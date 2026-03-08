@@ -4,7 +4,7 @@ milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
 stopped_at: Completed 14-static-json-export-02-PLAN.md
-last_updated: "2026-03-08T02:45:42.735Z"
+last_updated: "2026-03-08T02:49:16.682Z"
 last_activity: "2026-03-07 — Completed 13-04: all pipeline modules migrated to SQLite"
 progress:
   total_phases: 12
