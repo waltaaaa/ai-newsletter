@@ -64,6 +64,7 @@ from db import (init_db, get_db, get_all_projects, get_projects, save_indicator,
                 save_trend_snapshot, save_timeseries_point)
 from pipeline_logging import PipelineRunLogger
 from pipeline_cache import cache as _cache
+from export_dashboard import export_all
 
 try:
     from tavily import TavilyClient as _TavilyClient
@@ -3860,6 +3861,18 @@ def update_dashboard(deep_sweep: bool = False):
         run_log.log_metric("api_usage", "tavily_searches", tavily_searches_count)
         run_log.log_metric("api_usage", "tavily_month_total", tavily_credits.get("used", 0))
 
+        # -- STEP 9: Static JSON export ------------------------------------
+        print("\n[STEP 9] Exporting static JSON files...")
+        try:
+            export_result = export_all(conn=conn)
+            print(f"[OK] Exported {export_result['file_count']} files to {export_result['output_dir']}")
+            run_log.log_step("step_9_json_export")
+        except Exception as e:
+            print(f"[WARN] Static JSON export failed (non-fatal): {e}")
+            import traceback
+            traceback.print_exc()
+            run_log.log_error("json_export", e, recovered=True)
+
         run_log.finalize("success")
 
     except Exception as e:
@@ -4045,9 +4058,24 @@ if __name__ == "__main__":
                 save_dashboard_state(conn, f'timeseries_{dated_id}', indicators)
                 print(f"[OK] Indicators stored to dashboard_state/timeseries_{dated_id}")
                 daily_log.log_step("store_indicators")
-                daily_log.finalize("success")
             else:
                 print("[WARN] No indicators fetched or no DB connection")
+
+            # Export static JSON so the GitHub Pages site reflects fresh indicator data
+            print("\n[DAILY MODE] Exporting static JSON files...")
+            try:
+                export_result = export_all(conn=conn)
+                print(f"[OK] Exported {export_result['file_count']} files to {export_result['output_dir']}")
+                daily_log.log_step("step_9_json_export")
+            except Exception as e:
+                print(f"[WARN] Static JSON export failed (non-fatal): {e}")
+                import traceback
+                traceback.print_exc()
+                daily_log.log_error("json_export", e, recovered=True)
+
+            if indicators:
+                daily_log.finalize("success")
+            else:
                 daily_log.finalize("partial")
         except Exception as e:
             print(f"[ERROR] Daily indicators failed: {e}")
