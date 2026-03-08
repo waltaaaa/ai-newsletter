@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: planning
-stopped_at: Completed 13-sqlite-migration/13-02-PLAN.md
-last_updated: "2026-03-08T01:25:06.031Z"
-last_activity: 2026-03-07 — Roadmap created for v2.0
+stopped_at: Completed 13-sqlite-migration/13-04-PLAN.md
+last_updated: "2026-03-07T00:00:00.000Z"
+last_activity: 2026-03-07 — Completed 13-04 pipeline module SQLite migration
 progress:
   total_phases: 12
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
-  percent: 20
+  completed_plans: 4
+  percent: 27
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-07)
 
 ## Current Position
 
-Phase: 13 — SQLite Migration (not started)
-Plan: —
-Status: Roadmap defined, ready for Phase 13 planning
-Last activity: 2026-03-07 — Roadmap created for v2.0
+Phase: 13 — SQLite Migration (in progress)
+Plan: 13-04 complete — 13-05 (validation) next
+Status: Core pipeline migration complete; all 22 active modules use db.py
+Last activity: 2026-03-07 — Completed 13-04: all pipeline modules migrated to SQLite
 
-Progress: [██░░░░░░░░] 20%
+Progress: [███░░░░░░░] 27%
 
 ## Performance Metrics
 
@@ -50,8 +50,9 @@ Progress: [██░░░░░░░░] 20%
 | 17. Missing Project Form | 0/? | Not started | — |
 | 18. Cleanup | 0/? | Not started | — |
 | Phase 13-sqlite-migration P01 | 294 | 2 tasks | 2 files |
-| Phase 13-sqlite-migration P03 | 169 | 2 tasks | 3 files |
 | Phase 13-sqlite-migration P02 | 900 | 1 tasks | 1 files |
+| Phase 13-sqlite-migration P03 | 169 | 2 tasks | 3 files |
+| Phase 13-sqlite-migration P04 | 180 | 3 tasks | 22 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Progress: [██░░░░░░░░] 20%
 - [Phase 13-sqlite-migration]: pipeline_state.py store/get_follow_up_queries add optional conn param for testability without breaking existing callers
 - [Phase 13-sqlite-migration]: Paginated cursor-based Firestore streaming (200 docs/page) with exponential backoff replaces single list(stream()) to prevent 300s timeout on large collections
 - [Phase 13-sqlite-migration]: pipeline_state and statcan_indicators collections both migrate into dashboard_state table keyed by doc_id — no separate tables needed
+- [13-04]: Duck-typing pattern (hasattr(conn, 'execute')) used uniformly across all 22 migrated modules for Firestore backward compatibility without a breaking API change
+- [13-04]: briefing_export.py Firebase Storage upload deferred to Phase 16 — local file save used as interim replacement
+- [13-04]: JSON string serialization for SQLite array fields (evidence, statusHistory) — reads use json.loads(row["field"] or "[]"), writes use json.dumps(list)
 
 ### Pending Todos
 
@@ -88,6 +92,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T01:25:06.026Z
-Stopped at: Completed 13-sqlite-migration/13-02-PLAN.md
-Resume at: `/gsd:plan-phase 13` — SQLite Migration
+Last session: 2026-03-07T00:00:00.000Z
+Stopped at: Completed 13-sqlite-migration/13-04-PLAN.md
+Resume at: `/gsd:execute-phase 13` — run Plan 05 (end-to-end validation)
