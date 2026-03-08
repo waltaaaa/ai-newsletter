@@ -10,6 +10,24 @@ async function fetchJSON(path){
   return data;
 }
 
+/* ── loadSection: fetch JSON, show skeleton while loading, error+retry on failure ── */
+async function loadSection(elementId,jsonPath,renderFn){
+  const el=$(elementId);if(!el)return;
+  el.innerHTML='<div class="card">'+skeleton(3)+'</div>';
+  try{
+    const data=await fetchJSON(jsonPath);
+    renderFn(data,el);
+  }catch(e){
+    console.warn('Failed to load '+jsonPath+':',e);
+    el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
+      '<div style="color:var(--status-red);font-size:var(--text-sm);margin-bottom:8px">Could not load data</div>'+
+      '<button onclick="loadSection(\''+elementId+'\',\''+jsonPath+'\','+renderFn.name+')" '+
+      'style="padding:6px 16px;border:1px solid var(--border-light);border-radius:var(--radius-sm);'+
+      'background:var(--bg-subtle);color:var(--text-primary);cursor:pointer;font-size:var(--text-xs)">Retry</button></div>';
+  }
+}
+window.loadSection=loadSection;
+
 /* ── State ── */
 let D=null,indicators=[],allProjects=[],filteredProjects=[],projectPage=0,selectedProvince='BC',tsCache={},charts={},tabRendered={};
 const PAGE_SIZE=25;
@@ -977,15 +995,13 @@ function renderProjectsTab(){
   if(mpSec&&mpSec.options.length<=1){NAICS_CODES.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c+' '+NAICS_NAMES[c];mpSec.appendChild(o)})}
 }
 async function submitMissedProject(){
-  const name=($('mpName').value||'').trim();
-  const province=($('mpProvince').value||'').trim();
   const fb=$('missedFormFeedback');
-  if(!name||!province){fb.style.display='block';fb.style.background='#FEF2F2';fb.style.color='#991B1B';fb.textContent='Project name and province are required.';return}
-  const btn=$('mpSubmitBtn');btn.disabled=true;btn.textContent='Submitting...';
-  // Submissions collected via pipeline operator review — form disabled in static mode
-  fb.style.display='block';fb.style.background='#F0FDF4';fb.style.color='#166534';
-  fb.textContent='"'+name+'" noted. Please email corrections to the pipeline operator for inclusion in the next run.';
-  btn.disabled=false;btn.textContent='Submit Missing Project';
+  if(fb){
+    fb.style.display='block';
+    fb.style.background='#FEF3C7';
+    fb.style.color='#92400E';
+    fb.textContent='Project submissions are being migrated to a new system. Check back soon!';
+  }
 }
 async function filterProjects(){
   const search=($('projectSearch').value||'').toLowerCase();
@@ -1160,26 +1176,15 @@ window.toggleEditForm=function(eid){
   const el=document.getElementById(eid);
   if(el)el.style.display=el.style.display==='none'?'block':'none';
 };
-window.submitProjectCorrection=async function(eid,projectId){
-  const val=document.getElementById(eid+'_val').value.trim();
-  const status=document.getElementById(eid+'_status').value;
-  const prop=document.getElementById(eid+'_prop').value.trim();
-  const comp=document.getElementById(eid+'_comp').value;
-  const src=document.getElementById(eid+'_src').value.trim();
-  const notes=document.getElementById(eid+'_notes').value.trim();
-  const fb=document.getElementById(eid+'_fb');
-  if(!val&&!status&&!prop&&!comp){fb.style.display='block';fb.style.background='#fff3cd';fb.style.color='#856404';fb.textContent='Please change at least one field.';return}
-  // Find original project
-  const orig=allProjects.find(p=>p._id===projectId)||{};
-  const corrections=[];
-  if(val&&val!==(orig.value||''))corrections.push({field:'value',old_value:orig.value||'',new_value:val});
-  if(status&&status!==(orig.status||''))corrections.push({field:'status',old_value:orig.status||'',new_value:status});
-  if(prop&&prop!==(orig.proponent||''))corrections.push({field:'proponent',old_value:orig.proponent||'',new_value:prop});
-  if(comp&&comp!==(orig.completionDate||''))corrections.push({field:'completionDate',old_value:orig.completionDate||'',new_value:comp});
-  if(!corrections.length){fb.style.display='block';fb.style.background='#fff3cd';fb.style.color='#856404';fb.textContent='No changes detected.';return}
-  // Corrections logged client-side in static mode — operator applies on next pipeline run
-  fb.style.display='block';fb.style.background='#d4edda';fb.style.color='#155724';
-  fb.textContent='Correction noted ('+corrections.length+' field'+(corrections.length>1?'s':'')+') — contact pipeline operator to apply before next run.';
+window.submitProjectCorrection=function(){
+  // Find the feedback element in the correction form
+  const fbs=document.querySelectorAll('[id$="_fb"]');
+  fbs.forEach(function(fb){
+    fb.style.display='block';
+    fb.style.background='#FEF3C7';
+    fb.style.color='#92400E';
+    fb.textContent='Project corrections are being migrated to a new system. Check back soon!';
+  });
 };
 window.exportProjects=function(){
   if(!filteredProjects.length)return;
@@ -1336,7 +1341,12 @@ async function renderPipelineStatus(){
     const dur=run.duration_seconds?Math.round(run.duration_seconds/60)+'m':'—';
     const disc=run.discovery||{};
     el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:#555">Pipeline Status</div><div style="display:flex;gap:16px;font-size:var(--text-xs);color:#555;flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
-  }catch(e){console.warn('Pipeline status:',e);el.innerHTML=''}
+  }catch(e){
+    console.warn('Pipeline status:',e);
+    el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
+      '<div style="color:var(--status-red);font-size:var(--text-sm);margin-bottom:8px">Could not load pipeline status</div>'+
+      '<button onclick="renderPipelineStatus()" style="padding:6px 16px;border:1px solid var(--border-light);border-radius:var(--radius-sm);background:var(--bg-subtle);color:var(--text-primary);cursor:pointer;font-size:var(--text-xs)">Retry</button></div>';
+  }
 }
 
 /* ====== PHASE 1: COST MONITOR WIDGET ====== */
@@ -1351,7 +1361,12 @@ async function renderCostMonitor(){
     const claudeCost=((claudeIn/1e6)*3+(claudeOut/1e6)*15).toFixed(2);
     const tavilyPct=Math.round((tavilyUsed/1000)*100);
     el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;user-select:none">Cost Monitor <span style="font-weight:400;color:#999;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#555"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
-  }catch(e){console.warn('Cost monitor:',e);el.innerHTML=''}
+  }catch(e){
+    console.warn('Cost monitor:',e);
+    el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
+      '<div style="color:var(--status-red);font-size:var(--text-sm);margin-bottom:8px">Could not load cost data</div>'+
+      '<button onclick="renderCostMonitor()" style="padding:6px 16px;border:1px solid var(--border-light);border-radius:var(--radius-sm);background:var(--bg-subtle);color:var(--text-primary);cursor:pointer;font-size:var(--text-xs)">Retry</button></div>';
+  }
 }
 
 /* ====== PHASE 1: MICROSCOPE HISTORY ====== */
@@ -1366,7 +1381,12 @@ async function renderMicroscopeHistory(){
       items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:#777">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+h.description+'</div>':''}</div>`;
     });
     el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:14px 18px;user-select:none">Under the Microscope Archives (${history.length} weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
-  }catch(e){console.warn('Microscope history:',e);el.innerHTML=''}
+  }catch(e){
+    console.warn('Microscope history:',e);
+    el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
+      '<div style="color:var(--status-red);font-size:var(--text-sm);margin-bottom:8px">Could not load microscope history</div>'+
+      '<button onclick="renderMicroscopeHistory()" style="padding:6px 16px;border:1px solid var(--border-light);border-radius:var(--radius-sm);background:var(--bg-subtle);color:var(--text-primary);cursor:pointer;font-size:var(--text-xs)">Retry</button></div>';
+  }
 }
 
 /* ====== PHASE 2: UNDER THE MICROSCOPE ====== */
@@ -1379,7 +1399,12 @@ async function renderMicroscope(){
     const sectors=(m.affected_sectors||[]).map(s=>'<span style="background:var(--bg-subtle);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:var(--text-xs)">'+s+'</span>').join(' ');
     const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:#777;margin-left:8px">Week '+m.weeks_running+' of coverage</span>':'';
     el.innerHTML=`<div class="card fade-in"><div class="card-header">Under the Microscope ${weeks}</div><div style="font-size:var(--text-sm);font-weight:600;color:var(--accent-blue);margin-bottom:8px">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}<div class="card-body">${san(m.text||m.analysis||'')}</div></div>`;
-  }catch(e){console.warn('Microscope:',e);el.innerHTML=''}
+  }catch(e){
+    console.warn('Microscope:',e);
+    el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
+      '<div style="color:var(--status-red);font-size:var(--text-sm);margin-bottom:8px">Could not load microscope data</div>'+
+      '<button onclick="renderMicroscope()" style="padding:6px 16px;border:1px solid var(--border-light);border-radius:var(--radius-sm);background:var(--bg-subtle);color:var(--text-primary);cursor:pointer;font-size:var(--text-xs)">Retry</button></div>';
+  }
 }
 
 /* ====== PHASE 2: POLICY SECTION ====== */
@@ -1521,6 +1546,11 @@ window._doVcodeSearch=function(cat){
 $('execSummary').innerHTML='<div class="card">'+skeleton(4)+'</div>';
 $('nationalAnalysis').innerHTML='<div class="card">'+skeleton(3)+'</div>';
 $('keyIndicators').innerHTML='<div class="indicator-strip">'+Array(7).fill('<div class="skeleton sk-pill"></div>').join('')+'</div>';
+// Section-level skeleton placeholders while async sections load
+if($('pipelineStatus'))$('pipelineStatus').innerHTML='<div class="card">'+skeleton(2)+'</div>';
+if($('costMonitor'))$('costMonitor').innerHTML='<div class="card">'+skeleton(2)+'</div>';
+if($('microscopeSection'))$('microscopeSection').innerHTML='<div class="card">'+skeleton(3)+'</div>';
+if($('microscopeHistory'))$('microscopeHistory').innerHTML='<div class="card">'+skeleton(2)+'</div>';
 $('footerDate').textContent='Loading...';
 // No auth required — data is served as static JSON files
 loadAll();
