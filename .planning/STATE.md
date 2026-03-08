@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
-stopped_at: Completed 15-02-PLAN.md Task 1; awaiting human-verify checkpoint
-last_updated: "2026-03-08T03:21:03.499Z"
-last_activity: "2026-03-07 — Completed 13-04: all pipeline modules migrated to SQLite"
+stopped_at: Completed 15-02-PLAN.md — Phase 15 complete
+last_updated: "2026-03-08T04:00:00.000Z"
+last_activity: "2026-03-08 — Completed 15-02: loading/error UX, disabled submission forms, human verification passed"
 progress:
   total_phases: 12
   completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
-  percent: 27
+  total_plans: 10
+  completed_plans: 10
+  percent: 30
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-07)
 
 ## Current Position
 
-Phase: 13 — SQLite Migration (in progress)
-Plan: 13-04 complete — 13-05 (validation) next
-Status: Core pipeline migration complete; all 22 active modules use db.py
-Last activity: 2026-03-07 — Completed 13-04: all pipeline modules migrated to SQLite
+Phase: 15 — Frontend Rewrite (complete)
+Plan: 15-02 complete — Phase 16 (GitHub Pages + Actions) is next
+Status: All three infrastructure phases complete — SQLite, Static JSON export, Firebase-free frontend
+Last activity: 2026-03-08 — Completed 15-02: loading/error UX, disabled submissions, human verification passed
 
-Progress: [███░░░░░░░] 27%
+Progress: [███░░░░░░░] 30%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Progress: [███░░░░░░░] 27%
 | Phase 14-static-json-export P01 | 3 | 2 tasks | 23 files |
 | Phase 14-static-json-export P02 | 8 | 2 tasks | 2 files |
 | Phase 15-frontend-rewrite P01 | 45 | 2 tasks | 7 files |
+| Phase 15-frontend-rewrite P02 | 15 | 1 task | 1 file |
 
 ## Accumulated Context
 
@@ -101,13 +102,11 @@ None.
 
 ### Blockers/Concerns
 
-- 14 Firestore collections to migrate — ~40 Python files reference firebase_admin/google.cloud.firestore
-- Frontend app.js has Firebase API key hardcoded — must be removed in Phase 15
-- GitHub Actions needs ANTHROPIC, TAVILY, GEMINI as repository secrets before Phase 16
-- Migration report (DB-05) must confirm row counts before declaring Phase 13 complete
+- GitHub Actions needs ANTHROPIC, TAVILY, GEMINI as repository secrets before Phase 16 can deploy
+- Phase 16 requires GitHub repository to exist and GitHub Pages to be enabled on the main branch
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:20:57.491Z
-Stopped at: Completed 15-02-PLAN.md Task 1; awaiting human-verify checkpoint
-Resume at: `/gsd:execute-phase 13` — run Plan 05 (end-to-end validation)
+Last session: 2026-03-08T04:00:00.000Z
+Stopped at: Completed 15-02-PLAN.md — Phase 15 fully complete (human verification passed)
+Resume at: `/gsd:execute-phase 16` — begin GitHub Pages and Actions deployment

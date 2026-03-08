@@ -264,4 +264,4 @@ Plans:
 
 *Roadmap last updated: 2026-03-08*
 *Current milestone: v2.0*
-*Next: `/gsd:execute-phase 15` to begin Frontend Rewrite*
+*Next: `/gsd:execute-phase 16` to begin GitHub Pages + Actions deployment*

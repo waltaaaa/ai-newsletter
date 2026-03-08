@@ -180,8 +180,8 @@ async function loadAll(){
     $('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">Error rendering: '+e.message+'</div></div>';
   }
   const edStr=D?(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
-  $('navMeta').textContent=D?(edStr||'Data loaded'):'Data loaded';
-  $('footerDate').textContent='Last pipeline run: '+(D?fmtDate(D.updated_at||D.date)||edStr:new Date().toLocaleDateString('en-CA'));
+  $('navMeta').textContent=D?(edStr||'Data loaded'):'No data yet';
+  $('footerDate').textContent=D?'Last pipeline run: '+(fmtDate(D.updated_at||D.date)||edStr):'Awaiting first pipeline run';
   loadEditionList();
 }
 /* Edition dropdown toggle */
@@ -219,7 +219,7 @@ function sourcesFooter(sources,containerId){
 
 /* ══ OVERVIEW TAB ══ */
 function renderOverview(){
-  if(!D){$('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">No newsletter data available yet.</div></div>';return}
+  if(!D){$('execSummary').innerHTML='<div class="card" style="padding:24px;text-align:center"><div style="font-size:1.5rem;margin-bottom:12px;opacity:.5">📡</div><div style="color:var(--text-secondary);font-size:var(--text-sm)">No newsletter data available yet. Run the pipeline to generate your first briefing.</div></div>';$('keyIndicators').innerHTML='';$('nationalAnalysis').innerHTML='';return}
   // Executive Summary
   $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(D.executive_summary||'')}</div></div>`;
   // Key Indicators
