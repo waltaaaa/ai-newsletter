@@ -1172,3 +1172,44 @@ def get_trend_snapshots(conn: sqlite3.Connection, limit: int = 12) -> list[dict]
         d["snapshot"] = _from_json(d.get("snapshot"), {})
         result.append(d)
     return result
+
+
+def save_timeseries_point(conn: sqlite3.Connection, series_name: str, date_str: str,
+                          value: float | None, unit: str = "", source: str = "") -> None:
+    """Upsert a single timeseries data point. Skips if the date already exists.
+
+    Args:
+        conn: SQLite connection.
+        series_name: Identifier for the series (e.g. 'boc_rate', 'comm_wti').
+        date_str: ISO date string (YYYY-MM-DD).
+        value: Numeric value; None to skip.
+        unit: Optional unit string.
+        source: Optional source string.
+    """
+    if value is None:
+        return
+    with conn:
+        conn.execute("""
+            INSERT INTO timeseries (series_name, date, value, unit, source)
+            VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT(series_name, date) DO NOTHING
+        """, (series_name, date_str, value, unit, source))
+
+
+def get_timeseries(conn: sqlite3.Connection, series_name: str, limit: int = 52) -> list[dict]:
+    """Return timeseries points for a named series, most recent first.
+
+    Args:
+        conn: SQLite connection.
+        series_name: Identifier for the series.
+        limit: Maximum number of results.
+
+    Returns:
+        List of dicts with date, value, unit, source.
+    """
+    rows = conn.execute(
+        "SELECT date, value, unit, source FROM timeseries "
+        "WHERE series_name = ? ORDER BY date DESC LIMIT ?",
+        (series_name, limit)
+    ).fetchall()
+    return [dict(row) for row in rows]
