@@ -120,7 +120,7 @@ Recommended sequence: 7 → 8 → 9 (parallel with 8) → 10 (parallel with 8/9)
 
 - [x] **Phase 13: SQLite Migration** — Replace all Firestore access with a single db.py SQLite interface across the entire codebase (completed 2026-03-08)
 - [x] **Phase 14: Static JSON Export** — Build export_dashboard.py to generate all static JSON files consumed by the frontend (completed 2026-03-08)
-- [ ] **Phase 15: Frontend Rewrite** — Replace Firebase SDK with fetch() to static JSON while preserving all existing UI features
+- [x] **Phase 15: Frontend Rewrite** — Replace Firebase SDK with fetch() to static JSON while preserving all existing UI features (completed 2026-03-08)
 - [ ] **Phase 16: GitHub Pages + Actions** — Deploy dashboard to GitHub Pages and automate the pipeline via GitHub Actions
 - [ ] **Phase 17: Missing Project Form** — Replace Firestore-based user submissions with Google Form + Sheet integration
 - [ ] **Phase 18: Cleanup** — Remove all .bak files, Firebase configs, dead imports, and documentation references
@@ -169,7 +169,7 @@ Plans:
   3. All existing UI features work: project cards, sector filter, Chart.js indicator charts, weekly briefing display, V-code search, and briefing download buttons
   4. No Firebase API key, firebase_admin credential, or google.cloud reference appears anywhere in the frontend HTML or JS source
   5. A loading spinner or indicator is visible while province JSON files are being fetched
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 15-01-PLAN.md — Extend export with projects_all.json + pipeline_status.json, rewrite app.js data layer
 - [ ] 15-02-PLAN.md — Add loading/error UX, disable submissions, verify all features
@@ -215,7 +215,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 13. SQLite Migration | 5/5 | Complete    | 2026-03-08 |
 | 14. Static JSON Export | 2/2 | Complete    | 2026-03-08 |
-| 15. Frontend Rewrite | 1/2 | In Progress|  |
+| 15. Frontend Rewrite | 2/2 | Complete   | 2026-03-08 |
 | 16. GitHub Pages + Actions | 0/? | Not started | — |
 | 17. Missing Project Form | 0/? | Not started | — |
 | 18. Cleanup | 0/? | Not started | — |

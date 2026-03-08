@@ -33,9 +33,9 @@ Requirements for milestone v2.0: Infrastructure Overhaul — SQLite, GitHub Page
 - [x] **FE-01**: All Firebase SDK imports removed from frontend
 - [x] **FE-02**: All data loads via fetch() to static JSON files
 - [x] **FE-03**: Province filtering triggers correct per-province JSON file fetch
-- [ ] **FE-04**: All existing UI features preserved (project cards, filters, charts, briefing, V-code search)
+- [x] **FE-04**: All existing UI features preserved (project cards, filters, charts, briefing, V-code search)
 - [x] **FE-05**: Firebase API key removed from frontend code
-- [ ] **FE-06**: Loading indicators shown while JSON files download
+- [x] **FE-06**: Loading indicators shown while JSON files download
 
 ### Deployment (DEP)
 
@@ -129,9 +129,9 @@ All 12 requirements verified complete on 2026-03-07.
 | FE-01 | Phase 15 | Complete |
 | FE-02 | Phase 15 | Complete |
 | FE-03 | Phase 15 | Complete |
-| FE-04 | Phase 15 | Pending |
+| FE-04 | Phase 15 | Complete |
 | FE-05 | Phase 15 | Complete |
-| FE-06 | Phase 15 | Pending |
+| FE-06 | Phase 15 | Complete |
 | DEP-01 | Phase 16 | Pending |
 | DEP-02 | Phase 16 | Pending |
 | DEP-03 | Phase 16 | Pending |

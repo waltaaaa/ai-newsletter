@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
-stopped_at: Completed 15-01-PLAN.md
-last_updated: "2026-03-08T03:16:07.841Z"
+stopped_at: Completed 15-02-PLAN.md Task 1; awaiting human-verify checkpoint
+last_updated: "2026-03-08T03:21:03.499Z"
 last_activity: "2026-03-07 — Completed 13-04: all pipeline modules migrated to SQLite"
 progress:
   total_phases: 12
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 9
-  completed_plans: 8
+  completed_plans: 9
   percent: 27
 ---
 
@@ -92,6 +92,8 @@ Progress: [███░░░░░░░] 27%
 - [Phase 15-frontend-rewrite]: fetchJSON() caches responses in _cache — avoids re-fetching same file for multiple render functions
 - [Phase 15-frontend-rewrite]: policy.json and commodities.json: try/catch fetch with silent hide — sections disappear gracefully if files absent
 - [Phase 15-frontend-rewrite]: submitMissedProject/submitProjectCorrection: replaced Firestore writes with operator-contact message in static mode
+- [Phase 15-frontend-rewrite]: loadSection() sets skeleton then renders or shows inline error+retry — each section fails independently
+- [Phase 15-frontend-rewrite]: submitMissedProject and submitProjectCorrection replaced with amber migration banner (FE-04, FE-06 fulfilled)
 
 ### Pending Todos
 
@@ -106,6 +108,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T03:16:07.836Z
-Stopped at: Completed 15-01-PLAN.md
+Last session: 2026-03-08T03:20:57.491Z
+Stopped at: Completed 15-02-PLAN.md Task 1; awaiting human-verify checkpoint
 Resume at: `/gsd:execute-phase 13` — run Plan 05 (end-to-end validation)
