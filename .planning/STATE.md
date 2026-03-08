@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
-stopped_at: Completed 15-02-PLAN.md — Phase 15 fully complete (human verification passed)
-last_updated: "2026-03-08T03:49:34.359Z"
+stopped_at: Completed 16-01-PLAN.md
+last_updated: "2026-03-08T04:06:17.960Z"
 last_activity: "2026-03-08 — Completed 15-02: loading/error UX, disabled submissions, human verification passed"
 progress:
   total_phases: 12
   completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 11
+  completed_plans: 10
   percent: 30
 ---
 
@@ -58,6 +58,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 14-static-json-export P02 | 8 | 2 tasks | 2 files |
 | Phase 15-frontend-rewrite P01 | 45 | 2 tasks | 7 files |
 | Phase 15-frontend-rewrite P02 | 15 | 1 task | 1 file |
+| Phase 16-github-pages-actions P01 | 6 | 3 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,9 @@ Progress: [███░░░░░░░] 30%
 - [Phase 15-frontend-rewrite]: submitMissedProject/submitProjectCorrection: replaced Firestore writes with operator-contact message in static mode
 - [Phase 15-frontend-rewrite]: loadSection() sets skeleton then renders or shows inline error+retry — each section fails independently
 - [Phase 15-frontend-rewrite]: submitMissedProject and submitProjectCorrection replaced with amber migration banner (FE-04, FE-06 fulfilled)
+- [Phase 16-github-pages-actions]: deploy_to_github.py uses shutil.copytree(dirs_exist_ok=True) for idempotent docs/ population without touching docs/data/
+- [Phase 16-github-pages-actions]: Both GitHub Actions workflows set GEMINI_SEARCH_ENABLED=false to prevent accidental grounded search charges
+- [Phase 16-github-pages-actions]: Firebase configs moved to archive/firebase/ — functions/ directory removed; Cloud Functions replaced by GitHub Actions free tier
 
 ### Pending Todos
 
@@ -107,6 +111,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T04:00:00.000Z
-Stopped at: Completed 15-02-PLAN.md — Phase 15 fully complete (human verification passed)
+Last session: 2026-03-08T04:06:05.846Z
+Stopped at: Completed 16-01-PLAN.md
 Resume at: `/gsd:execute-phase 16` — begin GitHub Pages and Actions deployment
