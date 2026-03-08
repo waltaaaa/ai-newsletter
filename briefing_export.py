@@ -1,0 +1,318 @@
+"""
+briefing_export.py — Export weekly briefing as downloadable PDF or DOCX.
+
+Generates formatted documents from Firestore briefing content with
+dashboard branding, date, and section formatting.
+
+Pipeline generates files → uploads to Firebase Storage → frontend links
+to Storage download URLs.
+
+Dependencies: pip install reportlab python-docx
+"""
+
+import io
+import logging
+import re
+from datetime import datetime
+
+logger = logging.getLogger(__name__)
+
+
+def _get_briefing(conn, week_date=None):
+    """Fetch briefing content from SQLite.
+
+    Args:
+        conn: sqlite3.Connection from db.py
+        week_date: specific YYYY-MM-DD date, or None for latest
+
+    Returns: dict with content, date, week_number or None
+    """
+    from db import get_dashboard_state
+
+    if week_date:
+        # Look for the specific week's briefing in dashboard_state
+        briefing = get_dashboard_state(conn, f"briefing_{week_date}")
+        if briefing:
+            return briefing
+        # Fallback: try latest_briefing if date matches
+        latest = get_dashboard_state(conn, "latest_briefing")
+        if latest and latest.get("date") == week_date:
+            return latest
+        return None
+
+    return get_dashboard_state(conn, "latest_briefing")
+
+
+def export_briefing_pdf(conn, week_date=None):
+    """Export the weekly briefing as a formatted PDF.
+
+    Args:
+        conn: sqlite3.Connection from db.py
+        week_date: specific date or None for latest
+
+    Returns: bytes (PDF content) or None
+    """
+    briefing = _get_briefing(conn, week_date)
+    if not briefing or not briefing.get("content"):
+        logger.warning("No briefing content to export as PDF")
+        return None
+
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import inch
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+    from reportlab.lib.colors import HexColor
+
+    content = briefing["content"]
+    date_str = briefing.get("date", datetime.utcnow().strftime("%Y-%m-%d"))
+    week_num = briefing.get("week_number", "")
+
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(
+        buffer, pagesize=letter,
+        topMargin=1 * inch, bottomMargin=1 * inch,
+        leftMargin=1 * inch, rightMargin=1 * inch,
+    )
+
+    styles = getSampleStyleSheet()
+
+    title_style = ParagraphStyle(
+        'BriefingTitle', parent=styles['Title'],
+        fontSize=24, textColor=HexColor('#1B3A5C'),
+        spaceAfter=12,
+    )
+    subtitle_style = ParagraphStyle(
+        'BriefingSubtitle', parent=styles['Normal'],
+        fontSize=14, textColor=HexColor('#666666'),
+        spaceAfter=24,
+    )
+    heading_style = ParagraphStyle(
+        'BriefingHeading', parent=styles['Heading2'],
+        fontSize=14, textColor=HexColor('#2E5984'),
+        spaceBefore=18, spaceAfter=8,
+    )
+    body_style = ParagraphStyle(
+        'BriefingBody', parent=styles['Normal'],
+        fontSize=11, leading=16, spaceAfter=8,
+    )
+    footer_style = ParagraphStyle(
+        'Footer', parent=styles['Normal'],
+        fontSize=8, textColor=HexColor('#999999'),
+    )
+
+    story = []
+
+    # Title
+    story.append(Paragraph("Canadian Macro Strategic Dashboard", title_style))
+    story.append(Paragraph(
+        f"Weekly Intelligence Briefing &mdash; {date_str} (Week {week_num})",
+        subtitle_style,
+    ))
+    story.append(Spacer(1, 12))
+
+    # Parse briefing sections
+    for line in content.split('\n'):
+        line = line.strip()
+        if not line:
+            story.append(Spacer(1, 6))
+        elif line.startswith('## '):
+            story.append(Paragraph(_escape_html(line[3:]), heading_style))
+        elif line.startswith('# '):
+            story.append(Paragraph(_escape_html(line[2:]), heading_style))
+        elif re.match(r'^\d+\.\s+\*\*.*\*\*', line):
+            # Numbered section header like "1. **HEADLINE**"
+            heading_text = re.sub(r'^\d+\.\s+\*\*|\*\*.*$', '', line).strip()
+            if not heading_text:
+                heading_text = re.sub(r'^\d+\.\s+\*\*(.+?)\*\*.*', r'\1', line)
+            story.append(Paragraph(_escape_html(heading_text), heading_style))
+            # Check for trailing text after **HEADING** — ...
+            remainder = re.sub(r'^\d+\.\s+\*\*.*?\*\*\s*[-—:]?\s*', '', line).strip()
+            if remainder:
+                story.append(Paragraph(_escape_html(remainder), body_style))
+        elif line.startswith('**') and line.endswith('**'):
+            story.append(Paragraph(_escape_html(line.strip('*')), heading_style))
+        else:
+            # Convert **bold** to <b>bold</b> for reportlab
+            formatted = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', _escape_html(line))
+            story.append(Paragraph(formatted, body_style))
+
+    # Footer
+    story.append(Spacer(1, 24))
+    story.append(Paragraph(
+        f"Generated by Canadian Macro Strategic Dashboard &mdash; "
+        f"{datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
+        footer_style,
+    ))
+    story.append(Paragraph(
+        "All data sourced from verified Canadian government, news, and industry publications.",
+        footer_style,
+    ))
+
+    doc.build(story)
+    buffer.seek(0)
+    return buffer.getvalue()
+
+
+def export_briefing_docx(conn, week_date=None):
+    """Export the weekly briefing as a formatted Word document.
+
+    Args:
+        conn: sqlite3.Connection from db.py
+        week_date: specific date or None for latest
+
+    Returns: bytes (DOCX content) or None
+    """
+    briefing = _get_briefing(conn, week_date)
+    if not briefing or not briefing.get("content"):
+        logger.warning("No briefing content to export as DOCX")
+        return None
+
+    from docx import Document
+    from docx.shared import Pt, RGBColor
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+    content = briefing["content"]
+    date_str = briefing.get("date", datetime.utcnow().strftime("%Y-%m-%d"))
+    week_num = briefing.get("week_number", "")
+
+    doc = Document()
+
+    # Title
+    title = doc.add_heading("Canadian Macro Strategic Dashboard", level=0)
+    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    for run in title.runs:
+        run.font.color.rgb = RGBColor(0x1B, 0x3A, 0x5C)
+
+    subtitle = doc.add_paragraph(
+        f"Weekly Intelligence Briefing — {date_str} (Week {week_num})"
+    )
+    subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    doc.add_paragraph("")  # Spacer
+
+    # Parse and add content
+    for line in content.split('\n'):
+        line = line.strip()
+        if not line:
+            continue
+        elif line.startswith('## '):
+            doc.add_heading(line[3:], level=2)
+        elif line.startswith('# '):
+            doc.add_heading(line[2:], level=1)
+        elif re.match(r'^\d+\.\s+\*\*.*\*\*', line):
+            heading_text = re.sub(r'^\d+\.\s+\*\*(.+?)\*\*.*', r'\1', line)
+            doc.add_heading(heading_text, level=2)
+            remainder = re.sub(r'^\d+\.\s+\*\*.*?\*\*\s*[-—:]?\s*', '', line).strip()
+            if remainder:
+                doc.add_paragraph(remainder)
+        elif line.startswith('**') and line.endswith('**'):
+            doc.add_heading(line.strip('*'), level=2)
+        else:
+            # Handle **bold** in body text
+            p = doc.add_paragraph()
+            parts = re.split(r'(\*\*.+?\*\*)', line)
+            for part in parts:
+                if part.startswith('**') and part.endswith('**'):
+                    run = p.add_run(part.strip('*'))
+                    run.bold = True
+                else:
+                    p.add_run(part)
+
+    # Footer
+    doc.add_paragraph("")
+    footer = doc.add_paragraph(
+        f"Generated by Canadian Macro Strategic Dashboard — "
+        f"{datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}"
+    )
+    for run in footer.runs:
+        run.font.size = Pt(8)
+        run.font.color.rgb = RGBColor(0x99, 0x99, 0x99)
+
+    attr = doc.add_paragraph(
+        "All data sourced from verified Canadian government, news, and industry publications."
+    )
+    for run in attr.runs:
+        run.font.size = Pt(8)
+        run.font.color.rgb = RGBColor(0x99, 0x99, 0x99)
+
+    buffer = io.BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+    return buffer.getvalue()
+
+
+def _escape_html(text):
+    """Escape HTML entities for reportlab Paragraph."""
+    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+
+def export_and_store_local(conn, output_dir=None):
+    """Generate PDF + DOCX and save to local disk.
+
+    Stores file paths in dashboard_state/latest_briefing for reference.
+    Firebase Storage upload removed (Phase 16 will handle remote storage).
+
+    Args:
+        conn: sqlite3.Connection from db.py
+        output_dir: directory to write files (default: current directory)
+
+    Returns: dict with pdf_path and docx_path, or empty dict on failure
+    """
+    import os
+    from db import get_dashboard_state, save_dashboard_state
+
+    paths = {}
+    briefing = _get_briefing(conn)
+    if not briefing:
+        logger.warning("No briefing to export")
+        return paths
+
+    date_str = briefing.get("date", datetime.utcnow().strftime("%Y-%m-%d"))
+    out_dir = output_dir or "."
+
+    # PDF
+    try:
+        pdf_bytes = export_briefing_pdf(conn)
+        if pdf_bytes:
+            pdf_path = os.path.join(out_dir, f"CAN_Macro_Briefing_{date_str}.pdf")
+            with open(pdf_path, "wb") as f:
+                f.write(pdf_bytes)
+            paths["pdf_path"] = pdf_path
+            logger.info(f"PDF saved: {pdf_path}")
+    except Exception as e:
+        logger.warning(f"PDF export failed: {e}")
+
+    # DOCX
+    try:
+        docx_bytes = export_briefing_docx(conn)
+        if docx_bytes:
+            docx_path = os.path.join(out_dir, f"CAN_Macro_Briefing_{date_str}.docx")
+            with open(docx_path, "wb") as f:
+                f.write(docx_bytes)
+            paths["docx_path"] = docx_path
+            logger.info(f"DOCX saved: {docx_path}")
+    except Exception as e:
+        logger.warning(f"DOCX export failed: {e}")
+
+    # Update dashboard_state with file paths
+    if paths:
+        try:
+            existing = get_dashboard_state(conn, "latest_briefing") or {}
+            if isinstance(existing, dict):
+                existing.update(paths)
+                save_dashboard_state(conn, "latest_briefing", existing)
+            logger.info(f"Briefing file paths stored: {list(paths.keys())}")
+        except Exception as e:
+            logger.warning(f"Failed to store file paths: {e}")
+
+    return paths
+
+
+# Backward-compatible alias for callers that still use export_and_upload
+def export_and_upload(conn, storage_bucket=None):
+    """Backward-compatible wrapper — calls export_and_store_local().
+
+    Firebase Storage upload is deferred to Phase 16.
+    The storage_bucket argument is accepted but ignored.
+    """
+    return export_and_store_local(conn)
