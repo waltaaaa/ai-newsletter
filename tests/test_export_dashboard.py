@@ -1,0 +1,214 @@
+"""
+tests/test_export_dashboard.py — Unit tests for export_dashboard.py
+
+Tests use in-memory SQLite via init_db(":memory:") for full isolation.
+All 7 behaviors from PLAN spec are covered.
+"""
+
+import json
+import os
+import sys
+import tempfile
+import unittest
+
+# Add parent directory to path so we can import from the project root
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from db import init_db, upsert_project
+
+
+def _make_ontario_project(value="$600M"):
+    """Build an Ontario test project with the given value."""
+    return {
+        "name": f"Ontario Test Project {value}",
+        "province": "Ontario",
+        "cma": "Toronto",
+        "sector": "Construction",
+        "naics_code": "23",
+        "naics_name": "Construction",
+        "value": value,
+        "status": "Proposed",
+        "confidence": 0.8,
+        "project_type": "greenfield",
+        "is_brownfield": False,
+        "proponent": "Test Corp",
+        "description": "A test project in Ontario.",
+        "completionDate": "2028-12-31",
+        "firstTracked": "2026-01-01",
+        "lastUpdated": "2026-03-01",
+        "lastSeen": "2026-03-01",
+        "evidence": [{"url": "https://example.com/test", "title": "Test Article"}],
+        "statusHistory": [
+            {"status": "Proposed", "date": "2026-01-01", "detail": "Filed."}
+        ],
+        "discovery_source": "rss_feed",
+        "source_url_quality": "direct",
+        "has_government_source": False,
+        "evidence_count": 1,
+        "tags": ["construction", "ontario"],
+        "sources": [],
+        "discovery_sources": ["rss_feed"],
+        "anomalies": [],
+    }
+
+
+class TestParseValue(unittest.TestCase):
+    """Test 1–3 related: _parse_value parsing behavior."""
+
+    def setUp(self):
+        from export_dashboard import _parse_value
+        self.parse = _parse_value
+
+    def test_parse_billions(self):
+        self.assertAlmostEqual(self.parse("$1.2B"), 1_200_000_000.0)
+
+    def test_parse_millions(self):
+        self.assertAlmostEqual(self.parse("$600M"), 600_000_000.0)
+
+    def test_parse_written_billion(self):
+        self.assertAlmostEqual(self.parse("$2.5 billion"), 2_500_000_000.0)
+
+    def test_parse_not_disclosed(self):
+        self.assertIsNone(self.parse("Not disclosed"))
+
+    def test_parse_empty(self):
+        self.assertIsNone(self.parse(""))
+
+    def test_parse_none_input(self):
+        self.assertIsNone(self.parse(None))
+
+    def test_parse_unparseable(self):
+        self.assertIsNone(self.parse("TBD"))
+
+
+class TestExportProvinceProjects(unittest.TestCase):
+    """Tests 1–4: export_province_projects filtering and field shaping."""
+
+    def setUp(self):
+        self.conn = init_db(":memory:")
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        self.conn.close()
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _run_export(self, threshold_val=500_000_000):
+        from export_dashboard import export_province_projects
+        export_province_projects(self.conn, "Ontario", threshold_val, self.tmpdir)
+        out_path = os.path.join(self.tmpdir, "projects_ontario.json")
+        self.assertTrue(os.path.exists(out_path), "projects_ontario.json not created")
+        with open(out_path, encoding="utf-8") as f:
+            return json.load(f)
+
+    # Test 1: $600M project included, $400M excluded (threshold $500M)
+    def test_above_threshold_included(self):
+        upsert_project(self.conn, _make_ontario_project("$600M"))
+        projects = self._run_export(500_000_000)
+        names = [p["name"] for p in projects]
+        self.assertTrue(any("$600M" in n for n in names), "600M project should be included")
+
+    def test_below_threshold_excluded(self):
+        upsert_project(self.conn, _make_ontario_project("$400M"))
+        projects = self._run_export(500_000_000)
+        names = [p["name"] for p in projects]
+        self.assertFalse(any("$400M" in n for n in names), "400M project should be excluded")
+
+    # Test 2: "Not disclosed" projects included with value_confirmed=false
+    def test_not_disclosed_included_unconfirmed(self):
+        upsert_project(self.conn, _make_ontario_project("Not disclosed"))
+        projects = self._run_export(500_000_000)
+        unconfirmed = [p for p in projects if not p.get("value_confirmed", True)]
+        self.assertTrue(len(unconfirmed) >= 1, "Not disclosed project should be included with value_confirmed=false")
+
+    # Test 3: Unparseable value projects included with value_confirmed=false
+    def test_unparseable_value_included_unconfirmed(self):
+        upsert_project(self.conn, _make_ontario_project("TBD"))
+        projects = self._run_export(500_000_000)
+        unconfirmed = [p for p in projects if not p.get("value_confirmed", True)]
+        self.assertTrue(len(unconfirmed) >= 1, "TBD project should be included with value_confirmed=false")
+
+    # Test 4: JSON array fields are parsed from strings into proper arrays
+    def test_json_array_fields_are_parsed(self):
+        upsert_project(self.conn, _make_ontario_project("$600M"))
+        projects = self._run_export(500_000_000)
+        self.assertGreater(len(projects), 0, "Expected at least one project")
+        proj = projects[0]
+        # evidence and statusHistory must be lists, not strings
+        self.assertIsInstance(proj.get("evidence"), list, "evidence must be a list")
+        self.assertIsInstance(proj.get("statusHistory"), list, "statusHistory must be a list")
+
+
+class TestExportAll(unittest.TestCase):
+    """Tests 5–7: export_all creates all expected files with valid JSON and manifest."""
+
+    def setUp(self):
+        self.conn = init_db(":memory:")
+        self.tmpdir = tempfile.mkdtemp()
+        # Insert one above-threshold project for Ontario
+        upsert_project(self.conn, _make_ontario_project("$600M"))
+
+    def tearDown(self):
+        self.conn.close()
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    # Test 5: export_all creates all expected files
+    def test_all_expected_files_created(self):
+        from export_dashboard import export_all, PROVINCE_SLUGS
+        result = export_all(conn=self.conn, output_dir=self.tmpdir)
+
+        expected_files = [
+            "briefing_latest.json",
+            "briefing_archive.json",
+            "indicators.json",
+            "trends.json",
+            "events.json",
+            "microscope.json",
+            "timeseries.json",
+            "manifest.json",
+        ]
+        # Check all province slug files
+        for slug in PROVINCE_SLUGS:
+            expected_files.append(f"projects_{slug}.json")
+
+        for fname in expected_files:
+            path = os.path.join(self.tmpdir, fname)
+            self.assertTrue(
+                os.path.exists(path),
+                f"Expected file missing: {fname}"
+            )
+
+    # Test 6: All output files contain valid JSON
+    def test_all_files_valid_json(self):
+        from export_dashboard import export_all
+        export_all(conn=self.conn, output_dir=self.tmpdir)
+
+        import glob
+        json_files = glob.glob(os.path.join(self.tmpdir, "*.json"))
+        self.assertGreater(len(json_files), 0, "No JSON files produced")
+
+        for fpath in json_files:
+            with open(fpath, encoding="utf-8") as f:
+                try:
+                    json.load(f)
+                except json.JSONDecodeError as e:
+                    self.fail(f"Invalid JSON in {os.path.basename(fpath)}: {e}")
+
+    # Test 7: manifest.json contains exported_at and file_list
+    def test_manifest_has_required_fields(self):
+        from export_dashboard import export_all
+        export_all(conn=self.conn, output_dir=self.tmpdir)
+
+        manifest_path = os.path.join(self.tmpdir, "manifest.json")
+        with open(manifest_path, encoding="utf-8") as f:
+            manifest = json.load(f)
+
+        self.assertIn("exported_at", manifest, "manifest must have exported_at")
+        self.assertIn("file_list", manifest, "manifest must have file_list")
+        self.assertIsInstance(manifest["file_list"], list)
+        self.assertGreater(len(manifest["file_list"]), 0, "file_list must be non-empty")
+
+
+if __name__ == "__main__":
+    unittest.main()
