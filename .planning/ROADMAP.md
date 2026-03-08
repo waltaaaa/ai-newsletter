@@ -118,7 +118,7 @@ Recommended sequence: 7 → 8 → 9 (parallel with 8) → 10 (parallel with 8/9)
 
 ### Phases
 
-- [ ] **Phase 13: SQLite Migration** — Replace all Firestore access with a single db.py SQLite interface across the entire codebase
+- [x] **Phase 13: SQLite Migration** — Replace all Firestore access with a single db.py SQLite interface across the entire codebase (completed 2026-03-08)
 - [ ] **Phase 14: Static JSON Export** — Build export_dashboard.py to generate all static JSON files consumed by the frontend
 - [ ] **Phase 15: Frontend Rewrite** — Replace Firebase SDK with fetch() to static JSON while preserving all existing UI features
 - [ ] **Phase 16: GitHub Pages + Actions** — Deploy dashboard to GitHub Pages and automate the pipeline via GitHub Actions
@@ -137,7 +137,7 @@ Recommended sequence: 7 → 8 → 9 (parallel with 8) → 10 (parallel with 8/9)
   3. Adding a new project via upsert_project() preserves the evidence array (URLs never dropped), does not regress status, and does not decrease confidence score
   4. Full-text search on the projects table returns relevant results using SQLite FTS5
   5. Pipeline run logs and Tavily credit usage are visible in the SQLite database via db.py queries
-**Plans:** 3/5 plans executed
+**Plans:** 5/5 plans complete
 Plans:
 - [ ] 13-01-PLAN.md — Create db.py SQLite interface with schemas, FTS5, and upsert business rules
 - [ ] 13-02-PLAN.md — One-time Firestore-to-SQLite migration script with verification report
@@ -207,7 +207,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 13. SQLite Migration | 3/5 | In Progress|  |
+| 13. SQLite Migration | 5/5 | Complete   | 2026-03-08 |
 | 14. Static JSON Export | 0/? | Not started | — |
 | 15. Frontend Rewrite | 0/? | Not started | — |
 | 16. GitHub Pages + Actions | 0/? | Not started | — |
