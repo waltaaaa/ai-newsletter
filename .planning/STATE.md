@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: planning
-stopped_at: Completed 13-sqlite-migration/13-03-PLAN.md
-last_updated: "2026-03-08T01:11:05.713Z"
+stopped_at: Completed 13-sqlite-migration/13-02-PLAN.md
+last_updated: "2026-03-08T01:25:06.031Z"
 last_activity: 2026-03-07 — Roadmap created for v2.0
 progress:
   total_phases: 12
   completed_phases: 0
   total_plans: 5
-  completed_plans: 2
+  completed_plans: 3
   percent: 20
 ---
 
@@ -51,6 +51,7 @@ Progress: [██░░░░░░░░] 20%
 | 18. Cleanup | 0/? | Not started | — |
 | Phase 13-sqlite-migration P01 | 294 | 2 tasks | 2 files |
 | Phase 13-sqlite-migration P03 | 169 | 2 tasks | 3 files |
+| Phase 13-sqlite-migration P02 | 900 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,8 @@ Progress: [██░░░░░░░░] 20%
 - [Phase 13-sqlite-migration]: PipelineRunLogger keeps in-memory _discovery and _api_usage dicts, writing full JSON to SQLite on every update — avoids read-modify-write per field
 - [Phase 13-sqlite-migration]: tavily_search.py set_tracking_db() accepts sqlite3.Connection or legacy Firestore objects (ignored) for zero-friction backward compat
 - [Phase 13-sqlite-migration]: pipeline_state.py store/get_follow_up_queries add optional conn param for testability without breaking existing callers
+- [Phase 13-sqlite-migration]: Paginated cursor-based Firestore streaming (200 docs/page) with exponential backoff replaces single list(stream()) to prevent 300s timeout on large collections
+- [Phase 13-sqlite-migration]: pipeline_state and statcan_indicators collections both migrate into dashboard_state table keyed by doc_id — no separate tables needed
 
 ### Pending Todos
 
@@ -85,6 +88,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T01:10:55.877Z
-Stopped at: Completed 13-sqlite-migration/13-03-PLAN.md
+Last session: 2026-03-08T01:25:06.026Z
+Stopped at: Completed 13-sqlite-migration/13-02-PLAN.md
 Resume at: `/gsd:plan-phase 13` — SQLite Migration

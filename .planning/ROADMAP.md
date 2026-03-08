@@ -137,7 +137,7 @@ Recommended sequence: 7 → 8 → 9 (parallel with 8) → 10 (parallel with 8/9)
   3. Adding a new project via upsert_project() preserves the evidence array (URLs never dropped), does not regress status, and does not decrease confidence score
   4. Full-text search on the projects table returns relevant results using SQLite FTS5
   5. Pipeline run logs and Tavily credit usage are visible in the SQLite database via db.py queries
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 Plans:
 - [ ] 13-01-PLAN.md — Create db.py SQLite interface with schemas, FTS5, and upsert business rules
 - [ ] 13-02-PLAN.md — One-time Firestore-to-SQLite migration script with verification report
@@ -207,7 +207,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 13. SQLite Migration | 2/5 | In Progress|  |
+| 13. SQLite Migration | 3/5 | In Progress|  |
 | 14. Static JSON Export | 0/? | Not started | — |
 | 15. Frontend Rewrite | 0/? | Not started | — |
 | 16. GitHub Pages + Actions | 0/? | Not started | — |

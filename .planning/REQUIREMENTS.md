@@ -12,8 +12,8 @@ Requirements for milestone v2.0: Infrastructure Overhaul — SQLite, GitHub Page
 - [x] **DB-01**: db.py module provides single interface to SQLite — no direct sqlite3 calls in other modules
 - [x] **DB-02**: All 14 Firestore collections mapped to SQLite tables with correct schema
 - [x] **DB-03**: FTS5 virtual table on projects for full-text search
-- [ ] **DB-04**: One-time migration script reads all Firestore data and populates SQLite
-- [ ] **DB-05**: Migration report verifies row counts match Firestore document counts
+- [x] **DB-04**: One-time migration script reads all Firestore data and populates SQLite
+- [x] **DB-05**: Migration report verifies row counts match Firestore document counts
 - [x] **DB-06**: upsert_project() preserves evidence merge (never loses URLs), status non-regression, confidence-only-increases
 - [ ] **DB-07**: All ~40 Python files updated to import from db.py instead of firebase_admin/firestore
 - [ ] **DB-08**: firebase-admin removed from requirements.txt
@@ -114,8 +114,8 @@ All 12 requirements verified complete on 2026-03-07.
 | DB-01 | Phase 13 | Complete |
 | DB-02 | Phase 13 | Complete |
 | DB-03 | Phase 13 | Complete |
-| DB-04 | Phase 13 | Pending |
-| DB-05 | Phase 13 | Pending |
+| DB-04 | Phase 13 | Complete |
+| DB-05 | Phase 13 | Complete |
 | DB-06 | Phase 13 | Complete |
 | DB-07 | Phase 13 | Pending |
 | DB-08 | Phase 13 | Pending |
