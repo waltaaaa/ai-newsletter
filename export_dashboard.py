@@ -1,0 +1,538 @@
+"""
+export_dashboard.py — Static JSON export for CAN-MACRO Dashboard.
+
+Reads all dashboard data from SQLite via db.py and writes static JSON files
+to docs/data/ (default). These files represent the complete dataset the frontend
+needs to render without any database connection.
+
+Usage:
+    python export_dashboard.py                    # export to docs/data/
+    python export_dashboard.py --out /tmp/data    # export to custom directory
+
+This is the bridge between the SQLite backend (Phase 13) and the static
+frontend (Phase 15).
+"""
+
+import argparse
+import glob
+import json
+import logging
+import os
+import re
+import sys
+from datetime import datetime, timezone
+
+logger = logging.getLogger(__name__)
+
+# ── Province slug list (matches PROVINCES in pipeline_config.py) ─────────────
+
+PROVINCE_SLUGS = [
+    "ontario",
+    "quebec",
+    "alberta",
+    "british_columbia",
+    "saskatchewan",
+    "manitoba",
+    "nova_scotia",
+    "new_brunswick",
+    "newfoundland_and_labrador",
+    "prince_edward_island",
+    "yukon",
+    "northwest_territories",
+    "nunavut",
+]
+
+# Known timeseries series names (from update_dashboard.py append_to_timeseries)
+_TIMESERIES_NAMES = [
+    "boc_rate",
+    "tsx_composite",
+    "comm_wti",
+    "comm_brent",
+    "comm_natgas",
+    "comm_gold",
+    "comm_silver",
+    "comm_platinum",
+    "comm_palladium",
+    "comm_copper",
+    "comm_aluminum",
+    "comm_wheat",
+    "comm_corn",
+    "comm_rice",
+    "comm_soybeans",
+    "comm_coffee",
+    "comm_cocoa",
+    "comm_sugar",
+    "comm_cotton",
+    "comm_soyoil",
+    "comm_soymeal",
+    "comm_coal",
+    "comm_propane",
+    "idx_sp500",
+    "idx_djia",
+    "idx_nasdaq",
+    "idx_ftse",
+    "idx_dax",
+    "idx_nikkei",
+    "idx_hangseng",
+    "idx_shanghai",
+]
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# VALUE PARSING
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _parse_value(value_str) -> float | None:
+    """Parse project value strings into float (in dollars).
+
+    Handles forms like:
+      "$1.2B", "$600M", "$2.5 billion", "$350 million", "$1,200K"
+
+    Returns:
+        float in dollars, or None if not disclosed / empty / unparseable.
+    """
+    if not value_str:
+        return None
+    s = str(value_str).strip()
+    if s.lower() in ("not disclosed", "unknown", "tbd", "n/a", ""):
+        return None
+
+    # Handle written-out forms: "2.5 billion", "350 million"
+    written = re.match(
+        r"\$?([\d,]+\.?\d*)\s*(billion|million|thousand)", s, re.IGNORECASE
+    )
+    if written:
+        num = float(written.group(1).replace(",", ""))
+        unit = written.group(2).lower()
+        if unit == "billion":
+            return num * 1e9
+        elif unit == "million":
+            return num * 1e6
+        elif unit == "thousand":
+            return num * 1e3
+
+    # Handle abbreviated forms: "$1.2B", "$600M", "$1,200K"
+    abbrev = re.match(r"\$?([\d,]+\.?\d*)\s*(B|M|K)?", s, re.IGNORECASE)
+    if abbrev:
+        num_str = abbrev.group(1).replace(",", "")
+        try:
+            num = float(num_str)
+        except ValueError:
+            return None
+        unit = (abbrev.group(2) or "").upper()
+        if unit == "B":
+            return num * 1e9
+        elif unit == "M":
+            return num * 1e6
+        elif unit == "K":
+            return num * 1e3
+        # No unit — treat as raw dollars only if it looks significant (≥1000)
+        if num >= 1000:
+            return num
+
+    return None
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PROJECT SHAPE FOR EXPORT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _safe_json_loads(value, default):
+    """Parse a JSON string field safely, returning default on failure."""
+    if value is None:
+        return default
+    if isinstance(value, (list, dict)):
+        return value  # already parsed
+    try:
+        return json.loads(value)
+    except (json.JSONDecodeError, TypeError):
+        return default
+
+
+def _project_for_export(proj_dict: dict) -> dict:
+    """Convert a db.py project dict for JSON export.
+
+    - Parses JSON string fields (evidence, statusHistory, etc.) into real lists.
+    - Adds value_confirmed: bool field.
+    - Returns only the fields the frontend needs.
+    """
+    parsed_value = _parse_value(proj_dict.get("value"))
+    value_confirmed = parsed_value is not None
+
+    return {
+        "name": proj_dict.get("name", ""),
+        "province": proj_dict.get("province", ""),
+        "cma": proj_dict.get("cma", ""),
+        "sector": proj_dict.get("sector", ""),
+        "naics_code": proj_dict.get("naics_code", ""),
+        "naics_name": proj_dict.get("naics_name", ""),
+        "value": proj_dict.get("value", "Not disclosed"),
+        "value_confirmed": value_confirmed,
+        "status": proj_dict.get("status", ""),
+        "confidence": proj_dict.get("confidence", 0.0),
+        "project_type": proj_dict.get("project_type", ""),
+        "is_brownfield": bool(proj_dict.get("is_brownfield", False)),
+        "proponent": proj_dict.get("proponent", ""),
+        "description": proj_dict.get("description", ""),
+        "completionDate": proj_dict.get("completionDate", ""),
+        "firstTracked": proj_dict.get("firstTracked", ""),
+        "lastUpdated": proj_dict.get("lastUpdated", ""),
+        "lastSeen": proj_dict.get("lastSeen", ""),
+        "evidence": _safe_json_loads(proj_dict.get("evidence"), []),
+        "statusHistory": _safe_json_loads(proj_dict.get("statusHistory"), []),
+        "discovery_source": proj_dict.get("discovery_source", ""),
+        "evidence_count": proj_dict.get("evidence_count", 0),
+        "has_government_source": bool(proj_dict.get("has_government_source", False)),
+        "tags": _safe_json_loads(proj_dict.get("tags"), []),
+        "sources": _safe_json_loads(proj_dict.get("sources"), []),
+        "discovery_sources": _safe_json_loads(proj_dict.get("discovery_sources"), []),
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# EXPORT FUNCTIONS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def export_province_projects(conn, province_name: str, threshold_val: int, output_dir: str) -> str:
+    """Export projects for a single province, filtered by GDP threshold.
+
+    Inclusion rules:
+    - value is None (Not disclosed / unparseable) → include with value_confirmed=false
+    - value >= threshold_val → include with value_confirmed=true
+    - value < threshold_val → EXCLUDE
+
+    Returns the path of the written file.
+    """
+    from db import get_projects
+
+    raw_projects = get_projects(conn, province=province_name)
+    included = []
+
+    for raw in raw_projects:
+        # sqlite3.Row → plain dict
+        if hasattr(raw, "keys"):
+            proj = dict(raw)
+        else:
+            proj = raw
+
+        parsed_value = _parse_value(proj.get("value"))
+
+        # Exclusion rule: known value below threshold
+        if parsed_value is not None and parsed_value < threshold_val:
+            continue
+
+        shaped = _project_for_export(proj)
+        included.append(shaped)
+
+    slug = province_name.lower().replace(" ", "_")
+    out_path = os.path.join(output_dir, f"projects_{slug}.json")
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        # Compact JSON for province files (can be large)
+        json.dump(included, f, ensure_ascii=False, separators=(",", ":"))
+
+    return out_path
+
+
+def export_briefings(conn, output_dir: str) -> tuple[str, str]:
+    """Export briefing_latest.json and briefing_archive.json."""
+    from db import get_briefing_archive, get_latest_briefing
+
+    # Latest briefing — full payload
+    latest = get_latest_briefing(conn)
+    latest_path = os.path.join(output_dir, "briefing_latest.json")
+    with open(latest_path, "w", encoding="utf-8") as f:
+        json.dump(latest, f, ensure_ascii=False, indent=2)
+
+    # Archive — metadata only (no full sections to keep file small)
+    archive_raw = get_briefing_archive(conn, limit=52)
+    archive = []
+    for entry in archive_raw:
+        if hasattr(entry, "keys"):
+            entry = dict(entry)
+        archive.append(
+            {
+                "week_of": entry.get("week_of", ""),
+                "headline": entry.get("headline", ""),
+                "word_count": entry.get("word_count", 0),
+                "generated_at": entry.get("generated_at", ""),
+            }
+        )
+
+    archive_path = os.path.join(output_dir, "briefing_archive.json")
+    with open(archive_path, "w", encoding="utf-8") as f:
+        json.dump(archive, f, ensure_ascii=False, indent=2)
+
+    return latest_path, archive_path
+
+
+def export_indicators(conn, output_dir: str) -> str:
+    """Export indicators.json from get_latest_indicators plus statcan_latest."""
+    from db import get_dashboard_state, get_latest_indicators
+
+    indicators = get_latest_indicators(conn)
+    # Convert sqlite3.Row objects to plain dicts
+    indicators_list = []
+    for ind in indicators:
+        if hasattr(ind, "keys"):
+            row = dict(ind)
+            # Parse metadata JSON string if present
+            if "metadata" in row and isinstance(row["metadata"], str):
+                row["metadata"] = _safe_json_loads(row["metadata"], {})
+            indicators_list.append(row)
+        else:
+            indicators_list.append(ind)
+
+    # Also include statcan_latest from dashboard_state
+    statcan_latest = get_dashboard_state(conn, "statcan_latest")
+
+    output = {
+        "indicators": indicators_list,
+        "statcan_latest": statcan_latest,
+    }
+
+    out_path = os.path.join(output_dir, "indicators.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+
+    return out_path
+
+
+def export_trends(conn, output_dir: str) -> str:
+    """Export trends.json from get_trend_snapshots."""
+    from db import get_trend_snapshots
+
+    snapshots_raw = get_trend_snapshots(conn, limit=12)
+    snapshots = []
+    for snap in snapshots_raw:
+        if hasattr(snap, "keys"):
+            row = dict(snap)
+            # snapshot field is stored as JSON string
+            if "snapshot" in row and isinstance(row["snapshot"], str):
+                row["snapshot"] = _safe_json_loads(row["snapshot"], {})
+            snapshots.append(row)
+        else:
+            snapshots.append(snap)
+
+    out_path = os.path.join(output_dir, "trends.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(snapshots, f, ensure_ascii=False, indent=2)
+
+    return out_path
+
+
+def export_events(conn, output_dir: str) -> str:
+    """Export events.json from get_upcoming_events (30-day window)."""
+    from event_calendar import get_upcoming_events
+
+    events = get_upcoming_events(conn=conn, days_ahead=30)
+
+    out_path = os.path.join(output_dir, "events.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(events, f, ensure_ascii=False, indent=2)
+
+    return out_path
+
+
+def export_microscope(conn, output_dir: str) -> str:
+    """Export microscope.json from get_dashboard_state microscope_history."""
+    from db import get_dashboard_state
+
+    history = get_dashboard_state(conn, "microscope_history")
+
+    out_path = os.path.join(output_dir, "microscope.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+
+    return out_path
+
+
+def export_timeseries(conn, output_dir: str) -> str:
+    """Export timeseries.json as a single bundled object keyed by series_name."""
+    from db import get_timeseries
+
+    bundle = {}
+    for series_name in _TIMESERIES_NAMES:
+        rows = get_timeseries(conn, series_name, limit=52)
+        points = []
+        for row in rows:
+            if hasattr(row, "keys"):
+                points.append(dict(row))
+            else:
+                points.append(row)
+        if points:
+            bundle[series_name] = points
+
+    out_path = os.path.join(output_dir, "timeseries.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        # Compact for potentially large commodity data
+        json.dump(bundle, f, ensure_ascii=False, separators=(",", ":"))
+
+    return out_path
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MAIN ENTRY POINT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def export_all(conn=None, output_dir: str = "docs/data") -> dict:
+    """Export all dashboard data to static JSON files.
+
+    Args:
+        conn: sqlite3.Connection from db.py. If None, creates one via get_db().
+        output_dir: Directory to write JSON files. Created if it does not exist.
+
+    Returns:
+        dict with keys: file_count, output_dir, files_written
+    """
+    from db import get_db
+    from pipeline_config import PROVINCES
+
+    _own_conn = False
+    if conn is None:
+        conn = get_db()
+        _own_conn = True
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    files_written = []
+
+    # Province files
+    for prov in PROVINCES:
+        path = export_province_projects(
+            conn,
+            prov["name"],
+            prov["threshold_val"],
+            output_dir,
+        )
+        files_written.append(os.path.basename(path))
+
+    # Briefings
+    latest_path, archive_path = export_briefings(conn, output_dir)
+    files_written.extend([
+        os.path.basename(latest_path),
+        os.path.basename(archive_path),
+    ])
+
+    # Indicators
+    path = export_indicators(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Trends
+    path = export_trends(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Events
+    path = export_events(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Microscope
+    path = export_microscope(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Timeseries
+    path = export_timeseries(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Manifest
+    manifest = {
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+        "province_count": len(PROVINCES),
+        "file_count": len(files_written),
+        "file_list": sorted(files_written),
+    }
+    manifest_path = os.path.join(output_dir, "manifest.json")
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
+    files_written.append("manifest.json")
+
+    print(f"[EXPORT] Wrote {len(files_written)} files to {output_dir}/")
+
+    if _own_conn:
+        conn.close()
+
+    return {
+        "file_count": len(files_written),
+        "output_dir": output_dir,
+        "files_written": files_written,
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# STANDALONE VALIDATION (run after export_all in __main__)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _validate_output(output_dir: str) -> bool:
+    """Load each JSON file and print a summary line per file."""
+    json_files = sorted(glob.glob(os.path.join(output_dir, "*.json")))
+    if not json_files:
+        print(f"[VALIDATE] No JSON files found in {output_dir}/")
+        return False
+
+    all_ok = True
+    print(f"\n[VALIDATE] Checking {len(json_files)} files in {output_dir}/")
+    print(f"{'File':<45} {'Size (KB)':>10} {'Entries':>10}")
+    print("-" * 70)
+
+    for fpath in json_files:
+        fname = os.path.basename(fpath)
+        size_kb = os.path.getsize(fpath) / 1024
+        try:
+            with open(fpath, encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, list):
+                entry_count = len(data)
+            elif isinstance(data, dict):
+                entry_count = len(data)
+            else:
+                entry_count = 1
+            print(f"{fname:<45} {size_kb:>9.1f}K {entry_count:>10}")
+        except json.JSONDecodeError as e:
+            print(f"{fname:<45} INVALID JSON: {e}")
+            all_ok = False
+
+    print("-" * 70)
+    status = "PASSED" if all_ok else "FAILED"
+    print(f"[VALIDATE] {status} — all files valid JSON\n")
+    return all_ok
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CLI
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    )
+
+    parser = argparse.ArgumentParser(
+        description="Export CAN-MACRO dashboard data to static JSON files."
+    )
+    parser.add_argument(
+        "--out",
+        default="docs/data",
+        help="Output directory (default: docs/data)",
+    )
+    parser.add_argument(
+        "--db",
+        default=None,
+        help="Path to SQLite database (default: dashboard.db or DB_PATH env var)",
+    )
+    args = parser.parse_args()
+
+    from db import get_db
+
+    db_conn = get_db(args.db)
+    result = export_all(conn=db_conn, output_dir=args.out)
+    _validate_output(args.out)
+    db_conn.close()
+
+    sys.exit(0)
