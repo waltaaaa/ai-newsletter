@@ -184,7 +184,10 @@ Plans:
   3. A GitHub Actions workflow run appears every midnight ET completing the daily indicator refresh
   4. API keys (ANTHROPIC, TAVILY, GEMINI) are stored as GitHub repository secrets and never appear in any committed file
   5. All Firebase Cloud Functions, firebase.json, and Firestore rule files are archived and removed from the active codebase
-**Plans**: TBD
+**Plans:** 2/2 plans complete
+Plans:
+- [ ] 16-01-PLAN.md — Create GitHub Actions workflows, deploy script, archive Firebase configs
+- [ ] 16-02-PLAN.md — Enable GitHub Pages and verify deployment
 
 #### Phase 17: Missing Project Form
 **Goal**: Users can submit missing projects and corrections via Google Forms — no Firestore dependency for user submissions, and the pipeline reads those submissions automatically
@@ -194,7 +197,10 @@ Plans:
   1. Clicking the "Missing Project" button on the dashboard opens the Google Form in a new tab and the submission reaches the connected Google Sheet
   2. Running the pipeline after a form submission picks up entries from the Google Sheet and creates or updates the corresponding project in SQLite
   3. Clicking the "Project Correction" form link opens the correct Google Form and the submission routes to the pipeline's Google Sheet reader
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 17-01-PLAN.md — Create Google Sheets reader module and integrate into pipeline
+- [ ] 17-02-PLAN.md — Replace in-page forms with Google Form links in frontend
 
 #### Phase 18: Cleanup
 **Goal**: The repository contains no dead code, no .bak files, no Firebase references in documentation or imports — the codebase reflects exactly what runs in production
@@ -217,7 +223,7 @@ Plans:
 | 14. Static JSON Export | 2/2 | Complete    | 2026-03-08 |
 | 15. Frontend Rewrite | 2/2 | Complete    | 2026-03-08 |
 | 16. GitHub Pages + Actions | 2/2 | Complete    | 2026-03-08 |
-| 17. Missing Project Form | 0/? | Not started | — |
+| 17. Missing Project Form | 0/2 | Planned     | — |
 | 18. Cleanup | 0/? | Not started | — |
 
 ### Requirement Coverage (v2.0)
@@ -264,4 +270,4 @@ Plans:
 
 *Roadmap last updated: 2026-03-08*
 *Current milestone: v2.0*
-*Next: `/gsd:execute-phase 16` to begin GitHub Pages + Actions deployment*
+*Next: `/gsd:execute-phase 17` to begin Missing Project Form implementation*
