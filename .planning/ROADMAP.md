@@ -154,7 +154,10 @@ Plans:
   2. Province JSON files contain only projects meeting that province's GDP threshold, plus unconfirmed (no-value) projects labeled as such
   3. Export runs automatically as the final step of the weekly Monday pipeline without manual intervention
   4. All exported JSON files are valid (parseable by JSON.parse with no errors) and contain non-empty data after a full pipeline run
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 14-01-PLAN.md — Create export_dashboard.py with all export functions and validation
+- [ ] 14-02-PLAN.md — Integrate export as final pipeline step in update_dashboard.py
 
 #### Phase 15: Frontend Rewrite
 **Goal**: The dashboard loads entirely from static JSON files — no Firebase SDK, no API key in the browser, all existing UI features intact
@@ -208,7 +211,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 13. SQLite Migration | 5/5 | Complete    | 2026-03-08 |
-| 14. Static JSON Export | 0/? | Not started | — |
+| 14. Static JSON Export | 0/2 | Not started | — |
 | 15. Frontend Rewrite | 0/? | Not started | — |
 | 16. GitHub Pages + Actions | 0/? | Not started | — |
 | 17. Missing Project Form | 0/? | Not started | — |
@@ -256,6 +259,6 @@ Plans:
 
 ---
 
-*Roadmap last updated: 2026-03-07*
+*Roadmap last updated: 2026-03-08*
 *Current milestone: v2.0*
-*Next: `/gsd:execute-phase 13` to begin SQLite Migration*
+*Next: `/gsd:execute-phase 14` to begin Static JSON Export*
