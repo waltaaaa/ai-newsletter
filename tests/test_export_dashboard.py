@@ -210,5 +210,61 @@ class TestExportAll(unittest.TestCase):
         self.assertGreater(len(manifest["file_list"]), 0, "file_list must be non-empty")
 
 
+class TestPipelineIntegration(unittest.TestCase):
+    """Tests 8–11: verify update_dashboard.py pipeline integration (EXP-05)."""
+
+    UPDATE_DASHBOARD_PATH = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "update_dashboard.py",
+    )
+
+    def _read_source(self):
+        with open(self.UPDATE_DASHBOARD_PATH, encoding="utf-8") as f:
+            return f.read()
+
+    # Test 8: import statement present
+    def test_export_all_import_present(self):
+        source = self._read_source()
+        self.assertIn(
+            "from export_dashboard import export_all",
+            source,
+            "update_dashboard.py must import export_all from export_dashboard",
+        )
+
+    # Test 9: conn parameter passed
+    def test_export_all_called_with_conn(self):
+        source = self._read_source()
+        self.assertIn(
+            "export_all(conn=conn)",
+            source,
+            "update_dashboard.py must call export_all(conn=conn)",
+        )
+
+    # Test 10: step logging present
+    def test_step_9_logging_present(self):
+        source = self._read_source()
+        self.assertIn(
+            "step_9_json_export",
+            source,
+            "update_dashboard.py must log 'step_9_json_export' step",
+        )
+
+    # Test 11: export_all handles empty database without crashing
+    def test_export_all_empty_db(self):
+        from export_dashboard import export_all
+        import tempfile, shutil
+        conn = init_db(":memory:")
+        tmpdir = tempfile.mkdtemp()
+        try:
+            result = export_all(conn=conn, output_dir=tmpdir)
+            self.assertIn("file_count", result, "result must have file_count key")
+            self.assertIn("output_dir", result, "result must have output_dir key")
+            self.assertIsInstance(result["file_count"], int)
+            self.assertGreater(result["file_count"], 0, "should export at least one file (manifest)")
+        finally:
+            conn.close()
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+
 if __name__ == "__main__":
     unittest.main()
