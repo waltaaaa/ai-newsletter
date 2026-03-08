@@ -169,7 +169,7 @@ Plans:
   3. All existing UI features work: project cards, sector filter, Chart.js indicator charts, weekly briefing display, V-code search, and briefing download buttons
   4. No Firebase API key, firebase_admin credential, or google.cloud reference appears anywhere in the frontend HTML or JS source
   5. A loading spinner or indicator is visible while province JSON files are being fetched
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 Plans:
 - [ ] 15-01-PLAN.md — Extend export with projects_all.json + pipeline_status.json, rewrite app.js data layer
 - [ ] 15-02-PLAN.md — Add loading/error UX, disable submissions, verify all features
@@ -215,7 +215,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 13. SQLite Migration | 5/5 | Complete    | 2026-03-08 |
 | 14. Static JSON Export | 2/2 | Complete    | 2026-03-08 |
-| 15. Frontend Rewrite | 0/2 | Not started | — |
+| 15. Frontend Rewrite | 1/2 | In Progress|  |
 | 16. GitHub Pages + Actions | 0/? | Not started | — |
 | 17. Missing Project Form | 0/? | Not started | — |
 | 18. Cleanup | 0/? | Not started | — |

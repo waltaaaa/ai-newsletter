@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
-stopped_at: Phase 15 context gathered
-last_updated: "2026-03-08T02:53:59.145Z"
+stopped_at: Completed 15-01-PLAN.md
+last_updated: "2026-03-08T03:16:07.841Z"
 last_activity: "2026-03-07 — Completed 13-04: all pipeline modules migrated to SQLite"
 progress:
   total_phases: 12
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 9
+  completed_plans: 8
   percent: 27
 ---
 
@@ -56,6 +56,7 @@ Progress: [███░░░░░░░] 27%
 | Phase 13-sqlite-migration P05 | 11 | 3 tasks | 16 files |
 | Phase 14-static-json-export P01 | 3 | 2 tasks | 23 files |
 | Phase 14-static-json-export P02 | 8 | 2 tasks | 2 files |
+| Phase 15-frontend-rewrite P01 | 45 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,9 @@ Progress: [███░░░░░░░] 27%
 - [Phase 14-static-json-export]: Projects with unparseable or missing values included with value_confirmed=false
 - [Phase 14-static-json-export]: Export step placed after Tavily usage logging and before run_log.finalize so conn is still valid
 - [Phase 14-static-json-export]: Daily indicators-only mode also runs export so GitHub Pages site stays fresh after every daily run
+- [Phase 15-frontend-rewrite]: fetchJSON() caches responses in _cache — avoids re-fetching same file for multiple render functions
+- [Phase 15-frontend-rewrite]: policy.json and commodities.json: try/catch fetch with silent hide — sections disappear gracefully if files absent
+- [Phase 15-frontend-rewrite]: submitMissedProject/submitProjectCorrection: replaced Firestore writes with operator-contact message in static mode
 
 ### Pending Todos
 
@@ -102,6 +106,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:53:59.138Z
-Stopped at: Phase 15 context gathered
+Last session: 2026-03-08T03:16:07.836Z
+Stopped at: Completed 15-01-PLAN.md
 Resume at: `/gsd:execute-phase 13` — run Plan 05 (end-to-end validation)
