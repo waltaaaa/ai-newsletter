@@ -119,7 +119,7 @@ Recommended sequence: 7 → 8 → 9 (parallel with 8) → 10 (parallel with 8/9)
 ### Phases
 
 - [x] **Phase 13: SQLite Migration** — Replace all Firestore access with a single db.py SQLite interface across the entire codebase (completed 2026-03-08)
-- [ ] **Phase 14: Static JSON Export** — Build export_dashboard.py to generate all static JSON files consumed by the frontend
+- [x] **Phase 14: Static JSON Export** — Build export_dashboard.py to generate all static JSON files consumed by the frontend (completed 2026-03-08)
 - [ ] **Phase 15: Frontend Rewrite** — Replace Firebase SDK with fetch() to static JSON while preserving all existing UI features
 - [ ] **Phase 16: GitHub Pages + Actions** — Deploy dashboard to GitHub Pages and automate the pipeline via GitHub Actions
 - [ ] **Phase 17: Missing Project Form** — Replace Firestore-based user submissions with Google Form + Sheet integration
@@ -154,7 +154,7 @@ Plans:
   2. Province JSON files contain only projects meeting that province's GDP threshold, plus unconfirmed (no-value) projects labeled as such
   3. Export runs automatically as the final step of the weekly Monday pipeline without manual intervention
   4. All exported JSON files are valid (parseable by JSON.parse with no errors) and contain non-empty data after a full pipeline run
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 14-01-PLAN.md — Create export_dashboard.py with all export functions and validation
 - [ ] 14-02-PLAN.md — Integrate export as final pipeline step in update_dashboard.py
@@ -211,7 +211,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 13. SQLite Migration | 5/5 | Complete    | 2026-03-08 |
-| 14. Static JSON Export | 1/2 | In Progress|  |
+| 14. Static JSON Export | 2/2 | Complete   | 2026-03-08 |
 | 15. Frontend Rewrite | 0/? | Not started | — |
 | 16. GitHub Pages + Actions | 0/? | Not started | — |
 | 17. Missing Project Form | 0/? | Not started | — |

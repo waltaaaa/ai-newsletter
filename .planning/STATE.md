@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
-stopped_at: Completed 14-static-json-export-01-PLAN.md
-last_updated: "2026-03-08T02:41:34.735Z"
+stopped_at: Completed 14-static-json-export-02-PLAN.md
+last_updated: "2026-03-08T02:45:42.735Z"
 last_activity: "2026-03-07 — Completed 13-04: all pipeline modules migrated to SQLite"
 progress:
   total_phases: 12
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 7
-  completed_plans: 6
+  completed_plans: 7
   percent: 27
 ---
 
@@ -55,6 +55,7 @@ Progress: [███░░░░░░░] 27%
 | Phase 13-sqlite-migration P04 | 180 | 3 tasks | 22 files |
 | Phase 13-sqlite-migration P05 | 11 | 3 tasks | 16 files |
 | Phase 14-static-json-export P01 | 3 | 2 tasks | 23 files |
+| Phase 14-static-json-export P02 | 8 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,8 @@ Progress: [███░░░░░░░] 27%
 - [Phase 14-static-json-export]: export_all uses init_db() not get_db() to ensure schema exists on empty databases
 - [Phase 14-static-json-export]: Province files use compact JSON; briefing/manifest use indent=2 for readability
 - [Phase 14-static-json-export]: Projects with unparseable or missing values included with value_confirmed=false
+- [Phase 14-static-json-export]: Export step placed after Tavily usage logging and before run_log.finalize so conn is still valid
+- [Phase 14-static-json-export]: Daily indicators-only mode also runs export so GitHub Pages site stays fresh after every daily run
 
 ### Pending Todos
 
@@ -99,6 +102,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:41:34.731Z
-Stopped at: Completed 14-static-json-export-01-PLAN.md
+Last session: 2026-03-08T02:45:42.730Z
+Stopped at: Completed 14-static-json-export-02-PLAN.md
 Resume at: `/gsd:execute-phase 13` — run Plan 05 (end-to-end validation)

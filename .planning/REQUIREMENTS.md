@@ -26,7 +26,7 @@ Requirements for milestone v2.0: Infrastructure Overhaul — SQLite, GitHub Page
 - [x] **EXP-02**: Per-province project files (13 provinces) respect GDP thresholds
 - [x] **EXP-03**: No-value projects included as "unconfirmed" in exports
 - [x] **EXP-04**: Latest briefing, briefing archive, indicators, trends, events, microscope history all exported
-- [ ] **EXP-05**: Export runs as final step of weekly pipeline automatically
+- [x] **EXP-05**: Export runs as final step of weekly pipeline automatically
 
 ### Frontend (FE)
 
@@ -125,7 +125,7 @@ All 12 requirements verified complete on 2026-03-07.
 | EXP-02 | Phase 14 | Complete |
 | EXP-03 | Phase 14 | Complete |
 | EXP-04 | Phase 14 | Complete |
-| EXP-05 | Phase 14 | Pending |
+| EXP-05 | Phase 14 | Complete |
 | FE-01 | Phase 15 | Pending |
 | FE-02 | Phase 15 | Pending |
 | FE-03 | Phase 15 | Pending |
