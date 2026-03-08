@@ -216,7 +216,7 @@ Plans:
 | 13. SQLite Migration | 5/5 | Complete    | 2026-03-08 |
 | 14. Static JSON Export | 2/2 | Complete    | 2026-03-08 |
 | 15. Frontend Rewrite | 2/2 | Complete    | 2026-03-08 |
-| 16. GitHub Pages + Actions | 2/2 | Complete   | 2026-03-08 |
+| 16. GitHub Pages + Actions | 2/2 | Complete    | 2026-03-08 |
 | 17. Missing Project Form | 0/? | Not started | — |
 | 18. Cleanup | 0/? | Not started | — |
 

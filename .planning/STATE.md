@@ -4,7 +4,7 @@ milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
 stopped_at: Completed 16-02-PLAN.md
-last_updated: "2026-03-08T15:36:01.572Z"
+last_updated: "2026-03-08T15:50:40.742Z"
 last_activity: "2026-03-08 — Completed 15-02: loading/error UX, disabled submissions, human verification passed"
 progress:
   total_phases: 12
