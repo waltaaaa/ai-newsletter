@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
-stopped_at: Phase 14 context gathered
-last_updated: "2026-03-08T02:23:23.661Z"
+stopped_at: Completed 14-static-json-export-01-PLAN.md
+last_updated: "2026-03-08T02:41:34.735Z"
 last_activity: "2026-03-07 — Completed 13-04: all pipeline modules migrated to SQLite"
 progress:
   total_phases: 12
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 7
+  completed_plans: 6
   percent: 27
 ---
 
@@ -54,6 +54,7 @@ Progress: [███░░░░░░░] 27%
 | Phase 13-sqlite-migration P03 | 169 | 2 tasks | 3 files |
 | Phase 13-sqlite-migration P04 | 180 | 3 tasks | 22 files |
 | Phase 13-sqlite-migration P05 | 11 | 3 tasks | 16 files |
+| Phase 14-static-json-export P01 | 3 | 2 tasks | 23 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,9 @@ Progress: [███░░░░░░░] 27%
 - [13-04]: JSON string serialization for SQLite array fields (evidence, statusHistory) — reads use json.loads(row["field"] or "[]"), writes use json.dumps(list)
 - [Phase 13-sqlite-migration]: All 15 backfill/seed/audit scripts migrated to db.py completing DB-07 requirement
 - [Phase 13-sqlite-migration]: firebase-admin removed from requirements.txt completing DB-08 requirement; SQLite is stdlib
+- [Phase 14-static-json-export]: export_all uses init_db() not get_db() to ensure schema exists on empty databases
+- [Phase 14-static-json-export]: Province files use compact JSON; briefing/manifest use indent=2 for readability
+- [Phase 14-static-json-export]: Projects with unparseable or missing values included with value_confirmed=false
 
 ### Pending Todos
 
@@ -95,6 +99,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T02:23:23.619Z
-Stopped at: Phase 14 context gathered
+Last session: 2026-03-08T02:41:34.731Z
+Stopped at: Completed 14-static-json-export-01-PLAN.md
 Resume at: `/gsd:execute-phase 13` — run Plan 05 (end-to-end validation)

@@ -22,10 +22,10 @@ Requirements for milestone v2.0: Infrastructure Overhaul — SQLite, GitHub Page
 
 ### Static Export (EXP)
 
-- [ ] **EXP-01**: export_dashboard.py generates all static JSON files from SQLite
-- [ ] **EXP-02**: Per-province project files (13 provinces) respect GDP thresholds
-- [ ] **EXP-03**: No-value projects included as "unconfirmed" in exports
-- [ ] **EXP-04**: Latest briefing, briefing archive, indicators, trends, events, microscope history all exported
+- [x] **EXP-01**: export_dashboard.py generates all static JSON files from SQLite
+- [x] **EXP-02**: Per-province project files (13 provinces) respect GDP thresholds
+- [x] **EXP-03**: No-value projects included as "unconfirmed" in exports
+- [x] **EXP-04**: Latest briefing, briefing archive, indicators, trends, events, microscope history all exported
 - [ ] **EXP-05**: Export runs as final step of weekly pipeline automatically
 
 ### Frontend (FE)
@@ -121,10 +121,10 @@ All 12 requirements verified complete on 2026-03-07.
 | DB-08 | Phase 13 | Complete |
 | DB-09 | Phase 13 | Complete |
 | DB-10 | Phase 13 | Complete |
-| EXP-01 | Phase 14 | Pending |
-| EXP-02 | Phase 14 | Pending |
-| EXP-03 | Phase 14 | Pending |
-| EXP-04 | Phase 14 | Pending |
+| EXP-01 | Phase 14 | Complete |
+| EXP-02 | Phase 14 | Complete |
+| EXP-03 | Phase 14 | Complete |
+| EXP-04 | Phase 14 | Complete |
 | EXP-05 | Phase 14 | Pending |
 | FE-01 | Phase 15 | Pending |
 | FE-02 | Phase 15 | Pending |
