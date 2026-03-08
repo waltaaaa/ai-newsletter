@@ -210,6 +210,124 @@ class TestExportAll(unittest.TestCase):
         self.assertGreater(len(manifest["file_list"]), 0, "file_list must be non-empty")
 
 
+class TestExportAllProjects(unittest.TestCase):
+    """Test export_all_projects creates file with all projects across provinces."""
+
+    def setUp(self):
+        self.conn = init_db(":memory:")
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        self.conn.close()
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _make_project(self, name, province):
+        return {
+            "name": name,
+            "province": province,
+            "cma": "",
+            "sector": "Construction",
+            "naics_code": "23",
+            "naics_name": "Construction",
+            "value": "$600M",
+            "status": "Proposed",
+            "confidence": 0.8,
+            "project_type": "greenfield",
+            "is_brownfield": False,
+            "proponent": "Test Corp",
+            "description": "Test project.",
+            "completionDate": "2028-12-31",
+            "firstTracked": "2026-01-01",
+            "lastUpdated": "2026-03-01",
+            "lastSeen": "2026-03-01",
+            "evidence": [{"url": "https://example.com/test", "title": "Test"}],
+            "statusHistory": [{"status": "Proposed", "date": "2026-01-01", "detail": "Filed."}],
+            "discovery_source": "rss_feed",
+            "source_url_quality": "direct",
+            "has_government_source": False,
+            "evidence_count": 1,
+            "tags": [],
+            "sources": [],
+            "discovery_sources": ["rss_feed"],
+            "anomalies": [],
+        }
+
+    def test_export_all_projects_creates_file(self):
+        """Insert 3 projects across 2 provinces, verify all 3 in projects_all.json."""
+        from export_dashboard import export_all_projects
+        upsert_project(self.conn, self._make_project("Project A", "Ontario"))
+        upsert_project(self.conn, self._make_project("Project B", "Alberta"))
+        upsert_project(self.conn, self._make_project("Project C", "Alberta"))
+
+        path = export_all_projects(self.conn, self.tmpdir)
+        self.assertTrue(os.path.exists(path), "projects_all.json not created")
+
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+
+        self.assertIsInstance(data, list)
+        names = [p["name"] for p in data]
+        self.assertIn("Project A", names)
+        self.assertIn("Project B", names)
+        self.assertIn("Project C", names)
+        self.assertEqual(len(data), 3, "Expected all 3 projects")
+
+
+class TestExportPipelineStatus(unittest.TestCase):
+    """Test export_pipeline_status creates pipeline_status.json with correct structure."""
+
+    def setUp(self):
+        self.conn = init_db(":memory:")
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        self.conn.close()
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def test_export_pipeline_status_creates_file(self):
+        """Insert a pipeline run row, call export_pipeline_status, verify file structure."""
+        from db import save_pipeline_run, save_dashboard_state
+        from export_dashboard import export_pipeline_status
+
+        # Insert a pipeline run
+        save_pipeline_run(self.conn, {
+            "type": "weekly",
+            "status": "success",
+            "started_at": "2026-03-07",
+            "completed_at": "2026-03-07",
+            "duration_seconds": 1800,
+            "steps_completed": ["step_1", "step_2"],
+            "errors": [],
+            "discovery": {"articles_found": 100, "projects_added": 5},
+            "api_usage": {
+                "claude_sonnet_input_tokens": 50000,
+                "claude_sonnet_output_tokens": 10000,
+            },
+        })
+
+        # Insert tavily credits dashboard state
+        save_dashboard_state(self.conn, "tavily_credits", {"used": 250, "month": "2026-03"})
+
+        path = export_pipeline_status(self.conn, self.tmpdir)
+        self.assertTrue(os.path.exists(path), "pipeline_status.json not created")
+
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+
+        self.assertIn("last_run", data, "must have last_run key")
+        self.assertIn("tavily", data, "must have tavily key")
+        self.assertIn("claude_tokens", data, "must have claude_tokens key")
+        self.assertIn("recent_runs", data, "must have recent_runs key")
+
+        self.assertEqual(data["last_run"]["status"], "success")
+        self.assertEqual(data["tavily"]["used"], 250)
+        self.assertEqual(data["tavily"]["month"], "2026-03")
+        self.assertEqual(data["claude_tokens"]["input"], 50000)
+        self.assertEqual(data["claude_tokens"]["output"], 10000)
+
+
 class TestPipelineIntegration(unittest.TestCase):
     """Tests 8–11: verify update_dashboard.py pipeline integration (EXP-05)."""
 

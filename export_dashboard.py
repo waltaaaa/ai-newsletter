@@ -374,6 +374,110 @@ def export_timeseries(conn, output_dir: str) -> str:
     return out_path
 
 
+def export_all_projects(conn, output_dir: str) -> str:
+    """Export projects_all.json — all projects across all provinces, no threshold filter.
+
+    Sorts by lastSeen desc, limits to 5000 rows (same as previous Firestore all-provinces query).
+    Each project is shaped identically to export_province_projects output.
+
+    Returns the path of the written file.
+    """
+    rows = conn.execute(
+        """
+        SELECT * FROM projects
+        ORDER BY lastSeen DESC
+        LIMIT 5000
+        """
+    ).fetchall()
+
+    included = []
+    for raw in rows:
+        if hasattr(raw, "keys"):
+            proj = dict(raw)
+        else:
+            proj = raw
+        shaped = _project_for_export(proj)
+        included.append(shaped)
+
+    out_path = os.path.join(output_dir, "projects_all.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        # Compact JSON for potentially large file
+        json.dump(included, f, ensure_ascii=False, separators=(",", ":"))
+
+    return out_path
+
+
+def export_pipeline_status(conn, output_dir: str) -> str:
+    """Export pipeline_status.json — latest run info, tavily credits, claude token aggregation.
+
+    Structure:
+    {
+      "last_run": { "started_at": "...", "status": "...", "duration_seconds": N,
+                    "discovery": {...}, "errors": [...] },
+      "tavily": { "used": N, "month": "..." },
+      "claude_tokens": { "input": N, "output": N },
+      "recent_runs": [...]
+    }
+
+    Returns the path of the written file.
+    """
+    from db import get_dashboard_state, get_pipeline_runs
+
+    # Most recent pipeline run
+    runs = get_pipeline_runs(conn, limit=4)
+
+    last_run = {}
+    if runs:
+        r = runs[0]
+        last_run = {
+            "started_at": r.get("started_at", ""),
+            "status": r.get("status", "unknown"),
+            "duration_seconds": r.get("duration_seconds", 0),
+            "discovery": r.get("discovery", {}),
+            "errors": r.get("errors", []),
+        }
+
+    # Aggregate Claude tokens from last 4 runs
+    claude_input = 0
+    claude_output = 0
+    for r in runs:
+        api = r.get("api_usage", {})
+        claude_input += api.get("claude_sonnet_input_tokens", 0)
+        claude_output += api.get("claude_sonnet_output_tokens", 0)
+
+    # Tavily credits from dashboard_state
+    tavily_data = get_dashboard_state(conn, "tavily_credits") or {}
+    if isinstance(tavily_data, dict):
+        tavily_used = tavily_data.get("used", 0)
+        tavily_month = tavily_data.get("month", "")
+    else:
+        tavily_used = 0
+        tavily_month = ""
+
+    # Recent runs summary (all 4, trimmed for size)
+    recent_runs = []
+    for r in runs:
+        recent_runs.append({
+            "started_at": r.get("started_at", ""),
+            "status": r.get("status", "unknown"),
+            "duration_seconds": r.get("duration_seconds", 0),
+            "discovery": r.get("discovery", {}),
+        })
+
+    output = {
+        "last_run": last_run,
+        "tavily": {"used": tavily_used, "month": tavily_month},
+        "claude_tokens": {"input": claude_input, "output": claude_output},
+        "recent_runs": recent_runs,
+    }
+
+    out_path = os.path.join(output_dir, "pipeline_status.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+
+    return out_path
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # MAIN ENTRY POINT
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -436,6 +540,14 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
 
     # Timeseries
     path = export_timeseries(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # All projects (combined, no threshold)
+    path = export_all_projects(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Pipeline status (run info + cost data)
+    path = export_pipeline_status(conn, output_dir)
     files_written.append(os.path.basename(path))
 
     # Manifest
