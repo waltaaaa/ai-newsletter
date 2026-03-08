@@ -121,7 +121,7 @@ Recommended sequence: 7 → 8 → 9 (parallel with 8) → 10 (parallel with 8/9)
 - [x] **Phase 13: SQLite Migration** — Replace all Firestore access with a single db.py SQLite interface across the entire codebase (completed 2026-03-08)
 - [x] **Phase 14: Static JSON Export** — Build export_dashboard.py to generate all static JSON files consumed by the frontend (completed 2026-03-08)
 - [x] **Phase 15: Frontend Rewrite** — Replace Firebase SDK with fetch() to static JSON while preserving all existing UI features (completed 2026-03-08)
-- [ ] **Phase 16: GitHub Pages + Actions** — Deploy dashboard to GitHub Pages and automate the pipeline via GitHub Actions
+- [x] **Phase 16: GitHub Pages + Actions** — Deploy dashboard to GitHub Pages and automate the pipeline via GitHub Actions (completed 2026-03-08)
 - [ ] **Phase 17: Missing Project Form** — Replace Firestore-based user submissions with Google Form + Sheet integration
 - [ ] **Phase 18: Cleanup** — Remove all .bak files, Firebase configs, dead imports, and documentation references
 
@@ -216,7 +216,7 @@ Plans:
 | 13. SQLite Migration | 5/5 | Complete    | 2026-03-08 |
 | 14. Static JSON Export | 2/2 | Complete    | 2026-03-08 |
 | 15. Frontend Rewrite | 2/2 | Complete    | 2026-03-08 |
-| 16. GitHub Pages + Actions | 1/2 | In Progress|  |
+| 16. GitHub Pages + Actions | 2/2 | Complete   | 2026-03-08 |
 | 17. Missing Project Form | 0/? | Not started | — |
 | 18. Cleanup | 0/? | Not started | — |
 

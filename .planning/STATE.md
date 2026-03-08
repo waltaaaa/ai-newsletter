@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
-stopped_at: Completed 16-01-PLAN.md
-last_updated: "2026-03-08T04:06:17.960Z"
+stopped_at: Completed 16-02-PLAN.md
+last_updated: "2026-03-08T15:36:01.572Z"
 last_activity: "2026-03-08 — Completed 15-02: loading/error UX, disabled submissions, human verification passed"
 progress:
   total_phases: 12
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 11
-  completed_plans: 10
+  completed_plans: 11
   percent: 30
 ---
 
@@ -59,6 +59,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 15-frontend-rewrite P01 | 45 | 2 tasks | 7 files |
 | Phase 15-frontend-rewrite P02 | 15 | 1 task | 1 file |
 | Phase 16-github-pages-actions P01 | 6 | 3 tasks | 14 files |
+| Phase 16-github-pages-actions P02 | 0 | 1 tasks | 0 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,7 @@ Progress: [███░░░░░░░] 30%
 - [Phase 16-github-pages-actions]: deploy_to_github.py uses shutil.copytree(dirs_exist_ok=True) for idempotent docs/ population without touching docs/data/
 - [Phase 16-github-pages-actions]: Both GitHub Actions workflows set GEMINI_SEARCH_ENABLED=false to prevent accidental grounded search charges
 - [Phase 16-github-pages-actions]: Firebase configs moved to archive/firebase/ — functions/ directory removed; Cloud Functions replaced by GitHub Actions free tier
+- [Phase 16-github-pages-actions]: GitHub Pages enabled on main branch /docs folder — serves static dashboard at https://waltaaaa.github.io/ai-newsletter/
 
 ### Pending Todos
 
@@ -111,6 +113,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T04:06:05.846Z
-Stopped at: Completed 16-01-PLAN.md
+Last session: 2026-03-08T15:36:01.561Z
+Stopped at: Completed 16-02-PLAN.md
 Resume at: `/gsd:execute-phase 16` — begin GitHub Pages and Actions deployment

@@ -40,7 +40,7 @@ Requirements for milestone v2.0: Infrastructure Overhaul — SQLite, GitHub Page
 ### Deployment (DEP)
 
 - [x] **DEP-01**: deploy_to_github.py copies public/ + data/ to docs/ directory
-- [ ] **DEP-02**: GitHub Pages serves the dashboard from docs/ on main branch
+- [x] **DEP-02**: GitHub Pages serves the dashboard from docs/ on main branch
 - [x] **DEP-03**: Weekly pipeline runs via GitHub Actions (Monday 5:30 AM ET)
 - [x] **DEP-04**: Daily indicator refresh runs via GitHub Actions (midnight ET)
 - [x] **DEP-05**: GitHub Actions workflows use secrets for API keys
@@ -133,7 +133,7 @@ All 12 requirements verified complete on 2026-03-07.
 | FE-05 | Phase 15 | Complete |
 | FE-06 | Phase 15 | Complete |
 | DEP-01 | Phase 16 | Complete |
-| DEP-02 | Phase 16 | Pending |
+| DEP-02 | Phase 16 | Complete |
 | DEP-03 | Phase 16 | Complete |
 | DEP-04 | Phase 16 | Complete |
 | DEP-05 | Phase 16 | Complete |
