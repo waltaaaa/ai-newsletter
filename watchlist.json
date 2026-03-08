@@ -1,0 +1,4416 @@
+{
+  "provincial_sources": [
+    {
+      "jurisdiction": "BC",
+      "entity_name": "BC Premier's Office",
+      "role": "Premier",
+      "current_holder": "David Eby",
+      "source_url": "https://news.gov.bc.ca/ministries/premier",
+      "rss_url": "https://news.gov.bc.ca/feed",
+      "priority": "1",
+      "notes": "NDP government"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_name": "BC Ministry of Finance",
+      "role": "Minister of Finance",
+      "current_holder": "Brenda Bailey",
+      "source_url": "https://news.gov.bc.ca/ministries/finance",
+      "rss_url": "https://news.gov.bc.ca/feed",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_name": "BC Ministry of Jobs, Economic Development and Innovation",
+      "role": "Minister of Jobs/Econ Dev",
+      "current_holder": "Brenda Bailey",
+      "source_url": "https://news.gov.bc.ca/ministries/jobs-economic-development-and-innovation",
+      "rss_url": "https://news.gov.bc.ca/feed",
+      "priority": "2",
+      "notes": "Dual role with Finance"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_name": "BC Gov News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://news.gov.bc.ca",
+      "rss_url": "https://news.gov.bc.ca/feed",
+      "priority": "2",
+      "notes": "Comprehensive provincial feed"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_name": "AB Premier's Office",
+      "role": "Premier",
+      "current_holder": "Danielle Smith",
+      "source_url": "https://www.alberta.ca/premier.aspx",
+      "rss_url": "https://www.alberta.ca/news.rss",
+      "priority": "1",
+      "notes": "UCP government"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_name": "AB Treasury Board and Finance",
+      "role": "President of Treasury Board and Minister of Finance",
+      "current_holder": "Nate Horner",
+      "source_url": "https://www.alberta.ca/treasury-board-and-finance",
+      "rss_url": "https://www.alberta.ca/news.rss",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_name": "AB Ministry of Jobs, Economy and Trade",
+      "role": "Minister of Jobs/Economy/Trade",
+      "current_holder": "Matt Jones",
+      "source_url": "https://www.alberta.ca/jobs-economy-and-trade",
+      "rss_url": "https://www.alberta.ca/news.rss",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_name": "Alberta News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://www.alberta.ca/news",
+      "rss_url": "https://www.alberta.ca/news.rss",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_name": "SK Premier's Office",
+      "role": "Premier",
+      "current_holder": "Scott Moe",
+      "source_url": "https://www.saskatchewan.ca/government/news-and-media",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_name": "SK Ministry of Finance",
+      "role": "Minister of Finance",
+      "current_holder": "Donna Harpauer",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/finance",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_name": "SK Ministry of Trade and Export Development",
+      "role": "Minister of Trade and Export Development",
+      "current_holder": "Jeremy Harrison",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/trade-and-export-development",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_name": "Saskatchewan News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://www.saskatchewan.ca/government/news-and-media",
+      "rss_url": "",
+      "priority": "2",
+      "notes": "Check for RSS availability"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_name": "MB Premier's Office",
+      "role": "Premier",
+      "current_holder": "Wab Kinew",
+      "source_url": "https://news.gov.mb.ca/news/index.html",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "NDP government"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_name": "MB Department of Finance",
+      "role": "Minister of Finance",
+      "current_holder": "Adrien Sala",
+      "source_url": "https://www.gov.mb.ca/finance/",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_name": "MB Department of Economic Development, Investment and Trade",
+      "role": "Minister of Economic Development",
+      "current_holder": "Jamie Moses",
+      "source_url": "https://www.gov.mb.ca/jec/",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_name": "Manitoba News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://news.gov.mb.ca/news/index.html",
+      "rss_url": "",
+      "priority": "2",
+      "notes": "Check for RSS availability"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_name": "ON Premier's Office",
+      "role": "Premier",
+      "current_holder": "Doug Ford",
+      "source_url": "https://news.ontario.ca/en/office/premier",
+      "rss_url": "https://news.ontario.ca/newsroom/en/rss",
+      "priority": "1",
+      "notes": "PC government"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_name": "ON Ministry of Finance",
+      "role": "Minister of Finance",
+      "current_holder": "Peter Bethlenfalvy",
+      "source_url": "https://news.ontario.ca/en/ministry/finance",
+      "rss_url": "https://news.ontario.ca/newsroom/en/rss",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_name": "ON Ministry of Economic Development, Job Creation and Trade",
+      "role": "Minister of Economic Development",
+      "current_holder": "Vic Fedeli",
+      "source_url": "https://news.ontario.ca/en/ministry/economic-development-job-creation-and-trade",
+      "rss_url": "https://news.ontario.ca/newsroom/en/rss",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_name": "Ontario Newsroom RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://news.ontario.ca",
+      "rss_url": "https://news.ontario.ca/newsroom/en/rss",
+      "priority": "2",
+      "notes": "Comprehensive feed"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_name": "QC Premier's Office",
+      "role": "Premier",
+      "current_holder": "Francois Legault",
+      "source_url": "https://www.quebec.ca/gouvernement/premier-ministre",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "CAQ government"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_name": "QC Ministere des Finances",
+      "role": "Minister of Finance",
+      "current_holder": "Eric Girard",
+      "source_url": "https://www.finances.gouv.qc.ca",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_name": "QC Ministere de l'Economie, de l'Innovation et de l'Energie",
+      "role": "Minister of Economy, Innovation and Energy",
+      "current_holder": "Pierre Fitzgibbon",
+      "source_url": "https://www.economie.gouv.qc.ca",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_name": "Quebec Nouvelles RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://www.quebec.ca/nouvelles",
+      "rss_url": "",
+      "priority": "2",
+      "notes": "Check for RSS/Atom feed"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_name": "NB Premier's Office",
+      "role": "Premier",
+      "current_holder": "Susan Holt",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/news.html",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "Liberal government (replaced Higgs 2024)"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_name": "NB Department of Finance and Treasury Board",
+      "role": "Minister of Finance",
+      "current_holder": "Ernie Steeves",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/finance.html",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "Verify current holder under Holt"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_name": "NB Department of Economic Development",
+      "role": "Minister of Economic Development",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/economic_development.html",
+      "rss_url": "",
+      "priority": "2",
+      "notes": "New cabinet under Holt"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_name": "GNB News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/news.html",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_name": "NS Premier's Office",
+      "role": "Premier",
+      "current_holder": "Tim Houston",
+      "source_url": "https://novascotia.ca/news/",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "PC government"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_name": "NS Department of Finance and Treasury Board",
+      "role": "Minister of Finance and Treasury Board",
+      "current_holder": "Allan MacMaster",
+      "source_url": "https://novascotia.ca/finance/",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_name": "NS Department of Economic Development",
+      "role": "Minister of Economic Development",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/business/",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_name": "Nova Scotia News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/news/",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_name": "PEI Premier's Office",
+      "role": "Premier",
+      "current_holder": "Dennis King",
+      "source_url": "https://www.princeedwardisland.ca/en/news",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "PC government; verify current holder"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_name": "PEI Department of Finance",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca/en/topic/finance",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_name": "PEI Department of Economic Growth, Tourism and Culture",
+      "role": "Minister of Econ Growth",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca/en/topic/economic-growth-tourism-and-culture",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_name": "PEI News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca/en/news",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_name": "NL Premier's Office",
+      "role": "Premier",
+      "current_holder": "Andrew Furey",
+      "source_url": "https://www.gov.nl.ca/releases/",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "Liberal government"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_name": "NL Department of Finance",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/fin/",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_name": "NL Department of Industry, Energy and Technology",
+      "role": "Minister of IET",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/iet/",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_name": "NL Releases RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/releases/",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_name": "YK Premier's Office",
+      "role": "Premier",
+      "current_holder": "Ranj Pillai",
+      "source_url": "https://yukon.ca/en/news",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "Liberal government"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_name": "YK Department of Finance",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://yukon.ca/en/department-finance",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_name": "YK Department of Economic Development",
+      "role": "Minister of Economic Development",
+      "current_holder": "",
+      "source_url": "https://yukon.ca/en/economic-development",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_name": "Yukon News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://yukon.ca/en/news",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_name": "NWT Premier's Office",
+      "role": "Premier",
+      "current_holder": "R.J. Simpson",
+      "source_url": "https://www.gov.nt.ca/en/newsroom",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "Consensus government"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_name": "NWT Department of Finance",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca/en/services?department=finance",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_name": "NWT Department of Industry, Tourism and Investment",
+      "role": "Minister of ITI",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca/en/services?department=industry-tourism-and-investment",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_name": "NWT News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca/en/newsroom",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_name": "NU Premier's Office",
+      "role": "Premier",
+      "current_holder": "P.J. Akeeagok",
+      "source_url": "https://www.gov.nu.ca/news",
+      "rss_url": "",
+      "priority": "1",
+      "notes": "Consensus government"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_name": "NU Department of Finance",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca/finance",
+      "rss_url": "",
+      "priority": "1",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_name": "NU Department of Economic Development and Transportation",
+      "role": "Minister of EDT",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca/economic-development-and-transportation",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_name": "Nunavut News RSS",
+      "role": "Government News",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca/news",
+      "rss_url": "",
+      "priority": "2",
+      "notes": ""
+    }
+  ],
+  "cma_list": [
+    {
+      "jurisdiction": "BC",
+      "cma_name": "Vancouver",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "BC",
+      "cma_name": "Victoria",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "cma_name": "Kelowna",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "BC",
+      "cma_name": "Abbotsford-Mission",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "BC",
+      "cma_name": "Nanaimo",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "AB",
+      "cma_name": "Calgary",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "AB",
+      "cma_name": "Edmonton",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "SK",
+      "cma_name": "Saskatoon",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "cma_name": "Regina",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "cma_name": "Winnipeg",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "Toronto",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "Ottawa-Gatineau",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "Hamilton",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "Kitchener-Cambridge-Waterloo",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "London",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "Windsor",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "St. Catharines-Niagara",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "Oshawa",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "Barrie",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "Guelph",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "ON",
+      "cma_name": "Brantford",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "QC",
+      "cma_name": "Montreal",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "QC",
+      "cma_name": "Quebec City",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "cma_name": "Sherbrooke",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "QC",
+      "cma_name": "Saguenay",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "QC",
+      "cma_name": "Trois-Rivieres",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "NB",
+      "cma_name": "Moncton",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "NB",
+      "cma_name": "Saint John",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "NS",
+      "cma_name": "Halifax",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "cma_name": "St. John's",
+      "priority": "2"
+    }
+  ],
+  "industry_sources": [
+    {
+      "industry": "NAICS 23/48-49",
+      "entity_name": "Transport Canada",
+      "role": "Minister of Transport",
+      "source_url": "https://tc.canada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 21/22",
+      "entity_name": "Natural Resources Canada (NRCan)",
+      "role": "Minister of Energy and Natural Resources",
+      "source_url": "https://natural-resources.canada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 31-33/51/54",
+      "entity_name": "Innovation, Science and Economic Development (ISED)",
+      "role": "Minister of Industry",
+      "source_url": "https://ised-isde.canada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 23/48-49",
+      "entity_name": "Infrastructure Canada",
+      "role": "Minister of Housing/Infrastructure",
+      "source_url": "https://infrastructure.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 91",
+      "entity_name": "Department of National Defence (DND)",
+      "role": "Minister of National Defence",
+      "source_url": "https://canada.ca/en/department-national-defence",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Public Services and Procurement Canada (PSPC)",
+      "role": "Minister of PSPC",
+      "source_url": "https://canada.ca/en/public-services-procurement",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 21/22/48-49",
+      "entity_name": "Canada Energy Regulator (CER)",
+      "role": "CEO",
+      "source_url": "https://cer-rec.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 11",
+      "entity_name": "Agriculture and Agri-Food Canada (AAFC)",
+      "role": "Minister of Agriculture",
+      "source_url": "https://agriculture.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 11",
+      "entity_name": "Fisheries and Oceans Canada (DFO)",
+      "role": "Minister of Fisheries/Oceans",
+      "source_url": "https://dfo-mpo.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 62",
+      "entity_name": "Health Canada",
+      "role": "Minister of Health",
+      "source_url": "https://canada.ca/en/health-canada",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 22/56",
+      "entity_name": "Environment and Climate Change Canada (ECCC)",
+      "role": "Minister of ECCC",
+      "source_url": "https://canada.ca/en/environment-climate-change",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 52",
+      "entity_name": "Department of Finance Canada",
+      "role": "Minister of Finance",
+      "source_url": "https://canada.ca/en/department-finance",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Crown-Indigenous Relations and Northern Affairs (CIRNAC)",
+      "role": "Minister of CIRNAC",
+      "source_url": "https://canada.ca/en/crown-indigenous-relations-northern-affairs",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Impact Assessment Agency of Canada (IAAC)",
+      "role": "President",
+      "source_url": "https://iaac-aeic.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 53",
+      "entity_name": "Canada Mortgage and Housing Corporation (CMHC)",
+      "role": "CEO",
+      "source_url": "https://cmhc-schl.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 52",
+      "entity_name": "Office of the Superintendent of Financial Institutions (OSFI)",
+      "role": "Superintendent",
+      "source_url": "https://osfi-bsif.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Statistics Canada (StatCan)",
+      "role": "Chief Statistician",
+      "source_url": "https://statcan.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 52",
+      "entity_name": "Bank of Canada (BoC)",
+      "role": "Governor",
+      "source_url": "https://bankofcanada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 51",
+      "entity_name": "Canadian Radio-television and Telecommunications Commission (CRTC)",
+      "role": "Chairperson",
+      "source_url": "https://crtc.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 48-49",
+      "entity_name": "Canadian Transportation Agency (CTA)",
+      "role": "Chairperson",
+      "source_url": "https://otc-cta.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Competition Bureau Canada",
+      "role": "Commissioner",
+      "source_url": "https://competition-bureau.canada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 54",
+      "entity_name": "National Research Council Canada (NRC)",
+      "role": "President",
+      "source_url": "https://nrc.canada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 61",
+      "entity_name": "Immigration, Refugees and Citizenship Canada (IRCC)",
+      "role": "Minister of Immigration",
+      "source_url": "https://canada.ca/en/immigration-refugees-citizenship",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 62",
+      "entity_name": "Public Health Agency of Canada (PHAC)",
+      "role": "President",
+      "source_url": "https://canada.ca/en/public-health",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 51/71",
+      "entity_name": "Canadian Heritage",
+      "role": "Minister of Canadian Heritage",
+      "source_url": "https://canada.ca/en/canadian-heritage",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 61",
+      "entity_name": "Employment and Social Development Canada (ESDC)",
+      "role": "Minister of ESDC",
+      "source_url": "https://canada.ca/en/employment-social-development",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 72",
+      "entity_name": "Destination Canada",
+      "role": "CEO",
+      "source_url": "https://destinationcanada.com",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 62",
+      "entity_name": "Canadian Institute for Health Information (CIHI)",
+      "role": "President/CEO",
+      "source_url": "https://cihi.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "SEDAR+",
+      "role": "Administrator",
+      "source_url": "https://sedarplus.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 21/22",
+      "entity_name": "Canadian Energy Information Portal",
+      "role": "Administrator",
+      "source_url": "https://energy-information.canada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Canada Gazette",
+      "role": "Editor",
+      "source_url": "https://gazette.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Open Government Portal",
+      "role": "Administrator",
+      "source_url": "https://open.canada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "BC Environmental Assessment Office (BC EAO)",
+      "role": "Executive Director",
+      "source_url": "https://www.projects.eao.gov.bc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Ontario Environment Ministry (EA Branch)",
+      "role": "Director",
+      "source_url": "https://www.ontario.ca/page/environmental-assessments",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Alberta Energy Regulator (AER)",
+      "role": "President/CEO",
+      "source_url": "https://www.aer.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Alberta Environmental Protection and Enhancement",
+      "role": "Deputy Minister",
+      "source_url": "https://www.alberta.ca/environment-and-protected-areas",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Bureau d'audiences publiques sur l'environnement (BAPE)",
+      "role": "President",
+      "source_url": "https://www.bape.gouv.qc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 21",
+      "entity_name": "Canada-Newfoundland Offshore Petroleum Board (C-NLOPB)",
+      "role": "CEO",
+      "source_url": "https://www.cnlopb.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 21",
+      "entity_name": "Canada-Nova Scotia Offshore Petroleum Board (CNSOPB)",
+      "role": "CEO",
+      "source_url": "https://www.cnsopb.ns.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Export Development Canada (EDC)",
+      "role": "President/CEO",
+      "source_url": "https://www.edc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Business Development Bank of Canada (BDC)",
+      "role": "President/CEO",
+      "source_url": "https://www.bdc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 52",
+      "entity_name": "Canada Deposit Insurance Corporation (CDIC)",
+      "role": "CEO",
+      "source_url": "https://www.cdic.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Canada Infrastructure Bank (CIB)",
+      "role": "CEO",
+      "source_url": "https://cib-bic.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 48-49",
+      "entity_name": "Canada Port Authorities (various)",
+      "role": "CEOs",
+      "source_url": "https://tc.canada.ca/en/marine-transportation/ports",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 21",
+      "entity_name": "National Energy Board Library (archived)",
+      "role": "Archivist",
+      "source_url": "https://apps.cer-rec.gc.ca/REGDOCS",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 48-49",
+      "entity_name": "VIA Rail Canada",
+      "role": "President/CEO",
+      "source_url": "https://www.viarail.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Invest in Canada",
+      "role": "CEO",
+      "source_url": "https://www.investcanada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 51",
+      "entity_name": "Communications Security Establishment (CSE)",
+      "role": "Chief",
+      "source_url": "https://www.cse-cst.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Treasury Board of Canada Secretariat (TBS)",
+      "role": "President",
+      "source_url": "https://www.canada.ca/en/treasury-board-secretariat",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 52",
+      "entity_name": "Financial Consumer Agency of Canada (FCAC)",
+      "role": "Commissioner",
+      "source_url": "https://www.canada.ca/en/financial-consumer-agency",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 52",
+      "entity_name": "Financial Transactions and Reports Analysis Centre (FINTRAC)",
+      "role": "Director",
+      "source_url": "https://www.fintrac-canafe.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 21",
+      "entity_name": "Saskatchewan Energy Regulator",
+      "role": "Executive Director",
+      "source_url": "https://www.saskatchewan.ca/business/agriculture-natural-resources-and-industry/oil-and-gas",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "All NAICS",
+      "entity_name": "Manitoba Clean Environment Commission",
+      "role": "Chairperson",
+      "source_url": "https://www.cecmanitoba.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 48-49",
+      "entity_name": "NAV CANADA",
+      "role": "President/CEO",
+      "source_url": "https://www.navcanada.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 48-49",
+      "entity_name": "Canadian Air Transport Security Authority (CATSA)",
+      "role": "President/CEO",
+      "source_url": "https://www.catsa-acsta.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "3"
+    },
+    {
+      "industry": "NAICS 22",
+      "entity_name": "Atomic Energy of Canada Limited (AECL)",
+      "role": "President/CEO",
+      "source_url": "https://www.aecl.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 22",
+      "entity_name": "Ontario Energy Board (OEB)",
+      "role": "CEO",
+      "source_url": "https://www.oeb.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 22",
+      "entity_name": "Alberta Utilities Commission (AUC)",
+      "role": "Chair",
+      "source_url": "https://www.auc.ab.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 22",
+      "entity_name": "Hydro-Quebec",
+      "role": "President/CEO",
+      "source_url": "https://www.hydroquebec.com",
+      "rss_url": "",
+      "naics": "",
+      "priority": "1"
+    },
+    {
+      "industry": "NAICS 22",
+      "entity_name": "BC Hydro",
+      "role": "President/CEO",
+      "source_url": "https://www.bchydro.com",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 22",
+      "entity_name": "Independent Electricity System Operator (IESO)",
+      "role": "President/CEO",
+      "source_url": "https://www.ieso.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 21",
+      "entity_name": "Canada-Nova Scotia Offshore Petroleum Board (CNSOPB)",
+      "role": "CEO",
+      "source_url": "https://www.cnsopb.ns.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 22",
+      "entity_name": "Hydro-Quebec (regulatory context)",
+      "role": "VP Regulatory",
+      "source_url": "https://www.hydroquebec.com",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    },
+    {
+      "industry": "NAICS 48-49",
+      "entity_name": "Canadian Nuclear Safety Commission (CNSC)",
+      "role": "President",
+      "source_url": "https://www.nuclearsafety.gc.ca",
+      "rss_url": "",
+      "naics": "",
+      "priority": "2"
+    }
+  ],
+  "public_figures_canada": [
+    {
+      "name": "Mark Carney",
+      "role": "Prime Minister",
+      "entity_name": "Mark Carney",
+      "current_holder": "",
+      "priority": "1",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Head of government, sets national economic agenda, trade policy with US"
+    },
+    {
+      "name": "Francois-Philippe Champagne",
+      "role": "Minister of Finance",
+      "entity_name": "Francois-Philippe Champagne",
+      "current_holder": "",
+      "priority": "1",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Federal budget, tax policy, fiscal framework, debt management"
+    },
+    {
+      "name": "Dominic LeBlanc",
+      "role": "Minister of Public Safety, Democratic Institutions and Intergovernmental Affairs",
+      "entity_name": "Dominic LeBlanc",
+      "current_holder": "",
+      "priority": "1",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Federal-provincial relations, interprovincial trade, public safety"
+    },
+    {
+      "name": "Melanie Joly",
+      "role": "Minister of Industry",
+      "entity_name": "Melanie Joly",
+      "current_holder": "",
+      "priority": "1",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Innovation policy, competition, SME support, investment attraction"
+    },
+    {
+      "name": "Tim Hodgson",
+      "role": "Minister of Energy and Natural Resources",
+      "entity_name": "Tim Hodgson",
+      "current_holder": "",
+      "priority": "1",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Energy transition, pipelines, mining, LNG exports"
+    },
+    {
+      "name": "Steven MacKinnon",
+      "role": "Minister of Transport",
+      "entity_name": "Steven MacKinnon",
+      "current_holder": "",
+      "priority": "1",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Transportation infrastructure, ports, rail safety, aviation"
+    },
+    {
+      "name": "Gregor Robertson",
+      "role": "Minister of Housing, Infrastructure and Communities",
+      "entity_name": "Gregor Robertson",
+      "current_holder": "",
+      "priority": "1",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Housing starts, infrastructure bank, transit investment"
+    },
+    {
+      "name": "Maninder Sidhu",
+      "role": "Minister of International Trade",
+      "entity_name": "Maninder Sidhu",
+      "current_holder": "",
+      "priority": "1",
+      "jurisdiction": "Canada",
+      "why_it_matters": "CUSMA, trade diversification, export promotion, tariff response"
+    },
+    {
+      "name": "Tiff Macklem",
+      "role": "Governor of the Bank of Canada",
+      "entity_name": "Tiff Macklem",
+      "current_holder": "",
+      "priority": "1",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Interest rates, inflation targeting, financial stability, QT/QE"
+    },
+    {
+      "name": "Andre Loranger",
+      "role": "Chief Statistician of Canada",
+      "entity_name": "Andre Loranger",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "GDP, CPI, LFS data quality, census, national accounts"
+    },
+    {
+      "name": "Melanie Debassige",
+      "role": "CEO Canada Energy Regulator",
+      "entity_name": "Melanie Debassige",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Pipeline/transmission approvals, energy exports, Indigenous consultation"
+    },
+    {
+      "name": "Terence Hubbard",
+      "role": "President IAAC",
+      "entity_name": "Terence Hubbard",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Major project environmental/impact assessments"
+    },
+    {
+      "name": "Olivia Chow",
+      "role": "Mayor of Toronto",
+      "entity_name": "Olivia Chow",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Canada's largest city, housing, transit, immigration settlement"
+    },
+    {
+      "name": "Valerie Plante",
+      "role": "Mayor of Montreal",
+      "entity_name": "Valerie Plante",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Second-largest city, aerospace/AI corridor, cultural industries"
+    },
+    {
+      "name": "Ken Sim",
+      "role": "Mayor of Vancouver",
+      "entity_name": "Ken Sim",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "West Coast gateway, housing crisis, port city, tech hub"
+    },
+    {
+      "name": "Jyoti Gondek",
+      "role": "Mayor of Calgary",
+      "entity_name": "Jyoti Gondek",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Energy HQ, fastest-growing CMA, economic diversification"
+    },
+    {
+      "name": "Amarjeet Sohi",
+      "role": "Mayor of Edmonton",
+      "entity_name": "Amarjeet Sohi",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Petrochemicals hub, logistics, provincial capital"
+    },
+    {
+      "name": "Mark Sutcliffe",
+      "role": "Mayor of Ottawa",
+      "entity_name": "Mark Sutcliffe",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "National capital, federal government hub, tech sector"
+    },
+    {
+      "name": "Bruno Marchand",
+      "role": "Mayor of Quebec City",
+      "entity_name": "Bruno Marchand",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Provincial capital, defence procurement, insurance/tech"
+    },
+    {
+      "name": "Andy Fillmore",
+      "role": "Mayor of Halifax",
+      "entity_name": "Andy Fillmore",
+      "current_holder": "",
+      "priority": "2",
+      "jurisdiction": "Canada",
+      "why_it_matters": "Atlantic hub, military, ocean tech, immigration gateway"
+    }
+  ],
+  "global_watchlist": [
+    {
+      "jurisdiction": "US",
+      "entity_name": "Donald Trump",
+      "role": "President of the United States",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "US trade policy, tariffs on Canada, energy policy, NATO"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "Scott Bessent",
+      "role": "US Secretary of the Treasury",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "US fiscal policy, bond markets, sanctions, CFIUS"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "Jerome Powell",
+      "role": "Chair of the Federal Reserve",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "US interest rates, inflation, global liquidity, USD strength"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "Jamieson Greer",
+      "role": "US Trade Representative",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "CUSMA enforcement, tariffs, trade disputes with Canada"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "Howard Lutnick",
+      "role": "US Secretary of Commerce",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "Export controls, tariff implementation, trade data"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "Chris Wright",
+      "role": "US Secretary of Energy",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "US energy policy, LNG exports, nuclear, grid reliability"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "White House / NEC / CEA",
+      "role": "Economic Advisory",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "US economic strategy, executive orders, deregulation agenda"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "US Department of the Treasury",
+      "role": "Fiscal/Monetary Policy",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "US debt management, sanctions, IRS, tax policy"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "Federal Reserve System",
+      "role": "Central Bank",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "Federal funds rate, QT, banking supervision, financial stability"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "Office of the US Trade Representative (USTR)",
+      "role": "Trade Negotiation",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "CUSMA disputes, Section 301, trade agreements"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "US Department of Commerce",
+      "role": "Trade/Industry",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "Export controls, BIS, Census trade data, ITA"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "US Department of Energy (DOE)",
+      "role": "Energy Policy",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "LNG export permits, SPR, clean energy, nuclear"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "US Department of State",
+      "role": "Diplomacy",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "US-Canada bilateral relations, Arctic policy, sanctions"
+    },
+    {
+      "jurisdiction": "US",
+      "entity_name": "US Department of Defense (Pentagon)",
+      "role": "Military/Procurement",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "NORAD, defence procurement, Arctic security, NATO"
+    },
+    {
+      "jurisdiction": "China",
+      "entity_name": "Xi Jinping",
+      "role": "President of the People's Republic of China",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "Global trade dynamics, commodity demand, geopolitics"
+    },
+    {
+      "jurisdiction": "China",
+      "entity_name": "Pan Gongsheng",
+      "role": "Governor of the People's Bank of China",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "Yuan policy, capital flows, monetary easing, reserve management"
+    },
+    {
+      "jurisdiction": "China",
+      "entity_name": "Wang Wentao",
+      "role": "Minister of Commerce (MOFCOM)",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "China trade policy, retaliatory tariffs, commodity imports"
+    },
+    {
+      "jurisdiction": "China",
+      "entity_name": "Zheng Shanjie",
+      "role": "Chairman of NDRC",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "China industrial policy, investment planning, commodity controls"
+    },
+    {
+      "jurisdiction": "China",
+      "entity_name": "People's Bank of China (PBOC)",
+      "role": "Central Bank",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "Yuan exchange rate, reserve requirements, lending rates"
+    },
+    {
+      "jurisdiction": "China",
+      "entity_name": "Ministry of Commerce (MOFCOM)",
+      "role": "Trade Policy",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "Import/export controls, anti-dumping, trade negotiations"
+    },
+    {
+      "jurisdiction": "China",
+      "entity_name": "National Development and Reform Commission (NDRC)",
+      "role": "Economic Planning",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "Five-year plans, infrastructure investment, price controls"
+    },
+    {
+      "jurisdiction": "China",
+      "entity_name": "State-owned Assets Supervision and Administration Commission (SASAC)",
+      "role": "SOE Oversight",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "China SOE strategy, overseas investment, commodity procurement"
+    },
+    {
+      "jurisdiction": "China",
+      "entity_name": "General Administration of Customs",
+      "role": "Trade Data",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "China trade statistics, import/export volumes, commodity flows"
+    },
+    {
+      "jurisdiction": "EU",
+      "entity_name": "Ursula von der Leyen",
+      "role": "President of the European Commission",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "EU trade policy, Green Deal, regulatory frameworks"
+    },
+    {
+      "jurisdiction": "EU",
+      "entity_name": "Christine Lagarde",
+      "role": "President of the European Central Bank",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "Eurozone rates, inflation, financial stability, EUR strength"
+    },
+    {
+      "jurisdiction": "EU",
+      "entity_name": "Maros Sefcovic",
+      "role": "Executive VP / Trade Commissioner",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "EU-Canada CETA, trade disputes, supply chain diversification"
+    },
+    {
+      "jurisdiction": "EU",
+      "entity_name": "European Commission",
+      "role": "EU Executive",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "EU legislation, trade agreements, competition, Green Deal"
+    },
+    {
+      "jurisdiction": "EU",
+      "entity_name": "European Central Bank (ECB)",
+      "role": "Central Bank",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "Eurozone monetary policy, banking supervision, TARGET2"
+    },
+    {
+      "jurisdiction": "EU",
+      "entity_name": "DG Trade (European Commission)",
+      "role": "Trade Policy",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "CETA implementation, WTO, bilateral trade agreements"
+    },
+    {
+      "jurisdiction": "UK",
+      "entity_name": "Keir Starmer",
+      "role": "Prime Minister of the United Kingdom",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "UK trade policy, CPTPP, financial services, energy transition"
+    },
+    {
+      "jurisdiction": "UK",
+      "entity_name": "Rachel Reeves",
+      "role": "Chancellor of the Exchequer",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "UK fiscal policy, budget, tax, financial regulation"
+    },
+    {
+      "jurisdiction": "UK",
+      "entity_name": "Andrew Bailey",
+      "role": "Governor of the Bank of England",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "UK rates, inflation, GBP, financial stability"
+    },
+    {
+      "jurisdiction": "UK",
+      "entity_name": "Jonathan Reynolds",
+      "role": "Secretary of State for Business and Trade",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "UK-Canada trade, CPTPP, investment, industrial strategy"
+    },
+    {
+      "jurisdiction": "UK",
+      "entity_name": "HM Treasury",
+      "role": "Fiscal Policy",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "UK budget, tax policy, financial regulation framework"
+    },
+    {
+      "jurisdiction": "UK",
+      "entity_name": "Bank of England (BoE)",
+      "role": "Central Bank",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "UK monetary policy, prudential regulation, FPC"
+    },
+    {
+      "jurisdiction": "UK",
+      "entity_name": "Department for Business and Trade (DBT)",
+      "role": "Trade/Industry",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "UK trade promotion, investment, CPTPP, business regulation"
+    },
+    {
+      "jurisdiction": "Japan",
+      "entity_name": "Kazuo Ueda",
+      "role": "Governor of the Bank of Japan",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "2",
+      "why_it_matters": "JPY policy, yield curve control, global liquidity impact"
+    },
+    {
+      "jurisdiction": "Japan",
+      "entity_name": "Shigeru Ishiba",
+      "role": "Prime Minister of Japan",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "2",
+      "why_it_matters": "Japan trade, CPTPP, auto exports, semiconductor policy"
+    },
+    {
+      "jurisdiction": "Japan",
+      "entity_name": "Bank of Japan (BoJ)",
+      "role": "Central Bank",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "Japanese monetary policy, JPY, global capital flows"
+    },
+    {
+      "jurisdiction": "OPEC+",
+      "entity_name": "OPEC+",
+      "role": "Oil Cartel",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "1",
+      "why_it_matters": "Oil production quotas, crude price impact on CAD and Alberta revenues"
+    },
+    {
+      "jurisdiction": "Global",
+      "entity_name": "World Trade Organization (WTO)",
+      "role": "Trade Rules",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "Trade dispute resolution, tariff rules, multilateral framework"
+    },
+    {
+      "jurisdiction": "Australia",
+      "entity_name": "Michele Bullock",
+      "role": "Governor of the Reserve Bank of Australia",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "2",
+      "why_it_matters": "RBA rates, AUD, commodity economy parallel to Canada"
+    },
+    {
+      "jurisdiction": "India",
+      "entity_name": "Narendra Modi",
+      "role": "Prime Minister of India",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "2",
+      "why_it_matters": "India trade, immigration source country, critical minerals demand"
+    },
+    {
+      "jurisdiction": "Mexico",
+      "entity_name": "Claudia Sheinbaum",
+      "role": "President of Mexico",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "2",
+      "why_it_matters": "CUSMA partner, nearshoring, auto supply chain"
+    },
+    {
+      "jurisdiction": "Saudi Arabia",
+      "entity_name": "Abdulaziz bin Salman",
+      "role": "Minister of Energy",
+      "current_holder": "",
+      "entity_type": "Person",
+      "priority": "1",
+      "why_it_matters": "OPEC+ production decisions, oil price impact on Canada"
+    },
+    {
+      "jurisdiction": "Global",
+      "entity_name": "International Monetary Fund (IMF)",
+      "role": "Managing Director",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "Global economic outlook, Article IV reviews, financial stability"
+    },
+    {
+      "jurisdiction": "Global",
+      "entity_name": "World Bank",
+      "role": "President",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "Global development, commodity price forecasts"
+    },
+    {
+      "jurisdiction": "Global",
+      "entity_name": "Bank for International Settlements (BIS)",
+      "role": "General Manager",
+      "current_holder": "",
+      "entity_type": "Agency",
+      "priority": "2",
+      "why_it_matters": "Central bank coordination, global financial regulation, Basel standards"
+    }
+  ],
+  "provincial_officials": [
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "David Eby",
+      "role": "Premier",
+      "current_holder": "David Eby",
+      "source_url": "https://news.gov.bc.ca/ministries/premier",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Brenda Bailey",
+      "role": "Minister of Finance",
+      "current_holder": "Brenda Bailey",
+      "source_url": "https://news.gov.bc.ca/ministries/finance",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Josie Osborne",
+      "role": "Minister of Energy, Mines and Low Carbon Innovation",
+      "current_holder": "Josie Osborne",
+      "source_url": "https://news.gov.bc.ca/ministries/energy-mines-and-low-carbon-innovation",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Rob Fleming",
+      "role": "Minister of Transportation and Infrastructure",
+      "current_holder": "Rob Fleming",
+      "source_url": "https://news.gov.bc.ca/ministries/transportation-and-infrastructure",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Ravi Kahlon",
+      "role": "Minister of Housing",
+      "current_holder": "Ravi Kahlon",
+      "source_url": "https://news.gov.bc.ca/ministries/housing",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "George Heyman",
+      "role": "Minister of Environment and Climate Change Strategy",
+      "current_holder": "George Heyman",
+      "source_url": "https://news.gov.bc.ca/ministries/environment-and-climate-change-strategy",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Brenda Bailey",
+      "role": "Minister of Jobs, Economic Development and Innovation",
+      "current_holder": "Brenda Bailey",
+      "source_url": "https://news.gov.bc.ca/ministries/jobs-economic-development-and-innovation",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Lana Popham",
+      "role": "Minister of Agriculture and Food",
+      "current_holder": "Lana Popham",
+      "source_url": "https://news.gov.bc.ca/ministries/agriculture-and-food",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Harry Bains",
+      "role": "Minister of Labour",
+      "current_holder": "Harry Bains",
+      "source_url": "https://news.gov.bc.ca/ministries/labour",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Bruce Ralston",
+      "role": "Minister of Forests",
+      "current_holder": "Bruce Ralston",
+      "source_url": "https://news.gov.bc.ca/ministries/forests",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Murray Rankin",
+      "role": "Minister of Indigenous Relations and Reconciliation",
+      "current_holder": "Murray Rankin",
+      "source_url": "https://news.gov.bc.ca/ministries/indigenous-relations-and-reconciliation",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "Shannon Salter",
+      "role": "Deputy Minister to the Premier / Head of BC Public Service",
+      "current_holder": "Shannon Salter",
+      "source_url": "https://www2.gov.bc.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Chair of BC Utilities Commission",
+      "current_holder": "",
+      "source_url": "https://www.bcuc.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of BC Hydro",
+      "current_holder": "",
+      "source_url": "https://www.bchydro.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of ICBC",
+      "current_holder": "",
+      "source_url": "https://www.icbc.com",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "Danielle Smith",
+      "role": "Premier",
+      "current_holder": "Danielle Smith",
+      "source_url": "https://www.alberta.ca/premier",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "Nate Horner",
+      "role": "President of Treasury Board and Minister of Finance",
+      "current_holder": "Nate Horner",
+      "source_url": "https://www.alberta.ca/treasury-board-and-finance",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "Brian Jean",
+      "role": "Minister of Energy and Minerals",
+      "current_holder": "Brian Jean",
+      "source_url": "https://www.alberta.ca/energy-and-minerals",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "Devin Dreeshen",
+      "role": "Minister of Transportation and Economic Corridors",
+      "current_holder": "Devin Dreeshen",
+      "source_url": "https://www.alberta.ca/transportation-and-economic-corridors",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "Jason Nixon",
+      "role": "Minister of Seniors Community and Social Services",
+      "current_holder": "Jason Nixon",
+      "source_url": "https://www.alberta.ca/seniors-community-and-social-services",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "Rebecca Schulz",
+      "role": "Minister of Environment and Protected Areas",
+      "current_holder": "Rebecca Schulz",
+      "source_url": "https://www.alberta.ca/environment-and-protected-areas",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "Matt Jones",
+      "role": "Minister of Jobs, Economy and Trade",
+      "current_holder": "Matt Jones",
+      "source_url": "https://www.alberta.ca/jobs-economy-and-trade",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "RJ Sigurdson",
+      "role": "Minister of Agriculture and Irrigation",
+      "current_holder": "RJ Sigurdson",
+      "source_url": "https://www.alberta.ca/agriculture-and-irrigation",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "Matt Jones",
+      "role": "Minister of Jobs/Economy/Trade (includes labour)",
+      "current_holder": "Matt Jones",
+      "source_url": "https://www.alberta.ca/jobs-economy-and-trade",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "Adriana LaGrange",
+      "role": "Minister of Health",
+      "current_holder": "Adriana LaGrange",
+      "source_url": "https://www.alberta.ca/health",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Deputy Minister of Executive Council",
+      "current_holder": "Clerk of Executive Council",
+      "source_url": "https://www.alberta.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Alberta Energy Regulator",
+      "current_holder": "",
+      "source_url": "https://www.aer.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Chair of Alberta Utilities Commission",
+      "current_holder": "",
+      "source_url": "https://www.auc.ab.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Alberta Investment Management Corp (AIMCo)",
+      "current_holder": "",
+      "source_url": "https://www.aimco.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of ATB Financial",
+      "current_holder": "",
+      "source_url": "https://www.atb.com",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "Scott Moe",
+      "role": "Premier",
+      "current_holder": "Scott Moe",
+      "source_url": "https://www.saskatchewan.ca/government",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "Donna Harpauer",
+      "role": "Minister of Finance",
+      "current_holder": "Donna Harpauer",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/finance",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "Jim Reiter",
+      "role": "Minister of Energy and Resources",
+      "current_holder": "Jim Reiter",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/energy-and-resources",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "Fred Bradshaw",
+      "role": "Minister of Highways",
+      "current_holder": "Fred Bradshaw",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/highways",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "Jeremy Harrison",
+      "role": "Minister of Trade and Export Development",
+      "current_holder": "Jeremy Harrison",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/trade-and-export-development",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "David Marit",
+      "role": "Minister of Agriculture",
+      "current_holder": "David Marit",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/agriculture",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "Dana Skoropad",
+      "role": "Minister of Environment",
+      "current_holder": "Dana Skoropad",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/environment",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "Don Morgan",
+      "role": "Minister of Labour Relations and Workplace Safety",
+      "current_holder": "Don Morgan",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/labour-relations-and-workplace-safety",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Social Services",
+      "current_holder": "",
+      "source_url": "https://www.saskatchewan.ca/government/government-structure/ministries/social-services",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Deputy Minister to the Premier / Cabinet Secretary",
+      "current_holder": "",
+      "source_url": "https://www.saskatchewan.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of SaskPower",
+      "current_holder": "",
+      "source_url": "https://www.saskpower.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of SaskEnergy",
+      "current_holder": "",
+      "source_url": "https://www.saskenergy.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of SaskTel",
+      "current_holder": "",
+      "source_url": "https://www.sasktel.com",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of SGI",
+      "current_holder": "",
+      "source_url": "https://www.sgi.sk.ca",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Chair of SK Environmental Assessment Board",
+      "current_holder": "",
+      "source_url": "https://www.saskatchewan.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "Wab Kinew",
+      "role": "Premier",
+      "current_holder": "Wab Kinew",
+      "source_url": "https://www.gov.mb.ca/premier/",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "Adrien Sala",
+      "role": "Minister of Finance",
+      "current_holder": "Adrien Sala",
+      "source_url": "https://www.gov.mb.ca/finance/",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "Jamie Moses",
+      "role": "Minister of Economic Development, Investment and Trade",
+      "current_holder": "Jamie Moses",
+      "source_url": "https://www.gov.mb.ca/jec/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "Lisa Naylor",
+      "role": "Minister of Transportation and Infrastructure",
+      "current_holder": "Lisa Naylor",
+      "source_url": "https://www.gov.mb.ca/mit/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "Ron Kostyshyn",
+      "role": "Minister of Agriculture",
+      "current_holder": "Ron Kostyshyn",
+      "source_url": "https://www.gov.mb.ca/agriculture/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "Tracy Schmidt",
+      "role": "Minister of Environment and Climate Change",
+      "current_holder": "Tracy Schmidt",
+      "source_url": "https://www.gov.mb.ca/sd/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "Malaya Guida Lewandoski",
+      "role": "Minister of Labour and Immigration",
+      "current_holder": "Malaya Guida Lewandoski",
+      "source_url": "https://www.gov.mb.ca/labour/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "Bernadette Smith",
+      "role": "Minister of Housing/Homelessness and Addictions",
+      "current_holder": "Bernadette Smith",
+      "source_url": "https://www.gov.mb.ca/housing/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "Uzoma Asagwara",
+      "role": "Minister of Health",
+      "current_holder": "Uzoma Asagwara",
+      "source_url": "https://www.gov.mb.ca/health/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Clerk of the Executive Council",
+      "current_holder": "",
+      "source_url": "https://www.gov.mb.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Manitoba Hydro",
+      "current_holder": "",
+      "source_url": "https://www.hydro.mb.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Northern and Indigenous Relations",
+      "current_holder": "",
+      "source_url": "https://www.gov.mb.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Municipal and Northern Relations",
+      "current_holder": "",
+      "source_url": "https://www.gov.mb.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Manitoba Public Insurance",
+      "current_holder": "",
+      "source_url": "https://www.mpi.mb.ca",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Manitoba Liquor & Lotteries",
+      "current_holder": "",
+      "source_url": "https://www.mbll.ca",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "Doug Ford",
+      "role": "Premier",
+      "current_holder": "Doug Ford",
+      "source_url": "https://news.ontario.ca/en/office/premier",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "Peter Bethlenfalvy",
+      "role": "Minister of Finance",
+      "current_holder": "Peter Bethlenfalvy",
+      "source_url": "https://news.ontario.ca/en/ministry/finance",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "Todd Smith",
+      "role": "Minister of Energy",
+      "current_holder": "Todd Smith",
+      "source_url": "https://news.ontario.ca/en/ministry/energy",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "Caroline Mulroney",
+      "role": "Minister of Transportation",
+      "current_holder": "Caroline Mulroney",
+      "source_url": "https://news.ontario.ca/en/ministry/transportation",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "Steve Clark",
+      "role": "Minister of Municipal Affairs and Housing",
+      "current_holder": "Steve Clark",
+      "source_url": "https://news.ontario.ca/en/ministry/municipal-affairs-and-housing",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "Vic Fedeli",
+      "role": "Minister of Economic Development, Job Creation and Trade",
+      "current_holder": "Vic Fedeli",
+      "source_url": "https://news.ontario.ca/en/ministry/economic-development-job-creation-and-trade",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "David Piccini",
+      "role": "Minister of the Environment Conservation and Parks",
+      "current_holder": "David Piccini",
+      "source_url": "https://news.ontario.ca/en/ministry/environment-conservation-and-parks",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "Lisa Thompson",
+      "role": "Minister of Agriculture Food and Rural Affairs",
+      "current_holder": "Lisa Thompson",
+      "source_url": "https://news.ontario.ca/en/ministry/agriculture-food-and-rural-affairs",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "David Piccini",
+      "role": "Minister of Labour/Immigration/Training/Skills Dev",
+      "current_holder": "David Piccini",
+      "source_url": "https://news.ontario.ca/en/ministry/labour-immigration-training-and-skills-development",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "George Pirie",
+      "role": "Minister of Mines",
+      "current_holder": "George Pirie",
+      "source_url": "https://news.ontario.ca/en/ministry/mines",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "Sylvia Jones",
+      "role": "Minister of Health",
+      "current_holder": "Sylvia Jones",
+      "source_url": "https://news.ontario.ca/en/ministry/health",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Secretary of the Cabinet / Head of the ON Public Service",
+      "current_holder": "",
+      "source_url": "https://www.ontario.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Ontario Power Generation (OPG)",
+      "current_holder": "",
+      "source_url": "https://www.opg.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Metrolinx",
+      "current_holder": "",
+      "source_url": "https://www.metrolinx.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Ontario Energy Board (OEB)",
+      "current_holder": "",
+      "source_url": "https://www.oeb.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Francois Legault",
+      "role": "Premier",
+      "current_holder": "Francois Legault",
+      "source_url": "https://www.quebec.ca/gouvernement/premier-ministre",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Eric Girard",
+      "role": "Minister of Finance",
+      "current_holder": "Eric Girard",
+      "source_url": "https://www.finances.gouv.qc.ca",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Pierre Fitzgibbon",
+      "role": "Minister of Economy, Innovation and Energy",
+      "current_holder": "Pierre Fitzgibbon",
+      "source_url": "https://www.economie.gouv.qc.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Francois Bonnardel",
+      "role": "Minister of Transport and Sustainable Mobility",
+      "current_holder": "Francois Bonnardel",
+      "source_url": "https://www.transports.gouv.qc.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Benoit Charette",
+      "role": "Minister of Environment, Fight Against Climate Change, Wildlife and Parks",
+      "current_holder": "Benoit Charette",
+      "source_url": "https://www.environnement.gouv.qc.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Maite Blanchette Vezina",
+      "role": "Minister of Natural Resources and Forests",
+      "current_holder": "Maite Blanchette Vezina",
+      "source_url": "https://mern.gouv.qc.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Andre Lamontagne",
+      "role": "Minister of Agriculture, Fisheries and Food",
+      "current_holder": "Andre Lamontagne",
+      "source_url": "https://www.mapaq.gouv.qc.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Jean Boulet",
+      "role": "Minister of Labour",
+      "current_holder": "Jean Boulet",
+      "source_url": "https://www.travail.gouv.qc.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "France-Elaine Duranceau",
+      "role": "Minister of Housing",
+      "current_holder": "France-Elaine Duranceau",
+      "source_url": "https://www.quebec.ca/gouvernement",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Secretary General of the Executive Council",
+      "current_holder": "",
+      "source_url": "https://www.quebec.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Hydro-Quebec",
+      "current_holder": "",
+      "source_url": "https://www.hydroquebec.com",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Caisse de depot et placement du Quebec (CDPQ)",
+      "current_holder": "",
+      "source_url": "https://www.cdpq.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Investissement Quebec",
+      "current_holder": "",
+      "source_url": "https://www.investquebec.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Christine Frechette",
+      "role": "Minister of Immigration, Francisation and Integration",
+      "current_holder": "Christine Frechette",
+      "source_url": "https://www.quebec.ca/gouvernement",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "Andree Laforest",
+      "role": "Minister of Municipal Affairs and Housing",
+      "current_holder": "Andree Laforest",
+      "source_url": "https://www.quebec.ca/gouvernement",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "Susan Holt",
+      "role": "Premier",
+      "current_holder": "Susan Holt",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/premier.html",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Finance and Treasury Board",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/finance.html",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Economic Development",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/economic_development.html",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Natural Resources and Energy Development",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/erd.html",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Transportation and Infrastructure",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/dti.html",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Environment and Local Government",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/elg.html",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Agriculture Aquaculture and Fisheries",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/10.html",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Post-Secondary Education Training and Labour",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/post-secondary_education_training_and_labour.html",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Health",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/health.html",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Clerk of the Executive Council",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of NB Power",
+      "current_holder": "",
+      "source_url": "https://www.nbpower.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Opportunities NB",
+      "current_holder": "",
+      "source_url": "https://www.onbcanada.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Social Development",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca/content/gnb/en/departments/social_development.html",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Local Government",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Aboriginal Affairs",
+      "current_holder": "",
+      "source_url": "https://www2.gnb.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "Tim Houston",
+      "role": "Premier",
+      "current_holder": "Tim Houston",
+      "source_url": "https://novascotia.ca/premier/",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "Allan MacMaster",
+      "role": "Minister of Finance and Treasury Board",
+      "current_holder": "Allan MacMaster",
+      "source_url": "https://novascotia.ca/finance/",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Economic Development",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/business/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Natural Resources and Renewables",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/natr/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Public Works",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/tran/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Environment and Climate Change",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/nse/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Agriculture",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/agri/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Labour Skills and Immigration",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/lae/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Health and Wellness",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/dhw/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Municipal Affairs and Housing",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/dma/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Deputy Minister to the Premier / Secretary to Cabinet",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Nova Scotia Power (Emera subsidiary)",
+      "current_holder": "",
+      "source_url": "https://www.nspower.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Develop Nova Scotia",
+      "current_holder": "",
+      "source_url": "https://developns.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Nova Scotia Business Inc (NSBI)",
+      "current_holder": "",
+      "source_url": "https://www.novascotiabusiness.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Fisheries and Aquaculture",
+      "current_holder": "",
+      "source_url": "https://novascotia.ca/fish/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "Dennis King",
+      "role": "Premier",
+      "current_holder": "Dennis King",
+      "source_url": "https://www.princeedwardisland.ca/en/premier",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca/en/topic/finance",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Economic Growth, Tourism and Culture",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca/en/topic/economic-growth-tourism-and-culture",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Transportation and Infrastructure",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca/en/topic/transportation-and-infrastructure",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Agriculture and Land",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca/en/topic/agriculture-and-land",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Environment Energy and Climate Action",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca/en/topic/environment-energy-and-climate-action",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Fisheries Tourism Sport and Culture",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Health and Wellness",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca/en/topic/health-and-wellness",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Social Development and Housing",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Clerk of the Executive Council",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Innovation PEI",
+      "current_holder": "",
+      "source_url": "https://www.innovationpei.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Workforce Advanced Learning and Population",
+      "current_holder": "",
+      "source_url": "https://www.princeedwardisland.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "Andrew Furey",
+      "role": "Premier",
+      "current_holder": "Andrew Furey",
+      "source_url": "https://www.gov.nl.ca/premier/",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/fin/",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Industry, Energy and Technology",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/iet/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Transportation and Infrastructure",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/ti/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Environment and Climate Change",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/ecc/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Fisheries Forestry and Agriculture",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/ffa/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Immigration Population Growth and Skills",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Health and Community Services",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/hcs/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Children Seniors and Social Development",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/cssd/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Clerk of the Executive Council",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Newfoundland and Labrador Hydro (Nalcor successor)",
+      "current_holder": "",
+      "source_url": "https://nlhydro.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Newfoundland and Labrador Housing Corporation",
+      "current_holder": "",
+      "source_url": "https://www.nlhc.nl.ca",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of C-NLOPB",
+      "current_holder": "",
+      "source_url": "https://www.cnlopb.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Municipal and Provincial Affairs",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/mpa/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Tourism Culture Arts and Recreation",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/tcar/",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "Ranj Pillai",
+      "role": "Premier",
+      "current_holder": "Ranj Pillai",
+      "source_url": "https://yukon.ca/en/premier",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://yukon.ca/en/department-finance",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Economic Development",
+      "current_holder": "",
+      "source_url": "https://yukon.ca/en/economic-development",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Energy Mines and Resources",
+      "current_holder": "",
+      "source_url": "https://yukon.ca/en/energy-mines-and-resources",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Highways and Public Works",
+      "current_holder": "",
+      "source_url": "https://yukon.ca/en/highways-and-public-works",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Environment",
+      "current_holder": "",
+      "source_url": "https://yukon.ca/en/environment",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Health and Social Services",
+      "current_holder": "",
+      "source_url": "https://yukon.ca/en/health-and-social-services",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Deputy Minister to the Premier / Cabinet Secretary",
+      "current_holder": "",
+      "source_url": "https://yukon.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Yukon Energy",
+      "current_holder": "",
+      "source_url": "https://yukonenergy.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "YT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Yukon Development Corporation",
+      "current_holder": "",
+      "source_url": "https://yukonenergy.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "R.J. Simpson",
+      "role": "Premier",
+      "current_holder": "R.J. Simpson",
+      "source_url": "https://www.gov.nt.ca/en/premier",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Industry, Tourism and Investment",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Infrastructure",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Environment and Climate Change",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Health and Social Services",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Lands",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Secretary to Cabinet / Deputy Minister of Executive and Indigenous Affairs",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of NWT Power Corporation (NTPC)",
+      "current_holder": "",
+      "source_url": "https://www.ntpc.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Municipal and Community Affairs",
+      "current_holder": "",
+      "source_url": "https://www.gov.nt.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "P.J. Akeeagok",
+      "role": "Premier",
+      "current_holder": "P.J. Akeeagok",
+      "source_url": "https://www.gov.nu.ca",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Finance",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca/finance",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Economic Development and Transportation",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca/economic-development-and-transportation",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Environment",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca/environment",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Community and Government Services",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca/community-and-government-services",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Health",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca/health",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Minister of Energy",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Deputy Minister to the Premier / Secretary to Cabinet",
+      "current_holder": "",
+      "source_url": "https://www.gov.nu.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Qulliq Energy Corporation (QEC)",
+      "current_holder": "",
+      "source_url": "https://www.qec.nu.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of NCC Development Limited",
+      "current_holder": "",
+      "source_url": "https://www.nccgroup.ca",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Infrastructure Ontario",
+      "current_holder": "",
+      "source_url": "https://www.infrastructureontario.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Ontario Investment Office",
+      "current_holder": "",
+      "source_url": "https://www.investontario.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Montreal International",
+      "current_holder": "",
+      "source_url": "https://www.montrealinternational.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Alberta Innovates",
+      "current_holder": "",
+      "source_url": "https://albertainnovates.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Invest Alberta",
+      "current_holder": "",
+      "source_url": "https://investalberta.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Saskatchewan Trade and Export Partnership (STEP)",
+      "current_holder": "",
+      "source_url": "https://www.sasktrade.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Economic Development Winnipeg",
+      "current_holder": "",
+      "source_url": "https://www.economicdevelopmentwinnipeg.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Trade and Invest BC",
+      "current_holder": "",
+      "source_url": "https://www.britishcolumbia.ca/invest",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of BC Ferries",
+      "current_holder": "",
+      "source_url": "https://www.bcferries.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Alberta Gaming Liquor and Cannabis Commission",
+      "current_holder": "",
+      "source_url": "https://aglc.ca",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of LCBO",
+      "current_holder": "",
+      "source_url": "https://www.lcbo.com",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "QC",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Societe des alcools du Quebec (SAQ)",
+      "current_holder": "",
+      "source_url": "https://www.saq.com",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "NL",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Newfoundland and Labrador Business/Trade",
+      "current_holder": "",
+      "source_url": "https://www.gov.nl.ca/iet/",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "Executive Director of Nova Scotia Office of Immigration",
+      "current_holder": "",
+      "source_url": "https://novascotiaimmigration.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Bruce Power",
+      "current_holder": "",
+      "source_url": "https://www.brucepower.com",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "President of Saskatchewan Water Security Agency",
+      "current_holder": "",
+      "source_url": "https://www.wsask.ca",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Manitoba Centennial Centre Corporation",
+      "current_holder": "",
+      "source_url": "https://www.gov.mb.ca",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "PE",
+      "entity_type": "Person",
+      "entity_name": "",
+      "role": "CEO of Finance PEI",
+      "current_holder": "",
+      "source_url": "https://www.financepei.ca",
+      "priority": "2"
+    }
+  ],
+  "provincial_companies": [
+    {
+      "jurisdiction": "BC",
+      "industry": "Mining",
+      "company_name": "Teck Resources",
+      "ticker": "TSX:TECK.B",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "industry": "Telecommunications",
+      "company_name": "TELUS",
+      "ticker": "TSX:T",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "industry": "Mining",
+      "company_name": "Wheaton Precious Metals",
+      "ticker": "TSX:WPM",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "industry": "Forestry",
+      "company_name": "West Fraser Timber",
+      "ticker": "TSX:WFG",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "BC",
+      "industry": "Forestry",
+      "company_name": "Canfor",
+      "ticker": "TSX:CFP",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "AB",
+      "industry": "Energy",
+      "company_name": "Enbridge",
+      "ticker": "TSX:ENB",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "AB",
+      "industry": "Energy",
+      "company_name": "Canadian Natural Resources",
+      "ticker": "TSX:CNQ",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "AB",
+      "industry": "Transportation",
+      "company_name": "Canadian Pacific Kansas City (CPKC)",
+      "ticker": "TSX:CP",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "AB",
+      "industry": "Energy",
+      "company_name": "Suncor Energy",
+      "ticker": "TSX:SU",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "AB",
+      "industry": "Energy",
+      "company_name": "Cenovus Energy",
+      "ticker": "TSX:CVE",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "SK",
+      "industry": "Agriculture/Mining",
+      "company_name": "Nutrien",
+      "ticker": "TSX:NTR",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "SK",
+      "industry": "Mining",
+      "company_name": "Cameco",
+      "ticker": "TSX:CCO",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "SK",
+      "industry": "Technology",
+      "company_name": "Information Services Corporation (ISC)",
+      "ticker": "TSX:ISV",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "industry": "Agriculture",
+      "company_name": "Viterra",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "SK",
+      "industry": "Mining",
+      "company_name": "K+S Potash Canada",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "industry": "Financial Services",
+      "company_name": "Great-West Lifeco",
+      "ticker": "TSX:GWO",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "industry": "Financial Services",
+      "company_name": "IGM Financial",
+      "ticker": "TSX:IGM",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "industry": "Automotive Services",
+      "company_name": "Boyd Group Services",
+      "ticker": "TSX:BYD",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "industry": "Aerospace/Industrial",
+      "company_name": "Exchange Income Corporation",
+      "ticker": "TSX:EIF",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "MB",
+      "industry": "Manufacturing",
+      "company_name": "NFI Group",
+      "ticker": "TSX:NFI",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "ON",
+      "industry": "Technology",
+      "company_name": "Shopify",
+      "ticker": "TSX:SHOP",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "ON",
+      "industry": "Financial Services",
+      "company_name": "Royal Bank of Canada (RBC)",
+      "ticker": "TSX:RY",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "ON",
+      "industry": "Financial Services",
+      "company_name": "Toronto-Dominion Bank (TD)",
+      "ticker": "TSX:TD",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "ON",
+      "industry": "Financial Services",
+      "company_name": "Manulife Financial",
+      "ticker": "TSX:MFC",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "ON",
+      "industry": "Financial Services/Infrastructure",
+      "company_name": "Brookfield Corporation",
+      "ticker": "TSX:BN",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "QC",
+      "industry": "Aerospace/Defence",
+      "company_name": "CAE",
+      "ticker": "TSX:CAE",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "industry": "Aerospace",
+      "company_name": "Bombardier",
+      "ticker": "TSX:BBD.B",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "industry": "Engineering",
+      "company_name": "AtkinsRealis (formerly SNC-Lavalin)",
+      "ticker": "TSX:ATRL",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "QC",
+      "industry": "Retail",
+      "company_name": "Alimentation Couche-Tard",
+      "ticker": "TSX:ATD",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "QC",
+      "industry": "Energy",
+      "company_name": "Hydro-Quebec",
+      "ticker": "Crown",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NB",
+      "industry": "Energy",
+      "company_name": "Irving Oil",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "industry": "Diversified",
+      "company_name": "J.D. Irving Limited",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "industry": "Aquaculture",
+      "company_name": "Cooke Aquaculture",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "industry": "Food Processing",
+      "company_name": "McCain Foods",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NB",
+      "industry": "Gaming Technology",
+      "company_name": "Spielo International (IGT subsidiary)",
+      "ticker": "Private",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "NS",
+      "industry": "Utilities",
+      "company_name": "Emera",
+      "ticker": "TSX:EMA",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "industry": "Fisheries",
+      "company_name": "Clearwater Seafoods",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "industry": "Shipbuilding",
+      "company_name": "Halifax Shipyard (Irving Shipbuilding)",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "industry": "Economic Development",
+      "company_name": "Develop Nova Scotia",
+      "ticker": "Crown",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NS",
+      "industry": "Utilities",
+      "company_name": "Nova Scotia Power (Emera subsidiary)",
+      "ticker": "Subsidiary",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "industry": "Utilities",
+      "company_name": "Fortis Inc",
+      "ticker": "TSX:FTS",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NL",
+      "industry": "Energy",
+      "company_name": "Hibernia Management and Development Company",
+      "ticker": "Joint Venture",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "industry": "Mining",
+      "company_name": "Vale Newfoundland and Labrador",
+      "ticker": "Subsidiary",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "industry": "Energy",
+      "company_name": "Cenovus Energy NL (formerly Husky)",
+      "ticker": "Subsidiary",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NL",
+      "industry": "Utilities",
+      "company_name": "Newfoundland and Labrador Hydro (Nalcor successor)",
+      "ticker": "Crown",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "industry": "Agriculture/Food",
+      "company_name": "ADL (Atlantic Dairy Cooperative)",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "industry": "Food Processing",
+      "company_name": "Cavendish Farms (Irving subsidiary)",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "industry": "Biotech",
+      "company_name": "BioVectra",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "PE",
+      "industry": "Food Processing",
+      "company_name": "Island Abbey Foods",
+      "ticker": "Private",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "PE",
+      "industry": "Beverage",
+      "company_name": "PEI Brewing Company",
+      "ticker": "Private",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "YT",
+      "industry": "Mining",
+      "company_name": "Victoria Gold",
+      "ticker": "TSX:VGCX",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "YT",
+      "industry": "Mining",
+      "company_name": "Alexco Resource (acquired by Hecla)",
+      "ticker": "Acquired",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "YT",
+      "industry": "Mining",
+      "company_name": "Casino Mining Corporation (Western Copper and Gold)",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "YT",
+      "industry": "Mining",
+      "company_name": "Minto Explorations (Pembridge Resources)",
+      "ticker": "Private",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "YT",
+      "industry": "Utilities",
+      "company_name": "Yukon Energy Corporation",
+      "ticker": "Crown",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "industry": "Mining",
+      "company_name": "De Beers Canada",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "industry": "Mining",
+      "company_name": "Fortune Minerals",
+      "ticker": "TSX:FT",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "NT",
+      "industry": "Mining",
+      "company_name": "Mountain Province Diamonds",
+      "ticker": "TSX:MPVD",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "industry": "Utilities",
+      "company_name": "Northwest Territories Power Corporation (NTPC)",
+      "ticker": "Crown",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NT",
+      "industry": "Mining",
+      "company_name": "Diavik Diamond Mine (Rio Tinto subsidiary)",
+      "ticker": "Subsidiary",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "industry": "Mining",
+      "company_name": "Agnico Eagle Mines (Nunavut operations)",
+      "ticker": "TSX:AEM",
+      "priority": "1"
+    },
+    {
+      "jurisdiction": "NU",
+      "industry": "Mining",
+      "company_name": "Baffinland Iron Mines",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "industry": "Mining",
+      "company_name": "TMAC Resources (acquired by Agnico Eagle)",
+      "ticker": "Acquired",
+      "priority": "3"
+    },
+    {
+      "jurisdiction": "NU",
+      "industry": "Utilities",
+      "company_name": "Qulliq Energy Corporation (QEC)",
+      "ticker": "Crown",
+      "priority": "2"
+    },
+    {
+      "jurisdiction": "NU",
+      "industry": "Economic Development",
+      "company_name": "NCC Development Limited",
+      "ticker": "Private",
+      "priority": "3"
+    }
+  ],
+  "industry_companies": [
+    {
+      "industry": "Energy",
+      "company_name": "Canadian Natural Resources (CNRL)",
+      "ticker": "TSX:CNQ",
+      "priority": "1"
+    },
+    {
+      "industry": "Energy",
+      "company_name": "Suncor Energy",
+      "ticker": "TSX:SU",
+      "priority": "1"
+    },
+    {
+      "industry": "Energy",
+      "company_name": "TC Energy",
+      "ticker": "TSX:TRP",
+      "priority": "1"
+    },
+    {
+      "industry": "Energy",
+      "company_name": "Pembina Pipeline",
+      "ticker": "TSX:PPL",
+      "priority": "1"
+    },
+    {
+      "industry": "Energy",
+      "company_name": "ARC Resources",
+      "ticker": "TSX:ARX",
+      "priority": "2"
+    },
+    {
+      "industry": "Energy",
+      "company_name": "Imperial Oil",
+      "ticker": "TSX:IMO",
+      "priority": "2"
+    },
+    {
+      "industry": "Energy",
+      "company_name": "Tourmaline Oil",
+      "ticker": "TSX:TOU",
+      "priority": "1"
+    },
+    {
+      "industry": "Energy",
+      "company_name": "MEG Energy",
+      "ticker": "TSX:MEG",
+      "priority": "2"
+    },
+    {
+      "industry": "Mining",
+      "company_name": "Barrick Gold",
+      "ticker": "TSX:ABX",
+      "priority": "1"
+    },
+    {
+      "industry": "Mining",
+      "company_name": "First Quantum Minerals",
+      "ticker": "TSX:FM",
+      "priority": "2"
+    },
+    {
+      "industry": "Mining",
+      "company_name": "Lundin Mining",
+      "ticker": "TSX:LUN",
+      "priority": "2"
+    },
+    {
+      "industry": "Mining",
+      "company_name": "Agnico Eagle Mines",
+      "ticker": "TSX:AEM",
+      "priority": "1"
+    },
+    {
+      "industry": "Mining",
+      "company_name": "Kinross Gold",
+      "ticker": "TSX:K",
+      "priority": "2"
+    },
+    {
+      "industry": "Mining",
+      "company_name": "Teck Resources",
+      "ticker": "TSX:TECK.B",
+      "priority": "1"
+    },
+    {
+      "industry": "Mining",
+      "company_name": "Ivanhoe Mines",
+      "ticker": "TSX:IVN",
+      "priority": "2"
+    },
+    {
+      "industry": "Financial Services",
+      "company_name": "Royal Bank of Canada (RBC)",
+      "ticker": "TSX:RY",
+      "priority": "1"
+    },
+    {
+      "industry": "Financial Services",
+      "company_name": "Toronto-Dominion Bank (TD)",
+      "ticker": "TSX:TD",
+      "priority": "1"
+    },
+    {
+      "industry": "Financial Services",
+      "company_name": "Bank of Montreal (BMO)",
+      "ticker": "TSX:BMO",
+      "priority": "1"
+    },
+    {
+      "industry": "Financial Services",
+      "company_name": "Bank of Nova Scotia (Scotiabank)",
+      "ticker": "TSX:BNS",
+      "priority": "1"
+    },
+    {
+      "industry": "Financial Services",
+      "company_name": "Manulife Financial",
+      "ticker": "TSX:MFC",
+      "priority": "1"
+    },
+    {
+      "industry": "Financial Services",
+      "company_name": "Sun Life Financial",
+      "ticker": "TSX:SLF",
+      "priority": "1"
+    },
+    {
+      "industry": "Financial Services/Infrastructure",
+      "company_name": "Brookfield Corporation",
+      "ticker": "TSX:BN",
+      "priority": "1"
+    },
+    {
+      "industry": "Financial Services",
+      "company_name": "Fairfax Financial Holdings",
+      "ticker": "TSX:FFH",
+      "priority": "2"
+    },
+    {
+      "industry": "Technology",
+      "company_name": "Shopify",
+      "ticker": "TSX:SHOP",
+      "priority": "1"
+    },
+    {
+      "industry": "Technology",
+      "company_name": "Constellation Software",
+      "ticker": "TSX:CSU",
+      "priority": "1"
+    },
+    {
+      "industry": "Technology",
+      "company_name": "OpenText",
+      "ticker": "TSX:OTEX",
+      "priority": "2"
+    },
+    {
+      "industry": "Technology",
+      "company_name": "CGI Group",
+      "ticker": "TSX:GIB.A",
+      "priority": "2"
+    },
+    {
+      "industry": "Technology",
+      "company_name": "Descartes Systems Group",
+      "ticker": "TSX:DSG",
+      "priority": "2"
+    },
+    {
+      "industry": "Consumer/Retail",
+      "company_name": "Alimentation Couche-Tard",
+      "ticker": "TSX:ATD",
+      "priority": "1"
+    },
+    {
+      "industry": "Consumer/Retail",
+      "company_name": "Loblaw Companies",
+      "ticker": "TSX:L",
+      "priority": "1"
+    },
+    {
+      "industry": "Consumer/Retail",
+      "company_name": "George Weston Limited",
+      "ticker": "TSX:WN",
+      "priority": "1"
+    },
+    {
+      "industry": "Consumer/Retail",
+      "company_name": "Metro Inc",
+      "ticker": "TSX:MRU",
+      "priority": "2"
+    },
+    {
+      "industry": "Consumer/Food",
+      "company_name": "Saputo",
+      "ticker": "TSX:SAP",
+      "priority": "2"
+    },
+    {
+      "industry": "Consumer/Retail",
+      "company_name": "Dollarama",
+      "ticker": "TSX:DOL",
+      "priority": "1"
+    },
+    {
+      "industry": "Consumer/QSR",
+      "company_name": "Restaurant Brands International",
+      "ticker": "TSX:QSR",
+      "priority": "1"
+    },
+    {
+      "industry": "Consumer/Auto Parts",
+      "company_name": "Magna International",
+      "ticker": "TSX:MG",
+      "priority": "1"
+    },
+    {
+      "industry": "Consumer/Apparel",
+      "company_name": "Gildan Activewear",
+      "ticker": "TSX:GIL",
+      "priority": "2"
+    },
+    {
+      "industry": "Consumer/Retail",
+      "company_name": "Aritzia",
+      "ticker": "TSX:ATZ",
+      "priority": "2"
+    },
+    {
+      "industry": "Industrials/Rail",
+      "company_name": "Canadian Pacific Kansas City (CPKC)",
+      "ticker": "TSX:CP",
+      "priority": "1"
+    },
+    {
+      "industry": "Industrials/Rail",
+      "company_name": "Canadian National Railway (CNR)",
+      "ticker": "TSX:CNR",
+      "priority": "1"
+    },
+    {
+      "industry": "Industrials/Media",
+      "company_name": "Thomson Reuters",
+      "ticker": "TSX:TRI",
+      "priority": "1"
+    },
+    {
+      "industry": "Industrials/Waste",
+      "company_name": "Waste Connections",
+      "ticker": "TSX:WCN",
+      "priority": "2"
+    },
+    {
+      "industry": "Industrials/Engineering",
+      "company_name": "WSP Global",
+      "ticker": "TSX:WSP",
+      "priority": "1"
+    },
+    {
+      "industry": "Real Estate",
+      "company_name": "FirstService Corporation",
+      "ticker": "TSX:FSV",
+      "priority": "2"
+    },
+    {
+      "industry": "Real Estate",
+      "company_name": "Colliers International",
+      "ticker": "TSX:CIGI",
+      "priority": "2"
+    },
+    {
+      "industry": "Real Estate",
+      "company_name": "Canadian Apartment Properties REIT (CAPREIT)",
+      "ticker": "TSX:CAR.UN",
+      "priority": "2"
+    },
+    {
+      "industry": "Real Estate",
+      "company_name": "Boardwalk REIT",
+      "ticker": "TSX:BEI.UN",
+      "priority": "2"
+    },
+    {
+      "industry": "Real Estate",
+      "company_name": "Choice Properties REIT",
+      "ticker": "TSX:CHP.UN",
+      "priority": "2"
+    },
+    {
+      "industry": "Agriculture",
+      "company_name": "Nutrien",
+      "ticker": "TSX:NTR",
+      "priority": "1"
+    },
+    {
+      "industry": "Agriculture",
+      "company_name": "Viterra (Bunge acquisition pending)",
+      "ticker": "Private",
+      "priority": "2"
+    },
+    {
+      "industry": "Agriculture/Food",
+      "company_name": "Saputo",
+      "ticker": "TSX:SAP",
+      "priority": "2"
+    },
+    {
+      "industry": "Agriculture/Food",
+      "company_name": "George Weston Limited",
+      "ticker": "TSX:WN",
+      "priority": "2"
+    },
+    {
+      "industry": "Agriculture/Food",
+      "company_name": "Maple Leaf Foods",
+      "ticker": "TSX:MFI",
+      "priority": "2"
+    },
+    {
+      "industry": "Industrials/Aerospace",
+      "company_name": "CAE Inc",
+      "ticker": "TSX:CAE",
+      "priority": "2"
+    },
+    {
+      "industry": "Industrials/Aerospace",
+      "company_name": "Bombardier Inc",
+      "ticker": "TSX:BBD.B",
+      "priority": "2"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+Citation Audit Report — 2026-03-06
+============================================================
+
+── call1-macro ──
+  Citations: 45
+  Verified: 45
+  Failed: 0
+  Unsourced claims: 0
+  Spot-check failures: 4
+  Removal %: 8.9%
+  Result: PASSED
+  Archived: 2 URLs
+  Spot-check failures:
+    Claim: 10The Bank of Canada, RBC, TD and Export Development Canada completed Project Samara, a distributed-
+    Reason: No — The source is about Employment and Social Development Canada's workforce plan for the mining and mineral industries, and contains no information about Project Samara, the Bank of Canada, RBC, TD, Export Development Canada, or distributed-ledger bond issuance experiments.
+    Claim: 27The Matane Port Facilities Expansion Project in Quebec received an early positive decision from IA
+    Reason: No – The source is about Canada and global partners advancing 6G security and resilience at Mobile World Congress, and contains no information about the Matane Port Facilities Expansion Project or any IAAC decisions.
+    Claim: 10The Bank of Canada, RBC, TD and Export Development Canada completed Project Samara, a distributed-
+    Reason: No — The source is about Employment and Social Development Canada's workforce plan for the mining and mineral industries, which has no relation to Project Samara or any distributed-ledger bond issuance experiment involving the Bank of Canada, RBC, TD, or Export Development Canada.
+    Claim: 25Canada's Trade Diversification Corridors Fund explicitly targets non-U.
+    Reason: No – The source is about an early impact assessment decision regarding the Matane Port Facilities Expansion Project in Quebec and does not mention Canada's Trade Diversification Corridors Fund or its targeting of non-U.S. markets.
+
+── call2-industries ──
+  Citations: 37
+  Verified: 36
+  Failed: 1
+  Unsourced claims: 0
+  Spot-check failures: 4
+  Removal %: 13.5%
+  Result: PASSED
+  Archived: 11 URLs
+  Failed citations:
+    URL: https://www.statcan.gc.ca/daily-quotidien/260304/dq260304e-eng.htm
+    Reason: HTTP 404
+    Location: servicesIndustries[6].industrySources
+  Spot-check failures:
+    Claim: 25The federal-Quebec investment in green skills training announced March 6, 2026 in Gatineau targets
+    Reason: No — I cannot verify the existence of this source or the specific claim, as my knowledge does not confirm a federal-Quebec green skills training announcement made on March 6, 2026 in Gatineau, and I cannot access URLs to validate the content.
+    Claim: 43The new Canada Groceries and Essentials Benefit, highlighted by Secretary of State Buckley Belange
+    Reason: No – While the source title confirms Secretary of State Belanger highlighted the Canada Groceries and Essentials Benefit on the referenced date, the source does not characterize it as a measure specifically targeting NAICS 445 retail volumes or framing it in terms of sustaining food and beverage store sales among lower-income households; that economic framing is an interpretation not present in the source.
+    Claim: 19Minister Patty Hajdu's March 2, 2026 national coordinated plan for mining and mineral workforce ch
+    Reason: No — The source URL references a date of March 2026, which is beyond my knowledge cutoff, so I cannot verify its contents, and the specific claim that it "acknowledges structural labour shortages as a binding constraint on sector output growth" with explicit reference to NAICS 212 cannot be confirmed.
+    Claim: 17
+
+Mining, quarrying, and oil and gas extraction GDP declined 0.
+    Reason: No – The source is about the Canada Groceries and Essentials Benefit and contains no information about mining, quarrying, or oil and gas extraction GDP figures.
+
+── call3-provinces ──
+  Citations: 48
+  Verified: 48
+  Failed: 0
+  Unsourced claims: 1
+  Spot-check failures: 5
+  Removal %: 10.4%
+  Result: PASSED
+  Archived: 34 URLs
+  Unsourced claims:
+    - Canada's $12.1 billion in unlocked critical minerals capital and 30 new international partnerships a
+  Spot-check failures:
+    Claim: 1The Government of Canada on March 4, 2026 launched calls for proposals under the $5 billion Trade D
+    Reason: No — The source is about the opening of a preclearance facility at Billy Bishop Toronto City Airport, not about a Trade Diversification Corridors Fund or calls for proposals related to reducing Canadian export reliance.
+    Claim: 1The Government of Canada on March 4, 2026 launched calls for proposals under the $5 billion Trade D
+    Reason: No — The source is about a Government of Canada investment in the Prairies' forest sector, not about a $5 billion Trade Diversification Corridors Fund or calls for proposals targeting infrastructure to reduce Canadian export reliance.
+    Claim: 2Secretary of State Wayne Long travelled to Windsor on March 5, 2026 to announce federal support for
+    Reason: No — The source is about critical minerals partnerships and mining project capital announced at PDAC 2026, and has no relevance to Secretary of State Wayne Long's travel to Windsor or federal support for automotive manufacturing.
+    Claim: 2Secretary of State Wayne Long travelled to Windsor on March 5, 2026 to announce federal support for
+    Reason: No — The source is about Transport Canada's Trade Diversification Corridors Fund and Arctic Infrastructure Fund, and does not mention Secretary of State Wayne Long, Windsor, or automotive manufacturing sector support.
+    Claim: 3Minister of Energy and Natural Resources Tim Hodgson announced over $3.
+    Reason: **No** – The claim references "Tim Hodgson" as Minister of Energy and Natural Resources, but the source URL and title indicate a March 2026 document from Natural Resources Canada, and there is no verifiable information confirming Tim Hodgson held that ministerial role or that the specific announcement matches the incomplete claim provided.
+
+TOTAL: 130 citations, 1 failed
+============================================================

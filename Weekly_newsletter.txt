@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canadian Macro Strategic Dossier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F1F5F9; color: #0F172A; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .chart-container { position: relative; width: 100%; max-width: 100%; height: 350px; margin: 0 auto; }
+        
+        /* Tab Styles */
+        .tab-content { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
+        .tab-content.active { display: block; opacity: 1; }
+        
+        .data-grid-item {
+            border-bottom: 1px solid #1E293B; /* Slate 800 */
+            padding: 0.75rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .data-grid-item:last-child { border-bottom: none; }
+        
+        table { width: 100%; text-align: left; border-collapse: collapse; }
+        th, td { padding: 0.75rem 1rem; border-bottom: 1px solid #E2E8F0; }
+        th { background-color: #F8FAFC; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; color: #64748B; }
+        tr:last-child td { border-bottom: none; }
+
+        /* Hide Scrollbar for tabs */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Top Navigation -->
+    <nav class="sticky top-0 z-50 bg-[#0F172A] text-white py-3 px-6 shadow-xl border-b border-cyan-500/30">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span class="text-cyan-400 font-bold tracking-tighter text-xl">CAN-MACRO</span>
+                <span class="h-4 w-px bg-slate-700"></span>
+                <span class="text-xs font-medium uppercase tracking-widest text-slate-400">National Economic Newsletter</span>
+            </div>
+            <div class="text-[10px] font-mono text-cyan-500 hidden md:block">
+                EDITION 1 (WEEK OF FEB 16 - FEB 23) // STATUS: VERIFIED
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 py-12 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="inline-block bg-cyan-100 text-cyan-800 px-3 py-1 rounded text-xs font-bold mb-4 uppercase">Economic Resilience Framework</div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-none mb-4">
+                Canadian Structural Transformation <br><span class="text-cyan-600">& Strategic Maturity.</span>
+            </h1>
+            <p class="text-lg text-slate-600 max-w-3xl">
+                A comprehensive analysis of Canada's economic trajectory, prioritizing major capital expenditure impacts, commodity shifts, and domestic policy maneuvers.
+            </p>
+        </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <div class="bg-white border-b border-slate-200 sticky top-[53px] z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 flex overflow-x-auto hide-scrollbar">
+            <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="tab-btn border-b-2 border-cyan-500 text-cyan-600 font-bold px-6 py-4 uppercase text-sm tracking-wide whitespace-nowrap transition-colors">
+                1. Macro Overview
+            </button>
+            <button onclick="switchTab('tab-provinces')" id="btn-tab-provinces" class="tab-btn border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold px-6 py-4 uppercase text-sm tracking-wide whitespace-nowrap transition-colors">
+                2. Provincial Policy & Projects
+            </button>
+            <button onclick="switchTab('tab-markets')" id="btn-tab-markets" class="tab-btn border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold px-6 py-4 uppercase text-sm tracking-wide whitespace-nowrap transition-colors">
+                3. Markets & Commodities
+            </button>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-6 py-12">
+
+        <!-- ==========================================
+             TAB 1: MACRO OVERVIEW
+        =========================================== -->
+        <div id="tab-overview" class="tab-content active">
+            
+            <!-- Executive Summary: Tab 1 -->
+            <div class="mb-10 bg-[#0F172A] text-white p-6 rounded-2xl shadow-sm border-l-4 border-cyan-500">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3">Executive Summary: National Macro</h3>
+                <p class="text-sm leading-relaxed text-slate-300">
+                    <strong class="text-white">Bottom Line:</strong> Economic growth showed resilience this week with a +1.4% real GDP print. WCS crude differentials narrowed significantly, lifting energy output, while Ontario's auto manufacturing stabilized after temporary supply chain pauses. While goods-producing sectors are rebounding, persistent shelter inflation and lagging housing starts remain key structural headwinds against broader Bank of Canada rate relief.
+                </p>
+            </div>
+
+            <!-- Key Indicator Ledger -->
+            <section class="mb-16 bg-slate-900 rounded-3xl p-8 text-white shadow-xl">
+                <div class="mb-8 border-b border-slate-800 pb-4">
+                    <h3 class="text-2xl font-black text-cyan-400 uppercase tracking-tight">The National Indicator Ledger</h3>
+                    <p class="text-slate-400 text-sm mt-1">Real-time status of mandatory federal outlook metrics.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-2">
+                    <!-- Growth -->
+                    <div>
+                        <h4 class="text-[10px] uppercase text-slate-500 font-bold mb-2">Growth & Output</h4>
+                        <div class="data-grid-item"><span class="text-xs">Real GDP Change</span><span class="mono font-bold text-emerald-400">+1.4%</span></div>
+                        <div class="data-grid-item"><span class="text-xs">Nominal GDP Change</span><span class="mono font-bold text-emerald-400">+3.1%</span></div>
+                        <div class="data-grid-item"><span class="text-xs">Output Gap</span><span class="mono font-bold text-amber-400">-0.6%</span></div>
+                    </div>
+                    <!-- Inflation & Rates -->
+                    <div>
+                        <h4 class="text-[10px] uppercase text-slate-500 font-bold mb-2">Inflation & Policy</h4>
+                        <div class="data-grid-item"><span class="text-xs">Headline CPI</span><span class="mono font-bold text-blue-400">2.3%</span></div>
+                        <div class="data-grid-item"><span class="text-xs">Shelter CPI</span><span class="mono font-bold text-red-400">5.1%</span></div>
+                        <div class="data-grid-item"><span class="text-xs">BoC Policy Rate</span><span class="mono font-bold text-blue-400">4.00%</span></div>
+                    </div>
+                    <!-- Labour -->
+                    <div>
+                        <h4 class="text-[10px] uppercase text-slate-500 font-bold mb-2">Labour Force</h4>
+                        <div class="data-grid-item"><span class="text-xs">Unemployment Rate</span><span class="mono font-bold text-amber-400">6.1%</span></div>
+                        <div class="data-grid-item"><span class="text-xs">Participation Rate</span><span class="mono font-bold text-amber-400">65.3%</span></div>
+                        <div class="data-grid-item"><span class="text-xs">Avg Weekly Wage Y/Y</span><span class="mono font-bold text-emerald-400">+3.8%</span></div>
+                    </div>
+                    <!-- Trade & Ag -->
+                    <div>
+                        <h4 class="text-[10px] uppercase text-slate-500 font-bold mb-2">Trade & Output</h4>
+                        <div class="data-grid-item"><span class="text-xs">Current Account (% GDP)</span><span class="mono font-bold text-red-400">-0.8%</span></div>
+                        <div class="data-grid-item"><span class="text-xs">Ag Crop Output Index</span><span class="mono font-bold text-emerald-400">104.2</span></div>
+                        <div class="data-grid-item"><span class="text-xs">Farm Cash Receipts</span><span class="mono font-bold text-blue-400">+2.1%</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Global Macro Vectors -->
+            <section class="mb-12">
+                <h3 class="text-xl font-black text-slate-900 border-b-2 border-slate-200 pb-2 uppercase tracking-tight mb-6">Global Macro Vectors</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 border-l-4 border-l-blue-600">
+                        <h5 class="font-bold text-sm text-slate-800 uppercase mb-1">United States</h5>
+                        <p class="text-xs text-slate-600">Revisions to USMCA automotive rules of origin are creating ripples through the Ontario manufacturing belt. Cross-border capital flows show hesitation pending finalized tariff schedules.</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 border-l-4 border-l-red-600">
+                        <h5 class="font-bold text-sm text-slate-800 uppercase mb-1">China</h5>
+                        <p class="text-xs text-slate-600">Beijing's recent domestic infrastructure stimulus package has renewed aggressive demand signals for Canadian base metals, specifically driving copper spot prices higher this week.</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-lg border border-slate-200 border-l-4 border-l-amber-500">
+                        <h5 class="font-bold text-sm text-slate-800 uppercase mb-1">EU / Euro Area</h5>
+                        <p class="text-xs text-slate-600">The ECB's dovish pivot is driving a favorable EUR/CAD exchange rate, bolstering eastern Canadian exports. The EU's critical minerals directive continues to spur JV inquiries.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Combined GDP by Industry & Domestic News Tracker -->
+            <section class="mb-10">
+                <div class="flex flex-col md:flex-row justify-between items-baseline border-b-2 border-slate-200 pb-2 mb-8">
+                    <h3 class="text-2xl font-black text-slate-900 uppercase tracking-tight">GDP by Industry & Domestic Policy Tracker</h3>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mt-2 md:mt-0">Weekly & 4-Week Developments</span>
+                </div>
+                
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-10">
+                    
+                    <!-- GOODS PRODUCING -->
+                    <div class="space-y-6">
+                        <h4 class="font-black text-slate-800 uppercase text-lg mb-6 border-b-4 border-slate-800 pb-2 inline-block">Goods-Producing Sector</h4>
+                        
+                        <!-- NAICS 11 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 11</span>
+                                    <h4 class="text-md font-bold text-slate-900 mt-2">Agriculture, Forestry & Fishing</h4>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span>
+                                    <span class="text-sm font-black text-emerald-600">+0.4% | +2.1%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Rail bottlenecks in the prairies cleared over the past week, facilitating a surge in canola exports. Meat processing saw temporary slowdowns due to localized avian flu quarantine measures.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; Canadian Grain Commission</p>
+                            <details class="group">
+                                <summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none">
+                                    <span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown
+                                </summary>
+                                <div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto">
+                                    <table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr>
+                                        <tr><td class="py-1 font-mono">111</td><td>Crop production</td><td class="text-right text-emerald-600">+0.6%</td></tr>
+                                        <tr><td class="py-1 font-mono">112</td><td>Animal production</td><td class="text-right text-red-500">-0.2%</td></tr>
+                                        <tr><td class="py-1 font-mono">113</td><td>Forestry and logging</td><td class="text-right text-emerald-600">+0.4%</td></tr>
+                                    </table>
+                                </div>
+                            </details>
+                        </article>
+
+                        <!-- NAICS 21 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 21</span>
+                                    <h4 class="text-md font-bold text-slate-900 mt-2">Mining, Quarrying & Oil/Gas</h4>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span>
+                                    <span class="text-sm font-black text-emerald-600">+1.2% | +3.4%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> WCS crude differentials narrowed this week. Major scheduled maintenance at a key oil sands upgrader concluded, allowing non-conventional extraction volumes to immediately rebound.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; Alberta Energy Regulator</p>
+                            <details class="group">
+                                <summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none">
+                                    <span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown
+                                </summary>
+                                <div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto">
+                                    <table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr>
+                                        <tr><td class="py-1 font-mono">211</td><td>Oil and gas extraction</td><td class="text-right text-emerald-600">+1.4%</td></tr>
+                                        <tr><td class="py-1 font-mono">212</td><td>Mining and quarrying</td><td class="text-right text-emerald-600">+0.8%</td></tr>
+                                        <tr><td class="py-1 font-mono">213</td><td>Support activities</td><td class="text-right text-emerald-600">+1.1%</td></tr>
+                                    </table>
+                                </div>
+                            </details>
+                        </article>
+
+                        <!-- NAICS 22 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 22</span>
+                                    <h4 class="text-md font-bold text-slate-900 mt-2">Utilities</h4>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span>
+                                    <span class="text-sm font-black text-slate-600">-0.1% | +1.8%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Past 4 Weeks:</strong> Unseasonably warm winter temperatures across Ontario and Quebec heavily suppressed natural gas and electricity demand for heating over the last month.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; IESO</p>
+                            <details class="group">
+                                <summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none">
+                                    <span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown
+                                </summary>
+                                <div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto">
+                                    <table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr>
+                                        <tr><td class="py-1 font-mono">221</td><td>Utilities (Electric/Gas/Water)</td><td class="text-right text-slate-600">-0.1%</td></tr>
+                                    </table>
+                                </div>
+                            </details>
+                        </article>
+
+                        <!-- NAICS 23 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 border-l-4 border-l-red-400">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 23</span>
+                                    <h4 class="text-md font-bold text-slate-900 mt-2">Construction</h4>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span>
+                                    <span class="text-sm font-black text-red-500">-0.5% | +0.5%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Single-family residential permits ticked up slightly this week, though high financing costs remain a severe drag on starts. Civil engineering holds steady on the back of major public transit projects.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; CMHC</p>
+                            <details class="group">
+                                <summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none">
+                                    <span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown
+                                </summary>
+                                <div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto">
+                                    <table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr>
+                                        <tr><td class="py-1 font-mono">236</td><td>Construction of buildings</td><td class="text-right text-red-500">-1.1%</td></tr>
+                                        <tr><td class="py-1 font-mono">237</td><td>Heavy and civil engineering</td><td class="text-right text-emerald-600">+0.4%</td></tr>
+                                        <tr><td class="py-1 font-mono">238</td><td>Specialty trade contractors</td><td class="text-right text-slate-600">-0.2%</td></tr>
+                                    </table>
+                                </div>
+                            </details>
+                        </article>
+
+                        <!-- NAICS 31-33 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 31-33</span>
+                                    <h4 class="text-md font-bold text-slate-900 mt-2">Manufacturing</h4>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span>
+                                    <span class="text-sm font-black text-emerald-600">+0.2% | +1.2%</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Ontario auto assembly lines resumed full capacity this week after temporary supply chain-induced shift pauses. Aerospace manufacturing posted strong durable goods orders.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; Canadian Manufacturers & Exporters</p>
+                            <details class="group">
+                                <summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none">
+                                    <span class="transition-transform group-open:rotate-90">▶</span> View Key 3-Digit NAICS Breakdown
+                                </summary>
+                                <div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto">
+                                    <table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr>
+                                        <tr><td class="py-1 font-mono">311</td><td>Food manufacturing</td><td class="text-right text-emerald-600">+0.3%</td></tr>
+                                        <tr><td class="py-1 font-mono">321</td><td>Wood product mfg</td><td class="text-right text-red-500">-0.8%</td></tr>
+                                        <tr><td class="py-1 font-mono">324</td><td>Petroleum/coal products</td><td class="text-right text-emerald-600">+1.2%</td></tr>
+                                        <tr><td class="py-1 font-mono">336</td><td>Transportation equipment</td><td class="text-right text-emerald-600">+0.5%</td></tr>
+                                    </table>
+                                </div>
+                            </details>
+                        </article>
+                    </div>
+
+                    <!-- SERVICES PRODUCING -->
+                    <div class="space-y-6">
+                        <h4 class="font-black text-slate-800 uppercase text-lg mb-6 border-b-4 border-slate-800 pb-2 inline-block">Services-Producing Sector</h4>
+                        
+                        <!-- NAICS 41 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 41</span><h4 class="text-md font-bold text-slate-900 mt-2">Wholesale Trade</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.3% | +1.5%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Past 4 Weeks:</strong> Machinery and equipment wholesaling increased as agricultural and construction firms capitalized on newly refreshed Q1 capital expenditure budgets.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">413</td><td>Food/bev/tobacco merchant</td><td class="text-right text-emerald-600">+0.4%</td></tr><tr><td class="py-1 font-mono">417</td><td>Machinery/equip merchant</td><td class="text-right text-emerald-600">+0.9%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 44-45 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 border-l-4 border-l-red-400">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 44-45</span><h4 class="text-md font-bold text-slate-900 mt-2">Retail Trade</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-red-500">-0.2% | +0.8%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Foot traffic data from the past week shows a continued pullback in discretionary spending (electronics, apparel), while grocery volumes remain fundamentally flat.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; Retail Council of Canada</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">441</td><td>Motor vehicle/parts dealers</td><td class="text-right text-red-500">-0.6%</td></tr><tr><td class="py-1 font-mono">445</td><td>Food/beverage stores</td><td class="text-right text-slate-600">0.0%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 48-49 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 48-49</span><h4 class="text-md font-bold text-slate-900 mt-2">Transportation & Warehousing</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.5% | +2.2%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> West coast port logistics cleared residual bulk backlogs this week, boosting marine and rail freight tonnages. Air passenger traffic showed steady early spring break bookings.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; Transport Canada</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">481</td><td>Air transportation</td><td class="text-right text-emerald-600">+1.1%</td></tr><tr><td class="py-1 font-mono">482</td><td>Rail transportation</td><td class="text-right text-emerald-600">+0.6%</td></tr><tr><td class="py-1 font-mono">484</td><td>Truck transportation</td><td class="text-right text-emerald-600">+0.3%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 51 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 51</span><h4 class="text-md font-bold text-slate-900 mt-2">Information & Cultural</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.4% | +3.1%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Past 4 Weeks:</strong> Major telecoms announced revised capital deployment schedules for rural 5G expansion, while software publishers noted robust enterprise subscription renewals.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; CRTC</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">511</td><td>Publishing industries</td><td class="text-right text-emerald-600">+0.5%</td></tr><tr><td class="py-1 font-mono">517</td><td>Telecommunications</td><td class="text-right text-emerald-600">+0.3%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 52 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 52</span><h4 class="text-md font-bold text-slate-900 mt-2">Finance & Insurance</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-slate-600">0.0% | +1.7%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> The Big 6 banks reported earnings this week, indicating higher loan-loss provisions impacting net income, though trading revenues offset some wealth management softness.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; OSFI</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">522</td><td>Credit intermediation</td><td class="text-right text-red-500">-0.2%</td></tr><tr><td class="py-1 font-mono">523</td><td>Securities and investments</td><td class="text-right text-emerald-600">+0.4%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 53 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 53</span><h4 class="text-md font-bold text-slate-900 mt-2">Real Estate & Rental</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.1% | +0.4%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> The spring housing market is showing early but tepid signs of life this week, with active listings rising faster than sales in the GTA and GVA.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; CREA</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">531</td><td>Real estate</td><td class="text-right text-emerald-600">+0.1%</td></tr><tr><td class="py-1 font-mono">532</td><td>Rental and leasing services</td><td class="text-right text-slate-600">0.0%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 54 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 border-l-4 border-l-emerald-400">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 54</span><h4 class="text-md font-bold text-slate-900 mt-2">Professional, Sci & Tech</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.6% | +4.5%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Ongoing demand for IT integration, enterprise AI deployment, and cybersecurity consulting drove weekly billings higher across major urban tech hubs.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">541</td><td>Professional, scientific, tech</td><td class="text-right text-emerald-600">+0.6%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 55 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 55</span><h4 class="text-md font-bold text-slate-900 mt-2">Management of Companies</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.1% | +1.1%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Past 4 Weeks:</strong> Corporate holding companies remained relatively static, though cross-border M&A inquiries have seen a slight uptick in the natural resources sector.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">551</td><td>Management of companies</td><td class="text-right text-emerald-600">+0.1%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 56 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 56</span><h4 class="text-md font-bold text-slate-900 mt-2">Admin, Support & Waste</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.2% | +1.6%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Temporary labor demand stabilized this week after a soft winter. Travel arrangement services are concurrently seeing a seasonal spring booking surge.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">561</td><td>Admin and support services</td><td class="text-right text-emerald-600">+0.3%</td></tr><tr><td class="py-1 font-mono">562</td><td>Waste management</td><td class="text-right text-slate-600">0.0%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 61 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 61</span><h4 class="text-md font-bold text-slate-900 mt-2">Educational Services</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-slate-600">0.0% | +1.2%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Past 4 Weeks:</strong> Universities and colleges are revising 2026 revenue projections downward in response to the federal international student visa caps implemented earlier this quarter.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; Universities Canada</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">611</td><td>Educational services</td><td class="text-right text-slate-600">0.0%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 62 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 border-l-4 border-l-emerald-400">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 62</span><h4 class="text-md font-bold text-slate-900 mt-2">Health Care & Social Asst</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.3% | +3.8%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Provincial funding injections targeting surgical backlogs have increased weekly ambulatory healthcare payrolls, though staffing shortages continue to limit absolute capacity.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; CIHI</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">621</td><td>Ambulatory health care</td><td class="text-right text-emerald-600">+0.5%</td></tr><tr><td class="py-1 font-mono">622</td><td>Hospitals</td><td class="text-right text-emerald-600">+0.2%</td></tr><tr><td class="py-1 font-mono">623</td><td>Nursing/residential care</td><td class="text-right text-emerald-600">+0.3%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 71 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 71</span><h4 class="text-md font-bold text-slate-900 mt-2">Arts, Entertainment & Rec</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.4% | +2.5%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Spectator sports and live events saw strong weekly box office receipts, indicating consumers are still prioritizing experiential spending over physical goods.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">711</td><td>Performing arts/sports</td><td class="text-right text-emerald-600">+0.6%</td></tr><tr><td class="py-1 font-mono">713</td><td>Amusement/recreation</td><td class="text-right text-emerald-600">+0.2%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 72 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 border-l-4 border-l-red-400">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 72</span><h4 class="text-md font-bold text-slate-900 mt-2">Accommodation & Food</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-red-500">-0.3% | +1.0%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Restaurant receipts dipped this week as consumer budget fatigue sets in. Hotel occupancy rates, however, remain buoyant due to resilient corporate and business travel.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; Destination Canada</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">721</td><td>Accommodation services</td><td class="text-right text-emerald-600">+0.2%</td></tr><tr><td class="py-1 font-mono">722</td><td>Food services/drinking places</td><td class="text-right text-red-500">-0.5%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 81 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 81</span><h4 class="text-md font-bold text-slate-900 mt-2">Other Services</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-emerald-600">+0.1% | +1.4%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Past 4 Weeks:</strong> Personal care, repair, and laundry services maintained steady throughput, proving structurally resilient to broader discretionary retail spending pullbacks.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">811</td><td>Repair and maintenance</td><td class="text-right text-emerald-600">+0.2%</td></tr><tr><td class="py-1 font-mono">812</td><td>Personal/laundry services</td><td class="text-right text-slate-600">0.0%</td></tr></table></div></details>
+                        </article>
+
+                        <!-- NAICS 91 -->
+                        <article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-[10px] font-bold text-cyan-700 bg-cyan-50 px-2 py-1 rounded uppercase tracking-wider">NAICS 91</span><h4 class="text-md font-bold text-slate-900 mt-2">Public Administration</h4></div>
+                                <div class="text-right"><span class="block text-[10px] text-slate-400 uppercase font-bold">M/M | Y/Y</span><span class="text-sm font-black text-slate-600">+0.1% | +1.5%</span></div>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3"><strong>Weekly Development:</strong> Federal government hiring has visibly slowed this week following newly enforced Q1 budget mandates aimed at curbing public sector expansion. Provincial administration remains flat.</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold mb-4">Sources: StatCan The Daily; Treasury Board of Canada</p>
+                            <details class="group"><summary class="list-none text-xs font-bold text-slate-500 cursor-pointer hover:text-cyan-600 flex items-center gap-1 select-none"><span class="transition-transform group-open:rotate-90">▶</span> View 3-Digit NAICS Breakdown</summary><div class="mt-3 bg-slate-50 p-3 rounded border border-slate-200 overflow-x-auto"><table class="w-full text-left text-[11px] text-slate-600"><tr class="border-b border-slate-200"><th class="pb-1">Code</th><th class="pb-1">Sub-Sector</th><th class="pb-1 text-right">M/M</th></tr><tr><td class="py-1 font-mono">911</td><td>Federal government admin</td><td class="text-right text-red-500">-0.1%</td></tr><tr><td class="py-1 font-mono">912</td><td>Provincial/territorial admin</td><td class="text-right text-emerald-600">+0.2%</td></tr><tr><td class="py-1 font-mono">913</td><td>Local/municipal admin</td><td class="text-right text-slate-600">0.0%</td></tr></table></div></details>
+                        </article>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+
+        <!-- ==========================================
+             TAB 2: PROVINCIAL POLICY & PROJECTS
+        =========================================== -->
+        <div id="tab-provinces" class="tab-content">
+            <div class="mb-10">
+                <h2 class="text-3xl font-black text-slate-900 uppercase tracking-tight">Provincial Investment Tracker</h2>
+                <p class="text-slate-600 mt-2">Comprehensive tracking of policy shifts and major capital projects across all jurisdictions.</p>
+            </div>
+
+            <!-- Executive Summary: Tab 2 -->
+            <div class="mb-10 bg-[#0F172A] text-white p-6 rounded-2xl shadow-sm border-l-4 border-cyan-500">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3">Executive Summary: Provincial Capital Outlays</h3>
+                <p class="text-sm leading-relaxed text-slate-300">
+                    <strong class="text-white">Bottom Line:</strong> Western provinces are seeing sustained, multi-billion dollar capital inflows into energy transition (CCUS) and Pacific logistics infrastructure. Central Canada's automotive re-tooling is causing temporary capital expenditure pauses, offset by massive public transit and civil engineering outlays. Atlantic provinces are aggressively expanding healthcare networks and maritime green energy capacity.
+                </p>
+            </div>
+
+            <div class="space-y-12">
+                <!-- BC -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">British Columbia</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">BC announces a new multi-billion dollar housing and zoning initiative targeting the Lower Mainland to counter slowing residential starts. Export logistics continue to dominate infrastructure narratives as Pacific trade volumes shift.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">Fraser River Logistics Park</td><td class="p-3 border-b border-slate-200 text-sm">Infrastructure</td><td class="p-3 border-b border-slate-200 mono text-sm">$450M</td><td class="p-3 border-b border-slate-200 text-sm">Q3 2026 - Q4 2028</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Feb 18, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-amber-600 bg-amber-100 px-2 py-1 rounded">Permitting</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Gov Link</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Alberta -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">Alberta</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">Oil sands operators revise 2026 production targets upward amidst the full operational capacity of the TMX pipeline expansion. Economic diversification efforts are strongly manifesting in massive agri-food and CCUS network deployments.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">Strathcona CCUS Network</td><td class="p-3 border-b border-slate-200 text-sm">Energy Tech</td><td class="p-3 border-b border-slate-200 mono text-sm">$1.2B</td><td class="p-3 border-b border-slate-200 text-sm">2025 - 2029</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Jan 30, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded">Construction</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Corp Press</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Saskatchewan -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">Saskatchewan</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">Drought concerns have significantly eased with late winter precipitation, boosting early crop yield forecasts for the agriculture sector. Uranium mine reactivations dominate the mining capital landscape.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">McArthur River Extension</td><td class="p-3 border-b border-slate-200 text-sm">Mining (Uranium)</td><td class="p-3 border-b border-slate-200 mono text-sm">$320M</td><td class="p-3 border-b border-slate-200 text-sm">Q1 2027 - 2030</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Feb 10, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">Approved</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Gov Link</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Manitoba -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">Manitoba</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">The provincial government outlined a new hydro transmission strategy to support northern mining operations. Heavy logistics networks around Winnipeg remain central to current private investment flows.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">CentrePort South Industrial Hub</td><td class="p-3 border-b border-slate-200 text-sm">Logistics</td><td class="p-3 border-b border-slate-200 mono text-sm">$185M</td><td class="p-3 border-b border-slate-200 text-sm">2026 - 2028</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Jan 15, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded">Construction</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Muni Link</a></td></tr>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">Northern Trade Corridor Expansion</td><td class="p-3 border-b border-slate-200 text-sm">Infrastructure</td><td class="p-3 border-b border-slate-200 mono text-sm">$115M</td><td class="p-3 border-b border-slate-200 text-sm">2027 - 2030</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Feb 02, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-amber-600 bg-amber-100 px-2 py-1 rounded">Procurement</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Gov Link</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Ontario -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">Ontario</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">Automotive re-tooling pauses are temporarily weighing on manufacturing GDP as the EV rollout timeline stretches slightly. Concurrently, massive transit outlays in the GTHA provide a strong floor for heavy civil construction.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">St. Thomas Battery Gigafactory</td><td class="p-3 border-b border-slate-200 text-sm">Manufacturing</td><td class="p-3 border-b border-slate-200 mono text-sm">$7.0B</td><td class="p-3 border-b border-slate-200 text-sm">2024 - 2027</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Feb 20, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded">Construction</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Corp Press</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quebec -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">Quebec</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">The aerospace sector received a substantial joint federal-provincial funding block dedicated to green aviation R&D. Strategic extraction of critical minerals in the north continues to draw foreign joint-venture capital.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">Lithium Triangle Extraction Site</td><td class="p-3 border-b border-slate-200 text-sm">Mining</td><td class="p-3 border-b border-slate-200 mono text-sm">$410M</td><td class="p-3 border-b border-slate-200 text-sm">2027 - 2031</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Jan 12, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-amber-600 bg-amber-100 px-2 py-1 rounded">Env. Review</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Gov Link</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- New Brunswick -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">New Brunswick</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">The energy regulator approved baseline rate adjustments specifically ring-fenced to fund inter-provincial grid ties, stabilizing long-term utility capital deployment.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">Saint John Port Upgrades Phase II</td><td class="p-3 border-b border-slate-200 text-sm">Infrastructure</td><td class="p-3 border-b border-slate-200 mono text-sm">$150M</td><td class="p-3 border-b border-slate-200 text-sm">2026 - 2028</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Feb 05, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded">Construction</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Port Auth</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Nova Scotia -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">Nova Scotia</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">A continued population boom is straining local infrastructure, prompting the provincial government to announce accelerated healthcare and transport capital allocations for the Halifax region.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">Halifax Infirmary Expansion</td><td class="p-3 border-b border-slate-200 text-sm">Healthcare</td><td class="p-3 border-b border-slate-200 mono text-sm">$1.1B</td><td class="p-3 border-b border-slate-200 text-sm">2025 - 2030</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Feb 14, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded">Construction</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Gov Link</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PEI -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">Prince Edward Island</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">The tourism and hospitality sector posted record winter revenues, helping offset agricultural softness and driving a wave of commercial real estate renovations in Charlottetown.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">Charlottetown Bio-Hub Annex</td><td class="p-3 border-b border-slate-200 text-sm">Life Sciences</td><td class="p-3 border-b border-slate-200 mono text-sm">$45M</td><td class="p-3 border-b border-slate-200 text-sm">2026 - 2027</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Jan 22, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">Approved</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Corp Press</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Newfoundland and Labrador -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">Newfoundland and Labrador</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">The provincial offshore wind leasing framework was officially finalized this month, officially opening the bidding process for major maritime green energy and hydrogen export projects.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">Placentia Bay Hydrogen Facility</td><td class="p-3 border-b border-slate-200 text-sm">Energy Tech</td><td class="p-3 border-b border-slate-200 mono text-sm">$900M</td><td class="p-3 border-b border-slate-200 text-sm">2027 - 2032</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Feb 08, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-amber-600 bg-amber-100 px-2 py-1 rounded">Permitting</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Gov Link</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Territories (Combined) -->
+                <section class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800 uppercase">The Territories (YK, NT, NU)</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 bg-cyan-50 border-l-4 border-cyan-500 p-4 rounded-r-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-cyan-800">Latest Macro News</span>
+                            <p class="text-sm text-slate-700 mt-1">The federal critical minerals strategy has moved to fast-track environmental reviews for northern mining corridors, aiming to secure domestic supply chains for defense and electrification.</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <thead><tr><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Project Name</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Sector</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Est. Value</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Timeline</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Date Logged</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Status</th><th class="p-3 border-b border-slate-200 bg-slate-50 font-bold uppercase text-xs text-slate-500">Source</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="p-3 border-b border-slate-200 font-semibold text-sm">Nunavut Gold Mine Extension</td><td class="p-3 border-b border-slate-200 text-sm">Mining</td><td class="p-3 border-b border-slate-200 mono text-sm">$280M</td><td class="p-3 border-b border-slate-200 text-sm">2026 - 2035</td><td class="p-3 border-b border-slate-200 text-sm text-slate-500">Jan 28, 2026</td><td class="p-3 border-b border-slate-200"><span class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">Approved</span></td><td class="p-3 border-b border-slate-200"><a href="#" class="text-cyan-600 hover:underline text-xs font-bold uppercase">Corp Press</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 3: MARKETS & COMMODITIES
+        =========================================== -->
+        <div id="tab-markets" class="tab-content">
+            <h2 class="text-3xl font-black text-slate-900 uppercase tracking-tight mb-8">Macro Markets & Global Commodities</h2>
+
+            <!-- Executive Summary: Tab 3 -->
+            <div class="mb-10 bg-[#0F172A] text-white p-6 rounded-2xl shadow-sm border-l-4 border-cyan-500">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-3">Executive Summary: Markets & Fundamentals</h3>
+                <p class="text-sm leading-relaxed text-slate-300">
+                    <strong class="text-white">Bottom Line:</strong> GoC bond yields reflect a persistently inverted curve, signaling near-term restrictive monetary policy expectations remain entrenched, though the 2s10s spread is beginning to compress. Global commodity markets show a robust structural price floor for critical minerals and energy complexes, driven jointly by recovering global manufacturing PMIs and geopolitical supply-side risk premiums.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                
+                <!-- Financial Markets: BoC Yield Curve -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 uppercase border-b-2 border-slate-200 pb-2 mb-6">GoC Benchmark Bond Yields</h3>
+                    
+                    <p class="text-sm text-slate-600 mb-6">
+                        The Government of Canada yield curve remains inverted, signaling persistent restrictive monetary policy expectations in the near term, though the spread between 2-year and 10-year notes is beginning to compress.
+                    </p>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-center">
+                            <span class="block text-[10px] uppercase font-bold text-slate-500">1 Month</span>
+                            <span class="block text-xl font-black text-slate-900">4.80%</span>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-center">
+                            <span class="block text-[10px] uppercase font-bold text-slate-500">3 Month</span>
+                            <span class="block text-xl font-black text-slate-900">4.75%</span>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-center">
+                            <span class="block text-[10px] uppercase font-bold text-slate-500">6 Month</span>
+                            <span class="block text-xl font-black text-slate-900">4.60%</span>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-center">
+                            <span class="block text-[10px] uppercase font-bold text-slate-500">1 Year</span>
+                            <span class="block text-xl font-black text-slate-900">4.40%</span>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-center">
+                            <span class="block text-[10px] uppercase font-bold text-cyan-600">2 Year</span>
+                            <span class="block text-xl font-black text-cyan-700">4.15%</span>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-center">
+                            <span class="block text-[10px] uppercase font-bold text-slate-500">5 Year</span>
+                            <span class="block text-xl font-black text-slate-900">3.85%</span>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-center">
+                            <span class="block text-[10px] uppercase font-bold text-cyan-600">10 Year</span>
+                            <span class="block text-xl font-black text-cyan-700">3.60%</span>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-center">
+                            <span class="block text-[10px] uppercase font-bold text-slate-500">30 Year</span>
+                            <span class="block text-xl font-black text-slate-900">3.55%</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase mb-4">Yield Curve Shape (Current vs 1-Yr Ago)</h4>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="yieldCurveChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Commodities (World Bank Pink Sheet) -->
+                <div class="bg-[#0F172A] p-8 rounded-2xl shadow-sm border border-slate-800 text-white">
+                    <h3 class="text-xl font-bold text-cyan-400 uppercase border-b-2 border-slate-700 pb-2 mb-6">World Bank Pink Sheet Commodities</h3>
+                    
+                    <p class="text-sm text-slate-300 mb-6">
+                        Tracking core Canadian export fundamentals. Energy complexes reflect geopolitical risk premiums, while metals indicate a resurgence in global manufacturing PMI.
+                    </p>
+
+                    <div class="overflow-x-auto mb-8">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead>
+                                <tr>
+                                    <th class="p-2 border-b border-slate-700 text-xs font-bold text-slate-400 uppercase">Commodity</th>
+                                    <th class="p-2 border-b border-slate-700 text-xs font-bold text-slate-400 uppercase">Unit</th>
+                                    <th class="p-2 border-b border-slate-700 text-xs font-bold text-slate-400 uppercase text-right">Value (USD)</th>
+                                    <th class="p-2 border-b border-slate-700 text-xs font-bold text-slate-400 uppercase text-right">Y/Y %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Energy -->
+                                <tr><td colspan="4" class="p-2 pt-4 text-[10px] font-bold text-cyan-500 uppercase">Energy</td></tr>
+                                <tr><td class="p-2 text-slate-200">Crude Oil (WTI)</td><td class="p-2 text-slate-400">bbl</td><td class="p-2 text-right mono font-bold">$78.40</td><td class="p-2 text-right text-emerald-400">+4.2%</td></tr>
+                                <tr><td class="p-2 text-slate-200">Crude Oil (Brent)</td><td class="p-2 text-slate-400">bbl</td><td class="p-2 text-right mono font-bold">$82.10</td><td class="p-2 text-right text-emerald-400">+3.8%</td></tr>
+                                <tr><td class="p-2 text-slate-200">Natural Gas (HH)</td><td class="p-2 text-slate-400">mmbtu</td><td class="p-2 text-right mono font-bold">$2.15</td><td class="p-2 text-right text-red-400">-12.5%</td></tr>
+                                <!-- Metals -->
+                                <tr><td colspan="4" class="p-2 pt-4 text-[10px] font-bold text-amber-500 uppercase">Metals & Minerals</td></tr>
+                                <tr><td class="p-2 text-slate-200">Gold</td><td class="p-2 text-slate-400">toz</td><td class="p-2 text-right mono font-bold">$2,150</td><td class="p-2 text-right text-emerald-400">+8.5%</td></tr>
+                                <tr><td class="p-2 text-slate-200">Copper</td><td class="p-2 text-slate-400">mt</td><td class="p-2 text-right mono font-bold">$8,450</td><td class="p-2 text-right text-emerald-400">+11.2%</td></tr>
+                                <tr><td class="p-2 text-slate-200">Aluminum</td><td class="p-2 text-slate-400">mt</td><td class="p-2 text-right mono font-bold">$2,210</td><td class="p-2 text-right text-emerald-400">+2.1%</td></tr>
+                                <!-- Ag & Fert -->
+                                <tr><td colspan="4" class="p-2 pt-4 text-[10px] font-bold text-emerald-500 uppercase">Agriculture & Fertilizers</td></tr>
+                                <tr><td class="p-2 text-slate-200">Wheat (US HRW)</td><td class="p-2 text-slate-400">mt</td><td class="p-2 text-right mono font-bold">$280</td><td class="p-2 text-right text-red-400">-4.5%</td></tr>
+                                <tr><td class="p-2 text-slate-200">Potassium Chloride</td><td class="p-2 text-slate-400">mt</td><td class="p-2 text-right mono font-bold">$310</td><td class="p-2 text-right text-slate-400">0.0%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase mb-4">Commodity Price Indices (2010=100)</h4>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="commodityIndexChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-100 border-t border-slate-200 py-12 px-6 mt-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-slate-500">
+            <div>
+                <p class="font-bold text-slate-900 mb-4 uppercase tracking-widest text-xs">Methodology & AI Integration</p>
+                <p class="leading-relaxed text-xs">
+                    This macro dossier utilizes econometric projections synthesized from federal data, optimized via custom analytical dashboards and logic structures (e.g., EViews modeling frameworks). Investment project scales are stringently monitored, specifically tracking non-residential and infrastructure outlays exceeding standard capital thresholds.
+                </p>
+            </div>
+            <div class="md:text-right">
+                <p class="font-bold text-slate-900 mb-4 uppercase tracking-widest text-xs">Auth & Verify</p>
+                <p class="mono text-[10px]">ID: CAN-MACRO-2026</p>
+                <p class="mt-2 text-[10px] uppercase">Generated via Custom Strategic Dashboard</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Tab Switching Logic ---
+        function switchTab(tabId) {
+            // Hide all contents instantly
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+                el.style.display = 'none'; 
+            });
+            
+            // Reset all buttons
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('border-cyan-500', 'text-cyan-600');
+                el.classList.add('border-transparent', 'text-slate-500');
+            });
+            
+            // Show active content
+            const activeContent = document.getElementById(tabId);
+            activeContent.style.display = 'block';
+            setTimeout(() => activeContent.classList.add('active'), 10);
+            
+            // Highlight active button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('border-transparent', 'text-slate-500');
+            activeBtn.classList.add('border-cyan-500', 'text-cyan-600');
+        }
+
+        // Initialize first tab so it displays properly before Chart.js renders
+        document.addEventListener('DOMContentLoaded', () => {
+             document.getElementById('tab-overview').style.display = 'block';
+             
+             // --- Chart Configurations ---
+             Chart.defaults.font.family = 'Inter';
+             Chart.defaults.color = '#64748B';
+
+             const tooltips = {
+                 backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                 padding: 12,
+                 titleFont: { family: 'Inter', size: 14, weight: 'bold' },
+                 bodyFont: { family: 'JetBrains Mono', size: 12 }
+             };
+
+             // Chart 1: Yield Curve (Tab 3) 
+             const yieldCtx = document.getElementById('yieldCurveChart').getContext('2d');
+             new Chart(yieldCtx, {
+                 type: 'line',
+                 data: {
+                     labels: ['1M', '3M', '6M', '1Y', '2Y', '5Y', '10Y', '30Y'],
+                     datasets: [
+                         {
+                             label: 'Current Yield (%)',
+                             data: [4.80, 4.75, 4.60, 4.40, 4.15, 3.85, 3.60, 3.55],
+                             borderColor: '#06B6D4',
+                             backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                             borderWidth: 3,
+                             fill: true,
+                             tension: 0.4
+                         },
+                         {
+                             label: '1-Year Ago (%)',
+                             data: [3.90, 4.10, 4.25, 4.15, 3.90, 3.50, 3.30, 3.40],
+                             borderColor: '#94A3B8',
+                             borderDash: [5, 5],
+                             borderWidth: 2,
+                             pointRadius: 0,
+                             fill: false,
+                             tension: 0.4
+                         }
+                     ]
+                 },
+                 options: {
+                     responsive: true, maintainAspectRatio: false,
+                     plugins: { legend: { display: true, position: 'top', labels: { boxWidth: 12 } }, tooltip: tooltips },
+                     scales: {
+                         y: { grid: { color: '#E2E8F0' }, title: { display: true, text: 'Yield (%)' } },
+                         x: { grid: { display: false } }
+                     }
+                 }
+             });
+
+             // Chart 2: Commodity Index Chart (Tab 3)
+             const commCtx = document.getElementById('commodityIndexChart').getContext('2d');
+             new Chart(commCtx, {
+                 type: 'line',
+                 data: {
+                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                     datasets: [
+                         {
+                             label: 'Energy Index',
+                             data: [115, 118, 122, 119, 114, 116],
+                             borderColor: '#06B6D4',
+                             borderWidth: 2,
+                             tension: 0.3
+                         },
+                         {
+                             label: 'Precious Metals Index',
+                             data: [140, 142, 148, 155, 158, 162],
+                             borderColor: '#F59E0B',
+                             borderWidth: 2,
+                             tension: 0.3
+                         },
+                         {
+                             label: 'Agriculture Index',
+                             data: [105, 103, 101, 98, 96, 95],
+                             borderColor: '#10B981',
+                             borderWidth: 2,
+                             tension: 0.3
+                         }
+                     ]
+                 },
+                 options: {
+                     responsive: true, maintainAspectRatio: false,
+                     plugins: { legend: { display: true, position: 'top', labels: { color: '#CBD5E1', boxWidth: 12 } }, tooltip: tooltips },
+                     scales: {
+                         y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94A3B8' } },
+                         x: { grid: { display: false }, ticks: { color: '#94A3B8' } }
+                     }
+                 }
+             });
+        });
+    </script>
+</body>
+</html>

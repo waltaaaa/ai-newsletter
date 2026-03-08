@@ -1,0 +1,104 @@
+"""
+pro_gap_analysis.py — Pro analyzes Flash's provincial sweep results for gaps.
+
+Runs weekly after Flash completes broad provincial sweeps (T2).
+Pro identifies underrepresented sectors, missing project types, and
+generates targeted follow-up queries for Flash to run the next week.
+"""
+
+import logging
+from claude_reasoning import reason_sync
+from pipeline_state import parse_json_response
+
+logger = logging.getLogger(__name__)
+
+GAP_ANALYSIS_SYSTEM = """You are an expert analyst of the Canadian capital projects landscape.
+You have deep knowledge of each province's economic profile, major industries,
+and typical project pipeline.
+
+Your task: review the projects found by a web search for a given province and
+identify what's MISSING. Major provinces should have projects across most sectors.
+If a province with significant mining activity shows no mining projects, that's a gap.
+If a province with a housing crisis shows no residential projects, that's suspicious.
+
+For each gap identified, explain why you'd expect projects in that sector and
+suggest a specific, targeted search query that would find them.
+
+Return JSON:
+{
+  "province": "XX",
+  "projects_found": 8,
+  "sectors_represented": ["infrastructure", "healthcare"],
+  "gaps": [
+    {
+      "sector": "mining",
+      "reasoning": "Ontario has the Ring of Fire and significant mining activity in Sudbury/Timmins, but no mining projects appeared",
+      "suggested_query": "Ring of Fire mining projects Ontario 2025-2026 chromite development",
+      "confidence": "high"
+    }
+  ],
+  "overall_assessment": "Coverage appears incomplete — 3 major sectors missing"
+}"""
+
+
+def analyze_provincial_gaps_sync(sweep_results_by_province):
+    """Analyze Flash's provincial sweep results for coverage gaps.
+
+    Args:
+        sweep_results_by_province: dict of {province_name: [project_dicts]}
+
+    Returns:
+        list of follow-up query dicts for Flash to run next week
+    """
+    follow_up_queries = []
+
+    for province, projects in sweep_results_by_province.items():
+        # Summarize what Flash found
+        project_summary = []
+        for p in projects:
+            val = p.get("value", "Not disclosed")
+            project_summary.append(
+                f"- {p.get('name', 'Unknown')}: {p.get('naics_2digit') or p.get('sector', 'unknown')} sector, "
+                f"{val}, status: {p.get('status', 'unknown')}"
+            )
+
+        summary_text = "\n".join(project_summary) if project_summary else "(No projects found)"
+
+        user_prompt = (
+            f"Province: {province}\n"
+            f"Flash web search found {len(projects)} projects this week:\n\n"
+            f"{summary_text}\n\n"
+            f"Analyze this list. What major project types or sectors are missing "
+            f"that you would expect for this province? What should we search for next week?"
+        )
+
+        result = reason_sync(GAP_ANALYSIS_SYSTEM, user_prompt, task_name="gap_analysis")
+        response = result["text"] if result else None
+        data = parse_json_response(response)
+
+        if data:
+            for gap in data.get("gaps", []):
+                if gap.get("suggested_query") and gap.get("confidence") in ("high", "medium"):
+                    follow_up_queries.append({
+                        "query": gap["suggested_query"],
+                        "province": province,
+                        "sector": gap.get("sector", "unknown"),
+                        "source": "pro_gap_analysis",
+                        "reasoning": gap.get("reasoning", ""),
+                        "language": "en",
+                        "geo_tier": "province",
+                    })
+
+            gaps_found = len(data.get("gaps", []))
+            high_med = len([g for g in data.get("gaps", [])
+                           if g.get("confidence") in ("high", "medium")])
+            logger.info(
+                f"  {province}: {len(projects)} found, "
+                f"{gaps_found} gaps identified, {high_med} follow-up queries"
+            )
+        else:
+            logger.warning(f"  {province}: gap analysis returned no parseable result")
+
+    print(f"  [PRO] Gap analysis: {len(follow_up_queries)} follow-up queries "
+          f"from {len(sweep_results_by_province)} provinces")
+    return follow_up_queries

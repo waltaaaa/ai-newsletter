@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Dispatch</title>
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1634638022003-1e5928bb311f?w=1920&q=80">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.7/d3.layout.cloud.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+<style>
+:root {
+  --bg-primary:#133D62;--bg-white:#FFFFFF;--bg-subtle:#174A75;--bg-hover:#1C5688;
+  --border-light:#246A9A;--border-medium:#2E7DAD;--border-strong:#3A90C0;
+  --text-primary:#E8F0F8;--text-secondary:#B8D0E4;--text-tertiary:#8AAFC8;
+  --accent-blue:#2C4A7C;--accent-blue-light:#DCE4EF;--accent-blue-soft:#4A6FA5;
+  --status-green:#15803D;--status-green-bg:#DCFCE7;
+  --status-red:#B91C1C;--status-red-bg:#FEE2E2;
+  --status-amber:#B45309;--status-amber-bg:#FEF3C7;
+  --status-blue:#1E40AF;--status-blue-bg:#DBEAFE;
+  --status-purple:#6D28D9;--status-purple-bg:#EDE9FE;
+  --shadow-xs:0 1px 2px rgba(0,0,0,.05);
+  --shadow-sm:0 1px 4px rgba(0,0,0,.06),0 2px 6px rgba(0,0,0,.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 28px rgba(0,0,0,.10);
+  --radius-sm:6px;--radius-md:10px;--radius-lg:14px;--radius-xl:20px;
+  --font-body:'Plus Jakarta Sans',-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --text-xs:.75rem;--text-sm:.8125rem;--text-base:.9375rem;
+  --text-lg:1.125rem;--text-xl:1.375rem;--text-2xl:1.75rem;--text-3xl:2.25rem;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-medium);border-radius:3px}
+@keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .3s ease both}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+/* Hero */
+.hero{position:relative;overflow:hidden;background:var(--bg-subtle);padding:76px 0 64px}
+.hero::before{content:'';position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1634638022003-1e5928bb311f?w=1920&q=80');background-size:cover;background-position:center 40%;filter:saturate(.85) brightness(1);opacity:.8;z-index:0}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(19,61,98,.82) 25%,rgba(19,61,98,.45) 50%,rgba(19,61,98,.1) 75%,transparent 100%);z-index:1}
+.hero-content{position:relative;z-index:2;max-width:600px;background:rgba(19,61,98,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:var(--radius-lg);padding:24px 28px}
+.hero-eyebrow{font-size:var(--text-xs);letter-spacing:1.5px;color:#8AAFC8;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+.hero-title{font-size:var(--text-3xl);font-weight:700;color:#FFFFFF;line-height:1.2;margin-bottom:6px}
+.hero-subtitle{font-size:var(--text-base);color:#D0E0F0;margin-bottom:10px;line-height:1.5}
+.hero-badges{display:flex;gap:16px;font-size:var(--text-sm);color:#8AAFC8}
+.hero-badges span::before{content:'·';margin-right:8px;color:var(--border-medium)}
+.hero-badges span:first-child::before{display:none}
+/* Nav */
+.edition-item:hover{background:#eef1f6!important}
+.main-nav{position:sticky;top:0;z-index:100;background:var(--bg-white);border-bottom:1px solid var(--border-light);box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px}
+.nav-tabs{display:flex;justify-content:center;gap:0;list-style:none}
+.nav-tab{padding:10px 18px;font-size:var(--text-sm);font-weight:600;letter-spacing:.3px;color:#4A4640;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s ease;user-select:none}
+.nav-tab:hover{color:#1A1814}
+.nav-tab.active{color:var(--accent-blue);border-bottom-color:var(--accent-blue)}
+.nav-meta{text-align:center;font-size:var(--text-xs);color:#6E6A63;padding:4px 0 6px}
+/* Tab panels */
+.tab-panel{display:none;padding:24px 0 40px}
+.tab-panel.active{display:block}
+/* Section banners */
+.section-banner{position:relative;overflow:hidden;height:160px;background:var(--bg-subtle);border-radius:var(--radius-lg);margin-bottom:20px;display:flex;align-items:center;padding:0 32px;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 0 24px 8px rgba(19,61,98,.5);border:1px solid rgba(255,255,255,.1)}
+.section-banner::before{content:'';position:absolute;inset:0;background-image:var(--banner-img);background-size:cover;background-position:center;filter:saturate(.8) brightness(1);opacity:.7}
+.section-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(19,61,98,.8) 25%,rgba(19,61,98,.35) 55%,rgba(19,61,98,.1) 100%)}
+.section-banner-content{position:relative;z-index:2}
+.section-banner-title{font-size:var(--text-xl);font-weight:700;color:#E8F0F8}
+.section-banner-sub{font-size:var(--text-sm);color:#B8D0E4;margin-top:4px}
+.hero-map{position:absolute;right:8%;top:50%;transform:translateY(-50%);z-index:1;opacity:.2;pointer-events:none;mix-blend-mode:screen}
+/* Cards */
+.card{background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:22px;transition:box-shadow .2s ease;color:#111}
+.card:hover{box-shadow:var(--shadow-md)}
+.card-header{font-size:var(--text-lg);font-weight:600;color:#111;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card-body{font-size:var(--text-sm);line-height:1.65;color:#111;padding:4px 6px}
+.card-body li{margin-bottom:6px}
+.card-body strong{color:var(--accent-blue);font-weight:600}
+.card-body sup{color:var(--accent-blue);font-weight:600;cursor:pointer;font-size:.7em}
+.card-body sup:hover{text-decoration:underline}
+/* Indicator pills */
+.indicator-strip{display:flex;gap:8px;padding:2px 0 8px;justify-content:space-between}
+.indicator-strip::-webkit-scrollbar{display:none}
+.indicator-pill{flex:1 1 0;display:inline-flex;flex-direction:column;background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:8px 12px;min-width:0;transition:box-shadow .15s ease}
+.indicator-pill:hover{box-shadow:var(--shadow-md)}
+.indicator-pill-label{font-size:var(--text-xs);color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.indicator-pill-value{font-family:var(--font-mono);font-size:var(--text-base);font-weight:600;color:#111}
+.indicator-pill-change{font-size:var(--text-xs);font-weight:500;margin-top:2px}
+.indicator-pill-date{font-size:var(--text-xs);color:#555;margin-top:4px}
+.indicator-pill-source{font-size:.6875rem;color:var(--accent-blue);text-decoration:none;margin-top:4px}
+.indicator-pill-source:hover{text-decoration:underline}
+.sparkline-wrap{width:100%;height:48px;margin-top:auto;overflow:hidden;position:relative}
+.sparkline{width:100%;height:100%}
+.change-up{color:var(--status-green)}.change-down{color:var(--status-red)}.change-flat{color:#777}
+.ind-toggle{background:#0F3555;color:#6B9EC0;border-right:1px solid #1A4A70}.ind-toggle:last-child{border-right:none}.ind-toggle:hover{background:#1A4A70;color:#E8F0F8}.ind-toggle.active{background:#3B7DD8;color:#fff;box-shadow:inset 0 -2px 0 #2B6BC0}
+/* Indicator dropdown */
+.indicator-dropdown{margin-top:8px}
+.indicator-dropdown-toggle{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;font-size:var(--text-sm);font-weight:500;color:#B8D0E4;background:var(--bg-subtle);border:1px solid var(--border-light);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s ease}
+.indicator-dropdown-toggle:hover{background:var(--bg-hover);color:#E8F0F8}
+.indicator-dropdown-toggle .chevron{transition:transform .2s ease;font-size:.8em}
+.indicator-dropdown-toggle.open .chevron{transform:rotate(180deg)}
+.indicator-dropdown-body{display:none;margin-top:12px;background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden}
+.indicator-dropdown-body.open{display:block}
+.indicator-filter{width:100%;padding:10px 16px;border:none;border-bottom:1px solid #ddd;font-family:var(--font-body);font-size:var(--text-sm);outline:none;background:#f5f5f5;color:#111}
+.indicator-filter:focus{background:#fff}
+.indicator-group-header{padding:10px 16px;font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#555;background:#f0f0f0;border-top:1px solid #ddd}
+.indicator-row{display:grid;grid-template-columns:1fr 100px 100px 120px 60px;padding:8px 16px;font-size:var(--text-sm);align-items:center;border-bottom:1px solid #e5e5e5;color:#111}
+.indicator-row:nth-child(even){background:#f8f9fb}
+.indicator-row:hover{background:#eef1f6}
+.indicator-row-name{color:#111;font-weight:500}
+.indicator-row-value{font-family:var(--font-mono);font-weight:500;text-align:right;color:#111}
+.indicator-row-change{text-align:right;font-weight:500}
+.indicator-row-period{color:#777;font-size:var(--text-xs)}
+.indicator-row-source a{color:var(--accent-blue);text-decoration:none;font-size:var(--text-xs)}
+.indicator-row-source a:hover{text-decoration:underline}
+/* Province selector */
+.province-selector{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.province-selector::-webkit-scrollbar{display:none}
+.province-pill{flex:0 0 auto;padding:6px 12px;font-size:var(--text-sm);font-weight:600;border-radius:var(--radius-md);cursor:pointer;background:var(--bg-subtle);color:#B8D0E4;border:1px solid transparent;transition:all .15s ease}
+.province-pill:hover{background:var(--bg-hover);color:#E8F0F8}
+.province-pill.active{background:var(--accent-blue);color:#fff;border-color:var(--accent-blue)}
+/* Two column + mini charts */
+.two-col{display:grid;grid-template-columns:55% 45%;gap:16px}
+.mini-chart-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.mini-chart-card{background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:10px 12px;cursor:pointer;transition:box-shadow .15s ease}
+.mini-chart-card:hover{box-shadow:var(--shadow-md)}
+.mini-chart-label{font-size:var(--text-xs);text-transform:uppercase;color:#555;letter-spacing:.5px}
+.mini-chart-value{font-family:var(--font-mono);font-size:var(--text-base);font-weight:600;margin:2px 0;color:#111}
+.mini-chart-canvas{width:100%;height:60px}
+/* NAICS sector grid */
+.sector-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.sector-card{background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:14px 16px;border-left:3px solid var(--border-medium);transition:box-shadow .15s ease}
+.sector-card:hover{box-shadow:var(--shadow-md)}
+.sector-card-header{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.naics-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--accent-blue-light);color:var(--accent-blue);font-size:var(--text-xs);font-weight:700;padding:2px 8px;border-radius:4px;font-family:var(--font-mono)}
+.sector-card-name{font-size:var(--text-base);font-weight:600;color:#111}
+.sector-card-body{font-size:var(--text-sm);color:#333;line-height:1.6}
+.sector-card-body ul{padding-left:16px;margin:8px 0}
+.sector-card-body li{margin-bottom:4px}
+.s-energy{border-left-color:#D97706}.s-mining{border-left-color:#64748B}.s-utilities{border-left-color:#2563EB}.s-construction{border-left-color:#EA580C}
+.s-manufacturing{border-left-color:#4F46E5}.s-trade{border-left-color:#059669}.s-transport{border-left-color:#7C3AED}.s-info{border-left-color:#8B5CF6}
+.s-finance{border-left-color:#059669}.s-realestate{border-left-color:#0891B2}.s-professional{border-left-color:#6366F1}.s-admin{border-left-color:#78716C}
+.s-education{border-left-color:#2563EB}.s-health{border-left-color:#E11D48}.s-arts{border-left-color:#A855F7}.s-accommodation{border-left-color:#F59E0B}
+.s-other{border-left-color:#6B7280}.s-public{border-left-color:#1E40AF}.s-agriculture{border-left-color:#16A34A}
+/* Market cards */
+.market-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.market-card{background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px 14px;transition:box-shadow .15s ease}
+.market-card:hover{box-shadow:var(--shadow-md)}
+.market-card-ticker{font-size:var(--text-xs);color:#555;text-transform:uppercase;letter-spacing:.5px}
+.market-card-price{font-family:var(--font-mono);font-size:var(--text-lg);font-weight:700;margin:2px 0;color:#111}
+.market-card-change{font-size:var(--text-sm);font-weight:500}
+.market-card-source{font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;margin-top:4px;display:inline-block}
+.sparkline-container{height:50px;margin:8px 0}
+/* Yield curve */
+.yield-card{max-height:280px}.yield-card canvas{max-height:180px}
+.yield-spread{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-sm);color:#333;margin-top:8px}
+.yield-spread .inversion{background:var(--status-red-bg);color:var(--status-red);padding:2px 8px;border-radius:4px;font-size:var(--text-xs);font-weight:600}
+/* Filter bar */
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 0;margin-bottom:8px}
+.filter-bar input,.filter-bar select{font-family:var(--font-body);font-size:var(--text-sm);padding:8px 12px;border:1px solid #ccc;border-radius:var(--radius-sm);background:var(--bg-white);color:#111;outline:none;transition:border-color .15s}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--accent-blue-soft)}
+.filter-bar input{flex:1;min-width:200px}
+.results-summary{font-size:var(--text-sm);color:#B8D0E4;margin-bottom:12px}
+.toggle-label{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-xs);cursor:pointer;white-space:nowrap;color:var(--text-secondary);user-select:none}
+.toggle-label input{display:none}
+.toggle-slider{width:32px;height:18px;background:#ccc;border-radius:9px;position:relative;transition:background .2s}
+.toggle-slider::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle-label input:checked+.toggle-slider{background:var(--accent-blue-soft)}
+.toggle-label input:checked+.toggle-slider::after{transform:translateX(14px)}
+.unconfirmed-row{opacity:.55}
+.unconfirmed-badge{display:inline-block;font-size:9px;background:#e8e8e8;color:#888;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle}
+.edit-form{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:10px}
+.edit-form label{display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:3px;color:var(--text-secondary)}
+.edit-form input,.edit-form select,.edit-form textarea{width:100%;border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:var(--text-sm);background:var(--bg-white);margin-bottom:8px;font-family:var(--font-body)}
+.edit-form .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.edit-feedback{padding:6px 10px;border-radius:5px;font-size:var(--text-xs);margin-top:6px;display:none}
+/* Project table */
+.project-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);background:#fff;color:#111}
+.project-table thead th{position:sticky;top:52px;background:#fff;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.3px;color:#333;padding:10px 12px;text-align:left;border-bottom:2px solid var(--border-strong);cursor:pointer;user-select:none;z-index:10}
+.project-table thead th:hover{color:#111}
+.project-table tbody tr{border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .1s;background:#fff}
+.project-table tbody tr:nth-child(even){background:#f2f5f9}
+.project-table tbody tr:hover{background:#e6ecf3}
+.project-table td{padding:10px 12px;vertical-align:middle}
+.col-value{font-family:var(--font-mono);font-weight:600;white-space:nowrap}
+.col-name{font-weight:600}.col-province{white-space:nowrap}
+.col-cma{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-proponent{color:#555;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-updated{white-space:nowrap}.col-source a{color:var(--accent-blue);text-decoration:none}
+/* Project expansion */
+.project-expand{padding:16px 24px;background:var(--bg-white);border-bottom:2px solid var(--border-light)}
+.project-timeline{position:relative;padding-left:20px;margin:12px 0}
+.project-timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--border-light)}
+.timeline-entry{position:relative;padding:8px 0 8px 16px;font-size:var(--text-sm)}
+.timeline-entry::before{content:'';position:absolute;left:-17px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--accent-blue-soft);border:2px solid var(--bg-white)}
+.timeline-date{color:#777;font-size:var(--text-xs)}
+.timeline-detail{color:#555;margin-top:2px}
+/* Status badges */
+.status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:var(--text-xs);font-weight:500;white-space:nowrap}
+.status-badge::before{content:'';width:6px;height:6px;border-radius:50%}
+.st-proposed,.st-under-review{background:var(--status-blue-bg);color:var(--status-blue)}
+.st-proposed::before,.st-under-review::before{background:var(--status-blue)}
+.st-approved,.st-under-construction{background:var(--status-green-bg);color:var(--status-green)}
+.st-approved::before,.st-under-construction::before{background:var(--status-green)}
+.st-paused{background:var(--status-amber-bg);color:var(--status-amber)}.st-paused::before{background:var(--status-amber)}
+.st-expansion{background:var(--status-purple-bg);color:var(--status-purple)}.st-expansion::before{background:var(--status-purple)}
+.st-operational{background:var(--status-green-bg);color:var(--status-green)}.st-operational::before{background:var(--status-green)}
+/* Source & discovery badges */
+.src-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:var(--text-xs);font-weight:500}
+.src-article{background:var(--accent-blue-light);color:var(--accent-blue)}
+.src-press{background:var(--status-green-bg);color:var(--status-green)}
+.src-registry{background:var(--status-purple-bg);color:var(--status-purple)}
+.src-api{background:#e8e8e8;color:#555}
+.disc-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:var(--text-xs);font-weight:500;background:#e8e8e8;color:#555}
+/* Project type badges */
+.type-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:var(--text-xs);font-weight:500;white-space:nowrap}
+.type-greenfield{background:#dcfce7;color:#166534}
+.type-brownfield{background:#fef3c7;color:#92400e}
+.type-expansion{background:#dbeafe;color:#1e40af}
+.type-restoration{background:#f3e8ff;color:#6b21a8}
+.type-remediation{background:#ffedd5;color:#9a3412}
+.type-replace{background:#fee2e2;color:#991b1b}
+/* Confidence */
+.conf-high{color:#166534}.conf-mid{color:#92400e}.conf-low{color:#777}
+/* Project summary stats */
+.proj-stats{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.proj-stat-card{background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;min-width:110px;flex:1}
+.proj-stat-val{font-size:1.3rem;font-weight:700;color:#111}
+.proj-stat-label{font-size:var(--text-xs);color:#777;margin-top:2px}
+/* Evidence list */
+.evidence-list{margin-top:8px;padding:6px 0}
+.evidence-list a{color:#1E40AF;text-decoration:none;font-size:var(--text-xs)}
+.evidence-list a:hover{text-decoration:underline;color:#1E3A8A}
+.evidence-list li{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px}
+.src-badge{display:inline-flex;align-items:center;justify-content:center;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:700;flex-shrink:0;line-height:1.4}
+.src-badge-gov{background:#1E40AF;color:#fff}
+.src-badge-news{background:#374151;color:#fff}
+.src-badge-ind{background:#B45309;color:#fff}
+.src-badge-reg{background:#6B7280;color:#fff}
+.src-badge-other{background:#D1D5DB;color:#374151}
+.url-broken{color:#B91C1C;font-size:10px;margin-left:4px}
+.verify-banner{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:var(--radius-md);padding:8px 16px;margin-bottom:12px;font-size:var(--text-sm);color:#166534;display:flex;align-items:center;gap:8px}
+/* Filter toggle buttons */
+.proj-type-toggle{display:inline-flex;border:1px solid #ccc;border-radius:var(--radius-sm);overflow:hidden;margin-right:4px}
+.proj-type-toggle button{font-family:var(--font-body);font-size:var(--text-xs);padding:6px 12px;border:none;background:var(--bg-white);color:#555;cursor:pointer;transition:background .15s,color .15s}
+.proj-type-toggle button.active{background:var(--accent-blue);color:#fff}
+/* Sentiment + word cloud */
+.sentiment-section{display:flex;flex-direction:column;gap:16px}
+.word-cloud-container{width:100%;height:280px;display:flex;align-items:center;justify-content:center;overflow:visible}
+.word-cloud-container svg{width:100%;height:100%}
+.sentiment-meta{font-size:var(--text-xs);color:#777;margin-top:8px}
+.sentiment-badge{display:inline-flex;padding:3px 10px;border-radius:var(--radius-sm);font-size:var(--text-sm);font-weight:600;margin-bottom:8px}
+.pulse-prose{font-size:var(--text-sm);line-height:1.6;border-left:3px solid var(--accent-blue-light);padding-left:12px;margin-bottom:12px;color:#333}
+.category-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:var(--text-sm)}
+.category-bar-label{width:120px;color:#555;flex-shrink:0}
+.category-bar-track{flex:1;height:8px;background:#e5e5e5;border-radius:4px;overflow:hidden}
+.category-bar-fill{height:100%;border-radius:4px;transition:width .3s ease}
+.category-bar-score{width:48px;text-align:right;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500}
+/* Global vectors */
+.gv-card{background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:16px 20px;margin-bottom:10px;transition:box-shadow .2s}
+.gv-card:hover{box-shadow:var(--shadow-md)}
+.gv-header{display:flex;align-items:center;gap:8px;font-size:var(--text-base);font-weight:600;margin-bottom:8px;color:#111}
+.gv-body{font-size:var(--text-sm);line-height:1.6;color:#222}
+.gv-body strong{color:var(--accent-blue);font-weight:600}
+.gv-body sup{color:var(--accent-blue);font-weight:600;cursor:pointer;font-size:.7em}
+.gv-us{border-left:4px solid #64748B}.gv-china{border-left:4px solid #D97706}.gv-eu{border-left:4px solid #1E3A5F}.gv-uk{border-left:4px solid #0D9488}
+/* Sources footer */
+.sources-toggle{display:inline-flex;align-items:center;gap:6px;padding:4px 0;font-size:var(--text-xs);font-weight:500;color:#555;cursor:pointer;margin-top:12px}
+.sources-toggle:hover{color:#111}
+.sources-list{display:none;margin-top:4px;padding:10px 12px;background:#f5f5f5;border-radius:var(--radius-sm);font-size:var(--text-xs);line-height:1.7;color:#333}
+.sources-list.open{display:block}
+.sources-list a{color:var(--accent-blue);text-decoration:none}
+.sources-list a:hover{text-decoration:underline}
+/* Calendar */
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border-light);border:1px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px}
+.calendar-header-cell{padding:8px;text-align:center;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;color:#fff;background:var(--bg-subtle)}
+.calendar-cell{background:var(--bg-white);padding:8px;min-height:60px;font-size:var(--text-xs);cursor:pointer;transition:background .1s;color:#111}
+.calendar-cell:hover{background:#eef1f6}
+.calendar-cell.other-month{color:#999;background:#f5f5f5}
+.calendar-cell.today{background:var(--accent-blue-light)}
+.calendar-day-number{font-weight:600;margin-bottom:4px}
+.cal-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin:1px}
+.cal-dot.high{background:var(--status-red)}.cal-dot.medium{background:var(--status-amber)}.cal-dot.low{background:var(--accent-blue-soft)}
+/* Events */
+.events-week-card{background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:16px 20px;margin-bottom:12px}
+.events-week-card h3{font-size:var(--text-base);font-weight:600;margin-bottom:10px;color:#111}
+.event-row{display:grid;grid-template-columns:60px 1fr 140px 70px 32px;padding:6px 0;border-bottom:1px solid var(--border-light);align-items:center;font-size:var(--text-sm)}
+.event-row:last-child{border-bottom:none}
+.event-row:hover{background:#f0f2f5;border-radius:4px}
+.event-date-day{font-size:var(--text-base);font-weight:600;line-height:1;color:#111}
+.event-date-month{font-size:var(--text-xs);color:#777}
+.event-name{font-weight:500;color:#111}.event-institution{color:#555;font-size:var(--text-xs)}
+.impact-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:var(--text-xs);font-weight:600}
+.impact-high{background:var(--status-red-bg);color:var(--status-red)}
+.impact-medium{background:var(--status-amber-bg);color:var(--status-amber)}
+.impact-low{background:var(--accent-blue-light);color:var(--accent-blue)}
+.event-high-accent{border-left:3px solid var(--status-red);padding-left:8px}
+/* Metric selector + time range */
+.metric-selector{display:flex;gap:8px;margin-bottom:12px}
+.metric-selector select{font-family:var(--font-body);font-size:var(--text-sm);padding:6px 10px;border:1px solid #ccc;border-radius:var(--radius-sm);background:var(--bg-white);color:#111;cursor:pointer}
+.time-range-pills{display:flex;gap:4px}
+.time-pill{padding:4px 10px;font-size:var(--text-xs);font-weight:600;border-radius:var(--radius-sm);cursor:pointer;background:var(--bg-subtle);color:#B8D0E4;border:1px solid transparent;transition:all .15s}
+.time-pill:hover{background:var(--bg-hover)}.time-pill.active{background:var(--accent-blue);color:#fff}
+/* Load more */
+.load-more-btn{display:block;width:100%;padding:12px;margin-top:16px;font-family:var(--font-body);font-size:var(--text-sm);font-weight:600;color:var(--accent-blue);background:var(--bg-white);border:1px solid var(--border-light);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s}
+.load-more-btn:hover{background:var(--accent-blue-light);border-color:var(--accent-blue)}
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,var(--bg-subtle) 25%,var(--bg-hover) 50%,var(--bg-subtle) 75%);background-size:600px 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-sm)}
+.sk-line{height:16px;margin-bottom:10px}.sk-line.short{width:60%}.sk-line.med{width:80%}
+.sk-block{height:120px;margin-bottom:16px}.sk-pill{height:60px;width:130px;border-radius:var(--radius-lg)}
+/* Empty state */
+.empty-state{text-align:center;padding:24px 16px;color:#777}
+.empty-state-icon{font-size:2rem;margin-bottom:12px;opacity:.5}
+.empty-state-text{font-size:var(--text-sm)}
+/* Footer */
+.site-footer{text-align:center;padding:20px 24px;border-top:1px solid var(--border-light);font-size:var(--text-xs);color:#8AAFC8;line-height:1.5}
+/* Print */
+@media print{.main-nav,.filter-bar,.province-selector,.hero::before,.hero::after{display:none}.tab-panel{display:block!important;page-break-before:always}.sources-list{display:block!important}.card{box-shadow:none;border:1px solid #ddd}body{background:#fff}}
+/* Responsive */
+@media(max-width:1199px){.two-col,.sentiment-section{grid-template-columns:1fr}.market-grid{grid-template-columns:repeat(3,1fr)}.sector-grid{grid-template-columns:1fr}.mini-chart-grid{grid-template-columns:repeat(2,1fr)}.event-row{grid-template-columns:50px 1fr 120px 60px 28px}}
+@media(max-width:767px){.hero{padding:28px 0 20px}.hero-title{font-size:var(--text-2xl)}.hero-badges{flex-wrap:wrap;gap:6px}.nav-tabs{overflow-x:auto;justify-content:flex-start}.nav-tab{padding:10px 12px;font-size:var(--text-xs);white-space:nowrap}.container{padding:0 12px}.tab-panel{padding:16px 0 32px}.market-grid,.mini-chart-grid{grid-template-columns:1fr 1fr}.indicator-row{grid-template-columns:1fr 80px 70px}.indicator-row-period,.indicator-row-source{display:none}.event-row{grid-template-columns:40px 1fr 60px}.event-institution,.event-row>:last-child{display:none}.project-table{font-size:var(--text-xs)}.col-cma,.col-proponent{display:none}.filter-bar{flex-direction:column}.filter-bar input{min-width:100%}.calendar-cell{min-height:36px;padding:3px}.section-banner{height:56px;padding:0 16px}}
+</style>
+</head>
+<body>
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">WEEKLY BRIEFING</div>
+      <h1 class="hero-title">Signal Dispatch</h1>
+      <p class="hero-subtitle">Weekly recap on the economy, provinces, industries, and markets.</p>
+      <div class="hero-badges"><span>Updated Weekly</span><span>Primary Source Data</span><span>Institutional Research</span></div>
+    </div>
+    <svg class="hero-map" viewBox="126 250 190 152" width="440" height="352" fill="#2C4A7C"><path d="M151.767,281.182l1.72,2.602l0.864,3.475l4.305,1.081l3.017-3.25l2.585,1.306l7.321,0.647l5.169-2.17l0.864,7.157h3.017v-3.034l3.017,0.216l7.538,8.895l4.953,3.035l-2.584,4.123l1.081,1.081l9.673,1.953l0.216,4.34l2.585,0.433l0.648-6.51l4.089-1.08l3.017,4.556l6.457,3.034l3.233,0.647l2.152-2.602l0.216-4.124l3.873-2.387l1.288,3.476l-3.449,6.077l0.432,3.033l1.937-3.033l3.873-3.475l0.216-4.556l-2.152-3.476l0.648-2.817l5.169-2.603l2.369,1.738l0.432,15.188l3.657-3.25l2.152,1.305l-3.017,5.204l3.873,0.865l5.602-8.679l4.737,4.986l-1.936,8.895l-4.737,2.603l-4.521-2.169l-8.177,1.736l0.864,2.818l-2.152,3.476l-6.673,1.521l-7.538,5.86l-6.673,8.896l-0.864,2.817l4.521,1.737l1.72,4.339l6.241,6.293l9.906,4.339l-2.152,9.975l-0.216,2.818l2.585,1.736l3.449-4.555l0.432-8.679l5.385-0.216l2.584-4.988l0.433-7.589l6.889-13.45l8.609,3.034l4.521,6.293l-1.937,6.292l3.449,1.954l8.394-5.646l2.368,15.404l7.754,9.327l0.216,4.771l-8.609,2.17l-4.088,4.338l-8.609-1.953l-4.305-0.217l-7.538,5.86l4.521-1.081l5.601-1.08l1.081,1.305l-1.504,4.771l0.216,4.34l2.585,1.736l2.584-0.648l1.296-1.953h1.72l-2.801,5.205l-5.385,0.215l-2.368,3.476h-3.017l-0.864-2.603l4.305-4.338l-5.169,1.737l-0.233-7.374l-1.487-0.863l-4.521,1.953l-0.432,3.691h-10.338l-8.832,6.08l-11.842,3.908l-1.288-1.738l5.964-8.902l-3.388-3.261l-2.152-4.132l-4.383-3.346l-4.702-0.389l-8.428-5.904l-61.122-10.043l-1.011-4.142l-5.602-5.204v-4.339l0.865-3.907l-0.433-2.168l-2.152-2.171l-0.432-3.475l5.602-3.908l-3.449-18.653l-4.737-0.217l-4.305-5.645z"/><path d="M130.684,350.117l-1.47,2.818l0.51,1.996l0.959,0.598l-0.225,0.812l-1.029,0.294l0.294,2.965l1.106,1.115l0.882-0.959l-1.106-2.887l0.657-2.299l1.616-2.152l-1.175-1.997z"/><path d="M135.542,367.008l-1.323,0.52l2.429,2.818l0.588,3.336l2.429,2.592l2.058-0.371v-3.406l-2.498-1.557z"/><path d="M191.105,270.143l0.19,3.475l-6.898,7.148l1.729,5.791l4.979-1.348l2.878-4.253l7.278-2.706l5.938-0.389l-4.599-5.022l-2.299,1.737l-1.729-0.579l-0.959-2.126l-2.109-2.126z"/><path d="M200.113,259.908l-1.53,2.706l7.477,2.706l2.68-4.055l1.15,2.707h1.919l3.639-4.055l-4.409-1.158l-1.729-1.348l-2.299,2.316z"/><path d="M213.148,265.318l-5.938,2.508v1.928l7.667,2.896l-1.729,1.928l1.15,2.507l4.789-2.126h4.028l1.919,3.086l3.259-3.285l-0.77-3.095l-2.68,0.968l-0.38-3.863l1.34-2.316h-1.34l-2.109,1.349l-0.959,0.769l0.579,2.707l-1.53,1.158l-2.299-0.19l-0.579-3.476z"/><path d="M247.456,272.27l-2.299,0.77l0.38,3.086l3.83,2.507l0.19,1.927l-1.149,1.159l0.579,3.864l14.755,4.823l4.028,1.349l4.028-3.475l-4.789-3.864l-4.409,1.158l-6.128-0.579l-2.299-2.316l-0.579-6.371l-3.83-1.928z"/><path d="M207.399,280.576l-7.278,1.928l-4.219,3.673l0.38,4.054l7.667,2.317l-1.729,3.864l-5.558-3.477l-1.53,2.896l3.639,2.507l-0.19,4.054l5.558,1.547l6.708-0.389l1.149-2.126l4.979,5.601l3.449-1.157l0.579-3.864l2.49,1.737l0.38-3.864l-3.068-1.928l0.19-12.162l-2.68-2.126l-2.87,3.864z"/><path d="M259.523,292.357l-4.218-0.39l-4.979,1.927l-2.68,3.666l0.769,10.043l8.238,0.39l7.857,3.864l5.559,6.371l4.218-0.19l-1.15,5.981l-3.829,6.371l-4.218,1.926l-3.069-0.578l-1.53-1.348l-2.299,3.086l0.959,3.086l3.259,0.189l4.028-1.928l3.449,8.886l8.626,5.603l5.938-7.529l-4.979-8.108l2.878-3.284l4.028,6.758l7.278-6.371l-1.339-2.896l-4.98,1.548l-3.448-9.466l3.259-5.403l-6.518-6.949l-3.639,2.507l-3.449-7.529l-7.277,0.968l-1.919-9.076l-5.938,4.055l-0.579,5.021h-3.259l0.38-4.443z"/><path d="M262.021,274.006v1.738l-4.218,0.968l1.149,1.927l4.789,1.928l5.368,0.58l3.831,2.705l3.829-2.127l-2.681-2.705h3.449l2.109-2.316l5.178-0.77v-1.158l-2.878-1.928l0.379-2.127l8.048,1.348l11.886-4.633l-4.41-1.348l1.15-1.547h9.197l1.531-1.547l-18.593-6.569l-4.41-1.547l-4.789,3.476l-5.368-4.443l-2.878-0.19l-0.579,3.675l-3.638-3.285l-4.218,1.349l0.769,2.126l6.328,1.35l-0.38,3.086l3.449,2.125l8.438-2.125l0.19,2.896l-6.898,3.285l-4.218-3.285l-3.83,0.389l3.83,5.411l-1.919,0.969l-2.878-2.508l-2.109,1.348l1.919,3.666h3.259l-0.769,3.475l-2.68-0.389l-3.449-3.674z"/><path d="M244.941,327.159l-3.657,4.599l-0.225,5.065l3.198-1.841h3.881l2.74,2.533l2.515-2.076z"/><path d="M289.466,386.977l-9.136,8.748l0.916,2.074l11.186,4.141l1.599-2.758l-0.916-4.599l-3.657,0.458l-2.057-2.299l3.423-3.449z"/></svg>
+  </div>
+</section>
+<!-- Navigation -->
+<nav class="main-nav" id="mainNav">
+  <div class="nav-inner" style="display:flex;align-items:center;gap:16px">
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><svg viewBox="0 0 512 512" width="22" height="22" style="fill:#3B4F6B"><path d="M383.8 351.7c2.5-2.5 105.2-92.4 105.2-92.4l-17.5-7.5c-10-4.9-7.4-11.5-5-17.4 2.4-7.6 20.1-67.3 20.1-67.3s-47.7 10-57.7 12.5c-7.5 2.4-10-2.5-12.5-7.5s-15-32.4-15-32.4-52.6 59.9-55.1 62.3c-10 7.5-20.1 0-17.6-10 0-10 27.6-129.6 27.6-129.6s-30.1 17.4-40.1 22.4c-7.5 5-12.6 5-17.6-5C293.5 72.3 255.9 0 255.9 0s-37.5 72.3-42.5 79.8c-5 10-10 10-17.6 5-10-5-40.1-22.4-40.1-22.4s27.6 119.6 27.6 129.6c2.5 10-7.5 17.5-17.6 10-2.5-2.5-55.1-62.3-55.1-62.3s-12.6 27.5-15.1 32.4-5 9.9-12.5 7.5c-10-2.5-57.7-12.5-57.7-12.5s17.6 59.7 20.1 67.3c2.4 6 5 12.5-5 17.4l-17.5 7.5s102.6 89.9 105.2 92.4c5.1 5 10 7.5 5.1 22.5-5.1 15-10.1 35.1-10.1 35.1s95.2-20.1 105.3-22.6c8.7-.9 18.3 2.5 18.3 12.5S241 512 241 512h30s-5.8-102.7-5.8-112.8 9.5-13.4 18.4-12.5c10 2.5 105.2 22.6 105.2 22.6s-5-20.1-10-35.1 0-17.5 5-22.5z"/></svg><span style="font-weight:700;font-size:var(--text-sm);color:#1A1F2E;white-space:nowrap">Signal Dispatch</span></div>
+    <ul class="nav-tabs" id="navTabs" style="flex:1">
+      <li class="nav-tab active" data-tab="overview">Overview</li>
+      <li class="nav-tab" data-tab="provinces">Provinces</li>
+      <li class="nav-tab" data-tab="industries">Industries</li>
+      <li class="nav-tab" data-tab="markets">Markets</li>
+      <li class="nav-tab" data-tab="projects">Projects</li>
+      <li class="nav-tab" data-tab="calendar">Calendar</li>
+    </ul>
+    <div class="edition-dropdown" id="editionDropdown" style="position:relative;flex-shrink:0">
+      <button id="editionBtn" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:var(--text-xs);font-weight:500;color:#555;background:#f0f2f5;border:1px solid #ccc;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-body)">
+        <span id="navMeta">Loading...</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="editionList" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid var(--border-light);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);min-width:200px;max-height:300px;overflow-y:auto;z-index:200"></div>
+    </div>
+  </div>
+</nav>
+<!-- Content -->
+<main class="container">
+  <!-- OVERVIEW -->
+  <div class="tab-panel active" id="tab-overview">
+    <div id="execSummary"></div>
+    <section id="keyIndicators" style="margin-top:16px"></section>
+    <section id="indicatorExplorer" style="margin-top:16px"></section>
+    <div id="nationalAnalysis" style="margin-top:16px"></div>
+    <div id="sentimentSection" style="margin-top:20px"></div>
+    <section id="globalVectors" style="margin-top:20px"></section>
+    <section id="trendSummary" style="margin-top:20px"></section>
+    <div id="overviewSources" style="margin-top:16px"></div>
+  </div>
+  <!-- PROVINCES -->
+  <div class="tab-panel" id="tab-provinces">
+    <div class="section-banner" id="provBanner" style="--banner-img:url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title" id="provBannerTitle">Provincial Analysis</div>
+        <div class="section-banner-sub">Provincial economic trends, updated weekly</div>
+      </div>
+    </div>
+    <div class="province-selector" id="provSelector"></div>
+    <div id="provHeader" style="margin-bottom:12px"></div>
+    <div id="provMiniCharts"></div>
+    <div style="margin-top:16px"><div id="provAnalysis"></div></div>
+    <div id="provIndicatorDropdown"></div>
+    <div id="provProjectsPreview" style="margin-top:16px"></div>
+  </div>
+  <!-- INDUSTRIES -->
+  <div class="tab-panel" id="tab-industries">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Industry Analysis</div>
+        <div class="section-banner-sub">Industry trends by NAICS sector</div>
+      </div>
+    </div>
+    <div id="industryExecSummary" style="margin-bottom:16px"></div>
+    <div id="industryToggle" style="display:flex;gap:0;margin-bottom:16px;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border-light);width:fit-content">
+      <button class="ind-toggle active" onclick="toggleIndustryView('all')" data-view="all" style="padding:8px 18px;font-size:var(--text-sm);font-weight:600;border:none;cursor:pointer;transition:all .15s ease">All</button>
+      <button class="ind-toggle" onclick="toggleIndustryView('goods')" data-view="goods" style="padding:8px 18px;font-size:var(--text-sm);font-weight:600;border:none;cursor:pointer;transition:all .15s ease">Goods-Producing</button>
+      <button class="ind-toggle" onclick="toggleIndustryView('services')" data-view="services" style="padding:8px 18px;font-size:var(--text-sm);font-weight:600;border:none;cursor:pointer;transition:all .15s ease">Services-Producing</button>
+    </div>
+    <div id="industrySectorGrid"></div>
+  </div>
+  <!-- MARKETS -->
+  <div class="tab-panel" id="tab-markets">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Markets &amp; Commodities</div>
+        <div class="section-banner-sub">Markets, yields, and commodities</div>
+      </div>
+    </div>
+    <div id="marketsGrid"></div>
+    <h2 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">Government of Canada Yield Curve</h2>
+    <div id="yieldCurveCard" style="margin-bottom:16px"></div>
+    <div id="commoditiesGrid"></div>
+  </div>
+  <!-- PROJECTS -->
+  <div class="tab-panel" id="tab-projects">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Capital Projects Tracker</div>
+        <div class="section-banner-sub">Major capital projects across Canada</div>
+      </div>
+    </div>
+    <div class="filter-bar" id="projectFilterBar">
+      <input type="text" id="projectSearch" placeholder="Search projects..." aria-label="Search projects">
+      <div class="proj-type-toggle" id="projTypeToggle">
+        <button class="active" data-type="all">All</button>
+        <button data-type="greenfield">Greenfield</button>
+        <button data-type="brownfield">Brownfield</button>
+      </div>
+      <select id="filterProvince"><option value="">All Provinces</option></select>
+      <select id="filterSector"><option value="">All Sectors</option></select>
+      <select id="filterStatus"><option value="">All Statuses</option></select>
+      <select id="sortProjects"><option value="value_desc">Value (High to Low)</option><option value="updated">Recently Updated</option><option value="name_asc">Name A-Z</option><option value="confidence">Confidence</option></select>
+      <label class="toggle-label" title="Show only projects with confirmed value above provincial threshold"><input type="checkbox" id="confirmedToggle" checked onchange="_confirmedOnly=this.checked;filterProjects()"><span class="toggle-slider"></span> Confirmed</label>
+      <button onclick="exportProjects()" style="background:var(--surface-elevated);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.8rem;cursor:pointer;font-size:var(--text-xs);color:var(--text-secondary);white-space:nowrap" title="Export filtered projects as CSV">Export CSV</button>
+    </div>
+    <!-- Missing Project Submission Form -->
+    <div id="missedProjectSection" style="margin-top:0.5rem;margin-bottom:1rem">
+      <button id="toggleMissedForm" onclick="document.getElementById('missedProjectForm').style.display=document.getElementById('missedProjectForm').style.display==='none'?'block':'none'" style="background:var(--surface-elevated);border:1px solid var(--border);border-radius:8px;padding:0.6rem 1rem;cursor:pointer;font-size:var(--text-sm);color:var(--text-secondary);width:100%;text-align:left">
+        + Report a Missing Project
+      </button>
+      <div id="missedProjectForm" style="display:none;background:var(--surface-elevated);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:1.2rem;margin-top:-1px">
+        <p style="font-size:var(--text-xs);color:var(--text-secondary);margin-bottom:1rem">Know of a capital project our tracker missed? Submit it here. The system will add it, verify it, and learn from the miss to improve future discovery.</p>
+        <div id="missedFormFeedback" style="display:none;padding:0.6rem 1rem;border-radius:6px;margin-bottom:1rem;font-size:var(--text-sm)"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Project Name *</label><input type="text" id="mpName" placeholder="e.g., Portage Place Redevelopment" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Province *</label><select id="mpProvince" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"><option value="">Select province</option></select></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">City</label><input type="text" id="mpCity" placeholder="e.g., Winnipeg" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Sector</label><select id="mpSector" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"><option value="">Select sector (optional)</option></select></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Estimated Value ($ millions CAD)</label><input type="number" id="mpValue" placeholder="e.g., 650" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Proponent / Developer</label><input type="text" id="mpProponent" placeholder="e.g., True North Development" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Project Type</label><select id="mpType" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"><option value="new_build">New Build</option><option value="expansion">Expansion</option><option value="refurbishment">Refurbishment</option><option value="redevelopment">Redevelopment</option><option value="conversion">Conversion</option><option value="remediation">Remediation</option><option value="modernization">Modernization</option></select></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Status</label><select id="mpStatus" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"><option value="Proposed">Proposed</option><option value="Approved">Approved</option><option value="Under Construction">Under Construction</option><option value="Completed">Completed</option><option value="Paused">Delayed / Paused</option></select></div>
+        </div>
+        <div style="margin-top:0.75rem"><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Source URL (helps verification)</label><input type="url" id="mpSourceUrl" placeholder="https://..." style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+        <div style="margin-top:0.75rem"><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Description</label><input type="text" id="mpDescription" placeholder="Brief project description" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+        <div style="margin-top:0.75rem"><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Why do you think it was missed? (optional)</label><textarea id="mpNotes" rows="2" placeholder="e.g., Only covered in French media, small municipality..." style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface);resize:vertical"></textarea></div>
+        <button id="mpSubmitBtn" onclick="submitMissedProject()" style="margin-top:1rem;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:0.5rem 1.5rem;font-size:var(--text-sm);font-weight:500;cursor:pointer">Submit Missing Project</button>
+      </div>
+    </div>
+    <div id="projSummaryStats" class="proj-stats"></div>
+    <div id="projectResultsSummary" class="results-summary"></div>
+    <div id="projectTableContainer"></div>
+    <button id="loadMoreBtn" class="load-more-btn" style="display:none">Load more projects</button>
+  </div>
+  <!-- CALENDAR -->
+  <div class="tab-panel" id="tab-calendar">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1519832979-6fa011b87667?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Economic Calendar</div>
+        <div class="section-banner-sub">Economic events and watchlist</div>
+      </div>
+    </div>
+    <div id="calendarGrid"></div>
+    <div id="thisWeekEvents"></div>
+    <div id="allEventsTable"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  Signal Dispatch &middot; Data from Bank of Canada, Statistics Canada, Yahoo Finance &middot; All claims independently sourced &middot; <span id="footerDate"></span>
+</footer>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import{getAuth,signInAnonymously,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import{getFirestore,doc,getDoc,collection,getDocs,query,orderBy,limit,where,addDoc,Timestamp}from"https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyC2Vdn6NKQWIyR6whXgp_QkBULDR8GHg0E",authDomain:"can-macro-dashboard.firebaseapp.com",projectId:"can-macro-dashboard",storageBucket:"can-macro-dashboard.firebasestorage.app",messagingSenderId:"934745756616",appId:"1:934745756616:web:b592a858ff7239bb43a6fd"});
+const auth=getAuth(app),db=getFirestore(app);
+
+/* ── State ── */
+let D=null,indicators=[],allProjects=[],filteredProjects=[],projectPage=0,selectedProvince='BC',tsCache={},charts={},tabRendered={};
+const PAGE_SIZE=25;
+let _confirmedOnly=true;
+let _lastLoadedProvince=null,_loadSeq=0;
+const PROVS=[{code:'BC',name:'British Columbia'},{code:'AB',name:'Alberta'},{code:'SK',name:'Saskatchewan'},{code:'MB',name:'Manitoba'},{code:'ON',name:'Ontario'},{code:'QC',name:'Quebec'},{code:'NB',name:'New Brunswick'},{code:'NS',name:'Nova Scotia'},{code:'PE',name:'Prince Edward Island'},{code:'NL',name:'Newfoundland and Labrador'},{code:'YT',name:'Yukon'},{code:'NT',name:'Northwest Territories'},{code:'NU',name:'Nunavut'}];
+const NAME_TO_CODE={};PROVS.forEach(p=>{NAME_TO_CODE[p.name]=p.code;NAME_TO_CODE[p.code]=p.code});NAME_TO_CODE['Newfoundland']='NL';NAME_TO_CODE['PEI']='PE';
+function normProvince(raw){if(!raw)return '';return NAME_TO_CODE[raw.trim()]||raw.substring(0,2).toUpperCase()}
+const PROV_THRESHOLDS={'ON':500e6,'QC':250e6,'AB':200e6,'BC':175e6,'SK':45e6,'MB':40e6,'NS':25e6,'NB':20e6,'NL':17e6,'PE':5e6,'YT':3e6,'NT':3e6,'NU':3e6};
+function meetsThreshold(p){const v=parseNumericValue(p.value);if(!v)return false;const t=PROV_THRESHOLDS[normProvince(p.province)]||0;return v>=t}
+const PROV_IMGS={BC:'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80',AB:'https://images.unsplash.com/flagged/photo-1556669546-b1f29875df1c?w=1200&q=80',SK:'https://images.unsplash.com/photo-1753081490091-37ce36d8bbd8?w=1200&q=80',MB:'https://images.unsplash.com/photo-1591658522986-9eb791d2a89a?w=1200&q=80',ON:'https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1200&q=80',QC:'https://images.unsplash.com/photo-1575318672862-5c1887a74bf3?w=1200&q=80',NB:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80',NS:'https://images.unsplash.com/photo-1565465685025-9b00dc77ad52?w=1200&q=80',PE:'https://images.unsplash.com/photo-1756845405231-dce993817876?w=1200&q=80',NL:'https://images.unsplash.com/photo-1483599345082-521b252854ff?w=1200&q=80',YT:'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=1200&q=80',NT:'https://images.unsplash.com/photo-1579033461380-adb47c3eb938?w=1200&q=80',NU:'https://images.unsplash.com/photo-1589656966895-2f33e7653819?w=1200&q=80'};
+const NAICS_CODES=['11','21','22','23','31-33','41','44-45','48-49','51','52','53','54','55','56','61','62','71','72','81','91'];
+const NAICS_NAMES={'11':'Agriculture','21':'Mining, Oil & Gas','22':'Utilities','23':'Construction','31-33':'Manufacturing','41':'Wholesale Trade','44-45':'Retail Trade','48-49':'Transportation','51':'Information & Cultural','52':'Finance & Insurance','53':'Real Estate','54':'Professional Services','55':'Management','56':'Administrative & Support','61':'Education','62':'Health Care','71':'Arts & Recreation','72':'Accommodation & Food','81':'Other Services','91':'Public Administration'};
+const NAICS_CLS={'11':'s-agriculture','21':'s-mining','22':'s-utilities','23':'s-construction','31-33':'s-manufacturing','41':'s-trade','44-45':'s-trade','48-49':'s-transport','51':'s-info','52':'s-finance','53':'s-realestate','54':'s-professional','55':'s-admin','56':'s-admin','61':'s-education','62':'s-health','71':'s-arts','72':'s-accommodation','81':'s-other','91':'s-public'};
+const STATUSES=['Proposed','Under Review','Approved','Under Construction','Paused','Expansion','Operational','Completed','Cancelled'];
+/* Project type config */
+const PROJ_TYPE_CFG={
+greenfield:{label:'New Build',cls:'type-greenfield',cat:'Greenfield'},
+redevelopment:{label:'Redevelopment',cls:'type-brownfield',cat:'Brownfield'},
+adaptive_reuse:{label:'Adaptive Reuse',cls:'type-brownfield',cat:'Brownfield'},
+major_renovation:{label:'Renovation',cls:'type-brownfield',cat:'Brownfield'},
+expansion:{label:'Expansion',cls:'type-expansion',cat:'Brownfield'},
+retrofit:{label:'Retrofit',cls:'type-brownfield',cat:'Brownfield'},
+restoration:{label:'Restoration',cls:'type-restoration',cat:'Brownfield'},
+remediation:{label:'Remediation',cls:'type-remediation',cat:'Brownfield'},
+conversion:{label:'Conversion',cls:'type-brownfield',cat:'Brownfield'},
+modernization:{label:'Modernization',cls:'type-expansion',cat:'Brownfield'},
+decommission_replace:{label:'Replacement',cls:'type-replace',cat:'Brownfield'},
+};
+function typeBadge(pt){const c=PROJ_TYPE_CFG[pt]||PROJ_TYPE_CFG.greenfield;return'<span class="type-badge '+c.cls+'">'+c.label+'</span>'}
+function confBadge(conf,evCount){if(conf==null)return'';const pct=Math.round(conf*100);const cls=pct>=70?'conf-high':pct>=40?'conf-mid':'conf-low';return'<span class="'+cls+'" title="'+evCount+' source(s)">'+pct+'%'+(evCount?(' ('+evCount+' src'+(evCount>1?'s':'')+')'):'')+'</span>'}
+let _projTypeFilter='all';
+
+/* ── Helpers ── */
+const $=id=>document.getElementById(id);
+const san=h=>DOMPurify.sanitize(h||'',{ADD_ATTR:['target']});
+function fmtDate(iso){if(!iso)return'';try{const d=new Date(iso+'T00:00:00');return d.toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})}catch{return iso}}
+function relDate(iso){if(!iso)return'';const ms=Date.now()-new Date(iso+'T00:00:00').getTime(),d=Math.floor(ms/864e5);if(d<1)return'Today';if(d<7)return d+'d ago';if(d<30)return Math.floor(d/7)+'w ago';return Math.floor(d/30)+'mo ago'}
+function changeCls(arrow){return arrow===1?'change-up':arrow===2?'change-down':'change-flat'}
+function changeIcon(arrow){return arrow===1?'↑':arrow===2?'↓':'→'}
+function stCls(s){const k=s.toLowerCase().replace(/\s+/g,'-');return'st-'+k}
+function statusBadge(s){return`<span class="status-badge ${stCls(s)}">${s}</span>`}
+function srcLink(url,title){if(!url)return'';return`<a href="${url}" target="_blank" rel="noopener noreferrer" title="${title||'Source'}">\u2197</a>`}
+function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#777">N/D</span>';return v}
+function parseNumericValue(v){if(!v)return 0;const s=String(v).toUpperCase();const m=s.match(/([\d.]+)\s*(B|M|K)?/);if(!m)return 0;let n=parseFloat(m[1])||0;if(m[2]==='B')n*=1e9;else if(m[2]==='M')n*=1e6;else if(m[2]==='K')n*=1e3;return n}
+function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:#777;font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:#999;font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:#777">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:#999;font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:#999;font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
+function skeleton(n=3){return Array(n).fill('<div class="skeleton sk-line"></div><div class="skeleton sk-line med"></div><div class="skeleton sk-line short"></div>').join('')}
+
+/* ── Tab Switching ── */
+function switchTab(tabId){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tabId));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tabId));
+  if(D&&!tabRendered[tabId]){renderTab(tabId);tabRendered[tabId]=true}
+}
+document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+
+/* ── Data Loading ── */
+let currentEdition='latest';
+async function loadNewsletter(editionId){
+  const id=editionId||'latest';
+  try{const snap=await getDoc(doc(db,'newsletters',id));if(snap.exists())D=snap.data()}
+  catch(e){console.error('Newsletter load:',e)}
+}
+async function loadEditionList(){
+  try{
+    const q=query(collection(db,'newsletters'),orderBy('updated_at','desc'),limit(30));
+    const snap=await getDocs(q);
+    const editions=[];
+    snap.forEach(d=>{if(d.id!=='latest'&&d.id!=='latest_sentiment'){const data=d.data();editions.push({id:d.id,edition:data.edition||'',date:data.updated_at||data.date||d.id})}});
+    const list=$('editionList');
+    list.innerHTML=editions.map(e=>{
+      const label=(e.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim()||e.id;
+      const active=e.id===currentEdition?'font-weight:700;background:var(--bg-subtle)':'';
+      return'<div class="edition-item" data-id="'+e.id+'" style="padding:8px 14px;font-size:var(--text-xs);cursor:pointer;border-bottom:1px solid var(--border-light);'+active+'">'+label+'</div>';
+    }).join('');
+    list.querySelectorAll('.edition-item').forEach(el=>el.addEventListener('click',()=>switchEdition(el.dataset.id)));
+  }catch(e){console.warn('Edition list load:',e)}
+}
+async function switchEdition(editionId){
+  currentEdition=editionId;
+  $('editionList').style.display='none';
+  $('navMeta').textContent='Loading...';
+  tabRendered={};
+  Object.values(charts).forEach(c=>{if(c&&c.destroy)c.destroy()});charts={};
+  await loadNewsletter(editionId);
+  try{renderTab('overview');tabRendered.overview=true}catch(e){console.error('renderOverview:',e)}
+  const edStr=D?(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
+  $('navMeta').textContent=edStr||editionId;
+  const activeTab=document.querySelector('.nav-tab.active');
+  if(activeTab&&activeTab.dataset.tab!=='overview'){renderTab(activeTab.dataset.tab);tabRendered[activeTab.dataset.tab]=true}
+  loadEditionList();
+}
+async function loadIndicators(){
+  try{const snap=await getDoc(doc(db,'statcan_indicators','latest'));if(snap.exists())indicators=snap.data().indicators||[]}
+  catch(e){console.error('Indicators load:',e)}
+}
+async function loadProjects(province){
+  const seq=++_loadSeq;
+  _lastLoadedProvince=province||null;
+  try{
+    if(province){
+      // Province-scoped: query by both code and full name
+      const provName=(PROVS.find(p=>p.code===province)||{}).name||province;
+      const snap1=await getDocs(query(collection(db,'projects'),where('province','==',province)));
+      const snap2=await getDocs(query(collection(db,'projects'),where('province','==',provName)));
+      if(seq!==_loadSeq)return; // race guard
+      const seen=new Set();allProjects=[];
+      snap1.forEach(d=>{if(!seen.has(d.id)){seen.add(d.id);const data=d.data();data._id=d.id;allProjects.push(data)}});
+      snap2.forEach(d=>{if(!seen.has(d.id)){seen.add(d.id);const data=d.data();data._id=d.id;allProjects.push(data)}});
+      allProjects.sort((a,b)=>(b.lastSeen||'').localeCompare(a.lastSeen||''));
+    }else{
+      const q=query(collection(db,'projects'),orderBy('lastSeen','desc'),limit(5000));
+      const snap=await getDocs(q);
+      if(seq!==_loadSeq)return;
+      allProjects=[];snap.forEach(d=>{const data=d.data();data._id=d.id;allProjects.push(data)});
+    }
+    filteredProjects=[...allProjects];
+  }catch(e){
+    console.warn('Projects load failed, falling back:',e);
+    try{
+      const snap=await getDocs(query(collection(db,'projects'),limit(5000)));
+      if(seq!==_loadSeq)return;
+      allProjects=[];snap.forEach(d=>{const data=d.data();data._id=d.id;allProjects.push(data)});
+      allProjects.sort((a,b)=>(b.lastSeen||'').localeCompare(a.lastSeen||''));
+      filteredProjects=[...allProjects];
+    }catch(e2){console.error('Projects load:',e2)}
+  }
+}
+async function loadTimeseries(docId){
+  if(tsCache[docId])return tsCache[docId];
+  try{const snap=await getDoc(doc(db,'timeseries',docId));if(snap.exists()){tsCache[docId]=snap.data();return tsCache[docId]}}
+  catch(e){console.warn('TS load:',e)}
+  return null;
+}
+async function loadAll(){
+  try{
+    await Promise.all([loadNewsletter(),loadProjects(),loadIndicators()]);
+  }catch(e){console.error('loadAll data fetch:',e)}
+  try{
+    renderTab('overview');tabRendered.overview=true;
+  }catch(e){
+    console.error('renderOverview:',e);
+    $('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">Error rendering: '+e.message+'</div></div>';
+  }
+  const edStr=D?(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
+  $('navMeta').textContent=D?(edStr||'Data loaded'):'Data loaded';
+  $('footerDate').textContent='Last pipeline run: '+(D?fmtDate(D.updated_at||D.date)||edStr:new Date().toLocaleDateString('en-CA'));
+  loadEditionList();
+}
+/* Edition dropdown toggle */
+$('editionBtn').addEventListener('click',e=>{e.stopPropagation();const list=$('editionList');list.style.display=list.style.display==='none'?'block':'none'});
+document.addEventListener('click',()=>{$('editionList').style.display='none'});
+$('editionList').addEventListener('click',e=>e.stopPropagation());
+
+/* ── Render Router ── */
+function renderTab(id){
+  switch(id){
+    case'overview':renderOverview();break;
+    case'provinces':renderProvinces();break;
+    case'industries':renderIndustries();break;
+    case'markets':renderMarkets();break;
+    case'projects':renderProjectsTab();break;
+    case'calendar':renderCalendar();break;
+  }
+}
+
+/* ── Sources Footer Helper ── */
+function sourcesFooter(sources,containerId){
+  if(!sources||!sources.length)return'';
+  let html=`<div class="sources-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Sources (${sources.length}) <span class="chevron">▾</span></div>`;
+  html+='<div class="sources-list">';
+  sources.forEach((s,i)=>{
+    const url=s.url||s.archive_url||'';
+    const title=s.title||'Source';
+    const verified=s.verified_date?` · Verified ${fmtDate(s.verified_date)}`:'';
+    const archive=s.archive_url?` <a href="${s.archive_url}" target="_blank">[Archived]</a>`:'';
+    html+=`<div>[${i+1}] ${url?`<a href="${url}" target="_blank">${title} \u2197</a>`:title}${archive}${verified}</div>`;
+  });
+  return html+'</div>';
+}
+
+/* ══ OVERVIEW TAB ══ */
+function renderOverview(){
+  if(!D){$('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">No newsletter data available yet.</div></div>';return}
+  // Executive Summary
+  $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(D.executive_summary||'')}</div></div>`;
+  // Key Indicators
+  renderKeyIndicators();
+  // National Analysis
+  const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
+  const natSources=(D.national&&D.national.sources)||[];
+  $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(natContent)}</div>${sourcesFooter(natSources)}</div>`;
+  // Sentiment
+  renderSentiment();
+  // Global Vectors
+  renderGlobalVectors();
+  // Trend Summary
+  renderTrendSummary();
+  // Sources
+  $('overviewSources').innerHTML=sourcesFooter(D.sources||[]);
+}
+
+function renderKeyIndicators(){
+  const m=D.metrics||{};const yc=D.yieldCurve||[];
+  const im=D.indicatorMeta||{};
+  const headline=[
+    {label:'POLICY RATE',value:m.bocRate||m.boc_rate||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/',date:(im.bocRate||{}).period||'',tsId:'boc_rate'},
+    {label:'GDP YoY',value:m.realGdp||m.gdp||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.realGdp||{}).period||'',tsId:null},
+    {label:'CPI',value:m.cpi||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.cpi||{}).period||'',tsId:'canada_cpi'},
+    {label:'UNEMPLOYMENT',value:m.unemployment||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.unemployment||{}).period||'',tsId:'canada_unemployment'},
+    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',date:fmtDate(D.updated_at||D.date)||'',tsId:'cadusd'},
+    {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',date:fmtDate(D.updated_at||D.date)||'',tsId:'yield_10y'},
+    {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||'',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',date:(im.housingStarts||{}).period||'',tsId:null}
+  ];
+  let strip='<div class="indicator-strip">';
+  const sparkJobs=[];
+  headline.forEach((h,i)=>{
+    const imKey={POLICY_RATE:'bocRate',GDP_YOY:'realGdp',CPI:'cpi',UNEMPLOYMENT:'unemployment',HOUSING_STARTS:'housingStarts'}[h.label.replace(/ /g,'_')]||'';
+    const meta=im[imKey]||{};const chg=meta.change||'';
+    const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
+    const sparkId='spark_ind_'+i;
+    strip+=`<div class="indicator-pill"><div class="indicator-pill-label">${h.label}</div><div class="indicator-pill-value">${h.value||'N/A'}</div>${chg?`<div class="indicator-pill-change ${chgCls}">${chg}</div>`:''}${h.tsId?`<div class="sparkline-wrap"><canvas class="sparkline" id="${sparkId}"></canvas></div>`:''}${h.date?`<div class="indicator-pill-date">${h.date}</div>`:''}<a class="indicator-pill-source" href="${h.url}" target="_blank" rel="noopener noreferrer">${h.source} \u2197</a></div>`;
+    if(h.tsId)sparkJobs.push({canvasId:sparkId,docId:h.tsId,change:chg});
+  });
+  strip+='</div>';
+  // 71-indicator dropdown
+  strip+=renderIndicatorDropdown(indicators,'All Indicators');
+  $('keyIndicators').innerHTML=strip;
+  sparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
+  renderIndicatorExplorer();
+}
+
+
+/* == Indicator Dropdown (reused in Overview + Provinces) == */
+function renderIndicatorDropdown(inds,title,idSuffix){
+  const id='indDropdown'+(idSuffix||'');const filtId='indFilter'+(idSuffix||'');
+  const n=inds.length;
+  let html='<div class="indicator-dropdown"><button class="indicator-dropdown-toggle" onclick="this.classList.toggle(\x27open\x27);this.nextElementSibling.classList.toggle(\x27open\x27)">'+title+' ('+n+') <span class="chevron">\u25be</span></button>';
+  html+='<div class="indicator-dropdown-body" id="'+id+'"><input class="indicator-filter" id="'+filtId+'" placeholder="Filter indicators..." oninput="filterIndicators(\x27'+id+'\x27,\x27'+filtId+'\x27)">';
+  const groups={};
+  inds.forEach(ind=>{
+    const cat=ind.category||categorizeIndicator(ind.name);
+    if(!groups[cat])groups[cat]=[];
+    groups[cat].push(ind);
+  });
+  const groupOrder=['GDP by Industry','Labour Market','Housing','Trade','Monetary & Financial','Other'];
+  groupOrder.forEach(g=>{
+    const items=groups[g];if(!items||!items.length)return;
+    html+='<div class="indicator-group-header">'+g+'</div>';
+    items.forEach(ind=>{
+      const cls=ind.arrow===1?'change-up':ind.arrow===2?'change-down':'change-flat';
+      const chgTxt=ind.change?changeIcon(ind.arrow)+' '+ind.change:'';
+      html+='<div class="indicator-row" data-name="'+(ind.name||'').toLowerCase()+'"><div class="indicator-row-name">'+(ind.name||'')+'</div><div class="indicator-row-value">'+(ind.value||'N/A')+'</div><div class="indicator-row-change '+cls+'">'+chgTxt+'</div><div class="indicator-row-period">'+(ind.refPer||'')+'</div><div class="indicator-row-source">'+(ind.tableUrl?'<a href="'+ind.tableUrl+'" target="_blank">\u2197</a>':'')+'</div></div>';
+    });
+  });
+  Object.keys(groups).filter(g=>!groupOrder.includes(g)).forEach(g=>{
+    const items=groups[g];if(!items||!items.length)return;
+    html+='<div class="indicator-group-header">'+g+'</div>';
+    items.forEach(ind=>{
+      const cls=ind.arrow===1?'change-up':ind.arrow===2?'change-down':'change-flat';
+      html+='<div class="indicator-row" data-name="'+(ind.name||'').toLowerCase()+'"><div class="indicator-row-name">'+(ind.name||'')+'</div><div class="indicator-row-value">'+(ind.value||'N/A')+'</div><div class="indicator-row-change '+cls+'">'+(ind.change?changeIcon(ind.arrow)+' '+ind.change:'')+'</div><div class="indicator-row-period">'+(ind.refPer||'')+'</div><div class="indicator-row-source">'+(ind.tableUrl?'<a href="'+ind.tableUrl+'" target="_blank">\u2197</a>':'')+'</div></div>';
+    });
+  });
+  html+='</div></div>';
+  return html;
+}
+function categorizeIndicator(name){
+  const n=(name||'').toLowerCase();
+  if(n.includes('gross domestic product')||n.includes('gdp'))return 'GDP by Industry';
+  if(n.includes('employ')||n.includes('labour')||n.includes('job')||n.includes('wage'))return 'Labour Market';
+  if(n.includes('housing')||n.includes('building permit')||n.includes('new house'))return 'Housing';
+  if(n.includes('trade')||n.includes('export')||n.includes('import')||n.includes('merchandise'))return 'Trade';
+  if(n.includes('interest')||n.includes('yield')||n.includes('monetary')||n.includes('bank rate')||n.includes('consumer price')||n.includes('cpi')||n.includes('inflation'))return 'Monetary & Financial';
+  return 'Other';
+}
+window.filterIndicators=function(dropId,filtId){
+  const val=document.getElementById(filtId).value.toLowerCase();
+  document.querySelectorAll('#'+dropId+' .indicator-row').forEach(r=>{
+    r.style.display=r.dataset.name.includes(val)?'':'none';
+  });
+};
+
+
+/* == Interactive Indicator Explorer == */
+const INDICATOR_CATALOG=[
+  {group:'Rates',items:[
+    {id:'overnight_rate',label:'BoC Overnight Rate',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/key-interest-rates/',prov:false},
+    {id:'prime_rate',label:'Prime Rate',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',prov:false},
+    {id:'goc_5y_yield',label:'5Y GoC Yield',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/',prov:false},
+    {id:'goc_10y_yield',label:'10Y GoC Yield',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/',prov:false},
+    {id:'goc_2y_yield',label:'2Y GoC Yield',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/',prov:false}
+  ]},
+  {group:'Prices',items:[
+    {id:'cpi',label:'CPI (All Items)',unit:'%',source:'Statistics Canada',statcan:true,prov:true},
+    {id:'wti',label:'WTI Crude Oil',unit:'USD/bbl',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/CL%3DF/',prov:false},
+    {id:'gold',label:'Gold',unit:'USD/oz',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/GC%3DF/',prov:false},
+    {id:'cadusd',label:'CAD/USD',unit:'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',prov:false}
+  ]},
+  {group:'Labour',items:[
+    {id:'unemployment',label:'Unemployment Rate',unit:'%',source:'Statistics Canada',statcan:true,prov:true}
+  ]},
+  {group:'Activity',items:[
+    {id:'realGdp',label:'Real GDP (Q/Q)',unit:'%',source:'Statistics Canada',statcan:true,prov:false},
+    {id:'housingStarts',label:'Housing Starts',unit:'K',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',prov:false}
+  ]},
+  {group:'Markets',items:[
+    {id:'tsx',label:'S&P/TSX Composite',unit:'',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/%5EGSPTSE/',prov:false},
+    {id:'lumber',label:'Lumber',unit:'USD',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/LBS%3DF/',prov:false}
+  ]}
+];
+
+let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='national';
+
+function renderIndicatorExplorer(){
+  // Build selector
+  let selHtml='<div class="card fade-in"><div class="card-header">Indicator Explorer</div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px">';
+  selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:var(--text-sm)">';
+  INDICATOR_CATALOG.forEach(g=>{
+    selHtml+='<optgroup label="'+g.group+'">';
+    g.items.forEach(it=>{
+      selHtml+='<option value="'+it.id+'"'+(it.id===_indExpSel?' selected':'')+'>'+it.label+'</option>';
+    });
+    selHtml+='</optgroup>';
+  });
+  selHtml+='</select>';
+  // Province toggle (shown only for provincial indicators)
+  const selItem=findIndItem(_indExpSel);
+  if(selItem&&selItem.prov){
+    selHtml+='<select id="indExpProv" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:var(--text-sm)">';
+    selHtml+='<option value="national"'+((_indExpProv==='national')?' selected':'')+'>National</option>';
+    PROVS.forEach(p=>{selHtml+='<option value="'+p.code+'"'+(_indExpProv===p.code?' selected':'')+'>'+p.name+'</option>'});
+    selHtml+='</select>';
+  }
+  // Time range buttons
+  selHtml+='<div style="display:flex;gap:4px">';
+  [3,12,36,60].forEach(m=>{
+    const lbl=m===3?'3M':m===12?'1Y':m===36?'3Y':'5Y';
+    const active=_indExpRange===m?'background:var(--accent-blue);color:#fff':'background:var(--bg-tertiary);color:var(--text-secondary)';
+    selHtml+='<button onclick="_indExpRange='+m+';loadIndExpData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
+  });
+  selHtml+='</div></div>';
+  // Callout + chart
+  selHtml+='<div id="indExpCallout" style="margin-bottom:8px"></div>';
+  selHtml+='<div style="height:280px;position:relative"><canvas id="indExpCanvas"></canvas></div>';
+  // Source link
+  if(selItem){
+    const linkUrl=selItem.statcan?'https://www150.statcan.gc.ca/n1/en/type/data':selItem.url||'#';
+    const linkLabel=selItem.statcan?'View on StatsCan \u2197':selItem.source+' \u2197';
+    selHtml+='<div style="margin-top:8px;text-align:right"><a href="'+linkUrl+'" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue)">'+linkLabel+'</a></div>';
+  }
+  selHtml+='</div>';
+  $('indicatorExplorer').innerHTML=selHtml;
+  loadIndExpData();
+}
+
+function findIndItem(id){
+  for(const g of INDICATOR_CATALOG)for(const it of g.items)if(it.id===id)return it;
+  return null;
+}
+
+window.onIndExpChange=function(){
+  _indExpSel=$('indExpSelect').value;
+  const provSel=$('indExpProv');
+  _indExpProv=provSel?provSel.value:'national';
+  renderIndicatorExplorer();
+};
+
+async function loadIndExpData(){
+  const item=findIndItem(_indExpSel);if(!item)return;
+  const prov=item.prov?_indExpProv:'national';
+  const cacheKey=_indExpSel+'_'+prov;
+
+  if(!_indExpData[cacheKey]){
+    try{
+      const colRef=collection(db,'indicator_history');
+      const q=query(colRef,where('indicator','==',_indExpSel),where('province','==',prov),orderBy('date','asc'),limit(2000));
+      const snap=await getDocs(q);
+      const pts=[];
+      snap.forEach(d=>{const dd=d.data();pts.push({date:dd.date,value:parseFloat(dd.value)||0})});
+      _indExpData[cacheKey]=pts;
+    }catch(e){
+      console.warn('Indicator history load:',e);
+      // Fallback: try without orderBy (missing index)
+      try{
+        const colRef=collection(db,'indicator_history');
+        const q=query(colRef,where('indicator','==',_indExpSel),where('province','==',prov),limit(2000));
+        const snap=await getDocs(q);
+        const pts=[];
+        snap.forEach(d=>{const dd=d.data();pts.push({date:dd.date,value:parseFloat(dd.value)||0})});
+        pts.sort((a,b)=>a.date.localeCompare(b.date));
+        _indExpData[cacheKey]=pts;
+      }catch(e2){console.error('Indicator history fallback:',e2);_indExpData[cacheKey]=[]}
+    }
+  }
+
+  const allPts=_indExpData[cacheKey]||[];
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-_indExpRange);
+  const pts=allPts.filter(p=>new Date(p.date)>=cutoff);
+
+  // Callout
+  const callout=$('indExpCallout');
+  if(pts.length>=2){
+    const latest=pts[pts.length-1];const prev=pts[pts.length-2];
+    const diff=latest.value-prev.value;
+    const arrow=diff>0?'\u25b2':diff<0?'\u25bc':'\u25cf';
+    const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
+    const allVals=allPts.map(p=>p.value);
+    const mn=Math.min(...allVals).toFixed(2);const mx=Math.max(...allVals).toFixed(2);
+    callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+latest.value.toFixed(2)+'</span><span class="'+cls+'" style="font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev</span><span style="font-size:var(--text-xs);color:var(--text-muted)">5Y range: '+mn+' \u2013 '+mx+'</span><span style="font-size:var(--text-xs);color:var(--text-muted)">'+latest.date+'</span></div>';
+  }else if(pts.length===1){
+    callout.innerHTML='<span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+pts[0].value.toFixed(2)+'</span>';
+  }else{
+    callout.innerHTML='<span style="color:var(--text-muted);font-size:var(--text-sm)">No data for this period.</span>';
+  }
+
+  // Chart
+  const canvas=$('indExpCanvas');if(!canvas)return;
+  if(charts._indExp)charts._indExp.destroy();
+  if(!pts.length)return;
+  const labels=pts.map(p=>p.date);
+  const data=pts.map(p=>p.value);
+  charts._indExp=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#2E7DAD',backgroundColor:'rgba(46,125,173,0.08)',borderWidth:2,pointRadius:pts.length>60?0:3,pointBackgroundColor:'#1C5688',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#111827',bodyColor:'#4B5563',borderColor:'#D4DAE3',borderWidth:1,padding:10,cornerRadius:6,callbacks:{label:function(ctx){
+    const val=ctx.parsed.y;const idx=ctx.dataIndex;
+    if(idx>0){const prev=data[idx-1];const diff=val-prev;return val.toFixed(2)+' ('+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev)';}
+    return val.toFixed(2);
+  }}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Plus Jakarta Sans',size:10},color:'#6B7280'}},y:{grid:{color:'#D4DAE3',lineWidth:1},ticks:{font:{family:'JetBrains Mono',size:10},color:'#6B7280'}}}}});
+}
+
+/* == Sentiment + Word Cloud == */
+function renderSentiment(){
+  const cs=D.consumer_sentiment;const cp=D.consumer_pulse;
+  if(!cs&&!cp){$('sentimentSection').innerHTML='<div class="card"><div class="card-header">Consumer Sentiment</div><div class="empty-state"><div class="empty-state-text">Consumer sentiment data available after next pipeline run.</div></div></div>';return}
+  let html='<div class="card fade-in"><div class="card-header">Consumer Sentiment</div><div class="sentiment-section">';
+  if(cs){
+    const idx=cs.overall_index!=null?cs.overall_index:(cs.sentiment_index!=null?cs.sentiment_index:'N/A');
+    const lbl=cs.overall_label||cs.sentiment_label||'';
+    const neg=typeof idx==='number'&&idx<-0.1;const pos=typeof idx==='number'&&idx>0.1;
+    const bgc=neg?'var(--status-red-bg)':pos?'var(--status-green-bg)':'var(--status-amber-bg)';
+    const fgc=neg?'var(--status-red)':pos?'var(--status-green)':'var(--status-amber)';
+    html+='<div style="display:flex;align-items:center;gap:12px"><div class="sentiment-badge" style="background:'+bgc+';color:'+fgc+'">'+lbl+' ('+(typeof idx==='number'?idx.toFixed(2):idx)+')</div>';
+    const ss=cs.sources_summary||cs;
+    html+='<div class="sentiment-meta" style="margin-top:0">'+(ss.reddit_posts||0)+' Reddit posts \u00b7 '+(ss.trends_queries||0)+' trending searches \u00b7 '+(ss.news_comments||0)+' news comments</div></div>';
+  }
+  html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:#999;font-size:.75rem">(click to expand)</span></summary>';
+  html+='<div style="padding:12px 0"><div class="word-cloud-container" id="wordCloudSvg"></div></div>';
+  html+='<hr style="border:none;border-top:1px solid var(--border-light);margin:8px 0">';
+  if(cp)html+='<div style="padding:12px 0 8px"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:8px">Consumer Pulse</h4><div class="pulse-prose">'+san(cp)+'</div></div>';
+  html+='</details>';
+  if(cs&&cs.categories&&cs.categories.length){
+    html+='<div class="category-bar-container"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:#555">Category Sentiment</h4>';
+    const cats=cs.categories;
+    cats.forEach(cat=>{
+      const label=cat.name||cat.category||'';
+      const n=typeof cat.score==='number'?cat.score:parseFloat(cat.score)||0;
+      const pct=Math.min(Math.abs(n)*100,100);
+      const c=n>0.05?'var(--status-green)':n<-0.05?'var(--status-red)':'var(--text-tertiary)';
+      html+='<div class="category-bar-row"><div class="category-bar-label">'+label+'</div><div class="category-bar-track"><div class="category-bar-fill" style="width:'+pct+'%;background:'+c+'"></div></div><div class="category-bar-score" style="color:'+c+'">'+n.toFixed(2)+'</div></div>';
+    });
+    html+='</div>';
+  }
+  html+='</div></div>';
+  $('sentimentSection').innerHTML=html;
+  const wcTopics=(D.word_cloud_topics&&D.word_cloud_topics.length)?D.word_cloud_topics:(cs&&cs.topics&&cs.topics.length)?cs.topics:extractTopicsFromText();
+  if(wcTopics.length){
+    const det=$('sentimentSection').querySelector('details');
+    if(det){let wcDrawn=false;det.addEventListener('toggle',()=>{if(det.open&&!wcDrawn){wcDrawn=true;setTimeout(()=>renderWordCloud(wcTopics),50)}});}
+  }
+}
+
+function extractTopicsFromText(){
+  const stops=new Set(['the','and','for','are','but','not','you','all','can','had','her','was','one','our','out','has','its','let','say','she','too','use','that','with','have','this','will','your','from','they','been','call','come','each','make','like','long','look','many','over','such','take','than','them','then','what','when','more','some','time','very','most','also','into','just','may','new','now','old','see','way','who','did','get','well','back','much','before','being','does','other','about','after','could','their','which','would','these','only','still','between','through','where','while','should','during','both','under','because','those','since','against','another','around','without','within','across','among','along','however','further','beyond','above','below','until','upon','toward','onto','into','canada','canadian','percent','year','week','month','quarter','rate','data','according','reported','million','billion','said']);
+  let text='';
+  if(D.consumer_pulse)text+=D.consumer_pulse+' ';
+  if(D.executive_summary)text+=D.executive_summary+' ';
+  if(D.national&&D.national.analysis)text+=D.national.analysis+' ';
+  text=text.replace(/<[^>]+>/g,' ').replace(/[^a-zA-Z\s-]/g,' ').toLowerCase();
+  const freq={};
+  text.split(/\s+/).forEach(w=>{w=w.trim();if(w.length>3&&!stops.has(w)){freq[w]=(freq[w]||0)+1}});
+  return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,60).map(([word,count])=>({topic:word,frequency:count,sentiment_score:0}));
+}
+
+function renderWordCloud(topics){
+  const container=document.getElementById('wordCloudSvg');
+  if(!container||!topics.length)return;
+  const w=container.clientWidth||500,h=280;
+  container.innerHTML='';
+  const maxFreq=Math.max(...topics.map(t=>t.frequency||t.count||1));
+  const words=topics.slice(0,80).map(t=>{
+    const freq=t.frequency||t.count||1;
+    const score=t.sentiment_score||t.sentiment||0;
+    return{text:t.topic||t.word||'',size:12+((freq/maxFreq)*28),score:typeof score==='number'?score:0,freq};
+  });
+  const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Plus Jakarta Sans').fontSize(d=>d.size).on('end',drawn);
+  layout.start();
+  function drawn(wds){
+    const svg=d3.select(container).append('svg').attr('width',w).attr('height',h);
+    const g=svg.append('g').attr('transform','translate('+w/2+','+h/2+')');
+    g.selectAll('text').data(wds).enter().append('text')
+      .style('font-size',d=>d.size+'px').style('font-family','Plus Jakarta Sans')
+      .style('font-weight',d=>d.size>30?'700':d.size>20?'600':'400')
+      .style('fill','#1a2f6b')
+      .style('opacity',d=>0.6+Math.min(Math.abs(d.score),0.4))
+      .style('cursor','pointer')
+      .attr('text-anchor','middle').attr('transform',d=>'translate('+d.x+','+d.y+') rotate('+d.rotate+')')
+      .text(d=>d.text)
+      .append('title').text(d=>d.text+'\nSentiment: '+d.score.toFixed(2)+'\nFrequency: '+d.freq);
+  }
+}
+
+/* == Trend Summary == */
+async function renderTrendSummary(){
+  const el=$('trendSummary');if(!el)return;
+  try{
+    // Try weekly briefing first (Claude Sonnet), then trend report (Gemini Pro)
+    let narrative='',title='Weekly Intelligence Briefing',ds={};
+    const bSnap=await getDoc(doc(db,'dashboard_state','latest_briefing'));
+    if(bSnap.exists()&&bSnap.data().content){
+      narrative=bSnap.data().content;
+      title='Weekly Intelligence Briefing';
+    } else {
+      const weekNum=new Date().toISOString().slice(0,4)+'-W'+String(Math.ceil((Date.now()-new Date(new Date().getFullYear(),0,1))/(7*864e5))).padStart(2,'0');
+      const tSnap=await getDoc(doc(db,'trend_reports',weekNum));
+      if(tSnap.exists()){const tr=tSnap.data();ds=tr.data_summary||{};narrative=tr.narrative||'';title='Pipeline Trend Analysis'}
+    }
+    if(!narrative){el.innerHTML='';return}
+    const chips=ds.total_projects?`<div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap"><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)"><strong>${ds.total_projects||0}</strong> projects</div><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)">$<strong>${((ds.total_value_millions||0)/1000).toFixed(1)}B</strong> pipeline</div></div>`:'';
+    // Download buttons (linked to Firebase Storage URLs set by pipeline)
+    const bd=bSnap&&bSnap.exists()?bSnap.data():{};
+    const pdfUrl=bd.pdf_url||'';const docxUrl=bd.docx_url||'';
+    const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:12px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#b91c1c;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#1d4ed8;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
+    el.innerHTML=`<div class="card fade-in"><div class="card-header">${title}</div><div class="card-body">${chips}${dlBtns}<div style="line-height:1.65;color:var(--text-secondary);white-space:pre-line">${san(narrative)}</div></div></div>`;
+  }catch(e){console.warn('Trend summary:',e);el.innerHTML=''}
+}
+
+/* == Global Vectors == */
+function renderGlobalVectors(){
+  const gv=D.globalVectors||D.global_vectors||{};
+  const globalArr=D.global||[];
+  const REGION_MAP={'United States':'us','China':'china','European Union':'eu','United Kingdom':'uk'};
+  const vectors=[
+    {key:'us',name:'United States',cls:'gv-us'},
+    {key:'china',name:'China',cls:'gv-china'},
+    {key:'eu',name:'European Union',cls:'gv-eu'},
+    {key:'uk',name:'United Kingdom',cls:'gv-uk'}
+  ];
+  let html='<h2 style="font-size:var(--text-lg);font-weight:700;margin-bottom:12px">Global Vectors</h2>';
+  let hasAny=false;
+  vectors.forEach(v=>{
+    // Try rich global array first, fall back to globalVectors text
+    const gData=globalArr.find(g=>REGION_MAP[g.region]===v.key)||{};
+    const vectorText=gv[v.key]||'';
+    const analysis=gData.analysis||vectorText;
+    if(!analysis)return;
+    hasAny=true;
+    html+='<div class="gv-card '+v.cls+' fade-in"><div class="gv-header">'+v.name+'</div>';
+    // Show indicators if available
+    const gi=gData.indicators||{};
+    const hasInd=gi.gdp||gi.cpi||gi.rate||gi.unemployment;
+    if(hasInd){
+      html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">';
+      if(gi.gdp)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">GDP</div><div class="indicator-pill-value">'+gi.gdp+'</div></div>';
+      if(gi.cpi)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">CPI</div><div class="indicator-pill-value">'+gi.cpi+'</div></div>';
+      if(gi.rate)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">Rate</div><div class="indicator-pill-value">'+gi.rate+'</div></div>';
+      if(gi.unemployment)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">Unemp</div><div class="indicator-pill-value">'+gi.unemployment+'</div></div>';
+      html+='</div>';
+    }
+    html+='<div class="gv-body">'+san(analysis)+'</div>';
+    if(gData.sources&&gData.sources.length)html+=sourcesFooter(gData.sources);
+    html+='</div>';
+  });
+  if(!hasAny)html+='<div class="empty-state"><div class="empty-state-text">Global vector analysis not yet available.</div></div>';
+  $('globalVectors').innerHTML=html;
+}
+
+
+/* ====== PROVINCES TAB ====== */
+function renderProvinces(){
+  // Province selector pills
+  let sel='';
+  PROVS.forEach(p=>{
+    sel+='<div class="province-pill'+(p.code===selectedProvince?' active':'')+'" data-prov="'+p.code+'" onclick="window.selectProvince(this.dataset.prov)">'+p.code+'</div>';
+  });
+  $('provSelector').innerHTML=sel;
+  renderProvinceContent();
+}
+window.selectProvince=function(code){
+  selectedProvince=code;
+  document.querySelectorAll('.province-pill').forEach(p=>p.classList.toggle('active',p.dataset.prov===code));
+  // Update banner image and province map silhouette
+  const img=PROV_IMGS[code]||PROV_IMGS.BC;
+  $('provBanner').style.setProperty('--banner-img',"url('"+img+"')");
+  renderProvinceContent();
+};
+function renderProvinceContent(){
+  const prov=PROVS.find(p=>p.code===selectedProvince)||PROVS[0];
+  $('provBannerTitle').textContent=prov.name;
+  // Find province data from the provinces array
+  const provArr=D?(D.provinces||[]):[];
+  const norm=s=>(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z]/g,'');
+  const provData=provArr.find(p=>norm(p.name)===norm(prov.name))||{};
+  const provInd=provData.indicators||{};
+  const provMeta=provData.indicatorMeta||{};
+  let headerHtml='<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:var(--text-xl);font-weight:700">'+prov.name+'</span>';
+  headerHtml+='</div><span style="font-size:var(--text-xs);color:#777">Last updated '+(D?fmtDate(D.updated_at||D.date)||(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'')+'</span></div>';
+  $('provHeader').innerHTML=headerHtml;
+
+  // Mini chart cards
+  const chartMetrics=[{label:'GDP YoY',key:'gdp',tsId:null},{label:'Unemployment',key:'unemployment',tsId:'canada_unemployment'},{label:'CPI',key:'cpi',tsId:'canada_cpi'},{label:'Housing Starts',key:'housingStarts',tsId:null}];
+  let miniHtml='<div class="mini-chart-grid">';
+  const provSparkJobs=[];
+  chartMetrics.forEach((m,i)=>{
+    const val=provInd[m.key]||'N/A';
+    const meta=provMeta[m.key]||{};
+    const chg=meta.change||'';
+    const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
+    const sparkId='spark_prov_'+selectedProvince+'_'+i;
+    const prd=meta.period||'';
+    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
+    if(m.tsId)provSparkJobs.push({canvasId:sparkId,docId:m.tsId,change:chg});
+  });
+  miniHtml+='</div>';
+  $('provMiniCharts').innerHTML=miniHtml;
+  provSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
+
+  // Province indicator dropdown
+  $('provIndicatorDropdown').innerHTML=renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
+
+  // Analysis
+  const provContent=provData.analysis||'';
+  let analysisHtml='<div class="card"><div class="card-header">Analysis</div><div class="card-body">'+(provContent?san(provContent):'<div class="empty-state"><div class="empty-state-text">No provincial analysis available for '+prov.name+'.</div></div>')+'</div></div>';
+  // Province sources footer
+  if(provData.sources&&provData.sources.length){analysisHtml+=sourcesFooter(provData.sources)}
+  // Provincial upcoming events (from watchlist, filtered by province mention in description)
+  const wl=D&&(D.watchlist||D.events)?D.watchlist||D.events||[]:[];
+  const provEvents=wl.filter(e=>{const desc=(e.description||'')+(e.event_name||'');return desc.toLowerCase().includes(prov.name.toLowerCase())});
+  if(provEvents.length){
+    analysisHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:#555">';
+    provEvents.forEach(e=>{analysisHtml+='<div style="margin-bottom:4px">'+(e.date||'')+' \u2014 '+(e.event_name||e.event||'')+(e.institution?' ('+e.institution+')':'')+'</div>'});
+    analysisHtml+='</div></details>';
+  }
+  $('provAnalysis').innerHTML=analysisHtml;
+
+  // Projects preview
+  const provProjects=allProjects.filter(p=>p.province===prov.name||p.province===prov.code).slice(0,5);
+  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-size:var(--text-xs);color:#777;margin-left:8px">('+provProjects.length+')</span></div>';
+  if(provProjects.length){
+    projHtml+='<table class="project-table" style="margin-top:8px"><thead><tr><th>Value</th><th>Project</th><th>Status</th><th>Source</th></tr></thead><tbody>';
+    provProjects.forEach(p=>{
+      projHtml+='<tr><td class="col-value">'+fmtCurrency(p.value,p)+'</td><td class="col-name">'+((p.name||'').substring(0,60))+'</td><td>'+statusBadge(p.status||'Proposed')+'</td><td>'+srcLink((p.sources||[])[0]?.url,(p.sources||[])[0]?.title)+'</td></tr>';
+    });
+    projHtml+='</tbody></table>';
+    projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><a href="#" style="color:var(--accent-blue);text-decoration:none" onclick="event.preventDefault();switchTab(\'projects\')">View all projects \u2192</a></div>';
+  } else {
+    projHtml+='<div class="empty-state"><div class="empty-state-text">No projects tracked for '+prov.name+' yet.</div></div>';
+  }
+  projHtml+='</div>';
+  $('provProjectsPreview').innerHTML=projHtml;
+}
+
+
+
+/* ====== INDUSTRIES TAB ====== */
+let _industryView='all';
+window.toggleIndustryView=function(view){
+  _industryView=view;
+  document.querySelectorAll('.ind-toggle').forEach(b=>{b.classList.toggle('active',b.dataset.view===view)});
+  renderIndustrySectors();
+};
+function renderIndustries(){
+  if(!D){$('industrySectorGrid').innerHTML='<div class="empty-state"><div class="empty-state-text">No industry data available.</div></div>';return}
+  const ies=D.industry_executive_summary||'';
+  if(ies){
+    $('industryExecSummary').innerHTML='<div class="card fade-in"><div class="card-header">Industry Executive Summary</div><div class="card-body">'+san(ies)+'</div></div>';
+  }
+  renderIndustrySectors();
+}
+function renderIndustrySectors(){
+  if(!D)return;
+  const goodsArr=D.goodsIndustries||[];
+  const servArr=D.servicesIndustries||[];
+  const showGoods=_industryView==='all'||_industryView==='goods';
+  const showServ=_industryView==='all'||_industryView==='services';
+  let html='';
+  if(showGoods){
+    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#E8F0F8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Goods-Producing Industries</h3><div class="sector-grid" style="margin-bottom:16px">';
+    goodsArr.forEach(s=>{html+=sectorCard(s)});
+    if(!goodsArr.length)['11','21','22','23','31-33'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
+    html+='</div>';
+  }
+  if(showServ){
+    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#E8F0F8;text-transform:uppercase;letter-spacing:.5px;margin:'+(showGoods?'12px':'0')+' 0 8px">Services-Producing Industries</h3><div class="sector-grid">';
+    servArr.forEach(s=>{html+=sectorCard(s)});
+    if(!servArr.length)['41','44-45','48-49','51','52','53','54','55','56','61','62','71','72','81','91'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
+    html+='</div>';
+  }
+  $('industrySectorGrid').innerHTML=html;
+}
+function sectorCard(s){
+  const code=s.code||'';
+  const name=s.name||NAICS_NAMES[code]||code;
+  const cls=NAICS_CLS[code]||'';
+  const analysis=s.analysis||'';
+  const mm=s.mm||'';const yy=s.yy||'';
+  const mmCls=s.isNegative?'change-down':'change-up';
+  let footer='';
+  if(mm||yy)footer='<div style="margin-top:8px;font-size:var(--text-xs);color:#777">'+(mm?'M/M: <span class="'+mmCls+'" style="font-family:var(--font-mono)">'+mm+'</span> ':'')+(yy?'Y/Y: <span style="font-family:var(--font-mono)">'+yy+'</span>':'')+(s.indicatorSrc?' · '+s.indicatorSrc:'')+'</div>';
+  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+(analysis?san(analysis):'<em style="color:#777">No analysis available.</em>')+footer+'</div></div>';
+}
+
+/* ====== MARKETS TAB ====== */
+function renderMarkets(){
+  if(!D){$('marketsGrid').innerHTML='<div class="empty-state"><div class="empty-state-text">No market data available.</div></div>';return}
+  const fm=D.financialMarkets||D.financial_markets||D.markets||{};
+  const indices=fm.indices||[];const fx=fm.fx||[];
+  // Equity + Currency cards
+  // Indices: {name, value, change, day, yy, country}  FX: {name, value} (no change)
+  const mktTsMap={'S&P/TSX':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'idx_sp500','Dow Jones':'idx_djia','NASDAQ':'idx_nasdaq','FTSE 100':'idx_ftse','DAX':'idx_dax','Nikkei 225':'idx_nikkei','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','EUR/USD':'fx_eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'fx_usdjpy','USD/CNY':'fx_usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'comm_wti','Crude Oil (Brent)':'comm_brent','Natural Gas':'comm_natgas','Gold':'comm_gold','Silver':'comm_silver','Platinum':'comm_platinum','Palladium':'comm_palladium','Copper':'comm_copper','Aluminum':'comm_aluminum','Wheat':'comm_wheat','Corn':'comm_corn','Rice':'comm_rice','Soybeans':'comm_soybeans','Coffee':'comm_coffee','Cocoa':'comm_cocoa','Sugar #11':'comm_sugar','Cotton':'comm_cotton','Soybean Oil':'comm_soyoil','Soybean Meal':'comm_soymeal','Coal (Newcastle)':'comm_coal','Propane':'comm_propane'};
+  const normMktId=(name)=>(name||'').toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_');
+  const mktDate=fmtDate(D.updated_at||D.date)||'';
+  let eqHtml='';let mktSparkJobs=[];let mktIdx=0;
+  if(indices.length){
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#E8F0F8">Equity Indices</h3><div class="market-grid">';
+    indices.forEach(item=>{
+      const chg=item.change||item.day||'';const isNeg=chg.startsWith('-');
+      const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
+      const sid='spark_mkt_'+mktIdx++;
+      const tsId=mktTsMap[item.name]||null;
+      eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small>'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#777">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+      eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
+      if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
+    });
+    eqHtml+='</div>';
+  }
+  if(fx.length){
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">Foreign Exchange</h3><div class="market-grid">';
+    fx.forEach(item=>{
+      const chg=item.day||'';const isNeg=chg.startsWith('-');
+      const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
+      const sid='spark_mkt_'+mktIdx++;
+      const tsId=mktTsMap[item.name]||null;
+      eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#777">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+      eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
+      if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
+    });
+    eqHtml+='</div>';
+  }
+  $('marketsGrid').innerHTML=eqHtml||'<div class="empty-state"><div class="empty-state-text">No equity/currency data.</div></div>';
+  mktSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
+
+  // Yield curve
+  const yc=D.yieldCurve||[];
+  if(yc.length){
+    let ycHtml='<div class="card yield-card"><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
+    const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
+    if(y2&&y10){
+      const spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);
+      ycHtml+='<div class="yield-spread">10Y-2Y Spread: '+spread+'bp';
+      if(parseInt(spread)<0)ycHtml+=' <span class="inversion">Inverted</span>';
+      ycHtml+='</div>';
+    }
+    ycHtml+='<a class="market-card-source" href="https://www.bankofcanada.ca/rates/interest-rates/" target="_blank">Bank of Canada Valet API \u2197</a></div>';
+    $('yieldCurveCard').innerHTML=ycHtml;
+    setTimeout(()=>drawYieldChart(yc),50);
+  } else {
+    $('yieldCurveCard').innerHTML='<div class="card"><div class="empty-state"><div class="empty-state-text">No yield curve data.</div></div></div>';
+  }
+
+  // Commodities — pipeline stores [{category, color, items: [{name, unit, val, yy, day}]}]
+  const rawComms=D.commodities||fm.commodities||[];
+  let commHtml='';
+  const commSparkJobs=[];
+  if(Array.isArray(rawComms)&&rawComms.length&&rawComms[0].items){
+    // Nested category structure from pipeline
+    rawComms.forEach(cat=>{
+      commHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">'+cat.category+'</h3><div class="market-grid">';
+      (cat.items||[]).forEach(c=>{
+        const yy=c.yy||'';const isNeg=yy.startsWith('-');
+        const cls=isNeg?'change-down':(yy?'change-up':'change-flat');
+        const cid='spark_comm_'+mktIdx++;
+        const tsId=mktTsMap[c.name]||null;
+        commHtml+='<div class="market-card"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small>'+c.unit+'</small>':'')+'</div>';
+        if(yy)commHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+yy+' YoY</div>';
+        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#777">'+c.day+' today</div>';
+        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+        commHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
+        if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:yy});
+      });
+      commHtml+='</div>';
+    });
+  } else if(Array.isArray(rawComms)){
+    // Flat array fallback
+    rawComms.forEach(c=>{
+      const chg=c.change||c.yy||'';const isNeg=chg.startsWith('-');
+      const cls=isNeg?'change-down':'change-up';
+      const cid='spark_comm_'+mktIdx++;
+      const tsId=mktTsMap[c.name]||null;
+      commHtml+='<div class="market-card"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||c.value||'N/A')+'</div><div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div><div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
+      if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:chg});
+    });
+  }
+  $('commoditiesGrid').innerHTML=commHtml||'<div class="empty-state"><div class="empty-state-text">No commodity data.</div></div>';
+  commSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
+}
+
+/* == Chart Helpers == */
+function drawYieldChart(yc){
+  const canvas=document.getElementById('yieldChart');
+  if(!canvas)return;
+  if(charts.yield)charts.yield.destroy();
+  const labels=yc.map(y=>y.term);
+  const data=yc.map(y=>parseFloat(y.yield)||0);
+  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#2E7DAD',backgroundColor:'rgba(46,125,173,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#1C5688',pointBorderColor:'#fff',pointBorderWidth:2,fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#111827',bodyColor:'#4B5563',borderColor:'#D4DAE3',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:11},color:'#6B7280'}},y:{grid:{color:'#D4DAE3',lineWidth:1},ticks:{font:{family:'JetBrains Mono',size:11},color:'#6B7280',callback:v=>v.toFixed(2)+'%'}}}}});
+}
+function drawLineChart(canvasId,tsData,months){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  if(charts[canvasId])charts[canvasId].destroy();
+  if(!tsData||!tsData.series||!tsData.series.length){
+    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#777;font-size:var(--text-xs);padding:20px">No timeseries data available</div>');
+    return;
+  }
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-months);
+  const filtered=tsData.series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(!filtered.length)return;
+  const labels=filtered.map(p=>fmtDate(p.date));
+  const data=filtered.map(p=>p.value);
+  charts[canvasId]=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'var(--accent-blue-soft)',backgroundColor:'rgba(59,130,246,0.06)',borderWidth:2,pointRadius:3,pointBackgroundColor:'var(--accent-blue)',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:6,font:{family:'Plus Jakarta Sans',size:10},color:'#6B7280'}},y:{grid:{color:'#D4DAE3'},ticks:{font:{family:'JetBrains Mono',size:10},color:'#6B7280'}}}}});
+}
+
+function drawSparkline(canvasId,tsData,color){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas||!tsData||!tsData.series||!tsData.series.length)return;
+  if(charts[canvasId])charts[canvasId].destroy();
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
+  const filtered=tsData.series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(filtered.length<2)return;
+  const data=filtered.map(p=>p.value);
+  const c=color||'#2E7DAD';
+  const mn=Math.min(...data),mx=Math.max(...data),pad=(mx-mn)*0.15||0.01;
+  charts[canvasId]=new Chart(canvas,{type:'line',data:{labels:filtered.map(p=>p.date),datasets:[{data,borderColor:c,backgroundColor:c+'12',borderWidth:1.8,pointRadius:0,fill:true,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false,min:mn-pad,max:mx+pad}},elements:{line:{capBezierPoints:true}}}});
+}
+async function loadAndDrawSparkline(canvasId,docId,change){
+  const ts=await loadTimeseries(docId);
+  if(!ts)return;
+  const c=change&&change.startsWith('-')?'#B91C1C':change&&(change.startsWith('+')||parseFloat(change)>0)?'#15803D':'#2E7DAD';
+  drawSparkline(canvasId,ts,c);
+}
+
+/* ====== PROJECTS TAB ====== */
+function renderProjectsTab(){
+  // Populate filter dropdowns
+  const provSel=$('filterProvince');
+  if(provSel.options.length<=1){
+    PROVS.forEach(p=>{const o=document.createElement('option');o.value=p.code;o.textContent=p.name;provSel.appendChild(o)});
+  }
+  const secSel=$('filterSector');
+  if(secSel.options.length<=1){
+    NAICS_CODES.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c+' '+NAICS_NAMES[c];secSel.appendChild(o)});
+  }
+  const stSel=$('filterStatus');
+  if(stSel.options.length<=1){
+    STATUSES.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;stSel.appendChild(o)});
+  }
+  // Event listeners
+  $('projectSearch').oninput=filterProjects;
+  $('filterProvince').onchange=filterProjects;
+  $('filterSector').onchange=filterProjects;
+  $('filterStatus').onchange=filterProjects;
+  $('sortProjects').onchange=filterProjects;
+  $('loadMoreBtn').onclick=()=>{projectPage++;renderProjectTable()};
+  // Type toggle
+  document.querySelectorAll('#projTypeToggle button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('#projTypeToggle button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      _projTypeFilter=btn.dataset.type;
+      filterProjects();
+    });
+  });
+  filterProjects();
+  // Populate missed project form dropdowns
+  const mpProv=$('mpProvince');
+  if(mpProv&&mpProv.options.length<=1){PROVS.forEach(p=>{const o=document.createElement('option');o.value=p.name;o.textContent=p.name;mpProv.appendChild(o)})}
+  const mpSec=$('mpSector');
+  if(mpSec&&mpSec.options.length<=1){NAICS_CODES.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c+' '+NAICS_NAMES[c];mpSec.appendChild(o)})}
+}
+async function submitMissedProject(){
+  const name=($('mpName').value||'').trim();
+  const province=($('mpProvince').value||'').trim();
+  const fb=$('missedFormFeedback');
+  if(!name||!province){fb.style.display='block';fb.style.background='#FEF2F2';fb.style.color='#991B1B';fb.textContent='Project name and province are required.';return}
+  const btn=$('mpSubmitBtn');btn.disabled=true;btn.textContent='Submitting...';
+  try{
+    const doc={
+      name:name,
+      province:province,
+      city:($('mpCity').value||'').trim(),
+      sector:$('mpSector').value||'',
+      value_millions:$('mpValue').value?parseFloat($('mpValue').value):null,
+      proponent:($('mpProponent').value||'').trim(),
+      description:($('mpDescription').value||'').trim(),
+      source_url:($('mpSourceUrl').value||'').trim(),
+      project_type:$('mpType').value||'new_build',
+      status:$('mpStatus').value||'Proposed',
+      user_notes:($('mpNotes').value||'').trim(),
+      submitted_at:Timestamp.now(),
+      processing_status:'pending'
+    };
+    await addDoc(collection(db,'missed_projects'),doc);
+    fb.style.display='block';fb.style.background='#F0FDF4';fb.style.color='#166534';
+    fb.textContent='"'+name+'" submitted successfully. The system will verify it and adapt future searches.';
+    ['mpName','mpCity','mpValue','mpProponent','mpDescription','mpSourceUrl','mpNotes'].forEach(id=>{const el=$(id);if(el)el.value=''});
+    $('mpProvince').value='';$('mpSector').value='';$('mpType').value='new_build';$('mpStatus').value='Proposed';
+  }catch(e){
+    fb.style.display='block';fb.style.background='#FEF2F2';fb.style.color='#991B1B';
+    fb.textContent='Error submitting: '+e.message;
+  }finally{btn.disabled=false;btn.textContent='Submit Missing Project'}
+}
+async function filterProjects(){
+  const search=($('projectSearch').value||'').toLowerCase();
+  const prov=$('filterProvince').value||null;
+  const sector=$('filterSector').value;
+  const status=$('filterStatus').value;
+  const sort=$('sortProjects').value;
+  // If province changed, reload from Firestore
+  if(prov!==_lastLoadedProvince){
+    await loadProjects(prov);
+    filterProjects();
+    return;
+  }
+  filteredProjects=allProjects.filter(p=>{
+    if(_confirmedOnly&&!meetsThreshold(p))return false;
+    if(search&&!(p.name||'').toLowerCase().includes(search)&&!(p.cma||'').toLowerCase().includes(search)&&!(p.proponent||'').toLowerCase().includes(search))return false;
+    if(prov&&normProvince(p.province)!==prov)return false;
+    if(sector&&p.naics_code!==sector)return false;
+    if(status&&p.status!==status)return false;
+    if(_projTypeFilter==='greenfield'&&p.is_brownfield)return false;
+    if(_projTypeFilter==='brownfield'&&!p.is_brownfield)return false;
+    return true;
+  });
+  if(sort==='value_desc')filteredProjects.sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value));
+  else if(sort==='updated')filteredProjects.sort((a,b)=>(b.lastSeen||'').localeCompare(a.lastSeen||''));
+  else if(sort==='name_asc')filteredProjects.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  else if(sort==='confidence')filteredProjects.sort((a,b)=>(b.confidence||0)-(a.confidence||0));
+  projectPage=0;
+  renderProjectSummary();
+  renderProjectTable();
+}
+function renderProjectSummary(){
+  const total=filteredProjects.length;
+  const gf=filteredProjects.filter(p=>!p.is_brownfield).length;
+  const bf=filteredProjects.filter(p=>p.is_brownfield).length;
+  const totalVal=filteredProjects.reduce((s,p)=>s+parseNumericValue(p.value),0);
+  const uc=filteredProjects.filter(p=>(p.status||'').toLowerCase().includes('construction')).length;
+  const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$0';
+  const withUrls=filteredProjects.filter(p=>(p.evidence||[]).length>0).length;
+  const withGov=filteredProjects.filter(p=>p.has_government_source).length;
+  const pctVerified=total>0?Math.round(withUrls/total*100):0;
+  let banner='';
+  if(total>0)banner='<div class="verify-banner"><span>&#128279;</span><span>'+pctVerified+'% of projects have source links for independent verification.'+(withGov>0?' '+withGov+' backed by government sources.':'')+'</span></div>';
+  $('projSummaryStats').innerHTML=banner+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+total+'</div><div class="proj-stat-label">Total Projects</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+fv(totalVal)+'</div><div class="proj-stat-label">Total Value</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+gf+'</div><div class="proj-stat-label">Greenfield</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+bf+'</div><div class="proj-stat-label">Brownfield</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+uc+'</div><div class="proj-stat-label">Under Construction</div></div>';
+}
+function renderProjectTable(){
+  const shown=filteredProjects.slice(0,(projectPage+1)*PAGE_SIZE);
+  // Summary line
+  const pf=$('filterProvince')?.value;
+  const countNote=(!pf||pf==='')?'Showing '+shown.length+' of '+filteredProjects.length+' projects. Select a province for complete results. ('+allProjects.length+' most recent loaded)':'Showing '+shown.length+' of '+filteredProjects.length+' '+(PROVS.find(p=>p.code===pf)||{}).name+' projects';
+  $('projectResultsSummary').textContent=countNote;
+  // Table
+  let html='<table class="project-table"><thead><tr><th>Value</th><th>Project</th><th>Type</th><th>Province</th><th>Proponent</th><th>Status</th><th>Sector</th><th>Updated</th><th>Src</th></tr></thead><tbody>';
+  shown.forEach((p,i)=>{
+    const rowId='proj_'+i;
+    const firstEv=(p.evidence||[])[0]||{};
+    const srcDead=firstEv.url_dead||false;
+    const srcUrl=srcDead?'':((p.sources&&p.sources[0])?p.sources[0].url:'');
+    const srcTitle=(p.sources&&p.sources[0])?p.sources[0].title:'';
+    const updatedAgo=relDate(p.lastSeen||p.updated_at||'');
+    const staleWarn=p.is_stale||(p.lastSeen&&(Date.now()-new Date(p.lastSeen+'T00:00:00').getTime())>2592000000);
+    const provCode=normProvince(p.province);
+    const naicsShort=NAICS_NAMES[p.naics_code]||(p.sector||'').substring(0,20)||'';
+    const pType=p.project_type||'greenfield';
+    const isUnconf=!meetsThreshold(p);
+    html+='<tr onclick="window.toggleProjectRow(\''+rowId+'\')"'+(isUnconf&&!_confirmedOnly?' class="unconfirmed-row"':'')+'>';
+    html+='<td class="col-value">'+fmtCurrency(p.value,p)+(isUnconf?'<span class="unconfirmed-badge">unconfirmed</span>':'')+'</td>';
+    html+='<td class="col-name">'+((p.name||'').substring(0,50))+'</td>';
+    html+='<td>'+typeBadge(pType)+'</td>';
+    html+='<td class="col-province">'+(provCode||((p.province||'').substring(0,3)))+'</td>';
+    html+='<td class="col-proponent">'+(p.proponent||'')+'</td>';
+    html+='<td>'+statusBadge(p.status||'Proposed')+'</td>';
+    html+='<td style="font-size:var(--text-xs)">'+naicsShort+'</td>';
+    html+='<td class="col-updated"'+(staleWarn?' style="color:var(--status-amber)"':'')+'>'+updatedAgo+'</td>';
+    html+='<td class="col-source">'+srcLink(srcUrl,srcTitle)+'</td>';
+    html+='</tr>';
+    // Expansion row
+    const colSpan=9;
+    html+='<tr id="'+rowId+'" style="display:none"><td colspan="'+colSpan+'"><div class="project-expand">';
+    html+='<div style="font-size:var(--text-sm);color:#555;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
+    // CMA + confidence row
+    html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:var(--text-xs);color:#555">';
+    if(p.cma)html+='<span>CMA: <b>'+p.cma+'</b></span>';
+    const evArr=p.evidence||[];
+    const dispConf=p.display_confidence!=null?p.display_confidence:p.confidence;
+    if(dispConf!=null)html+='<span>Confidence: '+confBadge(dispConf,evArr.length)+(p.decay_applied?' <span style="color:#999;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
+    if(p.has_anomalies)html+='<span style="color:var(--status-amber);font-weight:600" title="'+(p.anomalies||[]).map(a=>a.type+': '+a.detail).join('; ')+'">&#9888; Anomaly detected</span>';
+    if(p.needs_review)html+='<span style="color:var(--status-red);font-weight:500">Needs review ('+p.days_since_update+'d stale)</span>';
+    const dsSrc=p.discovery_sources||[];
+    if(dsSrc.length>1)html+='<span>Found by '+dsSrc.length+' channels</span>';
+    html+='</div>';
+    // Evidence sources with authority badges
+    if(evArr.length){
+      const authOrder={government:0,major_news:1,industry:2,regional_news:3,other:4};
+      const sorted=[...evArr].sort((a,b)=>(authOrder[a.authority]||4)-(authOrder[b.authority]||4));
+      html+='<details class="evidence-list"><summary style="cursor:pointer;font-size:var(--text-xs);color:var(--accent-blue)">'+evArr.length+' source'+(evArr.length>1?'s':'')+' -- click to verify independently</summary><ul style="margin:6px 0 0 0;padding:0;list-style:none">';
+      sorted.forEach(e=>{
+        html+='<li>';
+        const auth=e.authority||'other';
+        const badgeCfg={government:['GOV','src-badge-gov'],major_news:['NEWS','src-badge-news'],industry:['IND','src-badge-ind'],regional_news:['REG','src-badge-reg'],other:['SRC','src-badge-other']};
+        const bc=badgeCfg[auth]||badgeCfg.other;
+        html+='<span class="src-badge '+bc[1]+'">'+bc[0]+'</span> ';
+        if(e.url&&!e.url_dead){
+          let label=e.name||'';
+          if(!label){try{const h=new URL(e.url).hostname;label=h.startsWith('www.')?h.slice(4):h}catch(_){label=e.url}}
+          html+='<a href="'+e.url+'" target="_blank" rel="noopener noreferrer" style="word-break:break-all">'+label+'</a>';
+        }else if(e.url&&e.url_dead){
+          let label=e.name||'';
+          if(!label){try{const h=new URL(e.url).hostname;label=h.startsWith('www.')?h.slice(4):h}catch(_){label=e.url}}
+          html+='<span style="color:#999;text-decoration:line-through;word-break:break-all">'+label+'</span> <span style="color:var(--status-red);font-size:10px">source unavailable</span>';
+        }else{
+          html+='<span>'+(e.name||'Unknown source')+'</span>';
+        }
+        if(e.date)html+=' <span style="color:#999;font-size:10px">('+e.date+')</span>';
+        if(e.url_verified===false&&!e.url_dead)html+='<span class="url-broken" title="Link may be broken">link may be unavailable</span>';
+        html+='</li>';
+      });
+      html+='</ul></details>';
+    }
+    // Status history
+    const sh=p.statusHistory||[];
+    if(sh.length){
+      html+='<div class="project-timeline">';
+      sh.forEach(entry=>{
+        html+='<div class="timeline-entry"><div class="timeline-date">'+fmtDate(entry.date||'')+'</div><div>'+statusBadge(entry.status||'')+(entry.detail?' <span style="color:#555;font-size:var(--text-xs)">'+entry.detail+'</span>':'')+'</div>';
+        const es=entry.source||{};
+        if(es.url)html+='<div style="font-size:var(--text-xs);margin-top:2px">'+srcLink(es.url,es.title)+(es.archive_url?' <a href="'+es.archive_url+'" target="_blank" style="color:#777">[Archived]</a>':'')+'</div>';
+        html+='</div>';
+      });
+      html+='</div>';
+    }
+    // Suggest edit
+    const eid='edit_'+i;
+    html+='<div style="margin-top:10px"><button onclick="event.stopPropagation();toggleEditForm(\''+eid+'\')" style="background:none;border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-size:var(--text-xs);color:var(--accent-blue-soft);cursor:pointer">Suggest Edit</button></div>';
+    html+='<div id="'+eid+'" class="edit-form" style="display:none" onclick="event.stopPropagation()">';
+    html+='<div class="edit-grid">';
+    html+='<div><label>Value (e.g. $1.2B)</label><input type="text" id="'+eid+'_val" value="'+(p.value||'').replace(/"/g,'&quot;')+'"></div>';
+    html+='<div><label>Status</label><select id="'+eid+'_status"><option value="">--</option>';
+    STATUSES.forEach(s=>{html+='<option value="'+s+'"'+((p.status||'')===s?' selected':'')+'>'+s+'</option>'});
+    html+='</select></div>';
+    html+='<div><label>Proponent</label><input type="text" id="'+eid+'_prop" value="'+(p.proponent||'').replace(/"/g,'&quot;')+'"></div>';
+    html+='<div><label>Completion Date</label><input type="date" id="'+eid+'_comp" value="'+(p.completionDate||'')+'"></div>';
+    html+='</div>';
+    html+='<div><label>Source URL (for verification)</label><input type="url" id="'+eid+'_src" placeholder="https://..."></div>';
+    html+='<div><label>Notes</label><textarea id="'+eid+'_notes" rows="2" placeholder="Why is this correction needed?"></textarea></div>';
+    html+='<button onclick="submitProjectCorrection(\''+eid+'\',\''+((p._id||'').replace(/'/g,"\\'"))+'\')" style="background:var(--accent);color:#fff;border:none;border-radius:5px;padding:5px 14px;font-size:var(--text-xs);cursor:pointer;margin-top:4px">Submit Correction</button>';
+    html+='<div id="'+eid+'_fb" class="edit-feedback"></div>';
+    html+='</div>';
+    // Metadata
+    html+='<div style="margin-top:12px;font-size:var(--text-xs);color:#777">';
+    if(p.firstTracked)html+='Tracked since '+fmtDate(p.firstTracked)+' \u00b7 ';
+    if(p.lastSeen)html+='Last seen '+fmtDate(p.lastSeen)+' \u00b7 ';
+    if(p.discovery_source)html+='<span class="disc-badge">'+p.discovery_source+'</span> ';
+    if(p.history_backfilled&&p.history_earliest_date)html+='<span class="disc-badge">History since '+fmtDate(p.history_earliest_date)+'</span>';
+    if(staleWarn)html+=' <span style="color:var(--status-amber);font-weight:500">\u26a0 Status unconfirmed since '+fmtDate(p.lastSeen)+'</span>';
+    html+='</div></div></td></tr>';
+  });
+  html+='</tbody></table>';
+  $('projectTableContainer').innerHTML=html;
+  $('loadMoreBtn').style.display=shown.length<filteredProjects.length?'block':'none';
+}
+window.toggleProjectRow=function(id){
+  const row=document.getElementById(id);
+  if(row)row.style.display=row.style.display==='none'?'table-row':'none';
+};
+window.toggleEditForm=function(eid){
+  const el=document.getElementById(eid);
+  if(el)el.style.display=el.style.display==='none'?'block':'none';
+};
+window.submitProjectCorrection=async function(eid,projectId){
+  const val=document.getElementById(eid+'_val').value.trim();
+  const status=document.getElementById(eid+'_status').value;
+  const prop=document.getElementById(eid+'_prop').value.trim();
+  const comp=document.getElementById(eid+'_comp').value;
+  const src=document.getElementById(eid+'_src').value.trim();
+  const notes=document.getElementById(eid+'_notes').value.trim();
+  const fb=document.getElementById(eid+'_fb');
+  if(!val&&!status&&!prop&&!comp){fb.style.display='block';fb.style.background='#fff3cd';fb.style.color='#856404';fb.textContent='Please change at least one field.';return}
+  // Find original project
+  const orig=allProjects.find(p=>p._id===projectId)||{};
+  const corrections=[];
+  if(val&&val!==(orig.value||''))corrections.push({field:'value',old_value:orig.value||'',new_value:val});
+  if(status&&status!==(orig.status||''))corrections.push({field:'status',old_value:orig.status||'',new_value:status});
+  if(prop&&prop!==(orig.proponent||''))corrections.push({field:'proponent',old_value:orig.proponent||'',new_value:prop});
+  if(comp&&comp!==(orig.completionDate||''))corrections.push({field:'completionDate',old_value:orig.completionDate||'',new_value:comp});
+  if(!corrections.length){fb.style.display='block';fb.style.background='#fff3cd';fb.style.color='#856404';fb.textContent='No changes detected.';return}
+  try{
+    for(const c of corrections){
+      await addDoc(collection(db,'project_corrections'),{
+        project_id:projectId,field:c.field,old_value:c.old_value,new_value:c.new_value,
+        submitted_at:Timestamp.now(),source_url:src,notes:notes
+      });
+    }
+    fb.style.display='block';fb.style.background='#d4edda';fb.style.color='#155724';fb.textContent='Correction submitted ('+corrections.length+' field'+(corrections.length>1?'s':'')+') — will be applied on next pipeline run.';
+  }catch(e){
+    fb.style.display='block';fb.style.background='#f8d7da';fb.style.color='#721c24';fb.textContent='Error: '+e.message;
+  }
+};
+window.exportProjects=function(){
+  if(!filteredProjects.length)return;
+  const headers=['Name','Province','CMA','Sector','NAICS','Value','Status','Proponent','Type','Description','Discovery Source','First Tracked','Last Updated','Source URL','Confidence'];
+  const rows=filteredProjects.map(p=>[
+    p.name||'',p.province||'',p.cma||'',p.sector||'',p.naics_code||'',
+    p.value||'Not disclosed',p.status||'',p.proponent||'',
+    p.project_type||'',p.description||'',p.discovery_source||'',
+    p.firstTracked||'',p.lastSeen||'',
+    (p.sources&&p.sources[0])?p.sources[0].url:'',
+    p.confidence!=null?Math.round(p.confidence*100)+'%':''
+  ].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
+  const csv=[headers.join(','),...rows].join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='can-macro-projects_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();URL.revokeObjectURL(a.href);
+};
+
+
+/* ====== CALENDAR TAB ====== */
+function renderCalendar(){
+  const events=(D&&(D.watchlist||D.events))?(D.watchlist||D.events):[];
+  // Monthly calendar grid
+  const now=new Date();
+  const year=now.getFullYear(),month=now.getMonth();
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const today=now.getDate();
+  const monthName=now.toLocaleDateString('en-CA',{month:'long',year:'numeric'});
+
+  // Map events to dates — handles ISO "2026-03-14" and short "Mar 14" formats
+  const eventsByDate={};
+  const MONTHS_SHORT={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  events.forEach(e=>{
+    const d=e.date||'';if(!d)return;
+    let eDay=0,eMonth=-1,eYear=year;
+    if(d.includes('-')&&d.length>=8){
+      // ISO format: 2026-03-14
+      eYear=parseInt(d.split('-')[0]);eMonth=parseInt(d.split('-')[1])-1;eDay=parseInt(d.split('-')[2]);
+    } else {
+      // Short format: "Mar 14" or "March 14"
+      const parts=d.trim().split(/\s+/);
+      if(parts.length>=2){eMonth=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)]??-1;eDay=parseInt(parts[1])||0;}
+    }
+    if(eYear===year&&eMonth===month&&eDay>0){
+      if(!eventsByDate[eDay])eventsByDate[eDay]=[];
+      eventsByDate[eDay].push(e);
+    }
+  });
+
+  let calHtml='<h3 style="font-size:var(--text-lg);font-weight:600;margin-bottom:16px;color:#E8F0F8">'+monthName+'</h3>';
+  calHtml+='<div class="calendar-grid">';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{calHtml+='<div class="calendar-header-cell">'+d+'</div>'});
+  // Blank cells before first day
+  for(let i=0;i<firstDay;i++)calHtml+='<div class="calendar-cell other-month"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=d===today;
+    calHtml+='<div class="calendar-cell'+(isToday?' today':'')+'">';
+    calHtml+='<div class="calendar-day-number">'+d+'</div>';
+    if(eventsByDate[d]){
+      eventsByDate[d].forEach(e=>{
+        const impact=(e.impact||'low').toLowerCase();
+        calHtml+='<span class="cal-dot '+impact+'" title="'+(e.event_name||e.event||e.name||'')+'"></span>';
+      });
+    }
+    calHtml+='</div>';
+  }
+  // Trailing blank cells
+  const totalCells=firstDay+daysInMonth;
+  const remaining=7-(totalCells%7);
+  if(remaining<7){for(let i=0;i<remaining;i++)calHtml+='<div class="calendar-cell other-month"></div>'}
+  calHtml+='</div>';
+  $('calendarGrid').innerHTML=calHtml;
+
+  // Helper to parse both ISO "2026-03-14" and short "Mar 14" dates
+  function parseEvtDate(d){
+    if(!d)return null;
+    if(d.includes('-')&&d.length>=8)return new Date(d+'T00:00:00');
+    const parts=d.trim().split(/\s+/);
+    if(parts.length>=2){const m=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)];if(m!=null)return new Date(year,m,parseInt(parts[1])||1)}
+    return null;
+  }
+
+  // This week events
+  const weekFromNow=new Date(now.getTime()+7*864e5);
+  const thisWeek=events.filter(e=>{
+    const ed=parseEvtDate(e.date);
+    return ed&&ed>=new Date(year,month,today)&&ed<=weekFromNow;
+  });
+  // Group by week_label if available
+  const byWeek={};thisWeek.forEach(e=>{const wl=e.week_label||'This Week';if(!byWeek[wl])byWeek[wl]=[];byWeek[wl].push(e)});
+
+  if(thisWeek.length){
+    let twHtml='';
+    Object.keys(byWeek).forEach(wl=>{
+      twHtml+='<div class="events-week-card"><h3>'+wl+'</h3>';
+      byWeek[wl].forEach(e=>{
+        const impact=(e.impact||'low').toLowerCase();
+        const isHigh=impact==='high';
+        const ed=parseEvtDate(e.date);
+        twHtml+='<div class="event-row'+(isHigh?' event-high-accent':'')+'">';
+        if(ed){twHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
+        else{twHtml+='<div>'+(e.date||'-')+'</div>'}
+        twHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
+        if(e.description)twHtml+='<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+e.description+'</div>';
+        twHtml+='</div>';
+        twHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
+        twHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
+        twHtml+='<div>'+srcLink(e.source_url||e.url,'')+'</div>';
+        twHtml+='</div>';
+      });
+      twHtml+='</div>';
+    });
+    $('thisWeekEvents').innerHTML=twHtml;
+  }
+
+  // All events table
+  const sorted=[...events].sort((a,b)=>{const da=parseEvtDate(a.date),db=parseEvtDate(b.date);return (da||new Date(0))-(db||new Date(0))}).slice(0,25);
+  if(sorted.length){
+    let allHtml='<div class="events-week-card"><h3>All Events</h3>';
+    sorted.forEach(e=>{
+      const impact=(e.impact||'low').toLowerCase();
+      const isHigh=impact==='high';
+      const ed=parseEvtDate(e.date);
+      allHtml+='<div class="event-row'+(isHigh?' event-high-accent':'')+'">';
+      if(ed){allHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
+      else{allHtml+='<div>'+(e.date||'-')+'</div>'}
+      allHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
+      if(e.description)allHtml+='<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+e.description+'</div>';
+      allHtml+='</div>';
+      allHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
+      allHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
+      allHtml+='<div>'+srcLink(e.source_url||e.url,'')+'</div>';
+      allHtml+='</div>';
+    });
+    allHtml+='</div>';
+    $('allEventsTable').innerHTML=allHtml;
+  } else {
+    $('allEventsTable').innerHTML='<div class="empty-state"><div class="empty-state-text">No upcoming economic events.</div></div>';
+  }
+}
+
+/* ====== INITIALIZATION ====== */
+// Module scripts are deferred — DOM is already ready, run immediately
+$('execSummary').innerHTML='<div class="card">'+skeleton(4)+'</div>';
+$('nationalAnalysis').innerHTML='<div class="card">'+skeleton(3)+'</div>';
+$('keyIndicators').innerHTML='<div class="indicator-strip">'+Array(7).fill('<div class="skeleton sk-pill"></div>').join('')+'</div>';
+$('footerDate').textContent='Loading...';
+// Auth + load
+let loaded=false;
+signInAnonymously(auth).catch(e=>{
+  console.error('Auth failed:',e);
+  $('navMeta').textContent='Auth error - check console';
+});
+onAuthStateChanged(auth,user=>{if(user&&!loaded){loaded=true;loadAll()}});
+setTimeout(()=>{if(!loaded){$('navMeta').textContent='Connection timeout - try refreshing'}},10000);
+</script>
+</body>
+</html>

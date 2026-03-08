@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EconF Weekly Newsletter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+            color: #0F172A;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+        }
+
+        table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        th {
+            background-color: #F8FAFC;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            color: #64748B;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite linear;
+            border-radius: 0.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .status-pulse {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-[#0F172A] text-white py-4 px-4 sm:px-8 flex justify-between items-center shadow-xl sticky top-0 z-50">
+        <div class="flex items-center gap-4 sm:gap-6">
+            <h1 class="font-black text-xl tracking-tighter text-cyan-400 underline decoration-cyan-500/30">EconF Weekly</h1>
+            <div class="flex items-center gap-2">
+                <label class="text-[10px] uppercase font-bold text-slate-500 hidden sm:inline">Archive:</label>
+                <select id="archive-selector"
+                    class="bg-slate-800 text-[10px] uppercase font-bold px-2 py-1 rounded border border-slate-700 outline-none text-cyan-500 focus:ring-1 focus:ring-cyan-500 cursor-pointer">
+                    <option value="latest">Loading...</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div id="freshness-indicator" class="hidden sm:flex items-center gap-1.5">
+                <span id="freshness-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span id="freshness-label" class="text-[10px] font-bold text-slate-500 uppercase tracking-wider"></span>
+            </div>
+            <div id="edition-label"
+                class="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-800 px-3 py-1 rounded-full">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+        <div class="inline-block bg-cyan-100 text-cyan-700 px-3 py-1 rounded text-[10px] font-bold mb-4 uppercase tracking-widest">
+            Intelligence Layer 4.0
+        </div>
+        <h2 class="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 leading-none mb-6 tracking-tight">
+            Canadian Structural Transformation <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">&amp; Strategic Maturity.</span>
+        </h2>
+        <p id="header-subtitle" class="text-slate-500 text-lg sm:text-xl max-w-3xl leading-relaxed"></p>
+    </header>
+
+    <!-- Tab Bar -->
+    <div class="bg-white border-y border-slate-200 sticky top-[60px] z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 flex gap-4 sm:gap-10 overflow-x-auto no-scrollbar">
+            <button onclick="switchTab('overview')" id="btn-overview"
+                class="tab-btn border-b-2 border-cyan-500 py-4 sm:py-5 text-xs font-black text-cyan-600 uppercase tracking-widest transition-all whitespace-nowrap">
+                1. Macro Overview
+            </button>
+            <button onclick="switchTab('industries')" id="btn-industries"
+                class="tab-btn border-b-2 border-transparent py-4 sm:py-5 text-xs font-black text-slate-400 uppercase tracking-widest transition-all whitespace-nowrap">
+                2. Industries
+            </button>
+            <button onclick="switchTab('markets')" id="btn-markets"
+                class="tab-btn border-b-2 border-transparent py-4 sm:py-5 text-xs font-black text-slate-400 uppercase tracking-widest transition-all whitespace-nowrap">
+                3. Markets &amp; Yields
+            </button>
+            <button onclick="switchTab('projects')" id="btn-projects"
+                class="tab-btn border-b-2 border-transparent py-4 sm:py-5 text-xs font-black text-slate-400 uppercase tracking-widest transition-all whitespace-nowrap">
+                4. Projects Tracker
+            </button>
+            <button onclick="switchTab('watchlist')" id="btn-watchlist"
+                class="tab-btn border-b-2 border-transparent py-4 sm:py-5 text-xs font-black text-slate-400 uppercase tracking-widest transition-all whitespace-nowrap">
+                5. Things to Watch
+            </button>
+            <button onclick="switchTab('about')" id="btn-about"
+                class="tab-btn border-b-2 border-transparent py-4 sm:py-5 text-xs font-black text-slate-400 uppercase tracking-widest transition-all whitespace-nowrap">
+                6. About &amp; Methodology
+            </button>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+
+        <!-- Loading State -->
+        <div id="loading-state" class="space-y-6">
+            <div class="skeleton h-40 w-full"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="skeleton h-28"></div>
+                <div class="skeleton h-28"></div>
+                <div class="skeleton h-28"></div>
+                <div class="skeleton h-28"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="skeleton h-64"></div>
+                <div class="skeleton h-64"></div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="hidden">
+            <div class="bg-red-50 border border-red-200 rounded-2xl p-8 text-center max-w-lg mx-auto">
+                <div class="text-red-400 text-4xl mb-4">&#9888;</div>
+                <h3 class="text-lg font-black text-red-700 mb-2">Connection Error</h3>
+                <p id="error-message" class="text-sm text-red-500 mb-6">Unable to load dashboard data.</p>
+                <button onclick="location.reload()"
+                    class="bg-red-600 text-white text-xs font-bold uppercase px-6 py-2.5 rounded-lg hover:bg-red-700 transition-colors">
+                    Retry
+                </button>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- Tab 1: Macro Overview                                   -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div id="tab-overview" class="tab-content">
+
+            <!-- ═══ Key Economic Indicators ═══════════════════════════════════ -->
+            <div id="statcan-indicators-section" class="mb-10 hidden">
+
+                <!-- Header row -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-6">
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Key Economic Indicators</h3>
+                        <p class="text-xs text-slate-400 mt-1 font-medium">Statistics Canada — updated each pipeline run</p>
+                    </div>
+                    <div class="relative flex-shrink-0">
+                        <svg class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-slate-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <input id="indicator-search" type="text" placeholder="Search indicators..."
+                            oninput="filterIndicators()"
+                            class="text-[10px] pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-cyan-500 text-slate-700 placeholder-slate-300 w-52 sm:w-64" />
+                    </div>
+                </div>
+
+                <!-- Top-5 pinned cards -->
+                <div id="indicator-top5" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-5"></div>
+
+                <!-- Expand toggle -->
+                <div id="indicator-expand-btn" class="text-center mb-4">
+                    <button onclick="toggleIndicatorExpand()" id="indicator-toggle-btn"
+                        class="text-[10px] font-black uppercase px-5 py-2 rounded-full border border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-700 bg-white transition-all tracking-wider">
+                        Show all indicators ▼
+                    </button>
+                </div>
+
+                <!-- Expanded view (hidden by default) -->
+                <div id="indicator-expanded" class="hidden">
+
+                    <!-- Sort bar -->
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Sort:</span>
+                        <select id="indicator-sort" onchange="filterIndicators()"
+                            class="text-[10px] font-black uppercase bg-white border border-slate-200 rounded-lg px-3 py-1.5 outline-none text-slate-700 focus:ring-1 focus:ring-cyan-500 cursor-pointer tracking-wide">
+                            <option value="name">Name A–Z</option>
+                            <option value="recent">Most Recent</option>
+                            <option value="freq">Frequency</option>
+                        </select>
+                    </div>
+
+                    <!-- Indicator table -->
+                    <div id="indicator-table" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-4"></div>
+
+                    <!-- Pagination -->
+                    <div id="indicator-pagination" class="flex items-center justify-between px-1 mb-4"></div>
+
+                    <!-- Collapse -->
+                    <div class="text-center">
+                        <button onclick="toggleIndicatorExpand()"
+                            class="text-[10px] font-black uppercase px-5 py-2 rounded-full border border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-700 bg-white transition-all tracking-wider">
+                            Show less ▲
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+
+            <div class="bg-slate-900 rounded-2xl p-6 sm:p-8 mb-12 border-l-4 border-cyan-500 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                    <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M13 2.05v2.02c3.39.49 6 3.39 6 6.93 0 3.54-2.61 6.44-6 6.93v2.02c4.5-.51 8-4.34 8-8.95s-3.5-8.44-8-8.95zM11 2.05c-4.5.51-8 4.34-8 8.95s3.5 8.44 8 8.95V2.05z" />
+                    </svg>
+                </div>
+                <h4 class="text-cyan-500 font-bold uppercase text-[10px] mb-4 tracking-widest">Executive Summary</h4>
+                <div id="summary-content" class="text-slate-300 text-sm leading-relaxed max-w-4xl space-y-4">
+                    Loading summary...
+                </div>
+            </div>
+
+            <!-- National Section -->
+            <div id="national-section" class="mb-6 hidden">
+                <details open class="group">
+                    <summary class="flex items-center justify-between cursor-pointer list-none mb-4 border-b border-slate-200 pb-4">
+                        <div>
+                            <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">National</h3>
+                            <p class="text-xs text-slate-400 mt-1 font-medium">Canada 🇨🇦 — Key domestic developments this week</p>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Key Economic Indicators</div>
+                            <div id="metrics-grid" class="grid grid-cols-4 gap-2 sm:gap-3"></div>
+                        </div>
+                        <div class="border-l-4 border-cyan-500 bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                            <div id="national-analysis" class="text-slate-700 text-sm leading-relaxed"></div>
+                            <div id="national-sources" class="mt-4 pt-3 border-t border-slate-100 space-y-1"></div>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Global Section -->
+            <div id="global-section" class="mb-10 hidden">
+                <details open class="group">
+                    <summary class="flex items-center justify-between cursor-pointer list-none mb-4 border-b border-slate-200 pb-4">
+                        <div>
+                            <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Global</h3>
+                            <p class="text-xs text-slate-400 mt-1 font-medium">International developments with direct impact on Canada</p>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div id="global-tiles" class="flex flex-col gap-4"></div>
+                </details>
+            </div>
+
+            <div class="mb-8 border-b border-slate-200 pb-6">
+                <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Provincial Policy Monitor</h3>
+                <p class="text-xs text-slate-400 mt-1 font-medium">Economic indicators, sector developments and policy news by province</p>
+            </div>
+            <div id="provinces-policy-container" class="space-y-6"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- Tab 2: Industries                                        -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div id="tab-industries" class="tab-content">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 border-b border-slate-200 pb-4 gap-4">
+                <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Industry Performance</h3>
+                <div class="flex gap-2 bg-slate-100 p-1 rounded-lg">
+                    <button onclick="filterIndustries('goods')" id="btn-goods"
+                        class="text-[10px] font-bold px-4 py-1.5 rounded-md bg-slate-900 text-white shadow-sm transition-all">Goods</button>
+                    <button onclick="filterIndustries('services')" id="btn-services"
+                        class="text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-500 hover:bg-slate-200 transition-all">Services</button>
+                </div>
+            </div>
+            <div id="industry-container" class="grid grid-cols-1 gap-6"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- Tab 3: Projects Tracker                                 -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div id="tab-projects" class="tab-content">
+            <!-- Header + controls row -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+                <div>
+                    <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Projects Tracker</h3>
+                    <p class="text-xs text-slate-400 mt-1 font-medium">Cumulative capital project tracker — updated each edition</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <select id="province-filter" onchange="filterByProvince(this.value)"
+                        class="bg-white text-[10px] font-black uppercase px-3 py-2 rounded-lg border border-slate-200 outline-none text-slate-700 focus:ring-1 focus:ring-cyan-500 cursor-pointer tracking-wide">
+                        <option value="all">All Provinces</option>
+                    </select>
+                    <div class="flex gap-2 bg-slate-100 p-1 rounded-lg">
+                        <button onclick="filterProjects('all')" id="btn-proj-all"
+                            class="proj-filter-btn text-[10px] font-bold px-4 py-1.5 rounded-md bg-slate-900 text-white shadow-sm transition-all">All</button>
+                        <button onclick="filterProjects('active')" id="btn-proj-active"
+                            class="proj-filter-btn text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-500 hover:bg-slate-200 transition-all">Active</button>
+                        <button onclick="filterProjects('completed')" id="btn-proj-completed"
+                            class="proj-filter-btn text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-500 hover:bg-slate-200 transition-all">Completed</button>
+                    </div>
+                    <button onclick="exportProjects()"
+                        class="text-[10px] font-bold px-4 py-2 rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-cyan-300 hover:text-cyan-600 transition-all uppercase tracking-wide">
+                        Export CSV
+                    </button>
+                </div>
+            </div>
+            <!-- Search + Sector filter row -->
+            <div class="flex flex-wrap gap-3 mb-3">
+                <input id="project-search" type="text" placeholder="Search projects, sectors, CMA, tags..."
+                    oninput="renderProjects()"
+                    class="flex-1 min-w-[200px] bg-white text-xs px-4 py-2.5 rounded-lg border border-slate-200 outline-none focus:ring-1 focus:ring-cyan-500 text-slate-700 placeholder-slate-300" />
+                <select id="sector-filter" onchange="renderProjects()"
+                    class="bg-white text-[10px] font-black uppercase px-3 py-2 rounded-lg border border-slate-200 outline-none text-slate-700 focus:ring-1 focus:ring-cyan-500 cursor-pointer tracking-wide">
+                    <option value="all">All Sectors</option>
+                </select>
+            </div>
+            <!-- Date range filter row -->
+            <div class="flex flex-wrap items-center gap-2 mb-8">
+                <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">First tracked:</span>
+                <button onclick="setProjectDateRange('all')" id="pdr-all"
+                    class="proj-date-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border border-slate-800 bg-slate-800 text-white transition-all">All time</button>
+                <button onclick="setProjectDateRange('30d')" id="pdr-30d"
+                    class="proj-date-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border border-slate-300 text-slate-600 bg-white hover:border-slate-400 transition-all">30 days</button>
+                <button onclick="setProjectDateRange('90d')" id="pdr-90d"
+                    class="proj-date-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border border-slate-300 text-slate-600 bg-white hover:border-slate-400 transition-all">90 days</button>
+                <button onclick="setProjectDateRange('ytd')" id="pdr-ytd"
+                    class="proj-date-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border border-slate-300 text-slate-600 bg-white hover:border-slate-400 transition-all">This year</button>
+            </div>
+            <div id="project-stats" class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8"></div>
+            <div id="projects-list" class="space-y-10"></div>
+            <div id="update-log" class="mt-12"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- Tab 4: Markets & Yields                                 -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div id="tab-markets" class="tab-content">
+            <div id="markets-container" class="space-y-12"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- Tab 5: Things to Watch                                  -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div id="tab-watchlist" class="tab-content">
+            <div class="mb-8 border-b border-slate-200 pb-4">
+                <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Things to Watch</h3>
+                <p class="text-xs text-slate-400 mt-1 font-medium">Upcoming releases, rate decisions & policy announcements — next 2–4 weeks</p>
+            </div>
+            <div id="watchlist-container" class="space-y-8"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- Tab 6: About & Methodology (static — no Firestore)     -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div id="tab-about" class="tab-content">
+            <!-- Header -->
+            <div class="mb-8 border-b border-slate-200 pb-4">
+                <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">About &amp; Methodology</h3>
+                <p class="text-xs text-slate-400 mt-1 font-medium">How this dashboard works — data sources, pipeline methods, and limitations</p>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 mb-10">
+                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Contents</h4>
+                <ol class="space-y-2">
+                    <li><a href="#about-overview" onclick="document.getElementById('about-overview').open=true" class="text-sm text-cyan-600 hover:text-cyan-700 font-bold hover:underline">1. Overview</a></li>
+                    <li><a href="#about-sources" onclick="document.getElementById('about-sources').open=true" class="text-sm text-cyan-600 hover:text-cyan-700 font-bold hover:underline">2. Data Sources</a></li>
+                    <li><a href="#about-methodology" onclick="document.getElementById('about-methodology').open=true" class="text-sm text-cyan-600 hover:text-cyan-700 font-bold hover:underline">3. Methodology</a></li>
+                    <li><a href="#about-projects" onclick="document.getElementById('about-projects').open=true" class="text-sm text-cyan-600 hover:text-cyan-700 font-bold hover:underline">4. Project Tracker Methodology</a></li>
+                    <li><a href="#about-explorer" onclick="document.getElementById('about-explorer').open=true" class="text-sm text-cyan-600 hover:text-cyan-700 font-bold hover:underline">5. Data Explorer</a></li>
+                    <li><a href="#about-watchlist-method" onclick="document.getElementById('about-watchlist-method').open=true" class="text-sm text-cyan-600 hover:text-cyan-700 font-bold hover:underline">6. Things to Watch Methodology</a></li>
+                    <li><a href="#about-schedule" onclick="document.getElementById('about-schedule').open=true" class="text-sm text-cyan-600 hover:text-cyan-700 font-bold hover:underline">7. Update Schedule</a></li>
+                    <li><a href="#about-limits" onclick="document.getElementById('about-limits').open=true" class="text-sm text-cyan-600 hover:text-cyan-700 font-bold hover:underline">8. Limitations &amp; Disclaimers</a></li>
+                </ol>
+            </div>
+
+            <div class="space-y-4">
+
+                <!-- 1. Overview -->
+                <details open id="about-overview" class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none p-6 sm:p-8 select-none hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">01</span>
+                            <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Overview</h4>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="px-6 sm:px-8 pb-8 border-t border-slate-100 pt-6 space-y-4 text-sm text-slate-600 leading-relaxed">
+                        <p>The <strong class="text-slate-800">EconF Weekly Newsletter</strong> is a weekly automated economic intelligence platform focused on Canadian structural transformation and capital investment activity. It is designed for strategic advisors, economists, policy analysts, infrastructure investors, and business leaders who need a rapid, high-fidelity view of Canada's economic landscape without manually aggregating data from dozens of sources.</p>
+                        <p>The dashboard synthesizes data from primary government APIs (Bank of Canada, Statistics Canada), real-time commodity and equity markets (Yahoo Finance), government news RSS feeds across federal, provincial, and municipal levels, and AI-augmented research using Perplexity's Sonar Pro web search engine.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                <div class="text-[10px] font-black text-cyan-600 uppercase tracking-wide mb-1">Update Cadence</div>
+                                <div class="text-sm font-bold text-slate-800">Weekly pipeline</div>
+                                <div class="text-xs text-slate-500 mt-0.5">Every week — full data refresh</div>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                <div class="text-[10px] font-black text-cyan-600 uppercase tracking-wide mb-1">Deep Sweep</div>
+                                <div class="text-sm font-bold text-slate-800">Monthly</div>
+                                <div class="text-xs text-slate-500 mt-0.5">First week — expanded project scan</div>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                <div class="text-[10px] font-black text-cyan-600 uppercase tracking-wide mb-1">Data Sourcing</div>
+                                <div class="text-sm font-bold text-slate-800">Primary APIs first</div>
+                                <div class="text-xs text-slate-500 mt-0.5">AI fills context gaps; never generates numbers</div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 2. Data Sources -->
+                <details id="about-sources" class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none p-6 sm:p-8 select-none hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">02</span>
+                            <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Data Sources</h4>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="px-6 sm:px-8 pb-8 border-t border-slate-100 pt-6 space-y-8">
+                        <p class="text-sm text-slate-500">All indicator values on this dashboard come from the primary sources below — never from AI estimation.</p>
+
+                        <!-- Market & macro APIs -->
+                        <div>
+                            <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Market &amp; Macro Indicators</h5>
+                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                <table>
+                                    <thead><tr><th>Source</th><th>What it provides</th><th>Frequency</th><th>Link</th></tr></thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="text-[10px] font-black text-blue-500 uppercase">BoC Valet API</span><div class="text-[10px] text-slate-400">Bank of Canada</div></td>
+                                            <td class="text-xs text-slate-600">Policy rate, exchange rates, full yield curve (3M–30Y), historical time series</td>
+                                            <td class="text-xs text-slate-500">Real-time</td>
+                                            <td class="text-xs"><a href="https://www.bankofcanada.ca/valet/docs" target="_blank" rel="noopener" class="text-cyan-600 hover:underline">valet docs</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="text-[10px] font-black text-red-500 uppercase">StatCan WDS</span><div class="text-[10px] text-slate-400">Statistics Canada</div></td>
+                                            <td class="text-xs text-slate-600">National &amp; provincial CPI (Table 18-10-0004-01), unemployment by province (Table 14-10-0287-01), GDP by industry (Table 36-10-0434-01), quarterly real GDP</td>
+                                            <td class="text-xs text-slate-500">Monthly / Quarterly</td>
+                                            <td class="text-xs"><a href="https://www150.statcan.gc.ca/t1/wds/rest/getDataFromVectorsAndLatestNPeriods" target="_blank" rel="noopener" class="text-cyan-600 hover:underline">WDS API</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="text-[10px] font-black text-green-500 uppercase">CMHC</span><div class="text-[10px] text-slate-400">Canada Mortgage &amp; Housing</div></td>
+                                            <td class="text-xs text-slate-600">Housing starts by province (seasonally adjusted annual rate)</td>
+                                            <td class="text-xs text-slate-500">Monthly</td>
+                                            <td class="text-xs"><a href="https://www.cmhc-schl.gc.ca/en/professionals/housing-markets-data-and-research" target="_blank" rel="noopener" class="text-cyan-600 hover:underline">cmhc-schl.gc.ca</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="text-[10px] font-black text-purple-500 uppercase">Yahoo Finance</span></td>
+                                            <td class="text-xs text-slate-600">Commodity prices (WTI, Brent, natural gas, gold, copper, lumber, potash, uranium, iron ore, coal), equity indices (TSX, S&amp;P 500, DJIA, NASDAQ, FTSE, DAX, Nikkei), CAD/USD</td>
+                                            <td class="text-xs text-slate-500">Real-time</td>
+                                            <td class="text-xs"><a href="https://finance.yahoo.com" target="_blank" rel="noopener" class="text-cyan-600 hover:underline">finance.yahoo.com</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="text-[10px] font-black text-purple-400 uppercase">FRED</span><div class="text-[10px] text-slate-400">Federal Reserve Bank of St. Louis</div></td>
+                                            <td class="text-xs text-slate-600">US CPI, US unemployment, US GDP, US Fed Funds Rate, UK/EU indicators via OECD series</td>
+                                            <td class="text-xs text-slate-500">Monthly / Quarterly</td>
+                                            <td class="text-xs"><a href="https://fred.stlouisfed.org" target="_blank" rel="noopener" class="text-cyan-600 hover:underline">fred.stlouisfed.org</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="text-[10px] font-black text-indigo-500 uppercase">ECB SDW</span><div class="text-[10px] text-slate-400">European Central Bank</div></td>
+                                            <td class="text-xs text-slate-600">Eurozone CPI, GDP, ECB deposit rate</td>
+                                            <td class="text-xs text-slate-500">Monthly / Quarterly</td>
+                                            <td class="text-xs"><a href="https://sdw.ecb.europa.eu" target="_blank" rel="noopener" class="text-cyan-600 hover:underline">sdw.ecb.europa.eu</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="text-[10px] font-black text-indigo-400 uppercase">BoE IADB</span><div class="text-[10px] text-slate-400">Bank of England</div></td>
+                                            <td class="text-xs text-slate-600">UK CPI, GDP, Bank Rate</td>
+                                            <td class="text-xs text-slate-500">Monthly / Quarterly</td>
+                                            <td class="text-xs"><a href="https://www.bankofengland.co.uk/boeapps/database/" target="_blank" rel="noopener" class="text-cyan-600 hover:underline">BoE database</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- RSS Feeds -->
+                        <div>
+                            <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Government News Feeds (23 verified RSS/Atom feeds)</h5>
+                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                <table>
+                                    <thead><tr><th>Level</th><th>Sources</th><th>Feed links</th></tr></thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-xs font-bold text-slate-600 align-top">Federal<div class="text-[10px] font-normal text-slate-400">14 feeds</div></td>
+                                            <td class="text-xs text-slate-600 align-top">Statistics Canada Daily, Bank of Canada (press &amp; publications), Infrastructure Canada, Finance Canada, ISED, NRCan, Transport Canada, PSPC, ESDC, IRCC, Canada Energy Regulator, Impact Assessment Agency of Canada, Treasury Board Secretariat</td>
+                                            <td class="text-xs align-top space-y-0.5">
+                                                <a href="https://www150.statcan.gc.ca/n1/rss/dai-quo/0-eng.atom" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">StatCan Daily Atom</a>
+                                                <a href="https://www.bankofcanada.ca/content_type/press-releases/feed/" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">BoC Press Releases</a>
+                                                <a href="https://api.io.canada.ca/io-server/gc/news/en/v2" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">Canada.ca News API</a>
+                                                <a href="https://www.cer-rec.gc.ca/rss/rssfd.aspx?l=e&amp;c=catNR" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">CER News Releases</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-xs font-bold text-slate-600 align-top">Provincial<div class="text-[10px] font-normal text-slate-400">4 feeds</div></td>
+                                            <td class="text-xs text-slate-600 align-top">BC Government News, Gouvernement du Québec, Government of Saskatchewan, Government of Newfoundland and Labrador</td>
+                                            <td class="text-xs align-top space-y-0.5">
+                                                <a href="https://news.gov.bc.ca/feed" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">news.gov.bc.ca/feed</a>
+                                                <a href="https://www.quebec.ca/fil-de-presse.rss" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">quebec.ca fil-de-presse</a>
+                                                <a href="https://www.saskatchewan.ca/Feeds/NewsFeed.ashx" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">saskatchewan.ca NewsFeed</a>
+                                                <a href="https://www.gov.nl.ca/releases/feed/" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">gov.nl.ca releases</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-xs font-bold text-slate-600 align-top">Municipal<div class="text-[10px] font-normal text-slate-400">5 feeds</div></td>
+                                            <td class="text-xs text-slate-600 align-top">City of Toronto, City of Calgary Newsroom, City of Winnipeg, Halifax Regional Municipality, City of Saskatoon</td>
+                                            <td class="text-xs align-top space-y-0.5">
+                                                <a href="https://www.toronto.ca/news/feed/" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">toronto.ca/news/feed</a>
+                                                <a href="https://newsroom.calgary.ca/feed/" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">newsroom.calgary.ca</a>
+                                                <a href="https://www.winnipeg.ca/rss/en/media-releases.xml" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">winnipeg.ca media-releases</a>
+                                                <a href="https://www.halifax.ca/news/rss-feed" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">halifax.ca/news/rss-feed</a>
+                                                <a href="https://www.saskatoon.ca/news-releases/feed" target="_blank" rel="noopener" class="text-cyan-600 hover:underline block">saskatoon.ca/news-releases</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- AI Tools -->
+                        <div>
+                            <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">AI Research &amp; Analysis</h5>
+                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                <table>
+                                    <thead><tr><th>Tool</th><th>Role in pipeline</th><th>Notes</th></tr></thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-xs font-bold text-slate-700">Perplexity Sonar Pro</td>
+                                            <td class="text-xs text-slate-600">~35 queries per weekly run — provincial economic news, global macro context, capital project discovery by NAICS sector × province</td>
+                                            <td class="text-xs text-slate-500">Returns cited URLs from live web search; URLs verified with HEAD request before publishing</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-xs font-bold text-slate-700">Claude Haiku 4.5<div class="text-[10px] font-normal text-slate-400">Anthropic</div></td>
+                                            <td class="text-xs text-slate-600">Parses Perplexity results and RSS content into structured project records (name, value, status, CMA, sector, tags)</td>
+                                            <td class="text-xs text-slate-500">Does not generate indicator values. Model: claude-haiku-4-5-20251001</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-xs font-bold text-slate-700">Claude Sonnet 4.6<div class="text-[10px] font-normal text-slate-400">Anthropic</div></td>
+                                            <td class="text-xs text-slate-600">Writes executive summary and section analysis from verified primary-source data + Perplexity research</td>
+                                            <td class="text-xs text-slate-500">Model: claude-sonnet-4-6</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 3. Methodology -->
+                <details id="about-methodology" class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none p-6 sm:p-8 select-none hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">03</span>
+                            <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Methodology</h4>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="px-6 sm:px-8 pb-8 border-t border-slate-100 pt-6 space-y-8">
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-2">Indicator Sourcing — Primary APIs First</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed">All macroeconomic indicator values (rates, CPI, unemployment, GDP, commodity prices) are fetched directly from primary APIs <em>before</em> any AI calls run. These values are stored in Firestore and displayed on the dashboard. AI analysis reads those pre-fetched values — it never estimates, generates, or fills in numbers. If a primary source is unavailable, the cell displays <span class="text-[10px] font-bold text-amber-500 border border-amber-200 bg-amber-50 rounded px-1 py-px">Unavailable</span> with a tooltip rather than showing a potentially incorrect estimate.</p>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-3">Data Provenance Badges</h5>
+                            <p class="text-sm text-slate-600 mb-4 leading-relaxed">Every indicator cell shows a small coloured source tag so you always know where the number came from:</p>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                <div class="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
+                                    <span class="text-[9px] font-black text-blue-500 uppercase tracking-wide">BoC</span>
+                                    <span class="text-xs text-slate-500">Bank of Canada Valet API</span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
+                                    <span class="text-[9px] font-black text-red-500 uppercase tracking-wide">StatCan</span>
+                                    <span class="text-xs text-slate-500">Statistics Canada WDS</span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
+                                    <span class="text-[9px] font-black text-green-500 uppercase tracking-wide">CMHC</span>
+                                    <span class="text-xs text-slate-500">CMHC housing data</span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
+                                    <span class="text-[9px] font-black text-purple-500 uppercase tracking-wide">Yahoo Finance</span>
+                                    <span class="text-xs text-slate-500">Real-time market data</span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100">
+                                    <span class="text-[9px] font-black text-indigo-500 uppercase tracking-wide">ECB / BoE</span>
+                                    <span class="text-xs text-slate-500">European central banks</span>
+                                </div>
+                                <div class="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 border border-amber-100 bg-amber-50">
+                                    <span class="text-[9px] font-black text-amber-500 uppercase tracking-wide">Unavailable</span>
+                                    <span class="text-xs text-slate-500">Primary source offline</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-2">Citations &amp; Link Verification</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed">All URLs embedded in provincial summaries and analysis sections come from Perplexity's Sonar Pro search results. Before publishing, each URL is tested with a HEAD request. Dead links (4xx/5xx responses) are replaced with plain text showing the publication name and date instead — broken links never appear on the dashboard.</p>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-2">AI Analysis Pipeline</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed">The executive summary and province/industry analysis sections are written by Claude Sonnet. The model receives a structured prompt containing: (1) all verified primary-source indicator values, (2) Perplexity research summaries with citations, (3) recent government RSS headlines. Claude writes analysis about verified facts — it cannot fabricate data because the data is already locked in before the writing step begins.</p>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-2">Commodity Prices</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed">Commodity prices are fetched from Yahoo Finance using mapped ticker symbols (e.g., <code class="text-[10px] bg-slate-100 px-1 py-px rounded">CL=F</code> for WTI crude, <code class="text-[10px] bg-slate-100 px-1 py-px rounded">GC=F</code> for gold, <code class="text-[10px] bg-slate-100 px-1 py-px rounded">HG=F</code> for copper, <code class="text-[10px] bg-slate-100 px-1 py-px rounded">LBS=F</code> for lumber). Each ticker is mapped to its World Bank Pink Sheet category and unit for standardized display.</p>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-2">Yield Curve Data</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed">Government of Canada yield curve data is sourced from the Bank of Canada Valet API. The dashboard displays the full maturity spectrum from 3-month T-bills to 30-year bonds. The toggle pills let you select which maturities appear on the chart. The "Compare to" buttons fetch historical BoC Valet data for the same maturities at 1M, 3M, 6M, or 1Y prior — allowing visual inspection of yield curve shifts over time. A custom date picker is also available.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 4. Project Tracker Methodology -->
+                <details id="about-projects" class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none p-6 sm:p-8 select-none hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">04</span>
+                            <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Project Tracker Methodology</h4>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="px-6 sm:px-8 pb-8 border-t border-slate-100 pt-6 space-y-8">
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-2">GDP-Proportional Size Thresholds</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-4">Rather than applying the same dollar threshold to every province, the pipeline uses GDP-proportional thresholds. This ensures that a significant infrastructure project in Prince Edward Island receives the same research attention as a proportionally larger project in Ontario. A $10M hospital in Charlottetown is as strategically relevant as a $300M hospital in Toronto.</p>
+                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                <table>
+                                    <thead><tr><th>Province / Territory</th><th class="text-right">Weekly threshold</th><th class="text-right">Monthly deep sweep</th></tr></thead>
+                                    <tbody>
+                                        <tr><td class="text-xs font-medium text-slate-700">Ontario</td><td class="text-xs mono text-right text-slate-600">$100M</td><td class="text-xs mono text-right text-slate-600">$200M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Quebec</td><td class="text-xs mono text-right text-slate-600">$50M</td><td class="text-xs mono text-right text-slate-600">$100M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Alberta</td><td class="text-xs mono text-right text-slate-600">$50M</td><td class="text-xs mono text-right text-slate-600">$100M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">British Columbia</td><td class="text-xs mono text-right text-slate-600">$50M</td><td class="text-xs mono text-right text-slate-600">$100M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Saskatchewan</td><td class="text-xs mono text-right text-slate-600">$20M</td><td class="text-xs mono text-right text-slate-600">$30M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Manitoba</td><td class="text-xs mono text-right text-slate-600">$20M</td><td class="text-xs mono text-right text-slate-600">$25M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Nova Scotia</td><td class="text-xs mono text-right text-slate-600">$15M</td><td class="text-xs mono text-right text-slate-600">$15M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">New Brunswick</td><td class="text-xs mono text-right text-slate-600">$15M</td><td class="text-xs mono text-right text-slate-600">$15M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Newfoundland and Labrador</td><td class="text-xs mono text-right text-slate-600">$15M</td><td class="text-xs mono text-right text-slate-600">$15M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Prince Edward Island</td><td class="text-xs mono text-right text-slate-600">$5M</td><td class="text-xs mono text-right text-slate-600">$5M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Yukon</td><td class="text-xs mono text-right text-slate-600">$3M</td><td class="text-xs mono text-right text-slate-600">$3M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Northwest Territories</td><td class="text-xs mono text-right text-slate-600">$3M</td><td class="text-xs mono text-right text-slate-600">$3M</td></tr>
+                                        <tr><td class="text-xs font-medium text-slate-700">Nunavut</td><td class="text-xs mono text-right text-slate-600">$3M</td><td class="text-xs mono text-right text-slate-600">$3M</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-3">Project Discovery</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">Projects are discovered from two tiers: <strong class="text-slate-800">government registries first</strong> (free, verified, authoritative), then <strong class="text-slate-800">Perplexity research</strong> to fill gaps. RSS government feeds are also parsed by Claude Haiku to extract project announcements at no additional Perplexity cost.</p>
+                            <div class="space-y-3">
+                                <div class="flex gap-3">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase w-20 flex-shrink-0 pt-0.5 leading-tight">Tier 1<br>Registries</span>
+                                    <span class="text-sm text-slate-600">Impact Assessment Agency of Canada (IAAC), Infrastructure Canada project database, NRCan Major Projects Inventory, MERX (federal procurement), provincial environmental assessment registries (BC EAO, Ontario EA, Alberta AER, etc.)</span>
+                                </div>
+                                <div class="flex gap-3">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase w-20 flex-shrink-0 pt-0.5 leading-tight">Tier 2<br>Research</span>
+                                    <span class="text-sm text-slate-600">Perplexity Sonar Pro queries targeting sector × province combinations (~31 weekly, ~260 monthly deep sweep) and RSS government feed parsing via Claude Haiku.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-2">Deduplication</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed">Before writing a new project to Firestore, the pipeline computes a normalized key from the project name and province (lowercase, stripped of punctuation and common stop words). If a matching key exists, the record is updated with fresh data — not duplicated. Projects are never deleted; they are only updated or marked stale.</p>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-3">Project Lifecycle</h5>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-[9px] font-black uppercase px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">Announced</span>
+                                <span class="text-slate-300 text-sm">→</span>
+                                <span class="text-[9px] font-black uppercase px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">Approved</span>
+                                <span class="text-slate-300 text-sm">→</span>
+                                <span class="text-[9px] font-black uppercase px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-100">Under Construction</span>
+                                <span class="text-slate-300 text-sm">→</span>
+                                <span class="text-[9px] font-black uppercase px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">Completed</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="text-[9px] font-black uppercase px-2.5 py-1 rounded-full bg-red-50 text-red-700 border border-red-100">Cancelled</span>
+                                <span class="text-[9px] font-black uppercase px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100">Suspended</span>
+                                <span class="text-[9px] font-black uppercase px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100">⚠ Status Unknown</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-3">The <strong class="text-amber-600">Status Unknown</strong> badge appears when a project has not appeared in any data source for 90+ days. It does not mean the project is cancelled — it means the pipeline has not found a recent update.</p>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-2">Classification — CMA, NAICS &amp; Tags</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed">Claude Haiku assigns each project a Census Metropolitan Area (CMA), a NAICS industry code, and descriptive tags (e.g., LNG, transit, renewable, affordable housing) based on the project description. These power the sector filter and search bar on the Projects tab.</p>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-black text-slate-700 mb-2">Source Provenance Tags</h5>
+                            <div class="flex flex-wrap gap-2 mt-1">
+                                <span class="text-[9px] font-mono bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">federal_registry</span>
+                                <span class="text-[9px] font-mono bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">provincial_ea</span>
+                                <span class="text-[9px] font-mono bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">infrastructure_canada</span>
+                                <span class="text-[9px] font-mono bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">nrcan</span>
+                                <span class="text-[9px] font-mono bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">merx</span>
+                                <span class="text-[9px] font-mono bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">rss_feed</span>
+                                <span class="text-[9px] font-mono bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200">perplexity_research</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-2">These tags are stored with each project record in Firestore and indicate how the project was first discovered.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 5. Data Explorer -->
+                <details id="about-explorer" class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none p-6 sm:p-8 select-none hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">05</span>
+                            <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Data Explorer</h4>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="px-6 sm:px-8 pb-8 border-t border-slate-100 pt-6 space-y-4">
+                        <p class="text-sm text-slate-600 leading-relaxed">The Data Explorer (on the Markets &amp; Yields tab) lets you overlay multiple time-series variables on a single interactive chart. Select any combination of macroeconomic variables — policy rates, CPI, unemployment, commodity prices, exchange rates — and compare their trajectories over custom time windows.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                <div class="text-xs font-black text-slate-700 mb-1">Time Range Options</div>
+                                <div class="text-xs text-slate-500">1M, 3M, 6M, 1Y, 2Y, 5Y — chart filters to data points within the selected window.</div>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                <div class="text-xs font-black text-slate-700 mb-1">Historical Accumulation</div>
+                                <div class="text-xs text-slate-500">Each weekly pipeline run appends a data point. The chart becomes richer the longer the dashboard has been running.</div>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                <div class="text-xs font-black text-slate-700 mb-1">Data Storage</div>
+                                <div class="text-xs text-slate-500">All time-series points are stored in the <code class="text-[10px] bg-slate-200 px-1 rounded">/timeseries</code> Firestore collection, keyed by variable ID and date.</div>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                <div class="text-xs font-black text-slate-700 mb-1">Variable Coverage</div>
+                                <div class="text-xs text-slate-500">BoC policy rate, CPI (national + provincial), unemployment, GDP growth, commodity prices, FX rates, yield curve maturities.</div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 6. Things to Watch Methodology -->
+                <details id="about-watchlist-method" class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none p-6 sm:p-8 select-none hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">06</span>
+                            <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Things to Watch Methodology</h4>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="px-6 sm:px-8 pb-8 border-t border-slate-100 pt-6 space-y-4">
+                        <p class="text-sm text-slate-600 leading-relaxed">The Things to Watch tab surfaces upcoming economic releases, central bank decisions, and policy announcements over the next 2–4 weeks. Entries are generated by AI from publicly available calendars.</p>
+                        <div class="space-y-4">
+                            <div class="flex gap-3">
+                                <div class="text-[9px] font-black text-slate-400 uppercase w-24 flex-shrink-0 pt-0.5 leading-tight">Sources</div>
+                                <div class="text-sm text-slate-600">Statistics Canada release calendar, Bank of Canada fixed announcement dates schedule, US Federal Reserve FOMC schedule, ECB Governing Council meeting calendar, Bank of Japan Policy Board schedule. All are publicly published.</div>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="text-[9px] font-black text-slate-400 uppercase w-24 flex-shrink-0 pt-0.5 leading-tight">Impact ratings</div>
+                                <div class="space-y-1.5 text-sm text-slate-600">
+                                    <div><span class="font-black text-red-600">High</span> — directly affects Canadian interest rates, employment levels, or GDP (e.g., BoC rate decision, Canadian CPI, Canadian jobs report)</div>
+                                    <div><span class="font-black text-amber-600">Medium</span> — affects Canadian financial markets or trade partners (e.g., US payrolls, Federal Reserve decision, ECB policy)</div>
+                                    <div><span class="font-black text-slate-500">Monitoring</span> — global context worth tracking (e.g., Bank of Japan, oil inventory data, Chinese PMI)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 7. Update Schedule -->
+                <details id="about-schedule" class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none p-6 sm:p-8 select-none hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">07</span>
+                            <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Update Schedule</h4>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="px-6 sm:px-8 pb-8 border-t border-slate-100 pt-6 space-y-6">
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-3 h-3 rounded-full bg-cyan-500 mt-1.5"></div>
+                            <div>
+                                <div class="text-sm font-black text-slate-800">Weekly Pipeline</div>
+                                <div class="text-sm text-slate-600 mt-1 leading-relaxed">Runs every week. Fetches all 23 RSS feeds, queries all primary APIs (BoC, StatCan, CMHC, Yahoo Finance, FRED, ECB, BoE), runs ~35 Perplexity research queries across all provinces and global macro context, generates full AI analysis, and publishes to Firebase Hosting + Firestore.</div>
+                                <div class="text-xs text-slate-400 mt-1.5">~35 Perplexity queries &nbsp;·&nbsp; ~20 min runtime</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-3 h-3 rounded-full bg-slate-300 mt-1.5"></div>
+                            <div>
+                                <div class="text-sm font-black text-slate-800">Monthly Deep Sweep</div>
+                                <div class="text-sm text-slate-600 mt-1 leading-relaxed">Runs during the first week of each month. Executes an expanded NAICS sector × province research matrix: 20 NAICS codes × 13 provinces = 260 additional Perplexity queries for comprehensive project discovery. Also re-verifies existing project records against current sources.</div>
+                                <div class="text-xs text-slate-400 mt-1.5">~260 additional Perplexity queries &nbsp;·&nbsp; ~90 min runtime</div>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-100 pt-6">
+                            <h5 class="text-sm font-black text-slate-700 mb-3">Data Freshness Indicator</h5>
+                            <p class="text-xs text-slate-500 mb-3">The coloured dot in the top navigation bar shows how current the loaded data is, based on the edition date.</p>
+                            <div class="flex flex-wrap gap-4 text-sm text-slate-600">
+                                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 flex-shrink-0"></span><span><strong>Green</strong> — less than 24 hours old</span></div>
+                                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 flex-shrink-0"></span><span><strong>Amber</strong> — 24–72 hours old</span></div>
+                                <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-red-400 flex-shrink-0"></span><span><strong>Red</strong> — more than 72 hours old</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 8. Limitations & Disclaimers -->
+                <details id="about-limits" class="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="flex items-center justify-between cursor-pointer list-none p-6 sm:p-8 select-none hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">08</span>
+                            <h4 class="text-lg font-black text-slate-800 uppercase tracking-tight">Limitations &amp; Disclaimers</h4>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </summary>
+                    <div class="px-6 sm:px-8 pb-8 border-t border-slate-100 pt-6">
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+                            <p class="text-sm font-bold text-amber-800">This dashboard is for informational purposes only. It does not constitute financial advice, investment advice, or any form of professional advisory service. Do not make investment or business decisions based solely on this content.</p>
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex gap-3"><span class="text-slate-300 flex-shrink-0 mt-0.5">·</span><span>AI-written analysis and summaries may contain errors despite being grounded in verified primary-source data. The model may misinterpret economic signals or miss important context.</span></li>
+                            <li class="flex gap-3"><span class="text-slate-300 flex-shrink-0 mt-0.5">·</span><span>Provincial indicators sourced via research (grey badge) may lag behind official API figures by days or weeks, depending on Statistics Canada's publication schedule.</span></li>
+                            <li class="flex gap-3"><span class="text-slate-300 flex-shrink-0 mt-0.5">·</span><span>Historical chart data in the Data Explorer only begins from the dashboard's first pipeline run. Retrospective data is not backfilled from historical APIs.</span></li>
+                            <li class="flex gap-3"><span class="text-slate-300 flex-shrink-0 mt-0.5">·</span><span>Some government RSS feeds may be intermittently unavailable due to server maintenance. The pipeline handles failures gracefully, but some news items may be missed during outages.</span></li>
+                            <li class="flex gap-3"><span class="text-slate-300 flex-shrink-0 mt-0.5">·</span><span>Perplexity citations link to third-party sources. Content at those URLs may change, be corrected, or be removed after the edition is published.</span></li>
+                            <li class="flex gap-3"><span class="text-slate-300 flex-shrink-0 mt-0.5">·</span><span>Project valuations in the Projects Tracker are sourced from public announcements and may not reflect final approved budgets, cost overruns, or scope changes after the first report date.</span></li>
+                            <li class="flex gap-3"><span class="text-slate-300 flex-shrink-0 mt-0.5">·</span><span>Québec government news releases (RSS) are in French and may not be fully captured by English-language research queries. French content is processed without translation.</span></li>
+                        </ul>
+                    </div>
+                </details>
+
+            </div><!-- /space-y-4 -->
+        </div><!-- /tab-about -->
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-12 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                &copy; <span id="footer-year"></span> EconF Weekly Newsletter
+            </div>
+            <div class="flex gap-8">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Data: StatCan / BoC / Yahoo Finance</span>
+                <span class="text-[10px] font-bold text-cyan-600 uppercase underline decoration-cyan-500/30">Strategic Dossier v4.3</span>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ─── Firebase Config ────────────────────────────────────────
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2Vdn6NKQWIyR6whXgp_QkBULDR8GHg0E",
+            authDomain: "can-macro-dashboard.firebaseapp.com",
+            projectId: "can-macro-dashboard",
+            storageBucket: "can-macro-dashboard.firebasestorage.app",
+            messagingSenderId: "934745756616",
+            appId: "1:934745756616:web:b592a858ff7239bb43a6fd"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ─── State ──────────────────────────────────────────────────
+        let currentData = null;
+        let allProjects = [];
+        let currentProjectFilter = 'all';
+        let currentProvinceFilter = 'all';
+        let chartInstances = {};
+        let _yieldData = null;
+        let _activeYieldTerms = null;
+        let _yieldCompareRange = '1y';
+        let _projectDateRange = 'all';
+        let _explorerSeries = {};  // { varId: { label, unit, category, points: [{date,value}] } }
+
+        // ─── Footer year ────────────────────────────────────────────
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+        // ─── UI Helpers ─────────────────────────────────────────────
+
+        const showLoading = () => {
+            document.getElementById('loading-state').classList.remove('hidden');
+            document.getElementById('error-state').classList.add('hidden');
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        };
+
+        const showError = (msg) => {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('error-state').classList.remove('hidden');
+            document.getElementById('error-message').textContent = msg;
+        };
+
+        const showContent = () => {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('error-state').classList.add('hidden');
+            document.getElementById('tab-overview').classList.add('active');
+        };
+
+        const parseNumericValue = (v) => {
+            if (typeof v === 'number') return v;
+            if (typeof v !== 'string') return NaN;
+            return parseFloat(v.replace(/[^-\d.]/g, ''));
+        };
+
+        const getColor = (v) => {
+            const num = parseNumericValue(v);
+            if (isNaN(num)) return 'text-slate-400';
+            if (num < 0) return 'text-red-500';
+            if (num > 0) return 'text-emerald-500';
+            return 'text-slate-400';
+        };
+
+        const getStatusBadge = (status) => {
+            if (!status) return { class: 'bg-slate-100 text-slate-500', label: 'Unknown', dot: 'bg-slate-400' };
+            const s = status.toLowerCase();
+            if (s.includes('complet') || s.includes('done') || s.includes('operational'))
+                return { class: 'bg-emerald-50 text-emerald-700', label: status, dot: 'bg-emerald-400' };
+            if (s.includes('progress') || s.includes('active') || s.includes('construction') || s.includes('underway'))
+                return { class: 'bg-cyan-50 text-cyan-700', label: status, dot: 'bg-cyan-400 status-pulse' };
+            if (s.includes('delay') || s.includes('stall') || s.includes('suspend') || s.includes('risk'))
+                return { class: 'bg-amber-50 text-amber-700', label: status, dot: 'bg-amber-400' };
+            if (s.includes('cancel') || s.includes('reject'))
+                return { class: 'bg-red-50 text-red-700', label: status, dot: 'bg-red-400' };
+            if (s.includes('announce') || s.includes('propos') || s.includes('planned') || s.includes('pending') || s.includes('approved'))
+                return { class: 'bg-blue-50 text-blue-700', label: status, dot: 'bg-blue-400' };
+            return { class: 'bg-slate-100 text-slate-600', label: status, dot: 'bg-slate-400' };
+        };
+
+        const safe = (obj, path, fallback = '') =>
+            path.split('.').reduce((o, k) => (o && o[k] !== undefined ? o[k] : fallback), obj);
+
+        // Render a small source attribution tag for indicator cells
+        // Color coding: BoC=blue, StatCan=red, CMHC=green, FRED/Yahoo=purple,
+        //               ECB/BoE=indigo, World Bank=teal, N/A=amber (tooltip)
+        const srcTag = (sourceLabel) => {
+            if (!sourceLabel || sourceLabel === 'N/A')
+                return `<div class="text-[7px] text-amber-400 mt-0.5 leading-none cursor-help"
+                             title="Data temporarily unavailable from primary source">Unavailable</div>`;
+            const colorMap = {
+                'BoC':           'text-blue-500',
+                'StatCan':       'text-red-500',
+                'CMHC':          'text-green-500',
+                'Yahoo Finance': 'text-purple-500',
+                'FRED':          'text-purple-500',
+                'FRED/BLS':      'text-purple-500',
+                'FRED/BEA':      'text-purple-500',
+                'FRED/ONS':      'text-purple-500',
+                'FRED/Eurostat': 'text-purple-500',
+                'ECB':           'text-indigo-500',
+                'ECB/Eurostat':  'text-indigo-500',
+                'BoE':           'text-indigo-400',
+                'World Bank':    'text-teal-500',
+            };
+            const color = colorMap[sourceLabel] || 'text-cyan-500';
+            return `<div class="text-[7px] font-bold ${color} mt-0.5 leading-none">${sourceLabel}</div>`;
+        };
+
+        // Change badge + observation period below a metric value
+        const metaBadge = (meta) => {
+            if (!meta?.change && !meta?.period) return '';
+            const isPos = (meta.change || '').startsWith('+');
+            const isNeg = (meta.change || '').startsWith('-');
+            const chgCls = isPos ? 'text-emerald-500' : isNeg ? 'text-red-500' : 'text-slate-400';
+            const arrow  = isPos ? '▲' : isNeg ? '▼' : '';
+            return `<div class="text-[8px] mono mt-0.5 leading-none">
+                ${meta.change ? `<span class="font-black ${chgCls}">${arrow}${meta.change}</span>` : ''}
+                ${meta.period ? `<span class="text-slate-300 ml-1">· ${meta.period}</span>` : ''}
+            </div>`;
+        };
+
+        // Hover tooltip string with full metadata
+        const metaTitle = (meta) => {
+            if (!meta) return '';
+            const parts = [
+                meta.period  ? `Period: ${meta.period}` : '',
+                meta.prev    ? `Prev: ${meta.prev}` : '',
+                meta.change  ? `Change: ${meta.change}` : '',
+                meta.obsDate ? `As of: ${meta.obsDate}` : '',
+                meta.source  ? `Source: ${meta.source}` : '',
+            ].filter(Boolean).join(' | ');
+            return parts ? `title="${parts.replace(/"/g, '&quot;')}"` : '';
+        };
+
+        const updateFreshness = (data) => {
+            const indicator = document.getElementById('freshness-indicator');
+            const dot = document.getElementById('freshness-dot');
+            const label = document.getElementById('freshness-label');
+            const edition = data.edition || data.date || '';
+            const dateMatch = edition.match(/(\d{4}-\d{2}-\d{2})/);
+            if (dateMatch) {
+                const dataDate = new Date(dateMatch[1] + 'T12:00:00');
+                const diffHours = (new Date() - dataDate) / (1000 * 60 * 60);
+                if (diffHours < 24) {
+                    dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                    label.textContent = 'Fresh — Today';
+                } else if (diffHours < 72) {
+                    dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                    label.textContent = `Updated ${Math.floor(diffHours / 24)}d ago`;
+                } else {
+                    dot.className = 'w-2 h-2 rounded-full bg-red-400';
+                    label.textContent = `Stale — ${Math.floor(diffHours / 24)}d old`;
+                }
+                indicator.classList.remove('hidden');
+                indicator.classList.add('flex');
+            }
+        };
+
+
+        // ─── Tab Switching ──────────────────────────────────────────
+
+        window.switchTab = (id) => {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('border-cyan-500', 'text-cyan-600');
+                b.classList.add('border-transparent', 'text-slate-400');
+            });
+            const btn = document.getElementById('btn-' + id);
+            btn.classList.replace('border-transparent', 'border-cyan-500');
+            btn.classList.replace('text-slate-400', 'text-cyan-600');
+            if (id === 'markets') renderMarkets();
+            if (id === 'projects') renderProjects();
+            if (id === 'industries') filterIndustries('goods');
+            if (id === 'watchlist') renderWatchlist();
+        };
+
+
+        // ─── Main Render ────────────────────────────────────────────
+
+        const render = (data) => {
+            if (!data) { showError('No data available in this edition.'); return; }
+            currentData = data;
+            showContent();
+            updateFreshness(data);
+
+            document.getElementById('edition-label').innerText = data.edition || 'Current Edition';
+            const editionRange = (data.edition || '').match(/EDITION:\s*(.+?)\s*\/\//);
+            document.getElementById('header-subtitle').innerText = editionRange ? editionRange[1] : (data.edition || '');
+
+            // Executive Summary
+            const summaryHtml = data.executive_summary
+                || data.execSummaries?.tab1
+                || data.summary
+                || 'No summary available for this edition.';
+            document.getElementById('summary-content').innerHTML = summaryHtml;
+
+            // Metrics
+            const m = data.metrics || {};
+            const iSrc = data.indicatorSources || {};
+            const iMeta = data.indicatorMeta || {};
+            const metricDefs = [
+                { l: 'Real GDP',        v: m.realGdp || m.real_gdp || m.gdp,          s: iSrc.realGdp || 'N/A',        meta: null },
+                { l: 'CPI (Headline)',  v: m.cpi || m.headline_cpi,                    s: iSrc.cpi || 'N/A',            meta: iMeta.cpi },
+                { l: 'Unemployment',   v: m.unemployment || m.unemployment_rate,       s: iSrc.unemployment || 'N/A',   meta: iMeta.unemployment },
+                { l: 'BoC Policy Rate',v: m.bocRate || m.boc_rate || m.policyRate,     s: iSrc.bocRate || 'BoC',        meta: iMeta.bocRate }
+            ];
+            document.getElementById('metrics-grid').innerHTML = metricDefs.map(x => {
+                const isNA = x.v === 'N/A';
+                const valClass = isNA ? 'text-slate-300' : (x.v ? getColor(x.v) : 'text-slate-300');
+                const naTitle = isNA ? `title="Data temporarily unavailable — source: ${x.s || 'API'}"` : '';
+                const ttl = (!isNA && x.meta) ? metaTitle(x.meta) : naTitle;
+                return `
+                <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-100" ${ttl}>
+                    <div class="text-sm sm:text-base font-black mono ${valClass}">${x.v || '—'}</div>
+                    <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wide mt-1 leading-tight">${x.l}</div>
+                    ${srcTag(x.s)}
+                    ${x.meta ? metaBadge(x.meta) : ''}
+                    ${x.meta?.context ? `<div class="text-[8px] text-slate-400 italic mt-1 leading-snug px-1">${x.meta.context}</div>` : ''}
+                </div>`;
+            }).join('');
+
+            // National Section
+            const national = data.national;
+            const nationalSection = document.getElementById('national-section');
+            if (national?.analysis) {
+                document.getElementById('national-analysis').innerHTML = national.analysis;
+                const srcEl = document.getElementById('national-sources');
+                if (national.sources?.length) {
+                    srcEl.innerHTML = national.sources.map(s => `
+                        <div class="text-[9px] text-slate-400 leading-snug">
+                            <sup class="font-bold text-slate-500 mr-1">${s.id}</sup>
+                            ${s.url ? `<a href="${s.url}" target="_blank" rel="noopener" class="hover:text-cyan-600 hover:underline">${s.title}</a>` : s.title}
+                        </div>`).join('');
+                } else {
+                    srcEl.innerHTML = '';
+                }
+                nationalSection.classList.remove('hidden');
+            } else {
+                nationalSection.classList.add('hidden');
+            }
+
+            // Global Section
+            const globalData = data.global;
+            const globalSection = document.getElementById('global-section');
+            if (globalData?.length) {
+                document.getElementById('global-tiles').innerHTML = globalData.map(g => {
+                    const iSrc = g.indicatorSources || {};
+                    const indDefs = [
+                        { l: 'GDP Growth',  v: g.indicators?.gdp,          s: iSrc.gdp          || 'N/A' },
+                        { l: 'CPI',         v: g.indicators?.cpi,          s: iSrc.cpi          || 'N/A' },
+                        { l: 'Policy Rate', v: g.indicators?.rate,         s: iSrc.rate         || 'N/A' },
+                        { l: 'Unemployment',v: g.indicators?.unemployment,  s: iSrc.unemployment || 'N/A' },
+                    ];
+                    return `
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col gap-4 fade-in">
+                        <div class="text-xs font-black text-slate-800 uppercase tracking-wide">${g.region}</div>
+                        <div class="grid grid-cols-4 gap-2">
+                            ${indDefs.map(i => `
+                            <div class="bg-slate-50 rounded-xl p-2.5 text-center border border-slate-100">
+                                <div class="text-xs font-black mono ${i.v && i.v !== 'N/A' ? getColor(i.v) : 'text-slate-300'}">${i.v || 'N/A'}</div>
+                                <div class="text-[8px] font-bold text-slate-400 uppercase tracking-wide mt-0.5 leading-tight">${i.l}</div>
+                                ${srcTag(i.s)}
+                            </div>`).join('')}
+                        </div>
+                        <div class="flex-1">${g.analysis || ''}</div>
+                        ${g.sources?.length ? `
+                        <div class="pt-3 border-t border-slate-100 space-y-1">
+                            ${g.sources.map(s => `
+                            <div class="text-[9px] text-slate-400 leading-snug">
+                                <sup class="font-bold text-slate-500 mr-1">${s.id}</sup>
+                                ${s.url ? `<a href="${s.url}" target="_blank" rel="noopener" class="hover:text-cyan-600 hover:underline">${s.title}</a>` : s.title}
+                            </div>`).join('')}
+                        </div>` : ''}
+                    </div>`;
+                }).join('');
+                globalSection.classList.remove('hidden');
+            } else {
+                globalSection.classList.add('hidden');
+            }
+
+            // Industries (pre-populate so data is ready when tab is opened)
+            filterIndustries('goods');
+
+            // Watchlist
+            renderWatchlist();
+
+            // Provincial Policy (rendered on Macro Overview tab)
+            renderProvincialPolicy();
+
+            // Merge projects for tracker
+            mergeProjects(data.provinces || []);
+        };
+
+
+        // ─── Tab 2: Provincial Policy ────────────────────────────────
+
+        // ─── StatCan Key Economic Indicators ───────────────────────
+
+        let _statcanIndicators = [];
+        let _indPage = 0;
+        const IND_PAGE_SIZE = 20;
+        let _indExpanded = false;
+
+        // Priority indicator name fragments for the top-5 pinned cards
+        const TOP5_NAMES = [
+            'real gross domestic product',
+            'consumer price index',
+            'unemployment rate',
+            'employment',
+            'international trade',
+        ];
+
+        const _indCard = (ind) => {
+            const arrowCls = ind.arrow === 1 ? 'text-emerald-500' : ind.arrow === 2 ? 'text-red-500' : 'text-slate-400';
+            const arrowIcon = ind.arrow === 1 ? '▲' : ind.arrow === 2 ? '▼' : '';
+            const ttl = [ind.refPer, ind.releaseDate ? `Released: ${ind.releaseDate}` : ''].filter(Boolean).join(' | ');
+            return `
+            <div class="bg-slate-50 rounded-xl p-3 border border-slate-100 hover:border-slate-200 transition-colors" title="${ttl.replace(/"/g,'&quot;')}">
+                <div class="text-[9px] font-black text-slate-400 uppercase tracking-wide leading-tight mb-2 line-clamp-2">${ind.name}</div>
+                <div class="text-sm sm:text-base font-black text-slate-900 mono leading-tight">${ind.value || '—'}</div>
+                ${ind.change ? `<div class="text-[9px] font-black ${arrowCls} mt-0.5">${arrowIcon} ${ind.change}</div>` : ''}
+                <div class="text-[8px] text-slate-400 mt-1 leading-tight">${ind.refPer || ''}</div>
+                ${srcTag('StatCan')}
+            </div>`;
+        };
+
+        const renderStatcanIndicators = () => {
+            if (!_statcanIndicators.length) return;
+            document.getElementById('statcan-indicators-section').classList.remove('hidden');
+
+            // Build top-5: try priority names, fall back to first 5 with values
+            const withValues = _statcanIndicators.filter(i => i.value);
+            const top5 = [];
+            for (const frag of TOP5_NAMES) {
+                const match = withValues.find(i => i.name.toLowerCase().includes(frag));
+                if (match && !top5.includes(match)) top5.push(match);
+                if (top5.length === 5) break;
+            }
+            // Pad to 5 from withValues if needed
+            for (const ind of withValues) {
+                if (top5.length >= 5) break;
+                if (!top5.includes(ind)) top5.push(ind);
+            }
+            document.getElementById('indicator-top5').innerHTML = top5.map(_indCard).join('');
+            filterIndicators();
+        };
+
+        const filterIndicators = () => {
+            const search = (document.getElementById('indicator-search')?.value || '').toLowerCase().trim();
+            const sort   = document.getElementById('indicator-sort')?.value || 'name';
+
+            let filtered = [..._statcanIndicators];
+
+            if (search) {
+                filtered = filtered.filter(ind =>
+                    ind.name.toLowerCase().includes(search) ||
+                    (ind.refPer || '').toLowerCase().includes(search) ||
+                    (ind.frequency || '').toLowerCase().includes(search)
+                );
+                // Auto-expand when searching from collapsed state
+                if (!_indExpanded) {
+                    document.getElementById('indicator-expanded').classList.remove('hidden');
+                    document.getElementById('indicator-toggle-btn').textContent = 'Show less ▲';
+                    _indExpanded = true;
+                }
+            }
+
+            // Sort
+            if (sort === 'name') {
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+            } else if (sort === 'recent') {
+                filtered.sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''));
+            } else if (sort === 'freq') {
+                const order = { 'Monthly': 0, 'Quarterly': 1, 'Annual': 2 };
+                filtered.sort((a, b) => (order[a.frequency] ?? 3) - (order[b.frequency] ?? 3));
+            }
+
+            const totalPages = Math.max(1, Math.ceil(filtered.length / IND_PAGE_SIZE));
+            if (_indPage >= totalPages) _indPage = 0;
+            const pageItems = filtered.slice(_indPage * IND_PAGE_SIZE, (_indPage + 1) * IND_PAGE_SIZE);
+
+            const freqBadge = (f) => {
+                const cls = f === 'Monthly'   ? 'bg-blue-50 text-blue-600'
+                          : f === 'Quarterly' ? 'bg-amber-50 text-amber-600'
+                                              : 'bg-slate-100 text-slate-500';
+                return `<span class="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full ${cls}">${f || '—'}</span>`;
+            };
+
+            document.getElementById('indicator-table').innerHTML = `
+                <div class="hidden sm:grid grid-cols-[2fr_1fr_1fr_1fr_1fr_0.7fr] gap-3 text-[9px] font-black text-slate-400 uppercase tracking-[0.15em] px-5 py-3 border-b border-slate-100">
+                    <span>Indicator</span><span>Value</span><span>Change</span><span>Period</span><span>Released</span><span>Freq</span>
+                </div>
+                <div class="divide-y divide-slate-100">
+                    ${pageItems.map(ind => {
+                        const arrowCls = ind.arrow === 1 ? 'text-emerald-500' : ind.arrow === 2 ? 'text-red-500' : 'text-slate-400';
+                        const arrowIcon = ind.arrow === 1 ? '▲' : ind.arrow === 2 ? '▼' : '';
+                        const nameHtml = ind.dailyUrl
+                            ? `<a href="${ind.dailyUrl}" target="_blank" rel="noopener" class="font-semibold text-slate-800 hover:text-cyan-600 hover:underline">${ind.name}</a>`
+                            : `<span class="font-semibold text-slate-800">${ind.name}</span>`;
+                        return `
+                        <div class="flex flex-col sm:grid sm:grid-cols-[2fr_1fr_1fr_1fr_1fr_0.7fr] gap-1 sm:gap-3 sm:items-center px-5 py-3 hover:bg-slate-50 transition-colors">
+                            <div class="text-xs leading-tight">${nameHtml}</div>
+                            <div class="text-xs font-black text-slate-900 mono">${ind.value || '—'}</div>
+                            <div class="text-[10px] font-black ${arrowCls}">${arrowIcon} ${ind.change || '—'}</div>
+                            <div class="text-[10px] text-slate-500">${ind.refPer || '—'}</div>
+                            <div class="text-[10px] text-slate-400 font-mono">${ind.releaseDate || '—'}</div>
+                            <div>${freqBadge(ind.frequency)}</div>
+                        </div>`;
+                    }).join('')}
+                </div>`;
+
+            // Pagination
+            const paginEl = document.getElementById('indicator-pagination');
+            if (totalPages > 1) {
+                const start = _indPage * IND_PAGE_SIZE + 1;
+                const end   = Math.min((_indPage + 1) * IND_PAGE_SIZE, filtered.length);
+                paginEl.innerHTML = `
+                    <span class="text-[10px] text-slate-400">Showing ${start}–${end} of ${filtered.length}</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="setIndPage(${_indPage - 1})" ${_indPage === 0 ? 'disabled' : ''}
+                            class="text-[10px] font-bold px-3 py-1 rounded border border-slate-200 transition-colors ${_indPage === 0 ? 'text-slate-300 cursor-not-allowed' : 'text-slate-600 hover:border-slate-300 cursor-pointer'}">← Prev</button>
+                        <span class="text-[10px] font-bold text-slate-500">Page ${_indPage + 1} of ${totalPages}</span>
+                        <button onclick="setIndPage(${_indPage + 1})" ${_indPage >= totalPages - 1 ? 'disabled' : ''}
+                            class="text-[10px] font-bold px-3 py-1 rounded border border-slate-200 transition-colors ${_indPage >= totalPages - 1 ? 'text-slate-300 cursor-not-allowed' : 'text-slate-600 hover:border-slate-300 cursor-pointer'}">Next →</button>
+                    </div>`;
+            } else {
+                paginEl.innerHTML = filtered.length
+                    ? `<span class="text-[10px] text-slate-400">${filtered.length} indicator${filtered.length !== 1 ? 's' : ''}</span>`
+                    : `<span class="text-[10px] text-slate-400 italic">No indicators match your search.</span>`;
+            }
+        };
+
+        window.toggleIndicatorExpand = () => {
+            _indExpanded = !_indExpanded;
+            const expanded = document.getElementById('indicator-expanded');
+            const btn = document.getElementById('indicator-toggle-btn');
+            if (_indExpanded) {
+                expanded.classList.remove('hidden');
+                btn.textContent = 'Show less ▲';
+                filterIndicators();
+            } else {
+                expanded.classList.add('hidden');
+                btn.textContent = 'Show all indicators ▼';
+            }
+        };
+
+        window.setIndPage = (page) => {
+            _indPage = page;
+            filterIndicators();
+            document.getElementById('statcan-indicators-section')
+                .scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        window.filterIndicators = filterIndicators;
+
+        // ─── End StatCan Indicators ─────────────────────────────────
+
+        const renderProvincialPolicy = () => {
+            const provinces = currentData?.provinces || [];
+            const container = document.getElementById('provinces-policy-container');
+
+            if (!provinces.length) {
+                container.innerHTML = `
+                    <div class="text-center py-16">
+                        <p class="text-slate-400 text-sm">No provincial data available for this edition.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = provinces.map(prov => {
+                const ind      = prov.indicators || {};
+                const iSrc     = prov.indicatorSources || {};
+                const provMeta = prov.indicatorMeta || {};
+
+                const indicatorDefs = [
+                    { l: 'GDP Growth',    v: ind.gdp || ind.gdpGrowth || ind.gdp_growth || '—', s: iSrc.gdp || 'AI Est.',          meta: null },
+                    { l: 'Unemployment',  v: ind.unemployment || ind.unemploymentRate || '—',    s: iSrc.unemployment || 'AI Est.', meta: provMeta.unemployment },
+                    { l: 'CPI',           v: ind.cpi || '—',                                     s: iSrc.cpi || 'AI Est.',          meta: provMeta.cpi },
+                    { l: 'Housing Starts',v: ind.housingStarts || ind.housing_starts || '—',     s: iSrc.housingStarts || 'AI Est.',meta: null }
+                ];
+
+                const analysisHtml = prov.analysis || prov.news || '';
+                const sources = prov.sources || [];
+
+                return `
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden fade-in">
+                    <!-- Province header -->
+                    <div class="bg-slate-900 px-6 sm:px-8 py-4 flex items-center justify-between">
+                        <h3 class="text-base font-black text-white uppercase tracking-widest">${prov.name}</h3>
+                        <span class="text-[10px] font-bold text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded uppercase tracking-wider">Province</span>
+                    </div>
+
+                    <div class="p-6 sm:p-8 space-y-6">
+
+                        <!-- Key Economic Indicators -->
+                        <div>
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Key Economic Indicators</div>
+                            <div class="grid grid-cols-4 gap-2 sm:gap-4">
+                                ${indicatorDefs.map(i => `
+                                    <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-100" ${i.meta ? metaTitle(i.meta) : ''}>
+                                        <div class="text-sm sm:text-base font-black mono ${i.v !== '—' ? getColor(i.v) : 'text-slate-300'}">${i.v}</div>
+                                        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wide mt-1 leading-tight">${i.l}</div>
+                                        ${srcTag(i.s)}
+                                        ${i.meta ? metaBadge(i.meta) : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Analysis -->
+                        <div>
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Economic Intelligence</div>
+                            ${analysisHtml ? `
+                            <div class="bg-slate-50 rounded-xl p-4 border-l-4 border-cyan-400 text-sm leading-relaxed space-y-1">
+                                ${analysisHtml}
+                            </div>` : `
+                            <p class="text-sm text-slate-300 italic">No analysis available for this edition.</p>
+                            `}
+                        </div>
+
+                        <!-- Sources / Footnotes -->
+                        ${sources.length ? `
+                        <div class="pt-1">
+                            <div class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-2">Sources</div>
+                            <ol class="space-y-1">
+                                ${sources.map(s => `
+                                <li class="flex gap-2 text-[10px] text-slate-400 leading-snug">
+                                    <span class="font-black text-slate-300 flex-shrink-0">${s.id}.</span>
+                                    ${s.url ? `<a href="${s.url}" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-500 transition-colors underline decoration-slate-200">${s.title}</a>` : `<span>${s.title}</span>`}
+                                </li>`).join('')}
+                            </ol>
+                        </div>` : ''}
+
+                    </div>
+                </div>`;
+            }).join('');
+        };
+
+
+        // ─── Cumulative Project System ──────────────────────────────
+
+        const normalizeKey = (name, province) =>
+            `${(name || '').toLowerCase().replace(/[^a-z0-9]/g, '')}__${(province || '').toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+
+        const mergeProjects = (provinces) => {
+            const existingMap = new Map(allProjects.map(p => [normalizeKey(p.name, p.province), p]));
+            const today = new Date().toISOString().split('T')[0];
+
+            for (const prov of provinces) {
+                for (const prj of (prov.projects || [])) {
+                    const key = normalizeKey(prj.name, prov.name);
+                    const existing = existingMap.get(key);
+                    if (existing) {
+                        const oldStatus = existing.status;
+                        existing.status = prj.status || existing.status;
+                        existing.value = prj.value || existing.value;
+                        existing.sector = prj.sector || existing.sector;
+                        existing.lastUpdated = today;
+                        if (prj.status && prj.status !== oldStatus) {
+                            existing.statusHistory = existing.statusHistory || [];
+                            existing.statusHistory.push({ status: prj.status, date: today });
+                        }
+                        if (prj.cma)          existing.cma    = prj.cma;
+                        if (prj.tags?.length) existing.tags   = prj.tags;
+                        if (prj.source)       existing.source = prj.source;
+                    } else {
+                        const newProject = {
+                            name: prj.name,
+                            province: prov.name,
+                            sector: prj.sector || 'General',
+                            value: prj.value || '—',
+                            status: prj.status || 'Announced',
+                            cma: prj.cma || '',
+                            tags: prj.tags || [],
+                            source: prj.source || '',
+                            firstTracked: today,
+                            lastUpdated: today,
+                            statusHistory: [{ status: prj.status || 'Announced', date: today }]
+                        };
+                        allProjects.push(newProject);
+                        existingMap.set(key, newProject);
+                    }
+                }
+            }
+        };
+
+        const loadCumulativeProjects = async () => {
+            try {
+                const snap = await getDocs(collection(db, 'projects'));
+                snap.forEach(d => {
+                    const p = d.data();
+                    const key = normalizeKey(p.name, p.province);
+                    if (!allProjects.find(e => normalizeKey(e.name, e.province) === key)) {
+                        allProjects.push({ ...p, _firestoreId: d.id });
+                    }
+                });
+            } catch (e) {
+                console.log('No dedicated projects collection found, using newsletter data.');
+            }
+        };
+
+        const populateProvinceDropdown = () => {
+            const provinces = [...new Set(allProjects.map(p => p.province).filter(Boolean))].sort();
+            const sel = document.getElementById('province-filter');
+            sel.innerHTML = '<option value="all">All Provinces</option>' +
+                provinces.map(p => `<option value="${p}" ${p === currentProvinceFilter ? 'selected' : ''}>${p}</option>`).join('');
+
+            const sectors = [...new Set(allProjects.map(p => p.sector).filter(Boolean))].sort();
+            const secSel = document.getElementById('sector-filter');
+            if (secSel) {
+                const curSector = secSel.value;
+                secSel.innerHTML = '<option value="all">All Sectors</option>' +
+                    sectors.map(s => `<option value="${s}" ${s === curSector ? 'selected' : ''}>${s}</option>`).join('');
+            }
+        };
+
+        window.filterByProvince = (province) => {
+            currentProvinceFilter = province;
+            renderProjects();
+        };
+
+        window.filterProjects = (filter) => {
+            currentProjectFilter = filter;
+            document.querySelectorAll('.proj-filter-btn').forEach(b => {
+                b.className = 'proj-filter-btn text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-500 hover:bg-slate-200 transition-all';
+            });
+            document.getElementById(`btn-proj-${filter}`).className =
+                'proj-filter-btn text-[10px] font-bold px-4 py-1.5 rounded-md bg-slate-900 text-white shadow-sm transition-all';
+            renderProjects();
+        };
+
+
+        // ─── Tab 3: Projects Tracker ─────────────────────────────────
+
+        const renderProjects = () => {
+            if (!allProjects.length) {
+                document.getElementById('projects-list').innerHTML = `
+                    <div class="text-center py-16">
+                        <p class="text-slate-400 text-sm">No projects tracked yet. Run the pipeline to populate data.</p>
+                    </div>`;
+                return;
+            }
+
+            populateProvinceDropdown();
+
+            const isActive = (s) => {
+                const sl = (s || '').toLowerCase();
+                return !sl.includes('complet') && !sl.includes('done') && !sl.includes('operational') && !sl.includes('cancel');
+            };
+
+            // Filter by province first
+            const provinceFiltered = currentProvinceFilter === 'all'
+                ? allProjects
+                : allProjects.filter(p => p.province === currentProvinceFilter);
+
+            // Filter by status
+            let statusFiltered = provinceFiltered;
+            if (currentProjectFilter === 'active') statusFiltered = provinceFiltered.filter(p => isActive(p.status));
+            if (currentProjectFilter === 'completed') statusFiltered = provinceFiltered.filter(p => !isActive(p.status));
+
+            // Filter by sector + search
+            const sectorFilter = document.getElementById('sector-filter')?.value || 'all';
+            const searchTerm = (document.getElementById('project-search')?.value || '').toLowerCase().trim();
+            let finalFiltered = statusFiltered;
+            if (sectorFilter !== 'all') finalFiltered = finalFiltered.filter(p => p.sector === sectorFilter);
+            if (searchTerm) finalFiltered = finalFiltered.filter(p =>
+                p.name.toLowerCase().includes(searchTerm) ||
+                p.sector.toLowerCase().includes(searchTerm) ||
+                (p.cma || '').toLowerCase().includes(searchTerm) ||
+                (p.tags || []).some(t => t.toLowerCase().includes(searchTerm))
+            );
+
+            // Filter by date range (firstTracked)
+            if (_projectDateRange !== 'all') {
+                const now = new Date();
+                const cutoff = _projectDateRange === '30d' ? new Date(now - 30 * 864e5)
+                    : _projectDateRange === '90d' ? new Date(now - 90 * 864e5)
+                    : new Date(now.getFullYear(), 0, 1);
+                finalFiltered = finalFiltered.filter(p => p.firstTracked && new Date(p.firstTracked) >= cutoff);
+            }
+
+            // Stats (always based on full allProjects for context)
+            const totalProjects = allProjects.length;
+            const activeProjects = allProjects.filter(p => isActive(p.status)).length;
+            const provincesCount = new Set(allProjects.map(p => p.province)).size;
+            const sectorsCount = new Set(allProjects.map(p => p.sector)).size;
+
+            document.getElementById('project-stats').innerHTML = [
+                { l: 'Total Tracked', v: totalProjects },
+                { l: 'Active', v: activeProjects },
+                { l: 'Provinces', v: provincesCount },
+                { l: 'Sectors', v: sectorsCount }
+            ].map(s => `
+                <div class="bg-white p-4 rounded-xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-2xl font-black text-slate-900 mono">${s.v}</div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${s.l}</div>
+                </div>
+            `).join('');
+
+            if (finalFiltered.length === 0) {
+                document.getElementById('projects-list').innerHTML = `
+                    <div class="text-center py-16">
+                        <p class="text-slate-400 text-sm">No projects match the current filter.</p>
+                    </div>`;
+                return;
+            }
+
+            // Group by province
+            const grouped = {};
+            for (const p of finalFiltered) {
+                if (!grouped[p.province]) grouped[p.province] = [];
+                grouped[p.province].push(p);
+            }
+
+            document.getElementById('projects-list').innerHTML = Object.keys(grouped).sort().map(provName => {
+                const projects = grouped[provName];
+                return `
+                <div class="fade-in">
+                    <!-- Province group header -->
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-sm font-black text-slate-700 uppercase tracking-tighter">${provName}</h4>
+                        <span class="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">${projects.length}</span>
+                    </div>
+
+                    <!-- Project rows -->
+                    <div class="flex flex-col gap-2 mb-2">
+                        ${projects.map(prj => {
+                            const badge = getStatusBadge(prj.status);
+                            const isNew = prj.firstTracked && (new Date() - new Date(prj.firstTracked)) < 14 * 864e5;
+                            const lastSeenDate = prj.lastSeen ? new Date(prj.lastSeen) : null;
+                            const daysSinceLastSeen = lastSeenDate ? Math.floor((new Date() - lastSeenDate) / 864e5) : null;
+                            const isStale = daysSinceLastSeen !== null && daysSinceLastSeen > 90;
+                            // Official provincial budget document URLs
+                            const BUDGET_URLS = {
+                                'Alberta':                  'https://www.alberta.ca/budget',
+                                'British Columbia':         'https://www.bcbudget.gov.bc.ca',
+                                'Ontario':                  'https://www.ontario.ca/page/budget',
+                                'Quebec':                   'https://www.finances.gouv.qc.ca/en/budget.asp',
+                                'Saskatchewan':             'https://www.saskatchewan.ca/government/government-structure/ministries/finance/budget',
+                                'Manitoba':                 'https://www.gov.mb.ca/finance/budget/',
+                                'Nova Scotia':              'https://novascotia.ca/finance/en/home/budget/default.aspx',
+                                'New Brunswick':            'https://www.gnb.ca/content/gnb/en/departments/finance/budget.html',
+                                'Newfoundland & Labrador':  'https://www.gov.nl.ca/fin/budget/',
+                                'Prince Edward Island':     'https://www.princeedwardisland.ca/en/topic/provincial-budget',
+                                'Yukon':                    'https://yukon.ca/en/budget',
+                                'Northwest Territories':    'https://www.fin.gov.nt.ca/en/budget',
+                                'Nunavut':                  'https://www.gov.nu.ca/finance/budget',
+                                'Federal':                  'https://www.budget.canada.ca',
+                                'Canada':                   'https://www.budget.canada.ca',
+                            };
+                            // Normalize a source entry into {title, url}, injecting budget URLs where applicable
+                            const normSrc = (s) => {
+                                if (typeof s === 'string') {
+                                    const urlMatch = s.match(/https?:\/\/\S+/);
+                                    return { url: urlMatch?.[0] || '', title: s.replace(/https?:\/\/\S+/g, '').trim().replace(/[,\s]+$/, '') || (urlMatch?.[0] ? new URL(urlMatch[0]).hostname : s) };
+                                }
+                                const url = s.url || (s.title?.match(/https?:\/\/\S+/)?.[0]) || '';
+                                const rawTitle = (s.title || '').replace(/https?:\/\/\S+/g, '').trim().replace(/[,\s]+$/, '');
+                                const title = rawTitle || (url ? (() => { try { return new URL(url).hostname; } catch { return url; } })() : '');
+                                // If source references a budget document and has no URL, inject official URL
+                                if (!url && /budget/i.test(rawTitle)) {
+                                    const budgetUrl = Object.entries(BUDGET_URLS).find(([prov]) => rawTitle.includes(prov))?.[1]
+                                        || (prj.province && BUDGET_URLS[prj.province]) || '';
+                                    return { url: budgetUrl, title: title || rawTitle };
+                                }
+                                return { url, title: title || url };
+                            };
+                            // Build structured sources: prefer sources array, fall back to legacy source string
+                            const prjSources = (prj.sources?.length)
+                                ? prj.sources.map(s => normSrc(s, prj.province))
+                                : prj.source
+                                    ? [normSrc(prj.source, prj.province)]
+                                    : [];
+                            return `
+                            <div class="bg-white px-3 py-2.5 rounded-xl border border-slate-300 hover:border-cyan-300 transition-colors">
+                                <!-- Row 1: name + value -->
+                                <div class="flex justify-between items-start gap-2 mb-1.5">
+                                    <div class="text-xs font-black text-slate-900 leading-snug flex-1 min-w-0 flex items-start gap-1.5">
+                                        ${isNew ? `<span class="flex-shrink-0 text-[8px] font-black uppercase px-1.5 py-px rounded bg-cyan-500 text-white tracking-wide mt-px">New</span>` : ''}
+                                        ${prj.name}
+                                    </div>
+                                    <div class="text-right flex-shrink-0">
+                                        <div class="text-xs font-black text-cyan-700 mono">${prj.value}</div>
+                                        ${prj.completionDate ? `<div class="text-[8px] text-slate-400 font-mono mt-px">${prj.completionDate}</div>` : ''}
+                                    </div>
+                                </div>
+                                <!-- Description -->
+                                ${prj.description ? `<div class="text-[10px] text-slate-500 leading-snug mb-1.5">${prj.description}</div>` : ''}
+                                <!-- Row 2: status + sector + cma -->
+                                <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+                                    <span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${badge.class}">
+                                        <span class="w-1 h-1 rounded-full ${badge.dot}"></span>${badge.label}
+                                    </span>
+                                    <span class="text-[9px] font-bold text-slate-700 uppercase tracking-tight">${prj.sector}</span>
+                                    ${prj.cma ? `<span class="text-[9px] text-slate-600 font-mono">· ${prj.cma}</span>` : ''}
+                                    ${isStale ? `<span class="inline-flex items-center gap-1 text-[8px] font-bold uppercase px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-600 ml-auto">
+                                        <svg class="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                        Status Unknown — Last seen ${prj.lastSeen}
+                                    </span>` : ''}
+                                </div>
+                                <!-- Row 3: tags + tracked date -->
+                                <div class="flex flex-wrap items-center gap-1 mb-1.5">
+                                    ${(prj.tags?.length) ? prj.tags.map(t => `<span class="text-[8px] font-bold uppercase px-1.5 py-px rounded bg-slate-200 text-slate-700">${t}</span>`).join('') : ''}
+                                    ${prj.firstTracked ? `<span class="text-[8px] text-slate-600 font-mono ml-auto">Since ${prj.firstTracked}</span>` : ''}
+                                </div>
+                                <!-- Sources -->
+                                ${prjSources.length ? `
+                                <div class="mt-1.5 pt-1.5 border-t border-slate-100">
+                                    <div class="text-[9px] font-black text-slate-300 uppercase tracking-[0.15em] mb-1">Source${prjSources.length > 1 ? 's' : ''}</div>
+                                    ${prjSources.map(s => `
+                                    <div class="flex items-start gap-1 text-[10px] text-slate-500 leading-snug">
+                                        <svg class="w-3 h-3 flex-shrink-0 mt-px text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                        <span>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener" class="text-cyan-600 hover:underline font-medium">${s.title}</a>` : `<span class="text-slate-600">${s.title}</span>`}</span>
+                                    </div>`).join('')}
+                                </div>` : ''}
+                                <!-- Updates dropdown -->
+                                ${(prj.statusHistory?.length) ? `
+                                <details class="mt-2 pt-1.5 border-t border-slate-300 group">
+                                    <summary class="text-[8px] font-black text-slate-600 uppercase tracking-widest cursor-pointer list-none flex items-center gap-1 select-none hover:text-slate-900 transition-colors">
+                                        <svg class="w-2.5 h-2.5 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                                        Updates (${prj.statusHistory.length})
+                                    </summary>
+                                    <div class="relative pl-3 space-y-1 border-l-2 border-slate-300 mt-1.5">
+                                        ${prj.statusHistory.map((h, i, arr) => {
+                                            const hSources = (h.sources?.length ? h.sources : h.source ? [h.source] : []).map(s => normSrc(s, prj.province));
+                                            return `
+                                        <div class="relative">
+                                            <div class="absolute -left-[0.9rem] top-0.5 w-1.5 h-1.5 rounded-full border-2 border-white ${i === arr.length - 1 ? 'bg-cyan-500' : 'bg-slate-400'}"></div>
+                                            <div>
+                                                <span class="text-[9px] font-mono text-slate-400">${h.date}</span>
+                                                ${h.status ? `<span class="text-[9px] font-black text-slate-800 ml-1.5 uppercase tracking-wide">${h.status}</span>` : ''}
+                                                ${h.note ? `<div class="text-[9px] text-slate-600 font-medium mt-0.5 leading-snug">${h.note}</div>` : ''}
+                                                ${hSources.length ? `<div class="mt-0.5 space-y-px">${hSources.map(s => `<div class="flex items-center gap-1 text-[9px] text-slate-400"><svg class="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener" class="text-cyan-600 hover:underline">${s.title}</a>` : s.title}</div>`).join('')}</div>` : ''}
+                                            </div>
+                                        </div>`;}).join('')}
+                                    </div>
+                                </details>` : ''}
+                            </div>`;
+                        }).join('')}
+                    </div>
+                    <div class="border-b border-slate-100 mt-4 mb-6"></div>
+                </div>`;
+            }).join('');
+
+            renderUpdateLog();
+        };
+
+
+        // ─── Export Projects ────────────────────────────────────────
+
+        window.setProjectDateRange = (range) => {
+            _projectDateRange = range;
+            document.querySelectorAll('.proj-date-btn').forEach(btn => {
+                const active = btn.id === `pdr-${range}`;
+                btn.className = `proj-date-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border transition-all ${active ? 'bg-slate-800 border-slate-800 text-white' : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400'}`;
+            });
+            renderProjects();
+        };
+
+        window.exportProjects = () => {
+            if (!allProjects.length) return;
+            const headers = ['Name', 'Province', 'Sector', 'Value', 'Status', 'CMA', 'Tags', 'Source', 'First Tracked', 'Last Updated'];
+            const rows = allProjects.map(p => [
+                p.name, p.province, p.sector, p.value, p.status,
+                p.cma || '', (p.tags || []).join('; '), p.source || '',
+                p.firstTracked || '', p.lastUpdated || ''
+            ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+            const csv = [headers.join(','), ...rows].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `can-macro-projects_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        // ─── Update Log ─────────────────────────────────────────────
+
+        const renderUpdateLog = () => {
+            const logEl = document.getElementById('update-log');
+            if (!logEl) return;
+
+            const BUDGET_URLS = {
+                'Alberta': 'https://www.alberta.ca/budget', 'British Columbia': 'https://www.bcbudget.gov.bc.ca',
+                'Ontario': 'https://www.ontario.ca/page/budget', 'Quebec': 'https://www.finances.gouv.qc.ca/en/budget.asp',
+                'Saskatchewan': 'https://www.saskatchewan.ca/government/government-structure/ministries/finance/budget',
+                'Manitoba': 'https://www.gov.mb.ca/finance/budget/', 'Nova Scotia': 'https://novascotia.ca/finance/en/home/budget/default.aspx',
+                'New Brunswick': 'https://www.gnb.ca/content/gnb/en/departments/finance/budget.html',
+                'Newfoundland & Labrador': 'https://www.gov.nl.ca/fin/budget/', 'Prince Edward Island': 'https://www.princeedwardisland.ca/en/topic/provincial-budget',
+                'Yukon': 'https://yukon.ca/en/budget', 'Northwest Territories': 'https://www.fin.gov.nt.ca/en/budget',
+                'Nunavut': 'https://www.gov.nu.ca/finance/budget', 'Federal': 'https://www.budget.canada.ca', 'Canada': 'https://www.budget.canada.ca',
+            };
+            const normSrc = (s, province) => {
+                if (typeof s === 'string') {
+                    const urlMatch = s.match(/https?:\/\/\S+/);
+                    return { url: urlMatch?.[0] || '', title: s.replace(/https?:\/\/\S+/g, '').trim().replace(/[,\s]+$/, '') || (urlMatch?.[0] ? (() => { try { return new URL(urlMatch[0]).hostname; } catch { return urlMatch[0]; } })() : s) };
+                }
+                const url = s.url || (s.title?.match(/https?:\/\/\S+/)?.[0]) || '';
+                const rawTitle = (s.title || '').replace(/https?:\/\/\S+/g, '').trim().replace(/[,\s]+$/, '');
+                const title = rawTitle || (url ? (() => { try { return new URL(url).hostname; } catch { return url; } })() : '');
+                if (!url && /budget/i.test(rawTitle)) {
+                    const budgetUrl = Object.entries(BUDGET_URLS).find(([prov]) => rawTitle.includes(prov))?.[1]
+                        || (province && BUDGET_URLS[province]) || '';
+                    return { url: budgetUrl, title: title || rawTitle };
+                }
+                return { url, title: title || url };
+            };
+
+            const entries = [];
+            for (const p of allProjects) {
+                for (const h of (p.statusHistory || [])) {
+                    if ((h.status || h.note) && h.date) {
+                        const rawSrcs = h.sources?.length ? h.sources : h.source ? [h.source] : p.sources?.length ? p.sources : p.source ? [p.source] : [];
+                        entries.push({
+                            date: h.date,
+                            project: p.name,
+                            province: p.province,
+                            status: h.status || '',
+                            note: h.note || '',
+                            sources: rawSrcs.map(s => normSrc(s, p.province))
+                        });
+                    }
+                }
+            }
+            entries.sort((a, b) => b.date.localeCompare(a.date));
+            const recent = entries.slice(0, 40);
+
+            if (!recent.length) { logEl.innerHTML = ''; return; }
+
+            logEl.innerHTML = `
+                <details class="group border-t border-slate-200 pt-10">
+                    <summary class="flex justify-between items-center mb-6 cursor-pointer list-none">
+                        <h4 class="text-lg font-black text-slate-800 uppercase tracking-tighter flex items-center gap-3">
+                            Update Log
+                            <svg class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </h4>
+                        <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">${recent.length} entries</span>
+                    </summary>
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        ${recent.map((e, i) => {
+                            const badge = getStatusBadge(e.status);
+                            return `
+                            <div class="px-5 py-3 ${i < recent.length - 1 ? 'border-b border-slate-100' : ''}">
+                                <div class="flex items-center gap-3 flex-wrap">
+                                    <span class="text-[9px] font-mono text-slate-400 w-20 flex-shrink-0">${e.date}</span>
+                                    <span class="text-[10px] font-bold text-slate-400 w-28 flex-shrink-0 truncate">${e.province}</span>
+                                    <span class="flex-1 text-xs font-semibold text-slate-700 truncate min-w-[120px]">${e.project}</span>
+                                    ${e.status ? `<span class="inline-flex items-center gap-1 text-[9px] font-black uppercase px-2 py-0.5 rounded-full flex-shrink-0 ${badge.class}"><span class="w-1.5 h-1.5 rounded-full ${badge.dot}"></span>${badge.label}</span>` : ''}
+                                </div>
+                                ${e.note ? `<div class="text-xs text-slate-600 font-medium mt-1.5 pl-[7.25rem] leading-snug">${e.note}</div>` : ''}
+                                ${e.sources?.length ? `<div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 pl-[7.25rem]">${e.sources.map(s => `<span class="flex items-center gap-1 text-[9px] text-slate-400"><svg class="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener" class="text-cyan-600 hover:underline">${s.title || s.url}</a>` : `<span>${s.title}</span>`}</span>`).join('')}</div>` : ''}
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </details>`;
+        };
+
+        // ─── Industry Filter ────────────────────────────────────────
+
+        window.filterIndustries = (type) => {
+            if (!currentData) return;
+            const goods = currentData.goodsIndustries || currentData.goods_industries || [];
+            const services = currentData.servicesIndustries || currentData.services_industries || [];
+            const industries = type === 'goods' ? goods : services;
+
+            const activeClass = 'text-[10px] font-bold px-4 py-1.5 rounded-md bg-slate-900 text-white shadow-sm transition-all';
+            const inactiveClass = 'text-[10px] font-bold px-4 py-1.5 rounded-md text-slate-500 hover:bg-slate-200 transition-all';
+            document.getElementById('btn-goods').className = type === 'goods' ? activeClass : inactiveClass;
+            document.getElementById('btn-services').className = type === 'services' ? activeClass : inactiveClass;
+
+            if (!industries.length) {
+                document.getElementById('industry-container').innerHTML = `
+                    <div class="col-span-2 text-center py-16">
+                        <p class="text-slate-400 text-sm">No ${type} industry data available for this edition.</p>
+                    </div>`;
+                return;
+            }
+
+            document.getElementById('industry-container').innerHTML = industries.map(i => `
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full hover:border-cyan-200 transition-colors fade-in">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-bold text-cyan-600 bg-cyan-50 px-2 py-1 rounded border border-cyan-100">NAICS ${i.code || '—'}</span>
+                        <div class="text-right">
+                            <div class="text-xs font-black ${i.mm === 'N/A' ? 'text-slate-300' : getColor(i.mm)}"
+                                 ${i.mm === 'N/A' ? 'title="Data temporarily unavailable — source: StatCan Table 36-10-0434-01"' : ''}>${i.mm || '—'} M/M</div>
+                            <div class="text-[9px] font-bold uppercase tracking-tighter ${i.yy === 'N/A' ? 'text-slate-300' : 'text-slate-400'}"
+                                 ${i.yy === 'N/A' ? 'title="Data temporarily unavailable — source: StatCan Table 36-10-0434-01"' : ''}>${i.yy || '—'} Y/Y</div>
+                            ${srcTag(i.indicatorSrc || 'StatCan')}
+                        </div>
+                    </div>
+                    <h5 class="font-black text-slate-900 leading-tight mb-2 text-lg">${i.name || 'Unnamed Sector'}</h5>
+                    <div class="text-xs leading-relaxed flex-grow">
+                        ${i.analysis
+                            ? `<div class="bg-slate-50 rounded-xl p-4 border-l-4 border-cyan-400 space-y-1">${i.analysis}</div>`
+                            : `<p class="text-slate-500">${i.summary || ''}</p>`}
+                        ${(i.industrySources?.length) ? `
+                        <div class="mt-3 pt-3 border-t border-slate-100">
+                            <div class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1.5">Sources</div>
+                            <ol class="space-y-1">
+                                ${i.industrySources.map(s => `
+                                <li class="flex gap-2 text-[10px] text-slate-400 leading-snug">
+                                    <span class="font-black text-slate-300 flex-shrink-0">${s.id}.</span>
+                                    ${s.url ? `<a href="${s.url}" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-500 transition-colors underline decoration-slate-200">${s.title}</a>` : `<span>${s.title}</span>`}
+                                </li>`).join('')}
+                            </ol>
+                        </div>` : ''}
+                    </div>
+                    ${(i.subsectors && i.subsectors.length) ? `
+                    <div class="pt-4 border-t border-slate-50">
+                        <table class="w-full text-[10px]">
+                            ${i.subsectors.map(s => `
+                                <tr>
+                                    <td class="text-slate-400 font-mono py-1.5">${s.code || ''}</td>
+                                    <td class="font-bold py-1.5 px-2">${s.name || ''}</td>
+                                    <td class="text-right font-black ${getColor(s.mm)} py-1.5">${s.mm || '—'}</td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>` : ''}
+                </div>
+            `).join('');
+        };
+
+
+        // ─── Tab 4: Markets & Yields ─────────────────────────────────
+
+        const renderMarkets = () => {
+            if (!currentData) return;
+            const container = document.getElementById('markets-container');
+            const yieldCurve = currentData.yieldCurve || currentData.yield_curve || [];
+            const commodities = currentData.commodities || [];
+            const fm = currentData.financialMarkets || {};
+
+            // Colour map for category headers — covers all Pink Sheet categories
+            const categoryColors = {
+                'energy':           'text-orange-500',
+                'precious metals':  'text-yellow-500',
+                'base metals':      'text-slate-500',
+                'agriculture - grains': 'text-lime-600',
+                'agriculture - softs':  'text-emerald-600',
+                'agriculture - oils & meals': 'text-green-600',
+                'fertilizers':      'text-teal-600',
+                'livestock':        'text-rose-500',
+            };
+
+            const catColor = (name) => {
+                const key = (name || '').toLowerCase();
+                for (const [k, v] of Object.entries(categoryColors)) {
+                    if (key.includes(k.split(' ')[0])) return v;
+                }
+                return 'text-cyan-600';
+            };
+
+            container.innerHTML = `
+                <!-- Financial Markets -->
+                ${(fm.indices?.length || fm.fx?.length) ? `
+                <div>
+                    <div class="flex justify-between items-end mb-6 border-b border-slate-200 pb-4">
+                        <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Financial Markets</h3>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden sm:block">1-day &amp; 1-year change</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                        <!-- Equity Indices -->
+                        ${fm.indices?.length ? `
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                            <div class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-5 pt-4 pb-2 border-b border-slate-100">Equity Indices</div>
+                            <div class="divide-y divide-slate-100">
+                                ${fm.indices.map(idx => `
+                                <div class="flex items-center justify-between px-5 py-2.5">
+                                    <div>
+                                        <div class="text-xs font-black text-slate-900">${idx.name}</div>
+                                        <div class="text-[9px] text-slate-400 font-bold uppercase">${idx.region || ''}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-sm font-black text-slate-900 mono">${idx.value}</div>
+                                        <div class="flex gap-2 justify-end">
+                                            <span class="text-[9px] font-black ${getColor(idx.day)} mono">${idx.day}</span>
+                                            <span class="text-[9px] font-bold text-slate-400 mono">${idx.yy} YoY</span>
+                                        </div>
+                                    </div>
+                                </div>`).join('')}
+                            </div>
+                        </div>` : ''}
+                        <!-- FX Rates -->
+                        ${fm.fx?.length ? `
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                            <div class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-5 pt-4 pb-2 border-b border-slate-100">Foreign Exchange</div>
+                            <div class="divide-y divide-slate-100">
+                                ${fm.fx.map(pair => `
+                                <div class="flex items-center justify-between px-5 py-2.5">
+                                    <div class="text-xs font-black text-slate-900">${pair.name}</div>
+                                    <div class="text-right">
+                                        <div class="text-sm font-black text-slate-900 mono">${pair.value}</div>
+                                        <div class="flex gap-2 justify-end">
+                                            <span class="text-[9px] font-black ${getColor(pair.day)} mono">${pair.day}</span>
+                                            <span class="text-[9px] font-bold text-slate-400 mono">${pair.yy} YoY</span>
+                                        </div>
+                                    </div>
+                                </div>`).join('')}
+                            </div>
+                        </div>` : ''}
+                    </div>
+                </div>` : ''}
+
+                <!-- Yield Curve — full width -->
+                <div class="bg-white p-6 sm:p-10 rounded-3xl border border-slate-200 shadow-sm">
+                    <h3 class="text-2xl font-black mb-8 uppercase tracking-tighter">Yield Curve Analysis</h3>
+                    ${yieldCurve.length ? `
+                    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-10">
+                        ${yieldCurve.map(y => `
+                            <div class="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100 text-center transition-colors hover:border-cyan-200">
+                                <div class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-widest">${y.term}</div>
+                                <div class="text-lg sm:text-xl font-black ${y.highlight ? 'text-cyan-600' : 'text-slate-800'} mono">${y.yield}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        ${yieldCurve.map(y => `
+                        <button onclick="toggleYieldTerm('${y.term}')" id="ytoggle-${y.term}"
+                            class="text-[10px] font-black uppercase px-3 py-1.5 rounded-full border transition-all ${y.highlight ? 'bg-cyan-600 border-cyan-600 text-white' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}">
+                            ${y.term}
+                        </button>`).join('')}
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 mb-4">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mr-1">Compare to:</span>
+                        <button onclick="setYieldCompare('none')" id="ycomp-none"
+                            class="yield-comp-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border border-slate-200 text-slate-500 bg-white hover:border-slate-300 transition-all">None</button>
+                        <button onclick="setYieldCompare('1m')" id="ycomp-1m"
+                            class="yield-comp-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border border-slate-200 text-slate-500 bg-white hover:border-slate-300 transition-all">1M ago</button>
+                        <button onclick="setYieldCompare('3m')" id="ycomp-3m"
+                            class="yield-comp-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border border-slate-200 text-slate-500 bg-white hover:border-slate-300 transition-all">3M ago</button>
+                        <button onclick="setYieldCompare('6m')" id="ycomp-6m"
+                            class="yield-comp-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border border-slate-200 text-slate-500 bg-white hover:border-slate-300 transition-all">6M ago</button>
+                        <button onclick="setYieldCompare('1y')" id="ycomp-1y"
+                            class="yield-comp-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border border-slate-700 text-white bg-slate-700 transition-all">1Y ago</button>
+                        <div class="flex items-center gap-1.5 ml-2 pl-3 border-l border-slate-200">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Custom:</span>
+                            <input type="date" id="yield-custom-date"
+                                class="text-[10px] font-mono bg-white border border-slate-200 rounded-lg px-2 py-1.5 outline-none focus:ring-1 focus:ring-slate-400 text-slate-600 cursor-pointer"
+                                onchange="setYieldCompareDate(this.value)" />
+                        </div>
+                    </div>
+                    <div class="chart-container"><canvas id="yieldChart"></canvas></div>
+                    ` : '<p class="text-slate-400 text-sm">No yield curve data available.</p>'}
+                </div>
+
+                <!-- Commodities — grid of category cards -->
+                ${commodities.length ? `
+                <div>
+                    <div class="flex justify-between items-end mb-8 border-b border-slate-200 pb-4">
+                        <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Global Commodities</h3>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden sm:block">World Bank Pink Sheet Categories</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        ${commodities.map(cat => {
+                            const color = cat.color || catColor(cat.category);
+                            return `
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition-colors fade-in">
+                                <div class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4 pb-2 border-b border-slate-100">${cat.category}</div>
+                                <div class="space-y-3">
+                                    ${(cat.items || []).map(item => `
+                                        <div class="flex justify-between items-start gap-2">
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-xs font-semibold text-slate-700 leading-tight">${item.name}</div>
+                                                ${item.unit ? `<div class="text-[9px] text-slate-400 font-mono">per ${item.unit}</div>` : ''}
+                                            </div>
+                                            <div class="text-right flex-shrink-0">
+                                                <div class="text-sm font-black text-slate-900 mono">${item.val}</div>
+                                                ${item.day ? `<div class="text-[9px] font-black ${getColor(item.day)} uppercase">${item.day} D</div>` : ''}
+                                                <div class="text-[9px] font-bold text-slate-400 uppercase">${item.yy || ''} YoY</div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                <!-- Data Explorer -->
+                <div class="bg-white p-6 sm:p-10 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-2 border-b border-slate-200 pb-4">
+                        <div>
+                            <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter">Data Explorer</h3>
+                            <p class="text-[10px] text-slate-400 mt-1 font-medium">Plot historical pipeline data points — builds up over time</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3 mt-6 mb-4 items-center">
+                        <select id="explorer-var"
+                            class="text-[10px] font-black uppercase bg-white border border-slate-200 rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-cyan-500 text-slate-700 cursor-pointer tracking-wide">
+                            <optgroup label="National">
+                                <option value="boc_rate">BoC Policy Rate (%)</option>
+                                <option value="canada_cpi">Canada CPI YoY (%)</option>
+                                <option value="canada_unemployment">Canada Unemployment (%)</option>
+                            </optgroup>
+                            <optgroup label="GoC Yield Curve">
+                                <option value="yield_2y">2Y Yield (%)</option>
+                                <option value="yield_3y">3Y Yield (%)</option>
+                                <option value="yield_5y">5Y Yield (%)</option>
+                                <option value="yield_7y">7Y Yield (%)</option>
+                                <option value="yield_10y">10Y Yield (%)</option>
+                                <option value="yield_long">Long Yield (%)</option>
+                            </optgroup>
+                            <optgroup label="Foreign Exchange">
+                                <option value="cadusd">CAD/USD Rate</option>
+                            </optgroup>
+                            <optgroup label="Equity">
+                                <option value="tsx_composite">TSX Composite (pts)</option>
+                            </optgroup>
+                        </select>
+                        <select id="explorer-range"
+                            class="text-[10px] font-black uppercase bg-white border border-slate-200 rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-cyan-500 text-slate-700 cursor-pointer tracking-wide">
+                            <option value="1m">1 Month</option>
+                            <option value="3m">3 Months</option>
+                            <option value="6m">6 Months</option>
+                            <option value="1y" selected>1 Year</option>
+                            <option value="2y">2 Years</option>
+                            <option value="5y">5 Years</option>
+                            <option value="all">All Time</option>
+                        </select>
+                        <button onclick="explorerAdd()"
+                            class="text-[10px] font-black uppercase px-4 py-2 rounded-lg bg-cyan-600 text-white hover:bg-cyan-700 transition-colors tracking-wide">
+                            Add to Chart
+                        </button>
+                        <button onclick="explorerClear()"
+                            class="text-[10px] font-black uppercase px-4 py-2 rounded-lg border border-slate-200 text-slate-500 hover:border-slate-300 transition-colors tracking-wide">
+                            Clear
+                        </button>
+                    </div>
+                    <div id="explorer-legend" class="flex flex-wrap gap-2 mb-4 min-h-[20px]"></div>
+                    <div id="explorer-msg" class="hidden text-center py-10 text-slate-400 text-sm italic"></div>
+                    <div id="explorer-empty" class="text-center py-14 text-slate-300">
+                        <svg class="w-10 h-10 mx-auto mb-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+                        <p class="text-sm font-medium">Select a variable and click <span class="font-black text-slate-400">Add to Chart</span></p>
+                        <p class="text-xs mt-1">Up to 7 series can be overlaid</p>
+                    </div>
+                    <div class="chart-container" id="explorer-chart-wrap" style="display:none"><canvas id="explorerChart"></canvas></div>
+                </div>
+            `;
+
+            // Auto-load or restore explorer chart
+            if (Object.keys(_explorerSeries).length) {
+                // Re-render after tab revisit (canvas was recreated by innerHTML)
+                setTimeout(() => renderExplorerChart(), 0);
+            } else {
+                // Auto-load BoC rate on first open
+                setTimeout(() => window.explorerAdd(), 0);
+            }
+
+            // Store yield data and init chart with toggle state
+            _yieldData = { yieldCurve, charts: currentData.charts || {} };
+            if (!_activeYieldTerms || _activeYieldTerms.size === 0) {
+                const highlighted = yieldCurve.filter(y => y.highlight).map(y => y.term);
+                _activeYieldTerms = new Set(highlighted.length ? highlighted : yieldCurve.map(y => y.term));
+            }
+            // Sync pill styles to match current active state
+            yieldCurve.forEach(y => {
+                const btn = document.getElementById(`ytoggle-${y.term}`);
+                if (!btn) return;
+                btn.className = `text-[10px] font-black uppercase px-3 py-1.5 rounded-full border transition-all ${_activeYieldTerms.has(y.term) ? 'bg-cyan-600 border-cyan-600 text-white' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}`;
+            });
+            renderYieldChart();
+        };
+
+        const renderYieldChart = () => {
+            if (!_yieldData?.yieldCurve?.length) return;
+            const { yieldCurve, charts } = _yieldData;
+            const active = (_activeYieldTerms?.size) ? _activeYieldTerms : new Set(yieldCurve.map(y => y.term));
+            const filtered = yieldCurve.filter(y => active.has(y.term));
+            const labels = filtered.map(y => y.term);
+            const currentYields = (charts.yieldCurveCurrent?.length)
+                ? filtered.map(y => charts.yieldCurveCurrent[yieldCurve.findIndex(z => z.term === y.term)])
+                : filtered.map(y => parseFloat(y.yield));
+            const lastYearYields = (charts.yieldCurveLastYear?.length)
+                ? filtered.map(y => charts.yieldCurveLastYear[yieldCurve.findIndex(z => z.term === y.term)])
+                : null;
+            const customDate = document.getElementById('yield-custom-date')?.value;
+            const compareLabel = _yieldCompareRange === 'custom' && customDate
+                ? customDate
+                : ({ none: null, '1m': '1M Prior', '3m': '3M Prior', '6m': '6M Prior', '1y': '1Y Prior' }[_yieldCompareRange] || '1Y Prior');
+            initChart('yieldChart', { type: 'line', data: { labels, datasets: [
+                { label: 'Current', data: currentYields, borderColor: '#0891b2', backgroundColor: 'rgba(8,145,178,0.08)', fill: true, tension: 0.4, borderWidth: 3, pointRadius: 5, pointBackgroundColor: '#0891b2', pointBorderColor: '#fff', pointBorderWidth: 2 },
+                ...(lastYearYields ? [{ label: compareLabel, data: lastYearYields, borderColor: '#94a3b8', borderDash: [4,4], fill: false, tension: 0.4, borderWidth: 2, pointRadius: 3 }] : [])
+            ]}});
+        };
+
+        window.toggleYieldTerm = (term) => {
+            if (!_activeYieldTerms || !_yieldData) return;
+            if (_activeYieldTerms.has(term)) {
+                if (_activeYieldTerms.size > 1) _activeYieldTerms.delete(term);
+            } else {
+                _activeYieldTerms.add(term);
+            }
+            _yieldData.yieldCurve.forEach(y => {
+                const btn = document.getElementById(`ytoggle-${y.term}`);
+                if (!btn) return;
+                btn.className = `text-[10px] font-black uppercase px-3 py-1.5 rounded-full border transition-all ${_activeYieldTerms.has(y.term) ? 'bg-cyan-600 border-cyan-600 text-white' : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'}`;
+            });
+            renderYieldChart();
+        };
+
+        // ─── Tab 4: Data Explorer ────────────────────────────────────
+
+        const EXPLORER_COLORS = ['#0891b2','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#64748b'];
+
+        const _explorerDaysBefore = (range) => {
+            return { '1m': 30, '3m': 90, '6m': 180, '1y': 365, '2y': 730, '5y': 1825, 'all': 999999 }[range] || 365;
+        };
+
+        const renderExplorerChart = () => {
+            const entries  = Object.values(_explorerSeries);
+            const msgEl    = document.getElementById('explorer-msg');
+            const legendEl = document.getElementById('explorer-legend');
+            const emptyEl  = document.getElementById('explorer-empty');
+            const wrapEl   = document.getElementById('explorer-chart-wrap');
+            if (!entries.length) {
+                if (chartInstances['explorerChart']) {
+                    chartInstances['explorerChart'].destroy();
+                    delete chartInstances['explorerChart'];
+                }
+                if (msgEl)    msgEl.classList.add('hidden');
+                if (legendEl) legendEl.innerHTML = '';
+                if (emptyEl)  emptyEl.style.display = '';
+                if (wrapEl)   wrapEl.style.display = 'none';
+                return;
+            }
+            if (emptyEl)  emptyEl.style.display = 'none';
+            if (wrapEl)   wrapEl.style.display = '';
+            if (msgEl) msgEl.classList.add('hidden');
+            const datasets = entries.map((s, i) => ({
+                label:                s.label + (s.unit ? ` (${s.unit})` : ''),
+                data:                 s.points.map(p => ({ x: p.date, y: p.value })),
+                borderColor:          EXPLORER_COLORS[i % EXPLORER_COLORS.length],
+                backgroundColor:      EXPLORER_COLORS[i % EXPLORER_COLORS.length] + '18',
+                fill:                 entries.length === 1,
+                tension:              0.4,
+                borderWidth:          2.5,
+                pointRadius:          4,
+                pointBackgroundColor: EXPLORER_COLORS[i % EXPLORER_COLORS.length],
+                pointBorderColor:     '#fff',
+                pointBorderWidth:     2,
+            }));
+            if (legendEl) {
+                const keys = Object.keys(_explorerSeries);
+                legendEl.innerHTML = keys.map((k, i) => {
+                    const s = _explorerSeries[k];
+                    return `
+                    <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-600">
+                        <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:${EXPLORER_COLORS[i % EXPLORER_COLORS.length]}"></span>
+                        ${s.label}
+                        <button onclick="explorerRemove('${k}')"
+                            class="ml-1 text-slate-300 hover:text-red-400 font-black leading-none">×</button>
+                    </div>`;
+                }).join('');
+            }
+            // Build merged date labels across all series
+            const allDates = [...new Set(entries.flatMap(s => s.points.map(p => p.date)))].sort();
+            // Convert datasets to label-indexed data
+            const labeledDatasets = datasets.map((ds, i) => {
+                const pointMap = Object.fromEntries(entries[i].points.map(p => [p.date, p.value]));
+                return { ...ds, data: allDates.map(d => pointMap[d] ?? null) };
+            });
+            initChart('explorerChart', {
+                type: 'line',
+                data: { labels: allDates, datasets: labeledDatasets },
+            });
+        };
+
+        const _explorerShowMsg = (text) => {
+            const msgEl   = document.getElementById('explorer-msg');
+            const emptyEl = document.getElementById('explorer-empty');
+            const wrapEl  = document.getElementById('explorer-chart-wrap');
+            if (emptyEl) emptyEl.style.display = 'none';
+            if (wrapEl)  wrapEl.style.display  = 'none';
+            if (msgEl)   { msgEl.textContent = text; msgEl.classList.remove('hidden'); }
+        };
+
+        window.explorerAdd = async () => {
+            const varId   = document.getElementById('explorer-var')?.value;
+            const range   = document.getElementById('explorer-range')?.value || '1y';
+            if (!varId) return;
+            if (_explorerSeries[varId]) return; // already on chart
+            if (Object.keys(_explorerSeries).length >= 7) return; // cap at 7 lines
+            try {
+                const snap = await getDoc(doc(db, 'timeseries', varId));
+                if (!snap.exists()) {
+                    _explorerShowMsg('No historical data yet for this variable — run the pipeline first.');
+                    return;
+                }
+                const tsd    = snap.data();
+                const cutoff = new Date();
+                cutoff.setDate(cutoff.getDate() - _explorerDaysBefore(range));
+                const points = (tsd.series || [])
+                    .filter(p => new Date(p.date) >= cutoff)
+                    .sort((a, b) => a.date.localeCompare(b.date));
+                if (points.length < 2) {
+                    _explorerShowMsg(`Not enough data for "${tsd.label}" in this range (${points.length} point${points.length === 1 ? '' : 's'} found). Try "All Time" or wait for more pipeline runs.`);
+                    return;
+                }
+                _explorerSeries[varId] = { label: tsd.label, unit: tsd.unit, category: tsd.category, points };
+                renderExplorerChart();
+            } catch (e) {
+                _explorerShowMsg('Failed to load data — check your connection and try again.');
+                console.error('Explorer add failed:', e);
+            }
+        };
+
+        window.explorerRemove = (varId) => {
+            delete _explorerSeries[varId];
+            renderExplorerChart();
+        };
+
+        window.explorerClear = () => {
+            _explorerSeries = {};
+            renderExplorerChart();
+        };
+
+        const YIELD_SERIES = 'BD.CDN.2YR.DQ.YLD,BD.CDN.3YR.DQ.YLD,BD.CDN.5YR.DQ.YLD,BD.CDN.7YR.DQ.YLD,BD.CDN.10YR.DQ.YLD,BD.CDN.LONG.DQ.YLD';
+
+        window.setYieldCompare = async (range) => {
+            _yieldCompareRange = range;
+            document.querySelectorAll('.yield-comp-btn').forEach(btn => {
+                const isActive = btn.id === `ycomp-${range}`;
+                btn.className = `yield-comp-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border transition-all ${isActive ? 'bg-slate-700 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}`;
+            });
+            if (range === 'none') {
+                if (_yieldData) _yieldData.charts = { ..._yieldData.charts, yieldCurveLastYear: [] };
+                renderYieldChart();
+                return;
+            }
+            const today = new Date();
+            const days = { '1m': 30, '3m': 90, '6m': 180, '1y': 365 }[range] || 365;
+            const start = new Date(today - days * 864e5);
+            const end   = new Date(start.getTime() + 14 * 864e5);
+            const startStr = start.toISOString().slice(0, 10);
+            const endStr   = end.toISOString().slice(0, 10);
+            try {
+                const resp = await fetch(`https://www.bankofcanada.ca/valet/observations/${YIELD_SERIES}/json?start_date=${startStr}&end_date=${endStr}`);
+                const data = await resp.json();
+                const obs = data.observations;
+                if (!obs?.length) {
+                    if (_yieldData) _yieldData.charts = { ..._yieldData.charts, yieldCurveLastYear: [] };
+                    renderYieldChart();
+                    return;
+                }
+                const latest = obs[obs.length - 1];
+                const vals = YIELD_SERIES.split(',').map(s => {
+                    const v = latest[s]?.v;
+                    return v != null ? parseFloat(v) : null;
+                });
+                if (_yieldData) _yieldData.charts = { ..._yieldData.charts, yieldCurveLastYear: vals };
+                renderYieldChart();
+            } catch(e) {
+                console.error('Yield compare fetch failed:', e);
+            }
+        };
+
+        window.setYieldCompareDate = async (dateStr) => {
+            if (!dateStr) return;
+            _yieldCompareRange = 'custom';
+            document.querySelectorAll('.yield-comp-btn').forEach(btn => {
+                btn.className = `yield-comp-btn text-[10px] font-black uppercase px-3 py-1.5 rounded-full border transition-all bg-white border-slate-200 text-slate-500 hover:border-slate-300`;
+            });
+            const start = new Date(dateStr);
+            const end   = new Date(start.getTime() + 14 * 864e5);
+            const endStr = end.toISOString().slice(0, 10);
+            try {
+                const resp = await fetch(`https://www.bankofcanada.ca/valet/observations/${YIELD_SERIES}/json?start_date=${dateStr}&end_date=${endStr}`);
+                const data = await resp.json();
+                const obs = data.observations;
+                if (!obs?.length) {
+                    if (_yieldData) _yieldData.charts = { ..._yieldData.charts, yieldCurveLastYear: [] };
+                    renderYieldChart();
+                    return;
+                }
+                const latest = obs[obs.length - 1];
+                const vals = YIELD_SERIES.split(',').map(s => {
+                    const v = latest[s]?.v;
+                    return v != null ? parseFloat(v) : null;
+                });
+                if (_yieldData) _yieldData.charts = { ..._yieldData.charts, yieldCurveLastYear: vals };
+                renderYieldChart();
+            } catch(e) {
+                console.error('Yield custom date fetch failed:', e);
+            }
+        };
+
+        // ─── Tab 5: Things to Watch ──────────────────────────────────
+
+        const renderWatchlist = () => {
+            if (!currentData) return;
+            const container = document.getElementById('watchlist-container');
+            const watchlist = currentData.watchlist || [];
+
+            if (!watchlist.length) {
+                container.innerHTML = `<div class="text-center py-16"><p class="text-slate-400 text-sm">No watchlist data available. Run the pipeline to populate.</p></div>`;
+                return;
+            }
+
+            // Group by week_label
+            const weeks = {};
+            for (const ev of watchlist) {
+                const wk = ev.week_label || 'Upcoming';
+                if (!weeks[wk]) weeks[wk] = [];
+                weeks[wk].push(ev);
+            }
+
+            container.innerHTML = Object.entries(weeks).map(([week, events]) => `
+                <div class="fade-in">
+                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">${week}</div>
+                    <div class="bg-white rounded-2xl border border-slate-200 divide-y divide-slate-100 overflow-hidden">
+                        ${events.map(ev => `
+                            <div class="flex items-start gap-4 px-5 py-3">
+                                <div class="flex-shrink-0 w-20 pt-0.5">
+                                    <div class="text-[10px] font-black text-slate-700 mono">${ev.date || '—'}</div>
+                                    <div class="text-[9px] text-slate-400 mt-0.5 leading-tight">${ev.institution || ''}</div>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-xs font-black text-slate-900 leading-snug">${ev.event_name || ''}</div>
+                                    <div class="text-[10px] text-slate-500 mt-0.5 leading-relaxed">${ev.description || ''}</div>
+                                </div>
+                            </div>`).join('')}
+                    </div>
+                </div>`
+            ).join('');
+        };
+
+        const initChart = (id, config) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (chartInstances[id]) chartInstances[id].destroy();
+            chartInstances[id] = new Chart(el.getContext('2d'), {
+                ...config,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { font: { family: 'JetBrains Mono', size: 10 } } },
+                        x: { ticks: { font: { family: 'JetBrains Mono', size: 10 } } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' }, padding: 20 } }
+                    }
+                }
+            });
+        };
+
+
+        // ─── Initialization ─────────────────────────────────────────
+
+        const init = async () => {
+            showLoading();
+
+            try {
+                await signInAnonymously(auth);
+            } catch (e) {
+                showError('Authentication failed. Please refresh the page.');
+                return;
+            }
+
+            onAuthStateChanged(auth, async (user) => {
+                if (!user) return;
+                try {
+                    await loadCumulativeProjects();
+
+                    const colRef = collection(db, 'newsletters');
+                    const snap = await getDocs(colRef);
+                    const editions = [];
+                    snap.forEach(d => { if (d.id !== 'latest') editions.push(d.id); });
+                    editions.sort((a, b) => b.localeCompare(a));
+
+                    const sel = document.getElementById('archive-selector');
+                    if (editions.length > 0) {
+                        sel.innerHTML = editions.map(e => `<option value="${e}">${e}</option>`).join('');
+                    } else {
+                        sel.innerHTML = '<option value="latest">Latest Edition</option>';
+                    }
+
+                    sel.addEventListener('change', async (e) => {
+                        showLoading();
+                        try {
+                            const d = await getDoc(doc(db, 'newsletters', e.target.value));
+                            if (d.exists()) render(d.data());
+                            else showError(`Edition "${e.target.value}" not found.`);
+                        } catch (err) {
+                            showError('Failed to load this edition.');
+                            console.error(err);
+                        }
+                    });
+
+                    // Load StatCan indicators (non-critical — section stays hidden on failure)
+                    try {
+                        const indDoc = await getDoc(doc(db, 'statcan_indicators', 'latest'));
+                        if (indDoc.exists()) {
+                            _statcanIndicators = indDoc.data().indicators || [];
+                            renderStatcanIndicators();
+                        }
+                    } catch (indErr) {
+                        console.warn('StatCan indicators unavailable:', indErr);
+                    }
+
+                    const latest = await getDoc(doc(db, 'newsletters', 'latest'));
+                    if (latest.exists()) {
+                        render(latest.data());
+                    } else if (editions.length > 0) {
+                        const fallback = await getDoc(doc(db, 'newsletters', editions[0]));
+                        if (fallback.exists()) render(fallback.data());
+                        else showError('No dashboard data found.');
+                    } else {
+                        showError('No dashboard data found. Run the pipeline to generate data.');
+                    }
+
+                } catch (e) {
+                    showError('Failed to connect to the database. Check your connection and try again.');
+                    console.error('Firestore error:', e);
+                }
+            });
+        };
+
+        init();
+    </script>
+</body>
+
+</html>

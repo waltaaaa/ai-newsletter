@@ -1,0 +1,96 @@
+======================================================================
+  SEED AUDIT REPORT -- 2026-03-03
+======================================================================
+  Total projects written to Firestore: 0
+
+-- Projects by Province --
+
+-- Projects by NAICS Code --
+  11       Agriculture, forestry, fishing and hunting                      0  <<< COVERAGE GAP
+  21       Mining, quarrying, and oil and gas extraction                   0  <<< COVERAGE GAP
+  22       Utilities                                                       0  <<< COVERAGE GAP
+  23       Construction                                                    0  <<< COVERAGE GAP
+  31-33    Manufacturing                                                   0  <<< COVERAGE GAP
+  41       Wholesale trade                                                 0  <<< COVERAGE GAP
+  44-45    Retail trade                                                    0  <<< COVERAGE GAP
+  48-49    Transportation and warehousing                                  0  <<< COVERAGE GAP
+  51       Information and cultural industries                             0  <<< COVERAGE GAP
+  52       Finance and insurance                                           0  <<< COVERAGE GAP
+  53       Real estate and rental and leasing                              0  <<< COVERAGE GAP
+  54       Professional, scientific and technical services                 0  <<< COVERAGE GAP
+  55       Management of companies and enterprises                         0  <<< COVERAGE GAP
+  56       Administrative and support, waste management and remediation services    0  <<< COVERAGE GAP
+  61       Educational services                                            0  <<< COVERAGE GAP
+  62       Health care and social assistance                               0  <<< COVERAGE GAP
+  71       Arts, entertainment and recreation                              0  <<< COVERAGE GAP
+  72       Accommodation and food services                                 0  <<< COVERAGE GAP
+  81       Other services (except public administration)                   0  <<< COVERAGE GAP
+  91       Public administration                                           0  <<< COVERAGE GAP
+
+-- Projects by Discovery Source --
+
+-- Projects by Status --
+
+-- Value = 'Not disclosed': 0/0 (0%)
+
+-- Source URL quality: 0 direct, 0 relevant
+
+-- Discovery Statistics --
+  GDELT queries executed:        68
+  Unique articles found:         0
+  Articles sent to Tavily:       0
+  RSS feeds processed:           34
+  RSS articles found:            38
+  Projects extracted (raw):      0
+  Projects after URL verify:     0
+  Post-verify rejected:          0
+  Projects rejected (total):     0
+  Dedup merges:                  0
+  Tier 1 (registries):           0
+  Tier 2 (GDELT+Claude):         0
+  Tier 3 (RSS feeds):            0
+  Perplexity:                    DISABLED
+
+-- Wayback History Stats --
+  Backfill attempted:            0
+  Backfill with history:         0
+  Not yet backfilled:            0
+  Median earliest date:          N/A
+  Historical entries added:      0
+
+-- Coverage Gaps --
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 11: Agriculture, forestry, fishing and hunting
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 21: Mining, quarrying, and oil and gas extraction
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 22: Utilities
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 23: Construction
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 31-33: Manufacturing
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 41: Wholesale trade
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 44-45: Retail trade
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 48-49: Transportation and warehousing
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 51: Information and cultural industries
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 52: Finance and insurance
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 53: Real estate and rental and leasing
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 54: Professional, scientific and technical services
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 55: Management of companies and enterprises
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 56: Administrative and support, waste management and remediation services
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 61: Educational services
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 62: Health care and social assistance
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 71: Arts, entertainment and recreation
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 72: Accommodation and food services
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 81: Other services (except public administration)
+  COVERAGE GAP: Consider enabling Perplexity gap fill for 91: Public administration
+
+-- Annual Cost Estimate --
+  Government registries + GDELT + RSS + Wayback CDX  = Free
+  Tavily Extract (~295 articles + ~100 RSS + ~800 snapshots seed)
+                                                      = ~$65/yr
+  Claude Opus (macro writing: exec summary + national + global)
+                                                      = ~$7/yr
+  Claude Sonnet (extraction + provincial/industry + citations)
+                                                      = ~$25/yr
+  Gemini 2.5 Flash (snapshots + JSON fallback + unsourced)
+                                                      = ~$5/yr
+  ──────────────────────────────────────────────────
+  TOTAL                                               = ~$102/yr
+
+======================================================================

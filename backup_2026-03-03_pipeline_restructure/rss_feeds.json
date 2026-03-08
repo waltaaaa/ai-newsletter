@@ -1,0 +1,343 @@
+{
+  "_meta": {
+    "description": "RSS feed configuration for CAN-MACRO dashboard",
+    "last_updated": "2026-03-03",
+    "total_feeds": 40,
+    "notes": "Cross-referenced with watchlist.json. URLs auto-discovered on --test-feeds."
+  },
+  "federal": [
+    {
+      "id": "transport_canada",
+      "name": "Transport Canada",
+      "url": "https://www.canada.ca/en/transport-canada.atom.xml",
+      "naics": ["23", "48-49"],
+      "keywords": ["construction", "infrastructure", "transit", "rail", "airport", "port", "highway", "bridge", "ferry", "marine"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "nrcan",
+      "name": "Natural Resources Canada",
+      "url": "https://www.canada.ca/en/natural-resources-canada.atom.xml",
+      "naics": ["21", "22"],
+      "keywords": ["mine", "mining", "oil", "gas", "LNG", "pipeline", "energy", "power", "nuclear", "hydrogen", "critical mineral", "lithium", "uranium"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "ised",
+      "name": "Innovation, Science and Economic Development",
+      "url": "https://www.canada.ca/en/innovation-science-economic-development.atom.xml",
+      "naics": ["31-33", "41", "51", "54"],
+      "keywords": ["manufacturing", "plant", "factory", "innovation", "technology", "broadband", "telecom", "semiconductor", "EV", "battery"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "infrastructure_canada",
+      "name": "Infrastructure Canada",
+      "url": "https://www.canada.ca/en/office-infrastructure.atom.xml",
+      "naics": ["23", "48-49"],
+      "keywords": ["infrastructure", "funding", "project", "construction", "transit", "investment", "awarded"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "dnd",
+      "name": "Department of National Defence",
+      "url": "https://www.canada.ca/en/department-national-defence.atom.xml",
+      "naics": ["91"],
+      "keywords": ["military", "base", "defence", "procurement", "facility", "shipbuilding", "fighter"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "pspc",
+      "name": "Public Services and Procurement Canada",
+      "url": "https://www.canada.ca/en/public-services-procurement.atom.xml",
+      "naics": ["all"],
+      "keywords": ["procurement", "contract", "awarded", "tender", "RFP", "construction", "building"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "cer",
+      "name": "Canada Energy Regulator",
+      "url": "https://www.canada.ca/en/energy-regulator.atom.xml",
+      "naics": ["21", "22", "48-49"],
+      "keywords": ["pipeline", "energy", "oil", "gas", "LNG", "export", "transmission", "regulator"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "aafc",
+      "name": "Agriculture and Agri-Food Canada",
+      "url": "https://www.canada.ca/en/agriculture-agri-food.atom.xml",
+      "naics": ["11"],
+      "keywords": ["farm", "agriculture", "food processing", "grain", "dairy", "agri-food", "aquaculture"],
+      "priority": 2,
+      "enabled": true
+    },
+    {
+      "id": "dfo",
+      "name": "Fisheries and Oceans Canada",
+      "url": "https://www.canada.ca/en/fisheries-oceans.atom.xml",
+      "naics": ["11"],
+      "keywords": ["fishery", "aquaculture", "fish farm", "harbour", "port", "marine"],
+      "priority": 2,
+      "enabled": true
+    },
+    {
+      "id": "health_canada",
+      "name": "Health Canada",
+      "url": "https://www.canada.ca/en/health-canada.atom.xml",
+      "naics": ["62"],
+      "keywords": ["hospital", "health", "medical", "pharmaceutical", "long-term care", "clinical"],
+      "priority": 2,
+      "enabled": true
+    },
+    {
+      "id": "eccc",
+      "name": "Environment and Climate Change Canada",
+      "url": "https://www.canada.ca/en/environment-climate-change.atom.xml",
+      "naics": ["22", "56"],
+      "keywords": ["waste", "recycling", "remediation", "carbon", "energy", "clean", "emission", "pollution"],
+      "priority": 2,
+      "enabled": true
+    },
+    {
+      "id": "finance_canada",
+      "name": "Department of Finance Canada",
+      "url": "https://www.canada.ca/en/department-finance.atom.xml",
+      "naics": ["52"],
+      "keywords": ["bank", "financial", "insurance", "fintech", "budget", "fiscal"],
+      "priority": 2,
+      "enabled": true
+    },
+    {
+      "id": "crown_indigenous",
+      "name": "Crown-Indigenous Relations and Northern Affairs",
+      "url": "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs.atom.xml",
+      "naics": ["all"],
+      "keywords": ["Indigenous", "First Nations", "Inuit", "Metis", "partnership", "economic development", "northern", "reconciliation"],
+      "priority": 2,
+      "enabled": true
+    },
+    {
+      "id": "ircc",
+      "name": "Immigration, Refugees and Citizenship Canada",
+      "url": "https://www.canada.ca/en/immigration-refugees-citizenship.atom.xml",
+      "naics": ["61"],
+      "keywords": ["immigration", "settlement", "training", "skills"],
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "id": "phac",
+      "name": "Public Health Agency of Canada",
+      "url": "https://www.canada.ca/en/public-health.atom.xml",
+      "naics": ["62"],
+      "keywords": ["hospital", "health", "laboratory", "pandemic", "facility"],
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "id": "canadian_heritage",
+      "name": "Canadian Heritage",
+      "url": "https://www.canada.ca/en/canadian-heritage.atom.xml",
+      "naics": ["51", "71"],
+      "keywords": ["cultural", "museum", "stadium", "arena", "film", "broadcast", "entertainment", "heritage"],
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "id": "esdc",
+      "name": "Employment and Social Development Canada",
+      "url": "https://www.canada.ca/en/employment-social-development.atom.xml",
+      "naics": ["61"],
+      "keywords": ["university", "college", "school", "training", "campus", "education", "skills"],
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "id": "tbs",
+      "name": "Treasury Board of Canada Secretariat",
+      "url": "https://www.canada.ca/en/treasury-board-secretariat.atom.xml",
+      "naics": ["91"],
+      "keywords": ["government", "spending", "procurement", "budget", "departmental", "estimates"],
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "id": "fcac",
+      "name": "Financial Consumer Agency of Canada",
+      "url": "https://www.canada.ca/en/financial-consumer-agency.atom.xml",
+      "naics": ["52"],
+      "keywords": ["financial", "consumer", "banking", "mortgage", "lending", "credit"],
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "id": "canada_gazette",
+      "name": "Canada Gazette",
+      "url": "https://gazette.gc.ca/rss/sc-rb-eng.xml",
+      "naics": ["all"],
+      "keywords": ["regulation", "order", "approval", "assessment", "environmental", "amendment", "act"],
+      "priority": 2,
+      "enabled": true
+    },
+    {
+      "id": "open_government",
+      "name": "Open Government",
+      "url": "https://open.canada.ca/data/en/feeds/dataset.atom",
+      "naics": ["all"],
+      "keywords": ["consultation", "data", "release", "open"],
+      "priority": 3,
+      "enabled": true
+    }
+  ],
+  "provincial": [
+    {
+      "id": "bc_gov_news",
+      "name": "BC Government News",
+      "url": "https://news.gov.bc.ca/feed",
+      "jurisdiction": "British Columbia",
+      "cma_list": ["Vancouver", "Victoria", "Kelowna", "Abbotsford-Mission", "Nanaimo"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "alberta_news",
+      "name": "Alberta News",
+      "url": "https://www.alberta.ca/news.rss",
+      "jurisdiction": "Alberta",
+      "cma_list": ["Calgary", "Edmonton"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "sask_news",
+      "name": "Saskatchewan News",
+      "url": "https://www.saskatchewan.ca/government/news-and-media/rss",
+      "jurisdiction": "Saskatchewan",
+      "cma_list": ["Saskatoon", "Regina"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "manitoba_news",
+      "name": "Manitoba News",
+      "url": "https://news.gov.mb.ca/news/rss",
+      "jurisdiction": "Manitoba",
+      "cma_list": ["Winnipeg"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "ontario_newsroom",
+      "name": "Ontario Newsroom",
+      "url": "https://news.ontario.ca/newsroom/en/rss",
+      "jurisdiction": "Ontario",
+      "cma_list": ["Toronto", "Ottawa-Gatineau", "Hamilton", "Kitchener-Cambridge-Waterloo", "London", "Windsor", "St. Catharines-Niagara", "Oshawa", "Barrie", "Guelph", "Brantford"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "quebec_nouvelles",
+      "name": "Quebec Nouvelles",
+      "url": "https://www.quebec.ca/nouvelles/rss",
+      "jurisdiction": "Quebec",
+      "cma_list": ["Montreal", "Quebec City", "Sherbrooke", "Saguenay", "Trois-Rivieres"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "quebec_assnat",
+      "name": "Quebec Assemblee nationale",
+      "url": "https://www.assnat.qc.ca/fr/fils-rss/rss.xml",
+      "jurisdiction": "Quebec",
+      "cma_list": ["Quebec City"],
+      "priority": 2,
+      "enabled": true
+    },
+    {
+      "id": "nb_gnb",
+      "name": "New Brunswick Government",
+      "url": "https://www2.gnb.ca/content/gnb/en/news/rss.xml",
+      "jurisdiction": "New Brunswick",
+      "cma_list": ["Moncton", "Saint John", "Fredericton"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "nova_scotia_news",
+      "name": "Nova Scotia News",
+      "url": "https://novascotia.ca/news/feed/",
+      "jurisdiction": "Nova Scotia",
+      "cma_list": ["Halifax"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "pei_news",
+      "name": "PEI News",
+      "url": "https://www.princeedwardisland.ca/en/news/feed",
+      "jurisdiction": "Prince Edward Island",
+      "cma_list": ["Charlottetown"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "nl_releases",
+      "name": "Newfoundland and Labrador Releases",
+      "url": "https://www.gov.nl.ca/releases/feed/",
+      "jurisdiction": "Newfoundland and Labrador",
+      "cma_list": ["St. John's"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "yukon_news",
+      "name": "Yukon News",
+      "url": "https://yukon.ca/en/news/rss.xml",
+      "jurisdiction": "Yukon",
+      "cma_list": ["Whitehorse"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "nwt_news",
+      "name": "Northwest Territories News",
+      "url": "https://www.gov.nt.ca/en/newsroom/feed",
+      "jurisdiction": "Northwest Territories",
+      "cma_list": ["Yellowknife"],
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "id": "nunavut_news",
+      "name": "Nunavut News",
+      "url": "https://news.gov.nu.ca/feed/",
+      "jurisdiction": "Nunavut",
+      "cma_list": ["Iqaluit"],
+      "priority": 1,
+      "enabled": true
+    }
+  ],
+  "municipal": [
+    {
+      "id": "civicinfo_bc",
+      "name": "CivicInfo BC",
+      "url": "https://www.civicinfo.bc.ca/feeds/rss",
+      "jurisdiction": "British Columbia",
+      "priority": 2,
+      "enabled": true
+    }
+  ],
+  "rss_discovery": {
+    "description": "Auto-discovery config for --test-feeds",
+    "probe_paths": ["/feed", "/rss", "/rss.xml", "/feed.xml", "/atom.xml", "/news/feed", "/news/rss"],
+    "link_rel_types": ["application/rss+xml", "application/atom+xml"],
+    "output_file": "rss_discovery_{date}.txt"
+  }
+}

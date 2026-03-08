@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canadian Macro Strategic Dashboard</title>
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1519832979-6fa011b87667?w=1920&q=80">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.7/d3.layout.cloud.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+<style>
+:root {
+  --bg-primary: #FAFBFD;
+  --bg-white: #FFFFFF;
+  --bg-subtle: #F4F6F9;
+  --bg-hover: #EEF1F6;
+  --border-light: #E8ECF1;
+  --border-medium: #D1D8E0;
+  --text-primary: #1A2332;
+  --text-secondary: #5A6B7F;
+  --text-tertiary: #8C99A9;
+  --accent-blue: #2E6BE6;
+  --accent-blue-light: #EBF2FF;
+  --accent-blue-soft: #3D7BF5;
+  --status-green: #16A34A;
+  --status-green-bg: #F0FDF4;
+  --status-red: #DC2626;
+  --status-red-bg: #FEF2F2;
+  --status-amber: #D97706;
+  --status-amber-bg: #FFFBEB;
+  --status-blue: #2563EB;
+  --status-blue-bg: #EFF6FF;
+  --status-purple: #7C3AED;
+  --status-purple-bg: #F5F3FF;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono { font-family: var(--font-mono); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Animations ── */
+@keyframes shimmer {
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-subtle) 25%, var(--bg-hover) 50%, var(--bg-subtle) 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.8s infinite linear;
+  border-radius: var(--radius-sm);
+}
+.fade-in { animation: fadeIn 0.3s ease-out forwards; }
+
+/* ── Layout ── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+/* ── Card ── */
+.card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  padding: 24px;
+  transition: box-shadow 0.15s ease;
+}
+.card:hover { box-shadow: var(--shadow-sm); }
+.card-lg { padding: 32px; }
+
+/* ── Hero ── */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-subtle);
+  padding: 64px 0 56px;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1519832979-6fa011b87667?w=1920&q=80');
+  background-size: cover;
+  background-position: center 40%;
+  filter: saturate(0.25) brightness(1.15);
+  opacity: 0.18;
+  z-index: 0;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(250,251,253,0.92) 40%, rgba(244,246,249,0.75) 100%);
+  z-index: 1;
+}
+.hero-content { position: relative; z-index: 2; }
+.hero-eyebrow {
+  font-size: var(--text-xs);
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.hero-title {
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.hero-subtitle {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin-bottom: 24px;
+}
+.trust-badges {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.trust-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.trust-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+}
+
+/* ── Sticky Nav ── */
+.main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xs);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 24px;
+}
+.nav-tab {
+  position: relative;
+  padding: 14px 16px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+.nav-tab:hover { color: var(--text-primary); }
+.nav-tab.active {
+  color: var(--accent-blue);
+}
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: var(--accent-blue);
+  border-radius: 1px;
+}
+.nav-meta {
+  text-align: center;
+  padding: 6px 0 8px;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* ── Tab Content ── */
+.tab-panel { display: none; padding: 32px 0 64px; }
+.tab-panel.active { display: block; }
+
+/* ── Section Banner ── */
+.section-banner {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+  margin-bottom: 32px;
+  border-radius: var(--radius-md);
+}
+.section-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.2) brightness(1.1);
+  opacity: 0.15;
+}
+.section-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(250,251,253,0.85) 0%, rgba(244,246,249,0.95) 100%);
+}
+.section-banner-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: 0 32px;
+}
+.section-banner-title {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.section-banner-sub {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ── Section Headers ── */
+.section-header {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-header svg { width: 18px; height: 18px; color: var(--text-tertiary); }
+
+/* ── Indicator Pills ── */
+.pill-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 0;
+}
+.pill-strip::-webkit-scrollbar { display: none; }
+.indicator-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 16px;
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  min-width: 120px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+.indicator-pill:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-sm);
+}
+.pill-label {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+.pill-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.pill-change {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+.pill-change.up { color: var(--status-green); }
+.pill-change.down { color: var(--status-red); }
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.badge-proposed { background: var(--status-blue-bg); color: var(--status-blue); }
+.badge-proposed .badge-dot { background: var(--status-blue); }
+.badge-review { background: var(--status-blue-bg); color: var(--status-blue); }
+.badge-review .badge-dot { background: var(--status-blue); }
+.badge-approved { background: var(--status-green-bg); color: var(--status-green); }
+.badge-approved .badge-dot { background: var(--status-green); }
+.badge-construction { background: var(--status-green-bg); color: #15803d; }
+.badge-construction .badge-dot { background: #15803d; }
+.badge-paused { background: var(--status-amber-bg); color: var(--status-amber); }
+.badge-paused .badge-dot { background: var(--status-amber); }
+.badge-expansion { background: var(--status-purple-bg); color: var(--status-purple); }
+.badge-expansion .badge-dot { background: var(--status-purple); }
+
+.badge-high { background: var(--status-red-bg); color: var(--status-red); }
+.badge-medium { background: var(--status-amber-bg); color: var(--status-amber); }
+.badge-low, .badge-monitoring { background: var(--status-blue-bg); color: var(--status-blue); }
+
+.source-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+.source-badge.article { background: var(--accent-blue-light); color: var(--accent-blue); }
+.source-badge.press_release { background: var(--status-green-bg); color: var(--status-green); }
+.source-badge.gazette { background: var(--status-amber-bg); color: var(--status-amber); }
+.source-badge.registry { background: var(--status-purple-bg); color: var(--status-purple); }
+.source-badge.api { background: var(--bg-subtle); color: var(--text-secondary); }
+.source-badge.government { background: var(--status-blue-bg); color: var(--status-blue); }
+
+/* ── Province Selector ── */
+.prov-selector {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+  margin-bottom: 24px;
+}
+.prov-btn {
+  padding: 8px 14px;
+  border-radius: var(--radius-lg);
+  border: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+}
+.prov-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.prov-btn.active { background: var(--accent-blue); color: #fff; }
+
+/* ── Sub-tabs (pill style) ── */
+.sub-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  width: fit-content;
+}
+.sub-tab {
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: transparent;
+  color: var(--text-secondary);
+}
+.sub-tab:hover { color: var(--text-primary); }
+.sub-tab.active { background: var(--bg-white); color: var(--accent-blue); box-shadow: var(--shadow-xs); }
+
+/* ── Writing Content ── */
+.writing-content {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+.writing-content ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+.writing-content li {
+  margin-bottom: 10px;
+  font-size: var(--text-sm);
+  color: #3d4f63;
+  line-height: 1.65;
+}
+.writing-content sup {
+  color: var(--accent-blue);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.7em;
+}
+.writing-content strong {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+/* ── Sources Footer ── */
+.sources-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: color 0.15s;
+}
+.sources-toggle:hover { color: var(--text-secondary); }
+.sources-list {
+  display: none;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-light);
+}
+.sources-list.open { display: block; }
+.source-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.source-item a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+.source-item a:hover { text-decoration: underline; }
+.source-num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  min-width: 24px;
+}
+
+/* ── Project Cards ── */
+.project-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 12px;
+}
+.project-card:hover { box-shadow: var(--shadow-sm); border-color: var(--border-medium); }
+.project-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.project-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 80px;
+  padding: 6px 12px;
+  background: var(--accent-blue-light);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  white-space: nowrap;
+}
+.project-value.nd { background: var(--bg-subtle); color: var(--text-tertiary); font-size: var(--text-sm); }
+.project-info { flex: 1; min-width: 0; }
+.project-name {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.project-meta {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.project-detail {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.project-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+.project-footer a { color: var(--accent-blue); text-decoration: none; }
+.project-footer a:hover { text-decoration: underline; }
+
+/* ── Project Expanded ── */
+.project-expanded {
+  display: none;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+.project-card.expanded .project-expanded { display: block; }
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+  position: relative;
+}
+.timeline-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.timeline-line {
+  position: absolute;
+  left: 4px;
+  top: 20px;
+  bottom: -10px;
+  width: 2px;
+  background: var(--border-light);
+}
+.timeline-content { flex: 1; }
+.timeline-date { font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); }
+.timeline-detail { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; line-height: 1.5; }
+.stale-warning {
+  background: var(--status-amber-bg);
+  color: var(--status-amber);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  margin-bottom: 12px;
+}
+
+/* ── Filter Bar ── */
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.filter-input {
+  padding: 10px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  background: var(--bg-white);
+  color: var(--text-primary);
+  min-width: 200px;
+  transition: border-color 0.15s;
+}
+.filter-input:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(46,107,230,0.1); }
+.filter-select {
+  padding: 10px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  background: var(--bg-white);
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238C99A9' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.filter-select:focus { outline: none; border-color: var(--accent-blue); }
+
+/* ── Results Summary ── */
+.results-summary {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+  padding: 8px 0;
+}
+
+/* ── Calendar ── */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 32px;
+}
+.cal-header {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 8px 4px;
+  text-transform: uppercase;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 6px 4px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  min-height: 60px;
+}
+.cal-day.today { border-color: var(--accent-blue); background: var(--accent-blue-light); }
+.cal-day.empty { background: transparent; border-color: transparent; }
+.cal-day-num { font-weight: 600; font-size: var(--text-xs); margin-bottom: 4px; }
+.cal-dots { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; }
+.cal-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+}
+.cal-dot.high { background: var(--status-red); }
+.cal-dot.medium { background: var(--status-amber); }
+.cal-dot.low, .cal-dot.monitoring { background: var(--accent-blue-soft); }
+
+/* ── Event Cards ── */
+.event-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  transition: box-shadow 0.15s;
+}
+.event-card:hover { box-shadow: var(--shadow-sm); }
+.event-card.impact-high { border-left: 3px solid var(--status-red); }
+.event-card.impact-medium { border-left: 3px solid var(--status-amber); }
+.event-date-block {
+  text-align: center;
+  min-width: 48px;
+}
+.event-day { font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); line-height: 1; }
+.event-month { font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; }
+.event-info { flex: 1; }
+.event-name { font-size: var(--text-base); font-weight: 500; color: var(--text-primary); }
+.event-institution { font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* ── Sentiment Word Cloud ── */
+.sentiment-container { display: grid; grid-template-columns: 55% 45%; gap: 24px; }
+.wc-canvas { width: 100%; height: 350px; position: relative; }
+.wc-tooltip {
+  position: fixed;
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-md);
+  font-size: var(--text-sm);
+  max-width: 280px;
+  pointer-events: none;
+  z-index: 200;
+  display: none;
+}
+.pulse-bar-container { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.pulse-bar-label { font-size: var(--text-sm); color: var(--text-secondary); min-width: 110px; }
+.pulse-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-subtle);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.pulse-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.pulse-bar-score { font-size: var(--text-xs); font-family: var(--font-mono); min-width: 48px; text-align: right; }
+.pulse-bar-sentiment { font-size: var(--text-xs); min-width: 100px; }
+.pulse-text {
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: var(--text-secondary);
+  border-left: 3px solid var(--accent-blue-light);
+  padding-left: 16px;
+  margin-bottom: 20px;
+}
+
+/* ── Yield Curve & Charts ── */
+.chart-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.chart-title { font-size: var(--text-base); font-weight: 600; color: var(--text-primary); }
+.time-toggles { display: flex; gap: 4px; }
+.time-btn {
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  background: var(--bg-white);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.time-btn:hover { background: var(--bg-subtle); }
+.time-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+/* ── Industry Cards ── */
+.industry-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  transition: box-shadow 0.15s;
+}
+.industry-card:hover { box-shadow: var(--shadow-sm); }
+.industry-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.naics-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-blue-light);
+  color: var(--accent-blue);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.industry-name { font-size: var(--text-base); font-weight: 600; color: var(--text-primary); }
+.industry-metrics {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.industry-metric-label { font-size: var(--text-xs); color: var(--text-tertiary); }
+.industry-metric-val { font-size: var(--text-sm); font-family: var(--font-mono); font-weight: 600; }
+
+/* ── Load More ── */
+.load-more-btn {
+  display: block;
+  margin: 24px auto;
+  padding: 12px 32px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-white);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.load-more-btn:hover { background: var(--bg-subtle); color: var(--text-primary); }
+
+/* ── Footer ── */
+.site-footer {
+  text-align: center;
+  padding: 32px 24px;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  border-top: 1px solid var(--border-light);
+  margin-top: 64px;
+}
+
+/* ── Empty State ── */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-tertiary);
+}
+.empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-size: var(--text-sm); }
+
+/* ── Responsive ── */
+@media (max-width: 1199px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .sentiment-container { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .container { padding: 0 16px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .hero { padding: 40px 0 36px; }
+  .hero-title { font-size: var(--text-2xl); }
+  .section-banner { height: 80px; }
+  .card { padding: 16px; }
+  .card-lg { padding: 20px; }
+  .project-card-header { flex-direction: column; gap: 8px; }
+  .project-value { text-align: left; min-width: auto; }
+  .filter-bar { flex-direction: column; }
+  .filter-input, .filter-select { width: 100%; min-width: auto; }
+  .nav-inner { padding: 0 16px; }
+  .cal-day { min-height: 40px; }
+  .event-card { flex-direction: column; gap: 8px; }
+}
+
+/* ── Print ── */
+@media print {
+  .main-nav, .filter-bar, .load-more-btn, .sub-tabs, .prov-selector, .time-toggles { display: none !important; }
+  .tab-panel { display: block !important; page-break-inside: avoid; }
+  .sources-list { display: block !important; }
+  .project-expanded { display: block !important; }
+  body { background: #fff; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-content container">
+    <div class="hero-eyebrow">Weekly Briefing</div>
+    <h1 class="hero-title">Canadian Macro Dashboard</h1>
+    <p class="hero-subtitle">Weekly intelligence on the economy, provinces, industries, and markets.</p>
+    <div class="trust-badges">
+      <span class="trust-badge"><span class="trust-dot"></span> Updated Weekly</span>
+      <span class="trust-badge"><span class="trust-dot"></span> Primary Source Data</span>
+      <span class="trust-badge"><span class="trust-dot"></span> Institutional Research</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MAIN NAV ═══ -->
+<nav class="main-nav" role="navigation" aria-label="Main navigation">
+  <div class="container">
+    <div class="nav-inner no-scrollbar">
+      <button class="nav-tab active" onclick="switchTab('overview')" data-tab="overview">Overview</button>
+      <button class="nav-tab" onclick="switchTab('provinces')" data-tab="provinces">Provinces</button>
+      <button class="nav-tab" onclick="switchTab('industries')" data-tab="industries">Industries</button>
+      <button class="nav-tab" onclick="switchTab('markets')" data-tab="markets">Markets</button>
+      <button class="nav-tab" onclick="switchTab('projects')" data-tab="projects">Projects</button>
+      <button class="nav-tab" onclick="switchTab('calendar')" data-tab="calendar">Calendar</button>
+    </div>
+  </div>
+  <div class="nav-meta" id="nav-meta">Loading...</div>
+</nav>
+
+<!-- ═══ TAB: OVERVIEW ═══ -->
+<div class="tab-panel active" id="panel-overview">
+  <div class="container">
+
+    <!-- Executive Summary -->
+    <div class="card card-lg" style="margin-bottom:24px">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Executive Summary
+      </div>
+      <div id="exec-summary" class="writing-content"><div class="skeleton" style="height:120px"></div></div>
+      <div id="exec-sources"></div>
+    </div>
+
+    <!-- National Analysis -->
+    <div class="card card-lg" style="margin-bottom:24px">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        National Analysis
+      </div>
+      <div id="national-analysis" class="writing-content"><div class="skeleton" style="height:160px"></div></div>
+      <div id="national-sources"></div>
+    </div>
+
+    <!-- Key Indicators -->
+    <div style="margin-bottom:32px">
+      <div class="section-header">Key Indicators</div>
+      <div class="pill-strip no-scrollbar" id="key-indicators">
+        <div class="skeleton" style="width:120px;height:72px"></div>
+        <div class="skeleton" style="width:120px;height:72px"></div>
+        <div class="skeleton" style="width:120px;height:72px"></div>
+      </div>
+    </div>
+
+    <!-- Global Vectors -->
+    <div style="margin-bottom:32px">
+      <div class="section-header">Global Vectors</div>
+      <div class="grid-4" id="global-vectors">
+        <div class="skeleton" style="height:200px"></div>
+        <div class="skeleton" style="height:200px"></div>
+        <div class="skeleton" style="height:200px"></div>
+        <div class="skeleton" style="height:200px"></div>
+      </div>
+    </div>
+
+    <!-- Consumer Sentiment -->
+    <div class="card card-lg" style="margin-bottom:32px" id="sentiment-section">
+      <div class="sentiment-container">
+        <div>
+          <div class="section-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Consumer Sentiment
+          </div>
+          <p style="font-size:var(--text-sm);color:var(--text-tertiary);margin-bottom:12px">What Canadians are talking about this week</p>
+          <div id="sentiment-index" style="margin-bottom:16px"></div>
+          <div id="wordcloud-container" class="wc-canvas">
+            <div class="empty-state" id="wc-empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              <p>Consumer sentiment data will be available after the next pipeline run</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:var(--text-base);font-weight:600;color:var(--text-primary);margin-bottom:12px">Consumer Pulse</div>
+          <div class="pulse-text" id="consumer-pulse">
+            <div class="skeleton" style="height:80px"></div>
+          </div>
+          <div style="font-size:var(--text-sm);font-weight:600;color:var(--text-primary);margin-bottom:12px">Category Sentiment</div>
+          <div id="category-bars"></div>
+          <p style="font-size:var(--text-xs);color:var(--text-tertiary);margin-top:16px">Sources: r/PersonalFinanceCanada, r/canadahousing, r/CanadianInvestor, r/canada &middot; Google Trends Canada &middot; CBC comments</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Events Watchlist -->
+    <div style="margin-bottom:32px">
+      <div class="section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Events Watchlist
+      </div>
+      <div id="watchlist-events">
+        <div class="skeleton" style="height:60px;margin-bottom:8px"></div>
+        <div class="skeleton" style="height:60px;margin-bottom:8px"></div>
+        <div class="skeleton" style="height:60px;margin-bottom:8px"></div>
+      </div>
+    </div>
+
+    <!-- Sources Footer -->
+    <div id="overview-sources-footer"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: PROVINCES ═══ -->
+<div class="tab-panel" id="panel-provinces">
+  <div class="container">
+    <div class="section-banner" id="prov-banner">
+      <div class="section-banner-content">
+        <div class="section-banner-title" id="prov-banner-title">Provincial Analysis</div>
+        <div class="section-banner-sub">Economic trends by province, updated weekly</div>
+      </div>
+    </div>
+    <div class="sub-tabs" id="prov-sub-tabs">
+      <button class="sub-tab active" onclick="switchProvSubTab('overview')">Provincial Overview</button>
+      <button class="sub-tab" onclick="switchProvSubTab('goods')">Goods Sector</button>
+      <button class="sub-tab" onclick="switchProvSubTab('services')">Services Sector</button>
+    </div>
+    <div class="prov-selector no-scrollbar" id="prov-selector"></div>
+    <div id="prov-content">
+      <div class="skeleton" style="height:400px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: INDUSTRIES ═══ -->
+<div class="tab-panel" id="panel-industries">
+  <div class="container">
+    <div class="section-banner" id="ind-banner" style="margin-bottom:32px">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Industry Analysis</div>
+        <div class="section-banner-sub">Trends by NAICS sector</div>
+      </div>
+    </div>
+    <div style="margin-bottom:24px">
+      <h3 style="font-size:var(--text-lg);font-weight:600;color:var(--text-primary);margin-bottom:16px">Goods-Producing</h3>
+      <div class="grid-2" id="goods-industries"></div>
+    </div>
+    <div>
+      <h3 style="font-size:var(--text-lg);font-weight:600;color:var(--text-primary);margin-bottom:16px">Services-Producing</h3>
+      <div class="grid-2" id="services-industries"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: MARKETS ═══ -->
+<div class="tab-panel" id="panel-markets">
+  <div class="container">
+    <div class="section-banner" id="mkt-banner" style="margin-bottom:32px">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Markets &amp; Commodities</div>
+        <div class="section-banner-sub">Live market data and yield curves</div>
+      </div>
+    </div>
+
+    <!-- Commodities Grid -->
+    <div class="section-header">Commodities</div>
+    <div class="grid-3" id="commodities-grid" style="margin-bottom:32px"></div>
+
+    <!-- Yield Curve -->
+    <div class="chart-card" style="margin-bottom:32px">
+      <div class="chart-header">
+        <div class="chart-title">Government of Canada Yield Curve</div>
+      </div>
+      <canvas id="yield-chart" height="280"></canvas>
+      <div id="yield-spread" style="margin-top:12px;font-size:var(--text-sm);color:var(--text-secondary)"></div>
+      <p style="margin-top:8px;font-size:var(--text-xs);color:var(--text-tertiary)">Source: Bank of Canada Valet API</p>
+    </div>
+
+    <!-- Financial Markets -->
+    <div class="section-header">Financial Markets</div>
+    <div class="grid-2" style="margin-bottom:32px">
+      <div class="card">
+        <div style="font-size:var(--text-base);font-weight:600;margin-bottom:12px">Indices</div>
+        <div id="indices-list"></div>
+      </div>
+      <div class="card">
+        <div style="font-size:var(--text-base);font-weight:600;margin-bottom:12px">Currencies</div>
+        <div id="fx-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: PROJECTS ═══ -->
+<div class="tab-panel" id="panel-projects">
+  <div class="container">
+    <div class="section-banner" id="proj-banner" style="margin-bottom:24px">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Capital Projects Tracker</div>
+        <div class="section-banner-sub">Major infrastructure and investment projects across Canada</div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <input type="text" class="filter-input" id="proj-search" placeholder="Search projects..." aria-label="Search projects">
+      <select class="filter-select" id="proj-province" aria-label="Filter by province"><option value="">All Provinces</option></select>
+      <select class="filter-select" id="proj-sector" aria-label="Filter by sector"><option value="">All Sectors</option></select>
+      <select class="filter-select" id="proj-status" aria-label="Filter by status">
+        <option value="">All Statuses</option>
+        <option>Proposed</option><option>Under Review</option><option>Approved</option>
+        <option>Under Construction</option><option>Paused</option><option>Expansion</option>
+      </select>
+      <select class="filter-select" id="proj-sort" aria-label="Sort by">
+        <option value="value">Value (High→Low)</option>
+        <option value="updated">Recently Updated</option>
+        <option value="name">Name A-Z</option>
+      </select>
+    </div>
+    <div class="results-summary" id="proj-summary"></div>
+    <div id="proj-list"></div>
+    <button class="load-more-btn" id="proj-load-more" style="display:none" onclick="loadMoreProjects()">Load more projects</button>
+  </div>
+</div>
+
+<!-- ═══ TAB: CALENDAR ═══ -->
+<div class="tab-panel" id="panel-calendar">
+  <div class="container">
+    <div class="section-banner" id="cal-banner" style="margin-bottom:32px">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Economic Calendar</div>
+        <div class="section-banner-sub">Upcoming data releases and policy decisions</div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:32px">
+      <div id="cal-month-label" style="font-size:var(--text-lg);font-weight:600;margin-bottom:16px;text-align:center"></div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div class="section-header">Upcoming Events</div>
+    <div id="cal-events"></div>
+  </div>
+</div>
+
+<!-- ═══ WORD CLOUD TOOLTIP ═══ -->
+<div class="wc-tooltip" id="wc-tooltip"></div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer">
+  Canadian Macro Strategic Dashboard &middot; Data from Bank of Canada, Statistics Canada, Yahoo Finance &middot; All claims independently sourced &middot; <span id="footer-date"></span>
+</footer>
+
+<!-- ═══ JAVASCRIPT ═══ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy, limit, where, startAfter } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC2Vdn6NKQWIyR6whXgp_QkBULDR8GHg0E",
+  authDomain: "can-macro-dashboard.firebaseapp.com",
+  projectId: "can-macro-dashboard",
+  storageBucket: "can-macro-dashboard.firebasestorage.app",
+  messagingSenderId: "934745756616",
+  appId: "1:934745756616:web:b592a858ff7239bb43a6fd"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ── State ──
+let D = null; // newsletter data
+let allProjects = [];
+let filteredProjects = [];
+let projectPage = 0;
+const PAGE_SIZE = 20;
+let selectedProvince = 'ON';
+let provSubTab = 'overview';
+let chartInstances = {};
+let bannerImages = {};
+
+// ── Province Config ──
+const PROVS = [
+  {code:'BC',name:'British Columbia',img:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&q=80'},
+  {code:'AB',name:'Alberta',img:'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=80'},
+  {code:'SK',name:'Saskatchewan',img:'https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=1600&q=80'},
+  {code:'MB',name:'Manitoba',img:'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600&q=80'},
+  {code:'ON',name:'Ontario',img:'https://images.unsplash.com/photo-1517090504332-edb3de1de924?w=1600&q=80'},
+  {code:'QC',name:'Quebec',img:'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1600&q=80'},
+  {code:'NB',name:'New Brunswick',img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80'},
+  {code:'NS',name:'Nova Scotia',img:'https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1600&q=80'},
+  {code:'PE',name:'Prince Edward Island',img:'https://images.unsplash.com/photo-1499346030926-9a72daac6c63?w=1600&q=80'},
+  {code:'NL',name:'Newfoundland and Labrador',img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80'},
+  {code:'YT',name:'Yukon',img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80'},
+  {code:'NT',name:'Northwest Territories',img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80'},
+  {code:'NU',name:'Nunavut',img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80'},
+];
+const provByCode = Object.fromEntries(PROVS.map(p=>[p.code,p]));
+const provByName = {};
+PROVS.forEach(p => {
+  provByName[p.name] = p;
+  provByName[p.name.toLowerCase()] = p;
+});
+
+// ── Helpers ──
+function san(html) { return DOMPurify.sanitize(html || '', {ADD_TAGS:['sup','strong','ul','li','a'],ADD_ATTR:['href','target','rel','class']}); }
+function esc(s) { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function $(id) { return document.getElementById(id); }
+function changeClass(v) { return v && v.startsWith('-') ? 'down' : v && v.startsWith('+') ? 'up' : ''; }
+function changeArrow(v) { return v && v.startsWith('-') ? '&#9662;' : v && v.startsWith('+') ? '&#9652;' : ''; }
+
+function statusBadge(status) {
+  const s = (status||'').toLowerCase();
+  let cls = 'badge-proposed';
+  if (s.includes('review')) cls = 'badge-review';
+  else if (s.includes('approved')) cls = 'badge-approved';
+  else if (s.includes('construction')) cls = 'badge-construction';
+  else if (s.includes('paused') || s.includes('suspend')) cls = 'badge-paused';
+  else if (s.includes('expan')) cls = 'badge-expansion';
+  return `<span class="badge ${cls}"><span class="badge-dot"></span>${esc(status)}</span>`;
+}
+
+function impactBadge(impact) {
+  const i = (impact||'').toLowerCase();
+  let cls = 'badge-low';
+  if (i === 'high') cls = 'badge-high';
+  else if (i === 'medium') cls = 'badge-medium';
+  return `<span class="badge ${cls}">${esc(impact||'Low')}</span>`;
+}
+
+function srcTypeBadge(type) {
+  const t = (type||'article').toLowerCase().replace(/\s+/g,'_');
+  return `<span class="source-badge ${t}">${esc(type||'Article')}</span>`;
+}
+
+function sourcesFooter(sources, containerId) {
+  if (!sources || !sources.length) return;
+  const el = $(containerId);
+  if (!el) return;
+  el.innerHTML = `
+    <button class="sources-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('span').textContent=this.nextElementSibling.classList.contains('open')?'Hide':'Show'">
+      <span>Show</span> all sources (${sources.length})
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="sources-list">
+      ${sources.map((s,i) => `
+        <div class="source-item">
+          <span class="source-num">[${s.id||i+1}]</span>
+          <a href="${esc(s.url||'#')}" target="_blank" rel="noopener noreferrer">${esc(s.title||'Source')}</a>
+          ${s.type ? srcTypeBadge(s.type) : ''}
+          ${s.verified_date ? `<span style="font-size:var(--text-xs);color:var(--text-tertiary)">Verified ${esc(s.verified_date)}</span>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function parseValue(v) {
+  if (!v || v === 'Not disclosed') return 0;
+  const s = String(v).replace(/[,$]/g,'');
+  const m = s.match(/([\d.]+)\s*(B|M|K)?/i);
+  if (!m) return 0;
+  const n = parseFloat(m[1]);
+  const u = (m[2]||'').toUpperCase();
+  if (u==='B') return n*1e9;
+  if (u==='M') return n*1e6;
+  if (u==='K') return n*1e3;
+  return n;
+}
+
+function fmtValue(v) {
+  if (!v || v === 'Not disclosed') return 'N/D';
+  return v;
+}
+
+function setBannerImg(elId, url) {
+  const el = $(elId);
+  if (!el) return;
+  el.style.setProperty('--banner-img', `url('${url}')`);
+  const style = el.querySelector('style') || document.createElement('style');
+  style.textContent = `#${elId}::before { background-image: url('${url}'); }`;
+  if (!style.parentNode) el.appendChild(style);
+}
+
+// ── Tab Switching ──
+window.switchTab = function(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  $(`panel-${tab}`).classList.add('active');
+  document.querySelector(`.nav-tab[data-tab="${tab}"]`).classList.add('active');
+  // Lazy-load banner images
+  if (tab === 'provinces') setBannerImg('prov-banner', provByCode[selectedProvince]?.img || PROVS[4].img);
+  if (tab === 'industries') setBannerImg('ind-banner', 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80');
+  if (tab === 'markets') setBannerImg('mkt-banner', 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1600&q=80');
+  if (tab === 'projects') setBannerImg('proj-banner', 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1600&q=80');
+  if (tab === 'calendar') setBannerImg('cal-banner', 'https://images.unsplash.com/photo-1519832979-6fa011b87667?w=1600&q=80');
+};
+
+// ══════════════════════════════════════
+// RENDER: OVERVIEW
+// ══════════════════════════════════════
+function renderOverview() {
+  if (!D) return;
+  // Executive Summary
+  $('exec-summary').innerHTML = san(D.executive_summary || '<p style="color:var(--text-tertiary)">Executive summary not available.</p>');
+
+  // National Analysis
+  const nat = D.national || {};
+  $('national-analysis').innerHTML = san(nat.analysis || '<p style="color:var(--text-tertiary)">National analysis not available.</p>');
+  sourcesFooter(nat.sources, 'national-sources');
+
+  // Collect all overview sources for footer
+  let allSources = [...(nat.sources||[])];
+  (D.global||[]).forEach(g => { if(g.sources) allSources.push(...g.sources); });
+  sourcesFooter(allSources, 'overview-sources-footer');
+
+  // Key Indicators
+  renderKeyIndicators();
+
+  // Global Vectors
+  renderGlobal();
+
+  // Consumer Sentiment
+  renderSentiment();
+
+  // Watchlist
+  renderWatchlist();
+}
+
+function renderKeyIndicators() {
+  const m = D.metrics || {};
+  const meta = D.indicatorMeta || {};
+  const srcMap = {
+    'bocRate': 'https://www.bankofcanada.ca/rates/indicators/key-variables/',
+    'cpi': 'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401',
+    'unemployment': 'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701',
+    'housingStarts': 'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',
+    'realGdp': 'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610010401',
+  };
+
+  const pills = [
+    {key:'bocRate', label:'POLICY RATE'},
+    {key:'realGdp', label:'GDP YoY'},
+    {key:'cpi', label:'CPI'},
+    {key:'unemployment', label:'UNEMPLOYMENT'},
+    {key:'housingStarts', label:'HOUSING STARTS'},
+  ];
+
+  // Add market indicators from hard data
+  const fx = (D.financialMarkets?.fx||[]).find(f => f.name && f.name.includes('USD'));
+  if (fx) pills.push({label:'CAD/USD', value: fx.value, change: fx.day});
+
+  const wti = null;
+  (D.commodities||[]).forEach(cat => {
+    (cat.items||[]).forEach(item => {
+      if (item.name && item.name.includes('WTI')) pills.push({label:'WTI CRUDE', value: item.val, change: item.yy});
+    });
+  });
+
+  const tsx = (D.financialMarkets?.indices||[]).find(i => i.name && i.name.includes('TSX'));
+  if (tsx) pills.push({label:'TSX', value: tsx.value, change: tsx.day});
+
+  // Yield
+  const y10 = (D.yieldCurve||[]).find(y => y.term === '10Y');
+  if (y10) pills.push({label:'10Y YIELD', value: y10.yield + '%'});
+
+  let html = '';
+  for (const p of pills) {
+    const val = p.value || m[p.key] || 'N/A';
+    const ch = p.change || (meta[p.key]?.change) || '';
+    const cls = changeClass(ch);
+    const url = p.key ? srcMap[p.key] : '';
+    html += `
+      <a class="indicator-pill" ${url ? `href="${url}" target="_blank" rel="noopener noreferrer"` : ''}>
+        <span class="pill-label">${p.label}</span>
+        <span class="pill-value">${esc(val)}</span>
+        ${ch ? `<span class="pill-change ${cls}">${changeArrow(ch)} ${esc(ch)}</span>` : ''}
+      </a>
+    `;
+  }
+  $('key-indicators').innerHTML = html;
+}
+
+function renderGlobal() {
+  const regions = D.global || [];
+  const vectors = D.globalVectors || {};
+  let html = '';
+  for (const r of regions) {
+    const ind = r.indicators || {};
+    html += `
+      <div class="card">
+        <div style="font-size:var(--text-xl);margin-bottom:8px">${esc(r.emoji||'')} ${esc(r.region)}</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+          ${ind.gdp ? `<span style="font-size:var(--text-xs);color:var(--text-tertiary)">GDP <strong class="mono" style="color:var(--text-primary)">${esc(ind.gdp)}</strong></span>` : ''}
+          ${ind.rate ? `<span style="font-size:var(--text-xs);color:var(--text-tertiary)">Rate <strong class="mono" style="color:var(--text-primary)">${esc(ind.rate)}</strong></span>` : ''}
+          ${ind.cpi ? `<span style="font-size:var(--text-xs);color:var(--text-tertiary)">CPI <strong class="mono" style="color:var(--text-primary)">${esc(ind.cpi)}</strong></span>` : ''}
+        </div>
+        <div class="writing-content" style="font-size:var(--text-sm)">${san(r.analysis||'')}</div>
+      </div>
+    `;
+  }
+  $('global-vectors').innerHTML = html || '<div class="empty-state"><p>Global analysis not available.</p></div>';
+}
+
+function renderSentiment() {
+  const sent = D.consumer_sentiment;
+  const pulse = D.consumer_pulse;
+  if (!sent && !pulse) {
+    $('sentiment-section').style.display = 'none';
+    return;
+  }
+  $('sentiment-section').style.display = '';
+
+  // Overall index
+  if (sent?.overall_index != null) {
+    const idx = sent.overall_index;
+    const lbl = sent.overall_label || (idx > 0.1 ? 'Positive' : idx < -0.1 ? 'Negative' : 'Neutral');
+    const clr = idx > 0.1 ? 'var(--status-green)' : idx < -0.1 ? 'var(--status-red)' : 'var(--status-amber)';
+    $('sentiment-index').innerHTML = `<span class="badge" style="background:${clr}20;color:${clr}">${esc(lbl)} (${idx > 0 ? '+' : ''}${idx.toFixed(2)})</span>`;
+  }
+
+  // Pulse text
+  if (pulse) {
+    $('consumer-pulse').innerHTML = san(pulse);
+  }
+
+  // Category bars
+  const cats = sent?.categories || [];
+  let barsHtml = '';
+  for (const c of cats) {
+    const score = c.score || 0;
+    const pct = Math.min(Math.abs(score) * 100, 100);
+    const clr = score > 0.1 ? 'var(--status-green)' : score < -0.1 ? 'var(--status-red)' : 'var(--text-tertiary)';
+    const sentLabel = c.label || (score > 0.2 ? 'Positive' : score > 0.05 ? 'Cautiously Positive' : score < -0.2 ? 'Pessimistic' : score < -0.05 ? 'Cautiously Negative' : 'Neutral');
+    barsHtml += `
+      <div class="pulse-bar-container">
+        <span class="pulse-bar-label">${esc(c.name||c.category||'')}</span>
+        <div class="pulse-bar-track"><div class="pulse-bar-fill" style="width:${pct}%;background:${clr}"></div></div>
+        <span class="pulse-bar-score mono" style="color:${clr}">${score > 0 ? '+' : ''}${score.toFixed(2)}</span>
+        <span class="pulse-bar-sentiment" style="color:${clr}">${esc(sentLabel)}</span>
+      </div>
+    `;
+  }
+  $('category-bars').innerHTML = barsHtml;
+
+  // Word cloud
+  const topics = sent?.topics;
+  if (topics && topics.length > 0) {
+    $('wc-empty').style.display = 'none';
+    renderWordCloud(topics, 'wordcloud-container');
+  }
+}
+
+function renderWordCloud(topics, containerId) {
+  const container = $(containerId);
+  const width = container.offsetWidth || 500;
+  const height = 350;
+
+  const freqExtent = d3.extent(topics, d => d.frequency || 1);
+  const fontScale = d3.scaleLinear().domain(freqExtent).range([14, 48]);
+
+  const colorFn = (d) => {
+    const s = d.sentiment_score || 0;
+    if (s > 0.1) return `rgba(22,163,74,${0.5 + Math.abs(s)*0.5})`;
+    if (s < -0.1) return `rgba(220,38,38,${0.5 + Math.abs(s)*0.5})`;
+    return '#8C99A9';
+  };
+
+  const words = topics.map((t,i) => ({
+    text: t.topic || t.word || '',
+    size: fontScale(t.frequency || 1),
+    color: colorFn(t),
+    weight: (t.frequency||1) > 70 ? 600 : 400,
+    rotate: Math.random() > 0.85 ? (Math.random() > 0.5 ? 45 : -45) : 0,
+    _data: t, _rank: i+1
+  }));
+
+  // Clear previous
+  const existing = container.querySelector('svg');
+  if (existing) existing.remove();
+
+  d3.layout.cloud()
+    .size([width, height])
+    .words(words)
+    .padding(6)
+    .fontSize(d => d.size)
+    .rotate(d => d.rotate)
+    .font('DM Sans')
+    .fontWeight(d => d.weight)
+    .on("end", draw)
+    .start();
+
+  function draw(drawnWords) {
+    const svg = d3.select(`#${containerId}`)
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    const g = svg.append("g")
+      .attr("transform", `translate(${width/2},${height/2})`);
+
+    const tooltip = d3.select('#wc-tooltip');
+
+    g.selectAll("text")
+      .data(drawnWords)
+      .enter().append("text")
+      .style("font-size", d => d.size + "px")
+      .style("font-family", "DM Sans")
+      .style("font-weight", d => d.weight)
+      .style("fill", d => d.color)
+      .style("cursor", "default")
+      .attr("text-anchor", "middle")
+      .attr("transform", d => `translate(${d.x},${d.y})rotate(${d.rotate})`)
+      .text(d => d.text)
+      .on("mouseover", function(event, d) {
+        const data = d._data;
+        const sentScore = data.sentiment_score || 0;
+        const sentLabel = sentScore > 0.1 ? 'Positive' : sentScore < -0.1 ? 'Negative' : 'Neutral';
+        const sentClr = sentScore > 0.1 ? 'var(--status-green)' : sentScore < -0.1 ? 'var(--status-red)' : 'var(--text-tertiary)';
+        tooltip.style("display", "block")
+          .html(`
+            <div style="font-weight:600;margin-bottom:4px">${esc(d.text)}</div>
+            <div style="color:${sentClr};margin-bottom:4px">Sentiment: ${sentLabel} (${sentScore > 0 ? '+' : ''}${sentScore.toFixed(2)})</div>
+            <div style="color:var(--text-tertiary);margin-bottom:4px">#${d._rank} most discussed</div>
+            ${data.source ? `<div style="color:var(--text-tertiary)">Source: ${esc(data.source)}</div>` : ''}
+            ${data.sample_context ? `<div style="font-style:italic;margin-top:6px;color:var(--text-secondary);font-size:var(--text-xs)">"${esc(data.sample_context)}"</div>` : ''}
+          `);
+      })
+      .on("mousemove", function(event) {
+        tooltip.style("left", (event.clientX + 12) + "px")
+               .style("top", (event.clientY - 10) + "px");
+      })
+      .on("mouseout", function() {
+        tooltip.style("display", "none");
+      });
+  }
+}
+
+function renderWatchlist() {
+  const events = D.watchlist || [];
+  if (!events.length) {
+    $('watchlist-events').innerHTML = '<div class="empty-state"><p>No upcoming events.</p></div>';
+    return;
+  }
+  let html = '';
+  for (const ev of events.slice(0, 25)) {
+    const imp = (ev.impact||'').toLowerCase();
+    html += `
+      <div class="event-card ${imp==='high'?'impact-high':imp==='medium'?'impact-medium':''}">
+        <div class="event-date-block">
+          <div class="event-day">${esc((ev.date||'').split(' ')[1]||'')}</div>
+          <div class="event-month">${esc((ev.date||'').split(' ')[0]||'')}</div>
+        </div>
+        <div class="event-info">
+          <div class="event-name">${esc(ev.event_name||ev.event||'')}</div>
+          <div class="event-institution">${esc(ev.institution||'')} ${ev.week_label ? `&middot; ${esc(ev.week_label)}` : ''}</div>
+          ${ev.description ? `<div style="font-size:var(--text-sm);color:var(--text-secondary);margin-top:4px">${esc(ev.description)}</div>` : ''}
+        </div>
+        <div>${impactBadge(ev.impact)}</div>
+      </div>
+    `;
+  }
+  $('watchlist-events').innerHTML = html;
+}
+
+// ══════════════════════════════════════
+// RENDER: PROVINCES
+// ══════════════════════════════════════
+function renderProvSelector() {
+  let html = '';
+  for (const p of PROVS) {
+    html += `<button class="prov-btn ${p.code===selectedProvince?'active':''}" onclick="selectProvince('${p.code}')">${p.code}</button>`;
+  }
+  $('prov-selector').innerHTML = html;
+}
+
+window.selectProvince = function(code) {
+  selectedProvince = code;
+  renderProvSelector();
+  renderProvinceContent();
+  setBannerImg('prov-banner', provByCode[code]?.img || PROVS[4].img);
+  $('prov-banner-title').textContent = provByCode[code]?.name || 'Provincial Analysis';
+};
+
+window.switchProvSubTab = function(tab) {
+  provSubTab = tab;
+  document.querySelectorAll('#prov-sub-tabs .sub-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#prov-sub-tabs .sub-tab').forEach((b,i) => {
+    if ((i===0 && tab==='overview') || (i===1 && tab==='goods') || (i===2 && tab==='services')) b.classList.add('active');
+  });
+  renderProvinceContent();
+};
+
+function renderProvinceContent() {
+  if (!D) return;
+  const el = $('prov-content');
+
+  if (provSubTab === 'goods' || provSubTab === 'services') {
+    renderIndustrySubTab(el, provSubTab);
+    return;
+  }
+
+  const provName = provByCode[selectedProvince]?.name || '';
+  const provData = (D.provinces||[]).find(p =>
+    p.name === provName || p.name?.toLowerCase() === provName.toLowerCase()
+  );
+
+  if (!provData) {
+    el.innerHTML = `<div class="empty-state"><p>No data available for ${esc(provName)}.</p></div>`;
+    return;
+  }
+
+  const ind = provData.indicators || {};
+  const meta = provData.indicatorMeta || {};
+
+  // Indicator pills
+  let pillsHtml = '';
+  for (const [key, label] of [['gdp','GDP YoY'],['unemployment','Unemployment'],['cpi','CPI'],['housingStarts','Housing Starts']]) {
+    const val = ind[key] || 'N/A';
+    const ch = meta[key]?.change || '';
+    pillsHtml += `
+      <div class="indicator-pill">
+        <span class="pill-label">${label}</span>
+        <span class="pill-value">${esc(val)}</span>
+        ${ch ? `<span class="pill-change ${changeClass(ch)}">${changeArrow(ch)} ${esc(ch)}</span>` : ''}
+      </div>
+    `;
+  }
+
+  // Projects for this province
+  const provProjects = allProjects.filter(p => {
+    const pn = (p.province||'').toLowerCase();
+    return pn === provName.toLowerCase() || pn.startsWith(provName.toLowerCase().slice(0,4));
+  }).slice(0, 5);
+
+  let projHtml = '';
+  if (provProjects.length) {
+    projHtml = `
+      <div style="margin-top:32px">
+        <div class="section-header">Major Projects in ${esc(provName)} <span class="badge badge-proposed">${provProjects.length}</span></div>
+        ${provProjects.map(p => renderProjectCardCompact(p)).join('')}
+        <a href="#" onclick="switchTab('projects');$('proj-province').value='${esc(provName)}';applyProjectFilters();return false" style="font-size:var(--text-sm);color:var(--accent-blue);text-decoration:none">View all projects &rarr;</a>
+      </div>
+    `;
+  }
+
+  el.innerHTML = `
+    <div class="pill-strip no-scrollbar" style="margin-bottom:24px">${pillsHtml}</div>
+    <div style="display:grid;grid-template-columns:55% 45%;gap:24px">
+      <div>
+        <div class="section-header">Analysis</div>
+        <div class="writing-content">${san(provData.analysis||'No analysis available.')}</div>
+        <div id="prov-sources-${selectedProvince}"></div>
+      </div>
+      <div>
+        <div class="chart-card">
+          <div class="chart-title" style="margin-bottom:12px">Provincial Indicators</div>
+          <canvas id="prov-chart" height="240"></canvas>
+        </div>
+      </div>
+    </div>
+    ${projHtml}
+  `;
+
+  sourcesFooter(provData.sources, `prov-sources-${selectedProvince}`);
+}
+
+function renderProjectCardCompact(p) {
+  const val = fmtValue(p.value);
+  return `
+    <div class="project-card" style="margin-bottom:8px;cursor:default">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="project-value ${val==='N/D'?'nd':''}" style="font-size:var(--text-sm);padding:4px 8px">${esc(val)}</span>
+        <div>
+          <div style="font-size:var(--text-sm);font-weight:600">${esc(p.name)}</div>
+          <div style="font-size:var(--text-xs);color:var(--text-secondary)">${esc(p.sector||'')} ${statusBadge(p.status)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderIndustrySubTab(el, type) {
+  if (!D) return;
+  const industries = type === 'goods' ? (D.goodsIndustries || []) : (D.servicesIndustries || []);
+  if (!industries.length) {
+    el.innerHTML = '<div class="empty-state"><p>No industry data available.</p></div>';
+    return;
+  }
+  el.innerHTML = `<div class="grid-2">${industries.map(ind => renderIndustryCard(ind)).join('')}</div>`;
+}
+
+// ══════════════════════════════════════
+// RENDER: INDUSTRIES
+// ══════════════════════════════════════
+function renderIndustries() {
+  if (!D) return;
+  const goods = D.goodsIndustries || [];
+  const services = D.servicesIndustries || [];
+  $('goods-industries').innerHTML = goods.map(i => renderIndustryCard(i)).join('') || '<div class="empty-state"><p>No goods industry data.</p></div>';
+  $('services-industries').innerHTML = services.map(i => renderIndustryCard(i)).join('') || '<div class="empty-state"><p>No services industry data.</p></div>';
+}
+
+function renderIndustryCard(ind) {
+  const mmCls = ind.isNegative ? 'down' : (ind.mm && ind.mm.startsWith('+') ? 'up' : '');
+  return `
+    <div class="industry-card">
+      <div class="industry-header">
+        <span class="naics-badge">${esc(ind.code||'')}</span>
+        <span class="industry-name">${esc(ind.name||'')}</span>
+      </div>
+      <div class="industry-metrics">
+        ${ind.mm ? `<div><div class="industry-metric-label">M/M</div><div class="industry-metric-val ${mmCls}">${esc(ind.mm)}</div></div>` : ''}
+        ${ind.yy ? `<div><div class="industry-metric-label">Y/Y</div><div class="industry-metric-val">${esc(ind.yy)}</div></div>` : ''}
+      </div>
+      <div class="writing-content" style="font-size:var(--text-sm)">${san(ind.analysis||'')}</div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════
+// RENDER: MARKETS
+// ══════════════════════════════════════
+function renderMarkets() {
+  if (!D) return;
+  renderCommodities();
+  renderYieldCurve();
+  renderFinancialMarkets();
+}
+
+function renderCommodities() {
+  const cats = D.commodities || [];
+  let html = '';
+  for (const cat of cats) {
+    for (const item of (cat.items||[])) {
+      const yy = item.yy || '';
+      const cls = changeClass(yy);
+      html += `
+        <div class="card" style="padding:16px">
+          <div style="font-size:var(--text-xs);color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">${esc(item.name||'')}</div>
+          <div style="font-family:var(--font-mono);font-size:var(--text-xl);font-weight:700;margin-bottom:4px">${esc(item.val||'')}</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            ${yy ? `<span class="pill-change ${cls}" style="font-size:var(--text-sm)">${changeArrow(yy)} ${esc(yy)} YoY</span>` : ''}
+            ${item.unit ? `<span style="font-size:var(--text-xs);color:var(--text-tertiary)">per ${esc(item.unit)}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+  }
+  $('commodities-grid').innerHTML = html || '<div class="empty-state"><p>No commodity data.</p></div>';
+}
+
+function renderYieldCurve() {
+  const yc = D.yieldCurve || [];
+  const chartData = D.charts || {};
+  if (!yc.length) return;
+
+  const labels = yc.map(y => y.term);
+  const values = yc.map(y => parseFloat(y.yield) || 0);
+  const lastYear = chartData.yieldCurveLastYear || [];
+
+  if (chartInstances.yield) chartInstances.yield.destroy();
+
+  const ctx = $('yield-chart').getContext('2d');
+  const datasets = [{
+    label: 'Current',
+    data: values,
+    borderColor: '#2E6BE6',
+    backgroundColor: 'rgba(46,107,230,0.06)',
+    borderWidth: 2,
+    pointRadius: 4,
+    pointBackgroundColor: '#2E6BE6',
+    pointBorderColor: '#fff',
+    pointBorderWidth: 2,
+    fill: true,
+    tension: 0.3,
+  }];
+
+  if (lastYear.length) {
+    datasets.push({
+      label: '1 Year Ago',
+      data: lastYear,
+      borderColor: '#D1D8E0',
+      borderWidth: 1.5,
+      borderDash: [4,4],
+      pointRadius: 3,
+      pointBackgroundColor: '#D1D8E0',
+      fill: false,
+      tension: 0.3,
+    });
+  }
+
+  chartInstances.yield = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: lastYear.length > 0, labels: { font: { family: 'DM Sans', size: 12 }, color: '#8C99A9' } },
+        tooltip: {
+          backgroundColor: '#fff', titleColor: '#1A2332', bodyColor: '#5A6B7F',
+          borderColor: '#E8ECF1', borderWidth: 1, padding: 10,
+          titleFont: { family: 'DM Sans' }, bodyFont: { family: 'JetBrains Mono', size: 13 },
+          callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + '%' }
+        }
+      },
+      scales: {
+        x: { grid: { color: '#E8ECF1' }, ticks: { font: { family: 'DM Sans', size: 12 }, color: '#8C99A9' } },
+        y: { grid: { color: '#E8ECF1' }, ticks: { font: { family: 'JetBrains Mono', size: 12 }, color: '#8C99A9', callback: v => v.toFixed(1)+'%' } }
+      }
+    }
+  });
+
+  // Spread
+  const y2 = yc.find(y => y.term === '2Y');
+  const y10 = yc.find(y => y.term === '10Y');
+  if (y2 && y10) {
+    const spread = ((parseFloat(y10.yield)||0) - (parseFloat(y2.yield)||0)) * 100;
+    const inverted = spread < 0;
+    $('yield-spread').innerHTML = `10Y-2Y Spread: <strong class="mono">${spread.toFixed(0)}bp</strong> ${inverted ? '<span style="color:var(--status-red);font-weight:600">⚠ Inverted</span>' : ''}`;
+  }
+}
+
+function renderFinancialMarkets() {
+  const fm = D.financialMarkets || {};
+  const indices = fm.indices || [];
+  const fx = fm.fx || [];
+
+  $('indices-list').innerHTML = indices.map(i => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-light)">
+      <span style="font-size:var(--text-sm);color:var(--text-primary)">${esc(i.name)}</span>
+      <div style="text-align:right">
+        <span class="mono" style="font-size:var(--text-sm);font-weight:600">${esc(i.value||'')}</span>
+        ${i.day ? `<span class="pill-change ${changeClass(i.day)}" style="margin-left:8px">${esc(i.day)}</span>` : ''}
+      </div>
+    </div>
+  `).join('') || '<p style="color:var(--text-tertiary);font-size:var(--text-sm)">No index data.</p>';
+
+  $('fx-list').innerHTML = fx.map(f => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-light)">
+      <span style="font-size:var(--text-sm);color:var(--text-primary)">${esc(f.name)}</span>
+      <div style="text-align:right">
+        <span class="mono" style="font-size:var(--text-sm);font-weight:600">${esc(f.value||'')}</span>
+        ${f.day ? `<span class="pill-change ${changeClass(f.day)}" style="margin-left:8px">${esc(f.day)}</span>` : ''}
+      </div>
+    </div>
+  `).join('') || '<p style="color:var(--text-tertiary);font-size:var(--text-sm)">No FX data.</p>';
+}
+
+// ══════════════════════════════════════
+// RENDER: PROJECTS
+// ══════════════════════════════════════
+function renderProjects() {
+  populateProjectFilters();
+  applyProjectFilters();
+}
+
+function populateProjectFilters() {
+  const provinces = [...new Set(allProjects.map(p => p.province).filter(Boolean))].sort();
+  const sectors = [...new Set(allProjects.map(p => p.naics_name || p.sector).filter(Boolean))].sort();
+
+  const provSel = $('proj-province');
+  provSel.innerHTML = '<option value="">All Provinces</option>' + provinces.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+
+  const secSel = $('proj-sector');
+  secSel.innerHTML = '<option value="">All Sectors</option>' + sectors.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+}
+
+window.applyProjectFilters = function() {
+  const search = ($('proj-search').value || '').toLowerCase();
+  const prov = $('proj-province').value;
+  const sector = $('proj-sector').value;
+  const status = $('proj-status').value;
+  const sort = $('proj-sort').value;
+
+  filteredProjects = allProjects.filter(p => {
+    if (search && !(p.name||'').toLowerCase().includes(search) && !(p.proponent||'').toLowerCase().includes(search) && !(p.cma||'').toLowerCase().includes(search)) return false;
+    if (prov && p.province !== prov) return false;
+    if (sector && (p.naics_name||p.sector) !== sector) return false;
+    if (status && p.status !== status) return false;
+    return true;
+  });
+
+  if (sort === 'value') filteredProjects.sort((a,b) => parseValue(b.value) - parseValue(a.value));
+  else if (sort === 'updated') filteredProjects.sort((a,b) => (b.lastUpdated||'').localeCompare(a.lastUpdated||''));
+  else if (sort === 'name') filteredProjects.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+
+  projectPage = 0;
+  renderProjectList();
+};
+
+// Attach filter listeners
+['proj-search','proj-province','proj-sector','proj-status','proj-sort'].forEach(id => {
+  const el = $(id);
+  if (el) el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', () => window.applyProjectFilters());
+});
+
+function renderProjectList() {
+  const end = (projectPage + 1) * PAGE_SIZE;
+  const page = filteredProjects.slice(0, end);
+
+  // Summary
+  const totalVal = filteredProjects.reduce((s,p) => s + parseValue(p.value), 0);
+  const valStr = totalVal >= 1e9 ? `$${(totalVal/1e9).toFixed(1)}B` : totalVal >= 1e6 ? `$${(totalVal/1e6).toFixed(0)}M` : '';
+  $('proj-summary').textContent = `Showing ${page.length} of ${filteredProjects.length} projects${valStr ? ` · Total value: ${valStr}` : ''}`;
+
+  $('proj-list').innerHTML = page.map((p, i) => renderProjectCard(p, i)).join('');
+  $('proj-load-more').style.display = end < filteredProjects.length ? 'block' : 'none';
+}
+
+window.loadMoreProjects = function() {
+  projectPage++;
+  renderProjectList();
+};
+
+function renderProjectCard(p, idx) {
+  const val = fmtValue(p.value);
+  const history = p.statusHistory || [];
+  const latest = history[history.length - 1] || {};
+  const detail = latest.detail || '';
+  const src = latest.source || latest.sources?.[0] || {};
+  const daysSince = p.lastSeen ? Math.floor((Date.now() - new Date(p.lastSeen).getTime()) / 86400000) : 999;
+  const isStale = daysSince > 28;
+
+  let timelineHtml = '';
+  if (history.length) {
+    timelineHtml = history.map((h, i) => {
+      const s = h.source || h.sources?.[0] || {};
+      return `
+        <div class="timeline-item">
+          ${i < history.length-1 ? '<div class="timeline-line"></div>' : ''}
+          <div class="timeline-dot" style="background:${statusColor(h.status)}"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">${esc(h.date||'')} ${statusBadge(h.status)}</div>
+            <div class="timeline-detail">${esc(h.detail||h.note||'')}</div>
+            ${s.url ? `<a href="${esc(s.archive_url||s.url)}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue)">${esc(s.title||'Source')} ↗</a>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  const discSrc = (p.discovery_source||'').replace(/_/g,' ');
+
+  return `
+    <div class="project-card" id="proj-${idx}" onclick="this.classList.toggle('expanded')">
+      ${isStale ? `<div class="stale-warning">Status unconfirmed since ${esc(p.lastSeen||'')}</div>` : ''}
+      <div class="project-card-header">
+        <div class="project-value ${val==='N/D'?'nd':''}">${esc(val)}</div>
+        <div class="project-info">
+          <div class="project-name">${esc(p.name||'')} ${statusBadge(p.status)}</div>
+          <div class="project-meta">${esc(p.province||'')} ${p.cma ? '&middot; '+esc(p.cma) : ''} ${p.proponent ? '&middot; '+esc(p.proponent) : ''}</div>
+          ${detail ? `<div class="project-detail">${esc(detail)}</div>` : ''}
+          <div class="project-footer">
+            ${src.url ? `<a href="${esc(src.archive_url||src.url)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Source: ${esc(src.title||'Link')} ↗</a>` : ''}
+            ${p.firstTracked ? `<span>Tracked since ${esc(p.firstTracked)}</span>` : ''}
+            ${discSrc ? `<span class="source-badge registry">${esc(discSrc)}</span>` : ''}
+          </div>
+        </div>
+      </div>
+      <div class="project-expanded">
+        ${p.history_backfilled && p.history_earliest_date ? `<div style="font-size:var(--text-xs);color:var(--accent-blue);margin-bottom:8px">History since ${esc(p.history_earliest_date)}</div>` : ''}
+        ${timelineHtml}
+      </div>
+    </div>
+  `;
+}
+
+function statusColor(status) {
+  const s = (status||'').toLowerCase();
+  if (s.includes('construction')) return '#15803d';
+  if (s.includes('approved')) return 'var(--status-green)';
+  if (s.includes('paused') || s.includes('suspend')) return 'var(--status-amber)';
+  if (s.includes('expan')) return 'var(--status-purple)';
+  return 'var(--status-blue)';
+}
+
+// ══════════════════════════════════════
+// RENDER: CALENDAR
+// ══════════════════════════════════════
+function renderCalendar() {
+  if (!D) return;
+  const events = D.watchlist || [];
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  $('cal-month-label').textContent = `${monthNames[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = now.getDate();
+
+  // Parse event dates
+  const eventsByDay = {};
+  for (const ev of events) {
+    const dateStr = ev.date || '';
+    // Parse "Mar 14" format
+    const parts = dateStr.split(' ');
+    if (parts.length === 2) {
+      const day = parseInt(parts[1]);
+      if (!isNaN(day)) {
+        if (!eventsByDay[day]) eventsByDay[day] = [];
+        eventsByDay[day].push(ev);
+      }
+    }
+  }
+
+  let html = '';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+    html += `<div class="cal-header">${d}</div>`;
+  });
+  for (let i = 0; i < firstDay; i++) {
+    html += '<div class="cal-day empty"></div>';
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = d === today;
+    const dayEvents = eventsByDay[d] || [];
+    html += `
+      <div class="cal-day ${isToday ? 'today' : ''}">
+        <span class="cal-day-num">${d}</span>
+        <div class="cal-dots">
+          ${dayEvents.map(e => `<div class="cal-dot ${(e.impact||'').toLowerCase()}"></div>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+  $('cal-grid').innerHTML = html;
+
+  // Events list
+  let evHtml = '';
+  for (const ev of events) {
+    const imp = (ev.impact||'').toLowerCase();
+    evHtml += `
+      <div class="event-card ${imp==='high'?'impact-high':imp==='medium'?'impact-medium':''}">
+        <div class="event-date-block">
+          <div class="event-day">${esc((ev.date||'').split(' ')[1]||'')}</div>
+          <div class="event-month">${esc((ev.date||'').split(' ')[0]||'')}</div>
+        </div>
+        <div class="event-info">
+          <div class="event-name">${esc(ev.event_name||ev.event||'')}</div>
+          <div class="event-institution">${esc(ev.institution||'')}</div>
+          ${ev.description ? `<div style="font-size:var(--text-sm);color:var(--text-secondary);margin-top:4px">${esc(ev.description)}</div>` : ''}
+        </div>
+        <div>${impactBadge(ev.impact)}</div>
+      </div>
+    `;
+  }
+  $('cal-events').innerHTML = evHtml || '<div class="empty-state"><p>No upcoming events.</p></div>';
+}
+
+// ══════════════════════════════════════
+// DATA LOADING
+// ══════════════════════════════════════
+async function loadData() {
+  try {
+    // Load newsletter
+    const nlSnap = await getDoc(doc(db, 'newsletters', 'latest'));
+    if (nlSnap.exists()) {
+      D = nlSnap.data();
+    }
+
+    // Update meta
+    if (D) {
+      const ts = D.timestamp || D.dateId || '';
+      const dateStr = ts ? new Date(ts).toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'}) : '';
+      $('nav-meta').textContent = `Week of ${dateStr || 'loading...'}`;
+      $('footer-date').textContent = `Last pipeline run: ${D.dateId || ''}`;
+    }
+
+    // Load projects
+    const projSnap = await getDocs(collection(db, 'projects'));
+    allProjects = [];
+    projSnap.forEach(d => {
+      const data = d.data();
+      data._id = d.id;
+      allProjects.push(data);
+    });
+    allProjects.sort((a,b) => parseValue(b.value) - parseValue(a.value));
+
+    // Render everything
+    renderOverview();
+    renderProvSelector();
+    renderProvinceContent();
+    renderIndustries();
+    renderMarkets();
+    renderProjects();
+    renderCalendar();
+
+    // Remove skeletons
+    document.querySelectorAll('.skeleton').forEach(s => s.remove());
+  } catch (err) {
+    console.error('Data load error:', err);
+    $('nav-meta').textContent = 'Error loading data — check console';
+  }
+}
+
+// ── Init ──
+onAuthStateChanged(auth, user => {
+  if (user) {
+    loadData();
+  } else {
+    signInAnonymously(auth).catch(err => {
+      console.error('Auth error:', err);
+      // Try loading anyway (public rules)
+      loadData();
+    });
+  }
+});
+</script>
+</body>
+</html>

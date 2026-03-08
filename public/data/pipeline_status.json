@@ -1,0 +1,12 @@
+{
+  "last_run": {},
+  "tavily": {
+    "used": 0,
+    "month": ""
+  },
+  "claude_tokens": {
+    "input": 0,
+    "output": 0
+  },
+  "recent_runs": []
+}

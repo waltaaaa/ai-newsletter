@@ -1,0 +1,142 @@
+"""
+pro_extraction_recovery.py — Pro recovers projects from articles Flash couldn't parse.
+
+When Sonnet's extraction returns no projects from an article that passed
+the RSS 3-layer filter, the article metadata is sent to Pro for deeper analysis.
+"""
+
+import logging
+from datetime import date
+from claude_reasoning import reason_sync
+from pipeline_state import parse_json_response
+
+logger = logging.getLogger(__name__)
+
+RECOVERY_SYSTEM = """You are a Canadian capital projects analyst. You are reading a news article
+or government press release that our automated system flagged as likely containing
+a capital project, but our extraction model could not identify a specific project.
+
+Read the article carefully. Look for:
+1. Explicit project mentions (by name, location, or description)
+2. Implied projects (funding announcements that imply construction will happen)
+3. Referenced projects (mentioned in passing but not the article's main topic)
+4. Future projects (announced plans, feasibility studies, requests for proposals)
+
+For each project found, return JSON:
+{
+  "projects": [
+    {
+      "name": "Project name (or best descriptive name if unnamed)",
+      "proponent": "Company or organization",
+      "province": "Full province name",
+      "city": "City name if known",
+      "value_millions": null or number,
+      "status": "Proposed|Approved|Under Construction|Completed|Delayed|Cancelled",
+      "sector": "sector description",
+      "description": "One sentence",
+      "confidence_notes": "Why this was hard to extract"
+    }
+  ]
+}
+
+If genuinely no capital project exists in this article, return {"projects": [], "reason": "explanation"}.
+Be thorough but do not fabricate projects."""
+
+
+def recover_failed_extractions_sync(failed_articles):
+    """Send articles that Sonnet couldn't extract to Pro for recovery.
+
+    Args:
+        failed_articles: list of dicts with keys from RSS items:
+            title, summary, url, source_name, province
+
+    Returns:
+        list of flat project dicts ready for upsert_flat_projects()
+    """
+    if not failed_articles:
+        return []
+
+    recovered = []
+    today = date.today().isoformat()
+
+    for article in failed_articles:
+        title = article.get("title", "")
+        summary = article.get("summary", "")
+        url = article.get("url", "")
+        province = article.get("province", "Canada")
+
+        # Build context from available article data
+        text_parts = []
+        if title:
+            text_parts.append(f"Headline: {title}")
+        if url:
+            text_parts.append(f"Source URL: {url}")
+        if summary:
+            text_parts.append(f"Summary: {summary[:4000]}")
+
+        if not text_parts:
+            continue
+
+        user_prompt = (
+            "\n\n".join(text_parts)
+            + "\n\nOur basic extraction model found no structured projects in this article. "
+            "Please read carefully and identify any capital projects mentioned or implied."
+        )
+
+        result = reason_sync(RECOVERY_SYSTEM, user_prompt, task_name="extraction_recovery")
+        response = result["text"] if result else None
+        data = parse_json_response(response)
+
+        if data and data.get("projects"):
+            for project in data["projects"]:
+                name = (project.get("name") or "").strip()
+                if not name or len(name) < 3:
+                    continue
+
+                prov = project.get("province") or province
+                if prov == "Canada":
+                    prov = ""
+
+                # Format value
+                val_m = project.get("value_millions")
+                if val_m and isinstance(val_m, (int, float)):
+                    if val_m >= 1000:
+                        value_str = f"C${val_m/1000:.1f}B"
+                    else:
+                        value_str = f"C${val_m:.0f}M"
+                else:
+                    value_str = "Not disclosed"
+
+                flat = {
+                    "name": name,
+                    "province": prov,
+                    "cma": project.get("city", ""),
+                    "sector": project.get("sector", "Other"),
+                    "value": value_str,
+                    "status": project.get("status", "Proposed"),
+                    "proponent": project.get("proponent", ""),
+                    "description": project.get("description", ""),
+                    "discovery_source": "pro_recovered",
+                    "discovery_sources": ["pro_recovered"],
+                    "confidence": 0.4,
+                    "source_url": url,
+                    "sources": [{"url": url, "title": title}] if url else [],
+                    "evidence": [{
+                        "url": url,
+                        "name": article.get("source_name", ""),
+                        "date": today,
+                        "source_type": "pro_recovered",
+                    }] if url else [],
+                    "evidence_count": 1 if url else 0,
+                    "announced": today,
+                }
+                recovered.append(flat)
+
+            logger.info(
+                f"  Recovered {len(data['projects'])} projects from: "
+                f"{title[:60]}"
+            )
+
+    print(f"  [PRO] Extraction recovery: {len(recovered)} projects "
+          f"from {len(failed_articles)} failed articles")
+    return recovered

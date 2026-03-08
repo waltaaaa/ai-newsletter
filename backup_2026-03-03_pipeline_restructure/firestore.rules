@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Newsletters — readable by any authenticated user (incl. anonymous)
+    match /newsletters/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Projects — cumulative tracker, readable by authenticated users
+    match /projects/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Timeseries — historical data points for Data Explorer
+    match /timeseries/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // StatCan indicators — key economic indicator feed snapshot
+    match /statcan_indicators/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+  }
+}

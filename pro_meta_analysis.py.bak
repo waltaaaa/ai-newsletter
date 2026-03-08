@@ -1,0 +1,145 @@
+"""
+pro_meta_analysis.py — Monthly Pro review of the entire project database.
+
+Pro analyzes coverage patterns across the full database and suggests
+improvements to the discovery strategy. Runs first week of each month.
+"""
+
+import json
+import logging
+from datetime import datetime
+from claude_reasoning import reason_sync
+from pipeline_state import parse_json_response
+
+logger = logging.getLogger(__name__)
+
+META_SYSTEM = """You are a strategic analyst reviewing a Canadian capital projects database.
+You have deep knowledge of Canada's economy, infrastructure needs, and project landscape.
+
+Analyze the database summary and identify:
+1. SECTOR GAPS: sectors with fewer projects than expected given economic activity
+2. GEOGRAPHIC GAPS: provinces or cities underrepresented relative to their GDP
+3. TYPE GAPS: is greenfield overrepresented vs brownfield or vice versa?
+4. STATUS GAPS: are we finding announcements but missing completions? Or vice versa?
+5. VALUE GAPS: is the average project value skewed? Are we missing small or large projects?
+6. TEMPORAL GAPS: are there periods with suspiciously low discovery rates?
+7. SEARCH STRATEGY IMPROVEMENTS: specific new query types, keywords, or sources to add
+
+Be specific and actionable. General advice is not useful. Name specific sectors,
+provinces, project types, and suggest exact search queries to close gaps.
+
+Return JSON:
+{
+  "sector_gaps": [{"sector": "...", "reasoning": "...", "suggested_query": "..."}],
+  "geographic_gaps": [{"province": "...", "reasoning": "...", "suggested_query": "..."}],
+  "type_gaps": [{"gap": "...", "reasoning": "..."}],
+  "status_gaps": [{"gap": "...", "reasoning": "..."}],
+  "value_gaps": [{"gap": "...", "reasoning": "..."}],
+  "temporal_gaps": [],
+  "recommended_new_queries": [{"query": "...", "province": "...", "sector": "..."}],
+  "recommended_new_sources": [{"source": "...", "url": "...", "reasoning": "..."}],
+  "overall_coverage_grade": "A/B/C/D/F",
+  "top_3_priorities": ["...", "...", "..."]
+}"""
+
+
+def run_meta_analysis_sync(db):
+    """Monthly meta-analysis of the full project database.
+
+    Returns:
+        dict with coverage analysis, or None on failure
+    """
+    # Build database summary
+    stats = {
+        "total_projects": 0,
+        "by_province": {},
+        "by_sector": {},
+        "by_status": {},
+        "by_discovery_source": {},
+        "with_value": 0,
+        "without_value": 0,
+        "stale_count": 0,
+    }
+
+    values = []
+
+    try:
+        for doc in db.collection("projects").stream():
+            data = doc.to_dict()
+            stats["total_projects"] += 1
+
+            prov = data.get("province", "Unknown")
+            sector = data.get("sector", "Unknown")
+            status = data.get("status", "Unknown")
+            source = data.get("discovery_source", "Unknown")
+
+            stats["by_province"][prov] = stats["by_province"].get(prov, 0) + 1
+            stats["by_sector"][sector] = stats["by_sector"].get(sector, 0) + 1
+            stats["by_status"][status] = stats["by_status"].get(status, 0) + 1
+            stats["by_discovery_source"][source] = stats["by_discovery_source"].get(source, 0) + 1
+
+            val_str = data.get("value", "")
+            if val_str and val_str != "Not disclosed":
+                stats["with_value"] += 1
+                # Parse numeric value
+                try:
+                    if "B" in val_str:
+                        v = float(val_str.replace("C$", "").replace("B", "").strip()) * 1000
+                    elif "M" in val_str:
+                        v = float(val_str.replace("C$", "").replace("M", "").strip())
+                    else:
+                        v = None
+                    if v:
+                        values.append(v)
+                except (ValueError, TypeError):
+                    pass
+            else:
+                stats["without_value"] += 1
+
+            if data.get("is_stale"):
+                stats["stale_count"] += 1
+    except Exception as e:
+        logger.warning(f"Failed to read projects for meta-analysis: {e}")
+        return None
+
+    if stats["total_projects"] == 0:
+        return None
+
+    stats["avg_value_millions"] = round(sum(values) / len(values)) if values else 0
+    stats["median_value_millions"] = round(sorted(values)[len(values) // 2]) if values else 0
+    stats["value_pct_disclosed"] = round(100 * stats["with_value"] / stats["total_projects"], 1)
+
+    user_prompt = (
+        f"Database summary as of {datetime.utcnow().strftime('%Y-%m-%d')}:\n\n"
+        f"{json.dumps(stats, indent=2)}\n\n"
+        f"Analyze this database for coverage gaps and recommend specific improvements "
+        f"to our search and tracking strategy."
+    )
+
+    result = reason_sync(META_SYSTEM, user_prompt, task_name="meta_analysis")
+    response = result["text"] if result else None
+    analysis = parse_json_response(response)
+
+    if analysis:
+        print(f"  [PRO] Meta-analysis: grade={analysis.get('overall_coverage_grade')}")
+        print(f"  [PRO] Top priorities: {analysis.get('top_3_priorities')}")
+        print(f"  [PRO] New queries: {len(analysis.get('recommended_new_queries', []))}, "
+              f"new sources: {len(analysis.get('recommended_new_sources', []))}")
+        return analysis
+
+    logger.warning("Meta-analysis returned no parseable result")
+    return None
+
+
+def store_meta_analysis(db, analysis):
+    """Store meta-analysis results in Firestore."""
+    if not analysis:
+        return
+    try:
+        db.collection("pipeline_state").document("monthly_meta_analysis").set({
+            "analysis": analysis,
+            "analyzed_at": datetime.utcnow().isoformat(),
+            "grade": analysis.get("overall_coverage_grade", "?"),
+        })
+    except Exception as e:
+        logger.warning(f"Failed to store meta-analysis: {e}")

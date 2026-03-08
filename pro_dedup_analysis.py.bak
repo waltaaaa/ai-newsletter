@@ -1,0 +1,135 @@
+"""
+pro_dedup_analysis.py — Pro identifies duplicates that mechanical dedup misses.
+
+Flash dedup matches on province + city + normalized name. This misses:
+- Same project with completely different names in different sources
+- Different phases of the same megaproject listed separately
+- A project and its subcomponents
+- Projects split across provinces (e.g., pipeline as AB project and BC project)
+"""
+
+import json
+import logging
+from datetime import datetime
+from claude_reasoning import reason_sync
+from pipeline_state import parse_json_response
+
+logger = logging.getLogger(__name__)
+
+DEDUP_SYSTEM = """You are a Canadian capital projects data quality analyst. You are reviewing
+a list of newly discovered projects to identify duplicates that our automated
+name-matching system may have missed.
+
+Look for:
+1. Same project, different names (e.g., "Portage Place Redevelopment" and "Downtown Winnipeg Mixed-Use Transformation")
+2. Parent-child relationships (e.g., "Ontario Line" and "Ontario Line Pape Station")
+3. Cross-province duplicates (e.g., an interprovincial project listed once for each province)
+4. Phase duplicates (e.g., "Project X Phase 1" and "Project X" counted separately)
+5. Implausible entries (hallucinated or garbled project names)
+
+Return JSON:
+{
+  "duplicate_groups": [
+    {
+      "reason": "Same project, different names from different sources",
+      "projects": ["Project Name A (index 3)", "Project Name B (index 17)"],
+      "recommended_canonical_name": "Best name to use",
+      "confidence": "high | medium | low"
+    }
+  ],
+  "parent_child": [
+    {
+      "parent": "Ontario Line (index 5)",
+      "children": ["Ontario Line Pape Station (index 22)"],
+      "recommendation": "Keep parent as main record, note children as subcomponents"
+    }
+  ],
+  "suspicious_entries": [
+    {
+      "project": "Name (index X)",
+      "reason": "Name appears garbled / no such project exists / likely hallucinated"
+    }
+  ],
+  "cross_province": [
+    {
+      "projects": ["Pipeline X - Alberta (index 8)", "Pipeline X - BC (index 14)"],
+      "recommendation": "Merge into single interprovincial project"
+    }
+  ]
+}"""
+
+
+def analyze_dedup_sync(new_projects):
+    """Send this week's new projects to Pro for intelligent dedup review.
+
+    Args:
+        new_projects: list of project dicts discovered this week
+
+    Returns:
+        dict with duplicate_groups, parent_child, suspicious_entries, cross_province
+    """
+    if not new_projects:
+        return None
+
+    # Format project list with indices
+    project_list = []
+    for i, p in enumerate(new_projects):
+        province = p.get("province", "??")
+        city = p.get("cma", "") or p.get("city", "")
+        value = p.get("value", "?")
+        sector = p.get("sector", "?")
+        status = p.get("status", "?")
+        project_list.append(
+            f"[{i}] {p.get('name', 'Unknown')} | "
+            f"{province}, {city} | {value} | {sector} | {status}"
+        )
+
+    all_results = {
+        "duplicate_groups": [],
+        "parent_child": [],
+        "suspicious_entries": [],
+        "cross_province": [],
+    }
+
+    # Chunk if > 100 projects
+    chunk_size = 100
+    for start in range(0, len(project_list), chunk_size):
+        chunk = project_list[start:start + chunk_size]
+
+        user_prompt = (
+            f"This week's newly discovered projects "
+            f"({len(chunk)} of {len(project_list)} total):\n\n"
+            + "\n".join(chunk)
+            + "\n\nIdentify any duplicates, parent-child relationships, "
+            "cross-province duplicates, or suspicious entries."
+        )
+
+        result = reason_sync(DEDUP_SYSTEM, user_prompt, task_name="dedup_qa")
+        response = result["text"] if result else None
+        data = parse_json_response(response)
+
+        if data:
+            for key in all_results:
+                all_results[key].extend(data.get(key, []))
+
+    total_flags = sum(len(v) for v in all_results.values())
+    print(f"  [PRO] Dedup analysis: {len(all_results['duplicate_groups'])} duplicate groups, "
+          f"{len(all_results['parent_child'])} parent-child, "
+          f"{len(all_results['suspicious_entries'])} suspicious, "
+          f"{len(all_results['cross_province'])} cross-province")
+
+    return all_results if total_flags > 0 else None
+
+
+def store_dedup_results(db, results):
+    """Store dedup analysis results in Firestore for review."""
+    if not results:
+        return
+    try:
+        db.collection("pipeline_state").document("dedup_analysis").set({
+            "results": results,
+            "analyzed_at": datetime.utcnow().isoformat(),
+            "total_flags": sum(len(v) for v in results.values()),
+        })
+    except Exception as e:
+        logger.warning(f"Failed to store dedup results: {e}")

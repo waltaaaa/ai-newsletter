@@ -1,0 +1,106 @@
+"""
+pro_signal_analysis.py — Pro analyzes investigation results for signal-tier leads.
+
+When a lobbyist registration or permit anomaly triggers an investigation query,
+Flash searches the web. Pro then reviews Flash's findings and makes a judgment
+call: new project, existing project update, or false signal.
+
+NOTE: This is a placeholder module. No signal sources (lobbyist registries,
+permit anomaly detectors) are integrated yet. The module is functional and
+ready for when those data sources are added.
+"""
+
+import json
+import logging
+from claude_reasoning import reason_sync
+from pipeline_state import parse_json_response
+
+logger = logging.getLogger(__name__)
+
+SIGNAL_SYSTEM = """You are a Canadian capital projects intelligence analyst. You are reviewing
+web search results that were triggered by an investigation signal — either a
+lobbyist registration suggesting a company is seeking project approval, or a
+building permit anomaly suggesting unusual construction activity in a municipality.
+
+Your job: determine whether this signal represents:
+1. A genuinely NEW project not yet in our database
+2. An update to an EXISTING project (provide the likely existing project name)
+3. A FALSE SIGNAL (the lobbying/permits are unrelated to a capital project)
+
+Return JSON:
+{
+  "signal_type": "new_project | existing_update | false_signal",
+  "confidence": "high | medium | low",
+  "reasoning": "Why you reached this conclusion",
+  "project": { "name": "...", "province": "...", "sector": "...", "value_millions": null, "status": "..." } or null,
+  "existing_project_name": "Name if this is an update to a known project" or null,
+  "recommended_action": "add_to_database | merge_with_existing | discard | monitor_next_week"
+}"""
+
+
+def analyze_signals_sync(investigation_results):
+    """Analyze Flash's signal investigation results.
+
+    Args:
+        investigation_results: list of dicts with:
+            signal: the original signal (lobbyist reg or permit anomaly)
+            flash_results: what Flash found when it searched
+
+    Returns:
+        list of actionable findings (new projects, updates, follow-ups)
+    """
+    if not investigation_results:
+        return []
+
+    findings = []
+
+    for investigation in investigation_results:
+        signal = investigation.get("signal", {})
+        flash_projects = investigation.get("flash_results", {}).get("projects", [])
+
+        flash_summary = json.dumps(flash_projects, indent=2)[:6000]
+
+        user_prompt = (
+            f"INVESTIGATION SIGNAL:\n"
+            f"Type: {signal.get('type', 'unknown')}\n"
+            f"Source: {signal.get('source', '')}\n"
+            f"Details: {signal.get('details', '')}\n"
+            f"Province: {signal.get('province', '')}\n"
+            f"Date: {signal.get('date', '')}\n\n"
+            f"FLASH SEARCH RESULTS:\n"
+            f"{flash_summary}\n\n"
+            f"Based on the signal and Flash's search results, what is your assessment? "
+            f"Is this a new project, an update to an existing one, or a false signal?"
+        )
+
+        result = reason_sync(SIGNAL_SYSTEM, user_prompt, task_name="signal_investigation")
+        response = result["text"] if result else None
+        data = parse_json_response(response)
+
+        if data:
+            if data.get("signal_type") == "new_project" and \
+               data.get("confidence") in ("high", "medium"):
+                project = data.get("project", {})
+                if project:
+                    project["_discovery_tier"] = "pro_signal_analysis"
+                    findings.append({
+                        "action": "add_to_database",
+                        "project": project,
+                        "reasoning": data.get("reasoning", ""),
+                    })
+            elif data.get("signal_type") == "existing_update":
+                findings.append({
+                    "action": "merge_with_existing",
+                    "existing_name": data.get("existing_project_name"),
+                    "update_data": data.get("project"),
+                    "reasoning": data.get("reasoning", ""),
+                })
+
+            logger.info(
+                f"  Signal: {signal.get('type')} -> {data.get('signal_type')} "
+                f"({data.get('confidence')}) — {data.get('recommended_action')}"
+            )
+
+    logger.info(f"Signal analysis: {len(findings)} actionable from "
+                f"{len(investigation_results)} investigations")
+    return findings

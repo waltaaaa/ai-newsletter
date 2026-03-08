@@ -1,0 +1,113 @@
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+from datetime import datetime, timedelta
+
+# ==========================================
+# 1. AUTHENTICATE WITH FIREBASE
+# ==========================================
+# This looks for the key file you downloaded and renamed in Step 1
+cred = credentials.Certificate('serviceAccountKey.json')
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
+# ==========================================
+# 2. THE DATA PIPELINE
+# ==========================================
+def fetch_and_format_weekly_data():
+    """
+    This generates the structured JSON. I've changed some numbers (e.g., GDP to +1.5%) 
+    and text so you can physically see the dashboard change when this runs!
+    """
+    today = datetime.now()
+    last_week = today - timedelta(days=7)
+    edition_string = f"EDITION UPDATE (WEEK OF {last_week.strftime('%b %d').upper()} - {today.strftime('%b %d').upper()}) // STATUS: AUTOMATED"
+
+    print(f"Generating data for: {edition_string}...")
+
+    # The new weekly data payload
+    new_weekly_data = {
+        "edition": edition_string,
+        "execSummaries": {
+            "tab1": "<strong class='text-white'>Updated Bottom Line:</strong> Real GDP surprised to the upside this week at +1.5%. WCS crude differentials remain stable, while Ontario's auto manufacturing is seeing rapid expansion.",
+            "tab2": "<strong class='text-white'>Updated Bottom Line:</strong> A massive new $500M infrastructure grant was announced for Atlantic maritime ports this week, accelerating deep-water projects.",
+            "tab3": "<strong class='text-white'>Updated Bottom Line:</strong> The yield curve inversion steepened slightly following hawkish US Fed commentary, putting downward pressure on equities."
+        },
+        "metrics": {
+            "realGdp": "+1.5%", "nomGdp": "+3.2%", "outputGap": "-0.5%",
+            "cpi": "2.2%", "shelterCpi": "5.0%", "bocRate": "4.00%",
+            "unemployment": "6.0%", "participation": "65.4%", "wageGrowth": "+3.7%",
+            "currentAccount": "-0.7%", "agCrop": "104.5", "farmCash": "+2.2%"
+        },
+        "globalVectors": {
+            "us": "US Fed officials signaled rates may stay higher for longer, causing a slight dip in the CAD/USD pair over the last 48 hours.",
+            "china": "Base metal demand remains strong following consecutive weeks of PBOC liquidity injections targeting property developers.",
+            "eu": "Eurozone manufacturing PMIs showed unexpected weakness, driving capital toward North American sovereign debt."
+        },
+        "goodsIndustries": [
+             { 
+                 "code": "11", "name": "Agriculture, Forestry & Fishing", "mm": "+0.5%", "yy": "+2.2%", 
+                 "summary": "<strong>Weekly Update:</strong> Favorable weather forecasts in the prairies are boosting early planting confidence and equipment purchases.", 
+                 "sources": "StatCan The Daily", 
+                 "isNegative": False,
+                 "subsectors": [{"code": "111", "name": "Crop production", "mm": "+0.7%"}, {"code": "112", "name": "Animal production", "mm": "-0.1%"}] 
+             }
+             # NOTE: For this test, we are just sending 1 industry to prove the connection works.
+             # In production, you would include all arrays from the fallback data here.
+        ],
+        "servicesIndustries": [
+            { 
+                 "code": "41", "name": "Wholesale Trade", "mm": "+0.4%", "yy": "+1.6%", 
+                 "summary": "<strong>Weekly Update:</strong> Agricultural machinery wholesaling saw a sharp weekly uptick across the Midwest.", 
+                 "sources": "StatCan The Daily", 
+                 "isNegative": False,
+                 "subsectors": [{"code": "413", "name": "Food/bev/tobacco merchant", "mm": "+0.5%"}, {"code": "417", "name": "Machinery/equip merchant", "mm": "+1.1%"}] 
+             }
+        ],
+        "provinces": [
+             { 
+                 "name": "British Columbia", 
+                 "news": "BC port authorities announced a new fast-tracking initiative for critical mineral exports to allied nations, boosting mining equity outlooks.", 
+                 "projects": [{ "name": "Fraser River Logistics Park", "sector": "Infrastructure", "value": "$450M", "timeline": "Q3 2026 - Q4 2028", "date": today.strftime('%b %d, %Y'), "status": "Approved", "statusClass": "text-blue-600 bg-blue-100", "source": "Gov Link", "sourceLink": "#" }] 
+             }
+        ],
+        "yieldCurve": [
+            { "term": "1 Month", "yield": "4.82%" }, { "term": "3 Month", "yield": "4.75%" }, { "term": "6 Month", "yield": "4.60%" }, { "term": "1 Year", "yield": "4.45%" },
+            { "term": "2 Year", "yield": "4.20%", "highlight": True }, { "term": "5 Year", "yield": "3.90%" }, { "term": "10 Year", "yield": "3.65%", "highlight": True }, { "term": "30 Year", "yield": "3.60%" }
+        ],
+        "commodities": [
+            { "category": "Energy", "color": "text-cyan-500", "items": [ { "name": "Crude Oil (WTI)", "unit": "bbl", "val": "$79.10", "yy": "+4.5%" } ] },
+            { "category": "Metals & Minerals", "color": "text-amber-500", "items": [ { "name": "Gold", "unit": "toz", "val": "$2,165", "yy": "+9.0%" } ] }
+        ],
+        "charts": {
+            "yieldCurveCurrent": [4.82, 4.75, 4.60, 4.45, 4.20, 3.90, 3.65, 3.60],
+            "yieldCurveLastYear": [3.90, 4.10, 4.25, 4.15, 3.90, 3.50, 3.30, 3.40],
+            "commodityEnergy": [115, 118, 122, 119, 114, 118],
+            "commodityPrecious": [140, 142, 148, 155, 158, 165],
+            "commodityAg": [105, 103, 101, 98, 96, 95]
+        }
+    }
+    
+    return new_weekly_data
+
+# ==========================================
+# 3. PUSH TO FIREBASE
+# ==========================================
+def update_dashboard():
+    try:
+        data_to_push = fetch_and_format_weekly_data()
+        
+        # Target the 'newsletters' collection, and the specific document named 'latest'
+        print("Pushing data to Firestore...")
+        doc_ref = db.collection('newsletters').document('latest')
+        doc_ref.set(data_to_push)
+        
+        print("✅ Dashboard successfully updated in Firebase!")
+        print("Refresh your live HTML page, and you will see the new numbers!")
+        
+    except Exception as e:
+        print(f"❌ Error updating dashboard: {e}")
+
+if __name__ == "__main__":
+    update_dashboard()

@@ -1,0 +1,756 @@
+"""
+claude_reasoning.py -- Claude Sonnet reasoning engine.
+
+ALL reasoning tasks route through this module:
+- Interpreting trends and connecting patterns
+- Generating narrative briefings
+- Pre-event analysis with historical context
+- Policy implication assessment
+- Cross-reference insight generation
+- Gap analysis (formerly Gemini Pro)
+- Extraction recovery (formerly Gemini Pro)
+- Dedup QA (formerly Gemini Pro)
+- Signal investigation (formerly Gemini Pro)
+- Monthly meta-analysis (formerly Gemini Pro)
+
+Gemini Flash: classification and extraction only (free, NO grounding)
+Claude Sonnet: ALL reasoning (~$55/year)
+"""
+
+import os
+import asyncio
+import logging
+
+import aiohttp
+
+logger = logging.getLogger(__name__)
+
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+CLAUDE_MODEL = os.environ.get("SONNET_MODEL", "claude-sonnet-4-5-20250929")
+CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages"
+
+
+async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
+    """Send a reasoning request to Claude Sonnet.
+
+    No web search, no tools -- pure analysis of provided context.
+
+    Args:
+        system_prompt: Role and instructions
+        user_prompt: Data and specific question
+        max_tokens: Response length limit
+
+    Returns:
+        str: Claude's analysis text, or None on failure
+    """
+    if not ANTHROPIC_API_KEY:
+        logger.warning("ANTHROPIC_API_KEY not set, skipping Claude reasoning")
+        return None
+
+    headers = {
+        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+    }
+
+    payload = {
+        "model": CLAUDE_MODEL,
+        "max_tokens": max_tokens,
+        "system": system_prompt,
+        "messages": [{"role": "user", "content": user_prompt}],
+    }
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                CLAUDE_ENDPOINT, headers=headers, json=payload,
+                timeout=aiohttp.ClientTimeout(total=120),
+            ) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    return data["content"][0]["text"]
+                else:
+                    text = await resp.text()
+                    logger.error(f"Claude API error {resp.status}: {text[:300]}")
+                    return None
+    except asyncio.TimeoutError:
+        logger.warning("Claude API timeout")
+        return None
+    except Exception as e:
+        logger.warning(f"Claude API exception: {e}")
+        return None
+
+
+async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
+                                     max_tokens=4096):
+    """Same as reason_with_claude but tracks token usage for cost monitoring.
+
+    Returns:
+        dict with text, input_tokens, output_tokens, cost_usd -- or None
+    """
+    if not ANTHROPIC_API_KEY:
+        logger.warning("ANTHROPIC_API_KEY not set, skipping Claude reasoning")
+        return None
+
+    headers = {
+        "Content-Type": "application/json",
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+    }
+
+    payload = {
+        "model": CLAUDE_MODEL,
+        "max_tokens": max_tokens,
+        "system": system_prompt,
+        "messages": [{"role": "user", "content": user_prompt}],
+    }
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                CLAUDE_ENDPOINT, headers=headers, json=payload,
+                timeout=aiohttp.ClientTimeout(total=120),
+            ) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    usage = data.get("usage", {})
+                    input_tokens = usage.get("input_tokens", 0)
+                    output_tokens = usage.get("output_tokens", 0)
+
+                    # Cost: Sonnet = $3/M input + $15/M output
+                    cost = (input_tokens * 3 + output_tokens * 15) / 1_000_000
+
+                    logger.info(
+                        f"Claude [{task_name}]: {input_tokens} in / "
+                        f"{output_tokens} out = ${cost:.4f}"
+                    )
+
+                    return {
+                        "text": data["content"][0]["text"],
+                        "input_tokens": input_tokens,
+                        "output_tokens": output_tokens,
+                        "cost_usd": cost,
+                    }
+                else:
+                    text = await resp.text()
+                    logger.error(f"Claude API error {resp.status}: {text[:300]}")
+                    return None
+    except asyncio.TimeoutError:
+        logger.warning(f"Claude API timeout [{task_name}]")
+        return None
+    except Exception as e:
+        logger.warning(f"Claude API exception [{task_name}]: {e}")
+        return None
+
+
+def reason_sync(system_prompt, user_prompt, task_name="sync", max_tokens=4096):
+    """Synchronous wrapper for reason_with_claude_tracked."""
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            import nest_asyncio
+            nest_asyncio.apply()
+            return loop.run_until_complete(
+                reason_with_claude_tracked(system_prompt, user_prompt,
+                                           task_name, max_tokens)
+            )
+        else:
+            return asyncio.run(
+                reason_with_claude_tracked(system_prompt, user_prompt,
+                                           task_name, max_tokens)
+            )
+    except RuntimeError:
+        return asyncio.run(
+            reason_with_claude_tracked(system_prompt, user_prompt,
+                                       task_name, max_tokens)
+        )
+
+
+# ═══════════════════════════════════════════════════════════════════
+# Pipeline reasoning tasks (formerly in pro_*.py, now consolidated)
+# ═══════════════════════════════════════════════════════════════════
+
+import json
+from datetime import date, datetime
+
+try:
+    from pipeline_state import parse_json_response
+except ImportError:
+    def parse_json_response(text):
+        if not text:
+            return None
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            import re
+            m = re.search(r'\{[\s\S]*\}', text)
+            if m:
+                try:
+                    return json.loads(m.group())
+                except json.JSONDecodeError:
+                    return None
+            return None
+
+
+# ── Gap Analysis ──────────────────────────────────────────────────
+
+GAP_ANALYSIS_SYSTEM = """You are an expert analyst of the Canadian capital projects landscape.
+You have deep knowledge of each province's economic profile, major industries,
+and typical project pipeline.
+
+Your task: review the projects found by a web search for a given province and
+identify what's MISSING. Major provinces should have projects across most sectors.
+If a province with significant mining activity shows no mining projects, that's a gap.
+If a province with a housing crisis shows no residential projects, that's suspicious.
+
+For each gap identified, explain why you'd expect projects in that sector and
+suggest a specific, targeted search query that would find them.
+
+Return JSON:
+{
+  "province": "XX",
+  "projects_found": 8,
+  "sectors_represented": ["infrastructure", "healthcare"],
+  "gaps": [
+    {
+      "sector": "mining",
+      "reasoning": "Ontario has the Ring of Fire and significant mining activity in Sudbury/Timmins, but no mining projects appeared",
+      "suggested_query": "Ring of Fire mining projects Ontario 2025-2026 chromite development",
+      "confidence": "high"
+    }
+  ],
+  "overall_assessment": "Coverage appears incomplete — 3 major sectors missing"
+}"""
+
+
+def analyze_provincial_gaps_sync(sweep_results_by_province):
+    """Analyze provincial sweep results for coverage gaps.
+
+    Args:
+        sweep_results_by_province: dict of {province_name: [project_dicts]}
+
+    Returns:
+        list of follow-up query dicts
+    """
+    follow_up_queries = []
+
+    for province, projects in sweep_results_by_province.items():
+        project_summary = []
+        for p in projects:
+            val = p.get("value", "Not disclosed")
+            project_summary.append(
+                f"- {p.get('name', 'Unknown')}: {p.get('naics_2digit') or p.get('sector', 'unknown')} sector, "
+                f"{val}, status: {p.get('status', 'unknown')}"
+            )
+
+        summary_text = "\n".join(project_summary) if project_summary else "(No projects found)"
+
+        user_prompt = (
+            f"Province: {province}\n"
+            f"Web search found {len(projects)} projects this week:\n\n"
+            f"{summary_text}\n\n"
+            f"Analyze this list. What major project types or sectors are missing "
+            f"that you would expect for this province? What should we search for next week?"
+        )
+
+        result = reason_sync(GAP_ANALYSIS_SYSTEM, user_prompt, task_name="gap_analysis")
+        response = result["text"] if result else None
+        data = parse_json_response(response)
+
+        if data:
+            for gap in data.get("gaps", []):
+                if gap.get("suggested_query") and gap.get("confidence") in ("high", "medium"):
+                    follow_up_queries.append({
+                        "query": gap["suggested_query"],
+                        "province": province,
+                        "sector": gap.get("sector", "unknown"),
+                        "source": "gap_analysis",
+                        "reasoning": gap.get("reasoning", ""),
+                        "language": "en",
+                        "geo_tier": "province",
+                    })
+
+            gaps_found = len(data.get("gaps", []))
+            high_med = len([g for g in data.get("gaps", [])
+                           if g.get("confidence") in ("high", "medium")])
+            logger.info(
+                f"  {province}: {len(projects)} found, "
+                f"{gaps_found} gaps identified, {high_med} follow-up queries"
+            )
+        else:
+            logger.warning(f"  {province}: gap analysis returned no parseable result")
+
+    print(f"  [CLAUDE] Gap analysis: {len(follow_up_queries)} follow-up queries "
+          f"from {len(sweep_results_by_province)} provinces")
+    return follow_up_queries
+
+
+# ── Extraction Recovery ───────────────────────────────────────────
+
+RECOVERY_SYSTEM = """You are a Canadian capital projects analyst. You are reading a news article
+or government press release that our automated system flagged as likely containing
+a capital project, but our extraction model could not identify a specific project.
+
+Read the article carefully. Look for:
+1. Explicit project mentions (by name, location, or description)
+2. Implied projects (funding announcements that imply construction will happen)
+3. Referenced projects (mentioned in passing but not the article's main topic)
+4. Future projects (announced plans, feasibility studies, requests for proposals)
+
+For each project found, return JSON:
+{
+  "projects": [
+    {
+      "name": "Project name (or best descriptive name if unnamed)",
+      "proponent": "Company or organization",
+      "province": "Full province name",
+      "city": "City name if known",
+      "value_millions": null or number,
+      "status": "Proposed|Approved|Under Construction|Completed|Delayed|Cancelled",
+      "sector": "sector description",
+      "description": "One sentence",
+      "confidence_notes": "Why this was hard to extract"
+    }
+  ]
+}
+
+If genuinely no capital project exists in this article, return {"projects": [], "reason": "explanation"}.
+Be thorough but do not fabricate projects."""
+
+
+def recover_failed_extractions_sync(failed_articles):
+    """Re-process articles that produced no projects.
+
+    Args:
+        failed_articles: list of dicts with keys: title, summary, url, source_name, province
+
+    Returns:
+        list of flat project dicts ready for upsert_flat_projects()
+    """
+    if not failed_articles:
+        return []
+
+    recovered = []
+    today = date.today().isoformat()
+
+    for article in failed_articles:
+        title = article.get("title", "")
+        summary = article.get("summary", "")
+        url = article.get("url", "")
+        province = article.get("province", "Canada")
+
+        text_parts = []
+        if title:
+            text_parts.append(f"Headline: {title}")
+        if url:
+            text_parts.append(f"Source URL: {url}")
+        if summary:
+            text_parts.append(f"Summary: {summary[:4000]}")
+
+        if not text_parts:
+            continue
+
+        user_prompt = (
+            "\n\n".join(text_parts)
+            + "\n\nOur basic extraction model found no structured projects in this article. "
+            "Please read carefully and identify any capital projects mentioned or implied."
+        )
+
+        result = reason_sync(RECOVERY_SYSTEM, user_prompt, task_name="extraction_recovery")
+        response = result["text"] if result else None
+        data = parse_json_response(response)
+
+        if data and data.get("projects"):
+            for project in data["projects"]:
+                name = (project.get("name") or "").strip()
+                if not name or len(name) < 3:
+                    continue
+
+                prov = project.get("province") or province
+                if prov == "Canada":
+                    prov = ""
+
+                val_m = project.get("value_millions")
+                if val_m and isinstance(val_m, (int, float)):
+                    if val_m >= 1000:
+                        value_str = f"C${val_m/1000:.1f}B"
+                    else:
+                        value_str = f"C${val_m:.0f}M"
+                else:
+                    value_str = "Not disclosed"
+
+                flat = {
+                    "name": name,
+                    "province": prov,
+                    "cma": project.get("city", ""),
+                    "sector": project.get("sector", "Other"),
+                    "value": value_str,
+                    "status": project.get("status", "Proposed"),
+                    "proponent": project.get("proponent", ""),
+                    "description": project.get("description", ""),
+                    "discovery_source": "claude_recovered",
+                    "discovery_sources": ["claude_recovered"],
+                    "confidence": 0.4,
+                    "source_url": url,
+                    "sources": [{"url": url, "title": title}] if url else [],
+                    "evidence": [{
+                        "url": url,
+                        "name": article.get("source_name", ""),
+                        "date": today,
+                        "source_type": "claude_recovered",
+                    }] if url else [],
+                    "evidence_count": 1 if url else 0,
+                    "announced": today,
+                }
+                recovered.append(flat)
+
+            logger.info(
+                f"  Recovered {len(data['projects'])} projects from: "
+                f"{title[:60]}"
+            )
+
+    print(f"  [CLAUDE] Extraction recovery: {len(recovered)} projects "
+          f"from {len(failed_articles)} failed articles")
+    return recovered
+
+
+# ── Dedup Analysis ────────────────────────────────────────────────
+
+DEDUP_SYSTEM = """You are a Canadian capital projects data quality analyst. You are reviewing
+a list of newly discovered projects to identify duplicates that our automated
+name-matching system may have missed.
+
+Look for:
+1. Same project, different names (e.g., "Portage Place Redevelopment" and "Downtown Winnipeg Mixed-Use Transformation")
+2. Parent-child relationships (e.g., "Ontario Line" and "Ontario Line Pape Station")
+3. Cross-province duplicates (e.g., an interprovincial project listed once for each province)
+4. Phase duplicates (e.g., "Project X Phase 1" and "Project X" counted separately)
+5. Implausible entries (hallucinated or garbled project names)
+
+Return JSON:
+{
+  "duplicate_groups": [
+    {
+      "reason": "Same project, different names from different sources",
+      "projects": ["Project Name A (index 3)", "Project Name B (index 17)"],
+      "recommended_canonical_name": "Best name to use",
+      "confidence": "high | medium | low"
+    }
+  ],
+  "parent_child": [
+    {
+      "parent": "Ontario Line (index 5)",
+      "children": ["Ontario Line Pape Station (index 22)"],
+      "recommendation": "Keep parent as main record, note children as subcomponents"
+    }
+  ],
+  "suspicious_entries": [
+    {
+      "project": "Name (index X)",
+      "reason": "Name appears garbled / no such project exists / likely hallucinated"
+    }
+  ],
+  "cross_province": [
+    {
+      "projects": ["Pipeline X - Alberta (index 8)", "Pipeline X - BC (index 14)"],
+      "recommendation": "Merge into single interprovincial project"
+    }
+  ]
+}"""
+
+
+def analyze_dedup_sync(new_projects):
+    """Send this week's new projects for intelligent dedup review.
+
+    Args:
+        new_projects: list of project dicts discovered this week
+
+    Returns:
+        dict with duplicate_groups, parent_child, suspicious_entries, cross_province
+    """
+    if not new_projects:
+        return None
+
+    project_list = []
+    for i, p in enumerate(new_projects):
+        province = p.get("province", "??")
+        city = p.get("cma", "") or p.get("city", "")
+        value = p.get("value", "?")
+        sector = p.get("sector", "?")
+        status = p.get("status", "?")
+        project_list.append(
+            f"[{i}] {p.get('name', 'Unknown')} | "
+            f"{province}, {city} | {value} | {sector} | {status}"
+        )
+
+    all_results = {
+        "duplicate_groups": [],
+        "parent_child": [],
+        "suspicious_entries": [],
+        "cross_province": [],
+    }
+
+    chunk_size = 100
+    for start in range(0, len(project_list), chunk_size):
+        chunk = project_list[start:start + chunk_size]
+
+        user_prompt = (
+            f"This week's newly discovered projects "
+            f"({len(chunk)} of {len(project_list)} total):\n\n"
+            + "\n".join(chunk)
+            + "\n\nIdentify any duplicates, parent-child relationships, "
+            "cross-province duplicates, or suspicious entries."
+        )
+
+        result = reason_sync(DEDUP_SYSTEM, user_prompt, task_name="dedup_qa")
+        response = result["text"] if result else None
+        data = parse_json_response(response)
+
+        if data:
+            for key in all_results:
+                all_results[key].extend(data.get(key, []))
+
+    total_flags = sum(len(v) for v in all_results.values())
+    print(f"  [CLAUDE] Dedup analysis: {len(all_results['duplicate_groups'])} duplicate groups, "
+          f"{len(all_results['parent_child'])} parent-child, "
+          f"{len(all_results['suspicious_entries'])} suspicious, "
+          f"{len(all_results['cross_province'])} cross-province")
+
+    return all_results if total_flags > 0 else None
+
+
+def store_dedup_results(db, results):
+    """Store dedup analysis results in Firestore for review."""
+    if not results:
+        return
+    try:
+        db.collection("pipeline_state").document("dedup_analysis").set({
+            "results": results,
+            "analyzed_at": datetime.utcnow().isoformat(),
+            "total_flags": sum(len(v) for v in results.values()),
+        })
+    except Exception as e:
+        logger.warning(f"Failed to store dedup results: {e}")
+
+
+# ── Meta-Analysis ─────────────────────────────────────────────────
+
+META_SYSTEM = """You are a strategic analyst reviewing a Canadian capital projects database.
+You have deep knowledge of Canada's economy, infrastructure needs, and project landscape.
+
+Analyze the database summary and identify:
+1. SECTOR GAPS: sectors with fewer projects than expected given economic activity
+2. GEOGRAPHIC GAPS: provinces or cities underrepresented relative to their GDP
+3. TYPE GAPS: is greenfield overrepresented vs brownfield or vice versa?
+4. STATUS GAPS: are we finding announcements but missing completions? Or vice versa?
+5. VALUE GAPS: is the average project value skewed? Are we missing small or large projects?
+6. TEMPORAL GAPS: are there periods with suspiciously low discovery rates?
+7. SEARCH STRATEGY IMPROVEMENTS: specific new query types, keywords, or sources to add
+
+Be specific and actionable. General advice is not useful. Name specific sectors,
+provinces, project types, and suggest exact search queries to close gaps.
+
+Return JSON:
+{
+  "sector_gaps": [{"sector": "...", "reasoning": "...", "suggested_query": "..."}],
+  "geographic_gaps": [{"province": "...", "reasoning": "...", "suggested_query": "..."}],
+  "type_gaps": [{"gap": "...", "reasoning": "..."}],
+  "status_gaps": [{"gap": "...", "reasoning": "..."}],
+  "value_gaps": [{"gap": "...", "reasoning": "..."}],
+  "temporal_gaps": [],
+  "recommended_new_queries": [{"query": "...", "province": "...", "sector": "..."}],
+  "recommended_new_sources": [{"source": "...", "url": "...", "reasoning": "..."}],
+  "overall_coverage_grade": "A/B/C/D/F",
+  "top_3_priorities": ["...", "...", "..."]
+}"""
+
+
+def run_meta_analysis_sync(db):
+    """Monthly meta-analysis of the full project database.
+
+    Returns:
+        dict with coverage analysis, or None on failure
+    """
+    stats = {
+        "total_projects": 0,
+        "by_province": {},
+        "by_sector": {},
+        "by_status": {},
+        "by_discovery_source": {},
+        "with_value": 0,
+        "without_value": 0,
+        "stale_count": 0,
+    }
+
+    values = []
+
+    try:
+        for doc in db.collection("projects").stream():
+            data = doc.to_dict()
+            stats["total_projects"] += 1
+
+            prov = data.get("province", "Unknown")
+            sector = data.get("sector", "Unknown")
+            status = data.get("status", "Unknown")
+            source = data.get("discovery_source", "Unknown")
+
+            stats["by_province"][prov] = stats["by_province"].get(prov, 0) + 1
+            stats["by_sector"][sector] = stats["by_sector"].get(sector, 0) + 1
+            stats["by_status"][status] = stats["by_status"].get(status, 0) + 1
+            stats["by_discovery_source"][source] = stats["by_discovery_source"].get(source, 0) + 1
+
+            val_str = data.get("value", "")
+            if val_str and val_str != "Not disclosed":
+                stats["with_value"] += 1
+                try:
+                    if "B" in val_str:
+                        v = float(val_str.replace("C$", "").replace("B", "").strip()) * 1000
+                    elif "M" in val_str:
+                        v = float(val_str.replace("C$", "").replace("M", "").strip())
+                    else:
+                        v = None
+                    if v:
+                        values.append(v)
+                except (ValueError, TypeError):
+                    pass
+            else:
+                stats["without_value"] += 1
+
+            if data.get("is_stale"):
+                stats["stale_count"] += 1
+    except Exception as e:
+        logger.warning(f"Failed to read projects for meta-analysis: {e}")
+        return None
+
+    if stats["total_projects"] == 0:
+        return None
+
+    stats["avg_value_millions"] = round(sum(values) / len(values)) if values else 0
+    stats["median_value_millions"] = round(sorted(values)[len(values) // 2]) if values else 0
+    stats["value_pct_disclosed"] = round(100 * stats["with_value"] / stats["total_projects"], 1)
+
+    user_prompt = (
+        f"Database summary as of {datetime.utcnow().strftime('%Y-%m-%d')}:\n\n"
+        f"{json.dumps(stats, indent=2)}\n\n"
+        f"Analyze this database for coverage gaps and recommend specific improvements "
+        f"to our search and tracking strategy."
+    )
+
+    result = reason_sync(META_SYSTEM, user_prompt, task_name="meta_analysis")
+    response = result["text"] if result else None
+    analysis = parse_json_response(response)
+
+    if analysis:
+        print(f"  [CLAUDE] Meta-analysis: grade={analysis.get('overall_coverage_grade')}")
+        print(f"  [CLAUDE] Top priorities: {analysis.get('top_3_priorities')}")
+        print(f"  [CLAUDE] New queries: {len(analysis.get('recommended_new_queries', []))}, "
+              f"new sources: {len(analysis.get('recommended_new_sources', []))}")
+        return analysis
+
+    logger.warning("Meta-analysis returned no parseable result")
+    return None
+
+
+def store_meta_analysis(db, analysis):
+    """Store meta-analysis results in Firestore."""
+    if not analysis:
+        return
+    try:
+        db.collection("pipeline_state").document("monthly_meta_analysis").set({
+            "analysis": analysis,
+            "analyzed_at": datetime.utcnow().isoformat(),
+            "grade": analysis.get("overall_coverage_grade", "?"),
+        })
+    except Exception as e:
+        logger.warning(f"Failed to store meta-analysis: {e}")
+
+
+# ── Signal Investigation ──────────────────────────────────────────
+
+SIGNAL_SYSTEM = """You are a Canadian capital projects intelligence analyst. You are reviewing
+web search results that were triggered by an investigation signal — either a
+lobbyist registration suggesting a company is seeking project approval, or a
+building permit anomaly suggesting unusual construction activity in a municipality.
+
+Your job: determine whether this signal represents:
+1. A genuinely NEW project not yet in our database
+2. An update to an EXISTING project (provide the likely existing project name)
+3. A FALSE SIGNAL (the lobbying/permits are unrelated to a capital project)
+
+Return JSON:
+{
+  "signal_type": "new_project | existing_update | false_signal",
+  "confidence": "high | medium | low",
+  "reasoning": "Why you reached this conclusion",
+  "project": { "name": "...", "province": "...", "sector": "...", "value_millions": null, "status": "..." } or null,
+  "existing_project_name": "Name if this is an update to a known project" or null,
+  "recommended_action": "add_to_database | merge_with_existing | discard | monitor_next_week"
+}"""
+
+
+def analyze_signals_sync(investigation_results):
+    """Analyze signal investigation results.
+
+    Args:
+        investigation_results: list of dicts with:
+            signal: the original signal (lobbyist reg or permit anomaly)
+            flash_results: what Flash found when it searched
+
+    Returns:
+        list of actionable findings (new projects, updates, follow-ups)
+    """
+    if not investigation_results:
+        return []
+
+    findings = []
+
+    for investigation in investigation_results:
+        signal = investigation.get("signal", {})
+        flash_projects = investigation.get("flash_results", {}).get("projects", [])
+
+        flash_summary = json.dumps(flash_projects, indent=2)[:6000]
+
+        user_prompt = (
+            f"INVESTIGATION SIGNAL:\n"
+            f"Type: {signal.get('type', 'unknown')}\n"
+            f"Source: {signal.get('source', '')}\n"
+            f"Details: {signal.get('details', '')}\n"
+            f"Province: {signal.get('province', '')}\n"
+            f"Date: {signal.get('date', '')}\n\n"
+            f"SEARCH RESULTS:\n"
+            f"{flash_summary}\n\n"
+            f"Based on the signal and search results, what is your assessment? "
+            f"Is this a new project, an update to an existing one, or a false signal?"
+        )
+
+        result = reason_sync(SIGNAL_SYSTEM, user_prompt, task_name="signal_investigation")
+        response = result["text"] if result else None
+        data = parse_json_response(response)
+
+        if data:
+            if data.get("signal_type") == "new_project" and \
+               data.get("confidence") in ("high", "medium"):
+                project = data.get("project", {})
+                if project:
+                    project["_discovery_tier"] = "signal_analysis"
+                    findings.append({
+                        "action": "add_to_database",
+                        "project": project,
+                        "reasoning": data.get("reasoning", ""),
+                    })
+            elif data.get("signal_type") == "existing_update":
+                findings.append({
+                    "action": "merge_with_existing",
+                    "existing_name": data.get("existing_project_name"),
+                    "update_data": data.get("project"),
+                    "reasoning": data.get("reasoning", ""),
+                })
+
+            logger.info(
+                f"  Signal: {signal.get('type')} -> {data.get('signal_type')} "
+                f"({data.get('confidence')}) — {data.get('recommended_action')}"
+            )
+
+    logger.info(f"Signal analysis: {len(findings)} actionable from "
+                f"{len(investigation_results)} investigations")
+    return findings

@@ -65,23 +65,5 @@ node_modules/
 # dotenv environment variables file
 .env
 
-# Pipeline cache (SQLite)
-.cache/
-
 # dataconnect generated files
 .dataconnect
-
-# Python cache
-__pycache__/
-*.pyc
-
-# SQLite databases
-*.db
-
-# Secrets and service account keys
-serviceAccountKey.json
-
-# Local cache directory
-.cache/
-
-nul
