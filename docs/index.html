@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Dispatch</title>
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1634638022003-1e5928bb311f?w=1920&q=80">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.7/d3.layout.cloud.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+<style>
+:root {
+  --bg-primary:#133D62;--bg-white:#FFFFFF;--bg-subtle:#174A75;--bg-hover:#1C5688;
+  --border-light:#246A9A;--border-medium:#2E7DAD;--border-strong:#3A90C0;
+  --text-primary:#E8F0F8;--text-secondary:#B8D0E4;--text-tertiary:#8AAFC8;
+  --accent-blue:#2C4A7C;--accent-blue-light:#DCE4EF;--accent-blue-soft:#4A6FA5;
+  --status-green:#15803D;--status-green-bg:#DCFCE7;
+  --status-red:#B91C1C;--status-red-bg:#FEE2E2;
+  --status-amber:#B45309;--status-amber-bg:#FEF3C7;
+  --status-blue:#1E40AF;--status-blue-bg:#DBEAFE;
+  --status-purple:#6D28D9;--status-purple-bg:#EDE9FE;
+  --shadow-xs:0 1px 2px rgba(0,0,0,.10);
+  --shadow-sm:0 1px 4px rgba(0,0,0,.12),0 2px 6px rgba(0,0,0,.08);
+  --shadow-md:0 4px 16px rgba(0,0,0,.15);
+  --shadow-lg:0 8px 28px rgba(0,0,0,.18);
+  --radius-sm:6px;--radius-md:10px;--radius-lg:14px;--radius-xl:20px;
+  --font-body:'Plus Jakarta Sans',-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --text-xs:.75rem;--text-sm:.8125rem;--text-base:.9375rem;
+  --text-lg:1.125rem;--text-xl:1.375rem;--text-2xl:1.75rem;--text-3xl:2.25rem;
+  /* Glass cards — solid white with subtle glass border for readability */
+  --glass-bg:#FFFFFF;--glass-border:rgba(255,255,255,0.35);
+  --glass-blur:0px;--glass-bg-hover:#F8FAFC;
+  /* Missing vars used by app.js inline styles */
+  --bg-secondary:#F0F2F5;--bg-tertiary:#E5E7EB;--text-muted:#6B7280;
+  --surface:#FFFFFF;--surface-elevated:#F0F2F5;
+  --accent:var(--accent-blue-soft);--border:#D1D5DB;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-medium);border-radius:3px}
+@keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .3s ease both}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+/* Hero */
+.hero{position:relative;overflow:hidden;background:var(--bg-subtle);padding:76px 0 64px}
+.hero::before{content:'';position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1634638022003-1e5928bb311f?w=1920&q=80');background-size:cover;background-position:center 40%;filter:saturate(.85) brightness(1);opacity:.8;z-index:0}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(19,61,98,.82) 25%,rgba(19,61,98,.45) 50%,rgba(19,61,98,.1) 75%,transparent 100%);z-index:1}
+.hero-content{position:relative;z-index:2;max-width:600px;background:rgba(19,61,98,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:var(--radius-lg);padding:24px 28px}
+.hero-eyebrow{font-size:var(--text-xs);letter-spacing:1.5px;color:#8AAFC8;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+.hero-title{font-size:var(--text-3xl);font-weight:700;color:#FFFFFF;line-height:1.2;margin-bottom:6px}
+.hero-subtitle{font-size:var(--text-base);color:#D0E0F0;margin-bottom:10px;line-height:1.5}
+.hero-badges{display:flex;gap:16px;font-size:var(--text-sm);color:#8AAFC8}
+.hero-badges span::before{content:'·';margin-right:8px;color:var(--border-medium)}
+.hero-badges span:first-child::before{display:none}
+/* Nav */
+.edition-item:hover{background:var(--bg-hover)!important}
+.main-nav{position:sticky;top:0;z-index:100;background:rgba(19,61,98,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);box-shadow:0 1px 8px rgba(0,0,0,.3)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px}
+.nav-tabs{display:flex;justify-content:center;gap:0;list-style:none}
+.nav-tab{padding:10px 18px;font-size:var(--text-sm);font-weight:600;letter-spacing:.3px;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s ease;user-select:none}
+.nav-tab:hover{color:var(--text-primary)}
+.nav-tab.active{color:var(--accent-blue-soft);border-bottom-color:var(--accent-blue-soft);text-shadow:0 0 12px rgba(59,130,246,.3)}
+.nav-meta{text-align:center;font-size:var(--text-xs);color:var(--text-tertiary);padding:4px 0 6px}
+/* Tab panels */
+.tab-panel{display:none;padding:24px 0 40px}
+.tab-panel.active{display:block;animation:fadeIn .2s ease both}
+/* Section banners */
+.section-banner{position:relative;overflow:hidden;height:160px;background:var(--bg-subtle);border-radius:var(--radius-lg);margin-bottom:20px;display:flex;align-items:center;padding:0 32px;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 0 24px 8px rgba(19,61,98,.5);border:1px solid rgba(255,255,255,.1)}
+.section-banner::before{content:'';position:absolute;inset:0;background-image:var(--banner-img);background-size:cover;background-position:center;filter:saturate(.8) brightness(1);opacity:.7}
+.section-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(19,61,98,.8) 25%,rgba(19,61,98,.35) 55%,rgba(19,61,98,.1) 100%)}
+.section-banner-content{position:relative;z-index:2}
+.section-banner-title{font-size:var(--text-xl);font-weight:700;color:#E8F0F8}
+.section-banner-sub{font-size:var(--text-sm);color:#B8D0E4;margin-top:4px}
+.hero-map{position:absolute;right:8%;top:50%;transform:translateY(-50%);z-index:1;opacity:.2;pointer-events:none;mix-blend-mode:screen}
+/* Cards */
+.card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:22px;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));transition:box-shadow .2s ease,background .2s ease;color:#111}
+.card:hover{box-shadow:var(--shadow-md),0 0 0 1px rgba(59,130,246,.08);background:var(--glass-bg-hover)}
+.card-header{font-size:var(--text-lg);font-weight:600;color:#111;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card-body{font-size:var(--text-sm);line-height:1.65;color:#111;padding:4px 6px}
+.card-body li{margin-bottom:6px}
+.card-body strong{color:var(--accent-blue);font-weight:600}
+.card-body sup{color:var(--accent-blue);font-weight:600;cursor:pointer;font-size:.7em}
+.card-body sup:hover{text-decoration:underline}
+/* Indicator pills */
+.indicator-strip{display:flex;gap:8px;padding:2px 0 8px;justify-content:space-between}
+.indicator-strip::-webkit-scrollbar{display:none}
+.indicator-pill{flex:1 1 0;display:inline-flex;flex-direction:column;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:8px 12px;min-width:0;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));transition:box-shadow .15s ease,background .15s ease}
+.indicator-pill:hover{box-shadow:var(--shadow-md);background:var(--glass-bg-hover)}
+.indicator-pill-label{font-size:var(--text-xs);color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.indicator-pill-value{font-family:var(--font-mono);font-size:var(--text-base);font-weight:600;color:#111}
+.indicator-pill-change{font-size:var(--text-xs);font-weight:500;margin-top:2px}
+.indicator-pill-date{font-size:var(--text-xs);color:#555;margin-top:4px}
+.indicator-pill-source{font-size:.6875rem;color:var(--accent-blue);text-decoration:none;margin-top:4px}
+.indicator-pill-source:hover{text-decoration:underline}
+.sparkline-wrap{width:100%;height:48px;margin-top:auto;overflow:hidden;position:relative}
+.sparkline{width:100%;height:100%}
+.change-up{color:var(--status-green)}.change-down{color:var(--status-red)}.change-flat{color:#777}
+.ind-toggle{background:#0F3555;color:#6B9EC0;border-right:1px solid #1A4A70}.ind-toggle:last-child{border-right:none}.ind-toggle:hover{background:#1A4A70;color:#E8F0F8}.ind-toggle.active{background:#3B7DD8;color:#fff;box-shadow:inset 0 -2px 0 #2B6BC0}
+/* Indicator dropdown */
+.indicator-dropdown{margin-top:8px}
+.indicator-dropdown-toggle{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;font-size:var(--text-sm);font-weight:500;color:#B8D0E4;background:var(--bg-subtle);border:1px solid var(--border-light);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s ease}
+.indicator-dropdown-toggle:hover{background:var(--bg-hover);color:#E8F0F8}
+.indicator-dropdown-toggle .chevron{transition:transform .2s ease;font-size:.8em}
+.indicator-dropdown-toggle.open .chevron{transform:rotate(180deg)}
+.indicator-dropdown-body{display:none;margin-top:12px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);overflow:hidden;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur))}
+.indicator-dropdown-body.open{display:block}
+.indicator-filter{width:100%;padding:10px 16px;border:none;border-bottom:1px solid #ddd;font-family:var(--font-body);font-size:var(--text-sm);outline:none;background:#f5f5f5;color:#111}
+.indicator-filter:focus{background:#fff}
+.indicator-group-header{padding:10px 16px;font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#555;background:#f0f0f0;border-top:1px solid #ddd}
+.indicator-row{display:grid;grid-template-columns:1fr 100px 100px 120px 60px;padding:8px 16px;font-size:var(--text-sm);align-items:center;border-bottom:1px solid #e5e5e5;color:#111}
+.indicator-row:nth-child(even){background:#f8f9fb}
+.indicator-row:hover{background:#eef1f6}
+.indicator-row-name{color:#111;font-weight:500}
+.indicator-row-value{font-family:var(--font-mono);font-weight:500;text-align:right;color:#111}
+.indicator-row-change{text-align:right;font-weight:500}
+.indicator-row-period{color:#777;font-size:var(--text-xs)}
+.indicator-row-source a{color:var(--accent-blue);text-decoration:none;font-size:var(--text-xs)}
+.indicator-row-source a:hover{text-decoration:underline}
+/* Province selector */
+.province-selector{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.province-selector::-webkit-scrollbar{display:none}
+.province-pill{flex:0 0 auto;padding:6px 12px;font-size:var(--text-sm);font-weight:600;border-radius:var(--radius-md);cursor:pointer;background:var(--bg-subtle);color:#B8D0E4;border:1px solid transparent;transition:all .15s ease}
+.province-pill:hover{background:var(--bg-hover);color:#E8F0F8}
+.province-pill.active{background:var(--accent-blue);color:#fff;border-color:var(--accent-blue)}
+/* Two column + mini charts */
+.two-col{display:grid;grid-template-columns:55% 45%;gap:16px}
+.mini-chart-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.mini-chart-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:10px 12px;cursor:pointer;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));transition:box-shadow .15s ease,background .15s ease}
+.mini-chart-card:hover{box-shadow:var(--shadow-md);background:var(--glass-bg-hover)}
+.mini-chart-label{font-size:var(--text-xs);text-transform:uppercase;color:#555;letter-spacing:.5px}
+.mini-chart-value{font-family:var(--font-mono);font-size:var(--text-base);font-weight:600;margin:2px 0;color:#111}
+.mini-chart-canvas{width:100%;height:60px}
+/* NAICS sector grid */
+.sector-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.sector-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:16px;border-left:3px solid var(--border-medium);backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));transition:box-shadow .15s ease,background .15s ease}
+.sector-card:hover{box-shadow:var(--shadow-md);background:var(--glass-bg-hover)}
+.sector-card-header{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.naics-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--accent-blue-light);color:var(--accent-blue);font-size:var(--text-xs);font-weight:700;padding:2px 8px;border-radius:4px;font-family:var(--font-mono)}
+.sector-card-name{font-size:var(--text-base);font-weight:600;color:#111}
+.sector-card-body{font-size:var(--text-sm);color:#333;line-height:1.6}
+.sector-card-body ul{padding-left:16px;margin:8px 0}
+.sector-card-body li{margin-bottom:4px}
+.s-energy{border-left-color:#D97706}.s-mining{border-left-color:#64748B}.s-utilities{border-left-color:#2563EB}.s-construction{border-left-color:#EA580C}
+.s-manufacturing{border-left-color:#4F46E5}.s-trade{border-left-color:#059669}.s-transport{border-left-color:#7C3AED}.s-info{border-left-color:#8B5CF6}
+.s-finance{border-left-color:#059669}.s-realestate{border-left-color:#0891B2}.s-professional{border-left-color:#6366F1}.s-admin{border-left-color:#78716C}
+.s-education{border-left-color:#2563EB}.s-health{border-left-color:#E11D48}.s-arts{border-left-color:#A855F7}.s-accommodation{border-left-color:#F59E0B}
+.s-other{border-left-color:#6B7280}.s-public{border-left-color:#1E40AF}.s-agriculture{border-left-color:#16A34A}
+/* Market cards */
+.market-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.market-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:12px 16px;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));transition:box-shadow .15s ease,background .15s ease}
+.market-card:hover{box-shadow:var(--shadow-md);background:var(--glass-bg-hover)}
+.market-card-ticker{font-size:var(--text-xs);color:#555;text-transform:uppercase;letter-spacing:.5px}
+.market-card-price{font-family:var(--font-mono);font-size:var(--text-lg);font-weight:700;margin:2px 0;color:#111}
+.market-card-change{font-size:var(--text-sm);font-weight:500}
+.market-card-source{font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;margin-top:4px;display:inline-block}
+.sparkline-container{height:50px;margin:8px 0}
+/* Yield curve */
+.yield-card{max-height:280px}.yield-card canvas{max-height:180px}
+.yield-spread{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-sm);color:#333;margin-top:8px}
+.yield-spread .inversion{background:var(--status-red-bg);color:var(--status-red);padding:2px 8px;border-radius:4px;font-size:var(--text-xs);font-weight:600}
+/* Filter bar */
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 0;margin-bottom:8px}
+.filter-bar input,.filter-bar select{font-family:var(--font-body);font-size:var(--text-sm);padding:8px 12px;border:1px solid #ccc;border-radius:var(--radius-sm);background:#fff;color:#111;outline:none;transition:border-color .15s}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--accent-blue-soft)}
+.filter-bar input{flex:1;min-width:200px}
+.results-summary{font-size:var(--text-sm);color:#B8D0E4;margin-bottom:12px}
+.toggle-label{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-xs);cursor:pointer;white-space:nowrap;color:var(--text-secondary);user-select:none}
+.toggle-label input{display:none}
+.toggle-slider{width:32px;height:18px;background:#ccc;border-radius:9px;position:relative;transition:background .2s}
+.toggle-slider::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle-label input:checked+.toggle-slider{background:var(--accent-blue-soft)}
+.toggle-label input:checked+.toggle-slider::after{transform:translateX(14px)}
+.unconfirmed-row{opacity:.55}
+.unconfirmed-badge{display:inline-block;font-size:9px;background:#e8e8e8;color:#888;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle}
+.edit-form{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:10px}
+.edit-form label{display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:3px;color:var(--text-secondary)}
+.edit-form input,.edit-form select,.edit-form textarea{width:100%;border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:var(--text-sm);background:var(--bg-white);margin-bottom:8px;font-family:var(--font-body)}
+.edit-form .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.edit-feedback{padding:6px 10px;border-radius:5px;font-size:var(--text-xs);margin-top:6px;display:none}
+/* Project table */
+.project-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);background:#fff;color:#111}
+.project-table thead th{position:sticky;top:52px;background:#fff;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.3px;color:#333;padding:10px 12px;text-align:left;border-bottom:2px solid var(--border-strong);cursor:pointer;user-select:none;z-index:10}
+.project-table thead th:hover{color:#111}
+.project-table tbody tr{border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .1s;background:#fff}
+.project-table tbody tr:nth-child(even){background:#f2f5f9}
+.project-table tbody tr:hover{background:#e6ecf3}
+.project-table td{padding:10px 12px;vertical-align:middle}
+.col-value{font-family:var(--font-mono);font-weight:600;white-space:nowrap}
+.col-name{font-weight:600}.col-province{white-space:nowrap}
+.col-cma{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-proponent{color:#555;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-updated{white-space:nowrap}.col-source a{color:var(--accent-blue);text-decoration:none}
+/* Project expansion */
+.project-expand{padding:16px 24px;background:#fff;border-bottom:2px solid var(--border-light)}
+.project-timeline{position:relative;padding-left:20px;margin:12px 0}
+.project-timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--border-light)}
+.timeline-entry{position:relative;padding:8px 0 8px 16px;font-size:var(--text-sm)}
+.timeline-entry::before{content:'';position:absolute;left:-17px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--accent-blue-soft);border:2px solid var(--bg-white)}
+.timeline-date{color:#777;font-size:var(--text-xs)}
+.timeline-detail{color:#555;margin-top:2px}
+/* Status badges */
+.status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:var(--text-xs);font-weight:500;white-space:nowrap}
+.status-badge::before{content:'';width:6px;height:6px;border-radius:50%}
+.st-proposed,.st-under-review{background:var(--status-blue-bg);color:var(--status-blue)}
+.st-proposed::before,.st-under-review::before{background:var(--status-blue)}
+.st-approved,.st-under-construction{background:var(--status-green-bg);color:var(--status-green)}
+.st-approved::before,.st-under-construction::before{background:var(--status-green)}
+.st-paused{background:var(--status-amber-bg);color:var(--status-amber)}.st-paused::before{background:var(--status-amber)}
+.st-expansion{background:var(--status-purple-bg);color:var(--status-purple)}.st-expansion::before{background:var(--status-purple)}
+.st-operational{background:var(--status-green-bg);color:var(--status-green)}.st-operational::before{background:var(--status-green)}
+/* Source & discovery badges */
+.src-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:var(--text-xs);font-weight:500}
+.src-article{background:var(--accent-blue-light);color:var(--accent-blue)}
+.src-press{background:var(--status-green-bg);color:var(--status-green)}
+.src-registry{background:var(--status-purple-bg);color:var(--status-purple)}
+.src-api{background:#e8e8e8;color:#555}
+.disc-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:var(--text-xs);font-weight:500;background:#e8e8e8;color:#555}
+/* Project type badges */
+.type-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:var(--text-xs);font-weight:500;white-space:nowrap}
+.type-greenfield{background:#dcfce7;color:#166534}
+.type-brownfield{background:#fef3c7;color:#92400e}
+.type-expansion{background:#dbeafe;color:#1e40af}
+.type-restoration{background:#f3e8ff;color:#6b21a8}
+.type-remediation{background:#ffedd5;color:#9a3412}
+.type-replace{background:#fee2e2;color:#991b1b}
+/* Confidence */
+.conf-high{color:#166534}.conf-mid{color:#92400e}.conf-low{color:#777}
+/* Project summary stats */
+.proj-stats{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.proj-stat-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center;min-width:110px;flex:1;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur))}
+.proj-stat-val{font-size:1.3rem;font-weight:700;color:#111}
+.proj-stat-label{font-size:var(--text-xs);color:#777;margin-top:2px}
+/* Evidence list */
+.evidence-list{margin-top:8px;padding:6px 0}
+.evidence-list a{color:#1E40AF;text-decoration:none;font-size:var(--text-xs)}
+.evidence-list a:hover{text-decoration:underline;color:#1E3A8A}
+.evidence-list li{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px}
+.src-badge{display:inline-flex;align-items:center;justify-content:center;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:700;flex-shrink:0;line-height:1.4}
+.src-badge-gov{background:#1E40AF;color:#fff}
+.src-badge-news{background:#374151;color:#fff}
+.src-badge-ind{background:#B45309;color:#fff}
+.src-badge-reg{background:#6B7280;color:#fff}
+.src-badge-other{background:#D1D5DB;color:#374151}
+.url-broken{color:#B91C1C;font-size:10px;margin-left:4px}
+.verify-banner{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:var(--radius-md);padding:8px 16px;margin-bottom:12px;font-size:var(--text-sm);color:#166534;display:flex;align-items:center;gap:8px}
+/* Filter toggle buttons */
+.proj-type-toggle{display:inline-flex;border:1px solid #ccc;border-radius:var(--radius-sm);overflow:hidden;margin-right:4px}
+.proj-type-toggle button{font-family:var(--font-body);font-size:var(--text-xs);padding:6px 12px;border:none;background:#fff;color:#555;cursor:pointer;transition:background .15s,color .15s}
+.proj-type-toggle button.active{background:var(--accent-blue);color:#fff}
+/* Sentiment + word cloud */
+.sentiment-section{display:flex;flex-direction:column;gap:16px}
+.word-cloud-container{width:100%;height:280px;display:flex;align-items:center;justify-content:center;overflow:visible}
+.word-cloud-container svg{width:100%;height:100%}
+.sentiment-meta{font-size:var(--text-xs);color:#777;margin-top:8px}
+.sentiment-badge{display:inline-flex;padding:3px 10px;border-radius:var(--radius-sm);font-size:var(--text-sm);font-weight:600;margin-bottom:8px}
+.pulse-prose{font-size:var(--text-sm);line-height:1.6;border-left:3px solid var(--accent-blue-light);padding-left:12px;margin-bottom:12px;color:#333}
+.category-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:var(--text-sm)}
+.category-bar-label{width:120px;color:#555;flex-shrink:0}
+.category-bar-track{flex:1;height:8px;background:#e5e5e5;border-radius:4px;overflow:hidden}
+.category-bar-fill{height:100%;border-radius:4px;transition:width .3s ease}
+.category-bar-score{width:48px;text-align:right;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500}
+/* Global vectors */
+.gv-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:16px 20px;margin-bottom:10px;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));transition:box-shadow .2s,background .2s}
+.gv-card:hover{box-shadow:var(--shadow-md);background:var(--glass-bg-hover)}
+.gv-header{display:flex;align-items:center;gap:8px;font-size:var(--text-base);font-weight:600;margin-bottom:8px;color:#111}
+.gv-body{font-size:var(--text-sm);line-height:1.6;color:#222}
+.gv-body strong{color:var(--accent-blue);font-weight:600}
+.gv-body sup{color:var(--accent-blue);font-weight:600;cursor:pointer;font-size:.7em}
+.gv-us{border-left:4px solid #64748B}.gv-china{border-left:4px solid #D97706}.gv-eu{border-left:4px solid #1E3A5F}.gv-uk{border-left:4px solid #0D9488}
+/* Sources footer */
+.sources-toggle{display:inline-flex;align-items:center;gap:6px;padding:4px 0;font-size:var(--text-xs);font-weight:500;color:#555;cursor:pointer;margin-top:12px}
+.sources-toggle:hover{color:#111}
+.sources-list{display:none;margin-top:4px;padding:10px 12px;background:#f5f5f5;border-radius:var(--radius-sm);font-size:var(--text-xs);line-height:1.7;color:#333}
+.sources-list.open{display:block}
+.sources-list a{color:var(--accent-blue);text-decoration:none}
+.sources-list a:hover{text-decoration:underline}
+/* Calendar */
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border-light);border:1px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px}
+.calendar-header-cell{padding:8px;text-align:center;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;color:#fff;background:var(--bg-subtle)}
+.calendar-cell{background:#fff;padding:8px;min-height:60px;font-size:var(--text-xs);cursor:pointer;transition:background .1s;color:#111}
+.calendar-cell:hover{background:#eef1f6}
+.calendar-cell.other-month{color:#999;background:#f5f5f5}
+.calendar-cell.today{background:var(--accent-blue-light)}
+.calendar-day-number{font-weight:600;margin-bottom:4px}
+.cal-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin:1px}
+.cal-dot.high{background:var(--status-red)}.cal-dot.medium{background:var(--status-amber)}.cal-dot.low{background:var(--accent-blue-soft)}
+/* Events */
+.events-week-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:16px 20px;margin-bottom:12px;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur))}
+.events-week-card h3{font-size:var(--text-base);font-weight:600;margin-bottom:10px;color:#111}
+.event-row{display:grid;grid-template-columns:60px 1fr 140px 70px 32px;padding:6px 0;border-bottom:1px solid var(--border-light);align-items:center;font-size:var(--text-sm)}
+.event-row:last-child{border-bottom:none}
+.event-row:hover{background:#f0f2f5;border-radius:4px}
+.event-date-day{font-size:var(--text-base);font-weight:600;line-height:1;color:#111}
+.event-date-month{font-size:var(--text-xs);color:#777}
+.event-name{font-weight:500;color:#111}.event-institution{color:#555;font-size:var(--text-xs)}
+.impact-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:var(--text-xs);font-weight:600}
+.impact-high{background:var(--status-red-bg);color:var(--status-red)}
+.impact-medium{background:var(--status-amber-bg);color:var(--status-amber)}
+.impact-low{background:var(--accent-blue-light);color:var(--accent-blue)}
+.event-high-accent{border-left:3px solid var(--status-red);padding-left:8px}
+/* Metric selector + time range */
+.metric-selector{display:flex;gap:8px;margin-bottom:12px}
+.metric-selector select{font-family:var(--font-body);font-size:var(--text-sm);padding:6px 10px;border:1px solid #ccc;border-radius:var(--radius-sm);background:#fff;color:#111;cursor:pointer}
+.time-range-pills{display:flex;gap:4px}
+.time-pill{padding:4px 10px;font-size:var(--text-xs);font-weight:600;border-radius:var(--radius-sm);cursor:pointer;background:var(--bg-subtle);color:#B8D0E4;border:1px solid transparent;transition:all .15s}
+.time-pill:hover{background:var(--bg-hover)}.time-pill.active{background:var(--accent-blue);color:#fff}
+/* Load more */
+.load-more-btn{display:block;width:100%;padding:12px;margin-top:16px;font-family:var(--font-body);font-size:var(--text-sm);font-weight:600;color:var(--accent-blue-soft);background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-sm);cursor:pointer;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));transition:all .15s}
+.load-more-btn:hover{background:var(--glass-bg-hover);border-color:var(--accent-blue-soft)}
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,var(--bg-subtle) 25%,var(--bg-hover) 50%,var(--bg-subtle) 75%);background-size:600px 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-sm)}
+.sk-line{height:16px;margin-bottom:10px}.sk-line.short{width:60%}.sk-line.med{width:80%}
+.sk-block{height:120px;margin-bottom:16px}.sk-pill{height:60px;width:130px;border-radius:var(--radius-lg)}
+/* Empty state */
+.empty-state{text-align:center;padding:24px 16px;color:#777}
+.empty-state-icon{font-size:2rem;margin-bottom:12px;opacity:.5}
+.empty-state-text{font-size:var(--text-sm)}
+/* Footer */
+.site-footer{text-align:center;padding:20px 24px;border-top:1px solid var(--border-light);font-size:var(--text-xs);color:#8AAFC8;line-height:1.5}
+/* Print */
+@media print{.main-nav,.filter-bar,.province-selector,.hero::before,.hero::after{display:none}.tab-panel{display:block!important;page-break-before:always}.sources-list{display:block!important}.card{box-shadow:none;border:1px solid #ddd}body{background:#fff}}
+/* Responsive */
+@media(max-width:1199px){.two-col,.sentiment-section{grid-template-columns:1fr}.market-grid{grid-template-columns:repeat(3,1fr)}.sector-grid{grid-template-columns:1fr}.mini-chart-grid{grid-template-columns:repeat(2,1fr)}.event-row{grid-template-columns:50px 1fr 120px 60px 28px}}
+@media(max-width:767px){.hero{padding:28px 0 20px}.hero-title{font-size:var(--text-2xl)}.hero-badges{flex-wrap:wrap;gap:6px}.nav-tabs{overflow-x:auto;justify-content:flex-start}.nav-tab{padding:10px 12px;font-size:var(--text-xs);white-space:nowrap}.container{padding:0 12px}.tab-panel{padding:16px 0 32px}.market-grid,.mini-chart-grid{grid-template-columns:1fr 1fr}.indicator-row{grid-template-columns:1fr 80px 70px}.indicator-row-period,.indicator-row-source{display:none}.event-row{grid-template-columns:40px 1fr 60px}.event-institution,.event-row>:last-child{display:none}.project-table{font-size:var(--text-xs)}.col-cma,.col-proponent{display:none}.filter-bar{flex-direction:column}.filter-bar input{min-width:100%}.calendar-cell{min-height:36px;padding:3px}.section-banner{height:56px;padding:0 16px}}
+</style>
+</head>
+<body>
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">WEEKLY BRIEFING</div>
+      <h1 class="hero-title">Signal Dispatch</h1>
+      <p class="hero-subtitle">Weekly recap on the economy, provinces, industries, and markets.</p>
+      <div class="hero-badges"><span>Updated Weekly</span><span>Primary Source Data</span><span>Institutional Research</span></div>
+    </div>
+    <svg class="hero-map" viewBox="126 250 190 152" width="440" height="352" fill="#2C4A7C"><path d="M151.767,281.182l1.72,2.602l0.864,3.475l4.305,1.081l3.017-3.25l2.585,1.306l7.321,0.647l5.169-2.17l0.864,7.157h3.017v-3.034l3.017,0.216l7.538,8.895l4.953,3.035l-2.584,4.123l1.081,1.081l9.673,1.953l0.216,4.34l2.585,0.433l0.648-6.51l4.089-1.08l3.017,4.556l6.457,3.034l3.233,0.647l2.152-2.602l0.216-4.124l3.873-2.387l1.288,3.476l-3.449,6.077l0.432,3.033l1.937-3.033l3.873-3.475l0.216-4.556l-2.152-3.476l0.648-2.817l5.169-2.603l2.369,1.738l0.432,15.188l3.657-3.25l2.152,1.305l-3.017,5.204l3.873,0.865l5.602-8.679l4.737,4.986l-1.936,8.895l-4.737,2.603l-4.521-2.169l-8.177,1.736l0.864,2.818l-2.152,3.476l-6.673,1.521l-7.538,5.86l-6.673,8.896l-0.864,2.817l4.521,1.737l1.72,4.339l6.241,6.293l9.906,4.339l-2.152,9.975l-0.216,2.818l2.585,1.736l3.449-4.555l0.432-8.679l5.385-0.216l2.584-4.988l0.433-7.589l6.889-13.45l8.609,3.034l4.521,6.293l-1.937,6.292l3.449,1.954l8.394-5.646l2.368,15.404l7.754,9.327l0.216,4.771l-8.609,2.17l-4.088,4.338l-8.609-1.953l-4.305-0.217l-7.538,5.86l4.521-1.081l5.601-1.08l1.081,1.305l-1.504,4.771l0.216,4.34l2.585,1.736l2.584-0.648l1.296-1.953h1.72l-2.801,5.205l-5.385,0.215l-2.368,3.476h-3.017l-0.864-2.603l4.305-4.338l-5.169,1.737l-0.233-7.374l-1.487-0.863l-4.521,1.953l-0.432,3.691h-10.338l-8.832,6.08l-11.842,3.908l-1.288-1.738l5.964-8.902l-3.388-3.261l-2.152-4.132l-4.383-3.346l-4.702-0.389l-8.428-5.904l-61.122-10.043l-1.011-4.142l-5.602-5.204v-4.339l0.865-3.907l-0.433-2.168l-2.152-2.171l-0.432-3.475l5.602-3.908l-3.449-18.653l-4.737-0.217l-4.305-5.645z"/><path d="M130.684,350.117l-1.47,2.818l0.51,1.996l0.959,0.598l-0.225,0.812l-1.029,0.294l0.294,2.965l1.106,1.115l0.882-0.959l-1.106-2.887l0.657-2.299l1.616-2.152l-1.175-1.997z"/><path d="M135.542,367.008l-1.323,0.52l2.429,2.818l0.588,3.336l2.429,2.592l2.058-0.371v-3.406l-2.498-1.557z"/><path d="M191.105,270.143l0.19,3.475l-6.898,7.148l1.729,5.791l4.979-1.348l2.878-4.253l7.278-2.706l5.938-0.389l-4.599-5.022l-2.299,1.737l-1.729-0.579l-0.959-2.126l-2.109-2.126z"/><path d="M200.113,259.908l-1.53,2.706l7.477,2.706l2.68-4.055l1.15,2.707h1.919l3.639-4.055l-4.409-1.158l-1.729-1.348l-2.299,2.316z"/><path d="M213.148,265.318l-5.938,2.508v1.928l7.667,2.896l-1.729,1.928l1.15,2.507l4.789-2.126h4.028l1.919,3.086l3.259-3.285l-0.77-3.095l-2.68,0.968l-0.38-3.863l1.34-2.316h-1.34l-2.109,1.349l-0.959,0.769l0.579,2.707l-1.53,1.158l-2.299-0.19l-0.579-3.476z"/><path d="M247.456,272.27l-2.299,0.77l0.38,3.086l3.83,2.507l0.19,1.927l-1.149,1.159l0.579,3.864l14.755,4.823l4.028,1.349l4.028-3.475l-4.789-3.864l-4.409,1.158l-6.128-0.579l-2.299-2.316l-0.579-6.371l-3.83-1.928z"/><path d="M207.399,280.576l-7.278,1.928l-4.219,3.673l0.38,4.054l7.667,2.317l-1.729,3.864l-5.558-3.477l-1.53,2.896l3.639,2.507l-0.19,4.054l5.558,1.547l6.708-0.389l1.149-2.126l4.979,5.601l3.449-1.157l0.579-3.864l2.49,1.737l0.38-3.864l-3.068-1.928l0.19-12.162l-2.68-2.126l-2.87,3.864z"/><path d="M259.523,292.357l-4.218-0.39l-4.979,1.927l-2.68,3.666l0.769,10.043l8.238,0.39l7.857,3.864l5.559,6.371l4.218-0.19l-1.15,5.981l-3.829,6.371l-4.218,1.926l-3.069-0.578l-1.53-1.348l-2.299,3.086l0.959,3.086l3.259,0.189l4.028-1.928l3.449,8.886l8.626,5.603l5.938-7.529l-4.979-8.108l2.878-3.284l4.028,6.758l7.278-6.371l-1.339-2.896l-4.98,1.548l-3.448-9.466l3.259-5.403l-6.518-6.949l-3.639,2.507l-3.449-7.529l-7.277,0.968l-1.919-9.076l-5.938,4.055l-0.579,5.021h-3.259l0.38-4.443z"/><path d="M262.021,274.006v1.738l-4.218,0.968l1.149,1.927l4.789,1.928l5.368,0.58l3.831,2.705l3.829-2.127l-2.681-2.705h3.449l2.109-2.316l5.178-0.77v-1.158l-2.878-1.928l0.379-2.127l8.048,1.348l11.886-4.633l-4.41-1.348l1.15-1.547h9.197l1.531-1.547l-18.593-6.569l-4.41-1.547l-4.789,3.476l-5.368-4.443l-2.878-0.19l-0.579,3.675l-3.638-3.285l-4.218,1.349l0.769,2.126l6.328,1.35l-0.38,3.086l3.449,2.125l8.438-2.125l0.19,2.896l-6.898,3.285l-4.218-3.285l-3.83,0.389l3.83,5.411l-1.919,0.969l-2.878-2.508l-2.109,1.348l1.919,3.666h3.259l-0.769,3.475l-2.68-0.389l-3.449-3.674z"/><path d="M244.941,327.159l-3.657,4.599l-0.225,5.065l3.198-1.841h3.881l2.74,2.533l2.515-2.076z"/><path d="M289.466,386.977l-9.136,8.748l0.916,2.074l11.186,4.141l1.599-2.758l-0.916-4.599l-3.657,0.458l-2.057-2.299l3.423-3.449z"/></svg>
+  </div>
+</section>
+<!-- Navigation -->
+<a href="#tab-overview" class="skip-link" style="position:absolute;top:-40px;left:0;background:#133D62;color:#E8F0F8;padding:8px 16px;z-index:1000;font-size:var(--text-sm);transition:top .2s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
+<nav class="main-nav" id="mainNav" aria-label="Main navigation">
+  <div class="nav-inner" style="display:flex;align-items:center;gap:16px">
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><svg viewBox="0 0 512 512" width="22" height="22" style="fill:var(--accent-blue-soft)"><path d="M383.8 351.7c2.5-2.5 105.2-92.4 105.2-92.4l-17.5-7.5c-10-4.9-7.4-11.5-5-17.4 2.4-7.6 20.1-67.3 20.1-67.3s-47.7 10-57.7 12.5c-7.5 2.4-10-2.5-12.5-7.5s-15-32.4-15-32.4-52.6 59.9-55.1 62.3c-10 7.5-20.1 0-17.6-10 0-10 27.6-129.6 27.6-129.6s-30.1 17.4-40.1 22.4c-7.5 5-12.6 5-17.6-5C293.5 72.3 255.9 0 255.9 0s-37.5 72.3-42.5 79.8c-5 10-10 10-17.6 5-10-5-40.1-22.4-40.1-22.4s27.6 119.6 27.6 129.6c2.5 10-7.5 17.5-17.6 10-2.5-2.5-55.1-62.3-55.1-62.3s-12.6 27.5-15.1 32.4-5 9.9-12.5 7.5c-10-2.5-57.7-12.5-57.7-12.5s17.6 59.7 20.1 67.3c2.4 6 5 12.5-5 17.4l-17.5 7.5s102.6 89.9 105.2 92.4c5.1 5 10 7.5 5.1 22.5-5.1 15-10.1 35.1-10.1 35.1s95.2-20.1 105.3-22.6c8.7-.9 18.3 2.5 18.3 12.5S241 512 241 512h30s-5.8-102.7-5.8-112.8 9.5-13.4 18.4-12.5c10 2.5 105.2 22.6 105.2 22.6s-5-20.1-10-35.1 0-17.5 5-22.5z"/></svg><span style="font-weight:700;font-size:var(--text-sm);color:var(--text-primary);white-space:nowrap">Signal Dispatch</span></div>
+    <ul class="nav-tabs" id="navTabs" role="tablist" style="flex:1">
+      <li class="nav-tab active" data-tab="overview" role="tab" aria-selected="true" aria-controls="tab-overview" tabindex="0">Overview</li>
+      <li class="nav-tab" data-tab="provinces" role="tab" aria-selected="false" aria-controls="tab-provinces" tabindex="-1">Provinces</li>
+      <li class="nav-tab" data-tab="industries" role="tab" aria-selected="false" aria-controls="tab-industries" tabindex="-1">Industries</li>
+      <li class="nav-tab" data-tab="markets" role="tab" aria-selected="false" aria-controls="tab-markets" tabindex="-1">Markets</li>
+      <li class="nav-tab" data-tab="projects" role="tab" aria-selected="false" aria-controls="tab-projects" tabindex="-1">Projects</li>
+      <li class="nav-tab" data-tab="calendar" role="tab" aria-selected="false" aria-controls="tab-calendar" tabindex="-1">Calendar</li>
+      <li class="nav-tab" data-tab="explorer" role="tab" aria-selected="false" aria-controls="tab-explorer" tabindex="-1">Explorer</li>
+    </ul>
+    <div class="edition-dropdown" id="editionDropdown" style="position:relative;flex-shrink:0">
+      <button id="editionBtn" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:var(--text-xs);font-weight:500;color:var(--text-secondary);background:var(--bg-subtle);border:1px solid var(--glass-border);border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-body)">
+        <span id="navMeta">Loading...</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="editionList" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:var(--bg-subtle);border:1px solid var(--glass-border);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);min-width:200px;max-height:300px;overflow-y:auto;z-index:200"></div>
+    </div>
+  </div>
+</nav>
+<!-- Content -->
+<main class="container">
+  <!-- OVERVIEW -->
+  <div class="tab-panel active" id="tab-overview" role="tabpanel" aria-labelledby="tab-overview-label">
+    <div id="execSummary"></div>
+    <section id="keyIndicators" style="margin-top:16px"></section>
+    <section id="indicatorExplorer" style="margin-top:16px"></section>
+    <div id="microscopeSection" style="margin-top:16px"></div>
+    <div id="nationalAnalysis" style="margin-top:16px"></div>
+    <div id="policySection" style="margin-top:16px"></div>
+    <div id="sentimentSection" style="margin-top:20px"></div>
+    <section id="globalVectors" style="margin-top:20px"></section>
+    <section id="trendSummary" style="margin-top:20px"></section>
+    <div id="pipelineStatus" style="margin-top:16px"></div>
+    <div id="costMonitor" style="margin-top:12px"></div>
+    <div id="microscopeHistory" style="margin-top:16px"></div>
+    <div id="overviewSources" style="margin-top:16px"></div>
+  </div>
+  <!-- PROVINCES -->
+  <div class="tab-panel" id="tab-provinces" role="tabpanel" aria-labelledby="tab-provinces-label">
+    <div class="section-banner" id="provBanner" style="--banner-img:url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title" id="provBannerTitle">Provincial Analysis</div>
+        <div class="section-banner-sub">Provincial economic trends, updated weekly</div>
+      </div>
+    </div>
+    <div class="province-selector" id="provSelector"></div>
+    <div id="provHeader" style="margin-bottom:12px"></div>
+    <div id="provMiniCharts"></div>
+    <div style="margin-top:16px"><div id="provAnalysis"></div></div>
+    <div id="provIndicatorDropdown"></div>
+    <div id="provProjectsPreview" style="margin-top:16px"></div>
+  </div>
+  <!-- INDUSTRIES -->
+  <div class="tab-panel" id="tab-industries" role="tabpanel" aria-labelledby="tab-industries-label">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Industry Analysis</div>
+        <div class="section-banner-sub">Industry trends by NAICS sector</div>
+      </div>
+    </div>
+    <div id="industryExecSummary" style="margin-bottom:16px"></div>
+    <div id="industryToggle" style="display:flex;gap:0;margin-bottom:16px;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border-light);width:fit-content">
+      <button class="ind-toggle active" onclick="toggleIndustryView('all')" data-view="all" style="padding:8px 18px;font-size:var(--text-sm);font-weight:600;border:none;cursor:pointer;transition:all .15s ease">All</button>
+      <button class="ind-toggle" onclick="toggleIndustryView('goods')" data-view="goods" style="padding:8px 18px;font-size:var(--text-sm);font-weight:600;border:none;cursor:pointer;transition:all .15s ease">Goods-Producing</button>
+      <button class="ind-toggle" onclick="toggleIndustryView('services')" data-view="services" style="padding:8px 18px;font-size:var(--text-sm);font-weight:600;border:none;cursor:pointer;transition:all .15s ease">Services-Producing</button>
+    </div>
+    <div id="industrySectorGrid"></div>
+  </div>
+  <!-- MARKETS -->
+  <div class="tab-panel" id="tab-markets" role="tabpanel" aria-labelledby="tab-markets-label">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Markets &amp; Commodities</div>
+        <div class="section-banner-sub">Markets, yields, and commodities</div>
+      </div>
+    </div>
+    <div id="marketsGrid"></div>
+    <h2 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">Government of Canada Yield Curve</h2>
+    <div id="canadianCommodities" style="margin-bottom:16px"></div>
+    <div id="yieldCurveCard" style="margin-bottom:16px"></div>
+    <div id="commoditiesGrid"></div>
+  </div>
+  <!-- PROJECTS -->
+  <div class="tab-panel" id="tab-projects" role="tabpanel" aria-labelledby="tab-projects-label">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Capital Projects Tracker</div>
+        <div class="section-banner-sub">Major capital projects across Canada</div>
+      </div>
+    </div>
+    <div class="filter-bar" id="projectFilterBar">
+      <input type="text" id="projectSearch" placeholder="Search projects..." aria-label="Search projects">
+      <div class="proj-type-toggle" id="projTypeToggle">
+        <button class="active" data-type="all">All</button>
+        <button data-type="greenfield">Greenfield</button>
+        <button data-type="brownfield">Brownfield</button>
+      </div>
+      <select id="filterProvince" aria-label="Filter by province"><option value="">All Provinces</option></select>
+      <select id="filterSector" aria-label="Filter by sector"><option value="">All Sectors</option></select>
+      <select id="filterStatus" aria-label="Filter by status"><option value="">All Statuses</option></select>
+      <select id="sortProjects" aria-label="Sort projects"><option value="value_desc">Value (High to Low)</option><option value="updated">Recently Updated</option><option value="name_asc">Name A-Z</option><option value="confidence">Confidence</option></select>
+      <label class="toggle-label" title="Show only projects with confirmed value above provincial threshold"><input type="checkbox" id="confirmedToggle" checked onchange="_confirmedOnly=this.checked;filterProjects()"><span class="toggle-slider"></span> Confirmed</label>
+      <button onclick="exportProjects()" style="background:var(--surface-elevated);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.8rem;cursor:pointer;font-size:var(--text-xs);color:var(--text-secondary);white-space:nowrap" title="Export filtered projects as CSV">Export CSV</button>
+    </div>
+    <!-- Missing Project Submission Form -->
+    <div id="missedProjectSection" style="margin-top:0.5rem;margin-bottom:1rem">
+      <button id="toggleMissedForm" onclick="document.getElementById('missedProjectForm').style.display=document.getElementById('missedProjectForm').style.display==='none'?'block':'none'" style="background:var(--surface-elevated);border:1px solid var(--border);border-radius:8px;padding:0.6rem 1rem;cursor:pointer;font-size:var(--text-sm);color:var(--text-secondary);width:100%;text-align:left">
+        + Report a Missing Project
+      </button>
+      <div id="missedProjectForm" style="display:none;background:var(--surface-elevated);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:1.2rem;margin-top:-1px">
+        <p style="font-size:var(--text-xs);color:var(--text-secondary);margin-bottom:1rem">Know of a capital project our tracker missed? Submit it here. The system will add it, verify it, and learn from the miss to improve future discovery.</p>
+        <div id="missedFormFeedback" style="display:none;padding:0.6rem 1rem;border-radius:6px;margin-bottom:1rem;font-size:var(--text-sm)"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Project Name *</label><input type="text" id="mpName" placeholder="e.g., Portage Place Redevelopment" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Province *</label><select id="mpProvince" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"><option value="">Select province</option></select></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">City</label><input type="text" id="mpCity" placeholder="e.g., Winnipeg" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Sector</label><select id="mpSector" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"><option value="">Select sector (optional)</option></select></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Estimated Value ($ millions CAD)</label><input type="number" id="mpValue" placeholder="e.g., 650" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Proponent / Developer</label><input type="text" id="mpProponent" placeholder="e.g., True North Development" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Project Type</label><select id="mpType" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"><option value="new_build">New Build</option><option value="expansion">Expansion</option><option value="refurbishment">Refurbishment</option><option value="redevelopment">Redevelopment</option><option value="conversion">Conversion</option><option value="remediation">Remediation</option><option value="modernization">Modernization</option></select></div>
+          <div><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Status</label><select id="mpStatus" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"><option value="Proposed">Proposed</option><option value="Approved">Approved</option><option value="Under Construction">Under Construction</option><option value="Completed">Completed</option><option value="Paused">Delayed / Paused</option></select></div>
+        </div>
+        <div style="margin-top:0.75rem"><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Source URL (helps verification)</label><input type="url" id="mpSourceUrl" placeholder="https://..." style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+        <div style="margin-top:0.75rem"><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Description</label><input type="text" id="mpDescription" placeholder="Brief project description" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface)"></div>
+        <div style="margin-top:0.75rem"><label style="display:block;font-size:var(--text-xs);font-weight:500;margin-bottom:0.25rem;color:var(--text-secondary)">Why do you think it was missed? (optional)</label><textarea id="mpNotes" rows="2" placeholder="e.g., Only covered in French media, small municipality..." style="width:100%;border:1px solid var(--border);border-radius:6px;padding:0.5rem;font-size:var(--text-sm);background:var(--surface);resize:vertical"></textarea></div>
+        <button id="mpSubmitBtn" onclick="submitMissedProject()" style="margin-top:1rem;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:0.5rem 1.5rem;font-size:var(--text-sm);font-weight:500;cursor:pointer">Submit Missing Project</button>
+      </div>
+    </div>
+    <div id="projSummaryStats" class="proj-stats"></div>
+    <div id="projectResultsSummary" class="results-summary"></div>
+    <div id="projectTableContainer"></div>
+    <button id="loadMoreBtn" class="load-more-btn" style="display:none">Load more projects</button>
+  </div>
+  <!-- CALENDAR -->
+  <div class="tab-panel" id="tab-calendar" role="tabpanel" aria-labelledby="tab-calendar-label">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1519832979-6fa011b87667?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Economic Calendar</div>
+        <div class="section-banner-sub">Economic events and watchlist</div>
+      </div>
+    </div>
+    <div id="calendarGrid"></div>
+    <div id="thisWeekEvents"></div>
+    <div id="allEventsTable"></div>
+  </div>
+  <!-- EXPLORER -->
+  <div class="tab-panel" id="tab-explorer" role="tabpanel" aria-labelledby="tab-explorer-label">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Data Explorer</div>
+        <div class="section-banner-sub">Search Statistics Canada tables by keyword</div>
+      </div>
+    </div>
+    <div id="explorerSearch" style="margin-bottom:16px"></div>
+    <div id="explorerCategories" style="margin-bottom:16px"></div>
+    <div id="explorerResults"></div>
+  </div>
+</main>
+<footer class="site-footer">
+  Signal Dispatch &middot; Data from Bank of Canada, Statistics Canada, Yahoo Finance &middot; All claims independently sourced &middot; <span id="footerDate"></span>
+</footer>
+<script src="./js/app.js"></script>
+</body>
+</html>
