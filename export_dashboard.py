@@ -389,12 +389,12 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
     Returns:
         dict with keys: file_count, output_dir, files_written
     """
-    from db import get_db
+    from db import get_db, init_db
     from pipeline_config import PROVINCES
 
     _own_conn = False
     if conn is None:
-        conn = get_db()
+        conn = init_db()
         _own_conn = True
 
     os.makedirs(output_dir, exist_ok=True)
@@ -528,9 +528,9 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    from db import get_db
+    from db import init_db
 
-    db_conn = get_db(args.db)
+    db_conn = init_db(args.db)
     result = export_all(conn=db_conn, output_dir=args.out)
     _validate_output(args.out)
     db_conn.close()
