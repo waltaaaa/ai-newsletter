@@ -1,0 +1,14 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "indicator_history",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "indicator", "order": "ASCENDING" },
+        { "fieldPath": "province", "order": "ASCENDING" },
+        { "fieldPath": "date", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

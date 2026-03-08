@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Newsletters — readable by any authenticated user (incl. anonymous)
+    match /newsletters/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Projects — cumulative tracker, readable by authenticated users
+    match /projects/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Timeseries — historical data points for Data Explorer
+    match /timeseries/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // StatCan indicators — key economic indicator feed snapshot
+    match /statcan_indicators/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Missed project submissions — public create, backend-only read/update
+    match /missed_projects/{document=**} {
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasAll(['name', 'province', 'submitted_at', 'processing_status'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 200;
+      allow read, update, delete: if false;
+    }
+
+    // Pipeline improvements — readable by authenticated users (admin panel)
+    match /pipeline_improvements/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Project corrections — user-submitted edits, backend-only read/update
+    match /project_corrections/{document=**} {
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasAll(['project_id', 'field', 'old_value', 'new_value', 'submitted_at'])
+        && request.resource.data.project_id is string
+        && request.resource.data.project_id.size() > 0;
+      allow read, update, delete: if false;
+    }
+  }
+}

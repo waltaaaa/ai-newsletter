@@ -1,0 +1,1 @@
+These files were the Firebase Cloud Functions and hosting configuration used before the migration to GitHub Pages + GitHub Actions in Phase 16 (March 2026). They are archived for reference only and are not used by the current system.
