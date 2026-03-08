@@ -1,0 +1,1526 @@
+/* ── Static JSON data layer ── */
+const DATA_BASE='data/';
+const _cache={};
+async function fetchJSON(path){
+  if(_cache[path])return _cache[path];
+  const resp=await fetch(DATA_BASE+path);
+  if(!resp.ok)throw new Error('Failed to load '+path+': '+resp.status);
+  const data=await resp.json();
+  _cache[path]=data;
+  return data;
+}
+
+/* ── State ── */
+let D=null,indicators=[],allProjects=[],filteredProjects=[],projectPage=0,selectedProvince='BC',tsCache={},charts={},tabRendered={};
+const PAGE_SIZE=25;
+let _confirmedOnly=true;
+let _lastLoadedProvince=null,_loadSeq=0;
+const PROVS=[{code:'BC',name:'British Columbia'},{code:'AB',name:'Alberta'},{code:'SK',name:'Saskatchewan'},{code:'MB',name:'Manitoba'},{code:'ON',name:'Ontario'},{code:'QC',name:'Quebec'},{code:'NB',name:'New Brunswick'},{code:'NS',name:'Nova Scotia'},{code:'PE',name:'Prince Edward Island'},{code:'NL',name:'Newfoundland and Labrador'},{code:'YT',name:'Yukon'},{code:'NT',name:'Northwest Territories'},{code:'NU',name:'Nunavut'}];
+const NAME_TO_CODE={};PROVS.forEach(p=>{NAME_TO_CODE[p.name]=p.code;NAME_TO_CODE[p.code]=p.code});NAME_TO_CODE['Newfoundland']='NL';NAME_TO_CODE['PEI']='PE';
+const PROV_SLUGS={};PROVS.forEach(p=>{PROV_SLUGS[p.code]=p.name.toLowerCase().replace(/ /g,'_')});
+function normProvince(raw){if(!raw)return '';return NAME_TO_CODE[raw.trim()]||raw.substring(0,2).toUpperCase()}
+const PROV_THRESHOLDS={'ON':500e6,'QC':250e6,'AB':200e6,'BC':175e6,'SK':45e6,'MB':40e6,'NS':25e6,'NB':20e6,'NL':17e6,'PE':5e6,'YT':3e6,'NT':3e6,'NU':3e6};
+function meetsThreshold(p){const v=parseNumericValue(p.value);if(!v)return false;const t=PROV_THRESHOLDS[normProvince(p.province)]||0;return v>=t}
+const PROV_IMGS={BC:'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80',AB:'https://images.unsplash.com/flagged/photo-1556669546-b1f29875df1c?w=1200&q=80',SK:'https://images.unsplash.com/photo-1753081490091-37ce36d8bbd8?w=1200&q=80',MB:'https://images.unsplash.com/photo-1591658522986-9eb791d2a89a?w=1200&q=80',ON:'https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1200&q=80',QC:'https://images.unsplash.com/photo-1575318672862-5c1887a74bf3?w=1200&q=80',NB:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80',NS:'https://images.unsplash.com/photo-1565465685025-9b00dc77ad52?w=1200&q=80',PE:'https://images.unsplash.com/photo-1756845405231-dce993817876?w=1200&q=80',NL:'https://images.unsplash.com/photo-1483599345082-521b252854ff?w=1200&q=80',YT:'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?w=1200&q=80',NT:'https://images.unsplash.com/photo-1579033461380-adb47c3eb938?w=1200&q=80',NU:'https://images.unsplash.com/photo-1589656966895-2f33e7653819?w=1200&q=80'};
+const NAICS_CODES=['11','21','22','23','31-33','41','44-45','48-49','51','52','53','54','55','56','61','62','71','72','81','91'];
+const NAICS_NAMES={'11':'Agriculture','21':'Mining, Oil & Gas','22':'Utilities','23':'Construction','31-33':'Manufacturing','41':'Wholesale Trade','44-45':'Retail Trade','48-49':'Transportation','51':'Information & Cultural','52':'Finance & Insurance','53':'Real Estate','54':'Professional Services','55':'Management','56':'Administrative & Support','61':'Education','62':'Health Care','71':'Arts & Recreation','72':'Accommodation & Food','81':'Other Services','91':'Public Administration'};
+const NAICS_CLS={'11':'s-agriculture','21':'s-mining','22':'s-utilities','23':'s-construction','31-33':'s-manufacturing','41':'s-trade','44-45':'s-trade','48-49':'s-transport','51':'s-info','52':'s-finance','53':'s-realestate','54':'s-professional','55':'s-admin','56':'s-admin','61':'s-education','62':'s-health','71':'s-arts','72':'s-accommodation','81':'s-other','91':'s-public'};
+const STATUSES=['Proposed','Under Review','Approved','Under Construction','Paused','Expansion','Operational','Completed','Cancelled'];
+/* Project type config */
+const PROJ_TYPE_CFG={
+greenfield:{label:'New Build',cls:'type-greenfield',cat:'Greenfield'},
+redevelopment:{label:'Redevelopment',cls:'type-brownfield',cat:'Brownfield'},
+adaptive_reuse:{label:'Adaptive Reuse',cls:'type-brownfield',cat:'Brownfield'},
+major_renovation:{label:'Renovation',cls:'type-brownfield',cat:'Brownfield'},
+expansion:{label:'Expansion',cls:'type-expansion',cat:'Brownfield'},
+retrofit:{label:'Retrofit',cls:'type-brownfield',cat:'Brownfield'},
+restoration:{label:'Restoration',cls:'type-restoration',cat:'Brownfield'},
+remediation:{label:'Remediation',cls:'type-remediation',cat:'Brownfield'},
+conversion:{label:'Conversion',cls:'type-brownfield',cat:'Brownfield'},
+modernization:{label:'Modernization',cls:'type-expansion',cat:'Brownfield'},
+decommission_replace:{label:'Replacement',cls:'type-replace',cat:'Brownfield'},
+};
+function typeBadge(pt){const c=PROJ_TYPE_CFG[pt]||PROJ_TYPE_CFG.greenfield;return'<span class="type-badge '+c.cls+'">'+c.label+'</span>'}
+function confBadge(conf,evCount){if(conf==null)return'';const pct=Math.round(conf*100);const cls=pct>=70?'conf-high':pct>=40?'conf-mid':'conf-low';return'<span class="'+cls+'" title="'+evCount+' source(s)">'+pct+'%'+(evCount?(' ('+evCount+' src'+(evCount>1?'s':'')+')'):'')+'</span>'}
+let _projTypeFilter='all';
+
+/* ── Helpers ── */
+const $=id=>document.getElementById(id);
+const san=h=>DOMPurify.sanitize(h||'',{ADD_ATTR:['target']});
+function fmtDate(iso){if(!iso)return'';try{const d=new Date(iso+'T00:00:00');return d.toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})}catch{return iso}}
+function relDate(iso){if(!iso)return'';const ms=Date.now()-new Date(iso+'T00:00:00').getTime(),d=Math.floor(ms/864e5);if(d<1)return'Today';if(d<7)return d+'d ago';if(d<30)return Math.floor(d/7)+'w ago';return Math.floor(d/30)+'mo ago'}
+function changeCls(arrow){return arrow===1?'change-up':arrow===2?'change-down':'change-flat'}
+function changeIcon(arrow){return arrow===1?'↑':arrow===2?'↓':'→'}
+function stCls(s){const k=s.toLowerCase().replace(/\s+/g,'-');return'st-'+k}
+function statusBadge(s){return`<span class="status-badge ${stCls(s)}">${s}</span>`}
+function srcLink(url,title){if(!url)return'';return`<a href="${url}" target="_blank" rel="noopener noreferrer" title="${title||'Source'}">\u2197</a>`}
+function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#777">N/D</span>';return v}
+function parseNumericValue(v){if(!v)return 0;const s=String(v).toUpperCase();const m=s.match(/([\d.]+)\s*(B|M|K)?/);if(!m)return 0;let n=parseFloat(m[1])||0;if(m[2]==='B')n*=1e9;else if(m[2]==='M')n*=1e6;else if(m[2]==='K')n*=1e3;return n}
+function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:#777;font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:#999;font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:#777">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:#999;font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:#999;font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
+function skeleton(n=3){return Array(n).fill('<div class="skeleton sk-line"></div><div class="skeleton sk-line med"></div><div class="skeleton sk-line short"></div>').join('')}
+
+/* ── Tab Switching ── */
+function switchTab(tabId){
+  document.querySelectorAll('.nav-tab').forEach(t=>{
+    const isActive=t.dataset.tab===tabId;
+    t.classList.toggle('active',isActive);
+    t.setAttribute('aria-selected',isActive?'true':'false');
+    t.setAttribute('tabindex',isActive?'0':'-1');
+  });
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tabId));
+  if(D&&!tabRendered[tabId]){renderTab(tabId);tabRendered[tabId]=true}
+}
+document.querySelectorAll('.nav-tab').forEach(t=>{
+  t.addEventListener('click',()=>switchTab(t.dataset.tab));
+  t.addEventListener('keydown',e=>{
+    const tabs=[...document.querySelectorAll('.nav-tab')];
+    const idx=tabs.indexOf(t);
+    let target=-1;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown')target=(idx+1)%tabs.length;
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp')target=(idx-1+tabs.length)%tabs.length;
+    else if(e.key==='Home')target=0;
+    else if(e.key==='End')target=tabs.length-1;
+    else if(e.key==='Enter'||e.key===' '){e.preventDefault();switchTab(t.dataset.tab);return}
+    if(target>=0){e.preventDefault();tabs[target].focus();switchTab(tabs[target].dataset.tab)}
+  });
+});
+
+/* ── Data Loading ── */
+let currentEdition='latest';
+async function loadNewsletter(editionId){
+  try{D=await fetchJSON('briefing_latest.json')}
+  catch(e){console.error('Newsletter load:',e)}
+}
+async function loadEditionList(){
+  try{
+    const archive=await fetchJSON('briefing_archive.json');
+    const editions=(archive||[]).map(e=>({id:e.week_of||'',edition:e.headline||'',date:e.generated_at||e.week_of||''}));
+    const list=$('editionList');
+    list.innerHTML=editions.map(e=>{
+      const label=(e.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim()||e.id;
+      const active=e.id===currentEdition?'font-weight:700;background:var(--bg-subtle)':'';
+      return'<div class="edition-item" data-id="'+e.id+'" style="padding:8px 14px;font-size:var(--text-xs);cursor:pointer;border-bottom:1px solid var(--border-light);'+active+'">'+label+'</div>';
+    }).join('');
+    list.querySelectorAll('.edition-item').forEach(el=>el.addEventListener('click',()=>switchEdition(el.dataset.id)));
+  }catch(e){console.warn('Edition list load:',e)}
+}
+async function switchEdition(editionId){
+  currentEdition=editionId;
+  $('editionList').style.display='none';
+  $('navMeta').textContent='Loading...';
+  tabRendered={};
+  Object.values(charts).forEach(c=>{if(c&&c.destroy)c.destroy()});charts={};
+  // Static mode: only latest briefing is available as full content
+  await loadNewsletter();
+  try{renderTab('overview');tabRendered.overview=true}catch(e){console.error('renderOverview:',e)}
+  const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
+  $('navMeta').textContent=edStr||'Latest Edition';
+  const activeTab=document.querySelector('.nav-tab.active');
+  if(activeTab&&activeTab.dataset.tab!=='overview'){renderTab(activeTab.dataset.tab);tabRendered[activeTab.dataset.tab]=true}
+  loadEditionList();
+}
+async function loadIndicators(){
+  try{const data=await fetchJSON('indicators.json');indicators=(data&&data.indicators)||data||[]}
+  catch(e){console.error('Indicators load:',e)}
+}
+async function loadProjects(province){
+  const seq=++_loadSeq;
+  _lastLoadedProvince=province||null;
+  try{
+    let data;
+    if(province){
+      const slug=PROV_SLUGS[province]||province.toLowerCase().replace(/ /g,'_');
+      data=await fetchJSON('projects_'+slug+'.json');
+    }else{
+      data=await fetchJSON('projects_all.json');
+    }
+    if(seq!==_loadSeq)return; // race guard
+    allProjects=Array.isArray(data)?data:[];
+    allProjects.sort((a,b)=>(b.lastSeen||'').localeCompare(a.lastSeen||''));
+    filteredProjects=[...allProjects];
+  }catch(e){
+    console.error('Projects load:',e);
+    allProjects=[];filteredProjects=[];
+  }
+}
+async function loadTimeseries(docId){
+  if(tsCache[docId])return tsCache[docId];
+  try{
+    const all=await fetchJSON('timeseries.json');
+    if(all[docId]){tsCache[docId]=all[docId];return all[docId]}
+  }catch(e){console.warn('TS load:',e)}
+  return null;
+}
+async function loadAll(){
+  try{
+    await Promise.all([loadNewsletter(),loadProjects(),loadIndicators()]);
+  }catch(e){console.error('loadAll data fetch:',e)}
+  try{
+    renderTab('overview');tabRendered.overview=true;
+  }catch(e){
+    console.error('renderOverview:',e);
+    $('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">Error rendering: '+e.message+'</div></div>';
+  }
+  const edStr=D?(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
+  $('navMeta').textContent=D?(edStr||'Data loaded'):'Data loaded';
+  $('footerDate').textContent='Last pipeline run: '+(D?fmtDate(D.updated_at||D.date)||edStr:new Date().toLocaleDateString('en-CA'));
+  loadEditionList();
+}
+/* Edition dropdown toggle */
+$('editionBtn').addEventListener('click',e=>{e.stopPropagation();const list=$('editionList');list.style.display=list.style.display==='none'?'block':'none'});
+document.addEventListener('click',()=>{$('editionList').style.display='none'});
+$('editionList').addEventListener('click',e=>e.stopPropagation());
+
+/* ── Render Router ── */
+function renderTab(id){
+  switch(id){
+    case'overview':renderOverview();break;
+    case'provinces':renderProvinces();break;
+    case'industries':renderIndustries();break;
+    case'markets':renderMarkets();break;
+    case'projects':renderProjectsTab();break;
+    case'calendar':renderCalendar();break;
+    case'explorer':renderExplorer();break;
+  }
+}
+
+/* ── Sources Footer Helper ── */
+function sourcesFooter(sources,containerId){
+  if(!sources||!sources.length)return'';
+  let html=`<div class="sources-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Sources (${sources.length}) <span class="chevron">▾</span></div>`;
+  html+='<div class="sources-list">';
+  sources.forEach((s,i)=>{
+    const url=s.url||s.archive_url||'';
+    const title=s.title||'Source';
+    const verified=s.verified_date?` · Verified ${fmtDate(s.verified_date)}`:'';
+    const archive=s.archive_url?` <a href="${s.archive_url}" target="_blank">[Archived]</a>`:'';
+    html+=`<div>[${i+1}] ${url?`<a href="${url}" target="_blank">${title} \u2197</a>`:title}${archive}${verified}</div>`;
+  });
+  return html+'</div>';
+}
+
+/* ══ OVERVIEW TAB ══ */
+function renderOverview(){
+  if(!D){$('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">No newsletter data available yet.</div></div>';return}
+  // Executive Summary
+  $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(D.executive_summary||'')}</div></div>`;
+  // Key Indicators
+  renderKeyIndicators();
+  // National Analysis
+  const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
+  const natSources=(D.national&&D.national.sources)||[];
+  $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(natContent)}</div>${sourcesFooter(natSources)}</div>`;
+  // Sentiment
+  renderSentiment();
+  // Global Vectors
+  renderGlobalVectors();
+  // Trend Summary
+  renderTrendSummary();
+  // New Phase 1-2 sections (async, non-blocking)
+  renderMicroscope();
+  renderPipelineStatus();
+  renderCostMonitor();
+  renderMicroscopeHistory();
+  renderPolicySection();
+  // Sources
+  $('overviewSources').innerHTML=sourcesFooter(D.sources||[]);
+}
+
+function renderKeyIndicators(){
+  const m=D.metrics||{};const yc=D.yieldCurve||[];
+  const im=D.indicatorMeta||{};
+  const headline=[
+    {label:'POLICY RATE',value:m.bocRate||m.boc_rate||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/',date:(im.bocRate||{}).period||'',tsId:'boc_rate'},
+    {label:'GDP YoY',value:m.realGdp||m.gdp||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.realGdp||{}).period||'',tsId:null},
+    {label:'CPI',value:m.cpi||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.cpi||{}).period||'',tsId:'canada_cpi'},
+    {label:'UNEMPLOYMENT',value:m.unemployment||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.unemployment||{}).period||'',tsId:'canada_unemployment'},
+    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',date:fmtDate(D.updated_at||D.date)||'',tsId:'cadusd'},
+    {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',date:fmtDate(D.updated_at||D.date)||'',tsId:'yield_10y'},
+    {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||'',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',date:(im.housingStarts||{}).period||'',tsId:null}
+  ];
+  let strip='<div class="indicator-strip">';
+  const sparkJobs=[];
+  headline.forEach((h,i)=>{
+    const imKey={POLICY_RATE:'bocRate',GDP_YOY:'realGdp',CPI:'cpi',UNEMPLOYMENT:'unemployment',HOUSING_STARTS:'housingStarts'}[h.label.replace(/ /g,'_')]||'';
+    const meta=im[imKey]||{};const chg=meta.change||'';
+    const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
+    const sparkId='spark_ind_'+i;
+    strip+=`<div class="indicator-pill"><div class="indicator-pill-label">${h.label}</div><div class="indicator-pill-value">${h.value||'N/A'}</div>${chg?`<div class="indicator-pill-change ${chgCls}">${chg}</div>`:''}${h.tsId?`<div class="sparkline-wrap"><canvas class="sparkline" id="${sparkId}"></canvas></div>`:''}${h.date?`<div class="indicator-pill-date">${h.date}</div>`:''}<a class="indicator-pill-source" href="${h.url}" target="_blank" rel="noopener noreferrer">${h.source} \u2197</a></div>`;
+    if(h.tsId)sparkJobs.push({canvasId:sparkId,docId:h.tsId,change:chg});
+  });
+  strip+='</div>';
+  // 71-indicator dropdown
+  strip+=renderIndicatorDropdown(indicators,'All Indicators');
+  $('keyIndicators').innerHTML=strip;
+  sparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
+  renderIndicatorExplorer();
+}
+
+
+/* == Indicator Dropdown (reused in Overview + Provinces) == */
+function renderIndicatorDropdown(inds,title,idSuffix){
+  const id='indDropdown'+(idSuffix||'');const filtId='indFilter'+(idSuffix||'');
+  const n=inds.length;
+  let html='<div class="indicator-dropdown"><button class="indicator-dropdown-toggle" onclick="this.classList.toggle(\x27open\x27);this.nextElementSibling.classList.toggle(\x27open\x27)">'+title+' ('+n+') <span class="chevron">\u25be</span></button>';
+  html+='<div class="indicator-dropdown-body" id="'+id+'"><input class="indicator-filter" id="'+filtId+'" placeholder="Filter indicators..." oninput="filterIndicators(\x27'+id+'\x27,\x27'+filtId+'\x27)">';
+  const groups={};
+  inds.forEach(ind=>{
+    const cat=ind.category||categorizeIndicator(ind.name);
+    if(!groups[cat])groups[cat]=[];
+    groups[cat].push(ind);
+  });
+  const groupOrder=['GDP by Industry','Labour Market','Housing','Trade','Monetary & Financial','Other'];
+  groupOrder.forEach(g=>{
+    const items=groups[g];if(!items||!items.length)return;
+    html+='<div class="indicator-group-header">'+g+'</div>';
+    items.forEach(ind=>{
+      const cls=ind.arrow===1?'change-up':ind.arrow===2?'change-down':'change-flat';
+      const chgTxt=ind.change?changeIcon(ind.arrow)+' '+ind.change:'';
+      html+='<div class="indicator-row" data-name="'+(ind.name||'').toLowerCase()+'"><div class="indicator-row-name">'+(ind.name||'')+'</div><div class="indicator-row-value">'+(ind.value||'N/A')+'</div><div class="indicator-row-change '+cls+'">'+chgTxt+'</div><div class="indicator-row-period">'+(ind.refPer||'')+'</div><div class="indicator-row-source">'+(ind.tableUrl?'<a href="'+ind.tableUrl+'" target="_blank">\u2197</a>':'')+'</div></div>';
+    });
+  });
+  Object.keys(groups).filter(g=>!groupOrder.includes(g)).forEach(g=>{
+    const items=groups[g];if(!items||!items.length)return;
+    html+='<div class="indicator-group-header">'+g+'</div>';
+    items.forEach(ind=>{
+      const cls=ind.arrow===1?'change-up':ind.arrow===2?'change-down':'change-flat';
+      html+='<div class="indicator-row" data-name="'+(ind.name||'').toLowerCase()+'"><div class="indicator-row-name">'+(ind.name||'')+'</div><div class="indicator-row-value">'+(ind.value||'N/A')+'</div><div class="indicator-row-change '+cls+'">'+(ind.change?changeIcon(ind.arrow)+' '+ind.change:'')+'</div><div class="indicator-row-period">'+(ind.refPer||'')+'</div><div class="indicator-row-source">'+(ind.tableUrl?'<a href="'+ind.tableUrl+'" target="_blank">\u2197</a>':'')+'</div></div>';
+    });
+  });
+  html+='</div></div>';
+  return html;
+}
+function categorizeIndicator(name){
+  const n=(name||'').toLowerCase();
+  if(n.includes('gross domestic product')||n.includes('gdp'))return 'GDP by Industry';
+  if(n.includes('employ')||n.includes('labour')||n.includes('job')||n.includes('wage'))return 'Labour Market';
+  if(n.includes('housing')||n.includes('building permit')||n.includes('new house'))return 'Housing';
+  if(n.includes('trade')||n.includes('export')||n.includes('import')||n.includes('merchandise'))return 'Trade';
+  if(n.includes('interest')||n.includes('yield')||n.includes('monetary')||n.includes('bank rate')||n.includes('consumer price')||n.includes('cpi')||n.includes('inflation'))return 'Monetary & Financial';
+  return 'Other';
+}
+window.filterIndicators=function(dropId,filtId){
+  const val=document.getElementById(filtId).value.toLowerCase();
+  document.querySelectorAll('#'+dropId+' .indicator-row').forEach(r=>{
+    r.style.display=r.dataset.name.includes(val)?'':'none';
+  });
+};
+
+
+/* == Interactive Indicator Explorer == */
+const INDICATOR_CATALOG=[
+  {group:'Rates',items:[
+    {id:'overnight_rate',label:'BoC Overnight Rate',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/key-interest-rates/',prov:false},
+    {id:'prime_rate',label:'Prime Rate',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',prov:false},
+    {id:'goc_5y_yield',label:'5Y GoC Yield',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/',prov:false},
+    {id:'goc_10y_yield',label:'10Y GoC Yield',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/',prov:false},
+    {id:'goc_2y_yield',label:'2Y GoC Yield',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/',prov:false}
+  ]},
+  {group:'Prices',items:[
+    {id:'cpi',label:'CPI (All Items)',unit:'%',source:'Statistics Canada',statcan:true,prov:true},
+    {id:'wti',label:'WTI Crude Oil',unit:'USD/bbl',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/CL%3DF/',prov:false},
+    {id:'gold',label:'Gold',unit:'USD/oz',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/GC%3DF/',prov:false},
+    {id:'cadusd',label:'CAD/USD',unit:'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',prov:false}
+  ]},
+  {group:'Labour',items:[
+    {id:'unemployment',label:'Unemployment Rate',unit:'%',source:'Statistics Canada',statcan:true,prov:true}
+  ]},
+  {group:'Activity',items:[
+    {id:'realGdp',label:'Real GDP (Q/Q)',unit:'%',source:'Statistics Canada',statcan:true,prov:false},
+    {id:'housingStarts',label:'Housing Starts',unit:'K',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',prov:false}
+  ]},
+  {group:'Markets',items:[
+    {id:'tsx',label:'S&P/TSX Composite',unit:'',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/%5EGSPTSE/',prov:false},
+    {id:'lumber',label:'Lumber',unit:'USD',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/LBS%3DF/',prov:false}
+  ]},
+  {group:'Ontario (OEA)',items:[
+    {id:'on_real_consumption',label:'ON Real Consumption',unit:'$M',source:'Ontario Economic Accounts',url:'https://data.ontario.ca/dataset/ontario-economic-accounts',prov:false},
+    {id:'on_real_household',label:'ON Household Spending',unit:'$M',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_real_gov_expenditure',label:'ON Gov Expenditure',unit:'$M',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_real_capital_investment',label:'ON Capital Investment',unit:'$M',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_exports',label:'ON Exports',unit:'$M',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_imports',label:'ON Imports',unit:'$M',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_gdp_goods',label:'ON GDP Goods-Producing',unit:'$M',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_consumption_pct',label:'ON Consumption Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_household_pct',label:'ON Household Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_gov_expenditure_pct',label:'ON Gov Spend Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_capital_investment_pct',label:'ON Capital Inv Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_exports_pct',label:'ON Exports Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_imports_pct',label:'ON Imports Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
+    {id:'on_gdp_goods_pct',label:'ON GDP Goods Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false}
+  ]},
+  {group:'Quebec (ISQ)',items:[
+    {id:'qc_real_gdp',label:'QC Real GDP',unit:'$M',source:'ISQ',url:'https://statistique.quebec.ca/en/document/comptes-economiques-du-quebec-quaterly',prov:false},
+    {id:'qc_nominal_gdp',label:'QC Nominal GDP',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_household_consumption',label:'QC Household Spending',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_gov_consumption',label:'QC Gov Spending',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_business_investment',label:'QC Business Investment',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_exports',label:'QC Exports',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_imports',label:'QC Imports',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_compensation',label:'QC Employee Compensation',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_household_income',label:'QC Household Income',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_real_gdp_pct',label:'QC Real GDP Q/Q %',unit:'%',source:'ISQ',prov:false},
+    {id:'qc_monthly_gdp',label:'QC Monthly GDP',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_housing_starts',label:'QC Housing Starts',unit:'units',source:'ISQ',prov:false},
+    {id:'qc_retail_sales',label:'QC Retail Sales',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_manufacturing_sales',label:'QC Manufacturing Sales',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_wholesale_sales',label:'QC Wholesale Sales',unit:'$M',source:'ISQ',prov:false},
+    {id:'qc_weekly_earnings',label:'QC Avg Weekly Earnings',unit:'$',source:'ISQ',prov:false},
+    {id:'qc_employment',label:'QC Employment',unit:'K',source:'ISQ',prov:false},
+    {id:'qc_unemployment_rate',label:'QC Unemployment Rate',unit:'%',source:'ISQ',prov:false},
+    {id:'qc_participation_rate',label:'QC Participation Rate',unit:'%',source:'ISQ',prov:false},
+    {id:'qc_cpi',label:'QC CPI Index',unit:'index',source:'ISQ',prov:false}
+  ]}
+];
+
+let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='national';
+
+function renderIndicatorExplorer(){
+  // Build selector
+  let selHtml='<div class="card fade-in"><div class="card-header">Indicator Explorer</div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px">';
+  selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:var(--text-sm)">';
+  INDICATOR_CATALOG.forEach(g=>{
+    selHtml+='<optgroup label="'+g.group+'">';
+    g.items.forEach(it=>{
+      selHtml+='<option value="'+it.id+'"'+(it.id===_indExpSel?' selected':'')+'>'+it.label+'</option>';
+    });
+    selHtml+='</optgroup>';
+  });
+  selHtml+='</select>';
+  // Province toggle (shown only for provincial indicators)
+  const selItem=findIndItem(_indExpSel);
+  if(selItem&&selItem.prov){
+    selHtml+='<select id="indExpProv" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:var(--text-sm)">';
+    selHtml+='<option value="national"'+((_indExpProv==='national')?' selected':'')+'>National</option>';
+    PROVS.forEach(p=>{selHtml+='<option value="'+p.code+'"'+(_indExpProv===p.code?' selected':'')+'>'+p.name+'</option>'});
+    selHtml+='</select>';
+  }
+  // Time range buttons
+  selHtml+='<div style="display:flex;gap:4px">';
+  [3,12,36,60].forEach(m=>{
+    const lbl=m===3?'3M':m===12?'1Y':m===36?'3Y':'5Y';
+    const active=_indExpRange===m?'background:var(--accent-blue);color:#fff':'background:var(--bg-tertiary);color:var(--text-secondary)';
+    selHtml+='<button onclick="_indExpRange='+m+';loadIndExpData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
+  });
+  selHtml+='</div></div>';
+  // Callout + chart
+  selHtml+='<div id="indExpCallout" style="margin-bottom:8px"></div>';
+  selHtml+='<div style="height:280px;position:relative"><canvas id="indExpCanvas"></canvas></div>';
+  // Source link
+  if(selItem){
+    const linkUrl=selItem.statcan?'https://www150.statcan.gc.ca/n1/en/type/data':selItem.url||'#';
+    const linkLabel=selItem.statcan?'View on StatsCan \u2197':selItem.source+' \u2197';
+    selHtml+='<div style="margin-top:8px;text-align:right"><a href="'+linkUrl+'" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue)">'+linkLabel+'</a></div>';
+  }
+  selHtml+='</div>';
+  $('indicatorExplorer').innerHTML=selHtml;
+  loadIndExpData();
+}
+
+function findIndItem(id){
+  for(const g of INDICATOR_CATALOG)for(const it of g.items)if(it.id===id)return it;
+  return null;
+}
+
+window.onIndExpChange=function(){
+  _indExpSel=$('indExpSelect').value;
+  const provSel=$('indExpProv');
+  _indExpProv=provSel?provSel.value:'national';
+  renderIndicatorExplorer();
+};
+
+async function loadIndExpData(){
+  const item=findIndItem(_indExpSel);if(!item)return;
+  const prov=item.prov?_indExpProv:'national';
+  const cacheKey=_indExpSel+'_'+prov;
+
+  if(!_indExpData[cacheKey]){
+    try{
+      const all=await fetchJSON('indicators.json');
+      const indicators_list=all.indicators||all;
+      const pts=(Array.isArray(indicators_list)?indicators_list:[])
+        .filter(r=>(r.indicator_name||r.indicator)===_indExpSel&&(r.province||'national')===prov)
+        .map(r=>({date:r.period||r.date,value:parseFloat(r.value)||0}))
+        .sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+      _indExpData[cacheKey]=pts;
+    }catch(e){console.error('Indicator history load:',e);_indExpData[cacheKey]=[]}
+  }
+
+  const allPts=_indExpData[cacheKey]||[];
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-_indExpRange);
+  const pts=allPts.filter(p=>new Date(p.date)>=cutoff);
+
+  // Callout
+  const callout=$('indExpCallout');
+  if(pts.length>=2){
+    const latest=pts[pts.length-1];const prev=pts[pts.length-2];
+    const diff=latest.value-prev.value;
+    const arrow=diff>0?'\u25b2':diff<0?'\u25bc':'\u25cf';
+    const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
+    const allVals=allPts.map(p=>p.value);
+    const mn=Math.min(...allVals).toFixed(2);const mx=Math.max(...allVals).toFixed(2);
+    callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+latest.value.toFixed(2)+'</span><span class="'+cls+'" style="font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev</span><span style="font-size:var(--text-xs);color:var(--text-muted)">5Y range: '+mn+' \u2013 '+mx+'</span><span style="font-size:var(--text-xs);color:var(--text-muted)">'+latest.date+'</span></div>';
+  }else if(pts.length===1){
+    callout.innerHTML='<span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+pts[0].value.toFixed(2)+'</span>';
+  }else{
+    callout.innerHTML='<span style="color:var(--text-muted);font-size:var(--text-sm)">No data for this period.</span>';
+  }
+
+  // Chart
+  const canvas=$('indExpCanvas');if(!canvas)return;
+  if(charts._indExp)charts._indExp.destroy();
+  if(!pts.length)return;
+  const labels=pts.map(p=>p.date);
+  const data=pts.map(p=>p.value);
+  // Compute range band (25th-75th percentile) — filter non-numeric, avoid falsy-zero bug
+  const numericData=data.filter(v=>typeof v==='number'&&!isNaN(v));
+  const sorted=[...numericData].sort((a,b)=>a-b);
+  const bandLow=sorted.length>0?sorted[Math.floor(sorted.length*0.25)]:null;
+  const bandHigh=sorted.length>0?sorted[Math.floor(sorted.length*0.75)]:null;
+  // Build event flag annotations from watchlist
+  const evtAnnotations={};
+  try{
+    if(D&&(D.watchlist||D.events)){
+      const wl=D.watchlist||D.events||[];
+      wl.filter(e=>(e.impact||'').toLowerCase()==='high').forEach((evt,i)=>{
+        try{
+          const ed=parseEvtDate(evt.date);if(!ed)return;
+          const ds=fmtDate(ed);const li=labels.indexOf(ds);if(li===-1)return;
+          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Plus Jakarta Sans',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
+        }catch(evtErr){}
+      });
+    }
+  }catch(annErr){console.warn('Event annotations:',annErr)}
+  const hasAnnotationPlugin=typeof window.ChartAnnotation!=='undefined'||(typeof Chart!=='undefined'&&Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation'));
+  const bandAnnotation=(bandLow!==null&&bandHigh!==null)?{band:{type:'box',yMin:bandLow,yMax:bandHigh,backgroundColor:'rgba(59,130,246,0.06)',borderWidth:0}}:{};
+  const annotationCfg=hasAnnotationPlugin?{annotation:{annotations:{...bandAnnotation,...evtAnnotations}}}:{};
+  const endpointPlugin={id:'endpointLabel',afterDraw(chart){try{const ds=chart.data.datasets[0];if(!ds||!ds.data||!ds.data.length)return;const lastVal=ds.data[ds.data.length-1];if(lastVal==null)return;const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#2E7DAD';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):String(lastVal),lastPt.x+6,lastPt.y-4);ctx.restore();}catch(e){}}};
+  const chartCfg={type:'line',data:{labels,datasets:[{data,borderColor:'#2E7DAD',backgroundColor:'rgba(46,125,173,0.08)',borderWidth:2,pointRadius:pts.length>60?0:3,pointBackgroundColor:'#1C5688',fill:true,tension:0.3}]},plugins:[endpointPlugin],options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},...annotationCfg,tooltip:{backgroundColor:'rgba(15,26,43,0.95)',titleColor:'#E8F0F8',bodyColor:'#94A8C2',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6,callbacks:{label:function(ctx){
+    const val=ctx.parsed.y;const idx=ctx.dataIndex;
+    if(idx>0){const prev=data[idx-1];const diff=val-prev;return val.toFixed(2)+' ('+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev)';}
+    return val.toFixed(2);
+  }}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Plus Jakarta Sans',size:10},color:'#94A8C2'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#94A8C2'}}}}};
+  try{charts._indExp=new Chart(canvas,chartCfg);}catch(chartErr){console.warn('Chart with annotations failed, retrying without:',chartErr);try{chartCfg.options.plugins={legend:{display:false},tooltip:chartCfg.options.plugins.tooltip};chartCfg.plugins=[];charts._indExp=new Chart(canvas,chartCfg);}catch(e2){console.error('Chart creation failed completely:',e2);}}
+}
+
+/* == Sentiment + Word Cloud == */
+function renderSentiment(){
+  const cs=D.consumer_sentiment;const cp=D.consumer_pulse;
+  if(!cs&&!cp){$('sentimentSection').innerHTML='<div class="card"><div class="card-header">Consumer Sentiment</div><div class="empty-state"><div class="empty-state-text">Consumer sentiment data available after next pipeline run.</div></div></div>';return}
+  let html='<div class="card fade-in"><div class="card-header">Consumer Sentiment</div><div class="sentiment-section">';
+  if(cs){
+    const idx=cs.overall_index!=null?cs.overall_index:(cs.sentiment_index!=null?cs.sentiment_index:'N/A');
+    const lbl=cs.overall_label||cs.sentiment_label||'';
+    const neg=typeof idx==='number'&&idx<-0.1;const pos=typeof idx==='number'&&idx>0.1;
+    const bgc=neg?'var(--status-red-bg)':pos?'var(--status-green-bg)':'var(--status-amber-bg)';
+    const fgc=neg?'var(--status-red)':pos?'var(--status-green)':'var(--status-amber)';
+    html+='<div style="display:flex;align-items:center;gap:12px"><div class="sentiment-badge" style="background:'+bgc+';color:'+fgc+'">'+lbl+' ('+(typeof idx==='number'?idx.toFixed(2):idx)+')</div>';
+    const ss=cs.sources_summary||cs;
+    html+='<div class="sentiment-meta" style="margin-top:0">'+(ss.reddit_posts||0)+' Reddit posts \u00b7 '+(ss.trends_queries||0)+' trending searches \u00b7 '+(ss.news_comments||0)+' news comments</div></div>';
+  }
+  html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:#999;font-size:.75rem">(click to expand)</span></summary>';
+  html+='<div style="padding:12px 0"><div class="word-cloud-container" id="wordCloudSvg"></div></div>';
+  html+='<hr style="border:none;border-top:1px solid var(--border-light);margin:8px 0">';
+  if(cp)html+='<div style="padding:12px 0 8px"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:8px">Consumer Pulse</h4><div class="pulse-prose">'+san(cp)+'</div></div>';
+  html+='</details>';
+  if(cs&&cs.categories&&cs.categories.length){
+    html+='<div class="category-bar-container"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:#555">Category Sentiment</h4>';
+    const cats=cs.categories;
+    cats.forEach(cat=>{
+      const label=cat.name||cat.category||'';
+      const n=typeof cat.score==='number'?cat.score:parseFloat(cat.score)||0;
+      const pct=Math.min(Math.abs(n)*100,100);
+      const c=n>0.05?'var(--status-green)':n<-0.05?'var(--status-red)':'var(--text-tertiary)';
+      html+='<div class="category-bar-row"><div class="category-bar-label">'+label+'</div><div class="category-bar-track"><div class="category-bar-fill" style="width:'+pct+'%;background:'+c+'"></div></div><div class="category-bar-score" style="color:'+c+'">'+n.toFixed(2)+'</div></div>';
+    });
+    html+='</div>';
+  }
+  html+='</div></div>';
+  $('sentimentSection').innerHTML=html;
+  const wcTopics=(D.word_cloud_topics&&D.word_cloud_topics.length)?D.word_cloud_topics:(cs&&cs.topics&&cs.topics.length)?cs.topics:extractTopicsFromText();
+  if(wcTopics.length){
+    const det=$('sentimentSection').querySelector('details');
+    if(det){let wcDrawn=false;det.addEventListener('toggle',()=>{if(det.open&&!wcDrawn){wcDrawn=true;setTimeout(()=>renderWordCloud(wcTopics),50)}});}
+  }
+}
+
+function extractTopicsFromText(){
+  const stops=new Set(['the','and','for','are','but','not','you','all','can','had','her','was','one','our','out','has','its','let','say','she','too','use','that','with','have','this','will','your','from','they','been','call','come','each','make','like','long','look','many','over','such','take','than','them','then','what','when','more','some','time','very','most','also','into','just','may','new','now','old','see','way','who','did','get','well','back','much','before','being','does','other','about','after','could','their','which','would','these','only','still','between','through','where','while','should','during','both','under','because','those','since','against','another','around','without','within','across','among','along','however','further','beyond','above','below','until','upon','toward','onto','into','canada','canadian','percent','year','week','month','quarter','rate','data','according','reported','million','billion','said']);
+  let text='';
+  if(D.consumer_pulse)text+=D.consumer_pulse+' ';
+  if(D.executive_summary)text+=D.executive_summary+' ';
+  if(D.national&&D.national.analysis)text+=D.national.analysis+' ';
+  text=text.replace(/<[^>]+>/g,' ').replace(/[^a-zA-Z\s-]/g,' ').toLowerCase();
+  const freq={};
+  text.split(/\s+/).forEach(w=>{w=w.trim();if(w.length>3&&!stops.has(w)){freq[w]=(freq[w]||0)+1}});
+  return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,60).map(([word,count])=>({topic:word,frequency:count,sentiment_score:0}));
+}
+
+function renderWordCloud(topics){
+  const container=document.getElementById('wordCloudSvg');
+  if(!container||!topics.length)return;
+  const w=container.clientWidth||500,h=280;
+  container.innerHTML='';
+  const maxFreq=Math.max(...topics.map(t=>t.frequency||t.count||1));
+  const words=topics.slice(0,80).map(t=>{
+    const freq=t.frequency||t.count||1;
+    const score=t.sentiment_score||t.sentiment||0;
+    return{text:t.topic||t.word||'',size:12+((freq/maxFreq)*28),score:typeof score==='number'?score:0,freq};
+  });
+  const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Plus Jakarta Sans').fontSize(d=>d.size).on('end',drawn);
+  layout.start();
+  function drawn(wds){
+    const svg=d3.select(container).append('svg').attr('width',w).attr('height',h);
+    const g=svg.append('g').attr('transform','translate('+w/2+','+h/2+')');
+    g.selectAll('text').data(wds).enter().append('text')
+      .style('font-size',d=>d.size+'px').style('font-family','Plus Jakarta Sans')
+      .style('font-weight',d=>d.size>30?'700':d.size>20?'600':'400')
+      .style('fill','#1a2f6b')
+      .style('opacity',d=>0.6+Math.min(Math.abs(d.score),0.4))
+      .style('cursor','pointer')
+      .attr('text-anchor','middle').attr('transform',d=>'translate('+d.x+','+d.y+') rotate('+d.rotate+')')
+      .text(d=>d.text)
+      .append('title').text(d=>d.text+'\nSentiment: '+d.score.toFixed(2)+'\nFrequency: '+d.freq);
+  }
+}
+
+/* == Trend Summary == */
+async function renderTrendSummary(){
+  const el=$('trendSummary');if(!el)return;
+  try{
+    let narrative='',title='Weekly Intelligence Briefing',ds={};
+    const briefing=await fetchJSON('briefing_latest.json');
+    if(briefing&&briefing.content){narrative=briefing.content;title='Weekly Intelligence Briefing'}
+    if(!narrative){el.innerHTML='';return}
+    const chips=ds.total_projects?`<div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap"><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)"><strong>${ds.total_projects||0}</strong> projects</div><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)">$<strong>${((ds.total_value_millions||0)/1000).toFixed(1)}B</strong> pipeline</div></div>`:'';
+    // Download buttons — pdf_url and docx_url are optional fields in briefing_latest.json
+    const pdfUrl=(briefing&&briefing.pdf_url)||'';const docxUrl=(briefing&&briefing.docx_url)||'';
+    const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:12px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#b91c1c;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#1d4ed8;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
+    el.innerHTML=`<div class="card fade-in"><div class="card-header">${title}</div><div class="card-body">${chips}${dlBtns}<div style="line-height:1.65;color:var(--text-secondary);white-space:pre-line">${san(narrative)}</div></div></div>`;
+  }catch(e){console.warn('Trend summary:',e);el.innerHTML=''}
+}
+
+/* == Global Vectors == */
+function renderGlobalVectors(){
+  const gv=D.globalVectors||D.global_vectors||{};
+  const globalArr=D.global||[];
+  const REGION_MAP={'United States':'us','China':'china','European Union':'eu','United Kingdom':'uk'};
+  const vectors=[
+    {key:'us',name:'United States',cls:'gv-us'},
+    {key:'china',name:'China',cls:'gv-china'},
+    {key:'eu',name:'European Union',cls:'gv-eu'},
+    {key:'uk',name:'United Kingdom',cls:'gv-uk'}
+  ];
+  let html='<h2 style="font-size:var(--text-lg);font-weight:700;margin-bottom:12px">Global Vectors</h2>';
+  let hasAny=false;
+  vectors.forEach(v=>{
+    // Try rich global array first, fall back to globalVectors text
+    const gData=globalArr.find(g=>REGION_MAP[g.region]===v.key)||{};
+    const vectorText=gv[v.key]||'';
+    const analysis=gData.analysis||vectorText;
+    if(!analysis)return;
+    hasAny=true;
+    html+='<div class="gv-card '+v.cls+' fade-in"><div class="gv-header">'+v.name+'</div>';
+    // Show indicators if available
+    const gi=gData.indicators||{};
+    const hasInd=gi.gdp||gi.cpi||gi.rate||gi.unemployment;
+    if(hasInd){
+      html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">';
+      if(gi.gdp)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">GDP</div><div class="indicator-pill-value">'+gi.gdp+'</div></div>';
+      if(gi.cpi)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">CPI</div><div class="indicator-pill-value">'+gi.cpi+'</div></div>';
+      if(gi.rate)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">Rate</div><div class="indicator-pill-value">'+gi.rate+'</div></div>';
+      if(gi.unemployment)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">Unemp</div><div class="indicator-pill-value">'+gi.unemployment+'</div></div>';
+      html+='</div>';
+    }
+    html+='<div class="gv-body">'+san(analysis)+'</div>';
+    if(gData.sources&&gData.sources.length)html+=sourcesFooter(gData.sources);
+    html+='</div>';
+  });
+  if(!hasAny)html+='<div class="empty-state"><div class="empty-state-text">Global vector analysis not yet available.</div></div>';
+  $('globalVectors').innerHTML=html;
+}
+
+
+/* ====== PROVINCES TAB ====== */
+function renderProvinces(){
+  // Province selector pills
+  let sel='';
+  PROVS.forEach(p=>{
+    sel+='<div class="province-pill'+(p.code===selectedProvince?' active':'')+'" data-prov="'+p.code+'" onclick="window.selectProvince(this.dataset.prov)">'+p.code+'</div>';
+  });
+  $('provSelector').innerHTML=sel;
+  renderProvinceContent();
+}
+window.selectProvince=function(code){
+  selectedProvince=code;
+  document.querySelectorAll('.province-pill').forEach(p=>p.classList.toggle('active',p.dataset.prov===code));
+  // Update banner image and province map silhouette
+  const img=PROV_IMGS[code]||PROV_IMGS.BC;
+  $('provBanner').style.setProperty('--banner-img',"url('"+img+"')");
+  renderProvinceContent();
+};
+function renderProvinceContent(){
+  const prov=PROVS.find(p=>p.code===selectedProvince)||PROVS[0];
+  $('provBannerTitle').textContent=prov.name;
+  // Find province data from the provinces array
+  const provArr=D?(D.provinces||[]):[];
+  const norm=s=>(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z]/g,'');
+  const provData=provArr.find(p=>norm(p.name)===norm(prov.name))||{};
+  const provInd=provData.indicators||{};
+  const provMeta=provData.indicatorMeta||{};
+  let headerHtml='<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:var(--text-xl);font-weight:700">'+prov.name+'</span>';
+  headerHtml+='</div><span style="font-size:var(--text-xs);color:#777">Last updated '+(D?fmtDate(D.updated_at||D.date)||(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'')+'</span></div>';
+  $('provHeader').innerHTML=headerHtml;
+
+  // Mini chart cards
+  const chartMetrics=[{label:'GDP YoY',key:'gdp',tsId:null},{label:'Unemployment',key:'unemployment',tsId:'canada_unemployment'},{label:'CPI',key:'cpi',tsId:'canada_cpi'},{label:'Housing Starts',key:'housingStarts',tsId:null}];
+  let miniHtml='<div class="mini-chart-grid">';
+  const provSparkJobs=[];
+  chartMetrics.forEach((m,i)=>{
+    const val=provInd[m.key]||'N/A';
+    const meta=provMeta[m.key]||{};
+    const chg=meta.change||'';
+    const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
+    const sparkId='spark_prov_'+selectedProvince+'_'+i;
+    const prd=meta.period||'';
+    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
+    if(m.tsId)provSparkJobs.push({canvasId:sparkId,docId:m.tsId,change:chg});
+  });
+  miniHtml+='</div>';
+  $('provMiniCharts').innerHTML=miniHtml;
+  provSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
+
+  // Province indicator dropdown
+  $('provIndicatorDropdown').innerHTML=renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
+
+  // Analysis
+  const provContent=provData.analysis||'';
+  let analysisHtml='<div class="card"><div class="card-header">Analysis</div><div class="card-body">'+(provContent?san(provContent):'<div class="empty-state"><div class="empty-state-text">No provincial analysis available for '+prov.name+'.</div></div>')+'</div></div>';
+  // Province sources footer
+  if(provData.sources&&provData.sources.length){analysisHtml+=sourcesFooter(provData.sources)}
+  // Provincial upcoming events (from watchlist, filtered by province mention in description)
+  const wl=D&&(D.watchlist||D.events)?D.watchlist||D.events||[]:[];
+  const provEvents=wl.filter(e=>{const desc=(e.description||'')+(e.event_name||'');return desc.toLowerCase().includes(prov.name.toLowerCase())});
+  if(provEvents.length){
+    analysisHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:#555">';
+    provEvents.forEach(e=>{analysisHtml+='<div style="margin-bottom:4px">'+(e.date||'')+' \u2014 '+(e.event_name||e.event||'')+(e.institution?' ('+e.institution+')':'')+'</div>'});
+    analysisHtml+='</div></details>';
+  }
+  $('provAnalysis').innerHTML=analysisHtml;
+
+  // Projects preview
+  const provProjects=allProjects.filter(p=>p.province===prov.name||p.province===prov.code).slice(0,5);
+  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-size:var(--text-xs);color:#777;margin-left:8px">('+provProjects.length+')</span></div>';
+  if(provProjects.length){
+    projHtml+='<table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
+    provProjects.forEach(p=>{
+      projHtml+='<tr><td class="col-value">'+fmtCurrency(p.value,p)+'</td><td class="col-name">'+((p.name||'').substring(0,60))+'</td><td>'+statusBadge(p.status||'Proposed')+'</td><td>'+srcLink((p.sources||[])[0]?.url,(p.sources||[])[0]?.title)+'</td></tr>';
+    });
+    projHtml+='</tbody></table>';
+    projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><a href="#" style="color:var(--accent-blue);text-decoration:none" onclick="event.preventDefault();switchTab(\'projects\')">View all projects \u2192</a></div>';
+  } else {
+    projHtml+='<div class="empty-state"><div class="empty-state-text">No projects tracked for '+prov.name+' yet.</div></div>';
+  }
+  projHtml+='</div>';
+  $('provProjectsPreview').innerHTML=projHtml;
+}
+
+
+
+/* ====== INDUSTRIES TAB ====== */
+let _industryView='all';
+window.toggleIndustryView=function(view){
+  _industryView=view;
+  document.querySelectorAll('.ind-toggle').forEach(b=>{b.classList.toggle('active',b.dataset.view===view)});
+  renderIndustrySectors();
+};
+function renderIndustries(){
+  if(!D){$('industrySectorGrid').innerHTML='<div class="empty-state"><div class="empty-state-text">No industry data available.</div></div>';return}
+  const ies=D.industry_executive_summary||'';
+  if(ies){
+    $('industryExecSummary').innerHTML='<div class="card fade-in"><div class="card-header">Industry Executive Summary</div><div class="card-body">'+san(ies)+'</div></div>';
+  }
+  renderIndustrySectors();
+}
+function renderIndustrySectors(){
+  if(!D)return;
+  const goodsArr=D.goodsIndustries||[];
+  const servArr=D.servicesIndustries||[];
+  const showGoods=_industryView==='all'||_industryView==='goods';
+  const showServ=_industryView==='all'||_industryView==='services';
+  let html='';
+  if(showGoods){
+    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#E8F0F8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Goods-Producing Industries</h3><div class="sector-grid" style="margin-bottom:16px">';
+    goodsArr.forEach(s=>{html+=sectorCard(s)});
+    if(!goodsArr.length)['11','21','22','23','31-33'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
+    html+='</div>';
+  }
+  if(showServ){
+    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#E8F0F8;text-transform:uppercase;letter-spacing:.5px;margin:'+(showGoods?'12px':'0')+' 0 8px">Services-Producing Industries</h3><div class="sector-grid">';
+    servArr.forEach(s=>{html+=sectorCard(s)});
+    if(!servArr.length)['41','44-45','48-49','51','52','53','54','55','56','61','62','71','72','81','91'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
+    html+='</div>';
+  }
+  $('industrySectorGrid').innerHTML=html;
+}
+function sectorCard(s){
+  const code=s.code||'';
+  const name=s.name||NAICS_NAMES[code]||code;
+  const cls=NAICS_CLS[code]||'';
+  const analysis=s.analysis||'';
+  const mm=s.mm||'';const yy=s.yy||'';
+  const mmCls=s.isNegative?'change-down':'change-up';
+  let footer='';
+  if(mm||yy)footer='<div style="margin-top:8px;font-size:var(--text-xs);color:#777">'+(mm?'M/M: <span class="'+mmCls+'" style="font-family:var(--font-mono)">'+mm+'</span> ':'')+(yy?'Y/Y: <span style="font-family:var(--font-mono)">'+yy+'</span>':'')+(s.indicatorSrc?' · '+s.indicatorSrc:'')+'</div>';
+  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+(analysis?san(analysis):'<em style="color:#777">No analysis available.</em>')+footer+'</div></div>';
+}
+
+/* ====== MARKETS TAB ====== */
+function renderMarkets(){
+  if(!D){$('marketsGrid').innerHTML='<div class="empty-state"><div class="empty-state-text">No market data available.</div></div>';return}
+  const fm=D.financialMarkets||D.financial_markets||D.markets||{};
+  const indices=fm.indices||[];const fx=fm.fx||[];
+  // Equity + Currency cards
+  // Indices: {name, value, change, day, yy, country}  FX: {name, value} (no change)
+  const mktTsMap={'S&P/TSX':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'idx_sp500','Dow Jones':'idx_djia','NASDAQ':'idx_nasdaq','FTSE 100':'idx_ftse','DAX':'idx_dax','Nikkei 225':'idx_nikkei','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','EUR/USD':'fx_eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'fx_usdjpy','USD/CNY':'fx_usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'comm_wti','Crude Oil (Brent)':'comm_brent','Natural Gas':'comm_natgas','Gold':'comm_gold','Silver':'comm_silver','Platinum':'comm_platinum','Palladium':'comm_palladium','Copper':'comm_copper','Aluminum':'comm_aluminum','Wheat':'comm_wheat','Corn':'comm_corn','Rice':'comm_rice','Soybeans':'comm_soybeans','Coffee':'comm_coffee','Cocoa':'comm_cocoa','Sugar #11':'comm_sugar','Cotton':'comm_cotton','Soybean Oil':'comm_soyoil','Soybean Meal':'comm_soymeal','Coal (Newcastle)':'comm_coal','Propane':'comm_propane'};
+  const normMktId=(name)=>(name||'').toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_');
+  const mktDate=fmtDate(D.updated_at||D.date)||'';
+  let eqHtml='';let mktSparkJobs=[];let mktIdx=0;
+  if(indices.length){
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#E8F0F8">Equity Indices</h3><div class="market-grid">';
+    indices.forEach(item=>{
+      const chg=item.change||item.day||'';const isNeg=chg.startsWith('-');
+      const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
+      const sid='spark_mkt_'+mktIdx++;
+      const tsId=mktTsMap[item.name]||null;
+      eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small>'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#777">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+      eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
+      if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
+    });
+    eqHtml+='</div>';
+  }
+  if(fx.length){
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">Foreign Exchange</h3><div class="market-grid">';
+    fx.forEach(item=>{
+      const chg=item.day||'';const isNeg=chg.startsWith('-');
+      const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
+      const sid='spark_mkt_'+mktIdx++;
+      const tsId=mktTsMap[item.name]||null;
+      eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#777">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+      eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
+      if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
+    });
+    eqHtml+='</div>';
+  }
+  $('marketsGrid').innerHTML=eqHtml||'<div class="empty-state"><div class="empty-state-text">No equity/currency data.</div></div>';
+  mktSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
+
+  // Yield curve
+  const yc=D.yieldCurve||[];
+  if(yc.length){
+    let ycHtml='<div class="card yield-card"><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
+    const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
+    if(y2&&y10){
+      const spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);
+      ycHtml+='<div class="yield-spread">10Y-2Y Spread: '+spread+'bp';
+      if(parseInt(spread)<0)ycHtml+=' <span class="inversion">Inverted</span>';
+      ycHtml+='</div>';
+    }
+    ycHtml+='<a class="market-card-source" href="https://www.bankofcanada.ca/rates/interest-rates/" target="_blank">Bank of Canada Valet API \u2197</a></div>';
+    $('yieldCurveCard').innerHTML=ycHtml;
+    setTimeout(()=>drawYieldChart(yc),50);
+  } else {
+    $('yieldCurveCard').innerHTML='<div class="card"><div class="empty-state"><div class="empty-state-text">No yield curve data.</div></div></div>';
+  }
+
+  // Commodities — pipeline stores [{category, color, items: [{name, unit, val, yy, day}]}]
+  const rawComms=D.commodities||fm.commodities||[];
+  let commHtml='';
+  const commSparkJobs=[];
+  if(Array.isArray(rawComms)&&rawComms.length&&rawComms[0].items){
+    // Nested category structure from pipeline
+    rawComms.forEach(cat=>{
+      commHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">'+cat.category+'</h3><div class="market-grid">';
+      (cat.items||[]).forEach(c=>{
+        const yy=c.yy||'';const isNeg=yy.startsWith('-');
+        const cls=isNeg?'change-down':(yy?'change-up':'change-flat');
+        const cid='spark_comm_'+mktIdx++;
+        const tsId=mktTsMap[c.name]||null;
+        commHtml+='<div class="market-card"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small>'+c.unit+'</small>':'')+'</div>';
+        if(yy)commHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+yy+' YoY</div>';
+        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#777">'+c.day+' today</div>';
+        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+        commHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
+        if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:yy});
+      });
+      commHtml+='</div>';
+    });
+  } else if(Array.isArray(rawComms)){
+    // Flat array fallback
+    rawComms.forEach(c=>{
+      const chg=c.change||c.yy||'';const isNeg=chg.startsWith('-');
+      const cls=isNeg?'change-down':'change-up';
+      const cid='spark_comm_'+mktIdx++;
+      const tsId=mktTsMap[c.name]||null;
+      commHtml+='<div class="market-card"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||c.value||'N/A')+'</div><div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div><div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
+      if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:chg});
+    });
+  }
+  $('commoditiesGrid').innerHTML=commHtml||'<div class="empty-state"><div class="empty-state-text">No commodity data.</div></div>';
+  commSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
+  // Canadian-specific commodities
+  renderCanadianCommodities();
+}
+
+/* == Chart Helpers == */
+function drawYieldChart(yc){
+  const canvas=document.getElementById('yieldChart');
+  if(!canvas)return;
+  if(charts.yield)charts.yield.destroy();
+  const labels=yc.map(y=>y.term);
+  const data=yc.map(y=>parseFloat(y.yield)||0);
+  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#2E7DAD',backgroundColor:'rgba(46,125,173,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#1C5688',pointBorderColor:'rgba(19,61,98,0.8)',pointBorderWidth:2,fill:true,tension:0.3}]},plugins:[{id:'yieldEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#2E7DAD';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(2)+'%':lastVal,lastPt.x+6,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,26,43,0.95)',titleColor:'#E8F0F8',bodyColor:'#94A8C2',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:11},color:'#94A8C2'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:11},color:'#94A8C2',callback:v=>v.toFixed(2)+'%'}}}}});
+}
+function drawLineChart(canvasId,tsData,months){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  if(charts[canvasId])charts[canvasId].destroy();
+  if(!tsData||!tsData.series||!tsData.series.length){
+    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#777;font-size:var(--text-xs);padding:20px">No timeseries data available</div>');
+    return;
+  }
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-months);
+  const filtered=tsData.series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(!filtered.length)return;
+  const labels=filtered.map(p=>fmtDate(p.date));
+  const data=filtered.map(p=>p.value);
+  // Build event annotations for line chart
+  const lcEvtAnnotations={};
+  try{
+    if(D&&(D.watchlist||D.events)){
+      const wl=D.watchlist||D.events||[];
+      wl.filter(e=>(e.impact||'').toLowerCase()==='high').forEach((evt,i)=>{
+        try{
+          const ed=parseEvtDate(evt.date);if(!ed)return;
+          const ds=fmtDate(ed);const li=labels.indexOf(ds);if(li===-1)return;
+          lcEvtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Plus Jakarta Sans',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
+        }catch(e2){}
+      });
+    }
+  }catch(e3){console.warn('Line chart event annotations:',e3)}
+  const lcHasAnnotation=typeof window.ChartAnnotation!=='undefined'||Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation');
+  const lcAnnotationCfg=lcHasAnnotation&&Object.keys(lcEvtAnnotations).length?{annotation:{annotations:{...lcEvtAnnotations}}}:{};
+  charts[canvasId]=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.06)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#1E40AF',fill:true,tension:0.3}]},plugins:[{id:'lineEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 10px JetBrains Mono';ctx.fillStyle='#3B82F6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):lastVal,lastPt.x+4,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},...lcAnnotationCfg},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:6,font:{family:'Plus Jakarta Sans',size:10},color:'#94A8C2'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#94A8C2'}}}}});
+}
+
+function drawSparkline(canvasId,tsData,color){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas||!tsData||!tsData.series||!tsData.series.length)return;
+  if(charts[canvasId])charts[canvasId].destroy();
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
+  const filtered=tsData.series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(filtered.length<2)return;
+  const data=filtered.map(p=>p.value);
+  const c=color||'#2E7DAD';
+  const mn=Math.min(...data),mx=Math.max(...data),pad=(mx-mn)*0.15||0.01;
+  charts[canvasId]=new Chart(canvas,{type:'line',data:{labels:filtered.map(p=>p.date),datasets:[{data,borderColor:c,backgroundColor:c+'12',borderWidth:1.8,pointRadius:data.map((_,i)=>i===data.length-1?3:0),pointBackgroundColor:c,fill:true,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false,min:mn-pad,max:mx+pad}},elements:{line:{capBezierPoints:true}}}});
+}
+async function loadAndDrawSparkline(canvasId,docId,change){
+  const ts=await loadTimeseries(docId);
+  if(!ts)return;
+  const c=change&&change.startsWith('-')?'#B91C1C':change&&(change.startsWith('+')||parseFloat(change)>0)?'#15803D':'#2E7DAD';
+  drawSparkline(canvasId,ts,c);
+}
+
+/* ====== PROJECTS TAB ====== */
+function renderProjectsTab(){
+  // Populate filter dropdowns
+  const provSel=$('filterProvince');
+  if(provSel.options.length<=1){
+    PROVS.forEach(p=>{const o=document.createElement('option');o.value=p.code;o.textContent=p.name;provSel.appendChild(o)});
+  }
+  const secSel=$('filterSector');
+  if(secSel.options.length<=1){
+    NAICS_CODES.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c+' '+NAICS_NAMES[c];secSel.appendChild(o)});
+  }
+  const stSel=$('filterStatus');
+  if(stSel.options.length<=1){
+    STATUSES.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;stSel.appendChild(o)});
+  }
+  // Event listeners
+  $('projectSearch').oninput=filterProjects;
+  $('filterProvince').onchange=filterProjects;
+  $('filterSector').onchange=filterProjects;
+  $('filterStatus').onchange=filterProjects;
+  $('sortProjects').onchange=filterProjects;
+  $('loadMoreBtn').onclick=()=>{projectPage++;renderProjectTable()};
+  // Type toggle
+  document.querySelectorAll('#projTypeToggle button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('#projTypeToggle button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      _projTypeFilter=btn.dataset.type;
+      filterProjects();
+    });
+  });
+  filterProjects();
+  // Populate missed project form dropdowns
+  const mpProv=$('mpProvince');
+  if(mpProv&&mpProv.options.length<=1){PROVS.forEach(p=>{const o=document.createElement('option');o.value=p.name;o.textContent=p.name;mpProv.appendChild(o)})}
+  const mpSec=$('mpSector');
+  if(mpSec&&mpSec.options.length<=1){NAICS_CODES.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c+' '+NAICS_NAMES[c];mpSec.appendChild(o)})}
+}
+async function submitMissedProject(){
+  const name=($('mpName').value||'').trim();
+  const province=($('mpProvince').value||'').trim();
+  const fb=$('missedFormFeedback');
+  if(!name||!province){fb.style.display='block';fb.style.background='#FEF2F2';fb.style.color='#991B1B';fb.textContent='Project name and province are required.';return}
+  const btn=$('mpSubmitBtn');btn.disabled=true;btn.textContent='Submitting...';
+  // Submissions collected via pipeline operator review — form disabled in static mode
+  fb.style.display='block';fb.style.background='#F0FDF4';fb.style.color='#166534';
+  fb.textContent='"'+name+'" noted. Please email corrections to the pipeline operator for inclusion in the next run.';
+  btn.disabled=false;btn.textContent='Submit Missing Project';
+}
+async function filterProjects(){
+  const search=($('projectSearch').value||'').toLowerCase();
+  const prov=$('filterProvince').value||null;
+  const sector=$('filterSector').value;
+  const status=$('filterStatus').value;
+  const sort=$('sortProjects').value;
+  // If province changed, reload from Firestore
+  if(prov!==_lastLoadedProvince){
+    await loadProjects(prov);
+    filterProjects();
+    return;
+  }
+  filteredProjects=allProjects.filter(p=>{
+    if(_confirmedOnly&&!meetsThreshold(p))return false;
+    if(search&&!(p.name||'').toLowerCase().includes(search)&&!(p.cma||'').toLowerCase().includes(search)&&!(p.proponent||'').toLowerCase().includes(search))return false;
+    if(prov&&normProvince(p.province)!==prov)return false;
+    if(sector&&p.naics_code!==sector)return false;
+    if(status&&p.status!==status)return false;
+    if(_projTypeFilter==='greenfield'&&p.is_brownfield)return false;
+    if(_projTypeFilter==='brownfield'&&!p.is_brownfield)return false;
+    return true;
+  });
+  if(sort==='value_desc')filteredProjects.sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value));
+  else if(sort==='updated')filteredProjects.sort((a,b)=>(b.lastSeen||'').localeCompare(a.lastSeen||''));
+  else if(sort==='name_asc')filteredProjects.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  else if(sort==='confidence')filteredProjects.sort((a,b)=>(b.confidence||0)-(a.confidence||0));
+  projectPage=0;
+  renderProjectSummary();
+  renderProjectTable();
+}
+function renderProjectSummary(){
+  const total=filteredProjects.length;
+  const gf=filteredProjects.filter(p=>!p.is_brownfield).length;
+  const bf=filteredProjects.filter(p=>p.is_brownfield).length;
+  const totalVal=filteredProjects.reduce((s,p)=>s+parseNumericValue(p.value),0);
+  const uc=filteredProjects.filter(p=>(p.status||'').toLowerCase().includes('construction')).length;
+  const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$0';
+  const withUrls=filteredProjects.filter(p=>(p.evidence||[]).length>0).length;
+  const withGov=filteredProjects.filter(p=>p.has_government_source).length;
+  const pctVerified=total>0?Math.round(withUrls/total*100):0;
+  let banner='';
+  if(total>0)banner='<div class="verify-banner"><span>&#128279;</span><span>'+pctVerified+'% of projects have source links for independent verification.'+(withGov>0?' '+withGov+' backed by government sources.':'')+'</span></div>';
+  $('projSummaryStats').innerHTML=banner+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+total+'</div><div class="proj-stat-label">Total Projects</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+fv(totalVal)+'</div><div class="proj-stat-label">Total Value</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+gf+'</div><div class="proj-stat-label">Greenfield</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+bf+'</div><div class="proj-stat-label">Brownfield</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+uc+'</div><div class="proj-stat-label">Under Construction</div></div>';
+}
+function renderProjectTable(){
+  const shown=filteredProjects.slice(0,(projectPage+1)*PAGE_SIZE);
+  // Summary line
+  const pf=$('filterProvince')?.value;
+  const countNote=(!pf||pf==='')?'Showing '+shown.length+' of '+filteredProjects.length+' projects. Select a province for complete results. ('+allProjects.length+' most recent loaded)':'Showing '+shown.length+' of '+filteredProjects.length+' '+(PROVS.find(p=>p.code===pf)||{}).name+' projects';
+  $('projectResultsSummary').textContent=countNote;
+  // Table
+  let html='<table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Type</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Updated</th><th scope="col">Src</th></tr></thead><tbody>';
+  shown.forEach((p,i)=>{
+    const rowId='proj_'+i;
+    const firstEv=(p.evidence||[])[0]||{};
+    const srcDead=firstEv.url_dead||false;
+    const srcUrl=srcDead?'':((p.sources&&p.sources[0])?p.sources[0].url:'');
+    const srcTitle=(p.sources&&p.sources[0])?p.sources[0].title:'';
+    const updatedAgo=relDate(p.lastSeen||p.updated_at||'');
+    const staleWarn=p.is_stale||(p.lastSeen&&(Date.now()-new Date(p.lastSeen+'T00:00:00').getTime())>2592000000);
+    const provCode=normProvince(p.province);
+    const naicsShort=NAICS_NAMES[p.naics_code]||(p.sector||'').substring(0,20)||'';
+    const pType=p.project_type||'greenfield';
+    const isUnconf=!meetsThreshold(p);
+    html+='<tr onclick="window.toggleProjectRow(\''+rowId+'\')"'+(isUnconf&&!_confirmedOnly?' class="unconfirmed-row"':'')+'>';
+    html+='<td class="col-value">'+fmtCurrency(p.value,p)+(isUnconf?'<span class="unconfirmed-badge">unconfirmed</span>':'')+'</td>';
+    html+='<td class="col-name">'+((p.name||'').substring(0,50))+'</td>';
+    html+='<td>'+typeBadge(pType)+'</td>';
+    html+='<td class="col-province">'+(provCode||((p.province||'').substring(0,3)))+'</td>';
+    html+='<td class="col-proponent">'+(p.proponent||'')+'</td>';
+    html+='<td>'+statusBadge(p.status||'Proposed')+'</td>';
+    html+='<td style="font-size:var(--text-xs)">'+naicsShort+'</td>';
+    html+='<td class="col-updated"'+(staleWarn?' style="color:var(--status-amber)"':'')+'>'+updatedAgo+'</td>';
+    html+='<td class="col-source">'+srcLink(srcUrl,srcTitle)+'</td>';
+    html+='</tr>';
+    // Expansion row
+    const colSpan=9;
+    html+='<tr id="'+rowId+'" style="display:none"><td colspan="'+colSpan+'"><div class="project-expand">';
+    html+='<div style="font-size:var(--text-sm);color:#555;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
+    // CMA + confidence row
+    html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:var(--text-xs);color:#555">';
+    if(p.cma)html+='<span>CMA: <b>'+p.cma+'</b></span>';
+    const evArr=p.evidence||[];
+    const dispConf=p.display_confidence!=null?p.display_confidence:p.confidence;
+    if(dispConf!=null)html+='<span>Confidence: '+confBadge(dispConf,evArr.length)+(p.decay_applied?' <span style="color:#999;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
+    if(p.has_anomalies)html+='<span style="color:var(--status-amber);font-weight:600" title="'+(p.anomalies||[]).map(a=>a.type+': '+a.detail).join('; ')+'">&#9888; Anomaly detected</span>';
+    if(p.needs_review)html+='<span style="color:var(--status-red);font-weight:500">Needs review ('+p.days_since_update+'d stale)</span>';
+    const dsSrc=p.discovery_sources||[];
+    if(dsSrc.length>1)html+='<span>Found by '+dsSrc.length+' channels</span>';
+    html+='</div>';
+    // Evidence sources with authority badges
+    if(evArr.length){
+      const authOrder={government:0,major_news:1,industry:2,regional_news:3,other:4};
+      const sorted=[...evArr].sort((a,b)=>(authOrder[a.authority]||4)-(authOrder[b.authority]||4));
+      html+='<details class="evidence-list"><summary style="cursor:pointer;font-size:var(--text-xs);color:var(--accent-blue)">'+evArr.length+' source'+(evArr.length>1?'s':'')+' -- click to verify independently</summary><ul style="margin:6px 0 0 0;padding:0;list-style:none">';
+      sorted.forEach(e=>{
+        html+='<li>';
+        const auth=e.authority||'other';
+        const badgeCfg={government:['GOV','src-badge-gov'],major_news:['NEWS','src-badge-news'],industry:['IND','src-badge-ind'],regional_news:['REG','src-badge-reg'],other:['SRC','src-badge-other']};
+        const bc=badgeCfg[auth]||badgeCfg.other;
+        html+='<span class="src-badge '+bc[1]+'">'+bc[0]+'</span> ';
+        if(e.url&&!e.url_dead){
+          let label=e.name||'';
+          if(!label){try{const h=new URL(e.url).hostname;label=h.startsWith('www.')?h.slice(4):h}catch(_){label=e.url}}
+          html+='<a href="'+e.url+'" target="_blank" rel="noopener noreferrer" style="word-break:break-all">'+label+'</a>';
+        }else if(e.url&&e.url_dead){
+          let label=e.name||'';
+          if(!label){try{const h=new URL(e.url).hostname;label=h.startsWith('www.')?h.slice(4):h}catch(_){label=e.url}}
+          html+='<span style="color:#999;text-decoration:line-through;word-break:break-all">'+label+'</span> <span style="color:var(--status-red);font-size:10px">source unavailable</span>';
+        }else{
+          html+='<span>'+(e.name||'Unknown source')+'</span>';
+        }
+        if(e.date)html+=' <span style="color:#999;font-size:10px">('+e.date+')</span>';
+        if(e.url_verified===false&&!e.url_dead)html+='<span class="url-broken" title="Link may be broken">link may be unavailable</span>';
+        html+='</li>';
+      });
+      html+='</ul></details>';
+    }
+    // Status history
+    const sh=p.statusHistory||[];
+    if(sh.length){
+      html+='<div class="project-timeline">';
+      sh.forEach(entry=>{
+        html+='<div class="timeline-entry"><div class="timeline-date">'+fmtDate(entry.date||'')+'</div><div>'+statusBadge(entry.status||'')+(entry.detail?' <span style="color:#555;font-size:var(--text-xs)">'+entry.detail+'</span>':'')+'</div>';
+        const es=entry.source||{};
+        if(es.url)html+='<div style="font-size:var(--text-xs);margin-top:2px">'+srcLink(es.url,es.title)+(es.archive_url?' <a href="'+es.archive_url+'" target="_blank" style="color:#777">[Archived]</a>':'')+'</div>';
+        html+='</div>';
+      });
+      html+='</div>';
+    }
+    // Suggest edit
+    const eid='edit_'+i;
+    html+='<div style="margin-top:10px"><button onclick="event.stopPropagation();toggleEditForm(\''+eid+'\')" style="background:none;border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-size:var(--text-xs);color:var(--accent-blue-soft);cursor:pointer">Suggest Edit</button></div>';
+    html+='<div id="'+eid+'" class="edit-form" style="display:none" onclick="event.stopPropagation()">';
+    html+='<div class="edit-grid">';
+    html+='<div><label>Value (e.g. $1.2B)</label><input type="text" id="'+eid+'_val" value="'+(p.value||'').replace(/"/g,'&quot;')+'"></div>';
+    html+='<div><label>Status</label><select id="'+eid+'_status"><option value="">--</option>';
+    STATUSES.forEach(s=>{html+='<option value="'+s+'"'+((p.status||'')===s?' selected':'')+'>'+s+'</option>'});
+    html+='</select></div>';
+    html+='<div><label>Proponent</label><input type="text" id="'+eid+'_prop" value="'+(p.proponent||'').replace(/"/g,'&quot;')+'"></div>';
+    html+='<div><label>Completion Date</label><input type="date" id="'+eid+'_comp" value="'+(p.completionDate||'')+'"></div>';
+    html+='</div>';
+    html+='<div><label>Source URL (for verification)</label><input type="url" id="'+eid+'_src" placeholder="https://..."></div>';
+    html+='<div><label>Notes</label><textarea id="'+eid+'_notes" rows="2" placeholder="Why is this correction needed?"></textarea></div>';
+    html+='<button onclick="submitProjectCorrection(\''+eid+'\',\''+((p._id||'').replace(/'/g,"\\'"))+'\')" style="background:var(--accent);color:#fff;border:none;border-radius:5px;padding:5px 14px;font-size:var(--text-xs);cursor:pointer;margin-top:4px">Submit Correction</button>';
+    html+='<div id="'+eid+'_fb" class="edit-feedback"></div>';
+    html+='</div>';
+    // Metadata
+    html+='<div style="margin-top:12px;font-size:var(--text-xs);color:#777">';
+    if(p.firstTracked)html+='Tracked since '+fmtDate(p.firstTracked)+' \u00b7 ';
+    if(p.lastSeen)html+='Last seen '+fmtDate(p.lastSeen)+' \u00b7 ';
+    if(p.discovery_source)html+='<span class="disc-badge">'+p.discovery_source+'</span> ';
+    if(p.history_backfilled&&p.history_earliest_date)html+='<span class="disc-badge">History since '+fmtDate(p.history_earliest_date)+'</span>';
+    if(staleWarn)html+=' <span style="color:var(--status-amber);font-weight:500">\u26a0 Status unconfirmed since '+fmtDate(p.lastSeen)+'</span>';
+    html+='</div></div></td></tr>';
+  });
+  html+='</tbody></table>';
+  $('projectTableContainer').innerHTML=html;
+  $('loadMoreBtn').style.display=shown.length<filteredProjects.length?'block':'none';
+}
+window.toggleProjectRow=function(id){
+  const row=document.getElementById(id);
+  if(row)row.style.display=row.style.display==='none'?'table-row':'none';
+};
+window.toggleEditForm=function(eid){
+  const el=document.getElementById(eid);
+  if(el)el.style.display=el.style.display==='none'?'block':'none';
+};
+window.submitProjectCorrection=async function(eid,projectId){
+  const val=document.getElementById(eid+'_val').value.trim();
+  const status=document.getElementById(eid+'_status').value;
+  const prop=document.getElementById(eid+'_prop').value.trim();
+  const comp=document.getElementById(eid+'_comp').value;
+  const src=document.getElementById(eid+'_src').value.trim();
+  const notes=document.getElementById(eid+'_notes').value.trim();
+  const fb=document.getElementById(eid+'_fb');
+  if(!val&&!status&&!prop&&!comp){fb.style.display='block';fb.style.background='#fff3cd';fb.style.color='#856404';fb.textContent='Please change at least one field.';return}
+  // Find original project
+  const orig=allProjects.find(p=>p._id===projectId)||{};
+  const corrections=[];
+  if(val&&val!==(orig.value||''))corrections.push({field:'value',old_value:orig.value||'',new_value:val});
+  if(status&&status!==(orig.status||''))corrections.push({field:'status',old_value:orig.status||'',new_value:status});
+  if(prop&&prop!==(orig.proponent||''))corrections.push({field:'proponent',old_value:orig.proponent||'',new_value:prop});
+  if(comp&&comp!==(orig.completionDate||''))corrections.push({field:'completionDate',old_value:orig.completionDate||'',new_value:comp});
+  if(!corrections.length){fb.style.display='block';fb.style.background='#fff3cd';fb.style.color='#856404';fb.textContent='No changes detected.';return}
+  // Corrections logged client-side in static mode — operator applies on next pipeline run
+  fb.style.display='block';fb.style.background='#d4edda';fb.style.color='#155724';
+  fb.textContent='Correction noted ('+corrections.length+' field'+(corrections.length>1?'s':'')+') — contact pipeline operator to apply before next run.';
+};
+window.exportProjects=function(){
+  if(!filteredProjects.length)return;
+  const headers=['Name','Province','CMA','Sector','NAICS','Value','Status','Proponent','Type','Description','Discovery Source','First Tracked','Last Updated','Source URL','Confidence'];
+  const rows=filteredProjects.map(p=>[
+    p.name||'',p.province||'',p.cma||'',p.sector||'',p.naics_code||'',
+    p.value||'Not disclosed',p.status||'',p.proponent||'',
+    p.project_type||'',p.description||'',p.discovery_source||'',
+    p.firstTracked||'',p.lastSeen||'',
+    (p.sources&&p.sources[0])?p.sources[0].url:'',
+    p.confidence!=null?Math.round(p.confidence*100)+'%':''
+  ].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
+  const csv=[headers.join(','),...rows].join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='can-macro-projects_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();URL.revokeObjectURL(a.href);
+};
+
+
+/* ====== CALENDAR TAB ====== */
+function renderCalendar(){
+  const events=(D&&(D.watchlist||D.events))?(D.watchlist||D.events):[];
+  // Monthly calendar grid
+  const now=new Date();
+  const year=now.getFullYear(),month=now.getMonth();
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const today=now.getDate();
+  const monthName=now.toLocaleDateString('en-CA',{month:'long',year:'numeric'});
+
+  // Map events to dates — handles ISO "2026-03-14" and short "Mar 14" formats
+  const eventsByDate={};
+  const MONTHS_SHORT={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  events.forEach(e=>{
+    const d=e.date||'';if(!d)return;
+    let eDay=0,eMonth=-1,eYear=year;
+    if(d.includes('-')&&d.length>=8){
+      // ISO format: 2026-03-14
+      eYear=parseInt(d.split('-')[0]);eMonth=parseInt(d.split('-')[1])-1;eDay=parseInt(d.split('-')[2]);
+    } else {
+      // Short format: "Mar 14" or "March 14"
+      const parts=d.trim().split(/\s+/);
+      if(parts.length>=2){eMonth=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)]??-1;eDay=parseInt(parts[1])||0;}
+    }
+    if(eYear===year&&eMonth===month&&eDay>0){
+      if(!eventsByDate[eDay])eventsByDate[eDay]=[];
+      eventsByDate[eDay].push(e);
+    }
+  });
+
+  let calHtml='<h3 style="font-size:var(--text-lg);font-weight:600;margin-bottom:16px;color:#E8F0F8">'+monthName+'</h3>';
+  calHtml+='<div class="calendar-grid">';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{calHtml+='<div class="calendar-header-cell">'+d+'</div>'});
+  // Blank cells before first day
+  for(let i=0;i<firstDay;i++)calHtml+='<div class="calendar-cell other-month"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=d===today;
+    calHtml+='<div class="calendar-cell'+(isToday?' today':'')+'">';
+    calHtml+='<div class="calendar-day-number">'+d+'</div>';
+    if(eventsByDate[d]){
+      eventsByDate[d].forEach(e=>{
+        const impact=(e.impact||'low').toLowerCase();
+        calHtml+='<span class="cal-dot '+impact+'" title="'+(e.event_name||e.event||e.name||'')+'"></span>';
+      });
+    }
+    calHtml+='</div>';
+  }
+  // Trailing blank cells
+  const totalCells=firstDay+daysInMonth;
+  const remaining=7-(totalCells%7);
+  if(remaining<7){for(let i=0;i<remaining;i++)calHtml+='<div class="calendar-cell other-month"></div>'}
+  calHtml+='</div>';
+  $('calendarGrid').innerHTML=calHtml;
+
+  // Helper to parse both ISO "2026-03-14" and short "Mar 14" dates
+  function parseEvtDate(d){
+    if(!d)return null;
+    if(d.includes('-')&&d.length>=8)return new Date(d+'T00:00:00');
+    const parts=d.trim().split(/\s+/);
+    if(parts.length>=2){const m=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)];if(m!=null)return new Date(year,m,parseInt(parts[1])||1)}
+    return null;
+  }
+
+  // This week events
+  const weekFromNow=new Date(now.getTime()+7*864e5);
+  const thisWeek=events.filter(e=>{
+    const ed=parseEvtDate(e.date);
+    return ed&&ed>=new Date(year,month,today)&&ed<=weekFromNow;
+  });
+  // Group by week_label if available
+  const byWeek={};thisWeek.forEach(e=>{const wl=e.week_label||'This Week';if(!byWeek[wl])byWeek[wl]=[];byWeek[wl].push(e)});
+
+  if(thisWeek.length){
+    let twHtml='';
+    Object.keys(byWeek).forEach(wl=>{
+      twHtml+='<div class="events-week-card"><h3>'+wl+'</h3>';
+      byWeek[wl].forEach(e=>{
+        const impact=(e.impact||'low').toLowerCase();
+        const isHigh=impact==='high';
+        const ed=parseEvtDate(e.date);
+        twHtml+='<div class="event-row'+(isHigh?' event-high-accent':'')+'">';
+        if(ed){twHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
+        else{twHtml+='<div>'+(e.date||'-')+'</div>'}
+        twHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
+        if(e.description)twHtml+='<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+e.description+'</div>';
+        twHtml+='</div>';
+        twHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
+        twHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
+        twHtml+='<div>'+srcLink(e.source_url||e.url,'')+'</div>';
+        twHtml+='</div>';
+      });
+      twHtml+='</div>';
+    });
+    $('thisWeekEvents').innerHTML=twHtml;
+  }
+
+  // All events table
+  const sorted=[...events].sort((a,b)=>{const da=parseEvtDate(a.date),db=parseEvtDate(b.date);return (da||new Date(0))-(db||new Date(0))}).slice(0,25);
+  if(sorted.length){
+    let allHtml='<div class="events-week-card"><h3>All Events</h3>';
+    sorted.forEach(e=>{
+      const impact=(e.impact||'low').toLowerCase();
+      const isHigh=impact==='high';
+      const ed=parseEvtDate(e.date);
+      allHtml+='<div class="event-row'+(isHigh?' event-high-accent':'')+'">';
+      if(ed){allHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
+      else{allHtml+='<div>'+(e.date||'-')+'</div>'}
+      allHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
+      if(e.description)allHtml+='<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+e.description+'</div>';
+      allHtml+='</div>';
+      allHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
+      allHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
+      allHtml+='<div>'+srcLink(e.source_url||e.url,'')+'</div>';
+      allHtml+='</div>';
+    });
+    allHtml+='</div>';
+    $('allEventsTable').innerHTML=allHtml;
+  } else {
+    $('allEventsTable').innerHTML='<div class="empty-state"><div class="empty-state-text">No upcoming economic events.</div></div>';
+  }
+}
+
+/* ====== PHASE 1: PIPELINE STATUS WIDGET ====== */
+async function renderPipelineStatus(){
+  const el=$('pipelineStatus');if(!el)return;
+  try{
+    const ps=await fetchJSON('pipeline_status.json');
+    const run=ps.last_run||{};
+    if(!run.started_at){el.innerHTML='';return}
+    const st=run.status||'unknown';
+    const stColor=st==='success'?'var(--status-green)':st==='partial'?'var(--status-amber)':'var(--status-red)';
+    const dur=run.duration_seconds?Math.round(run.duration_seconds/60)+'m':'—';
+    const disc=run.discovery||{};
+    el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:#555">Pipeline Status</div><div style="display:flex;gap:16px;font-size:var(--text-xs);color:#555;flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
+  }catch(e){console.warn('Pipeline status:',e);el.innerHTML=''}
+}
+
+/* ====== PHASE 1: COST MONITOR WIDGET ====== */
+async function renderCostMonitor(){
+  const el=$('costMonitor');if(!el)return;
+  try{
+    const ps=await fetchJSON('pipeline_status.json');
+    const tavilyUsed=ps.tavily?.used||0;
+    const tavilyMonth=ps.tavily?.month||'';
+    const claudeIn=ps.claude_tokens?.input||0;
+    const claudeOut=ps.claude_tokens?.output||0;
+    const claudeCost=((claudeIn/1e6)*3+(claudeOut/1e6)*15).toFixed(2);
+    const tavilyPct=Math.round((tavilyUsed/1000)*100);
+    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;user-select:none">Cost Monitor <span style="font-weight:400;color:#999;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#555"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
+  }catch(e){console.warn('Cost monitor:',e);el.innerHTML=''}
+}
+
+/* ====== PHASE 1: MICROSCOPE HISTORY ====== */
+async function renderMicroscopeHistory(){
+  const el=$('microscopeHistory');if(!el)return;
+  try{
+    const data=await fetchJSON('microscope.json');
+    const history=(data&&(data.topics||data.history))||[];
+    if(!history.length){el.innerHTML='';return}
+    let items='';
+    history.slice(0,12).forEach(h=>{
+      items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:#777">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+h.description+'</div>':''}</div>`;
+    });
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:14px 18px;user-select:none">Under the Microscope Archives (${history.length} weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
+  }catch(e){console.warn('Microscope history:',e);el.innerHTML=''}
+}
+
+/* ====== PHASE 2: UNDER THE MICROSCOPE ====== */
+async function renderMicroscope(){
+  const el=$('microscopeSection');if(!el)return;
+  try{
+    const data=await fetchJSON('microscope.json');
+    const m=(data&&data.current)||data||{};
+    if(!m.topic&&!m.text){el.innerHTML='';return}
+    const sectors=(m.affected_sectors||[]).map(s=>'<span style="background:var(--bg-subtle);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:var(--text-xs)">'+s+'</span>').join(' ');
+    const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:#777;margin-left:8px">Week '+m.weeks_running+' of coverage</span>':'';
+    el.innerHTML=`<div class="card fade-in"><div class="card-header">Under the Microscope ${weeks}</div><div style="font-size:var(--text-sm);font-weight:600;color:var(--accent-blue);margin-bottom:8px">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}<div class="card-body">${san(m.text||m.analysis||'')}</div></div>`;
+  }catch(e){console.warn('Microscope:',e);el.innerHTML=''}
+}
+
+/* ====== PHASE 2: POLICY SECTION ====== */
+async function renderPolicySection(){
+  const el=$('policySection');if(!el)return;
+  try{
+    let policyData;
+    try{policyData=await fetchJSON('policy.json')}catch(_){el.innerHTML='';return}
+    const articles=policyData?.articles||[];
+    if(!articles.length){el.innerHTML='';return}
+    // Category summary
+    const cats={};articles.forEach(a=>{const c=a.category||'other';cats[c]=(cats[c]||0)+1});
+    const catBadges=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([c,n])=>'<span style="background:var(--bg-subtle);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:var(--text-xs)">'+c.replace(/_/g,' ')+' ('+n+')</span>').join(' ');
+    // Article list (top 8)
+    let listHtml='';
+    articles.slice(0,8).forEach(a=>{
+      const provBadge=a.scope?'<span style="background:var(--status-blue-bg);color:var(--status-blue);padding:1px 6px;border-radius:3px;font-size:.65rem;margin-left:4px">'+a.scope+'</span>':'';
+      listHtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border-light);font-size:var(--text-xs)"><a href="${a.url||'#'}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue);text-decoration:none">${a.headline||a.title||'Untitled'}</a>${provBadge}<span style="color:#777;margin-left:6px">${a.source||''}</span></div>`;
+    });
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:14px 18px;user-select:none">Policy Monitor (${articles.length} articles this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${catBadges}</div>${listHtml}</div></details>`;
+  }catch(e){console.warn('Policy section:',e);el.innerHTML=''}
+}
+
+/* ====== PHASE 3: CANADIAN COMMODITIES ====== */
+async function renderCanadianCommodities(){
+  const el=$('canadianCommodities');if(!el)return;
+  try{
+    let data;
+    try{data=await fetchJSON('commodities.json')}catch(_){el.innerHTML='';return}
+    const indicators=data.indicators||data;
+    const keys=Object.keys(indicators).filter(k=>k!=='updated_at'&&typeof indicators[k]==='object');
+    if(!keys.length){el.innerHTML='';return}
+    let html='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#E8F0F8">Canadian Commodity Indicators</h3><div class="market-grid">';
+    keys.forEach(k=>{
+      const c=indicators[k];
+      const chg=c.pct_1w||'';const isNeg=String(chg).startsWith('-');
+      const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
+      const sectors=(c.affected_sectors||[]).map(s=>'<span style="background:#1a4a70;color:#8AAFC8;padding:1px 5px;border-radius:3px;font-size:.6rem">'+s+'</span>').join(' ');
+      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:#3a2a1a;color:#dab06a;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
+      html+=`<div class="market-card"><div class="market-card-ticker">${c.name||k.replace(/_/g,' ')}</div><div class="market-card-price">${c.current||'N/A'}</div>`;
+      if(chg)html+=`<div class="market-card-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg} 1W</div>`;
+      if(c.pct_1m)html+=`<div style="font-size:var(--text-xs);color:#777">1M: ${c.pct_1m}</div>`;
+      if(sectors)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:4px">${sectors}</div>`;
+      if(provs)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:2px">${provs}</div>`;
+      html+='</div>';
+    });
+    html+='</div>';
+    el.innerHTML=html;
+  }catch(e){console.warn('Canadian commodities:',e);el.innerHTML=''}
+}
+
+/* ====== PHASE 4: DATA EXPLORER (V-Code Search) ====== */
+const VCODE_INDEX=[
+  {vcode:'V41690973',table:'18-10-0004-01',title:'Consumer Price Index, monthly',keywords:'cpi inflation prices consumer',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V2062815',table:'14-10-0287-01',title:'Labour force characteristics',keywords:'unemployment employment labour jobs rate',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V62305752',table:'36-10-0434-01',title:'Gross domestic product (GDP), expenditure-based',keywords:'gdp growth economy quarterly',category:'GDP',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V735391',table:'34-10-0066-01',title:'Building permits, by type of structure',keywords:'building permits construction residential commercial',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V111382687',table:'34-10-0175-01',title:'Building permits, by type of work',keywords:'construction new renovation addition permits',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V53620',table:'18-10-0006-01',title:'Consumer Price Index, by province',keywords:'cpi inflation prices provincial',category:'Prices',freq:'Monthly',geo:'Provinces'},
+  {vcode:'V65201229',table:'36-10-0434-01',title:'GDP Agriculture, forestry, fishing',keywords:'agriculture farming forestry gdp naics 11',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201236',table:'36-10-0434-01',title:'GDP Mining, quarrying, oil and gas',keywords:'mining oil gas extraction gdp naics 21',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201254',table:'36-10-0434-01',title:'GDP Utilities',keywords:'utilities power electricity gdp naics 22',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201258',table:'36-10-0434-01',title:'GDP Construction',keywords:'construction building gdp naics 23',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201263',table:'36-10-0434-01',title:'GDP Manufacturing',keywords:'manufacturing factory production gdp naics 31',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201358',table:'36-10-0434-01',title:'GDP Wholesale trade',keywords:'wholesale trade gdp naics 41',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201368',table:'36-10-0434-01',title:'GDP Retail trade',keywords:'retail shopping consumer gdp naics 44',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201381',table:'36-10-0434-01',title:'GDP Transportation and warehousing',keywords:'transportation logistics transit rail gdp naics 48',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201398',table:'36-10-0434-01',title:'GDP Information and cultural industries',keywords:'information media telecom technology gdp naics 51',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201407',table:'36-10-0434-01',title:'GDP Finance and insurance',keywords:'finance banking insurance gdp naics 52',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201419',table:'36-10-0434-01',title:'GDP Real estate',keywords:'real estate housing rental property gdp naics 53',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201452',table:'36-10-0434-01',title:'GDP Educational services',keywords:'education schools university college gdp naics 61',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201457',table:'36-10-0434-01',title:'GDP Health care and social assistance',keywords:'health care hospital medical gdp naics 62',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201463',table:'36-10-0434-01',title:'GDP Arts, entertainment and recreation',keywords:'arts entertainment recreation tourism gdp naics 71',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201468',table:'36-10-0434-01',title:'GDP Accommodation and food services',keywords:'accommodation hotel food services restaurant gdp naics 72',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201476',table:'36-10-0434-01',title:'GDP Public administration',keywords:'public administration government military defence gdp naics 91',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V52367876',table:'27-10-0273-01',title:'Investment in building construction',keywords:'investment building construction capital spending',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V1',table:'10-10-0125-01',title:'Canadian international merchandise trade',keywords:'trade exports imports merchandise international',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'V1044832260',table:'33-10-0036-01',title:'New housing price index',keywords:'housing prices new house index',category:'Housing',freq:'Monthly',geo:'Canada, CMAs'},
+  {vcode:'V735337',table:'34-10-0035-01',title:'Housing starts',keywords:'housing starts cmhc residential new construction',category:'Housing',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V37426',table:'16-10-0048-01',title:'Manufacturing sales',keywords:'manufacturing sales shipments production',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V52409870',table:'20-10-0008-01',title:'Retail trade sales',keywords:'retail sales consumer spending',category:'GDP',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V120424858',table:'14-10-0064-01',title:'Employee wages by industry',keywords:'wages salary earnings income employee',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V39079',table:'BoC Valet',title:'Bank of Canada overnight rate',keywords:'interest rate overnight policy bank canada boc',category:'Rates',freq:'Daily',geo:'Canada'},
+  {vcode:'V80691311',table:'11-10-0240-01',title:'Business insolvencies',keywords:'insolvency bankruptcy business failure',category:'GDP',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V41693271',table:'18-10-0004-01',title:'CPI Energy',keywords:'energy gasoline fuel electricity cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693461',table:'18-10-0004-01',title:'CPI Shelter',keywords:'shelter housing rent mortgage cpi',category:'Housing',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693508',table:'18-10-0004-01',title:'CPI Food',keywords:'food grocery prices cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+];
+
+function searchVCodes(query){
+  if(!query||query.length<2)return[];
+  const q=query.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+  return VCODE_INDEX.map(v=>{
+    const text=(v.title+' '+v.keywords+' '+v.category+' '+v.geo).toLowerCase();
+    let score=0;
+    q.forEach(w=>{
+      if(text.includes(w))score+=1;
+      if(v.title.toLowerCase().includes(w))score+=2;
+      if(v.keywords.includes(w))score+=1;
+    });
+    return{...v,score};
+  }).filter(v=>v.score>0).sort((a,b)=>b.score-a.score).slice(0,15);
+}
+
+function renderExplorer(){
+  const searchEl=$('explorerSearch');
+  const catEl=$('explorerCategories');
+  const resEl=$('explorerResults');
+  if(!searchEl)return;
+
+  searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#111;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
+
+  const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Rates'];
+  catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#333;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
+
+  resEl.innerHTML='<div style="color:#777;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
+}
+
+window._doVcodeSearch=function(cat){
+  const q=cat||($('vcodeSearch')?$('vcodeSearch').value:'');
+  if(!q)return;
+  if(cat&&$('vcodeSearch'))$('vcodeSearch').value=cat;
+  const results=searchVCodes(q);
+  const resEl=$('explorerResults');
+  if(!results.length){
+    resEl.innerHTML='<div style="color:#777;font-size:var(--text-sm);padding:20px 0">No tables found for "'+q+'". Try different keywords.</div>';
+    return;
+  }
+  let html='<div style="font-size:var(--text-xs);color:#777;margin-bottom:8px">'+results.length+' table(s) found</div>';
+  results.forEach(r=>{
+    const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${r.table.replace(/-/g,'')}`;
+    html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#777;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#777;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
+  });
+  resEl.innerHTML=html;
+};
+
+/* ====== INITIALIZATION ====== */
+// Module scripts are deferred — DOM is already ready, run immediately
+$('execSummary').innerHTML='<div class="card">'+skeleton(4)+'</div>';
+$('nationalAnalysis').innerHTML='<div class="card">'+skeleton(3)+'</div>';
+$('keyIndicators').innerHTML='<div class="indicator-strip">'+Array(7).fill('<div class="skeleton sk-pill"></div>').join('')+'</div>';
+$('footerDate').textContent='Loading...';
+// No auth required — data is served as static JSON files
+loadAll();
