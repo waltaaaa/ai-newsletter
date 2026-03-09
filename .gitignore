@@ -75,8 +75,8 @@ node_modules/
 __pycache__/
 *.pyc
 
-# SQLite databases
-*.db
+# SQLite databases (allow dashboard.db for backup)
+# *.db
 
 # Secrets and service account keys
 serviceAccountKey.json
