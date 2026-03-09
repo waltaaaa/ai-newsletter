@@ -122,7 +122,7 @@ Recommended sequence: 7 → 8 → 9 (parallel with 8) → 10 (parallel with 8/9)
 - [x] **Phase 14: Static JSON Export** — Build export_dashboard.py to generate all static JSON files consumed by the frontend (completed 2026-03-08)
 - [x] **Phase 15: Frontend Rewrite** — Replace Firebase SDK with fetch() to static JSON while preserving all existing UI features (completed 2026-03-08)
 - [x] **Phase 16: GitHub Pages + Actions** — Deploy dashboard to GitHub Pages and automate the pipeline via GitHub Actions (completed 2026-03-08)
-- [x] **Phase 17: Missing Project Form** — Replace Firestore-based user submissions with Google Form + Sheet integration (completed 2026-03-09)
+- [x] **Phase 17: Missing Project Form** — Replace Firestore-based user submissions with GitHub Issues templates (completed 2026-03-09)
 - [ ] **Phase 18: Cleanup** — Remove all .bak files, Firebase configs, dead imports, and documentation references
 
 ### Phase Details
@@ -190,17 +190,17 @@ Plans:
 - [ ] 16-02-PLAN.md — Enable GitHub Pages and verify deployment
 
 #### Phase 17: Missing Project Form
-**Goal**: Users can submit missing projects and corrections via Google Forms — no Firestore dependency for user submissions, and the pipeline reads those submissions automatically
+**Goal**: Users can submit missing projects and corrections via GitHub Issues — no Firestore dependency for user submissions, and the pipeline reads those submissions automatically
 **Depends on**: Nothing (independent of phases 13-16)
 **Requirements**: SUB-01, SUB-02, SUB-03
 **Success Criteria** (what must be TRUE):
-  1. Clicking the "Missing Project" button on the dashboard opens the Google Form in a new tab and the submission reaches the connected Google Sheet
-  2. Running the pipeline after a form submission picks up entries from the Google Sheet and creates or updates the corresponding project in SQLite
-  3. Clicking the "Project Correction" form link opens the correct Google Form and the submission routes to the pipeline's Google Sheet reader
+  1. Clicking the "Missing Project" button on the dashboard opens the GitHub Issues template in a new tab
+  2. Running the pipeline after an issue submission picks up entries from the GitHub Issues API and creates or updates the corresponding project in SQLite
+  3. Clicking the "Project Correction" link opens the GitHub Issues correction template with the project name prefilled
 **Plans:** 2/2 plans complete
 Plans:
-- [ ] 17-01-PLAN.md — Create Google Sheets reader module and integrate into pipeline
-- [ ] 17-02-PLAN.md — Replace in-page forms with Google Form links in frontend
+- [ ] 17-01-PLAN.md — Create GitHub Issues reader module and integrate into pipeline
+- [ ] 17-02-PLAN.md — Replace in-page forms with GitHub Issues links in frontend
 
 #### Phase 18: Cleanup
 **Goal**: The repository contains no dead code, no .bak files, no Firebase references in documentation or imports — the codebase reflects exactly what runs in production
@@ -257,9 +257,9 @@ Plans:
 | DEP-04 | 16 | Daily indicator refresh via GitHub Actions midnight ET |
 | DEP-05 | 16 | GitHub Actions workflows use secrets for API keys |
 | DEP-06 | 16 | Firebase Cloud Functions and configs archived |
-| SUB-01 | 17 | Missing project form via Google Form |
-| SUB-02 | 17 | Pipeline reads Google Form submissions from Sheet |
-| SUB-03 | 17 | Project correction form via Google Form |
+| SUB-01 | 17 | Missing project form via GitHub Issues template |
+| SUB-02 | 17 | Pipeline reads submissions from GitHub Issues API |
+| SUB-03 | 17 | Project correction form via GitHub Issues template |
 | CLN-01 | 18 | All .bak files deleted |
 | CLN-02 | 18 | Firebase references removed from documentation |
 | CLN-03 | 18 | No firebase_admin imports in any .py file |

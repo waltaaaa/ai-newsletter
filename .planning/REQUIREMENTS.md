@@ -48,9 +48,9 @@ Requirements for milestone v2.0: Infrastructure Overhaul — SQLite, GitHub Page
 
 ### User Submissions (SUB)
 
-- [x] **SUB-01**: Missing project form submits via Google Form instead of Firestore
-- [x] **SUB-02**: Pipeline reads Google Form submissions from connected Google Sheet
-- [x] **SUB-03**: Project correction form submits via Google Form
+- [x] **SUB-01**: Missing project form submits via GitHub Issues template instead of Firestore
+- [x] **SUB-02**: Pipeline reads submissions from GitHub Issues API
+- [x] **SUB-03**: Project correction form submits via GitHub Issues template
 
 ### Cleanup (CLN)
 
@@ -105,7 +105,7 @@ All 12 requirements verified complete on 2026-03-07.
 | Mobile app | Web-first static SPA is sufficient. |
 | Real-time updates | Weekly cadence is the design. |
 | Dual-write migration period | Solo developer, weekly cadence allows clean cutover. |
-| Server-side form processing | Static site — Google Forms handles user submissions. |
+| Server-side form processing | Static site — GitHub Issues handles user submissions. |
 
 ## Traceability
 
