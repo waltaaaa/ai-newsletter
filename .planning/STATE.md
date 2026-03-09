@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
-stopped_at: Phase 17 context gathered
-last_updated: "2026-03-08T16:15:10.910Z"
+stopped_at: Completed 17-01-PLAN.md
+last_updated: "2026-03-09T16:27:06.475Z"
 last_activity: "2026-03-08 — Completed 15-02: loading/error UX, disabled submissions, human verification passed"
 progress:
   total_phases: 12
   completed_phases: 4
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 13
+  completed_plans: 12
   percent: 30
 ---
 
@@ -60,6 +60,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 15-frontend-rewrite P02 | 15 | 1 task | 1 file |
 | Phase 16-github-pages-actions P01 | 6 | 3 tasks | 14 files |
 | Phase 16-github-pages-actions P02 | 0 | 1 tasks | 0 files |
+| Phase 17-missing-project-form P01 | 405 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,8 @@ Progress: [███░░░░░░░] 30%
 - [Phase 16-github-pages-actions]: Both GitHub Actions workflows set GEMINI_SEARCH_ENABLED=false to prevent accidental grounded search charges
 - [Phase 16-github-pages-actions]: Firebase configs moved to archive/firebase/ — functions/ directory removed; Cloud Functions replaced by GitHub Actions free tier
 - [Phase 16-github-pages-actions]: GitHub Pages enabled on main branch /docs folder — serves static dashboard at https://waltaaaa.github.io/ai-newsletter/
+- [Phase 17-missing-project-form]: Used urllib.request (stdlib) for GitHub API — no new dependencies
+- [Phase 17-missing-project-form]: GitHub Issues replaces Firestore-based submission path — no API keys needed for public repos
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-08T16:15:10.878Z
-Stopped at: Phase 17 context gathered
+Last session: 2026-03-09T16:27:06.469Z
+Stopped at: Completed 17-01-PLAN.md
 Resume at: `/gsd:execute-phase 16` — begin GitHub Pages and Actions deployment
