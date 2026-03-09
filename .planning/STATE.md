@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: "— Infrastructure Overhaul: SQLite, GitHub Pages, Search Layer"
 status: completed
-stopped_at: Completed 17-01-PLAN.md
-last_updated: "2026-03-09T16:27:06.475Z"
-last_activity: "2026-03-08 — Completed 15-02: loading/error UX, disabled submissions, human verification passed"
+stopped_at: Completed 17-02-PLAN.md
+last_updated: "2026-03-09T23:30:27.665Z"
+last_activity: "2026-03-09 — Completed 17-02: GitHub Issues frontend links replacing in-page forms"
 progress:
   total_phases: 12
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 13
-  completed_plans: 12
+  completed_plans: 13
   percent: 30
 ---
 
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-03-07)
 
 ## Current Position
 
-Phase: 15 — Frontend Rewrite (complete)
-Plan: 15-02 complete — Phase 16 (GitHub Pages + Actions) is next
-Status: All three infrastructure phases complete — SQLite, Static JSON export, Firebase-free frontend
-Last activity: 2026-03-08 — Completed 15-02: loading/error UX, disabled submissions, human verification passed
+Phase: 17 — Missing Project Form (complete)
+Plan: 17-02 complete — All v2.0 phases complete (13-17)
+Status: All infrastructure phases complete — SQLite, Static JSON, Frontend, GitHub Pages, Missing Project Form
+Last activity: 2026-03-09 — Completed 17-02: GitHub Issues frontend links replacing in-page forms
 
-Progress: [███░░░░░░░] 30%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Progress: [███░░░░░░░] 30%
 | Phase 16-github-pages-actions P01 | 6 | 3 tasks | 14 files |
 | Phase 16-github-pages-actions P02 | 0 | 1 tasks | 0 files |
 | Phase 17-missing-project-form P01 | 405 | 2 tasks | 4 files |
+| Phase 17-missing-project-form P02 | 5 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,7 @@ Progress: [███░░░░░░░] 30%
 - [Phase 16-github-pages-actions]: GitHub Pages enabled on main branch /docs folder — serves static dashboard at https://waltaaaa.github.io/ai-newsletter/
 - [Phase 17-missing-project-form]: Used urllib.request (stdlib) for GitHub API — no new dependencies
 - [Phase 17-missing-project-form]: GitHub Issues replaces Firestore-based submission path — no API keys needed for public repos
+- [Phase 17-missing-project-form]: Direct anchor links for missing project (no JS needed) vs window.open for corrections (prefills project name)
 
 ### Pending Todos
 
@@ -116,6 +118,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-09T16:27:06.469Z
-Stopped at: Completed 17-01-PLAN.md
+Last session: 2026-03-09T23:30:27.660Z
+Stopped at: Completed 17-02-PLAN.md
 Resume at: `/gsd:execute-phase 16` — begin GitHub Pages and Actions deployment

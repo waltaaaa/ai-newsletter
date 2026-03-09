@@ -48,9 +48,9 @@ Requirements for milestone v2.0: Infrastructure Overhaul — SQLite, GitHub Page
 
 ### User Submissions (SUB)
 
-- [ ] **SUB-01**: Missing project form submits via Google Form instead of Firestore
+- [x] **SUB-01**: Missing project form submits via Google Form instead of Firestore
 - [x] **SUB-02**: Pipeline reads Google Form submissions from connected Google Sheet
-- [ ] **SUB-03**: Project correction form submits via Google Form
+- [x] **SUB-03**: Project correction form submits via Google Form
 
 ### Cleanup (CLN)
 
@@ -138,9 +138,9 @@ All 12 requirements verified complete on 2026-03-07.
 | DEP-04 | Phase 16 | Complete |
 | DEP-05 | Phase 16 | Complete |
 | DEP-06 | Phase 16 | Complete |
-| SUB-01 | Phase 17 | Pending |
+| SUB-01 | Phase 17 | Complete |
 | SUB-02 | Phase 17 | Complete |
-| SUB-03 | Phase 17 | Pending |
+| SUB-03 | Phase 17 | Complete |
 | CLN-01 | Phase 18 | Pending |
 | CLN-02 | Phase 18 | Pending |
 | CLN-03 | Phase 18 | Pending |

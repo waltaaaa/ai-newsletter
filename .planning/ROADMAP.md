@@ -122,7 +122,7 @@ Recommended sequence: 7 → 8 → 9 (parallel with 8) → 10 (parallel with 8/9)
 - [x] **Phase 14: Static JSON Export** — Build export_dashboard.py to generate all static JSON files consumed by the frontend (completed 2026-03-08)
 - [x] **Phase 15: Frontend Rewrite** — Replace Firebase SDK with fetch() to static JSON while preserving all existing UI features (completed 2026-03-08)
 - [x] **Phase 16: GitHub Pages + Actions** — Deploy dashboard to GitHub Pages and automate the pipeline via GitHub Actions (completed 2026-03-08)
-- [ ] **Phase 17: Missing Project Form** — Replace Firestore-based user submissions with Google Form + Sheet integration
+- [x] **Phase 17: Missing Project Form** — Replace Firestore-based user submissions with Google Form + Sheet integration (completed 2026-03-09)
 - [ ] **Phase 18: Cleanup** — Remove all .bak files, Firebase configs, dead imports, and documentation references
 
 ### Phase Details
@@ -197,7 +197,7 @@ Plans:
   1. Clicking the "Missing Project" button on the dashboard opens the Google Form in a new tab and the submission reaches the connected Google Sheet
   2. Running the pipeline after a form submission picks up entries from the Google Sheet and creates or updates the corresponding project in SQLite
   3. Clicking the "Project Correction" form link opens the correct Google Form and the submission routes to the pipeline's Google Sheet reader
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 Plans:
 - [ ] 17-01-PLAN.md — Create Google Sheets reader module and integrate into pipeline
 - [ ] 17-02-PLAN.md — Replace in-page forms with Google Form links in frontend
@@ -223,7 +223,7 @@ Plans:
 | 14. Static JSON Export | 2/2 | Complete    | 2026-03-08 |
 | 15. Frontend Rewrite | 2/2 | Complete    | 2026-03-08 |
 | 16. GitHub Pages + Actions | 2/2 | Complete    | 2026-03-08 |
-| 17. Missing Project Form | 1/2 | In Progress|  |
+| 17. Missing Project Form | 2/2 | Complete   | 2026-03-09 |
 | 18. Cleanup | 0/? | Not started | — |
 
 ### Requirement Coverage (v2.0)
