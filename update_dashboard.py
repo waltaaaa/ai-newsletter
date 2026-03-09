@@ -3470,6 +3470,21 @@ def update_dashboard(deep_sweep: bool = False):
         except Exception as e:
             print(f"  [CAPACITY] Failed: {type(e).__name__}: {e}")
 
+        # ── STEP 2J: Read GitHub Issues submissions ──────────
+        try:
+            from github_issues_reader import fetch_issue_submissions
+            issues_result = fetch_issue_submissions(conn)
+            if issues_result.get("skipped"):
+                print(f"  [ISSUES] Skipped: {issues_result.get('reason', 'unknown')}")
+            elif issues_result.get("processed", 0) > 0:
+                print(f"  [ISSUES] {issues_result['processed']} new submissions "
+                      f"({issues_result.get('new_projects', 0)} projects, "
+                      f"{issues_result.get('corrections', 0)} corrections)")
+            else:
+                print("  [ISSUES] No new submissions")
+        except Exception as e:
+            print(f"  [ISSUES] Warning: {e}")
+
         # ── STEP 2K: Process missed project submissions ──────────
         try:
             from missed_project_enrichment import process_pending_submissions
