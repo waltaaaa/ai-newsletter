@@ -1,0 +1,86 @@
+name: Missing Project
+description: Report a Canadian infrastructure or capital project missing from the dashboard
+labels: ["missing-project"]
+body:
+  - type: input
+    id: project_name
+    attributes:
+      label: Project Name
+      placeholder: "e.g., Trans Mountain Pipeline Expansion"
+    validations:
+      required: true
+  - type: dropdown
+    id: province
+    attributes:
+      label: Province / Territory
+      options:
+        - Alberta
+        - British Columbia
+        - Manitoba
+        - New Brunswick
+        - Newfoundland and Labrador
+        - Northwest Territories
+        - Nova Scotia
+        - Nunavut
+        - Ontario
+        - Prince Edward Island
+        - Quebec
+        - Saskatchewan
+        - Yukon
+    validations:
+      required: true
+  - type: dropdown
+    id: sector
+    attributes:
+      label: Sector
+      options:
+        - Oil & Gas
+        - Mining
+        - Infrastructure
+        - Power & Energy
+        - Manufacturing
+        - Transport & Logistics
+        - Healthcare
+        - Education
+        - Residential
+        - Commercial / Mixed Use
+        - Agriculture
+        - Forestry
+        - Defence
+        - Telecom
+        - Indigenous
+        - Environment
+        - Tourism & Culture
+        - Government
+    validations:
+      required: true
+  - type: input
+    id: estimated_value
+    attributes:
+      label: Estimated Value
+      description: Optional — dollar amount if known
+      placeholder: "$500M"
+    validations:
+      required: false
+  - type: input
+    id: proponent
+    attributes:
+      label: Proponent / Developer
+      placeholder: "e.g., Trans Mountain Corporation"
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      placeholder: "Brief description of the project"
+    validations:
+      required: true
+  - type: input
+    id: source_url
+    attributes:
+      label: Source URL
+      description: Required — a verifiable source link for this project
+      placeholder: "https://..."
+    validations:
+      required: true

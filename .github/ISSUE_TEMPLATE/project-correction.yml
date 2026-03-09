@@ -1,0 +1,48 @@
+name: Project Correction
+description: Report incorrect information about an existing project
+labels: ["project-correction"]
+body:
+  - type: input
+    id: project_name
+    attributes:
+      label: Project Name
+      description: The project as it appears on the dashboard
+      placeholder: "e.g., Site C Clean Energy Project"
+    validations:
+      required: true
+  - type: dropdown
+    id: field_to_correct
+    attributes:
+      label: Field to Correct
+      options:
+        - Name
+        - Province
+        - Sector
+        - Value
+        - Status
+        - Proponent
+        - Description
+    validations:
+      required: true
+  - type: input
+    id: new_value
+    attributes:
+      label: Correct Value
+      placeholder: "The correct information"
+    validations:
+      required: true
+  - type: input
+    id: source_url
+    attributes:
+      label: Source URL
+      description: Required — a verifiable source confirming the correction
+      placeholder: "https://..."
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      placeholder: "Any additional context"
+    validations:
+      required: false
