@@ -988,20 +988,6 @@ function renderProjectsTab(){
     });
   });
   filterProjects();
-  // Populate missed project form dropdowns
-  const mpProv=$('mpProvince');
-  if(mpProv&&mpProv.options.length<=1){PROVS.forEach(p=>{const o=document.createElement('option');o.value=p.name;o.textContent=p.name;mpProv.appendChild(o)})}
-  const mpSec=$('mpSector');
-  if(mpSec&&mpSec.options.length<=1){NAICS_CODES.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c+' '+NAICS_NAMES[c];mpSec.appendChild(o)})}
-}
-async function submitMissedProject(){
-  const fb=$('missedFormFeedback');
-  if(fb){
-    fb.style.display='block';
-    fb.style.background='#FEF3C7';
-    fb.style.color='#92400E';
-    fb.textContent='Project submissions are being migrated to a new system. Check back soon!';
-  }
 }
 async function filterProjects(){
   const search=($('projectSearch').value||'').toLowerCase();
@@ -1138,23 +1124,8 @@ function renderProjectTable(){
       });
       html+='</div>';
     }
-    // Suggest edit
-    const eid='edit_'+i;
-    html+='<div style="margin-top:10px"><button onclick="event.stopPropagation();toggleEditForm(\''+eid+'\')" style="background:none;border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-size:var(--text-xs);color:var(--accent-blue-soft);cursor:pointer">Suggest Edit</button></div>';
-    html+='<div id="'+eid+'" class="edit-form" style="display:none" onclick="event.stopPropagation()">';
-    html+='<div class="edit-grid">';
-    html+='<div><label>Value (e.g. $1.2B)</label><input type="text" id="'+eid+'_val" value="'+(p.value||'').replace(/"/g,'&quot;')+'"></div>';
-    html+='<div><label>Status</label><select id="'+eid+'_status"><option value="">--</option>';
-    STATUSES.forEach(s=>{html+='<option value="'+s+'"'+((p.status||'')===s?' selected':'')+'>'+s+'</option>'});
-    html+='</select></div>';
-    html+='<div><label>Proponent</label><input type="text" id="'+eid+'_prop" value="'+(p.proponent||'').replace(/"/g,'&quot;')+'"></div>';
-    html+='<div><label>Completion Date</label><input type="date" id="'+eid+'_comp" value="'+(p.completionDate||'')+'"></div>';
-    html+='</div>';
-    html+='<div><label>Source URL (for verification)</label><input type="url" id="'+eid+'_src" placeholder="https://..."></div>';
-    html+='<div><label>Notes</label><textarea id="'+eid+'_notes" rows="2" placeholder="Why is this correction needed?"></textarea></div>';
-    html+='<button onclick="submitProjectCorrection(\''+eid+'\',\''+((p._id||'').replace(/'/g,"\\'"))+'\')" style="background:var(--accent);color:#fff;border:none;border-radius:5px;padding:5px 14px;font-size:var(--text-xs);cursor:pointer;margin-top:4px">Submit Correction</button>';
-    html+='<div id="'+eid+'_fb" class="edit-feedback"></div>';
-    html+='</div>';
+    // Report correction — GitHub Issues link
+    html+='<div style="margin-top:10px"><a href="https://github.com/waltaaaa/ai-newsletter/issues/new?template=project-correction.yml&title=Correction:+'+encodeURIComponent(p.name||'')+'" target="_blank" rel="noopener" style="font-size:var(--text-xs);color:var(--accent)">Report correction &#x2197;</a></div>';
     // Metadata
     html+='<div style="margin-top:12px;font-size:var(--text-xs);color:#777">';
     if(p.firstTracked)html+='Tracked since '+fmtDate(p.firstTracked)+' \u00b7 ';
@@ -1175,16 +1146,6 @@ window.toggleProjectRow=function(id){
 window.toggleEditForm=function(eid){
   const el=document.getElementById(eid);
   if(el)el.style.display=el.style.display==='none'?'block':'none';
-};
-window.submitProjectCorrection=function(){
-  // Find the feedback element in the correction form
-  const fbs=document.querySelectorAll('[id$="_fb"]');
-  fbs.forEach(function(fb){
-    fb.style.display='block';
-    fb.style.background='#FEF3C7';
-    fb.style.color='#92400E';
-    fb.textContent='Project corrections are being migrated to a new system. Check back soon!';
-  });
 };
 window.exportProjects=function(){
   if(!filteredProjects.length)return;
