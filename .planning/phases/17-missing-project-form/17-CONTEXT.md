@@ -6,47 +6,46 @@
 <domain>
 ## Phase Boundary
 
-Users can submit missing projects and corrections via Google Forms. The pipeline reads those submissions automatically from a connected Google Sheet and creates/updates projects in SQLite. No Firestore dependency for user submissions.
+Users can submit missing projects and corrections via GitHub Issues (structured issue templates). The pipeline reads those submissions automatically from the GitHub Issues API and creates/updates projects in SQLite. No Firestore dependency, no new services — uses existing GitHub infrastructure.
 
-Replaces the amber "being migrated" banners added in Phase 15 with working Google Form links.
+Replaces the amber "being migrated" banners added in Phase 15 with working GitHub Issues links.
 
 </domain>
 
 <decisions>
 ## Implementation Decisions
 
-### Form field design
-- Missing Project form: moderate fields — Name, Province (dropdown), Sector (dropdown matching 18 NAICS codes), Estimated value (optional), Proponent (optional), Description, Source URL (required)
+### Submission method (CHANGED: GitHub Issues replaces Google Forms)
+- GitHub Issues with structured YAML form templates — no new services, no API keys for reads (public repo)
+- Missing Project template: Name, Province (dropdown), Sector (dropdown matching 18 NAICS codes), Estimated value (optional), Proponent (optional), Description, Source URL (required)
 - Source URL is required on the form — matches the project URL hard gate (no URL = no project)
-- Project Correction form: separate Google Form with project name, field to correct, new value, source URL, notes
-- Two separate forms, feeding into one Google Sheet with separate tabs (or two sheets)
-- Optional email field — not required, for submitters who want follow-up
-- Forms created manually by user; phase delivers setup documentation with exact field names and Sheet column mappings
+- Project Correction template: project name, field to correct, new value, source URL, notes
+- Two separate issue templates, labeled `missing-project` and `project-correction`
+- Pipeline auto-closes processed issues with a thank-you comment (when GITHUB_TOKEN available)
 
 ### Pipeline ingestion behavior
-- Auto-create projects from submissions — pipeline reads Sheet, runs enrichment via existing missed_project_enrichment.py, creates project in SQLite if URL hard gate passes
+- Auto-create projects from submissions — pipeline reads GitHub Issues API, runs enrichment via existing missed_project_enrichment.py, creates project in SQLite if URL hard gate passes
 - Duplicate handling: merge evidence — if submitted project matches existing one (name + province fuzzy match), add submission URL to evidence array; status never regresses; follows existing dedup rules
-- Row tracking: track processed rows in SQLite only — store processed row numbers/timestamps in dashboard_state; Sheet stays read-only (simpler auth)
+- Issue tracking: track processed issue numbers in SQLite dashboard_state (monotonically increasing); no write access to issues needed for tracking
 - Corrections: log as pending correction in missed_projects table with type='correction'; enrichment step reviews and applies if source URL confirms the change
-- Failure mode: log warning and continue pipeline if Google Sheet is unreachable; submissions picked up on next successful run
+- Failure mode: log warning and continue pipeline if GitHub API is unreachable; submissions picked up on next successful run
 
 ### Frontend submission UX
-- "Missing Project" button: direct link opening Google Form in new tab; replaces current amber migration banner
-- Project Correction link: on each project card as a small "Report correction" link; Google Form URL includes project name as prefilled parameter
+- "Missing Project" button: direct link opening GitHub issue template in new tab; replaces current amber migration banner
+- Project Correction link: on each project card as a small "Report correction" link; GitHub issue URL includes project name in title
 - No submission tracking on dashboard — dashboard is read-only; users see their project appear in Projects tab when pipeline processes it
 - Remove existing in-page form HTML entirely — delete the old form fields, dropdowns, and submitMissedProject()/submitProjectCorrection() JS functions; replace with clean external links
 
-### Google API authentication
-- API key (read-only) for Google Sheets API v4 — publish Sheet as "Anyone with link can view"
-- Credentials stored in .env + GitHub Actions secrets: GOOGLE_SHEET_ID and GOOGLE_SHEETS_API_KEY; matches existing pattern for other API keys
-- Sheet ID could be hardcoded since it's not sensitive (public-readable sheet), but .env is cleaner for consistency
-- No service account needed — read-only access sufficient since row tracking is in SQLite
+### Authentication
+- No auth needed for reading issues from public repo (GitHub REST API allows unauthenticated reads)
+- GITHUB_TOKEN (already available in GitHub Actions) used for closing issues after processing
+- No new env vars or secrets needed — zero configuration
 
 ### Claude's Discretion
-- Exact Google Sheets API v4 query implementation
-- How to structure the Sheet reader module (new file vs extension of existing)
+- Exact GitHub Issues API query implementation
+- How to structure the Issues reader module (new file vs extension of existing)
 - Fuzzy matching algorithm for duplicate detection against existing projects
-- How to prefill Google Form fields from project card links (URL parameters)
+- Issue body parsing approach for structured template responses
 
 </decisions>
 
