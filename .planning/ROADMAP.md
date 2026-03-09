@@ -223,7 +223,7 @@ Plans:
 | 14. Static JSON Export | 2/2 | Complete    | 2026-03-08 |
 | 15. Frontend Rewrite | 2/2 | Complete    | 2026-03-08 |
 | 16. GitHub Pages + Actions | 2/2 | Complete    | 2026-03-08 |
-| 17. Missing Project Form | 2/2 | Complete   | 2026-03-09 |
+| 17. Missing Project Form | 2/2 | Complete    | 2026-03-09 |
 | 18. Cleanup | 0/? | Not started | — |
 
 ### Requirement Coverage (v2.0)
