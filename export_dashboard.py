@@ -374,11 +374,36 @@ def export_timeseries(conn, output_dir: str) -> str:
     return out_path
 
 
+def _project_for_export_slim(proj_dict: dict) -> dict:
+    """Like _project_for_export but trims evidence/sources to reduce file size.
+
+    Used for projects_all.json which contains thousands of projects.
+    Keeps only the first evidence URL and drops full evidence text.
+    """
+    shaped = _project_for_export(proj_dict)
+    # Trim evidence array: keep only first 2 entries, drop full text
+    ev = shaped.get("evidence", [])
+    shaped["evidence"] = [
+        {"url": e.get("url", ""), "source": e.get("source", "")}
+        for e in ev[:2]
+        if e.get("url")
+    ]
+    shaped["evidence_count"] = len(ev)
+    # Drop full statusHistory (keep count only)
+    sh = shaped.get("statusHistory", [])
+    shaped["statusHistory"] = sh[-1:] if sh else []
+    # Drop tags and discovery_sources
+    shaped.pop("tags", None)
+    shaped.pop("discovery_sources", None)
+    shaped.pop("sources", None)
+    return shaped
+
+
 def export_all_projects(conn, output_dir: str) -> str:
     """Export projects_all.json — all projects across all provinces, no threshold filter.
 
     Sorts by lastSeen desc, limits to 5000 rows (same as previous Firestore all-provinces query).
-    Each project is shaped identically to export_province_projects output.
+    Uses slim export shape to keep file size manageable.
 
     Returns the path of the written file.
     """
@@ -396,7 +421,7 @@ def export_all_projects(conn, output_dir: str) -> str:
             proj = dict(raw)
         else:
             proj = raw
-        shaped = _project_for_export(proj)
+        shaped = _project_for_export_slim(proj)
         included.append(shaped)
 
     out_path = os.path.join(output_dir, "projects_all.json")

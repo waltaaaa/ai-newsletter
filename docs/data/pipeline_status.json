@@ -1,12 +1,43 @@
 {
-  "last_run": {},
+  "last_run": {
+    "started_at": "2026-03-10T00:55:12.763673",
+    "status": "error",
+    "duration_seconds": 2428,
+    "discovery": {
+      "articles_found": 5687,
+      "projects_added": 651,
+      "projects_updated": 4236,
+      "projects_deduped": 776
+    },
+    "errors": [
+      {
+        "step": "pipeline",
+        "error_type": "KeyError",
+        "message": "'name'",
+        "recovered": false,
+        "timestamp": "2026-03-10T01:35:41.022394"
+      }
+    ]
+  },
   "tavily": {
-    "used": 0,
-    "month": ""
+    "used": 30,
+    "month": "2026-03"
   },
   "claude_tokens": {
     "input": 0,
     "output": 0
   },
-  "recent_runs": []
+  "recent_runs": [
+    {
+      "started_at": "2026-03-10T00:55:12.763673",
+      "status": "error",
+      "duration_seconds": 2428,
+      "discovery": {
+        "articles_found": 5687,
+        "projects_added": 651,
+        "projects_updated": 4236,
+        "projects_deduped": 776
+      }
+    }
+  ]
 }

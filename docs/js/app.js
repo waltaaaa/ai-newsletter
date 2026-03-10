@@ -86,7 +86,7 @@ function switchTab(tabId){
     t.setAttribute('tabindex',isActive?'0':'-1');
   });
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tabId));
-  if(D&&!tabRendered[tabId]){renderTab(tabId);tabRendered[tabId]=true}
+  if(!tabRendered[tabId]){renderTab(tabId);tabRendered[tabId]=true}
 }
 document.querySelectorAll('.nav-tab').forEach(t=>{
   t.addEventListener('click',()=>switchTab(t.dataset.tab));
@@ -138,8 +138,29 @@ async function switchEdition(editionId){
   loadEditionList();
 }
 async function loadIndicators(){
-  try{const data=await fetchJSON('indicators.json');indicators=(data&&data.indicators)||data||[]}
-  catch(e){console.error('Indicators load:',e)}
+  try{
+    const data=await fetchJSON('indicators.json');
+    const raw=(data&&data.indicators)||data||[];
+    // Normalize: SQLite uses indicator_name, frontend uses name
+    indicators=raw.map(ind=>{
+      const name=ind.name||ind.indicator_name||'';
+      const displayName=name.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      return Object.assign({},ind,{
+        name:displayName,
+        indicator_name:ind.indicator_name||name,
+        refPer:ind.refPer||ind.period||'',
+        category:ind.category||categorizeIndicator(displayName)
+      });
+    });
+    // Deduplicate: keep latest by indicator_name
+    const seen={};
+    indicators=indicators.filter(ind=>{
+      const key=ind.indicator_name;
+      if(!key)return true;
+      if(seen[key])return false;
+      seen[key]=true;return true;
+    });
+  }catch(e){console.error('Indicators load:',e)}
 }
 async function loadProjects(province){
   const seq=++_loadSeq;
@@ -171,7 +192,7 @@ async function loadTimeseries(docId){
 }
 async function loadAll(){
   try{
-    await Promise.all([loadNewsletter(),loadProjects(),loadIndicators()]);
+    await Promise.all([loadNewsletter(),loadIndicators()]);
   }catch(e){console.error('loadAll data fetch:',e)}
   try{
     renderTab('overview');tabRendered.overview=true;
@@ -179,9 +200,9 @@ async function loadAll(){
     console.error('renderOverview:',e);
     $('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">Error rendering: '+e.message+'</div></div>';
   }
-  const edStr=D?(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
-  $('navMeta').textContent=D?(edStr||'Data loaded'):'No data yet';
-  $('footerDate').textContent=D?'Last pipeline run: '+(fmtDate(D.updated_at||D.date)||edStr):'Awaiting first pipeline run';
+  const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
+  $('navMeta').textContent=edStr||((indicators.length)?indicators.length+' indicators loaded':'Data loaded');
+  $('footerDate').textContent=D&&D.updated_at?'Last pipeline run: '+fmtDate(D.updated_at):(indicators.length?'Live indicator data loaded':'Awaiting first pipeline run');
   loadEditionList();
 }
 /* Edition dropdown toggle */
@@ -219,42 +240,52 @@ function sourcesFooter(sources,containerId){
 
 /* ══ OVERVIEW TAB ══ */
 function renderOverview(){
-  if(!D){$('execSummary').innerHTML='<div class="card" style="padding:24px;text-align:center"><div style="font-size:1.5rem;margin-bottom:12px;opacity:.5">📡</div><div style="color:var(--text-secondary);font-size:var(--text-sm)">No newsletter data available yet. Run the pipeline to generate your first briefing.</div></div>';$('keyIndicators').innerHTML='';$('nationalAnalysis').innerHTML='';return}
-  // Executive Summary
-  $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(D.executive_summary||'')}</div></div>`;
-  // Key Indicators
+  const hasBriefing=D&&D.executive_summary;
+  // Executive Summary — show briefing content or a status message
+  if(hasBriefing){
+    $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(D.executive_summary)}</div></div>`;
+  }else{
+    const indCount=indicators.length;
+    $('execSummary').innerHTML=`<div class="card fade-in" style="padding:24px;text-align:center"><div style="color:var(--text-secondary);font-size:var(--text-sm)">Weekly briefing pending. ${indCount} indicators loaded from primary sources.</div></div>`;
+  }
+  // Key Indicators — always render from indicators[] data
   renderKeyIndicators();
   // National Analysis
-  const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
-  const natSources=(D.national&&D.national.sources)||[];
-  $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(natContent)}</div>${sourcesFooter(natSources)}</div>`;
+  if(hasBriefing){
+    const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
+    const natSources=(D.national&&D.national.sources)||[];
+    $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(natContent)}</div>${sourcesFooter(natSources)}</div>`;
+  }else{$('nationalAnalysis').innerHTML=''}
   // Sentiment
-  renderSentiment();
+  if(D)renderSentiment();
   // Global Vectors
-  renderGlobalVectors();
+  if(D)renderGlobalVectors();
   // Trend Summary
   renderTrendSummary();
-  // New Phase 1-2 sections (async, non-blocking)
+  // Async sections (non-blocking)
   renderMicroscope();
   renderPipelineStatus();
   renderCostMonitor();
   renderMicroscopeHistory();
   renderPolicySection();
   // Sources
-  $('overviewSources').innerHTML=sourcesFooter(D.sources||[]);
+  $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
 }
 
 function renderKeyIndicators(){
-  const m=D.metrics||{};const yc=D.yieldCurve||[];
-  const im=D.indicatorMeta||{};
+  // Helper: look up a value from the indicators[] array by indicator_name
+  function indVal(name){const i=indicators.find(x=>x.indicator_name===name);return i?i.value:null}
+  function indDate(name){const i=indicators.find(x=>x.indicator_name===name);return i?fmtDate(i.period):''}
+  const m=(D&&D.metrics)||{};const yc=(D&&D.yieldCurve)||[];
+  const im=(D&&D.indicatorMeta)||{};
   const headline=[
-    {label:'POLICY RATE',value:m.bocRate||m.boc_rate||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/',date:(im.bocRate||{}).period||'',tsId:'boc_rate'},
-    {label:'GDP YoY',value:m.realGdp||m.gdp||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.realGdp||{}).period||'',tsId:null},
-    {label:'CPI',value:m.cpi||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.cpi||{}).period||'',tsId:'canada_cpi'},
-    {label:'UNEMPLOYMENT',value:m.unemployment||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.unemployment||{}).period||'',tsId:'canada_unemployment'},
-    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',date:fmtDate(D.updated_at||D.date)||'',tsId:'cadusd'},
-    {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',date:fmtDate(D.updated_at||D.date)||'',tsId:'yield_10y'},
-    {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||'',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',date:(im.housingStarts||{}).period||'',tsId:null}
+    {label:'POLICY RATE',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/',date:(im.bocRate||{}).period||indDate('overnight_rate'),tsId:'boc_rate'},
+    {label:'GDP YoY',value:m.realGdp||m.gdp||indVal('realGdp')||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.realGdp||{}).period||indDate('realGdp'),tsId:null},
+    {label:'CPI',value:m.cpi||indVal('cpi')||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.cpi||{}).period||indDate('cpi'),tsId:'canada_cpi'},
+    {label:'UNEMPLOYMENT',value:m.unemployment||indVal('unemployment')||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.unemployment||{}).period||indDate('unemployment'),tsId:'canada_unemployment'},
+    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',date:fmtDate((D&&(D.updated_at||D.date))||'')||indDate('cad_usd'),tsId:'cadusd'},
+    {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||indVal('goc_10y_yield')||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',date:fmtDate((D&&(D.updated_at||D.date))||'')||indDate('goc_10y_yield'),tsId:'yield_10y'},
+    {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',date:(im.housingStarts||{}).period||indDate('housingStarts'),tsId:null}
   ];
   let strip='<div class="indicator-strip">';
   const sparkJobs=[];
@@ -677,17 +708,31 @@ window.selectProvince=function(code){
   $('provBanner').style.setProperty('--banner-img',"url('"+img+"')");
   renderProvinceContent();
 };
-function renderProvinceContent(){
+async function renderProvinceContent(){
   const prov=PROVS.find(p=>p.code===selectedProvince)||PROVS[0];
   $('provBannerTitle').textContent=prov.name;
+  // Load province projects if not loaded for this province
+  if(_lastLoadedProvince!==prov.code){await loadProjects(prov.code)}
   // Find province data from the provinces array
   const provArr=D?(D.provinces||[]):[];
   const norm=s=>(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z]/g,'');
   const provData=provArr.find(p=>norm(p.name)===norm(prov.name))||{};
   const provInd=provData.indicators||{};
   const provMeta=provData.indicatorMeta||{};
+  // Helper: find indicator value for this province from indicators[]
+  function provIndVal(key){
+    // Map to province-specific indicator_name patterns
+    const provPrefix=prov.code.toLowerCase();
+    const nameMap={gdp:'realGdp',unemployment:'unemployment',cpi:'cpi',housingStarts:'housingStarts'};
+    const indName=nameMap[key]||key;
+    // Try province-specific first, then national
+    const provMatch=indicators.find(x=>x.indicator_name===provPrefix+'_'+indName);
+    if(provMatch)return provMatch.value;
+    const natMatch=indicators.find(x=>x.indicator_name===indName);
+    return natMatch?natMatch.value:null;
+  }
   let headerHtml='<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:var(--text-xl);font-weight:700">'+prov.name+'</span>';
-  headerHtml+='</div><span style="font-size:var(--text-xs);color:#777">Last updated '+(D?fmtDate(D.updated_at||D.date)||(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'')+'</span></div>';
+  headerHtml+='</div><span style="font-size:var(--text-xs);color:#777">'+allProjects.length+' projects loaded</span></div>';
   $('provHeader').innerHTML=headerHtml;
 
   // Mini chart cards
@@ -695,7 +740,7 @@ function renderProvinceContent(){
   let miniHtml='<div class="mini-chart-grid">';
   const provSparkJobs=[];
   chartMetrics.forEach((m,i)=>{
-    const val=provInd[m.key]||'N/A';
+    const val=provInd[m.key]||provIndVal(m.key)||'N/A';
     const meta=provMeta[m.key]||{};
     const chg=meta.change||'';
     const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
@@ -753,17 +798,17 @@ window.toggleIndustryView=function(view){
   renderIndustrySectors();
 };
 function renderIndustries(){
-  if(!D){$('industrySectorGrid').innerHTML='<div class="empty-state"><div class="empty-state-text">No industry data available.</div></div>';return}
-  const ies=D.industry_executive_summary||'';
+  const ies=(D&&D.industry_executive_summary)||'';
   if(ies){
     $('industryExecSummary').innerHTML='<div class="card fade-in"><div class="card-header">Industry Executive Summary</div><div class="card-body">'+san(ies)+'</div></div>';
+  }else{
+    $('industryExecSummary').innerHTML='';
   }
   renderIndustrySectors();
 }
 function renderIndustrySectors(){
-  if(!D)return;
-  const goodsArr=D.goodsIndustries||[];
-  const servArr=D.servicesIndustries||[];
+  const goodsArr=(D&&D.goodsIndustries)||[];
+  const servArr=(D&&D.servicesIndustries)||[];
   const showGoods=_industryView==='all'||_industryView==='goods';
   const showServ=_industryView==='all'||_industryView==='services';
   let html='';
@@ -795,14 +840,21 @@ function sectorCard(s){
 
 /* ====== MARKETS TAB ====== */
 function renderMarkets(){
-  if(!D){$('marketsGrid').innerHTML='<div class="empty-state"><div class="empty-state-text">No market data available.</div></div>';return}
-  const fm=D.financialMarkets||D.financial_markets||D.markets||{};
-  const indices=fm.indices||[];const fx=fm.fx||[];
+  const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
+  let indices=fm.indices||[];let fx=fm.fx||[];
+  // Build from indicators[] if briefing has no market data
+  if(!indices.length&&indicators.length){
+    const idxMap=[{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'}];
+    idxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:''})});
+  }
+  if(!fx.length&&indicators.length){
+    const fxMap=[{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'}];
+    fxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!fx.find(x=>x.name===m.name))fx.push({name:m.name,value:i.value})});
+  }
   // Equity + Currency cards
-  // Indices: {name, value, change, day, yy, country}  FX: {name, value} (no change)
   const mktTsMap={'S&P/TSX':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'idx_sp500','Dow Jones':'idx_djia','NASDAQ':'idx_nasdaq','FTSE 100':'idx_ftse','DAX':'idx_dax','Nikkei 225':'idx_nikkei','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','EUR/USD':'fx_eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'fx_usdjpy','USD/CNY':'fx_usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'comm_wti','Crude Oil (Brent)':'comm_brent','Natural Gas':'comm_natgas','Gold':'comm_gold','Silver':'comm_silver','Platinum':'comm_platinum','Palladium':'comm_palladium','Copper':'comm_copper','Aluminum':'comm_aluminum','Wheat':'comm_wheat','Corn':'comm_corn','Rice':'comm_rice','Soybeans':'comm_soybeans','Coffee':'comm_coffee','Cocoa':'comm_cocoa','Sugar #11':'comm_sugar','Cotton':'comm_cotton','Soybean Oil':'comm_soyoil','Soybean Meal':'comm_soymeal','Coal (Newcastle)':'comm_coal','Propane':'comm_propane'};
   const normMktId=(name)=>(name||'').toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_');
-  const mktDate=fmtDate(D.updated_at||D.date)||'';
+  const mktDate=D?fmtDate(D.updated_at||D.date)||'':'';
   let eqHtml='';let mktSparkJobs=[];let mktIdx=0;
   if(indices.length){
     eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#E8F0F8">Equity Indices</h3><div class="market-grid">';
@@ -840,7 +892,12 @@ function renderMarkets(){
   mktSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
 
   // Yield curve
-  const yc=D.yieldCurve||[];
+  let yc=(D&&D.yieldCurve)||[];
+  // Build from indicators[] if briefing has no yield data
+  if(!yc.length&&indicators.length){
+    const yieldTerms=[{term:'2Y',ind:'goc_2y_yield'},{term:'5Y',ind:'goc_5y_yield'},{term:'10Y',ind:'goc_10y_yield'}];
+    yieldTerms.forEach(t=>{const i=indicators.find(x=>x.indicator_name===t.ind);if(i)yc.push({term:t.term,yield:i.value})});
+  }
   if(yc.length){
     let ycHtml='<div class="card yield-card"><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
     const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
@@ -858,7 +915,12 @@ function renderMarkets(){
   }
 
   // Commodities — pipeline stores [{category, color, items: [{name, unit, val, yy, day}]}]
-  const rawComms=D.commodities||fm.commodities||[];
+  const rawComms=(D&&D.commodities)||fm.commodities||[];
+  // Build commodity cards from indicators[] if pipeline data is empty
+  if(!rawComms.length&&indicators.length){
+    const commMap=[{name:'Crude Oil (WTI)',ind:'wti'},{name:'Crude Oil (WTI)',ind:'wti_oil'},{name:'Gold',ind:'gold'},{name:'Natural Gas',ind:'natural_gas'},{name:'Copper',ind:'copper'},{name:'Lumber',ind:'lumber'}];
+    commMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!rawComms.find(x=>x.name===m.name))rawComms.push({name:m.name,val:i.value,change:''})});
+  }
   let commHtml='';
   const commSparkJobs=[];
   if(Array.isArray(rawComms)&&rawComms.length&&rawComms[0].items){
@@ -957,7 +1019,12 @@ async function loadAndDrawSparkline(canvasId,docId,change){
 }
 
 /* ====== PROJECTS TAB ====== */
-function renderProjectsTab(){
+async function renderProjectsTab(){
+  // Load projects on demand if not yet loaded
+  if(!allProjects.length){
+    const prov=$('filterProvince')?.value||'BC';
+    await loadProjects(prov||null);
+  }
   // Populate filter dropdowns
   const provSel=$('filterProvince');
   if(provSel.options.length<=1){
@@ -1207,8 +1274,10 @@ window.exportProjects=function(){
 
 
 /* ====== CALENDAR TAB ====== */
-function renderCalendar(){
-  const events=(D&&(D.watchlist||D.events))?(D.watchlist||D.events):[];
+async function renderCalendar(){
+  let events=(D&&(D.watchlist||D.events))||[];
+  // Load from static events.json if briefing has no events
+  if(!events.length){try{events=await fetchJSON('events.json')||[]}catch(_){events=[]}}
   // Monthly calendar grid
   const now=new Date();
   const year=now.getFullYear(),month=now.getMonth();
