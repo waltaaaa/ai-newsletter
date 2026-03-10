@@ -432,7 +432,7 @@ let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='nati
 function renderIndicatorExplorer(){
   // Build selector
   let selHtml='<div class="card fade-in"><div class="card-header">Indicator Explorer</div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px">';
-  selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:var(--text-sm)">';
+  selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#191a1c;font-size:var(--text-sm)">';
   INDICATOR_CATALOG.forEach(g=>{
     selHtml+='<optgroup label="'+g.group+'">';
     g.items.forEach(it=>{
@@ -444,7 +444,7 @@ function renderIndicatorExplorer(){
   // Province toggle (shown only for provincial indicators)
   const selItem=findIndItem(_indExpSel);
   if(selItem&&selItem.prov){
-    selHtml+='<select id="indExpProv" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:var(--text-sm)">';
+    selHtml+='<select id="indExpProv" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#191a1c;font-size:var(--text-sm)">';
     selHtml+='<option value="national"'+((_indExpProv==='national')?' selected':'')+'>National</option>';
     PROVS.forEach(p=>{selHtml+='<option value="'+p.code+'"'+(_indExpProv===p.code?' selected':'')+'>'+p.name+'</option>'});
     selHtml+='</select>';
@@ -453,7 +453,7 @@ function renderIndicatorExplorer(){
   selHtml+='<div style="display:flex;gap:4px">';
   [3,12,36,60].forEach(m=>{
     const lbl=m===3?'3M':m===12?'1Y':m===36?'3Y':'5Y';
-    const active=_indExpRange===m?'background:var(--accent-blue);color:#fff':'background:var(--bg-tertiary);color:var(--text-secondary)';
+    const active=_indExpRange===m?'background:#0073e6;color:#fff':'background:#e0e0e0;color:#3a3a3a';
     selHtml+='<button onclick="_indExpRange='+m+';loadIndExpData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
   });
   selHtml+='</div></div>';
