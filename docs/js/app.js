@@ -31,7 +31,7 @@ window.loadSection=loadSection;
 /* ── State ── */
 let D=null,indicators=[],allProjects=[],filteredProjects=[],projectPage=0,selectedProvince='BC',tsCache={},charts={},tabRendered={};
 const PAGE_SIZE=25;
-let _confirmedOnly=true;
+let _confirmedOnly=false;
 let _lastLoadedProvince=null,_loadSeq=0;
 const PROVS=[{code:'BC',name:'British Columbia'},{code:'AB',name:'Alberta'},{code:'SK',name:'Saskatchewan'},{code:'MB',name:'Manitoba'},{code:'ON',name:'Ontario'},{code:'QC',name:'Quebec'},{code:'NB',name:'New Brunswick'},{code:'NS',name:'Nova Scotia'},{code:'PE',name:'Prince Edward Island'},{code:'NL',name:'Newfoundland and Labrador'},{code:'YT',name:'Yukon'},{code:'NT',name:'Northwest Territories'},{code:'NU',name:'Nunavut'}];
 const NAME_TO_CODE={};PROVS.forEach(p=>{NAME_TO_CODE[p.name]=p.code;NAME_TO_CODE[p.code]=p.code});NAME_TO_CODE['Newfoundland']='NL';NAME_TO_CODE['PEI']='PE';
@@ -1009,7 +1009,7 @@ async function filterProjects(){
   const sector=$('filterSector').value;
   const status=$('filterStatus').value;
   const sort=$('sortProjects').value;
-  // If province changed, reload from Firestore
+  // If province changed, reload from static JSON
   if(prov!==_lastLoadedProvince){
     await loadProjects(prov);
     filterProjects();
