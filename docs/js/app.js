@@ -868,10 +868,10 @@ function renderMarkets(){
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
       const sid='spark_mkt_'+mktIdx++;
       const tsId=mktTsMap[item.name]||null;
-      eqHtml+='<div class="market-card" data-cat="equity"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small style="color:#6b8ab5">'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      eqHtml+='<div class="market-card" data-cat="equity"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small style="color:#636363">'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#6b8ab5">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#5a7a9e;margin-top:2px">'+mktDate+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
     });
@@ -886,8 +886,8 @@ function renderMarkets(){
       const tsId=mktTsMap[item.name]||null;
       eqHtml+='<div class="market-card" data-cat="fx"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#6b8ab5">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#5a7a9e;margin-top:2px">'+mktDate+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
     });
@@ -904,7 +904,7 @@ function renderMarkets(){
     yieldTerms.forEach(t=>{const i=indicators.find(x=>x.indicator_name===t.ind);if(i)yc.push({term:t.term,yield:i.value})});
   }
   if(yc.length){
-    let ycHtml='<div class="yield-card" style="padding:16px"><h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Gov. of Canada Yield Curve</h3><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
+    let ycHtml='<div class="yield-card" style="padding:16px"><h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#191a1c;text-transform:uppercase;letter-spacing:1px">Gov. of Canada Yield Curve</h3><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
     const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
     if(y2&&y10){
       const spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);
@@ -916,7 +916,7 @@ function renderMarkets(){
     $('yieldCurveCard').innerHTML=ycHtml;
     setTimeout(()=>drawYieldChart(yc),50);
   } else {
-    $('yieldCurveCard').innerHTML='<div class="yield-card" style="padding:16px"><div class="empty-state"><div class="empty-state-text" style="color:#6b8ab5">No yield curve data.</div></div></div>';
+    $('yieldCurveCard').innerHTML='<div class="yield-card" style="padding:16px"><div class="empty-state"><div class="empty-state-text" style="color:#636363">No yield curve data.</div></div></div>';
   }
 
   // Commodities — pipeline stores [{category, color, items: [{name, unit, val, yy, day}]}]
@@ -939,10 +939,10 @@ function renderMarkets(){
         const cls=isNeg?'change-down':(yy?'change-up':'change-flat');
         const cid='spark_comm_'+mktIdx++;
         const tsId=mktTsMap[c.name]||null;
-        commHtml+='<div class="market-card" data-cat="'+dataCat+'"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small style="color:#6b8ab5">'+c.unit+'</small>':'')+'</div>';
+        commHtml+='<div class="market-card" data-cat="'+dataCat+'"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small style="color:#636363">'+c.unit+'</small>':'')+'</div>';
         if(yy)commHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+yy+' YoY</div>';
-        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#6b8ab5">'+c.day+' today</div>';
-        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#5a7a9e;margin-top:2px">'+mktDate+'</div>';
+        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#636363">'+c.day+' today</div>';
+        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
         commHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
         if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:yy});
       });
@@ -972,7 +972,7 @@ function drawYieldChart(yc){
   if(charts.yield)charts.yield.destroy();
   const labels=yc.map(y=>y.term);
   const data=yc.map(y=>parseFloat(y.yield)||0);
-  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#0073e6',backgroundColor:'rgba(0,115,230,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#1c3664',pointBorderColor:'rgba(28,54,100,0.8)',pointBorderWidth:2,fill:true,tension:0.3}]},plugins:[{id:'yieldEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#0073e6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(2)+'%':lastVal,lastPt.x+6,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(28,54,100,0.95)',titleColor:'#ffffff',bodyColor:'#c0c0c0',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Arial',size:11},color:'#c0c0c0'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:11},color:'#c0c0c0',callback:v=>v.toFixed(2)+'%'}}}}});
+  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#0073e6',backgroundColor:'rgba(0,115,230,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#0073e6',pointBorderColor:'#0073e6',pointBorderWidth:2,fill:true,tension:0.3}]},plugins:[{id:'yieldEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#0073e6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(2)+'%':lastVal,lastPt.x+6,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(28,54,100,0.95)',titleColor:'#ffffff',bodyColor:'#c0c0c0',borderColor:'rgba(0,0,0,0.12)',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Arial',size:11},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.06)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:11},color:'#636363',callback:v=>v.toFixed(2)+'%'}}}}});
 }
 function drawLineChart(canvasId,tsData,months){
   const canvas=document.getElementById(canvasId);
@@ -1522,7 +1522,7 @@ async function renderCanadianCommodities(){
       const provs=(c.affected_provinces||[]).map(p=>'<span style="background:rgba(255,255,255,0.08);color:#8ea8cc;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
       html+=`<div class="market-card" data-cat="energy"><div class="market-card-ticker">${c.name||k.replace(/_/g,' ')}</div><div class="market-card-price">${c.current||'N/A'}</div>`;
       if(chg)html+=`<div class="market-card-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg} 1W</div>`;
-      if(c.pct_1m)html+=`<div style="font-size:var(--text-xs);color:#6b8ab5">1M: ${c.pct_1m}</div>`;
+      if(c.pct_1m)html+=`<div style="font-size:var(--text-xs);color:#636363">1M: ${c.pct_1m}</div>`;
       if(sectors)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:4px">${sectors}</div>`;
       if(provs)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:2px">${provs}</div>`;
       html+='</div>';
