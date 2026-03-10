@@ -1,17 +1,24 @@
 # CLAUDE.md — Canadian Macro Strategic Dashboard
 
 ## What This Project Is
-A weekly intelligence briefing platform covering Canadian national economic conditions, provincial policy, capital projects, markets, and events. Python discovery pipeline feeds a single-file HTML frontend via Firestore. Runs autonomously every Monday.
+A weekly intelligence briefing platform covering Canadian national economic conditions, provincial policy, capital projects, markets, and events. Python discovery pipeline feeds a static HTML frontend via SQLite + GitHub Pages. Runs autonomously every Monday.
 
 ## Reference Document
 For full system specification (25 sections, every feature detailed), see `COMPLETE_SYSTEM_SPECIFICATION.md` in the project root. Consult it before making architectural changes.
 
+## Second Brain (Obsidian Vault)
+- **Location:** `C:/Users/walte/OneDrive/SecondBrain/`
+- **Project context:** `01-projects/can-macro-dashboard/context.md`
+- **Access:** `claude --add-dir "C:/Users/walte/OneDrive/SecondBrain"`
+- **Purpose:** Persistent context, decisions, debug journals, cross-session knowledge
+
 ## Architecture
 - **Pipeline:** Python, async, multi-step. Entry point: `update_dashboard.py`
-- **Frontend:** Single-file HTML deployed via Firebase Hosting
-- **Database:** Firestore (7 collections: projects, missed_projects, pipeline_improvements, indicator_history, trend_snapshots, weekly_briefings, dashboard_state)
-- **Scheduling:** Cloud Functions (`functions/index.js`) — weekly Monday 6AM ET + daily midnight ET
-- **Dependencies:** aiohttp, feedparser, beautifulsoup4, yfinance, reportlab, python-docx, google-cloud-firestore
+- **Frontend:** Static HTML + JS served via GitHub Pages from `docs/`
+- **Database:** SQLite (`dashboard.db`) via `db.py` single interface module
+- **Scheduling:** GitHub Actions — weekly Monday 5:30 AM ET + daily midnight ET
+- **User submissions:** GitHub Issues templates — pipeline reads via API
+- **Dependencies:** aiohttp, feedparser, beautifulsoup4, yfinance, reportlab, python-docx
 
 ## Model Stack (DO NOT CHANGE)
 - **Gemini 2.5 Flash (NO GROUNDING):** Classification, extraction, RSS processing. FREE TIER. Code must NEVER pass `google_search` tool or `groundingConfig` to the API.
@@ -90,7 +97,7 @@ All generated content must be factual reporting, not opinion or analysis.
 - This applies to: weekly briefing, Under the Microscope, market commentary, policy sections, pre-event sections.
 
 - **ADDITIVE ONLY for adaptive learning.** The system can add queries, keywords, feeds. It can NEVER remove existing ones.
-- **URL hard gate.** Every project MUST have at least one verifiable source URL. No URL = no Firestore write.
+- **URL hard gate.** Every project MUST have at least one verifiable source URL. No URL = no database write.
 - **Evidence merge NEVER loses URLs.** During dedup, evidence arrays combine, never overwrite.
 - **Government source bypass.** Articles from government domains skip RSS keyword filtering entirely.
 - **Dollar-value bypass.** Articles with dollar values ≥ province threshold skip keyword filtering.
@@ -132,9 +139,9 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - StatsCan table URL: `https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid={table_no_dashes}`
 - Every result includes a "View on StatsCan" link
 
-## Firestore Collections
+## SQLite Tables (dashboard.db)
 - `projects` — main project database
-- `missed_projects` — user-submitted missed projects
+- `missed_projects` — user-submitted missed projects (via GitHub Issues)
 - `pipeline_improvements` — adaptive learning improvements
 - `indicator_history` — time series for all economic indicators
 - `trend_snapshots` — weekly trend analysis snapshots
@@ -147,7 +154,7 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - Search: `tavily_search.py` (targeted enrichment only)
 - Reasoning: `claude_reasoning.py` (all reasoning — no gemini_pro_reasoning.py)
 - Analysis: `sector_trends.py`, `cross_reference.py`, `indicator_trends.py`
-- Frontend: `public/index.html` (single-file)
+- Frontend: `docs/index.html` (GitHub Pages root)
 
 ## Common Mistakes to Avoid
 - Do not use Gemini grounded search — it costs $35/1,000 queries. Use Google News RSS instead.
@@ -155,13 +162,13 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - Do not use Gemini Pro — removed. All reasoning goes through Claude Sonnet.
 - Do not use Perplexity, GDELT, or Haiku in the weekly pipeline
 - Do not remove keywords from RSS filter (additive only)
-- Do not skip dedup when writing to Firestore
+- Do not skip dedup when writing to SQLite
 - Do not create projects without source URLs
 - Do not exceed 1,000 Tavily credits/month (free tier limit)
 - Do not generate briefing content without real data — no fabrication
 - Do not regress project status during merge
 - Do not overwrite evidence arrays during dedup — always append/merge
 - Do not add negative keywords that match legitimate project terms (mall, housing, office, heritage, downtown, Indigenous)
-- Do not create new Firestore collections without documenting them here
+- Do not create new SQLite tables without documenting them here
 - Do not editorialize — no predictions, no recommendations, no "good news/bad news" framing, no "bullish/bearish"
 - Do not enable billing on any Google Cloud project without explicit approval
