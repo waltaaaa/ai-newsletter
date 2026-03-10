@@ -72,9 +72,9 @@ function changeIcon(arrow){return arrow===1?'↑':arrow===2?'↓':'→'}
 function stCls(s){const k=s.toLowerCase().replace(/\s+/g,'-');return'st-'+k}
 function statusBadge(s){return`<span class="status-badge ${stCls(s)}">${s}</span>`}
 function srcLink(url,title){if(!url)return'';return`<a href="${url}" target="_blank" rel="noopener noreferrer" title="${title||'Source'}">\u2197</a>`}
-function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#777">N/D</span>';return v}
+function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#919191">N/D</span>';return v}
 function parseNumericValue(v){if(!v)return 0;const s=String(v).toUpperCase();const m=s.match(/([\d.]+)\s*(B|M|K)?/);if(!m)return 0;let n=parseFloat(m[1])||0;if(m[2]==='B')n*=1e9;else if(m[2]==='M')n*=1e6;else if(m[2]==='K')n*=1e3;return n}
-function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:#777;font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:#999;font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:#777">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:#999;font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:#999;font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
+function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:#919191;font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:#919191;font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:#919191">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:#919191;font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:#919191;font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
 function skeleton(n=3){return Array(n).fill('<div class="skeleton sk-line"></div><div class="skeleton sk-line med"></div><div class="skeleton sk-line short"></div>').join('')}
 
 /* ── Tab Switching ── */
@@ -535,20 +535,20 @@ async function loadIndExpData(){
         try{
           const ed=parseEvtDate(evt.date);if(!ed)return;
           const ds=fmtDate(ed);const li=labels.indexOf(ds);if(li===-1)return;
-          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Plus Jakarta Sans',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
+          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Arial',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
         }catch(evtErr){}
       });
     }
   }catch(annErr){console.warn('Event annotations:',annErr)}
   const hasAnnotationPlugin=typeof window.ChartAnnotation!=='undefined'||(typeof Chart!=='undefined'&&Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation'));
-  const bandAnnotation=(bandLow!==null&&bandHigh!==null)?{band:{type:'box',yMin:bandLow,yMax:bandHigh,backgroundColor:'rgba(59,130,246,0.06)',borderWidth:0}}:{};
+  const bandAnnotation=(bandLow!==null&&bandHigh!==null)?{band:{type:'box',yMin:bandLow,yMax:bandHigh,backgroundColor:'rgba(0,115,230,0.06)',borderWidth:0}}:{};
   const annotationCfg=hasAnnotationPlugin?{annotation:{annotations:{...bandAnnotation,...evtAnnotations}}}:{};
-  const endpointPlugin={id:'endpointLabel',afterDraw(chart){try{const ds=chart.data.datasets[0];if(!ds||!ds.data||!ds.data.length)return;const lastVal=ds.data[ds.data.length-1];if(lastVal==null)return;const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#2E7DAD';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):String(lastVal),lastPt.x+6,lastPt.y-4);ctx.restore();}catch(e){}}};
-  const chartCfg={type:'line',data:{labels,datasets:[{data,borderColor:'#2E7DAD',backgroundColor:'rgba(46,125,173,0.08)',borderWidth:2,pointRadius:pts.length>60?0:3,pointBackgroundColor:'#1C5688',fill:true,tension:0.3}]},plugins:[endpointPlugin],options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},...annotationCfg,tooltip:{backgroundColor:'rgba(15,26,43,0.95)',titleColor:'#E8F0F8',bodyColor:'#94A8C2',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6,callbacks:{label:function(ctx){
+  const endpointPlugin={id:'endpointLabel',afterDraw(chart){try{const ds=chart.data.datasets[0];if(!ds||!ds.data||!ds.data.length)return;const lastVal=ds.data[ds.data.length-1];if(lastVal==null)return;const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#0073e6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):String(lastVal),lastPt.x+6,lastPt.y-4);ctx.restore();}catch(e){}}};
+  const chartCfg={type:'line',data:{labels,datasets:[{data,borderColor:'#0073e6',backgroundColor:'rgba(0,115,230,0.08)',borderWidth:2,pointRadius:pts.length>60?0:3,pointBackgroundColor:'#1c3664',fill:true,tension:0.3}]},plugins:[endpointPlugin],options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},...annotationCfg,tooltip:{backgroundColor:'rgba(25,26,28,0.95)',titleColor:'#ffffff',bodyColor:'#c0c0c0',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6,callbacks:{label:function(ctx){
     const val=ctx.parsed.y;const idx=ctx.dataIndex;
     if(idx>0){const prev=data[idx-1];const diff=val-prev;return val.toFixed(2)+' ('+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev)';}
     return val.toFixed(2);
-  }}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Plus Jakarta Sans',size:10},color:'#94A8C2'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#94A8C2'}}}}};
+  }}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Arial',size:10},color:'#c0c0c0'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#c0c0c0'}}}}};
   try{charts._indExp=new Chart(canvas,chartCfg);}catch(chartErr){console.warn('Chart with annotations failed, retrying without:',chartErr);try{chartCfg.options.plugins={legend:{display:false},tooltip:chartCfg.options.plugins.tooltip};chartCfg.plugins=[];charts._indExp=new Chart(canvas,chartCfg);}catch(e2){console.error('Chart creation failed completely:',e2);}}
 }
 
@@ -567,13 +567,13 @@ function renderSentiment(){
     const ss=cs.sources_summary||cs;
     html+='<div class="sentiment-meta" style="margin-top:0">'+(ss.reddit_posts||0)+' Reddit posts \u00b7 '+(ss.trends_queries||0)+' trending searches \u00b7 '+(ss.news_comments||0)+' news comments</div></div>';
   }
-  html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:#999;font-size:.75rem">(click to expand)</span></summary>';
+  html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:#919191;font-size:.75rem">(click to expand)</span></summary>';
   html+='<div style="padding:12px 0"><div class="word-cloud-container" id="wordCloudSvg"></div></div>';
   html+='<hr style="border:none;border-top:1px solid var(--border-light);margin:8px 0">';
   if(cp)html+='<div style="padding:12px 0 8px"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:8px">Consumer Pulse</h4><div class="pulse-prose">'+san(cp)+'</div></div>';
   html+='</details>';
   if(cs&&cs.categories&&cs.categories.length){
-    html+='<div class="category-bar-container"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:#555">Category Sentiment</h4>';
+    html+='<div class="category-bar-container"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:#636363">Category Sentiment</h4>';
     const cats=cs.categories;
     cats.forEach(cat=>{
       const label=cat.name||cat.category||'';
@@ -616,15 +616,15 @@ function renderWordCloud(topics){
     const score=t.sentiment_score||t.sentiment||0;
     return{text:t.topic||t.word||'',size:12+((freq/maxFreq)*28),score:typeof score==='number'?score:0,freq};
   });
-  const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Plus Jakarta Sans').fontSize(d=>d.size).on('end',drawn);
+  const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Arial').fontSize(d=>d.size).on('end',drawn);
   layout.start();
   function drawn(wds){
     const svg=d3.select(container).append('svg').attr('width',w).attr('height',h);
     const g=svg.append('g').attr('transform','translate('+w/2+','+h/2+')');
     g.selectAll('text').data(wds).enter().append('text')
-      .style('font-size',d=>d.size+'px').style('font-family','Plus Jakarta Sans')
+      .style('font-size',d=>d.size+'px').style('font-family','Arial')
       .style('font-weight',d=>d.size>30?'700':d.size>20?'600':'400')
-      .style('fill','#1a2f6b')
+      .style('fill','#1c3664')
       .style('opacity',d=>0.6+Math.min(Math.abs(d.score),0.4))
       .style('cursor','pointer')
       .attr('text-anchor','middle').attr('transform',d=>'translate('+d.x+','+d.y+') rotate('+d.rotate+')')
@@ -644,7 +644,7 @@ async function renderTrendSummary(){
     const chips=ds.total_projects?`<div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap"><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)"><strong>${ds.total_projects||0}</strong> projects</div><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)">$<strong>${((ds.total_value_millions||0)/1000).toFixed(1)}B</strong> pipeline</div></div>`:'';
     // Download buttons — pdf_url and docx_url are optional fields in briefing_latest.json
     const pdfUrl=(briefing&&briefing.pdf_url)||'';const docxUrl=(briefing&&briefing.docx_url)||'';
-    const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:12px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#b91c1c;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#1d4ed8;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
+    const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:12px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#cc0033;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#0073e6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
     el.innerHTML=`<div class="card fade-in"><div class="card-header">${title}</div><div class="card-body">${chips}${dlBtns}<div style="line-height:1.65;color:var(--text-secondary);white-space:pre-line">${san(narrative)}</div></div></div>`;
   }catch(e){console.warn('Trend summary:',e);el.innerHTML=''}
 }
@@ -732,7 +732,7 @@ async function renderProvinceContent(){
     return natMatch?natMatch.value:null;
   }
   let headerHtml='<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:var(--text-xl);font-weight:700">'+prov.name+'</span>';
-  headerHtml+='</div><span style="font-size:var(--text-xs);color:#777">'+allProjects.length+' projects loaded</span></div>';
+  headerHtml+='</div><span style="font-size:var(--text-xs);color:#919191">'+allProjects.length+' projects loaded</span></div>';
   $('provHeader').innerHTML=headerHtml;
 
   // Mini chart cards
@@ -746,7 +746,7 @@ async function renderProvinceContent(){
     const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
     const sparkId='spark_prov_'+selectedProvince+'_'+i;
     const prd=meta.period||'';
-    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
+    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#919191;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
     if(m.tsId)provSparkJobs.push({canvasId:sparkId,docId:m.tsId,change:chg});
   });
   miniHtml+='</div>';
@@ -765,7 +765,7 @@ async function renderProvinceContent(){
   const wl=D&&(D.watchlist||D.events)?D.watchlist||D.events||[]:[];
   const provEvents=wl.filter(e=>{const desc=(e.description||'')+(e.event_name||'');return desc.toLowerCase().includes(prov.name.toLowerCase())});
   if(provEvents.length){
-    analysisHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:#555">';
+    analysisHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:#636363">';
     provEvents.forEach(e=>{analysisHtml+='<div style="margin-bottom:4px">'+(e.date||'')+' \u2014 '+(e.event_name||e.event||'')+(e.institution?' ('+e.institution+')':'')+'</div>'});
     analysisHtml+='</div></details>';
   }
@@ -773,7 +773,7 @@ async function renderProvinceContent(){
 
   // Projects preview
   const provProjects=allProjects.filter(p=>p.province===prov.name||p.province===prov.code).slice(0,5);
-  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-size:var(--text-xs);color:#777;margin-left:8px">('+provProjects.length+')</span></div>';
+  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-size:var(--text-xs);color:#919191;margin-left:8px">('+provProjects.length+')</span></div>';
   if(provProjects.length){
     projHtml+='<table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
     provProjects.forEach(p=>{
@@ -813,13 +813,13 @@ function renderIndustrySectors(){
   const showServ=_industryView==='all'||_industryView==='services';
   let html='';
   if(showGoods){
-    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#E8F0F8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Goods-Producing Industries</h3><div class="sector-grid" style="margin-bottom:16px">';
+    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Goods-Producing Industries</h3><div class="sector-grid" style="margin-bottom:16px">';
     goodsArr.forEach(s=>{html+=sectorCard(s)});
     if(!goodsArr.length)['11','21','22','23','31-33'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
     html+='</div>';
   }
   if(showServ){
-    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#E8F0F8;text-transform:uppercase;letter-spacing:.5px;margin:'+(showGoods?'12px':'0')+' 0 8px">Services-Producing Industries</h3><div class="sector-grid">';
+    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:.5px;margin:'+(showGoods?'12px':'0')+' 0 8px">Services-Producing Industries</h3><div class="sector-grid">';
     servArr.forEach(s=>{html+=sectorCard(s)});
     if(!servArr.length)['41','44-45','48-49','51','52','53','54','55','56','61','62','71','72','81','91'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
     html+='</div>';
@@ -834,8 +834,8 @@ function sectorCard(s){
   const mm=s.mm||'';const yy=s.yy||'';
   const mmCls=s.isNegative?'change-down':'change-up';
   let footer='';
-  if(mm||yy)footer='<div style="margin-top:8px;font-size:var(--text-xs);color:#777">'+(mm?'M/M: <span class="'+mmCls+'" style="font-family:var(--font-mono)">'+mm+'</span> ':'')+(yy?'Y/Y: <span style="font-family:var(--font-mono)">'+yy+'</span>':'')+(s.indicatorSrc?' · '+s.indicatorSrc:'')+'</div>';
-  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+(analysis?san(analysis):'<em style="color:#777">No analysis available.</em>')+footer+'</div></div>';
+  if(mm||yy)footer='<div style="margin-top:8px;font-size:var(--text-xs);color:#919191">'+(mm?'M/M: <span class="'+mmCls+'" style="font-family:var(--font-mono)">'+mm+'</span> ':'')+(yy?'Y/Y: <span style="font-family:var(--font-mono)">'+yy+'</span>':'')+(s.indicatorSrc?' · '+s.indicatorSrc:'')+'</div>';
+  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+(analysis?san(analysis):'<em style="color:#919191">No analysis available.</em>')+footer+'</div></div>';
 }
 
 /* ====== MARKETS TAB ====== */
@@ -857,7 +857,7 @@ function renderMarkets(){
   const mktDate=D?fmtDate(D.updated_at||D.date)||'':'';
   let eqHtml='';let mktSparkJobs=[];let mktIdx=0;
   if(indices.length){
-    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#E8F0F8">Equity Indices</h3><div class="market-grid">';
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#ffffff">Equity Indices</h3><div class="market-grid">';
     indices.forEach(item=>{
       const chg=item.change||item.day||'';const isNeg=chg.startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
@@ -865,15 +865,15 @@ function renderMarkets(){
       const tsId=mktTsMap[item.name]||null;
       eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small>'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#777">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#919191">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#919191;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
     });
     eqHtml+='</div>';
   }
   if(fx.length){
-    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">Foreign Exchange</h3><div class="market-grid">';
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#ffffff">Foreign Exchange</h3><div class="market-grid">';
     fx.forEach(item=>{
       const chg=item.day||'';const isNeg=chg.startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
@@ -881,8 +881,8 @@ function renderMarkets(){
       const tsId=mktTsMap[item.name]||null;
       eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#777">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#919191">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#919191;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
     });
@@ -926,7 +926,7 @@ function renderMarkets(){
   if(Array.isArray(rawComms)&&rawComms.length&&rawComms[0].items){
     // Nested category structure from pipeline
     rawComms.forEach(cat=>{
-      commHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">'+cat.category+'</h3><div class="market-grid">';
+      commHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#ffffff">'+cat.category+'</h3><div class="market-grid">';
       (cat.items||[]).forEach(c=>{
         const yy=c.yy||'';const isNeg=yy.startsWith('-');
         const cls=isNeg?'change-down':(yy?'change-up':'change-flat');
@@ -934,8 +934,8 @@ function renderMarkets(){
         const tsId=mktTsMap[c.name]||null;
         commHtml+='<div class="market-card"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small>'+c.unit+'</small>':'')+'</div>';
         if(yy)commHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+yy+' YoY</div>';
-        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#777">'+c.day+' today</div>';
-        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#919191">'+c.day+' today</div>';
+        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#919191;margin-top:2px">'+mktDate+'</div>';
         commHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
         if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:yy});
       });
@@ -965,14 +965,14 @@ function drawYieldChart(yc){
   if(charts.yield)charts.yield.destroy();
   const labels=yc.map(y=>y.term);
   const data=yc.map(y=>parseFloat(y.yield)||0);
-  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#2E7DAD',backgroundColor:'rgba(46,125,173,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#1C5688',pointBorderColor:'rgba(19,61,98,0.8)',pointBorderWidth:2,fill:true,tension:0.3}]},plugins:[{id:'yieldEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#2E7DAD';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(2)+'%':lastVal,lastPt.x+6,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,26,43,0.95)',titleColor:'#E8F0F8',bodyColor:'#94A8C2',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:11},color:'#94A8C2'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:11},color:'#94A8C2',callback:v=>v.toFixed(2)+'%'}}}}});
+  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#0073e6',backgroundColor:'rgba(0,115,230,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#1c3664',pointBorderColor:'rgba(25,26,28,0.8)',pointBorderWidth:2,fill:true,tension:0.3}]},plugins:[{id:'yieldEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#0073e6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(2)+'%':lastVal,lastPt.x+6,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(25,26,28,0.95)',titleColor:'#ffffff',bodyColor:'#c0c0c0',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Arial',size:11},color:'#c0c0c0'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:11},color:'#c0c0c0',callback:v=>v.toFixed(2)+'%'}}}}});
 }
 function drawLineChart(canvasId,tsData,months){
   const canvas=document.getElementById(canvasId);
   if(!canvas)return;
   if(charts[canvasId])charts[canvasId].destroy();
   if(!tsData||!tsData.series||!tsData.series.length){
-    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#777;font-size:var(--text-xs);padding:20px">No timeseries data available</div>');
+    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#919191;font-size:var(--text-xs);padding:20px">No timeseries data available</div>');
     return;
   }
   const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-months);
@@ -989,14 +989,14 @@ function drawLineChart(canvasId,tsData,months){
         try{
           const ed=parseEvtDate(evt.date);if(!ed)return;
           const ds=fmtDate(ed);const li=labels.indexOf(ds);if(li===-1)return;
-          lcEvtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Plus Jakarta Sans',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
+          lcEvtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Arial',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
         }catch(e2){}
       });
     }
   }catch(e3){console.warn('Line chart event annotations:',e3)}
   const lcHasAnnotation=typeof window.ChartAnnotation!=='undefined'||Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation');
   const lcAnnotationCfg=lcHasAnnotation&&Object.keys(lcEvtAnnotations).length?{annotation:{annotations:{...lcEvtAnnotations}}}:{};
-  charts[canvasId]=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.06)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#1E40AF',fill:true,tension:0.3}]},plugins:[{id:'lineEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 10px JetBrains Mono';ctx.fillStyle='#3B82F6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):lastVal,lastPt.x+4,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},...lcAnnotationCfg},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:6,font:{family:'Plus Jakarta Sans',size:10},color:'#94A8C2'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#94A8C2'}}}}});
+  charts[canvasId]=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#0073e6',backgroundColor:'rgba(0,115,230,0.06)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#1c3664',fill:true,tension:0.3}]},plugins:[{id:'lineEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 10px JetBrains Mono';ctx.fillStyle='#0073e6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):lastVal,lastPt.x+4,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},...lcAnnotationCfg},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:6,font:{family:'Arial',size:10},color:'#c0c0c0'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#c0c0c0'}}}}});
 }
 
 function drawSparkline(canvasId,tsData,color){
@@ -1007,14 +1007,14 @@ function drawSparkline(canvasId,tsData,color){
   const filtered=tsData.series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
   if(filtered.length<2)return;
   const data=filtered.map(p=>p.value);
-  const c=color||'#2E7DAD';
+  const c=color||'#0073e6';
   const mn=Math.min(...data),mx=Math.max(...data),pad=(mx-mn)*0.15||0.01;
   charts[canvasId]=new Chart(canvas,{type:'line',data:{labels:filtered.map(p=>p.date),datasets:[{data,borderColor:c,backgroundColor:c+'12',borderWidth:1.8,pointRadius:data.map((_,i)=>i===data.length-1?3:0),pointBackgroundColor:c,fill:true,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false,min:mn-pad,max:mx+pad}},elements:{line:{capBezierPoints:true}}}});
 }
 async function loadAndDrawSparkline(canvasId,docId,change){
   const ts=await loadTimeseries(docId);
   if(!ts)return;
-  const c=change&&change.startsWith('-')?'#B91C1C':change&&(change.startsWith('+')||parseFloat(change)>0)?'#15803D':'#2E7DAD';
+  const c=change&&change.startsWith('-')?'#B91C1C':change&&(change.startsWith('+')||parseFloat(change)>0)?'#15803D':'#0073e6';
   drawSparkline(canvasId,ts,c);
 }
 
@@ -1153,13 +1153,13 @@ function renderProjectTable(){
     // Expansion row
     const colSpan=9;
     html+='<tr id="'+rowId+'" style="display:none"><td colspan="'+colSpan+'"><div class="project-expand">';
-    html+='<div style="font-size:var(--text-sm);color:#555;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
+    html+='<div style="font-size:var(--text-sm);color:#636363;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
     // CMA + confidence row
-    html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:var(--text-xs);color:#555">';
+    html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:var(--text-xs);color:#636363">';
     if(p.cma)html+='<span>CMA: <b>'+p.cma+'</b></span>';
     const evArr=p.evidence||[];
     const dispConf=p.display_confidence!=null?p.display_confidence:p.confidence;
-    if(dispConf!=null)html+='<span>Confidence: '+confBadge(dispConf,evArr.length)+(p.decay_applied?' <span style="color:#999;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
+    if(dispConf!=null)html+='<span>Confidence: '+confBadge(dispConf,evArr.length)+(p.decay_applied?' <span style="color:#919191;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
     if(p.has_anomalies)html+='<span style="color:var(--status-amber);font-weight:600" title="'+(p.anomalies||[]).map(a=>a.type+': '+a.detail).join('; ')+'">&#9888; Anomaly detected</span>';
     if(p.needs_review)html+='<span style="color:var(--status-red);font-weight:500">Needs review ('+p.days_since_update+'d stale)</span>';
     const dsSrc=p.discovery_sources||[];
@@ -1183,11 +1183,11 @@ function renderProjectTable(){
         }else if(e.url&&e.url_dead){
           let label=e.name||'';
           if(!label){try{const h=new URL(e.url).hostname;label=h.startsWith('www.')?h.slice(4):h}catch(_){label=e.url}}
-          html+='<span style="color:#999;text-decoration:line-through;word-break:break-all">'+label+'</span> <span style="color:var(--status-red);font-size:10px">source unavailable</span>';
+          html+='<span style="color:#919191;text-decoration:line-through;word-break:break-all">'+label+'</span> <span style="color:var(--status-red);font-size:10px">source unavailable</span>';
         }else{
           html+='<span>'+(e.name||'Unknown source')+'</span>';
         }
-        if(e.date)html+=' <span style="color:#999;font-size:10px">('+e.date+')</span>';
+        if(e.date)html+=' <span style="color:#919191;font-size:10px">('+e.date+')</span>';
         if(e.url_verified===false&&!e.url_dead)html+='<span class="url-broken" title="Link may be broken">link may be unavailable</span>';
         html+='</li>';
       });
@@ -1198,9 +1198,9 @@ function renderProjectTable(){
     if(sh.length){
       html+='<div class="project-timeline">';
       sh.forEach(entry=>{
-        html+='<div class="timeline-entry"><div class="timeline-date">'+fmtDate(entry.date||'')+'</div><div>'+statusBadge(entry.status||'')+(entry.detail?' <span style="color:#555;font-size:var(--text-xs)">'+entry.detail+'</span>':'')+'</div>';
+        html+='<div class="timeline-entry"><div class="timeline-date">'+fmtDate(entry.date||'')+'</div><div>'+statusBadge(entry.status||'')+(entry.detail?' <span style="color:#636363;font-size:var(--text-xs)">'+entry.detail+'</span>':'')+'</div>';
         const es=entry.source||{};
-        if(es.url)html+='<div style="font-size:var(--text-xs);margin-top:2px">'+srcLink(es.url,es.title)+(es.archive_url?' <a href="'+es.archive_url+'" target="_blank" style="color:#777">[Archived]</a>':'')+'</div>';
+        if(es.url)html+='<div style="font-size:var(--text-xs);margin-top:2px">'+srcLink(es.url,es.title)+(es.archive_url?' <a href="'+es.archive_url+'" target="_blank" style="color:#919191">[Archived]</a>':'')+'</div>';
         html+='</div>';
       });
       html+='</div>';
@@ -1223,7 +1223,7 @@ function renderProjectTable(){
     html+='<div id="'+eid+'_fb" class="edit-feedback"></div>';
     html+='</div>';
     // Metadata
-    html+='<div style="margin-top:12px;font-size:var(--text-xs);color:#777">';
+    html+='<div style="margin-top:12px;font-size:var(--text-xs);color:#919191">';
     if(p.firstTracked)html+='Tracked since '+fmtDate(p.firstTracked)+' \u00b7 ';
     if(p.lastSeen)html+='Last seen '+fmtDate(p.lastSeen)+' \u00b7 ';
     if(p.discovery_source)html+='<span class="disc-badge">'+p.discovery_source+'</span> ';
@@ -1306,7 +1306,7 @@ async function renderCalendar(){
     }
   });
 
-  let calHtml='<h3 style="font-size:var(--text-lg);font-weight:600;margin-bottom:16px;color:#E8F0F8">'+monthName+'</h3>';
+  let calHtml='<h3 style="font-size:var(--text-lg);font-weight:600;margin-bottom:16px;color:#ffffff">'+monthName+'</h3>';
   calHtml+='<div class="calendar-grid">';
   ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{calHtml+='<div class="calendar-header-cell">'+d+'</div>'});
   // Blank cells before first day
@@ -1360,7 +1360,7 @@ async function renderCalendar(){
         if(ed){twHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
         else{twHtml+='<div>'+(e.date||'-')+'</div>'}
         twHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
-        if(e.description)twHtml+='<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+e.description+'</div>';
+        if(e.description)twHtml+='<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+e.description+'</div>';
         twHtml+='</div>';
         twHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
         twHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
@@ -1384,7 +1384,7 @@ async function renderCalendar(){
       if(ed){allHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
       else{allHtml+='<div>'+(e.date||'-')+'</div>'}
       allHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
-      if(e.description)allHtml+='<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+e.description+'</div>';
+      if(e.description)allHtml+='<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+e.description+'</div>';
       allHtml+='</div>';
       allHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
       allHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
@@ -1409,7 +1409,7 @@ async function renderPipelineStatus(){
     const stColor=st==='success'?'var(--status-green)':st==='partial'?'var(--status-amber)':'var(--status-red)';
     const dur=run.duration_seconds?Math.round(run.duration_seconds/60)+'m':'—';
     const disc=run.discovery||{};
-    el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:#555">Pipeline Status</div><div style="display:flex;gap:16px;font-size:var(--text-xs);color:#555;flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
+    el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:#636363">Pipeline Status</div><div style="display:flex;gap:16px;font-size:var(--text-xs);color:#636363;flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
   }catch(e){
     console.warn('Pipeline status:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1429,7 +1429,7 @@ async function renderCostMonitor(){
     const claudeOut=ps.claude_tokens?.output||0;
     const claudeCost=((claudeIn/1e6)*3+(claudeOut/1e6)*15).toFixed(2);
     const tavilyPct=Math.round((tavilyUsed/1000)*100);
-    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;user-select:none">Cost Monitor <span style="font-weight:400;color:#999;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#555"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
+    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;user-select:none">Cost Monitor <span style="font-weight:400;color:#919191;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#636363"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
   }catch(e){
     console.warn('Cost monitor:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1447,9 +1447,9 @@ async function renderMicroscopeHistory(){
     if(!history.length){el.innerHTML='';return}
     let items='';
     history.slice(0,12).forEach(h=>{
-      items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:#777">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+h.description+'</div>':''}</div>`;
+      items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:#919191">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+h.description+'</div>':''}</div>`;
     });
-    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:14px 18px;user-select:none">Under the Microscope Archives (${history.length} weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Under the Microscope Archives (${history.length} weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
   }catch(e){
     console.warn('Microscope history:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1466,7 +1466,7 @@ async function renderMicroscope(){
     const m=(data&&data.current)||data||{};
     if(!m.topic&&!m.text){el.innerHTML='';return}
     const sectors=(m.affected_sectors||[]).map(s=>'<span style="background:var(--bg-subtle);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:var(--text-xs)">'+s+'</span>').join(' ');
-    const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:#777;margin-left:8px">Week '+m.weeks_running+' of coverage</span>':'';
+    const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:#919191;margin-left:8px">Week '+m.weeks_running+' of coverage</span>':'';
     el.innerHTML=`<div class="card fade-in"><div class="card-header">Under the Microscope ${weeks}</div><div style="font-size:var(--text-sm);font-weight:600;color:var(--accent-blue);margin-bottom:8px">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}<div class="card-body">${san(m.text||m.analysis||'')}</div></div>`;
   }catch(e){
     console.warn('Microscope:',e);
@@ -1491,9 +1491,9 @@ async function renderPolicySection(){
     let listHtml='';
     articles.slice(0,8).forEach(a=>{
       const provBadge=a.scope?'<span style="background:var(--status-blue-bg);color:var(--status-blue);padding:1px 6px;border-radius:3px;font-size:.65rem;margin-left:4px">'+a.scope+'</span>':'';
-      listHtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border-light);font-size:var(--text-xs)"><a href="${a.url||'#'}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue);text-decoration:none">${a.headline||a.title||'Untitled'}</a>${provBadge}<span style="color:#777;margin-left:6px">${a.source||''}</span></div>`;
+      listHtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border-light);font-size:var(--text-xs)"><a href="${a.url||'#'}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue);text-decoration:none">${a.headline||a.title||'Untitled'}</a>${provBadge}<span style="color:#919191;margin-left:6px">${a.source||''}</span></div>`;
     });
-    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:14px 18px;user-select:none">Policy Monitor (${articles.length} articles this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${catBadges}</div>${listHtml}</div></details>`;
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Policy Monitor (${articles.length} articles this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${catBadges}</div>${listHtml}</div></details>`;
   }catch(e){console.warn('Policy section:',e);el.innerHTML=''}
 }
 
@@ -1506,16 +1506,16 @@ async function renderCanadianCommodities(){
     const indicators=data.indicators||data;
     const keys=Object.keys(indicators).filter(k=>k!=='updated_at'&&typeof indicators[k]==='object');
     if(!keys.length){el.innerHTML='';return}
-    let html='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#E8F0F8">Canadian Commodity Indicators</h3><div class="market-grid">';
+    let html='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#ffffff">Canadian Commodity Indicators</h3><div class="market-grid">';
     keys.forEach(k=>{
       const c=indicators[k];
       const chg=c.pct_1w||'';const isNeg=String(chg).startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
-      const sectors=(c.affected_sectors||[]).map(s=>'<span style="background:#1a4a70;color:#8AAFC8;padding:1px 5px;border-radius:3px;font-size:.6rem">'+s+'</span>').join(' ');
-      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:#3a2a1a;color:#dab06a;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
+      const sectors=(c.affected_sectors||[]).map(s=>'<span style="background:#191a1c;color:#c0c0c0;padding:1px 5px;border-radius:3px;font-size:.6rem">'+s+'</span>').join(' ');
+      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:#3a3a3a;color:#c0c0c0;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
       html+=`<div class="market-card"><div class="market-card-ticker">${c.name||k.replace(/_/g,' ')}</div><div class="market-card-price">${c.current||'N/A'}</div>`;
       if(chg)html+=`<div class="market-card-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg} 1W</div>`;
-      if(c.pct_1m)html+=`<div style="font-size:var(--text-xs);color:#777">1M: ${c.pct_1m}</div>`;
+      if(c.pct_1m)html+=`<div style="font-size:var(--text-xs);color:#919191">1M: ${c.pct_1m}</div>`;
       if(sectors)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:4px">${sectors}</div>`;
       if(provs)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:2px">${provs}</div>`;
       html+='</div>';
@@ -1584,12 +1584,12 @@ function renderExplorer(){
   const resEl=$('explorerResults');
   if(!searchEl)return;
 
-  searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#111;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
+  searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#191a1c;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
 
   const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Rates'];
-  catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#333;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
+  catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#3a3a3a;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
 
-  resEl.innerHTML='<div style="color:#777;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
+  resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
 }
 
 window._doVcodeSearch=function(cat){
@@ -1599,13 +1599,13 @@ window._doVcodeSearch=function(cat){
   const results=searchVCodes(q);
   const resEl=$('explorerResults');
   if(!results.length){
-    resEl.innerHTML='<div style="color:#777;font-size:var(--text-sm);padding:20px 0">No tables found for "'+q+'". Try different keywords.</div>';
+    resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">No tables found for "'+q+'". Try different keywords.</div>';
     return;
   }
-  let html='<div style="font-size:var(--text-xs);color:#777;margin-bottom:8px">'+results.length+' table(s) found</div>';
+  let html='<div style="font-size:var(--text-xs);color:#919191;margin-bottom:8px">'+results.length+' table(s) found</div>';
   results.forEach(r=>{
     const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${r.table.replace(/-/g,'')}`;
-    html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#777;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#777;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
+    html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#919191;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#919191;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
   });
   resEl.innerHTML=html;
 };
