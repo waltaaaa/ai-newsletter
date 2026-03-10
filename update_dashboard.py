@@ -1149,6 +1149,80 @@ def _archive_indicators_to_history(primary_ind: dict) -> None:
     print(f"  [HISTORY] Archived {count} indicator values to indicator_history")
 
 
+def _archive_market_data_to_history(financial_markets: dict, commodity_data: dict, yield_data: dict) -> None:
+    """Save financial market data to indicator_history so it exports to indicators.json."""
+    today_str = date.today().isoformat()
+    count = 0
+
+    def _save(name, value_str, unit='', source='Yahoo Finance'):
+        nonlocal count
+        if not value_str:
+            return
+        try:
+            val = str(value_str).replace('$', '').replace(',', '').replace('%', '').strip()
+            float(val)  # validate it's numeric
+        except (ValueError, TypeError):
+            return
+        save_indicator(conn, {
+            'indicator': name,
+            'province': 'national',
+            'date': today_str,
+            'value': val,
+            'unit': unit,
+            'source': source,
+            'frequency': 'daily',
+            'backfilled': False,
+        })
+        count += 1
+
+    # Equity indices
+    IDX_MAP = {
+        'TSX Composite': 'tsx_composite', 'S&P/TSX': 'tsx_composite',
+        'S&P 500': 'sp500', 'Dow Jones': 'djia', 'NASDAQ': 'nasdaq',
+        'FTSE 100': 'ftse100', 'DAX': 'dax', 'Nikkei 225': 'nikkei225',
+    }
+    for idx in financial_markets.get('indices', []):
+        name = IDX_MAP.get(idx.get('name', ''))
+        if name:
+            _save(name, idx.get('value'), 'pts')
+
+    # FX pairs
+    FX_MAP = {
+        'CAD/USD': 'cadusd', 'EUR/USD': 'eurusd',
+        'USD/CNY': 'usdcny', 'USD/JPY': 'usdjpy',
+    }
+    for fx in financial_markets.get('fx', []):
+        name = FX_MAP.get(fx.get('name', ''))
+        if name:
+            _save(name, fx.get('value'))
+
+    # Commodities
+    COMM_MAP = {
+        'Crude Oil (WTI)': 'wti', 'Crude Oil (Brent)': 'brent',
+        'Natural Gas': 'natural_gas', 'Gold': 'gold', 'Silver': 'silver',
+        'Platinum': 'platinum', 'Palladium': 'palladium',
+        'Copper': 'copper', 'Aluminum': 'aluminum',
+        'Wheat': 'wheat', 'Corn': 'corn', 'Rice': 'rice',
+        'Soybeans': 'soybeans', 'Coffee': 'coffee', 'Cocoa': 'cocoa',
+        'Sugar #11': 'sugar', 'Cotton': 'cotton',
+        'Soybean Oil': 'soybean_oil', 'Soybean Meal': 'soybean_meal',
+        'Coal (Newcastle)': 'coal', 'Propane': 'propane', 'Lumber': 'lumber',
+    }
+    for cat in commodity_data.get('structured', []):
+        for item in cat.get('items', []):
+            name = COMM_MAP.get(item.get('name', ''))
+            if name:
+                _save(name, item.get('val'), item.get('unit', ''))
+
+    # Yield curve
+    for yc in (yield_data or {}).get('yieldCurve', []):
+        term = yc.get('term', '')
+        if term:
+            _save(f'goc_{term.lower()}_yield', yc.get('yield'), '%', 'Bank of Canada')
+
+    print(f"  [HISTORY] Archived {count} market data points to indicator_history")
+
+
 def get_goc_yields():
     print("Fetching live GoC yield curve from Bank of Canada...")
 
@@ -2941,6 +3015,12 @@ def update_dashboard(deep_sweep: bool = False):
             _archive_indicators_to_history(primary_ind)
         except Exception as e:
             print(f"  [HISTORY] Archive error (non-critical): {e}")
+
+        # Archive market data (indices, FX, commodities) to indicator_history
+        try:
+            _archive_market_data_to_history(financial_markets, commodity_data, yield_data)
+        except Exception as e:
+            print(f"  [HISTORY] Market archive error (non-critical): {e}")
 
         run_log.log_step("step_1b_indicators")
 

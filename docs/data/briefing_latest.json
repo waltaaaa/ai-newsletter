@@ -6,5 +6,256 @@
   "word_count": 0,
   "generated_at": "2026-03-10T00:52:01Z",
   "pdf_url": "",
-  "docx_url": ""
+  "docx_url": "",
+  "financialMarkets": {
+    "indices": [
+      {
+        "name": "S&P/TSX",
+        "value": "31,049",
+        "region": "Canada",
+        "change": "",
+        "day": "",
+        "yy": ""
+      },
+      {
+        "name": "S&P 500",
+        "value": "5,615",
+        "region": "USA",
+        "change": "",
+        "day": "",
+        "yy": ""
+      },
+      {
+        "name": "Dow Jones",
+        "value": "41,912",
+        "region": "USA",
+        "change": "",
+        "day": "",
+        "yy": ""
+      },
+      {
+        "name": "NASDAQ",
+        "value": "17,468",
+        "region": "USA",
+        "change": "",
+        "day": "",
+        "yy": ""
+      },
+      {
+        "name": "FTSE 100",
+        "value": "8,600",
+        "region": "UK",
+        "change": "",
+        "day": "",
+        "yy": ""
+      },
+      {
+        "name": "DAX",
+        "value": "22,621",
+        "region": "Germany",
+        "change": "",
+        "day": "",
+        "yy": ""
+      },
+      {
+        "name": "Nikkei 225",
+        "value": "39,819",
+        "region": "Japan",
+        "change": "",
+        "day": "",
+        "yy": ""
+      }
+    ],
+    "fx": [
+      {
+        "name": "CAD/USD",
+        "value": "0.7000",
+        "day": "",
+        "yy": ""
+      },
+      {
+        "name": "EUR/USD",
+        "value": "1.0900",
+        "day": "",
+        "yy": ""
+      },
+      {
+        "name": "USD/CNY",
+        "value": "7.2300",
+        "day": "",
+        "yy": ""
+      },
+      {
+        "name": "USD/JPY",
+        "value": "147.6100",
+        "day": "",
+        "yy": ""
+      }
+    ]
+  },
+  "commodities": [
+    {
+      "category": "Energy",
+      "items": [
+        {
+          "name": "Crude Oil (WTI)",
+          "val": "66.03",
+          "unit": "bbl",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Crude Oil (Brent)",
+          "val": "69.28",
+          "unit": "bbl",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Natural Gas",
+          "val": "2.86",
+          "unit": "MMBtu",
+          "yy": "",
+          "day": ""
+        }
+      ]
+    },
+    {
+      "category": "Precious Metals",
+      "items": [
+        {
+          "name": "Gold",
+          "val": "2891.0",
+          "unit": "troy oz",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Silver",
+          "val": "32.28",
+          "unit": "troy oz",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Platinum",
+          "val": "962.0",
+          "unit": "troy oz",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Palladium",
+          "val": "1137.3",
+          "unit": "troy oz",
+          "yy": "",
+          "day": ""
+        }
+      ]
+    },
+    {
+      "category": "Base Metals",
+      "items": [
+        {
+          "name": "Copper",
+          "val": "4.64",
+          "unit": "lb",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Aluminum",
+          "val": "2651.0",
+          "unit": "lb",
+          "yy": "",
+          "day": ""
+        }
+      ]
+    },
+    {
+      "category": "Agriculture - Grains",
+      "items": [
+        {
+          "name": "Wheat",
+          "val": "537.75",
+          "unit": "bu",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Corn",
+          "val": "458.75",
+          "unit": "bu",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Soybeans",
+          "val": "999.75",
+          "unit": "bu",
+          "yy": "",
+          "day": ""
+        }
+      ]
+    },
+    {
+      "category": "Agriculture - Softs",
+      "items": [
+        {
+          "name": "Coffee",
+          "val": "389.35",
+          "unit": "lb",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Cocoa",
+          "val": "8279.0",
+          "unit": "t",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Sugar #11",
+          "val": "18.85",
+          "unit": "lb",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Cotton",
+          "val": "66.0",
+          "unit": "lb",
+          "yy": "",
+          "day": ""
+        }
+      ]
+    },
+    {
+      "category": "Forest Products",
+      "items": [
+        {
+          "name": "Lumber",
+          "val": "384.9",
+          "unit": "MBF",
+          "yy": "",
+          "day": ""
+        }
+      ]
+    }
+  ],
+  "yieldCurve": [
+    {
+      "term": "2Y",
+      "yield": "2.44"
+    },
+    {
+      "term": "5Y",
+      "yield": "2.75"
+    },
+    {
+      "term": "10Y",
+      "yield": "3.22"
+    }
+  ]
 }

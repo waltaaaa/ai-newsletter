@@ -200,15 +200,40 @@ def backfill_yahoo(conn, years=5):
         print("  [YAHOO] yfinance not installed, skipping")
         return 0
 
-    # IDs must match INDICATOR_CATALOG in app.js
+    # IDs must match indicator_name used by pipeline + frontend
     tickers = {
+        # Existing
         'wti': 'CL=F',
         'gold': 'GC=F',
         'lumber': 'LBS=F',
-        'tsx': '^GSPTSE',
+        'tsx_composite': '^GSPTSE',
         'cadusd': 'CADUSD=X',
         'natural_gas': 'NG=F',
         'copper': 'HG=F',
+        # Equity indices
+        'sp500': '^GSPC',
+        'djia': '^DJI',
+        'nasdaq': '^IXIC',
+        'ftse100': '^FTSE',
+        'dax': '^GDAXI',
+        'nikkei225': '^N225',
+        # FX pairs
+        'eurusd': 'EURUSD=X',
+        'usdcny': 'USDCNY=X',
+        'usdjpy': 'USDJPY=X',
+        # Commodities
+        'brent': 'BZ=F',
+        'silver': 'SI=F',
+        'platinum': 'PL=F',
+        'palladium': 'PA=F',
+        'aluminum': 'ALI=F',
+        'wheat': 'ZW=F',
+        'corn': 'ZC=F',
+        'soybeans': 'ZS=F',
+        'coffee': 'KC=F',
+        'cocoa': 'CC=F',
+        'sugar': 'SB=F',
+        'cotton': 'CT=F',
     }
 
     total = 0

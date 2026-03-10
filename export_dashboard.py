@@ -237,12 +237,121 @@ def export_province_projects(conn, province_name: str, threshold_val: int, outpu
     return out_path
 
 
+def _build_market_data_from_indicators(conn) -> dict:
+    """Build financialMarkets + commodities + yieldCurve from indicator_history."""
+    rows = conn.execute("""
+        SELECT indicator_name, value, unit
+        FROM indicator_history
+        WHERE indicator_name IN (
+            'tsx_composite','sp500','djia','nasdaq','ftse100','dax','nikkei225',
+            'cadusd','eurusd','usdcny','usdjpy',
+            'wti','brent','natural_gas','coal','propane',
+            'gold','silver','platinum','palladium',
+            'copper','aluminum',
+            'wheat','corn','rice','soybeans','coffee','cocoa','sugar','cotton',
+            'soybean_oil','soybean_meal','lumber',
+            'goc_2y_yield','goc_5y_yield','goc_10y_yield'
+        )
+        GROUP BY indicator_name
+        HAVING fetched_at = MAX(fetched_at)
+    """).fetchall()
+
+    vals = {}
+    for r in rows:
+        vals[r[0]] = {'value': r[1], 'unit': r[2] or ''}
+
+    def _fmt(name, decimals=2):
+        v = vals.get(name, {}).get('value')
+        if v is None:
+            return None
+        try:
+            f = float(str(v).replace(',', ''))
+            return f"{f:,.{decimals}f}" if f < 1000 else f"{f:,.0f}"
+        except (ValueError, TypeError):
+            return str(v)
+
+    # Indices
+    IDX = [
+        ('tsx_composite', 'S&P/TSX', 'Canada'),
+        ('sp500', 'S&P 500', 'USA'),
+        ('djia', 'Dow Jones', 'USA'),
+        ('nasdaq', 'NASDAQ', 'USA'),
+        ('ftse100', 'FTSE 100', 'UK'),
+        ('dax', 'DAX', 'Germany'),
+        ('nikkei225', 'Nikkei 225', 'Japan'),
+    ]
+    indices = []
+    for key, label, region in IDX:
+        v = _fmt(key, 0)
+        if v:
+            indices.append({'name': label, 'value': v, 'region': region, 'change': '', 'day': '', 'yy': ''})
+
+    # FX
+    FX = [('cadusd', 'CAD/USD'), ('eurusd', 'EUR/USD'), ('usdcny', 'USD/CNY'), ('usdjpy', 'USD/JPY')]
+    fx = []
+    for key, label in FX:
+        v = _fmt(key, 4)
+        if v:
+            fx.append({'name': label, 'value': v, 'day': '', 'yy': ''})
+
+    # Commodities
+    COMMS = {
+        'Energy': [('wti', 'Crude Oil (WTI)', 'bbl'), ('brent', 'Crude Oil (Brent)', 'bbl'),
+                   ('natural_gas', 'Natural Gas', 'MMBtu'), ('coal', 'Coal (Newcastle)', 't'),
+                   ('propane', 'Propane', 'gal')],
+        'Precious Metals': [('gold', 'Gold', 'troy oz'), ('silver', 'Silver', 'troy oz'),
+                            ('platinum', 'Platinum', 'troy oz'), ('palladium', 'Palladium', 'troy oz')],
+        'Base Metals': [('copper', 'Copper', 'lb'), ('aluminum', 'Aluminum', 'lb')],
+        'Agriculture - Grains': [('wheat', 'Wheat', 'bu'), ('corn', 'Corn', 'bu'),
+                                  ('rice', 'Rice', 'cwt'), ('soybeans', 'Soybeans', 'bu')],
+        'Agriculture - Softs': [('coffee', 'Coffee', 'lb'), ('cocoa', 'Cocoa', 't'),
+                                 ('sugar', 'Sugar #11', 'lb'), ('cotton', 'Cotton', 'lb')],
+        'Agriculture - Oils & Meals': [('soybean_oil', 'Soybean Oil', 'lb'), ('soybean_meal', 'Soybean Meal', 'ton')],
+        'Forest Products': [('lumber', 'Lumber', 'MBF')],
+    }
+    commodities = []
+    for cat, items in COMMS.items():
+        cat_items = []
+        for key, label, unit in items:
+            v = vals.get(key, {}).get('value')
+            if v is not None:
+                cat_items.append({'name': label, 'val': str(v), 'unit': unit, 'yy': '', 'day': ''})
+        if cat_items:
+            commodities.append({'category': cat, 'items': cat_items})
+
+    # Yield curve
+    yieldCurve = []
+    for term in ['2Y', '5Y', '10Y']:
+        v = vals.get(f'goc_{term.lower()}_yield', {}).get('value')
+        if v is not None:
+            yieldCurve.append({'term': term, 'yield': str(v)})
+
+    return {
+        'financialMarkets': {'indices': indices, 'fx': fx},
+        'commodities': commodities,
+        'yieldCurve': yieldCurve,
+    }
+
+
 def export_briefings(conn, output_dir: str) -> tuple[str, str]:
     """Export briefing_latest.json and briefing_archive.json."""
     from db import get_briefing_archive, get_latest_briefing
 
     # Latest briefing — full payload
     latest = get_latest_briefing(conn)
+    if latest is None:
+        latest = {}
+
+    # Merge market data from indicator_history if not already in briefing
+    if not latest.get('financialMarkets') or not latest.get('commodities'):
+        market_data = _build_market_data_from_indicators(conn)
+        if not latest.get('financialMarkets'):
+            latest['financialMarkets'] = market_data['financialMarkets']
+        if not latest.get('commodities'):
+            latest['commodities'] = market_data['commodities']
+        if not latest.get('yieldCurve'):
+            latest['yieldCurve'] = market_data['yieldCurve']
+
     latest_path = os.path.join(output_dir, "briefing_latest.json")
     with open(latest_path, "w", encoding="utf-8") as f:
         json.dump(latest, f, ensure_ascii=False, indent=2)
@@ -377,6 +486,27 @@ def export_timeseries(conn, output_dir: str) -> str:
                 points.append(row)
         if points:
             bundle[series_name] = points
+
+    # Also build sparkline data from indicator_history for market data
+    # Uses the new naming convention (wti, sp500, etc.)
+    _IH_SERIES = [
+        'tsx_composite', 'sp500', 'djia', 'nasdaq', 'ftse100', 'dax', 'nikkei225',
+        'cadusd', 'eurusd', 'usdcny', 'usdjpy',
+        'wti', 'brent', 'natural_gas', 'gold', 'silver', 'platinum', 'palladium',
+        'copper', 'aluminum', 'wheat', 'corn', 'soybeans', 'coffee', 'cocoa',
+        'sugar', 'cotton', 'lumber',
+    ]
+    for name in _IH_SERIES:
+        if name in bundle:
+            continue  # already have timeseries data
+        rows = conn.execute("""
+            SELECT period AS date, value, unit, source
+            FROM indicator_history
+            WHERE indicator_name = ? AND period IS NOT NULL
+            ORDER BY period DESC LIMIT 52
+        """, (name,)).fetchall()
+        if rows:
+            bundle[name] = [dict(r) for r in rows]
 
     out_path = os.path.join(output_dir, "timeseries.json")
     with open(out_path, "w", encoding="utf-8") as f:

@@ -186,7 +186,12 @@ async function loadTimeseries(docId){
   if(tsCache[docId])return tsCache[docId];
   try{
     const all=await fetchJSON('timeseries.json');
-    if(all[docId]){tsCache[docId]=all[docId];return all[docId]}
+    let raw=all[docId];
+    if(raw){
+      // Normalize: wrap flat array into {series:[...]} if needed
+      const ts=Array.isArray(raw)?{series:raw}:raw;
+      tsCache[docId]=ts;return ts;
+    }
   }catch(e){console.warn('TS load:',e)}
   return null;
 }
@@ -844,45 +849,45 @@ function renderMarkets(){
   let indices=fm.indices||[];let fx=fm.fx||[];
   // Build from indicators[] if briefing has no market data
   if(!indices.length&&indicators.length){
-    const idxMap=[{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'}];
-    idxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:''})});
+    const idxMap=[{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'},{name:'FTSE 100',ind:'ftse100'},{name:'DAX',ind:'dax'},{name:'Nikkei 225',ind:'nikkei225'}];
+    idxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:'',region:''})});
   }
   if(!fx.length&&indicators.length){
-    const fxMap=[{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'}];
+    const fxMap=[{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'},{name:'EUR/USD',ind:'eurusd'},{name:'USD/CNY',ind:'usdcny'},{name:'USD/JPY',ind:'usdjpy'}];
     fxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!fx.find(x=>x.name===m.name))fx.push({name:m.name,value:i.value})});
   }
   // Equity + Currency cards
-  const mktTsMap={'S&P/TSX':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'idx_sp500','Dow Jones':'idx_djia','NASDAQ':'idx_nasdaq','FTSE 100':'idx_ftse','DAX':'idx_dax','Nikkei 225':'idx_nikkei','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','EUR/USD':'fx_eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'fx_usdjpy','USD/CNY':'fx_usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'comm_wti','Crude Oil (Brent)':'comm_brent','Natural Gas':'comm_natgas','Gold':'comm_gold','Silver':'comm_silver','Platinum':'comm_platinum','Palladium':'comm_palladium','Copper':'comm_copper','Aluminum':'comm_aluminum','Wheat':'comm_wheat','Corn':'comm_corn','Rice':'comm_rice','Soybeans':'comm_soybeans','Coffee':'comm_coffee','Cocoa':'comm_cocoa','Sugar #11':'comm_sugar','Cotton':'comm_cotton','Soybean Oil':'comm_soyoil','Soybean Meal':'comm_soymeal','Coal (Newcastle)':'comm_coal','Propane':'comm_propane'};
+  const mktTsMap={'S&P/TSX':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'sp500','Dow Jones':'djia','NASDAQ':'nasdaq','FTSE 100':'ftse100','DAX':'dax','Nikkei 225':'nikkei225','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','EUR/USD':'eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'usdjpy','USD/CNY':'usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'wti','Crude Oil (Brent)':'brent','Natural Gas':'natural_gas','Gold':'gold','Silver':'silver','Platinum':'platinum','Palladium':'palladium','Copper':'copper','Aluminum':'aluminum','Wheat':'wheat','Corn':'corn','Rice':'comm_rice','Soybeans':'soybeans','Coffee':'coffee','Cocoa':'cocoa','Sugar #11':'sugar','Cotton':'cotton','Soybean Oil':'comm_soyoil','Soybean Meal':'comm_soymeal','Coal (Newcastle)':'comm_coal','Propane':'comm_propane','Lumber':'lumber'};
   const normMktId=(name)=>(name||'').toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_');
   const mktDate=D?fmtDate(D.updated_at||D.date)||'':'';
   let eqHtml='';let mktSparkJobs=[];let mktIdx=0;
   if(indices.length){
-    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#ffffff">Equity Indices</h3><div class="market-grid">';
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Equity Indices</h3><div class="market-grid">';
     indices.forEach(item=>{
       const chg=item.change||item.day||'';const isNeg=chg.startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
       const sid='spark_mkt_'+mktIdx++;
       const tsId=mktTsMap[item.name]||null;
-      eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small>'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      eqHtml+='<div class="market-card" data-cat="equity"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small style="color:#6b8ab5">'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#919191">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#919191;margin-top:2px">'+mktDate+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#6b8ab5">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#5a7a9e;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
     });
     eqHtml+='</div>';
   }
   if(fx.length){
-    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#ffffff">Foreign Exchange</h3><div class="market-grid">';
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Foreign Exchange</h3><div class="market-grid">';
     fx.forEach(item=>{
       const chg=item.day||'';const isNeg=chg.startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
       const sid='spark_mkt_'+mktIdx++;
       const tsId=mktTsMap[item.name]||null;
-      eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      eqHtml+='<div class="market-card" data-cat="fx"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#919191">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#919191;margin-top:2px">'+mktDate+'</div>';
+      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#6b8ab5">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#5a7a9e;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
     });
@@ -899,7 +904,7 @@ function renderMarkets(){
     yieldTerms.forEach(t=>{const i=indicators.find(x=>x.indicator_name===t.ind);if(i)yc.push({term:t.term,yield:i.value})});
   }
   if(yc.length){
-    let ycHtml='<div class="card yield-card"><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
+    let ycHtml='<div class="yield-card" style="padding:16px"><h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Gov. of Canada Yield Curve</h3><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
     const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
     if(y2&&y10){
       const spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);
@@ -911,31 +916,33 @@ function renderMarkets(){
     $('yieldCurveCard').innerHTML=ycHtml;
     setTimeout(()=>drawYieldChart(yc),50);
   } else {
-    $('yieldCurveCard').innerHTML='<div class="card"><div class="empty-state"><div class="empty-state-text">No yield curve data.</div></div></div>';
+    $('yieldCurveCard').innerHTML='<div class="yield-card" style="padding:16px"><div class="empty-state"><div class="empty-state-text" style="color:#6b8ab5">No yield curve data.</div></div></div>';
   }
 
   // Commodities — pipeline stores [{category, color, items: [{name, unit, val, yy, day}]}]
   const rawComms=(D&&D.commodities)||fm.commodities||[];
   // Build commodity cards from indicators[] if pipeline data is empty
   if(!rawComms.length&&indicators.length){
-    const commMap=[{name:'Crude Oil (WTI)',ind:'wti'},{name:'Crude Oil (WTI)',ind:'wti_oil'},{name:'Gold',ind:'gold'},{name:'Natural Gas',ind:'natural_gas'},{name:'Copper',ind:'copper'},{name:'Lumber',ind:'lumber'}];
+    const commMap=[{name:'Crude Oil (WTI)',ind:'wti'},{name:'Crude Oil (WTI)',ind:'wti_oil'},{name:'Crude Oil (Brent)',ind:'brent'},{name:'Natural Gas',ind:'natural_gas'},{name:'Gold',ind:'gold'},{name:'Silver',ind:'silver'},{name:'Platinum',ind:'platinum'},{name:'Palladium',ind:'palladium'},{name:'Copper',ind:'copper'},{name:'Aluminum',ind:'aluminum'},{name:'Wheat',ind:'wheat'},{name:'Corn',ind:'corn'},{name:'Soybeans',ind:'soybeans'},{name:'Coffee',ind:'coffee'},{name:'Cocoa',ind:'cocoa'},{name:'Sugar #11',ind:'sugar'},{name:'Cotton',ind:'cotton'},{name:'Lumber',ind:'lumber'}];
     commMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!rawComms.find(x=>x.name===m.name))rawComms.push({name:m.name,val:i.value,change:''})});
   }
   let commHtml='';
   const commSparkJobs=[];
+  const commCatMap={'Energy':'energy','Precious Metals':'precious','Base Metals':'base','Agriculture - Grains':'agriculture','Agriculture - Softs':'agriculture','Agriculture - Oils & Meals':'agriculture','Fertilizers':'agriculture','Livestock':'agriculture','Forest Products':'forest'};
   if(Array.isArray(rawComms)&&rawComms.length&&rawComms[0].items){
     // Nested category structure from pipeline
     rawComms.forEach(cat=>{
-      commHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#ffffff">'+cat.category+'</h3><div class="market-grid">';
+      const dataCat=commCatMap[cat.category]||'energy';
+      commHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">'+cat.category+'</h3><div class="market-grid">';
       (cat.items||[]).forEach(c=>{
         const yy=c.yy||'';const isNeg=yy.startsWith('-');
         const cls=isNeg?'change-down':(yy?'change-up':'change-flat');
         const cid='spark_comm_'+mktIdx++;
         const tsId=mktTsMap[c.name]||null;
-        commHtml+='<div class="market-card"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small>'+c.unit+'</small>':'')+'</div>';
+        commHtml+='<div class="market-card" data-cat="'+dataCat+'"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small style="color:#6b8ab5">'+c.unit+'</small>':'')+'</div>';
         if(yy)commHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+yy+' YoY</div>';
-        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#919191">'+c.day+' today</div>';
-        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#919191;margin-top:2px">'+mktDate+'</div>';
+        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#6b8ab5">'+c.day+' today</div>';
+        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#5a7a9e;margin-top:2px">'+mktDate+'</div>';
         commHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
         if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:yy});
       });
@@ -948,7 +955,7 @@ function renderMarkets(){
       const cls=isNeg?'change-down':'change-up';
       const cid='spark_comm_'+mktIdx++;
       const tsId=mktTsMap[c.name]||null;
-      commHtml+='<div class="market-card"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||c.value||'N/A')+'</div><div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div><div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
+      commHtml+='<div class="market-card" data-cat="energy"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||c.value||'N/A')+'</div><div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div><div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
       if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:chg});
     });
   }
@@ -1506,16 +1513,16 @@ async function renderCanadianCommodities(){
     const indicators=data.indicators||data;
     const keys=Object.keys(indicators).filter(k=>k!=='updated_at'&&typeof indicators[k]==='object');
     if(!keys.length){el.innerHTML='';return}
-    let html='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#ffffff">Canadian Commodity Indicators</h3><div class="market-grid">';
+    let html='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Canadian Commodity Indicators</h3><div class="market-grid">';
     keys.forEach(k=>{
       const c=indicators[k];
       const chg=c.pct_1w||'';const isNeg=String(chg).startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
-      const sectors=(c.affected_sectors||[]).map(s=>'<span style="background:#1c3664;color:#c0c0c0;padding:1px 5px;border-radius:3px;font-size:.6rem">'+s+'</span>').join(' ');
-      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:#3a3a3a;color:#c0c0c0;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
-      html+=`<div class="market-card"><div class="market-card-ticker">${c.name||k.replace(/_/g,' ')}</div><div class="market-card-price">${c.current||'N/A'}</div>`;
+      const sectors=(c.affected_sectors||[]).map(s=>'<span style="background:rgba(255,255,255,0.08);color:#8ea8cc;padding:1px 5px;border-radius:3px;font-size:.6rem">'+s+'</span>').join(' ');
+      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:rgba(255,255,255,0.08);color:#8ea8cc;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
+      html+=`<div class="market-card" data-cat="energy"><div class="market-card-ticker">${c.name||k.replace(/_/g,' ')}</div><div class="market-card-price">${c.current||'N/A'}</div>`;
       if(chg)html+=`<div class="market-card-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg} 1W</div>`;
-      if(c.pct_1m)html+=`<div style="font-size:var(--text-xs);color:#919191">1M: ${c.pct_1m}</div>`;
+      if(c.pct_1m)html+=`<div style="font-size:var(--text-xs);color:#6b8ab5">1M: ${c.pct_1m}</div>`;
       if(sectors)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:4px">${sectors}</div>`;
       if(provs)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:2px">${provs}</div>`;
       html+='</div>';
