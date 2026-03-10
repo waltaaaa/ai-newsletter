@@ -780,11 +780,11 @@ async function renderProvinceContent(){
   const provProjects=allProjects.filter(p=>p.province===prov.name||p.province===prov.code).slice(0,5);
   let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-size:var(--text-xs);color:#919191;margin-left:8px">('+provProjects.length+')</span></div>';
   if(provProjects.length){
-    projHtml+='<table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
+    projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
     provProjects.forEach(p=>{
       projHtml+='<tr><td class="col-value">'+fmtCurrency(p.value,p)+'</td><td class="col-name">'+((p.name||'').substring(0,60))+'</td><td>'+statusBadge(p.status||'Proposed')+'</td><td>'+srcLink((p.sources||[])[0]?.url,(p.sources||[])[0]?.title)+'</td></tr>';
     });
-    projHtml+='</tbody></table>';
+    projHtml+='</tbody></table></div>';
     projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><a href="#" style="color:var(--accent-blue);text-decoration:none" onclick="event.preventDefault();switchTab(\'projects\')">View all projects \u2192</a></div>';
   } else {
     projHtml+='<div class="empty-state"><div class="empty-state-text">No projects tracked for '+prov.name+' yet.</div></div>';
@@ -1133,7 +1133,7 @@ function renderProjectTable(){
   const countNote=(!pf||pf==='')?'Showing '+shown.length+' of '+filteredProjects.length+' projects. Select a province for complete results. ('+allProjects.length+' most recent loaded)':'Showing '+shown.length+' of '+filteredProjects.length+' '+(PROVS.find(p=>p.code===pf)||{}).name+' projects';
   $('projectResultsSummary').textContent=countNote;
   // Table
-  let html='<table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Type</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Updated</th><th scope="col">Src</th></tr></thead><tbody>';
+  let html='<div class="project-table-wrap"><table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Type</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Updated</th><th scope="col">Src</th></tr></thead><tbody>';
   shown.forEach((p,i)=>{
     const rowId='proj_'+i;
     const firstEv=(p.evidence||[])[0]||{};
@@ -1238,7 +1238,7 @@ function renderProjectTable(){
     if(staleWarn)html+=' <span style="color:var(--status-amber);font-weight:500">\u26a0 Status unconfirmed since '+fmtDate(p.lastSeen)+'</span>';
     html+='</div></div></td></tr>';
   });
-  html+='</tbody></table>';
+  html+='</tbody></table></div>';
   $('projectTableContainer').innerHTML=html;
   $('loadMoreBtn').style.display=shown.length<filteredProjects.length?'block':'none';
 }

@@ -206,13 +206,15 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
 .edit-form .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .edit-feedback{padding:6px 10px;border-radius:5px;font-size:var(--text-xs);margin-top:6px;display:none}
 /* Project table */
-.project-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);background:#fff;color:#191a1c}
-.project-table thead th{position:sticky;top:var(--nav-height,44px);background:#fff;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.3px;color:#3a3a3a;padding:10px 12px;text-align:left;border-bottom:2px solid var(--border-strong);cursor:pointer;user-select:none;z-index:10}
+.project-table-wrap{width:100%;max-width:100%;overflow-x:auto;border-radius:var(--radius-md)}
+.project-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);background:#fff;color:#191a1c;table-layout:fixed}
+.project-table thead th{position:sticky;top:var(--nav-height,44px);background:#fff;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.3px;color:#3a3a3a;padding:10px 8px;text-align:left;border-bottom:2px solid var(--border-strong);cursor:pointer;user-select:none;z-index:10;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .project-table thead th:hover{color:#191a1c}
 .project-table tbody tr{border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .1s;background:#fff}
 .project-table tbody tr:nth-child(even){background:#f8f8f8}
 .project-table tbody tr:hover{background:#e6f0ff}
-.project-table td{padding:10px 12px;vertical-align:middle}
+.project-table td{padding:10px 8px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.project-table .col-value{width:90px}.project-table .col-name{width:22%}.project-table .col-province{width:50px}.project-table .col-proponent{width:12%}.project-table .col-updated{width:70px}.project-table .col-source{width:50px}
 .col-value{font-family:var(--font-mono);font-weight:600;white-space:nowrap}
 .col-name{font-weight:600}.col-province{white-space:nowrap}
 .col-cma{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
