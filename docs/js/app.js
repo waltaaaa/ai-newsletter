@@ -513,7 +513,7 @@ async function loadIndExpData(){
     const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
     const allVals=allPts.map(p=>p.value);
     const mn=Math.min(...allVals).toFixed(2);const mx=Math.max(...allVals).toFixed(2);
-    callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+latest.value.toFixed(2)+'</span><span class="'+cls+'" style="font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev</span><span style="font-size:var(--text-xs);color:var(--text-muted)">5Y range: '+mn+' \u2013 '+mx+'</span><span style="font-size:var(--text-xs);color:var(--text-muted)">'+latest.date+'</span></div>';
+    callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+latest.value.toFixed(2)+'</span><span class="'+cls+'" style="font-family:var(--font-mono);font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev</span><span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted)">5Y range: '+mn+' \u2013 '+mx+'</span><span style="font-size:var(--text-xs);color:var(--text-muted)">'+latest.date+'</span></div>';
   }else if(pts.length===1){
     callout.innerHTML='<span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+pts[0].value.toFixed(2)+'</span>';
   }else{
@@ -570,7 +570,7 @@ function renderSentiment(){
     const fgc=neg?'var(--status-red)':pos?'var(--status-green)':'var(--status-amber)';
     html+='<div style="display:flex;align-items:center;gap:12px"><div class="sentiment-badge" style="background:'+bgc+';color:'+fgc+'">'+lbl+' ('+(typeof idx==='number'?idx.toFixed(2):idx)+')</div>';
     const ss=cs.sources_summary||cs;
-    html+='<div class="sentiment-meta" style="margin-top:0">'+(ss.reddit_posts||0)+' Reddit posts \u00b7 '+(ss.trends_queries||0)+' trending searches \u00b7 '+(ss.news_comments||0)+' news comments</div></div>';
+    html+='<div class="sentiment-meta" style="margin-top:0;font-family:var(--font-mono)">'+(ss.reddit_posts||0)+' Reddit posts \u00b7 '+(ss.trends_queries||0)+' trending searches \u00b7 '+(ss.news_comments||0)+' news comments</div></div>';
   }
   html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:#919191;font-size:.75rem">(click to expand)</span></summary>';
   html+='<div style="padding:12px 0"><div class="word-cloud-container" id="wordCloudSvg"></div></div>';
@@ -646,7 +646,7 @@ async function renderTrendSummary(){
     const briefing=await fetchJSON('briefing_latest.json');
     if(briefing&&briefing.content){narrative=briefing.content;title='Weekly Intelligence Briefing'}
     if(!narrative){el.innerHTML='';return}
-    const chips=ds.total_projects?`<div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap"><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)"><strong>${ds.total_projects||0}</strong> projects</div><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)">$<strong>${((ds.total_value_millions||0)/1000).toFixed(1)}B</strong> pipeline</div></div>`:'';
+    const chips=ds.total_projects?`<div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap"><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)"><strong style="font-family:var(--font-mono)">${ds.total_projects||0}</strong> projects</div><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)">$<strong style="font-family:var(--font-mono)">${((ds.total_value_millions||0)/1000).toFixed(1)}B</strong> pipeline</div></div>`:'';
     // Download buttons — pdf_url and docx_url are optional fields in briefing_latest.json
     const pdfUrl=(briefing&&briefing.pdf_url)||'';const docxUrl=(briefing&&briefing.docx_url)||'';
     const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:12px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#cc0033;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#0073e6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
@@ -778,7 +778,7 @@ async function renderProvinceContent(){
 
   // Projects preview
   const provProjects=allProjects.filter(p=>p.province===prov.name||p.province===prov.code).slice(0,5);
-  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-size:var(--text-xs);color:#919191;margin-left:8px">('+provProjects.length+')</span></div>';
+  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:#919191;margin-left:8px">('+provProjects.length+')</span></div>';
   if(provProjects.length){
     projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
     provProjects.forEach(p=>{
@@ -1166,9 +1166,9 @@ function renderProjectTable(){
     if(p.cma)html+='<span>CMA: <b>'+p.cma+'</b></span>';
     const evArr=p.evidence||[];
     const dispConf=p.display_confidence!=null?p.display_confidence:p.confidence;
-    if(dispConf!=null)html+='<span>Confidence: '+confBadge(dispConf,evArr.length)+(p.decay_applied?' <span style="color:#919191;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
+    if(dispConf!=null)html+='<span>Confidence: '+confBadge(dispConf,evArr.length)+(p.decay_applied?' <span style="font-family:var(--font-mono);color:#919191;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
     if(p.has_anomalies)html+='<span style="color:var(--status-amber);font-weight:600" title="'+(p.anomalies||[]).map(a=>a.type+': '+a.detail).join('; ')+'">&#9888; Anomaly detected</span>';
-    if(p.needs_review)html+='<span style="color:var(--status-red);font-weight:500">Needs review ('+p.days_since_update+'d stale)</span>';
+    if(p.needs_review)html+='<span style="font-family:var(--font-mono);color:var(--status-red);font-weight:500">Needs review ('+p.days_since_update+'d stale)</span>';
     const dsSrc=p.discovery_sources||[];
     if(dsSrc.length>1)html+='<span>Found by '+dsSrc.length+' channels</span>';
     html+='</div>';
@@ -1416,7 +1416,7 @@ async function renderPipelineStatus(){
     const stColor=st==='success'?'var(--status-green)':st==='partial'?'var(--status-amber)':'var(--status-red)';
     const dur=run.duration_seconds?Math.round(run.duration_seconds/60)+'m':'—';
     const disc=run.discovery||{};
-    el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:#636363">Pipeline Status</div><div style="display:flex;gap:16px;font-size:var(--text-xs);color:#636363;flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
+    el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:#636363">Pipeline Status</div><div style="display:flex;gap:16px;font-family:var(--font-mono);font-size:var(--text-xs);color:#636363;flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
   }catch(e){
     console.warn('Pipeline status:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1436,7 +1436,7 @@ async function renderCostMonitor(){
     const claudeOut=ps.claude_tokens?.output||0;
     const claudeCost=((claudeIn/1e6)*3+(claudeOut/1e6)*15).toFixed(2);
     const tavilyPct=Math.round((tavilyUsed/1000)*100);
-    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;user-select:none">Cost Monitor <span style="font-weight:400;color:#919191;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#636363"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
+    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;user-select:none">Cost Monitor <span style="font-weight:400;color:#919191;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#636363"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="font-family:var(--font-mono);margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="font-family:var(--font-mono);margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
   }catch(e){
     console.warn('Cost monitor:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1456,7 +1456,7 @@ async function renderMicroscopeHistory(){
     history.slice(0,12).forEach(h=>{
       items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:#919191">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+h.description+'</div>':''}</div>`;
     });
-    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Under the Microscope Archives (${history.length} weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Under the Microscope Archives (<span style="font-family:var(--font-mono)">${history.length}</span> weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
   }catch(e){
     console.warn('Microscope history:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1500,7 +1500,7 @@ async function renderPolicySection(){
       const provBadge=a.scope?'<span style="background:var(--status-blue-bg);color:var(--status-blue);padding:1px 6px;border-radius:3px;font-size:.65rem;margin-left:4px">'+a.scope+'</span>':'';
       listHtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border-light);font-size:var(--text-xs)"><a href="${a.url||'#'}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue);text-decoration:none">${a.headline||a.title||'Untitled'}</a>${provBadge}<span style="color:#919191;margin-left:6px">${a.source||''}</span></div>`;
     });
-    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Policy Monitor (${articles.length} articles this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${catBadges}</div>${listHtml}</div></details>`;
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Policy Monitor (<span style="font-family:var(--font-mono)">${articles.length}</span> articles this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${catBadges}</div>${listHtml}</div></details>`;
   }catch(e){console.warn('Policy section:',e);el.innerHTML=''}
 }
 
