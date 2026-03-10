@@ -870,7 +870,7 @@ function renderMarkets(){
       const tsId=mktTsMap[item.name]||null;
       eqHtml+='<div class="market-card" data-cat="equity"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small style="color:#636363">'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
+      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
       if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
@@ -886,7 +886,7 @@ function renderMarkets(){
       const tsId=mktTsMap[item.name]||null;
       eqHtml+='<div class="market-card" data-cat="fx"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
+      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
       if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
@@ -941,7 +941,7 @@ function renderMarkets(){
         const tsId=mktTsMap[c.name]||null;
         commHtml+='<div class="market-card" data-cat="'+dataCat+'"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small style="color:#636363">'+c.unit+'</small>':'')+'</div>';
         if(yy)commHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+yy+' YoY</div>';
-        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#636363">'+c.day+' today</div>';
+        if(c.day)commHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">'+c.day+' today</div>';
         if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
         commHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
         if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:yy});
@@ -1519,10 +1519,10 @@ async function renderCanadianCommodities(){
       const chg=c.pct_1w||'';const isNeg=String(chg).startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
       const sectors=(c.affected_sectors||[]).map(s=>'<span style="background:rgba(255,255,255,0.08);color:#8ea8cc;padding:1px 5px;border-radius:3px;font-size:.6rem">'+s+'</span>').join(' ');
-      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:rgba(255,255,255,0.08);color:#8ea8cc;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
+      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:rgba(0,0,0,0.05);color:#636363;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
       html+=`<div class="market-card" data-cat="energy"><div class="market-card-ticker">${c.name||k.replace(/_/g,' ')}</div><div class="market-card-price">${c.current||'N/A'}</div>`;
       if(chg)html+=`<div class="market-card-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg} 1W</div>`;
-      if(c.pct_1m)html+=`<div style="font-size:var(--text-xs);color:#636363">1M: ${c.pct_1m}</div>`;
+      if(c.pct_1m)html+=`<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">1M: ${c.pct_1m}</div>`;
       if(sectors)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:4px">${sectors}</div>`;
       if(provs)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:2px">${provs}</div>`;
       html+='</div>';
