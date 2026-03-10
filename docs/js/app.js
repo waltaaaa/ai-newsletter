@@ -486,8 +486,8 @@ async function loadIndExpData(){
   if(!_indExpData[cacheKey]){
     try{
       const all=await fetchJSON('indicators.json');
-      const indicators_list=all.indicators||all;
-      const pts=(Array.isArray(indicators_list)?indicators_list:[])
+      const history_list=all.history||all.indicators||all;
+      const pts=(Array.isArray(history_list)?history_list:[])
         .filter(r=>(r.indicator_name||r.indicator)===_indExpSel&&(r.province||'national')===prov)
         .map(r=>({date:r.period||r.date,value:parseFloat(r.value)||0}))
         .sort((a,b)=>(a.date||'').localeCompare(b.date||''));

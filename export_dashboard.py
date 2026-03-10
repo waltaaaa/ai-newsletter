@@ -270,7 +270,7 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
 
 
 def export_indicators(conn, output_dir: str) -> str:
-    """Export indicators.json from get_latest_indicators plus statcan_latest."""
+    """Export indicators.json with full history for the indicator explorer chart."""
     from db import get_dashboard_state, get_latest_indicators
 
     indicators = get_latest_indicators(conn)
@@ -286,11 +286,23 @@ def export_indicators(conn, output_dir: str) -> str:
         else:
             indicators_list.append(ind)
 
+    # Export full indicator history (last 5 years) for the explorer chart
+    # Deduplicate by keeping one value per indicator+province+period
+    history_rows = conn.execute("""
+        SELECT indicator_name, province, period, value, unit, source
+        FROM indicator_history
+        WHERE period >= date('now', '-5 years')
+        GROUP BY indicator_name, province, period
+        ORDER BY indicator_name, province, period
+    """).fetchall()
+    history_list = [dict(r) for r in history_rows]
+
     # Also include statcan_latest from dashboard_state
     statcan_latest = get_dashboard_state(conn, "statcan_latest")
 
     output = {
         "indicators": indicators_list,
+        "history": history_list,
         "statcan_latest": statcan_latest,
     }
 

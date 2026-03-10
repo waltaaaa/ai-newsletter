@@ -567,7 +567,7 @@ def run_gemini_search(
 
 def log_gemini_unique(projects: list[dict], existing_names: set[str]):
     """Log projects found by Gemini but not in existing Firestore."""
-    unique = [p for p in projects if p['name'].lower().strip() not in existing_names]
+    unique = [p for p in projects if p.get('name', '').lower().strip() not in existing_names]
     if not unique:
         return
     try:
