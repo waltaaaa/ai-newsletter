@@ -378,7 +378,7 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
       <li class="nav-tab" data-tab="markets" role="tab" aria-selected="false" aria-controls="tab-markets" tabindex="-1">Markets</li>
       <li class="nav-tab" data-tab="projects" role="tab" aria-selected="false" aria-controls="tab-projects" tabindex="-1">Projects</li>
       <li class="nav-tab" data-tab="calendar" role="tab" aria-selected="false" aria-controls="tab-calendar" tabindex="-1">Calendar</li>
-      <li class="nav-tab" data-tab="explorer" role="tab" aria-selected="false" aria-controls="tab-explorer" tabindex="-1">Explorer</li>
+      <li class="nav-tab" data-tab="explorer" role="tab" aria-selected="false" aria-controls="tab-explorer" tabindex="-1">Data Explorer</li>
     </ul>
     <div class="edition-dropdown" id="editionDropdown" style="position:relative;flex-shrink:0">
       <button id="editionBtn" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:var(--text-xs);font-weight:500;color:var(--text-secondary);background:var(--bg-subtle);border:1px solid var(--glass-border);border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-body)">
@@ -395,7 +395,6 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
   <div class="tab-panel active" id="tab-overview" role="tabpanel" aria-labelledby="tab-overview-label">
     <div id="execSummary"></div>
     <section id="keyIndicators" style="margin-top:16px"></section>
-    <section id="indicatorExplorer" style="margin-top:16px"></section>
     <div id="microscopeSection" style="margin-top:16px"></div>
     <div id="nationalAnalysis" style="margin-top:16px"></div>
     <div id="policySection" style="margin-top:16px"></div>
@@ -520,10 +519,12 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
     <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80')">
       <div class="section-banner-content">
         <div class="section-banner-title">Data Explorer</div>
-        <div class="section-banner-sub">Search Statistics Canada tables by keyword</div>
+        <div class="section-banner-sub">Interactive indicators, provincial accounts &amp; StatCan table directory</div>
       </div>
     </div>
+    <section id="indicatorExplorer" style="margin-bottom:24px"></section>
     <div id="explorerSearch" style="margin-bottom:16px"></div>
+    <div id="explorerStats" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap"></div>
     <div id="explorerCategories" style="margin-bottom:16px"></div>
     <div id="explorerResults"></div>
   </div>

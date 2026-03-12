@@ -1705,9 +1705,7 @@ const FREQ_MAP={M:'Monthly',Q:'Quarterly',A:'Annual',D:'Daily',W:'Weekly',E:'Eve
       category:r.c,freq:FREQ_MAP[r.f]||r.f,geo:r.g,_dir:true
     }));
     _fullDirLoaded=true;
-    /* Update result count hint if explorer is visible */
-    const hint=$('explorerDirCount');
-    if(hint)hint.textContent=`${(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()} tables indexed`;
+    _renderExplorerStats();
   }catch(e){/* silent — curated index still works */}
 })();
 
@@ -1809,6 +1807,16 @@ function searchVCodes(query){
   return curatedResults.concat(dirResults).sort((a,b)=>b.score-a.score).slice(0,25);
 }
 
+function _renderExplorerStats(){
+  const el=$('explorerStats');
+  if(!el)return;
+  const total=VCODE_INDEX.length+_fullTableDir.length;
+  const curated=VCODE_INDEX.length;
+  const dir=_fullTableDir.length;
+  const pill=(label,value,color)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-md);background:var(--bg-white);border:1px solid var(--border-light)"><span style="font-size:var(--text-xs);color:#919191">${label}</span><span style="font-family:var(--font-mono);font-size:var(--text-base);font-weight:700;color:${color}">${value.toLocaleString()}</span></div>`;
+  el.innerHTML=pill('Total Tables',total,'var(--accent-blue)')+pill('Curated',curated,'#10b981')+pill('Full Directory',dir,_fullDirLoaded?'#6366f1':'#919191')+(!_fullDirLoaded?'<span style="font-size:var(--text-xs);color:#919191;align-self:center">Loading directory\u2026</span>':'');
+}
+
 function renderExplorer(){
   const searchEl=$('explorerSearch');
   const catEl=$('explorerCategories');
@@ -1817,10 +1825,12 @@ function renderExplorer(){
 
   searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#191a1c;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
 
+  _renderExplorerStats();
+
   const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Energy','Manufacturing','Agriculture','Infrastructure','Transportation','Health','Demographics','Tourism'];
   catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#3a3a3a;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
 
-  resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.<br><span id="explorerDirCount" style="font-size:var(--text-xs)">'+VCODE_INDEX.length+' curated tables'+((_fullDirLoaded)?(' + '+_fullTableDir.length.toLocaleString()+' from full directory'):' (loading full directory...)')+'</span></div>';
+  resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
 }
 
 window._doVcodeSearch=function(cat){
