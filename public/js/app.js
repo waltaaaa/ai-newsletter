@@ -31,7 +31,7 @@ window.loadSection=loadSection;
 /* ── State ── */
 let D=null,indicators=[],allProjects=[],filteredProjects=[],projectPage=0,selectedProvince='BC',tsCache={},charts={},tabRendered={};
 const PAGE_SIZE=25;
-let _confirmedOnly=true;
+let _confirmedOnly=false;
 let _lastLoadedProvince=null,_loadSeq=0;
 const PROVS=[{code:'BC',name:'British Columbia'},{code:'AB',name:'Alberta'},{code:'SK',name:'Saskatchewan'},{code:'MB',name:'Manitoba'},{code:'ON',name:'Ontario'},{code:'QC',name:'Quebec'},{code:'NB',name:'New Brunswick'},{code:'NS',name:'Nova Scotia'},{code:'PE',name:'Prince Edward Island'},{code:'NL',name:'Newfoundland and Labrador'},{code:'YT',name:'Yukon'},{code:'NT',name:'Northwest Territories'},{code:'NU',name:'Nunavut'}];
 const NAME_TO_CODE={};PROVS.forEach(p=>{NAME_TO_CODE[p.name]=p.code;NAME_TO_CODE[p.code]=p.code});NAME_TO_CODE['Newfoundland']='NL';NAME_TO_CODE['PEI']='PE';
@@ -72,9 +72,9 @@ function changeIcon(arrow){return arrow===1?'↑':arrow===2?'↓':'→'}
 function stCls(s){const k=s.toLowerCase().replace(/\s+/g,'-');return'st-'+k}
 function statusBadge(s){return`<span class="status-badge ${stCls(s)}">${s}</span>`}
 function srcLink(url,title){if(!url)return'';return`<a href="${url}" target="_blank" rel="noopener noreferrer" title="${title||'Source'}">\u2197</a>`}
-function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#777">N/D</span>';return v}
+function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#919191">N/D</span>';return v}
 function parseNumericValue(v){if(!v)return 0;const s=String(v).toUpperCase();const m=s.match(/([\d.]+)\s*(B|M|K)?/);if(!m)return 0;let n=parseFloat(m[1])||0;if(m[2]==='B')n*=1e9;else if(m[2]==='M')n*=1e6;else if(m[2]==='K')n*=1e3;return n}
-function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:#777;font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:#999;font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:#777">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:#999;font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:#999;font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
+function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:#919191;font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:#919191;font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:#919191">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:#919191;font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:#919191;font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
 function skeleton(n=3){return Array(n).fill('<div class="skeleton sk-line"></div><div class="skeleton sk-line med"></div><div class="skeleton sk-line short"></div>').join('')}
 
 /* ── Tab Switching ── */
@@ -86,7 +86,7 @@ function switchTab(tabId){
     t.setAttribute('tabindex',isActive?'0':'-1');
   });
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tabId));
-  if(D&&!tabRendered[tabId]){renderTab(tabId);tabRendered[tabId]=true}
+  if(!tabRendered[tabId]){renderTab(tabId);tabRendered[tabId]=true}
 }
 document.querySelectorAll('.nav-tab').forEach(t=>{
   t.addEventListener('click',()=>switchTab(t.dataset.tab));
@@ -138,8 +138,29 @@ async function switchEdition(editionId){
   loadEditionList();
 }
 async function loadIndicators(){
-  try{const data=await fetchJSON('indicators.json');indicators=(data&&data.indicators)||data||[]}
-  catch(e){console.error('Indicators load:',e)}
+  try{
+    const data=await fetchJSON('indicators.json');
+    const raw=(data&&data.indicators)||data||[];
+    // Normalize: SQLite uses indicator_name, frontend uses name
+    indicators=raw.map(ind=>{
+      const name=ind.name||ind.indicator_name||'';
+      const displayName=name.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      return Object.assign({},ind,{
+        name:displayName,
+        indicator_name:ind.indicator_name||name,
+        refPer:ind.refPer||ind.period||'',
+        category:ind.category||categorizeIndicator(displayName)
+      });
+    });
+    // Deduplicate: keep latest by indicator_name
+    const seen={};
+    indicators=indicators.filter(ind=>{
+      const key=ind.indicator_name;
+      if(!key)return true;
+      if(seen[key])return false;
+      seen[key]=true;return true;
+    });
+  }catch(e){console.error('Indicators load:',e)}
 }
 async function loadProjects(province){
   const seq=++_loadSeq;
@@ -165,13 +186,18 @@ async function loadTimeseries(docId){
   if(tsCache[docId])return tsCache[docId];
   try{
     const all=await fetchJSON('timeseries.json');
-    if(all[docId]){tsCache[docId]=all[docId];return all[docId]}
+    let raw=all[docId];
+    if(raw){
+      // Normalize: wrap flat array into {series:[...]} if needed
+      const ts=Array.isArray(raw)?{series:raw}:raw;
+      tsCache[docId]=ts;return ts;
+    }
   }catch(e){console.warn('TS load:',e)}
   return null;
 }
 async function loadAll(){
   try{
-    await Promise.all([loadNewsletter(),loadProjects(),loadIndicators()]);
+    await Promise.all([loadNewsletter(),loadIndicators()]);
   }catch(e){console.error('loadAll data fetch:',e)}
   try{
     renderTab('overview');tabRendered.overview=true;
@@ -179,9 +205,9 @@ async function loadAll(){
     console.error('renderOverview:',e);
     $('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">Error rendering: '+e.message+'</div></div>';
   }
-  const edStr=D?(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
-  $('navMeta').textContent=D?(edStr||'Data loaded'):'No data yet';
-  $('footerDate').textContent=D?'Last pipeline run: '+(fmtDate(D.updated_at||D.date)||edStr):'Awaiting first pipeline run';
+  const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
+  $('navMeta').textContent=edStr||((indicators.length)?indicators.length+' indicators loaded':'Data loaded');
+  $('footerDate').textContent=D&&D.updated_at?'Last pipeline run: '+fmtDate(D.updated_at):(indicators.length?'Live indicator data loaded':'Awaiting first pipeline run');
   loadEditionList();
 }
 /* Edition dropdown toggle */
@@ -198,7 +224,7 @@ function renderTab(id){
     case'markets':renderMarkets();break;
     case'projects':renderProjectsTab();break;
     case'calendar':renderCalendar();break;
-    case'explorer':renderExplorer();break;
+    case'explorer':renderIndicatorExplorer();renderExplorer();break;
   }
 }
 
@@ -219,42 +245,52 @@ function sourcesFooter(sources,containerId){
 
 /* ══ OVERVIEW TAB ══ */
 function renderOverview(){
-  if(!D){$('execSummary').innerHTML='<div class="card" style="padding:24px;text-align:center"><div style="font-size:1.5rem;margin-bottom:12px;opacity:.5">📡</div><div style="color:var(--text-secondary);font-size:var(--text-sm)">No newsletter data available yet. Run the pipeline to generate your first briefing.</div></div>';$('keyIndicators').innerHTML='';$('nationalAnalysis').innerHTML='';return}
-  // Executive Summary
-  $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(D.executive_summary||'')}</div></div>`;
-  // Key Indicators
+  const hasBriefing=D&&D.executive_summary;
+  // Executive Summary — show briefing content or a status message
+  if(hasBriefing){
+    $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(D.executive_summary)}</div></div>`;
+  }else{
+    const indCount=indicators.length;
+    $('execSummary').innerHTML=`<div class="card fade-in" style="padding:24px;text-align:center"><div style="color:var(--text-secondary);font-size:var(--text-sm)">Weekly briefing pending. ${indCount} indicators loaded from primary sources.</div></div>`;
+  }
+  // Key Indicators — always render from indicators[] data
   renderKeyIndicators();
   // National Analysis
-  const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
-  const natSources=(D.national&&D.national.sources)||[];
-  $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(natContent)}</div>${sourcesFooter(natSources)}</div>`;
+  if(hasBriefing){
+    const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
+    const natSources=(D.national&&D.national.sources)||[];
+    $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(natContent)}</div>${sourcesFooter(natSources)}</div>`;
+  }else{$('nationalAnalysis').innerHTML=''}
   // Sentiment
-  renderSentiment();
+  if(D)renderSentiment();
   // Global Vectors
-  renderGlobalVectors();
+  if(D)renderGlobalVectors();
   // Trend Summary
   renderTrendSummary();
-  // New Phase 1-2 sections (async, non-blocking)
+  // Async sections (non-blocking)
   renderMicroscope();
   renderPipelineStatus();
   renderCostMonitor();
   renderMicroscopeHistory();
   renderPolicySection();
   // Sources
-  $('overviewSources').innerHTML=sourcesFooter(D.sources||[]);
+  $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
 }
 
 function renderKeyIndicators(){
-  const m=D.metrics||{};const yc=D.yieldCurve||[];
-  const im=D.indicatorMeta||{};
+  // Helper: look up a value from the indicators[] array by indicator_name
+  function indVal(name){const i=indicators.find(x=>x.indicator_name===name);return i?i.value:null}
+  function indDate(name){const i=indicators.find(x=>x.indicator_name===name);return i?fmtDate(i.period):''}
+  const m=(D&&D.metrics)||{};const yc=(D&&D.yieldCurve)||[];
+  const im=(D&&D.indicatorMeta)||{};
   const headline=[
-    {label:'POLICY RATE',value:m.bocRate||m.boc_rate||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/',date:(im.bocRate||{}).period||'',tsId:'boc_rate'},
-    {label:'GDP YoY',value:m.realGdp||m.gdp||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.realGdp||{}).period||'',tsId:null},
-    {label:'CPI',value:m.cpi||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.cpi||{}).period||'',tsId:'canada_cpi'},
-    {label:'UNEMPLOYMENT',value:m.unemployment||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.unemployment||{}).period||'',tsId:'canada_unemployment'},
-    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',date:fmtDate(D.updated_at||D.date)||'',tsId:'cadusd'},
-    {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',date:fmtDate(D.updated_at||D.date)||'',tsId:'yield_10y'},
-    {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||'',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',date:(im.housingStarts||{}).period||'',tsId:null}
+    {label:'POLICY RATE',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/',date:(im.bocRate||{}).period||indDate('overnight_rate'),tsId:'boc_rate'},
+    {label:'GDP YoY',value:m.realGdp||m.gdp||indVal('realGdp')||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.realGdp||{}).period||indDate('realGdp'),tsId:null},
+    {label:'CPI',value:m.cpi||indVal('cpi')||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.cpi||{}).period||indDate('cpi'),tsId:'canada_cpi'},
+    {label:'UNEMPLOYMENT',value:m.unemployment||indVal('unemployment')||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.unemployment||{}).period||indDate('unemployment'),tsId:'canada_unemployment'},
+    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',date:fmtDate((D&&(D.updated_at||D.date))||'')||indDate('cad_usd'),tsId:'cadusd'},
+    {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||indVal('goc_10y_yield')||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',date:fmtDate((D&&(D.updated_at||D.date))||'')||indDate('goc_10y_yield'),tsId:'yield_10y'},
+    {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',date:(im.housingStarts||{}).period||indDate('housingStarts'),tsId:null}
   ];
   let strip='<div class="indicator-strip">';
   const sparkJobs=[];
@@ -396,7 +432,7 @@ let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='nati
 function renderIndicatorExplorer(){
   // Build selector
   let selHtml='<div class="card fade-in"><div class="card-header">Indicator Explorer</div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px">';
-  selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:var(--text-sm)">';
+  selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#191a1c;font-size:var(--text-sm)">';
   INDICATOR_CATALOG.forEach(g=>{
     selHtml+='<optgroup label="'+g.group+'">';
     g.items.forEach(it=>{
@@ -408,7 +444,7 @@ function renderIndicatorExplorer(){
   // Province toggle (shown only for provincial indicators)
   const selItem=findIndItem(_indExpSel);
   if(selItem&&selItem.prov){
-    selHtml+='<select id="indExpProv" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:var(--text-sm)">';
+    selHtml+='<select id="indExpProv" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#191a1c;font-size:var(--text-sm)">';
     selHtml+='<option value="national"'+((_indExpProv==='national')?' selected':'')+'>National</option>';
     PROVS.forEach(p=>{selHtml+='<option value="'+p.code+'"'+(_indExpProv===p.code?' selected':'')+'>'+p.name+'</option>'});
     selHtml+='</select>';
@@ -417,7 +453,7 @@ function renderIndicatorExplorer(){
   selHtml+='<div style="display:flex;gap:4px">';
   [3,12,36,60].forEach(m=>{
     const lbl=m===3?'3M':m===12?'1Y':m===36?'3Y':'5Y';
-    const active=_indExpRange===m?'background:var(--accent-blue);color:#fff':'background:var(--bg-tertiary);color:var(--text-secondary)';
+    const active=_indExpRange===m?'background:#0073e6;color:#fff':'background:#e0e0e0;color:#3a3a3a';
     selHtml+='<button onclick="_indExpRange='+m+';loadIndExpData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
   });
   selHtml+='</div></div>';
@@ -455,8 +491,8 @@ async function loadIndExpData(){
   if(!_indExpData[cacheKey]){
     try{
       const all=await fetchJSON('indicators.json');
-      const indicators_list=all.indicators||all;
-      const pts=(Array.isArray(indicators_list)?indicators_list:[])
+      const history_list=all.history||all.indicators||all;
+      const pts=(Array.isArray(history_list)?history_list:[])
         .filter(r=>(r.indicator_name||r.indicator)===_indExpSel&&(r.province||'national')===prov)
         .map(r=>({date:r.period||r.date,value:parseFloat(r.value)||0}))
         .sort((a,b)=>(a.date||'').localeCompare(b.date||''));
@@ -477,7 +513,7 @@ async function loadIndExpData(){
     const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
     const allVals=allPts.map(p=>p.value);
     const mn=Math.min(...allVals).toFixed(2);const mx=Math.max(...allVals).toFixed(2);
-    callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+latest.value.toFixed(2)+'</span><span class="'+cls+'" style="font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev</span><span style="font-size:var(--text-xs);color:var(--text-muted)">5Y range: '+mn+' \u2013 '+mx+'</span><span style="font-size:var(--text-xs);color:var(--text-muted)">'+latest.date+'</span></div>';
+    callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+latest.value.toFixed(2)+'</span><span class="'+cls+'" style="font-family:var(--font-mono);font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev</span><span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted)">5Y range: '+mn+' \u2013 '+mx+'</span><span style="font-size:var(--text-xs);color:var(--text-muted)">'+latest.date+'</span></div>';
   }else if(pts.length===1){
     callout.innerHTML='<span style="font-size:1.5rem;font-weight:700;font-family:JetBrains Mono,monospace">'+pts[0].value.toFixed(2)+'</span>';
   }else{
@@ -504,20 +540,20 @@ async function loadIndExpData(){
         try{
           const ed=parseEvtDate(evt.date);if(!ed)return;
           const ds=fmtDate(ed);const li=labels.indexOf(ds);if(li===-1)return;
-          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Plus Jakarta Sans',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
+          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Arial',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
         }catch(evtErr){}
       });
     }
   }catch(annErr){console.warn('Event annotations:',annErr)}
   const hasAnnotationPlugin=typeof window.ChartAnnotation!=='undefined'||(typeof Chart!=='undefined'&&Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation'));
-  const bandAnnotation=(bandLow!==null&&bandHigh!==null)?{band:{type:'box',yMin:bandLow,yMax:bandHigh,backgroundColor:'rgba(59,130,246,0.06)',borderWidth:0}}:{};
+  const bandAnnotation=(bandLow!==null&&bandHigh!==null)?{band:{type:'box',yMin:bandLow,yMax:bandHigh,backgroundColor:'rgba(0,115,230,0.06)',borderWidth:0}}:{};
   const annotationCfg=hasAnnotationPlugin?{annotation:{annotations:{...bandAnnotation,...evtAnnotations}}}:{};
-  const endpointPlugin={id:'endpointLabel',afterDraw(chart){try{const ds=chart.data.datasets[0];if(!ds||!ds.data||!ds.data.length)return;const lastVal=ds.data[ds.data.length-1];if(lastVal==null)return;const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#2E7DAD';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):String(lastVal),lastPt.x+6,lastPt.y-4);ctx.restore();}catch(e){}}};
-  const chartCfg={type:'line',data:{labels,datasets:[{data,borderColor:'#2E7DAD',backgroundColor:'rgba(46,125,173,0.08)',borderWidth:2,pointRadius:pts.length>60?0:3,pointBackgroundColor:'#1C5688',fill:true,tension:0.3}]},plugins:[endpointPlugin],options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},...annotationCfg,tooltip:{backgroundColor:'rgba(15,26,43,0.95)',titleColor:'#E8F0F8',bodyColor:'#94A8C2',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6,callbacks:{label:function(ctx){
+  const endpointPlugin={id:'endpointLabel',afterDraw(chart){try{const ds=chart.data.datasets[0];if(!ds||!ds.data||!ds.data.length)return;const lastVal=ds.data[ds.data.length-1];if(lastVal==null)return;const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#0073e6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):String(lastVal),lastPt.x+6,lastPt.y-4);ctx.restore();}catch(e){}}};
+  const chartCfg={type:'line',data:{labels,datasets:[{data,borderColor:'#0073e6',backgroundColor:'rgba(0,115,230,0.08)',borderWidth:2,pointRadius:pts.length>60?0:3,pointBackgroundColor:'#0073e6',fill:true,tension:0.3}]},plugins:[endpointPlugin],options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},...annotationCfg,tooltip:{backgroundColor:'rgba(28,54,100,0.95)',titleColor:'#ffffff',bodyColor:'#c0c0c0',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6,callbacks:{label:function(ctx){
     const val=ctx.parsed.y;const idx=ctx.dataIndex;
     if(idx>0){const prev=data[idx-1];const diff=val-prev;return val.toFixed(2)+' ('+(diff>=0?'+':'')+diff.toFixed(2)+' vs prev)';}
     return val.toFixed(2);
-  }}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Plus Jakarta Sans',size:10},color:'#94A8C2'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#94A8C2'}}}}};
+  }}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Arial',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.06)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#636363'}}}}};
   try{charts._indExp=new Chart(canvas,chartCfg);}catch(chartErr){console.warn('Chart with annotations failed, retrying without:',chartErr);try{chartCfg.options.plugins={legend:{display:false},tooltip:chartCfg.options.plugins.tooltip};chartCfg.plugins=[];charts._indExp=new Chart(canvas,chartCfg);}catch(e2){console.error('Chart creation failed completely:',e2);}}
 }
 
@@ -534,15 +570,15 @@ function renderSentiment(){
     const fgc=neg?'var(--status-red)':pos?'var(--status-green)':'var(--status-amber)';
     html+='<div style="display:flex;align-items:center;gap:12px"><div class="sentiment-badge" style="background:'+bgc+';color:'+fgc+'">'+lbl+' ('+(typeof idx==='number'?idx.toFixed(2):idx)+')</div>';
     const ss=cs.sources_summary||cs;
-    html+='<div class="sentiment-meta" style="margin-top:0">'+(ss.reddit_posts||0)+' Reddit posts \u00b7 '+(ss.trends_queries||0)+' trending searches \u00b7 '+(ss.news_comments||0)+' news comments</div></div>';
+    html+='<div class="sentiment-meta" style="margin-top:0;font-family:var(--font-mono)">'+(ss.reddit_posts||0)+' Reddit posts \u00b7 '+(ss.trends_queries||0)+' trending searches \u00b7 '+(ss.news_comments||0)+' news comments</div></div>';
   }
-  html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:#999;font-size:.75rem">(click to expand)</span></summary>';
+  html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:#919191;font-size:.75rem">(click to expand)</span></summary>';
   html+='<div style="padding:12px 0"><div class="word-cloud-container" id="wordCloudSvg"></div></div>';
   html+='<hr style="border:none;border-top:1px solid var(--border-light);margin:8px 0">';
   if(cp)html+='<div style="padding:12px 0 8px"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:8px">Consumer Pulse</h4><div class="pulse-prose">'+san(cp)+'</div></div>';
   html+='</details>';
   if(cs&&cs.categories&&cs.categories.length){
-    html+='<div class="category-bar-container"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:#555">Category Sentiment</h4>';
+    html+='<div class="category-bar-container"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:#636363">Category Sentiment</h4>';
     const cats=cs.categories;
     cats.forEach(cat=>{
       const label=cat.name||cat.category||'';
@@ -585,15 +621,15 @@ function renderWordCloud(topics){
     const score=t.sentiment_score||t.sentiment||0;
     return{text:t.topic||t.word||'',size:12+((freq/maxFreq)*28),score:typeof score==='number'?score:0,freq};
   });
-  const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Plus Jakarta Sans').fontSize(d=>d.size).on('end',drawn);
+  const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Arial').fontSize(d=>d.size).on('end',drawn);
   layout.start();
   function drawn(wds){
     const svg=d3.select(container).append('svg').attr('width',w).attr('height',h);
     const g=svg.append('g').attr('transform','translate('+w/2+','+h/2+')');
     g.selectAll('text').data(wds).enter().append('text')
-      .style('font-size',d=>d.size+'px').style('font-family','Plus Jakarta Sans')
+      .style('font-size',d=>d.size+'px').style('font-family','Arial')
       .style('font-weight',d=>d.size>30?'700':d.size>20?'600':'400')
-      .style('fill','#1a2f6b')
+      .style('fill','#1c3664')
       .style('opacity',d=>0.6+Math.min(Math.abs(d.score),0.4))
       .style('cursor','pointer')
       .attr('text-anchor','middle').attr('transform',d=>'translate('+d.x+','+d.y+') rotate('+d.rotate+')')
@@ -610,10 +646,10 @@ async function renderTrendSummary(){
     const briefing=await fetchJSON('briefing_latest.json');
     if(briefing&&briefing.content){narrative=briefing.content;title='Weekly Intelligence Briefing'}
     if(!narrative){el.innerHTML='';return}
-    const chips=ds.total_projects?`<div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap"><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)"><strong>${ds.total_projects||0}</strong> projects</div><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)">$<strong>${((ds.total_value_millions||0)/1000).toFixed(1)}B</strong> pipeline</div></div>`:'';
+    const chips=ds.total_projects?`<div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap"><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)"><strong style="font-family:var(--font-mono)">${ds.total_projects||0}</strong> projects</div><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)">$<strong style="font-family:var(--font-mono)">${((ds.total_value_millions||0)/1000).toFixed(1)}B</strong> pipeline</div></div>`:'';
     // Download buttons — pdf_url and docx_url are optional fields in briefing_latest.json
     const pdfUrl=(briefing&&briefing.pdf_url)||'';const docxUrl=(briefing&&briefing.docx_url)||'';
-    const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:12px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#b91c1c;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#1d4ed8;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
+    const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:12px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#cc0033;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#0073e6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
     el.innerHTML=`<div class="card fade-in"><div class="card-header">${title}</div><div class="card-body">${chips}${dlBtns}<div style="line-height:1.65;color:var(--text-secondary);white-space:pre-line">${san(narrative)}</div></div></div>`;
   }catch(e){console.warn('Trend summary:',e);el.innerHTML=''}
 }
@@ -677,17 +713,31 @@ window.selectProvince=function(code){
   $('provBanner').style.setProperty('--banner-img',"url('"+img+"')");
   renderProvinceContent();
 };
-function renderProvinceContent(){
+async function renderProvinceContent(){
   const prov=PROVS.find(p=>p.code===selectedProvince)||PROVS[0];
   $('provBannerTitle').textContent=prov.name;
+  // Load province projects if not loaded for this province
+  if(_lastLoadedProvince!==prov.code){await loadProjects(prov.code)}
   // Find province data from the provinces array
   const provArr=D?(D.provinces||[]):[];
   const norm=s=>(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z]/g,'');
   const provData=provArr.find(p=>norm(p.name)===norm(prov.name))||{};
   const provInd=provData.indicators||{};
   const provMeta=provData.indicatorMeta||{};
+  // Helper: find indicator value for this province from indicators[]
+  function provIndVal(key){
+    // Map to province-specific indicator_name patterns
+    const provPrefix=prov.code.toLowerCase();
+    const nameMap={gdp:'realGdp',unemployment:'unemployment',cpi:'cpi',housingStarts:'housingStarts'};
+    const indName=nameMap[key]||key;
+    // Try province-specific first, then national
+    const provMatch=indicators.find(x=>x.indicator_name===provPrefix+'_'+indName);
+    if(provMatch)return provMatch.value;
+    const natMatch=indicators.find(x=>x.indicator_name===indName);
+    return natMatch?natMatch.value:null;
+  }
   let headerHtml='<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:var(--text-xl);font-weight:700">'+prov.name+'</span>';
-  headerHtml+='</div><span style="font-size:var(--text-xs);color:#777">Last updated '+(D?fmtDate(D.updated_at||D.date)||(D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'')+'</span></div>';
+  headerHtml+='</div><span style="font-size:var(--text-xs);color:#919191">'+allProjects.length+' projects loaded</span></div>';
   $('provHeader').innerHTML=headerHtml;
 
   // Mini chart cards
@@ -695,13 +745,13 @@ function renderProvinceContent(){
   let miniHtml='<div class="mini-chart-grid">';
   const provSparkJobs=[];
   chartMetrics.forEach((m,i)=>{
-    const val=provInd[m.key]||'N/A';
+    const val=provInd[m.key]||provIndVal(m.key)||'N/A';
     const meta=provMeta[m.key]||{};
     const chg=meta.change||'';
     const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
     const sparkId='spark_prov_'+selectedProvince+'_'+i;
     const prd=meta.period||'';
-    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
+    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#919191;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
     if(m.tsId)provSparkJobs.push({canvasId:sparkId,docId:m.tsId,change:chg});
   });
   miniHtml+='</div>';
@@ -720,7 +770,7 @@ function renderProvinceContent(){
   const wl=D&&(D.watchlist||D.events)?D.watchlist||D.events||[]:[];
   const provEvents=wl.filter(e=>{const desc=(e.description||'')+(e.event_name||'');return desc.toLowerCase().includes(prov.name.toLowerCase())});
   if(provEvents.length){
-    analysisHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:#555">';
+    analysisHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:#636363">';
     provEvents.forEach(e=>{analysisHtml+='<div style="margin-bottom:4px">'+(e.date||'')+' \u2014 '+(e.event_name||e.event||'')+(e.institution?' ('+e.institution+')':'')+'</div>'});
     analysisHtml+='</div></details>';
   }
@@ -728,13 +778,13 @@ function renderProvinceContent(){
 
   // Projects preview
   const provProjects=allProjects.filter(p=>p.province===prov.name||p.province===prov.code).slice(0,5);
-  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-size:var(--text-xs);color:#777;margin-left:8px">('+provProjects.length+')</span></div>';
+  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:#919191;margin-left:8px">('+provProjects.length+')</span></div>';
   if(provProjects.length){
-    projHtml+='<table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
+    projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
     provProjects.forEach(p=>{
       projHtml+='<tr><td class="col-value">'+fmtCurrency(p.value,p)+'</td><td class="col-name">'+((p.name||'').substring(0,60))+'</td><td>'+statusBadge(p.status||'Proposed')+'</td><td>'+srcLink((p.sources||[])[0]?.url,(p.sources||[])[0]?.title)+'</td></tr>';
     });
-    projHtml+='</tbody></table>';
+    projHtml+='</tbody></table></div>';
     projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><a href="#" style="color:var(--accent-blue);text-decoration:none" onclick="event.preventDefault();switchTab(\'projects\')">View all projects \u2192</a></div>';
   } else {
     projHtml+='<div class="empty-state"><div class="empty-state-text">No projects tracked for '+prov.name+' yet.</div></div>';
@@ -753,28 +803,28 @@ window.toggleIndustryView=function(view){
   renderIndustrySectors();
 };
 function renderIndustries(){
-  if(!D){$('industrySectorGrid').innerHTML='<div class="empty-state"><div class="empty-state-text">No industry data available.</div></div>';return}
-  const ies=D.industry_executive_summary||'';
+  const ies=(D&&D.industry_executive_summary)||'';
   if(ies){
     $('industryExecSummary').innerHTML='<div class="card fade-in"><div class="card-header">Industry Executive Summary</div><div class="card-body">'+san(ies)+'</div></div>';
+  }else{
+    $('industryExecSummary').innerHTML='';
   }
   renderIndustrySectors();
 }
 function renderIndustrySectors(){
-  if(!D)return;
-  const goodsArr=D.goodsIndustries||[];
-  const servArr=D.servicesIndustries||[];
+  const goodsArr=(D&&D.goodsIndustries)||[];
+  const servArr=(D&&D.servicesIndustries)||[];
   const showGoods=_industryView==='all'||_industryView==='goods';
   const showServ=_industryView==='all'||_industryView==='services';
   let html='';
   if(showGoods){
-    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#E8F0F8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Goods-Producing Industries</h3><div class="sector-grid" style="margin-bottom:16px">';
+    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Goods-Producing Industries</h3><div class="sector-grid" style="margin-bottom:16px">';
     goodsArr.forEach(s=>{html+=sectorCard(s)});
     if(!goodsArr.length)['11','21','22','23','31-33'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
     html+='</div>';
   }
   if(showServ){
-    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#E8F0F8;text-transform:uppercase;letter-spacing:.5px;margin:'+(showGoods?'12px':'0')+' 0 8px">Services-Producing Industries</h3><div class="sector-grid">';
+    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:.5px;margin:'+(showGoods?'12px':'0')+' 0 8px">Services-Producing Industries</h3><div class="sector-grid">';
     servArr.forEach(s=>{html+=sectorCard(s)});
     if(!servArr.length)['41','44-45','48-49','51','52','53','54','55','56','61','62','71','72','81','91'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
     html+='</div>';
@@ -789,48 +839,55 @@ function sectorCard(s){
   const mm=s.mm||'';const yy=s.yy||'';
   const mmCls=s.isNegative?'change-down':'change-up';
   let footer='';
-  if(mm||yy)footer='<div style="margin-top:8px;font-size:var(--text-xs);color:#777">'+(mm?'M/M: <span class="'+mmCls+'" style="font-family:var(--font-mono)">'+mm+'</span> ':'')+(yy?'Y/Y: <span style="font-family:var(--font-mono)">'+yy+'</span>':'')+(s.indicatorSrc?' · '+s.indicatorSrc:'')+'</div>';
-  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+(analysis?san(analysis):'<em style="color:#777">No analysis available.</em>')+footer+'</div></div>';
+  if(mm||yy)footer='<div style="margin-top:8px;font-size:var(--text-xs);color:#919191">'+(mm?'M/M: <span class="'+mmCls+'" style="font-family:var(--font-mono)">'+mm+'</span> ':'')+(yy?'Y/Y: <span style="font-family:var(--font-mono)">'+yy+'</span>':'')+(s.indicatorSrc?' · '+s.indicatorSrc:'')+'</div>';
+  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+(analysis?san(analysis):'<em style="color:#919191">No analysis available.</em>')+footer+'</div></div>';
 }
 
 /* ====== MARKETS TAB ====== */
 function renderMarkets(){
-  if(!D){$('marketsGrid').innerHTML='<div class="empty-state"><div class="empty-state-text">No market data available.</div></div>';return}
-  const fm=D.financialMarkets||D.financial_markets||D.markets||{};
-  const indices=fm.indices||[];const fx=fm.fx||[];
+  const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
+  let indices=fm.indices||[];let fx=fm.fx||[];
+  // Build from indicators[] if briefing has no market data
+  if(!indices.length&&indicators.length){
+    const idxMap=[{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'},{name:'FTSE 100',ind:'ftse100'},{name:'DAX',ind:'dax'},{name:'Nikkei 225',ind:'nikkei225'}];
+    idxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:'',region:''})});
+  }
+  if(!fx.length&&indicators.length){
+    const fxMap=[{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'},{name:'EUR/USD',ind:'eurusd'},{name:'USD/CNY',ind:'usdcny'},{name:'USD/JPY',ind:'usdjpy'}];
+    fxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!fx.find(x=>x.name===m.name))fx.push({name:m.name,value:i.value})});
+  }
   // Equity + Currency cards
-  // Indices: {name, value, change, day, yy, country}  FX: {name, value} (no change)
-  const mktTsMap={'S&P/TSX':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'idx_sp500','Dow Jones':'idx_djia','NASDAQ':'idx_nasdaq','FTSE 100':'idx_ftse','DAX':'idx_dax','Nikkei 225':'idx_nikkei','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','EUR/USD':'fx_eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'fx_usdjpy','USD/CNY':'fx_usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'comm_wti','Crude Oil (Brent)':'comm_brent','Natural Gas':'comm_natgas','Gold':'comm_gold','Silver':'comm_silver','Platinum':'comm_platinum','Palladium':'comm_palladium','Copper':'comm_copper','Aluminum':'comm_aluminum','Wheat':'comm_wheat','Corn':'comm_corn','Rice':'comm_rice','Soybeans':'comm_soybeans','Coffee':'comm_coffee','Cocoa':'comm_cocoa','Sugar #11':'comm_sugar','Cotton':'comm_cotton','Soybean Oil':'comm_soyoil','Soybean Meal':'comm_soymeal','Coal (Newcastle)':'comm_coal','Propane':'comm_propane'};
+  const mktTsMap={'S&P/TSX':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'sp500','Dow Jones':'djia','NASDAQ':'nasdaq','FTSE 100':'ftse100','DAX':'dax','Nikkei 225':'nikkei225','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','EUR/USD':'eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'usdjpy','USD/CNY':'usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'wti','Crude Oil (Brent)':'brent','Natural Gas':'natural_gas','Gold':'gold','Silver':'silver','Platinum':'platinum','Palladium':'palladium','Copper':'copper','Aluminum':'aluminum','Wheat':'wheat','Corn':'corn','Rice':'comm_rice','Soybeans':'soybeans','Coffee':'coffee','Cocoa':'cocoa','Sugar #11':'sugar','Cotton':'cotton','Soybean Oil':'comm_soyoil','Soybean Meal':'comm_soymeal','Coal (Newcastle)':'comm_coal','Propane':'comm_propane','Lumber':'lumber'};
   const normMktId=(name)=>(name||'').toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_');
-  const mktDate=fmtDate(D.updated_at||D.date)||'';
+  const mktDate=D?fmtDate(D.updated_at||D.date)||'':'';
   let eqHtml='';let mktSparkJobs=[];let mktIdx=0;
   if(indices.length){
-    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#E8F0F8">Equity Indices</h3><div class="market-grid">';
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Equity Indices</h3><div class="market-grid">';
     indices.forEach(item=>{
       const chg=item.change||item.day||'';const isNeg=chg.startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
       const sid='spark_mkt_'+mktIdx++;
       const tsId=mktTsMap[item.name]||null;
-      eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small>'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      eqHtml+='<div class="market-card" data-cat="equity"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small style="color:#636363">'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#777">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
     });
     eqHtml+='</div>';
   }
   if(fx.length){
-    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">Foreign Exchange</h3><div class="market-grid">';
+    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Foreign Exchange</h3><div class="market-grid">';
     fx.forEach(item=>{
       const chg=item.day||'';const isNeg=chg.startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
       const sid='spark_mkt_'+mktIdx++;
       const tsId=mktTsMap[item.name]||null;
-      eqHtml+='<div class="market-card"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      eqHtml+='<div class="market-card" data-cat="fx"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-size:var(--text-xs);color:#777">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
+      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
     });
@@ -840,9 +897,14 @@ function renderMarkets(){
   mktSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
 
   // Yield curve
-  const yc=D.yieldCurve||[];
+  let yc=(D&&D.yieldCurve)||[];
+  // Build from indicators[] if briefing has no yield data
+  if(!yc.length&&indicators.length){
+    const yieldTerms=[{term:'2Y',ind:'goc_2y_yield'},{term:'5Y',ind:'goc_5y_yield'},{term:'10Y',ind:'goc_10y_yield'}];
+    yieldTerms.forEach(t=>{const i=indicators.find(x=>x.indicator_name===t.ind);if(i)yc.push({term:t.term,yield:i.value})});
+  }
   if(yc.length){
-    let ycHtml='<div class="card yield-card"><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
+    let ycHtml='<div class="yield-card" style="padding:16px"><h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#191a1c;text-transform:uppercase;letter-spacing:1px">Gov. of Canada Yield Curve</h3><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
     const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
     if(y2&&y10){
       const spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);
@@ -854,26 +916,33 @@ function renderMarkets(){
     $('yieldCurveCard').innerHTML=ycHtml;
     setTimeout(()=>drawYieldChart(yc),50);
   } else {
-    $('yieldCurveCard').innerHTML='<div class="card"><div class="empty-state"><div class="empty-state-text">No yield curve data.</div></div></div>';
+    $('yieldCurveCard').innerHTML='<div class="yield-card" style="padding:16px"><div class="empty-state"><div class="empty-state-text" style="color:#636363">No yield curve data.</div></div></div>';
   }
 
   // Commodities — pipeline stores [{category, color, items: [{name, unit, val, yy, day}]}]
-  const rawComms=D.commodities||fm.commodities||[];
+  const rawComms=(D&&D.commodities)||fm.commodities||[];
+  // Build commodity cards from indicators[] if pipeline data is empty
+  if(!rawComms.length&&indicators.length){
+    const commMap=[{name:'Crude Oil (WTI)',ind:'wti'},{name:'Crude Oil (WTI)',ind:'wti_oil'},{name:'Crude Oil (Brent)',ind:'brent'},{name:'Natural Gas',ind:'natural_gas'},{name:'Gold',ind:'gold'},{name:'Silver',ind:'silver'},{name:'Platinum',ind:'platinum'},{name:'Palladium',ind:'palladium'},{name:'Copper',ind:'copper'},{name:'Aluminum',ind:'aluminum'},{name:'Wheat',ind:'wheat'},{name:'Corn',ind:'corn'},{name:'Soybeans',ind:'soybeans'},{name:'Coffee',ind:'coffee'},{name:'Cocoa',ind:'cocoa'},{name:'Sugar #11',ind:'sugar'},{name:'Cotton',ind:'cotton'},{name:'Lumber',ind:'lumber'}];
+    commMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!rawComms.find(x=>x.name===m.name))rawComms.push({name:m.name,val:i.value,change:''})});
+  }
   let commHtml='';
   const commSparkJobs=[];
+  const commCatMap={'Energy':'energy','Precious Metals':'precious','Base Metals':'base','Agriculture - Grains':'agriculture','Agriculture - Softs':'agriculture','Agriculture - Oils & Meals':'agriculture','Fertilizers':'agriculture','Livestock':'agriculture','Forest Products':'forest'};
   if(Array.isArray(rawComms)&&rawComms.length&&rawComms[0].items){
     // Nested category structure from pipeline
     rawComms.forEach(cat=>{
-      commHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#E8F0F8">'+cat.category+'</h3><div class="market-grid">';
+      const dataCat=commCatMap[cat.category]||'energy';
+      commHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">'+cat.category+'</h3><div class="market-grid">';
       (cat.items||[]).forEach(c=>{
         const yy=c.yy||'';const isNeg=yy.startsWith('-');
         const cls=isNeg?'change-down':(yy?'change-up':'change-flat');
         const cid='spark_comm_'+mktIdx++;
         const tsId=mktTsMap[c.name]||null;
-        commHtml+='<div class="market-card"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small>'+c.unit+'</small>':'')+'</div>';
+        commHtml+='<div class="market-card" data-cat="'+dataCat+'"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small style="color:#636363">'+c.unit+'</small>':'')+'</div>';
         if(yy)commHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+yy+' YoY</div>';
-        if(c.day)commHtml+='<div style="font-size:var(--text-xs);color:#777">'+c.day+' today</div>';
-        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#999;margin-top:2px">'+mktDate+'</div>';
+        if(c.day)commHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">'+c.day+' today</div>';
+        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
         commHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
         if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:yy});
       });
@@ -886,7 +955,7 @@ function renderMarkets(){
       const cls=isNeg?'change-down':'change-up';
       const cid='spark_comm_'+mktIdx++;
       const tsId=mktTsMap[c.name]||null;
-      commHtml+='<div class="market-card"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||c.value||'N/A')+'</div><div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div><div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
+      commHtml+='<div class="market-card" data-cat="energy"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||c.value||'N/A')+'</div><div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div><div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
       if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:chg});
     });
   }
@@ -903,14 +972,14 @@ function drawYieldChart(yc){
   if(charts.yield)charts.yield.destroy();
   const labels=yc.map(y=>y.term);
   const data=yc.map(y=>parseFloat(y.yield)||0);
-  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#2E7DAD',backgroundColor:'rgba(46,125,173,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#1C5688',pointBorderColor:'rgba(19,61,98,0.8)',pointBorderWidth:2,fill:true,tension:0.3}]},plugins:[{id:'yieldEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#2E7DAD';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(2)+'%':lastVal,lastPt.x+6,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,26,43,0.95)',titleColor:'#E8F0F8',bodyColor:'#94A8C2',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:11},color:'#94A8C2'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:11},color:'#94A8C2',callback:v=>v.toFixed(2)+'%'}}}}});
+  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#0073e6',backgroundColor:'rgba(0,115,230,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#0073e6',pointBorderColor:'#0073e6',pointBorderWidth:2,fill:true,tension:0.3}]},plugins:[{id:'yieldEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#0073e6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(2)+'%':lastVal,lastPt.x+6,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(28,54,100,0.95)',titleColor:'#ffffff',bodyColor:'#c0c0c0',borderColor:'rgba(0,0,0,0.12)',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Arial',size:11},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.06)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:11},color:'#636363',callback:v=>v.toFixed(2)+'%'}}}}});
 }
 function drawLineChart(canvasId,tsData,months){
   const canvas=document.getElementById(canvasId);
   if(!canvas)return;
   if(charts[canvasId])charts[canvasId].destroy();
   if(!tsData||!tsData.series||!tsData.series.length){
-    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#777;font-size:var(--text-xs);padding:20px">No timeseries data available</div>');
+    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#919191;font-size:var(--text-xs);padding:20px">No timeseries data available</div>');
     return;
   }
   const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-months);
@@ -927,14 +996,14 @@ function drawLineChart(canvasId,tsData,months){
         try{
           const ed=parseEvtDate(evt.date);if(!ed)return;
           const ds=fmtDate(ed);const li=labels.indexOf(ds);if(li===-1)return;
-          lcEvtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Plus Jakarta Sans',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
+          lcEvtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Arial',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
         }catch(e2){}
       });
     }
   }catch(e3){console.warn('Line chart event annotations:',e3)}
   const lcHasAnnotation=typeof window.ChartAnnotation!=='undefined'||Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation');
   const lcAnnotationCfg=lcHasAnnotation&&Object.keys(lcEvtAnnotations).length?{annotation:{annotations:{...lcEvtAnnotations}}}:{};
-  charts[canvasId]=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.06)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#1E40AF',fill:true,tension:0.3}]},plugins:[{id:'lineEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 10px JetBrains Mono';ctx.fillStyle='#3B82F6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):lastVal,lastPt.x+4,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},...lcAnnotationCfg},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:6,font:{family:'Plus Jakarta Sans',size:10},color:'#94A8C2'}},y:{grid:{color:'rgba(255,255,255,0.08)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#94A8C2'}}}}});
+  charts[canvasId]=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#0073e6',backgroundColor:'rgba(0,115,230,0.06)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#0073e6',fill:true,tension:0.3}]},plugins:[{id:'lineEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 10px JetBrains Mono';ctx.fillStyle='#0073e6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?lastVal.toFixed(1):lastVal,lastPt.x+4,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},...lcAnnotationCfg},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:6,font:{family:'Arial',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.06)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'JetBrains Mono',size:10},color:'#636363'}}}}});
 }
 
 function drawSparkline(canvasId,tsData,color){
@@ -945,19 +1014,24 @@ function drawSparkline(canvasId,tsData,color){
   const filtered=tsData.series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
   if(filtered.length<2)return;
   const data=filtered.map(p=>p.value);
-  const c=color||'#2E7DAD';
+  const c=color||'#0073e6';
   const mn=Math.min(...data),mx=Math.max(...data),pad=(mx-mn)*0.15||0.01;
   charts[canvasId]=new Chart(canvas,{type:'line',data:{labels:filtered.map(p=>p.date),datasets:[{data,borderColor:c,backgroundColor:c+'12',borderWidth:1.8,pointRadius:data.map((_,i)=>i===data.length-1?3:0),pointBackgroundColor:c,fill:true,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false,min:mn-pad,max:mx+pad}},elements:{line:{capBezierPoints:true}}}});
 }
 async function loadAndDrawSparkline(canvasId,docId,change){
   const ts=await loadTimeseries(docId);
   if(!ts)return;
-  const c=change&&change.startsWith('-')?'#B91C1C':change&&(change.startsWith('+')||parseFloat(change)>0)?'#15803D':'#2E7DAD';
+  const c=change&&change.startsWith('-')?'#B91C1C':change&&(change.startsWith('+')||parseFloat(change)>0)?'#15803D':'#0073e6';
   drawSparkline(canvasId,ts,c);
 }
 
 /* ====== PROJECTS TAB ====== */
-function renderProjectsTab(){
+async function renderProjectsTab(){
+  // Load projects on demand if not yet loaded
+  if(!allProjects.length){
+    const prov=$('filterProvince')?.value||'BC';
+    await loadProjects(prov||null);
+  }
   // Populate filter dropdowns
   const provSel=$('filterProvince');
   if(provSel.options.length<=1){
@@ -988,6 +1062,20 @@ function renderProjectsTab(){
     });
   });
   filterProjects();
+  // Populate missed project form dropdowns
+  const mpProv=$('mpProvince');
+  if(mpProv&&mpProv.options.length<=1){PROVS.forEach(p=>{const o=document.createElement('option');o.value=p.name;o.textContent=p.name;mpProv.appendChild(o)})}
+  const mpSec=$('mpSector');
+  if(mpSec&&mpSec.options.length<=1){NAICS_CODES.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c+' '+NAICS_NAMES[c];mpSec.appendChild(o)})}
+}
+async function submitMissedProject(){
+  const fb=$('missedFormFeedback');
+  if(fb){
+    fb.style.display='block';
+    fb.style.background='#FEF3C7';
+    fb.style.color='#92400E';
+    fb.textContent='Project submissions are being migrated to a new system. Check back soon!';
+  }
 }
 async function filterProjects(){
   const search=($('projectSearch').value||'').toLowerCase();
@@ -995,7 +1083,7 @@ async function filterProjects(){
   const sector=$('filterSector').value;
   const status=$('filterStatus').value;
   const sort=$('sortProjects').value;
-  // If province changed, reload from Firestore
+  // If province changed, reload from static JSON
   if(prov!==_lastLoadedProvince){
     await loadProjects(prov);
     filterProjects();
@@ -1045,7 +1133,7 @@ function renderProjectTable(){
   const countNote=(!pf||pf==='')?'Showing '+shown.length+' of '+filteredProjects.length+' projects. Select a province for complete results. ('+allProjects.length+' most recent loaded)':'Showing '+shown.length+' of '+filteredProjects.length+' '+(PROVS.find(p=>p.code===pf)||{}).name+' projects';
   $('projectResultsSummary').textContent=countNote;
   // Table
-  let html='<table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Type</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Updated</th><th scope="col">Src</th></tr></thead><tbody>';
+  let html='<div class="project-table-wrap"><table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Type</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Updated</th><th scope="col">Src</th></tr></thead><tbody>';
   shown.forEach((p,i)=>{
     const rowId='proj_'+i;
     const firstEv=(p.evidence||[])[0]||{};
@@ -1072,15 +1160,15 @@ function renderProjectTable(){
     // Expansion row
     const colSpan=9;
     html+='<tr id="'+rowId+'" style="display:none"><td colspan="'+colSpan+'"><div class="project-expand">';
-    html+='<div style="font-size:var(--text-sm);color:#555;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
+    html+='<div style="font-size:var(--text-sm);color:#636363;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
     // CMA + confidence row
-    html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:var(--text-xs);color:#555">';
+    html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:var(--text-xs);color:#636363">';
     if(p.cma)html+='<span>CMA: <b>'+p.cma+'</b></span>';
     const evArr=p.evidence||[];
     const dispConf=p.display_confidence!=null?p.display_confidence:p.confidence;
-    if(dispConf!=null)html+='<span>Confidence: '+confBadge(dispConf,evArr.length)+(p.decay_applied?' <span style="color:#999;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
+    if(dispConf!=null)html+='<span>Confidence: '+confBadge(dispConf,evArr.length)+(p.decay_applied?' <span style="font-family:var(--font-mono);color:#919191;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
     if(p.has_anomalies)html+='<span style="color:var(--status-amber);font-weight:600" title="'+(p.anomalies||[]).map(a=>a.type+': '+a.detail).join('; ')+'">&#9888; Anomaly detected</span>';
-    if(p.needs_review)html+='<span style="color:var(--status-red);font-weight:500">Needs review ('+p.days_since_update+'d stale)</span>';
+    if(p.needs_review)html+='<span style="font-family:var(--font-mono);color:var(--status-red);font-weight:500">Needs review ('+p.days_since_update+'d stale)</span>';
     const dsSrc=p.discovery_sources||[];
     if(dsSrc.length>1)html+='<span>Found by '+dsSrc.length+' channels</span>';
     html+='</div>';
@@ -1102,11 +1190,11 @@ function renderProjectTable(){
         }else if(e.url&&e.url_dead){
           let label=e.name||'';
           if(!label){try{const h=new URL(e.url).hostname;label=h.startsWith('www.')?h.slice(4):h}catch(_){label=e.url}}
-          html+='<span style="color:#999;text-decoration:line-through;word-break:break-all">'+label+'</span> <span style="color:var(--status-red);font-size:10px">source unavailable</span>';
+          html+='<span style="color:#919191;text-decoration:line-through;word-break:break-all">'+label+'</span> <span style="color:var(--status-red);font-size:10px">source unavailable</span>';
         }else{
           html+='<span>'+(e.name||'Unknown source')+'</span>';
         }
-        if(e.date)html+=' <span style="color:#999;font-size:10px">('+e.date+')</span>';
+        if(e.date)html+=' <span style="color:#919191;font-size:10px">('+e.date+')</span>';
         if(e.url_verified===false&&!e.url_dead)html+='<span class="url-broken" title="Link may be broken">link may be unavailable</span>';
         html+='</li>';
       });
@@ -1117,17 +1205,32 @@ function renderProjectTable(){
     if(sh.length){
       html+='<div class="project-timeline">';
       sh.forEach(entry=>{
-        html+='<div class="timeline-entry"><div class="timeline-date">'+fmtDate(entry.date||'')+'</div><div>'+statusBadge(entry.status||'')+(entry.detail?' <span style="color:#555;font-size:var(--text-xs)">'+entry.detail+'</span>':'')+'</div>';
+        html+='<div class="timeline-entry"><div class="timeline-date">'+fmtDate(entry.date||'')+'</div><div>'+statusBadge(entry.status||'')+(entry.detail?' <span style="color:#636363;font-size:var(--text-xs)">'+entry.detail+'</span>':'')+'</div>';
         const es=entry.source||{};
-        if(es.url)html+='<div style="font-size:var(--text-xs);margin-top:2px">'+srcLink(es.url,es.title)+(es.archive_url?' <a href="'+es.archive_url+'" target="_blank" style="color:#777">[Archived]</a>':'')+'</div>';
+        if(es.url)html+='<div style="font-size:var(--text-xs);margin-top:2px">'+srcLink(es.url,es.title)+(es.archive_url?' <a href="'+es.archive_url+'" target="_blank" style="color:#919191">[Archived]</a>':'')+'</div>';
         html+='</div>';
       });
       html+='</div>';
     }
-    // Report correction — GitHub Issues link
-    html+='<div style="margin-top:10px"><a href="https://github.com/waltaaaa/ai-newsletter/issues/new?template=project-correction.yml&title=Correction:+'+encodeURIComponent(p.name||'')+'" target="_blank" rel="noopener" style="font-size:var(--text-xs);color:var(--accent)">Report correction &#x2197;</a></div>';
+    // Suggest edit
+    const eid='edit_'+i;
+    html+='<div style="margin-top:10px"><button onclick="event.stopPropagation();toggleEditForm(\''+eid+'\')" style="background:none;border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-size:var(--text-xs);color:var(--accent-blue-soft);cursor:pointer">Suggest Edit</button></div>';
+    html+='<div id="'+eid+'" class="edit-form" style="display:none" onclick="event.stopPropagation()">';
+    html+='<div class="edit-grid">';
+    html+='<div><label>Value (e.g. $1.2B)</label><input type="text" id="'+eid+'_val" value="'+(p.value||'').replace(/"/g,'&quot;')+'"></div>';
+    html+='<div><label>Status</label><select id="'+eid+'_status"><option value="">--</option>';
+    STATUSES.forEach(s=>{html+='<option value="'+s+'"'+((p.status||'')===s?' selected':'')+'>'+s+'</option>'});
+    html+='</select></div>';
+    html+='<div><label>Proponent</label><input type="text" id="'+eid+'_prop" value="'+(p.proponent||'').replace(/"/g,'&quot;')+'"></div>';
+    html+='<div><label>Completion Date</label><input type="date" id="'+eid+'_comp" value="'+(p.completionDate||'')+'"></div>';
+    html+='</div>';
+    html+='<div><label>Source URL (for verification)</label><input type="url" id="'+eid+'_src" placeholder="https://..."></div>';
+    html+='<div><label>Notes</label><textarea id="'+eid+'_notes" rows="2" placeholder="Why is this correction needed?"></textarea></div>';
+    html+='<button onclick="submitProjectCorrection(\''+eid+'\',\''+((p._id||'').replace(/'/g,"\\'"))+'\')" style="background:var(--accent);color:#fff;border:none;border-radius:5px;padding:5px 14px;font-size:var(--text-xs);cursor:pointer;margin-top:4px">Submit Correction</button>';
+    html+='<div id="'+eid+'_fb" class="edit-feedback"></div>';
+    html+='</div>';
     // Metadata
-    html+='<div style="margin-top:12px;font-size:var(--text-xs);color:#777">';
+    html+='<div style="margin-top:12px;font-size:var(--text-xs);color:#919191">';
     if(p.firstTracked)html+='Tracked since '+fmtDate(p.firstTracked)+' \u00b7 ';
     if(p.lastSeen)html+='Last seen '+fmtDate(p.lastSeen)+' \u00b7 ';
     if(p.discovery_source)html+='<span class="disc-badge">'+p.discovery_source+'</span> ';
@@ -1135,7 +1238,7 @@ function renderProjectTable(){
     if(staleWarn)html+=' <span style="color:var(--status-amber);font-weight:500">\u26a0 Status unconfirmed since '+fmtDate(p.lastSeen)+'</span>';
     html+='</div></div></td></tr>';
   });
-  html+='</tbody></table>';
+  html+='</tbody></table></div>';
   $('projectTableContainer').innerHTML=html;
   $('loadMoreBtn').style.display=shown.length<filteredProjects.length?'block':'none';
 }
@@ -1146,6 +1249,16 @@ window.toggleProjectRow=function(id){
 window.toggleEditForm=function(eid){
   const el=document.getElementById(eid);
   if(el)el.style.display=el.style.display==='none'?'block':'none';
+};
+window.submitProjectCorrection=function(){
+  // Find the feedback element in the correction form
+  const fbs=document.querySelectorAll('[id$="_fb"]');
+  fbs.forEach(function(fb){
+    fb.style.display='block';
+    fb.style.background='#FEF3C7';
+    fb.style.color='#92400E';
+    fb.textContent='Project corrections are being migrated to a new system. Check back soon!';
+  });
 };
 window.exportProjects=function(){
   if(!filteredProjects.length)return;
@@ -1168,8 +1281,10 @@ window.exportProjects=function(){
 
 
 /* ====== CALENDAR TAB ====== */
-function renderCalendar(){
-  const events=(D&&(D.watchlist||D.events))?(D.watchlist||D.events):[];
+async function renderCalendar(){
+  let events=(D&&(D.watchlist||D.events))||[];
+  // Load from static events.json if briefing has no events
+  if(!events.length){try{events=await fetchJSON('events.json')||[]}catch(_){events=[]}}
   // Monthly calendar grid
   const now=new Date();
   const year=now.getFullYear(),month=now.getMonth();
@@ -1198,7 +1313,7 @@ function renderCalendar(){
     }
   });
 
-  let calHtml='<h3 style="font-size:var(--text-lg);font-weight:600;margin-bottom:16px;color:#E8F0F8">'+monthName+'</h3>';
+  let calHtml='<h3 style="font-size:var(--text-lg);font-weight:600;margin-bottom:16px;color:#ffffff">'+monthName+'</h3>';
   calHtml+='<div class="calendar-grid">';
   ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{calHtml+='<div class="calendar-header-cell">'+d+'</div>'});
   // Blank cells before first day
@@ -1252,7 +1367,7 @@ function renderCalendar(){
         if(ed){twHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
         else{twHtml+='<div>'+(e.date||'-')+'</div>'}
         twHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
-        if(e.description)twHtml+='<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+e.description+'</div>';
+        if(e.description)twHtml+='<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+e.description+'</div>';
         twHtml+='</div>';
         twHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
         twHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
@@ -1276,7 +1391,7 @@ function renderCalendar(){
       if(ed){allHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
       else{allHtml+='<div>'+(e.date||'-')+'</div>'}
       allHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
-      if(e.description)allHtml+='<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+e.description+'</div>';
+      if(e.description)allHtml+='<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+e.description+'</div>';
       allHtml+='</div>';
       allHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
       allHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
@@ -1301,7 +1416,7 @@ async function renderPipelineStatus(){
     const stColor=st==='success'?'var(--status-green)':st==='partial'?'var(--status-amber)':'var(--status-red)';
     const dur=run.duration_seconds?Math.round(run.duration_seconds/60)+'m':'—';
     const disc=run.discovery||{};
-    el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:#555">Pipeline Status</div><div style="display:flex;gap:16px;font-size:var(--text-xs);color:#555;flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
+    el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:#636363">Pipeline Status</div><div style="display:flex;gap:16px;font-family:var(--font-mono);font-size:var(--text-xs);color:#636363;flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
   }catch(e){
     console.warn('Pipeline status:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1321,7 +1436,7 @@ async function renderCostMonitor(){
     const claudeOut=ps.claude_tokens?.output||0;
     const claudeCost=((claudeIn/1e6)*3+(claudeOut/1e6)*15).toFixed(2);
     const tavilyPct=Math.round((tavilyUsed/1000)*100);
-    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;user-select:none">Cost Monitor <span style="font-weight:400;color:#999;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#555"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
+    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;user-select:none">Cost Monitor <span style="font-weight:400;color:#919191;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#636363"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="font-family:var(--font-mono);margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="font-family:var(--font-mono);margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
   }catch(e){
     console.warn('Cost monitor:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1339,9 +1454,9 @@ async function renderMicroscopeHistory(){
     if(!history.length){el.innerHTML='';return}
     let items='';
     history.slice(0,12).forEach(h=>{
-      items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:#777">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:#555;margin-top:2px">'+h.description+'</div>':''}</div>`;
+      items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:#919191">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+h.description+'</div>':''}</div>`;
     });
-    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:14px 18px;user-select:none">Under the Microscope Archives (${history.length} weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Under the Microscope Archives (<span style="font-family:var(--font-mono)">${history.length}</span> weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
   }catch(e){
     console.warn('Microscope history:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1358,7 +1473,7 @@ async function renderMicroscope(){
     const m=(data&&data.current)||data||{};
     if(!m.topic&&!m.text){el.innerHTML='';return}
     const sectors=(m.affected_sectors||[]).map(s=>'<span style="background:var(--bg-subtle);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:var(--text-xs)">'+s+'</span>').join(' ');
-    const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:#777;margin-left:8px">Week '+m.weeks_running+' of coverage</span>':'';
+    const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:#919191;margin-left:8px">Week '+m.weeks_running+' of coverage</span>':'';
     el.innerHTML=`<div class="card fade-in"><div class="card-header">Under the Microscope ${weeks}</div><div style="font-size:var(--text-sm);font-weight:600;color:var(--accent-blue);margin-bottom:8px">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}<div class="card-body">${san(m.text||m.analysis||'')}</div></div>`;
   }catch(e){
     console.warn('Microscope:',e);
@@ -1383,9 +1498,9 @@ async function renderPolicySection(){
     let listHtml='';
     articles.slice(0,8).forEach(a=>{
       const provBadge=a.scope?'<span style="background:var(--status-blue-bg);color:var(--status-blue);padding:1px 6px;border-radius:3px;font-size:.65rem;margin-left:4px">'+a.scope+'</span>':'';
-      listHtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border-light);font-size:var(--text-xs)"><a href="${a.url||'#'}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue);text-decoration:none">${a.headline||a.title||'Untitled'}</a>${provBadge}<span style="color:#777;margin-left:6px">${a.source||''}</span></div>`;
+      listHtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border-light);font-size:var(--text-xs)"><a href="${a.url||'#'}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue);text-decoration:none">${a.headline||a.title||'Untitled'}</a>${provBadge}<span style="color:#919191;margin-left:6px">${a.source||''}</span></div>`;
     });
-    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#555;padding:14px 18px;user-select:none">Policy Monitor (${articles.length} articles this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${catBadges}</div>${listHtml}</div></details>`;
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Policy Monitor (<span style="font-family:var(--font-mono)">${articles.length}</span> articles this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${catBadges}</div>${listHtml}</div></details>`;
   }catch(e){console.warn('Policy section:',e);el.innerHTML=''}
 }
 
@@ -1398,16 +1513,16 @@ async function renderCanadianCommodities(){
     const indicators=data.indicators||data;
     const keys=Object.keys(indicators).filter(k=>k!=='updated_at'&&typeof indicators[k]==='object');
     if(!keys.length){el.innerHTML='';return}
-    let html='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#E8F0F8">Canadian Commodity Indicators</h3><div class="market-grid">';
+    let html='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Canadian Commodity Indicators</h3><div class="market-grid">';
     keys.forEach(k=>{
       const c=indicators[k];
       const chg=c.pct_1w||'';const isNeg=String(chg).startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
-      const sectors=(c.affected_sectors||[]).map(s=>'<span style="background:#1a4a70;color:#8AAFC8;padding:1px 5px;border-radius:3px;font-size:.6rem">'+s+'</span>').join(' ');
-      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:#3a2a1a;color:#dab06a;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
-      html+=`<div class="market-card"><div class="market-card-ticker">${c.name||k.replace(/_/g,' ')}</div><div class="market-card-price">${c.current||'N/A'}</div>`;
+      const sectors=(c.affected_sectors||[]).map(s=>'<span style="background:rgba(255,255,255,0.08);color:#8ea8cc;padding:1px 5px;border-radius:3px;font-size:.6rem">'+s+'</span>').join(' ');
+      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:rgba(0,0,0,0.05);color:#636363;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
+      html+=`<div class="market-card" data-cat="energy"><div class="market-card-ticker">${c.name||k.replace(/_/g,' ')}</div><div class="market-card-price">${c.current||'N/A'}</div>`;
       if(chg)html+=`<div class="market-card-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg} 1W</div>`;
-      if(c.pct_1m)html+=`<div style="font-size:var(--text-xs);color:#777">1M: ${c.pct_1m}</div>`;
+      if(c.pct_1m)html+=`<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">1M: ${c.pct_1m}</div>`;
       if(sectors)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:4px">${sectors}</div>`;
       if(provs)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:2px">${provs}</div>`;
       html+='</div>';
@@ -1419,12 +1534,87 @@ async function renderCanadianCommodities(){
 
 /* ====== PHASE 4: DATA EXPLORER (V-Code Search) ====== */
 const VCODE_INDEX=[
+  // ── NATIONAL INDICATORS ──
   {vcode:'V41690973',table:'18-10-0004-01',title:'Consumer Price Index, monthly',keywords:'cpi inflation prices consumer',category:'Prices',freq:'Monthly',geo:'Canada'},
-  {vcode:'V2062815',table:'14-10-0287-01',title:'Labour force characteristics',keywords:'unemployment employment labour jobs rate',category:'Labour Market',freq:'Monthly',geo:'Canada'},
-  {vcode:'V62305752',table:'36-10-0434-01',title:'Gross domestic product (GDP), expenditure-based',keywords:'gdp growth economy quarterly',category:'GDP',freq:'Quarterly',geo:'Canada'},
-  {vcode:'V735391',table:'34-10-0066-01',title:'Building permits, by type of structure',keywords:'building permits construction residential commercial',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
-  {vcode:'V111382687',table:'34-10-0175-01',title:'Building permits, by type of work',keywords:'construction new renovation addition permits',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V2062815',table:'14-10-0287-01',title:'Unemployment rate, seasonally adjusted',keywords:'unemployment rate labour jobs lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V2062809',table:'14-10-0287-01',title:'Employment rate, seasonally adjusted',keywords:'employment rate labour jobs lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V2062803',table:'14-10-0287-01',title:'Participation rate, seasonally adjusted',keywords:'participation rate labour force lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V62305752',table:'36-10-0104-01',title:'Gross domestic product (GDP), quarterly',keywords:'gdp growth economy quarterly real',category:'GDP',freq:'Quarterly',geo:'Canada'},
+
+  // ── CPI COMPONENTS ──
+  {vcode:'V41693271',table:'18-10-0004-01',title:'CPI Energy',keywords:'energy gasoline fuel electricity cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693461',table:'18-10-0004-01',title:'CPI Shelter',keywords:'shelter housing rent mortgage cpi',category:'Housing',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693508',table:'18-10-0004-01',title:'CPI Food',keywords:'food grocery prices cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693242',table:'18-10-0004-01',title:'CPI All-items excluding food and energy (core)',keywords:'core cpi inflation excluding food energy',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693302',table:'18-10-0004-01',title:'CPI Transportation',keywords:'transportation vehicles gas auto insurance cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693380',table:'18-10-0004-01',title:'CPI Clothing and footwear',keywords:'clothing footwear apparel cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693414',table:'18-10-0004-01',title:'CPI Health and personal care',keywords:'health personal care medical cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693432',table:'18-10-0004-01',title:'CPI Recreation, education and reading',keywords:'recreation education reading cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693456',table:'18-10-0004-01',title:'CPI Household operations, furnishings and equipment',keywords:'household operations furnishings equipment cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693468',table:'18-10-0004-01',title:'CPI Alcoholic beverages, tobacco and cannabis',keywords:'alcohol tobacco cannabis beverages cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+
+  // ── PROVINCIAL CPI ──
   {vcode:'V53620',table:'18-10-0006-01',title:'Consumer Price Index, by province',keywords:'cpi inflation prices provincial',category:'Prices',freq:'Monthly',geo:'Provinces'},
+  {vcode:'V41690914',table:'18-10-0004-01',title:'CPI Newfoundland and Labrador',keywords:'cpi inflation newfoundland labrador nl',category:'Prices',freq:'Monthly',geo:'Newfoundland and Labrador'},
+  {vcode:'V41690915',table:'18-10-0004-01',title:'CPI Prince Edward Island',keywords:'cpi inflation prince edward island pei',category:'Prices',freq:'Monthly',geo:'Prince Edward Island'},
+  {vcode:'V41690916',table:'18-10-0004-01',title:'CPI Nova Scotia',keywords:'cpi inflation nova scotia ns',category:'Prices',freq:'Monthly',geo:'Nova Scotia'},
+  {vcode:'V41690917',table:'18-10-0004-01',title:'CPI New Brunswick',keywords:'cpi inflation new brunswick nb',category:'Prices',freq:'Monthly',geo:'New Brunswick'},
+  {vcode:'V41690918',table:'18-10-0004-01',title:'CPI Quebec',keywords:'cpi inflation quebec qc',category:'Prices',freq:'Monthly',geo:'Quebec'},
+  {vcode:'V41690919',table:'18-10-0004-01',title:'CPI Ontario',keywords:'cpi inflation ontario on',category:'Prices',freq:'Monthly',geo:'Ontario'},
+  {vcode:'V41690920',table:'18-10-0004-01',title:'CPI Manitoba',keywords:'cpi inflation manitoba mb',category:'Prices',freq:'Monthly',geo:'Manitoba'},
+  {vcode:'V41690921',table:'18-10-0004-01',title:'CPI Saskatchewan',keywords:'cpi inflation saskatchewan sk',category:'Prices',freq:'Monthly',geo:'Saskatchewan'},
+  {vcode:'V41690922',table:'18-10-0004-01',title:'CPI Alberta',keywords:'cpi inflation alberta ab',category:'Prices',freq:'Monthly',geo:'Alberta'},
+  {vcode:'V41690923',table:'18-10-0004-01',title:'CPI British Columbia',keywords:'cpi inflation british columbia bc',category:'Prices',freq:'Monthly',geo:'British Columbia'},
+
+  // ── PROVINCIAL UNEMPLOYMENT ──
+  {vcode:'V2063004',table:'14-10-0287-01',title:'Unemployment rate, Newfoundland and Labrador',keywords:'unemployment rate newfoundland labrador nl lfs',category:'Labour Market',freq:'Monthly',geo:'Newfoundland and Labrador'},
+  {vcode:'V2063193',table:'14-10-0287-01',title:'Unemployment rate, Prince Edward Island',keywords:'unemployment rate prince edward island pei lfs',category:'Labour Market',freq:'Monthly',geo:'Prince Edward Island'},
+  {vcode:'V2063382',table:'14-10-0287-01',title:'Unemployment rate, Nova Scotia',keywords:'unemployment rate nova scotia ns lfs',category:'Labour Market',freq:'Monthly',geo:'Nova Scotia'},
+  {vcode:'V2063571',table:'14-10-0287-01',title:'Unemployment rate, New Brunswick',keywords:'unemployment rate new brunswick nb lfs',category:'Labour Market',freq:'Monthly',geo:'New Brunswick'},
+  {vcode:'V2063760',table:'14-10-0287-01',title:'Unemployment rate, Quebec',keywords:'unemployment rate quebec qc lfs',category:'Labour Market',freq:'Monthly',geo:'Quebec'},
+  {vcode:'V2063949',table:'14-10-0287-01',title:'Unemployment rate, Ontario',keywords:'unemployment rate ontario on lfs',category:'Labour Market',freq:'Monthly',geo:'Ontario'},
+  {vcode:'V2064138',table:'14-10-0287-01',title:'Unemployment rate, Manitoba',keywords:'unemployment rate manitoba mb lfs',category:'Labour Market',freq:'Monthly',geo:'Manitoba'},
+  {vcode:'V2064327',table:'14-10-0287-01',title:'Unemployment rate, Saskatchewan',keywords:'unemployment rate saskatchewan sk lfs',category:'Labour Market',freq:'Monthly',geo:'Saskatchewan'},
+  {vcode:'V2064516',table:'14-10-0287-01',title:'Unemployment rate, Alberta',keywords:'unemployment rate alberta ab lfs',category:'Labour Market',freq:'Monthly',geo:'Alberta'},
+  {vcode:'V2064705',table:'14-10-0287-01',title:'Unemployment rate, British Columbia',keywords:'unemployment rate british columbia bc lfs',category:'Labour Market',freq:'Monthly',geo:'British Columbia'},
+
+  // ── PROVINCIAL EMPLOYMENT RATE ──
+  {vcode:'V2062998',table:'14-10-0287-01',title:'Employment rate, Newfoundland and Labrador',keywords:'employment rate newfoundland labrador nl lfs',category:'Labour Market',freq:'Monthly',geo:'Newfoundland and Labrador'},
+  {vcode:'V2063187',table:'14-10-0287-01',title:'Employment rate, Prince Edward Island',keywords:'employment rate prince edward island pei lfs',category:'Labour Market',freq:'Monthly',geo:'Prince Edward Island'},
+  {vcode:'V2063376',table:'14-10-0287-01',title:'Employment rate, Nova Scotia',keywords:'employment rate nova scotia ns lfs',category:'Labour Market',freq:'Monthly',geo:'Nova Scotia'},
+  {vcode:'V2063565',table:'14-10-0287-01',title:'Employment rate, New Brunswick',keywords:'employment rate new brunswick nb lfs',category:'Labour Market',freq:'Monthly',geo:'New Brunswick'},
+  {vcode:'V2063754',table:'14-10-0287-01',title:'Employment rate, Quebec',keywords:'employment rate quebec qc lfs',category:'Labour Market',freq:'Monthly',geo:'Quebec'},
+  {vcode:'V2063943',table:'14-10-0287-01',title:'Employment rate, Ontario',keywords:'employment rate ontario on lfs',category:'Labour Market',freq:'Monthly',geo:'Ontario'},
+  {vcode:'V2064132',table:'14-10-0287-01',title:'Employment rate, Manitoba',keywords:'employment rate manitoba mb lfs',category:'Labour Market',freq:'Monthly',geo:'Manitoba'},
+  {vcode:'V2064321',table:'14-10-0287-01',title:'Employment rate, Saskatchewan',keywords:'employment rate saskatchewan sk lfs',category:'Labour Market',freq:'Monthly',geo:'Saskatchewan'},
+  {vcode:'V2064510',table:'14-10-0287-01',title:'Employment rate, Alberta',keywords:'employment rate alberta ab lfs',category:'Labour Market',freq:'Monthly',geo:'Alberta'},
+  {vcode:'V2064699',table:'14-10-0287-01',title:'Employment rate, British Columbia',keywords:'employment rate british columbia bc lfs',category:'Labour Market',freq:'Monthly',geo:'British Columbia'},
+
+  // ── PROVINCIAL PARTICIPATION RATE ──
+  {vcode:'V2062992',table:'14-10-0287-01',title:'Participation rate, Newfoundland and Labrador',keywords:'participation rate newfoundland labrador nl lfs',category:'Labour Market',freq:'Monthly',geo:'Newfoundland and Labrador'},
+  {vcode:'V2063181',table:'14-10-0287-01',title:'Participation rate, Prince Edward Island',keywords:'participation rate prince edward island pei lfs',category:'Labour Market',freq:'Monthly',geo:'Prince Edward Island'},
+  {vcode:'V2063370',table:'14-10-0287-01',title:'Participation rate, Nova Scotia',keywords:'participation rate nova scotia ns lfs',category:'Labour Market',freq:'Monthly',geo:'Nova Scotia'},
+  {vcode:'V2063559',table:'14-10-0287-01',title:'Participation rate, New Brunswick',keywords:'participation rate new brunswick nb lfs',category:'Labour Market',freq:'Monthly',geo:'New Brunswick'},
+  {vcode:'V2063748',table:'14-10-0287-01',title:'Participation rate, Quebec',keywords:'participation rate quebec qc lfs',category:'Labour Market',freq:'Monthly',geo:'Quebec'},
+  {vcode:'V2063937',table:'14-10-0287-01',title:'Participation rate, Ontario',keywords:'participation rate ontario on lfs',category:'Labour Market',freq:'Monthly',geo:'Ontario'},
+  {vcode:'V2064126',table:'14-10-0287-01',title:'Participation rate, Manitoba',keywords:'participation rate manitoba mb lfs',category:'Labour Market',freq:'Monthly',geo:'Manitoba'},
+  {vcode:'V2064315',table:'14-10-0287-01',title:'Participation rate, Saskatchewan',keywords:'participation rate saskatchewan sk lfs',category:'Labour Market',freq:'Monthly',geo:'Saskatchewan'},
+  {vcode:'V2064504',table:'14-10-0287-01',title:'Participation rate, Alberta',keywords:'participation rate alberta ab lfs',category:'Labour Market',freq:'Monthly',geo:'Alberta'},
+  {vcode:'V2064693',table:'14-10-0287-01',title:'Participation rate, British Columbia',keywords:'participation rate british columbia bc lfs',category:'Labour Market',freq:'Monthly',geo:'British Columbia'},
+
+  // ── PROVINCIAL GDP ──
+  {vcode:'V62464519',table:'36-10-0402-01',title:'Real GDP, Newfoundland and Labrador',keywords:'gdp growth newfoundland labrador nl',category:'GDP',freq:'Annual',geo:'Newfoundland and Labrador'},
+  {vcode:'V62464824',table:'36-10-0402-01',title:'Real GDP, Prince Edward Island',keywords:'gdp growth prince edward island pei',category:'GDP',freq:'Annual',geo:'Prince Edward Island'},
+  {vcode:'V62465129',table:'36-10-0402-01',title:'Real GDP, Nova Scotia',keywords:'gdp growth nova scotia ns',category:'GDP',freq:'Annual',geo:'Nova Scotia'},
+  {vcode:'V62465434',table:'36-10-0402-01',title:'Real GDP, New Brunswick',keywords:'gdp growth new brunswick nb',category:'GDP',freq:'Annual',geo:'New Brunswick'},
+  {vcode:'V62465739',table:'36-10-0402-01',title:'Real GDP, Quebec',keywords:'gdp growth quebec qc',category:'GDP',freq:'Annual',geo:'Quebec'},
+  {vcode:'V62466044',table:'36-10-0402-01',title:'Real GDP, Ontario',keywords:'gdp growth ontario on',category:'GDP',freq:'Annual',geo:'Ontario'},
+  {vcode:'V62466349',table:'36-10-0402-01',title:'Real GDP, Manitoba',keywords:'gdp growth manitoba mb',category:'GDP',freq:'Annual',geo:'Manitoba'},
+  {vcode:'V62466654',table:'36-10-0402-01',title:'Real GDP, Saskatchewan',keywords:'gdp growth saskatchewan sk',category:'GDP',freq:'Annual',geo:'Saskatchewan'},
+  {vcode:'V62466959',table:'36-10-0402-01',title:'Real GDP, Alberta',keywords:'gdp growth alberta ab',category:'GDP',freq:'Annual',geo:'Alberta'},
+  {vcode:'V62467264',table:'36-10-0402-01',title:'Real GDP, British Columbia',keywords:'gdp growth british columbia bc',category:'GDP',freq:'Annual',geo:'British Columbia'},
+
+  // ── GDP BY INDUSTRY (20 NAICS) ──
   {vcode:'V65201229',table:'36-10-0434-01',title:'GDP Agriculture, forestry, fishing',keywords:'agriculture farming forestry gdp naics 11',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201236',table:'36-10-0434-01',title:'GDP Mining, quarrying, oil and gas',keywords:'mining oil gas extraction gdp naics 21',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201254',table:'36-10-0434-01',title:'GDP Utilities',keywords:'utilities power electricity gdp naics 22',category:'GDP',freq:'Monthly',geo:'Canada'},
@@ -1436,38 +1626,187 @@ const VCODE_INDEX=[
   {vcode:'V65201398',table:'36-10-0434-01',title:'GDP Information and cultural industries',keywords:'information media telecom technology gdp naics 51',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201407',table:'36-10-0434-01',title:'GDP Finance and insurance',keywords:'finance banking insurance gdp naics 52',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201419',table:'36-10-0434-01',title:'GDP Real estate',keywords:'real estate housing rental property gdp naics 53',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201429',table:'36-10-0434-01',title:'GDP Professional, scientific and technical services',keywords:'professional scientific technical consulting gdp naics 54',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201441',table:'36-10-0434-01',title:'GDP Management of companies',keywords:'management companies enterprises headquarters gdp naics 55',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201442',table:'36-10-0434-01',title:'GDP Administrative and support, waste management',keywords:'administrative support waste management remediation gdp naics 56',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201452',table:'36-10-0434-01',title:'GDP Educational services',keywords:'education schools university college gdp naics 61',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201457',table:'36-10-0434-01',title:'GDP Health care and social assistance',keywords:'health care hospital medical gdp naics 62',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201463',table:'36-10-0434-01',title:'GDP Arts, entertainment and recreation',keywords:'arts entertainment recreation tourism gdp naics 71',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201468',table:'36-10-0434-01',title:'GDP Accommodation and food services',keywords:'accommodation hotel food services restaurant gdp naics 72',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201471',table:'36-10-0434-01',title:'GDP Other services (except public administration)',keywords:'other services repair personal laundry gdp naics 81',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201476',table:'36-10-0434-01',title:'GDP Public administration',keywords:'public administration government military defence gdp naics 91',category:'GDP',freq:'Monthly',geo:'Canada'},
+
+  // ── CONSTRUCTION & HOUSING ──
+  {vcode:'V735391',table:'34-10-0066-01',title:'Building permits, by type of structure',keywords:'building permits construction residential commercial',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V111382687',table:'34-10-0175-01',title:'Building permits, by type of work',keywords:'construction new renovation addition permits',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
   {vcode:'V52367876',table:'27-10-0273-01',title:'Investment in building construction',keywords:'investment building construction capital spending',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
-  {vcode:'V1',table:'10-10-0125-01',title:'Canadian international merchandise trade',keywords:'trade exports imports merchandise international',category:'Trade',freq:'Monthly',geo:'Canada'},
-  {vcode:'V1044832260',table:'33-10-0036-01',title:'New housing price index',keywords:'housing prices new house index',category:'Housing',freq:'Monthly',geo:'Canada, CMAs'},
   {vcode:'V735337',table:'34-10-0035-01',title:'Housing starts',keywords:'housing starts cmhc residential new construction',category:'Housing',freq:'Monthly',geo:'Canada, provinces'},
-  {vcode:'V37426',table:'16-10-0048-01',title:'Manufacturing sales',keywords:'manufacturing sales shipments production',category:'GDP',freq:'Monthly',geo:'Canada'},
-  {vcode:'V52409870',table:'20-10-0008-01',title:'Retail trade sales',keywords:'retail sales consumer spending',category:'GDP',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V1044832260',table:'33-10-0036-01',title:'New housing price index',keywords:'housing prices new house index nhpi',category:'Housing',freq:'Monthly',geo:'Canada, CMAs'},
+
+  // ── BUILDING PERMITS BY CMA (Tier 9 anomaly detection) ──
+  {vcode:'V77987',table:'34-10-0066-01',title:'Building permits, Toronto CMA',keywords:'building permits construction toronto ontario',category:'Construction',freq:'Monthly',geo:'Toronto'},
+  {vcode:'V77971',table:'34-10-0066-01',title:'Building permits, Montreal CMA',keywords:'building permits construction montreal quebec',category:'Construction',freq:'Monthly',geo:'Montreal'},
+  {vcode:'V78009',table:'34-10-0066-01',title:'Building permits, Vancouver CMA',keywords:'building permits construction vancouver bc',category:'Construction',freq:'Monthly',geo:'Vancouver'},
+  {vcode:'V77951',table:'34-10-0066-01',title:'Building permits, Calgary CMA',keywords:'building permits construction calgary alberta',category:'Construction',freq:'Monthly',geo:'Calgary'},
+  {vcode:'V77953',table:'34-10-0066-01',title:'Building permits, Edmonton CMA',keywords:'building permits construction edmonton alberta',category:'Construction',freq:'Monthly',geo:'Edmonton'},
+  {vcode:'V77979',table:'34-10-0066-01',title:'Building permits, Ottawa CMA',keywords:'building permits construction ottawa ontario',category:'Construction',freq:'Monthly',geo:'Ottawa'},
+  {vcode:'V77967',table:'34-10-0066-01',title:'Building permits, Winnipeg CMA',keywords:'building permits construction winnipeg manitoba',category:'Construction',freq:'Monthly',geo:'Winnipeg'},
+  {vcode:'V77973',table:'34-10-0066-01',title:'Building permits, Quebec City CMA',keywords:'building permits construction quebec city',category:'Construction',freq:'Monthly',geo:'Quebec City'},
+  {vcode:'V77981',table:'34-10-0066-01',title:'Building permits, Hamilton CMA',keywords:'building permits construction hamilton ontario',category:'Construction',freq:'Monthly',geo:'Hamilton'},
+  {vcode:'V77957',table:'34-10-0066-01',title:'Building permits, Halifax CMA',keywords:'building permits construction halifax nova scotia',category:'Construction',freq:'Monthly',geo:'Halifax'},
+
+  // ── TRADE & COMMERCE ──
+  {vcode:'V1',table:'12-10-0011-01',title:'Canadian international merchandise trade',keywords:'trade exports imports merchandise international',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'V37426',table:'16-10-0048-01',title:'Manufacturing sales',keywords:'manufacturing sales shipments production',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'V52409870',table:'20-10-0008-01',title:'Retail trade sales',keywords:'retail sales consumer spending',category:'Trade',freq:'Monthly',geo:'Canada, provinces'},
+
+  // ── LABOUR MARKET (additional) ──
   {vcode:'V120424858',table:'14-10-0064-01',title:'Employee wages by industry',keywords:'wages salary earnings income employee',category:'Labour Market',freq:'Monthly',geo:'Canada'},
   {vcode:'V39079',table:'BoC Valet',title:'Bank of Canada overnight rate',keywords:'interest rate overnight policy bank canada boc',category:'Rates',freq:'Daily',geo:'Canada'},
   {vcode:'V80691311',table:'11-10-0240-01',title:'Business insolvencies',keywords:'insolvency bankruptcy business failure',category:'GDP',freq:'Monthly',geo:'Canada, provinces'},
-  {vcode:'V41693271',table:'18-10-0004-01',title:'CPI Energy',keywords:'energy gasoline fuel electricity cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
-  {vcode:'V41693461',table:'18-10-0004-01',title:'CPI Shelter',keywords:'shelter housing rent mortgage cpi',category:'Housing',freq:'Monthly',geo:'Canada'},
-  {vcode:'V41693508',table:'18-10-0004-01',title:'CPI Food',keywords:'food grocery prices cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+
+  // ── TABLE REFERENCES (no specific vector — link to full table) ──
+  {vcode:'—',table:'17-10-0009-01',title:'Population estimates, quarterly',keywords:'population estimates growth demographic quarterly',category:'Demographics',freq:'Quarterly',geo:'Canada, provinces'},
+  {vcode:'—',table:'14-10-0372-01',title:'Job vacancies by industry sector, monthly',keywords:'job vacancies vacancy rate openings hiring industry',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'14-10-0371-01',title:'Job vacancies by province, monthly',keywords:'job vacancies vacancy rate openings provincial',category:'Labour Market',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'14-10-0355-01',title:'Employment by industry, monthly',keywords:'employment industry sector jobs naics lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'14-10-0223-01',title:'Average weekly earnings by industry',keywords:'wages weekly earnings salary industry seph',category:'Labour Market',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'20-10-0074-01',title:'Wholesale trade sales',keywords:'wholesale trade sales distribution',category:'Trade',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'36-10-0018-01',title:'Balance of international payments, current account, SA',keywords:'balance payments current account trade surplus deficit',category:'Trade',freq:'Quarterly',geo:'Canada'},
+  {vcode:'—',table:'36-10-0108-01',title:'International investment position',keywords:'international investment foreign assets liabilities',category:'Trade',freq:'Quarterly',geo:'Canada'},
+  {vcode:'—',table:'36-10-0480-01',title:'Labour productivity and related measures',keywords:'labour productivity output per hour efficiency',category:'GDP',freq:'Quarterly',geo:'Canada'},
+  {vcode:'—',table:'36-10-0222-01',title:'GDP at basic prices, provincial, monthly',keywords:'gdp provincial monthly economic output',category:'GDP',freq:'Monthly',geo:'Provinces'},
+  {vcode:'—',table:'25-10-0015-01',title:'Electric power generation by type',keywords:'electricity power generation hydro nuclear wind solar coal',category:'Energy',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'25-10-0063-01',title:'Supply and disposition of crude oil and natural gas',keywords:'crude oil natural gas supply production pipeline',category:'Energy',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'21-10-0024-01',title:'Capital and repair expenditures by industry',keywords:'capital expenditures investment capex repair industry',category:'Construction',freq:'Annual',geo:'Canada, provinces'},
+  {vcode:'—',table:'18-10-0268-01',title:'Industrial product price index',keywords:'ippi industrial product producer prices manufacturing',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'18-10-0029-01',title:'Raw materials price index',keywords:'rmpi raw materials commodity input prices',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'10-10-0147-01',title:'International merchandise trade by commodity (HS)',keywords:'merchandise trade commodity exports imports harmonized',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'33-10-0163-01',title:'MLS home sales and average price',keywords:'mls real estate home sales average price housing market',category:'Housing',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'11-10-0065-01',title:'Household sector credit market summary',keywords:'household debt credit mortgage consumer loans',category:'Rates',freq:'Quarterly',geo:'Canada'},
+  {vcode:'—',table:'10-10-0006-01',title:'Canadian international transactions in securities',keywords:'securities transactions portfolio investment foreign bonds equities',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'23-10-0067-01',title:'Non-residential building construction price index',keywords:'construction price index non-residential building cost',category:'Construction',freq:'Quarterly',geo:'Canada, CMAs'},
 ];
+
+/* Full StatCan table directory (loaded async from JSON) */
+let _fullTableDir=[];
+let _fullDirLoaded=false;
+const FREQ_MAP={M:'Monthly',Q:'Quarterly',A:'Annual',D:'Daily',W:'Weekly',E:'Every 2 months',S:'Semi-annual',O:'Occasional'};
+
+(async function loadTableDirectory(){
+  try{
+    const resp=await fetch('data/statcan_tables.json');
+    if(!resp.ok)return;
+    const raw=await resp.json();
+    /* Build a Set of table IDs already in curated index */
+    const curated=new Set(VCODE_INDEX.map(v=>v.table));
+    _fullTableDir=raw.filter(r=>!curated.has(r.t)).map(r=>({
+      vcode:'—',table:r.t,title:r.n,keywords:r.k,
+      category:r.c,freq:FREQ_MAP[r.f]||r.f,geo:r.g,_dir:true
+    }));
+    _fullDirLoaded=true;
+    /* Update result count hint if explorer is visible */
+    const hint=$('explorerDirCount');
+    if(hint)hint.textContent=`${(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()} tables indexed`;
+  }catch(e){/* silent — curated index still works */}
+})();
+
+/* Synonym map — expands user query words to related terms */
+const _SYN={
+  jobs:['employment','labour','workforce','hiring','vacancy','vacancies','lfs'],
+  job:['employment','labour','workforce','hiring','vacancy','vacancies','lfs'],
+  workers:['employment','labour','workforce','lfs'],
+  hiring:['employment','job','vacancy','vacancies','labour'],
+  wages:['salary','earnings','income','compensation','seph'],
+  salary:['wages','earnings','income','compensation'],
+  pay:['wages','salary','earnings','income'],
+  income:['wages','salary','earnings'],
+  houses:['housing','residential','shelter','home','dwelling'],
+  homes:['housing','residential','shelter','home','dwelling'],
+  house:['housing','residential','shelter','home','dwelling'],
+  rent:['rental','shelter','housing','tenant','lease'],
+  mortgage:['housing','shelter','home','lending','interest'],
+  property:['real estate','housing','residential','commercial'],
+  inflation:['cpi','prices','consumer','cost'],
+  prices:['cpi','inflation','index','cost'],
+  cost:['prices','cpi','inflation','expenditure'],
+  oil:['crude','petroleum','wti','energy','extraction'],
+  gas:['natural gas','lng','petroleum','energy'],
+  energy:['oil','gas','electricity','power','utilities','hydro','nuclear','solar','wind'],
+  power:['electricity','energy','utilities','hydro','generation'],
+  electricity:['power','energy','utilities','hydro','generation'],
+  trade:['exports','imports','merchandise','international','commerce'],
+  exports:['trade','merchandise','international','shipments'],
+  imports:['trade','merchandise','international'],
+  mining:['quarrying','extraction','mineral','ore'],
+  construction:['building','permits','infrastructure','capex'],
+  building:['construction','permits','residential','commercial'],
+  permits:['building','construction','approval','development'],
+  manufacturing:['factory','production','industrial','plant','shipments'],
+  factory:['manufacturing','production','industrial','plant'],
+  gdp:['growth','output','economy','economic','gross domestic'],
+  economy:['gdp','growth','output','economic'],
+  growth:['gdp','economy','output','expansion'],
+  debt:['credit','borrowing','loans','liabilities','deficit'],
+  spending:['expenditure','consumption','retail','consumer'],
+  population:['demographic','census','migration','immigration'],
+  immigration:['migration','immigrant','population','newcomer'],
+  health:['healthcare','hospital','medical','nursing'],
+  hospital:['health','healthcare','medical','nursing'],
+  school:['education','university','college','student'],
+  education:['school','university','college','student','training'],
+  transport:['transportation','transit','rail','logistics','shipping'],
+  transit:['transportation','transport','rail','bus','lrt','subway'],
+  farming:['agriculture','crop','livestock','farm'],
+  agriculture:['farming','crop','livestock','farm','forestry'],
+  tourism:['travel','hotel','accommodation','recreation','visitor'],
+  travel:['tourism','hotel','accommodation','visitor'],
+  insolvency:['bankruptcy','failure','default'],
+  bankruptcy:['insolvency','failure','default'],
+  productivity:['efficiency','output','labour'],
+  investment:['capital','capex','expenditure','spending'],
+  securities:['bonds','equities','stocks','portfolio'],
+  stocks:['equities','securities','shares','market'],
+  bonds:['securities','fixed income','debt','yield'],
+  interest:['rate','overnight','policy','boc','lending','mortgage'],
+  rate:['interest','overnight','policy','percentage'],
+  lumber:['forestry','wood','timber','sawmill'],
+  auto:['automotive','vehicle','car','motor'],
+  retail:['shopping','consumer','sales','store'],
+  wholesale:['distribution','trade','sales'],
+  telecom:['telecommunications','broadband','internet','wireless'],
+  tech:['technology','information','digital','innovation'],
+  military:['defence','defense','dnd','armed forces'],
+  defence:['military','defense','dnd','armed forces'],
+};
+
+function _expandQuery(words){
+  const expanded=new Set(words);
+  words.forEach(w=>{
+    const syns=_SYN[w];
+    if(syns)syns.forEach(s=>expanded.add(s));
+  });
+  return Array.from(expanded);
+}
 
 function searchVCodes(query){
   if(!query||query.length<2)return[];
-  const q=query.toLowerCase().split(/\s+/).filter(w=>w.length>1);
-  return VCODE_INDEX.map(v=>{
+  const qRaw=query.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+  const q=_expandQuery(qRaw);
+  /* Search curated entries (boosted) then full directory */
+  const score=(v,boost)=>{
     const text=(v.title+' '+v.keywords+' '+v.category+' '+v.geo).toLowerCase();
-    let score=0;
+    let s=0;
     q.forEach(w=>{
-      if(text.includes(w))score+=1;
-      if(v.title.toLowerCase().includes(w))score+=2;
-      if(v.keywords.includes(w))score+=1;
+      if(text.includes(w))s+=1;
+      if(v.title.toLowerCase().includes(w))s+=2;
+      if(v.keywords&&v.keywords.includes(w))s+=1;
     });
-    return{...v,score};
-  }).filter(v=>v.score>0).sort((a,b)=>b.score-a.score).slice(0,15);
+    return s>0?s+boost:0;
+  };
+  const curatedResults=VCODE_INDEX.map(v=>({...v,score:score(v,5)})).filter(v=>v.score>0);
+  const dirResults=_fullTableDir.map(v=>({...v,score:score(v,0)})).filter(v=>v.score>0);
+  return curatedResults.concat(dirResults).sort((a,b)=>b.score-a.score).slice(0,25);
 }
 
 function renderExplorer(){
@@ -1476,12 +1815,12 @@ function renderExplorer(){
   const resEl=$('explorerResults');
   if(!searchEl)return;
 
-  searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#111;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
+  searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#191a1c;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
 
-  const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Rates'];
-  catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#333;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
+  const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Energy','Manufacturing','Agriculture','Infrastructure','Transportation','Health','Demographics','Tourism'];
+  catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#3a3a3a;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
 
-  resEl.innerHTML='<div style="color:#777;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
+  resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.<br><span id="explorerDirCount" style="font-size:var(--text-xs)">'+VCODE_INDEX.length+' curated tables'+((_fullDirLoaded)?(' + '+_fullTableDir.length.toLocaleString()+' from full directory'):' (loading full directory...)')+'</span></div>';
 }
 
 window._doVcodeSearch=function(cat){
@@ -1491,13 +1830,13 @@ window._doVcodeSearch=function(cat){
   const results=searchVCodes(q);
   const resEl=$('explorerResults');
   if(!results.length){
-    resEl.innerHTML='<div style="color:#777;font-size:var(--text-sm);padding:20px 0">No tables found for "'+q+'". Try different keywords.</div>';
+    resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">No tables found for "'+q+'". Try different keywords.</div>';
     return;
   }
-  let html='<div style="font-size:var(--text-xs);color:#777;margin-bottom:8px">'+results.length+' table(s) found</div>';
+  let html='<div style="font-size:var(--text-xs);color:#919191;margin-bottom:8px">Showing '+results.length+' of '+(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()+' indexed tables</div>';
   results.forEach(r=>{
     const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${r.table.replace(/-/g,'')}`;
-    html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#777;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#777;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
+    html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#919191;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#919191;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
   });
   resEl.innerHTML=html;
 };

@@ -224,7 +224,7 @@ function renderTab(id){
     case'markets':renderMarkets();break;
     case'projects':renderProjectsTab();break;
     case'calendar':renderCalendar();break;
-    case'explorer':renderExplorer();break;
+    case'explorer':renderIndicatorExplorer();renderExplorer();break;
   }
 }
 
@@ -1534,12 +1534,87 @@ async function renderCanadianCommodities(){
 
 /* ====== PHASE 4: DATA EXPLORER (V-Code Search) ====== */
 const VCODE_INDEX=[
+  // ── NATIONAL INDICATORS ──
   {vcode:'V41690973',table:'18-10-0004-01',title:'Consumer Price Index, monthly',keywords:'cpi inflation prices consumer',category:'Prices',freq:'Monthly',geo:'Canada'},
-  {vcode:'V2062815',table:'14-10-0287-01',title:'Labour force characteristics',keywords:'unemployment employment labour jobs rate',category:'Labour Market',freq:'Monthly',geo:'Canada'},
-  {vcode:'V62305752',table:'36-10-0434-01',title:'Gross domestic product (GDP), expenditure-based',keywords:'gdp growth economy quarterly',category:'GDP',freq:'Quarterly',geo:'Canada'},
-  {vcode:'V735391',table:'34-10-0066-01',title:'Building permits, by type of structure',keywords:'building permits construction residential commercial',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
-  {vcode:'V111382687',table:'34-10-0175-01',title:'Building permits, by type of work',keywords:'construction new renovation addition permits',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V2062815',table:'14-10-0287-01',title:'Unemployment rate, seasonally adjusted',keywords:'unemployment rate labour jobs lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V2062809',table:'14-10-0287-01',title:'Employment rate, seasonally adjusted',keywords:'employment rate labour jobs lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V2062803',table:'14-10-0287-01',title:'Participation rate, seasonally adjusted',keywords:'participation rate labour force lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V62305752',table:'36-10-0104-01',title:'Gross domestic product (GDP), quarterly',keywords:'gdp growth economy quarterly real',category:'GDP',freq:'Quarterly',geo:'Canada'},
+
+  // ── CPI COMPONENTS ──
+  {vcode:'V41693271',table:'18-10-0004-01',title:'CPI Energy',keywords:'energy gasoline fuel electricity cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693461',table:'18-10-0004-01',title:'CPI Shelter',keywords:'shelter housing rent mortgage cpi',category:'Housing',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693508',table:'18-10-0004-01',title:'CPI Food',keywords:'food grocery prices cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693242',table:'18-10-0004-01',title:'CPI All-items excluding food and energy (core)',keywords:'core cpi inflation excluding food energy',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693302',table:'18-10-0004-01',title:'CPI Transportation',keywords:'transportation vehicles gas auto insurance cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693380',table:'18-10-0004-01',title:'CPI Clothing and footwear',keywords:'clothing footwear apparel cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693414',table:'18-10-0004-01',title:'CPI Health and personal care',keywords:'health personal care medical cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693432',table:'18-10-0004-01',title:'CPI Recreation, education and reading',keywords:'recreation education reading cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693456',table:'18-10-0004-01',title:'CPI Household operations, furnishings and equipment',keywords:'household operations furnishings equipment cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V41693468',table:'18-10-0004-01',title:'CPI Alcoholic beverages, tobacco and cannabis',keywords:'alcohol tobacco cannabis beverages cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+
+  // ── PROVINCIAL CPI ──
   {vcode:'V53620',table:'18-10-0006-01',title:'Consumer Price Index, by province',keywords:'cpi inflation prices provincial',category:'Prices',freq:'Monthly',geo:'Provinces'},
+  {vcode:'V41690914',table:'18-10-0004-01',title:'CPI Newfoundland and Labrador',keywords:'cpi inflation newfoundland labrador nl',category:'Prices',freq:'Monthly',geo:'Newfoundland and Labrador'},
+  {vcode:'V41690915',table:'18-10-0004-01',title:'CPI Prince Edward Island',keywords:'cpi inflation prince edward island pei',category:'Prices',freq:'Monthly',geo:'Prince Edward Island'},
+  {vcode:'V41690916',table:'18-10-0004-01',title:'CPI Nova Scotia',keywords:'cpi inflation nova scotia ns',category:'Prices',freq:'Monthly',geo:'Nova Scotia'},
+  {vcode:'V41690917',table:'18-10-0004-01',title:'CPI New Brunswick',keywords:'cpi inflation new brunswick nb',category:'Prices',freq:'Monthly',geo:'New Brunswick'},
+  {vcode:'V41690918',table:'18-10-0004-01',title:'CPI Quebec',keywords:'cpi inflation quebec qc',category:'Prices',freq:'Monthly',geo:'Quebec'},
+  {vcode:'V41690919',table:'18-10-0004-01',title:'CPI Ontario',keywords:'cpi inflation ontario on',category:'Prices',freq:'Monthly',geo:'Ontario'},
+  {vcode:'V41690920',table:'18-10-0004-01',title:'CPI Manitoba',keywords:'cpi inflation manitoba mb',category:'Prices',freq:'Monthly',geo:'Manitoba'},
+  {vcode:'V41690921',table:'18-10-0004-01',title:'CPI Saskatchewan',keywords:'cpi inflation saskatchewan sk',category:'Prices',freq:'Monthly',geo:'Saskatchewan'},
+  {vcode:'V41690922',table:'18-10-0004-01',title:'CPI Alberta',keywords:'cpi inflation alberta ab',category:'Prices',freq:'Monthly',geo:'Alberta'},
+  {vcode:'V41690923',table:'18-10-0004-01',title:'CPI British Columbia',keywords:'cpi inflation british columbia bc',category:'Prices',freq:'Monthly',geo:'British Columbia'},
+
+  // ── PROVINCIAL UNEMPLOYMENT ──
+  {vcode:'V2063004',table:'14-10-0287-01',title:'Unemployment rate, Newfoundland and Labrador',keywords:'unemployment rate newfoundland labrador nl lfs',category:'Labour Market',freq:'Monthly',geo:'Newfoundland and Labrador'},
+  {vcode:'V2063193',table:'14-10-0287-01',title:'Unemployment rate, Prince Edward Island',keywords:'unemployment rate prince edward island pei lfs',category:'Labour Market',freq:'Monthly',geo:'Prince Edward Island'},
+  {vcode:'V2063382',table:'14-10-0287-01',title:'Unemployment rate, Nova Scotia',keywords:'unemployment rate nova scotia ns lfs',category:'Labour Market',freq:'Monthly',geo:'Nova Scotia'},
+  {vcode:'V2063571',table:'14-10-0287-01',title:'Unemployment rate, New Brunswick',keywords:'unemployment rate new brunswick nb lfs',category:'Labour Market',freq:'Monthly',geo:'New Brunswick'},
+  {vcode:'V2063760',table:'14-10-0287-01',title:'Unemployment rate, Quebec',keywords:'unemployment rate quebec qc lfs',category:'Labour Market',freq:'Monthly',geo:'Quebec'},
+  {vcode:'V2063949',table:'14-10-0287-01',title:'Unemployment rate, Ontario',keywords:'unemployment rate ontario on lfs',category:'Labour Market',freq:'Monthly',geo:'Ontario'},
+  {vcode:'V2064138',table:'14-10-0287-01',title:'Unemployment rate, Manitoba',keywords:'unemployment rate manitoba mb lfs',category:'Labour Market',freq:'Monthly',geo:'Manitoba'},
+  {vcode:'V2064327',table:'14-10-0287-01',title:'Unemployment rate, Saskatchewan',keywords:'unemployment rate saskatchewan sk lfs',category:'Labour Market',freq:'Monthly',geo:'Saskatchewan'},
+  {vcode:'V2064516',table:'14-10-0287-01',title:'Unemployment rate, Alberta',keywords:'unemployment rate alberta ab lfs',category:'Labour Market',freq:'Monthly',geo:'Alberta'},
+  {vcode:'V2064705',table:'14-10-0287-01',title:'Unemployment rate, British Columbia',keywords:'unemployment rate british columbia bc lfs',category:'Labour Market',freq:'Monthly',geo:'British Columbia'},
+
+  // ── PROVINCIAL EMPLOYMENT RATE ──
+  {vcode:'V2062998',table:'14-10-0287-01',title:'Employment rate, Newfoundland and Labrador',keywords:'employment rate newfoundland labrador nl lfs',category:'Labour Market',freq:'Monthly',geo:'Newfoundland and Labrador'},
+  {vcode:'V2063187',table:'14-10-0287-01',title:'Employment rate, Prince Edward Island',keywords:'employment rate prince edward island pei lfs',category:'Labour Market',freq:'Monthly',geo:'Prince Edward Island'},
+  {vcode:'V2063376',table:'14-10-0287-01',title:'Employment rate, Nova Scotia',keywords:'employment rate nova scotia ns lfs',category:'Labour Market',freq:'Monthly',geo:'Nova Scotia'},
+  {vcode:'V2063565',table:'14-10-0287-01',title:'Employment rate, New Brunswick',keywords:'employment rate new brunswick nb lfs',category:'Labour Market',freq:'Monthly',geo:'New Brunswick'},
+  {vcode:'V2063754',table:'14-10-0287-01',title:'Employment rate, Quebec',keywords:'employment rate quebec qc lfs',category:'Labour Market',freq:'Monthly',geo:'Quebec'},
+  {vcode:'V2063943',table:'14-10-0287-01',title:'Employment rate, Ontario',keywords:'employment rate ontario on lfs',category:'Labour Market',freq:'Monthly',geo:'Ontario'},
+  {vcode:'V2064132',table:'14-10-0287-01',title:'Employment rate, Manitoba',keywords:'employment rate manitoba mb lfs',category:'Labour Market',freq:'Monthly',geo:'Manitoba'},
+  {vcode:'V2064321',table:'14-10-0287-01',title:'Employment rate, Saskatchewan',keywords:'employment rate saskatchewan sk lfs',category:'Labour Market',freq:'Monthly',geo:'Saskatchewan'},
+  {vcode:'V2064510',table:'14-10-0287-01',title:'Employment rate, Alberta',keywords:'employment rate alberta ab lfs',category:'Labour Market',freq:'Monthly',geo:'Alberta'},
+  {vcode:'V2064699',table:'14-10-0287-01',title:'Employment rate, British Columbia',keywords:'employment rate british columbia bc lfs',category:'Labour Market',freq:'Monthly',geo:'British Columbia'},
+
+  // ── PROVINCIAL PARTICIPATION RATE ──
+  {vcode:'V2062992',table:'14-10-0287-01',title:'Participation rate, Newfoundland and Labrador',keywords:'participation rate newfoundland labrador nl lfs',category:'Labour Market',freq:'Monthly',geo:'Newfoundland and Labrador'},
+  {vcode:'V2063181',table:'14-10-0287-01',title:'Participation rate, Prince Edward Island',keywords:'participation rate prince edward island pei lfs',category:'Labour Market',freq:'Monthly',geo:'Prince Edward Island'},
+  {vcode:'V2063370',table:'14-10-0287-01',title:'Participation rate, Nova Scotia',keywords:'participation rate nova scotia ns lfs',category:'Labour Market',freq:'Monthly',geo:'Nova Scotia'},
+  {vcode:'V2063559',table:'14-10-0287-01',title:'Participation rate, New Brunswick',keywords:'participation rate new brunswick nb lfs',category:'Labour Market',freq:'Monthly',geo:'New Brunswick'},
+  {vcode:'V2063748',table:'14-10-0287-01',title:'Participation rate, Quebec',keywords:'participation rate quebec qc lfs',category:'Labour Market',freq:'Monthly',geo:'Quebec'},
+  {vcode:'V2063937',table:'14-10-0287-01',title:'Participation rate, Ontario',keywords:'participation rate ontario on lfs',category:'Labour Market',freq:'Monthly',geo:'Ontario'},
+  {vcode:'V2064126',table:'14-10-0287-01',title:'Participation rate, Manitoba',keywords:'participation rate manitoba mb lfs',category:'Labour Market',freq:'Monthly',geo:'Manitoba'},
+  {vcode:'V2064315',table:'14-10-0287-01',title:'Participation rate, Saskatchewan',keywords:'participation rate saskatchewan sk lfs',category:'Labour Market',freq:'Monthly',geo:'Saskatchewan'},
+  {vcode:'V2064504',table:'14-10-0287-01',title:'Participation rate, Alberta',keywords:'participation rate alberta ab lfs',category:'Labour Market',freq:'Monthly',geo:'Alberta'},
+  {vcode:'V2064693',table:'14-10-0287-01',title:'Participation rate, British Columbia',keywords:'participation rate british columbia bc lfs',category:'Labour Market',freq:'Monthly',geo:'British Columbia'},
+
+  // ── PROVINCIAL GDP ──
+  {vcode:'V62464519',table:'36-10-0402-01',title:'Real GDP, Newfoundland and Labrador',keywords:'gdp growth newfoundland labrador nl',category:'GDP',freq:'Annual',geo:'Newfoundland and Labrador'},
+  {vcode:'V62464824',table:'36-10-0402-01',title:'Real GDP, Prince Edward Island',keywords:'gdp growth prince edward island pei',category:'GDP',freq:'Annual',geo:'Prince Edward Island'},
+  {vcode:'V62465129',table:'36-10-0402-01',title:'Real GDP, Nova Scotia',keywords:'gdp growth nova scotia ns',category:'GDP',freq:'Annual',geo:'Nova Scotia'},
+  {vcode:'V62465434',table:'36-10-0402-01',title:'Real GDP, New Brunswick',keywords:'gdp growth new brunswick nb',category:'GDP',freq:'Annual',geo:'New Brunswick'},
+  {vcode:'V62465739',table:'36-10-0402-01',title:'Real GDP, Quebec',keywords:'gdp growth quebec qc',category:'GDP',freq:'Annual',geo:'Quebec'},
+  {vcode:'V62466044',table:'36-10-0402-01',title:'Real GDP, Ontario',keywords:'gdp growth ontario on',category:'GDP',freq:'Annual',geo:'Ontario'},
+  {vcode:'V62466349',table:'36-10-0402-01',title:'Real GDP, Manitoba',keywords:'gdp growth manitoba mb',category:'GDP',freq:'Annual',geo:'Manitoba'},
+  {vcode:'V62466654',table:'36-10-0402-01',title:'Real GDP, Saskatchewan',keywords:'gdp growth saskatchewan sk',category:'GDP',freq:'Annual',geo:'Saskatchewan'},
+  {vcode:'V62466959',table:'36-10-0402-01',title:'Real GDP, Alberta',keywords:'gdp growth alberta ab',category:'GDP',freq:'Annual',geo:'Alberta'},
+  {vcode:'V62467264',table:'36-10-0402-01',title:'Real GDP, British Columbia',keywords:'gdp growth british columbia bc',category:'GDP',freq:'Annual',geo:'British Columbia'},
+
+  // ── GDP BY INDUSTRY (20 NAICS) ──
   {vcode:'V65201229',table:'36-10-0434-01',title:'GDP Agriculture, forestry, fishing',keywords:'agriculture farming forestry gdp naics 11',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201236',table:'36-10-0434-01',title:'GDP Mining, quarrying, oil and gas',keywords:'mining oil gas extraction gdp naics 21',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201254',table:'36-10-0434-01',title:'GDP Utilities',keywords:'utilities power electricity gdp naics 22',category:'GDP',freq:'Monthly',geo:'Canada'},
@@ -1551,38 +1626,187 @@ const VCODE_INDEX=[
   {vcode:'V65201398',table:'36-10-0434-01',title:'GDP Information and cultural industries',keywords:'information media telecom technology gdp naics 51',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201407',table:'36-10-0434-01',title:'GDP Finance and insurance',keywords:'finance banking insurance gdp naics 52',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201419',table:'36-10-0434-01',title:'GDP Real estate',keywords:'real estate housing rental property gdp naics 53',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201429',table:'36-10-0434-01',title:'GDP Professional, scientific and technical services',keywords:'professional scientific technical consulting gdp naics 54',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201441',table:'36-10-0434-01',title:'GDP Management of companies',keywords:'management companies enterprises headquarters gdp naics 55',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201442',table:'36-10-0434-01',title:'GDP Administrative and support, waste management',keywords:'administrative support waste management remediation gdp naics 56',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201452',table:'36-10-0434-01',title:'GDP Educational services',keywords:'education schools university college gdp naics 61',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201457',table:'36-10-0434-01',title:'GDP Health care and social assistance',keywords:'health care hospital medical gdp naics 62',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201463',table:'36-10-0434-01',title:'GDP Arts, entertainment and recreation',keywords:'arts entertainment recreation tourism gdp naics 71',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201468',table:'36-10-0434-01',title:'GDP Accommodation and food services',keywords:'accommodation hotel food services restaurant gdp naics 72',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V65201471',table:'36-10-0434-01',title:'GDP Other services (except public administration)',keywords:'other services repair personal laundry gdp naics 81',category:'GDP',freq:'Monthly',geo:'Canada'},
   {vcode:'V65201476',table:'36-10-0434-01',title:'GDP Public administration',keywords:'public administration government military defence gdp naics 91',category:'GDP',freq:'Monthly',geo:'Canada'},
+
+  // ── CONSTRUCTION & HOUSING ──
+  {vcode:'V735391',table:'34-10-0066-01',title:'Building permits, by type of structure',keywords:'building permits construction residential commercial',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V111382687',table:'34-10-0175-01',title:'Building permits, by type of work',keywords:'construction new renovation addition permits',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
   {vcode:'V52367876',table:'27-10-0273-01',title:'Investment in building construction',keywords:'investment building construction capital spending',category:'Construction',freq:'Monthly',geo:'Canada, provinces'},
-  {vcode:'V1',table:'10-10-0125-01',title:'Canadian international merchandise trade',keywords:'trade exports imports merchandise international',category:'Trade',freq:'Monthly',geo:'Canada'},
-  {vcode:'V1044832260',table:'33-10-0036-01',title:'New housing price index',keywords:'housing prices new house index',category:'Housing',freq:'Monthly',geo:'Canada, CMAs'},
   {vcode:'V735337',table:'34-10-0035-01',title:'Housing starts',keywords:'housing starts cmhc residential new construction',category:'Housing',freq:'Monthly',geo:'Canada, provinces'},
-  {vcode:'V37426',table:'16-10-0048-01',title:'Manufacturing sales',keywords:'manufacturing sales shipments production',category:'GDP',freq:'Monthly',geo:'Canada'},
-  {vcode:'V52409870',table:'20-10-0008-01',title:'Retail trade sales',keywords:'retail sales consumer spending',category:'GDP',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'V1044832260',table:'33-10-0036-01',title:'New housing price index',keywords:'housing prices new house index nhpi',category:'Housing',freq:'Monthly',geo:'Canada, CMAs'},
+
+  // ── BUILDING PERMITS BY CMA (Tier 9 anomaly detection) ──
+  {vcode:'V77987',table:'34-10-0066-01',title:'Building permits, Toronto CMA',keywords:'building permits construction toronto ontario',category:'Construction',freq:'Monthly',geo:'Toronto'},
+  {vcode:'V77971',table:'34-10-0066-01',title:'Building permits, Montreal CMA',keywords:'building permits construction montreal quebec',category:'Construction',freq:'Monthly',geo:'Montreal'},
+  {vcode:'V78009',table:'34-10-0066-01',title:'Building permits, Vancouver CMA',keywords:'building permits construction vancouver bc',category:'Construction',freq:'Monthly',geo:'Vancouver'},
+  {vcode:'V77951',table:'34-10-0066-01',title:'Building permits, Calgary CMA',keywords:'building permits construction calgary alberta',category:'Construction',freq:'Monthly',geo:'Calgary'},
+  {vcode:'V77953',table:'34-10-0066-01',title:'Building permits, Edmonton CMA',keywords:'building permits construction edmonton alberta',category:'Construction',freq:'Monthly',geo:'Edmonton'},
+  {vcode:'V77979',table:'34-10-0066-01',title:'Building permits, Ottawa CMA',keywords:'building permits construction ottawa ontario',category:'Construction',freq:'Monthly',geo:'Ottawa'},
+  {vcode:'V77967',table:'34-10-0066-01',title:'Building permits, Winnipeg CMA',keywords:'building permits construction winnipeg manitoba',category:'Construction',freq:'Monthly',geo:'Winnipeg'},
+  {vcode:'V77973',table:'34-10-0066-01',title:'Building permits, Quebec City CMA',keywords:'building permits construction quebec city',category:'Construction',freq:'Monthly',geo:'Quebec City'},
+  {vcode:'V77981',table:'34-10-0066-01',title:'Building permits, Hamilton CMA',keywords:'building permits construction hamilton ontario',category:'Construction',freq:'Monthly',geo:'Hamilton'},
+  {vcode:'V77957',table:'34-10-0066-01',title:'Building permits, Halifax CMA',keywords:'building permits construction halifax nova scotia',category:'Construction',freq:'Monthly',geo:'Halifax'},
+
+  // ── TRADE & COMMERCE ──
+  {vcode:'V1',table:'12-10-0011-01',title:'Canadian international merchandise trade',keywords:'trade exports imports merchandise international',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'V37426',table:'16-10-0048-01',title:'Manufacturing sales',keywords:'manufacturing sales shipments production',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'V52409870',table:'20-10-0008-01',title:'Retail trade sales',keywords:'retail sales consumer spending',category:'Trade',freq:'Monthly',geo:'Canada, provinces'},
+
+  // ── LABOUR MARKET (additional) ──
   {vcode:'V120424858',table:'14-10-0064-01',title:'Employee wages by industry',keywords:'wages salary earnings income employee',category:'Labour Market',freq:'Monthly',geo:'Canada'},
   {vcode:'V39079',table:'BoC Valet',title:'Bank of Canada overnight rate',keywords:'interest rate overnight policy bank canada boc',category:'Rates',freq:'Daily',geo:'Canada'},
   {vcode:'V80691311',table:'11-10-0240-01',title:'Business insolvencies',keywords:'insolvency bankruptcy business failure',category:'GDP',freq:'Monthly',geo:'Canada, provinces'},
-  {vcode:'V41693271',table:'18-10-0004-01',title:'CPI Energy',keywords:'energy gasoline fuel electricity cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
-  {vcode:'V41693461',table:'18-10-0004-01',title:'CPI Shelter',keywords:'shelter housing rent mortgage cpi',category:'Housing',freq:'Monthly',geo:'Canada'},
-  {vcode:'V41693508',table:'18-10-0004-01',title:'CPI Food',keywords:'food grocery prices cpi',category:'Prices',freq:'Monthly',geo:'Canada'},
+
+  // ── TABLE REFERENCES (no specific vector — link to full table) ──
+  {vcode:'—',table:'17-10-0009-01',title:'Population estimates, quarterly',keywords:'population estimates growth demographic quarterly',category:'Demographics',freq:'Quarterly',geo:'Canada, provinces'},
+  {vcode:'—',table:'14-10-0372-01',title:'Job vacancies by industry sector, monthly',keywords:'job vacancies vacancy rate openings hiring industry',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'14-10-0371-01',title:'Job vacancies by province, monthly',keywords:'job vacancies vacancy rate openings provincial',category:'Labour Market',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'14-10-0355-01',title:'Employment by industry, monthly',keywords:'employment industry sector jobs naics lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'14-10-0223-01',title:'Average weekly earnings by industry',keywords:'wages weekly earnings salary industry seph',category:'Labour Market',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'20-10-0074-01',title:'Wholesale trade sales',keywords:'wholesale trade sales distribution',category:'Trade',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'36-10-0018-01',title:'Balance of international payments, current account, SA',keywords:'balance payments current account trade surplus deficit',category:'Trade',freq:'Quarterly',geo:'Canada'},
+  {vcode:'—',table:'36-10-0108-01',title:'International investment position',keywords:'international investment foreign assets liabilities',category:'Trade',freq:'Quarterly',geo:'Canada'},
+  {vcode:'—',table:'36-10-0480-01',title:'Labour productivity and related measures',keywords:'labour productivity output per hour efficiency',category:'GDP',freq:'Quarterly',geo:'Canada'},
+  {vcode:'—',table:'36-10-0222-01',title:'GDP at basic prices, provincial, monthly',keywords:'gdp provincial monthly economic output',category:'GDP',freq:'Monthly',geo:'Provinces'},
+  {vcode:'—',table:'25-10-0015-01',title:'Electric power generation by type',keywords:'electricity power generation hydro nuclear wind solar coal',category:'Energy',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'25-10-0063-01',title:'Supply and disposition of crude oil and natural gas',keywords:'crude oil natural gas supply production pipeline',category:'Energy',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'21-10-0024-01',title:'Capital and repair expenditures by industry',keywords:'capital expenditures investment capex repair industry',category:'Construction',freq:'Annual',geo:'Canada, provinces'},
+  {vcode:'—',table:'18-10-0268-01',title:'Industrial product price index',keywords:'ippi industrial product producer prices manufacturing',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'18-10-0029-01',title:'Raw materials price index',keywords:'rmpi raw materials commodity input prices',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'10-10-0147-01',title:'International merchandise trade by commodity (HS)',keywords:'merchandise trade commodity exports imports harmonized',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'33-10-0163-01',title:'MLS home sales and average price',keywords:'mls real estate home sales average price housing market',category:'Housing',freq:'Monthly',geo:'Canada, provinces'},
+  {vcode:'—',table:'11-10-0065-01',title:'Household sector credit market summary',keywords:'household debt credit mortgage consumer loans',category:'Rates',freq:'Quarterly',geo:'Canada'},
+  {vcode:'—',table:'10-10-0006-01',title:'Canadian international transactions in securities',keywords:'securities transactions portfolio investment foreign bonds equities',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'—',table:'23-10-0067-01',title:'Non-residential building construction price index',keywords:'construction price index non-residential building cost',category:'Construction',freq:'Quarterly',geo:'Canada, CMAs'},
 ];
+
+/* Full StatCan table directory (loaded async from JSON) */
+let _fullTableDir=[];
+let _fullDirLoaded=false;
+const FREQ_MAP={M:'Monthly',Q:'Quarterly',A:'Annual',D:'Daily',W:'Weekly',E:'Every 2 months',S:'Semi-annual',O:'Occasional'};
+
+(async function loadTableDirectory(){
+  try{
+    const resp=await fetch('data/statcan_tables.json');
+    if(!resp.ok)return;
+    const raw=await resp.json();
+    /* Build a Set of table IDs already in curated index */
+    const curated=new Set(VCODE_INDEX.map(v=>v.table));
+    _fullTableDir=raw.filter(r=>!curated.has(r.t)).map(r=>({
+      vcode:'—',table:r.t,title:r.n,keywords:r.k,
+      category:r.c,freq:FREQ_MAP[r.f]||r.f,geo:r.g,_dir:true
+    }));
+    _fullDirLoaded=true;
+    /* Update result count hint if explorer is visible */
+    const hint=$('explorerDirCount');
+    if(hint)hint.textContent=`${(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()} tables indexed`;
+  }catch(e){/* silent — curated index still works */}
+})();
+
+/* Synonym map — expands user query words to related terms */
+const _SYN={
+  jobs:['employment','labour','workforce','hiring','vacancy','vacancies','lfs'],
+  job:['employment','labour','workforce','hiring','vacancy','vacancies','lfs'],
+  workers:['employment','labour','workforce','lfs'],
+  hiring:['employment','job','vacancy','vacancies','labour'],
+  wages:['salary','earnings','income','compensation','seph'],
+  salary:['wages','earnings','income','compensation'],
+  pay:['wages','salary','earnings','income'],
+  income:['wages','salary','earnings'],
+  houses:['housing','residential','shelter','home','dwelling'],
+  homes:['housing','residential','shelter','home','dwelling'],
+  house:['housing','residential','shelter','home','dwelling'],
+  rent:['rental','shelter','housing','tenant','lease'],
+  mortgage:['housing','shelter','home','lending','interest'],
+  property:['real estate','housing','residential','commercial'],
+  inflation:['cpi','prices','consumer','cost'],
+  prices:['cpi','inflation','index','cost'],
+  cost:['prices','cpi','inflation','expenditure'],
+  oil:['crude','petroleum','wti','energy','extraction'],
+  gas:['natural gas','lng','petroleum','energy'],
+  energy:['oil','gas','electricity','power','utilities','hydro','nuclear','solar','wind'],
+  power:['electricity','energy','utilities','hydro','generation'],
+  electricity:['power','energy','utilities','hydro','generation'],
+  trade:['exports','imports','merchandise','international','commerce'],
+  exports:['trade','merchandise','international','shipments'],
+  imports:['trade','merchandise','international'],
+  mining:['quarrying','extraction','mineral','ore'],
+  construction:['building','permits','infrastructure','capex'],
+  building:['construction','permits','residential','commercial'],
+  permits:['building','construction','approval','development'],
+  manufacturing:['factory','production','industrial','plant','shipments'],
+  factory:['manufacturing','production','industrial','plant'],
+  gdp:['growth','output','economy','economic','gross domestic'],
+  economy:['gdp','growth','output','economic'],
+  growth:['gdp','economy','output','expansion'],
+  debt:['credit','borrowing','loans','liabilities','deficit'],
+  spending:['expenditure','consumption','retail','consumer'],
+  population:['demographic','census','migration','immigration'],
+  immigration:['migration','immigrant','population','newcomer'],
+  health:['healthcare','hospital','medical','nursing'],
+  hospital:['health','healthcare','medical','nursing'],
+  school:['education','university','college','student'],
+  education:['school','university','college','student','training'],
+  transport:['transportation','transit','rail','logistics','shipping'],
+  transit:['transportation','transport','rail','bus','lrt','subway'],
+  farming:['agriculture','crop','livestock','farm'],
+  agriculture:['farming','crop','livestock','farm','forestry'],
+  tourism:['travel','hotel','accommodation','recreation','visitor'],
+  travel:['tourism','hotel','accommodation','visitor'],
+  insolvency:['bankruptcy','failure','default'],
+  bankruptcy:['insolvency','failure','default'],
+  productivity:['efficiency','output','labour'],
+  investment:['capital','capex','expenditure','spending'],
+  securities:['bonds','equities','stocks','portfolio'],
+  stocks:['equities','securities','shares','market'],
+  bonds:['securities','fixed income','debt','yield'],
+  interest:['rate','overnight','policy','boc','lending','mortgage'],
+  rate:['interest','overnight','policy','percentage'],
+  lumber:['forestry','wood','timber','sawmill'],
+  auto:['automotive','vehicle','car','motor'],
+  retail:['shopping','consumer','sales','store'],
+  wholesale:['distribution','trade','sales'],
+  telecom:['telecommunications','broadband','internet','wireless'],
+  tech:['technology','information','digital','innovation'],
+  military:['defence','defense','dnd','armed forces'],
+  defence:['military','defense','dnd','armed forces'],
+};
+
+function _expandQuery(words){
+  const expanded=new Set(words);
+  words.forEach(w=>{
+    const syns=_SYN[w];
+    if(syns)syns.forEach(s=>expanded.add(s));
+  });
+  return Array.from(expanded);
+}
 
 function searchVCodes(query){
   if(!query||query.length<2)return[];
-  const q=query.toLowerCase().split(/\s+/).filter(w=>w.length>1);
-  return VCODE_INDEX.map(v=>{
+  const qRaw=query.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+  const q=_expandQuery(qRaw);
+  /* Search curated entries (boosted) then full directory */
+  const score=(v,boost)=>{
     const text=(v.title+' '+v.keywords+' '+v.category+' '+v.geo).toLowerCase();
-    let score=0;
+    let s=0;
     q.forEach(w=>{
-      if(text.includes(w))score+=1;
-      if(v.title.toLowerCase().includes(w))score+=2;
-      if(v.keywords.includes(w))score+=1;
+      if(text.includes(w))s+=1;
+      if(v.title.toLowerCase().includes(w))s+=2;
+      if(v.keywords&&v.keywords.includes(w))s+=1;
     });
-    return{...v,score};
-  }).filter(v=>v.score>0).sort((a,b)=>b.score-a.score).slice(0,15);
+    return s>0?s+boost:0;
+  };
+  const curatedResults=VCODE_INDEX.map(v=>({...v,score:score(v,5)})).filter(v=>v.score>0);
+  const dirResults=_fullTableDir.map(v=>({...v,score:score(v,0)})).filter(v=>v.score>0);
+  return curatedResults.concat(dirResults).sort((a,b)=>b.score-a.score).slice(0,25);
 }
 
 function renderExplorer(){
@@ -1593,10 +1817,10 @@ function renderExplorer(){
 
   searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#191a1c;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
 
-  const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Rates'];
+  const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Energy','Manufacturing','Agriculture','Infrastructure','Transportation','Health','Demographics','Tourism'];
   catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#3a3a3a;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
 
-  resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
+  resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.<br><span id="explorerDirCount" style="font-size:var(--text-xs)">'+VCODE_INDEX.length+' curated tables'+((_fullDirLoaded)?(' + '+_fullTableDir.length.toLocaleString()+' from full directory'):' (loading full directory...)')+'</span></div>';
 }
 
 window._doVcodeSearch=function(cat){
@@ -1609,7 +1833,7 @@ window._doVcodeSearch=function(cat){
     resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">No tables found for "'+q+'". Try different keywords.</div>';
     return;
   }
-  let html='<div style="font-size:var(--text-xs);color:#919191;margin-bottom:8px">'+results.length+' table(s) found</div>';
+  let html='<div style="font-size:var(--text-xs);color:#919191;margin-bottom:8px">Showing '+results.length+' of '+(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()+' indexed tables</div>';
   results.forEach(r=>{
     const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${r.table.replace(/-/g,'')}`;
     html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#919191;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#919191;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
