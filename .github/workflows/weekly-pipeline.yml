@@ -52,6 +52,10 @@ jobs:
           LOCAL_MODEL_PATH: models/qwen2.5-3b-instruct-q4_k_m.gguf
         run: python update_dashboard.py
 
+      - name: Generate briefing exports
+        run: python briefing_export.py
+        continue-on-error: true
+
       - name: Deploy static assets to docs/
         run: python deploy_to_github.py
 

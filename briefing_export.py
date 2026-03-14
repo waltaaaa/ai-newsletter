@@ -316,3 +316,18 @@ def export_and_upload(conn, storage_bucket=None):
     The storage_bucket argument is accepted but ignored.
     """
     return export_and_store_local(conn)
+
+
+if __name__ == "__main__":
+    import os
+    import sys
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+    from db import init_db
+    conn = init_db()
+    result = export_and_store_local(conn, output_dir="docs/data")
+    conn.close()
+    if result:
+        print(f"[BRIEFING EXPORT] Generated: {list(result.keys())}")
+    else:
+        print("[BRIEFING EXPORT] No briefing available to export")
+    sys.exit(0)

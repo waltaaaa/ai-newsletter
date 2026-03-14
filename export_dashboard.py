@@ -499,6 +499,44 @@ def export_microscope(conn, output_dir: str) -> str:
     return out_path
 
 
+def export_policy(conn, output_dir: str) -> str:
+    """Export policy.json from the latest policy_developments in dashboard_state."""
+    from db import get_dashboard_state
+
+    # Find the most recent policy_developments_YYYY-WNN key
+    row = conn.execute("""
+        SELECT value FROM dashboard_state
+        WHERE key LIKE 'policy_developments_%'
+        ORDER BY key DESC LIMIT 1
+    """).fetchone()
+
+    if row:
+        data = _safe_json_loads(row[0], {})
+    else:
+        data = {"articles": [], "count": 0}
+
+    out_path = os.path.join(output_dir, "policy.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    return out_path
+
+
+def export_commodities(conn, output_dir: str) -> str:
+    """Export commodities.json from canadian_commodities in dashboard_state."""
+    from db import get_dashboard_state
+
+    data = get_dashboard_state(conn, "canadian_commodities")
+    if not data or not isinstance(data, dict):
+        data = {"indicators": {}}
+
+    out_path = os.path.join(output_dir, "commodities.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    return out_path
+
+
 def export_timeseries(conn, output_dir: str) -> str:
     """Export timeseries.json as a single bundled object keyed by series_name."""
     from db import get_timeseries
@@ -751,6 +789,14 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
 
     # Pipeline status (run info + cost data)
     path = export_pipeline_status(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Policy developments
+    path = export_policy(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Canadian commodity indicators
+    path = export_commodities(conn, output_dir)
     files_written.append(os.path.basename(path))
 
     # Manifest

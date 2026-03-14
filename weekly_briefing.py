@@ -31,7 +31,7 @@ policy advisors.
 Your briefing must be:
 - Insightful, not just informative (connect dots between data points)
 - Specific (cite project names, dollar values, provinces, percentages)
-- Forward-looking (what does this week's data mean for next quarter?)
+- Analytical (what does this week's data tell us about current conditions?)
 - Balanced (cover all regions, not just Toronto/Vancouver)
 - Concise (1000-1500 words total)
 - Sourced (every factual claim traces to data in the provided context)
@@ -47,7 +47,7 @@ Structure:
 8. LOOKING AHEAD -- upcoming events and what to watch (100-150 words)
 
 Do NOT use generic filler phrases like "in conclusion" or "it remains to be seen."
-Every sentence should contain specific information or actionable insight."""
+Every sentence should contain specific information or contextual insight."""
 
 
 def _format_list(items):

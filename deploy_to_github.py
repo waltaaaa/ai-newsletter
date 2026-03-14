@@ -1,16 +1,14 @@
 """
-deploy_to_github.py — Copy static frontend assets from public/ into docs/
+deploy_to_github.py — Sync static frontend assets from public/ into docs/
 
 GitHub Pages serves files from the docs/ directory on the main branch.
 This script is idempotent: safe to run repeatedly.
 
 What it copies:
-  public/index.html  -> docs/index.html
-  public/404.html    -> docs/404.html
-  public/js/         -> docs/js/   (shutil.copytree with dirs_exist_ok=True)
+  Everything in public/ -> docs/  (excluding hidden files and node_modules)
 
 What it does NOT touch:
-  docs/data/         — managed by export_dashboard.py
+  docs/data/         — managed by export_dashboard.py (preserved during sync)
 """
 
 import shutil
@@ -18,36 +16,53 @@ import os
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+# Directories and patterns to exclude from the copy
+_IGNORE = shutil.ignore_patterns(
+    ".*",           # hidden files/dirs
+    "node_modules", # npm artifacts
+)
+
 
 def main():
     public_dir = os.path.join(PROJECT_ROOT, "public")
     docs_dir = os.path.join(PROJECT_ROOT, "docs")
 
-    # Ensure docs/ exists (docs/data/ may already be there from export_dashboard.py)
-    os.makedirs(docs_dir, exist_ok=True)
+    if not os.path.isdir(public_dir):
+        print("ERROR: public/ directory not found")
+        return
 
-    # Copy individual HTML files
-    for filename in ("index.html", "404.html"):
-        src = os.path.join(public_dir, filename)
-        dst = os.path.join(docs_dir, filename)
-        if os.path.exists(src):
-            shutil.copy2(src, dst)
-            print(f"Copied public/{filename} -> docs/{filename}")
-        else:
-            print(f"WARNING: public/{filename} not found, skipping")
+    # Preserve docs/data/ (managed by export_dashboard.py)
+    data_dir = os.path.join(docs_dir, "data")
+    data_backup = None
+    if os.path.isdir(data_dir):
+        data_backup = data_dir + "_backup"
+        if os.path.exists(data_backup):
+            shutil.rmtree(data_backup)
+        os.rename(data_dir, data_backup)
 
-    # Copy js/ directory (dirs_exist_ok keeps existing files in place)
-    src_js = os.path.join(public_dir, "js")
-    dst_js = os.path.join(docs_dir, "js")
-    if os.path.isdir(src_js):
-        shutil.copytree(src_js, dst_js, dirs_exist_ok=True)
-        js_files = os.listdir(src_js)
-        for f in js_files:
-            print(f"Copied public/js/{f} -> docs/js/{f}")
-    else:
-        print("WARNING: public/js/ not found, skipping")
+    # Sync public/ -> docs/ (full copytree with ignore patterns)
+    shutil.copytree(public_dir, docs_dir, ignore=_IGNORE, dirs_exist_ok=True)
 
-    print("deploy_to_github.py: done")
+    # Restore docs/data/
+    if data_backup and os.path.isdir(data_backup):
+        if os.path.isdir(data_dir):
+            shutil.rmtree(data_dir)
+        os.rename(data_backup, data_dir)
+
+    # Print what was copied
+    copied = []
+    for root, dirs, files in os.walk(public_dir):
+        # Skip ignored dirs
+        dirs[:] = [d for d in dirs if not d.startswith(".") and d != "node_modules"]
+        for f in files:
+            if not f.startswith("."):
+                rel = os.path.relpath(os.path.join(root, f), public_dir)
+                copied.append(rel)
+
+    for rel in sorted(copied):
+        print(f"Copied public/{rel} -> docs/{rel}")
+
+    print(f"deploy_to_github.py: synced {len(copied)} files from public/ to docs/")
 
 
 if __name__ == "__main__":

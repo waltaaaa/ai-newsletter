@@ -1,0 +1,23 @@
+All 6 fixes complete. Here's a summary:
+
+**Fix 1 — Missing JSON exports:** Added `export_policy()` and `export_commodities()` functions to `export_dashboard.py`. They pull data from `dashboard_state` (where `provincial_policy_monitor.py` and `canadian_markets.py` already store it) and write `policy.json` and `commodities.json` to `docs/data/`. Both exports are wired into `export_all()`.
+
+**Fix 2 — Deploy script too narrow:** Rewrote `deploy_to_github.py` to use `shutil.copytree` with `ignore_patterns` to sync the entire `public/` directory to `docs/`, excluding hidden files and `node_modules`. Preserves `docs/data/` (managed by `export_dashboard.py`) via backup/restore during the sync.
+
+**Fix 3 — Briefing export not in CI:** Added a `Generate briefing exports` step to `weekly-pipeline.yml` (with `continue-on-error: true`) that runs `python briefing_export.py` after the pipeline completes. Also added a `__main__` block to `briefing_export.py` that outputs PDF/DOCX to `docs/data/`.
+
+**Fix 4 — No meta tags:** Added `<meta name="description">`, `og:title`, `og:description`, and `og:type` meta tags to `public/index.html`.
+
+**Fix 5 — Editorializing in briefing prompt:** Replaced "Forward-looking (what does this week's data mean for next quarter?)" with "Analytical (what does this week's data tell us about current conditions?)" and "actionable insight" with "contextual insight" in `weekly_briefing.py`.
+
+**Fix 6 — ARCHITECTURE.md overhaul:** Complete rewrite reflecting:
+1. Phase-based architecture diagram (9 phases with `phases/` directory)
+2. Updated repository layout showing `phases/` and `archive/` directories
+3. AI Model Stack updated — Claude Opus removed, local LLM (Qwen 2.5 3B) added, Gemini marked as fallback-only
+4. Discovery tier annotations (disabled: Tiers 3, 6, 11, 12)
+5. Archived files removed from main index, `archive/` section added
+6. `claude_checkpoints` table documented
+7. New "Circuit Breaker" section documenting `ServiceHealth`
+8. `llama-cpp-python` added to Dependencies
+9. Updated file counts, query counts (2,574), and table count (15+)
+10. RSS filter L6 updated to show local LLM as primary, Gemini as fallback

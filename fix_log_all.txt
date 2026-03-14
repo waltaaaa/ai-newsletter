@@ -321,3 +321,42 @@ warning: in the working copy of 'phases/__init__.py', LF will be replaced by CRL
  create mode 100644 phases/signals.py
  create mode 100644 phases/verification.py
    Committed. Moving to next prompt...
+
+───────────────────────────────────────────────────
+  PROMPT 9 of 10
+───────────────────────────────────────────────────
+
+All 6 files compile clean. Here's a summary of all 7 fixes:
+
+**Fix 1: Phase numbers in dedup keys** (`anomaly_detection.py`) — `_normalize_name()` now preserves tokens following "phase", "stage", "part", "unit". Bare numbers like "1", "2", "3" and roman numerals removed from filler list. "LNG Canada Phase 1" and "LNG Canada Phase 2" now normalize differently.
+
+**Fix 2: Building-type filler words** (`project_dedup.py`) — Removed `mall`, `centre`, `center`, `complex`, `building`, `tower`, `facility`, `plant`, `station`, `terminal`, `hub`, `campus` from `_FILLER`. These carry semantic meaning for project identity.
+
+**Fix 3: URL hard gate in db.py** (`db.py:upsert_project()`) — Added evidence check at the top. Projects with empty/missing evidence are rejected with a log message and `return None`.
+
+**Fix 4: `cost_unfindable` reset** (`cost_finder.py`) — Added a pre-step in `run_cost_finding()` that clears `cost_unfindable` and resets `cost_search_attempts` for projects whose `lastSeen` is within the last 7 days.
+
+**Fix 5: Compound query dedup** (`google_news_rss_search.py`) — `convert_queries_to_rss_urls()` now deduplicates by final URL before fetching. Logs the dedup stats. Updated doc references from "759" to "2,574" in CLAUDE.md.
+
+**Fix 6: URL normalization** (`url_utils.py`) — `normalize_url()` now only strips known tracking parameters (utm_*, fbclid, gclid, etc.) instead of all query params. StatCan `?pid=` and similar meaningful params are preserved.
+
+**Fix 7: Signals phase order** — Verified correct. `update_dashboard.py` lines 129-139 already has signals at position 4 (after filtering, before analysis). No change needed.
+
+✅ Prompt 9 complete. Committing...
+warning: in the working copy of 'CLAUDE.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'cost_finder.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'db.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_all.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'google_news_rss_search.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'project_dedup.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'url_utils.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_prompt_09.txt', LF will be replaced by CRLF the next time Git touches it
+[fix/signal-dispatch-overhaul 44c42f6] fix(signal-dispatch): prompt 9 of 10 — fix several data quality issues
+ 9 files changed, 129 insertions(+), 14 deletions(-)
+ create mode 100644 fix_log_prompt_09.txt
+   Committed. Moving to next prompt...
+
+───────────────────────────────────────────────────
+  PROMPT 10 of 10
+───────────────────────────────────────────────────
+

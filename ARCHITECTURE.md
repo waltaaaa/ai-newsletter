@@ -15,30 +15,24 @@
                        │
                        ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                  update_dashboard.py (~4150 lines)                   │
+│               update_dashboard.py (orchestrator)                     │
 │                                                                     │
-│  Step 1:  Hard data (6 APIs, no AI)                                 │
-│  Step 1b: Primary source indicators (StatCan, CMHC, FRED, ECB, BoE)│
-│  Tier 1-14: Discovery pipeline (14 tiers)                           │
-│  Step 3:  Claude analysis (4 API calls)                             │
-│  Step 4:  Hard-data injection (API values override AI)              │
-│  Step 2J: User submissions (GitHub Issues)                          │
-│  Step 2K: Claude reasoning (gap analysis, dedup QA, meta-analysis)  │
-│  Step 2M: Trend analysis (sector, indicator, cross-reference)       │
-│  Step 2N: Narrative pipeline (markets, events, microscope, briefing)│
-│  Step 2G: Structured signals (permits, lobbyists)                   │
-│  Step 5:  Source verification + Wayback archival                    │
-│  Step 6:  Timeseries append                                        │
-│  Step 7:  Final assembly → dashboard_state                          │
-│  Step 8:  Quality report → pipeline_runs                            │
-│  Step 9:  Static JSON export → docs/data/                           │
+│  Phase 1: Data Collection ─── phases/data_collection.py             │
+│  Phase 2: Discovery ───────── phases/discovery.py                   │
+│  Phase 3: Filtering & Dedup ─ phases/filtering.py                   │
+│  Phase 4: Signals ──────────── phases/signals.py                    │
+│  Phase 5: AI Analysis ──────── phases/analysis.py                   │
+│  Phase 6: Reasoning ────────── phases/reasoning.py                  │
+│  Phase 7: Narrative ────────── phases/narrative.py                  │
+│  Phase 8: Verification ─────── phases/verification.py               │
+│  Phase 9: Finalize & Export ── phases/finalize.py                   │
 └──────────────────────┬──────────────────────────────────────────────┘
                        │
           ┌────────────┼────────────────┐
           ▼            ▼                ▼
    ┌─────────────┐  ┌───────────┐  ┌──────────────┐
    │  14 Discovery│  │ AI Engine │  │  Hard Data   │
-   │  Tiers       │  │ (3 models)│  │  (6+ APIs)   │
+   │  Tiers       │  │ (4 models)│  │  (6+ APIs)   │
    └──────┬──────┘  └─────┬─────┘  └──────┬───────┘
           │                │               │
           └────────────────┼───────────────┘
@@ -46,12 +40,13 @@
 ┌─────────────────────────────────────────────────────────────────────┐
 │                    SQLite (dashboard.db) — WAL mode                  │
 │                    db.py — single interface module                   │
-│                    14 tables + FTS5 triggers                         │
+│                    15+ tables + FTS5 triggers                        │
 └──────────────────────────┬──────────────────────────────────────────┘
                            │
                            ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│              export_dashboard.py → docs/data/*.json (28+ files)     │
+│              export_dashboard.py → docs/data/*.json (30+ files)     │
+│              briefing_export.py → docs/data/*.pdf, *.docx           │
 │              deploy_to_github.py → public/ → docs/                  │
 └──────────────────────────┬──────────────────────────────────────────┘
                            │
@@ -72,30 +67,41 @@
 
 ```
 AI newsletter/
-├── update_dashboard.py         # Master pipeline entry point
-├── deploy_to_github.py         # public/ → docs/ copy
+├── update_dashboard.py         # Master pipeline orchestrator
+├── deploy_to_github.py         # public/ → docs/ sync
 ├── export_dashboard.py         # SQLite → docs/data/*.json
-├── db.py                       # Single SQLite interface module
+├── briefing_export.py          # PDF + DOCX briefing generation
+├── db.py                       # Single SQLite interface module (~1744 lines)
 ├── pipeline_config.py          # Model routing, thresholds, dedup config
 ├── pipeline_logging.py         # Structured run logger → pipeline_runs table
-├── pipeline_cache.py           # In-memory + SQLite TTL cache
-├── pipeline_state.py           # Follow-up query storage
+├── service_health.py           # Circuit breaker for external APIs
+│
+├── ── PHASES (pipeline architecture) ──
+├── phases/
+│   ├── __init__.py
+│   ├── data_collection.py      # Phase 1: Hard data (6+ APIs, no AI)
+│   ├── discovery.py            # Phase 2: 14-tier project discovery
+│   ├── filtering.py            # Phase 3: RSS filter, extraction, dedup
+│   ├── signals.py              # Phase 4: Permits + lobbyist signals
+│   ├── analysis.py             # Phase 5: Claude 4-call analysis + hard data override
+│   ├── reasoning.py            # Phase 6: Gap analysis, dedup QA, meta-analysis
+│   ├── narrative.py            # Phase 7: Trends, commentary, briefing
+│   ├── verification.py         # Phase 8: URL verification, Wayback, enrichment
+│   └── finalize.py             # Phase 9: Timeseries, assembly, export, deploy
 │
 ├── ── DISCOVERY (14 tiers) ──
-├── google_news_rss_search.py   # Tier 2: 759 queries → Google News RSS
+├── google_news_rss_search.py   # Tier 2: 2,574 queries → Google News RSS
 ├── rss_monitor.py              # Tier 4: ~201 RSS feeds, 6-layer filter
-├── gov_sources.py              # Tier 1: IAAC, BC EAO, NRCan, Infra CAN, CanadaBuys, CER, ERO
+├── gov_sources.py              # Tier 1,5,8: IAAC, BC EAO, NRCan, CER, provincial EAs
 ├── municipal_dev_apps.py       # Tier 11: 15 CMAs (Socrata/CKAN/HTML)
 ├── institutional_capital.py    # Tier 14: U15 universities, polytechnics, hospitals
 ├── statcan_permits.py          # Tier 9: Building permit anomaly detection
 ├── lobbyist_registries.py      # Tier 10: Federal lobbyist registry
 ├── key_people_tracker.py       # Key people RSS (PM, premiers, ministers)
-├── google_alerts.py            # Tier 12: 25 Google Alert RSS feeds (not yet configured)
-├── archive/gdelt_monitor.py    # Tier 3: GDELT DOC 2.0 (disabled — never integrated)
-├── known_project_sweep.py      # One-time: ~208 queries + 47 hardcoded seeds
+├── google_alerts.py            # Tier 12: 25 Google Alert RSS feeds
 │
 ├── ── FILTERING / DEDUP ──
-├── article_filter.py           # 6-layer article filter
+├── article_filter.py           # 6-layer article filter (local LLM + Gemini)
 ├── project_dedup.py            # Cross-tier deduplication
 ├── project_schema.py           # normalize_project_type, is_brownfield
 ├── project_sync.py             # upsert_projects, upsert_flat_projects
@@ -104,11 +110,11 @@ AI newsletter/
 │
 ├── ── AI / REASONING ──
 ├── claude_reasoning.py         # Claude Sonnet: all reasoning tasks
-├── gemini_engine.py            # Gemini Flash classification helpers
+├── gemini_engine.py            # Gemini Flash classification (local LLM fallback)
+├── local_llm.py                # Qwen 2.5 3B via llama-cpp-python (no API needed)
 ├── enrichment_queries.py       # Gemini Flash: fill missing value/status
 ├── under_the_microscope.py     # Topic selection + deep-dive analysis
 ├── weekly_briefing.py          # 8-section weekly briefing generation
-├── briefing_export.py          # PDF (reportlab) + DOCX (python-docx)
 │
 ├── ── ANALYSIS ──
 ├── sector_trends.py            # Sector project counts/values
@@ -124,43 +130,30 @@ AI newsletter/
 ├── ── SEARCH ──
 ├── tavily_search.py            # Targeted Tavily (1000 credits/mo free)
 ├── cost_finder.py              # Tavily-powered cost search for valueless projects
-├── perplexity_search.py        # Legacy (removed from pipeline; reference only)
 │
 ├── ── DATA QUALITY ──
 ├── url_utils.py                # URL normalization for dedup
-├── url_verifier.py             # Async URL verification with retry
 ├── url_verify.py               # Sync URL verification, quick_reject()
 ├── wayback.py                  # Wayback Machine save + backfill snapshots
-├── deep_verification.py        # Deep project URL verification with Wayback fallback
 ├── quality_report.py           # Pipeline quality metrics report
 ├── learning_store.py           # Adaptive learning (additive only)
 ├── github_issues_reader.py     # Read user submissions via GitHub Issues API
-├── missed_project_enrichment.py# Process pending user submissions via Tavily
-├── missed_project_diagnostics.py# Diagnostic tools for missed project analysis
 ├── dedup_audit.py              # Deduplication quality audit
 ├── coverage_audit.py           # Geographic + sector coverage gap audit
 │
 ├── ── SEEDING / ONE-TIME ──
-├── seed_projects.py            # Legacy one-time project seeder
-├── seed_projects_v2.py         # Full rebuild (Tier 1 → GDELT+Claude → Perplexity)
+├── seed_projects_v2.py         # Full rebuild (registries → GDELT+Claude → Perplexity)
 ├── known_project_sweep.py      # ~208 Gemini queries + 47 hardcoded seeds
 ├── generate_compound_queries.py# Generates compound_queries_final.json
 ├── compound_queries.py         # Compound query builder logic
-├── historical_backfill.py      # Historical indicator backfill
-├── backfill_indicator_history.py
-├── backfill_commodity_timeseries.py
-├── backfill_descriptions.py
-├── backfill_frontend_data.py
-├── backfill_global_indicators.py
-├── backfill_project_fields.py
-├── backfill_project_values.py
-├── backfill_timeseries.py
 │
 ├── ── MISC UTILITIES ──
 ├── named_tracker.py            # Named entity tracking across runs
 ├── sentiment.py                # Consumer sentiment (Reddit, Google Trends)
 ├── statcan_table_registry.py   # Generates statcan_tables.json for Data Explorer
 ├── convert_watchlist.py        # Converts watchlist CSV → watchlist.json
+├── capacity_scheduler.py       # AI capacity management
+├── capacity_queries.py         # Query sets for capacity scheduler
 │
 ├── ── TESTS ──
 ├── test_compound_queries.py
@@ -168,11 +161,26 @@ AI newsletter/
 ├── test_dedup.py
 ├── test_brownfield_discovery.py
 ├── test_db.py
+├── tests/test_export_dashboard.py
+│
+├── ── ARCHIVE (disabled / one-time scripts) ──
+├── archive/
+│   ├── gdelt_monitor.py        # GDELT DOC 2.0 (disabled — replaced by Google News RSS)
+│   ├── gemini_search.py        # Gemini grounded search (removed — $136/day cost)
+│   ├── seed_projects.py        # Legacy seeder
+│   ├── pipeline_cache.py       # Legacy cache
+│   ├── pipeline_state.py       # Legacy state store
+│   ├── url_verifier.py         # Legacy URL checker
+│   ├── deep_verification.py    # Legacy deep verification
+│   ├── missed_project_enrichment.py
+│   ├── missed_project_diagnostics.py
+│   ├── historical_backfill.py
+│   └── backfill_*.py (7 files) # One-time data migrations
 │
 ├── ── DATA / CONFIG ──
-├── dashboard.db                # SQLite database (WAL mode, 14 tables)
+├── dashboard.db                # SQLite database (WAL mode, 15+ tables)
 ├── .env                        # API keys, model IDs, feature flags (not committed)
-├── compound_queries_final.json # 759 compound queries
+├── compound_queries_final.json # 2,574 compound queries
 ├── rss_feeds.json              # Feed inventory (~201 feeds, 6 categories)
 ├── watchlist.json              # Verified officials list (PM, ministers, premiers)
 ├── requirements.txt            # Python dependencies
@@ -195,8 +203,12 @@ AI newsletter/
         ├── trends.json               # Sector trend snapshots
         ├── events.json               # Upcoming economic events
         ├── microscope.json           # Under the Microscope analysis
+        ├── policy.json               # Provincial policy monitor articles
+        ├── commodities.json          # Canadian commodity indicators
         ├── pipeline_status.json      # Last pipeline run status
         ├── statcan_tables.json       # Data Explorer table registry
+        ├── CAN_Macro_Briefing_*.pdf  # Downloadable briefing PDF
+        ├── CAN_Macro_Briefing_*.docx # Downloadable briefing DOCX
         └── manifest.json             # Build metadata
 ```
 
@@ -207,8 +219,8 @@ AI newsletter/
 ### `weekly-pipeline.yml` — Full Run
 - **Schedule:** Monday 10:30 UTC (5:30 AM ET)
 - **Trigger:** Also `workflow_dispatch` (manual)
-- **Steps:** Checkout → Python 3.12 → `pip install` → `python update_dashboard.py` → `python deploy_to_github.py` → git commit/push docs/
-- **Env:** `GEMINI_SEARCH_ENABLED=false`, `GEMINI_MODEL=gemini-2.5-flash`, `SONNET_MODEL=claude-sonnet-4-6`
+- **Steps:** Checkout → Python 3.12 → `pip install` → cache/download local LLM model → `python update_dashboard.py` → `python briefing_export.py` → `python deploy_to_github.py` → git commit/push docs/
+- **Env:** `GEMINI_SEARCH_ENABLED=false`, `GEMINI_MODEL=gemini-2.5-flash`, `SONNET_MODEL=claude-sonnet-4-6`, `LOCAL_MODEL_PATH=models/qwen2.5-3b-instruct-q4_k_m.gguf`
 
 ### `daily-indicators.yml` — Indicator Refresh
 - **Schedule:** Daily 05:00 UTC (midnight ET)
@@ -217,9 +229,9 @@ AI newsletter/
 
 ---
 
-## Pipeline Execution Order
+## Pipeline Execution Order (9 Phases)
 
-### Step 1 — Hard Data (No AI)
+### Phase 1 — Data Collection (No AI)
 
 | Source | What | API |
 |--------|------|-----|
@@ -236,12 +248,12 @@ AI newsletter/
 
 All values archived to `indicator_history` table for trend analysis.
 
-### Step 2 — Discovery Pipeline (10 active tiers of 14)
+### Phase 2 — Discovery Pipeline (14 tiers)
 
 ```
 Tier 1:  Federal Registries ──── IAAC, BC EAO, NRCan, Infra CAN, CanadaBuys, CER, ERO, CIB, Metrolinx
-Tier 2:  Google News RSS ─────── 759 compound queries → free RSS feeds
-Tier 3:  GDELT ────────────────── (disabled — not integrated into pipeline; moved to archive/)
+Tier 2:  Google News RSS ─────── 2,574 compound queries → free RSS feeds
+Tier 3:  GDELT ────────────────── (disabled — moved to archive/; replaced by Google News RSS)
 Tier 4:  RSS Feeds ────────────── ~201 feeds through 6-layer filter
 Tier 5:  Provincial EA ────────── 10 registries (QC BAPE, AB, SK, MB, NS, NB, NL, YT, NWT)
 Tier 6:  SEDAR+ ───────────────── (disabled — endpoint audit needed; scraper targets login portal)
@@ -255,7 +267,9 @@ Tier 13: Industry Trade RSS ───── 22 feeds (included in Tier 4)
 Tier 14: Institutional Capital ── U15 universities, polytechnics, hospitals
 ```
 
-### RSS Filter (6 layers — order matters)
+### Phase 3 — Filtering & Dedup
+
+#### RSS Filter (6 layers — order matters)
 
 ```
 Article → L1: Government source? ──yes──► skip to L6
@@ -268,36 +282,15 @@ Article → L1: Government source? ──yes──► skip to L6
          │ no match → REJECT
          L5: Negative keywords (crime/sports/weather ONLY)
          │ match → REJECT
-         L6: Gemini Flash classification (uncertain = RELEVANT)
+         L6: Local LLM classification (Gemini Flash fallback)
          │
          ▼
      PASS → extraction pipeline
 ```
 
-### Step 3 — Claude Analysis (4 API calls)
+**Note:** Layer 6 now uses the local Qwen 2.5 3B model as the primary classifier, with Gemini Flash as fallback when the local model is unavailable.
 
-| Call | Model | Output |
-|------|-------|--------|
-| 1 | Claude Opus | Executive summary, national analysis, global vectors, watchlist, consumer pulse, word cloud |
-| 2 | Claude Sonnet | Industry analysis (5 goods + 15 services sectors), yield curve, charts |
-| 3 | Claude Sonnet | All 13 provinces (analysis bullets, indicators, projects) |
-| 4 | Claude Sonnet | Structured project extraction from discovered articles |
-
-- 4 retry attempts with exponential backoff per call
-- JSON parse failure → Gemini Flash repair
-- Opus 404 → automatic Sonnet fallback
-- Post-call citation audit removes unsourced claims
-
-### Step 2K — Claude Reasoning Layer
-
-| Task | Purpose |
-|------|---------|
-| Gap analysis | Identify provincial discovery gaps → follow-up queries |
-| Extraction recovery | Retry failed RSS articles with Claude |
-| Dedup QA | Flag probable duplicates in new projects |
-| Meta-analysis | Monthly full database review (first 7 days of month) |
-
-### Post-Extraction — Project Pipeline
+#### Post-Extraction — Project Pipeline
 
 ```
 All discovered projects
@@ -310,18 +303,30 @@ URL hard gate (must have evidence URL)
         │
         ▼
 upsert to SQLite (status non-regression, evidence merge)
-        │
-        ├── Tavily cost-finding (projects with no dollar value)
-        ├── Gemini enrichment (fill missing fields, ≤100 queries/day)
-        ├── Wayback Machine backfill (up to 20/run)
-        ├── Stale project check (28+ days unseen)
-        ├── Evidence URL verification (HEAD requests)
-        ├── Confidence decay (31-120+ days)
-        ├── Lifecycle monitoring (Gemini status checks)
-        └── Cross-project anomaly detection
 ```
 
-### Steps 4a-4g — Hard Data Override
+### Phase 4 — Signals
+
+| Signal | Source |
+|--------|--------|
+| Building permit anomalies | StatCan permits (20 CMAs, 3.0x threshold) |
+| Lobbyist registrations | Federal CSV, infrastructure keyword filter |
+
+### Phase 5 — AI Analysis (Claude 4-call pipeline)
+
+| Call | Model | Output |
+|------|-------|--------|
+| 1 | Claude Sonnet | Executive summary, national analysis, global vectors, watchlist, consumer pulse, word cloud |
+| 2 | Claude Sonnet | Industry analysis (5 goods + 15 services sectors), yield curve, charts |
+| 3 | Claude Sonnet | All 13 provinces (analysis bullets, indicators, projects) |
+| 4 | Claude Sonnet | Structured project extraction from discovered articles |
+
+- 4 retry attempts with exponential backoff per call
+- JSON parse failure → Gemini Flash repair
+- Claude checkpoint support (resume after crash via `claude_checkpoints` table)
+- Post-call citation audit removes unsourced claims
+
+#### Hard Data Override (Steps 4a-4g)
 
 After Claude writes the payload, authoritative API values overwrite all indicators:
 - Commodities, markets, yields (Yahoo Finance / BoC Valet)
@@ -331,7 +336,16 @@ After Claude writes the payload, authoritative API values overwrite all indicato
 - Industry M/M and Y/Y (StatCan Table 36-10-0434-01)
 - `validate_indicators()` cross-checks and logs any mismatches
 
-### Steps 2M-2P — Analysis & Briefing
+### Phase 6 — Reasoning
+
+| Task | Purpose |
+|------|---------|
+| Gap analysis | Identify provincial discovery gaps → follow-up queries |
+| Extraction recovery | Retry failed RSS articles with Claude |
+| Dedup QA | Flag probable duplicates in new projects |
+| Meta-analysis | Monthly full database review (first 7 days of month) |
+
+### Phase 7 — Narrative
 
 | Component | AI Model | Output |
 |-----------|----------|--------|
@@ -345,16 +359,28 @@ After Claude writes the payload, authoritative API values overwrite all indicato
 | Pre-event analysis | Claude Sonnet | High-significance event previews |
 | Under the Microscope | Gemini (topic) + Claude (analysis) | 200-300 word deep-dive |
 | Weekly briefing | Claude Sonnet | 8 sections, 1000-1500 words |
-| Briefing export | reportlab + python-docx | PDF + DOCX files |
 
-### Steps 5-9 — Finalize & Export
+### Phase 8 — Verification & Quality
 
-1. **Source verification** — Concurrent HEAD requests, dead URLs cleared, Wayback archived
-2. **Timeseries append** — One data point per tracked variable for sparklines
-3. **Final assembly** — Full JSON payload saved to `dashboard_state`
-4. **Quality report** — Pipeline metrics logged to `pipeline_runs`
-5. **Static JSON export** — `export_all(conn)` writes 13+ files to `docs/data/`
-6. **Deploy** — `deploy_to_github.py` copies `public/` → `docs/`, git commit/push
+| Task | Method |
+|------|--------|
+| Source verification | Concurrent HEAD requests, dead URLs flagged |
+| Wayback archival | Up to 20 URLs per run |
+| Cost-finding | Tavily search for projects missing dollar values |
+| Gemini enrichment | Fill missing fields (≤100 queries/day) |
+| Stale project check | 28+ days unseen detection |
+| Confidence decay | 31-120+ day score reduction |
+| Lifecycle monitoring | Gemini status transition checks |
+| Cross-project anomaly detection | Duplicate/outlier detection |
+
+### Phase 9 — Finalize, Export & Deploy
+
+1. **Timeseries append** — One data point per tracked variable for sparklines
+2. **Final assembly** — Full JSON payload saved to `dashboard_state`
+3. **Quality report** — Pipeline metrics logged to `pipeline_runs`
+4. **Briefing export** — PDF (reportlab) + DOCX (python-docx) to `docs/data/`
+5. **Static JSON export** — `export_all(conn)` writes 30+ files to `docs/data/`
+6. **Deploy** — `deploy_to_github.py` syncs `public/` → `docs/`, git commit/push
 
 ---
 
@@ -362,7 +388,7 @@ After Claude writes the payload, authoritative API values overwrite all indicato
 
 All SQLite access through `db.py`. WAL mode, foreign keys ON, `busy_timeout=5000`.
 
-### 14 Tables
+### 15+ Tables
 
 | Table | Purpose |
 |-------|---------|
@@ -380,6 +406,8 @@ All SQLite access through `db.py`. WAL mode, foreign keys ON, `busy_timeout=5000
 | `timeseries` | Commodity/market time series (sparklines) |
 | `newsletters` | Legacy newsletter collection |
 | `pipeline_state` | Follow-up queries, misc state |
+| `claude_checkpoints` | Resume-after-crash for expensive Claude API calls |
+| `miss_audit_results` | Typed miss classifications from coverage audit |
 
 ### Projects Table (key fields)
 
@@ -411,6 +439,21 @@ CREATE TABLE projects (
 );
 ```
 
+### Claude Checkpoints Table
+
+```sql
+CREATE TABLE claude_checkpoints (
+    run_id    TEXT NOT NULL,
+    call_name TEXT NOT NULL,
+    response  TEXT,
+    cost_usd  REAL DEFAULT 0,
+    created   TEXT,
+    PRIMARY KEY (run_id, call_name)
+);
+```
+
+Allows the pipeline to resume from the last successful Claude call after a crash, avoiding re-spending on expensive API calls.
+
 ### Status Ordering (non-regression)
 
 ```
@@ -426,7 +469,7 @@ Terminal states (always override): Cancelled, On Hold, Suspended, Paused
 2. **Evidence merge never loses URLs** — Dedup by normalized URL, always append
 3. **Status never regresses** — Only advances in ordering
 4. **Additive only** — Keywords, queries, feeds can be added, never removed
-5. **Primary API always wins** — Hard data override in Steps 4a-4f
+5. **Primary API always wins** — Hard data override in Phase 5
 6. **No fabrication** — Citation audit removes unsourced claims
 
 ---
@@ -434,12 +477,12 @@ Terminal states (always override): Cancelled, On Hold, Suspended, Paused
 ## Frontend Architecture
 
 ### Stack
-- **HTML:** `public/index.html` (496 lines, shell only)
+- **HTML:** `public/index.html` (~500 lines, shell only)
 - **JS:** `public/js/app.js` (~1400+ lines, all rendering)
 - **CSS:** Tailwind CDN + custom properties
 - **Charts:** Chart.js 4.4.1 + chartjs-plugin-annotation
 - **Viz:** D3 7.8.5 + d3-cloud (word cloud)
-- **Fonts:** Plus Jakarta Sans + JetBrains Mono
+- **Fonts:** Neue Haas Grotesk Display Pro + JetBrains Mono
 - **Sanitization:** DOMPurify 3.0.6
 
 ### Data Loading
@@ -458,7 +501,7 @@ Terminal states (always override): Cancelled, On Hold, Suspended, Paused
 | Provinces | `briefing_latest.json`, `projects_{prov}.json` | Per-province analysis + projects |
 | Projects | `projects_all.json`, `projects_{prov}.json` | Searchable/filterable project database |
 | Briefing | `briefing_latest.json`, `briefing_archive.json` | 8-section briefing, PDF/DOCX downloads |
-| Markets | `briefing_latest.json`, `timeseries.json` | Commodity cards, equities, yield curve |
+| Markets | `briefing_latest.json`, `timeseries.json`, `commodities.json` | Commodity cards, equities, yield curve |
 
 ### No Backend
 - No server, no runtime API calls
@@ -471,14 +514,44 @@ Terminal states (always override): Cancelled, On Hold, Suspended, Paused
 
 | Model | Role | Cost | Constraint |
 |-------|------|------|------------|
-| Claude Opus (claude-opus-4-6) | Call 1: macro writing | ~$7/year | Opus 404 → Sonnet fallback |
-| Claude Sonnet (claude-sonnet-4-6) | All reasoning, briefing, analysis | ~$25/year | $3/M input, $15/M output |
-| Gemini 2.5 Flash | Classification, extraction, JSON repair | Free tier | **NEVER pass google_search tool or groundingConfig** |
+| Claude Sonnet (claude-sonnet-4-6) | All reasoning, writing, briefing, analysis | ~$55/year | $3/M input, $15/M output |
+| Gemini 2.5 Flash | Classification, extraction, JSON repair (fallback) | Free tier | **NEVER pass google_search tool or groundingConfig** |
+| Qwen 2.5 3B (local) | Primary classifier for RSS filter L6, article filter | Free (local) | llama-cpp-python; ~2GB model file |
 | Tavily | Targeted enrichment search | Free tier (1,000/mo) | Budget tracked in dashboard_state |
 
 ### Cost Constraint: ~$60/year total
 
-No Gemini Pro, no Gemini grounded search ($35/1K queries), no Perplexity, no GDELT paid tier, no Haiku in weekly pipeline.
+No Gemini Pro, no Gemini grounded search ($35/1K queries), no Claude Opus, no Perplexity, no GDELT paid tier, no Haiku in weekly pipeline.
+
+### Local LLM Details
+
+- **Model:** Qwen 2.5 3B Instruct (Q4_K_M quantization, ~2GB)
+- **Runtime:** llama-cpp-python with 4096 context, 2 threads
+- **Path:** `LOCAL_MODEL_PATH` env var or `models/qwen2.5-3b-instruct-q4_k_m.gguf`
+- **Usage:** Primary classifier in `article_filter.py` L6 and `gemini_engine.py` fallback
+- **Behavior:** Lazy-loaded on first call, stays in memory for run duration. Returns "RELEVANT" (safe default) if model unavailable.
+- **CI caching:** `actions/cache@v4` caches `models/` directory; downloaded from HuggingFace on miss
+
+---
+
+## Circuit Breaker — `service_health.py`
+
+The `ServiceHealth` singleton tracks consecutive failures per external service. After reaching a configurable threshold, the service is marked "dead" for the remainder of the pipeline run to avoid wasting time on unreachable endpoints.
+
+| Service | Failure Threshold | Effect when dead |
+|---------|-------------------|------------------|
+| `gemini` | 3 | Skip Gemini classification → use local LLM only |
+| `reddit` | 2 | Skip sentiment collection |
+| `wayback` | 2 | Skip Wayback archival |
+| `statcan` | 3 | Skip StatCan WDS calls |
+| `tavily` | 3 | Skip Tavily enrichment searches |
+
+**API:**
+- `service_health.init()` — create/reset at pipeline start
+- `service_health.get()` — get singleton
+- `health.record_failure(service, reason)` — increment counter; auto-marks dead at threshold
+- `health.record_success(service)` — reset counter
+- `health.is_available(service)` — check before making calls
 
 ---
 
@@ -487,13 +560,14 @@ No Gemini Pro, no Gemini grounded search ($35/1K queries), no Perplexity, no GDE
 ```
 DISCOVERY                    PROCESSING                  STORAGE            DELIVERY
 ─────────────────────────── ─────────────────────────── ──────────────────── ──────────────
-Google News RSS (759)  ───┐
+Google News RSS (2574) ───┐
 Gov Registries (9)     ───┤  6-layer RSS filter
-RSS Feeds (~201)       ───┤  ───────────────────►
-Municipal Apps (4*)    ───┤  Claude extraction (4 calls)
-Institutional (20)     ───┤  ───────────────────►          dashboard.db
-StatCan Permits (20)   ───┤  Cross-tier dedup              (SQLite WAL)
-Lobbyist Registry      ───┘  URL hard gate                 ──────────────►
+RSS Feeds (~201)       ───┤  (local LLM + Gemini)
+Municipal Apps (4*)    ───┤  ───────────────────►
+Institutional (20)     ───┤  Claude extraction (4 calls)
+StatCan Permits (20)   ───┤  ───────────────────►          dashboard.db
+Lobbyist Registry      ───┘  Cross-tier dedup              (SQLite WAL)
+                             URL hard gate                 ──────────────►
                              Evidence merge                                  docs/data/
                              Status non-regression                           *.json
                         * Municipal: 4 API cities active; HTML scrapers degraded
@@ -519,8 +593,9 @@ World Bank         ────────►                                  
 | `--seed-projects` | One-time project seed (registries + Google News RSS + municipal + institutional) |
 | `--test-feeds` | Test all RSS feed URLs for connectivity |
 | `--audit-citations` | Verify all source URLs, archive dead ones via Wayback |
+| `--known-sweep` | One-time historical sweep (~208 queries + 47 seeds) |
+| `--audit-archetypes` | Archetype pattern scan for missed project types |
 | `--test-sentiment` | Sentiment collection only |
-| `--test-queries` | GDELT dry run |
 
 ---
 
@@ -528,6 +603,7 @@ World Bank         ────────►                                  
 
 - All discovery tiers: `try/except` → `[WARN]` + continue (non-critical)
 - Claude API: 4 retries, exponential backoff (1s→8s), JSON failure → Gemini repair
+- Claude checkpoints: expensive calls saved to `claude_checkpoints` table for crash recovery
 - StatCan WDS: 1 retry after 5s
 - BoC Valet: 1 retry after 5s
 - CMHC: tries last 4 months for publication lag
@@ -536,6 +612,7 @@ World Bank         ────────►                                  
 - URL verification: HEAD with 5s timeout, 12 concurrent workers
 - Pipeline logging: `PipelineRunLogger` → `pipeline_runs` table (step logs, error counts, API usage)
 - Full traceback on unhandled exceptions; run finalized with `"error"` status
+- **Circuit breaker:** `ServiceHealth` marks services dead after N consecutive failures (see section above)
 
 ---
 
@@ -587,122 +664,14 @@ beautifulsoup4    # HTML scraping (registries)
 yfinance          # Yahoo Finance market data
 reportlab         # PDF briefing export
 python-docx       # DOCX briefing export
-anthropic         # Claude SDK (Call 1-3)
+anthropic         # Claude SDK
 google-genai      # Gemini SDK (classification)
 tavily-python     # Tavily search client
-openpyxl          # NRCan XLSX parsing
+llama-cpp-python  # Local LLM inference (Qwen 2.5 3B)
 lxml              # HTML/XML parsing
 nest_asyncio      # Allow nested event loops
 python-dotenv     # .env file loading
 requests          # Sync HTTP (RSS SSL fix)
-gdeltdoc          # GDELT DOC 2.0 client (patched UA)
+gdeltdoc          # GDELT DOC 2.0 client (legacy, archive/)
 pytz              # Timezone handling
 ```
-
----
-
-## Complete Python File Index (60+ files)
-
-### Pipeline Core
-| File | Lines | Purpose |
-|------|-------|---------|
-| `update_dashboard.py` | ~4150 | Main orchestrator — all 9 steps |
-| `db.py` | — | SQLite interface, 14 table schemas, upsert logic, FTS5 |
-| `pipeline_config.py` | — | Model routing, GDP thresholds, NAICS map, dedup helpers |
-| `pipeline_cache.py` | — | In-memory TTL cache (yfinance 12hr, indicators 24hr) |
-| `pipeline_logging.py` | — | Structured `PipelineRunLogger` → pipeline_runs table |
-| `pipeline_state.py` | — | Follow-up query store/retrieve |
-| `export_dashboard.py` | — | SQLite → docs/data/*.json (28+ static files) |
-| `deploy_to_github.py` | — | Copy public/ → docs/ for GitHub Pages |
-
-### Discovery (14 Tiers)
-| File | Tier | Purpose |
-|------|------|---------|
-| `gov_sources.py` | 1,5,8 | IAAC, BC EAO, NRCan, InfraCA, BuyAndSell, CER, 13 provincial EAs |
-| `google_news_rss_search.py` | 2 | 759 compound queries → Google News RSS (free, unlimited) |
-| `archive/gdelt_monitor.py` | 3 | GDELT DOC 2.0 (disabled — never integrated into pipeline) |
-| `rss_monitor.py` | 4,12,13 | 201+ RSS/Atom feeds (gov, media, industry, Google Alerts) |
-| `article_filter.py` | — | 6-layer RSS filter (gov bypass → dollar bypass → keywords → Gemini) |
-| `statcan_permits.py` | 9 | Building permit anomaly detection (20 CMAs, 3.0x threshold) |
-| `lobbyist_registries.py` | 10 | Federal/provincial lobbyist signal detection |
-| `municipal_dev_apps.py` | 11 | 15 CMAs (Socrata/CKAN APIs + HTML portals) |
-| `google_alerts.py` | 12 | 25 Google Alerts RSS feeds (disabled — not configured) |
-| `institutional_capital.py` | 14 | U15 universities, polytechnics, hospitals |
-| `key_people_tracker.py` | — | 15 RSS feeds (PM, premiers, crown corps) — gov bypass |
-| `capacity_scheduler.py` | — | T1-T6 remaining Gemini budget allocation |
-| `capacity_queries.py` | — | Query sets for capacity scheduler |
-
-### AI / Reasoning
-| File | Model | Purpose |
-|------|-------|---------|
-| `claude_reasoning.py` | Claude Sonnet | Gap analysis, extraction recovery, dedup QA, meta-analysis |
-| `gemini_engine.py` | Gemini Flash | Classification, extraction, JSON repair |
-| `enrichment_queries.py` | Gemini Flash | Fill missing value/proponent/status (≤100/day) |
-| `under_the_microscope.py` | Gemini + Claude | Topic selection + 200-300 word deep-dive |
-| `weekly_briefing.py` | Claude Sonnet | 8-section briefing (1000-1500 words) |
-| `briefing_export.py` | — | PDF (reportlab) + DOCX (python-docx) generation |
-
-### Project Processing
-| File | Purpose |
-|------|---------|
-| `project_dedup.py` | Cross-tier fuzzy dedup (norm_key + SequenceMatcher ≥0.85) |
-| `project_sync.py` | SQLite upsert with status non-regression, evidence merge |
-| `project_schema.py` | Type normalization, brownfield detection |
-| `confidence_decay.py` | Score decay after 30/60/90/120 days |
-| `lifecycle_monitor.py` | Gemini status transition checks on active projects |
-| `anomaly_detection.py` | Cross-project/cross-province duplicate detection |
-
-### Analysis + Narrative
-| File | Purpose |
-|------|---------|
-| `sector_trends.py` | Project count/value trends by sector |
-| `indicator_trends.py` | M/M and Y/Y computations from indicator_history |
-| `cross_reference.py` | Link indicator movements to project counts |
-| `weekly_trend_report.py` | Textual trend narrative |
-| `canadian_markets.py` | Commodity data + Claude market commentary |
-| `event_calendar.py` | BoC dates, StatsCan releases + Claude pre-event analysis |
-| `provincial_policy_monitor.py` | Policy RSS processing |
-| `citation_audit.py` | Removes unverifiable claims after each Claude call |
-
-### Search
-| File | Purpose |
-|------|---------|
-| `tavily_search.py` | Targeted enrichment (cost-finding, verification, follow-ups) |
-| `cost_finder.py` | Tavily cost search for projects missing dollar values |
-| `gemini_search.py` | Legacy search logging helper (search disabled) |
-
-### Data Quality
-| File | Purpose |
-|------|---------|
-| `url_utils.py` | URL normalization for dedup |
-| `url_verifier.py` | Async URL verification with retry |
-| `url_verify.py` | Sync URL verification, quick_reject() |
-| `wayback.py` | Wayback Machine save + backfill snapshots |
-| `deep_verification.py` | Deep URL verification with Wayback fallback |
-| `quality_report.py` | Pipeline quality metrics |
-| `learning_store.py` | Adaptive learning (additive only) |
-| `github_issues_reader.py` | Read user submissions via GitHub Issues API |
-| `missed_project_enrichment.py` | Process submissions via Tavily |
-| `missed_project_diagnostics.py` | Missed project diagnostic tools |
-| `dedup_audit.py` | Dedup quality audit |
-| `coverage_audit.py` | Geographic + sector coverage gaps |
-
-### Seeding / One-Time
-| File | Purpose |
-|------|---------|
-| `seed_projects.py` | Legacy one-time seeder |
-| `seed_projects_v2.py` | Full rebuild (registries → GDELT+Claude → Perplexity) |
-| `known_project_sweep.py` | ~208 Gemini queries + 47 hardcoded seeds |
-| `generate_compound_queries.py` | Generates compound_queries_final.json |
-| `compound_queries.py` | Compound query builder logic |
-| `historical_backfill.py` | Historical indicator backfill |
-| `backfill_*.py` (7 files) | Various one-time data backfill scripts |
-
-### Misc
-| File | Purpose |
-|------|---------|
-| `named_tracker.py` | Named entity tracking across runs |
-| `sentiment.py` | Consumer sentiment (Reddit, Google Trends) |
-| `statcan_table_registry.py` | Generates statcan_tables.json for Data Explorer |
-| `convert_watchlist.py` | Converts watchlist CSV → JSON |
-| `test_*.py` (5 files) | Unit/integration tests |
