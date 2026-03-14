@@ -92,3 +92,50 @@ warning: in the working copy of 'generate_archetype_queries.py', LF will be repl
   PROMPT 2 of 10
 ───────────────────────────────────────────────────
 
+All files compile cleanly. Here's a summary of all changes:
+
+**Fix 1 — Unified Sonnet model defaults:**
+- `claude_reasoning.py`: imports `SONNET_MODEL` from `pipeline_config` instead of hardcoding `claude-sonnet-4-5-20250929`
+- `citation_audit.py`: imports `SONNET_MODEL` from `pipeline_config` instead of hardcoding `claude-sonnet-4-5-20250514`
+- `backfill_global_indicators.py`: imports and uses `SONNET_MODEL` instead of inline `os.environ.get` with `claude-sonnet-4-5`
+- `seed_projects.py`: same treatment
+
+**Fix 2 — Pricing:** Already correct. $3/$15 per MTok is the current Sonnet 4.6 rate, confirmed via Anthropic docs.
+
+**Fix 3 — Cost cap enforcement in `claude_reasoning.py`:**
+- Added module-level `_cumulative_cost_usd` and `_cumulative_tokens` tracking
+- Both `reason_with_claude()` and `reason_with_claude_tracked()` now check the cap before calling the API and return `None` when exceeded
+- Both accumulate cost after successful calls
+- Added `reset_cost_tracker()` and `get_cumulative_cost()` helpers
+
+**Fix 4 — Perplexity disabled:**
+- `pipeline_config.py`: `PERPLEXITY_ENABLED = False` (hardcoded, ignores env var)
+- Deleted `perplexity_search.py` entirely
+- No imports of it existed in other files
+
+**Fix 5 — Cross-reference sector mapping:**
+- Added `_XREF_TO_NAICS` dict mapping all 20 abbreviated names (e.g. `"Mining & O&G"`) to full NAICS names from `pipeline_config.NAICS_MAP` (e.g. `"Mining, quarrying, and oil and gas extraction"`)
+- `cross_reference_trends()` now translates sector names before looking up in `momentum`, so correlations actually match
+
+**Fix 6 — Enrichment query cap:**
+- Changed from `investigations[:50] + detail_fills[:50]` (up to 100) to 60/40 split that never exceeds `MAX_ENRICHMENT_QUERIES_PER_DAY` (55)
+
+✅ Prompt 2 complete. Committing...
+warning: in the working copy of 'backfill_global_indicators.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'citation_audit.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'export_dashboard.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_all.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_prompt_01.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'pipeline_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'seed_projects.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_prompt_02.txt', LF will be replaced by CRLF the next time Git touches it
+[fix/signal-dispatch-overhaul 7d28bff] fix(signal-dispatch): prompt 2 of 10 — fix 6 configuration issues
+ 13 files changed, 220 insertions(+), 204 deletions(-)
+ create mode 100644 fix_log_prompt_02.txt
+ delete mode 100644 perplexity_search.py
+   Committed. Moving to next prompt...
+
+───────────────────────────────────────────────────
+  PROMPT 3 of 10
+───────────────────────────────────────────────────
+

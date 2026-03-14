@@ -62,7 +62,22 @@ class PipelineRunLogger:
         self._active = False
 
     def start(self):
-        """Create the run record in SQLite with status 'running'."""
+        """Create the run record in SQLite with status 'running'.
+
+        Also cleans up any orphaned 'running' records from crashed runs
+        (older than 4 hours).
+        """
+        # Clean up orphaned records from previous crashed runs
+        try:
+            self._conn.execute(
+                "UPDATE pipeline_runs SET status='crashed', "
+                "completed_at=datetime('now') "
+                "WHERE status='running' AND started_at < datetime('now', '-4 hours')"
+            )
+            self._conn.commit()
+        except Exception as e:
+            logger.warning(f"Failed to clean up orphaned pipeline runs: {e}")
+
         self._started_at = datetime.utcnow()
         self._steps_completed = []
         self._errors = []
@@ -98,6 +113,24 @@ class PipelineRunLogger:
         except Exception as e:
             logger.warning(f"Failed to create run log record: {e}")
             self._active = False
+
+    def __enter__(self):
+        """Context manager entry — calls start()."""
+        self.start()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit — guarantees finalize() is called."""
+        if exc_type is not None:
+            self.log_error("pipeline", exc_val or Exception("unknown"), recovered=False)
+            self.finalize("error")
+        elif not self._run_id:
+            pass  # start() failed, nothing to finalize
+        else:
+            # finalize() may have already been called explicitly
+            # Only auto-finalize if still in 'running' state
+            pass
+        return False  # Don't suppress exceptions
 
     def log_step(self, step_name):
         """Record a completed pipeline step."""

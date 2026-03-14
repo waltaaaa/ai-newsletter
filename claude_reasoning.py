@@ -31,6 +31,10 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 CLAUDE_MODEL = SONNET_MODEL
 CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages"
 
+# Retry config for rate limits (429) and overloaded (529)
+CLAUDE_MAX_RETRIES = 4
+CLAUDE_RETRY_BASE_DELAY = 30  # seconds — Claude rate limits are longer than Gemini's
+
 # ── Per-run cost tracking (shared across all calls in this module) ────────────
 _cumulative_cost_usd = 0.0
 _cumulative_tokens = {"input": 0, "output": 0}
@@ -84,32 +88,47 @@ async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
         "messages": [{"role": "user", "content": user_prompt}],
     }
 
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                CLAUDE_ENDPOINT, headers=headers, json=payload,
-                timeout=aiohttp.ClientTimeout(total=120),
-            ) as resp:
-                if resp.status == 200:
-                    data = await resp.json()
-                    usage = data.get("usage", {})
-                    in_tok = usage.get("input_tokens", 0)
-                    out_tok = usage.get("output_tokens", 0)
-                    cost = (in_tok * 3 + out_tok * 15) / 1_000_000
-                    _cumulative_cost_usd += cost
-                    _cumulative_tokens["input"] += in_tok
-                    _cumulative_tokens["output"] += out_tok
-                    return data["content"][0]["text"]
-                else:
-                    text = await resp.text()
-                    logger.error(f"Claude API error {resp.status}: {text[:300]}")
-                    return None
-    except asyncio.TimeoutError:
-        logger.warning("Claude API timeout")
-        return None
-    except Exception as e:
-        logger.warning(f"Claude API exception: {e}")
-        return None
+    for attempt in range(CLAUDE_MAX_RETRIES + 1):
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    CLAUDE_ENDPOINT, headers=headers, json=payload,
+                    timeout=aiohttp.ClientTimeout(total=120),
+                ) as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        usage = data.get("usage", {})
+                        in_tok = usage.get("input_tokens", 0)
+                        out_tok = usage.get("output_tokens", 0)
+                        cost = (in_tok * 3 + out_tok * 15) / 1_000_000
+                        _cumulative_cost_usd += cost
+                        _cumulative_tokens["input"] += in_tok
+                        _cumulative_tokens["output"] += out_tok
+                        return data["content"][0]["text"]
+                    elif resp.status in (429, 529) and attempt < CLAUDE_MAX_RETRIES:
+                        delay = CLAUDE_RETRY_BASE_DELAY * (2 ** attempt)
+                        logger.warning(
+                            f"Claude rate limited ({resp.status}), "
+                            f"waiting {delay}s (attempt {attempt + 1}/{CLAUDE_MAX_RETRIES})"
+                        )
+                        await asyncio.sleep(delay)
+                        continue
+                    else:
+                        text = await resp.text()
+                        logger.error(f"Claude API error {resp.status}: {text[:300]}")
+                        return None
+        except asyncio.TimeoutError:
+            if attempt < CLAUDE_MAX_RETRIES:
+                delay = CLAUDE_RETRY_BASE_DELAY * (2 ** attempt)
+                logger.warning(f"Claude API timeout, retrying in {delay}s (attempt {attempt + 1})")
+                await asyncio.sleep(delay)
+                continue
+            logger.warning("Claude API timeout (all retries exhausted)")
+            return None
+        except Exception as e:
+            logger.warning(f"Claude API exception: {e}")
+            return None
+    return None
 
 
 async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
@@ -142,45 +161,60 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
         "messages": [{"role": "user", "content": user_prompt}],
     }
 
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                CLAUDE_ENDPOINT, headers=headers, json=payload,
-                timeout=aiohttp.ClientTimeout(total=120),
-            ) as resp:
-                if resp.status == 200:
-                    data = await resp.json()
-                    usage = data.get("usage", {})
-                    input_tokens = usage.get("input_tokens", 0)
-                    output_tokens = usage.get("output_tokens", 0)
+    for attempt in range(CLAUDE_MAX_RETRIES + 1):
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    CLAUDE_ENDPOINT, headers=headers, json=payload,
+                    timeout=aiohttp.ClientTimeout(total=120),
+                ) as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        usage = data.get("usage", {})
+                        input_tokens = usage.get("input_tokens", 0)
+                        output_tokens = usage.get("output_tokens", 0)
 
-                    # Cost: Sonnet 4.6 = $3/MTok input + $15/MTok output
-                    cost = (input_tokens * 3 + output_tokens * 15) / 1_000_000
-                    _cumulative_cost_usd += cost
-                    _cumulative_tokens["input"] += input_tokens
-                    _cumulative_tokens["output"] += output_tokens
+                        # Cost: Sonnet 4.6 = $3/MTok input + $15/MTok output
+                        cost = (input_tokens * 3 + output_tokens * 15) / 1_000_000
+                        _cumulative_cost_usd += cost
+                        _cumulative_tokens["input"] += input_tokens
+                        _cumulative_tokens["output"] += output_tokens
 
-                    logger.info(
-                        f"Claude [{task_name}]: {input_tokens} in / "
-                        f"{output_tokens} out = ${cost:.4f}"
-                    )
+                        logger.info(
+                            f"Claude [{task_name}]: {input_tokens} in / "
+                            f"{output_tokens} out = ${cost:.4f}"
+                        )
 
-                    return {
-                        "text": data["content"][0]["text"],
-                        "input_tokens": input_tokens,
-                        "output_tokens": output_tokens,
-                        "cost_usd": cost,
-                    }
-                else:
-                    text = await resp.text()
-                    logger.error(f"Claude API error {resp.status}: {text[:300]}")
-                    return None
-    except asyncio.TimeoutError:
-        logger.warning(f"Claude API timeout [{task_name}]")
-        return None
-    except Exception as e:
-        logger.warning(f"Claude API exception [{task_name}]: {e}")
-        return None
+                        return {
+                            "text": data["content"][0]["text"],
+                            "input_tokens": input_tokens,
+                            "output_tokens": output_tokens,
+                            "cost_usd": cost,
+                        }
+                    elif resp.status in (429, 529) and attempt < CLAUDE_MAX_RETRIES:
+                        delay = CLAUDE_RETRY_BASE_DELAY * (2 ** attempt)
+                        logger.warning(
+                            f"Claude rate limited ({resp.status}) [{task_name}], "
+                            f"waiting {delay}s (attempt {attempt + 1}/{CLAUDE_MAX_RETRIES})"
+                        )
+                        await asyncio.sleep(delay)
+                        continue
+                    else:
+                        text = await resp.text()
+                        logger.error(f"Claude API error {resp.status}: {text[:300]}")
+                        return None
+        except asyncio.TimeoutError:
+            if attempt < CLAUDE_MAX_RETRIES:
+                delay = CLAUDE_RETRY_BASE_DELAY * (2 ** attempt)
+                logger.warning(f"Claude API timeout [{task_name}], retrying in {delay}s (attempt {attempt + 1})")
+                await asyncio.sleep(delay)
+                continue
+            logger.warning(f"Claude API timeout [{task_name}] (all retries exhausted)")
+            return None
+        except Exception as e:
+            logger.warning(f"Claude API exception [{task_name}]: {e}")
+            return None
+    return None
 
 
 def reason_sync(system_prompt, user_prompt, task_name="sync", max_tokens=4096):

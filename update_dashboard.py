@@ -348,12 +348,13 @@ def _boc_series(series_id: str, recent: int = 1) -> str | None:
         result = _fetch()
         if result is not None:
             return result
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"  [WARN] BoC rate fetch attempt 1 failed: {e}")
     time.sleep(5)
     try:
         return _fetch()
-    except Exception:
+    except Exception as e:
+        print(f"  [WARN] BoC rate fetch attempt 2 failed: {e}")
         return None
 
 
@@ -487,16 +488,16 @@ def get_national_indicators() -> dict:
             values['cpi']    = f"+{yoy:.1f}%" if yoy >= 0 else f"{yoy:.1f}%"
             sources['cpi']   = 'StatCan'
             obs_dates['cpi'] = cpi_obs[-1].get('refPer', '')
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] CPI parsing failed: {e}")
     if len(cpi_obs) >= 14:
         try:
             prev_latest   = float(cpi_obs[-2]['value'])
             prev_year_ago = float(cpi_obs[-14]['value'])
             prev_yoy      = ((prev_latest - prev_year_ago) / prev_year_ago) * 100
             prev_values['cpi'] = f"+{prev_yoy:.1f}%" if prev_yoy >= 0 else f"{prev_yoy:.1f}%"
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] CPI previous value parsing failed: {e}")
 
     # Unemployment rate — latest observation
     unemp_obs = wds_data.get(_UNEMP_VECTOR, [])
@@ -505,13 +506,13 @@ def get_national_indicators() -> dict:
             values['unemployment']    = f"{float(unemp_obs[-1]['value']):.1f}%"
             sources['unemployment']   = 'StatCan'
             obs_dates['unemployment'] = unemp_obs[-1].get('refPer', '')
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] Unemployment parsing failed: {e}")
     if len(unemp_obs) >= 2:
         try:
             prev_values['unemployment'] = f"{float(unemp_obs[-2]['value']):.1f}%"
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] Unemployment previous value parsing failed: {e}")
 
     # Employment rate — latest observation
     emprate_obs = wds_data.get(_EMPRATE_VECTOR, [])
@@ -520,13 +521,13 @@ def get_national_indicators() -> dict:
             values['employmentRate']    = f"{float(emprate_obs[-1]['value']):.1f}%"
             sources['employmentRate']   = 'StatCan'
             obs_dates['employmentRate'] = emprate_obs[-1].get('refPer', '')
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] Employment rate parsing failed: {e}")
     if len(emprate_obs) >= 2:
         try:
             prev_values['employmentRate'] = f"{float(emprate_obs[-2]['value']):.1f}%"
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] Employment rate previous value parsing failed: {e}")
 
     # Participation rate — latest observation
     partrate_obs = wds_data.get(_PARTRATE_VECTOR, [])
@@ -535,13 +536,13 @@ def get_national_indicators() -> dict:
             values['participationRate']    = f"{float(partrate_obs[-1]['value']):.1f}%"
             sources['participationRate']   = 'StatCan'
             obs_dates['participationRate'] = partrate_obs[-1].get('refPer', '')
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] Participation rate parsing failed: {e}")
     if len(partrate_obs) >= 2:
         try:
             prev_values['participationRate'] = f"{float(partrate_obs[-2]['value']):.1f}%"
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] Participation rate previous value parsing failed: {e}")
 
     # Housing Starts — CMHC SAAR from CMHC monthly news release (direct source)
     starts = _cmhc_housing_starts()
@@ -687,8 +688,8 @@ def get_provincial_indicators() -> dict:
                         if 1.0 <= prev_val <= 30.0:
                             updates['unemployment_prev'] = f"{prev_val:.1f}%"
                     result.setdefault(prov, {}).update(updates)
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  [WARN] Provincial unemployment ({prov}): {e}")
 
     # CPI — YoY from index levels, obs[-1] vs obs[-13] = 12 months apart
     for prov, vid in _PROV_CPI_VIDS.items():
@@ -710,8 +711,8 @@ def get_provincial_indicators() -> dict:
                         prev_yoy = ((prev_latest - prev_year_ago) / prev_year_ago) * 100
                         updates['cpi_prev'] = f"+{prev_yoy:.1f}%" if prev_yoy >= 0 else f"{prev_yoy:.1f}%"
                 result.setdefault(prov, {}).update(updates)
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  [WARN] Provincial CPI ({prov}): {e}")
 
     # Employment rate — latest value (SA, both sexes, 15+, Table 14-10-0287-01)
     for prov, vid in _PROV_EMPRATE_VIDS.items():
@@ -730,8 +731,8 @@ def get_provincial_indicators() -> dict:
                         if 30.0 <= prev_val <= 80.0:
                             updates['employmentRate_prev'] = f"{prev_val:.1f}%"
                     result.setdefault(prov, {}).update(updates)
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  [WARN] Provincial employment rate ({prov}): {e}")
 
     # Participation rate — latest value (SA, both sexes, 15+, Table 14-10-0287-01)
     for prov, vid in _PROV_PARTRATE_VIDS.items():
@@ -750,8 +751,8 @@ def get_provincial_indicators() -> dict:
                         if 40.0 <= prev_val <= 80.0:
                             updates['participationRate_prev'] = f"{prev_val:.1f}%"
                     result.setdefault(prov, {}).update(updates)
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  [WARN] Provincial participation rate ({prov}): {e}")
 
     # Real GDP — annual Y/Y growth from chained-dollar levels (Table 36-10-0402-01)
     # n=2: obs[-1]=current year, obs[-2]=prior year — enough for one Y/Y growth rate
@@ -770,8 +771,8 @@ def get_provincial_indicators() -> dict:
                         'gdp_date': ref_year,  # e.g. "2024"
                     }
                     result.setdefault(prov, {}).update(updates)
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  [WARN] Provincial GDP ({prov}): {e}")
 
     # Housing starts — CMHC monthly news release (provincial SAAR trend)
     prov_starts = _cmhc_provincial_housing_starts()
@@ -1179,8 +1180,8 @@ def fetch_industry_indicators() -> dict:
                     f"+{qoq_ann:.1f}%" if qoq_ann >= 0 else f"{qoq_ann:.1f}%"
                 )
                 result['_gdp_quarterly_src'] = 'StatCan'
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] Quarterly GDP parsing failed: {e}")
 
     n_ind = sum(1 for k in result if not k.startswith('_'))
     gdp_str = result.get('_gdp_quarterly', 'N/A')
@@ -2895,8 +2896,8 @@ def _verify_project_evidence_urls(conn, batch_size=200) -> None:
                         "UPDATE projects SET urls_checked_at = ? WHERE norm_key = ?",
                         (today_str, doc['norm_key'])
                     )
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  [WARN] URL check timestamp update failed ({doc.get('norm_key', '?')}): {e}")
         print("  [URL-CHECK] No evidence URLs to verify.")
         return
 
@@ -2934,8 +2935,8 @@ def _verify_project_evidence_urls(conn, batch_size=200) -> None:
                             (_json.dumps(ev_list, ensure_ascii=False), today_str, norm_key)
                         )
             checked_keys.add(norm_key)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [WARN] Dead URL update failed ({norm_key}): {e}")
 
     for doc in docs:
         if doc['norm_key'] not in checked_keys:
@@ -2945,8 +2946,8 @@ def _verify_project_evidence_urls(conn, batch_size=200) -> None:
                         "UPDATE projects SET urls_checked_at = ? WHERE norm_key = ?",
                         (today_str, doc['norm_key'])
                     )
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  [WARN] URL check timestamp update failed ({doc.get('norm_key', '?')}): {e}")
 
     live_count = len(urls_only) - dead_count
     print(f"  [URL-CHECK] {live_count} live, {dead_count} dead across {len(docs)} projects")
@@ -2977,8 +2978,8 @@ def _check_stale_projects(conn) -> None:
                         "UPDATE projects SET stale = 1, statusNote = ? WHERE norm_key = ?",
                         (f"Not seen since {row['lastSeen'] or 'unknown'}", row['norm_key'])
                     )
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  [WARN] Stale mark failed ({row.get('norm_key', '?')}): {e}")
         print(f"  [Stale check] {len(rows)} projects marked stale")
     except Exception as e:
         print(f"  [Stale check] Error: {e}")
@@ -3552,6 +3553,19 @@ def update_dashboard(deep_sweep: bool = False):
                 existing_names.add((p.get('name') or '').lower().strip())
             log_gemini_unique(gemini_projects, existing_names)
 
+    except Exception as e:
+        import traceback
+        print(f"\n[CRITICAL] Core pipeline failed: {e}")
+        traceback.print_exc()
+        run_log.log_error("core_pipeline", e, recovered=False)
+        run_log.finalize("error")
+        return
+
+    # ════════════════════════════════════════════════════════════════
+    # NON-CRITICAL STEPS — each isolated, failures don't block others
+    # ════════════════════════════════════════════════════════════════
+
+    try:
         # ── Cost-finding for valueless projects (runs first) ─────────
         try:
             if can_use_tavily():
@@ -3564,6 +3578,7 @@ def update_dashboard(deep_sweep: bool = False):
                 print("\n[POST-EXTRACTION] Cost-finding skipped (Tavily budget)")
         except Exception as e:
             print(f"  [COST] Cost-finding failed: {type(e).__name__}: {e}")
+            run_log.log_error("cost_finding", e)
 
         # ── Enrichment queries (Gemini Flash, no grounding) ────────
         if all_flat_projects:
@@ -3587,11 +3602,18 @@ def update_dashboard(deep_sweep: bool = False):
                     print("  [ENRICHMENT] No projects need enrichment")
             except Exception as e:
                 print(f"  [ENRICHMENT] Failed: {type(e).__name__}: {e}")
+                run_log.log_error("enrichment", e)
 
         # ── Wayback history backfill for new projects ──────────────
-        from wayback import backfill_project_history, save_page as wayback_save
-        print("\n[POST-EXTRACTION] Wayback history backfill for new projects...")
         try:
+            from wayback import backfill_project_history, save_page as wayback_save
+        except ImportError:
+            backfill_project_history = None
+            wayback_save = None
+            print("[WARN] wayback module not available, skipping archival")
+        if backfill_project_history is not None:
+            print("\n[POST-EXTRACTION] Wayback history backfill for new projects...")
+            try:
             import json as _json
             rows = conn.execute(
                 "SELECT norm_key, name, province, status, statusHistory FROM projects "
@@ -3646,7 +3668,7 @@ def update_dashboard(deep_sweep: bool = False):
             print(f"  [Backfill] Error (non-critical): {type(e).__name__}: {e}")
 
         # ── Deep-sweep: re-attempt backfill for history_backfilled=false ─
-        if deep_sweep:
+        if deep_sweep and backfill_project_history is not None:
             print("\n[DEEP-SWEEP] Re-attempting backfill for unbackfilled projects...")
             try:
                 import json as _json
@@ -3691,8 +3713,12 @@ def update_dashboard(deep_sweep: bool = False):
                 print(f"  [Deep-sweep backfill] Error: {type(e).__name__}")
 
         # ── Stale project checks ──────────────────────────────────
-        print("\n[POST-EXTRACTION] Checking stale projects...")
-        _check_stale_projects(conn)
+        try:
+            print("\n[POST-EXTRACTION] Checking stale projects...")
+            _check_stale_projects(conn)
+        except Exception as e:
+            print(f"  [STALE] Stale check failed: {type(e).__name__}: {e}")
+            run_log.log_error("stale_check", e)
 
         # ── Evidence URL verification ──────────────────────────────
         try:
@@ -3917,8 +3943,8 @@ def update_dashboard(deep_sweep: bool = False):
                                 "date": evt.get("date", ""),
                                 "analysis": analysis.get("text", ""),
                             })
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        print(f"  [WARN] Pre-event analysis failed ({evt.get('name', '?')}): {e}")
 
             if pre_event_analyses:
                 print(f"  [CALENDAR] {len(pre_event_analyses)} pre-event analyses generated")
@@ -4019,10 +4045,18 @@ def update_dashboard(deep_sweep: bool = False):
             print(f"  [2G signals] Failed: {type(e).__name__}: {e}")
 
         # ── STEP 5d: StatCan indicators snapshot ───────────────────
-        save_statcan_indicators(conn, statcan_inds)
+        try:
+            save_statcan_indicators(conn, statcan_inds)
+        except Exception as e:
+            print(f"  [WARN] StatCan snapshot save failed: {e}")
+            run_log.log_error("statcan_snapshot", e)
 
         # ── STEP 6: Timeseries ─────────────────────────────────────
-        append_to_timeseries(final_payload, financial_markets, boc_data['rate'] or 'N/A')
+        try:
+            append_to_timeseries(final_payload, financial_markets, boc_data['rate'] or 'N/A')
+        except Exception as e:
+            print(f"  [WARN] Timeseries append failed: {e}")
+            run_log.log_error("timeseries", e)
 
         # ── Edition string ─────────────────────────────────────────
         toronto_tz = pytz.timezone('America/Toronto')
@@ -4048,128 +4082,145 @@ def update_dashboard(deep_sweep: bool = False):
 
         # ── Wayback save for all verified citation URLs ────────────
         all_verified_sources = final_payload.pop('_all_verified_sources', [])
-        if all_verified_sources:
-            print(f"\n[POST-EXTRACTION] Archiving {len(all_verified_sources)} verified citation URLs...")
-            archived = 0
-            for src in all_verified_sources:
-                url = src.get('url', '')
-                if url and not src.get('archive_url'):
-                    archive_url = wayback_save(url)
-                    if archive_url:
-                        src['archive_url'] = archive_url
-                        archived += 1
-            if archived:
-                print(f"  [Wayback] Archived {archived} citation URLs")
+        if all_verified_sources and wayback_save is not None:
+            try:
+                print(f"\n[POST-EXTRACTION] Archiving {len(all_verified_sources)} verified citation URLs...")
+                archived = 0
+                for src in all_verified_sources:
+                    url = src.get('url', '')
+                    if url and not src.get('archive_url'):
+                        archive_url = wayback_save(url)
+                        if archive_url:
+                            src['archive_url'] = archive_url
+                            archived += 1
+                if archived:
+                    print(f"  [Wayback] Archived {archived} citation URLs")
+            except Exception as e:
+                print(f"  [Wayback] Citation archiving failed: {type(e).__name__}: {e}")
+                run_log.log_error("wayback_citations", e)
 
-        # ── STEP 7: Final assembly + push to Firestore ─────────────
-        print("\n[STEP 7] Final assembly + push to Firestore...")
-
-        # Ensure all required newsletter fields are present
-        final_payload.setdefault('updated_at', date.today().isoformat())
-        final_payload.setdefault('consumer_pulse', '')
-        final_payload.setdefault('industry_executive_summary', '')
-        # Remove internal keys before Firestore push
-        final_payload.pop('_citation_audit', None)
-
-        # Build sources array with archive URLs
-        sources_with_archives = []
-        for src in all_verified_sources:
-            sources_with_archives.append({
-                'url': src.get('url', ''),
-                'title': src.get('title', ''),
-                'archive_url': src.get('archive_url', ''),
-            })
-        if sources_with_archives:
-            final_payload['sources'] = sources_with_archives
-
-        dated_id = today.strftime('%Y-%m-%d')
-        # Store newsletter payload as dashboard_state entries
-        save_dashboard_state(conn, 'newsletter_latest', final_payload)
-        save_dashboard_state(conn, f'newsletter_{dated_id}', final_payload)
-        if final_payload.get('_analysis_incomplete'):
-            print("[WARN] Dashboard updated with INCOMPLETE analysis — Claude calls failed.")
-        else:
-            print("[OK] Dashboard successfully updated.")
-        run_log.log_step("step_7_firestore_push")
-
-        # ── STEP 8: Quality Report ─────────────────────────────────
-        print("\n[STEP 8] Generating quality report...")
-        # Build stats dicts from pipeline data
-        _discovery_stats = {
-            'gemini_projects': len(gemini_projects) if gemini_projects else 0,
-            'tavily_extractions': len(extracted_articles) if 'extracted_articles' in dir() else 'N/A',
-            'projects_registries': len(registry_projects) if registry_projects else 0,
-            'projects_rss': len(rss_projects) if 'rss_projects' in dir() and rss_projects else 0,
-            'projects_gemini': len(gemini_projects) if gemini_projects else 0,
-        }
-        _writing_stats = {}
-        _citation_audit = final_payload.get('citation_audit', {})
-        if _citation_audit:
-            _writing_stats = {
-                'total_citations': _citation_audit.get('total_citations', 0),
-                'verified_citations': _citation_audit.get('total_citations', 0) - _citation_audit.get('total_failed', 0),
-                'removed_citations': _citation_audit.get('total_failed', 0),
-                'audit_pass_rate': 'ALL PASSED' if _citation_audit.get('passed') else 'SOME FAILED',
-                'per_call': _citation_audit.get('calls', []),
-                'officials_referenced': 'N/A',
-                'officials_available': len(_WATCHLIST.get('public_figures_canada', [])) + len(_WATCHLIST.get('provincial_officials', [])),
-            }
-        _sentiment_stats = {}
-        _sentiment_result = hard_data.get('_sentiment_result')
-        if _sentiment_result:
-            _sentiment_stats = {
-                'reddit_posts': _sentiment_result.get('reddit_posts', 'N/A'),
-                'reddit_comments': _sentiment_result.get('reddit_comments', 'N/A'),
-                'trends_queries': _sentiment_result.get('trends_queries', 'N/A'),
-                'news_comments': _sentiment_result.get('news_comments', 'N/A'),
-                'topics_count': len(_sentiment_result.get('topics', [])),
-                'sentiment_index': _sentiment_result.get('sentiment_index', 'N/A'),
-                'sentiment_label': _sentiment_result.get('sentiment_label', 'N/A'),
-                'categories': _sentiment_result.get('categories', {}),
-            }
-        generate_quality_report(
-            conn=conn,
-            discovery_stats=_discovery_stats,
-            writing_stats=_writing_stats,
-            sentiment_stats=_sentiment_stats,
-        )
-        run_log.log_step("quality_report")
-
-        # Log Tavily usage from this run
-        from tavily_search import get_tavily_credits_used
-        tavily_credits = get_tavily_credits_used(conn)
-        run_log.log_metric("api_usage", "tavily_searches", tavily_searches_count)
-        run_log.log_metric("api_usage", "tavily_month_total", tavily_credits.get("used", 0))
-
-        # -- STEP 9: Static JSON export ------------------------------------
-        print("\n[STEP 9] Exporting static JSON files...")
+        # ── STEP 8: Quality Report (non-critical) ────────────────────
         try:
+            print("\n[STEP 8] Generating quality report...")
+            _discovery_stats = {
+                'gemini_projects': len(gemini_projects) if gemini_projects else 0,
+                'tavily_extractions': len(extracted_articles) if 'extracted_articles' in dir() else 'N/A',
+                'projects_registries': len(registry_projects) if registry_projects else 0,
+                'projects_rss': len(rss_projects) if 'rss_projects' in dir() and rss_projects else 0,
+                'projects_gemini': len(gemini_projects) if gemini_projects else 0,
+            }
+            _writing_stats = {}
+            _citation_audit = final_payload.get('citation_audit', {})
+            if _citation_audit:
+                _writing_stats = {
+                    'total_citations': _citation_audit.get('total_citations', 0),
+                    'verified_citations': _citation_audit.get('total_citations', 0) - _citation_audit.get('total_failed', 0),
+                    'removed_citations': _citation_audit.get('total_failed', 0),
+                    'audit_pass_rate': 'ALL PASSED' if _citation_audit.get('passed') else 'SOME FAILED',
+                    'per_call': _citation_audit.get('calls', []),
+                    'officials_referenced': 'N/A',
+                    'officials_available': len(_WATCHLIST.get('public_figures_canada', [])) + len(_WATCHLIST.get('provincial_officials', [])),
+                }
+            _sentiment_stats = {}
+            _sentiment_result = hard_data.get('_sentiment_result')
+            if _sentiment_result:
+                _sentiment_stats = {
+                    'reddit_posts': _sentiment_result.get('reddit_posts', 'N/A'),
+                    'reddit_comments': _sentiment_result.get('reddit_comments', 'N/A'),
+                    'trends_queries': _sentiment_result.get('trends_queries', 'N/A'),
+                    'news_comments': _sentiment_result.get('news_comments', 'N/A'),
+                    'topics_count': len(_sentiment_result.get('topics', [])),
+                    'sentiment_index': _sentiment_result.get('sentiment_index', 'N/A'),
+                    'sentiment_label': _sentiment_result.get('sentiment_label', 'N/A'),
+                    'categories': _sentiment_result.get('categories', {}),
+                }
+            generate_quality_report(
+                conn=conn,
+                discovery_stats=_discovery_stats,
+                writing_stats=_writing_stats,
+                sentiment_stats=_sentiment_stats,
+            )
+            run_log.log_step("quality_report")
+        except Exception as e:
+            print(f"  [QUALITY] Quality report failed: {type(e).__name__}: {e}")
+            run_log.log_error("quality_report", e)
+
+    finally:
+        # ════════════════════════════════════════════════════════════════
+        # CRITICAL — these steps ALWAYS run regardless of earlier failures
+        # ════════════════════════════════════════════════════════════════
+
+        # ── STEP 7: Final assembly + push to SQLite ─────────────────
+        try:
+            print("\n[STEP 7] Final assembly + push to SQLite...")
+            final_payload.setdefault('updated_at', date.today().isoformat())
+            final_payload.setdefault('consumer_pulse', '')
+            final_payload.setdefault('industry_executive_summary', '')
+            final_payload.pop('_citation_audit', None)
+
+            # Build sources array with archive URLs
+            all_verified_sources = locals().get('all_verified_sources', [])
+            sources_with_archives = []
+            for src in all_verified_sources:
+                sources_with_archives.append({
+                    'url': src.get('url', ''),
+                    'title': src.get('title', ''),
+                    'archive_url': src.get('archive_url', ''),
+                })
+            if sources_with_archives:
+                final_payload['sources'] = sources_with_archives
+
+            toronto_tz = pytz.timezone('America/Toronto')
+            today = datetime.now(toronto_tz)
+            dated_id = today.strftime('%Y-%m-%d')
+            save_dashboard_state(conn, 'newsletter_latest', final_payload)
+            save_dashboard_state(conn, f'newsletter_{dated_id}', final_payload)
+            if final_payload.get('_analysis_incomplete'):
+                print("[WARN] Dashboard updated with INCOMPLETE analysis — Claude calls failed.")
+            else:
+                print("[OK] Dashboard successfully updated.")
+            run_log.log_step("step_7_firestore_push")
+        except Exception as e:
+            print(f"[ERROR] Step 7 (SQLite export) failed: {type(e).__name__}: {e}")
+            import traceback
+            traceback.print_exc()
+            run_log.log_error("step_7_export", e, recovered=False)
+
+        # ── Log Tavily usage ──────────────────────────────────────────
+        try:
+            from tavily_search import get_tavily_credits_used
+            tavily_credits = get_tavily_credits_used(conn)
+            run_log.log_metric("api_usage", "tavily_searches", tavily_searches_count)
+            run_log.log_metric("api_usage", "tavily_month_total", tavily_credits.get("used", 0))
+        except Exception as e:
+            print(f"  [WARN] Tavily usage logging failed: {e}")
+
+        # ── STEP 9: Static JSON export ─────────────────────────────────
+        try:
+            print("\n[STEP 9] Exporting static JSON files...")
             export_result = export_all(conn=conn)
             print(f"[OK] Exported {export_result['file_count']} files to {export_result['output_dir']}")
             run_log.log_step("step_9_json_export")
         except Exception as e:
-            print(f"[WARN] Static JSON export failed (non-fatal): {e}")
+            print(f"[ERROR] Static JSON export failed: {type(e).__name__}: {e}")
             import traceback
             traceback.print_exc()
-            run_log.log_error("json_export", e, recovered=True)
+            run_log.log_error("json_export", e, recovered=False)
 
-        # ── Claude API cost summary ──────────────────────────────────────
-        print(f"\n[COST SUMMARY] Claude API: {_claude_run_tokens['input']:,} input + {_claude_run_tokens['output']:,} output tokens = ${_claude_run_cost_usd:.4f} (cap: ${CLAUDE_COST_CAP_USD:.2f})")
-        run_log.log_metric("api_usage", "claude_input_tokens", _claude_run_tokens["input"])
-        run_log.log_metric("api_usage", "claude_output_tokens", _claude_run_tokens["output"])
-        run_log.log_metric("api_usage", "claude_cost_usd", round(_claude_run_cost_usd, 4))
+        # ── Claude API cost summary ──────────────────────────────────
+        try:
+            print(f"\n[COST SUMMARY] Claude API: {_claude_run_tokens['input']:,} input + {_claude_run_tokens['output']:,} output tokens = ${_claude_run_cost_usd:.4f} (cap: ${CLAUDE_COST_CAP_USD:.2f})")
+            run_log.log_metric("api_usage", "claude_input_tokens", _claude_run_tokens["input"])
+            run_log.log_metric("api_usage", "claude_output_tokens", _claude_run_tokens["output"])
+            run_log.log_metric("api_usage", "claude_cost_usd", round(_claude_run_cost_usd, 4))
+        except Exception as e:
+            print(f"  [WARN] Cost summary failed: {e}")
 
+        # ── Finalize pipeline run log ─────────────────────────────────
         if final_payload.get('_analysis_incomplete'):
             run_log.finalize("partial")
         else:
             run_log.finalize("success")
-
-    except Exception as e:
-        import traceback
-        print(f"[ERROR] Pipeline failed: {e}")
-        traceback.print_exc()
-        run_log.log_error("pipeline", e, recovered=False)
-        run_log.finalize("error")
 
 
 def audit_all_citations():
