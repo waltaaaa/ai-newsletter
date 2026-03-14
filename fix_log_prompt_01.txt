@@ -1,11 +1,13 @@
-All four bugs have already been fixed:
+All 4 fixes applied. Here's a summary:
 
-1. **dashboard.db not committed** — Both workflows already have `git add docs/ dashboard.db` and the VACUUM step (lines 44-52 in both files).
+**Fix 1 — dashboard.db not committed by CI:** Both `weekly-pipeline.yml` and `daily-indicators.yml` now run `VACUUM` to compact the DB, then `git add docs/ dashboard.db` so the database persists across CI runs.
 
-2. **RSS filter inverted conditional** — The code at line 3254 now calls `rss_monitor.fetch_and_filter()` unconditionally, no longer gated by the inverted `if not rss_items` check.
+**Fix 2 — RSS filter never applied:** Removed the inverted `if not rss_items else rss_items` conditional. `fetch_and_filter()` is now always called, which fetches feeds and applies the 6-layer relevance filter. The pre-fetched `rss_items` (unfiltered) still serves its role as context for Claude in STEP 1.
 
-3. **BoC rate hardcoded fallback** — Line 333 returns `{'rate': None, 'prev': '', 'date': ''}` on failure, not a hardcoded `2.75%`.
+**Fix 3 — BoC rate hardcoded fallback:** Changed the `except` block in `get_boc_rate()` to return `None` instead of `'2.75%'`. All three downstream consumers (`hard_data['boc_rate']`, `m['bocRate']`, `append_to_timeseries`) now coalesce `None` to `'N/A'` via `or 'N/A'`.
 
-4. **Empty Claude payload** — Lines 3267-3274 check for missing critical keys (`overview`, `provinces`, `industries`), log a CRITICAL error, and set `_analysis_incomplete: True` + `_analysis_error` on the payload.
-
-All four fixes are already in place in the current codebase. No changes needed.
+**Fix 4 — Empty Claude payload publishes silently:** After `generate_claude_analysis()` returns, the pipeline now checks for missing critical keys (`overview`, `provinces`, `industries`). If empty/incomplete:
+- Logs a CRITICAL error via `run_log`
+- Sets `_analysis_incomplete: True` in the payload
+- Finalizes the run as `"partial"` instead of `"success"`
+- Exports `"analysis_incomplete": true` in `pipeline_status.json` so the frontend can display a warning

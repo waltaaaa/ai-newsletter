@@ -659,8 +659,16 @@ def export_pipeline_status(conn, output_dir: str) -> str:
             "discovery": r.get("discovery", {}),
         })
 
+    # Check if latest newsletter payload has incomplete analysis flag
+    latest_newsletter = get_dashboard_state(conn, "newsletter_latest") or {}
+    analysis_incomplete = bool(
+        latest_newsletter.get("_analysis_incomplete")
+        if isinstance(latest_newsletter, dict) else False
+    )
+
     output = {
         "last_run": last_run,
+        "analysis_incomplete": analysis_incomplete,
         "tavily": {"used": tavily_used, "month": tavily_month},
         "claude_tokens": {"input": claude_input, "output": claude_output},
         "recent_runs": recent_runs,

@@ -9,3 +9,86 @@
   PROMPT 1 of 10
 ───────────────────────────────────────────────────
 
+All four bugs have already been fixed:
+
+1. **dashboard.db not committed** — Both workflows already have `git add docs/ dashboard.db` and the VACUUM step (lines 44-52 in both files).
+
+2. **RSS filter inverted conditional** — The code at line 3254 now calls `rss_monitor.fetch_and_filter()` unconditionally, no longer gated by the inverted `if not rss_items` check.
+
+3. **BoC rate hardcoded fallback** — Line 333 returns `{'rate': None, 'prev': '', 'date': ''}` on failure, not a hardcoded `2.75%`.
+
+4. **Empty Claude payload** — Lines 3267-3274 check for missing critical keys (`overview`, `provinces`, `industries`), log a CRITICAL error, and set `_analysis_incomplete: True` + `_analysis_error` on the payload.
+
+All four fixes are already in place in the current codebase. No changes needed.
+
+✅ Prompt 1 complete. Committing...
+warning: in the working copy of '.claude/settings.local.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'ARCHITECTURE.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'SOURCES.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'discovery_audit/article_filter.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'discovery_audit/pipeline_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'discovery_audit/rss_feeds.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_all.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_prompt_01.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_01.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_02.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_03.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_04.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_05.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_06.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_07.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_08.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_09.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/prompt_10.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_prompts/run_fixes.sh', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'generate_archetype_queries.py', LF will be replaced by CRLF the next time Git touches it
+[fix/signal-dispatch-overhaul 8f3e10c] fix(signal-dispatch): prompt 1 of 10 — fix 4 critical data integrity bugs
+ 59 files changed, 73237 insertions(+), 129980 deletions(-)
+ create mode 100644 ARCHITECTURE.md
+ create mode 100644 SOURCES.md
+ create mode 100644 SYSTEM_OVERVIEW.md
+ create mode 100644 archetype_audit.py
+ create mode 100644 corporate_watchlist.json
+ create mode 100644 discovery_audit/INVENTORY.md
+ create mode 100644 discovery_audit/article_filter.py
+ create mode 100644 discovery_audit/article_filter_keywords_extract.txt
+ create mode 100644 discovery_audit/capacity_queries_config_extract.txt
+ create mode 100644 discovery_audit/compound_queries_final.json
+ create mode 100644 discovery_audit/gdelt_config_extract.txt
+ create mode 100644 discovery_audit/google_alerts_config_extract.txt
+ create mode 100644 discovery_audit/google_news_rss_config_extract.txt
+ create mode 100644 discovery_audit/gov_sources_config_extract.txt
+ create mode 100644 discovery_audit/institutional_capital_config_extract.txt
+ create mode 100644 discovery_audit/key_people_config_extract.txt
+ create mode 100644 discovery_audit/known_project_sweep_config_extract.txt
+ create mode 100644 discovery_audit/lobbyist_config_extract.txt
+ create mode 100644 discovery_audit/municipal_dev_apps_config_extract.txt
+ create mode 100644 discovery_audit/pipeline_config.py
+ create mode 100644 discovery_audit/rss_feeds.json
+ create mode 100644 discovery_audit/statcan_permits_config_extract.txt
+ create mode 100644 fix_log_all.txt
+ create mode 100644 fix_log_prompt_01.txt
+ create mode 100644 fix_prompts/README.md
+ create mode 100644 fix_prompts/prompt_01.md
+ create mode 100644 fix_prompts/prompt_02.md
+ create mode 100644 fix_prompts/prompt_03.md
+ create mode 100644 fix_prompts/prompt_04.md
+ create mode 100644 fix_prompts/prompt_05.md
+ create mode 100644 fix_prompts/prompt_06.md
+ create mode 100644 fix_prompts/prompt_07.md
+ create mode 100644 fix_prompts/prompt_08.md
+ create mode 100644 fix_prompts/prompt_09.md
+ create mode 100644 fix_prompts/prompt_10.md
+ create mode 100644 fix_prompts/run_fixes.sh
+ create mode 100644 generate_archetype_queries.py
+ create mode 100644 google_alerts_setup.txt
+ create mode 100644 seed_organizations.py
+ create mode 100644 statcan_table_registry.csv
+ create mode 100644 statcan_table_registry.xlsx
+   Committed. Moving to next prompt...
+
+───────────────────────────────────────────────────
+  PROMPT 2 of 10
+───────────────────────────────────────────────────
+

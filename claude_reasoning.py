@@ -23,11 +23,29 @@ import logging
 
 import aiohttp
 
+from pipeline_config import SONNET_MODEL, CLAUDE_COST_CAP_USD
+
 logger = logging.getLogger(__name__)
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-CLAUDE_MODEL = os.environ.get("SONNET_MODEL", "claude-sonnet-4-5-20250929")
+CLAUDE_MODEL = SONNET_MODEL
 CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages"
+
+# ── Per-run cost tracking (shared across all calls in this module) ────────────
+_cumulative_cost_usd = 0.0
+_cumulative_tokens = {"input": 0, "output": 0}
+
+
+def reset_cost_tracker():
+    """Reset cumulative cost tracker (call at start of each pipeline run)."""
+    global _cumulative_cost_usd, _cumulative_tokens
+    _cumulative_cost_usd = 0.0
+    _cumulative_tokens = {"input": 0, "output": 0}
+
+
+def get_cumulative_cost():
+    """Return current cumulative cost and token counts."""
+    return _cumulative_cost_usd, _cumulative_tokens.copy()
 
 
 async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
@@ -45,6 +63,12 @@ async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
     """
     if not ANTHROPIC_API_KEY:
         logger.warning("ANTHROPIC_API_KEY not set, skipping Claude reasoning")
+        return None
+
+    global _cumulative_cost_usd
+    if _cumulative_cost_usd >= CLAUDE_COST_CAP_USD:
+        logger.warning(f"Cost cap exceeded (${_cumulative_cost_usd:.4f} >= "
+                        f"${CLAUDE_COST_CAP_USD:.2f}) — skipping Claude call")
         return None
 
     headers = {
@@ -68,6 +92,13 @@ async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
             ) as resp:
                 if resp.status == 200:
                     data = await resp.json()
+                    usage = data.get("usage", {})
+                    in_tok = usage.get("input_tokens", 0)
+                    out_tok = usage.get("output_tokens", 0)
+                    cost = (in_tok * 3 + out_tok * 15) / 1_000_000
+                    _cumulative_cost_usd += cost
+                    _cumulative_tokens["input"] += in_tok
+                    _cumulative_tokens["output"] += out_tok
                     return data["content"][0]["text"]
                 else:
                     text = await resp.text()
@@ -90,6 +121,12 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
     """
     if not ANTHROPIC_API_KEY:
         logger.warning("ANTHROPIC_API_KEY not set, skipping Claude reasoning")
+        return None
+
+    global _cumulative_cost_usd
+    if _cumulative_cost_usd >= CLAUDE_COST_CAP_USD:
+        logger.warning(f"Cost cap exceeded (${_cumulative_cost_usd:.4f} >= "
+                        f"${CLAUDE_COST_CAP_USD:.2f}) — skipping [{task_name}]")
         return None
 
     headers = {
@@ -117,8 +154,11 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
                     input_tokens = usage.get("input_tokens", 0)
                     output_tokens = usage.get("output_tokens", 0)
 
-                    # Cost: Sonnet = $3/M input + $15/M output
+                    # Cost: Sonnet 4.6 = $3/MTok input + $15/MTok output
                     cost = (input_tokens * 3 + output_tokens * 15) / 1_000_000
+                    _cumulative_cost_usd += cost
+                    _cumulative_tokens["input"] += input_tokens
+                    _cumulative_tokens["output"] += output_tokens
 
                     logger.info(
                         f"Claude [{task_name}]: {input_tokens} in / "

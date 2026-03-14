@@ -4159,7 +4159,10 @@ def update_dashboard(deep_sweep: bool = False):
         run_log.log_metric("api_usage", "claude_output_tokens", _claude_run_tokens["output"])
         run_log.log_metric("api_usage", "claude_cost_usd", round(_claude_run_cost_usd, 4))
 
-        run_log.finalize("success")
+        if final_payload.get('_analysis_incomplete'):
+            run_log.finalize("partial")
+        else:
+            run_log.finalize("success")
 
     except Exception as e:
         import traceback
@@ -4372,4 +4375,7 @@ if __name__ == "__main__":
                 daily_log.finalize("partial")
         except Exception as e:
             print(f"[ERROR] Daily indicators failed: {e}")
-        
+            daily_log.log_error("daily_indicators", e, recovered=False)
+            daily_log.finalize("error")
+    else:
+        update_dashboard(deep_sweep=args.deep_sweep)

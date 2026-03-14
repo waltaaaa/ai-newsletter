@@ -18,6 +18,7 @@ import time
 import requests
 import anthropic
 from dotenv import load_dotenv
+from pipeline_config import SONNET_MODEL
 
 load_dotenv()
 
@@ -74,7 +75,7 @@ print("\nStructuring with Claude Sonnet...")
 research_text = "\n\n".join(f"=== {name} ===\n{text}" for name, text in research.items() if text)
 
 msg = anthropic_client.messages.create(
-    model=os.environ.get("SONNET_MODEL", "claude-sonnet-4-5"),
+    model=SONNET_MODEL,
     max_tokens=1024,
     system="You are a data extraction assistant. Return ONLY valid JSON. No markdown. No explanation.",
     messages=[{"role": "user", "content": f"""Extract the 4 key indicators for each country from the research below.

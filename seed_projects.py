@@ -25,6 +25,7 @@ from dotenv import load_dotenv
 
 from project_sync import normalize_key, fuzzy_match
 from db import init_db, get_all_projects, upsert_project
+from pipeline_config import SONNET_MODEL
 
 # ==========================================
 # CONFIG & API KEYS
@@ -353,7 +354,7 @@ SOURCE TEXT:
     for attempt in range(4):
         try:
             msg = anthropic_client.messages.create(
-                model=os.environ.get("SONNET_MODEL", "claude-sonnet-4-5"),
+                model=SONNET_MODEL,
                 max_tokens=4096,
                 system=system_prompt,
                 messages=[{"role": "user", "content": user_prompt}],

@@ -106,11 +106,15 @@ async def run_enrichment_queries(new_projects: list[dict],
 
     # ── Cap at daily limit ────────────────────────────────────────────────
     if len(queries) > MAX_ENRICHMENT_QUERIES_PER_DAY:
+        cap = MAX_ENRICHMENT_QUERIES_PER_DAY
         investigations = [q for q in queries if q["type"] == "investigation"]
         detail_fills = [q for q in queries if q["type"] == "detail_fill"]
-        queries = investigations[:50] + detail_fills[:50]
+        # 60% investigations, 40% detail fills, total never exceeds cap
+        inv_limit = int(cap * 0.6)
+        fill_limit = cap - min(len(investigations), inv_limit)
+        queries = investigations[:inv_limit] + detail_fills[:fill_limit]
         logger.info(f"Capped enrichment at {len(queries)} queries "
-                    f"(limit: {MAX_ENRICHMENT_QUERIES_PER_DAY})")
+                    f"(limit: {cap})")
 
     if not queries:
         logger.info("No enrichment queries needed")

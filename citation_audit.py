@@ -43,7 +43,7 @@ def _load_wayback():
         _wayback_save = save_page
 
 TODAY = date.today().isoformat()
-SONNET_MODEL = os.environ.get('SONNET_MODEL', 'claude-sonnet-4-5-20250514')
+from pipeline_config import SONNET_MODEL
 GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')
 
 # ── Citation rules block appended to all writing prompts ─────────────────────

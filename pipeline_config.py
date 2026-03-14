@@ -361,9 +361,8 @@ def make_project(
 # This flag kept for backwards compat — must remain false.
 GEMINI_SEARCH_ENABLED = os.environ.get('GEMINI_SEARCH_ENABLED', 'false').lower() == 'true'
 
-# Tier 3B — Perplexity Sonar Pro (monthly gap-fill, --deep-sweep only)
-# 13 queries/month, catches projects missed by Tiers 1-3. ~$0.50-0.80/year.
-PERPLEXITY_ENABLED = os.environ.get('PERPLEXITY_ENABLED', 'true').lower() == 'true'
+# Tier 3B — Perplexity REMOVED. Do not re-enable.
+PERPLEXITY_ENABLED = False
 
 
 # ══════════════════════════════════════════════════════════════════════════════

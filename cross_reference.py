@@ -8,7 +8,34 @@ project sectors, enabling the weekly report to explain correlations
 
 import logging
 
+from pipeline_config import NAICS_MAP
+
 logger = logging.getLogger(__name__)
+
+# Map abbreviated sector names (used in INDICATOR_PROJECT_LINKS) to the full
+# NAICS sector names stored in the projects table via pipeline_config.NAICS_MAP.
+_XREF_TO_NAICS = {
+    "Agriculture":      NAICS_MAP["11"],
+    "Mining & O&G":     NAICS_MAP["21"],
+    "Utilities":        NAICS_MAP["22"],
+    "Construction":     NAICS_MAP["23"],
+    "Manufacturing":    NAICS_MAP["31-33"],
+    "Wholesale":        NAICS_MAP["41"],
+    "Retail":           NAICS_MAP["44-45"],
+    "Transportation":   NAICS_MAP["48-49"],
+    "Information":      NAICS_MAP["51"],
+    "Finance":          NAICS_MAP["52"],
+    "Real Estate":      NAICS_MAP["53"],
+    "Professional":     NAICS_MAP["54"],
+    "Management":       NAICS_MAP["55"],
+    "Admin & Waste":    NAICS_MAP["56"],
+    "Education":        NAICS_MAP["61"],
+    "Health Care":      NAICS_MAP["62"],
+    "Entertainment":    NAICS_MAP["71"],
+    "Accommodation":    NAICS_MAP["72"],
+    "Other Services":   NAICS_MAP["81"],
+    "Public Admin":     NAICS_MAP["91"],
+}
 
 # Mapping: indicator -> list of (sector, relationship)
 # relationship: "positive" = indicator up → sector activity up
@@ -90,7 +117,9 @@ def cross_reference_trends(indicator_trends, sector_trends):
             continue
 
         for sector, relationship in links:
-            sect_data = momentum.get(sector, {})
+            # Translate abbreviated name to full NAICS name used in DB
+            naics_sector = _XREF_TO_NAICS.get(sector, sector)
+            sect_data = momentum.get(naics_sector, {})
             sect_label = sect_data.get("label", "unknown")
 
             if sect_label == "unknown":
