@@ -4,6 +4,14 @@ project_dedup.py — Multi-source project deduplication and merging.
 Projects discovered by multiple queries or tiers are merged, not duplicated.
 Multiple independent discoveries increase the project's confidence score.
 
+Phase 5 adds weighted multi-factor scoring for DB-level dedup matching:
+  - Deterministic ID matches (filing IDs, municipal app IDs)
+  - Name similarity (exact normalized + fuzzy)
+  - Organization matching via organizations table
+  - Geography, sector, capex proximity
+  - Shared evidence URLs
+  - Contradiction penalties
+
 Used by update_dashboard.py to deduplicate raw project mentions from:
   - Compound Gemini queries (Tier 2)
   - RSS feeds (Tier 4)
@@ -14,8 +22,181 @@ Used by update_dashboard.py to deduplicate raw project mentions from:
 
 import re
 from collections import defaultdict
+from difflib import SequenceMatcher
 from project_schema import normalize_project_type, is_brownfield, STATUS_PROGRESSION
 from url_utils import normalize_url, classify_source_authority, validate_url
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# WEIGHTED DEDUP SCORING (Phase 5)
+# ══════════════════════════════════════════════════════════════════════════════
+
+DEDUP_WEIGHTS = {
+    'same_filing_id':           50,
+    'same_municipal_app_id':    45,
+    'exact_normalized_name':    25,
+    'same_organization':        15,
+    'same_municipality':        10,
+    'same_sector':               5,
+    'capex_within_20pct':        8,
+    'fuzzy_name_above_85':      15,
+    'shared_evidence_url':      20,
+    'contradictory_province':  -20,
+    'contradictory_sector':    -15,
+}
+
+DEDUP_THRESHOLDS = {
+    'auto_match':   60,   # auto-merge
+    'likely_match': 35,   # flag for Claude QA pass
+    'likely_new':    0,   # below 35, treat as new
+}
+
+
+def _parse_value_numeric(val) -> float | None:
+    """Parse a dollar value to a float in millions, or None."""
+    if val is None:
+        return None
+    if isinstance(val, (int, float)):
+        return float(val)
+    s = str(val).upper().replace(',', '').replace('$', '').replace('C', '').strip()
+    m = re.match(r'(\d+(?:\.\d+)?)\s*(B|M|K)?', s)
+    if not m:
+        return None
+    n = float(m.group(1))
+    unit = m.group(2) or 'M'
+    if unit == 'B':
+        n *= 1000
+    elif unit == 'K':
+        n /= 1000
+    return n
+
+
+def _values_within_pct(val1, val2, pct=0.20) -> bool:
+    """Check if two dollar values are within pct of each other."""
+    v1 = _parse_value_numeric(val1)
+    v2 = _parse_value_numeric(val2)
+    if v1 is None or v2 is None or v1 == 0 or v2 == 0:
+        return False
+    return abs(v1 - v2) / max(v1, v2) <= pct
+
+
+def _resolve_org(proponent, conn):
+    """Resolve a proponent string to a canonical org ID via the organizations table."""
+    if not proponent or not conn:
+        return None
+    try:
+        from db import resolve_organization
+        return resolve_organization(conn, proponent)
+    except Exception:
+        return None
+
+
+def _shared_evidence_urls(candidate, existing, conn) -> bool:
+    """Check if candidate and existing share any evidence URLs."""
+    if not conn:
+        return False
+    try:
+        cand_id = candidate.get('rowid')
+        exist_id = existing.get('rowid')
+        if not cand_id or not exist_id:
+            return False
+        from db import get_evidence_for_project
+        cand_urls = {r.get('url_normalized') for r in get_evidence_for_project(conn, cand_id)}
+        exist_urls = {r.get('url_normalized') for r in get_evidence_for_project(conn, exist_id)}
+        return bool(cand_urls & exist_urls)
+    except Exception:
+        return False
+
+
+def _get_identifiers(project_id, conn) -> dict:
+    """Get official identifiers from project_identifiers table."""
+    if not conn or not project_id:
+        return {}
+    try:
+        rows = conn.execute(
+            "SELECT id_type, id_value FROM project_identifiers WHERE project_id = ?",
+            (project_id,)
+        ).fetchall()
+        return {row[0]: row[1] for row in rows}
+    except Exception:
+        return {}
+
+
+def compute_match_score(candidate: dict, existing: dict, conn=None) -> int:
+    """Compute weighted match score between a candidate and existing project.
+
+    Used for DB-level dedup when upserting projects that didn't match on norm_key.
+
+    Args:
+        candidate: new project dict (may have 'rowid' if already in DB)
+        existing: existing project dict from DB (should have 'rowid')
+        conn: SQLite connection for org/evidence/identifier lookups
+
+    Returns:
+        Integer score. ≥60 = auto-merge, 35-59 = likely match, <35 = likely new.
+    """
+    score = 0
+
+    # Deterministic ID checks
+    if conn:
+        cand_ids = _get_identifiers(candidate.get('rowid'), conn)
+        exist_ids = _get_identifiers(existing.get('rowid'), conn)
+        for id_type in ('iaac', 'cer', 'provincial_ea', 'filing'):
+            if cand_ids.get(id_type) and cand_ids[id_type] == exist_ids.get(id_type):
+                score += DEDUP_WEIGHTS['same_filing_id']
+                break
+        for id_type in ('municipal_app', 'permit'):
+            if cand_ids.get(id_type) and cand_ids[id_type] == exist_ids.get(id_type):
+                score += DEDUP_WEIGHTS['same_municipal_app_id']
+                break
+
+    # Name similarity
+    cand_key = candidate.get('norm_key', '')
+    exist_key = existing.get('norm_key', '')
+    if cand_key and exist_key:
+        if cand_key == exist_key:
+            score += DEDUP_WEIGHTS['exact_normalized_name']
+        elif SequenceMatcher(None, cand_key, exist_key).ratio() >= 0.85:
+            score += DEDUP_WEIGHTS['fuzzy_name_above_85']
+
+    # Organization match
+    cand_org = _resolve_org(candidate.get('proponent'), conn)
+    exist_org = _resolve_org(existing.get('proponent'), conn)
+    if cand_org and exist_org and cand_org == exist_org:
+        score += DEDUP_WEIGHTS['same_organization']
+
+    # Geography
+    cand_cma = (candidate.get('cma') or '').lower().strip()
+    exist_cma = (existing.get('cma') or '').lower().strip()
+    if cand_cma and cand_cma == exist_cma:
+        score += DEDUP_WEIGHTS['same_municipality']
+
+    # Sector
+    cand_sector = (candidate.get('sector') or '').lower().strip()
+    exist_sector = (existing.get('sector') or '').lower().strip()
+    if cand_sector and exist_sector:
+        if cand_sector == exist_sector:
+            score += DEDUP_WEIGHTS['same_sector']
+        else:
+            score += DEDUP_WEIGHTS['contradictory_sector']
+
+    # Province contradiction
+    cand_prov = (candidate.get('province') or '').upper().strip()
+    exist_prov = (existing.get('province') or '').upper().strip()
+    if cand_prov and exist_prov and cand_prov != exist_prov:
+        score += DEDUP_WEIGHTS['contradictory_province']
+
+    # Capex proximity
+    cand_val = candidate.get('value_millions') or candidate.get('value')
+    exist_val = existing.get('value_millions') or existing.get('value')
+    if _values_within_pct(cand_val, exist_val, 0.20):
+        score += DEDUP_WEIGHTS['capex_within_20pct']
+
+    # Shared evidence URLs
+    if _shared_evidence_urls(candidate, existing, conn):
+        score += DEDUP_WEIGHTS['shared_evidence_url']
+
+    return score
 
 
 # -- Filler words removed during key generation --

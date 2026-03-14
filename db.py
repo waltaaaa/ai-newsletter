@@ -2,9 +2,9 @@
 db.py — SQLite interface module for CAN-MACRO Dashboard.
 
 Single-module interface to SQLite — no other module needs to import sqlite3 directly.
-Maps all 14 Firestore collections to SQLite tables.
+Maps all 21 tables to SQLite.
 
-Collections mapped:
+Tables:
   1. projects          — main project database
   2. projects_fts      — FTS5 virtual table for full-text search
   3. indicator_history — economic indicator time series
@@ -19,6 +19,13 @@ Collections mapped:
  12. newsletters       — legacy newsletter collection
  13. pipeline_state    — follow-up queries and state tracking
  14. projects_archive  — soft-deleted / superseded projects
+ 15. evidence          — normalized evidence rows (from projects.evidence JSON)
+ 16. documents         — URL fetch/classification tracking
+ 17. project_events    — normalized status/cost change timeline
+ 18. organizations     — canonical proponent entities
+ 19. organization_aliases — proponent name variants
+ 20. project_organizations — project-to-organization links
+ 21. project_identifiers — official IDs (IAAC, CER, municipal app, etc.)
 
 Usage:
     from db import init_db, upsert_project, get_projects, search_projects
@@ -129,7 +136,8 @@ CREATE TABLE IF NOT EXISTS projects (
     has_known_source INTEGER DEFAULT 0,
     evidence_count  INTEGER DEFAULT 0,
     history_backfilled INTEGER DEFAULT 0,
-    history_earliest_date TEXT DEFAULT ''
+    history_earliest_date TEXT DEFAULT '',
+    official_ids    TEXT DEFAULT '{}'
 );
 
 -- 2. FTS5 virtual table for full-text search on projects
@@ -293,6 +301,133 @@ CREATE TABLE IF NOT EXISTS projects_archive (
     archived_at TEXT DEFAULT '',
     reason      TEXT DEFAULT ''
 );
+
+-- 15. Evidence (normalized from projects.evidence JSON)
+CREATE TABLE IF NOT EXISTS evidence (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id      INTEGER NOT NULL REFERENCES projects(rowid),
+    url             TEXT NOT NULL,
+    url_normalized  TEXT,
+    source_type     TEXT,
+    source_tier     TEXT,
+    source_weight   REAL DEFAULT 0.5,
+    field_claimed   TEXT,
+    extracted_value TEXT,
+    extraction_date TEXT,
+    published_date  TEXT,
+    confidence      REAL DEFAULT 0.5,
+    content_hash    TEXT,
+    is_primary      INTEGER DEFAULT 0,
+    created_at      TEXT DEFAULT (datetime('now')),
+    UNIQUE(project_id, url_normalized, field_claimed)
+);
+
+CREATE INDEX IF NOT EXISTS idx_evidence_project ON evidence(project_id);
+CREATE INDEX IF NOT EXISTS idx_evidence_url ON evidence(url_normalized);
+CREATE INDEX IF NOT EXISTS idx_evidence_source_type ON evidence(source_type);
+
+-- 16. Documents (URL fetch/classification tracking)
+CREATE TABLE IF NOT EXISTS documents (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    url             TEXT NOT NULL,
+    url_normalized  TEXT UNIQUE NOT NULL,
+    content_hash    TEXT,
+    title           TEXT,
+    published_date  TEXT,
+    fetch_date      TEXT DEFAULT (datetime('now')),
+    source_tier     TEXT,
+    source_type     TEXT,
+    fetch_status    TEXT DEFAULT 'fetched',
+    is_relevant     INTEGER,
+    classification_json TEXT,
+    language        TEXT DEFAULT 'en',
+    created_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_documents_hash ON documents(content_hash);
+CREATE INDEX IF NOT EXISTS idx_documents_url ON documents(url_normalized);
+CREATE INDEX IF NOT EXISTS idx_documents_status ON documents(fetch_status);
+
+-- 17. Project events (normalized from projects.statusHistory JSON)
+CREATE TABLE IF NOT EXISTS project_events (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id      INTEGER NOT NULL REFERENCES projects(rowid),
+    event_type      TEXT NOT NULL,
+    event_date      TEXT,
+    detected_date   TEXT DEFAULT (datetime('now')),
+    status_before   TEXT,
+    status_after    TEXT,
+    cost_before     TEXT,
+    cost_after      TEXT,
+    summary         TEXT,
+    evidence_id     INTEGER REFERENCES evidence(id),
+    source_url      TEXT,
+    is_material     INTEGER DEFAULT 0,
+    created_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_events_project ON project_events(project_id);
+CREATE INDEX IF NOT EXISTS idx_events_type ON project_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_events_date ON project_events(event_date);
+
+-- 18. Organizations (canonical proponent names)
+CREATE TABLE IF NOT EXISTS organizations (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    canonical_name  TEXT UNIQUE NOT NULL,
+    org_type        TEXT,
+    hq_province     TEXT,
+    website         TEXT,
+    ticker          TEXT,
+    sedar_id        TEXT,
+    created_at      TEXT DEFAULT (datetime('now'))
+);
+
+-- 19. Organization aliases
+CREATE TABLE IF NOT EXISTS organization_aliases (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    organization_id INTEGER NOT NULL REFERENCES organizations(id),
+    alias           TEXT NOT NULL,
+    alias_normalized TEXT NOT NULL,
+    UNIQUE(organization_id, alias_normalized)
+);
+
+CREATE INDEX IF NOT EXISTS idx_org_aliases_norm ON organization_aliases(alias_normalized);
+
+-- 20. Project-organization links
+CREATE TABLE IF NOT EXISTS project_organizations (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id      INTEGER NOT NULL REFERENCES projects(rowid),
+    organization_id INTEGER NOT NULL REFERENCES organizations(id),
+    role            TEXT DEFAULT 'proponent',
+    source_evidence_id INTEGER REFERENCES evidence(id),
+    created_at      TEXT DEFAULT (datetime('now')),
+    UNIQUE(project_id, organization_id, role)
+);
+
+-- 21. Project identifiers (official IDs from registries/filings)
+CREATE TABLE IF NOT EXISTS project_identifiers (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id      INTEGER NOT NULL REFERENCES projects(rowid),
+    id_type         TEXT NOT NULL,
+    id_value        TEXT NOT NULL,
+    source_url      TEXT,
+    created_at      TEXT DEFAULT (datetime('now')),
+    UNIQUE(id_type, id_value)
+);
+
+CREATE INDEX IF NOT EXISTS idx_identifiers_type_value ON project_identifiers(id_type, id_value);
+CREATE INDEX IF NOT EXISTS idx_identifiers_project ON project_identifiers(project_id);
+
+CREATE TABLE IF NOT EXISTS miss_audit_results (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    audit_date      TEXT DEFAULT (datetime('now')),
+    province        TEXT,
+    sector          TEXT,
+    miss_type       TEXT,
+    description     TEXT,
+    suggested_action TEXT,
+    resolved        INTEGER DEFAULT 0
+);
 """
 
 
@@ -314,6 +449,13 @@ def init_db(path: str | None = None) -> sqlite3.Connection:
     # It commits any open transaction first, so we call it directly.
     # Note: executescript always commits after completion.
     conn.executescript(_SCHEMA_SQL)
+
+    # Phase 5 migration: add official_ids column if missing (existing DBs)
+    try:
+        conn.execute("SELECT official_ids FROM projects LIMIT 1")
+    except sqlite3.OperationalError:
+        conn.execute("ALTER TABLE projects ADD COLUMN official_ids TEXT DEFAULT '{}'")
+        conn.commit()
 
     logger.info(f"Database initialized: {path or _DEFAULT_DB_PATH}")
     return conn
@@ -1213,3 +1355,329 @@ def get_timeseries(conn: sqlite3.Connection, series_name: str, limit: int = 52) 
         (series_name, limit)
     ).fetchall()
     return [dict(row) for row in rows]
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# EVIDENCE
+# ══════════════════════════════════════════════════════════════════════════════
+
+SOURCE_WEIGHT = {
+    'federal_registry': 1.00,
+    'provincial_registry': 0.98,
+    'securities_filing': 0.96,
+    'company_ir': 0.92,
+    'gov_newsroom': 0.88,
+    'municipal_record': 0.84,
+    'procurement': 0.82,
+    'trade_publication': 0.72,
+    'business_media': 0.70,
+    'local_news': 0.62,
+    'rss_feed': 0.55,
+    'google_news': 0.50,
+    'gdelt': 0.45,
+    'aggregator': 0.25,
+}
+
+
+def _classify_source_type(url: str, discovery_source: str = '') -> str:
+    """Infer source_type from URL domain or discovery_source field."""
+    from url_utils import _extract_domain, _GOV_PATTERNS_COMPILED
+
+    if discovery_source:
+        ds = discovery_source.lower()
+        if ds in ('iaac', 'bc_eao', 'infrastructure_canada', 'nrcan'):
+            return 'federal_registry'
+        if 'provincial' in ds or '_ea' in ds:
+            return 'provincial_registry'
+        if ds in ('sedar', 'securities'):
+            return 'securities_filing'
+        if ds in ('canadabuys', 'procurement'):
+            return 'procurement'
+        if ds == 'municipal':
+            return 'municipal_record'
+        if ds == 'google_news_rss':
+            return 'google_news'
+        if ds == 'gdelt':
+            return 'gdelt'
+        if ds in ('rss', 'rss_feed'):
+            return 'rss_feed'
+
+    if not url:
+        return 'aggregator'
+
+    domain = _extract_domain(url)
+    if any(p.search(domain) for p in _GOV_PATTERNS_COMPILED):
+        return 'gov_newsroom'
+    if '.gc.ca' in domain or '.gov.' in domain:
+        return 'gov_newsroom'
+
+    trade = {'dailycommercialnews.com', 'constructconnect.com', 'on-sitemag.com',
+             'canadianminingjournal.com', 'northernminer.com', 'renewcanada.net',
+             'jwnenergy.com', 'oilsandsmagazine.com'}
+    if domain in trade:
+        return 'trade_publication'
+
+    major = {'cbc.ca', 'globalnews.ca', 'thestar.com', 'theglobeandmail.com',
+             'nationalpost.com', 'bnnbloomberg.ca', 'reuters.com', 'bloomberg.com',
+             'ici.radio-canada.ca', 'lapresse.ca', 'ledevoir.com'}
+    if domain in major:
+        return 'business_media'
+
+    from url_utils import KNOWN_GOOD_DOMAINS
+    if domain in KNOWN_GOOD_DOMAINS:
+        return 'local_news'
+
+    if 'news.google.com' in domain or 'google.com/alerts' in domain:
+        return 'google_news'
+
+    return 'aggregator'
+
+
+def insert_evidence(conn: sqlite3.Connection, project_id: int, url: str,
+                    discovery_source: str = '', field_claimed: str = 'general',
+                    extracted_value: str = '', published_date: str = '') -> int | None:
+    """Insert a single evidence row. Returns row id or None on conflict."""
+    from url_utils import normalize_url
+    norm = normalize_url(url)
+    if not norm:
+        return None
+
+    source_type = _classify_source_type(url, discovery_source)
+    weight = SOURCE_WEIGHT.get(source_type, 0.5)
+
+    try:
+        with conn:
+            cur = conn.execute("""
+                INSERT INTO evidence (
+                    project_id, url, url_normalized, source_type, source_weight,
+                    field_claimed, extracted_value, extraction_date, published_date
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), ?)
+                ON CONFLICT(project_id, url_normalized, field_claimed) DO NOTHING
+            """, (project_id, url, norm, source_type, weight,
+                  field_claimed, extracted_value, published_date))
+        return cur.lastrowid if cur.rowcount > 0 else None
+    except Exception as e:
+        logger.debug(f"Evidence insert skipped for {url}: {e}")
+        return None
+
+
+def get_evidence_for_project(conn: sqlite3.Connection, project_id: int) -> list[dict]:
+    """Return all evidence rows for a project, ordered by source weight."""
+    rows = conn.execute(
+        "SELECT * FROM evidence WHERE project_id = ? ORDER BY source_weight DESC",
+        (project_id,)
+    ).fetchall()
+    return [dict(row) for row in rows]
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# DOCUMENTS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def is_already_processed(conn: sqlite3.Connection, url: str, content_hash: str = None):
+    """Check if URL was already fetched. Returns (is_processed, status)."""
+    from url_utils import normalize_url
+    norm = normalize_url(url)
+    if not norm:
+        return False, 'new'
+    row = conn.execute(
+        "SELECT content_hash, fetch_status FROM documents WHERE url_normalized = ?", (norm,)
+    ).fetchone()
+    if not row:
+        return False, 'new'
+    if content_hash and row[0] != content_hash:
+        return False, 'changed'
+    return True, row[1]
+
+
+def insert_document(conn: sqlite3.Connection, url: str, title: str = '',
+                    source_tier: str = '', source_type: str = '',
+                    published_date: str = '', content_hash: str = None) -> int | None:
+    """Insert a document record. Returns row id or None on conflict."""
+    from url_utils import normalize_url
+    norm = normalize_url(url)
+    if not norm:
+        return None
+    try:
+        with conn:
+            cur = conn.execute("""
+                INSERT INTO documents (url, url_normalized, title, source_tier,
+                    source_type, published_date, content_hash)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(url_normalized) DO UPDATE SET
+                    fetch_date = datetime('now'),
+                    title = COALESCE(NULLIF(excluded.title, ''), title),
+                    content_hash = COALESCE(excluded.content_hash, content_hash)
+            """, (url, norm, title, source_tier, source_type, published_date, content_hash))
+        return cur.lastrowid
+    except Exception as e:
+        logger.debug(f"Document insert error for {url}: {e}")
+        return None
+
+
+def update_document_classification(conn: sqlite3.Connection, url: str,
+                                   is_relevant: bool, classification_json: str = '') -> None:
+    """Update classification result for a document."""
+    from url_utils import normalize_url
+    norm = normalize_url(url)
+    with conn:
+        conn.execute("""
+            UPDATE documents SET is_relevant = ?, classification_json = ?,
+                fetch_status = 'classified'
+            WHERE url_normalized = ?
+        """, (1 if is_relevant else 0, classification_json, norm))
+
+
+def update_document_status(conn: sqlite3.Connection, url: str, status: str) -> None:
+    """Update fetch_status for a document."""
+    from url_utils import normalize_url
+    norm = normalize_url(url)
+    with conn:
+        conn.execute(
+            "UPDATE documents SET fetch_status = ? WHERE url_normalized = ?",
+            (status, norm)
+        )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PROJECT EVENTS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def insert_project_event(conn: sqlite3.Connection, project_id: int,
+                         event_type: str, event_date: str = '',
+                         status_before: str = '', status_after: str = '',
+                         cost_before: str = '', cost_after: str = '',
+                         summary: str = '', evidence_id: int = None,
+                         source_url: str = '', is_material: bool = False) -> int:
+    """Insert a project event row. Returns row id."""
+    with conn:
+        cur = conn.execute("""
+            INSERT INTO project_events (
+                project_id, event_type, event_date, status_before, status_after,
+                cost_before, cost_after, summary, evidence_id, source_url, is_material
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (project_id, event_type, event_date or _now_iso()[:10],
+              status_before, status_after, cost_before, cost_after,
+              summary, evidence_id, source_url,
+              1 if is_material else 0))
+    return cur.lastrowid
+
+
+def get_project_events(conn: sqlite3.Connection, project_id: int) -> list[dict]:
+    """Return all events for a project, ordered by event_date."""
+    rows = conn.execute(
+        "SELECT * FROM project_events WHERE project_id = ? ORDER BY event_date DESC",
+        (project_id,)
+    ).fetchall()
+    return [dict(row) for row in rows]
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ORGANIZATIONS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _normalize_org_name(name: str) -> str:
+    """Normalize an organization name for matching."""
+    import re
+    s = name.strip()
+    # Strip common suffixes
+    for suffix in ('Inc.', 'Inc', 'Ltd.', 'Ltd', 'Corp.', 'Corp',
+                   'LP', 'L.P.', 'LLC', 'LLP', 'Co.', 'Co',
+                   'Ltée', 'Limitée', 'S.E.C.'):
+        if s.endswith(suffix):
+            s = s[:-len(suffix)].strip().rstrip(',')
+    return re.sub(r'\s+', ' ', s).strip()
+
+
+def resolve_organization(conn: sqlite3.Connection, proponent: str) -> int | None:
+    """Find or create an organization from a proponent name. Returns org id."""
+    if not proponent or not proponent.strip():
+        return None
+
+    norm = _normalize_org_name(proponent).lower()
+    if not norm:
+        return None
+
+    # Search aliases
+    row = conn.execute(
+        "SELECT organization_id FROM organization_aliases WHERE alias_normalized = ?",
+        (norm,)
+    ).fetchone()
+    if row:
+        return row[0]
+
+    # Create new organization + alias
+    canonical = _normalize_org_name(proponent)
+    with conn:
+        cur = conn.execute(
+            "INSERT INTO organizations (canonical_name) VALUES (?)",
+            (canonical,)
+        )
+        org_id = cur.lastrowid
+        conn.execute(
+            "INSERT INTO organization_aliases (organization_id, alias, alias_normalized) VALUES (?, ?, ?)",
+            (org_id, proponent.strip(), norm)
+        )
+    return org_id
+
+
+def link_project_organization(conn: sqlite3.Connection, project_id: int,
+                              organization_id: int, role: str = 'proponent') -> None:
+    """Link a project to an organization."""
+    try:
+        with conn:
+            conn.execute("""
+                INSERT INTO project_organizations (project_id, organization_id, role)
+                VALUES (?, ?, ?)
+                ON CONFLICT(project_id, organization_id, role) DO NOTHING
+            """, (project_id, organization_id, role))
+    except Exception as e:
+        logger.debug(f"Project-org link skipped: {e}")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PROJECT IDENTIFIERS (Phase 5)
+# ══════════════════════════════════════════════════════════════════════════════
+
+_VALID_ID_TYPES = frozenset({
+    'iaac', 'cer', 'provincial_ea', 'municipal_app',
+    'sedar', 'permit', 'filing', 'other',
+})
+
+
+def insert_project_identifier(conn: sqlite3.Connection, project_id: int,
+                               id_type: str, id_value: str,
+                               source_url: str = '') -> int | None:
+    """Insert an official project identifier. Returns row id or None on conflict."""
+    if not id_value or id_type not in _VALID_ID_TYPES:
+        return None
+    try:
+        with conn:
+            cur = conn.execute("""
+                INSERT INTO project_identifiers (project_id, id_type, id_value, source_url)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(id_type, id_value) DO NOTHING
+            """, (project_id, id_type, id_value.strip(), source_url))
+        return cur.lastrowid if cur.rowcount > 0 else None
+    except Exception as e:
+        logger.debug(f"Identifier insert skipped ({id_type}={id_value}): {e}")
+        return None
+
+
+def get_project_identifiers(conn: sqlite3.Connection, project_id: int) -> list[dict]:
+    """Return all identifiers for a project."""
+    rows = conn.execute(
+        "SELECT * FROM project_identifiers WHERE project_id = ?",
+        (project_id,)
+    ).fetchall()
+    return [dict(row) for row in rows]
+
+
+def find_project_by_identifier(conn: sqlite3.Connection, id_type: str,
+                                id_value: str) -> int | None:
+    """Find a project by an official identifier. Returns project_id or None."""
+    row = conn.execute(
+        "SELECT project_id FROM project_identifiers WHERE id_type = ? AND id_value = ?",
+        (id_type, id_value.strip())
+    ).fetchone()
+    return row[0] if row else None

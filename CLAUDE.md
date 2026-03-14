@@ -21,9 +21,10 @@ For full system specification (25 sections, every feature detailed), see `COMPLE
 - **Dependencies:** aiohttp, feedparser, beautifulsoup4, yfinance, reportlab, python-docx
 
 ## Model Stack (DO NOT CHANGE)
-- **Gemini 2.5 Flash (NO GROUNDING):** Classification, extraction, RSS processing. FREE TIER. Code must NEVER pass `google_search` tool or `groundingConfig` to the API.
-- **Claude Sonnet 4.5:** ALL reasoning — briefing, market commentary, policy assessment, pre-event analysis, Under the Microscope, gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis. ~$55/year.
+- **Gemini 2.5 Flash (NO GROUNDING):** Classification, extraction, RSS processing, rehash detection. FREE TIER. Code must NEVER pass `google_search` tool or `groundingConfig` to the API.
+- **Claude Sonnet 4.6:** ALL reasoning and writing — briefing, executive summary, market commentary, policy assessment, pre-event analysis, Under the Microscope, gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis, selective extraction. ~$55/year.
 - **Tavily:** Targeted enrichment searches only (cost-finding, verification, named tracking). Free tier 1,000 credits/month.
+- **NO Claude Opus.** Removed (Phase 6). All writing goes through Claude Sonnet.
 - **NO Gemini Pro.** Removed. All reasoning goes through Claude Sonnet.
 - **NO Gemini grounded search.** Caused $136/day in charges. Replaced by Google News RSS.
 - **NO Perplexity.** Removed. Do not add.
@@ -139,6 +140,13 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - StatsCan table URL: `https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid={table_no_dashes}`
 - Every result includes a "View on StatsCan" link
 
+## Data Explorer (V-Code Search)
+- Local fuzzy search over curated index (120+ entries across 9 categories)
+- Categories: Labour Market, GDP, Construction, Housing, Prices, Trade, Rates, Energy, Demographics
+- Includes: all 20 NAICS industry GDP, 10 provincial unemployment/employment/participation/CPI/GDP, 10 CMA permits, CPI components, 20 table-only references
+- StatCan table URL: `https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid={table_no_dashes}`
+- Pipeline fetches national + provincial: unemployment, employment rate, participation rate, CPI, GDP
+
 ## SQLite Tables (dashboard.db)
 - `projects` — main project database
 - `missed_projects` — user-submitted missed projects (via GitHub Issues)
@@ -147,6 +155,7 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - `trend_snapshots` — weekly trend analysis snapshots
 - `weekly_briefings` — generated briefings
 - `dashboard_state` — frontend state, latest briefing, microscope history/override
+- `miss_audit_results` — typed miss classifications from coverage audit (Phase 6)
 
 ## File Naming
 - Step files: `STEP_2X_DESCRIPTION.md`
@@ -172,3 +181,4 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - Do not create new SQLite tables without documenting them here
 - Do not editorialize — no predictions, no recommendations, no "good news/bad news" framing, no "bullish/bearish"
 - Do not enable billing on any Google Cloud project without explicit approval
+- Do not use Claude Opus — removed in Phase 6. All writing uses Sonnet.

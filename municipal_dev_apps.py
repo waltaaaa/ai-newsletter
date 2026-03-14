@@ -183,6 +183,77 @@ MUNICIPAL_SOURCES = {
         "url": "https://www.charlottetown.ca/departments/planning-and-heritage",
         "approach": "html_scrape",
     },
+    # ── Phase 7 CMA additions ─────────────────────────────────────────────
+    "kitchener": {
+        "name": "Kitchener Development Applications",
+        "province": "ON",
+        "cma": "Kitchener-Cambridge-Waterloo",
+        "url": "https://open-kitchenergis.opendata.arcgis.com/api/download/v1/items/3ee5ccb0b6f4488e858522d858e3e508/csv?layers=0",
+        "approach": "html_scrape",
+    },
+    "london_on": {
+        "name": "London ON Building Permits",
+        "province": "ON",
+        "cma": "London",
+        "url": "https://opendata.london.ca/datasets/building-permits/explore",
+        "approach": "html_scrape",
+    },
+    "oshawa": {
+        "name": "Oshawa Planning Applications",
+        "province": "ON",
+        "cma": "Oshawa",
+        "url": "https://www.oshawa.ca/en/building-and-development/planning-applications.aspx",
+        "approach": "html_scrape",
+    },
+    "st_catharines": {
+        "name": "St. Catharines Development Applications",
+        "province": "ON",
+        "cma": "St. Catharines-Niagara",
+        "url": "https://www.stcatharines.ca/en/build-and-renovate/planning-applications.aspx",
+        "approach": "html_scrape",
+    },
+    "victoria": {
+        "name": "Victoria Development Tracker",
+        "province": "BC",
+        "cma": "Victoria",
+        "url": "https://opendata.victoria.ca/datasets/development-tracker/explore",
+        "approach": "html_scrape",
+    },
+    "moncton": {
+        "name": "Moncton Building Permits",
+        "province": "NB",
+        "cma": "Moncton",
+        "url": "https://www.moncton.ca/building-permits",
+        "approach": "html_scrape",
+    },
+    "kelowna": {
+        "name": "Kelowna Development Applications",
+        "province": "BC",
+        "cma": "Kelowna",
+        "url": "https://www.kelowna.ca/homes-building/building-permits-inspections/development-applications",
+        "approach": "html_scrape",
+    },
+    "barrie": {
+        "name": "Barrie Development Applications",
+        "province": "ON",
+        "cma": "Barrie",
+        "url": "https://www.barrie.ca/planning-and-development/planning-applications",
+        "approach": "html_scrape",
+    },
+    "guelph": {
+        "name": "Guelph Development Applications",
+        "province": "ON",
+        "cma": "Guelph",
+        "url": "https://guelph.ca/city-hall/planning-and-development/community-plans-studies/development-applications/",
+        "approach": "html_scrape",
+    },
+    "abbotsford": {
+        "name": "Abbotsford Development Applications",
+        "province": "BC",
+        "cma": "Abbotsford-Mission",
+        "url": "https://www.abbotsford.ca/business-development/planning-development/development-applications",
+        "approach": "html_scrape",
+    },
 }
 
 # Dollar regex for extracting values from HTML descriptions

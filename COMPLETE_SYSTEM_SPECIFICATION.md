@@ -2,23 +2,22 @@
 
 **Purpose:** This document describes every feature and component the system should have after implementing STEP_2A through STEP_2P. Use this as an audit checklist — verify each item exists and functions correctly. Fix anything missing or broken.
 
-**Annual operating cost:** ~$60/year (Claude Sonnet ~$55, Firebase ~$5, all search free)
+**Annual operating cost:** ~$55/year (Claude Sonnet ~$55, all search and hosting free)
 
 ---
 
 ## 1. DATA COLLECTION INFRASTRUCTURE
 
 ### 1.1 Scheduled Execution
-- **Weekly pipeline trigger:** Cloud Function running every Monday at 6:00 AM Eastern via `functions/index.js` → `weeklyPipeline`
-- **Daily query trigger:** Cloud Function running every day at midnight Eastern via `functions/index.js` → `dailyIndicators`
-- **Firebase configuration:** `firebase.json` includes functions section, `functions/` directory contains `index.js` and `package.json`
-- Both triggers call `update_dashboard.py` with appropriate flags
+- **Weekly pipeline trigger:** GitHub Actions workflow (`.github/workflows/weekly-pipeline.yml`) running every Monday at 5:30 AM Eastern
+- **Daily indicator trigger:** GitHub Actions workflow (`.github/workflows/daily-indicators.yml`) running every day at midnight Eastern
+- Both workflows call `update_dashboard.py` with appropriate flags
 
 ### 1.2 Environment Variables
-- `GEMINI_API_KEY` — Gemini 2.5 Flash and Pro
-- `ANTHROPIC_API_KEY` — Claude Sonnet 4.5
-- No Perplexity API key (removed)
-- Firebase credentials via service account or default application credentials
+- `GOOGLE_API_KEY` — Gemini 2.5 Flash (no grounding)
+- `ANTHROPIC_API_KEY` — Claude Sonnet
+- `TAVILY_API_KEY` — Tavily free tier (1,000 credits/month)
+- No Firebase credentials required — database is local SQLite
 
 ---
 
@@ -155,8 +154,8 @@ All 759 compound queries converted to RSS feed URLs. Polled weekly. No daily lim
 - QC and NB projects get both French and English cost queries
 - Regex-based cost extraction from response (handles $X million, $X billion, ranges, revised estimates)
 - After 3 failed attempts across 6 weeks: marked `cost_unfindable`
-- Found values written to Firestore with source URLs, confidence recalculated
-- Firestore fields: `value_millions`, `value_low_millions`, `value_high_millions`, `value_notes`, `last_cost_search`, `cost_search_attempts`, `cost_unfindable`
+- Found values written to SQLite with source URLs, confidence recalculated
+- SQLite fields: `value_millions`, `value_low_millions`, `value_high_millions`, `value_notes`, `last_cost_search`, `cost_search_attempts`, `cost_unfindable`
 
 ---
 
@@ -183,7 +182,7 @@ rumoured (0) → proposed (1) → approved (2) → under_construction (3) → co
 Branches: delayed/on_hold (2.5), cancelled (-1)
 Merge logic: always advance to highest status, never regress
 
-### 5.4 Firestore Project Document Schema
+### 5.4 SQLite Project Table Schema
 ```
 {
   name, proponent,
@@ -209,7 +208,7 @@ Merge logic: always advance to highest status, never regress
 ### 5.5 URL Hard Gate
 - Every project MUST have at least one verifiable source URL
 - `build_project_document()` returns None if no evidence URL exists
-- Projects without URLs are rejected from Firestore
+- Projects without URLs are rejected from SQLite
 - Evidence merge NEVER loses URLs during dedup
 
 ---
@@ -294,7 +293,7 @@ Merge logic: always advance to highest status, never regress
 
 ### 8.3 Improvement Application
 - Each diagnosis generates concrete improvements (new terms, new feeds, expanded coverage)
-- Stored in Firestore `pipeline_improvements` collection
+- Stored in SQLite `pipeline_improvements` collection
 - Auto-approved types (additive only): vocabulary_addition, keyword_addition, feed_addition, french_sector_expansion
 - Manual review types: negative_keyword_review, affinity_expansion, geographic_addition, taxonomy_expansion
 - **CRITICAL CONSTRAINT:** Improvements are ADDITIVE ONLY — system can never remove existing queries, keywords, or feeds
@@ -319,7 +318,7 @@ Merge logic: always advance to highest status, never regress
 - Bank of Canada Valet API: 5 years of policy rate, CAD/USD, CPI, prime rate, 10Y bond yield, 5Y mortgage rate
 - Statistics Canada: 5 years of GDP, employment, building permits, housing starts, unemployment by province, non-residential capital expenditure
 - Yahoo Finance: 5 years of WTI, natural gas, gold, copper, lumber, TSX composite, TSX mining/energy/REIT sub-indices, CAD/USD
-- All written to `indicator_history` Firestore collection with schema: {indicator, series, province, date, value, unit, source, frequency, description, backfilled}
+- All written to `indicator_history` SQLite table with schema: {indicator, series, province, date, value, unit, source, frequency, description, backfilled}
 - Live weekly data also writes to `indicator_history` (same schema)
 - Run ONCE for backfill, then ongoing via weekly pipeline
 
@@ -354,7 +353,7 @@ Merge logic: always advance to highest status, never regress
 - When indicator crosses threshold, generates insight with affected project count and value
 
 ### 10.4 Trend Snapshots
-- Weekly trend data stored in Firestore `trend_snapshots` collection
+- Weekly trend data stored in SQLite `trend_snapshots` collection
 - Enables historical comparison of trends themselves
 
 ---
@@ -438,7 +437,7 @@ Beyond standard Yahoo Finance tickers:
 - Tone: Reuters wire service, not opinion column
 
 ### 14.3 Storage & Distribution
-- Stored in Firestore `weekly_briefings` collection (date, week_number, content, metadata)
+- Stored in SQLite `weekly_briefings` collection (date, week_number, content, metadata)
 - Latest briefing in `dashboard_state/latest_briefing` for frontend display
 - Token usage and cost tracked per briefing
 
@@ -499,10 +498,10 @@ Beyond standard Yahoo Finance tickers:
   - Shaded band showing the 5-year range (min/max) for context
   - Hover tooltip showing date, value, and period-over-period change
   - Time range selector: 3 months, 1 year, 3 years, 5 years
-- **Data source:** Reads from `indicator_history` Firestore collection (already populated by backfill + weekly pipeline)
+- **Data source:** Reads from `indicator_history` SQLite table (already populated by backfill + weekly pipeline)
 - **StatsCan link:** "View on StatsCan" button that opens the source table using the V-code URL
 
-### 16.7 Firestore Indexes
+### 16.7 SQLite Indexes
 - Composite indexes for filter combinations: province + status, is_brownfield + province, sector + province, project_type + status, province + value DESC
 
 ---
@@ -517,7 +516,7 @@ A dedicated deep-dive section in the weekly briefing that provides extended anal
   - Highest-volume news story in the past 7 days from RSS feeds and Gemini results
   - Story with the largest measurable impact on tracked indicators (biggest commodity/rate move)
   - Story with the most affected projects in the database (via cross-reference engine)
-  - User override: optional Firestore field `dashboard_state/microscope_override` to force a specific topic
+  - User override: optional SQLite field `dashboard_state/microscope_override` to force a specific topic
 - Only ONE topic per week — depth over breadth
 
 ### 15.3 Analysis Structure (200-300 words within briefing)
@@ -540,7 +539,7 @@ A dedicated deep-dive section in the weekly briefing that provides extended anal
 
 ### 15.5 Continuity Tracking
 - If the same story dominates multiple consecutive weeks, briefings reference prior coverage: "In its third week under the microscope, the Iran conflict has now..."
-- Firestore `dashboard_state/microscope_history` stores past topics with dates
+- SQLite `dashboard_state/microscope_history` stores past topics with dates
 - Prevents repetitive analysis — each week must have genuinely new developments to justify continuation
 
 ---
@@ -660,7 +659,7 @@ The weekly pipeline's 4-week lookback window only catches projects with recent m
 
 ---
 
-## 22. COLLECTIONS SUMMARY (Firestore)
+## 22. TABLES SUMMARY (SQLite)
 
 | Collection | Purpose | Written By |
 |---|---|---|
@@ -690,8 +689,8 @@ The weekly pipeline's 4-week lookback window only catches projects with recent m
 | Briefing PDF/DOCX export (reportlab, python-docx) | $0 |
 | Known-project sweep (one-time) | $0 |
 | Claude Sonnet 4.5 (ALL reasoning — briefing, microscope, commentary, gap analysis, dedup QA, ~10 calls/week) | ~$55 |
-| Firebase/Firestore (storage + functions) | ~$5 |
-| **Total** | **~$60/year** |
+| GitHub Pages + Actions (hosting + scheduling) | $0 |
+| **Total** | **~$55/year** |
 
 ---
 
@@ -717,7 +716,7 @@ The weekly pipeline's 4-week lookback window only catches projects with recent m
 
 2. Deduplication (all raw mentions merged)
 
-3. Firestore Write (new projects created, existing updated)
+3. SQLite Write (new projects created, existing updated)
 
 4. Enrichment Phase (ordered):
    a. Cost-finding for valueless projects (first priority, 60/day)
@@ -775,7 +774,7 @@ The weekly pipeline's 4-week lookback window only catches projects with recent m
 14. Briefing Export:
     a. Generate PDF version via reportlab
     b. Generate DOCX version via python-docx
-    c. Store both in Firestore or Cloud Storage for download
+    c. Store both locally for download via GitHub Pages
 
 15. Archive Indicators:
     a. Write current week's indicator values to indicator_history
@@ -790,5 +789,5 @@ The weekly pipeline's 4-week lookback window only catches projects with recent m
 2. Tavily named project tracking (~7 queries, from 200/month budget)
 3. Tavily cost-finding for valueless projects (~10 queries, from 300/month budget)
 4. Tavily enrichment for missing fields (~5 queries, from 150/month budget)
-5. Process any results through dedup and Firestore write
+5. Process any results through dedup and SQLite write
 ```

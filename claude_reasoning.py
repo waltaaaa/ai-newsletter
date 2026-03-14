@@ -309,10 +309,17 @@ For each project found, return JSON:
       "status": "Proposed|Approved|Under Construction|Completed|Delayed|Cancelled",
       "sector": "sector description",
       "description": "One sentence",
-      "confidence_notes": "Why this was hard to extract"
+      "confidence_notes": "Why this was hard to extract",
+      "official_ids": {}
     }
   ]
 }
+
+If the article references any official project identifiers — such as an IAAC registry number,
+a provincial EA reference number, a CER hearing order, a municipal development application ID,
+a SEDAR filing number, or a building permit number — extract them into the "official_ids" object
+with keys like "iaac", "cer", "provincial_ea", "municipal_app", "sedar", "permit".
+If no identifiers are present, return an empty object {}.
 
 If genuinely no capital project exists in this article, return {"projects": [], "reason": "explanation"}.
 Be thorough but do not fabricate projects."""
@@ -401,6 +408,7 @@ def recover_failed_extractions_sync(failed_articles):
                     }] if url else [],
                     "evidence_count": 1 if url else 0,
                     "announced": today,
+                    "official_ids": project.get("official_ids", {}),
                 }
                 recovered.append(flat)
 
@@ -791,3 +799,204 @@ def analyze_signals_sync(investigation_results):
     logger.info(f"Signal analysis: {len(findings)} actionable from "
                 f"{len(investigation_results)} investigations")
     return findings
+
+
+# ── Selective Extraction ──────────────────────────────────────
+
+SELECTIVE_EXTRACT_SYSTEM = """You are a Canadian capital projects data extractor. You are reading
+a high-quality source document (government registry, corporate press release, or procurement award)
+that has already been flagged as likely containing a capital project.
+
+Extract ALL capital projects mentioned. For each project return structured data.
+
+Return JSON:
+{
+  "projects": [
+    {
+      "name": "Official project name",
+      "aliases": ["alternative names if any"],
+      "proponent": "Company or organization responsible",
+      "proponent_role": "developer | owner | contractor | funder",
+      "province": "Full province or territory name",
+      "municipality": "City or town",
+      "cma": "Census Metropolitan Area if applicable",
+      "address": "Street address if available",
+      "sector": "sector description",
+      "subsector": "more specific description",
+      "capex_exact": null,
+      "capex_low": null,
+      "capex_high": null,
+      "capex_currency": "CAD",
+      "status": "Proposed|Approved|Under Construction|Completed|Cancelled|Paused",
+      "event_type": "announcement|approval|construction_start|completion|cancellation|update",
+      "date_announced": "",
+      "date_expected_start": "",
+      "date_expected_completion": "",
+      "official_ids": {},
+      "evidence_snippet": "Key quote from source (1-2 sentences)"
+    }
+  ]
+}
+
+If no capital project exists, return {"projects": [], "reason": "explanation"}.
+Be thorough but never fabricate. Extract exact dollar values when stated."""
+
+
+def _select_top_documents(documents, max_docs=40):
+    """Select top documents by signal quality for Claude extraction.
+
+    Priority order:
+    1. Government registry sources (tier 1/5/8)
+    2. Corporate press releases with dollar values
+    3. Procurement awards
+    4. Documents with high Gemini classification confidence
+    """
+    scored = []
+    for doc in documents:
+        score = 0
+        url = (doc.get('url') or '').lower()
+        title = (doc.get('title') or '').lower()
+        text = (doc.get('text') or doc.get('summary') or '').lower()
+        combined = title + ' ' + text
+
+        # Government sources get highest priority
+        gov_domains = ('.gc.ca', 'canada.ca', '.gov.', 'eao.gov', 'iaac-aeic')
+        if any(d in url for d in gov_domains):
+            score += 50
+
+        # Dollar values in title/text
+        import re
+        if re.search(r'\$[\d,.]+\s*[BMK]', combined, re.IGNORECASE):
+            score += 30
+        elif re.search(r'\$[\d,.]+\s*(billion|million)', combined, re.IGNORECASE):
+            score += 30
+
+        # Procurement / award keywords
+        if any(kw in combined for kw in ('awarded', 'contract', 'procurement',
+                                          'tender', 'rfp', 'bid')):
+            score += 20
+
+        # High Gemini confidence
+        conf = doc.get('classification_confidence', 0)
+        if isinstance(conf, (int, float)) and conf >= 0.85:
+            score += 15
+
+        # Press release indicators
+        if any(kw in combined for kw in ('press release', 'news release',
+                                          'announces', 'announced')):
+            score += 10
+
+        if score > 0:
+            scored.append((score, doc))
+
+    scored.sort(key=lambda x: -x[0])
+    return [doc for _, doc in scored[:max_docs]]
+
+
+def selective_extraction_sync(documents, flash_extractions=None):
+    """Run Claude Sonnet extraction on top high-signal documents.
+
+    Call AFTER Gemini Flash bulk extraction, BEFORE project sync.
+
+    Args:
+        documents: list of document dicts (url, title, text/summary)
+        flash_extractions: optional dict mapping url -> flash extraction result,
+                          for comparison
+
+    Returns:
+        list of project dicts ready for upsert, with confidence notes
+    """
+    top_docs = _select_top_documents(documents)
+    if not top_docs:
+        print("  [CLAUDE] Selective extraction: no high-signal documents found")
+        return []
+
+    print(f"  [CLAUDE] Selective extraction: {len(top_docs)} high-signal documents")
+    extracted = []
+    today = date.today().isoformat()
+
+    for doc in top_docs:
+        title = doc.get('title', '')
+        url = doc.get('url', '')
+        text = doc.get('text') or doc.get('summary', '')
+
+        user_prompt = (
+            f"Source URL: {url}\n"
+            f"Headline: {title}\n"
+            f"Text:\n{text[:4000]}\n\n"
+            f"Extract all capital projects mentioned in this document."
+        )
+
+        result = reason_sync(SELECTIVE_EXTRACT_SYSTEM, user_prompt,
+                             task_name="selective_extraction", max_tokens=4096)
+        response = result["text"] if result else None
+        data = parse_json_response(response)
+
+        if not data or not data.get("projects"):
+            continue
+
+        for project in data["projects"]:
+            name = (project.get("name") or "").strip()
+            if not name or len(name) < 3:
+                continue
+
+            # Build capex string
+            capex = project.get("capex_exact")
+            if not capex:
+                capex = project.get("capex_low")
+            if capex and isinstance(capex, (int, float)):
+                if capex >= 1_000_000_000:
+                    value_str = f"C${capex/1e9:.1f}B"
+                elif capex >= 1_000_000:
+                    value_str = f"C${capex/1e6:.0f}M"
+                else:
+                    value_str = f"C${capex/1e3:.0f}K"
+            else:
+                value_str = "Not disclosed"
+
+            # Compare with Flash extraction if available
+            confidence = 0.5
+            confidence_note = "claude_selective"
+            if flash_extractions and url in flash_extractions:
+                flash_proj = flash_extractions[url]
+                # If both agree on name/province, higher confidence
+                flash_name = (flash_proj.get("name") or "").lower()
+                if flash_name and (
+                    flash_name in name.lower() or name.lower() in flash_name
+                ):
+                    confidence = 0.7
+                    confidence_note = "claude+flash_agree"
+                else:
+                    confidence = 0.6
+                    confidence_note = "claude_selective_conflict"
+
+            flat = {
+                "name": name,
+                "province": project.get("province", ""),
+                "cma": project.get("cma") or project.get("municipality", ""),
+                "sector": project.get("sector", "Other"),
+                "value": value_str,
+                "status": project.get("status", "Proposed"),
+                "proponent": project.get("proponent", ""),
+                "description": project.get("evidence_snippet", ""),
+                "discovery_source": "claude_selective",
+                "discovery_sources": ["claude_selective"],
+                "confidence": confidence,
+                "confidence_note": confidence_note,
+                "source_url": url,
+                "sources": [{"url": url, "title": title}] if url else [],
+                "evidence": [{
+                    "url": url,
+                    "name": doc.get("source_name", ""),
+                    "date": today,
+                    "source_type": "claude_selective",
+                }] if url else [],
+                "evidence_count": 1 if url else 0,
+                "announced": today,
+                "official_ids": project.get("official_ids", {}),
+            }
+            extracted.append(flat)
+
+    print(f"  [CLAUDE] Selective extraction: {len(extracted)} projects "
+          f"from {len(top_docs)} documents")
+    return extracted

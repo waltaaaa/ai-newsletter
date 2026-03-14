@@ -404,7 +404,35 @@ def export_indicators(conn, output_dir: str) -> str:
         GROUP BY indicator_name, province, period
         ORDER BY indicator_name, province, period
     """).fetchall()
-    history_list = [dict(r) for r in history_rows]
+
+    # Normalize province names to 2-letter codes (frontend uses codes)
+    _PROV_NORMALIZE = {
+        'Newfoundland and Labrador': 'NL', 'Newfoundland': 'NL',
+        'Prince Edward Island': 'PE', 'PEI': 'PE',
+        'Nova Scotia': 'NS', 'New Brunswick': 'NB',
+        'Quebec': 'QC', 'Ontario': 'ON',
+        'Manitoba': 'MB', 'Saskatchewan': 'SK',
+        'Alberta': 'AB', 'British Columbia': 'BC',
+        'Yukon': 'YT', 'Northwest Territories': 'NT', 'Nunavut': 'NU',
+        'National': 'national', 'national': 'national', 'global': 'national',
+    }
+    # Skip duplicate legacy names (e.g. cpi_national, unemployment_national)
+    _SKIP_INDICATORS = {'cpi_national', 'unemployment_national', 'cpi_date', 'cpi_prev',
+                        'unemployment_date', 'unemployment_prev', 'gdp_date',
+                        'housingStarts_date', 'housingStarts_prev'}
+    history_list = []
+    for r in history_rows:
+        row = dict(r)
+        if row['indicator_name'] in _SKIP_INDICATORS:
+            continue
+        prov = row.get('province', 'national')
+        row['province'] = _PROV_NORMALIZE.get(prov, prov)
+        # Ensure value is numeric where possible
+        try:
+            row['value'] = float(str(row['value']).replace(',', '').replace('%', '').replace('+', ''))
+        except (ValueError, TypeError):
+            pass
+        history_list.append(row)
 
     # Also include statcan_latest from dashboard_state
     statcan_latest = get_dashboard_state(conn, "statcan_latest")

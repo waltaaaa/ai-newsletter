@@ -307,7 +307,7 @@ function renderKeyIndicators(){
   strip+=renderIndicatorDropdown(indicators,'All Indicators');
   $('keyIndicators').innerHTML=strip;
   sparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
-  renderIndicatorExplorer();
+  renderIndicatorExplorer('overviewIndicatorExplorer');
 }
 
 
@@ -427,9 +427,10 @@ const INDICATOR_CATALOG=[
   ]}
 ];
 
-let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='national';
+let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='national',_indExpTarget='indicatorExplorer';
 
-function renderIndicatorExplorer(){
+function renderIndicatorExplorer(targetId){
+  _indExpTarget=targetId||'indicatorExplorer';
   // Build selector
   let selHtml='<div class="card fade-in"><div class="card-header">Indicator Explorer</div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px">';
   selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#191a1c;font-size:var(--text-sm)">';
@@ -467,7 +468,7 @@ function renderIndicatorExplorer(){
     selHtml+='<div style="margin-top:8px;text-align:right"><a href="'+linkUrl+'" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue)">'+linkLabel+'</a></div>';
   }
   selHtml+='</div>';
-  $('indicatorExplorer').innerHTML=selHtml;
+  $(_indExpTarget).innerHTML=selHtml;
   loadIndExpData();
 }
 
@@ -480,7 +481,7 @@ window.onIndExpChange=function(){
   _indExpSel=$('indExpSelect').value;
   const provSel=$('indExpProv');
   _indExpProv=provSel?provSel.value:'national';
-  renderIndicatorExplorer();
+  renderIndicatorExplorer(_indExpTarget);
 };
 
 async function loadIndExpData(){
@@ -1845,7 +1846,7 @@ window._doVcodeSearch=function(cat){
   }
   let html='<div style="font-size:var(--text-xs);color:#919191;margin-bottom:8px">Showing '+results.length+' of '+(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()+' indexed tables</div>';
   results.forEach(r=>{
-    const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${r.table.replace(/-/g,'')}`;
+    const pid=r.table.replace(/-/g,'');const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${pid.length<=8?pid+'01':pid}`;
     html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#919191;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#919191;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
   });
   resEl.innerHTML=html;

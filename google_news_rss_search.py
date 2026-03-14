@@ -265,4 +265,17 @@ def run_google_news_search(gemini_client=None):
         art["_discovery_tier"] = "google_news_rss"
         art["discovery_source"] = "google_news_rss"
 
+    # Record documents for fetch tracking
+    try:
+        from db import get_db, insert_document
+        conn = get_db()
+        for art in filtered:
+            insert_document(conn, art.get('url') or art.get('link', ''),
+                            title=art.get('title', ''),
+                            source_tier='tier_2', source_type='google_news',
+                            published_date=art.get('published', ''))
+        conn.close()
+    except Exception:
+        pass
+
     return filtered

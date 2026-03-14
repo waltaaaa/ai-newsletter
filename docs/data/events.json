@@ -1,43 +1,5 @@
 [
   {
-    "date": "2026-03-10",
-    "name": "Building Permits",
-    "source": "Statistics Canada",
-    "type": "data_release",
-    "frequency": "monthly",
-    "significance": "medium",
-    "indicator": "building_permits",
-    "relevance": "6-12 month leading indicator of construction activity by province."
-  },
-  {
-    "date": "2026-03-10",
-    "name": "Investment in Building Construction",
-    "source": "Statistics Canada",
-    "type": "data_release",
-    "frequency": "monthly",
-    "significance": "medium",
-    "indicator": "investment_nonresidential",
-    "relevance": "Directly measures capital spending on non-residential construction."
-  },
-  {
-    "date": "2026-03-12",
-    "name": "Bank of Canada Rate Decision",
-    "source": "Bank of Canada",
-    "type": "rate_decision",
-    "significance": "high",
-    "indicators_affected": [
-      "policy_rate",
-      "mortgage_5y_fixed",
-      "prime_rate"
-    ],
-    "sectors_affected": [
-      "Real Estate",
-      "Construction",
-      "Finance"
-    ],
-    "relevance": "Rate decisions directly affect mortgage rates, project financing costs, and housing market activity."
-  },
-  {
     "date": "2026-03-17",
     "name": "Consumer Price Index",
     "source": "Statistics Canada",
@@ -76,5 +38,25 @@
     "significance": "high",
     "indicator": "employment",
     "relevance": "Employment and unemployment by province. Affects infrastructure spending pressure and construction labour availability."
+  },
+  {
+    "date": "2026-04-10",
+    "name": "Building Permits",
+    "source": "Statistics Canada",
+    "type": "data_release",
+    "frequency": "monthly",
+    "significance": "medium",
+    "indicator": "building_permits",
+    "relevance": "6-12 month leading indicator of construction activity by province."
+  },
+  {
+    "date": "2026-04-10",
+    "name": "Investment in Building Construction",
+    "source": "Statistics Canada",
+    "type": "data_release",
+    "frequency": "monthly",
+    "significance": "medium",
+    "indicator": "investment_nonresidential",
+    "relevance": "Directly measures capital spending on non-residential construction."
   }
 ]

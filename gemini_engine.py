@@ -127,6 +127,135 @@ def _parse_raw(api_response, query_obj):
     }
 
 
+async def is_rehash(session, semaphore, article_text, existing_project_summary):
+    """Use Gemini Flash to determine if article adds new information vs existing project.
+
+    Free (Flash) — reduces unnecessary Sonnet extraction calls.
+
+    Args:
+        session: aiohttp.ClientSession
+        semaphore: asyncio.Semaphore
+        article_text: article title + text (truncated to 2000 chars)
+        existing_project_summary: 200-word summary of the most similar existing project
+
+    Returns:
+        bool: True if article is a rehash (no new info), False if it has new info
+    """
+    prompt = (
+        "Compare this article to an existing project summary.\n"
+        "Does the article contain ANY new information not in the summary?\n"
+        "New information includes: updated cost, new timeline, status change, "
+        "new partners, new approvals, new opposition, regulatory updates.\n\n"
+        f"Existing project summary:\n{existing_project_summary[:1000]}\n\n"
+        f"Article:\n{article_text[:2000]}\n\n"
+        'Respond with ONLY "NEW" or "REHASH".'
+    )
+
+    query_obj = {"query": prompt}
+    result = await query_one(session, semaphore, query_obj,
+                             "You classify whether articles contain new project information.",
+                             attempt=0)
+    text = (result.get("text") or "").strip().upper()
+    return text == "REHASH"
+
+
+async def filter_rehashes(articles, existing_projects, max_concurrent=10):
+    """Filter out articles that are rehashes of known projects.
+
+    Args:
+        articles: list of article dicts (url, title, text/summary)
+        existing_projects: list of project dicts (name, description, province, value)
+
+    Returns:
+        list of articles that contain genuinely new information
+    """
+    if not GEMINI_API_KEY or not articles or not existing_projects:
+        return articles
+
+    from difflib import SequenceMatcher
+
+    # Build project summaries for matching
+    project_summaries = {}
+    for p in existing_projects:
+        name = (p.get('name') or '').lower()
+        summary = (
+            f"Project: {p.get('name', '')}\n"
+            f"Province: {p.get('province', '')}\n"
+            f"Value: {p.get('value', 'Not disclosed')}\n"
+            f"Status: {p.get('status', '')}\n"
+            f"Proponent: {p.get('proponent', '')}\n"
+            f"Description: {p.get('description', '')}"
+        )
+        project_summaries[name] = summary
+
+    project_names = list(project_summaries.keys())
+    semaphore = asyncio.Semaphore(max_concurrent)
+    kept = []
+
+    async with aiohttp.ClientSession() as session:
+        for article in articles:
+            title = (article.get('title') or '').lower()
+            text = article.get('text') or article.get('summary') or ''
+            combined = title + ' ' + text[:500]
+
+            # Find most similar existing project by name
+            best_match = None
+            best_ratio = 0
+            for pname in project_names:
+                # Check if project name appears in article
+                if pname and len(pname) > 5 and pname in combined.lower():
+                    best_match = pname
+                    best_ratio = 1.0
+                    break
+                ratio = SequenceMatcher(None, pname, title).ratio()
+                if ratio > best_ratio:
+                    best_ratio = ratio
+                    best_match = pname
+
+            # Only check rehash if there's a reasonable match
+            if best_ratio < 0.4 or not best_match:
+                kept.append(article)
+                continue
+
+            article_text = f"{article.get('title', '')}\n{text}"
+            try:
+                rehash = await is_rehash(session, semaphore, article_text,
+                                         project_summaries[best_match])
+                if not rehash:
+                    kept.append(article)
+                else:
+                    logger.debug(f"Rehash filtered: {article.get('title', '')[:60]}")
+            except Exception:
+                kept.append(article)  # on error, keep the article
+
+    filtered = len(articles) - len(kept)
+    if filtered:
+        print(f"  [REHASH] Filtered {filtered}/{len(articles)} rehash articles")
+    return kept
+
+
+def filter_rehashes_sync(articles, existing_projects, max_concurrent=10):
+    """Synchronous wrapper for filter_rehashes."""
+    if not articles:
+        return articles
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            import nest_asyncio
+            nest_asyncio.apply()
+            return loop.run_until_complete(
+                filter_rehashes(articles, existing_projects, max_concurrent)
+            )
+        else:
+            return asyncio.run(
+                filter_rehashes(articles, existing_projects, max_concurrent)
+            )
+    except RuntimeError:
+        return asyncio.run(
+            filter_rehashes(articles, existing_projects, max_concurrent)
+        )
+
+
 async def run_batch(queries, system_prompt, max_concurrent=MAX_CONCURRENT,
                     tag="BATCH"):
     """Run all queries concurrently with semaphore control.

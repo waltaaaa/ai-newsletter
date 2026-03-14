@@ -1,11 +1,11 @@
 """
-confidence_decay.py -- Time-based confidence decay for project records.
+confidence_decay.py -- Source-weighted confidence scoring + time-based decay.
 
-Run weekly after discovery. Reduces display_confidence for projects
-that haven't been re-discovered or mentioned in recent pipeline runs.
-The base 'confidence' field is never modified -- only display_confidence
-is adjusted, so decay is automatically reversed when a project is
-re-discovered (confidence is recalculated from scratch).
+Two stages:
+  1. compute_confidence() — evidence-weighted base score using the evidence table.
+     Reads source_weight, recency, extraction confidence, agreement bonus, ID bonus.
+  2. calculate_decay() — applies staleness decay on top of the base score.
+     Only modifies display_confidence; base confidence is recalculated on re-discovery.
 
 Decay schedule:
   0-30 days since lastSeen: No decay
@@ -30,6 +30,72 @@ DECAY_SCHEDULE = [
     (180, 0.20),
     (9999, 0.25),
 ]
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SOURCE-WEIGHTED CONFIDENCE (Phase 5)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _recency_factor(date_str):
+    """Decay factor based on age of evidence."""
+    if not date_str:
+        return 0.5
+    try:
+        dt = datetime.fromisoformat(date_str[:10])
+    except (ValueError, TypeError):
+        return 0.5
+    days_old = max((datetime.utcnow() - dt).days, 0)
+    if days_old <= 30:
+        return 1.0
+    elif days_old <= 60:
+        return 0.90
+    elif days_old <= 90:
+        return 0.75
+    elif days_old <= 120:
+        return 0.60
+    elif days_old <= 180:
+        return 0.45
+    else:
+        return 0.30
+
+
+def compute_confidence(project_id, conn):
+    """Source-weighted confidence using the evidence table.
+
+    confidence = max(source_weight * recency * extraction_confidence)
+    across all evidence rows, with bonuses for:
+    - multiple independent source types (agreement_bonus)
+    - official identifiers present (id_bonus)
+
+    Falls back to 0.3 (legacy default) if no evidence rows exist.
+    """
+    from db import get_evidence_for_project
+    evidence_rows = get_evidence_for_project(conn, project_id)
+    if not evidence_rows:
+        return 0.3  # legacy default — no evidence yet
+
+    scores = []
+    for row in evidence_rows:
+        recency = _recency_factor(row.get('published_date') or row.get('extraction_date'))
+        weight = row.get('source_weight') or 0.5
+        ext_conf = row.get('confidence') or 0.5
+        scores.append(weight * recency * ext_conf)
+
+    base_score = max(scores)
+
+    # Agreement bonus: multiple independent source types
+    unique_types = set(r.get('source_type', 'unknown') for r in evidence_rows)
+    agreement_bonus = min(len(unique_types) * 0.03, 0.15)
+
+    # Identifier bonus: official IDs recorded in evidence
+    has_official_id = any(
+        r.get('field_claimed') in ('official_id', 'iaac', 'cer', 'provincial_ea',
+                                    'municipal_app', 'sedar', 'permit', 'filing')
+        for r in evidence_rows
+    )
+    id_bonus = 0.10 if has_official_id else 0.0
+
+    return min(round(base_score + agreement_bonus + id_bonus, 2), 1.0)
 
 
 def calculate_decay(last_seen, base_confidence):
@@ -92,13 +158,31 @@ def apply_confidence_decay(conn):
         import json
 
         projects = get_all_projects(conn)
+        recomputed = 0
         for data in projects:
             norm_key = data.get("norm_key", "")
             if not norm_key:
                 continue
 
             last_seen = data.get("lastSeen") or data.get("lastUpdated") or ""
-            base_conf = data.get("confidence", 0.3)
+
+            # Phase 5: recompute base confidence from evidence table
+            project_rowid = data.get("rowid")
+            if project_rowid:
+                new_conf = compute_confidence(project_rowid, conn)
+                if new_conf != data.get("confidence", 0.3):
+                    try:
+                        with conn:
+                            conn.execute(
+                                "UPDATE projects SET confidence = ? WHERE rowid = ?",
+                                (new_conf, project_rowid),
+                            )
+                        recomputed += 1
+                    except Exception as e:
+                        logger.debug(f"[DECAY] Confidence recompute failed for {norm_key}: {e}")
+                base_conf = new_conf
+            else:
+                base_conf = data.get("confidence", 0.3)
 
             result = calculate_decay(last_seen, base_conf)
 
@@ -182,7 +266,9 @@ def apply_confidence_decay(conn):
         if batch_count > 0:
             batch.commit()
 
+    recomputed_count = recomputed if hasattr(conn, 'execute') else 0
     print(f"  [DECAY] {total} projects processed: "
-          f"{decayed} decayed, {stale} stale, {review} need review")
+          f"{recomputed_count} recomputed, {decayed} decayed, {stale} stale, {review} need review")
 
-    return {"total": total, "decayed": decayed, "stale": stale, "needs_review": review}
+    return {"total": total, "recomputed": recomputed_count, "decayed": decayed,
+            "stale": stale, "needs_review": review}

@@ -405,7 +405,7 @@ def _load_media_feeds() -> dict[str, dict]:
 
     extra = {}
     # Process each media category
-    for category in ('cbc', 'ctv', 'global_news', 'postmedia', 'independent', 'wire_services', 'industry', 'regional_media', 'business_media', 'key_people'):
+    for category in ('cbc', 'ctv', 'global_news', 'postmedia', 'independent', 'wire_services', 'industry', 'regional_media', 'regional_media_fr', 'business_media', 'key_people', 'google_alerts', 'corporate_ir', 'corporate_epc', 'institutional'):
         feeds = data.get(category, [])
         for feed in feeds:
             if not feed.get('enabled', True):
@@ -578,6 +578,20 @@ def fetch_all_feeds(
                 dead += 1
 
     print(f"{len(all_items)} items from {alive}/{alive + dead} feeds")
+
+    # Record documents for fetch tracking
+    try:
+        from db import get_db, insert_document
+        conn = get_db()
+        for item in all_items:
+            insert_document(conn, item.get('url', ''),
+                            title=item.get('title', ''),
+                            source_tier='tier_4', source_type='rss_feed',
+                            published_date=item.get('published', ''))
+        conn.close()
+    except Exception:
+        pass
+
     return all_items
 
 

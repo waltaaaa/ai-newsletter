@@ -48,7 +48,7 @@ import rss_monitor
 from dotenv import load_dotenv
 from project_sync import upsert_projects, upsert_flat_projects
 from gov_sources import fetch_statcan_indicators, save_statcan_indicators, fetch_registry_projects
-from pipeline_config import OPUS_MODEL, SONNET_MODEL, GEMINI_MODEL, GEMINI_SEARCH_ENABLED
+from pipeline_config import SONNET_MODEL, GEMINI_MODEL, GEMINI_SEARCH_ENABLED, CLAUDE_COST_CAP_USD
 from citation_audit import (
     CITATION_RULES, run_citation_audit, save_audit_log,
 )
@@ -124,6 +124,18 @@ if _HAS_TAVILY and TAVILY_API_KEY:
 
 anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 gemini_client  = genai.Client(api_key=GEMINI_API_KEY)
+
+# ── Claude API cost tracking (per-run) ────────────────────────────────────────
+# Sonnet 4.6: $3/MTok input, $15/MTok output
+_CLAUDE_INPUT_COST_PER_MTOK = 3.0
+_CLAUDE_OUTPUT_COST_PER_MTOK = 15.0
+_claude_run_cost_usd = 0.0
+_claude_run_tokens = {"input": 0, "output": 0}
+
+
+class CostCapExceeded(Exception):
+    """Raised when Claude API cost exceeds the per-run cap."""
+    pass
 
 # Initialize SQLite connection
 conn = init_db()
@@ -461,8 +473,8 @@ def get_national_indicators() -> dict:
     obs_dates   = {}
     sources     = {'bocRate': 'BoC'}
 
-    # Batch fetch CPI + unemployment — n=14 gives 14 obs for prev-month YoY
-    wds_data = _statcan_wds([_CPI_VECTOR, _UNEMP_VECTOR], n=14)
+    # Batch fetch CPI + unemployment + employment rate + participation rate — n=14 for YoY
+    wds_data = _statcan_wds([_CPI_VECTOR, _UNEMP_VECTOR, _EMPRATE_VECTOR, _PARTRATE_VECTOR], n=14)
 
     # CPI (all-items) — YoY from index levels (obs[-1] vs obs[-13] = 12 months apart)
     cpi_obs = wds_data.get(_CPI_VECTOR, [])
@@ -500,6 +512,36 @@ def get_national_indicators() -> dict:
         except Exception:
             pass
 
+    # Employment rate — latest observation
+    emprate_obs = wds_data.get(_EMPRATE_VECTOR, [])
+    if emprate_obs:
+        try:
+            values['employmentRate']    = f"{float(emprate_obs[-1]['value']):.1f}%"
+            sources['employmentRate']   = 'StatCan'
+            obs_dates['employmentRate'] = emprate_obs[-1].get('refPer', '')
+        except Exception:
+            pass
+    if len(emprate_obs) >= 2:
+        try:
+            prev_values['employmentRate'] = f"{float(emprate_obs[-2]['value']):.1f}%"
+        except Exception:
+            pass
+
+    # Participation rate — latest observation
+    partrate_obs = wds_data.get(_PARTRATE_VECTOR, [])
+    if partrate_obs:
+        try:
+            values['participationRate']    = f"{float(partrate_obs[-1]['value']):.1f}%"
+            sources['participationRate']   = 'StatCan'
+            obs_dates['participationRate'] = partrate_obs[-1].get('refPer', '')
+        except Exception:
+            pass
+    if len(partrate_obs) >= 2:
+        try:
+            prev_values['participationRate'] = f"{float(partrate_obs[-2]['value']):.1f}%"
+        except Exception:
+            pass
+
     # Housing Starts — CMHC SAAR from CMHC monthly news release (direct source)
     starts = _cmhc_housing_starts()
     if starts is not None:
@@ -507,6 +549,7 @@ def get_national_indicators() -> dict:
         sources['housingStarts'] = 'CMHC'
 
     print(f"  CPI={values.get('cpi','N/A')}  Unemployment={values.get('unemployment','N/A')}  "
+          f"EmpRate={values.get('employmentRate','N/A')}  PartRate={values.get('participationRate','N/A')}  "
           f"HousingStarts={values.get('housingStarts','N/A')}")
     return {'values': values, 'prev_values': prev_values, 'obs_dates': obs_dates, 'sources': sources}
 
@@ -558,6 +601,40 @@ _PROV_GDP_VIDS = {
     "British Columbia":          62467264,
 }
 
+# ── Provincial employment rate — StatCan WDS vector IDs ──────────────────────
+# Table 14-10-0287-01 (PID 14100287): Employment rate, both sexes, 15 years+, SA
+_PROV_EMPRATE_VIDS = {
+    "Newfoundland and Labrador": 2062998,
+    "Prince Edward Island":      2063187,
+    "Nova Scotia":               2063376,
+    "New Brunswick":             2063565,
+    "Quebec":                    2063754,
+    "Ontario":                   2063943,
+    "Manitoba":                  2064132,
+    "Saskatchewan":              2064321,
+    "Alberta":                   2064510,
+    "British Columbia":          2064699,
+}
+
+# ── Provincial participation rate — StatCan WDS vector IDs ───────────────────
+# Table 14-10-0287-01 (PID 14100287): Participation rate, both sexes, 15 years+, SA
+_PROV_PARTRATE_VIDS = {
+    "Newfoundland and Labrador": 2062992,
+    "Prince Edward Island":      2063181,
+    "Nova Scotia":               2063370,
+    "New Brunswick":             2063559,
+    "Quebec":                    2063748,
+    "Ontario":                   2063937,
+    "Manitoba":                  2064126,
+    "Saskatchewan":              2064315,
+    "Alberta":                   2064504,
+    "British Columbia":          2064693,
+}
+
+# ── National employment and participation — StatCan WDS vector IDs ───────────
+_EMPRATE_VECTOR   = 2062809   # Table 14-10-0287-01, Employment rate Canada SA
+_PARTRATE_VECTOR  = 2062803   # Table 14-10-0287-01, Participation rate Canada SA
+
 # ── CMHC provincial housing starts abbreviation map ──────────────────────────
 # Matches abbreviations used in CMHC monthly news release tables
 _CMHC_PROV_ABBR = {
@@ -584,8 +661,9 @@ def get_provincial_indicators() -> dict:
     print("Fetching provincial indicators from StatCan WDS...")
     result = {}
 
-    # Batch 1: unemployment (10) + CPI (10) — n=14 for prev-month YoY on CPI
-    all_vids = list(_PROV_UNEMP_VIDS.values()) + list(_PROV_CPI_VIDS.values())
+    # Batch 1: unemployment (10) + CPI (10) + employment rate (10) + participation rate (10) — n=14
+    all_vids = (list(_PROV_UNEMP_VIDS.values()) + list(_PROV_CPI_VIDS.values())
+                + list(_PROV_EMPRATE_VIDS.values()) + list(_PROV_PARTRATE_VIDS.values()))
     data = _statcan_wds(all_vids, n=14)
 
     # Batch 2: provincial annual real GDP (10) — n=2 for current + prior year Y/Y
@@ -631,6 +709,46 @@ def get_provincial_indicators() -> dict:
                         prev_yoy = ((prev_latest - prev_year_ago) / prev_year_ago) * 100
                         updates['cpi_prev'] = f"+{prev_yoy:.1f}%" if prev_yoy >= 0 else f"{prev_yoy:.1f}%"
                 result.setdefault(prov, {}).update(updates)
+            except Exception:
+                pass
+
+    # Employment rate — latest value (SA, both sexes, 15+, Table 14-10-0287-01)
+    for prov, vid in _PROV_EMPRATE_VIDS.items():
+        obs = data.get(vid, [])
+        if obs:
+            try:
+                val = float(obs[-1]['value'])
+                if 30.0 <= val <= 80.0:
+                    updates = {
+                        'employmentRate':      f"{val:.1f}%",
+                        'employmentRate_src':  'StatCan',
+                        'employmentRate_date': obs[-1].get('refPer', ''),
+                    }
+                    if len(obs) >= 2:
+                        prev_val = float(obs[-2]['value'])
+                        if 30.0 <= prev_val <= 80.0:
+                            updates['employmentRate_prev'] = f"{prev_val:.1f}%"
+                    result.setdefault(prov, {}).update(updates)
+            except Exception:
+                pass
+
+    # Participation rate — latest value (SA, both sexes, 15+, Table 14-10-0287-01)
+    for prov, vid in _PROV_PARTRATE_VIDS.items():
+        obs = data.get(vid, [])
+        if obs:
+            try:
+                val = float(obs[-1]['value'])
+                if 40.0 <= val <= 80.0:
+                    updates = {
+                        'participationRate':      f"{val:.1f}%",
+                        'participationRate_src':  'StatCan',
+                        'participationRate_date': obs[-1].get('refPer', ''),
+                    }
+                    if len(obs) >= 2:
+                        prev_val = float(obs[-2]['value'])
+                        if 40.0 <= prev_val <= 80.0:
+                            updates['participationRate_prev'] = f"{prev_val:.1f}%"
+                    result.setdefault(prov, {}).update(updates)
             except Exception:
                 pass
 
@@ -1671,6 +1789,12 @@ If no valid projects are found, return: {{"projects": []}}
 SOURCE TEXT:
 {raw_text}"""
 
+    global _claude_run_cost_usd, _claude_run_tokens
+
+    if _claude_run_cost_usd >= CLAUDE_COST_CAP_USD:
+        print(f"    [COST CAP] ${_claude_run_cost_usd:.4f} >= ${CLAUDE_COST_CAP_USD:.2f} cap — skipping {context_label}")
+        return []
+
     for attempt in range(4):
         try:
             msg = anthropic_client.messages.create(
@@ -1679,6 +1803,15 @@ SOURCE TEXT:
                 system=system_prompt,
                 messages=[{"role": "user", "content": user_prompt}],
             )
+            # Track cost
+            in_tok = getattr(msg.usage, 'input_tokens', 0)
+            out_tok = getattr(msg.usage, 'output_tokens', 0)
+            _claude_run_tokens["input"] += in_tok
+            _claude_run_tokens["output"] += out_tok
+            call_cost = (in_tok * _CLAUDE_INPUT_COST_PER_MTOK + out_tok * _CLAUDE_OUTPUT_COST_PER_MTOK) / 1_000_000
+            _claude_run_cost_usd += call_cost
+            print(f"    [COST] {context_label}: {in_tok:,} in + {out_tok:,} out = ${call_cost:.4f} (run total: ${_claude_run_cost_usd:.4f}/${CLAUDE_COST_CAP_USD:.2f})")
+
             content = msg.content[0].text.strip()
             if content.startswith("```"):
                 parts = content.split("```")
@@ -1904,6 +2037,13 @@ def _enrich_source_urls(payload: dict):
 
 def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '') -> dict:
     """Call Claude with specified model and parse JSON. Falls back to Gemini on parse failure."""
+    global _claude_run_cost_usd, _claude_run_tokens
+
+    # ── Pre-call cost cap check ──────────────────────────────────────────────
+    if _claude_run_cost_usd >= CLAUDE_COST_CAP_USD:
+        print(f"    [COST CAP] ${_claude_run_cost_usd:.4f} >= ${CLAUDE_COST_CAP_USD:.2f} cap — skipping {label}")
+        return {}
+
     use_model = model or _CLAUDE_MODEL
     raw_content = ""
     for attempt in range(4):
@@ -1914,6 +2054,15 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
                 system=_CLAUDE_SYSTEM,
                 messages=[{"role": "user", "content": prompt}],
             )
+            # ── Track cost ───────────────────────────────────────────────
+            in_tok = getattr(msg.usage, 'input_tokens', 0)
+            out_tok = getattr(msg.usage, 'output_tokens', 0)
+            _claude_run_tokens["input"] += in_tok
+            _claude_run_tokens["output"] += out_tok
+            call_cost = (in_tok * _CLAUDE_INPUT_COST_PER_MTOK + out_tok * _CLAUDE_OUTPUT_COST_PER_MTOK) / 1_000_000
+            _claude_run_cost_usd += call_cost
+            print(f"    [COST] {label}: {in_tok:,} in + {out_tok:,} out = ${call_cost:.4f} (run total: ${_claude_run_cost_usd:.4f}/${CLAUDE_COST_CAP_USD:.2f})")
+
             raw_content = msg.content[0].text.strip()
             # Strip accidental markdown fences
             if raw_content.startswith("```"):
@@ -1927,15 +2076,9 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
                 print(f"    [CLAUDE JSON ERROR] {label} — trying Gemini repair...")
                 return _repair_with_gemini(raw_content, label)
             time.sleep(1)
+        except CostCapExceeded:
+            raise
         except Exception as e:
-            err_str = str(e).lower()
-            # Opus 404 → automatic Sonnet fallback (API key may lack Opus access)
-            if use_model == OPUS_MODEL and use_model != SONNET_MODEL and (
-                'not_found' in err_str or '404' in err_str or 'could not resolve' in err_str
-            ):
-                print(f"    [MODEL FALLBACK] {use_model} unavailable — switching to {SONNET_MODEL}")
-                use_model = SONNET_MODEL
-                continue  # retry immediately with Sonnet, don't burn an attempt
             if attempt == 3:
                 print(f"    [CLAUDE ERROR] {label}: {e}")
                 return {}
@@ -2142,7 +2285,7 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
                              rss_items: list[dict] | None = None) -> dict:
     """
     Four-call Claude pipeline with model routing:
-      Call 1: Macro — Claude Opus (executive_summary, national, global, globalVectors, watchlist)
+      Call 1: Macro — Claude Sonnet (executive_summary, national, global, globalVectors, watchlist)
       Call 2: Industries + Markets — Claude Sonnet (goodsIndustries, servicesIndustries, yieldCurve)
       Call 3: Provincial — Claude Sonnet (all 13 provinces with analysis, indicators, projects)
       Call 4: Project extraction — Claude Sonnet (structured project records)
@@ -2150,7 +2293,7 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
     Post-writing citation audit runs after each call.
     """
     print(f"\n[STEP 3] Claude analysis (4 calls, {len(articles)} articles)...")
-    print(f"  Models: Opus={OPUS_MODEL}, Sonnet={SONNET_MODEL}")
+    print(f"  Model: Sonnet={SONNET_MODEL}")
     today_str    = date.today().strftime('%B %d, %Y')
     hard_summary = _hard_data_summary(hard_data, rss_items)
 
@@ -2195,8 +2338,8 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
     # Collect citation audit results
     audit_results = []
 
-    # ── CALL 1: Macro Tab (OPUS) ────────────────────────────────
-    print(f"  [1/4] Macro Tab — exec summary, national, global, watchlist, consumer pulse (Opus)...")
+    # ── CALL 1: Macro Tab (SONNET) ───────────────────────────────
+    print(f"  [1/4] Macro Tab — exec summary, national, global, watchlist, consumer pulse (Sonnet)...")
 
     call1 = _call_claude(f"""Today: {today_str}
 
@@ -2284,7 +2427,7 @@ SCHEMA:
         {{"topic": "BoC rate hold", "sentiment_score": 0.2, "frequency": 7}},
         {{"topic": "housing affordability", "sentiment_score": -0.5, "frequency": 6}}
     ]
-}}""", "call1-macro", max_tokens=12000, model=OPUS_MODEL)
+}}""", "call1-macro", max_tokens=12000, model=SONNET_MODEL)
 
     # Citation audit for Call 1
     audit1 = run_citation_audit(call1 or {}, 'call1-macro', anthropic_client=anthropic_client)
@@ -3333,6 +3476,34 @@ def update_dashboard(deep_sweep: bool = False):
                 p.setdefault('discovery_source', 'institutional_capital')
             all_flat_projects.extend(institutional_projects)
 
+        # ── Rehash filter (Gemini Flash, free) ────────────────────────
+        try:
+            from gemini_engine import filter_rehashes_sync
+            existing = get_all_projects(conn)
+            if rss_items and existing:
+                pre_count = len(rss_items)
+                rss_items = filter_rehashes_sync(rss_items, existing)
+                if pre_count != len(rss_items):
+                    print(f"  [REHASH] RSS items: {pre_count} -> {len(rss_items)}")
+        except Exception as e:
+            print(f"  [REHASH] Filter failed (non-critical): {type(e).__name__}: {e}")
+
+        # ── Selective Claude extraction (top high-signal documents) ───
+        try:
+            from claude_reasoning import selective_extraction_sync
+            # Collect all articles that were classified as relevant this run
+            selective_docs = list(rss_items) if rss_items else []
+            if 'extracted_articles' in dir() and extracted_articles:
+                selective_docs.extend(extracted_articles)
+            if selective_docs:
+                print("\n[POST-EXTRACTION] Selective Claude extraction (high-signal docs)...")
+                selective_projects = selective_extraction_sync(selective_docs)
+                if selective_projects:
+                    all_flat_projects.extend(selective_projects)
+                    print(f"  [SELECTIVE] {len(selective_projects)} projects from selective extraction")
+        except Exception as e:
+            print(f"  [SELECTIVE] Extraction failed (non-critical): {type(e).__name__}: {e}")
+
         # ── Cross-tier deduplication ──────────────────────────────────
         if all_flat_projects:
             raw_count = len(all_flat_projects)
@@ -3968,6 +4139,12 @@ def update_dashboard(deep_sweep: bool = False):
             traceback.print_exc()
             run_log.log_error("json_export", e, recovered=True)
 
+        # ── Claude API cost summary ──────────────────────────────────────
+        print(f"\n[COST SUMMARY] Claude API: {_claude_run_tokens['input']:,} input + {_claude_run_tokens['output']:,} output tokens = ${_claude_run_cost_usd:.4f} (cap: ${CLAUDE_COST_CAP_USD:.2f})")
+        run_log.log_metric("api_usage", "claude_input_tokens", _claude_run_tokens["input"])
+        run_log.log_metric("api_usage", "claude_output_tokens", _claude_run_tokens["output"])
+        run_log.log_metric("api_usage", "claude_cost_usd", round(_claude_run_cost_usd, 4))
+
         run_log.finalize("success")
 
     except Exception as e:
@@ -4109,6 +4286,10 @@ if __name__ == "__main__":
         '--known-sweep', action='store_true',
         help='One-time comprehensive sweep for ALL active Canadian projects (no time constraint). Seeds 50+ known projects + runs ~200 Gemini queries.'
     )
+    parser.add_argument(
+        '--audit-archetypes', action='store_true',
+        help='Scan rejected articles for emerging archetype patterns (monthly/quarterly).'
+    )
     args = parser.parse_args()
 
     if args.test_sentiment:
@@ -4139,6 +4320,9 @@ if __name__ == "__main__":
         seed_known_projects(conn)
         result = run_known_project_sweep_sync(conn)
         print(f"\n[KNOWN-SWEEP] Complete: {result}")
+    elif args.audit_archetypes:
+        from archetype_audit import run_archetype_audit
+        run_archetype_audit(conn=conn, days=30)
     elif args.indicators_only:
         # Daily mode: hard-data refresh only (no AI calls, no project discovery)
         daily_log = PipelineRunLogger(conn=conn, run_type="daily_indicators")

@@ -150,7 +150,7 @@ def fetch_statcan_indicators() -> list[dict]:
 
             source    = str(ind.get('source') or '').strip()
             table_url = (
-                f"https://www150.statcan.gc.ca/t1/tbl1/en/table/0{source}-eng"
+                f"https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid={source}01"
                 if source else ''
             )
 
@@ -1873,6 +1873,21 @@ def fetch_registry_projects(tavily_client=None) -> list[dict]:
         time.sleep(1)
 
     all_projects = [p for p in all_projects if p.get('name') and len(p['name']) > 5]
+
+    # Record documents for fetch tracking
+    try:
+        from db import get_db, insert_document
+        conn = get_db()
+        for proj in all_projects:
+            src_url = proj.get('source_url', '')
+            if src_url:
+                insert_document(conn, src_url,
+                                title=proj.get('name', ''),
+                                source_tier='tier_1',
+                                source_type=proj.get('discovery_source', 'federal_registry'))
+        conn.close()
+    except Exception:
+        pass
 
     print(f"  [Registries] Total: {len(all_projects)} projects across all sources")
     return all_projects

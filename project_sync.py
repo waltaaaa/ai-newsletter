@@ -21,7 +21,95 @@ import re
 from datetime import date
 from difflib import SequenceMatcher
 from project_schema import normalize_project_type, is_brownfield
-from db import upsert_project, get_project, get_all_projects
+from db import (upsert_project, get_project, get_all_projects,
+                insert_evidence, insert_project_event,
+                resolve_organization, link_project_organization,
+                insert_project_identifier)
+
+
+def _get_project_rowid(conn, norm_key: str) -> int | None:
+    """Get the rowid for a project by its norm_key."""
+    row = conn.execute("SELECT rowid FROM projects WHERE norm_key = ?", (norm_key,)).fetchone()
+    return row[0] if row else None
+
+
+def _sync_evidence_and_org(conn, norm_key: str, project_dict: dict, existing: dict | None):
+    """Dual-write evidence to evidence table, insert events on changes, resolve org."""
+    project_id = _get_project_rowid(conn, norm_key)
+    if not project_id:
+        return
+
+    # Dual-write evidence rows
+    evidence = project_dict.get('evidence', [])
+    if isinstance(evidence, str):
+        import json
+        try:
+            evidence = json.loads(evidence)
+        except Exception:
+            evidence = []
+    discovery_source = project_dict.get('discovery_source', '')
+    for ev in evidence:
+        url = ev.get('url', '')
+        if url:
+            insert_evidence(conn, project_id, url,
+                            discovery_source=ev.get('source', discovery_source),
+                            published_date=ev.get('date', ''))
+
+    # Also add sources list as evidence
+    for src_url in (project_dict.get('sources') or []):
+        if isinstance(src_url, str) and src_url:
+            insert_evidence(conn, project_id, src_url,
+                            discovery_source=discovery_source)
+
+    # Insert events on status/value changes
+    if existing:
+        old_status = existing.get('status', '')
+        new_status = project_dict.get('status', old_status)
+        if new_status and new_status != old_status:
+            insert_project_event(conn, project_id, 'status_change',
+                                 status_before=old_status,
+                                 status_after=new_status,
+                                 summary=f"Status changed from {old_status} to {new_status}",
+                                 is_material=True)
+
+        old_value = existing.get('value', '')
+        new_value = project_dict.get('value', '')
+        if new_value and new_value != old_value and new_value != '\u2014':
+            insert_project_event(conn, project_id, 'cost_revision',
+                                 cost_before=old_value,
+                                 cost_after=new_value,
+                                 summary=f"Value changed from {old_value} to {new_value}")
+
+        if evidence:
+            insert_project_event(conn, project_id, 'new_evidence',
+                                 summary=f"{len(evidence)} evidence entries added")
+    else:
+        # New project — record announcement event
+        insert_project_event(conn, project_id, 'announcement',
+                             status_after=project_dict.get('status', 'Proposed'),
+                             summary='First tracked')
+
+    # Write official identifiers (Phase 5)
+    official_ids = project_dict.get('official_ids', {})
+    if isinstance(official_ids, str):
+        import json as _json
+        try:
+            official_ids = _json.loads(official_ids)
+        except Exception:
+            official_ids = {}
+    if isinstance(official_ids, dict):
+        source_url = project_dict.get('source_url', '')
+        for id_type, id_value in official_ids.items():
+            if id_value:
+                insert_project_identifier(conn, project_id, id_type,
+                                          str(id_value), source_url)
+
+    # Resolve organization
+    proponent = project_dict.get('proponent', '')
+    if proponent:
+        org_id = resolve_organization(conn, proponent)
+        if org_id:
+            link_project_organization(conn, project_id, org_id, 'proponent')
 
 
 def _to_numeric_confidence(val) -> float:
@@ -142,7 +230,8 @@ def upsert_projects(conn, provinces_data: list[dict]):
             }
 
             try:
-                upsert_project(conn, proj_dict)
+                norm_key = upsert_project(conn, proj_dict)
+                _sync_evidence_and_org(conn, norm_key, proj_dict, existing)
                 if existing is None:
                     new_count += 1
                     print(f"  [NEW] {prov_name}: {proj_name}")
@@ -223,7 +312,8 @@ def upsert_flat_projects(conn, projects: list[dict]):
         }
 
         try:
-            upsert_project(conn, proj_dict)
+            norm_key = upsert_project(conn, proj_dict)
+            _sync_evidence_and_org(conn, norm_key, proj_dict, existing)
             if existing is None:
                 new_count += 1
                 print(f"  [NEW] {prov_name}: {proj_name}")

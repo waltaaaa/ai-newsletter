@@ -63,6 +63,46 @@ _CAT_A = frozenset({
     'broadband', 'fibre', 'fiber', 'transmission line',
     'solar farm', 'wind farm', 'battery storage', 'ev charging',
     'hydrogen', 'carbon capture', 'ccs',
+    # Phase 1 additions — generic facility terms
+    'installation', 'complex', 'centre', 'center',
+    'hub', 'park', 'depot', 'station', 'works',
+    'building', 'structure',
+    # Generic action terms
+    'construct', 'develop', 'expand',
+    'modernize', 'renovate', 'demolish',
+    'commission',
+    # Generic scale terms
+    'mega', 'major', 'significant', 'largest', 'massive',
+    'world-class', 'state-of-the-art', 'first-of-its-kind',
+    # Milestone terms
+    'sod turning', 'financial close', 'fid', 'final investment decision',
+    # Data centres and digital
+    'hyperscale', 'colocation',
+    # Clean energy
+    'battery plant', 'gigafactory', 'ev factory', 'hydrogen plant',
+    'clean fuel', 'ccus', 'smr', 'small modular reactor',
+    # Defence
+    'shipbuilding', 'naval', 'military base', 'defence procurement',
+    # Tourism/culture
+    'convention centre', 'convention center',
+    'hotel development', 'resort',
+    # Agriculture/food
+    'food processing', 'grain terminal', 'canola crushing',
+    'fertilizer plant', 'agri-food', 'greenhouse',
+    # Phase 3 additions — redevelopment and real estate
+    'urban renewal', 'master plan', 'master-planned',
+    'condo tower', 'residential tower', 'office tower',
+    'commercial development', 'transit-oriented', 'rezoning', 'brownfield',
+    # Phase 3 — digital
+    'fibre optic', 'fiber optic', '5g tower',
+    # Phase 3 — milestone terms (also in Cat A for co-occurrence)
+    'groundbreaking', 'ribbon cutting',
+    'topping off', 'substantial completion',
+    # Phase 3 — French Cat A
+    'projet', 'investissement', 'agrandissement',
+    'usine', 'installation', 'infrastructure', 'développement',
+    'aménagement', 'réaménagement', 'mise en chantier',
+    'milliard', 'million de dollars',
 })
 
 # Category B: economic signal
@@ -90,6 +130,17 @@ _CAT_C = frozenset({
     'zoning amendment', 'official plan amendment',
     'notice of commencement', 'record of decision',
     'certificate of authorization', 'underway', 'under way',
+    # Phase 1 additions
+    'broke ground', 'shovels in ground', 'green light',
+    'given the go-ahead', 'received approval', 'regulatory approval',
+    'environmental assessment complete', 'building permit issued',
+    'construction permit', 'zoning approved', 'rezoning approved',
+    'fid reached', 'reached financial close', 'secured financing',
+    'awarded contract', 'contract awarded to',
+    # Phase 3 — French Cat C
+    'approuvé', 'approbation', 'autorisé', 'permis de construire',
+    'début des travaux', 'achèvement', 'inauguration',
+    'annulé', 'reporté', 'retardé',
 })
 
 # Dollar-value bypass regex: matches $X million/billion, C$X M/B,
@@ -99,6 +150,51 @@ _DOLLAR_RE = re.compile(
     r'|[\d,.]+\s*(?:million|billion|millions|milliards)\s*\$)',
     re.IGNORECASE,
 )
+
+
+# ── L2b bypass: Canadian location + any dollar mention ──
+
+_CANADIAN_PROVINCES = frozenset({
+    'ontario', 'quebec', 'québec', 'alberta', 'british columbia',
+    'saskatchewan', 'manitoba', 'nova scotia', 'new brunswick',
+    'newfoundland', 'labrador', 'prince edward island', 'pei',
+    'yukon', 'northwest territories', 'nunavut',
+    'canada', 'canadian',
+})
+
+_CANADIAN_CMAS = frozenset({
+    'toronto', 'montreal', 'montréal', 'vancouver', 'calgary',
+    'edmonton', 'ottawa', 'winnipeg', 'quebec city', 'hamilton',
+    'kitchener', 'waterloo', 'london', 'halifax', 'victoria',
+    'windsor', 'oshawa', 'saskatoon', 'regina', 'barrie',
+    'kelowna', 'abbotsford', 'sherbrooke', 'guelph', 'moncton',
+    'saint john', 'fredericton', 'sudbury', 'thunder bay',
+    'trois-rivières', 'brantford', 'peterborough', 'lethbridge',
+    'red deer', 'kamloops', "st. john's", 'charlottetown',
+    'gatineau', 'niagara', 'st. catharines',
+})
+
+_ALL_CANADIAN_LOCATIONS = _CANADIAN_PROVINCES | _CANADIAN_CMAS
+
+
+def _mentions_canadian_location(text: str) -> bool:
+    """Check if text mentions any Canadian province or CMA."""
+    text_lower = text.lower()
+    for loc in _ALL_CANADIAN_LOCATIONS:
+        if loc in text_lower:
+            return True
+    return False
+
+
+_ANY_DOLLAR_RE = re.compile(
+    r'\$\s*[\d,.]+|\d+\s*(?:million|billion|mil|bil|milliard)',
+    re.IGNORECASE,
+)
+
+
+def _has_any_dollar_mention(text: str) -> bool:
+    """Check if text contains any dollar figure (no minimum threshold)."""
+    return bool(_ANY_DOLLAR_RE.search(text))
 
 
 def _has_any(text: str, keywords: frozenset) -> bool:
@@ -137,10 +233,15 @@ def layer1_keyword_check(title: str, summary: str = '') -> bool:
     """
     text = (title + ' ' + summary).lower()
 
-    # Dollar-value bypass: any article mentioning ≥$1M is likely project-relevant
+    # L2: Dollar-value bypass: any article mentioning ≥$1M is likely project-relevant
     if _has_dollar_value(text):
         return True
 
+    # L2b: Any dollar mention + Canadian location → pass to L6 Gemini classification
+    if _has_any_dollar_mention(text) and _mentions_canadian_location(text):
+        return True
+
+    # L4: Keyword co-occurrence
     if not _has_any(text, _CAT_A):
         return False
     return _has_any(text, _CAT_B) or _has_any(text, _CAT_C)
@@ -242,6 +343,15 @@ RELEVANT means it describes ANY of these:
 - GOVERNMENT SPENDING: infrastructure funding announcements, procurement awards, P3 projects
 - INDUSTRIAL: mine development, refinery, pipeline, LNG terminal, manufacturing plant
 - ENERGY: solar farm, wind farm, battery storage, transmission line, hydrogen facility
+- DATA CENTRES: hyperscale, colocation, cloud infrastructure facilities
+- CLEAN ENERGY TRANSITION: carbon capture, CCUS, EV charging, biofuels, hydrogen
+- DEFENCE AND MILITARY: base construction, shipbuilding, military facility upgrades
+- WATER AND WASTEWATER: treatment plants, stormwater, flood protection
+- INSTITUTIONAL: museums, libraries, community centres, government buildings
+
+Be INCLUSIVE. If the article describes spending money to build or improve something physical in Canada, it is relevant. If uncertain, classify as RELEVANT.
+
+Do NOT reject articles because they describe a project type you haven't seen before. A "vertical farm," "quantum computing lab," "space launch facility," "modular housing factory," or "AI training data centre" are all relevant if they involve construction or capital investment in Canada.
 
 NOT_RELEVANT means:
 - Crime, court proceedings, sentencing, arrests
@@ -253,7 +363,21 @@ NOT_RELEVANT means:
 - Stories where a dollar figure is incidental (lawsuit settlement, fine, salary)
 - Opinion/editorial without specific project details
 
-Return ONLY a JSON array of the indices that are RELEVANT. Example: [0, 2, 5]
+Return a JSON array with one object per input article (same order as input). Each object must have:
+{
+  "index": <int>,
+  "is_relevant": <bool>,
+  "is_canadian": <bool>,
+  "is_project_related": <bool>,
+  "likely_province": "<two-letter code or null>",
+  "likely_sector": "<sector name or null>",
+  "likely_event_type": "<announcement|approval|construction_start|completion|funding|cancellation|null>",
+  "confidence": <float 0.0-1.0>,
+  "reasoning": "<one sentence>",
+  "has_dollar_value": <bool>,
+  "estimated_value_range": "<e.g. '100M-500M' or null>",
+  "likely_source_type": "<gov_newsroom|trade_publication|business_media|local_news|aggregator>"
+}
 
 """
 
@@ -262,11 +386,13 @@ def layer3_gemini_prescreen(
     articles: list[dict],
     batch_size: int = 20,
     gemini_client=None,
+    conn=None,
 ) -> list[int]:
     """
-    Layer 3: Gemini Flash batch classification.
+    Layer 3: Gemini Flash batch classification with structured JSON output.
     Returns list of indices (from the input list) that are RELEVANT.
 
+    When conn is provided, stores classification_json in documents table.
     Each article dict should have 'title' and optionally 'summary'.
     """
     if not articles:
@@ -294,15 +420,39 @@ def layer3_gemini_prescreen(
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type='application/json',
-                    max_output_tokens=512,
+                    max_output_tokens=2048,
                 ),
             )
             raw = response.text.strip()
-            indices = json.loads(raw)
-            if isinstance(indices, list):
-                for idx in indices:
-                    if isinstance(idx, int) and 0 <= idx < len(batch):
-                        relevant_indices.append(batch_start + idx)
+            parsed = json.loads(raw)
+
+            # Handle both formats: array of objects (new) or array of ints (legacy)
+            if isinstance(parsed, list):
+                for item in parsed:
+                    if isinstance(item, int):
+                        # Legacy format: plain index array
+                        if 0 <= item < len(batch):
+                            relevant_indices.append(batch_start + item)
+                    elif isinstance(item, dict):
+                        idx = item.get('index', -1)
+                        is_relevant = item.get('is_relevant', True)
+                        if 0 <= idx < len(batch) and is_relevant:
+                            relevant_indices.append(batch_start + idx)
+
+                        # Store classification in documents table
+                        if conn and 0 <= idx < len(batch):
+                            art = batch[idx]
+                            url = art.get('url') or art.get('link', '')
+                            if url:
+                                try:
+                                    from db import update_document_classification
+                                    update_document_classification(
+                                        conn, url, is_relevant,
+                                        json.dumps(item, ensure_ascii=False)
+                                    )
+                                except Exception:
+                                    pass
+
         except Exception as e:
             # On error, pass everything in this batch through
             print(f"  [Filter L3] Gemini pre-screen error: {type(e).__name__}")
@@ -321,6 +471,7 @@ def filter_articles(
     skip_layer1: bool = False,
     skip_layer2: bool = False,
     log_filtered: bool = True,
+    conn=None,
 ) -> list[dict]:
     """
     Run articles through the three-layer filter stack.
@@ -332,12 +483,28 @@ def filter_articles(
         skip_layer2: If True, skip negative keyword exclusion
                      (for infrastructure/procurement government feeds).
         log_filtered: If True, log rejected articles to filtered_{date}.txt.
+        conn: Optional SQLite connection for document dedup check.
 
     Returns:
         List of articles that passed all layers.
     """
     if not articles:
         return []
+
+    # Layer 0: Skip articles already processed in documents table
+    if conn:
+        try:
+            from db import is_already_processed
+            pre_count = len(articles)
+            articles = [
+                a for a in articles
+                if not is_already_processed(conn, a.get('url', a.get('link', '')))[0]
+            ]
+            skipped = pre_count - len(articles)
+            if skipped:
+                print(f"  [Filter L0] {skipped} already-processed URLs skipped")
+        except Exception:
+            pass
 
     initial_count = len(articles)
     filtered_out = []
@@ -362,9 +529,9 @@ def filter_articles(
                 filtered_out.append(('L2', art))
         articles = passed_l2
 
-    # Layer 3: Gemini batch pre-screen
+    # Layer 3: Gemini batch pre-screen (structured JSON output in Phase 5)
     if gemini_client and articles:
-        relevant_idx = layer3_gemini_prescreen(articles, gemini_client=gemini_client)
+        relevant_idx = layer3_gemini_prescreen(articles, gemini_client=gemini_client, conn=conn)
         relevant_set = set(relevant_idx)
         passed_l3 = []
         for i, art in enumerate(articles):

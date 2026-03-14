@@ -11,7 +11,7 @@
     "indices": [
       {
         "name": "S&P/TSX",
-        "value": "31,049",
+        "value": "32,542",
         "region": "Canada",
         "change": "",
         "day": "",
@@ -19,7 +19,7 @@
       },
       {
         "name": "S&P 500",
-        "value": "5,615",
+        "value": "6,632",
         "region": "USA",
         "change": "",
         "day": "",
@@ -27,7 +27,7 @@
       },
       {
         "name": "Dow Jones",
-        "value": "41,912",
+        "value": "46,558",
         "region": "USA",
         "change": "",
         "day": "",
@@ -35,7 +35,7 @@
       },
       {
         "name": "NASDAQ",
-        "value": "17,468",
+        "value": "22,105",
         "region": "USA",
         "change": "",
         "day": "",
@@ -43,7 +43,7 @@
       },
       {
         "name": "FTSE 100",
-        "value": "8,600",
+        "value": "10,261",
         "region": "UK",
         "change": "",
         "day": "",
@@ -51,7 +51,7 @@
       },
       {
         "name": "DAX",
-        "value": "22,621",
+        "value": "23,447",
         "region": "Germany",
         "change": "",
         "day": "",
@@ -59,7 +59,7 @@
       },
       {
         "name": "Nikkei 225",
-        "value": "39,819",
+        "value": "53,820",
         "region": "Japan",
         "change": "",
         "day": "",
@@ -69,25 +69,25 @@
     "fx": [
       {
         "name": "CAD/USD",
-        "value": "0.7000",
+        "value": "0.7300",
         "day": "",
         "yy": ""
       },
       {
         "name": "EUR/USD",
-        "value": "1.0900",
+        "value": "1.1400",
         "day": "",
         "yy": ""
       },
       {
         "name": "USD/CNY",
-        "value": "7.2300",
+        "value": "6.9000",
         "day": "",
         "yy": ""
       },
       {
         "name": "USD/JPY",
-        "value": "147.6100",
+        "value": "159.7200",
         "day": "",
         "yy": ""
       }
@@ -99,22 +99,29 @@
       "items": [
         {
           "name": "Crude Oil (WTI)",
-          "val": "66.03",
+          "val": "99.31",
           "unit": "bbl",
           "yy": "",
           "day": ""
         },
         {
           "name": "Crude Oil (Brent)",
-          "val": "69.28",
+          "val": "103.86",
           "unit": "bbl",
           "yy": "",
           "day": ""
         },
         {
           "name": "Natural Gas",
-          "val": "2.86",
+          "val": "3.132",
           "unit": "MMBtu",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Coal (Newcastle)",
+          "val": "96.0",
+          "unit": "t",
           "yy": "",
           "day": ""
         }
@@ -125,28 +132,28 @@
       "items": [
         {
           "name": "Gold",
-          "val": "2891.0",
+          "val": "5023.0",
           "unit": "troy oz",
           "yy": "",
           "day": ""
         },
         {
           "name": "Silver",
-          "val": "32.28",
+          "val": "80.64",
           "unit": "troy oz",
           "yy": "",
           "day": ""
         },
         {
           "name": "Platinum",
-          "val": "962.0",
+          "val": "2024.0",
           "unit": "troy oz",
           "yy": "",
           "day": ""
         },
         {
           "name": "Palladium",
-          "val": "1137.3",
+          "val": "1561.0",
           "unit": "troy oz",
           "yy": "",
           "day": ""
@@ -158,14 +165,14 @@
       "items": [
         {
           "name": "Copper",
-          "val": "4.64",
+          "val": "5.675",
           "unit": "lb",
           "yy": "",
           "day": ""
         },
         {
           "name": "Aluminum",
-          "val": "2651.0",
+          "val": "3426.0",
           "unit": "lb",
           "yy": "",
           "day": ""
@@ -177,21 +184,28 @@
       "items": [
         {
           "name": "Wheat",
-          "val": "537.75",
+          "val": "613.25",
           "unit": "bu",
           "yy": "",
           "day": ""
         },
         {
           "name": "Corn",
-          "val": "458.75",
+          "val": "467.0",
           "unit": "bu",
           "yy": "",
           "day": ""
         },
         {
+          "name": "Rice",
+          "val": "11.38",
+          "unit": "cwt",
+          "yy": "",
+          "day": ""
+        },
+        {
           "name": "Soybeans",
-          "val": "999.75",
+          "val": "1223.75",
           "unit": "bu",
           "yy": "",
           "day": ""
@@ -203,29 +217,48 @@
       "items": [
         {
           "name": "Coffee",
-          "val": "389.35",
+          "val": "285.15",
           "unit": "lb",
           "yy": "",
           "day": ""
         },
         {
           "name": "Cocoa",
-          "val": "8279.0",
+          "val": "3298.0",
           "unit": "t",
           "yy": "",
           "day": ""
         },
         {
           "name": "Sugar #11",
-          "val": "18.85",
+          "val": "14.41",
           "unit": "lb",
           "yy": "",
           "day": ""
         },
         {
           "name": "Cotton",
-          "val": "66.0",
+          "val": "65.72",
           "unit": "lb",
+          "yy": "",
+          "day": ""
+        }
+      ]
+    },
+    {
+      "category": "Agriculture - Oils & Meals",
+      "items": [
+        {
+          "name": "Soybean Oil",
+          "val": "67.43",
+          "unit": "lb",
+          "yy": "",
+          "day": ""
+        },
+        {
+          "name": "Soybean Meal",
+          "val": "322.2",
+          "unit": "ton",
           "yy": "",
           "day": ""
         }
@@ -236,7 +269,7 @@
       "items": [
         {
           "name": "Lumber",
-          "val": "384.9",
+          "val": "560.0",
           "unit": "MBF",
           "yy": "",
           "day": ""
@@ -247,15 +280,15 @@
   "yieldCurve": [
     {
       "term": "2Y",
-      "yield": "2.44"
+      "yield": "2.82"
     },
     {
       "term": "5Y",
-      "yield": "2.75"
+      "yield": "3.09"
     },
     {
       "term": "10Y",
-      "yield": "3.22"
+      "yield": "3.52"
     }
   ]
 }

@@ -56,11 +56,95 @@ UNIVERSITY_SOURCES = [
      "url": "https://www.sait.ca/about-sait"},
     {"name": "George Brown College", "province": "ON", "cma": "Toronto",
      "url": "https://www.georgebrown.ca/about"},
-    # ── Healthcare research institutions ─────────────────────────────────────
+    # ── Additional polytechnics ──────────────────────────────────────────────
+    {"name": "Seneca Polytechnic", "province": "ON", "cma": "Toronto",
+     "url": "https://www.senecapolytechnic.ca/about/media.html"},
+    {"name": "Humber College", "province": "ON", "cma": "Toronto",
+     "url": "https://humber.ca/about/news.html"},
+    {"name": "Algonquin College", "province": "ON", "cma": "Ottawa-Gatineau",
+     "url": "https://www.algonquincollege.com/public-relations/"},
+    {"name": "Fanshawe College", "province": "ON", "cma": "London",
+     "url": "https://www.fanshawec.ca/about-fanshawe/news"},
+    {"name": "Mohawk College", "province": "ON", "cma": "Hamilton",
+     "url": "https://www.mohawkcollege.ca/about-mohawk/media-room"},
+    {"name": "Conestoga College", "province": "ON", "cma": "Kitchener-Cambridge-Waterloo",
+     "url": "https://www.conestogac.on.ca/about/news"},
+    {"name": "Red River College Polytechnic", "province": "MB", "cma": "Winnipeg",
+     "url": "https://www.rrc.ca/news/"},
+    {"name": "Saskatchewan Polytechnic", "province": "SK", "cma": "Saskatoon",
+     "url": "https://saskpolytech.ca/about/news/"},
+    {"name": "NAIT", "province": "AB", "cma": "Edmonton",
+     "url": "https://www.nait.ca/nait/about/news-events"},
+    # ── Healthcare institutions ────────────────────────────────────────────
     {"name": "SickKids Hospital — Project Horizon", "province": "ON", "cma": "Toronto",
      "url": "https://www.sickkids.ca/en/about/project-horizon/"},
     {"name": "MUHC (McGill University Health Centre)", "province": "QC", "cma": "Montreal",
      "url": "https://muhc.ca/"},
+    {"name": "University Health Network", "province": "ON", "cma": "Toronto",
+     "url": "https://www.uhn.ca/corporate/News/"},
+    {"name": "Sunnybrook Health Sciences Centre", "province": "ON", "cma": "Toronto",
+     "url": "https://sunnybrook.ca/media/"},
+    {"name": "Hamilton Health Sciences", "province": "ON", "cma": "Hamilton",
+     "url": "https://www.hamiltonhealthsciences.ca/news/"},
+    {"name": "CHUM (Centre hospitalier de l'Université de Montréal)", "province": "QC", "cma": "Montreal",
+     "url": "https://www.chumontreal.qc.ca/nouvelles"},
+    {"name": "BC Children's Hospital", "province": "BC", "cma": "Vancouver",
+     "url": "https://www.bcchildrens.ca/about/news-stories"},
+    {"name": "Alberta Health Services", "province": "AB", "cma": "Calgary",
+     "url": "https://www.albertahealthservices.ca/news/"},
+    {"name": "Saskatchewan Health Authority", "province": "SK", "cma": "Saskatoon",
+     "url": "https://www.saskhealthauthority.ca/news/"},
+    {"name": "Eastern Health (NL)", "province": "NL", "cma": "St. John's",
+     "url": "https://www.easternhealth.ca/news/"},
+    {"name": "IWK Health Centre", "province": "NS", "cma": "Halifax",
+     "url": "https://www.iwk.nshealth.ca/news"},
+    # ── Transit agencies ───────────────────────────────────────────────────
+    {"name": "Metrolinx", "province": "ON", "cma": "Toronto",
+     "url": "https://www.metrolinx.com/en/news"},
+    {"name": "TransLink", "province": "BC", "cma": "Vancouver",
+     "url": "https://www.translink.ca/news"},
+    {"name": "STM (Société de transport de Montréal)", "province": "QC", "cma": "Montreal",
+     "url": "https://www.stm.info/en/press-room"},
+    {"name": "OC Transpo (Ottawa)", "province": "ON", "cma": "Ottawa-Gatineau",
+     "url": "https://www.octranspo.com/en/news/"},
+    {"name": "Calgary Transit", "province": "AB", "cma": "Calgary",
+     "url": "https://www.calgarytransit.com/content/transit/en/home/news.html"},
+    {"name": "Edmonton Transit Service", "province": "AB", "cma": "Edmonton",
+     "url": "https://www.edmonton.ca/ets/ets-news"},
+    {"name": "Winnipeg Transit", "province": "MB", "cma": "Winnipeg",
+     "url": "https://info.winnipegtransit.com/en/"},
+    # ── Airport authorities ────────────────────────────────────────────────
+    {"name": "Greater Toronto Airports Authority", "province": "ON", "cma": "Toronto",
+     "url": "https://www.torontopearson.com/en/corporate/media"},
+    {"name": "Vancouver Airport Authority", "province": "BC", "cma": "Vancouver",
+     "url": "https://www.yvr.ca/en/media"},
+    {"name": "Aéroports de Montréal", "province": "QC", "cma": "Montreal",
+     "url": "https://www.admtl.com/en/news"},
+    {"name": "Calgary Airport Authority", "province": "AB", "cma": "Calgary",
+     "url": "https://www.yyc.com/en/media"},
+    {"name": "Edmonton International Airport", "province": "AB", "cma": "Edmonton",
+     "url": "https://flyeia.com/corporate/media"},
+    {"name": "Ottawa International Airport", "province": "ON", "cma": "Ottawa-Gatineau",
+     "url": "https://yow.ca/en/corporate/media"},
+    {"name": "Winnipeg Airport Authority", "province": "MB", "cma": "Winnipeg",
+     "url": "https://www.waa.ca/media"},
+    {"name": "Halifax Stanfield International Airport", "province": "NS", "cma": "Halifax",
+     "url": "https://halifaxstanfield.ca/news"},
+    # ── Port authorities ───────────────────────────────────────────────────
+    {"name": "Vancouver Fraser Port Authority", "province": "BC", "cma": "Vancouver",
+     "url": "https://www.portvancouver.com/news-and-media/"},
+    {"name": "Port of Montreal", "province": "QC", "cma": "Montreal",
+     "url": "https://www.port-montreal.com/en/news"},
+    {"name": "Port of Halifax", "province": "NS", "cma": "Halifax",
+     "url": "https://www.portofhalifax.ca/news/"},
+    {"name": "Port of Saint John", "province": "NB", "cma": "Saint John",
+     "url": "https://www.sjport.com/news"},
+    {"name": "Port of Hamilton-Oshawa", "province": "ON", "cma": "Hamilton",
+     "url": "https://www.hopaports.ca/news/"},
+    {"name": "Port of Thunder Bay", "province": "ON", "cma": "Thunder Bay",
+     "url": "https://www.portofthunderbay.com/news/"},
+    {"name": "Port of Prince Rupert", "province": "BC", "cma": "Prince Rupert",
+     "url": "https://www.rupertport.com/news/"},
 ]
 
 # Dollar regex for extracting values from page text
@@ -79,6 +163,20 @@ def _parse_dollar(text: str) -> float | None:
     if m.group(2).lower().startswith('b'):
         return num * 1000
     return num
+
+
+def _naics_for_source(name: str) -> str:
+    """Return NAICS code based on institution name."""
+    low = name.lower()
+    if any(k in low for k in ("hospital", "health", "sickkids", "muhc", "chum", "iwk")):
+        return "62"
+    if any(k in low for k in ("transit", "metrolinx", "translink", "stm", "oc transpo")):
+        return "48-49"
+    if any(k in low for k in ("airport", "pearson", "yvr", "yyc", "yow", "stanfield")):
+        return "48-49"
+    if any(k in low for k in ("port of", "port authority")):
+        return "48-49"
+    return "61"
 
 
 def scrape_institutional_capital() -> list[dict]:
@@ -161,8 +259,8 @@ def _extract_projects_from_page(soup, source: dict) -> list[dict]:
             "name": display_name,
             "province": source["province"],
             "cma": source.get("cma", ""),
-            "sector": "61",  # Education (NAICS 61) or 62 for healthcare
-            "naics_code": "62" if "hospital" in source["name"].lower() or "health" in source["name"].lower() else "61",
+            "sector": _naics_for_source(source["name"]),
+            "naics_code": _naics_for_source(source["name"]),
             "tags": [],
             "value": f"${value:.0f}M",
             "value_millions": value,

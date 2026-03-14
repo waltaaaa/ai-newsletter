@@ -24,23 +24,17 @@ TODAY = date.today().isoformat()
 # MODEL ROUTING
 # ══════════════════════════════════════════════════════════════════════════════
 #
-# Opus 4.5 — Flagship writing only (~$7/year)
-#   Executive summary (500w), national analysis (500w), global vectors (300w x4),
-#   indicator context lines. Paragraph-length prose where narrative quality matters.
+# Claude Sonnet 4.6 — ALL reasoning and writing (~$55/year)
+#   Executive summary, national analysis, global vectors, indicator context,
+#   industry/provincial analysis, project extraction, citation checks,
+#   gap analysis, extraction recovery, dedup QA, signal investigation.
 #
-# Sonnet 4.5 — Extraction + secondary writing + citation checks (~$25/year)
-#   Project extraction from GDELT articles and RSS press releases.
-#   Provincial writing (bullets). Industry writing (bullets). Citation spot-checks.
-#   Catches 10-15% more projects than Flash on ambiguous extraction.
+# Gemini 2.5 Flash — Mechanical high-volume tasks (FREE)
+#   Classification, extraction, JSON repair, rehash detection.
 #
-# Gemini 2.5 Flash — Mechanical high-volume tasks (~$5/year)
-#   Wayback snapshot parsing, JSON repair, unsourced claims detection.
-#   Structured extraction at 10x lower cost.
-#
-# No AI — All API calls, URL verification, Wayback archival, RSS monitoring,
-#   deduplication, status normalization, threshold filtering, assembly, Firestore writes.
+# No AI — All API calls, URL verification, RSS monitoring,
+#   deduplication, status normalization, threshold filtering, assembly, writes.
 
-OPUS_MODEL   = os.environ.get('OPUS_MODEL',   'claude-opus-4-6')
 SONNET_MODEL = os.environ.get('SONNET_MODEL', 'claude-sonnet-4-6')
 GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')
 
@@ -396,3 +390,8 @@ PERPLEXITY_ENABLED = os.environ.get('PERPLEXITY_ENABLED', 'true').lower() == 'tr
 GDELT_MAX_ARTICLES       = int(os.environ.get('GDELT_MAX_ARTICLES', '195'))
 RSS_MAX_ARTICLES         = int(os.environ.get('RSS_MAX_ARTICLES', '100'))
 WAYBACK_MAX_SNAPSHOTS_SEED = int(os.environ.get('WAYBACK_MAX_SNAPSHOTS_SEED', '800'))
+
+# Claude API cost cap per pipeline run (USD).
+# Sonnet 4.6 pricing: $3/MTok input, $15/MTok output.
+# Normal run ≈ $0.80-1.20 (4 calls). Cap prevents runaway costs.
+CLAUDE_COST_CAP_USD = float(os.environ.get('CLAUDE_COST_CAP_USD', '4.00'))

@@ -93,7 +93,7 @@ def backfill_statcan(conn, years=5):
         'unemployment_national': '2062815',
         # Provincial unemployment
         'unemployment_NL': '2063004',
-        'unemployment_PEI': '2063193',
+        'unemployment_PE': '2063193',
         'unemployment_NS': '2063382',
         'unemployment_NB': '2063571',
         'unemployment_QC': '2063760',
@@ -104,7 +104,7 @@ def backfill_statcan(conn, years=5):
         'unemployment_BC': '2064705',
         # Provincial CPI
         'cpi_NL': '41690914',
-        'cpi_PEI': '41690915',
+        'cpi_PE': '41690915',
         'cpi_NS': '41690916',
         'cpi_NB': '41690917',
         'cpi_QC': '41690918',
@@ -113,6 +113,68 @@ def backfill_statcan(conn, years=5):
         'cpi_SK': '41690921',
         'cpi_AB': '41690922',
         'cpi_BC': '41690923',
+        # National employment & participation rates
+        'employment_rate_national': '2062809',
+        'participation_rate_national': '2062803',
+        # Provincial employment rate
+        'employment_rate_NL': '2062998',
+        'employment_rate_PE': '2063187',
+        'employment_rate_NS': '2063376',
+        'employment_rate_NB': '2063565',
+        'employment_rate_QC': '2063754',
+        'employment_rate_ON': '2063943',
+        'employment_rate_MB': '2064132',
+        'employment_rate_SK': '2064321',
+        'employment_rate_AB': '2064510',
+        'employment_rate_BC': '2064699',
+        # Provincial participation rate
+        'participation_rate_NL': '2062992',
+        'participation_rate_PE': '2063181',
+        'participation_rate_NS': '2063370',
+        'participation_rate_NB': '2063559',
+        'participation_rate_QC': '2063748',
+        'participation_rate_ON': '2063937',
+        'participation_rate_MB': '2064126',
+        'participation_rate_SK': '2064315',
+        'participation_rate_AB': '2064504',
+        'participation_rate_BC': '2064693',
+        # Quarterly real GDP
+        'realGdp_national': '62305752',
+        # GDP by industry (20 NAICS, monthly)
+        'gdp_agriculture': '65201229',
+        'gdp_mining_og': '65201236',
+        'gdp_utilities': '65201254',
+        'gdp_construction': '65201258',
+        'gdp_manufacturing': '65201263',
+        'gdp_wholesale': '65201358',
+        'gdp_retail': '65201368',
+        'gdp_transportation': '65201381',
+        'gdp_information': '65201398',
+        'gdp_finance': '65201407',
+        'gdp_real_estate': '65201419',
+        'gdp_professional': '65201429',
+        'gdp_management': '65201441',
+        'gdp_admin_waste': '65201442',
+        'gdp_education': '65201452',
+        'gdp_healthcare': '65201457',
+        'gdp_entertainment': '65201463',
+        'gdp_accommodation': '65201468',
+        'gdp_other_services': '65201471',
+        'gdp_public_admin': '65201476',
+        # Provincial GDP (annual)
+        'gdp_NL': '62464519',
+        'gdp_PE': '62464824',
+        'gdp_NS': '62465129',
+        'gdp_NB': '62465434',
+        'gdp_QC': '62465739',
+        'gdp_ON': '62466044',
+        'gdp_MB': '62466349',
+        'gdp_SK': '62466654',
+        'gdp_AB': '62466959',
+        'gdp_BC': '62467264',
+        # Housing-related
+        'housingStarts_national': '735337',
+        'building_permits': '735391',
     }
 
     total = 0
@@ -151,10 +213,14 @@ def backfill_statcan(conn, years=5):
                     })
 
             # Determine province from indicator name
+            PROV_CODES = ('NL', 'PE', 'NS', 'NB', 'QC', 'ON', 'MB', 'SK', 'AB', 'BC')
             parts = indicator_name.split('_')
-            if len(parts) >= 2 and parts[-1] in ('NL', 'PEI', 'NS', 'NB', 'QC', 'ON', 'MB', 'SK', 'AB', 'BC'):
+            if len(parts) >= 2 and parts[-1] in PROV_CODES:
                 province = parts[-1]
                 base_indicator = '_'.join(parts[:-1])
+            elif indicator_name.endswith('_national'):
+                province = 'national'
+                base_indicator = indicator_name.replace('_national', '')
             else:
                 province = 'national'
                 base_indicator = indicator_name
@@ -168,14 +234,23 @@ def backfill_statcan(conn, years=5):
                 if not obs_date or val == '' or val is None:
                     continue
 
+                # Determine frequency and unit from indicator type
+                freq = 'monthly'
+                unit = '%'
+                if 'realGdp' in indicator_name or indicator_name.startswith('gdp_') and not indicator_name.startswith('gdp_agriculture'):
+                    freq = 'quarterly' if 'realGdp' in indicator_name or indicator_name.startswith('gdp_') and indicator_name.split('_')[-1] in PROV_CODES else 'monthly'
+                    unit = '$M'
+                if indicator_name == 'housingStarts_national' or indicator_name == 'building_permits':
+                    unit = 'units'
+
                 save_indicator(conn, {
                     'indicator': base_indicator,
                     'province': province,
                     'date': obs_date,
                     'value': str(val),
-                    'unit': '%',
+                    'unit': unit,
                     'source': 'Statistics Canada WDS',
-                    'frequency': 'monthly',
+                    'frequency': freq,
                     'backfilled': True,
                 })
                 count += 1
@@ -207,6 +282,7 @@ def backfill_yahoo(conn, years=5):
         'gold': 'GC=F',
         'lumber': 'LBS=F',
         'tsx_composite': '^GSPTSE',
+        'tsx': '^GSPTSE',
         'cadusd': 'CADUSD=X',
         'natural_gas': 'NG=F',
         'copper': 'HG=F',

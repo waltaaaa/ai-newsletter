@@ -39,7 +39,7 @@ except ImportError:
 # ---------------------------------------------------------------------------
 _UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) CAN-Macro-Dashboard/1.0"
 _GDELT_TIMEOUT = (15, 60)   # (connect_s, read_s)
-_BAIL_THRESHOLD = 3         # consecutive failures before declaring API unreachable
+_BAIL_THRESHOLD = 8         # consecutive failures before declaring API unreachable
 
 # GDELT API base URL — use HTTP because port 443 (HTTPS) can be TCP-blocked by ISPs
 # while port 80 (HTTP) remains accessible. The API supports both protocols.
@@ -189,6 +189,66 @@ _CATCHALL_SEARCHES = [
     ("Canada construction procurement contract awarded billion",        "project"),
 ]
 
+# Section F: Archetype national queries (18)
+_ARCHETYPE_NATIONAL = [
+    ("Canada redevelopment construction",          "project"),
+    ("Canada mixed-use development",               "project"),
+    ("Canada transit LRT construction",            "project"),
+    ("Canada hospital construction expansion",     "project"),
+    ("Canada arena stadium construction",          "project"),
+    ("Canada university campus construction",      "project"),
+    ("Canada mine approved construction",          "project"),
+    ("Canada wind farm solar construction",        "project"),
+    ("Canada pipeline transmission approved",      "project"),
+    ("Canada LNG petrochemical plant",             "project"),
+    ("Canada manufacturing factory plant",         "project"),
+    ("Canada data centre construction",            "project"),
+    ("Canada airport port expansion",              "project"),
+    ("Canada water treatment construction",        "project"),
+    ("Canada military defence construction",       "project"),
+    ("Canada Indigenous development project",      "project"),
+    ("Canada hydrogen carbon capture",             "project"),
+    ("Canada museum library construction",         "project"),
+]
+
+# Section G: Archetype provincial queries (top 5 archetypes per province)
+_ARCHETYPE_PROV_KEYWORDS = [
+    "redevelopment construction",
+    "hospital construction",
+    "transit construction",
+    "manufacturing plant",
+    "clean energy project",
+]
+
+def _build_archetype_prov_searches() -> list[tuple[str, str]]:
+    out = []
+    for prov in _PROVINCE_NAMES:
+        for kw in _ARCHETYPE_PROV_KEYWORDS:
+            out.append((f"{prov} {kw}", "project"))
+    return out
+
+# Section H: Archetype CMA queries (2 per CMA)
+_ARCHETYPE_CMA_KEYWORDS = [
+    "construction project",
+    "development investment",
+]
+
+def _build_archetype_cma_searches() -> list[tuple[str, str]]:
+    out = []
+    for cma in _CMA_NAMES:
+        for kw in _ARCHETYPE_CMA_KEYWORDS:
+            out.append((f"{cma} {kw}", "project"))
+    return out
+
+# Section I: French archetype queries (5)
+_FRENCH_ARCHETYPE_SEARCHES = [
+    ('"projet investissement" Quebec OR Montréal',          "project"),
+    ('"construction" "milliard" Québec',                    "project"),
+    ('"mise en chantier" Québec OR Montréal',               "project"),
+    ('"agrandissement usine" Québec',                       "project"),
+    ('"infrastructure" projet Québec approuvé',             "project"),
+]
+
 # Economy searches (retained for context, not project discovery)
 _ECONOMY_SEARCHES = [
     ("Canada economy",                      "economy"),
@@ -282,13 +342,17 @@ def fetch_gdelt_articles(days_back: int = 7, include_economy: bool = True) -> li
         print("  [GDELT] gdeltdoc package not available — skipping GDELT searches.")
         return []
 
-    # Build the reduced query set (~200 project + 8 economy)
+    # Build the full query set (~343 project + 8 economy)
     all_searches = (
-        _build_province_searches()     # 65
-        + _build_cma_searches()        # 60
-        + _build_sector_searches()     # 40
-        + _build_company_searches()    # 30
-        + list(_CATCHALL_SEARCHES)     # 5
+        _build_province_searches()          # 65
+        + _build_cma_searches()             # 60
+        + _build_sector_searches()          # 40
+        + _build_company_searches()         # 30
+        + list(_CATCHALL_SEARCHES)          # 5
+        + list(_ARCHETYPE_NATIONAL)         # 18
+        + _build_archetype_prov_searches()  # 65
+        + _build_archetype_cma_searches()   # 60
+        + list(_FRENCH_ARCHETYPE_SEARCHES)  # 5
     )
     if include_economy:
         all_searches += list(_ECONOMY_SEARCHES)  # 8
@@ -335,6 +399,19 @@ def fetch_gdelt_articles(days_back: int = 7, include_economy: bool = True) -> li
     n_ca      = sum(1 for a in unique if any(dom in a['domain'] for dom in _CA_DOMAINS))
     print(f"  [GDELT] {len(unique)} unique articles "
           f"(project={n_project}, economy={n_economy}, Canadian={n_ca})")
+
+    # Record documents for fetch tracking
+    try:
+        from db import get_db, insert_document
+        conn = get_db()
+        for art in unique:
+            insert_document(conn, art.get('url', ''),
+                            title=art.get('title', ''),
+                            source_tier='tier_3', source_type='gdelt',
+                            published_date=art.get('seendate', ''))
+        conn.close()
+    except Exception:
+        pass
 
     return unique
 
