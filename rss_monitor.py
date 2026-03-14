@@ -443,7 +443,7 @@ def _load_media_feeds() -> dict[str, dict]:
             }
 
     if google_alert_total > 0 and google_alert_placeholder == google_alert_total:
-        logger.info("[Tier 12] Skipped — no Google Alert feeds configured")
+        print("[Tier 12] Skipped — no Google Alert feeds configured")
 
     return extra
 

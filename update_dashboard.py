@@ -454,7 +454,7 @@ if __name__ == "__main__":
         daily_log.start()
         print("\n[DAILY MODE] Fetching hard indicators only...")
         try:
-            from gov_sources import fetch_primary_indicators
+            from phases.data_collection import fetch_primary_indicators
             indicators = fetch_primary_indicators()
             daily_log.log_step("fetch_indicators")
             if indicators:

@@ -3,10 +3,14 @@ Local LLM inference via llama-cpp-python.
 Drop-in replacement for gemini_engine.py classification and extraction tasks.
 Uses a quantized 3B parameter model — no API key, no quota, no network calls.
 """
-from llama_cpp import Llama
 import json
 import os
 import logging
+
+try:
+    from llama_cpp import Llama
+except ImportError:
+    Llama = None
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +20,8 @@ _model = None
 def get_model():
     """Lazy-load the model on first call. Stays in memory for the run."""
     global _model
+    if Llama is None:
+        return None
     if _model is None:
         model_path = os.environ.get(
             "LOCAL_MODEL_PATH",
