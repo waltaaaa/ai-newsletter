@@ -1,0 +1,49 @@
+# Google Alerts — Discovery Configuration Extract
+# Source: google_alerts.py
+# Total: 22 recommended alerts (manual setup at google.com/alerts)
+# Status: RECOMMENDED_ALERTS defined but GOOGLE_ALERT_FEEDS is EMPTY (no feeds configured yet)
+
+## Recommended Alert Queries (22)
+
+### High-value catch-all (4)
+1. billion_project_ca:     "billion dollar" project Canada construction
+2. hundred_million_ca:     "hundred million" project Canada construction
+3. major_project_approved: "major project" approved Canada
+4. construction_begins:    "construction begins" Canada million
+
+### Brownfield / adaptive reuse (4)
+5. redevelopment_ca:         "redevelopment" million Canada project
+6. adaptive_reuse_ca:        "adaptive reuse" Canada project
+7. conversion_residential:   "conversion" residential Canada project
+8. revitalization_ca:        "revitalization" Canada million
+
+### Sector-specific (9)
+9.  mine_approved_ca:         "mine" approved Canada
+10. pipeline_approved:        "pipeline" approved Canada
+11. lng_project_ca:           "LNG" project Canada
+12. data_centre_ca:           "data centre" Canada construction
+13. battery_plant_ca:         "battery plant" Canada
+14. smr_ca:                   "SMR" "small modular reactor" Canada
+15. transit_extension:        "transit" extension Canada approved
+16. hospital_construction:    "hospital" construction Canada million
+17. affordable_housing:       "affordable housing" construction Canada million
+
+### French (3)
+18. projet_majeur_qc:    "projet majeur" construction Canada million
+19. reamenagement_qc:    "réaménagement" Québec million
+20. construction_qc:     "construction" approuvé Québec million
+
+### Status changes (2)
+21. project_delayed:    "project delayed" Canada construction
+22. cost_overrun:       "cost overrun" Canada project
+
+### NOT LISTED but referenced in code:
+23. project_cancelled:  "project cancelled" Canada construction
+
+## Configuration Settings
+- Delivery: RSS feed
+- Sources: News + Web
+- Language: English (French for QC alerts)
+- Region: Canada
+- Frequency: As-it-happens
+- Results: All results

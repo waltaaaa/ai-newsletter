@@ -1,0 +1,68 @@
+# Key People Tracker — Discovery Configuration Extract
+# Source: key_people_tracker.py
+# Integration: RSS feeds processed through government bypass (skip L1+L2 filters)
+
+## Federal Officials (5 with active RSS)
+
+### 1. Prime Minister of Canada
+- RSS: https://pm.gc.ca/en/news/rss
+- Relevance: Federal infrastructure spending, housing policy, trade policy, Indigenous reconciliation
+
+### 2. Minister of Finance
+- RSS: https://api.io.canada.ca/io-server/gc/news/en/v2?dept=departmentfinance&sort=publishedDate&orderBy=desc&publishedDate%3E=2021-07-23&pick=50&format=atom&atomtitle=Department%20of%20Finance%20Canada
+- Relevance: Federal budget, tax incentives, economic policy
+
+### 3. Minister of Housing and Infrastructure
+- RSS: https://api.io.canada.ca/io-server/gc/news/en/v2?dept=officeinfrastructure&sort=publishedDate&orderBy=desc&publishedDate%3E=2021-07-23&pick=50&format=atom&atomtitle=Infrastructure%20Canada
+- Relevance: Infrastructure funding, housing programs, HAF, ACLA
+
+### 4. Minister of Energy and Natural Resources
+- RSS: https://api.io.canada.ca/io-server/gc/news/en/v2?dept=naturalresourcescanada&sort=publishedDate&orderBy=desc&publishedDate%3E=2021-07-23&pick=50&format=atom&atomtitle=Natural%20Resources%20Canada
+- Relevance: Energy projects, mining approvals, critical minerals strategy
+
+### 5. Minister of Transport
+- RSS: https://api.io.canada.ca/io-server/gc/news/en/v2?dept=departmentoftransport&sort=publishedDate&orderBy=desc&publishedDate%3E=2021-07-23&pick=50&format=atom&atomtitle=Transport%20Canada
+- Relevance: Port expansions, airport upgrades, rail projects, CER decisions
+
+## Provincial Premiers (13 with RSS — all have feeds)
+1.  Ontario:                https://news.ontario.ca/en/rss
+2.  Quebec:                 https://www.quebec.ca/nouvelles/rss
+3.  Alberta:                https://www.alberta.ca/release.cfm?xID=894838DC5D411-C981-BAB5-C04B78F2CCFE3B39
+4.  British Columbia:       https://news.gov.bc.ca/feed
+5.  Saskatchewan:           https://www.saskatchewan.ca/rss
+6.  Manitoba:               https://news.gov.mb.ca/news/rss
+7.  Nova Scotia:            https://novascotia.ca/news/rss/
+8.  New Brunswick:          https://www2.gnb.ca/content/gnb/en/news.rss
+9.  Newfoundland & Labrador: https://www.gov.nl.ca/releases/feed/
+10. PEI:                    https://www.princeedwardisland.ca/en/news/rss.xml
+11. Yukon:                  https://yukon.ca/en/news/rss.xml
+12. NWT:                    https://www.gov.nt.ca/en/newsroom/rss.xml
+13. Nunavut:                https://gov.nu.ca/news/feed
+
+## Mayors (15 — NO RSS feeds configured)
+Toronto, Montreal, Vancouver, Calgary, Edmonton,
+Ottawa, Winnipeg, Quebec City, Hamilton, Halifax,
+Saskatoon, Regina, St. John's, Fredericton, Charlottetown
+
+## Crown Corp Leaders (6 — NO RSS feeds configured)
+1. CEO of Canada Infrastructure Bank — CIB investment decisions
+2. CEO of CMHC — Housing programs, affordable housing funding
+3. President of Metrolinx (ON) — Ontario transit projects
+4. CEO of Hydro-Québec (QC) — Quebec energy projects
+5. CEO of BC Hydro (BC) — BC energy projects, Site C
+6. President of VIA Rail — HFR project
+
+## Announcement Keywords (37)
+announce, invest, fund, approve, construction, build,
+project, million, billion, infrastructure, development,
+redevelopment, expansion, renovation, transit, housing,
+hospital, school, mine, pipeline, facility, plant,
+breaking ground, shovels in the ground, green light,
+budget, capital plan, economic statement,
+# French:
+annoncer, investir, financer, approuver, construction,
+projet, millions, milliards, infrastructure
+
+## Total Active RSS Feeds: 18 (5 federal + 13 premiers)
+## Total People Tracked: 39 (5 federal + 13 premiers + 15 mayors + 6 crown corp)
+## Feeds without RSS: 21 (15 mayors + 6 crown corp leaders)

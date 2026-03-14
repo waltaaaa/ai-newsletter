@@ -1,0 +1,79 @@
+# Capacity Queries — Discovery Configuration Extract
+# Source: capacity_queries.py
+# Used by: capacity_scheduler.py (fills remaining Gemini budget after main pipeline)
+# Total: ~115 queries (15 T2 + 50 T3 + 25 T5 + 25 T6)
+
+## Province Map (with GDP thresholds)
+ON: Ontario ($500M), QC: Quebec ($250M), AB: Alberta ($200M),
+BC: British Columbia ($175M), SK: Saskatchewan ($45M),
+MB: Manitoba ($40M), NS: Nova Scotia ($25M), NB: New Brunswick ($20M),
+NL: Newfoundland and Labrador ($17M), PE: Prince Edward Island ($5M),
+YT: Yukon ($3M), NT: Northwest Territories ($3M), NU: Nunavut ($3M)
+
+## Tier 2: Provincial Broad Sweeps (15 queries)
+- 13 English sweeps (one per province) — cross-sector, value ≥ threshold
+- 2 French sweeps (QC at $250M, NB at $20M)
+- Query pattern: "List ALL major capital projects in {province}..."
+- All sectors covered in each query
+
+## Tier 3: CMA Deep Dives (50 queries)
+### Top 10 CMAs × 3 sector cuts = 30 queries
+CMAs: Toronto, Montreal, Vancouver, Calgary, Edmonton,
+      Ottawa-Gatineau, Winnipeg, Quebec City, Hamilton, Halifax
+
+Sector cuts:
+1. Cleantech and data centres (data centre, AI, EV battery, hydrogen, solar, wind, carbon capture)
+2. Affordable housing and residential (affordable, rental, social, supportive, student, seniors, mixed-use)
+3. Institutional healthcare and education (hospital, LTC, medical, university, college, school, research, lab)
+
+### 20 Medium CMAs × 1 broad sweep = 20 queries
+CMAs: Kitchener-Waterloo, Victoria, Saskatoon, Regina, St. John's,
+      London, Windsor, Oshawa-Durham, Barrie, Kelowna,
+      Moncton, Saint John, Sudbury, Thunder Bay, Lethbridge,
+      Red Deer, Nanaimo, Kamloops, Brantford, Guelph
+
+## Tier 5: Federal & Interprovincial (25 queries)
+### Cross-border infrastructure (4):
+1. Interprovincial pipelines
+2. Electricity transmission interconnections
+3. Interprovincial rail (HFR, HSR)
+4. Interprovincial highways and bridges (border crossings, Trans-Canada)
+
+### Federal programs (6):
+5. Federal government buildings ($100M+, Parliament, military, corrections, border)
+6. Military procurement (CSC, AOPS, fighter jets, base construction)
+7. Coast Guard, icebreakers, marine infrastructure
+8. Canada Infrastructure Bank projects (transit, broadband, clean power)
+9. Housing (HAF, ACLP, CMHC programs)
+10. Indigenous infrastructure (clean water, housing, schools, broadband, cultural centres)
+
+### Additional federal (8):
+11. Broadband/rural connectivity (Universal Broadband Fund)
+12. Clean energy (ITC, Strategic Innovation Fund, Net Zero Accelerator)
+13. Port and airport expansions
+14. Water and wastewater infrastructure
+15. Public transit (Permanent Transit Fund, CCBF)
+16. Research/innovation facilities (synchrotrons, supercomputing)
+17. Nuclear projects (SMR, uranium processing, refurbishments)
+18. Dam safety, flood mitigation, climate adaptation
+
+### French federal (1):
+19. Broad federal projects (FR)
+
+## Tier 6: Emerging Sector Watchlists (25 queries)
+### English (12):
+1. Data centres (hyperscale, AI, colocation)
+2. EV battery manufacturing (gigafactories, cathode/anode, recycling)
+3. Critical minerals processing (lithium, nickel, cobalt, graphite, rare earth)
+4. SMR and nuclear energy (sites, fuel, refurbishments, waste)
+5. Hydrogen and CCUS (blue/green hydrogen, CO2 pipelines)
+6. Semiconductor fabrication (wafer fab, photonics, quantum computing)
+7. Broadband/fibre (UBF, undersea cables, satellite ground stations)
+8. LNG terminals (East/West Coast, floating LNG)
+9. Large-scale renewables ($100M+: offshore wind, solar, pumped hydro, BESS, geothermal, tidal)
+10. Mass timber/modular construction (CLT plants, modular factories)
+11. Gap detection (limited media coverage projects, smaller provinces, rural, Indigenous, niche)
+12. Indigenous infrastructure (First Nations, Inuit, Métis: housing, water, energy, schools, health)
+
+### French (1):
+13. Data centres, EV batteries, critical minerals, hydrogen in QC/East (FR)

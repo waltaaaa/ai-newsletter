@@ -328,8 +328,9 @@ def get_boc_rate() -> dict:
         prev = f"{float(obs[0]['V39079']['v']):.2f}%" if len(obs) >= 2 else ''
         date_str = obs[-1].get('d', '')
         return {'rate': rate, 'prev': prev, 'date': date_str}
-    except Exception:
-        return {'rate': '2.75%', 'prev': '', 'date': ''}
+    except Exception as e:
+        print(f"  [WARN] BoC rate fetch failed: {e}")
+        return {'rate': None, 'prev': '', 'date': ''}
 
 
 def _boc_series(series_id: str, recent: int = 1) -> str | None:
@@ -3141,7 +3142,7 @@ def update_dashboard(deep_sweep: bool = False):
         hard_data = {
             'commodities':       commodity_data,
             'financial_markets': financial_markets,
-            'boc_rate':          boc_data['rate'],
+            'boc_rate':          boc_data['rate'] or 'N/A',
             'rss_items':         rss_items,
         }
         run_log.log_step("step_1_hard_data")
@@ -3254,13 +3255,23 @@ def update_dashboard(deep_sweep: bool = False):
             days_back=days_back,
             include_media=True,
             gemini_client=gemini_client,
-        ) if not rss_items else rss_items  # use existing if already fetched
+        )
         # Note: rss_items was already fetched at STEP 1 for context;
         # rss_filtered adds media feeds + three-layer filter for project extraction
 
         # ── STEP 3: Claude Sonnet analysis ────────────────────────
         final_payload = generate_claude_analysis(hard_data, extracted_articles, rss_items)
         run_log.log_step("step_3_claude_analysis")
+
+        # ── Guard: abort if Claude returned nothing useful ────────
+        _REQUIRED_KEYS = {'overview', 'provinces', 'industries'}
+        _missing = _REQUIRED_KEYS - set(final_payload or {})
+        if not final_payload or _missing:
+            msg = f"Claude analysis empty or missing critical keys: {_missing or 'empty dict'}"
+            print(f"  [CRITICAL] {msg}")
+            run_log.log_error("step_3_claude_analysis", RuntimeError(msg), recovered=False)
+            final_payload.setdefault('_analysis_incomplete', True)
+            final_payload.setdefault('_analysis_error', msg)
 
         # ── STEP 4a: Inject authoritative hard data (overrides AI) ─
         final_payload['commodities']      = commodity_data['structured']
@@ -3271,7 +3282,7 @@ def update_dashboard(deep_sweep: bool = False):
 
         # ── STEP 4b: National metrics — API or N/A, never AI ───────
         m = final_payload.setdefault('metrics', {})
-        m['bocRate'] = boc_data['rate']
+        m['bocRate'] = boc_data['rate'] or 'N/A'
         nat_src = {'bocRate': 'BoC'}
         # Fields that MUST come from a primary API (or N/A — never AI-estimated)
         for field, src_key in [('cpi', 'cpi'), ('unemployment', 'unemployment'),
@@ -4011,7 +4022,7 @@ def update_dashboard(deep_sweep: bool = False):
         save_statcan_indicators(conn, statcan_inds)
 
         # ── STEP 6: Timeseries ─────────────────────────────────────
-        append_to_timeseries(final_payload, financial_markets, boc_data['rate'])
+        append_to_timeseries(final_payload, financial_markets, boc_data['rate'] or 'N/A')
 
         # ── Edition string ─────────────────────────────────────────
         toronto_tz = pytz.timezone('America/Toronto')
@@ -4075,7 +4086,10 @@ def update_dashboard(deep_sweep: bool = False):
         # Store newsletter payload as dashboard_state entries
         save_dashboard_state(conn, 'newsletter_latest', final_payload)
         save_dashboard_state(conn, f'newsletter_{dated_id}', final_payload)
-        print("[OK] Dashboard successfully updated.")
+        if final_payload.get('_analysis_incomplete'):
+            print("[WARN] Dashboard updated with INCOMPLETE analysis — Claude calls failed.")
+        else:
+            print("[OK] Dashboard successfully updated.")
         run_log.log_step("step_7_firestore_push")
 
         # ── STEP 8: Quality Report ─────────────────────────────────
@@ -4358,7 +4372,4 @@ if __name__ == "__main__":
                 daily_log.finalize("partial")
         except Exception as e:
             print(f"[ERROR] Daily indicators failed: {e}")
-            daily_log.log_error("daily_indicators", e, recovered=False)
-            daily_log.finalize("error")
-    else:
-        update_dashboard(deep_sweep=args.deep_sweep)
+        

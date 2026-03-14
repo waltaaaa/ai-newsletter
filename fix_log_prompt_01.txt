@@ -1,0 +1,11 @@
+All four bugs have already been fixed:
+
+1. **dashboard.db not committed** — Both workflows already have `git add docs/ dashboard.db` and the VACUUM step (lines 44-52 in both files).
+
+2. **RSS filter inverted conditional** — The code at line 3254 now calls `rss_monitor.fetch_and_filter()` unconditionally, no longer gated by the inverted `if not rss_items` check.
+
+3. **BoC rate hardcoded fallback** — Line 333 returns `{'rate': None, 'prev': '', 'date': ''}` on failure, not a hardcoded `2.75%`.
+
+4. **Empty Claude payload** — Lines 3267-3274 check for missing critical keys (`overview`, `provinces`, `industries`), log a CRITICAL error, and set `_analysis_incomplete: True` + `_analysis_error` on the payload.
+
+All four fixes are already in place in the current codebase. No changes needed.

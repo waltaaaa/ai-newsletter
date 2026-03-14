@@ -1,0 +1,57 @@
+Google Alerts Setup — CAN-MACRO Strategic Dashboard
+====================================================
+
+Go to https://www.google.com/alerts and create each alert below.
+
+Settings for EACH alert:
+  - How often: As-it-happens
+  - Sources: News
+  - Language: English (or French for Quebec alerts)
+  - Region: Canada
+  - How many: All results
+  - Deliver to: RSS feed  <-- IMPORTANT: select "RSS feed", NOT email
+
+After creating each alert, copy the RSS feed URL and paste it into
+rss_feeds.json under the "google_alerts" category, replacing
+"PASTE_FEED_URL_HERE" for the matching entry. Then set "enabled": true.
+
+====================================================
+NATIONAL ALERTS (25)
+====================================================
+
+1.  "major project" Canada construction
+2.  "billion dollar" project Canada
+3.  "investment" "new facility" Canada
+4.  "construction" "approved" Canada infrastructure
+5.  Canada "data centre" OR "data center" construction
+6.  Canada "mine" approved OR construction OR expansion
+7.  Canada pipeline project approved OR construction
+8.  Canada "wind farm" OR "solar farm" approved OR construction
+9.  Canada "transit" expansion OR construction project
+10. Canada LNG terminal OR export facility
+11. Canada "housing" development "million" OR "billion"
+12. Canada "manufacturing" plant new OR expansion
+13. Canada "hospital" OR "university" construction expansion
+14. Canada "airport" expansion OR terminal
+15. Canada "port" expansion OR terminal
+16. Canada "military" OR "defence" facility project
+17. Canada "nuclear" project OR reactor OR SMR
+18. Canada "battery" plant OR "EV" factory
+19. Canada "semiconductor" OR "chip" facility
+20. Canada "broadband" OR "fibre" infrastructure
+21. "redevelopment" OR "revitalization" Canada downtown project
+22. Canada "mixed-use" development "million" OR "billion"
+23. Canada Indigenous project construction investment
+24. Canada "critical minerals" mine OR processing
+25. "infrastructure bank" Canada project approved OR funded
+
+====================================================
+PROVINCIAL ALERTS (6)
+====================================================
+
+26. Ontario "major project" construction OR approved
+27. Quebec "projet" construction OR investissement
+28. Alberta "major project" construction OR approved
+29. British Columbia "major project" construction OR approved
+30. Saskatchewan "major project" construction OR investment
+31. Manitoba "major project" construction OR investment

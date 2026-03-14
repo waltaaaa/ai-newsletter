@@ -1,0 +1,35 @@
+# Lobbyist Registries — Discovery Configuration Extract
+# Source: lobbyist_registries.py (Tier 10)
+# Type: Signal detection (investigation queries, not confirmed projects)
+
+## Data Source
+- ZIP URL: https://lobbycanada.gc.ca/media/zwcjycef/registrations_enregistrements_ocl_cal.zip
+- Format: CSV inside ZIP archive
+- Method: Download → unzip in memory → CSV parse
+- Filter: Recent registrations only (year ≥ 2025)
+- Max signals: 50
+
+## Project Keywords (27)
+construction, infrastructure, facility, plant, mine,
+pipeline, refinery, terminal, development, project,
+environmental assessment, permit, approval, licence,
+expansion, remediation, transit, highway, bridge,
+port, airport, housing, energy, nuclear, lng,
+broadband, data centre, data center
+
+## Relevant Subject Matter Categories (10)
+infrastructure, environment, energy, mining,
+transport, housing, defence, science and technology,
+natural resources, industry
+
+## Sector Inference Rules
+- Oil/gas/pipeline/LNG/refinery → Energy
+- Mine/mining/mineral → Mining
+- Nuclear/wind/solar/hydro/hydrogen/carbon → Clean Energy
+- Transit/rail/subway/LRT → Transit & Rail
+- Highway/bridge/road/infrastructure → Infrastructure
+- Housing/residential/affordable → Housing
+- Hospital/health/medical → Healthcare
+- Defence/defense/military → Defence
+- Port/terminal/airport → Ports & Logistics
+- Default → Infrastructure

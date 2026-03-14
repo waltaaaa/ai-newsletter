@@ -1,0 +1,125 @@
+# Government Sources — Registry Configuration Extract
+# Source: gov_sources.py (Tiers 1, 5, 6, 7, 8)
+# Total: 19 scrapers in fetch_registry_projects()
+
+## Federal Registries (8)
+
+### 1. IAAC (Impact Assessment Agency of Canada)
+- URL: https://iaac-aeic.gc.ca/050/evaluations/exploration?culture=en-CA
+- Method: HTML scrape (requires Chrome-like User-Agent)
+- Output: discovery_source='iaac_registry'
+
+### 2. BC EAO (Environmental Assessment Office)
+- URL: https://www.projects.eao.gov.bc.ca/api/v2/projects?&fields=name,eacDecision,status,proponent,sector,region,description&pageSize=200
+- Method: JSON API
+- Output: discovery_source='provincial_ea'
+
+### 3. Infrastructure Canada
+- API: https://infrastructure.gc.ca/alt-format/opendata/project-list-liste-de-projets-bil.json
+- Page: https://www.infrastructure.gc.ca/gmap-gcarte/index-eng.html
+- Method: JSON download (severely malformed — custom parser)
+- Output: discovery_source='infrastructure_canada'
+
+### 4. CanadaBuys (BuyAndSell)
+- URL: https://canadabuys.canada.ca/opendata/pub/contractHistoryComplete-contratsOctroyesComplet.csv
+- Method: CSV stream download
+- Filter: amendment_value > $50M, infrastructure keywords
+- Output: discovery_source='buyandsell'
+
+### 5. NRCan Major Projects Inventory
+- Page: https://natural-resources.canada.ca/science-and-data/data-and-analysis/major-projects-inventory/22218
+- XLSX: https://ftp.maps.canada.ca/pub/nrcan_rncan/Natural-resources_Ressources-naturelles/major_projects_inventory/MPI_2024_Active_Projects_en.xlsx
+- Method: HTML scrape + Tavily fallback
+- Output: discovery_source='nrcan'
+
+### 6. Canada Energy Regulator (CER)
+- URL: https://www.cer-rec.gc.ca/en/applications-hearings/view-applications-projects/
+- Method: HTML scrape (link extraction)
+- Output: discovery_source='cer_registry'
+
+### 7. Ontario Environmental Registry (ERO)
+- URL: https://ero.ontario.ca/search
+- Method: HTML scrape
+- Output: discovery_source='provincial_ea'
+
+### 8. Canada Infrastructure Bank (CIB)
+- Method: HTML scrape (Metrolinx sub-scraper)
+- Output: discovery_source='crown_corp'
+
+## Provincial EA Registries (9)
+
+### 9. QC BAPE (Bureau d'audiences publiques sur l'environnement)
+- URL: https://www.bape.gouv.qc.ca/fr/dossiers/
+- Method: HTML scrape + Tavily fallback
+- Output: discovery_source='provincial_ea'
+
+### 10. AB EA (Alberta Environmental Impact Assessments)
+- Current: https://www.alberta.ca/environmental-impact-assessments-current-projects
+- Historical: https://www.alberta.ca/environmental-impact-assessments-historical-projects
+- Method: HTML scrape
+- Output: discovery_source='provincial_ea'
+
+### 11. SK EA (Saskatchewan Environmental Assessment)
+- URL: https://www.saskatchewan.ca/business/environmental-protection-and-sustainability/environmental-assessment/environmental-assessment-projects
+- Method: HTML scrape + Tavily fallback
+- Output: discovery_source='provincial_ea'
+
+### 12. MB EA (Manitoba Environmental Assessment)
+- URL: https://www.gov.mb.ca/sd/eal/registries/
+- Method: HTML scrape
+- Output: discovery_source='provincial_ea'
+
+### 13. NS EA (Nova Scotia Environmental Assessment)
+- URL: https://novascotia.ca/nse/ea/projects.asp
+- Method: HTML scrape
+- Output: discovery_source='provincial_ea'
+
+### 14. NB EIA (New Brunswick Environmental Impact Assessment)
+- URL: https://www2.gnb.ca/content/gnb/en/departments/elg/environment/content/environmental_impactassessment.html
+- Method: HTML scrape (follows sub-page links)
+- Output: discovery_source='provincial_ea'
+
+### 15. NL EA (Newfoundland Environmental Assessment)
+- URL: https://www.gov.nl.ca/ecc/env-assessment/projects-list/
+- Method: HTML scrape
+- Output: discovery_source='provincial_ea'
+
+### 16. YESAB (Yukon Environmental and Socio-economic Assessment)
+- URL: https://yesabregistry.ca/projects
+- Method: Tavily extraction + HTML scrape fallback
+- Output: discovery_source='provincial_ea'
+
+### 17. MVRB (Mackenzie Valley Review Board — NWT)
+- URL: https://new.reviewboard.ca/en/registry
+- Method: HTML scrape + Tavily fallback
+- Output: discovery_source='provincial_ea'
+
+## Securities & Crown Corps (2)
+
+### 18. SEDAR+ (Securities Filings)
+- URL: https://www.sedarplus.ca/csa-party/records/record.html?lang=en
+- Method: Tavily extraction (site blocks automated requests)
+- Keywords: 43-101, technical report, feasibility, material change, construction, mine, project
+- Output: discovery_source='sedar_filings'
+
+### 19. Metrolinx Project Tracker
+- URL: https://www.metrolinx.com/en/projects-and-programs
+- Method: HTML scrape (Next.js __NEXT_DATA__) + Tavily fallback
+- Output: discovery_source='crown_corp'
+
+## Province Coverage Summary
+| Province | EA Registry | Municipal Apps | Status |
+|----------|------------|----------------|--------|
+| BC       | BC EAO (JSON API) | Vancouver (CKAN) | Active |
+| AB       | AB EA (HTML) | Calgary, Edmonton (Socrata) | Active |
+| SK       | SK EA (HTML) | Saskatoon, Regina (HTML) | Active |
+| MB       | MB EA (HTML) | Winnipeg (Socrata) | Active |
+| ON       | Ontario ERO (HTML) | Toronto, Ottawa, Hamilton (HTML) | Active |
+| QC       | QC BAPE (HTML) | Montreal, Quebec City (HTML) | Active |
+| NS       | NS EA (HTML) | Halifax (HTML) | Active |
+| NB       | NB EIA (HTML) | Fredericton (HTML) | Active |
+| NL       | NL EA (HTML) | St. John's (HTML) | Active |
+| PE       | —           | Charlottetown (HTML) | No EA scraper |
+| YT       | YESAB (HTML) | — | No municipal |
+| NT       | MVRB (HTML) | — | No municipal |
+| NU       | —           | — | No EA scraper, no municipal |

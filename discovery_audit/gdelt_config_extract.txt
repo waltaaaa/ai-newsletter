@@ -1,0 +1,95 @@
+# GDELT Monitor — Discovery Configuration Extract
+# Source: gdelt_monitor.py
+# Total: ~200 queries (65 province + 60 CMA + 40 sector + 30 company + 5 catchall + 8 economy)
+
+## API Settings
+- Base URL: http://api.gdeltproject.org/api/v2/doc/doc (HTTP only — HTTPS blocked by ISP)
+- User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) CAN-Macro-Dashboard/1.0
+- Timeout: (15s connect, 60s read)
+- Bail threshold: 3 consecutive failures → skip remaining
+- Rate limit: 0.5s between queries
+
+## Canadian Domain Priority List (30 domains)
+globeandmail.com, theglobeandmail.com, nationalpost.com,
+financialpost.com, cbc.ca, thestar.com, torontostar.com,
+calgaryherald.com, vancouversun.com, montrealgazette.com,
+ottawacitizen.com, edmontonjournal.com, ledevoir.com,
+lapresse.ca, biv.com, ctvnews.ca, business.financialpost.com,
+therecord.com, theconversation.com, ipolitics.ca,
+constructioncanada.net, dailycommercialnews.com,
+mining.com, miningweekly.com, northernminer.com,
+oilandgas360.com, rigzone.com, energynow.ca,
+rcinet.ca, macleans.ca, canadianbusiness.com
+
+## Section A: Province Catch-All (13 × 5 = 65 queries)
+### Provinces:
+Ontario, Quebec, Alberta, British Columbia, Saskatchewan,
+Manitoba, Nova Scotia, New Brunswick, Newfoundland Labrador,
+Prince Edward Island, Yukon, Northwest Territories, Nunavut
+
+### Keywords (each province × each keyword):
+1. "major project construction billion approved"
+2. "capital investment facility expansion million"
+3. "redevelopment revitalization mixed-use project"
+4. "infrastructure transit bridge highway project"
+5. "new facility plant mine announced approved"
+
+## Section B: CMA Queries (30 × 2 = 60 queries)
+### CMAs:
+Toronto, Montreal, Vancouver, Calgary, Edmonton,
+Ottawa, Winnipeg, Quebec City, Hamilton, Kitchener Waterloo,
+London Ontario, Halifax, Victoria BC, Windsor Ontario, Oshawa,
+Saskatoon, Regina, St Catharines Niagara, Barrie Ontario, Kelowna,
+Abbotsford, Sherbrooke, Guelph, Moncton, Saint John NB,
+St Johns NL, Fredericton, Saguenay, Trois-Rivieres, Brantford
+
+### Keywords (each CMA × each keyword):
+1. "major development project construction"
+2. "redevelopment expansion approved million"
+
+## Section C: Sector Queries (20 × 2 = 40 queries)
+### Sectors:
+Agriculture forestry, Mining oil gas, Utilities power, Construction,
+Manufacturing plant, Wholesale trade, Retail trade, Transportation warehousing,
+Information technology, Finance insurance, Real estate, Professional services,
+Management companies, Waste management, Education university,
+Healthcare hospital, Arts entertainment, Accommodation food, Other services,
+Public administration government
+
+### Keywords (each sector × each keyword):
+1. "Canada project construction investment 2025 2026"
+2. "Canada facility expansion billion million"
+
+## Section D: Top Company Queries (30)
+TC Energy Canada project, Enbridge pipeline project, TransAlta power project,
+Brookfield Canada development, CPPIB infrastructure project,
+SNC-Lavalin Canada project, Aecon Group Canada project,
+EllisDon construction Canada, PCL Construction Canada project,
+Tridel development Toronto, Concord Pacific Vancouver project,
+Mattamy Homes development, Dream Unlimited Canada project,
+Fortis Canada energy project, Ontario Power Generation nuclear,
+Cameco uranium Canada, Teck Resources mine project,
+Nutrien potash expansion, Lundin Mining Canada,
+Samsung Canada EV battery plant, Stellantis Canada plant,
+Volkswagen Canada battery plant, Honda Canada facility,
+Amazon Canada warehouse, Google Canada data center,
+Microsoft Canada data center, Hydro-Quebec project,
+CDPQ Infra Canada project, Devimco Montreal development,
+Bird Construction Canada project
+
+## Section E: Publication Catch-All (5)
+1. "Canada major project ReNew infrastructure Daily Commercial News"
+2. "Canada mining project Northern Miner approved"
+3. "Canada energy project pipeline LNG approved"
+4. "Canada P3 Indigenous economic development project"
+5. "Canada construction procurement contract awarded billion"
+
+## Economy Searches (8 — context, not project discovery)
+1. "Canada economy"
+2. "Bank of Canada interest rate"
+3. "Canada trade tariffs"
+4. "US economy Canada impact"
+5. "China Canada trade"
+6. "EU Canada trade"
+7. "Canada inflation CPI"
+8. "Canada unemployment jobs"

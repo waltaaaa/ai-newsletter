@@ -1,0 +1,52 @@
+# StatCan Building Permits — Discovery Configuration Extract
+# Source: statcan_permits.py (Tier 9)
+# Type: Anomaly detection → investigation queries (not projects)
+# Table: 34-10-0066-01 (Building permits by type of structure and type of work)
+
+## API
+- URL: https://www150.statcan.gc.ca/t1/wds/rest/getDataFromVectorsAndLatestNPeriods
+- Method: POST JSON
+- Data: Last 14 observations per vector
+
+## Anomaly Detection Settings
+- Multiplier: 3.0x (flag if current month > 3x the 12-month moving average)
+- Minimum historical data: 6 months (out of 12)
+- Output: investigation queries for follow-up
+
+## 20 CMAs Monitored (vector_id, province)
+
+### Ontario (7)
+Toronto:     77987
+Ottawa:      77979
+Hamilton:    77981
+Kitchener:   77985
+London:      77983
+Windsor:     77993
+Barrie:      77997
+
+### Quebec (2)
+Montreal:    77971
+Quebec City: 77973
+
+### Alberta (2)
+Calgary:     77951
+Edmonton:    77953
+
+### British Columbia (4)
+Vancouver:   78009
+Victoria:    78007
+Kelowna:     78005
+Abbotsford:  78003
+
+### Saskatchewan (2)
+Saskatoon:   77947
+Regina:      77945
+
+### Manitoba (1)
+Winnipeg:    77967
+
+### Nova Scotia (1)
+Halifax:     77957
+
+### Newfoundland (1)
+St. John's:  77939

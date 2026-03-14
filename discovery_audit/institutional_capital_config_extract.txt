@@ -1,0 +1,41 @@
+# Institutional Capital Plans — Discovery Configuration Extract
+# Source: institutional_capital.py (Tier 14)
+# Total: 20 institutions (15 U15 universities + 3 polytechnics + 2 healthcare)
+
+## U15 Research Universities (15)
+1.  University of Toronto     ON  Toronto                    https://www.fs.utoronto.ca/capital-projects/
+2.  UBC                       BC  Vancouver                  https://planning.ubc.ca/
+3.  McGill University         QC  Montreal                   https://www.mcgill.ca/facilities/
+4.  Université de Montréal    QC  Montreal                   https://di.umontreal.ca/
+5.  University of Alberta     AB  Edmonton                   https://www.ualberta.ca/facilities-operations/
+6.  University of Calgary     AB  Calgary                    https://www.ucalgary.ca/facilities/
+7.  McMaster University       ON  Hamilton                   https://facilities.mcmaster.ca/
+8.  University of Ottawa      ON  Ottawa-Gatineau            https://www.uottawa.ca/facilities/
+9.  Université Laval          QC  Quebec City                https://www.ulaval.ca/
+10. Queen's University        ON  Kingston                   https://www.queensu.ca/pps/
+11. University of Manitoba    MB  Winnipeg                   https://umanitoba.ca/physical-plant/
+12. Dalhousie University      NS  Halifax                    https://www.dal.ca/dept/facilities-management.html
+13. University of Saskatchewan SK  Saskatoon                  https://facilities.usask.ca/
+14. Western University        ON  London                     https://www.uwo.ca/facilities/
+15. University of Waterloo    ON  Kitchener-Cambridge-Waterloo https://uwaterloo.ca/plant-operations/
+
+## Major Polytechnics (3)
+16. BCIT                      BC  Vancouver     https://www.bcit.ca/about/
+17. SAIT                      AB  Calgary       https://www.sait.ca/about-sait
+18. George Brown College      ON  Toronto       https://www.georgebrown.ca/about
+
+## Healthcare Research Institutions (2)
+19. SickKids Hospital — Project Horizon  ON  Toronto   https://www.sickkids.ca/en/about/project-horizon/
+20. MUHC (McGill University Health Centre) QC Montreal https://muhc.ca/
+
+## Institutional RSS Feeds for Ongoing Monitoring (4)
+1. U of T News:  https://www.utoronto.ca/news/rss.xml
+2. UBC News:     https://news.ubc.ca/feed/
+3. McGill News:  https://www.mcgill.ca/newsroom/rss
+4. UAlberta News: https://www.ualberta.ca/news-and-events/rss-feeds.html
+
+## Extraction Settings
+- Minimum value: $10M
+- NAICS: 61 (Education) or 62 (Healthcare)
+- Confidence: 0.65
+- Source type: government

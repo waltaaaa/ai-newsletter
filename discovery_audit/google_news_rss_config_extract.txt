@@ -1,0 +1,50 @@
+# Google News RSS Search — Discovery Configuration Extract
+# Source: google_news_rss_search.py
+# Total: 759 queries from compound_queries_final.json
+# Cost: $0 (free, unlimited)
+
+## RSS URL Template
+Base: https://news.google.com/rss/search
+Params: q={query}, hl=en-CA, gl=CA, ceid=CA:en (or fr-CA/CA:fr for French)
+
+## Sector Keywords (18 sectors → RSS query terms)
+oil_gas:            "oil gas LNG pipeline"
+mining:             "mining mine mineral"
+infrastructure:     "infrastructure transit highway bridge"
+power_energy:       "power energy solar wind hydro nuclear"
+manufacturing:      "manufacturing factory plant"
+transport_logistics: "port airport rail terminal"
+healthcare:         "hospital healthcare medical centre"
+education:          "university school campus college"
+residential:        "housing residential condo tower"
+commercial_mixed:   "development mixed-use redevelopment commercial"
+agriculture:        "agriculture greenhouse food processing"
+forestry:           "forestry sawmill pulp mill lumber"
+defence:            "military defence naval shipyard"
+telecom:            "data centre broadband fibre 5G"
+indigenous:         "Indigenous First Nations infrastructure"
+environment:        "remediation cleanup waste recycling"
+tourism_culture:    "museum arena recreation cultural centre"
+government:         "government building courthouse civic"
+
+## Province Names (13 + aliases)
+ON → Ontario, QC → Québec, AB → Alberta, BC → British Columbia,
+SK → Saskatchewan, MB → Manitoba, NS → Nova Scotia, NB → New Brunswick,
+NL → Newfoundland, PE → PEI, YT → Yukon, NT → Northwest Territories,
+NU → Nunavut
+
+## Query Shortening Pattern
+English: "{sector_keywords} project {province_name} {year}"
+French:  "projet {sector_keywords} {province_name} {year}"
+CMA:     "{sector_keywords} project {cma_name} {year}"
+
+## Compound Queries Breakdown (from compound_queries.py docstring)
+- 13 provinces × 18 NAICS sectors (English, affinity-filtered)
+- French queries: QC (full 18), NB (full), NS (light 8), PE (light), ON (light)
+- 35 CMAs × 8 urban sectors
+- 30 regional clusters × 7 resource sectors
+- Lifecycle/status queries for all provinces (EN + FR)
+- TOTAL: 759 queries
+
+## Concurrency: 30 simultaneous feeds (asyncio.Semaphore(30))
+## Max articles per feed: 15

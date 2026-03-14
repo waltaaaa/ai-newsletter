@@ -1,0 +1,123 @@
+# Article Filter — 6-Layer Keyword Configuration Extract
+# Source: article_filter.py
+# Used by: RSS feeds (Tier 4), GDELT (Tier 3), Google News RSS (Tier 2)
+
+## LAYER 1: Compound Keyword Co-Occurrence
+# Rule: (≥1 from Cat A) AND (≥1 from Cat B OR ≥1 from Cat C)
+# OR: dollar-value bypass (≥$1M anywhere in title+summary)
+
+### Category A: Project Signal (66 keywords — greenfield + brownfield)
+
+#### Greenfield (31):
+project, construction, facility, plant, development,
+build, campus, tower, terminal, warehouse, refinery,
+pipeline, mine, dam, generation, turbine, reactor,
+data center, data centre, housing, transit, highway,
+bridge, port, airport, hospital, arena, stadium,
+mill, smelter, upgrader, compressor, substation, interconnection
+
+#### Brownfield / renovation (22):
+redevelopment, expansion, renovation, conversion,
+remediation, retrofit, restoration, adaptive reuse,
+modernization, modernisation, decommission, upgrade,
+overhaul, rehabilitation, repurpose, repurposing,
+rebuild, rebuilding, infill, densification,
+revitalization, revitalisation, reconfiguration,
+replacement, demolition and rebuild, seismic upgrade,
+energy retrofit, deep retrofit, envelope upgrade
+
+#### Building types (9):
+mixed-use, mixed use, condo, condominium, townhouse,
+apartment, long-term care, ltc, seniors residence,
+assisted living, retirement home
+
+#### Infrastructure types (24):
+interchange, overpass, underpass, tunnel, flyover,
+rail yard, maintenance facility, bus rapid transit,
+light rail, lrt, brt, wastewater, water treatment,
+desalination, landfill, recycling facility,
+broadband, fibre, fiber, transmission line,
+solar farm, wind farm, battery storage, ev charging,
+hydrogen, carbon capture, ccs
+
+### Category B: Economic Signal (26 keywords)
+million, billion, investment, funding, contract,
+awarded, procurement, cost, budget, spend, spending,
+financing, capital, c$, $, loan, bond, grant,
+subsidy, allocation, appropriation, estimate,
+value, worth, price tag, revenue, expenditure,
+infrastructure bank, p3, public-private, ppp
+
+### Category C: Status Signal (30 keywords)
+proposed, approved, under construction, under review,
+breaking ground, announced, commissioned, tender, rfp,
+permit, rezoning, rezoned, assessment, phase,
+environmental review, environmental assessment,
+public consultation, shovels in ground, ribbon cutting,
+completion, opening, operational, inaugurated,
+site plan, building permit, demolition permit,
+heritage designation, shovel-ready, shovel ready,
+groundbreaking, ground breaking, topping off,
+substantial completion, occupancy permit,
+zoning amendment, official plan amendment,
+notice of commencement, record of decision,
+certificate of authorization, underway, under way
+
+### Dollar-Value Bypass
+Regex: $X million/billion, C$X M/B, French "500 millions $"
+Threshold: ≥ $1M
+
+---
+
+## LAYER 2: Negative Keyword Exclusion (title only)
+
+### Crime (20 keywords):
+homicide, murder, assault, robbery, arrest, charged,
+sentenced, verdict, guilty, plea, trafficking, shooting,
+stabbing, manslaughter, parole, inquest, sexual assault,
+embezzlement, extradition, indicted,
+convicted, crime, theft, kidnapping, missing person
+
+### Sports (18 keywords):
+nhl, cfl, nba, mlb, mls, chl, whl, ohl, qmjhl,
+playoff, roster, free agent, trade deadline,
+tournament, championship, hat trick, shutout,
+touchdown, assists, standings, preseason, grey cup,
+stanley cup, world series, all-star
+
+### Entertainment (12 keywords):
+concert, festival lineup, album, box office,
+grammy, award show, celebrity, red carpet, recipe,
+restaurant review, fashion, travel tips, obituary
+
+### Health (10 keywords):
+patient, diagnosis, outbreak, vaccination, covid case,
+overdose, opioid death, flu season, infection rate,
+drug recall, symptom
+
+### Weather (9 keywords):
+flood warning, wildfire evacuation, tornado watch, blizzard,
+amber alert, weather advisory, wind chill, heat wave,
+storm surge
+
+### Politics (11 keywords):
+polling, approval rating, caucus, leadership race, debate,
+campaign trail, endorsement, resignation, scandal,
+controversy, ethics probe
+
+### Intentionally NOT negative keywords:
+fraud (procurement fraud relevant), bail (financial bailout),
+arson (fire-rebuild stories), warrant (financial),
+film (film studio construction), movie, wedding, birth,
+funeral, clinical trial (pharma facility), power outage (grid),
+goal (project goals), scored (financial context),
+mall, housing, office, heritage, downtown, Indigenous
+
+---
+
+## LAYER 3: Gemini Flash Batch Pre-Screen
+- Batch size: 20 articles per call
+- Model: gemini-2.5-flash (from GEMINI_MODEL env var)
+- Response: JSON array of relevant indices
+- Fail mode: pass everything through (fail open)
+- No grounding tools passed

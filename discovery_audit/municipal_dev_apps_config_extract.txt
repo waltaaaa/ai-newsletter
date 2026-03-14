@@ -1,0 +1,68 @@
+# Municipal Development Applications — Discovery Configuration Extract
+# Source: municipal_dev_apps.py (Tier 13)
+# Total: 15 CMAs (4 API + 11 HTML scrape)
+
+## GDP Thresholds (value filter, millions CAD)
+ON: $500M, QC: $250M, AB: $200M, BC: $175M, SK: $45M, MB: $40M,
+NS: $25M, NB: $20M, NL: $17M, PE: $5M, YT/NT/NU: $3M
+
+## Open Data API Cities (4) — structured JSON/CSV
+
+### Vancouver (BC)
+- URL: https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/issued-building-permits/records
+- Approach: CKAN v2
+- Filter: projectvalue > $175M
+- Fields: projectdescription, projectvalue, address, typeofwork, issuedate
+
+### Calgary (AB)
+- URL: https://data.calgary.ca/resource/6933-unw5.json
+- Approach: Socrata
+- Filter: estimatedprojectcost > $200M
+- Fields: description, estimatedprojectcost, communityname, workclassgroup, issueddate
+
+### Edmonton (AB)
+- URL: https://data.edmonton.ca/resource/24uj-dj8v.json
+- Approach: Socrata
+- Filter: job_value > $200M
+- Fields: job_description, job_value, address, permit_type, issue_date
+
+### Winnipeg (MB)
+- URL: https://data.winnipeg.ca/resource/m4wt-mqkb.json
+- Approach: Socrata
+- Filter: total_project_value > $40M
+- Fields: work_description, total_project_value, address, permit_type, issue_date
+
+## HTML Portal Cities (11) — BeautifulSoup scraping
+
+### Toronto (ON)
+- URL: https://www.toronto.ca/city-government/planning-development/application-information-centre/
+
+### Ottawa (ON)
+- URL: https://devapps.ottawa.ca/en/
+
+### Montreal (QC)
+- URL: https://ocpm.qc.ca/fr/consultations-publiques
+
+### Hamilton (ON)
+- URL: https://www.hamilton.ca/develop-property/planning-applications
+
+### Halifax (NS)
+- URL: https://www.halifax.ca/business/planning-development/applications
+
+### Quebec City (QC)
+- URL: https://www.ville.quebec.qc.ca/citoyens/permis/
+
+### Saskatoon (SK)
+- URL: https://www.saskatoon.ca/business-development/planning/development-permits
+
+### Regina (SK)
+- URL: https://www.regina.ca/business-development/building-property-maintenance/building-permits/
+
+### St. John's (NL)
+- URL: https://www.stjohns.ca/en/business-investment/development-applications.aspx
+
+### Fredericton (NB)
+- URL: https://www.fredericton.ca/en/building-renovating
+
+### Charlottetown (PE)
+- URL: https://www.charlottetown.ca/departments/planning-and-heritage

@@ -1,0 +1,133 @@
+# Known Project Sweep — Discovery Configuration Extract
+# Source: known_project_sweep.py
+# Type: One-time comprehensive sweep (run via --known-sweep flag)
+# Total: ~208+ sweep queries + 47 hardcoded seed projects
+
+## 18 NAICS-Aligned Sectors
+oil_gas, mining, infrastructure, power_energy, manufacturing,
+transport_logistics, healthcare, education, residential,
+commercial_mixed, agriculture, forestry, defence, telecom,
+indigenous, environment, tourism_culture, government
+
+## Sector Descriptions (expanded keywords for each)
+oil_gas:            oil, gas, hydrogen, LNG, pipeline, refinery, carbon capture
+mining:             mining, critical minerals, smelting, mineral processing
+infrastructure:     highways, bridges, transit, water treatment, flood protection, municipal
+power_energy:       power generation, transmission, solar, wind, hydro, nuclear, SMR, battery storage, grid modernization
+manufacturing:      factories, data centres, EV battery plants, semiconductor, food processing, pharmaceutical
+transport_logistics: airports, ports, rail, ferry terminals, logistics hubs, intermodal
+healthcare:         hospitals, medical centres, LTC, mental health, health science centres
+education:          schools, universities, colleges, research centres, campus construction
+residential:        towers, housing, affordable housing, office-to-residential conversions, adaptive reuse
+commercial_mixed:   mixed-use, commercial towers, entertainment districts, convention centres, arenas, downtown redevelopments, waterfront, mall transformations
+agriculture:        grain terminals, food processing, greenhouses, fertilizer, aquaculture
+forestry:           sawmills, pulp mills, mass timber, biomass
+defence:            military bases, naval shipyards, coast guard, RCMP, correctional, border crossings
+telecom:            data centres, fibre optic, broadband, 5G, satellite ground stations, AI computing
+indigenous:         First Nations housing, on-reserve water treatment, cultural centres, clean energy, reconciliation
+environment:        recycling, waste-to-energy, brownfield remediation, contaminated site cleanup, mine reclamation
+tourism_culture:    museums, performing arts, recreation centres, ski resorts, casinos, heritage restorations, park revitalizations
+government:         courthouses, government buildings, fire stations, Parliament renovations, civic centres, seismic upgrades
+
+## Sweep Query Generation
+### Province × Sector queries (~170):
+- Top 5 provinces (ON, QC, AB, BC, SK): all 18 sectors each
+- Remaining 8 provinces: top 10 sectors each
+- No time constraint — asks for "currently proposed, approved, under construction, or completed in past 2 years"
+
+### CMA sweeps (20 queries):
+Toronto, Montreal, Vancouver, Calgary, Edmonton,
+Ottawa-Gatineau, Winnipeg, Quebec City, Hamilton, Halifax,
+Kitchener-Waterloo, Victoria, Saskatoon, Regina, St. John's,
+London Ontario, Windsor Ontario, Moncton, Fredericton, Charlottetown
+
+### French sweeps (2): QC and NB
+
+### Known-missing queries (16):
+Portage Place Redevelopment Winnipeg
+The Forks Winnipeg Manitoba development projects
+Winnipeg major construction and redevelopment
+Manitoba major capital projects 2024 2025 2026
+Canadian major infrastructure under construction 2026
+Canada largest construction projects active billion dollar
+Canadian megaprojects under construction 2026
+ReNew Canada Top 100 infrastructure projects 2025 2026
+Major brownfield redevelopment projects Canada
+Office to residential conversions Canada
+Canadian arena stadium entertainment district projects
+Major hospital construction projects Canada 2025 2026
+Canadian LRT subway transit projects under construction
+Major mining projects Canada under construction or approved
+Canadian data centre projects announced or under construction
+First Nations Indigenous infrastructure projects Canada
+
+## 47 Hardcoded Seed Projects (ADDITIONAL_KNOWN_PROJECTS)
+
+### Manitoba (4)
+1.  Portage Place Redevelopment          $650M   commercial_mixed   under_construction
+2.  The Forks Market Renovation          —       tourism_culture    under_construction
+3.  Wehwehneh Bahgahkinahgohn            $140M   indigenous         under_construction
+4.  Manitoba Museum Transformation       $165M   tourism_culture    under_construction
+
+### Ontario (13)
+5.  Ontario Place Redevelopment          $3.5B   commercial_mixed   approved
+6.  Ontario Line                         $19B    infrastructure     under_construction
+7.  Eglinton Crosstown LRT              $12.8B  infrastructure     under_construction
+8.  Scarborough Subway Extension         $5.5B   infrastructure     under_construction
+9.  Finch West LRT                       $2.5B   infrastructure     under_construction
+10. Yonge North Subway Extension         $5.6B   infrastructure     under_construction
+11. LeBreton Flats                       $4B     commercial_mixed   under_construction
+12. Zibi Development                     $1.5B   commercial_mixed   under_construction
+13. Parliament Hill Rehabilitation       $5B     government         under_construction
+14. SickKids Project Horizon             $1.3B   healthcare         under_construction
+15. VIA HFR                              $12B    infrastructure     proposed
+16. Gordie Howe International Bridge     $6.4B   infrastructure     under_construction
+17. Ring of Fire Road Infrastructure     $3.5B   infrastructure     proposed
+
+### Quebec (7)
+18. REM                                  $7.95B  infrastructure     under_construction
+19. REM de l'Est                         $10B    infrastructure     proposed
+20. Blue Line Extension                  $6.4B   infrastructure     under_construction
+21. New Champlain Bridge                 $4.2B   infrastructure     completed
+22. CHUM Hospital                        $3.6B   healthcare         completed
+23. Contrecoeur Container Terminal       $950M   transport_logistics under_construction
+24. Northvolt Battery Plant              $7B     manufacturing      delayed
+
+### Alberta (4)
+25. Calgary Event Centre                 $800M   commercial_mixed   under_construction
+26. Calgary Green Line LRT               $5.5B   infrastructure     under_construction
+27. Edmonton Valley Line West LRT        $2.6B   infrastructure     under_construction
+28. Trans Mountain Expansion             $34.2B  oil_gas            completed
+
+### British Columbia (8)
+29. LNG Canada Phase 1                   $40B    oil_gas            under_construction
+30. Coastal GasLink Pipeline             $14.5B  oil_gas            completed
+31. Site C Dam                           $16B    power_energy       under_construction
+32. Broadway SkyTrain Extension          $2.83B  infrastructure     under_construction
+33. SkyTrain Surrey-Langley Extension    $4B     infrastructure     under_construction
+34. Roberts Bank Terminal 2              $3.5B   transport_logistics approved
+35. Woodfibre LNG                        $3B     oil_gas            under_construction
+36. Cedar LNG                            $3B     oil_gas            approved
+37. Pattullo Bridge Replacement          $1.377B infrastructure     under_construction
+
+### Saskatchewan (2)
+38. BHP Jansen Potash Mine               $12B    mining             under_construction
+39. Regina Bypass                        $1.88B  infrastructure     completed
+
+### Nova Scotia (2)
+40. Halifax Cogswell District            $2B     commercial_mixed   under_construction
+41. Irving Shipbuilding — CSC Program    $60B    defence            under_construction
+
+### New Brunswick (1)
+42. Point Lepreau SMR                    $3B     power_energy       proposed
+
+### Newfoundland (2)
+43. Bay du Nord Offshore                 $12B    oil_gas            approved
+44. Muskrat Falls                        $13B    power_energy       completed
+
+### National / Federal (2)
+45. Canadian Surface Combatant           $77.3B  defence            under_construction
+46. Arctic Offshore Patrol Ships         $4.3B   defence            under_construction
+
+### Territories (1)
+47. Diavik Mine Closure                  $1B     environment        under_construction
