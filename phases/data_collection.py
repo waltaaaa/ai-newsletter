@@ -1404,6 +1404,17 @@ def run(conn, context, logger):
         except Exception as e:
             print(f"  [HISTORY] Market archive error (non-critical): {e}")
 
+        # STEP 1c: Extended StatCan indicators (investment, employment, trade, housing)
+        statcan_ext = {}
+        try:
+            from statcan_extended import run_extended_statcan
+            pipeline_mode = context.get("mode", "weekly")
+            statcan_ext = run_extended_statcan(conn, mode=pipeline_mode)
+        except ImportError:
+            print("  [WARN] statcan_extended not available — skipping")
+        except Exception as e:
+            print(f"  [WARN] Extended StatCan fetch failed (non-critical): {e}")
+
         logger.log_step("step_1b_indicators")
 
         return {
@@ -1418,6 +1429,7 @@ def run(conn, context, logger):
             "national_ind": national_ind,
             "prov_ind": prov_ind,
             "global_ind": global_ind,
+            **statcan_ext,
         }
     except Exception as e:
         logger.log_error(step_name, e, recovered=False)

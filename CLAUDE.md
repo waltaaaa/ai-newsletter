@@ -180,10 +180,14 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - Procurement: `procurement_monitor.py` (federal + provincial contract awards — Open Canada, BuyAndSell, Ontario BPS, BC Bid)
 - Policy: `policy_tracker.py` (LEGISinfo, Canada Gazette, ministry feeds — legislative/regulatory tracking)
 - Signals: `job_monitor.py` (hiring spike detection — 15 CMAs, 9 sectors, Indeed/Job Bank RSS)
+- StatCan Extended: `statcan_extended.py` (8 additional WDS tables — investment, employment, trade, housing)
 - Search: `tavily_search.py` (targeted enrichment only)
 - Reasoning: `claude_reasoning.py` (all reasoning — no gemini_pro_reasoning.py)
 - Analysis: `sector_trends.py`, `cross_reference.py`, `indicator_trends.py`
 - Frontend: `docs/index.html` (GitHub Pages root)
+
+## StatCan Extended Indicators
+8 additional StatCan WDS tables fetched in Phase 1 (data collection) covering capital expenditure intentions (34-10-0035, annual), building investment (34-10-0175, quarterly), construction price index (18-10-0135, quarterly), employment by industry (14-10-0022, monthly), job vacancies (14-10-0326, quarterly), merchandise exports (12-10-0129, monthly), housing starts (34-10-0143, monthly), and new housing price index (18-10-0205, monthly). All fetched via WDS API. Zero cost, no API key. Mode-aware: daily/indicators-only runs skip annual and quarterly tables, only fetch monthly ones. Indicators feed into `indicator_history` and the cross-reference engine.
 
 ## Policy Tracking
 Monitors ~17 federal and provincial RSS feeds for legislative and regulatory developments affecting capital investment. Sources include LEGISinfo (federal bills), Canada Gazette (regulations), and ministry news feeds for Finance, ISED, NRCan, ECCC, Transport, Infrastructure, CMHC, Global Affairs, and DND. Provincial feeds cover ON, BC, AB, QC, SK.

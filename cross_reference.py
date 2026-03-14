@@ -86,6 +86,56 @@ INDICATOR_PROJECT_LINKS = {
         ("Real Estate", "positive"),
         ("Manufacturing", "lagged_positive"), # building materials
     ],
+    # ── Extended StatCan indicators (from statcan_extended.py) ──
+    "construction_employment": [
+        ("Construction", "positive"),         # direct activity measure
+        ("Real Estate", "lagged_positive"),
+    ],
+    "mining_og_employment": [
+        ("Mining & O&G", "positive"),
+    ],
+    "manufacturing_employment": [
+        ("Manufacturing", "positive"),
+    ],
+    "residential_building_investment": [
+        ("Real Estate", "positive"),
+        ("Construction", "positive"),
+    ],
+    "non_residential_building_investment": [
+        ("Construction", "positive"),
+        ("Manufacturing", "lagged_positive"),
+    ],
+    "construction_price_index_composite": [
+        ("Construction", "negative"),         # higher costs → fewer starts
+        ("Real Estate", "negative"),
+    ],
+    "total_capex": [
+        ("Construction", "positive"),
+        ("Manufacturing", "positive"),
+        ("Mining & O&G", "positive"),
+    ],
+    "energy_exports": [
+        ("Mining & O&G", "positive"),
+        ("Utilities", "positive"),
+    ],
+    "mineral_exports": [
+        ("Mining & O&G", "positive"),
+    ],
+    "forestry_exports": [
+        ("Manufacturing", "positive"),        # sawmills, pulp & paper
+    ],
+    "housing_starts_total": [
+        ("Construction", "positive"),
+        ("Real Estate", "positive"),
+        ("Manufacturing", "lagged_positive"),
+    ],
+    "new_housing_price_index": [
+        ("Real Estate", "positive"),
+        ("Construction", "lagged_positive"),
+    ],
+    "construction_vacancies": [
+        ("Construction", "positive"),         # high vacancies = high demand
+    ],
 }
 
 
