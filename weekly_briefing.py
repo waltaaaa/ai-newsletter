@@ -67,6 +67,31 @@ def _format_signal_context(signal_context):
 
     parts = []
 
+    # Policy summary
+    policy_summary = signal_context.get('policy_summary', {})
+    policy_items = signal_context.get('policy_items', [])
+    if policy_summary or policy_items:
+        p_lines = []
+        for item in policy_items[:5]:
+            title = item.get('title', '')[:150]
+            cats = ', '.join(item.get('policy_categories', [])[:3])
+            affected = item.get('affected_projects_total', 0)
+            prov = item.get('province', '')
+            prov_note = f" [{prov}]" if prov else ''
+            p_lines.append(f"  - [{cats}]{prov_note} {title} ({affected} projects in scope)")
+        if p_lines:
+            parts.append(
+                "=== POLICY TRACKER ===\n"
+                "Include significant policy developments in the relevant briefing sections:\n"
+                "- New legislation affecting housing → Section 1 (Headline) if major, or Section 5 (Sector Watch)\n"
+                "- Federal budget items → Section 2 (Macro Pulse)\n"
+                "- Provincial policy → Section 4 (Provincial Spotlight) if the featured province is affected\n"
+                "- Trade policy → Section 7 (Markets & Commodities) if it affects commodity trade\n"
+                "- Upcoming regulatory deadlines → Section 8 (Looking Ahead)\n"
+                "Report what happened and how many projects are in scope. No predictions.\n"
+                + '\n'.join(p_lines)
+            )
+
     # Hiring spikes
     spikes = signal_context.get('job_spikes', [])[:5]
     if spikes:
@@ -78,7 +103,9 @@ def _format_signal_context(signal_context):
         ]
         parts.append(
             "=== HIRING SIGNALS ===\n"
-            "Hiring spikes indicate project mobilization. Include in Section 6 (Project Tracker).\n"
+            "Hiring spikes indicate project mobilization. Include in:\n"
+            "- Section 6 (Project Tracker) — \"Hiring spike at [employer] in [location] suggests [project] is mobilizing\"\n"
+            "- Section 4 (Provincial Spotlight) if concentrated in the featured province\n"
             + '\n'.join(s_lines)
         )
 
@@ -93,10 +120,14 @@ def _format_signal_context(signal_context):
             val = c.get('value', 0)
             val_str = f"${val / 1_000_000:.0f}M" if val else 'undisclosed'
             desc = c.get('description', c.get('title', ''))[:150]
-            c_lines.append(f"  - {desc} — {val_str}")
+            prov = c.get('province', '')
+            prov_note = f" [{prov}]" if prov else ''
+            c_lines.append(f"  -{prov_note} {desc} — {val_str}")
         parts.append(
             "=== PROCUREMENT AWARDS ===\n"
-            "Government contract awards confirm project advancement. Include in Section 6.\n"
+            "Government contract awards confirm project advancement. Include in:\n"
+            "- Section 6 (Project Tracker) — \"[Department] awarded $[value] to [vendor] for [description]\"\n"
+            "- Section 5 (Sector Watch) if concentrated in a specific sector\n"
             + '\n'.join(c_lines)
         )
 
@@ -106,17 +137,29 @@ def _format_signal_context(signal_context):
         i_lines = [
             f"  - {ch.get('project_name', '?')}: "
             f"{ch.get('old_status', '?')} → {ch.get('new_status', '?')}"
+            f" ({ch.get('province', '')})"
             for ch in iaac[:5]
         ]
         parts.append(
             "=== ASSESSMENT STATUS CHANGES ===\n"
-            "Federal IAAC transitions. Include in Section 6 (Project Tracker).\n"
+            "Federal IAAC transitions. Include in:\n"
+            "- Section 6 (Project Tracker) — \"[Project] advanced from [old] to [new] in IAAC assessment\"\n"
             + '\n'.join(i_lines)
         )
 
     # Regulatory signals
-    # (these come from discovered_articles tagged with regulatory_signal)
-    # Not directly in signal_context, but we include the note for completeness
+    reg_signals = signal_context.get('regulatory_signals', [])
+    if reg_signals:
+        r_lines = [
+            f"  - {r.get('title', '?')[:150]} — {r.get('regulatory_signal', {}).get('action', '?')}"
+            for r in reg_signals[:5]
+        ]
+        parts.append(
+            "=== REGULATORY DECISIONS ===\n"
+            "Tribunal and court decisions. Include in:\n"
+            "- Section 6 (Project Tracker) — \"[Tribunal] [approved/denied] [project]\"\n"
+            + '\n'.join(r_lines)
+        )
 
     if not parts:
         return ""
@@ -124,8 +167,8 @@ def _format_signal_context(signal_context):
     return (
         "\n\n" + '\n\n'.join(parts) + "\n\n"
         "IMPORTANT: All new data sources follow the same editorial rules. "
-        "State what happened, cite the source, reference specific numbers. "
-        "No predictions, no 'good news/bad news' framing."
+        "State what happened, cite the source, reference specific numbers and project names. "
+        "No predictions, no 'good news/bad news' framing, no recommendations."
     )
 
 

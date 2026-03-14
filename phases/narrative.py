@@ -79,6 +79,10 @@ def run(conn, context, logger):
             'job_spikes': context.get('job_spikes', []),
             'procurement_contracts': context.get('procurement_contracts', []),
             'iaac_status_changes': context.get('iaac_status_changes', []),
+            'regulatory_signals': [
+                a for a in context.get('discovered_articles', [])
+                if a.get('regulatory_signal')
+            ][:5],
         }
 
         # Weekly narrative briefing
