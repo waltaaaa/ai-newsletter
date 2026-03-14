@@ -1860,7 +1860,8 @@ def fetch_registry_projects(tavily_client=None) -> list[dict]:
         ("YESAB",                 _scrape_yukon_yesab),
         ("MVRB",                  _scrape_nwt_mvrb),
         # STEP 2G: Structured databases
-        ("SEDAR+",                _scrape_sedar),
+        # SEDAR+ disabled — scraper targets login portal, returns 0 results. Needs endpoint audit.
+        # ("SEDAR+",                _scrape_sedar),
         ("Metrolinx",             _scrape_metrolinx),
     ]
 

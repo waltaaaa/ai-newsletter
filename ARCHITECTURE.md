@@ -90,8 +90,8 @@ AI newsletter/
 ├── statcan_permits.py          # Tier 9: Building permit anomaly detection
 ├── lobbyist_registries.py      # Tier 10: Federal lobbyist registry
 ├── key_people_tracker.py       # Key people RSS (PM, premiers, ministers)
-├── google_alerts.py            # Tier 12: 25 Google Alert RSS feeds
-├── gdelt_monitor.py            # Tier 3: GDELT DOC 2.0 (~200 queries)
+├── google_alerts.py            # Tier 12: 25 Google Alert RSS feeds (not yet configured)
+├── archive/gdelt_monitor.py    # Tier 3: GDELT DOC 2.0 (disabled — never integrated)
 ├── known_project_sweep.py      # One-time: ~208 queries + 47 hardcoded seeds
 │
 ├── ── FILTERING / DEDUP ──
@@ -236,21 +236,21 @@ AI newsletter/
 
 All values archived to `indicator_history` table for trend analysis.
 
-### Step 2 — 14-Tier Discovery Pipeline
+### Step 2 — Discovery Pipeline (10 active tiers of 14)
 
 ```
 Tier 1:  Federal Registries ──── IAAC, BC EAO, NRCan, Infra CAN, CanadaBuys, CER, ERO, CIB, Metrolinx
 Tier 2:  Google News RSS ─────── 759 compound queries → free RSS feeds
-Tier 3:  GDELT ────────────────── ~200 queries (HTTP only, bail-out after 3 failures)
+Tier 3:  GDELT ────────────────── (disabled — not integrated into pipeline; moved to archive/)
 Tier 4:  RSS Feeds ────────────── ~201 feeds through 6-layer filter
 Tier 5:  Provincial EA ────────── 10 registries (QC BAPE, AB, SK, MB, NS, NB, NL, YT, NWT)
-Tier 6:  SEDAR+ ───────────────── Securities filings (via Tavily extract)
+Tier 6:  SEDAR+ ───────────────── (disabled — endpoint audit needed; scraper targets login portal)
 Tier 7:  Crown Corps ──────────── CIB, Metrolinx (via Tier 1)
 Tier 8:  Canada Energy Regulator── CER applications (via Tier 1)
 Tier 9:  StatCan Permits ──────── 20 CMAs, anomaly threshold 3.0x 12-month MA
 Tier 10: Lobbyist Registry ────── Federal bulk CSV, infrastructure keyword filter
-Tier 11: Municipal Dev Apps ───── 15 CMAs (Socrata/CKAN APIs + HTML portals)
-Tier 12: Google Alerts ────────── 25 alert queries (RSS delivery)
+Tier 11: Municipal Dev Apps ───── (degraded — most HTML endpoints broken; 4 API cities may work)
+Tier 12: Google Alerts ────────── (disabled — not configured; placeholder URLs only)
 Tier 13: Industry Trade RSS ───── 22 feeds (included in Tier 4)
 Tier 14: Institutional Capital ── U15 universities, polytechnics, hospitals
 ```
@@ -489,13 +489,14 @@ DISCOVERY                    PROCESSING                  STORAGE            DELI
 ─────────────────────────── ─────────────────────────── ──────────────────── ──────────────
 Google News RSS (759)  ───┐
 Gov Registries (9)     ───┤  6-layer RSS filter
-GDELT (~200)           ───┤  ───────────────────►
-RSS Feeds (~201)       ───┤  Claude extraction (4 calls)
-Municipal Apps (15)    ───┤  ───────────────────►          dashboard.db
-Institutional (20)     ───┤  Cross-tier dedup              (SQLite WAL)
-StatCan Permits (20)   ───┤  URL hard gate                 ──────────────►
-Lobbyist Registry      ───┤  Evidence merge                                  docs/data/
-Google Alerts (25)     ───┘  Status non-regression                           *.json
+RSS Feeds (~201)       ───┤  ───────────────────►
+Municipal Apps (4*)    ───┤  Claude extraction (4 calls)
+Institutional (20)     ───┤  ───────────────────►          dashboard.db
+StatCan Permits (20)   ───┤  Cross-tier dedup              (SQLite WAL)
+Lobbyist Registry      ───┘  URL hard gate                 ──────────────►
+                             Evidence merge                                  docs/data/
+                             Status non-regression                           *.json
+                        * Municipal: 4 API cities active; HTML scrapers degraded
                              Confidence scoring                              ──────────►
                              ───────────────────►
 BoC Valet API      ────────► Hard data override                              GitHub Pages
@@ -530,7 +531,7 @@ World Bank         ────────►                                  
 - StatCan WDS: 1 retry after 5s
 - BoC Valet: 1 retry after 5s
 - CMHC: tries last 4 months for publication lag
-- GDELT: bail-out after 3 consecutive failures
+- GDELT: disabled (moved to archive/)
 - Yahoo Finance: 12hr cache shields instability
 - URL verification: HEAD with 5s timeout, 12 concurrent workers
 - Pipeline logging: `PipelineRunLogger` → `pipeline_runs` table (step logs, error counts, API usage)
@@ -619,13 +620,13 @@ pytz              # Timezone handling
 |------|------|---------|
 | `gov_sources.py` | 1,5,8 | IAAC, BC EAO, NRCan, InfraCA, BuyAndSell, CER, 13 provincial EAs |
 | `google_news_rss_search.py` | 2 | 759 compound queries → Google News RSS (free, unlimited) |
-| `gdelt_monitor.py` | 3 | GDELT DOC 2.0 (~200 queries, HTTP only, bail-out after 3 fails) |
+| `archive/gdelt_monitor.py` | 3 | GDELT DOC 2.0 (disabled — never integrated into pipeline) |
 | `rss_monitor.py` | 4,12,13 | 201+ RSS/Atom feeds (gov, media, industry, Google Alerts) |
 | `article_filter.py` | — | 6-layer RSS filter (gov bypass → dollar bypass → keywords → Gemini) |
 | `statcan_permits.py` | 9 | Building permit anomaly detection (20 CMAs, 3.0x threshold) |
 | `lobbyist_registries.py` | 10 | Federal/provincial lobbyist signal detection |
 | `municipal_dev_apps.py` | 11 | 15 CMAs (Socrata/CKAN APIs + HTML portals) |
-| `google_alerts.py` | 12 | 25 Google Alerts RSS feeds |
+| `google_alerts.py` | 12 | 25 Google Alerts RSS feeds (disabled — not configured) |
 | `institutional_capital.py` | 14 | U15 universities, polytechnics, hospitals |
 | `key_people_tracker.py` | — | 15 RSS feeds (PM, premiers, crown corps) — gov bypass |
 | `capacity_scheduler.py` | — | T1-T6 remaining Gemini budget allocation |

@@ -404,15 +404,32 @@ def _load_media_feeds() -> dict[str, dict]:
         return {}
 
     extra = {}
+    google_alert_total = 0
+    google_alert_placeholder = 0
     # Process each media category
     for category in ('cbc', 'ctv', 'global_news', 'postmedia', 'independent', 'wire_services', 'industry', 'regional_media', 'regional_media_fr', 'business_media', 'key_people', 'google_alerts', 'corporate_ir', 'corporate_epc', 'institutional'):
         feeds = data.get(category, [])
         for feed in feeds:
             if not feed.get('enabled', True):
+                if category == 'google_alerts':
+                    google_alert_total += 1
+                    url = feed.get('url', '')
+                    if 'PASTE_FEED_URL_HERE' in url or not url.startswith('http'):
+                        google_alert_placeholder += 1
                 continue
             fid = feed.get('id', '')
             if not fid or not feed.get('url'):
                 continue
+            # Skip placeholder URLs (e.g. unconfigured Google Alert feeds)
+            url = feed.get('url', '')
+            if 'PASTE_FEED_URL_HERE' in url or 'XXXX' in url:
+                if category == 'google_alerts':
+                    google_alert_total += 1
+                    google_alert_placeholder += 1
+                logger.warning(f"  [{fid}] Skipped — placeholder URL not configured")
+                continue
+            if category == 'google_alerts':
+                google_alert_total += 1
             # key_people feeds use 'key_people' level for government bypass
             level = 'key_people' if category == 'key_people' else 'media'
             extra[fid] = {
@@ -424,6 +441,9 @@ def _load_media_feeds() -> dict[str, dict]:
                 'priority': feed.get('priority', 3),
                 'test': feed.get('test', False),
             }
+
+    if google_alert_total > 0 and google_alert_placeholder == google_alert_total:
+        logger.info("[Tier 12] Skipped — no Google Alert feeds configured")
 
     return extra
 

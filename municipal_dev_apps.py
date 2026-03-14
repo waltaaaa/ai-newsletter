@@ -473,16 +473,38 @@ async def _scrape_html_portal(session: aiohttp.ClientSession, source: dict,
     return projects
 
 
+async def _health_check(session: aiohttp.ClientSession, url: str) -> bool:
+    """HEAD request with 5-second timeout to verify endpoint is reachable."""
+    try:
+        async with session.head(
+            url,
+            timeout=aiohttp.ClientTimeout(total=5),
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) CAN-Macro-Dashboard/1.0"},
+            allow_redirects=True,
+        ) as resp:
+            return resp.status < 500
+    except Exception:
+        return False
+
+
 async def scrape_municipal_applications() -> list[dict]:
     """Scrape municipal development portals for major projects.
 
     Returns list of project dicts ready for dedup and Firestore upsert.
     """
     all_projects = []
+    cities_skipped = 0
+    cities_total = len(MUNICIPAL_SOURCES)
 
     async with aiohttp.ClientSession() as session:
         for city_key, source in MUNICIPAL_SOURCES.items():
             try:
+                # Health check: verify endpoint is reachable before full scrape
+                if not await _health_check(session, source["url"]):
+                    logger.warning(f"  [Municipal] {city_key} skipped — endpoint unreachable")
+                    cities_skipped += 1
+                    continue
+
                 prov = source["province"]
                 threshold = GDP_THRESHOLDS.get(prov, 40)
                 approach = source.get("approach", "html_scrape")
@@ -499,8 +521,13 @@ async def scrape_municipal_applications() -> list[dict]:
 
             except Exception as e:
                 logger.warning(f"  {city_key} failed: {e}")
+                cities_skipped += 1
 
-    logger.info(f"Municipal scraping complete: {len(all_projects)} total projects")
+    if cities_skipped == cities_total:
+        logger.warning("[Municipal] All cities failed health check — tier skipped entirely")
+    else:
+        logger.info(f"Municipal scraping complete: {len(all_projects)} total projects "
+                     f"({cities_skipped}/{cities_total} cities skipped)")
     return all_projects
 
 

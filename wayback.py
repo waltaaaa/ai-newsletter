@@ -419,25 +419,10 @@ def _search_gdelt_historical(project_name: str, province: str) -> list[str]:
     for archived versions of those article URLs.
 
     Returns a list of archive_urls suitable for Tavily extraction.
+
+    GDELT disabled — module never integrated into pipeline. Always returns [].
     """
-    urls = []
-    try:
-        from gdelt_monitor import _gdelt_search, _NETWORK_ERROR
-        keyword = f'"{project_name}" Canada {province}'.strip()
-        result = _gdelt_search(keyword, 'project', days_back=365*5, max_records=20)
-        if result is _NETWORK_ERROR or not result:
-            return []
-        for art in result:
-            art_url = art.get('url', '')
-            if not art_url:
-                continue
-            snaps = query_cdx(art_url, match_type='exact', limit=5)
-            if snaps:
-                # Take the most recent archived version
-                urls.append(snaps[-1].get('archive_url', ''))
-    except Exception as e:
-        print(f"  [Wayback] GDELT historical search error: {type(e).__name__}")
-    return [u for u in urls if u]
+    return []
 
 
 def backfill_project_history(

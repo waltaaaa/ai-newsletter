@@ -386,7 +386,8 @@ PERPLEXITY_ENABLED = False
 # BUDGETS (from .env)
 # ══════════════════════════════════════════════════════════════════════════════
 
-GDELT_MAX_ARTICLES       = int(os.environ.get('GDELT_MAX_ARTICLES', '195'))
+# GDELT disabled — module never integrated into pipeline
+# GDELT_MAX_ARTICLES       = int(os.environ.get('GDELT_MAX_ARTICLES', '195'))
 RSS_MAX_ARTICLES         = int(os.environ.get('RSS_MAX_ARTICLES', '100'))
 WAYBACK_MAX_SNAPSHOTS_SEED = int(os.environ.get('WAYBACK_MAX_SNAPSHOTS_SEED', '800'))
 
