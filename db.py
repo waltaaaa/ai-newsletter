@@ -2,7 +2,7 @@
 db.py — SQLite interface module for CAN-MACRO Dashboard.
 
 Single-module interface to SQLite — no other module needs to import sqlite3 directly.
-Maps all 22 tables to SQLite.
+Maps all 24 tables to SQLite.
 
 Tables:
   1. projects          — main project database
@@ -27,6 +27,7 @@ Tables:
  20. project_organizations — project-to-organization links
  21. project_identifiers — official IDs (IAAC, CER, municipal app, etc.)
  22. job_snapshots     — weekly job posting aggregates and hiring spike alerts
+ 23. policy_snapshots  — weekly policy/legislative developments with sector/project linkages
 
 Usage:
     from db import init_db, upsert_project, get_projects, search_projects
@@ -439,7 +440,16 @@ CREATE TABLE IF NOT EXISTS job_snapshots (
     PRIMARY KEY (week_of)
 );
 
--- 23. Claude checkpoints (resume-after-crash for expensive API calls)
+-- 23. Policy snapshots (weekly policy/legislative developments with sector/project linkages)
+CREATE TABLE IF NOT EXISTS policy_snapshots (
+    week_of     TEXT NOT NULL,
+    data        TEXT NOT NULL,
+    summary     TEXT,
+    created     TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (week_of)
+);
+
+-- 24. Claude checkpoints (resume-after-crash for expensive API calls)
 CREATE TABLE IF NOT EXISTS claude_checkpoints (
     run_id    TEXT NOT NULL,
     call_name TEXT NOT NULL,

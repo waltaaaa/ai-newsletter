@@ -50,6 +50,20 @@ def run(conn, context, logger):
             print(f"[WARN] Procurement monitor failed: {type(e).__name__}: {e}")
             logger.log_error("procurement_monitor", e)
 
+        # Policy tracker: legislative and regulatory monitoring
+        try:
+            from policy_tracker import run_policy_tracker
+            print("\n[POLICY] Policy and legislative tracking...")
+            policy_results = run_policy_tracker(conn)
+            context.update(policy_results)
+            print(f"  {len(policy_results['policy_items'])} relevant items, "
+                  f"{len(policy_results['policy_new_items'])} new this week")
+        except ImportError:
+            print("[WARN] policy_tracker not available, skipping policy monitoring")
+        except Exception as e:
+            print(f"[WARN] Policy tracker failed: {type(e).__name__}: {e}")
+            logger.log_error("policy_tracker", e)
+
         # Tier 2: Gemini compound discovery
         gemini_projects = []
 

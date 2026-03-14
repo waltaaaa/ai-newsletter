@@ -163,6 +163,7 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - `miss_audit_results` — typed miss classifications from coverage audit (Phase 6)
 - `job_snapshots` — weekly job posting aggregates and hiring spike alerts
 - `procurement_snapshots` — weekly government procurement contract snapshots
+- `policy_snapshots` — weekly policy/legislative developments with sector/project linkages
 
 ## Directory Structure
 - `phases/` — Pipeline phase modules (data_collection, discovery, filtering, analysis, etc.)
@@ -176,11 +177,19 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 ## File Naming
 - Discovery: `google_news_rss_search.py`, `rss_filter.py`, `gov_sources.py`, `municipal_dev_apps.py`, `snippet_enhancer.py`, `metadata_tagger.py`
 - Procurement: `procurement_monitor.py` (federal + provincial contract awards — Open Canada, BuyAndSell, Ontario BPS, BC Bid)
+- Policy: `policy_tracker.py` (LEGISinfo, Canada Gazette, ministry feeds — legislative/regulatory tracking)
 - Signals: `job_monitor.py` (hiring spike detection — 15 CMAs, 9 sectors, Indeed/Job Bank RSS)
 - Search: `tavily_search.py` (targeted enrichment only)
 - Reasoning: `claude_reasoning.py` (all reasoning — no gemini_pro_reasoning.py)
 - Analysis: `sector_trends.py`, `cross_reference.py`, `indicator_trends.py`
 - Frontend: `docs/index.html` (GitHub Pages root)
+
+## Policy Tracking
+Monitors ~17 federal and provincial RSS feeds for legislative and regulatory developments affecting capital investment. Sources include LEGISinfo (federal bills), Canada Gazette (regulations), and ministry news feeds for Finance, ISED, NRCan, ECCC, Transport, Infrastructure, CMHC, Global Affairs, and DND. Provincial feeds cover ON, BC, AB, QC, SK.
+
+Policy items are classified into 8 categories (housing, energy_transition, infrastructure_funding, trade_policy, defence, resource_development, healthcare_infrastructure, fiscal_policy) and linked to affected projects by sector and province. The policy_summary output feeds into the narrative phase for the weekly briefing.
+
+Zero cost — all government RSS feeds are free public data.
 
 ## Common Mistakes to Avoid
 - Do not use Gemini grounded search — it costs $35/1,000 queries. Use Google News RSS instead.
