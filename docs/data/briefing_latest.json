@@ -1,17 +1,25 @@
 {
   "id": 5,
-  "week_of": "TJ6sgBPE6oNoi2tTHNGN",
-  "headline": "",
-  "sections": {},
-  "word_count": 0,
-  "generated_at": "2026-03-10T00:52:01Z",
+  "week_of": "2026-03-14",
+  "headline": "Canada enters mid-Q1 2026 with Q4 2025 GDP growth confirmed at +2.7%, a policy rate of 2.75% following the Bank of Canada's January 29 cut, and a project database now tracking 32,757 active files across all provinces.",
+  "sections": {
+    "MACRO PULSE": "Statistics Canada confirmed Q4 2025 real GDP growth at +2.7%, the most recent available quarterly figure. The Bank of Canada's policy rate stands at 2.75%, set at the January 29, 2026 meeting. The Government of Canada yield curve as of February 19 reads: 2-year at 2.44%, 5-year at 2.75%, and 10-year at 3.22%. The spread between the 2-year and 10-year sits at 78 basis points, indicating a positively sloped curve across the full term structure. The December 2025 CPI index registers at 165.0 (2002=100, StatCan WDS). The Canadian dollar trades at CAD/USD 0.73.",
+    "UNDER THE MICROSCOPE": "The current GoC term structure — 2y: 2.44%, 5y: 2.75%, 10y: 3.22% — defines the base borrowing environment for infrastructure and capital project financing. The 78-basis-point spread from 2-year to 10-year represents the term premium available to long-duration lenders. For the 6,167 approved projects and 9,278 projects currently under construction in the CAN-MACRO database, long-term fixed financing anchors to the 10-year benchmark at 3.22%, with credit spreads applied above that floor depending on project type and sponsor. The January 29 BoC cut to 2.75% moved the policy rate below the 10-year yield, establishing a configuration where short-term floating-rate instruments price at a discount to long-term fixed instruments.",
+    "PROVINCIAL SPOTLIGHT": "Ontario leads with 5,698 tracked projects. British Columbia holds 4,527 projects, with the BC EAO registry contributing to this week's refresh. Quebec accounts for 3,899 projects, and Alberta registers 3,229 projects, with CER-regulated pipeline and energy facility records forming a material share. The combined four-province count of 17,353 represents 52.9% of the national 32,757-project database. This week's news filter identified 33 new project mentions across 10 provinces.",
+    "SECTOR WATCH": "Construction is the largest sector with 6,135 tracked projects, followed by Utilities at 2,958, Education at 2,331, and Healthcare at 2,219. These four sectors collectively account for 13,643 projects, or 41.6% of the total database. Lumber at US$385/MBF and copper at US$4.64/lb are direct input cost variables for the construction segment.",
+    "PROJECT TRACKER": "Database totals: Under Construction 9,278, Approved 6,167, Proposed 4,663, total 32,757. This week's registry refresh incorporated 4,963 project records from IAAC, BC EAO, Infrastructure Canada, CER, and provincial EA bodies. News intelligence processed 30,075 articles, of which 754 passed the relevance filter. From those, 33 new project mentions were extracted across 10 provinces.",
+    "MARKETS & COMMODITIES": "S&P/TSX Composite: 33,776. S&P 500: 5,615. DJIA: 41,912. CAD/USD: 0.73. WTI crude: US$66.03/bbl. Natural gas: US$2.86/MMBtu. Gold: US$2,891/oz. Copper: US$4.64/lb. Lumber: US$385/MBF. At WTI US$66.03 and CAD/USD 0.73, Canadian oil producers receive approximately CAD$90.45/bbl before transportation and quality differentials.",
+    "LOOKING AHEAD": "Q1 2026 GDP first estimate will update the current Q4 2025 baseline of +2.7%. The next Bank of Canada rate decision will determine whether the 2.75% policy rate holds. Next StatCan CPI release will update the December 2025 index level of 165.0. CMHC housing starts update will refresh the current 48,822 annualized rate. GoC yield curve readings from February 19 will be updated as new benchmark bond data becomes available."
+  },
+  "word_count": 534,
+  "generated_at": "2026-03-14T15:51:40.114272Z",
   "pdf_url": "",
   "docx_url": "",
   "financialMarkets": {
     "indices": [
       {
         "name": "S&P/TSX",
-        "value": "32,542",
+        "value": "31,049",
         "region": "Canada",
         "change": "",
         "day": "",
@@ -19,7 +27,7 @@
       },
       {
         "name": "S&P 500",
-        "value": "6,632",
+        "value": "5,615",
         "region": "USA",
         "change": "",
         "day": "",
@@ -27,7 +35,7 @@
       },
       {
         "name": "Dow Jones",
-        "value": "46,558",
+        "value": "41,912",
         "region": "USA",
         "change": "",
         "day": "",
@@ -35,7 +43,7 @@
       },
       {
         "name": "NASDAQ",
-        "value": "22,105",
+        "value": "17,468",
         "region": "USA",
         "change": "",
         "day": "",
@@ -43,7 +51,7 @@
       },
       {
         "name": "FTSE 100",
-        "value": "10,261",
+        "value": "8,600",
         "region": "UK",
         "change": "",
         "day": "",
@@ -51,7 +59,7 @@
       },
       {
         "name": "DAX",
-        "value": "23,447",
+        "value": "22,621",
         "region": "Germany",
         "change": "",
         "day": "",
@@ -59,7 +67,7 @@
       },
       {
         "name": "Nikkei 225",
-        "value": "53,820",
+        "value": "39,819",
         "region": "Japan",
         "change": "",
         "day": "",
@@ -69,25 +77,25 @@
     "fx": [
       {
         "name": "CAD/USD",
-        "value": "0.7300",
+        "value": "0.7000",
         "day": "",
         "yy": ""
       },
       {
         "name": "EUR/USD",
-        "value": "1.1400",
+        "value": "1.0900",
         "day": "",
         "yy": ""
       },
       {
         "name": "USD/CNY",
-        "value": "6.9000",
+        "value": "7.2300",
         "day": "",
         "yy": ""
       },
       {
         "name": "USD/JPY",
-        "value": "159.7200",
+        "value": "147.6100",
         "day": "",
         "yy": ""
       }
@@ -99,29 +107,22 @@
       "items": [
         {
           "name": "Crude Oil (WTI)",
-          "val": "99.31",
+          "val": "66.03",
           "unit": "bbl",
           "yy": "",
           "day": ""
         },
         {
           "name": "Crude Oil (Brent)",
-          "val": "103.86",
+          "val": "69.28",
           "unit": "bbl",
           "yy": "",
           "day": ""
         },
         {
           "name": "Natural Gas",
-          "val": "3.132",
+          "val": "2.86",
           "unit": "MMBtu",
-          "yy": "",
-          "day": ""
-        },
-        {
-          "name": "Coal (Newcastle)",
-          "val": "96.0",
-          "unit": "t",
           "yy": "",
           "day": ""
         }
@@ -132,28 +133,28 @@
       "items": [
         {
           "name": "Gold",
-          "val": "5023.0",
+          "val": "2891.0",
           "unit": "troy oz",
           "yy": "",
           "day": ""
         },
         {
           "name": "Silver",
-          "val": "80.64",
+          "val": "32.28",
           "unit": "troy oz",
           "yy": "",
           "day": ""
         },
         {
           "name": "Platinum",
-          "val": "2024.0",
+          "val": "962.0",
           "unit": "troy oz",
           "yy": "",
           "day": ""
         },
         {
           "name": "Palladium",
-          "val": "1561.0",
+          "val": "1137.3",
           "unit": "troy oz",
           "yy": "",
           "day": ""
@@ -165,14 +166,14 @@
       "items": [
         {
           "name": "Copper",
-          "val": "5.675",
+          "val": "4.64",
           "unit": "lb",
           "yy": "",
           "day": ""
         },
         {
           "name": "Aluminum",
-          "val": "3426.0",
+          "val": "2651.0",
           "unit": "lb",
           "yy": "",
           "day": ""
@@ -184,28 +185,21 @@
       "items": [
         {
           "name": "Wheat",
-          "val": "613.25",
+          "val": "537.75",
           "unit": "bu",
           "yy": "",
           "day": ""
         },
         {
           "name": "Corn",
-          "val": "467.0",
+          "val": "458.75",
           "unit": "bu",
           "yy": "",
           "day": ""
         },
         {
-          "name": "Rice",
-          "val": "11.38",
-          "unit": "cwt",
-          "yy": "",
-          "day": ""
-        },
-        {
           "name": "Soybeans",
-          "val": "1223.75",
+          "val": "999.75",
           "unit": "bu",
           "yy": "",
           "day": ""
@@ -217,48 +211,29 @@
       "items": [
         {
           "name": "Coffee",
-          "val": "285.15",
+          "val": "389.35",
           "unit": "lb",
           "yy": "",
           "day": ""
         },
         {
           "name": "Cocoa",
-          "val": "3298.0",
+          "val": "8279.0",
           "unit": "t",
           "yy": "",
           "day": ""
         },
         {
           "name": "Sugar #11",
-          "val": "14.41",
+          "val": "18.85",
           "unit": "lb",
           "yy": "",
           "day": ""
         },
         {
           "name": "Cotton",
-          "val": "65.72",
+          "val": "66.0",
           "unit": "lb",
-          "yy": "",
-          "day": ""
-        }
-      ]
-    },
-    {
-      "category": "Agriculture - Oils & Meals",
-      "items": [
-        {
-          "name": "Soybean Oil",
-          "val": "67.43",
-          "unit": "lb",
-          "yy": "",
-          "day": ""
-        },
-        {
-          "name": "Soybean Meal",
-          "val": "322.2",
-          "unit": "ton",
           "yy": "",
           "day": ""
         }
@@ -269,7 +244,7 @@
       "items": [
         {
           "name": "Lumber",
-          "val": "560.0",
+          "val": "384.9",
           "unit": "MBF",
           "yy": "",
           "day": ""
@@ -280,15 +255,15 @@
   "yieldCurve": [
     {
       "term": "2Y",
-      "yield": "2.82"
+      "yield": "2.44"
     },
     {
       "term": "5Y",
-      "yield": "3.09"
+      "yield": "2.75"
     },
     {
       "term": "10Y",
-      "yield": "3.52"
+      "yield": "3.22"
     }
   ]
 }
