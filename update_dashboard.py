@@ -37,7 +37,7 @@ from dotenv import load_dotenv
 from db import init_db, save_dashboard_state, get_all_projects
 from pipeline_logging import PipelineRunLogger
 from pipeline_config import CLAUDE_COST_CAP_USD
-from export_dashboard import export_all
+from tools.export_dashboard import export_all
 import rss_monitor
 import service_health
 
@@ -90,7 +90,7 @@ from tavily_search import set_tracking_db, can_use_tavily
 set_tracking_db(conn)
 
 # Watchlist for official context injection
-_WATCHLIST_PATH = os.path.join(os.path.dirname(__file__), 'watchlist.json')
+_WATCHLIST_PATH = os.path.join(os.path.dirname(__file__), 'config', 'watchlist.json')
 _WATCHLIST = {}
 if os.path.exists(_WATCHLIST_PATH):
     with open(_WATCHLIST_PATH, 'r', encoding='utf-8') as _wf:
@@ -236,7 +236,7 @@ def seed_projects(deep_sweep: bool = False) -> None:
         print(f"  [Seed] Institutional scrape failed: {e}")
 
     # Wayback history backfill
-    from wayback import backfill_project_history as _bfill
+    from tools.wayback import backfill_project_history as _bfill
     print("\n  [Seed] Wayback history backfill...")
     try:
         rows = conn.execute(
@@ -285,8 +285,8 @@ def seed_projects(deep_sweep: bool = False) -> None:
 
 def audit_all_citations():
     """--audit-citations: Link rot audit — re-verify ALL URLs in DB."""
-    from url_verify import verify_url as _vurl, quick_reject as _qr
-    from wayback import save_page as _wsave
+    from tools.url_verify import verify_url as _vurl, quick_reject as _qr
+    from tools.wayback import save_page as _wsave
     from db import get_dashboard_state
 
     print(f"\n{'='*70}")

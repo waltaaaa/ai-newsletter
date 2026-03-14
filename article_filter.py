@@ -529,11 +529,15 @@ def filter_articles(
     initial_count = len(articles)
     filtered_out = []
 
-    # Layer 1: Keyword co-occurrence (+ dollar-value bypass)
+    # Layer 1: Keyword co-occurrence (+ dollar-value bypass + metadata boost)
     if not skip_layer1:
         passed_l1 = []
         for art in articles:
-            if layer1_keyword_check(art.get('title', ''), art.get('summary', '')):
+            # Metadata boost: articles pre-tagged with sector by domain or feed
+            # bypass L1 keyword check (still go through L2 negative + L3 LLM)
+            if art.get('meta_sectors'):
+                passed_l1.append(art)
+            elif layer1_keyword_check(art.get('title', ''), art.get('summary', '')):
                 passed_l1.append(art)
             else:
                 filtered_out.append(('L1', art))

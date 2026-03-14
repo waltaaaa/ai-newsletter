@@ -360,6 +360,16 @@ def run(conn, context, logger):
         institutional_projects = context.get("institutional_projects", [])
         gemini_projects = context.get("gemini_projects", [])
 
+        # ── Pre-step: Metadata tagging (zero API cost) ────────────────
+        try:
+            from metadata_tagger import tag_batch
+            if rss_items:
+                rss_items = tag_batch(rss_items)
+        except ImportError:
+            print("[WARN] metadata_tagger not available, skipping metadata tagging")
+        except Exception as e:
+            print(f"[WARN] Metadata tagging failed, continuing without tags: {e}")
+
         # ── TIER 3: Article extraction from RSS ─────────────────────
         # Compound queries + RSS cover all news discovery.
         # Tavily extracts full text from RSS article URLs.

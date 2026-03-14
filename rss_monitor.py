@@ -512,6 +512,14 @@ def _entry_to_item(entry, meta: dict) -> dict:
             pub_date = val[:25]  # truncate long ISO strings
             break
 
+    # Extract RSS-level category/tag fields for metadata tagger
+    entry_tags = []
+    if hasattr(entry, 'tags') and entry.tags:
+        for tag in entry.tags:
+            term = tag.get('term') or tag.get('label') or ''
+            if term:
+                entry_tags.append(term)
+
     return {
         'title':        title,
         'summary':      summary,
@@ -521,6 +529,7 @@ def _entry_to_item(entry, meta: dict) -> dict:
         'source_level': meta['level'],
         'province':     meta.get('province'),
         'category':     meta.get('category', 'general'),
+        'tags':         entry_tags,
     }
 
 
@@ -633,6 +642,27 @@ def fetch_and_filter(
     all_items = fetch_all_feeds(days_back=days_back, include_media=include_media)
     if not all_items:
         return []
+
+    # Pre-filter step 1: Metadata tagging (zero API cost)
+    try:
+        from metadata_tagger import tag_batch
+        tag_batch(all_items)
+    except ImportError:
+        pass
+    except Exception as e:
+        print(f"[WARN] Metadata tagging failed in fetch_and_filter: {e}")
+
+    # Pre-filter step 2: enhance short/missing snippets via sumy (zero API cost)
+    try:
+        from snippet_enhancer import enhance_batch
+        all_items = enhance_batch(
+            all_items, url_key="url", snippet_key="summary",
+            max_enhance=50, skip_gov=True,
+        )
+    except ImportError:
+        print("[WARN] sumy not installed, skipping snippet enhancement")
+    except Exception as e:
+        print(f"[WARN] Snippet enhancement failed, continuing with original snippets: {e}")
 
     # Split into three tiers: infra-gov (+ key_people), other-gov, media
     _INFRA_CATS = {'infrastructure', 'procurement', 'key_people'}

@@ -83,6 +83,10 @@ Plus: Key people RSS feeds (processed through government bypass)
 5. Negative keywords (crime/sports/weather ONLY — NOT mall, housing, office, heritage)
 6. Gemini Flash classification (uncertain = RELEVANT)
 
+Pre-filter step 1: Metadata tagging — articles tagged with sector (NAICS keys) and geography (province codes) using 6 signal layers: source domain, feed label, RSS categories, URL path, headline geography, headline keywords. Zero API cost. Tags flow through to L1 (metadata boost bypasses keyword check), Claude extraction (sector/province hints), and cross-reference engine (article-indicator alignment).
+
+Pre-filter step 2: Articles with snippets shorter than 80 chars are enhanced via sumy (LexRank extractive summarization) before entering the 6-layer filter. This improves L4 keyword co-occurrence and L6 LLM classification accuracy. Zero API cost. Fails gracefully — original snippet preserved on any error. Government sources are skipped (they already bypass L1+L2).
+
 ## Province GDP Thresholds
 ON $500M, QC $250M, AB $200M, BC $175M, SK $45M, MB $40M, NS $25M, NB $20M, NL $17M, PE $5M, YT/NT/NU $3M
 
@@ -156,10 +160,20 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - `weekly_briefings` — generated briefings
 - `dashboard_state` — frontend state, latest briefing, microscope history/override
 - `miss_audit_results` — typed miss classifications from coverage audit (Phase 6)
+- `job_snapshots` — weekly job posting aggregates and hiring spike alerts
+
+## Directory Structure
+- `phases/` — Pipeline phase modules (data_collection, discovery, filtering, analysis, etc.)
+- `tools/` — Utilities, seeders, audits, deploy, export (`deploy_to_github.py`, `export_dashboard.py`, `url_verify.py`, `wayback.py`, `quality_report.py`, `seed_projects_v2.py`, etc.)
+- `tests/` — Test files (`conftest.py` adds project root to sys.path)
+- `config/` — Static data files (`watchlist.json`, `compound_queries_final.json`, `statcan_table_registry.*`, etc.)
+- `archive/` — Archived code, old backups, legacy frontend
+- `docs/` — GitHub Pages static frontend
+- `public/` — Source frontend assets (synced to docs/ by `tools/deploy_to_github.py`)
 
 ## File Naming
-- Step files: `STEP_2X_DESCRIPTION.md`
-- Discovery: `google_news_rss_search.py`, `rss_filter.py`, `gov_sources.py`, `municipal_dev_apps.py`
+- Discovery: `google_news_rss_search.py`, `rss_filter.py`, `gov_sources.py`, `municipal_dev_apps.py`, `snippet_enhancer.py`, `metadata_tagger.py`
+- Signals: `job_monitor.py` (hiring spike detection — 15 CMAs, 9 sectors, Indeed/Job Bank RSS)
 - Search: `tavily_search.py` (targeted enrichment only)
 - Reasoning: `claude_reasoning.py` (all reasoning — no gemini_pro_reasoning.py)
 - Analysis: `sector_trends.py`, `cross_reference.py`, `indicator_trends.py`

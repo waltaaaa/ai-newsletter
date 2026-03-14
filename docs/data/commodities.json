@@ -1,0 +1,77 @@
+{
+  "updated_at": "2026-03-06T23:29:50.528466",
+  "indicators": {
+    "uranium_spot": {
+      "description": "Uranium spot price proxy (URA ETF)",
+      "year_ago": 22.85,
+      "pct_1w": -10.2,
+      "affected_sectors": [
+        "Mining & O&G",
+        "Utilities"
+      ],
+      "month_ago": 52.39,
+      "pct_1y": 113.5,
+      "pct_1m": -6.9,
+      "affected_provinces": [
+        "SK",
+        "ON",
+        "NB"
+      ],
+      "relevance": "Determines Saskatchewan uranium mine expansion viability and SMR project economics.",
+      "current": 48.78,
+      "week_ago": 54.34
+    },
+    "nickel": {
+      "description": "Nickel price proxy (NIKL ETF)",
+      "year_ago": 28.4,
+      "pct_1w": 0.0,
+      "affected_sectors": [
+        "Mining & O&G"
+      ],
+      "month_ago": 28.4,
+      "pct_1y": 0.0,
+      "pct_1m": 0.0,
+      "affected_provinces": [
+        "ON",
+        "QC",
+        "NL",
+        "MB"
+      ],
+      "relevance": "Affects Ontario and Quebec nickel mine projects and EV battery supply chain.",
+      "current": 28.4,
+      "week_ago": 28.4
+    },
+    "steel": {
+      "description": "Steel price proxy (SLX ETF)",
+      "year_ago": 61.55,
+      "pct_1w": -9.7,
+      "affected_sectors": [
+        "Construction",
+        "Transportation"
+      ],
+      "month_ago": 97.98,
+      "pct_1y": 48.3,
+      "pct_1m": -6.9,
+      "affected_provinces": [],
+      "relevance": "Major input cost for infrastructure and building construction.",
+      "current": 91.25,
+      "week_ago": 101.08
+    },
+    "tsx_infrastructure": {
+      "description": "Canadian infrastructure companies basket",
+      "year_ago": 40.33,
+      "pct_1w": -2.5,
+      "affected_sectors": [
+        "Utilities",
+        "Transportation"
+      ],
+      "month_ago": 52.76,
+      "pct_1y": 35.9,
+      "pct_1m": 3.9,
+      "affected_provinces": [],
+      "relevance": "Market valuation of infrastructure companies signals investment appetite.",
+      "current": 54.81,
+      "week_ago": 56.22
+    }
+  }
+}

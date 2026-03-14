@@ -994,9 +994,22 @@ def selective_extraction_sync(documents, flash_extractions=None):
         url = doc.get('url', '')
         text = doc.get('text') or doc.get('summary', '')
 
+        # Include metadata hints if available
+        hints = ""
+        meta_sectors = doc.get('meta_sectors', [])
+        meta_provinces = doc.get('meta_provinces', [])
+        if meta_sectors or meta_provinces:
+            hint_parts = []
+            if meta_sectors:
+                hint_parts.append(f"Sector hints: {', '.join(meta_sectors)}")
+            if meta_provinces:
+                hint_parts.append(f"Province hints: {', '.join(meta_provinces)}")
+            hints = '\n'.join(hint_parts) + "\n(Hints from source metadata — verify against content)\n\n"
+
         user_prompt = (
             f"Source URL: {url}\n"
             f"Headline: {title}\n"
+            f"{hints}"
             f"Text:\n{text[:4000]}\n\n"
             f"Extract all capital projects mentioned in this document."
         )

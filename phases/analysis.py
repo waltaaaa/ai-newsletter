@@ -595,11 +595,24 @@ def _format_articles_for_prompt(articles: list[dict], max_chars: int = 20000) ->
             src_type = 'canada_gazette'
         elif any(d in url for d in ('.gc.ca', 'canada.ca', '.gov.')):
             src_type = 'government_press_release'
+        # Include metadata hints if available
+        hints = ""
+        meta_sectors = a.get('meta_sectors', [])
+        meta_provinces = a.get('meta_provinces', [])
+        if meta_sectors or meta_provinces:
+            hint_parts = []
+            if meta_sectors:
+                hint_parts.append(f"sector_hints={meta_sectors}")
+            if meta_provinces:
+                hint_parts.append(f"province_hints={meta_provinces}")
+            hints = f"Metadata hints: {', '.join(hint_parts)}\n"
+
         chunk = (
             f"ARTICLE [{i}]:\n"
             f"Source type: {src_type}\n"
             f"Headline: \"{title}\"\n"
             f"URL: {url}\n"
+            f"{hints}"
             f"Text: {text}\n"
         )
         if total + len(chunk) > max_chars:
@@ -984,6 +997,9 @@ INSTRUCTIONS:
 For each article that mentions a Canadian capital project worth $5M or more,
 extract structured data. Only include real, clearly described projects.
 Never fabricate project details not present in the articles.
+Some articles include metadata hints (sector_hints, province_hints) derived from source metadata.
+Use these as starting points but verify against the article content.
+The hints may be empty, incomplete, or occasionally wrong — they are signals, not ground truth.
 
 Output ONLY valid JSON. No markdown. No text outside JSON.
 

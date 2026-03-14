@@ -209,7 +209,7 @@ def run(conn, context, logger):
 
         # Wayback history backfill
         try:
-            from wayback import backfill_project_history, save_page as wayback_save
+            from tools.wayback import backfill_project_history, save_page as wayback_save
         except ImportError:
             backfill_project_history = None
             wayback_save = None

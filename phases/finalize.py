@@ -149,7 +149,7 @@ def run(conn, context, logger):
 
         # Quality Report
         try:
-            from quality_report import generate_quality_report
+            from tools.quality_report import generate_quality_report
             from db import get_all_projects
             print("\n[STEP 8] Generating quality report...")
             gemini_projects = context.get("gemini_projects", [])

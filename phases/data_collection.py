@@ -8,7 +8,6 @@ import traceback
 import re
 import requests
 import time
-import yfinance as yf
 from datetime import datetime, date, timedelta
 
 import rss_monitor
@@ -101,6 +100,7 @@ def get_live_commodities():
         print(f"  Using cached commodity data ({len(cached.get('structured', []))} categories)")
         return cached
 
+    import yfinance as yf
     try:
         data = yf.download(all_tickers, period="1y", progress=False)['Close']
     except Exception as e:
@@ -178,6 +178,7 @@ def get_financial_markets():
         return cached
 
     all_tickers = [t[0] for t in INDICES] + [t[0] for t in FX]
+    import yfinance as yf
     try:
         data = yf.download(all_tickers, period="1y", progress=False)['Close']
     except Exception as e:

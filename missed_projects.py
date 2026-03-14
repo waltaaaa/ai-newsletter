@@ -511,7 +511,7 @@ def diagnose_missed_project(submission):
 def _load_compound_queries():
     """Load compound queries from JSON file."""
     base = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(base, "compound_queries_final.json")
+    path = os.path.join(base, "config", "compound_queries_final.json")
     try:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)

@@ -32,14 +32,14 @@ _wayback_save = None
 def _load_url_verify():
     global _verify_url, _quick_reject
     if _verify_url is None:
-        from url_verify import verify_url, quick_reject
+        from tools.url_verify import verify_url, quick_reject
         _verify_url = verify_url
         _quick_reject = quick_reject
 
 def _load_wayback():
     global _wayback_save
     if _wayback_save is None:
-        from wayback import save_page
+        from tools.wayback import save_page
         _wayback_save = save_page
 
 TODAY = date.today().isoformat()

@@ -15,6 +15,7 @@ import aiohttp
 import feedparser
 import json
 import logging
+import os
 import urllib.parse
 from datetime import datetime
 
@@ -73,7 +74,7 @@ def build_google_news_url(query_text, language="en"):
     return f"{GOOGLE_NEWS_RSS_BASE}?{urllib.parse.urlencode(params)}"
 
 
-def load_compound_queries(json_path="compound_queries_final.json"):
+def load_compound_queries(json_path=os.path.join(os.path.dirname(__file__), "config", "compound_queries_final.json")):
     """Load compound queries from JSON file."""
     with open(json_path, "r") as f:
         data = json.load(f)
@@ -184,12 +185,12 @@ async def fetch_rss_feed(session, feed, semaphore):
             return []
 
 
-async def run_google_news_discovery(json_path="compound_queries_final.json"):
+async def run_google_news_discovery(json_path=None):
     """Run all compound queries via Google News RSS.
 
     Returns deduplicated list of article dicts.
     """
-    queries = load_compound_queries(json_path)
+    queries = load_compound_queries(json_path) if json_path else load_compound_queries()
     rss_feeds = convert_queries_to_rss_urls(queries)
 
     logger.info(f"Google News RSS discovery: {len(queries)} queries → {len(rss_feeds)} unique feeds")
@@ -258,6 +259,18 @@ def run_google_news_search(gemini_client=None):
     if not articles:
         print("  [GOOGLE-NEWS] No articles found")
         return []
+
+    # Pre-filter: enhance short/missing snippets via sumy (zero API cost)
+    try:
+        from snippet_enhancer import enhance_batch
+        articles = enhance_batch(
+            articles, url_key="link", snippet_key="summary",
+            max_enhance=30, skip_gov=False,
+        )
+    except ImportError:
+        print("  [WARN] sumy not installed, skipping snippet enhancement")
+    except Exception as e:
+        print(f"  [WARN] Snippet enhancement failed for Google News results: {e}")
 
     # Run through 3-layer filter
     filtered = filter_articles(

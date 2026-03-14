@@ -16,7 +16,7 @@ Every query has a 4-week lookback window and requests both greenfield and brownf
 import json
 import os
 
-QUERIES_FILE = os.path.join(os.path.dirname(__file__), "compound_queries_final.json")
+QUERIES_FILE = os.path.join(os.path.dirname(__file__), "config", "compound_queries_final.json")
 
 _cached_queries = None
 

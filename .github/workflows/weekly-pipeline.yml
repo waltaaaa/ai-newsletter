@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Download NLTK data for sumy
+        run: python -c "import nltk; nltk.download('punkt_tab', quiet=True)"
+
       - name: Cache local LLM model
         uses: actions/cache@v4
         with:
@@ -57,7 +60,7 @@ jobs:
         continue-on-error: true
 
       - name: Deploy static assets to docs/
-        run: python deploy_to_github.py
+        run: python tools/deploy_to_github.py
 
       - name: Compact database
         run: python -c "import sqlite3; c=sqlite3.connect('dashboard.db'); c.execute('VACUUM'); c.close()"

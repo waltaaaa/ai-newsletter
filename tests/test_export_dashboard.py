@@ -56,7 +56,7 @@ class TestParseValue(unittest.TestCase):
     """Test 1–3 related: _parse_value parsing behavior."""
 
     def setUp(self):
-        from export_dashboard import _parse_value
+        from tools.export_dashboard import _parse_value
         self.parse = _parse_value
 
     def test_parse_billions(self):
@@ -94,7 +94,7 @@ class TestExportProvinceProjects(unittest.TestCase):
         shutil.rmtree(self.tmpdir, ignore_errors=True)
 
     def _run_export(self, threshold_val=500_000_000):
-        from export_dashboard import export_province_projects
+        from tools.export_dashboard import export_province_projects
         export_province_projects(self.conn, "Ontario", threshold_val, self.tmpdir)
         out_path = os.path.join(self.tmpdir, "projects_ontario.json")
         self.assertTrue(os.path.exists(out_path), "projects_ontario.json not created")
@@ -155,7 +155,7 @@ class TestExportAll(unittest.TestCase):
 
     # Test 5: export_all creates all expected files
     def test_all_expected_files_created(self):
-        from export_dashboard import export_all, PROVINCE_SLUGS
+        from tools.export_dashboard import export_all, PROVINCE_SLUGS
         result = export_all(conn=self.conn, output_dir=self.tmpdir)
 
         expected_files = [
@@ -181,7 +181,7 @@ class TestExportAll(unittest.TestCase):
 
     # Test 6: All output files contain valid JSON
     def test_all_files_valid_json(self):
-        from export_dashboard import export_all
+        from tools.export_dashboard import export_all
         export_all(conn=self.conn, output_dir=self.tmpdir)
 
         import glob
@@ -197,7 +197,7 @@ class TestExportAll(unittest.TestCase):
 
     # Test 7: manifest.json contains exported_at and file_list
     def test_manifest_has_required_fields(self):
-        from export_dashboard import export_all
+        from tools.export_dashboard import export_all
         export_all(conn=self.conn, output_dir=self.tmpdir)
 
         manifest_path = os.path.join(self.tmpdir, "manifest.json")
@@ -255,7 +255,7 @@ class TestExportAllProjects(unittest.TestCase):
 
     def test_export_all_projects_creates_file(self):
         """Insert 3 projects across 2 provinces, verify all 3 in projects_all.json."""
-        from export_dashboard import export_all_projects
+        from tools.export_dashboard import export_all_projects
         upsert_project(self.conn, self._make_project("Project A", "Ontario"))
         upsert_project(self.conn, self._make_project("Project B", "Alberta"))
         upsert_project(self.conn, self._make_project("Project C", "Alberta"))
@@ -289,7 +289,7 @@ class TestExportPipelineStatus(unittest.TestCase):
     def test_export_pipeline_status_creates_file(self):
         """Insert a pipeline run row, call export_pipeline_status, verify file structure."""
         from db import save_pipeline_run, save_dashboard_state
-        from export_dashboard import export_pipeline_status
+        from tools.export_dashboard import export_pipeline_status
 
         # Insert a pipeline run
         save_pipeline_run(self.conn, {
@@ -344,7 +344,7 @@ class TestPipelineIntegration(unittest.TestCase):
     def test_export_all_import_present(self):
         source = self._read_source()
         self.assertIn(
-            "from export_dashboard import export_all",
+            "from tools.export_dashboard import export_all",
             source,
             "update_dashboard.py must import export_all from export_dashboard",
         )
@@ -369,7 +369,7 @@ class TestPipelineIntegration(unittest.TestCase):
 
     # Test 11: export_all handles empty database without crashing
     def test_export_all_empty_db(self):
-        from export_dashboard import export_all
+        from tools.export_dashboard import export_all
         import tempfile, shutil
         conn = init_db(":memory:")
         tmpdir = tempfile.mkdtemp()

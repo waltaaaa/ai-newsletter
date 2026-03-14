@@ -89,6 +89,42 @@ INDICATOR_PROJECT_LINKS = {
 }
 
 
+def check_article_indicator_alignment(articles, indicator_changes):
+    """Flag sectors where both new articles and indicator movements are concentrated.
+
+    Uses meta_sectors from the metadata tagger to find correlations between
+    newly discovered articles and indicator movements — even before Claude
+    has extracted formal project records.
+
+    Args:
+        articles: list of article dicts with optional 'meta_sectors' field
+        indicator_changes: list of dicts with 'sector', 'name', 'change' keys
+
+    Returns:
+        list of alignment dicts with sector, indicator, article_count, indicator_change
+    """
+    article_sectors = {}
+    for a in articles:
+        for s in a.get("meta_sectors", []):
+            article_sectors[s] = article_sectors.get(s, 0) + 1
+
+    alignments = []
+    for indicator in indicator_changes:
+        sector = indicator.get("sector")
+        if sector and article_sectors.get(sector, 0) >= 3:
+            alignments.append({
+                "sector": sector,
+                "indicator": indicator["name"],
+                "article_count": article_sectors[sector],
+                "indicator_change": indicator["change"],
+            })
+
+    if alignments:
+        print(f"  [XREF] {len(alignments)} article-indicator alignments detected")
+
+    return alignments
+
+
 def cross_reference_trends(indicator_trends, sector_trends):
     """Cross-reference indicator trends with sector momentum.
 

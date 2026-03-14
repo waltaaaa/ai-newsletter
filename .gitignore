@@ -87,4 +87,11 @@ serviceAccountKey.json
 # Local LLM models (downloaded at runtime)
 models/
 
+# Cleanup artifacts
 nul
+backup_*/
+*.tar.gz
+*_backup_*.json
+fix_log_*.txt
+filtered_*.txt
+seed_run_*.log
