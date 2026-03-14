@@ -1,0 +1,23 @@
+All four parts are done. Here's the summary:
+
+**Part 1 — `local_llm.py` created** with:
+- `get_model()` — lazy-loads Qwen 2.5 3B GGUF, stays in memory
+- `classify_article()` — single-article RELEVANT/IRRELEVANT classification
+- `batch_classify()` — batches of 25 with JSON array output
+- `extract_sentiment()` — Reddit post sentiment classification
+- `repair_json()` — JSON repair via local model
+- All functions fail-open (return RELEVANT / empty) if model unavailable
+
+**Part 2 — Integration into existing modules:**
+- `gemini_engine.py` — `is_rehash()` tries local LLM first, falls back to Gemini
+- `article_filter.py` — `layer3_gemini_prescreen()` tries local LLM batch classification first, falls back to Gemini
+- `update_dashboard.py` — `_repair_json()` chain is now: local LLM → Haiku → Gemini
+
+**Part 3 — `requirements.txt`** — added `llama-cpp-python`
+
+**Part 4 — GitHub Actions workflows** — both `weekly-pipeline.yml` and `daily-indicators.yml` now:
+- Cache the model directory with `actions/cache@v4`
+- Download the GGUF from HuggingFace if not cached
+- Set `LOCAL_MODEL_PATH` env var
+
+Also added `models/` to `.gitignore` to prevent the ~2GB GGUF from being committed.

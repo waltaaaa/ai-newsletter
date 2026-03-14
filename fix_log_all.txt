@@ -215,3 +215,50 @@ warning: in the working copy of 'fix_log_prompt_05.txt', LF will be replaced by 
   PROMPT 6 of 10
 ───────────────────────────────────────────────────
 
+Error: Reached max turns (50)
+✅ Prompt 6 complete. Committing...
+warning: in the working copy of 'capacity_scheduler.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_all.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_prompt_05.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'gov_sources.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'url_verify.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/backfill_commodity_timeseries.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/backfill_frontend_data.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/backfill_global_indicators.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/backfill_timeseries.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/deep_verification.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/historical_backfill.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/missed_project_diagnostics.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/missed_project_enrichment.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/pipeline_cache.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/pipeline_state.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/seed_projects.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'archive/url_verifier.py', LF will be replaced by CRLF the next time Git touches it
+[fix/signal-dispatch-overhaul 033c8da] fix(signal-dispatch): prompt 6 of 10 — clean up dead files and consolidate related modules
+ 26 files changed, 1521 insertions(+), 33 deletions(-)
+ rename backfill_commodity_timeseries.py => archive/backfill_commodity_timeseries.py (100%)
+ rename backfill_descriptions.py => archive/backfill_descriptions.py (100%)
+ rename backfill_frontend_data.py => archive/backfill_frontend_data.py (100%)
+ rename backfill_global_indicators.py => archive/backfill_global_indicators.py (100%)
+ rename backfill_indicator_history.py => archive/backfill_indicator_history.py (100%)
+ rename backfill_project_fields.py => archive/backfill_project_fields.py (100%)
+ rename backfill_project_values.py => archive/backfill_project_values.py (100%)
+ rename backfill_timeseries.py => archive/backfill_timeseries.py (100%)
+ rename deep_verification.py => archive/deep_verification.py (100%)
+ rename gemini_search.py => archive/gemini_search.py (100%)
+ rename historical_backfill.py => archive/historical_backfill.py (100%)
+ rename missed_project_diagnostics.py => archive/missed_project_diagnostics.py (100%)
+ rename missed_project_enrichment.py => archive/missed_project_enrichment.py (100%)
+ rename pipeline_cache.py => archive/pipeline_cache.py (100%)
+ rename pipeline_state.py => archive/pipeline_state.py (100%)
+ rename seed_projects.py => archive/seed_projects.py (100%)
+ rename url_verifier.py => archive/url_verifier.py (100%)
+ create mode 100644 fix_log_prompt_06.txt
+ create mode 100644 missed_projects.py
+ create mode 100644 pipeline_store.py
+   Committed. Moving to next prompt...
+
+───────────────────────────────────────────────────
+  PROMPT 7 of 10
+───────────────────────────────────────────────────
+

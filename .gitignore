@@ -84,4 +84,7 @@ serviceAccountKey.json
 # Local cache directory
 .cache/
 
+# Local LLM models (downloaded at runtime)
+models/
+
 nul

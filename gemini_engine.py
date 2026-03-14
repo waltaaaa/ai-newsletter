@@ -15,6 +15,7 @@ import os
 import logging
 
 import service_health
+import local_llm
 
 logger = logging.getLogger(__name__)
 
@@ -144,9 +145,9 @@ def _parse_raw(api_response, query_obj):
 
 
 async def is_rehash(session, semaphore, article_text, existing_project_summary):
-    """Use Gemini Flash to determine if article adds new information vs existing project.
+    """Determine if article adds new information vs existing project.
 
-    Free (Flash) — reduces unnecessary Sonnet extraction calls.
+    Tries local LLM first, falls back to Gemini Flash if local unavailable.
 
     Args:
         session: aiohttp.ClientSession
@@ -157,7 +158,7 @@ async def is_rehash(session, semaphore, article_text, existing_project_summary):
     Returns:
         bool: True if article is a rehash (no new info), False if it has new info
     """
-    prompt = (
+    prompt_text = (
         "Compare this article to an existing project summary.\n"
         "Does the article contain ANY new information not in the summary?\n"
         "New information includes: updated cost, new timeline, status change, "
@@ -167,7 +168,25 @@ async def is_rehash(session, semaphore, article_text, existing_project_summary):
         'Respond with ONLY "NEW" or "REHASH".'
     )
 
-    query_obj = {"query": prompt}
+    # Try local LLM first
+    model = local_llm.get_model()
+    if model is not None:
+        try:
+            resp = model.create_chat_completion(messages=[
+                {"role": "system", "content": "You classify whether articles contain new project information."},
+                {"role": "user", "content": prompt_text}
+            ], max_tokens=10, temperature=0)
+            text = resp["choices"][0]["message"]["content"].strip().upper()
+            return text == "REHASH"
+        except Exception as e:
+            logger.warning(f"Local LLM rehash check failed: {e}")
+
+    # Fall back to Gemini
+    health = service_health.get()
+    if not health.is_available("gemini"):
+        return False  # fail-open: treat as NEW if both unavailable
+
+    query_obj = {"query": prompt_text}
     result = await query_one(session, semaphore, query_obj,
                              "You classify whether articles contain new project information.",
                              attempt=0)

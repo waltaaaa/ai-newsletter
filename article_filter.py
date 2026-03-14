@@ -23,6 +23,7 @@ import re
 from datetime import date
 
 from dotenv import load_dotenv
+import local_llm
 
 load_dotenv()
 
@@ -389,7 +390,7 @@ def layer3_gemini_prescreen(
     conn=None,
 ) -> list[int]:
     """
-    Layer 3: Gemini Flash batch classification with structured JSON output.
+    Layer 3: Local LLM batch classification, falling back to Gemini Flash.
     Returns list of indices (from the input list) that are RELEVANT.
 
     When conn is provided, stores classification_json in documents table.
@@ -397,6 +398,25 @@ def layer3_gemini_prescreen(
     """
     if not articles:
         return []
+
+    # Try local LLM first
+    local_model = local_llm.get_model()
+    if local_model is not None:
+        try:
+            items = [
+                {"headline": a.get("title", ""), "snippet": (a.get("summary", "") or "")[:150]}
+                for a in articles
+            ]
+            classifications = local_llm.batch_classify(items, _L3_PROMPT)
+            relevant_indices = []
+            for i, cls in enumerate(classifications):
+                if i < len(articles) and "RELEVANT" in str(cls).upper():
+                    relevant_indices.append(i)
+            print(f"  [Filter L3] Local LLM: {len(relevant_indices)}/{len(articles)} relevant")
+            return relevant_indices
+        except Exception as e:
+            print(f"  [Filter L3] Local LLM failed, falling back to Gemini: {e}")
+
     if not gemini_client:
         # No client — pass everything through (fail open)
         return list(range(len(articles)))

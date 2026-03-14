@@ -13,3 +13,4 @@ aiohttp
 nest_asyncio
 reportlab
 python-docx
+llama-cpp-python

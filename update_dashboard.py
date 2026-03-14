@@ -55,6 +55,7 @@ from citation_audit import (
 from google_news_rss_search import run_google_news_search
 # Perplexity removed — function covered by compound queries + enrichment tiers
 from article_filter import filter_articles
+import local_llm
 from quality_report import generate_quality_report
 from project_dedup import deduplicate_projects
 from project_schema import normalize_project_type, is_brownfield
@@ -2047,14 +2048,24 @@ def _is_truncated(text: str) -> bool:
 
 
 def _repair_json(broken_json: str, label: str) -> dict:
-    """Try Haiku first (cheap), then Gemini if Haiku fails and Gemini is available."""
+    """Try local LLM first, then Haiku, then Gemini."""
     if not broken_json:
         return {}
+
+    # Try local LLM first (free, no network)
+    try:
+        result = local_llm.repair_json(broken_json)
+        if result is not None:
+            print(f"    [LOCAL REPAIR OK] {label}")
+            return result
+    except Exception as e:
+        print(f"    [LOCAL REPAIR FAILED] {label}: {e}")
+
     repair_prompt = (
         "The following JSON is malformed or truncated. Return ONLY the corrected valid JSON. "
         "No markdown. No explanation.\n\n" + broken_json
     )
-    # Try Claude Haiku first (cheap, always available)
+    # Try Claude Haiku (cheap, always available)
     try:
         msg = anthropic_client.messages.create(
             model="claude-haiku-4-5-20251001",
@@ -2078,7 +2089,7 @@ def _repair_json(broken_json: str, label: str) -> dict:
     if health.is_available("gemini"):
         return _repair_with_gemini(broken_json, label)
 
-    print(f"    [REPAIR FAILED] {label}: Haiku failed and Gemini unavailable")
+    print(f"    [REPAIR FAILED] {label}: all repair methods exhausted")
     return {}
 
 
