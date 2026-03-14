@@ -138,6 +138,15 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 7. Markets & Commodities — price movements stated factually, affected project counts from database
 8. Looking Ahead — upcoming scheduled events (BoC dates, StatsCan releases, budget dates) with affected project counts
 
+The briefing integrates data from: indicator history, project database, discovery articles, policy tracker (legislative/regulatory developments), job monitor (hiring spikes), procurement monitor (contract awards), IAAC status changes, and regulatory tribunal decisions. All sources cited factually per editorial policy.
+
+## Claude Analysis Calls — Additional Context (from Prompts 11-19)
+| Call | Additional Context |
+|------|-------------------|
+| 1 (Macro) | Policy summary, top hiring spikes, procurement ≥$10M, IAAC changes, extended StatCan summary |
+| 2 (Industries) | Per-sector signals: policy items, hiring spikes, procurement awards |
+| 3 (Provinces) | Per-province signals: policy items, hiring spikes, procurement awards, IAAC changes |
+
 ## Briefing Export
 - PDF via reportlab, DOCX via python-docx
 - Download buttons on frontend: `/api/briefing-download?format=pdf` and `?format=docx`

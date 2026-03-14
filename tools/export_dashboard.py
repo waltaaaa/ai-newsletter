@@ -503,20 +503,40 @@ def export_microscope(conn, output_dir: str) -> str:
 
 
 def export_policy(conn, output_dir: str) -> str:
-    """Export policy.json from the latest policy_developments in dashboard_state."""
+    """Export policy.json from policy_snapshots table and dashboard_state."""
     from db import get_dashboard_state
 
-    # Find the most recent policy_developments_YYYY-WNN key
-    row = conn.execute("""
-        SELECT value FROM dashboard_state
-        WHERE key LIKE 'policy_developments_%'
-        ORDER BY key DESC LIMIT 1
-    """).fetchone()
+    # Try policy_snapshots table first (from Prompt 15 policy tracker)
+    weeks = []
+    try:
+        rows = conn.execute("""
+            SELECT week_of, summary FROM policy_snapshots
+            ORDER BY week_of DESC LIMIT 8
+        """).fetchall()
+        for row in rows:
+            weeks.append({
+                "week_of": row[0],
+                "summary": _safe_json_loads(row[1], {}),
+            })
+    except Exception:
+        pass  # Table may not exist yet
 
-    if row:
-        data = _safe_json_loads(row[0], {})
+    # Fallback: dashboard_state policy_developments keys
+    if not weeks:
+        row = conn.execute("""
+            SELECT value FROM dashboard_state
+            WHERE key LIKE 'policy_developments_%'
+            ORDER BY key DESC LIMIT 1
+        """).fetchone()
+        if row:
+            data = _safe_json_loads(row[0], {})
+        else:
+            data = {"articles": [], "count": 0}
     else:
-        data = {"articles": [], "count": 0}
+        data = {
+            "weeks": weeks,
+            "last_updated": datetime.now(timezone.utc).isoformat(),
+        }
 
     out_path = os.path.join(output_dir, "policy.json")
     with open(out_path, "w", encoding="utf-8") as f:

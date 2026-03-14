@@ -40,7 +40,8 @@ Return ONLY a JSON object:
 }}"""
 
 
-async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_insights):
+async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_insights,
+                                  signal_context=None):
     """Select this week's Under the Microscope topic.
 
     Selection criteria (weighted):
@@ -48,12 +49,15 @@ async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_in
     2. Highest-volume news story in RSS feeds this week
     3. Story with largest indicator/commodity moves
     4. Story affecting the most tracked projects
+    5. Multi-signal convergence boost (policy + hiring + procurement + IAAC)
 
     Args:
         conn: sqlite3.Connection from db.py
         rss_articles: list of article dicts from RSS feeds
         indicator_trends: dict from compute_indicator_trends()
         cross_insights: dict from cross_reference_trends()
+        signal_context: dict with policy_items, job_spikes, procurement_contracts,
+                        iaac_status_changes from Prompts 11-19
 
     Returns: dict with topic, description, related_articles, weeks_running, history
     """
@@ -105,9 +109,14 @@ async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_in
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel("gemini-2.5-flash")
 
+        # Build signal summary for topic selection
+        _sig_lines = _format_signal_summary_for_topic(signal_context or {})
+
         prompt = TOPIC_SELECTION_PROMPT.format(
             headlines="\n".join(f"- {h}" for h in recent_headlines[:200])
         )
+        if _sig_lines:
+            prompt += f"\n\nAdditional signal data (consider when selecting topic):\n{_sig_lines}"
         response = model.generate_content(prompt)
         text = response.text.strip()
 
@@ -121,6 +130,11 @@ async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_in
         if not topic:
             logger.warning("Gemini returned empty topic")
             return None
+
+        # Calculate signal convergence boost
+        sig_boost = calculate_signal_boost(affected_sectors, signal_context or {})
+        if sig_boost:
+            logger.info(f"Microscope topic signal boost: +{sig_boost}")
 
         logger.info(f"Microscope topic selected: {topic}")
         return await _build_topic_context(
@@ -187,6 +201,82 @@ def _topics_match(topic_a, topic_b):
         return False
     overlap = len(a & b) / min(len(a), len(b))
     return overlap >= 0.5
+
+
+# ── Signal helpers for topic selection ─────────────────────────────────────
+
+
+def _format_signal_summary_for_topic(signal_context):
+    """Format signal data as a concise summary for topic selection."""
+    if not signal_context:
+        return ''
+    parts = []
+    spikes = signal_context.get('job_spikes', [])
+    if spikes:
+        sectors = {}
+        for s in spikes:
+            sec = s.get('sector', 'unknown')
+            sectors[sec] = sectors.get(sec, 0) + 1
+        parts.append("Hiring spikes: " + ", ".join(f"{v} in {k}" for k, v in sectors.items()))
+    contracts = signal_context.get('procurement_contracts', [])
+    big = [c for c in contracts if c.get('value', 0) >= 10_000_000]
+    if big:
+        parts.append(f"Procurement: {len(big)} contracts ≥$10M awarded")
+    iaac = signal_context.get('iaac_status_changes', [])
+    if iaac:
+        parts.append(f"IAAC: {len(iaac)} assessment status changes")
+    policy = signal_context.get('policy_items', [])
+    if policy:
+        cats = {}
+        for p in policy:
+            for c in p.get('policy_categories', []):
+                cats[c] = cats.get(c, 0) + 1
+        parts.append("Policy: " + ", ".join(f"{v} {k}" for k, v in cats.items()))
+    return "\n".join(f"- {p}" for p in parts) if parts else ''
+
+
+def calculate_signal_boost(affected_sectors, signal_context):
+    """Calculate a scoring boost for topics with multi-signal convergence.
+
+    A sector with simultaneous policy changes, hiring spikes, and procurement
+    awards is a stronger microscope candidate.
+
+    Returns: int boost score
+    """
+    if not signal_context or not affected_sectors:
+        return 0
+
+    boost = 0
+    for sector in affected_sectors:
+        # Policy convergence
+        policy_items = [
+            p for p in signal_context.get('policy_items', [])
+            if sector in p.get('affected_sectors', [])
+        ]
+        boost += len(policy_items) * 2
+
+        # Hiring activity
+        hiring_spikes = [
+            s for s in signal_context.get('job_spikes', [])
+            if s.get('sector') == sector
+        ]
+        boost += len(hiring_spikes) * 3
+
+        # Procurement activity
+        procurement = [
+            c for c in signal_context.get('procurement_contracts', [])
+            if any(p.get('sector') == sector for p in c.get('linked_projects', []))
+        ]
+        boost += len(procurement) * 2
+
+        # IAAC status changes
+        iaac_changes = [
+            c for c in signal_context.get('iaac_status_changes', [])
+            if c.get('sector') == sector
+        ]
+        boost += len(iaac_changes) * 4
+
+    return boost
 
 
 # ── Analysis generation ────────────────────────────────────────────────────

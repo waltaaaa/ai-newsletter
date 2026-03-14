@@ -60,6 +60,75 @@ def _format_list(items):
     return "\n".join(lines)
 
 
+def _format_signal_context(signal_context):
+    """Format Prompts 11-19 signal data for the briefing prompt."""
+    if not signal_context:
+        return ""
+
+    parts = []
+
+    # Hiring spikes
+    spikes = signal_context.get('job_spikes', [])[:5]
+    if spikes:
+        s_lines = [
+            f"  - {s.get('employer', '?')} in {s.get('location', '?')} "
+            f"({s.get('sector', '?')}): {s.get('current_count', 0)} postings, "
+            f"{s.get('multiplier', 0):.1f}x normal"
+            for s in spikes
+        ]
+        parts.append(
+            "=== HIRING SIGNALS ===\n"
+            "Hiring spikes indicate project mobilization. Include in Section 6 (Project Tracker).\n"
+            + '\n'.join(s_lines)
+        )
+
+    # Procurement awards ≥$10M
+    contracts = [
+        c for c in signal_context.get('procurement_contracts', [])
+        if c.get('value', 0) >= 10_000_000
+    ][:5]
+    if contracts:
+        c_lines = []
+        for c in contracts:
+            val = c.get('value', 0)
+            val_str = f"${val / 1_000_000:.0f}M" if val else 'undisclosed'
+            desc = c.get('description', c.get('title', ''))[:150]
+            c_lines.append(f"  - {desc} — {val_str}")
+        parts.append(
+            "=== PROCUREMENT AWARDS ===\n"
+            "Government contract awards confirm project advancement. Include in Section 6.\n"
+            + '\n'.join(c_lines)
+        )
+
+    # IAAC status changes
+    iaac = signal_context.get('iaac_status_changes', [])
+    if iaac:
+        i_lines = [
+            f"  - {ch.get('project_name', '?')}: "
+            f"{ch.get('old_status', '?')} → {ch.get('new_status', '?')}"
+            for ch in iaac[:5]
+        ]
+        parts.append(
+            "=== ASSESSMENT STATUS CHANGES ===\n"
+            "Federal IAAC transitions. Include in Section 6 (Project Tracker).\n"
+            + '\n'.join(i_lines)
+        )
+
+    # Regulatory signals
+    # (these come from discovered_articles tagged with regulatory_signal)
+    # Not directly in signal_context, but we include the note for completeness
+
+    if not parts:
+        return ""
+
+    return (
+        "\n\n" + '\n\n'.join(parts) + "\n\n"
+        "IMPORTANT: All new data sources follow the same editorial rules. "
+        "State what happened, cite the source, reference specific numbers. "
+        "No predictions, no 'good news/bad news' framing."
+    )
+
+
 async def generate_weekly_briefing(
     project_trends,
     indicator_trends,
@@ -69,6 +138,7 @@ async def generate_weekly_briefing(
     upcoming_events,
     pre_event_analyses,
     microscope_text=None,
+    signal_context=None,
 ):
     """Generate the full weekly intelligence briefing via Claude Sonnet.
 
@@ -163,6 +233,8 @@ Pipeline health:
 
 === UNDER THE MICROSCOPE (pre-generated deep-dive — incorporate as section 3) ===
 {microscope_text if microscope_text else 'No microscope analysis available this week. Skip section 3 and proceed with sections 1-2, 4-8.'}
+
+{_format_signal_context(signal_context)}
 
 Generate the weekly briefing following the 8-section structure in your system instructions."""
 

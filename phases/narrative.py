@@ -72,6 +72,15 @@ def run(conn, context, logger):
         except Exception as e:
             print(f"  [CALENDAR] Failed: {type(e).__name__}: {e}")
 
+        # Build signal context for downstream modules
+        signal_context = {
+            'policy_summary': context.get('policy_summary', {}),
+            'policy_items': context.get('policy_items', []),
+            'job_spikes': context.get('job_spikes', []),
+            'procurement_contracts': context.get('procurement_contracts', []),
+            'iaac_status_changes': context.get('iaac_status_changes', []),
+        }
+
         # Weekly narrative briefing
         try:
             from weekly_briefing import generate_weekly_briefing, store_and_distribute_briefing
@@ -84,9 +93,15 @@ def run(conn, context, logger):
                     "total": sector_data.get("total_projects", 0),
                     "by_sector": sector_data.get("sectors", {}),
                 }
+                # Pass trade policy context to market commentary
+                _trade_policy = [
+                    p for p in context.get('policy_items', [])
+                    if 'trade_policy' in p.get('policy_categories', [])
+                ]
                 market_commentary_result = _aio.run(
                     generate_market_commentary(
-                        cdn_commodity_data, _project_summary, policy_developments
+                        cdn_commodity_data, _project_summary, policy_developments,
+                        trade_policy=_trade_policy,
                     )
                 )
                 if market_commentary_result:
@@ -127,7 +142,8 @@ def run(conn, context, logger):
 
                 rss_items = context.get("rss_items", [])
                 topic_context = _aio.run(select_microscope_topic(
-                    conn, rss_items, indicator_data, xref_data
+                    conn, rss_items, indicator_data, xref_data,
+                    signal_context=signal_context,
                 ))
                 if topic_context and topic_context.get("topic"):
                     print(f"  [MICROSCOPE] Topic: {topic_context['topic']}")
@@ -163,6 +179,7 @@ def run(conn, context, logger):
                 upcoming_events=upcoming_events,
                 pre_event_analyses=pre_event_analyses,
                 microscope_text=microscope_text,
+                signal_context=signal_context,
             ))
 
             if briefing:

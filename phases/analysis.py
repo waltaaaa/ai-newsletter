@@ -622,13 +622,237 @@ def _format_articles_for_prompt(articles: list[dict], max_chars: int = 20000) ->
     return '\n'.join(lines)
 
 
+# ── CMA → Province mapping (for job spike province attribution) ──────────────
+
+_CMA_TO_PROVINCE = {
+    'Toronto': 'ON', 'Ottawa': 'ON', 'Hamilton': 'ON', 'Kitchener': 'ON',
+    'London': 'ON', 'Windsor': 'ON',
+    'Montreal': 'QC', 'Quebec City': 'QC',
+    'Vancouver': 'BC', 'Victoria': 'BC',
+    'Calgary': 'AB', 'Edmonton': 'AB',
+    'Winnipeg': 'MB', 'Regina': 'SK', 'Saskatoon': 'SK',
+    'Halifax': 'NS', 'St. John\'s': 'NL', 'Saint John': 'NB',
+    'Charlottetown': 'PE', 'Fredericton': 'NB', 'Moncton': 'NB',
+}
+
+
+def _cma_to_province(location: str) -> str:
+    """Map CMA/city name to 2-letter province code."""
+    if not location:
+        return ''
+    for cma, prov in _CMA_TO_PROVINCE.items():
+        if cma.lower() in location.lower():
+            return prov
+    return ''
+
+
+# ── Signal context builders (Prompts 11-19 data) ────────────────────────────
+
+def _build_signal_context_blocks(sig: dict) -> dict:
+    """Build formatted text blocks from new signal data for Claude prompts.
+
+    Returns dict with keys: call1, sector_signals, province_signals
+    """
+    blocks = {}
+
+    # ── Call 1: National-level signal summary ────────────────────
+    parts = []
+
+    # Policy developments
+    policy_summary = sig.get('policy_summary', {})
+    policy_items = sig.get('policy_items', [])
+    if policy_summary or policy_items:
+        p_lines = []
+        for item in policy_items[:8]:
+            title = item.get('title', '')[:150]
+            cats = ', '.join(item.get('policy_categories', [])[:3])
+            affected = item.get('affected_projects_total', 0)
+            p_lines.append(f"  - [{cats}] {title} ({affected} projects in scope)")
+        if p_lines:
+            parts.append(
+                "POLICY DEVELOPMENTS (legislative/regulatory changes affecting capital investment):\n"
+                + '\n'.join(p_lines) + '\n'
+                "Report what happened factually. Do not predict outcomes."
+            )
+
+    # Hiring spikes
+    spikes = sig.get('job_spikes', [])[:10]
+    if spikes:
+        s_lines = []
+        for s in spikes:
+            s_lines.append(
+                f"  - {s.get('employer', '?')} in {s.get('location', '?')} "
+                f"({s.get('sector', '?')}): {s.get('current_count', 0)} postings, "
+                f"{s.get('multiplier', 0):.1f}x normal"
+            )
+        parts.append(
+            "HIRING SIGNALS (employer job posting spikes — possible project mobilization):\n"
+            + '\n'.join(s_lines)
+        )
+
+    # Procurement highlights (≥$10M)
+    contracts = sig.get('procurement_contracts', [])
+    big_contracts = [c for c in contracts if c.get('value', 0) >= 10_000_000][:10]
+    if big_contracts:
+        c_lines = []
+        for c in big_contracts:
+            val = c.get('value', 0)
+            val_str = f"${val / 1_000_000:.0f}M" if val else 'undisclosed'
+            desc = c.get('description', c.get('title', ''))[:150]
+            prov = c.get('province', '')
+            linked = len(c.get('linked_projects', []))
+            link_note = f", linked to {linked} tracked project(s)" if linked else ''
+            c_lines.append(f"  - [{prov}] {desc} — {val_str}{link_note}")
+        parts.append(
+            "GOVERNMENT PROCUREMENT (contract awards/tenders ≥$10M in construction/infrastructure):\n"
+            + '\n'.join(c_lines)
+        )
+
+    # IAAC status changes
+    iaac = sig.get('iaac_status_changes', [])
+    if iaac:
+        i_lines = []
+        for ch in iaac[:8]:
+            i_lines.append(
+                f"  - {ch.get('project_name', '?')}: "
+                f"{ch.get('old_status', '?')} → {ch.get('new_status', '?')} "
+                f"({ch.get('province', '')})"
+            )
+        parts.append(
+            "ASSESSMENT STATUS CHANGES (federal IAAC transitions):\n"
+            + '\n'.join(i_lines)
+        )
+
+    # Extended indicators summary
+    ext_tables = sig.get('statcan_extended_tables_ok', 0)
+    ext_saved = sig.get('statcan_extended_saved', 0)
+    if ext_tables:
+        parts.append(
+            f"EXTENDED STATCAN DATA: {ext_tables} additional tables fetched, "
+            f"{ext_saved} new indicator values saved this cycle."
+        )
+
+    blocks['call1'] = '\n\n'.join(parts) if parts else ''
+
+    # ── Call 2: Per-sector signals ────────────────────────────────
+    sector_signals = {}
+    for item in policy_items:
+        for sector in item.get('affected_sectors', []):
+            sector_signals.setdefault(sector, {'policy': [], 'hiring': [], 'procurement': []})
+            sector_signals[sector]['policy'].append({
+                'title': item.get('title', '')[:120],
+                'source_type': item.get('source_type', ''),
+                'affected_projects_total': item.get('affected_projects_total', 0),
+            })
+    for spike in spikes:
+        sector = spike.get('sector')
+        if sector:
+            sector_signals.setdefault(sector, {'policy': [], 'hiring': [], 'procurement': []})
+            sector_signals[sector]['hiring'].append({
+                'employer': spike.get('employer', ''),
+                'location': spike.get('location', ''),
+                'count': spike.get('current_count', 0),
+                'multiplier': spike.get('multiplier', 0),
+            })
+    for contract in contracts:
+        for proj in contract.get('linked_projects', []):
+            sector = proj.get('sector')
+            if sector:
+                sector_signals.setdefault(sector, {'policy': [], 'hiring': [], 'procurement': []})
+                sector_signals[sector]['procurement'].append({
+                    'description': contract.get('description', '')[:150],
+                    'value': contract.get('value'),
+                })
+
+    if sector_signals:
+        ss_lines = []
+        for sector, data in sorted(sector_signals.items()):
+            items_desc = []
+            if data['policy']:
+                items_desc.append(f"{len(data['policy'])} policy items")
+            if data['hiring']:
+                items_desc.append(f"{len(data['hiring'])} hiring spikes")
+            if data['procurement']:
+                items_desc.append(f"{len(data['procurement'])} procurement awards")
+            ss_lines.append(f"  {sector}: {', '.join(items_desc)}")
+        blocks['sector_signals'] = (
+            "SECTOR SIGNALS (from policy tracker, job monitor, procurement monitor):\n"
+            + '\n'.join(ss_lines) + '\n'
+            "Incorporate these signals where relevant. State facts, not opinions."
+        )
+    else:
+        blocks['sector_signals'] = ''
+
+    # ── Call 3: Per-province signals ──────────────────────────────
+    province_signals = {}
+    for item in policy_items:
+        prov = item.get('province')
+        if prov:
+            province_signals.setdefault(prov, {'policy': [], 'hiring': [], 'procurement': [], 'iaac_changes': []})
+            province_signals[prov]['policy'].append({
+                'title': item.get('title', '')[:120],
+                'categories': item.get('policy_categories', []),
+            })
+    for spike in spikes:
+        prov = _cma_to_province(spike.get('location', ''))
+        if prov:
+            province_signals.setdefault(prov, {'policy': [], 'hiring': [], 'procurement': [], 'iaac_changes': []})
+            province_signals[prov]['hiring'].append({
+                'employer': spike.get('employer', ''),
+                'location': spike.get('location', ''),
+                'sector': spike.get('sector', ''),
+                'count': spike.get('current_count', 0),
+            })
+    for contract in contracts:
+        prov = contract.get('province')
+        if prov:
+            province_signals.setdefault(prov, {'policy': [], 'hiring': [], 'procurement': [], 'iaac_changes': []})
+            province_signals[prov]['procurement'].append({
+                'description': contract.get('description', '')[:150],
+                'value': contract.get('value'),
+            })
+    for change in iaac:
+        prov = change.get('province')
+        if prov:
+            province_signals.setdefault(prov, {'policy': [], 'hiring': [], 'procurement': [], 'iaac_changes': []})
+            province_signals[prov]['iaac_changes'].append({
+                'project': change.get('project_name', ''),
+                'old_status': change.get('old_status', ''),
+                'new_status': change.get('new_status', ''),
+            })
+
+    if province_signals:
+        ps_lines = []
+        for prov, data in sorted(province_signals.items()):
+            items_desc = []
+            if data['policy']:
+                items_desc.append(f"{len(data['policy'])} policy")
+            if data['hiring']:
+                items_desc.append(f"{len(data['hiring'])} hiring")
+            if data['procurement']:
+                items_desc.append(f"{len(data['procurement'])} procurement")
+            if data['iaac_changes']:
+                items_desc.append(f"{len(data['iaac_changes'])} IAAC changes")
+            ps_lines.append(f"  {prov}: {', '.join(items_desc)}")
+        blocks['province_signals'] = (
+            "PROVINCE SIGNALS (from policy tracker, job monitor, procurement monitor, IAAC):\n"
+            + '\n'.join(ps_lines) + '\n'
+            "Reference province-specific signals in each province's analysis where relevant."
+        )
+    else:
+        blocks['province_signals'] = ''
+
+    return blocks
+
+
 # ── Main analysis function ───────────────────────────────────────────────────
 
 def generate_claude_analysis(hard_data: dict, articles: list[dict],
                              rss_items: list[dict] | None = None,
                              anthropic_client=None, gemini_client=None,
                              cost_state=None, conn=None,
-                             watchlist=None) -> dict:
+                             watchlist=None,
+                             signal_context=None) -> dict:
     """
     Four-call Claude pipeline with model routing:
       Call 1: Macro — Claude Sonnet (executive_summary, national, global, globalVectors, watchlist)
@@ -640,6 +864,8 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
     """
     if watchlist is None:
         watchlist = {}
+    if signal_context is None:
+        signal_context = {}
     if cost_state is None:
         cost_state = {
             'usd': 0.0, 'input': 0, 'output': 0,
@@ -685,6 +911,9 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
     except Exception as e:
         print(f"  [Sentiment] Collection failed (non-critical): {type(e).__name__}")
 
+    # ── Build signal context blocks from Prompts 11-19 data ────────
+    _signal_blocks = _build_signal_context_blocks(signal_context)
+
     # Split articles by topic for focused prompts
     economy_arts  = [a for a in articles if a.get('topic') == 'economy']
     project_arts  = [a for a in articles if a.get('topic') == 'project']
@@ -708,6 +937,9 @@ VERIFIED DATA (use exactly, never modify round or reinterpret):
 RECENT NEWS AND PRESS RELEASES (cite by article number):
 {all_arts_text}
 {sentiment_ctx}
+
+{_signal_blocks.get('call1', '')}
+
 {CITATION_RULES}
 
 Write:
@@ -811,6 +1043,8 @@ VERIFIED DATA:
 
 RECENT ARTICLES (grouped by industry — cite by article number, use URLs exactly as given):
 {industry_arts_text}
+
+{_signal_blocks.get('sector_signals', '')}
 
 {CITATION_RULES}
 
@@ -916,6 +1150,8 @@ GOVERNMENT RSS NEWS RELEASES:
 {rss_ctx[:8000]}
 
 {prov_officials_ctx}
+
+{_signal_blocks.get('province_signals', '')}
 
 {CITATION_RULES}
 
@@ -1293,6 +1529,17 @@ def run(conn, context, logger):
         boc_data = context["boc_data"]
         yield_data = context["yield_data"]
 
+        # Build signal context from Prompts 11-19 data streams
+        signal_context = {
+            'policy_summary': context.get('policy_summary', {}),
+            'policy_items': context.get('policy_items', []),
+            'job_spikes': context.get('job_spikes', []),
+            'procurement_contracts': context.get('procurement_contracts', []),
+            'iaac_status_changes': context.get('iaac_status_changes', []),
+            'statcan_extended_tables_ok': context.get('statcan_extended_tables_ok', 0),
+            'statcan_extended_saved': context.get('statcan_extended_saved', 0),
+        }
+
         # Call Claude analysis
         final_payload = generate_claude_analysis(
             hard_data, extracted_articles, rss_items,
@@ -1301,6 +1548,7 @@ def run(conn, context, logger):
             cost_state=cost_state,
             conn=conn,
             watchlist=watchlist,
+            signal_context=signal_context,
         )
         logger.log_step("step_3_claude_analysis")
 

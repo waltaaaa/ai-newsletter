@@ -145,7 +145,8 @@ def fetch_canadian_commodities():
     return results
 
 
-async def generate_market_commentary(market_data, project_data, policy_context):
+async def generate_market_commentary(market_data, project_data, policy_context,
+                                     trade_policy=None):
     """Generate weekly market commentary connecting prices to projects via Claude Sonnet."""
     from claude_reasoning import reason_with_claude_tracked
 
@@ -154,6 +155,10 @@ async def generate_market_commentary(market_data, project_data, policy_context):
         "for capital investment and construction activity. Connect price changes to "
         "specific Canadian economic impacts. Be specific about thresholds and "
         "reference specific projects from the database when possible. "
+        "If trade policy developments (tariffs, export controls, trade agreements) "
+        "occurred this week, note them alongside affected commodity price movements "
+        "and the number of projects in affected sectors. State the policy change "
+        "and the data — do not speculate on impact. "
         "Write 200-300 words."
     )
 
@@ -171,6 +176,9 @@ ACTIVE PROJECT PIPELINE SUMMARY:
 
 RECENT POLICY CONTEXT:
 {json.dumps(policy_context[:3], indent=2) if policy_context else 'No significant policy changes this week.'}
+
+TRADE POLICY DEVELOPMENTS:
+{json.dumps([{'title': t.get('title', ''), 'categories': t.get('policy_categories', []), 'affected_sectors': t.get('affected_sectors', [])} for t in (trade_policy or [])[:5]], indent=2) if trade_policy else 'No trade policy changes this week.'}
 
 Write a concise market commentary for a Canadian economic intelligence briefing.
 Focus on what matters for capital investment decisions.
