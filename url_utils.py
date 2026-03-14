@@ -97,12 +97,33 @@ def validate_url(url):
 
 
 def normalize_url(url):
-    """Normalize URL for deduplication (strip tracking params, fragments)."""
+    """Normalize URL for deduplication (strip tracking params, fragments).
+
+    Only strips known tracking parameters. Preserves meaningful query params
+    (e.g. StatCan ?pid=...) to avoid merging distinct resources.
+    """
     if not url:
         return ""
     try:
+        from urllib.parse import parse_qs, urlencode
         parsed = urlparse(url)
-        clean = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+        # Only strip known tracking parameters
+        _TRACKING_PARAMS = {
+            'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+            'fbclid', 'gclid', 'gclsrc', 'dclid', 'msclkid',
+            'mc_cid', 'mc_eid', 'ref', 'referrer',
+            '_ga', '_gl', 'yclid', 'twclid', 'ttclid',
+        }
+        if parsed.query:
+            params = parse_qs(parsed.query, keep_blank_values=True)
+            filtered = {k: v for k, v in params.items() if k.lower() not in _TRACKING_PARAMS}
+            if filtered:
+                clean_query = urlencode(filtered, doseq=True)
+                clean = f"{parsed.scheme}://{parsed.netloc}{parsed.path}?{clean_query}"
+            else:
+                clean = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+        else:
+            clean = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
         return clean.rstrip("/")
     except Exception:
         return url

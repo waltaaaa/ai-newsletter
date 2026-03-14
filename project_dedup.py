@@ -200,12 +200,12 @@ def compute_match_score(candidate: dict, existing: dict, conn=None) -> int:
 
 
 # -- Filler words removed during key generation --
+# NOTE: Building-type words (mall, centre, tower, facility, plant, station,
+# terminal, hub, campus) are NOT filler — they carry semantic meaning for
+# project identity. "Westbank Centre" and "Westbank Tower" are different projects.
 _FILLER = {'project', 'development', 'the', 'new', 'proposed', 'phase',
            'redevelopment', 'construction', 'of', 'and', 'for', 'in', 'at',
            'le', 'la', 'les', 'du', 'de', 'des',
-           # Building-type words that vary across sources
-           'mall', 'centre', 'center', 'complex', 'building', 'tower',
-           'facility', 'plant', 'station', 'terminal', 'hub', 'campus',
            'expansion', 'renovation', 'retrofit', 'upgrade', 'replacement',
            'modernization', 'restoration', 'conversion', 'remediation'}
 

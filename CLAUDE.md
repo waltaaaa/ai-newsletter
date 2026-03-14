@@ -54,7 +54,7 @@ Rules:
 
 ## Discovery Pipeline (14 tiers)
 1. Federal IAAC registry
-2. Google News RSS search (759 queries converted to RSS URLs — replaces Gemini grounded search)
+2. Google News RSS search (2,574 queries, deduped to unique RSS URLs — replaces Gemini grounded search)
 3. RSS feeds (201+ feeds, 6-layer remediated filter)
 4. Project status monitoring
 5. Provincial EA registries (13 provinces)

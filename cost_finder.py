@@ -446,6 +446,23 @@ async def run_cost_finding(conn):
         print("  [COST] No TAVILY_API_KEY — skipping cost-finding.")
         return {"found": 0, "not_found": 0, "unfindable": 0, "errors": 0}
 
+    # Reset cost_unfindable for projects with recent new evidence
+    # (lastSeen updated in last 7 days means new discovery occurred)
+    try:
+        from datetime import datetime as _dt
+        cutoff = (_dt.utcnow() - timedelta(days=7)).isoformat()[:10]
+        with conn:
+            reset_result = conn.execute(
+                "UPDATE projects SET cost_unfindable = 0, cost_search_attempts = 0 "
+                "WHERE cost_unfindable = 1 AND lastSeen >= ?",
+                (cutoff,)
+            )
+            reset_count = reset_result.rowcount
+        if reset_count:
+            print(f"  [COST] Reset cost_unfindable for {reset_count} projects with recent evidence")
+    except Exception as e:
+        logger.warning(f"[COST] Failed to reset cost_unfindable: {e}")
+
     candidates = select_projects_needing_cost(conn)
     if not candidates:
         print("  [COST] No valueless projects to search.")

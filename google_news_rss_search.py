@@ -107,13 +107,24 @@ def _shorten_query(query_text, query_meta):
 
 
 def convert_queries_to_rss_urls(queries):
-    """Convert all compound queries to Google News RSS URLs."""
+    """Convert all compound queries to Google News RSS URLs.
+
+    Deduplicates by final RSS URL — many compound queries collapse to the
+    same shortened form after _shorten_query().
+    """
     rss_feeds = []
+    seen_urls = set()
+    total = len(queries)
+
     for q in queries:
         query_text = q.get("query", "")
         language = q.get("language", "en")
         short_query = _shorten_query(query_text, q)
         url = build_google_news_url(short_query, language)
+
+        if url in seen_urls:
+            continue
+        seen_urls.add(url)
 
         rss_feeds.append({
             "url": url,
@@ -126,6 +137,7 @@ def convert_queries_to_rss_urls(queries):
             "type": "google_news_rss",
         })
 
+    logger.info(f"{total} queries → {len(rss_feeds)} unique RSS URLs after dedup")
     return rss_feeds
 
 
@@ -180,8 +192,8 @@ async def run_google_news_discovery(json_path="compound_queries_final.json"):
     queries = load_compound_queries(json_path)
     rss_feeds = convert_queries_to_rss_urls(queries)
 
-    logger.info(f"Google News RSS discovery: {len(rss_feeds)} feeds")
-    print(f"  [GOOGLE-NEWS] Fetching {len(rss_feeds)} RSS feeds...")
+    logger.info(f"Google News RSS discovery: {len(queries)} queries → {len(rss_feeds)} unique feeds")
+    print(f"  [GOOGLE-NEWS] {len(queries)} queries → {len(rss_feeds)} unique RSS feeds")
 
     semaphore = asyncio.Semaphore(30)
     all_articles = []
@@ -216,7 +228,7 @@ async def run_google_news_discovery(json_path="compound_queries_final.json"):
 def run_google_news_search(gemini_client=None):
     """Synchronous wrapper matching run_compound_search() interface.
 
-    1. Fetches Google News RSS for all 759 compound queries
+    1. Fetches Google News RSS for all compound queries (deduped by URL)
     2. Passes results through the 3-layer article filter
     3. Returns filtered articles ready for Tavily text extraction +
        Flash project extraction

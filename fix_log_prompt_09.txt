@@ -1,0 +1,15 @@
+All 6 files compile clean. Here's a summary of all 7 fixes:
+
+**Fix 1: Phase numbers in dedup keys** (`anomaly_detection.py`) — `_normalize_name()` now preserves tokens following "phase", "stage", "part", "unit". Bare numbers like "1", "2", "3" and roman numerals removed from filler list. "LNG Canada Phase 1" and "LNG Canada Phase 2" now normalize differently.
+
+**Fix 2: Building-type filler words** (`project_dedup.py`) — Removed `mall`, `centre`, `center`, `complex`, `building`, `tower`, `facility`, `plant`, `station`, `terminal`, `hub`, `campus` from `_FILLER`. These carry semantic meaning for project identity.
+
+**Fix 3: URL hard gate in db.py** (`db.py:upsert_project()`) — Added evidence check at the top. Projects with empty/missing evidence are rejected with a log message and `return None`.
+
+**Fix 4: `cost_unfindable` reset** (`cost_finder.py`) — Added a pre-step in `run_cost_finding()` that clears `cost_unfindable` and resets `cost_search_attempts` for projects whose `lastSeen` is within the last 7 days.
+
+**Fix 5: Compound query dedup** (`google_news_rss_search.py`) — `convert_queries_to_rss_urls()` now deduplicates by final URL before fetching. Logs the dedup stats. Updated doc references from "759" to "2,574" in CLAUDE.md.
+
+**Fix 6: URL normalization** (`url_utils.py`) — `normalize_url()` now only strips known tracking parameters (utm_*, fbclid, gclid, etc.) instead of all query params. StatCan `?pid=` and similar meaningful params are preserved.
+
+**Fix 7: Signals phase order** — Verified correct. `update_dashboard.py` lines 129-139 already has signals at position 4 (after filtering, before analysis). No change needed.

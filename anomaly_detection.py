@@ -17,15 +17,34 @@ logger = logging.getLogger(__name__)
 # Words to strip before comparing names
 _FILLER = {
     "project", "development", "construction", "phase", "expansion",
-    "redevelopment", "the", "new", "proposed", "1", "2", "3", "i", "ii", "iii",
+    "redevelopment", "the", "new", "proposed",
 }
+
+# Patterns that precede a number and give it semantic meaning (e.g. "Phase 2")
+_PHASE_PREFIXES = {"phase", "stage", "part", "unit"}
 
 
 def _normalize_name(name):
-    """Normalize a project name for duplicate comparison."""
+    """Normalize a project name for duplicate comparison.
+
+    Preserves numeric identifiers that follow phase/stage/part/unit
+    (e.g. "LNG Canada Phase 2" keeps "phase 2" distinct from "Phase 1").
+    """
     n = (name or "").lower().strip()
-    tokens = [t for t in n.split() if t not in _FILLER]
-    return " ".join(tokens).strip()
+    tokens = n.split()
+    result = []
+    i = 0
+    while i < len(tokens):
+        token = tokens[i]
+        if token in _PHASE_PREFIXES and i + 1 < len(tokens):
+            # Keep both the prefix and the following number/numeral
+            result.append(token)
+            i += 1
+            result.append(tokens[i])
+        elif token not in _FILLER:
+            result.append(token)
+        i += 1
+    return " ".join(result).strip()
 
 
 def check_cross_project_anomalies(all_projects):

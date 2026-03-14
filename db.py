@@ -609,6 +609,17 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
     if not name or not province:
         raise ValueError("project_dict must have non-empty 'name' and 'province'")
 
+    # URL hard gate: reject projects with no evidence URLs
+    evidence = project_dict.get("evidence", [])
+    if isinstance(evidence, str):
+        try:
+            evidence = json.loads(evidence)
+        except (json.JSONDecodeError, TypeError):
+            evidence = []
+    if not evidence or len(evidence) == 0:
+        print(f"[DB] Rejected project with no evidence URL: {name}")
+        return None
+
     key = _norm_key(name, province)
     now = _now_iso()
     today = now[:10]
