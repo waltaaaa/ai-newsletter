@@ -262,3 +262,42 @@ warning: in the working copy of 'archive/url_verifier.py', LF will be replaced b
   PROMPT 7 of 10
 ───────────────────────────────────────────────────
 
+All four parts are done. Here's the summary:
+
+**Part 1 — `local_llm.py` created** with:
+- `get_model()` — lazy-loads Qwen 2.5 3B GGUF, stays in memory
+- `classify_article()` — single-article RELEVANT/IRRELEVANT classification
+- `batch_classify()` — batches of 25 with JSON array output
+- `extract_sentiment()` — Reddit post sentiment classification
+- `repair_json()` — JSON repair via local model
+- All functions fail-open (return RELEVANT / empty) if model unavailable
+
+**Part 2 — Integration into existing modules:**
+- `gemini_engine.py` — `is_rehash()` tries local LLM first, falls back to Gemini
+- `article_filter.py` — `layer3_gemini_prescreen()` tries local LLM batch classification first, falls back to Gemini
+- `update_dashboard.py` — `_repair_json()` chain is now: local LLM → Haiku → Gemini
+
+**Part 3 — `requirements.txt`** — added `llama-cpp-python`
+
+**Part 4 — GitHub Actions workflows** — both `weekly-pipeline.yml` and `daily-indicators.yml` now:
+- Cache the model directory with `actions/cache@v4`
+- Download the GGUF from HuggingFace if not cached
+- Set `LOCAL_MODEL_PATH` env var
+
+Also added `models/` to `.gitignore` to prevent the ~2GB GGUF from being committed.
+
+✅ Prompt 7 complete. Committing...
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'article_filter.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_all.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_prompt_07.txt', LF will be replaced by CRLF the next time Git touches it
+[fix/signal-dispatch-overhaul b3c5091] fix(signal-dispatch): prompt 7 of 10 — create a local LLM module that replaces Gemini for classific
+ 10 files changed, 285 insertions(+), 8 deletions(-)
+ create mode 100644 fix_log_prompt_07.txt
+ create mode 100644 local_llm.py
+   Committed. Moving to next prompt...
+
+───────────────────────────────────────────────────
+  PROMPT 8 of 10
+───────────────────────────────────────────────────
+
