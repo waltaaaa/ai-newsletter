@@ -55,7 +55,7 @@ Rules:
 ## Discovery Pipeline (14 tiers)
 1. Federal IAAC registry
 2. Google News RSS search (2,574 queries, deduped to unique RSS URLs — replaces Gemini grounded search)
-3. RSS feeds (314+ feeds, 6-layer remediated filter)
+3. RSS feeds (324+ feeds, 6-layer remediated filter)
 4. Project status monitoring
 5. Provincial EA registries (13 provinces)
 6. SEDAR+ securities filings
@@ -71,6 +71,7 @@ Plus: Key people RSS feeds (processed through government bypass)
 Plus: Procurement monitor — federal/provincial contract awards and tenders (Open Canada, BuyAndSell, Ontario BPS, BC Bid). Filters for construction/infrastructure >=5M. Links awards to existing projects. Zero cost.
 Plus: Corporate newswires — 12 RSS feeds from GlobeNewswire, Canada Newswire, and Cision covering mining, energy, real estate, construction, manufacturing, transport, and government press releases. Pre-filtered for Canadian relevance before entering the 6-layer RSS filter. Zero cost.
 Plus: IAAC status tracker — monitors federal Impact Assessment Registry for status transitions (planning, public comment, panel review, decision). Updates project statuses and detects new IAAC projects. Zero cost.
+Plus: Regulatory feeds — 10 CanLII RSS feeds covering Federal Court, CER, Ontario LPAT, Ontario/BC/Alberta environmental tribunals, BC/Alberta utilities commissions, Quebec TAQ, and Saskatchewan Municipal Board. Pre-filtered for project relevance (>=2 keyword matches). Regulatory decisions carry status signals: approvals, denials, compliance orders, and stop-work orders map to project status updates. Tagged as government sources — bypass RSS keyword filter (L1). Zero cost.
 
 ## Search Budget
 - **Google News RSS:** Unlimited, free. Primary discovery layer.
@@ -182,6 +183,7 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - Policy: `policy_tracker.py` (LEGISinfo, Canada Gazette, ministry feeds — legislative/regulatory tracking)
 - Signals: `job_monitor.py` (hiring spike detection — 15 CMAs, 9 sectors, Indeed/Job Bank RSS)
 - StatCan Extended: `statcan_extended.py` (8 additional WDS tables — investment, employment, trade, housing)
+- Regulatory: `article_filter.py` contains `is_regulatory_relevant()` pre-filter and `extract_regulatory_signal()` for CanLII feeds (10 feeds in `rss_feeds.json` `regulatory` category)
 - Search: `tavily_search.py` (targeted enrichment only)
 - Reasoning: `claude_reasoning.py` (all reasoning — no gemini_pro_reasoning.py)
 - Analysis: `sector_trends.py`, `cross_reference.py`, `indicator_trends.py`

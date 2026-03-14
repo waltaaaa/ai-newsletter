@@ -2,7 +2,7 @@
   "_meta": {
     "description": "RSS feed configuration for CAN-MACRO dashboard — expanded Tier 4",
     "last_updated": "2026-03-13",
-    "total_feeds": 314,
+    "total_feeds": 324,
     "notes": "Cross-referenced with watchlist.json. Feeds marked test=true need URL validation on --test-feeds."
   },
   "federal": [
@@ -358,6 +358,18 @@
     {"id": "cnw_transportation", "name": "Canada Newswire - Transportation", "url": "https://www.newswire.ca/rss/industry/transportation-and-logistics-746.rss", "type": "corporate_newswire", "sector": "transport_logistics", "enabled": true},
     {"id": "cnw_government", "name": "Canada Newswire - Government", "url": "https://www.newswire.ca/rss/organization/government-762.rss", "type": "corporate_newswire", "sector": null, "enabled": true},
     {"id": "cision_canada", "name": "Cision - Canada Business", "url": "https://www.prnewswire.com/rss/news-releases-from-canada-list.rss", "type": "corporate_newswire", "sector": null, "enabled": true}
+  ],
+  "regulatory": [
+    {"id": "canlii_federal_court", "name": "CanLII - Federal Court", "url": "https://www.canlii.org/en/ca/fct/rss.xml", "type": "regulatory", "source_type": "government", "sector": null, "enabled": true, "notes": "Federal Court decisions — environmental reviews, regulatory challenges"},
+    {"id": "canlii_cer_neb", "name": "CanLII - National Energy Board / CER", "url": "https://www.canlii.org/en/ca/neb/rss.xml", "type": "regulatory", "source_type": "government", "sector": "oil_gas", "enabled": true, "notes": "CER pipeline and energy decisions"},
+    {"id": "canlii_on_lpat", "name": "CanLII - Ontario Municipal Board / LPAT", "url": "https://www.canlii.org/en/on/onlpat/rss.xml", "type": "regulatory", "source_type": "government", "sector": null, "enabled": true, "notes": "Ontario Land Planning Appeal Tribunal — zoning, OMB successor"},
+    {"id": "canlii_on_ert", "name": "CanLII - Ontario Environmental Review Tribunal", "url": "https://www.canlii.org/en/on/onert/rss.xml", "type": "regulatory", "source_type": "government", "sector": null, "enabled": true, "notes": "Ontario environmental approvals and appeals"},
+    {"id": "canlii_bc_eab", "name": "CanLII - BC Environmental Appeal Board", "url": "https://www.canlii.org/en/bc/bceab/rss.xml", "type": "regulatory", "source_type": "government", "sector": null, "enabled": true, "notes": "BC environmental permit appeals"},
+    {"id": "canlii_bc_uc", "name": "CanLII - BC Utilities Commission", "url": "https://www.canlii.org/en/bc/bcuc/rss.xml", "type": "regulatory", "source_type": "government", "sector": "power_energy", "enabled": true, "notes": "BC energy and utility rate decisions"},
+    {"id": "canlii_ab_aer", "name": "CanLII - Alberta Energy Regulator", "url": "https://www.canlii.org/en/ab/abaer/rss.xml", "type": "regulatory", "source_type": "government", "sector": "oil_gas", "enabled": true, "notes": "Alberta energy project approvals and compliance"},
+    {"id": "canlii_ab_auc", "name": "CanLII - Alberta Utilities Commission", "url": "https://www.canlii.org/en/ab/abauc/rss.xml", "type": "regulatory", "source_type": "government", "sector": "power_energy", "enabled": true, "notes": "Alberta power generation and transmission decisions"},
+    {"id": "canlii_qc_taq", "name": "CanLII - Quebec Environmental Tribunal", "url": "https://www.canlii.org/fr/qc/qctaq/rss.xml", "type": "regulatory", "source_type": "government", "sector": null, "enabled": true, "notes": "Quebec TAQ environmental decisions (French)"},
+    {"id": "canlii_sk_smb", "name": "CanLII - Saskatchewan Assessment Appeals", "url": "https://www.canlii.org/en/sk/sksmb/rss.xml", "type": "regulatory", "source_type": "government", "sector": null, "enabled": true, "notes": "SK Municipal Board — assessment and planning appeals"}
   ],
   "rss_discovery": {
     "description": "Auto-discovery config for --test-feeds",

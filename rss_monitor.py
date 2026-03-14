@@ -407,7 +407,7 @@ def _load_media_feeds() -> dict[str, dict]:
     google_alert_total = 0
     google_alert_placeholder = 0
     # Process each media category
-    for category in ('cbc', 'ctv', 'global_news', 'postmedia', 'independent', 'wire_services', 'industry', 'regional_media', 'regional_media_fr', 'business_media', 'key_people', 'google_alerts', 'corporate_ir', 'corporate_epc', 'institutional', 'corporate_newswire'):
+    for category in ('cbc', 'ctv', 'global_news', 'postmedia', 'independent', 'wire_services', 'industry', 'regional_media', 'regional_media_fr', 'business_media', 'key_people', 'google_alerts', 'corporate_ir', 'corporate_epc', 'institutional', 'corporate_newswire', 'regulatory'):
         feeds = data.get(category, [])
         for feed in feeds:
             if not feed.get('enabled', True):
@@ -430,8 +430,13 @@ def _load_media_feeds() -> dict[str, dict]:
                 continue
             if category == 'google_alerts':
                 google_alert_total += 1
-            # key_people feeds use 'key_people' level for government bypass
-            level = 'key_people' if category == 'key_people' else 'media'
+            # key_people and regulatory feeds use special levels for government bypass
+            if category == 'key_people':
+                level = 'key_people'
+            elif category == 'regulatory':
+                level = 'regulatory'
+            else:
+                level = 'media'
             extra[fid] = {
                 'name': feed.get('name', fid),
                 'url': feed['url'],
@@ -721,14 +726,39 @@ def fetch_and_filter(
     if newswire_dropped:
         print(f"  [RSS] Newswire Canadian filter: dropped {newswire_dropped} non-Canadian articles")
 
-    # Split into three tiers: infra-gov (+ key_people), other-gov, media
+    # Pre-filter step 4: Regulatory relevance filter for CanLII feeds
+    # CanLII feeds include many non-project decisions (family law, criminal, etc.)
+    # Require >=2 keyword matches before entering the main pipeline
+    regulatory_items = [i for i in all_items if i.get('source_level') == 'regulatory']
+    non_regulatory = [i for i in all_items if i.get('source_level') != 'regulatory']
+    if regulatory_items:
+        from article_filter import is_regulatory_relevant, extract_regulatory_signal
+        pre_reg = len(regulatory_items)
+        regulatory_items = [i for i in regulatory_items if is_regulatory_relevant(i)]
+        reg_dropped = pre_reg - len(regulatory_items)
+        if reg_dropped:
+            print(f"  [RSS] Regulatory pre-filter: {pre_reg} -> {len(regulatory_items)} "
+                  f"(dropped {reg_dropped} non-project legal decisions)")
+        # Extract status signals and attach to articles for downstream use
+        for item in regulatory_items:
+            signal = extract_regulatory_signal(item)
+            if signal:
+                item['regulatory_signal'] = signal
+        sig_count = sum(1 for i in regulatory_items if i.get('regulatory_signal'))
+        if sig_count:
+            print(f"  [RSS] Regulatory signals: {sig_count} status signals extracted")
+    all_items = non_regulatory + regulatory_items
+
+    # Split into four tiers: infra-gov (+ key_people), regulatory, other-gov, media
     _INFRA_CATS = {'infrastructure', 'procurement', 'key_people'}
     gov_infra = [i for i in all_items
-                 if i.get('source_level') not in ('media',)
+                 if i.get('source_level') not in ('media', 'regulatory')
                  and (i.get('category') in _INFRA_CATS
                       or i.get('source_level') == 'key_people')]
+    gov_regulatory = [i for i in all_items
+                      if i.get('source_level') == 'regulatory']
     gov_other = [i for i in all_items
-                 if i.get('source_level') not in ('media', 'key_people')
+                 if i.get('source_level') not in ('media', 'key_people', 'regulatory')
                  and i.get('category') not in _INFRA_CATS]
     media_items = [i for i in all_items if i.get('source_level') == 'media']
 
@@ -739,6 +769,12 @@ def fetch_and_filter(
         gov_infra, gemini_client=gemini_client,
         skip_layer1=True, skip_layer2=True,
     ) if gov_infra else []
+
+    # Regulatory feeds: already pre-filtered for relevance, skip L1 + L2
+    filtered_regulatory = filter_articles(
+        gov_regulatory, gemini_client=gemini_client,
+        skip_layer1=True, skip_layer2=True,
+    ) if gov_regulatory else []
 
     # Other government feeds: skip L1, run L2 + L3
     filtered_gov_other = filter_articles(
@@ -752,10 +788,10 @@ def fetch_and_filter(
         skip_layer1=False, skip_layer2=False,
     ) if media_items else []
 
-    combined = filtered_gov_infra + filtered_gov_other + filtered_media
+    combined = filtered_gov_infra + filtered_regulatory + filtered_gov_other + filtered_media
     print(f"  [RSS] After filter: {len(combined)} project-relevant items "
-          f"(gov-infra={len(filtered_gov_infra)}, gov-other={len(filtered_gov_other)}, "
-          f"media={len(filtered_media)})")
+          f"(gov-infra={len(filtered_gov_infra)}, regulatory={len(filtered_regulatory)}, "
+          f"gov-other={len(filtered_gov_other)}, media={len(filtered_media)})")
     return combined
 
 

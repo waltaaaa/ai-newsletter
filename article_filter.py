@@ -588,6 +588,84 @@ def filter_articles(
 # VERIFICATION TEST HARNESS
 # ══════════════════════════════════════════════════════════════════════════════
 
+# ══════════════════════════════════════════════════════════════════════════════
+# REGULATORY FEED PRE-FILTER (CanLII / tribunal decisions)
+# ══════════════════════════════════════════════════════════════════════════════
+
+REGULATORY_KEYWORDS = [
+    # Project types
+    "construction", "development", "building permit", "site plan",
+    "zoning", "official plan", "subdivision", "rezoning",
+    "environmental assessment", "environmental approval",
+    "compliance order", "remediation order", "stop work",
+    # Infrastructure
+    "pipeline", "transmission line", "generating station", "wind farm",
+    "solar", "refinery", "mine", "quarry", "port", "terminal",
+    "highway", "bridge", "water treatment", "wastewater",
+    # Regulatory actions
+    "approved", "denied", "dismissed", "granted", "suspended",
+    "variance", "amendment", "certificate of approval",
+    "licence", "license", "permit",
+    # Parties (project proponents)
+    "proponent", "applicant", "developer", "operator",
+]
+
+
+def is_regulatory_relevant(article: dict) -> bool:
+    """Filter CanLII/regulatory feed items for project relevance.
+
+    Requires at least 2 keyword matches in title+summary to pass.
+    Intentionally loose — better to let some irrelevant legal decisions
+    through to the LLM filter than to miss a pipeline approval.
+    """
+    text = f"{article.get('title', '')} {article.get('summary', '')}".lower()
+    matches = sum(1 for kw in REGULATORY_KEYWORDS if kw in text)
+    return matches >= 2
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# REGULATORY STATUS SIGNAL EXTRACTION
+# ══════════════════════════════════════════════════════════════════════════════
+
+REGULATORY_STATUS_SIGNALS = {
+    # Positive progression
+    "approved": "Approved",
+    "granted": "Approved",
+    "certificate of approval": "Approved",
+    "licence issued": "Approved",
+    "permit issued": "Approved",
+    # Negative / blocking
+    "denied": "On Hold",
+    "dismissed": None,  # Appeal dismissed — status unchanged
+    "suspended": "Suspended",
+    "stop work order": "On Hold",
+    "compliance order": "Under Construction",  # Confirms active construction
+    "remediation order": "Under Construction",  # Confirms site activity
+    # Cancelled
+    "revoked": "Cancelled",
+    "withdrawn": "Cancelled",
+}
+
+
+def extract_regulatory_signal(article: dict) -> dict | None:
+    """Extract project status signal from a regulatory decision.
+
+    Returns a dict with signal, implied_status, source, and title,
+    or None if no status signal is detected.
+    """
+    text = f"{article.get('title', '')} {article.get('summary', '')}".lower()
+
+    for keyword, status in REGULATORY_STATUS_SIGNALS.items():
+        if keyword in text:
+            return {
+                "signal": keyword,
+                "implied_status": status,
+                "source": article.get("url", ""),
+                "title": article.get("title", ""),
+            }
+    return None
+
+
 def run_filter_tests():
     """
     Verify the remediated filter catches brownfield projects and rejects noise.
