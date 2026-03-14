@@ -68,6 +68,7 @@ Rules:
 13. Industry trade RSS (~15 feeds)
 14. University/institutional capital plans
 Plus: Key people RSS feeds (processed through government bypass)
+Plus: Procurement monitor — federal/provincial contract awards and tenders (Open Canada, BuyAndSell, Ontario BPS, BC Bid). Filters for construction/infrastructure >=5M. Links awards to existing projects. Zero cost.
 
 ## Search Budget
 - **Google News RSS:** Unlimited, free. Primary discovery layer.
@@ -161,6 +162,7 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - `dashboard_state` — frontend state, latest briefing, microscope history/override
 - `miss_audit_results` — typed miss classifications from coverage audit (Phase 6)
 - `job_snapshots` — weekly job posting aggregates and hiring spike alerts
+- `procurement_snapshots` — weekly government procurement contract snapshots
 
 ## Directory Structure
 - `phases/` — Pipeline phase modules (data_collection, discovery, filtering, analysis, etc.)
@@ -173,6 +175,7 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 
 ## File Naming
 - Discovery: `google_news_rss_search.py`, `rss_filter.py`, `gov_sources.py`, `municipal_dev_apps.py`, `snippet_enhancer.py`, `metadata_tagger.py`
+- Procurement: `procurement_monitor.py` (federal + provincial contract awards — Open Canada, BuyAndSell, Ontario BPS, BC Bid)
 - Signals: `job_monitor.py` (hiring spike detection — 15 CMAs, 9 sectors, Indeed/Job Bank RSS)
 - Search: `tavily_search.py` (targeted enrichment only)
 - Reasoning: `claude_reasoning.py` (all reasoning — no gemini_pro_reasoning.py)

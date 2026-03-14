@@ -38,6 +38,18 @@ def run(conn, context, logger):
             print(f"  [TIER 14] Institutional scrape failed: {type(e).__name__}: {e}")
             logger.log_error("tier_14_institutional", e)
 
+        # Procurement monitor: federal + provincial contract awards
+        try:
+            from procurement_monitor import run_procurement_monitor
+            print("\n[PROCUREMENT] Government procurement tracking...")
+            procurement_results = run_procurement_monitor(conn)
+            context.update(procurement_results)
+        except ImportError:
+            print("[WARN] procurement_monitor not available, skipping procurement tracking")
+        except Exception as e:
+            print(f"[WARN] Procurement monitor failed: {type(e).__name__}: {e}")
+            logger.log_error("procurement_monitor", e)
+
         # Tier 2: Gemini compound discovery
         gemini_projects = []
 
