@@ -428,6 +428,16 @@ CREATE TABLE IF NOT EXISTS miss_audit_results (
     suggested_action TEXT,
     resolved        INTEGER DEFAULT 0
 );
+
+-- 22. Claude checkpoints (resume-after-crash for expensive API calls)
+CREATE TABLE IF NOT EXISTS claude_checkpoints (
+    run_id    TEXT NOT NULL,
+    call_name TEXT NOT NULL,
+    response  TEXT,
+    cost_usd  REAL DEFAULT 0,
+    created   TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (run_id, call_name)
+);
 """
 
 
@@ -1125,6 +1135,46 @@ def get_pipeline_runs(conn: sqlite3.Connection, limit: int = 20) -> list[dict]:
             d[col] = _from_json(d.get(col), {})
         result.append(d)
     return result
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CLAUDE CHECKPOINTS (resume-after-crash)
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+def save_checkpoint(conn: sqlite3.Connection, run_id: str, call_name: str,
+                    response: str, cost: float = 0.0) -> None:
+    """Save a Claude API response checkpoint for crash recovery.
+
+    Args:
+        conn: SQLite connection.
+        run_id: Pipeline run ID (str).
+        call_name: Identifier for the Claude call (e.g. 'call1-macro').
+        response: Raw JSON response text.
+        cost: Cost in USD for this call.
+    """
+    with conn:
+        conn.execute("""
+            INSERT OR REPLACE INTO claude_checkpoints
+                (run_id, call_name, response, cost_usd, created)
+            VALUES (?, ?, ?, ?, datetime('now'))
+        """, (str(run_id), call_name, response, cost))
+
+
+def get_checkpoint(conn: sqlite3.Connection, run_id: str,
+                   call_name: str) -> dict | None:
+    """Retrieve a cached Claude response for a given run + call.
+
+    Returns:
+        Dict with keys response (str), cost_usd (float) if found, else None.
+    """
+    row = conn.execute(
+        "SELECT response, cost_usd FROM claude_checkpoints WHERE run_id=? AND call_name=?",
+        (str(run_id), call_name),
+    ).fetchone()
+    if row is None:
+        return None
+    return {"response": row["response"], "cost_usd": row["cost_usd"]}
 
 
 # ══════════════════════════════════════════════════════════════════════════════

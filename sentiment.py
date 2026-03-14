@@ -27,6 +27,8 @@ from datetime import datetime, timedelta
 import requests
 from dotenv import load_dotenv
 
+import service_health
+
 load_dotenv()
 
 # ── Config ───────────────────────────────────────────────────────────────────
@@ -101,6 +103,7 @@ def fetch_reddit(max_retries: int = 2) -> dict:
     all_text = []
     total_posts = 0
     total_comments = 0
+    health = service_health.get()
 
     for cfg in REDDIT_SUBS:
         sub = cfg['sub']
@@ -108,18 +111,25 @@ def fetch_reddit(max_retries: int = 2) -> dict:
         weight = cfg['weight']
         filter_kw = cfg.get('filter_keywords')
 
+        if not health.is_available("reddit"):
+            break
+
         try:
             url = f'https://www.reddit.com/r/{sub}/top.json?t=week&limit={limit}'
             resp = requests.get(url, headers=_HEADERS, timeout=15)
 
             if resp.status_code == 429:
+                health.record_failure("reddit", "429 rate limited")
                 print(f"  [Sentiment] Reddit rate-limited on r/{sub}, waiting 30s...")
                 time.sleep(30)
                 resp = requests.get(url, headers=_HEADERS, timeout=15)
 
             if resp.status_code != 200:
+                health.record_failure("reddit", f"HTTP {resp.status_code}")
                 print(f"  [Sentiment] Reddit r/{sub}: HTTP {resp.status_code}")
                 continue
+
+            health.record_success("reddit")
 
             data = resp.json()
             posts = data.get('data', {}).get('children', [])
@@ -165,6 +175,7 @@ def fetch_reddit(max_retries: int = 2) -> dict:
             print(f"  [Sentiment] r/{sub}: {len(posts)} posts fetched")
 
         except Exception as e:
+            health.record_failure("reddit", f"{type(e).__name__}: {e}")
             print(f"  [Sentiment] Reddit r/{sub} error: {type(e).__name__}: {e}")
 
     return {

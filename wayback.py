@@ -21,6 +21,8 @@ from urllib.parse import quote
 import requests
 from dotenv import load_dotenv
 
+import service_health
+
 load_dotenv()
 
 # ── Config from .env ─────────────────────────────────────────────────────────
@@ -62,6 +64,9 @@ def save_page(url: str) -> str | None:
         return None
     if not url or not url.startswith('http'):
         return None
+    health = service_health.get()
+    if not health.is_available("wayback"):
+        return None
 
     _rate_limit()
     try:
@@ -73,6 +78,7 @@ def save_page(url: str) -> str | None:
         )
         # Save Page Now returns a redirect to the archived page
         if r.status_code in (200, 301, 302):
+            health.record_success("wayback")
             archive_url = r.headers.get('Content-Location') or r.headers.get('Location')
             if archive_url:
                 if not archive_url.startswith('http'):
@@ -81,8 +87,10 @@ def save_page(url: str) -> str | None:
             # Sometimes the final URL after redirects IS the archive URL
             if 'web.archive.org' in r.url:
                 return r.url
+        health.record_failure("wayback", f"HTTP {r.status_code}")
         return None
     except Exception as e:
+        health.record_failure("wayback", f"{type(e).__name__}: {e}")
         print(f"  [Wayback] save_page error for {url[:60]}: {type(e).__name__}")
         return None
 
@@ -119,6 +127,9 @@ def query_cdx(
     """
     if not WAYBACK_ENABLED:
         return []
+    health = service_health.get()
+    if not health.is_available("wayback"):
+        return []
 
     _rate_limit()
     params = {
@@ -136,10 +147,13 @@ def query_cdx(
     try:
         r = requests.get(_CDX_API, params=params, headers=_HEADERS, timeout=30)
         if r.status_code != 200:
+            health.record_failure("wayback", f"CDX HTTP {r.status_code}")
             return []
         data = r.json()
         if not data or len(data) < 2:
             return []
+
+        health.record_success("wayback")
 
         # First row is header
         header = data[0]
@@ -161,6 +175,7 @@ def query_cdx(
         return snapshots
 
     except Exception as e:
+        health.record_failure("wayback", f"{type(e).__name__}: {e}")
         print(f"  [Wayback] CDX query error for {url[:60]}: {type(e).__name__}")
         return []
 

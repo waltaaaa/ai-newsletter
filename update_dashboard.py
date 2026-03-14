@@ -61,10 +61,12 @@ from project_dedup import deduplicate_projects
 from project_schema import normalize_project_type, is_brownfield
 from db import (init_db, get_db, get_all_projects, get_projects, save_indicator, get_indicators,
                 save_briefing, get_latest_briefing, save_dashboard_state, get_dashboard_state,
-                save_trend_snapshot, save_timeseries_point)
+                save_trend_snapshot, save_timeseries_point,
+                save_checkpoint, get_checkpoint)
 from pipeline_logging import PipelineRunLogger
 from pipeline_cache import cache as _cache
 from export_dashboard import export_all
+import service_health
 
 try:
     from tavily import TavilyClient as _TavilyClient
@@ -2037,9 +2039,71 @@ def _enrich_source_urls(payload: dict):
         print(f"  [Source URLs] Enriched {total_fixed} empty source URLs from known patterns")
 
 
-def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '') -> dict:
-    """Call Claude with specified model and parse JSON. Falls back to Gemini on parse failure."""
+def _is_truncated(text: str) -> bool:
+    """Check if JSON response was truncated (doesn't end with valid closure)."""
+    stripped = text.rstrip()
+    if not stripped:
+        return True
+    return stripped[-1] not in ('}', ']')
+
+
+def _repair_json(broken_json: str, label: str) -> dict:
+    """Try Haiku first (cheap), then Gemini if Haiku fails and Gemini is available."""
+    if not broken_json:
+        return {}
+    repair_prompt = (
+        "The following JSON is malformed or truncated. Return ONLY the corrected valid JSON. "
+        "No markdown. No explanation.\n\n" + broken_json
+    )
+    # Try Claude Haiku first (cheap, always available)
+    try:
+        msg = anthropic_client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=16384,
+            messages=[{"role": "user", "content": repair_prompt}],
+        )
+        raw = msg.content[0].text.strip()
+        if raw.startswith("```"):
+            parts = raw.split("```")
+            raw = parts[1] if len(parts) > 1 else raw
+            if raw.startswith("json"):
+                raw = raw[4:]
+        result = json.loads(raw)
+        print(f"    [HAIKU REPAIR OK] {label}")
+        return result
+    except Exception as e:
+        print(f"    [HAIKU REPAIR FAILED] {label}: {e}")
+
+    # Fall back to Gemini if available via circuit breaker
+    health = service_health.get()
+    if health.is_available("gemini"):
+        return _repair_with_gemini(broken_json, label)
+
+    print(f"    [REPAIR FAILED] {label}: Haiku failed and Gemini unavailable")
+    return {}
+
+
+def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '',
+                 run_id: str = '') -> dict:
+    """Call Claude with specified model and parse JSON.
+
+    Features:
+    - Checkpointing: if run_id is set, checks for cached response before calling
+    - Truncation detection: if response hit max_tokens, retries with +4096
+    - JSON repair: tries Haiku first, then Gemini fallback
+    """
     global _claude_run_cost_usd, _claude_run_tokens
+
+    # ── Checkpoint check — return cached response if available ────────────
+    if run_id:
+        cached = get_checkpoint(conn, run_id, label)
+        if cached:
+            try:
+                result = json.loads(cached["response"])
+                print(f"    [CHECKPOINT HIT] {label} — using cached response (saved ${cached['cost_usd']:.4f})")
+                return result
+            except (json.JSONDecodeError, TypeError):
+                pass  # corrupted checkpoint, re-run
 
     # ── Pre-call cost cap check ──────────────────────────────────────────────
     if _claude_run_cost_usd >= CLAUDE_COST_CAP_USD:
@@ -2048,11 +2112,12 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
 
     use_model = model or _CLAUDE_MODEL
     raw_content = ""
+    current_max_tokens = max_tokens
     for attempt in range(4):
         try:
             msg = anthropic_client.messages.create(
                 model=use_model,
-                max_tokens=max_tokens,
+                max_tokens=current_max_tokens,
                 system=_CLAUDE_SYSTEM,
                 messages=[{"role": "user", "content": prompt}],
             )
@@ -2066,17 +2131,40 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
             print(f"    [COST] {label}: {in_tok:,} in + {out_tok:,} out = ${call_cost:.4f} (run total: ${_claude_run_cost_usd:.4f}/${CLAUDE_COST_CAP_USD:.2f})")
 
             raw_content = msg.content[0].text.strip()
+
+            # ── Truncation detection ─────────────────────────────────────
+            if out_tok >= current_max_tokens - 10 and _is_truncated(raw_content):
+                current_max_tokens += 4096
+                print(f"    [TRUNCATED] {label}: hit {out_tok} tokens — retrying with max_tokens={current_max_tokens}")
+                time.sleep(1)
+                continue
+
             # Strip accidental markdown fences
             if raw_content.startswith("```"):
                 parts = raw_content.split("```")
                 raw_content = parts[1] if len(parts) > 1 else raw_content
                 if raw_content.startswith("json"):
                     raw_content = raw_content[4:]
-            return json.loads(raw_content)
+            parsed = json.loads(raw_content)
+
+            # ── Save checkpoint on success ────────────────────────────────
+            if run_id:
+                try:
+                    save_checkpoint(conn, run_id, label, json.dumps(parsed, ensure_ascii=False), call_cost)
+                except Exception as e:
+                    print(f"    [CHECKPOINT SAVE WARN] {label}: {e}")
+
+            return parsed
         except json.JSONDecodeError:
             if attempt == 3:
-                print(f"    [CLAUDE JSON ERROR] {label} — trying Gemini repair...")
-                return _repair_with_gemini(raw_content, label)
+                print(f"    [CLAUDE JSON ERROR] {label} — trying repair...")
+                repaired = _repair_json(raw_content, label)
+                if repaired and run_id:
+                    try:
+                        save_checkpoint(conn, run_id, label, json.dumps(repaired, ensure_ascii=False), call_cost)
+                    except Exception:
+                        pass
+                return repaired
             time.sleep(1)
         except CostCapExceeded:
             raise
@@ -3125,6 +3213,7 @@ def _normalize_extracted_project(p: dict) -> dict | None:
 
 def update_dashboard(deep_sweep: bool = False):
     run_type = "deep_sweep" if deep_sweep else "weekly"
+    health = service_health.init()
     run_log = PipelineRunLogger(conn=conn, run_type=run_type)
     run_log.start()
     try:
@@ -4215,6 +4304,12 @@ def update_dashboard(deep_sweep: bool = False):
             run_log.log_metric("api_usage", "claude_cost_usd", round(_claude_run_cost_usd, 4))
         except Exception as e:
             print(f"  [WARN] Cost summary failed: {e}")
+
+        # ── Service health summary ─────────────────────────────────
+        health_status = health.get_status()
+        if health_status["dead"]:
+            print(f"\n[SERVICE HEALTH] Dead services: {health_status['dead']}")
+        run_log.log_metric("api_usage", "service_health", health_status)
 
         # ── Finalize pipeline run log ─────────────────────────────────
         if final_payload.get('_analysis_incomplete'):

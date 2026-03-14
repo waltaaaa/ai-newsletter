@@ -14,6 +14,8 @@ import aiohttp
 import os
 import logging
 
+import service_health
+
 logger = logging.getLogger(__name__)
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
@@ -45,6 +47,15 @@ async def query_one(session, semaphore, query_obj, system_prompt, attempt=0):
           error: str|None — error message if failed
     """
     async with semaphore:
+        health = service_health.get()
+        if not health.is_available("gemini"):
+            return {
+                "text": "",
+                "grounding_urls": [],
+                "query": query_obj,
+                "error": "Gemini circuit breaker open",
+            }
+
         payload = {
             "contents": [{"parts": [{"text": query_obj["query"]}]}],
             # Grounding disabled — Google Search costs $35/1000 queries
@@ -59,9 +70,11 @@ async def query_one(session, semaphore, query_obj, system_prompt, attempt=0):
                 timeout=aiohttp.ClientTimeout(total=120)
             ) as resp:
                 if resp.status == 200:
+                    health.record_success("gemini")
                     data = await resp.json()
                     return _parse_raw(data, query_obj)
                 elif resp.status == 429 and attempt < MAX_RETRY:
+                    health.record_failure("gemini", f"429 RESOURCE_EXHAUSTED")
                     logger.warning(
                         f"Rate limited, waiting {RETRY_DELAY}s "
                         f"(attempt {attempt + 1})"
@@ -73,6 +86,7 @@ async def query_one(session, semaphore, query_obj, system_prompt, attempt=0):
                     )
                 else:
                     text = await resp.text()
+                    health.record_failure("gemini", f"HTTP {resp.status}")
                     return {
                         "text": "",
                         "grounding_urls": [],
@@ -80,6 +94,7 @@ async def query_one(session, semaphore, query_obj, system_prompt, attempt=0):
                         "error": f"Gemini {resp.status}: {text[:300]}",
                     }
         except asyncio.TimeoutError:
+            health.record_failure("gemini", "Timeout after 120s")
             return {
                 "text": "",
                 "grounding_urls": [],
@@ -87,6 +102,7 @@ async def query_one(session, semaphore, query_obj, system_prompt, attempt=0):
                 "error": "Timeout after 120s",
             }
         except Exception as e:
+            health.record_failure("gemini", str(e)[:200])
             return {
                 "text": "",
                 "grounding_urls": [],
