@@ -68,6 +68,10 @@ DOMAIN_SECTOR_MAP = {
     # Manufacturing
     "canadianmanufacturing.com": ["manufacturing"],
     "plant.ca": ["manufacturing"],
+    # Newswire domains — sector comes from feed-level metadata, not domain
+    "globenewswire.com": [],
+    "newswire.ca": [],
+    "prnewswire.com": [],
 }
 
 # ── Province detection ──

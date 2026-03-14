@@ -55,7 +55,7 @@ Rules:
 ## Discovery Pipeline (14 tiers)
 1. Federal IAAC registry
 2. Google News RSS search (2,574 queries, deduped to unique RSS URLs — replaces Gemini grounded search)
-3. RSS feeds (201+ feeds, 6-layer remediated filter)
+3. RSS feeds (314+ feeds, 6-layer remediated filter)
 4. Project status monitoring
 5. Provincial EA registries (13 provinces)
 6. SEDAR+ securities filings
@@ -69,6 +69,7 @@ Rules:
 14. University/institutional capital plans
 Plus: Key people RSS feeds (processed through government bypass)
 Plus: Procurement monitor — federal/provincial contract awards and tenders (Open Canada, BuyAndSell, Ontario BPS, BC Bid). Filters for construction/infrastructure >=5M. Links awards to existing projects. Zero cost.
+Plus: Corporate newswires — 12 RSS feeds from GlobeNewswire, Canada Newswire, and Cision covering mining, energy, real estate, construction, manufacturing, transport, and government press releases. Pre-filtered for Canadian relevance before entering the 6-layer RSS filter. Zero cost.
 
 ## Search Budget
 - **Google News RSS:** Unlimited, free. Primary discovery layer.

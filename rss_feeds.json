@@ -2,7 +2,7 @@
   "_meta": {
     "description": "RSS feed configuration for CAN-MACRO dashboard — expanded Tier 4",
     "last_updated": "2026-03-13",
-    "total_feeds": 302,
+    "total_feeds": 314,
     "notes": "Cross-referenced with watchlist.json. Feeds marked test=true need URL validation on --test-feeds."
   },
   "federal": [
@@ -344,6 +344,20 @@
     {"id": "rrc_news", "name": "Red River College News", "url": "https://news.google.com/rss/search?q=site:rrc.ca+when:30d&hl=en-CA&gl=CA&ceid=CA:en", "source_type": "industry", "jurisdiction": "Manitoba", "priority": 3, "enabled": true},
     {"id": "nait_news", "name": "NAIT News", "url": "https://news.google.com/rss/search?q=site:nait.ca+when:30d&hl=en-CA&gl=CA&ceid=CA:en", "source_type": "industry", "jurisdiction": "Alberta", "priority": 3, "enabled": true},
     {"id": "saskpoly_news", "name": "Saskatchewan Polytechnic News", "url": "https://news.google.com/rss/search?q=site:saskpolytech.ca+when:30d&hl=en-CA&gl=CA&ceid=CA:en", "source_type": "industry", "jurisdiction": "Saskatchewan", "priority": 3, "enabled": true}
+  ],
+  "corporate_newswire": [
+    {"id": "gnw_mining", "name": "GlobeNewswire - Mining", "url": "https://www.globenewswire.com/RssFeed/subjectcode/15-Mining/feedTitle/GlobeNewswire - Mining", "type": "corporate_newswire", "sector": "mining", "enabled": true},
+    {"id": "gnw_energy", "name": "GlobeNewswire - Energy", "url": "https://www.globenewswire.com/RssFeed/subjectcode/36-Energy/feedTitle/GlobeNewswire - Energy", "type": "corporate_newswire", "sector": "oil_gas", "enabled": true},
+    {"id": "gnw_real_estate", "name": "GlobeNewswire - Real Estate", "url": "https://www.globenewswire.com/RssFeed/subjectcode/42-Real Estate/feedTitle/GlobeNewswire - Real Estate", "type": "corporate_newswire", "sector": "residential", "enabled": true},
+    {"id": "gnw_construction", "name": "GlobeNewswire - Construction", "url": "https://www.globenewswire.com/RssFeed/subjectcode/14-Construction/feedTitle/GlobeNewswire - Construction", "type": "corporate_newswire", "sector": "infrastructure", "enabled": true},
+    {"id": "gnw_heavy_industry", "name": "GlobeNewswire - Heavy Industry", "url": "https://www.globenewswire.com/RssFeed/subjectcode/39-Heavy Industry/feedTitle/GlobeNewswire - Heavy Industry", "type": "corporate_newswire", "sector": "manufacturing", "enabled": true},
+    {"id": "cnw_construction", "name": "Canada Newswire - Construction & Building", "url": "https://www.newswire.ca/rss/industry/construction-and-building-702.rss", "type": "corporate_newswire", "sector": "infrastructure", "enabled": true},
+    {"id": "cnw_mining", "name": "Canada Newswire - Mining & Metals", "url": "https://www.newswire.ca/rss/industry/mining-and-metals-720.rss", "type": "corporate_newswire", "sector": "mining", "enabled": true},
+    {"id": "cnw_energy", "name": "Canada Newswire - Energy & Utilities", "url": "https://www.newswire.ca/rss/industry/energy-and-utilities-706.rss", "type": "corporate_newswire", "sector": "oil_gas", "enabled": true},
+    {"id": "cnw_real_estate", "name": "Canada Newswire - Real Estate", "url": "https://www.newswire.ca/rss/industry/real-estate-730.rss", "type": "corporate_newswire", "sector": "residential", "enabled": true},
+    {"id": "cnw_transportation", "name": "Canada Newswire - Transportation", "url": "https://www.newswire.ca/rss/industry/transportation-and-logistics-746.rss", "type": "corporate_newswire", "sector": "transport_logistics", "enabled": true},
+    {"id": "cnw_government", "name": "Canada Newswire - Government", "url": "https://www.newswire.ca/rss/organization/government-762.rss", "type": "corporate_newswire", "sector": null, "enabled": true},
+    {"id": "cision_canada", "name": "Cision - Canada Business", "url": "https://www.prnewswire.com/rss/news-releases-from-canada-list.rss", "type": "corporate_newswire", "sector": null, "enabled": true}
   ],
   "rss_discovery": {
     "description": "Auto-discovery config for --test-feeds",

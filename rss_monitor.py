@@ -407,7 +407,7 @@ def _load_media_feeds() -> dict[str, dict]:
     google_alert_total = 0
     google_alert_placeholder = 0
     # Process each media category
-    for category in ('cbc', 'ctv', 'global_news', 'postmedia', 'independent', 'wire_services', 'industry', 'regional_media', 'regional_media_fr', 'business_media', 'key_people', 'google_alerts', 'corporate_ir', 'corporate_epc', 'institutional'):
+    for category in ('cbc', 'ctv', 'global_news', 'postmedia', 'independent', 'wire_services', 'industry', 'regional_media', 'regional_media_fr', 'business_media', 'key_people', 'google_alerts', 'corporate_ir', 'corporate_epc', 'institutional', 'corporate_newswire'):
         feeds = data.get(category, [])
         for feed in feeds:
             if not feed.get('enabled', True):
@@ -531,6 +531,50 @@ def _entry_to_item(entry, meta: dict) -> dict:
         'category':     meta.get('category', 'general'),
         'tags':         entry_tags,
     }
+
+
+# ---------------------------------------------------------------------------
+# Canadian relevance pre-filter for global newswire feeds
+# ---------------------------------------------------------------------------
+
+_NEWSWIRE_DOMAINS = frozenset({
+    'globenewswire.com', 'prnewswire.com',
+})
+
+CANADIAN_INDICATORS = [
+    # Company suffixes
+    "ltd.", "inc.", "corp.", "limited",
+    # Exchanges
+    "tsx", "tsx-v", "cse",
+    # Geography
+    "canada", "canadian", "alberta", "ontario", "quebec", "british columbia",
+    "saskatchewan", "manitoba", "nova scotia", "new brunswick",
+    "newfoundland", "pei", "yukon", "nwt", "nunavut",
+    # Cities (top 20 by project volume)
+    "toronto", "vancouver", "calgary", "edmonton", "montreal",
+    "ottawa", "winnipeg", "halifax", "saskatoon", "regina",
+    "victoria", "hamilton", "kitchener", "london on",
+    "st. john's", "moncton", "fredericton", "sudbury",
+    # Canadian-specific terms
+    "first nation", "indigenous", "crown land", "provincial",
+]
+
+
+def _is_newswire_article(item):
+    """Check if article comes from a global newswire (needs Canadian filter)."""
+    url = item.get('url') or item.get('link') or ''
+    try:
+        from urllib.parse import urlparse
+        domain = urlparse(url).netloc.lower().replace('www.', '')
+        return any(domain.endswith(d) for d in _NEWSWIRE_DOMAINS)
+    except Exception:
+        return False
+
+
+def is_canadian_content(article):
+    """Quick check if a newswire article is Canadian-relevant."""
+    text = f"{article.get('title', '')} {article.get('summary', '')}".lower()
+    return any(indicator in text for indicator in CANADIAN_INDICATORS)
 
 
 _HEADERS = {'User-Agent': 'Mozilla/5.0 (CAN-MACRO/1.0; +https://github.com/can-macro)'}
@@ -663,6 +707,19 @@ def fetch_and_filter(
         print("[WARN] sumy not installed, skipping snippet enhancement")
     except Exception as e:
         print(f"[WARN] Snippet enhancement failed, continuing with original snippets: {e}")
+
+    # Pre-filter step 3: Canadian relevance filter for global newswire feeds
+    # GlobeNewswire and PRNewswire are global — drop non-Canadian articles
+    # before they burn LLM classification tokens. Canada Newswire is already
+    # Canadian-only so it skips this check.
+    pre_newswire = len(all_items)
+    all_items = [
+        item for item in all_items
+        if not _is_newswire_article(item) or is_canadian_content(item)
+    ]
+    newswire_dropped = pre_newswire - len(all_items)
+    if newswire_dropped:
+        print(f"  [RSS] Newswire Canadian filter: dropped {newswire_dropped} non-Canadian articles")
 
     # Split into three tiers: infra-gov (+ key_people), other-gov, media
     _INFRA_CATS = {'infrastructure', 'procurement', 'key_people'}
