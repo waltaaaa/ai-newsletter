@@ -168,3 +168,50 @@ warning: in the working copy of 'wayback.py', LF will be replaced by CRLF the ne
   PROMPT 5 of 10
 ───────────────────────────────────────────────────
 
+Only the self-referencing docstring in the archived file. All clean.
+
+Here's a summary of all changes made:
+
+### 1. GDELT (Tier 3) -- dead code
+- **Moved** `gdelt_monitor.py` to `archive/gdelt_monitor.py`
+- **Removed** the import in `wayback.py:416` -- `_search_gdelt_historical()` now returns `[]` with a comment explaining why
+- **Commented out** `GDELT_MAX_ARTICLES` in `pipeline_config.py:389` with note: "GDELT disabled -- module never integrated into pipeline"
+
+### 2. SEDAR+ (Tier 6) -- stub scraper
+- **Commented out** the `("SEDAR+", _scrape_sedar)` entry in `gov_sources.py:1863` with note: "SEDAR+ disabled -- scraper targets login portal, returns 0 results. Needs endpoint audit."
+- The `_scrape_sedar()` function itself is preserved for future fixing
+
+### 3. Google Alerts (Tier 12) -- never configured
+- **Added** placeholder URL detection in `rss_monitor.py:_load_media_feeds()` -- feeds with `PASTE_FEED_URL_HERE` or `XXXX` in their URL are skipped with a warning log
+- **Added** tier-level log: `[Tier 12] Skipped -- no Google Alert feeds configured` when all feeds are placeholders
+
+### 4. Municipal Dev Apps (Tier 11) -- degraded
+- **Added** `_health_check()` async function -- HEAD request with 5-second timeout before each city scrape
+- **Added** per-city skip logging: `[Municipal] {city} skipped -- endpoint unreachable`
+- **Added** tier-level skip: if all cities fail health check, logs "All cities failed health check -- tier skipped entirely"
+- Reports skip count in summary: `(X/Y cities skipped)`
+
+### 5. ARCHITECTURE.md updated
+- Tier list section retitled to "10 active tiers of 14"
+- Tiers 3, 6, 11, 12 annotated with status (disabled/degraded + reason)
+- Repository layout, discovery table, data flow diagram, and error handling sections updated
+- Tier numbering preserved (no renumbering)
+
+✅ Prompt 5 complete. Committing...
+warning: in the working copy of 'ARCHITECTURE.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_all.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'gov_sources.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'pipeline_config.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'rss_monitor.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'wayback.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_log_prompt_05.txt', LF will be replaced by CRLF the next time Git touches it
+[fix/signal-dispatch-overhaul d9ca8ce] fix(signal-dispatch): prompt 5 of 10 — clean up non-functional discovery tiers
+ 9 files changed, 117 insertions(+), 38 deletions(-)
+ rename gdelt_monitor.py => archive/gdelt_monitor.py (100%)
+ create mode 100644 fix_log_prompt_05.txt
+   Committed. Moving to next prompt...
+
+───────────────────────────────────────────────────
+  PROMPT 6 of 10
+───────────────────────────────────────────────────
+

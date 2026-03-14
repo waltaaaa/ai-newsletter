@@ -248,7 +248,7 @@ import json
 from datetime import date, datetime
 
 try:
-    from pipeline_state import parse_json_response
+    from pipeline_store import parse_json_response
 except ImportError:
     def parse_json_response(text):
         if not text:

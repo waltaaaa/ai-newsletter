@@ -16,7 +16,7 @@ import requests
 from datetime import date
 
 try:
-    from pipeline_cache import cache as _cache
+    from pipeline_store import cache as _cache
 except ImportError:
     _cache = None
 

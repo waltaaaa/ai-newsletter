@@ -55,7 +55,7 @@ def run_capacity_tiers(db):
 
     # ── T1: Deep Verification (50 queries) ────────────────────────
     try:
-        from deep_verification import run_verification
+        from url_verify import run_verification
         print("\n[T1] Deep verification of single-source projects...")
         t1_result = run_verification(db, max_queries=TIER_BUDGETS["T1"])
         summary["T1_confirmed"] = t1_result.get("confirmed", 0)

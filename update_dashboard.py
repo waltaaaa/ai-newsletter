@@ -52,7 +52,6 @@ from pipeline_config import SONNET_MODEL, GEMINI_MODEL, GEMINI_SEARCH_ENABLED, C
 from citation_audit import (
     CITATION_RULES, run_citation_audit, save_audit_log,
 )
-from gemini_search import log_gemini_unique  # legacy logging helper
 from google_news_rss_search import run_google_news_search
 # Perplexity removed — function covered by compound queries + enrichment tiers
 from article_filter import filter_articles
@@ -64,7 +63,7 @@ from db import (init_db, get_db, get_all_projects, get_projects, save_indicator,
                 save_trend_snapshot, save_timeseries_point,
                 save_checkpoint, get_checkpoint)
 from pipeline_logging import PipelineRunLogger
-from pipeline_cache import cache as _cache
+from pipeline_store import cache as _cache
 from export_dashboard import export_all
 import service_health
 
@@ -3296,7 +3295,7 @@ def update_dashboard(deep_sweep: bool = False):
         # Consume follow-up queries from last week via Tavily
         tavily_searches_count = 0
         try:
-            from pipeline_state import get_follow_up_queries
+            from pipeline_store import get_follow_up_queries
             from tavily_search import tavily_search_sync
             pro_follow_ups = get_follow_up_queries(db=None, conn=conn)
             if pro_follow_ups and can_use_tavily():
@@ -3635,12 +3634,7 @@ def update_dashboard(deep_sweep: bool = False):
             print("\n[DEDUP] No flat projects to upsert")
         run_log.log_step("post_extraction_dedup")
 
-        # Cross-reference logging
-        if gemini_projects:
-            existing_names = set()
-            for p in get_all_projects(conn):
-                existing_names.add((p.get('name') or '').lower().strip())
-            log_gemini_unique(gemini_projects, existing_names)
+        # Cross-reference logging (legacy gemini_search logger removed)
 
     except Exception as e:
         import traceback
@@ -3864,7 +3858,7 @@ def update_dashboard(deep_sweep: bool = False):
 
         # ── STEP 2K: Process missed project submissions ──────────
         try:
-            from missed_project_enrichment import process_pending_submissions
+            from missed_projects import process_pending_submissions
             missed_result = process_pending_submissions(conn, max_queries=20)
             if missed_result.get("processed"):
                 print(f"  [MISSED] {missed_result['processed']} submissions, "
@@ -3883,7 +3877,7 @@ def update_dashboard(deep_sweep: bool = False):
 
         # ── STEP 2K: Claude reasoning layer ──────────────────────
         try:
-            from pipeline_state import store_follow_up_queries
+            from pipeline_store import store_follow_up_queries
             from claude_reasoning import (
                 analyze_provincial_gaps_sync,
                 recover_failed_extractions_sync,
@@ -4120,13 +4114,13 @@ def update_dashboard(deep_sweep: bool = False):
 
             permit_anomalies = detect_permit_anomalies(conn)
             if permit_anomalies:
-                from pipeline_state import store_follow_up_queries as _store_fq
+                from pipeline_store import store_follow_up_queries as _store_fq
                 _store_fq(db=None, queries=permit_anomalies, conn=conn)
                 print(f"  [PERMITS] {len(permit_anomalies)} anomalies → follow-up queries")
 
             lobby_signals = search_lobbyist_registries()
             if lobby_signals:
-                from pipeline_state import store_follow_up_queries as _store_fq2
+                from pipeline_store import store_follow_up_queries as _store_fq2
                 _store_fq2(db=None, queries=lobby_signals, conn=conn)
                 print(f"  [LOBBY] {len(lobby_signals)} signals → follow-up queries")
 
