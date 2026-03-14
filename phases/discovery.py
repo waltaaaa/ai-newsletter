@@ -38,6 +38,22 @@ def run(conn, context, logger):
             print(f"  [TIER 14] Institutional scrape failed: {type(e).__name__}: {e}")
             logger.log_error("tier_14_institutional", e)
 
+        # IAAC status tracker: federal assessment status changes
+        try:
+            from iaac_status import run_iaac_status
+            print("\n[IAAC-STATUS] IAAC assessment status tracking...")
+            iaac_results = run_iaac_status(conn)
+            context.update(iaac_results)
+            status_changes = len(iaac_results.get("iaac_status_changes", []))
+            new_disc = len(iaac_results.get("iaac_new_discoveries", []))
+            if status_changes or new_disc:
+                print(f"  {status_changes} status changes, {new_disc} new discoveries")
+        except ImportError:
+            print("[WARN] iaac_status not available, skipping IAAC status tracking")
+        except Exception as e:
+            print(f"[WARN] IAAC status tracking failed: {type(e).__name__}: {e}")
+            logger.log_error("iaac_status_tracker", e)
+
         # Procurement monitor: federal + provincial contract awards
         try:
             from procurement_monitor import run_procurement_monitor

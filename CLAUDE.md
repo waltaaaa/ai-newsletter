@@ -70,6 +70,7 @@ Rules:
 Plus: Key people RSS feeds (processed through government bypass)
 Plus: Procurement monitor — federal/provincial contract awards and tenders (Open Canada, BuyAndSell, Ontario BPS, BC Bid). Filters for construction/infrastructure >=5M. Links awards to existing projects. Zero cost.
 Plus: Corporate newswires — 12 RSS feeds from GlobeNewswire, Canada Newswire, and Cision covering mining, energy, real estate, construction, manufacturing, transport, and government press releases. Pre-filtered for Canadian relevance before entering the 6-layer RSS filter. Zero cost.
+Plus: IAAC status tracker — monitors federal Impact Assessment Registry for status transitions (planning, public comment, panel review, decision). Updates project statuses and detects new IAAC projects. Zero cost.
 
 ## Search Budget
 - **Google News RSS:** Unlimited, free. Primary discovery layer.
@@ -176,7 +177,7 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 - `public/` — Source frontend assets (synced to docs/ by `tools/deploy_to_github.py`)
 
 ## File Naming
-- Discovery: `google_news_rss_search.py`, `rss_filter.py`, `gov_sources.py`, `municipal_dev_apps.py`, `snippet_enhancer.py`, `metadata_tagger.py`
+- Discovery: `google_news_rss_search.py`, `rss_filter.py`, `gov_sources.py`, `municipal_dev_apps.py`, `snippet_enhancer.py`, `metadata_tagger.py`, `iaac_status.py`
 - Procurement: `procurement_monitor.py` (federal + provincial contract awards — Open Canada, BuyAndSell, Ontario BPS, BC Bid)
 - Policy: `policy_tracker.py` (LEGISinfo, Canada Gazette, ministry feeds — legislative/regulatory tracking)
 - Signals: `job_monitor.py` (hiring spike detection — 15 CMAs, 9 sectors, Indeed/Job Bank RSS)
@@ -195,6 +196,9 @@ Monitors ~17 federal and provincial RSS feeds for legislative and regulatory dev
 Policy items are classified into 8 categories (housing, energy_transition, infrastructure_funding, trade_policy, defence, resource_development, healthcare_infrastructure, fiscal_policy) and linked to affected projects by sector and province. The policy_summary output feeds into the narrative phase for the weekly briefing.
 
 Zero cost — all government RSS feeds are free public data.
+
+## IAAC Status Tracker
+Monitors the federal Impact Assessment Registry for status transitions on projects under assessment. Maps IAAC phases (Planning Phase, Public Comment, Panel Review, Decision Statement, etc.) to project statuses and updates the database when projects advance through the assessment process. Also detects IAAC projects not yet in the database as new discoveries. Reuses the existing Tier 1 IAAC scraper from `gov_sources.py` — does not duplicate the HTTP/parsing logic. Status updates respect the non-regression rule (terminal states like Cancelled always apply). Zero cost.
 
 ## Common Mistakes to Avoid
 - Do not use Gemini grounded search — it costs $35/1,000 queries. Use Google News RSS instead.
