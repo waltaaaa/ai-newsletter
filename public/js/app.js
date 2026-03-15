@@ -223,13 +223,13 @@ $('editionList').addEventListener('click',e=>e.stopPropagation());
 /* ── Render Router ── */
 function renderTab(id){
   switch(id){
-    case'overview':renderOverview();break;
+    case'overview':renderOverview();renderIndicatorExplorer();break;
     case'provinces':renderProvinces();break;
     case'industries':renderIndustries();break;
     case'markets':renderMarkets();break;
     case'projects':renderProjectsTab();break;
     case'calendar':renderCalendar();break;
-    case'explorer':renderIndicatorExplorer();renderExplorer();break;
+    case'explorer':renderExplorer();break;
   }
 }
 
@@ -253,7 +253,7 @@ function renderOverview(){
   const hasBriefing=D&&D.executive_summary;
   // Executive Summary — show briefing content or a status message
   if(hasBriefing){
-    $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div></div>`;
+    $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">TL;DR</div><div class="card-body">${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div></div>`;
   }else{
     const indCount=indicators.length;
     $('execSummary').innerHTML=`<div class="card fade-in" style="padding:24px;text-align:center"><div style="color:var(--text-secondary);font-size:var(--text-sm)">Weekly briefing pending. ${indCount} indicators loaded from primary sources.</div></div>`;
