@@ -83,12 +83,12 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .tab-panel>section,.tab-panel>div[id]{margin-top:var(--space-lg)}
 .tab-panel>:first-child{margin-top:0}
 /* Section banners */
-.section-banner{position:relative;overflow:hidden;min-height:auto;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:var(--radius-lg);margin-bottom:24px;display:flex;align-items:center;padding:var(--space-2xl) var(--space-2xl);box-shadow:var(--shadow-md);border:1px solid rgba(255,255,255,0.10);border-left:4px solid var(--accent-red)}
-.section-banner::before{display:none}
-.section-banner::after{display:none}
+.section-banner{position:relative;overflow:hidden;min-height:120px;background:rgba(255,255,255,0.85);border-radius:var(--radius-lg);margin-bottom:24px;display:flex;align-items:center;padding:var(--space-2xl) var(--space-2xl);box-shadow:var(--shadow-md);border:1px solid rgba(255,255,255,0.18)}
+.section-banner::before{content:'';position:absolute;inset:0;background-image:var(--banner-img);background-size:cover;background-position:center;opacity:.18;z-index:0}
+.section-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(255,255,255,0.92) 30%,rgba(255,255,255,0.70) 60%,rgba(255,255,255,0.50) 100%);z-index:1}
 .section-banner-content{position:relative;z-index:2}
-.section-banner-title{font-family:var(--font-heading);font-size:var(--text-xl);font-weight:700;color:#FFFFFF;letter-spacing:-0.02em}
-.section-banner-sub{font-size:var(--text-sm);color:rgba(255,255,255,0.55);margin-top:4px;font-weight:400}
+.section-banner-title{font-family:var(--font-heading);font-size:var(--text-xl);font-weight:700;color:#0f1b33;letter-spacing:-0.02em}
+.section-banner-sub{font-size:var(--text-sm);color:#5a6a85;margin-top:4px;font-weight:400}
 .hero-map{position:absolute;right:8%;top:50%;transform:translateY(-50%);z-index:1;opacity:.12;pointer-events:none;mix-blend-mode:screen}
 /* Cards */
 .card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:22px;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));transition:box-shadow .2s ease,background .2s ease;color:#1a2744}
