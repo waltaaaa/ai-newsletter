@@ -655,7 +655,7 @@ function renderIndicatorExplorer(){
   selHtml+='</div></div>';
   // Callout + chart
   selHtml+='<div id="indExpCallout" style="margin-bottom:8px"></div>';
-  selHtml+='<div style="height:280px;position:relative"><canvas id="indExpCanvas"></canvas></div>';
+  selHtml+='<div style="height:200px;position:relative"><canvas id="indExpCanvas"></canvas></div>';
   // Source link
   if(selItem){
     const linkUrl=selItem.statcan?'https://www150.statcan.gc.ca/n1/en/type/data':selItem.url||'#';
