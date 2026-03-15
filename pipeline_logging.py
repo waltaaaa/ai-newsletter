@@ -132,8 +132,14 @@ class PipelineRunLogger:
             pass
         return False  # Don't suppress exceptions
 
-    def log_step(self, step_name):
-        """Record a completed pipeline step."""
+    def log_step(self, step_name, status=None, detail=None):
+        """Record a completed pipeline step.
+
+        Args:
+            step_name: Name of the pipeline step.
+            status: Optional status string (ignored — kept for call-site compat).
+            detail: Optional detail string (ignored — kept for call-site compat).
+        """
         self._steps_completed.append(step_name)
         if self._active and self._run_id is not None:
             try:

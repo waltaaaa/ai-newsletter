@@ -1,19 +1,27 @@
 {
   "last_run": {
-    "started_at": "2026-03-14T20:10:45.539527",
+    "started_at": "2026-03-15T05:12:10.422659",
     "status": "running",
     "duration_seconds": 0,
     "discovery": {
-      "articles_found": 0,
-      "projects_added": 0,
-      "projects_updated": 0,
-      "projects_deduped": 0
+      "articles_found": 5764,
+      "projects_added": 19,
+      "projects_updated": 4910,
+      "projects_deduped": 811
     },
-    "errors": []
+    "errors": [
+      {
+        "step": "iaac_status_tracker",
+        "error_type": "ValueError",
+        "message": "project_dict must have non-empty 'name' and 'province'",
+        "recovered": true,
+        "timestamp": "2026-03-15T05:16:28.288373"
+      }
+    ]
   },
   "analysis_incomplete": false,
   "tavily": {
-    "used": 30,
+    "used": 90,
     "month": "2026-03"
   },
   "claude_tokens": {
@@ -22,41 +30,41 @@
   },
   "recent_runs": [
     {
-      "started_at": "2026-03-14T20:10:45.539527",
+      "started_at": "2026-03-15T05:12:10.422659",
       "status": "running",
       "duration_seconds": 0,
       "discovery": {
-        "articles_found": 0,
-        "projects_added": 0,
-        "projects_updated": 0,
-        "projects_deduped": 0
+        "articles_found": 5764,
+        "projects_added": 19,
+        "projects_updated": 4910,
+        "projects_deduped": 811
       }
     },
     {
-      "started_at": "2026-03-14T19:59:05.363921",
-      "status": "success",
-      "duration_seconds": 34,
-      "discovery": {
-        "articles_found": 0,
-        "projects_added": 0,
-        "projects_updated": 0,
-        "projects_deduped": 0
-      }
-    },
-    {
-      "started_at": "2026-03-14T19:36:37.824600",
-      "status": "success",
-      "duration_seconds": 19,
-      "discovery": {
-        "articles_found": 0,
-        "projects_added": 0,
-        "projects_updated": 0,
-        "projects_deduped": 0
-      }
-    },
-    {
-      "started_at": "2026-03-14T19:35:52.305754",
+      "started_at": "2026-03-15T03:59:39.683010",
       "status": "error",
+      "duration_seconds": 4318,
+      "discovery": {
+        "articles_found": 5772,
+        "projects_added": 530,
+        "projects_updated": 4395,
+        "projects_deduped": 823
+      }
+    },
+    {
+      "started_at": "2026-03-15T03:53:10.911351",
+      "status": "success",
+      "duration_seconds": 133,
+      "discovery": {
+        "articles_found": 0,
+        "projects_added": 0,
+        "projects_updated": 0,
+        "projects_deduped": 0
+      }
+    },
+    {
+      "started_at": "2026-03-15T02:08:23.420126",
+      "status": "running",
       "duration_seconds": 0,
       "discovery": {
         "articles_found": 0,
