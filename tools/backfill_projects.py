@@ -235,6 +235,7 @@ def parse_infrastructure_canada():
                 "confidence": 0.7,
                 "has_government_source": 1,
                 "source": "Infrastructure Canada",
+                "_category": category,
             })
 
     logger.info(f"Infrastructure Canada: {len(projects)} projects parsed")
