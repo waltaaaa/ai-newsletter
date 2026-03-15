@@ -430,35 +430,35 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 <main class="container">
   <!-- OVERVIEW -->
   <div class="tab-panel active" id="tab-overview" role="tabpanel" aria-labelledby="tab-overview-label">
-    <!-- TL;DR + Indicator Explorer side by side -->
-    <div class="ws-row ws-row-60-40" style="align-items:start">
-      <div id="execSummary"></div>
-      <section id="indicatorExplorer"></section>
-    </div>
-    <!-- Infographics — dynamic from editorial directives or defaults -->
-    <div id="infographicsContainer" style="margin-top:20px"></div>
-    <!-- Key Indicators -->
+    <!-- 1. TL;DR — full width, the hook -->
+    <div id="execSummary"></div>
+    <!-- 2. Key Indicators — quick macro snapshot -->
     <section id="keyIndicators" style="margin-top:20px"></section>
-    <!-- Microscope + National Analysis side by side -->
-    <div class="ws-row ws-row-2" style="margin-top:20px">
+    <!-- 3. Infographics — visual story of the week -->
+    <div id="infographicsContainer" style="margin-top:20px"></div>
+    <!-- 4. Deep dives: Microscope + National Analysis -->
+    <div class="ws-row ws-row-2" style="margin-top:24px">
       <div id="microscopeSection"></div>
       <div id="nationalAnalysis"></div>
     </div>
-    <!-- Policy + Sentiment side by side -->
-    <div class="ws-row ws-row-2" style="margin-top:20px">
-      <div id="policySection"></div>
+    <!-- 5. Global context: Vectors + Sentiment -->
+    <div class="ws-row ws-row-2" style="margin-top:24px">
+      <section id="globalVectors"></section>
       <div id="sentimentSection"></div>
     </div>
-    <!-- Global Vectors full width -->
-    <section id="globalVectors" style="margin-top:20px"></section>
-    <!-- Trend Summary full width -->
-    <section id="trendSummary" style="margin-top:20px"></section>
-    <!-- Pipeline + Cost side by side -->
-    <div class="ws-row ws-row-2" style="margin-top:16px">
+    <!-- 6. Regulatory + Trends -->
+    <div class="ws-row ws-row-2" style="margin-top:24px">
+      <div id="policySection"></div>
+      <section id="trendSummary"></section>
+    </div>
+    <!-- 7. Interactive explorer — dig deeper -->
+    <section id="indicatorExplorer" style="margin-top:24px"></section>
+    <!-- 8. System health -->
+    <div class="ws-row ws-row-2" style="margin-top:20px">
       <div id="pipelineStatus"></div>
       <div id="costMonitor"></div>
     </div>
-    <!-- History + Sources -->
+    <!-- 9. Archive + Sources -->
     <div class="ws-row ws-row-2" style="margin-top:16px">
       <div id="microscopeHistory"></div>
       <div id="overviewSources"></div>
