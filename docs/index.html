@@ -80,7 +80,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 /* Tab panels */
 .tab-panel{display:none;padding:var(--space-xl) 0 var(--space-2xl)}
 .tab-panel.active{display:block;animation:fadeIn .25s ease both;will-change:opacity,transform}
-.tab-panel>section,.tab-panel>div[id]{margin-top:var(--space-lg)}
+.tab-panel>section,.tab-panel>div[id],.tab-panel>.ws-row{margin-top:24px}
 .tab-panel>:first-child{margin-top:0}
 /* Section banners */
 .section-banner{position:relative;overflow:hidden;min-height:120px;background:rgba(255,255,255,0.95);border-radius:var(--radius-lg);margin-bottom:24px;display:flex;align-items:center;padding:var(--space-2xl) var(--space-2xl);box-shadow:var(--shadow-md);border:1px solid rgba(255,255,255,0.18)}
@@ -349,7 +349,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 /* Focus styles */
 .nav-tab:focus-visible,.province-pill:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent-blue-soft);outline-offset:2px}
 /* Widescreen newsletter layout */
-.ws-row{display:grid;gap:24px;margin-top:16px;align-items:stretch}
+.ws-row{display:grid;gap:24px;align-items:stretch}
 .ws-row-2{grid-template-columns:1fr 1fr}
 .ws-row-60-40{grid-template-columns:3fr 2fr}
 .ws-row>*{margin-top:0!important;min-width:0}
@@ -430,36 +430,27 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 <main class="container">
   <!-- OVERVIEW -->
   <div class="tab-panel active" id="tab-overview" role="tabpanel" aria-labelledby="tab-overview-label">
-    <!-- 1. TL;DR — full width, the hook -->
     <div id="execSummary"></div>
-    <!-- 2. Key Indicators — quick macro snapshot -->
-    <section id="keyIndicators" style="margin-top:20px"></section>
-    <!-- 3. Infographics — visual story of the week -->
-    <div id="infographicsContainer" style="margin-top:20px"></div>
-    <!-- 4. Deep dives: Microscope + National Analysis -->
-    <div class="ws-row ws-row-2" style="margin-top:24px">
+    <section id="keyIndicators"></section>
+    <div id="infographicsContainer"></div>
+    <div class="ws-row ws-row-2">
       <div id="microscopeSection"></div>
       <div id="nationalAnalysis"></div>
     </div>
-    <!-- 5. Global context: Vectors + Sentiment -->
-    <div class="ws-row ws-row-2" style="margin-top:24px">
+    <div class="ws-row ws-row-2">
       <section id="globalVectors"></section>
       <div id="sentimentSection"></div>
     </div>
-    <!-- 6. Regulatory + Trends -->
-    <div class="ws-row ws-row-2" style="margin-top:24px">
+    <div class="ws-row ws-row-2">
       <div id="policySection"></div>
       <section id="trendSummary"></section>
     </div>
-    <!-- 7. Interactive explorer — dig deeper -->
-    <section id="indicatorExplorer" style="margin-top:24px"></section>
-    <!-- 8. System health -->
-    <div class="ws-row ws-row-2" style="margin-top:20px">
+    <section id="indicatorExplorer"></section>
+    <div class="ws-row ws-row-2">
       <div id="pipelineStatus"></div>
       <div id="costMonitor"></div>
     </div>
-    <!-- 9. Archive + Sources -->
-    <div class="ws-row ws-row-2" style="margin-top:16px">
+    <div class="ws-row ws-row-2">
       <div id="microscopeHistory"></div>
       <div id="overviewSources"></div>
     </div>
