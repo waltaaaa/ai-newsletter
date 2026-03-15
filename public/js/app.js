@@ -278,8 +278,66 @@ function renderOverview(){
   renderCostMonitor();
   renderMicroscopeHistory();
   renderPolicySection();
+  // Infographics
+  renderInfographics();
   // Sources
   $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
+}
+
+/* ====== INFOGRAPHICS ====== */
+async function renderInfographics(){
+  // Load all projects for infographics
+  let projects=[];
+  try{
+    const data=await fetchJSON('projects_all.json');
+    projects=Array.isArray(data)?data:[];
+  }catch(e){return}
+  if(!projects.length)return;
+
+  const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$'+fmtNum(v,0);
+  const statusOrder=['Proposed','Under Review','Approved','Under Construction','Partially Complete','Complete','On Hold','Cancelled'];
+  const statusColors=['#94A3B8','#60A5FA','#3B82F6','#2563EB','#1D4ED8','#15803D','#F59E0B','#EF4444'];
+
+  // 1. Pipeline Funnel — horizontal bar chart by status
+  const statusCounts={};
+  projects.forEach(p=>{const s=p.status||'Proposed';statusCounts[s]=(statusCounts[s]||0)+1});
+  const pLabels=[];const pData=[];const pColors=[];
+  statusOrder.forEach((s,i)=>{if(statusCounts[s]){pLabels.push(s);pData.push(statusCounts[s]);pColors.push(statusColors[i])}});
+  if(pData.length){
+    $('pipelineFunnelCard').style.display='';
+    if(charts._pipeline)charts._pipeline.destroy();
+    charts._pipeline=new Chart($('pipelineFunnelChart'),{type:'bar',data:{labels:pLabels,datasets:[{data:pData,backgroundColor:pColors,borderRadius:6,barPercentage:0.7}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8,callbacks:{label:ctx=>ctx.raw+' projects'}}},scales:{x:{grid:{display:false},ticks:{font:{family:'Outfit',size:11},color:'#5a6a85'}},y:{grid:{display:false},ticks:{font:{family:'Outfit',size:11,weight:500},color:'#1a2744'}}}}});
+  }
+
+  // 2. Sector Donut
+  const sectorVal={};
+  projects.forEach(p=>{const s=p.sector||'Other';const v=parseNumericValue(p.value);sectorVal[s]=(sectorVal[s]||0)+v});
+  const sorted=Object.entries(sectorVal).sort((a,b)=>b[1]-a[1]);
+  const top8=sorted.slice(0,8);
+  const otherVal=sorted.slice(8).reduce((s,e)=>s+e[1],0);
+  if(otherVal>0)top8.push(['Other',otherVal]);
+  const sLabels=top8.map(e=>e[0].replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));
+  const sData=top8.map(e=>e[1]);
+  const sColors=['#2563EB','#3B82F6','#60A5FA','#93C5FD','#F59E0B','#10B981','#8B5CF6','#EC4899','#94A3B8'];
+  if(sData.length){
+    $('sectorDonutCard').style.display='';
+    if(charts._sector)charts._sector.destroy();
+    charts._sector=new Chart($('sectorDonutChart'),{type:'doughnut',data:{labels:sLabels,datasets:[{data:sData,backgroundColor:sColors.slice(0,sData.length),borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{boxWidth:10,padding:8,font:{family:'Outfit',size:11},color:'#1a2744',usePointStyle:true,pointStyle:'circle'}},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8,callbacks:{label:ctx=>{const v=ctx.raw;const label=ctx.label;return label+': '+fv(v)}}}}}});
+  }
+
+  // 3. Province Value Bar Chart
+  const provVal={};
+  projects.forEach(p=>{const pr=p.province||'Unknown';const v=parseNumericValue(p.value);provVal[pr]=(provVal[pr]||0)+v});
+  const provSorted=Object.entries(provVal).sort((a,b)=>b[1]-a[1]).filter(e=>e[1]>0);
+  if(provSorted.length){
+    $('provinceBarCard').style.display='';
+    const pvLabels=provSorted.map(e=>e[0]);
+    const pvData=provSorted.map(e=>e[1]);
+    const pvMax=Math.max(...pvData);
+    const pvColors=pvData.map(v=>{const pct=v/pvMax;return pct>0.7?'#2563EB':pct>0.4?'#3B82F6':'#93C5FD'});
+    if(charts._provBar)charts._provBar.destroy();
+    charts._provBar=new Chart($('provinceBarChart'),{type:'bar',data:{labels:pvLabels,datasets:[{data:pvData,backgroundColor:pvColors,borderRadius:6,barPercentage:0.65}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8,callbacks:{label:ctx=>fv(ctx.raw)}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{family:'Outfit',size:11},color:'#5a6a85',callback:v=>fv(v)}},y:{grid:{display:false},ticks:{font:{family:'Outfit',size:11,weight:500},color:'#1a2744'}}}}});
+  }
 }
 
 function renderKeyIndicators(){

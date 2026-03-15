@@ -433,6 +433,21 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       <div id="execSummary"></div>
       <section id="indicatorExplorer"></section>
     </div>
+    <!-- Infographics row -->
+    <div class="ws-row ws-row-2" style="margin-top:20px" id="infographicsRow">
+      <div class="card fade-in" id="pipelineFunnelCard" style="display:none">
+        <div class="card-header">Project Pipeline</div>
+        <div style="height:220px;position:relative"><canvas id="pipelineFunnelChart"></canvas></div>
+      </div>
+      <div class="card fade-in" id="sectorDonutCard" style="display:none">
+        <div class="card-header">Sector Breakdown</div>
+        <div style="height:220px;position:relative"><canvas id="sectorDonutChart"></canvas></div>
+      </div>
+    </div>
+    <div class="card fade-in" id="provinceBarCard" style="margin-top:20px;display:none">
+      <div class="card-header">Project Value by Province</div>
+      <div style="height:200px;position:relative"><canvas id="provinceBarChart"></canvas></div>
+    </div>
     <!-- Key Indicators -->
     <section id="keyIndicators" style="margin-top:20px"></section>
     <!-- Microscope + National Analysis side by side -->
