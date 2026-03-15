@@ -78,6 +78,19 @@ def _parse_date(raw):
     return ""
 
 
+def _fmt_value(pv):
+    """Format a parsed numeric value for display. Uses B for billions."""
+    if not pv or pv <= 0:
+        return "Not disclosed"
+    if pv >= 1_000_000_000:
+        return f"${pv/1_000_000_000:.1f}B"
+    if pv >= 1_000_000:
+        return f"${pv/1_000_000:.0f}M"
+    if pv >= 1_000:
+        return f"${pv/1_000:.0f}K"
+    return f"${pv:,.0f}"
+
+
 def _date_to_date(s):
     """Parse YYYY-MM-DD string to date object, or None."""
     if not s:
@@ -99,20 +112,28 @@ def _build_evidence(url, source_name):
     }
 
 
-def _passes_threshold(parsed_value, province, source=""):
+def _passes_threshold(parsed_value, province, source="", category=""):
     """Check if a project meets the province GDP threshold.
 
     For major project inventories (NRCan, BC MPI, Alberta, Quebec): no-value projects
     pass as unconfirmed, since these sources only track significant projects.
 
-    For funding program lists (Infrastructure Canada, Ontario Builds): a confirmed
-    value above threshold is required, since these include everything down to $50K.
+    For funding program lists (Infrastructure Canada): a confirmed value above
+    threshold is required, since these include everything down to $50K.
+
+    For Ontario Builds: confirmed value required EXCEPT for Transit and Health care
+    categories, which are curated major infrastructure even without disclosed budgets.
     """
-    # Sources that require confirmed values
-    REQUIRE_VALUE = {"Infrastructure Canada", "Ontario Builds"}
+    # Ontario Builds Transit and Health care — allow unconfirmed (inherently major)
+    ONTARIO_MAJOR_CATEGORIES = {"transit", "health care"}
+
     if parsed_value is None:
-        if any(s in source for s in REQUIRE_VALUE):
-            return False  # funding program list → need confirmed value
+        # Infrastructure Canada always requires confirmed value
+        if "Infrastructure Canada" in source:
+            return False
+        # Ontario Builds requires confirmed value EXCEPT for major categories
+        if "Ontario Builds" in source:
+            return category.lower().strip() in ONTARIO_MAJOR_CATEGORIES
         return True  # major project inventory → include as unconfirmed
     threshold = PROVINCE_GDP_THRESHOLDS.get(province, 500_000_000)
     return parsed_value >= threshold
@@ -174,9 +195,7 @@ def parse_infrastructure_canada():
                     pv = float(raw_value.replace(",", ""))
                 except ValueError:
                     pv = None
-            value_text = f"${pv/1_000_000:.0f}M" if pv and pv >= 1_000_000 else (
-                f"${pv:,.0f}" if pv else "Not disclosed"
-            )
+            value_text = _fmt_value(pv)
 
             # Dates
             approved = _parse_date(row.get("Approved Date", ""))
@@ -251,7 +270,7 @@ def parse_nrcan():
         # Cost in $M
         cost_m = row[22]  # Cost 2024 (CAD) {$M}
         pv = float(cost_m) * 1_000_000 if cost_m else None
-        value_text = f"${cost_m:.0f}M" if cost_m else "Not disclosed"
+        value_text = _fmt_value(pv)
 
         status = normalize_status(str(row[19] or "Proposed"))  # Status 2024
         proponent = str(row[2] or "")  # Company/Proponent
@@ -330,9 +349,7 @@ def parse_ontario():
                         pv = None
                 except ValueError:
                     pv = None
-            value_text = f"${pv/1_000_000:.0f}M" if pv and pv >= 1_000_000 else (
-                f"${pv:,.0f}" if pv else "Not disclosed"
-            )
+            value_text = _fmt_value(pv)
 
             status = normalize_status(row.get("Status", "Proposed"))
             community = row.get("Community", "")
@@ -363,6 +380,7 @@ def parse_ontario():
                 "confidence": 0.7,
                 "has_government_source": 1,
                 "source": "Ontario Builds",
+                "_category": category,
             })
 
     logger.info(f"Ontario Builds: {len(projects)} projects parsed")
@@ -395,7 +413,7 @@ def parse_bc():
         # Cost in $M
         cost_m = row[3]  # ESTIMATED_COST
         pv = float(cost_m) * 1_000_000 if cost_m else None
-        value_text = f"${cost_m:.0f}M" if cost_m else "Not disclosed"
+        value_text = _fmt_value(pv)
 
         status = normalize_status(str(row[13] or "Proposed"))  # PROJECT_STATUS
         developer = str(row[11] or "")  # DEVELOPER
@@ -459,7 +477,7 @@ def parse_alberta():
         # Cost in $M
         cost_m = props.get("cost")
         pv = float(cost_m) * 1_000_000 if cost_m else None
-        value_text = f"${cost_m:.0f}M" if cost_m else "Not disclosed"
+        value_text = _fmt_value(pv)
 
         # Alberta uses both stage and status
         stage = props.get("stage", "")
@@ -620,7 +638,8 @@ def apply_filters(projects):
 
         # GDP threshold filter
         source = p.get("source", "")
-        if not _passes_threshold(pv, province, source):
+        category = p.get("_category", "")
+        if not _passes_threshold(pv, province, source, category):
             stats["threshold"] += 1
             continue
 
