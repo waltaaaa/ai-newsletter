@@ -338,12 +338,24 @@ def _build_market_data_from_indicators(conn) -> dict:
 
 def export_briefings(conn, output_dir: str) -> tuple[str, str]:
     """Export briefing_latest.json and briefing_archive.json."""
-    from db import get_briefing_archive, get_latest_briefing
+    from db import get_briefing_archive, get_latest_briefing, get_dashboard_state
 
-    # Latest briefing — full payload
-    latest = get_latest_briefing(conn)
+    # Latest briefing — prefer full newsletter payload from dashboard_state
+    # (includes provinces, industries, executive_summary from Claude analysis)
+    # Falls back to weekly_briefings table (briefing text only)
+    latest = get_dashboard_state(conn, 'newsletter_latest')
+    if not latest or not isinstance(latest, dict):
+        latest = get_latest_briefing(conn)
     if latest is None:
         latest = {}
+    # Merge in briefing sections from weekly_briefings if not in newsletter payload
+    if not latest.get('sections'):
+        briefing = get_latest_briefing(conn)
+        if briefing:
+            for key in ('id', 'week_of', 'headline', 'sections', 'word_count',
+                        'generated_at', 'pdf_url', 'docx_url'):
+                if briefing.get(key) and not latest.get(key):
+                    latest[key] = briefing[key]
 
     # Merge market data from indicator_history if not already in briefing
     if not latest.get('financialMarkets') or not latest.get('commodities'):

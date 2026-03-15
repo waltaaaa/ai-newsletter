@@ -4,7 +4,9 @@ import json
 import os
 import re
 import time
+import threading
 import anthropic
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, timedelta
 from google import genai
 from google.genai import types
@@ -276,6 +278,9 @@ def _repair_json(broken_json: str, label: str,
                 max_tokens=16384,
                 messages=[{"role": "user", "content": repair_prompt}],
             )
+            if not msg.content:
+                print(f"    [HAIKU REPAIR FAILED] {label}: empty API response")
+                return None
             raw = msg.content[0].text.strip()
             if raw.startswith("```"):
                 parts = raw.split("```")
@@ -375,15 +380,28 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
                 system=_CLAUDE_SYSTEM,
                 messages=[{"role": "user", "content": prompt}],
             )
-            # ── Track cost ───────────────────────────────────────────────
+            # ── Track cost (thread-safe when _lock present) ────────────
             in_tok = getattr(msg.usage, 'input_tokens', 0)
             out_tok = getattr(msg.usage, 'output_tokens', 0)
-            cost_state['input'] += in_tok
-            cost_state['output'] += out_tok
             call_cost = (in_tok * input_cost + out_tok * output_cost) / 1_000_000
-            cost_state['usd'] += call_cost
-            print(f"    [COST] {label}: {in_tok:,} in + {out_tok:,} out = ${call_cost:.4f} (run total: ${cost_state['usd']:.4f}/${cap:.2f})")
+            lock = cost_state.get('_lock')
+            if lock:
+                with lock:
+                    cost_state['input'] += in_tok
+                    cost_state['output'] += out_tok
+                    cost_state['usd'] += call_cost
+                    total = cost_state['usd']
+            else:
+                cost_state['input'] += in_tok
+                cost_state['output'] += out_tok
+                cost_state['usd'] += call_cost
+                total = cost_state['usd']
+            print(f"    [COST] {label}: {in_tok:,} in + {out_tok:,} out = ${call_cost:.4f} (run total: ${total:.4f}/${cap:.2f})")
 
+            if not msg.content:
+                print(f"    [TRUNCATED] {label}: empty API response — retrying")
+                time.sleep(2)
+                continue
             raw_content = msg.content[0].text.strip()
 
             # ── Truncation detection ─────────────────────────────────────
@@ -922,10 +940,13 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
     # Collect citation audit results
     audit_results = []
 
-    # ── CALL 1: Macro Tab (SONNET) ───────────────────────────────
-    print(f"  [1/4] Macro Tab — exec summary, national, global, watchlist, consumer pulse (Sonnet)...")
+    # ── CALLS 1-4: Run in parallel (all independent) ─────────────
+    # cost_state is shared across threads — add lock to protect mutations
+    cost_state['_lock'] = threading.Lock()
 
-    call1 = _call_claude(f"""Today: {today_str}
+    print(f"  [1-4] Running all Claude calls in parallel (Sonnet)...")
+
+    _call1_prompt = f"""Today: {today_str}
 
 VERIFIED DATA (use exactly, never modify round or reinterpret):
 {hard_summary}
@@ -1014,17 +1035,8 @@ SCHEMA:
         {{"topic": "BoC rate hold", "sentiment_score": 0.2, "frequency": 7}},
         {{"topic": "housing affordability", "sentiment_score": -0.5, "frequency": 6}}
     ]
-}}""", "call1-macro", max_tokens=12000, model=SONNET_MODEL,
-        anthropic_client=anthropic_client, cost_state=cost_state, conn=conn,
-        gemini_client=gemini_client)
+}}"""
 
-    # Citation audit for Call 1
-    audit1 = run_citation_audit(call1 or {}, 'call1-macro', anthropic_client=anthropic_client)
-    audit1['_label'] = 'call1-macro'
-    audit_results.append(audit1)
-
-    # ── CALL 2: Industries + Markets (SONNET) ────────────────────
-    print(f"  [2/4] Industries + yields (Sonnet)...")
     industry_arts_text = _format_articles_for_prompt(
         [a for a in economy_arts if any(kw in (a.get('title','') + a.get('text','')).lower()
                                         for kw in ('energy','oil','gas','mining','manufactur',
@@ -1036,7 +1048,7 @@ SCHEMA:
                                                    'military','defense','government'))][:50]
     )
 
-    call2 = _call_claude(f"""Today: {today_str}
+    _call2_prompt = f"""Today: {today_str}
 
 VERIFIED DATA:
 {hard_summary}
@@ -1114,17 +1126,7 @@ SCHEMA:
         "yieldCurveCurrent": [],
         "yieldCurveLastYear": []
     }}
-}}""", "call2-industries", max_tokens=10000, model=SONNET_MODEL,
-        anthropic_client=anthropic_client, cost_state=cost_state, conn=conn,
-        gemini_client=gemini_client)
-
-    # Citation audit for Call 2
-    audit2 = run_citation_audit(call2 or {}, 'call2-industries', anthropic_client=anthropic_client)
-    audit2['_label'] = 'call2-industries'
-    audit_results.append(audit2)
-
-    # ── CALL 3: Provinces (SONNET) ────────────────────────────────
-    print(f"  [3/4] Provinces (all 13, Sonnet)...")
+}}"""
 
     # Build provincial article context: matching articles + RSS items per province
     prov_arts_text = _format_articles_for_prompt(economy_arts[:60], max_chars=18000)
@@ -1140,7 +1142,7 @@ SCHEMA:
             prov_officials_lines.append(ctx)
     prov_officials_ctx = '\n'.join(prov_officials_lines)
 
-    call3 = _call_claude(f"""Today: {today_str}
+    _call3_prompt = f"""Today: {today_str}
 Bank of Canada Policy Rate: {hard_data['boc_rate']}
 
 NEWS ARTICLES (cite by article number — use URLs exactly as given):
@@ -1194,17 +1196,7 @@ SCHEMA:
             ]
         }}
     ]
-}}""", "call3-provinces", max_tokens=10000, model=SONNET_MODEL,
-        anthropic_client=anthropic_client, cost_state=cost_state, conn=conn,
-        gemini_client=gemini_client)
-
-    # Citation audit for Call 3
-    audit3 = run_citation_audit(call3 or {}, 'call3-provinces', anthropic_client=anthropic_client)
-    audit3['_label'] = 'call3-provinces'
-    audit_results.append(audit3)
-
-    # ── CALL 4: Project extraction from GDELT articles ────────────
-    print("  [4/4] Project extraction from articles...")
+}}"""
     proj_arts_text = _format_articles_for_prompt(project_arts[:60], max_chars=20000)
 
     _PROJ_EXTRACT_SCHEMA = """{
@@ -1224,7 +1216,7 @@ SCHEMA:
   ]
 }"""
 
-    call4_raw = _call_claude(f"""Today: {today_str}
+    _call4_prompt = f"""Today: {today_str}
 
 PROJECT DISCOVERY ARTICLES (extract capital projects — use article URLs verbatim):
 {proj_arts_text}
@@ -1242,10 +1234,51 @@ Output ONLY valid JSON. No markdown. No text outside JSON.
 SCHEMA:
 {_PROJ_EXTRACT_SCHEMA}
 
-If no projects found, return: {{"projects": []}}""",
-        "call4-projects", max_tokens=8096, model=SONNET_MODEL,
-        anthropic_client=anthropic_client, cost_state=cost_state, conn=conn,
-        gemini_client=gemini_client)
+If no projects found, return: {{"projects": []}}"""
+
+    # ── Execute all 4 calls in parallel ────────────────────────────
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        f1 = executor.submit(_call_claude, _call1_prompt, "call1-macro",
+                             max_tokens=12000, model=SONNET_MODEL,
+                             anthropic_client=anthropic_client, cost_state=cost_state,
+                             conn=conn, gemini_client=gemini_client)
+        f2 = executor.submit(_call_claude, _call2_prompt, "call2-industries",
+                             max_tokens=10000, model=SONNET_MODEL,
+                             anthropic_client=anthropic_client, cost_state=cost_state,
+                             conn=conn, gemini_client=gemini_client)
+        f3 = executor.submit(_call_claude, _call3_prompt, "call3-provinces",
+                             max_tokens=10000, model=SONNET_MODEL,
+                             anthropic_client=anthropic_client, cost_state=cost_state,
+                             conn=conn, gemini_client=gemini_client)
+        f4 = executor.submit(_call_claude, _call4_prompt, "call4-projects",
+                             max_tokens=8096, model=SONNET_MODEL,
+                             anthropic_client=anthropic_client, cost_state=cost_state,
+                             conn=conn, gemini_client=gemini_client)
+
+    call1 = f1.result()
+    call2 = f2.result()
+    call3 = f3.result()
+    call4_raw = f4.result()
+    print("  [1-4] All Claude calls completed")
+
+    # ── Citation audits (parallel, after all calls) ────────────────
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        fa1 = executor.submit(run_citation_audit, call1 or {}, 'call1-macro',
+                              anthropic_client=anthropic_client)
+        fa2 = executor.submit(run_citation_audit, call2 or {}, 'call2-industries',
+                              anthropic_client=anthropic_client)
+        fa3 = executor.submit(run_citation_audit, call3 or {}, 'call3-provinces',
+                              anthropic_client=anthropic_client)
+
+    audit1 = fa1.result()
+    audit1['_label'] = 'call1-macro'
+    audit_results.append(audit1)
+    audit2 = fa2.result()
+    audit2['_label'] = 'call2-industries'
+    audit_results.append(audit2)
+    audit3 = fa3.result()
+    audit3['_label'] = 'call3-provinces'
+    audit_results.append(audit3)
 
     extracted_projects = (call4_raw or {}).get('projects', [])
     print(f"  [Call 4] Extracted {len(extracted_projects)} projects from articles")
@@ -1389,6 +1422,9 @@ def generate_context_lines(ind_meta: dict, national_values: dict,
             max_tokens=400,
             messages=[{'role': 'user', 'content': prompt}]
         )
+        if not msg.content:
+            print(f"  [CONTEXT LINES] Empty API response (non-critical)")
+            return {}
         text = msg.content[0].text
         json_match = re.search(r'\{[\s\S]*\}', text)
         if json_match:
@@ -1513,21 +1549,26 @@ def run(conn, context, logger):
     """Phase 5: Analysis — Claude calls 1-4, hard data override, indicator validation."""
     step_name = "Phase 5: Analysis"
     try:
-        anthropic_client = context["anthropic_client"]
-        gemini_client = context["gemini_client"]
-        cost_state = context["claude_cost"]
+        anthropic_client = context.get("anthropic_client")
+        gemini_client = context.get("gemini_client")
+        if not anthropic_client:
+            print(f"  [ANALYSIS] ERROR: Missing anthropic_client in context — cannot run analysis")
+            return {"analysis_error": "missing anthropic_client"}
+        if not gemini_client:
+            print(f"  [ANALYSIS] WARNING: Missing gemini_client in context")
+        cost_state = context.get("claude_cost", {"total_usd": 0.0})
         watchlist = context.get("watchlist", {})
-        hard_data = context["hard_data"]
+        hard_data = context.get("hard_data", {})
         rss_items = context.get("rss_items", [])
         extracted_articles = context.get("extracted_articles", [])
-        primary_ind = context["primary_ind"]
-        national_ind = context["national_ind"]
-        prov_ind = context["prov_ind"]
-        global_ind = context["global_ind"]
-        commodity_data = context["commodity_data"]
-        financial_markets = context["financial_markets"]
-        boc_data = context["boc_data"]
-        yield_data = context["yield_data"]
+        primary_ind = context.get("primary_ind", {})
+        national_ind = context.get("national_ind", {})
+        prov_ind = context.get("prov_ind", {})
+        global_ind = context.get("global_ind", {})
+        commodity_data = context.get("commodity_data", {})
+        financial_markets = context.get("financial_markets", {})
+        boc_data = context.get("boc_data", {})
+        yield_data = context.get("yield_data", {})
 
         # Build signal context from Prompts 11-19 data streams
         signal_context = {
@@ -1553,7 +1594,7 @@ def run(conn, context, logger):
         logger.log_step("step_3_claude_analysis")
 
         # ── Guard: abort if Claude returned nothing useful ────────
-        _REQUIRED_KEYS = {'overview', 'provinces', 'industries'}
+        _REQUIRED_KEYS = {'executive_summary', 'provinces'}
         _missing = _REQUIRED_KEYS - set(final_payload or {})
         if not final_payload or _missing:
             msg = f"Claude analysis empty or missing critical keys: {_missing or 'empty dict'}"
