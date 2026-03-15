@@ -65,6 +65,7 @@ let _projTypeFilter='all';
 /* ── Helpers ── */
 const $=id=>document.getElementById(id);
 const san=h=>DOMPurify.sanitize(h||'',{ADD_ATTR:['target']});
+function linkFootnotes(html,sources){if(!html||!sources||!sources.length)return html||'';return html.replace(/<sup>(\d+)<\/sup>/g,(m,n)=>{const idx=parseInt(n,10)-1;const s=sources[idx];if(!s)return m;const url=s.url||s.archive_url||'';const title=(s.title||'Source').replace(/"/g,'&quot;');return url?`<a href="${url}" target="_blank" title="${title}" style="color:var(--accent);text-decoration:none"><sup>${n}</sup></a>`:`<sup title="${title}">${n}</sup>`})}
 function fmtDate(iso){if(!iso)return'';try{const d=new Date(iso+'T00:00:00');return d.toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})}catch{return iso}}
 function relDate(iso){if(!iso)return'';const ms=Date.now()-new Date(iso+'T00:00:00').getTime(),d=Math.floor(ms/864e5);if(d<1)return'Today';if(d<7)return d+'d ago';if(d<30)return Math.floor(d/7)+'w ago';return Math.floor(d/30)+'mo ago'}
 function changeCls(arrow){return arrow===1?'change-up':arrow===2?'change-down':'change-flat'}
@@ -248,7 +249,7 @@ function renderOverview(){
   const hasBriefing=D&&D.executive_summary;
   // Executive Summary — show briefing content or a status message
   if(hasBriefing){
-    $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(D.executive_summary)}</div></div>`;
+    $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">Executive Summary</div><div class="card-body">${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div></div>`;
   }else{
     const indCount=indicators.length;
     $('execSummary').innerHTML=`<div class="card fade-in" style="padding:24px;text-align:center"><div style="color:var(--text-secondary);font-size:var(--text-sm)">Weekly briefing pending. ${indCount} indicators loaded from primary sources.</div></div>`;
@@ -259,7 +260,7 @@ function renderOverview(){
   if(hasBriefing){
     const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
     const natSources=(D.national&&D.national.sources)||[];
-    $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(natContent)}</div>${sourcesFooter(natSources)}</div>`;
+    $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(linkFootnotes(natContent,natSources.length?natSources:(D.sources||[])))}</div>${sourcesFooter(natSources)}</div>`;
   }else{$('nationalAnalysis').innerHTML=''}
   // Sentiment
   if(D)renderSentiment();
@@ -307,7 +308,7 @@ function renderKeyIndicators(){
   strip+=renderIndicatorDropdown(indicators,'All Indicators');
   $('keyIndicators').innerHTML=strip;
   sparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
-  renderIndicatorExplorer('overviewIndicatorExplorer');
+  renderIndicatorExplorer();
 }
 
 
@@ -427,10 +428,9 @@ const INDICATOR_CATALOG=[
   ]}
 ];
 
-let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='national',_indExpTarget='indicatorExplorer';
+let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='national';
 
-function renderIndicatorExplorer(targetId){
-  _indExpTarget=targetId||'indicatorExplorer';
+function renderIndicatorExplorer(){
   // Build selector
   let selHtml='<div class="card fade-in"><div class="card-header">Indicator Explorer</div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px">';
   selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#191a1c;font-size:var(--text-sm)">';
@@ -468,7 +468,7 @@ function renderIndicatorExplorer(targetId){
     selHtml+='<div style="margin-top:8px;text-align:right"><a href="'+linkUrl+'" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue)">'+linkLabel+'</a></div>';
   }
   selHtml+='</div>';
-  $(_indExpTarget).innerHTML=selHtml;
+  $('indicatorExplorer').innerHTML=selHtml;
   loadIndExpData();
 }
 
@@ -481,7 +481,7 @@ window.onIndExpChange=function(){
   _indExpSel=$('indExpSelect').value;
   const provSel=$('indExpProv');
   _indExpProv=provSel?provSel.value:'national';
-  renderIndicatorExplorer(_indExpTarget);
+  renderIndicatorExplorer();
 };
 
 async function loadIndExpData(){
@@ -687,7 +687,7 @@ function renderGlobalVectors(){
       if(gi.unemployment)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">Unemp</div><div class="indicator-pill-value">'+gi.unemployment+'</div></div>';
       html+='</div>';
     }
-    html+='<div class="gv-body">'+san(analysis)+'</div>';
+    html+='<div class="gv-body">'+san(linkFootnotes(analysis,gData.sources||[]))+'</div>';
     if(gData.sources&&gData.sources.length)html+=sourcesFooter(gData.sources);
     html+='</div>';
   });
@@ -764,7 +764,8 @@ async function renderProvinceContent(){
 
   // Analysis
   const provContent=provData.analysis||'';
-  let analysisHtml='<div class="card"><div class="card-header">Analysis</div><div class="card-body">'+(provContent?san(provContent):'<div class="empty-state"><div class="empty-state-text">No provincial analysis available for '+prov.name+'.</div></div>')+'</div></div>';
+  const provSources=provData.sources||[];
+  let analysisHtml='<div class="card"><div class="card-header">Analysis</div><div class="card-body">'+(provContent?san(linkFootnotes(provContent,provSources.length?provSources:(D.sources||[]))):'<div class="empty-state"><div class="empty-state-text">No provincial analysis available for '+prov.name+'.</div></div>')+'</div></div>';
   // Province sources footer
   if(provData.sources&&provData.sources.length){analysisHtml+=sourcesFooter(provData.sources)}
   // Provincial upcoming events (from watchlist, filtered by province mention in description)
@@ -1846,7 +1847,7 @@ window._doVcodeSearch=function(cat){
   }
   let html='<div style="font-size:var(--text-xs);color:#919191;margin-bottom:8px">Showing '+results.length+' of '+(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()+' indexed tables</div>';
   results.forEach(r=>{
-    const pid=r.table.replace(/-/g,'');const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${pid.length<=8?pid+'01':pid}`;
+    const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${r.table.replace(/-/g,'')}`;
     html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#919191;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#919191;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
   });
   resEl.innerHTML=html;
