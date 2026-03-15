@@ -77,9 +77,9 @@ function buildTimeline(p){const ann=p.announcement_date||p.firstTracked||'';cons
 function fmtDateShort(s){if(!s)return'';const parts=s.split('-');if(parts.length<2)return s;const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return months[parseInt(parts[1])-1]+' '+parts[0]}
 function srcLink(url,title){if(!url)return'';return`<a href="${url}" target="_blank" rel="noopener noreferrer" title="${title||'Source'}">\u2197</a>`}
 function fmtNum(n,d){if(typeof n!=='number'||isNaN(n))return String(n);const dec=d!=null?d:(Math.abs(n)>=100?0:Math.abs(n)>=1?1:2);return n.toLocaleString('en-CA',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
-function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#919191">N/D</span>';return v}
+function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:rgba(255,255,255,0.40)">N/D</span>';return v}
 function parseNumericValue(v){if(!v)return 0;const s=String(v).toUpperCase();const m=s.match(/([\d.]+)\s*(B|M|K)?/);if(!m)return 0;let n=parseFloat(m[1])||0;if(m[2]==='B')n*=1e9;else if(m[2]==='M')n*=1e6;else if(m[2]==='K')n*=1e3;return n}
-function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:#919191;font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:#919191;font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:#919191">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:#919191;font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:#919191;font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
+function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:rgba(255,255,255,0.40);font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:rgba(255,255,255,0.40);font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:rgba(255,255,255,0.40)">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:rgba(255,255,255,0.40);font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:rgba(255,255,255,0.40);font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
 function skeleton(n=3){return Array(n).fill('<div class="skeleton sk-line"></div><div class="skeleton sk-line med"></div><div class="skeleton sk-line short"></div>').join('')}
 
 /* ── Tab Switching ── */
@@ -437,7 +437,7 @@ let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='nati
 function renderIndicatorExplorer(){
   // Build selector
   let selHtml='<div class="card fade-in"><div class="card-header">Indicator Explorer</div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px">';
-  selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#191a1c;font-size:var(--text-sm)">';
+  selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#FFFFFF;font-size:var(--text-sm)">';
   INDICATOR_CATALOG.forEach(g=>{
     selHtml+='<optgroup label="'+g.group+'">';
     g.items.forEach(it=>{
@@ -449,7 +449,7 @@ function renderIndicatorExplorer(){
   // Province toggle (shown only for provincial indicators)
   const selItem=findIndItem(_indExpSel);
   if(selItem&&selItem.prov){
-    selHtml+='<select id="indExpProv" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#191a1c;font-size:var(--text-sm)">';
+    selHtml+='<select id="indExpProv" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#FFFFFF;font-size:var(--text-sm)">';
     selHtml+='<option value="national"'+((_indExpProv==='national')?' selected':'')+'>National</option>';
     PROVS.forEach(p=>{selHtml+='<option value="'+p.code+'"'+(_indExpProv===p.code?' selected':'')+'>'+p.name+'</option>'});
     selHtml+='</select>';
@@ -458,7 +458,7 @@ function renderIndicatorExplorer(){
   selHtml+='<div style="display:flex;gap:4px">';
   [3,12,36,60].forEach(m=>{
     const lbl=m===3?'3M':m===12?'1Y':m===36?'3Y':'5Y';
-    const active=_indExpRange===m?'background:#FFFFFF;color:#3D5A96':'background:rgba(255,255,255,0.10);color:rgba(255,255,255,0.65)';
+    const active=_indExpRange===m?'background:rgba(255,255,255,0.20);color:#FFFFFF':'background:rgba(255,255,255,0.10);color:rgba(255,255,255,0.65)';
     selHtml+='<button onclick="_indExpRange='+m+';loadIndExpData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
   });
   selHtml+='</div></div>';
@@ -577,13 +577,13 @@ function renderSentiment(){
     const ss=cs.sources_summary||cs;
     html+='<div class="sentiment-meta" style="margin-top:0;font-family:var(--font-mono)">'+(ss.reddit_posts||0)+' Reddit posts \u00b7 '+(ss.trends_queries||0)+' trending searches \u00b7 '+(ss.news_comments||0)+' news comments</div></div>';
   }
-  html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:#919191;font-size:.75rem">(click to expand)</span></summary>';
+  html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:rgba(255,255,255,0.50);padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:rgba(255,255,255,0.40);font-size:.75rem">(click to expand)</span></summary>';
   html+='<div style="padding:12px 0"><div class="word-cloud-container" id="wordCloudSvg"></div></div>';
   html+='<hr style="border:none;border-top:1px solid var(--border-light);margin:8px 0">';
   if(cp)html+='<div style="padding:12px 0 8px"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:8px">Consumer Pulse</h4><div class="pulse-prose">'+san(cp)+'</div></div>';
   html+='</details>';
   if(cs&&cs.categories&&cs.categories.length){
-    html+='<div class="category-bar-container"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:#636363">Category Sentiment</h4>';
+    html+='<div class="category-bar-container"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:rgba(255,255,255,0.50)">Category Sentiment</h4>';
     const cats=cs.categories;
     cats.forEach(cat=>{
       const label=cat.name||cat.category||'';
@@ -634,7 +634,7 @@ function renderWordCloud(topics){
     g.selectAll('text').data(wds).enter().append('text')
       .style('font-size',d=>d.size+'px').style('font-family','Outfit')
       .style('font-weight',d=>d.size>30?'700':d.size>20?'600':'400')
-      .style('fill','#3D5A96')
+      .style('fill','rgba(255,255,255,0.07)')
       .style('opacity',d=>0.6+Math.min(Math.abs(d.score),0.4))
       .style('cursor','pointer')
       .attr('text-anchor','middle').attr('transform',d=>'translate('+d.x+','+d.y+') rotate('+d.rotate+')')
@@ -742,7 +742,7 @@ async function renderProvinceContent(){
     return natMatch?natMatch.value:null;
   }
   let headerHtml='<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:var(--text-xl);font-weight:700">'+prov.name+'</span>';
-  headerHtml+='</div><span style="font-size:var(--text-xs);color:#919191">'+allProjects.length+' projects loaded</span></div>';
+  headerHtml+='</div><span style="font-size:var(--text-xs);color:rgba(255,255,255,0.40)">'+allProjects.length+' projects loaded</span></div>';
   $('provHeader').innerHTML=headerHtml;
 
   // Mini chart cards
@@ -756,7 +756,7 @@ async function renderProvinceContent(){
     const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
     const sparkId='spark_prov_'+selectedProvince+'_'+i;
     const prd=meta.period||'';
-    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#919191;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
+    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:rgba(255,255,255,0.40);margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
     if(m.tsId)provSparkJobs.push({canvasId:sparkId,docId:m.tsId,change:chg});
   });
   miniHtml+='</div>';
@@ -776,7 +776,7 @@ async function renderProvinceContent(){
   const wl=D&&(D.watchlist||D.events)?D.watchlist||D.events||[]:[];
   const provEvents=wl.filter(e=>{const desc=(e.description||'')+(e.event_name||'');return desc.toLowerCase().includes(prov.name.toLowerCase())});
   if(provEvents.length){
-    analysisHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:#636363">';
+    analysisHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:rgba(255,255,255,0.50)">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:rgba(255,255,255,0.50)">';
     provEvents.forEach(e=>{analysisHtml+='<div style="margin-bottom:4px">'+(e.date||'')+' \u2014 '+(e.event_name||e.event||'')+(e.institution?' ('+e.institution+')':'')+'</div>'});
     analysisHtml+='</div></details>';
   }
@@ -784,7 +784,7 @@ async function renderProvinceContent(){
 
   // Projects preview
   const provProjects=allProjects.filter(p=>p.province===prov.name||p.province===prov.code).slice(0,5);
-  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:#919191;margin-left:8px">('+provProjects.length+')</span></div>';
+  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:rgba(255,255,255,0.40);margin-left:8px">('+provProjects.length+')</span></div>';
   if(provProjects.length){
     projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
     provProjects.forEach(p=>{
@@ -845,8 +845,8 @@ function sectorCard(s){
   const mm=s.mm||'';const yy=s.yy||'';
   const mmCls=s.isNegative?'change-down':'change-up';
   let footer='';
-  if(mm||yy)footer='<div style="margin-top:8px;font-size:var(--text-xs);color:#919191">'+(mm?'M/M: <span class="'+mmCls+'" style="font-family:var(--font-mono)">'+mm+'</span> ':'')+(yy?'Y/Y: <span style="font-family:var(--font-mono)">'+yy+'</span>':'')+(s.indicatorSrc?' · '+s.indicatorSrc:'')+'</div>';
-  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+(analysis?san(analysis):'<em style="color:#919191">No analysis available.</em>')+footer+'</div></div>';
+  if(mm||yy)footer='<div style="margin-top:8px;font-size:var(--text-xs);color:rgba(255,255,255,0.40)">'+(mm?'M/M: <span class="'+mmCls+'" style="font-family:var(--font-mono)">'+mm+'</span> ':'')+(yy?'Y/Y: <span style="font-family:var(--font-mono)">'+yy+'</span>':'')+(s.indicatorSrc?' · '+s.indicatorSrc:'')+'</div>';
+  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+(analysis?san(analysis):'<em style="color:rgba(255,255,255,0.40)">No analysis available.</em>')+footer+'</div></div>';
 }
 
 /* ====== MARKETS TAB ====== */
@@ -874,9 +874,9 @@ function renderMarkets(){
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
       const sid='spark_mkt_'+mktIdx++;
       const tsId=mktTsMap[item.name]||null;
-      eqHtml+='<div class="market-card" data-cat="equity"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small style="color:#636363">'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
+      eqHtml+='<div class="market-card" data-cat="equity"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small style="color:rgba(255,255,255,0.50)">'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
+      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:rgba(255,255,255,0.50)">YoY: '+item.yy+'</div>';
       if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
@@ -892,7 +892,7 @@ function renderMarkets(){
       const tsId=mktTsMap[item.name]||null;
       eqHtml+='<div class="market-card" data-cat="fx"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
       if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">YoY: '+item.yy+'</div>';
+      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:rgba(255,255,255,0.50)">YoY: '+item.yy+'</div>';
       if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
       eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
       if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
@@ -910,7 +910,7 @@ function renderMarkets(){
     yieldTerms.forEach(t=>{const i=indicators.find(x=>x.indicator_name===t.ind);if(i)yc.push({term:t.term,yield:i.value})});
   }
   if(yc.length){
-    let ycHtml='<div class="yield-card" style="padding:16px"><h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#191a1c;text-transform:uppercase;letter-spacing:1px">Gov. of Canada Yield Curve</h3><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
+    let ycHtml='<div class="yield-card" style="padding:16px"><h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#FFFFFF;text-transform:uppercase;letter-spacing:1px">Gov. of Canada Yield Curve</h3><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
     const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
     if(y2&&y10){
       const spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);
@@ -922,7 +922,7 @@ function renderMarkets(){
     $('yieldCurveCard').innerHTML=ycHtml;
     setTimeout(()=>drawYieldChart(yc),50);
   } else {
-    $('yieldCurveCard').innerHTML='<div class="yield-card" style="padding:16px"><div class="empty-state"><div class="empty-state-text" style="color:#636363">No yield curve data.</div></div></div>';
+    $('yieldCurveCard').innerHTML='<div class="yield-card" style="padding:16px"><div class="empty-state"><div class="empty-state-text" style="color:rgba(255,255,255,0.50)">No yield curve data.</div></div></div>';
   }
 
   // Commodities — pipeline stores [{category, color, items: [{name, unit, val, yy, day}]}]
@@ -945,9 +945,9 @@ function renderMarkets(){
         const cls=isNeg?'change-down':(yy?'change-up':'change-flat');
         const cid='spark_comm_'+mktIdx++;
         const tsId=mktTsMap[c.name]||null;
-        commHtml+='<div class="market-card" data-cat="'+dataCat+'"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small style="color:#636363">'+c.unit+'</small>':'')+'</div>';
+        commHtml+='<div class="market-card" data-cat="'+dataCat+'"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small style="color:rgba(255,255,255,0.50)">'+c.unit+'</small>':'')+'</div>';
         if(yy)commHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+yy+' YoY</div>';
-        if(c.day)commHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">'+c.day+' today</div>';
+        if(c.day)commHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:rgba(255,255,255,0.50)">'+c.day+' today</div>';
         if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#888888;margin-top:2px">'+mktDate+'</div>';
         commHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
         if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:yy});
@@ -985,7 +985,7 @@ function drawLineChart(canvasId,tsData,months){
   if(!canvas)return;
   if(charts[canvasId])charts[canvasId].destroy();
   if(!tsData||!tsData.series||!tsData.series.length){
-    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#919191;font-size:var(--text-xs);padding:20px">No timeseries data available</div>');
+    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:rgba(255,255,255,0.40);font-size:var(--text-xs);padding:20px">No timeseries data available</div>');
     return;
   }
   const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-months);
@@ -1158,7 +1158,7 @@ function renderProjectTable(){
     html+='<td class="col-value">'+fmtCurrency(p.value,p)+(isUnconf?'<span class="unconfirmed-badge">unconfirmed</span>':'')+'</td>';
     html+='<td class="col-name">'+((p.name||'').substring(0,50))+'</td>';
     html+='<td>'+typeBadge(pType)+'</td>';
-    html+='<td class="col-province">'+(provCode||((p.province||'').substring(0,3)))+(p.provinces_additional?'<span style="color:#919191;font-size:10px"> +'+p.provinces_additional.split(',').length+'</span>':'')+'</td>';
+    html+='<td class="col-province">'+(provCode||((p.province||'').substring(0,3)))+(p.provinces_additional?'<span style="color:rgba(255,255,255,0.40);font-size:10px"> +'+p.provinces_additional.split(',').length+'</span>':'')+'</td>';
     html+='<td class="col-proponent">'+(p.proponent||'')+'</td>';
     html+='<td>'+statusBadge(p.status||'Proposed')+'</td>';
     html+='<td style="font-size:var(--text-xs)">'+naicsShort+'</td>';
@@ -1168,15 +1168,15 @@ function renderProjectTable(){
     // Expansion row
     const colSpan=9;
     html+='<tr id="'+rowId+'" style="display:none"><td colspan="'+colSpan+'"><div class="project-expand">';
-    html+='<div style="font-size:var(--text-sm);color:#636363;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
+    html+='<div style="font-size:var(--text-sm);color:rgba(255,255,255,0.50);margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
     // Project timeline bar
     html+=buildTimeline(p);
     // CMA + confidence + quality row
-    html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:var(--text-xs);color:#636363">';
+    html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:var(--text-xs);color:rgba(255,255,255,0.50)">';
     if(p.cma)html+='<span>CMA: <b>'+p.cma+'</b></span>';
     const evArr=p.evidence||[];
     const dispConf=p.display_confidence!=null?p.display_confidence:p.confidence;
-    if(dispConf!=null)html+='<span>Confidence: '+confMeter(dispConf)+(p.decay_applied?' <span style="font-family:var(--font-mono);color:#919191;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
+    if(dispConf!=null)html+='<span>Confidence: '+confMeter(dispConf)+(p.decay_applied?' <span style="font-family:var(--font-mono);color:rgba(255,255,255,0.40);font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
     if(p.has_government_source)html+='<span class="gov-badge">GOV</span>';
     html+='<span>'+evArr.length+' source'+(evArr.length!==1?'s':'')+'</span>';
     if(p.has_anomalies)html+='<span style="color:var(--status-amber);font-weight:600" title="'+(p.anomalies||[]).map(a=>a.type+': '+a.detail).join('; ')+'">&#9888; Anomaly detected</span>';
@@ -1203,11 +1203,11 @@ function renderProjectTable(){
         }else if(e.url&&e.url_dead){
           let label=e.name||'';
           if(!label){try{const h=new URL(e.url).hostname;label=h.startsWith('www.')?h.slice(4):h}catch(_){label=e.url}}
-          html+='<span style="color:#919191;text-decoration:line-through;word-break:break-all">'+label+'</span> <span style="color:var(--status-red);font-size:10px">source unavailable</span>';
+          html+='<span style="color:rgba(255,255,255,0.40);text-decoration:line-through;word-break:break-all">'+label+'</span> <span style="color:var(--status-red);font-size:10px">source unavailable</span>';
         }else{
           html+='<span>'+(e.name||'Unknown source')+'</span>';
         }
-        if(e.date)html+=' <span style="color:#919191;font-size:10px">('+e.date+')</span>';
+        if(e.date)html+=' <span style="color:rgba(255,255,255,0.40);font-size:10px">('+e.date+')</span>';
         if(e.url_verified===false&&!e.url_dead)html+='<span class="url-broken" title="Link may be broken">link may be unavailable</span>';
         html+='</li>';
       });
@@ -1218,9 +1218,9 @@ function renderProjectTable(){
     if(sh.length){
       html+='<div class="project-timeline">';
       sh.forEach(entry=>{
-        html+='<div class="timeline-entry"><div class="timeline-date">'+fmtDate(entry.date||'')+'</div><div>'+statusBadge(entry.status||'')+(entry.detail?' <span style="color:#636363;font-size:var(--text-xs)">'+entry.detail+'</span>':'')+'</div>';
+        html+='<div class="timeline-entry"><div class="timeline-date">'+fmtDate(entry.date||'')+'</div><div>'+statusBadge(entry.status||'')+(entry.detail?' <span style="color:rgba(255,255,255,0.50);font-size:var(--text-xs)">'+entry.detail+'</span>':'')+'</div>';
         const es=entry.source||{};
-        if(es.url)html+='<div style="font-size:var(--text-xs);margin-top:2px">'+srcLink(es.url,es.title)+(es.archive_url?' <a href="'+es.archive_url+'" target="_blank" style="color:#919191">[Archived]</a>':'')+'</div>';
+        if(es.url)html+='<div style="font-size:var(--text-xs);margin-top:2px">'+srcLink(es.url,es.title)+(es.archive_url?' <a href="'+es.archive_url+'" target="_blank" style="color:rgba(255,255,255,0.40)">[Archived]</a>':'')+'</div>';
         html+='</div>';
       });
       html+='</div>';
@@ -1243,7 +1243,7 @@ function renderProjectTable(){
     html+='<div id="'+eid+'_fb" class="edit-feedback"></div>';
     html+='</div>';
     // Metadata
-    html+='<div style="margin-top:12px;font-size:var(--text-xs);color:#919191">';
+    html+='<div style="margin-top:12px;font-size:var(--text-xs);color:rgba(255,255,255,0.40)">';
     if(p.firstTracked)html+='Tracked since '+fmtDate(p.firstTracked)+' \u00b7 ';
     if(p.lastSeen)html+='Last seen '+fmtDate(p.lastSeen)+' \u00b7 ';
     if(p.discovery_source)html+='<span class="disc-badge">'+p.discovery_source+'</span> ';
@@ -1380,7 +1380,7 @@ async function renderCalendar(){
         if(ed){twHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
         else{twHtml+='<div>'+(e.date||'-')+'</div>'}
         twHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
-        if(e.description)twHtml+='<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+e.description+'</div>';
+        if(e.description)twHtml+='<div style="font-size:var(--text-xs);color:rgba(255,255,255,0.50);margin-top:2px">'+e.description+'</div>';
         twHtml+='</div>';
         twHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
         twHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
@@ -1404,7 +1404,7 @@ async function renderCalendar(){
       if(ed){allHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
       else{allHtml+='<div>'+(e.date||'-')+'</div>'}
       allHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
-      if(e.description)allHtml+='<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+e.description+'</div>';
+      if(e.description)allHtml+='<div style="font-size:var(--text-xs);color:rgba(255,255,255,0.50);margin-top:2px">'+e.description+'</div>';
       allHtml+='</div>';
       allHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
       allHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
@@ -1429,7 +1429,7 @@ async function renderPipelineStatus(){
     const stColor=st==='success'?'var(--status-green)':st==='partial'?'var(--status-amber)':'var(--status-red)';
     const dur=run.duration_seconds?Math.round(run.duration_seconds/60)+'m':'—';
     const disc=run.discovery||{};
-    el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:#636363">Pipeline Status</div><div style="display:flex;gap:16px;font-family:var(--font-mono);font-size:var(--text-xs);color:#636363;flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
+    el.innerHTML=`<div class="card fade-in" style="padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="font-size:var(--text-sm);font-weight:600;color:rgba(255,255,255,0.50)">Pipeline Status</div><div style="display:flex;gap:16px;font-family:var(--font-mono);font-size:var(--text-xs);color:rgba(255,255,255,0.50);flex-wrap:wrap"><span>Last run: <b>${fmtDate(run.started_at)}</b></span><span>Duration: <b>${dur}</b></span><span>Articles: <b>${disc.articles_found||0}</b></span><span>Projects added: <b>${disc.projects_added||0}</b></span><span>Status: <b style="color:${stColor}">${st}</b></span>${(run.errors||[]).length?'<span style="color:var(--status-amber)">'+run.errors.length+' error(s)</span>':''}</div></div></div>`;
   }catch(e){
     console.warn('Pipeline status:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1449,7 +1449,7 @@ async function renderCostMonitor(){
     const claudeOut=ps.claude_tokens?.output||0;
     const claudeCost=((claudeIn/1e6)*3+(claudeOut/1e6)*15).toFixed(2);
     const tavilyPct=Math.round((tavilyUsed/1000)*100);
-    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;user-select:none">Cost Monitor <span style="font-weight:400;color:#919191;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#636363"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="font-family:var(--font-mono);margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="font-family:var(--font-mono);margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
+    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:rgba(255,255,255,0.50);user-select:none">Cost Monitor <span style="font-weight:400;color:rgba(255,255,255,0.40);font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:rgba(255,255,255,0.50)"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="font-family:var(--font-mono);margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="font-family:var(--font-mono);margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
   }catch(e){
     console.warn('Cost monitor:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1467,9 +1467,9 @@ async function renderMicroscopeHistory(){
     if(!history.length){el.innerHTML='';return}
     let items='';
     history.slice(0,12).forEach(h=>{
-      items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:#919191">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:#636363;margin-top:2px">'+h.description+'</div>':''}</div>`;
+      items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:rgba(255,255,255,0.40)">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:rgba(255,255,255,0.50);margin-top:2px">'+h.description+'</div>':''}</div>`;
     });
-    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Under the Microscope Archives (<span style="font-family:var(--font-mono)">${history.length}</span> weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:rgba(255,255,255,0.50);padding:14px 18px;user-select:none">Under the Microscope Archives (<span style="font-family:var(--font-mono)">${history.length}</span> weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
   }catch(e){
     console.warn('Microscope history:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
@@ -1486,7 +1486,7 @@ async function renderMicroscope(){
     const m=(data&&data.current)||data||{};
     if(!m.topic&&!m.text){el.innerHTML='';return}
     const sectors=(m.affected_sectors||[]).map(s=>'<span style="background:var(--bg-subtle);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:var(--text-xs)">'+s+'</span>').join(' ');
-    const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:#919191;margin-left:8px">Week '+m.weeks_running+' of coverage</span>':'';
+    const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:rgba(255,255,255,0.40);margin-left:8px">Week '+m.weeks_running+' of coverage</span>':'';
     el.innerHTML=`<div class="card fade-in"><div class="card-header">Under the Microscope ${weeks}</div><div style="font-size:var(--text-sm);font-weight:600;color:var(--accent-blue);margin-bottom:8px">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}<div class="card-body">${san(m.text||m.analysis||'')}</div></div>`;
   }catch(e){
     console.warn('Microscope:',e);
@@ -1511,9 +1511,9 @@ async function renderPolicySection(){
     let listHtml='';
     articles.slice(0,8).forEach(a=>{
       const provBadge=a.scope?'<span style="background:var(--status-blue-bg);color:var(--status-blue);padding:1px 6px;border-radius:3px;font-size:.65rem;margin-left:4px">'+a.scope+'</span>':'';
-      listHtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border-light);font-size:var(--text-xs)"><a href="${a.url||'#'}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue);text-decoration:none">${a.headline||a.title||'Untitled'}</a>${provBadge}<span style="color:#919191;margin-left:6px">${a.source||''}</span></div>`;
+      listHtml+=`<div style="padding:6px 0;border-bottom:1px solid var(--border-light);font-size:var(--text-xs)"><a href="${a.url||'#'}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue);text-decoration:none">${a.headline||a.title||'Untitled'}</a>${provBadge}<span style="color:rgba(255,255,255,0.40);margin-left:6px">${a.source||''}</span></div>`;
     });
-    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#636363;padding:14px 18px;user-select:none">Policy Monitor (<span style="font-family:var(--font-mono)">${articles.length}</span> articles this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${catBadges}</div>${listHtml}</div></details>`;
+    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:rgba(255,255,255,0.50);padding:14px 18px;user-select:none">Policy Monitor (<span style="font-family:var(--font-mono)">${articles.length}</span> articles this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${catBadges}</div>${listHtml}</div></details>`;
   }catch(e){console.warn('Policy section:',e);el.innerHTML=''}
 }
 
@@ -1532,10 +1532,10 @@ async function renderCanadianCommodities(){
       const chg=c.pct_1w||'';const isNeg=String(chg).startsWith('-');
       const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
       const sectors=(c.affected_sectors||[]).map(s=>'<span style="background:rgba(255,255,255,0.08);color:#8ea8cc;padding:1px 5px;border-radius:3px;font-size:.6rem">'+s+'</span>').join(' ');
-      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:rgba(0,0,0,0.05);color:#636363;padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
+      const provs=(c.affected_provinces||[]).map(p=>'<span style="background:rgba(0,0,0,0.05);color:rgba(255,255,255,0.50);padding:1px 5px;border-radius:3px;font-size:.6rem">'+p+'</span>').join(' ');
       html+=`<div class="market-card" data-cat="energy"><div class="market-card-ticker">${c.name||k.replace(/_/g,' ')}</div><div class="market-card-price">${c.current||'N/A'}</div>`;
       if(chg)html+=`<div class="market-card-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg} 1W</div>`;
-      if(c.pct_1m)html+=`<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#636363">1M: ${c.pct_1m}</div>`;
+      if(c.pct_1m)html+=`<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:rgba(255,255,255,0.50)">1M: ${c.pct_1m}</div>`;
       if(sectors)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:4px">${sectors}</div>`;
       if(provs)html+=`<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:2px">${provs}</div>`;
       html+='</div>';
@@ -1826,8 +1826,8 @@ function _renderExplorerStats(){
   const total=VCODE_INDEX.length+_fullTableDir.length;
   const curated=VCODE_INDEX.length;
   const dir=_fullTableDir.length;
-  const pill=(label,value,color)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-md);background:var(--bg-white);border:1px solid var(--border-light)"><span style="font-size:var(--text-xs);color:#919191">${label}</span><span style="font-family:var(--font-mono);font-size:var(--text-base);font-weight:700;color:${color}">${value.toLocaleString()}</span></div>`;
-  el.innerHTML=pill('Total Tables',total,'var(--accent-blue)')+pill('Curated',curated,'#10b981')+pill('Full Directory',dir,_fullDirLoaded?'#6366f1':'#919191')+(!_fullDirLoaded?'<span style="font-size:var(--text-xs);color:#919191;align-self:center">Loading directory\u2026</span>':'');
+  const pill=(label,value,color)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-md);background:var(--bg-white);border:1px solid var(--border-light)"><span style="font-size:var(--text-xs);color:rgba(255,255,255,0.40)">${label}</span><span style="font-family:var(--font-mono);font-size:var(--text-base);font-weight:700;color:${color}">${value.toLocaleString()}</span></div>`;
+  el.innerHTML=pill('Total Tables',total,'var(--accent-blue)')+pill('Curated',curated,'#10b981')+pill('Full Directory',dir,_fullDirLoaded?'#6366f1':'#919191')+(!_fullDirLoaded?'<span style="font-size:var(--text-xs);color:rgba(255,255,255,0.40);align-self:center">Loading directory\u2026</span>':'');
 }
 
 function renderExplorer(){
@@ -1836,14 +1836,14 @@ function renderExplorer(){
   const resEl=$('explorerResults');
   if(!searchEl)return;
 
-  searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#191a1c;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
+  searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#FFFFFF;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
 
   _renderExplorerStats();
 
   const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Energy','Manufacturing','Agriculture','Infrastructure','Transportation','Health','Demographics','Tourism'];
-  catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#3a3a3a;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
+  catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:rgba(255,255,255,0.65);font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
 
-  resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
+  resEl.innerHTML='<div style="color:rgba(255,255,255,0.40);font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
 }
 
 window._doVcodeSearch=function(cat){
@@ -1853,13 +1853,13 @@ window._doVcodeSearch=function(cat){
   const results=searchVCodes(q);
   const resEl=$('explorerResults');
   if(!results.length){
-    resEl.innerHTML='<div style="color:#919191;font-size:var(--text-sm);padding:20px 0">No tables found for "'+q+'". Try different keywords.</div>';
+    resEl.innerHTML='<div style="color:rgba(255,255,255,0.40);font-size:var(--text-sm);padding:20px 0">No tables found for "'+q+'". Try different keywords.</div>';
     return;
   }
-  let html='<div style="font-size:var(--text-xs);color:#919191;margin-bottom:8px">Showing '+results.length+' of '+(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()+' indexed tables</div>';
+  let html='<div style="font-size:var(--text-xs);color:rgba(255,255,255,0.40);margin-bottom:8px">Showing '+results.length+' of '+(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()+' indexed tables</div>';
   results.forEach(r=>{
     const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${r.table.replace(/-/g,'')}`;
-    html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#919191;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#919191;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
+    html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:rgba(255,255,255,0.40);margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:rgba(255,255,255,0.40);margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
   });
   resEl.innerHTML=html;
 };
