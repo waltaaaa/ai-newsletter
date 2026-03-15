@@ -282,6 +282,21 @@ function renderOverview(){
   renderInfographics();
   // Sources
   $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
+  // Collapse empty sections
+  setTimeout(collapseEmpty,200);
+}
+function collapseEmpty(){
+  const panel=document.getElementById('tab-overview');
+  if(!panel)return;
+  panel.querySelectorAll(':scope > section, :scope > div[id]').forEach(el=>{
+    if(!el.innerHTML.trim())el.style.display='none';
+    else el.style.display='';
+  });
+  panel.querySelectorAll(':scope > .ws-row').forEach(row=>{
+    const kids=[...row.children];
+    const allEmpty=kids.every(c=>!c.innerHTML.trim());
+    row.style.display=allEmpty?'none':'';
+  });
 }
 
 /* ====== INFOGRAPHICS ====== */
