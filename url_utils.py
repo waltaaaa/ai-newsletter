@@ -76,6 +76,11 @@ def validate_url(url):
 
     domain = _extract_domain(url)
 
+    # Reject Gemini grounded search redirect URLs — not real sources
+    if "vertexaisearch.cloud.google.com" in url or "vertexaisearch.cloud.goog" in url:
+        return {"valid": False, "domain": domain, "is_known_source": False,
+                "warning": "Gemini grounded search redirect URL — not a real source"}
+
     is_known = domain in KNOWN_GOOD_DOMAINS or any(
         p.search(domain) for p in _GOV_PATTERNS_COMPILED
     )

@@ -504,8 +504,9 @@ def _entry_to_item(entry, meta: dict) -> dict:
     summary = ''
     if hasattr(entry, 'summary') and entry.summary:
         summary = entry.summary
-    elif hasattr(entry, 'content') and entry.content:
-        summary = entry.content[0].get('value', '')
+    elif hasattr(entry, 'content') and entry.content and len(entry.content) > 0:
+        first = entry.content[0]
+        summary = first.get('value', '') if isinstance(first, dict) else str(first)
     summary = _clean_html(summary)[:500]
 
     url = getattr(entry, 'link', '') or ''
@@ -585,6 +586,51 @@ def is_canadian_content(article):
 _HEADERS = {'User-Agent': 'Mozilla/5.0 (CAN-MACRO/1.0; +https://github.com/can-macro)'}
 
 
+def _persist_feed_health(feed_results: dict):
+    """Persist per-feed health to dashboard_state for monitoring.
+
+    Tracks: last_success, consecutive_failures, total_checks.
+    Alerts when previously healthy feeds go dead (>=3 consecutive failures).
+    """
+    try:
+        import json
+        from datetime import date as _date
+        from db import get_dashboard_state, save_dashboard_state
+
+        conn = __import__("db").get_db()
+        try:
+            existing = get_dashboard_state(conn, "feed_health")
+            health = existing if isinstance(existing, dict) else {}
+
+            today = _date.today().isoformat()
+            newly_dead = []
+
+            for fid, result in feed_results.items():
+                entry = health.get(fid, {"last_success": "", "consecutive_failures": 0, "total_checks": 0})
+                entry["total_checks"] = entry.get("total_checks", 0) + 1
+
+                if result["alive"]:
+                    entry["last_success"] = today
+                    entry["consecutive_failures"] = 0
+                    entry["items"] = result["items"]
+                else:
+                    entry["consecutive_failures"] = entry.get("consecutive_failures", 0) + 1
+                    # Alert if a previously healthy feed has failed 3+ times
+                    if entry.get("last_success") and entry["consecutive_failures"] >= 3:
+                        newly_dead.append(fid)
+
+                health[fid] = entry
+
+            save_dashboard_state(conn, "feed_health", health)
+
+            if newly_dead:
+                print(f"  [FEED HEALTH] {len(newly_dead)} feeds newly dead: {', '.join(newly_dead[:5])}")
+        finally:
+            conn.close()
+    except Exception:
+        pass  # feed health tracking is non-critical
+
+
 def _fetch_one(feed_id: str, meta: dict, days_back: int) -> list[dict]:
     """Fetch a single RSS/Atom feed and return recent items. Never raises.
 
@@ -639,34 +685,44 @@ def fetch_all_feeds(
     print(f"  [RSS] Fetching {len(feeds)} {label} feeds (last {days_back}d)...",
           end=' ', flush=True)
 
+    feed_results = {}  # feed_id → {"alive": bool, "items": int}
     with concurrent.futures.ThreadPoolExecutor(max_workers=16) as ex:
         futures = {
             ex.submit(_fetch_one, fid, meta, days_back): fid
             for fid, meta in feeds.items()
         }
-        for future in concurrent.futures.as_completed(futures):
+        for future in concurrent.futures.as_completed(futures, timeout=300):
+            fid = futures[future]
             try:
-                items = future.result()
+                items = future.result(timeout=60)
                 if items:
                     alive += 1
                     all_items.extend(items)
+                    feed_results[fid] = {"alive": True, "items": len(items)}
                 else:
                     dead += 1
-            except Exception:
+                    feed_results[fid] = {"alive": False, "items": 0}
+            except (concurrent.futures.TimeoutError, Exception):
                 dead += 1
+                feed_results[fid] = {"alive": False, "items": 0}
 
     print(f"{len(all_items)} items from {alive}/{alive + dead} feeds")
+
+    # Persist feed health to DB for monitoring
+    _persist_feed_health(feed_results)
 
     # Record documents for fetch tracking
     try:
         from db import get_db, insert_document
-        conn = get_db()
-        for item in all_items:
-            insert_document(conn, item.get('url', ''),
-                            title=item.get('title', ''),
-                            source_tier='tier_4', source_type='rss_feed',
-                            published_date=item.get('published', ''))
-        conn.close()
+        doc_conn = get_db()
+        try:
+            for item in all_items:
+                insert_document(doc_conn, item.get('url', ''),
+                                title=item.get('title', ''),
+                                source_tier='tier_4', source_type='rss_feed',
+                                published_date=item.get('published', ''))
+        finally:
+            doc_conn.close()
     except Exception:
         pass
 
@@ -677,18 +733,26 @@ def fetch_and_filter(
     days_back: int = 7,
     include_media: bool = True,
     gemini_client=None,
+    prefetched_items: list = None,
 ) -> list[dict]:
     """
-    Fetch all feeds, then run three-layer relevance filter.
+    Fetch all feeds (or reuse prefetched_items), then run three-layer relevance filter.
 
     Government feed bypass rules (STEP_2B):
       - Infrastructure/procurement feeds: skip L1 + L2 (already narrowly scoped)
       - Other government feeds (economic/general): skip L1, run L2 + L3
 
+    Args:
+        prefetched_items: If provided, skip the fetch step and filter these items
+                          directly. Avoids double-fetching when Phase 1 already fetched.
+
     Returns:
         List of filtered news items likely to describe capital projects.
     """
-    all_items = fetch_all_feeds(days_back=days_back, include_media=include_media)
+    if prefetched_items is not None:
+        all_items = list(prefetched_items)  # shallow copy to avoid mutating caller's list
+    else:
+        all_items = fetch_all_feeds(days_back=days_back, include_media=include_media)
     if not all_items:
         return []
 

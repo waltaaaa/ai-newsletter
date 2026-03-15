@@ -1,0 +1,52 @@
+name: Monthly Government Data Refresh
+
+on:
+  schedule:
+    # 1st of each month at 6:00 AM ET = 11:00 UTC
+    - cron: "0 11 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Backup database
+        run: cp dashboard.db dashboard.db.bak 2>/dev/null || true
+
+      - name: Run monthly government data refresh
+        run: python tools/backfill_projects.py --refresh --export
+
+      - name: Run coverage monitor
+        run: python tools/coverage_monitor.py
+        continue-on-error: true
+
+      - name: Deploy static assets to docs/
+        run: python tools/deploy_to_github.py
+
+      - name: Compact database
+        run: python -c "import sqlite3; c=sqlite3.connect('dashboard.db'); c.execute('VACUUM'); c.close()"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/ dashboard.db
+          git diff --staged --quiet || (git commit -m "auto: monthly government data refresh $(date +%Y-%m-%d)" && git push)

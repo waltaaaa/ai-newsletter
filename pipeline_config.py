@@ -36,7 +36,14 @@ TODAY = date.today().isoformat()
 #   deduplication, status normalization, threshold filtering, assembly, writes.
 
 SONNET_MODEL = os.environ.get('SONNET_MODEL', 'claude-sonnet-4-6')
+OPUS_MODEL = os.environ.get('OPUS_MODEL', 'claude-opus-4-6')
 GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')
+
+# Per-model cost rates (USD per million tokens)
+MODEL_RATES = {
+    'claude-opus-4-6':   {'input': 15.0, 'output': 75.0},
+    'claude-sonnet-4-6': {'input': 3.0,  'output': 15.0},
+}
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -186,6 +193,152 @@ def infer_naics(name: str, sector: str = '') -> tuple[str, str]:
     if 'construction' in t or 'infrastructure' in t:
         return '23', NAICS_MAP['23']
     return '23', NAICS_MAP['23']  # default: construction
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SECTOR CANONICAL MAP — maps government source categories to 18 pipeline sectors
+# Used by backfill_projects.py to normalize sector values from all 6 sources
+# ══════════════════════════════════════════════════════════════════════════════
+
+SECTOR_CANONICAL_MAP = {
+    # ── Infrastructure Canada categories ──
+    "public transit": "infrastructure",
+    "highways and roads": "infrastructure",
+    "active transportation": "infrastructure",
+    "marine": "transport_logistics",
+    "regional and local airports": "transport_logistics",
+    "shortline rail": "transport_logistics",
+    "border infrastructure": "infrastructure",
+    "drinking water": "infrastructure",
+    "wastewater": "infrastructure",
+    "solid waste management": "environment",
+    "brownfield remediation and redevelopment": "environment",
+    "green energy": "power_energy",
+    "healthcare infrastructure": "healthcare",
+    "education, training and childcare": "education",
+    "culture": "tourism_culture",
+    "recreation": "tourism_culture",
+    "sport": "tourism_culture",
+    "tourism": "tourism_culture",
+    "affordable and temporary housing": "residential",
+    "broadband and connectivity": "telecom",
+    "disaster mitigation": "infrastructure",
+    "innovation": "manufacturing",
+    "capacity building": "government",
+    "administration, emergency and public works": "government",
+    "ventilation": "government",
+    "other": "infrastructure",
+
+    # ── Ontario Builds categories ──
+    "communities": "infrastructure",
+    "transit": "infrastructure",
+    "roads and bridges": "infrastructure",
+    "health care": "healthcare",
+    "education": "education",
+    "child care": "education",
+    "recreation": "tourism_culture",
+
+    # ── NRCan sectors ──
+    "energy": "power_energy",
+    "mining": "mining",
+    "forest": "forestry",
+
+    # ── BC MPI categories ──
+    "manufacturing": "manufacturing",
+    "mining & oil & gas extraction": "oil_gas",
+    "other services": "commercial_mixed",
+    "public services": "government",
+    "residential/commercial": "residential",
+    "transportation & warehousing": "transport_logistics",
+    "utilities (incl sewage treatment)": "power_energy",
+    # BC MPI PROJECT_TYPE granular
+    "residential": "residential",
+    "commercial": "commercial_mixed",
+    "commercial/industrial": "manufacturing",
+    "commercial/retail": "commercial_mixed",
+    "retail": "commercial_mixed",
+    "accommodation": "tourism_culture",
+    "accommodation/commercial": "commercial_mixed",
+    "accommodation/residential": "residential",
+    "accommodation/retail": "commercial_mixed",
+    "mixed use - commercial/retail/ industrial/residential": "commercial_mixed",
+    "mixed use - residential/commercial/retail/ industrial": "commercial_mixed",
+    "residential/accommodation": "residential",
+    "residential/commercial": "residential",
+    "residential/commercial/retail": "commercial_mixed",
+    "residential/retail": "residential",
+    "retail/residential": "residential",
+    "resort": "tourism_culture",
+    "resort/residential": "tourism_culture",
+    "seniors housing": "residential",
+    "seniors housing": "residential",
+    "social housing": "residential",
+    "educational services": "education",
+    "health care and social assistance": "healthcare",
+    "public administration": "government",
+    "arts, entertainment & recreation": "tourism_culture",
+    "airport operations": "transport_logistics",
+    "port and harbour facilities": "transport_logistics",
+    "general warehousing and storage": "transport_logistics",
+    "transportation": "transport_logistics",
+    "oil and gas extraction": "oil_gas",
+    "crude oil pipeline": "oil_gas",
+    "natural gas pipeline": "oil_gas",
+    "natural gas processing": "oil_gas",
+    "liquefied natural gas": "oil_gas",
+    "liquefied natural gas - natural gas pipeline": "oil_gas",
+    "petrochemical manufacturing": "oil_gas",
+    "sewage treatment facilities": "infrastructure",
+    "water, sewage, and other systems": "infrastructure",
+    "utilities": "power_energy",
+    "wood products manufacturing": "forestry",
+    "skiing facilities": "tourism_culture",
+    "skiing facilities/residential": "tourism_culture",
+
+    # ── Alberta sectors ──
+    "oil and gas": "oil_gas",
+    "pipeline": "oil_gas",
+    "power": "power_energy",
+    "industrial": "manufacturing",
+    "institutional": "government",
+    "infrastructure": "infrastructure",
+    "mixed-use": "commercial_mixed",
+    "tourism / recreation": "tourism_culture",
+
+    # ── Quebec sectors ──
+    "administration gouvernementale": "government",
+    "culture": "tourism_culture",
+    "developpement du sport": "tourism_culture",
+    "développement du sport": "tourism_culture",
+    "developpement du territoire nordique et des communautes autochtones": "indigenous",
+    "développement du territoire nordique et des communautés autochtones": "indigenous",
+    "enseignement superieur": "education",
+    "enseignement supérieur": "education",
+    "environnement": "environment",
+    "logements sociaux et communautaires": "residential",
+    "municipalites": "infrastructure",
+    "municipalités": "infrastructure",
+    "recherche": "education",
+    "reseau routier": "infrastructure",
+    "réseau routier": "infrastructure",
+    "sante et services sociaux": "healthcare",
+    "santé et services sociaux": "healthcare",
+    "tourisme et activites recreatives": "tourism_culture",
+    "tourisme et activités récréatives": "tourism_culture",
+    "transport collectif": "infrastructure",
+    "transports maritime, aerien, ferroviaire et autres": "transport_logistics",
+    "transports maritime, aérien, ferroviaire et autres": "transport_logistics",
+    "education": "education",
+    "éducation": "education",
+}
+
+# Province GDP thresholds as a simple code → value dict (for filtering)
+PROVINCE_GDP_THRESHOLDS = {
+    "ON": 500_000_000, "QC": 250_000_000, "AB": 200_000_000, "BC": 175_000_000,
+    "SK": 45_000_000, "MB": 40_000_000, "NS": 25_000_000, "NB": 20_000_000,
+    "NL": 17_000_000, "PE": 5_000_000, "YT": 3_000_000, "NT": 3_000_000,
+    "NU": 3_000_000, "CA": 500_000_000,
+}
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -392,6 +545,7 @@ RSS_MAX_ARTICLES         = int(os.environ.get('RSS_MAX_ARTICLES', '100'))
 WAYBACK_MAX_SNAPSHOTS_SEED = int(os.environ.get('WAYBACK_MAX_SNAPSHOTS_SEED', '800'))
 
 # Claude API cost cap per pipeline run (USD).
-# Sonnet 4.6 pricing: $3/MTok input, $15/MTok output.
-# Normal run ≈ $0.80-1.20 (4 calls). Cap prevents runaway costs.
-CLAUDE_COST_CAP_USD = float(os.environ.get('CLAUDE_COST_CAP_USD', '4.00'))
+# Opus 4.6: $15/MTok input, $75/MTok output (calls 1-3, briefing, market, microscope).
+# Sonnet 4.6: $3/MTok input, $15/MTok output (call 4, gap analysis, dedup QA).
+# Normal run ≈ $3-5 with Opus writing. Cap prevents runaway costs.
+CLAUDE_COST_CAP_USD = float(os.environ.get('CLAUDE_COST_CAP_USD', '8.00'))

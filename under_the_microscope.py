@@ -343,11 +343,13 @@ RELEVANT INDICATOR MOVEMENTS:
 Generate the Under the Microscope analysis (200-300 words)."""
 
     try:
+        from claude_reasoning import OPUS_WRITING_MODEL
         result = await reason_with_claude_tracked(
             MICROSCOPE_SYSTEM,
             user_prompt,
             task_name="under_the_microscope",
             max_tokens=1500,
+            model=OPUS_WRITING_MODEL,
         )
         logger.info(f"Microscope analysis generated: {len(result.get('text', ''))} chars")
         return result

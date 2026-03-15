@@ -11,7 +11,7 @@ from datetime import date, timedelta
 from google import genai
 from google.genai import types
 
-from pipeline_config import SONNET_MODEL, GEMINI_MODEL, CLAUDE_COST_CAP_USD
+from pipeline_config import SONNET_MODEL, OPUS_MODEL, GEMINI_MODEL, CLAUDE_COST_CAP_USD
 from citation_audit import CITATION_RULES, run_citation_audit, save_audit_log, remove_failed_claims
 from db import save_checkpoint, get_checkpoint
 import local_llm
@@ -369,8 +369,11 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
     use_model = model or SONNET_MODEL
     raw_content = ""
     current_max_tokens = max_tokens
-    input_cost = cost_state.get('input_cost_per_mtok', 3.0)
-    output_cost = cost_state.get('output_cost_per_mtok', 15.0)
+    # Use per-model rates if available, fallback to cost_state defaults
+    from pipeline_config import MODEL_RATES
+    rates = MODEL_RATES.get(use_model, {})
+    input_cost = rates.get('input', cost_state.get('input_cost_per_mtok', 3.0))
+    output_cost = rates.get('output', cost_state.get('output_cost_per_mtok', 15.0))
 
     for attempt in range(4):
         try:
@@ -892,7 +895,7 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
         }
 
     print(f"\n[STEP 3] Claude analysis (4 calls, {len(articles)} articles)...")
-    print(f"  Model: Sonnet={SONNET_MODEL}")
+    print(f"  Writing: Opus={OPUS_MODEL}, Extraction: Sonnet={SONNET_MODEL}")
     today_str    = date.today().strftime('%B %d, %Y')
     hard_summary = _hard_data_summary(hard_data, rss_items)
 
@@ -1197,19 +1200,27 @@ SCHEMA:
         }}
     ]
 }}"""
-    proj_arts_text = _format_articles_for_prompt(project_arts[:60], max_chars=20000)
+    # Split project articles into 2 batches of 30 to prevent truncation
+    proj_batch_1 = project_arts[:30]
+    proj_batch_2 = project_arts[30:60]
+    proj_arts_text_1 = _format_articles_for_prompt(proj_batch_1, max_chars=12000)
+    proj_arts_text_2 = _format_articles_for_prompt(proj_batch_2, max_chars=12000) if proj_batch_2 else ""
 
     _PROJ_EXTRACT_SCHEMA = """{
   "projects": [
     {
       "project_name": "Full official project name",
-      "province": "Exact Canadian province or territory name",
+      "province": "2-letter province code: ON, QC, AB, BC, SK, MB, NS, NB, NL, PE, YT, NT, NU",
       "cma": "Census Metropolitan Area or nearest city",
-      "sector": "Energy | Mining | Transit | Housing | Defence | Manufacturing | Technology | Healthcare | Agriculture | Telecommunications | Ports & Logistics | Clean Energy | Water & Wastewater | Education | Other",
+      "sector": "oil_gas | mining | infrastructure | power_energy | manufacturing | transport_logistics | healthcare | education | residential | commercial_mixed | agriculture | forestry | defence | telecom | indigenous | environment | tourism_culture | government",
       "naics_code": "NAICS code string e.g. '21'",
       "tags": ["tag1", "tag2"],
       "estimated_value": "$X.XB or $XXXM or '' if unknown",
-      "status": "Announced | Approved | Under Construction | Completed | Cancelled | Suspended",
+      "status": "Proposed | Under Review | Approved | Under Construction | Partially Complete | Complete | Cancelled | On Hold",
+      "announcement_date": "YYYY-MM-DD when project was officially announced, or '' if unknown",
+      "estimated_start_date": "YYYY-MM-DD estimated construction start, or '' if unknown",
+      "estimated_completion_date": "YYYY-MM-DD estimated completion, or '' if unknown",
+      "proponent": "Company or organization behind the project",
       "detail": "2-3 sentence description of what the article reports about this project",
       "source": {"title": "article title", "url": "article URL verbatim", "date": "published date"}
     }
@@ -1219,7 +1230,7 @@ SCHEMA:
     _call4_prompt = f"""Today: {today_str}
 
 PROJECT DISCOVERY ARTICLES (extract capital projects — use article URLs verbatim):
-{proj_arts_text}
+{{proj_batch_text}}
 
 INSTRUCTIONS:
 For each article that mentions a Canadian capital project worth $5M or more,
@@ -1229,6 +1240,13 @@ Some articles include metadata hints (sector_hints, province_hints) derived from
 Use these as starting points but verify against the article content.
 The hints may be empty, incomplete, or occasionally wrong — they are signals, not ground truth.
 
+IMPORTANT:
+- Use 2-letter province codes (ON, QC, AB, BC, SK, MB, NS, NB, NL, PE, YT, NT, NU)
+- Use exact canonical statuses (Proposed, Under Review, Approved, Under Construction, Partially Complete, Complete, Cancelled, On Hold)
+- Use canonical sector keys (oil_gas, mining, infrastructure, power_energy, manufacturing, etc.)
+- Extract ACTUAL dates from the article text — do NOT use today's date
+- Include the proponent (company/organization) if mentioned
+
 Output ONLY valid JSON. No markdown. No text outside JSON.
 
 SCHEMA:
@@ -1236,30 +1254,41 @@ SCHEMA:
 
 If no projects found, return: {{"projects": []}}"""
 
-    # ── Execute all 4 calls in parallel ────────────────────────────
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    # ── Execute calls in parallel ─────────────────────────────────
+    # Calls 1-3: writing (Opus), Call 4: extraction (Sonnet), split into 2 batches
+    _call4a_prompt = _call4_prompt.replace("{proj_batch_text}", proj_arts_text_1)
+    _call4b_prompt = _call4_prompt.replace("{proj_batch_text}", proj_arts_text_2) if proj_arts_text_2 else None
+
+    workers = 5 if _call4b_prompt else 4
+    with ThreadPoolExecutor(max_workers=workers) as executor:
         f1 = executor.submit(_call_claude, _call1_prompt, "call1-macro",
-                             max_tokens=12000, model=SONNET_MODEL,
+                             max_tokens=12000, model=OPUS_MODEL,
                              anthropic_client=anthropic_client, cost_state=cost_state,
                              conn=conn, gemini_client=gemini_client)
         f2 = executor.submit(_call_claude, _call2_prompt, "call2-industries",
-                             max_tokens=10000, model=SONNET_MODEL,
+                             max_tokens=10000, model=OPUS_MODEL,
                              anthropic_client=anthropic_client, cost_state=cost_state,
                              conn=conn, gemini_client=gemini_client)
         f3 = executor.submit(_call_claude, _call3_prompt, "call3-provinces",
-                             max_tokens=10000, model=SONNET_MODEL,
+                             max_tokens=10000, model=OPUS_MODEL,
                              anthropic_client=anthropic_client, cost_state=cost_state,
                              conn=conn, gemini_client=gemini_client)
-        f4 = executor.submit(_call_claude, _call4_prompt, "call4-projects",
-                             max_tokens=8096, model=SONNET_MODEL,
-                             anthropic_client=anthropic_client, cost_state=cost_state,
-                             conn=conn, gemini_client=gemini_client)
+        f4a = executor.submit(_call_claude, _call4a_prompt, "call4a-projects",
+                              max_tokens=8096, model=SONNET_MODEL,
+                              anthropic_client=anthropic_client, cost_state=cost_state,
+                              conn=conn, gemini_client=gemini_client)
+        if _call4b_prompt:
+            f4b = executor.submit(_call_claude, _call4b_prompt, "call4b-projects",
+                                  max_tokens=8096, model=SONNET_MODEL,
+                                  anthropic_client=anthropic_client, cost_state=cost_state,
+                                  conn=conn, gemini_client=gemini_client)
 
     call1 = f1.result()
     call2 = f2.result()
     call3 = f3.result()
-    call4_raw = f4.result()
-    print("  [1-4] All Claude calls completed")
+    call4a_raw = f4a.result()
+    call4b_raw = f4b.result() if _call4b_prompt else {}
+    print(f"  [1-4] All Claude calls completed (Opus: calls 1-3, Sonnet: call 4 x{1 + bool(_call4b_prompt)})")
 
     # ── Citation audits (parallel, after all calls) ────────────────
     with ThreadPoolExecutor(max_workers=3) as executor:
@@ -1280,8 +1309,64 @@ If no projects found, return: {{"projects": []}}"""
     audit3['_label'] = 'call3-provinces'
     audit_results.append(audit3)
 
-    extracted_projects = (call4_raw or {}).get('projects', [])
+    # Merge Call 4 batch results
+    extracted_projects = (call4a_raw or {}).get('projects', []) + (call4b_raw or {}).get('projects', [])
     print(f"  [Call 4] Extracted {len(extracted_projects)} projects from articles")
+
+    # ── Wire Call 4 projects into DB ──────────────────────────────
+    if extracted_projects and conn:
+        from normalize import normalize_province, normalize_status, parse_value
+        from project_schema import build_project_document
+        from project_sync import upsert_flat_projects
+
+        # Transform Call 4 schema → pipeline schema
+        call4_for_db = []
+        for ep in extracted_projects:
+            source_url = ""
+            if ep.get("source"):
+                source_url = ep["source"].get("url", "")
+            if not source_url:
+                continue  # URL hard gate
+
+            # Normalize province and status at extraction time
+            raw_prov = ep.get("province", "")
+            prov_code, prov_add = normalize_province(raw_prov)
+            if not prov_code:
+                continue
+
+            call4_for_db.append({
+                "name": ep.get("project_name", ""),
+                "province": prov_code,
+                "provinces_additional": prov_add,
+                "cma": ep.get("cma", ""),
+                "sector": ep.get("sector", ""),
+                "naics_code": ep.get("naics_code", ""),
+                "value": ep.get("estimated_value", ""),
+                "parsed_value": parse_value(ep.get("estimated_value", "")),
+                "status": normalize_status(ep.get("status", "Proposed")),
+                "proponent": ep.get("proponent", ""),
+                "description": ep.get("detail", ""),
+                "announcement_date": ep.get("announcement_date", ""),
+                "start_date": ep.get("estimated_start_date", ""),
+                "completionDate": ep.get("estimated_completion_date", ""),
+                "tags": ep.get("tags", []),
+                "evidence": [{
+                    "url": source_url,
+                    "source_type": "news_article",
+                    "name": ep.get("source", {}).get("title", ""),
+                    "date": ep.get("source", {}).get("date", ""),
+                }],
+                "discovery_source": "call4_extraction",
+                "discovery_sources": ["call4_extraction"],
+                "confidence": 0.4,
+            })
+
+        if call4_for_db:
+            try:
+                result = upsert_flat_projects(conn, call4_for_db)
+                print(f"  [Call 4 → DB] {result.get('new', 0)} new, {result.get('updated', 0)} updated, {result.get('skipped', 0)} skipped")
+            except Exception as e:
+                print(f"  [Call 4 → DB] Error: {e}")
 
     # ── Merge all four results ─────────────────────────────────────
     payload = {}

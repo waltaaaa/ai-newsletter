@@ -108,6 +108,9 @@ def build_project_document(extracted):
     """
     from url_utils import normalize_url, validate_url, classify_source_authority
 
+    # Domains to reject — Gemini grounded search redirects, not real sources
+    _REJECT_DOMAINS = ("vertexaisearch.cloud.google.com", "vertexaisearch.cloud.goog")
+
     # -- Collect ALL evidence with URLs --
     evidence = []
     seen_urls = set()
@@ -115,7 +118,7 @@ def build_project_document(extracted):
     # From _evidence array (built by Gemini parser with grounding URLs)
     for e in extracted.get("_evidence", []):
         url = e.get("url", "")
-        if url and url.startswith("http"):
+        if url and url.startswith("http") and not any(d in url for d in _REJECT_DOMAINS):
             norm = normalize_url(url)
             if norm not in seen_urls:
                 validation = validate_url(url)
@@ -134,7 +137,7 @@ def build_project_document(extracted):
     # From existing evidence array (already built by dedup)
     for e in extracted.get("evidence", []):
         url = e.get("url", "")
-        if url and url.startswith("http"):
+        if url and url.startswith("http") and not any(d in url for d in _REJECT_DOMAINS):
             norm = normalize_url(url)
             if norm not in seen_urls:
                 validation = validate_url(url)
@@ -152,7 +155,7 @@ def build_project_document(extracted):
 
     # Fallback: check top-level source_url field
     top_url = extracted.get("source_url", "")
-    if top_url and top_url.startswith("http"):
+    if top_url and top_url.startswith("http") and not any(d in top_url for d in _REJECT_DOMAINS):
         norm = normalize_url(top_url)
         if norm not in seen_urls:
             validation = validate_url(top_url)

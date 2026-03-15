@@ -184,8 +184,10 @@ Write a concise market commentary for a Canadian economic intelligence briefing.
 Focus on what matters for capital investment decisions.
 Lead with the most significant market development this week."""
 
+    from claude_reasoning import OPUS_WRITING_MODEL
     return await reason_with_claude_tracked(
         system, user_prompt, task_name="market_commentary", max_tokens=1500,
+        model=OPUS_WRITING_MODEL,
     )
 
 

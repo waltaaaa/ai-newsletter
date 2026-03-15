@@ -191,6 +191,10 @@ def _project_for_export(proj_dict: dict) -> dict:
         "tags": _safe_json_loads(proj_dict.get("tags"), []),
         "sources": _safe_json_loads(proj_dict.get("sources"), []),
         "discovery_sources": _safe_json_loads(proj_dict.get("discovery_sources"), []),
+        "announcement_date": proj_dict.get("announcement_date", ""),
+        "start_date": proj_dict.get("start_date", ""),
+        "parsed_value": proj_dict.get("parsed_value"),
+        "provinces_additional": proj_dict.get("provinces_additional", ""),
     }
 
 

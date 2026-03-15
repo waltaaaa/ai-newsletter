@@ -16,7 +16,7 @@ def test_same_project_different_names():
          "location": {"city": "winnipeg", "province": "MB"},
          "value_millions": 650, "source_url": "https://cbc.ca/1",
          "status": "Approved", "discovery_source": "gemini_compound"},
-        {"name": "Portage Place Mall Redevelopment",
+        {"name": "The Portage Place New Redevelopment",
          "location": {"city": "winnipeg", "province": "MB"},
          "value_millions": 600, "source_url": "https://wpgfreepress.com/2",
          "status": "Proposed", "discovery_source": "rss_remediated"},
@@ -155,12 +155,16 @@ def test_dedup_key_generation():
     """Verify dedup keys are stable and normalized."""
     k1 = generate_dedup_key({"name": "Portage Place Redevelopment",
                               "location": {"city": "Winnipeg", "province": "MB"}})
-    k2 = generate_dedup_key({"name": "Portage Place Mall Redevelopment",
+    k2 = generate_dedup_key({"name": "Portage Place New Redevelopment",
                               "location": {"city": "winnipeg", "province": "MB"}})
     k3 = generate_dedup_key({"name": "PORTAGE PLACE",
                               "location": {"city": "WINNIPEG", "province": "mb"}})
     assert k1 == k2, f"Keys should match: {k1} vs {k2}"
     assert k1 == k3, f"Keys should match: {k1} vs {k3}"
+    # Mall is a building-type word — NOT filler. Different project.
+    k_mall = generate_dedup_key({"name": "Portage Place Mall Redevelopment",
+                                  "location": {"city": "Winnipeg", "province": "MB"}})
+    assert k1 != k_mall, "Mall carries semantic meaning — different project"
 
     # Different project, same city
     k4 = generate_dedup_key({"name": "Transit BRT Extension",

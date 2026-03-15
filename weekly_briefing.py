@@ -281,11 +281,13 @@ Pipeline health:
 
 Generate the weekly briefing following the 8-section structure in your system instructions."""
 
+    from claude_reasoning import OPUS_WRITING_MODEL
     return await reason_with_claude_tracked(
         WEEKLY_SYNTHESIS_SYSTEM,
         user_prompt,
         task_name="weekly_briefing",
         max_tokens=3000,
+        model=OPUS_WRITING_MODEL,
     )
 
 

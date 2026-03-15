@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   run-pipeline:
@@ -44,6 +45,9 @@ jobs:
             wget -q https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf -O models/qwen2.5-3b-instruct-q4_k_m.gguf
           fi
 
+      - name: Backup database before pipeline
+        run: cp dashboard.db dashboard.db.bak 2>/dev/null || true
+
       - name: Run weekly pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -51,6 +55,7 @@ jobs:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           GEMINI_MODEL: gemini-2.5-flash
           SONNET_MODEL: claude-sonnet-4-6
+          OPUS_MODEL: claude-opus-4-6
           GEMINI_SEARCH_ENABLED: "false"
           LOCAL_MODEL_PATH: models/qwen2.5-3b-instruct-q4_k_m.gguf
         run: python update_dashboard.py
@@ -71,3 +76,48 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/ dashboard.db
           git diff --staged --quiet || (git commit -m "auto: weekly pipeline update $(date +%Y-%m-%d)" && git push)
+
+      - name: Archive database backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard-backup-${{ github.run_number }}
+          path: dashboard.db.bak
+          retention-days: 14
+
+      - name: Create issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Pipeline failure: ${new Date().toISOString().split('T')[0]}`;
+            const body = `The weekly pipeline failed on run #${context.runNumber}.\n\n` +
+              `[View run logs](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})\n\n` +
+              `A database backup artifact is available for this run.`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['pipeline-failure']
+            });
+
+  retry-on-failure:
+    needs: run-pipeline
+    if: failure()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait 2 hours before retry
+        run: sleep 7200
+
+      - name: Trigger retry
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'weekly-pipeline.yml',
+              ref: 'main'
+            });

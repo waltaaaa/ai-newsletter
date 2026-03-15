@@ -16,3 +16,5 @@ python-docx
 llama-cpp-python
 sumy
 nltk
+trafilatura
+openpyxl

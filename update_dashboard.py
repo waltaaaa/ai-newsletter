@@ -83,7 +83,12 @@ except ImportError:
     print("[WARN] tavily-python not installed — Tavily Extract will be skipped")
 
 # SQLite
-conn = init_db()
+try:
+    conn = init_db()
+except Exception as e:
+    print(f"[FATAL] Database initialization failed: {e}")
+    import sys
+    sys.exit(1)
 
 # Tavily credit tracking
 from tavily_search import set_tracking_db, can_use_tavily
@@ -93,8 +98,12 @@ set_tracking_db(conn)
 _WATCHLIST_PATH = os.path.join(os.path.dirname(__file__), 'config', 'watchlist.json')
 _WATCHLIST = {}
 if os.path.exists(_WATCHLIST_PATH):
-    with open(_WATCHLIST_PATH, 'r', encoding='utf-8') as _wf:
-        _WATCHLIST = json.load(_wf)
+    try:
+        with open(_WATCHLIST_PATH, 'r', encoding='utf-8') as _wf:
+            _WATCHLIST = json.load(_wf)
+    except Exception as e:
+        print(f"[WARN] Failed to load watchlist: {e}")
+        _WATCHLIST = {}
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -138,15 +147,79 @@ def update_dashboard(deep_sweep: bool = False):
         ("Phase 9: Finalize",        finalize),
     ]
 
+    # Per-phase timeout limits (seconds). Generous defaults.
+    PHASE_TIMEOUTS = {
+        "Phase 1: Data Collection": 600,
+        "Phase 2: Discovery": 300,
+        "Phase 3: Filtering": 120,
+        "Phase 4: Signals": 180,
+        "Phase 5: Analysis": 300,
+        "Phase 6: Reasoning": 120,
+        "Phase 7: Narrative": 120,
+        "Phase 8: Verification": 120,
+        "Phase 9: Finalize": 120,
+    }
+
+    # Phase-level caching: check for run_id-based cache key
+    run_date = date.today().isoformat()
+    cache_prefix = f"phase_cache_{run_date}"
+
     for phase_name, phase_module in phases:
         print(f"\n{'='*60}")
         print(f"  {phase_name}")
         print(f"{'='*60}")
+
+        # Check phase cache for crash recovery
+        cache_key = f"{cache_prefix}_{phase_name.replace(' ', '_')}"
         try:
-            result = phase_module.run(conn, context, run_log)
-            # Merge phase outputs into shared context
-            if result:
-                context.update(result)
+            from db import get_dashboard_state
+            cached = get_dashboard_state(conn, cache_key)
+            if cached and isinstance(cached, dict) and cached.get("_completed"):
+                print(f"  [CACHE HIT] Skipping — completed earlier today")
+                context.update({k: v for k, v in cached.items() if not k.startswith("_")})
+                continue
+        except Exception:
+            pass
+
+        timeout = PHASE_TIMEOUTS.get(phase_name, 300)
+        try:
+            import signal as _signal
+            import threading
+
+            # Use threading timeout (cross-platform)
+            result_container = [None]
+            error_container = [None]
+
+            def _run_phase():
+                try:
+                    result_container[0] = phase_module.run(conn, context, run_log)
+                except Exception as e:
+                    error_container[0] = e
+
+            t = threading.Thread(target=_run_phase)
+            t.start()
+            t.join(timeout=timeout)
+
+            if t.is_alive():
+                print(f"\n[TIMEOUT] {phase_name} exceeded {timeout}s — continuing with partial results")
+                run_log.log_error(phase_name, Exception(f"Timeout after {timeout}s"), recovered=True)
+            elif error_container[0]:
+                raise error_container[0]
+            else:
+                result = result_container[0]
+                # Merge phase outputs into shared context
+                if result:
+                    context.update(result)
+                    # Cache phase results for crash recovery
+                    try:
+                        from db import save_dashboard_state
+                        cache_data = {k: v for k, v in result.items()
+                                      if isinstance(v, (str, int, float, bool, list, dict, type(None)))}
+                        cache_data["_completed"] = True
+                        save_dashboard_state(conn, cache_key, cache_data)
+                    except Exception:
+                        pass  # caching is best-effort
+
         except Exception as e:
             import traceback
             print(f"\n[CRITICAL] {phase_name} failed: {e}")

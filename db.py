@@ -45,6 +45,8 @@ import re
 import sqlite3
 from datetime import datetime
 
+from normalize import normalize_province, normalize_status, parse_value
+
 logger = logging.getLogger(__name__)
 
 # Default database path — override via DB_PATH env var
@@ -139,7 +141,11 @@ CREATE TABLE IF NOT EXISTS projects (
     evidence_count  INTEGER DEFAULT 0,
     history_backfilled INTEGER DEFAULT 0,
     history_earliest_date TEXT DEFAULT '',
-    official_ids    TEXT DEFAULT '{}'
+    official_ids    TEXT DEFAULT '{}',
+    announcement_date TEXT DEFAULT '',
+    start_date      TEXT DEFAULT '',
+    parsed_value    REAL,
+    provinces_additional TEXT DEFAULT ''
 );
 
 -- 2. FTS5 virtual table for full-text search on projects
@@ -629,6 +635,26 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
     if not name or not province:
         raise ValueError("project_dict must have non-empty 'name' and 'province'")
 
+    # Auto-normalize province
+    primary_prov, additional_prov = normalize_province(province)
+    if primary_prov is None:
+        print(f"[DB] Rejected project with invalid province: {name} ({province!r})")
+        return None
+    province = primary_prov
+    project_dict["province"] = province
+    if additional_prov:
+        project_dict["provinces_additional"] = additional_prov
+
+    # Auto-normalize status
+    raw_status = project_dict.get("status", "Proposed")
+    project_dict["status"] = normalize_status(raw_status)
+
+    # Auto-populate parsed_value from value text
+    if project_dict.get("parsed_value") is None:
+        raw_value = project_dict.get("value")
+        if raw_value:
+            project_dict["parsed_value"] = parse_value(raw_value)
+
     # URL hard gate: reject projects with no evidence URLs
     evidence = project_dict.get("evidence", [])
     if isinstance(evidence, str):
@@ -675,7 +701,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     firstTracked, lastUpdated, lastSeen, created,
                     evidence, discovery_sources, statusHistory, sources, tags,
                     discovery_source, source_url_quality,
-                    has_government_source, has_known_source, evidence_count
+                    has_government_source, has_known_source, evidence_count,
+                    announcement_date, start_date, parsed_value, provinces_additional
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?,
                     ?, ?, ?, ?, ?,
@@ -683,7 +710,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     ?, ?, ?, ?,
                     ?, ?, ?, ?, ?,
                     ?, ?,
-                    ?, ?, ?
+                    ?, ?, ?,
+                    ?, ?, ?, ?
                 )
             """, (
                 key, name, province,
@@ -713,6 +741,10 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                 1 if project_dict.get("has_government_source") else 0,
                 1 if project_dict.get("has_known_source") else 0,
                 len(evidence),
+                project_dict.get("announcement_date", ""),
+                project_dict.get("start_date", ""),
+                project_dict.get("parsed_value"),
+                project_dict.get("provinces_additional", ""),
             ))
         else:
             # UPDATE existing project
@@ -760,6 +792,10 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
             value = project_dict.get("value") or existing_dict.get("value", "Not disclosed")
             completion = project_dict.get("completionDate") or existing_dict.get("completionDate", "")
             proponent = project_dict.get("proponent") or existing_dict.get("proponent", "")
+            announcement = project_dict.get("announcement_date") or existing_dict.get("announcement_date", "")
+            start = project_dict.get("start_date") or existing_dict.get("start_date", "")
+            pv = project_dict.get("parsed_value") or existing_dict.get("parsed_value")
+            prov_add = project_dict.get("provinces_additional") or existing_dict.get("provinces_additional", "")
 
             conn.execute("""
                 UPDATE projects SET
@@ -776,7 +812,11 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     proponent = ?,
                     has_government_source = ?,
                     has_known_source = ?,
-                    evidence_count = ?
+                    evidence_count = ?,
+                    announcement_date = ?,
+                    start_date = ?,
+                    parsed_value = ?,
+                    provinces_additional = ?
                 WHERE norm_key = ?
             """, (
                 resolved_status,
@@ -793,6 +833,10 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                 1 if any(e.get("authority") == "government" for e in merged_evidence) else existing_dict.get("has_government_source", 0),
                 1 if any(e.get("is_known_source") for e in merged_evidence) else existing_dict.get("has_known_source", 0),
                 len(merged_evidence),
+                announcement,
+                start,
+                pv,
+                prov_add,
                 key,
             ))
 
@@ -805,7 +849,7 @@ def get_projects(conn: sqlite3.Connection, province: str | None = None,
 
     Args:
         conn: SQLite connection.
-        province: Filter by province name (exact match).
+        province: Filter by province name or 2-letter code. Auto-normalized.
         sector: Filter by sector name (exact match).
         limit: Maximum number of results.
 
@@ -817,8 +861,10 @@ def get_projects(conn: sqlite3.Connection, province: str | None = None,
     conditions = []
 
     if province:
+        # Normalize province name to 2-letter code (e.g. "Ontario" → "ON")
+        prov_code, _ = normalize_province(province)
         conditions.append("province = ?")
-        params.append(province)
+        params.append(prov_code or province)
     if sector:
         conditions.append("sector = ?")
         params.append(sector)

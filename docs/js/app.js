@@ -72,6 +72,9 @@ function changeCls(arrow){return arrow===1?'change-up':arrow===2?'change-down':'
 function changeIcon(arrow){return arrow===1?'↑':arrow===2?'↓':'→'}
 function stCls(s){const k=s.toLowerCase().replace(/\s+/g,'-');return'st-'+k}
 function statusBadge(s){return`<span class="status-badge ${stCls(s)}">${s}</span>`}
+function confMeter(conf){if(conf==null)return'';const n=Math.round(conf*5);const cls=conf>=0.7?'high':'';let h='<span class="conf-meter" title="Confidence: '+(conf*100).toFixed(0)+'%">';for(let i=0;i<5;i++)h+='<span class="conf-meter-dot'+(i<n?' filled'+(cls?' '+cls:''): '')+'"></span>';return h+'</span> '+(conf*100).toFixed(0)+'%'}
+function buildTimeline(p){const ann=p.announcement_date||p.firstTracked||'';const start=p.start_date||'';const end=p.completionDate||'';if(!ann&&!start&&!end)return'';const STATUS_COLORS={Proposed:'proposed','Under Review':'proposed',Approved:'approved','Under Construction':'construction','Partially Complete':'construction',Complete:'complete',Cancelled:'proposed','On Hold':'hold'};const now=new Date();const d=s=>{if(!s)return null;const dt=new Date(s+'T00:00:00');return isNaN(dt)?null:dt};const dAnn=d(ann);const dStart=d(start);const dEnd=d(end);const earliest=dAnn||dStart||now;const latest=dEnd||new Date(now.getTime()+365*86400000);const span=Math.max(latest-earliest,86400000);const pct=dt=>dt?Math.max(0,Math.min(100,((dt-earliest)/span)*100)):null;const nowPct=pct(now);let bar='<div style="margin-bottom:10px"><div class="proj-timeline">';const segColor=STATUS_COLORS[p.status]||'proposed';bar+='<div class="proj-timeline-seg '+segColor+'" style="width:100%"></div>';if(nowPct!==null&&nowPct>0&&nowPct<100)bar+='<div class="proj-timeline-marker" style="left:'+nowPct+'%"></div>';bar+='</div><div class="proj-timeline-dates">';bar+='<span>'+(ann?fmtDateShort(ann):(p.firstTracked?'Disc. '+fmtDateShort(p.firstTracked):''))+'</span>';if(start)bar+='<span>Start: '+fmtDateShort(start)+'</span>';if(end)bar+='<span>End: '+fmtDateShort(end)+'</span>';bar+='</div></div>';return bar}
+function fmtDateShort(s){if(!s)return'';const parts=s.split('-');if(parts.length<2)return s;const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return months[parseInt(parts[1])-1]+' '+parts[0]}
 function srcLink(url,title){if(!url)return'';return`<a href="${url}" target="_blank" rel="noopener noreferrer" title="${title||'Source'}">\u2197</a>`}
 function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#919191">N/D</span>';return v}
 function parseNumericValue(v){if(!v)return 0;const s=String(v).toUpperCase();const m=s.match(/([\d.]+)\s*(B|M|K)?/);if(!m)return 0;let n=parseFloat(m[1])||0;if(m[2]==='B')n*=1e9;else if(m[2]==='M')n*=1e6;else if(m[2]==='K')n*=1e3;return n}
@@ -1038,6 +1041,8 @@ async function renderProjectsTab(){
   const provSel=$('filterProvince');
   if(provSel.options.length<=1){
     PROVS.forEach(p=>{const o=document.createElement('option');o.value=p.code;o.textContent=p.name;provSel.appendChild(o)});
+    // Async: fetch project counts per province for display
+    (async()=>{try{const r=await fetch('./data/projects_all.json');if(r.ok){const all=await r.json();const cnt={};all.forEach(p=>{cnt[p.province]=(cnt[p.province]||0)+1});provSel.querySelectorAll('option').forEach(o=>{if(o.value&&cnt[o.value])o.textContent+=` (${cnt[o.value]})`;})}}catch(e){}})();
   }
   const secSel=$('filterSector');
   if(secSel.options.length<=1){
@@ -1152,7 +1157,7 @@ function renderProjectTable(){
     html+='<td class="col-value">'+fmtCurrency(p.value,p)+(isUnconf?'<span class="unconfirmed-badge">unconfirmed</span>':'')+'</td>';
     html+='<td class="col-name">'+((p.name||'').substring(0,50))+'</td>';
     html+='<td>'+typeBadge(pType)+'</td>';
-    html+='<td class="col-province">'+(provCode||((p.province||'').substring(0,3)))+'</td>';
+    html+='<td class="col-province">'+(provCode||((p.province||'').substring(0,3)))+(p.provinces_additional?'<span style="color:#919191;font-size:10px"> +'+p.provinces_additional.split(',').length+'</span>':'')+'</td>';
     html+='<td class="col-proponent">'+(p.proponent||'')+'</td>';
     html+='<td>'+statusBadge(p.status||'Proposed')+'</td>';
     html+='<td style="font-size:var(--text-xs)">'+naicsShort+'</td>';
@@ -1163,16 +1168,21 @@ function renderProjectTable(){
     const colSpan=9;
     html+='<tr id="'+rowId+'" style="display:none"><td colspan="'+colSpan+'"><div class="project-expand">';
     html+='<div style="font-size:var(--text-sm);color:#636363;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
-    // CMA + confidence row
+    // Project timeline bar
+    html+=buildTimeline(p);
+    // CMA + confidence + quality row
     html+='<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:var(--text-xs);color:#636363">';
     if(p.cma)html+='<span>CMA: <b>'+p.cma+'</b></span>';
     const evArr=p.evidence||[];
     const dispConf=p.display_confidence!=null?p.display_confidence:p.confidence;
-    if(dispConf!=null)html+='<span>Confidence: '+confBadge(dispConf,evArr.length)+(p.decay_applied?' <span style="font-family:var(--font-mono);color:#919191;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
+    if(dispConf!=null)html+='<span>Confidence: '+confMeter(dispConf)+(p.decay_applied?' <span style="font-family:var(--font-mono);color:#919191;font-size:10px">(decay: -'+Math.round((p.decay_applied||0)*100)+'%)</span>':'')+'</span>';
+    if(p.has_government_source)html+='<span class="gov-badge">GOV</span>';
+    html+='<span>'+evArr.length+' source'+(evArr.length!==1?'s':'')+'</span>';
     if(p.has_anomalies)html+='<span style="color:var(--status-amber);font-weight:600" title="'+(p.anomalies||[]).map(a=>a.type+': '+a.detail).join('; ')+'">&#9888; Anomaly detected</span>';
     if(p.needs_review)html+='<span style="font-family:var(--font-mono);color:var(--status-red);font-weight:500">Needs review ('+p.days_since_update+'d stale)</span>';
     const dsSrc=p.discovery_sources||[];
     if(dsSrc.length>1)html+='<span>Found by '+dsSrc.length+' channels</span>';
+    if(p.proponent)html+='<span>Proponent: <b>'+p.proponent+'</b></span>';
     html+='</div>';
     // Evidence sources with authority badges
     if(evArr.length){

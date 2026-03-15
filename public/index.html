@@ -354,7 +354,34 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
 @media print{.main-nav,.filter-bar,.province-selector,.hero::before,.hero::after,.section-banner{display:none}.tab-panel{display:block!important;page-break-before:always}.sources-list{display:block!important}.card{box-shadow:none;border:1px solid #c0c0c0}.hero{padding:20px 0;background:#fff}.hero-content{background:none}.hero-title{color:#191a1c}body{background:#fff;color:#191a1c}}
 /* Responsive */
 @media(max-width:1199px){.two-col,.sentiment-section{grid-template-columns:1fr}.market-grid{grid-template-columns:repeat(3,1fr)}.sector-grid{grid-template-columns:1fr}.mini-chart-grid{grid-template-columns:repeat(2,1fr)}.event-row{grid-template-columns:50px 1fr 120px 60px 28px}}
-@media(max-width:767px){.hero{padding:28px 0 20px}.hero-title{font-size:var(--text-2xl)}.hero-badges{flex-wrap:wrap;gap:6px}.nav-inner{position:relative}.nav-inner::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40px;background:linear-gradient(to right,transparent,rgba(28,54,100,0.95));pointer-events:none;z-index:10}.nav-tabs{overflow-x:auto;justify-content:flex-start;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-right:40px}.nav-tab{padding:10px 12px;font-size:var(--text-xs);white-space:nowrap;scroll-snap-align:start}.container{padding:0 var(--space-md)}.tab-panel{padding:var(--space-lg) 0 var(--space-2xl)}.market-grid,.mini-chart-grid{grid-template-columns:1fr 1fr}.indicator-strip{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:var(--space-sm)}.indicator-pill{flex:0 0 140px;min-width:140px}.indicator-row{grid-template-columns:1fr 80px 70px}.indicator-row-period,.indicator-row-source{display:none}.event-row{grid-template-columns:40px 1fr 60px}.event-institution,.event-row>:last-child{display:none}.project-table{font-size:var(--text-xs)}.col-cma,.col-proponent{display:none}.filter-bar{flex-direction:column;gap:var(--space-sm)}.filter-bar input{min-width:100%}.proj-type-toggle{width:100%}.proj-type-toggle button{flex:1}.calendar-cell{min-height:36px;padding:3px}.section-banner{min-height:72px;padding:var(--space-lg);margin-bottom:var(--space-md)}.section-banner-title{font-size:var(--text-lg)}}
+@media(max-width:767px){.hero{padding:28px 0 20px}.hero-title{font-size:var(--text-2xl)}.hero-badges{flex-wrap:wrap;gap:6px}.nav-inner{position:relative}.nav-inner::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40px;background:linear-gradient(to right,transparent,rgba(28,54,100,0.95));pointer-events:none;z-index:10}.nav-tabs{overflow-x:auto;justify-content:flex-start;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-right:40px}.nav-tab{padding:10px 12px;font-size:var(--text-xs);white-space:nowrap;scroll-snap-align:start}.container{padding:0 var(--space-md)}.tab-panel{padding:var(--space-lg) 0 var(--space-2xl)}.market-grid,.mini-chart-grid{grid-template-columns:1fr 1fr}.indicator-strip{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:var(--space-sm)}.indicator-pill{flex:0 0 140px;min-width:140px}.indicator-row{grid-template-columns:1fr 80px 70px}.indicator-row-period,.indicator-row-source{display:none}.event-row{grid-template-columns:40px 1fr 60px}.event-institution,.event-row>:last-child{display:none}.project-table{font-size:var(--text-xs)}.col-cma,.col-proponent{display:none}.filter-bar{flex-direction:column;gap:var(--space-sm)}.filter-bar input{min-width:100%}.proj-type-toggle{width:100%}.proj-type-toggle button{flex:1}.calendar-cell{min-height:36px;padding:3px}.section-banner{min-height:72px;padding:var(--space-lg);margin-bottom:var(--space-md)}.section-banner-title{font-size:var(--text-lg)}.proj-timeline-bar{min-width:100px}}
+/* ── Project Timeline ── */
+.proj-timeline{display:flex;align-items:center;gap:2px;height:10px;border-radius:5px;overflow:hidden;background:#2a4d80;min-width:140px;max-width:240px;position:relative}
+.proj-timeline-seg{height:100%;min-width:3px;transition:width .2s}
+.proj-timeline-seg.proposed{background:#6b7280}
+.proj-timeline-seg.approved{background:#3b82f6}
+.proj-timeline-seg.construction{background:#0073e6}
+.proj-timeline-seg.complete{background:#15803d}
+.proj-timeline-seg.hold{background:#b45309}
+.proj-timeline-marker{position:absolute;top:-2px;width:3px;height:14px;background:#fff;border-radius:2px;z-index:1}
+.proj-timeline-dates{display:flex;justify-content:space-between;font-size:10px;color:#919191;margin-top:2px;font-family:var(--font-mono)}
+/* ── Quality Indicators ── */
+.conf-meter{display:inline-flex;gap:1px;vertical-align:middle;margin-left:4px}
+.conf-meter-dot{width:5px;height:10px;border-radius:2px;background:#2a4d80}
+.conf-meter-dot.filled{background:#0073e6}
+.conf-meter-dot.filled.high{background:#15803d}
+.gov-badge{display:inline-block;font-size:9px;font-weight:600;padding:1px 4px;border-radius:3px;background:rgba(21,128,61,0.15);color:#15803d;vertical-align:middle;margin-left:4px}
+/* ── Province Count Badge ── */
+.prov-count{font-family:var(--font-mono);font-size:10px;color:#919191;margin-left:4px}
+/* ── Help Modal ── */
+.help-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;display:none;align-items:center;justify-content:center}
+.help-modal-overlay.active{display:flex}
+.help-modal{background:var(--bg-white);color:#191a1c;border-radius:var(--radius-lg);padding:var(--space-xl);max-width:600px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.help-modal h2{font-family:var(--font-heading);font-size:var(--text-xl);margin-bottom:var(--space-md)}
+.help-modal h3{font-size:var(--text-base);margin:var(--space-lg) 0 var(--space-sm);color:var(--accent-blue)}
+.help-modal p,.help-modal li{font-size:var(--text-sm);line-height:1.6;color:#636363}
+.help-modal ul{padding-left:20px;margin-bottom:var(--space-md)}
+.help-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:#636363}
 </style>
 </head>
 <body>
@@ -535,7 +562,30 @@ body{font-family:var(--font-body);background:var(--bg-primary);color:var(--text-
 </main>
 <footer class="site-footer">
   Signal Dispatch &middot; Data from Bank of Canada, Statistics Canada, Yahoo Finance &middot; All claims independently sourced &middot; <span id="footerDate"></span>
+  &middot; <a href="#" onclick="document.getElementById('helpModal').classList.add('active');return false" style="color:var(--accent-blue-soft);text-decoration:underline">Help &amp; Guide</a>
 </footer>
+<div class="help-modal-overlay" id="helpModal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="help-modal" style="position:relative">
+    <button class="help-close" onclick="document.getElementById('helpModal').classList.remove('active')">&times;</button>
+    <h2>Signal Dispatch User Guide</h2>
+    <h3>What is this?</h3>
+    <p>A weekly intelligence briefing covering Canadian capital projects, economic indicators, policy, and markets. Updated every Monday. All content is factual reporting with sourced data.</p>
+    <h3>Briefing Archive</h3>
+    <p>Past briefings are accessible via the Archive tab. Each briefing covers one week's developments.</p>
+    <h3>Project Database</h3>
+    <p>The Projects tab shows capital projects tracked across all provinces. Filter by province, sector, or status. Click a row to expand details, evidence sources, and status history.</p>
+    <ul>
+      <li><b>Value</b> &mdash; Estimated project cost in CAD. "Unconfirmed" means value not yet verified.</li>
+      <li><b>Confidence</b> &mdash; 0.0-1.0 score based on evidence sources, government backing, and verification. Decays if not re-confirmed in 30+ days.</li>
+      <li><b>Timeline</b> &mdash; Color bar showing project lifecycle: grey=proposed, blue=construction, green=complete, amber=on hold.</li>
+      <li><b>GOV badge</b> &mdash; Project has at least one government source.</li>
+    </ul>
+    <h3>Data Explorer &amp; V-Codes</h3>
+    <p>Search StatCan indicators by keyword. Each V-code links directly to the StatCan table. Categories: Labour Market, GDP, Construction, Housing, Prices, Trade, Rates, Energy, Demographics.</p>
+    <h3>Data Sources</h3>
+    <p>Infrastructure Canada, NRCan, Ontario Builds, BC MPI, Alberta Major Projects, Quebec Infrastructure Plan, 300+ RSS feeds, Google News RSS, IAAC, SEDAR+, procurement monitors, and CanLII regulatory feeds.</p>
+  </div>
+</div>
 <script src="./js/app.js"></script>
 </body>
 </html>

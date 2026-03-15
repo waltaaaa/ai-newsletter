@@ -219,7 +219,7 @@ def _make_project(**kwargs):
     """Build a minimal valid project dict."""
     defaults = {
         "name": "Test Wind Farm",
-        "province": "Ontario",
+        "province": "ON",
         "status": "Proposed",
         "sector": "power_energy",
         "value": "$500M",
@@ -245,21 +245,21 @@ class TestUpsertProject:
         from db import upsert_project, get_project
         proj = _make_project()
         upsert_project(conn, proj)
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         assert result is not None
         assert result["name"] == "Test Wind Farm"
 
     def test_insert_sets_created(self, conn):
         from db import upsert_project, get_project
         upsert_project(conn, _make_project())
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         assert result["created"] is not None
 
     def test_upsert_updates_last_seen(self, conn):
         from db import upsert_project, get_project
         upsert_project(conn, _make_project())
         upsert_project(conn, _make_project(description="Updated"))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         assert result["lastSeen"] is not None
 
     def test_evidence_merge_no_duplicates(self, conn):
@@ -268,7 +268,7 @@ class TestUpsertProject:
         proj = _make_project(evidence=[{"url": "https://cbc.ca/wind-farm", "title": "CBC"}])
         upsert_project(conn, proj)
         upsert_project(conn, _make_project(evidence=[{"url": "https://cbc.ca/wind-farm", "title": "CBC"}]))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         evidence = json.loads(result["evidence"]) if isinstance(result["evidence"], str) else result["evidence"]
         assert len(evidence) == 1  # no duplicate
 
@@ -277,7 +277,7 @@ class TestUpsertProject:
         from db import upsert_project, get_project
         upsert_project(conn, _make_project(evidence=[{"url": "https://cbc.ca/a", "title": "A"}]))
         upsert_project(conn, _make_project(evidence=[{"url": "https://globalnews.ca/b", "title": "B"}]))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         evidence = json.loads(result["evidence"]) if isinstance(result["evidence"], str) else result["evidence"]
         urls = [e["url"] for e in evidence]
         assert "https://cbc.ca/a" in urls
@@ -288,7 +288,7 @@ class TestUpsertProject:
         from db import upsert_project, get_project
         upsert_project(conn, _make_project(status="Under Construction"))
         upsert_project(conn, _make_project(status="Proposed"))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         assert result["status"] == "Under Construction"
 
     def test_status_advances_forward(self, conn):
@@ -296,7 +296,7 @@ class TestUpsertProject:
         from db import upsert_project, get_project
         upsert_project(conn, _make_project(status="Proposed"))
         upsert_project(conn, _make_project(status="Approved"))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         assert result["status"] == "Approved"
 
     def test_status_cancelled_overrides(self, conn):
@@ -304,7 +304,7 @@ class TestUpsertProject:
         from db import upsert_project, get_project
         upsert_project(conn, _make_project(status="Under Construction"))
         upsert_project(conn, _make_project(status="Cancelled"))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         assert result["status"] == "Cancelled"
 
     def test_confidence_never_decreases(self, conn):
@@ -312,7 +312,7 @@ class TestUpsertProject:
         from db import upsert_project, get_project
         upsert_project(conn, _make_project(confidence=0.8))
         upsert_project(conn, _make_project(confidence=0.3))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         assert float(result["confidence"]) >= 0.8
 
     def test_confidence_increases(self, conn):
@@ -320,7 +320,7 @@ class TestUpsertProject:
         from db import upsert_project, get_project
         upsert_project(conn, _make_project(confidence=0.3))
         upsert_project(conn, _make_project(confidence=0.9))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         assert float(result["confidence"]) >= 0.9
 
     def test_status_history_appended_on_change(self, conn):
@@ -328,7 +328,7 @@ class TestUpsertProject:
         from db import upsert_project, get_project
         upsert_project(conn, _make_project(status="Proposed"))
         upsert_project(conn, _make_project(status="Approved"))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         history = json.loads(result["statusHistory"]) if isinstance(result["statusHistory"], str) else result["statusHistory"]
         statuses = [h.get("status") for h in history if h.get("status")]
         assert "Approved" in statuses
@@ -338,7 +338,7 @@ class TestUpsertProject:
         from db import upsert_project, get_project
         upsert_project(conn, _make_project(discovery_sources=["rss_feed"]))
         upsert_project(conn, _make_project(discovery_sources=["rss_feed", "iaac_registry"]))
-        result = get_project(conn, "testwindfarm__ontario")
+        result = get_project(conn, "testwindfarm__on")
         ds = json.loads(result["discovery_sources"]) if isinstance(result["discovery_sources"], str) else result["discovery_sources"]
         assert ds.count("rss_feed") == 1
         assert "iaac_registry" in ds
@@ -354,10 +354,10 @@ class TestGetProjects:
 
     def test_get_projects_filter_province(self, conn):
         from db import upsert_project, get_projects
-        upsert_project(conn, _make_project(name="ON Project", province="Ontario"))
-        upsert_project(conn, _make_project(name="AB Project", province="Alberta"))
-        results = get_projects(conn, province="Ontario")
-        assert all(r["province"] == "Ontario" for r in results)
+        upsert_project(conn, _make_project(name="ON Project", province="ON"))
+        upsert_project(conn, _make_project(name="AB Project", province="AB"))
+        results = get_projects(conn, province="Ontario")  # should auto-normalize to ON
+        assert all(r["province"] == "ON" for r in results)
 
     def test_get_projects_filter_sector(self, conn):
         from db import upsert_project, get_projects

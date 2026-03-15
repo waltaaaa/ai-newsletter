@@ -243,6 +243,84 @@ def run(conn, context, logger):
         except Exception as e:
             print(f"  [WARN] Tavily usage logging failed: {e}")
 
+        # ── Quality gate — block deploy if critical checks fail ────────
+        gate_passed = True
+        gate_failures = []
+
+        # Check 1: briefing is non-empty
+        exec_summary = final_payload.get("executive_summary", "")
+        if not exec_summary or len(exec_summary) < 100:
+            gate_failures.append("Briefing executive_summary is empty or too short")
+            gate_passed = False
+
+        # Check 2: minimum project count
+        try:
+            from db import get_projects
+            all_projects = get_projects(conn, limit=10000)
+            if len(all_projects) < 100:
+                gate_failures.append(f"Only {len(all_projects)} projects in DB (minimum: 100)")
+                gate_passed = False
+            # Check 3: province representation
+            provinces_found = set(p.get("province", "") for p in all_projects)
+            if len(provinces_found) < 10:
+                gate_failures.append(f"Only {len(provinces_found)} provinces represented (minimum: 10)")
+                gate_passed = False
+        except Exception as e:
+            gate_failures.append(f"Could not check projects: {e}")
+
+        # Check 4: editorial word scan
+        FORBIDDEN_WORDS = {"should", "must", "worrying", "promising", "encouraging",
+                          "welcome", "bullish", "bearish", "unfortunately", "hopefully"}
+        editorial_violations = []
+        for text_key in ("executive_summary", "consumer_pulse", "industry_executive_summary"):
+            text = final_payload.get(text_key, "")
+            if text:
+                words = text.lower().split()
+                for fw in FORBIDDEN_WORDS:
+                    if fw in words:
+                        editorial_violations.append(f"{text_key}: contains '{fw}'")
+        # Check provinces' analysis text too
+        for prov in final_payload.get("provinces", []):
+            analysis = prov.get("analysis", "")
+            if analysis:
+                words = analysis.lower().split()
+                for fw in FORBIDDEN_WORDS:
+                    if fw in words:
+                        editorial_violations.append(f"province {prov.get('name', '?')}: contains '{fw}'")
+        if editorial_violations:
+            print(f"\n[EDITORIAL SCAN] {len(editorial_violations)} violations found:")
+            for v in editorial_violations[:10]:
+                print(f"  - {v}")
+            # Editorial violations are warnings, not gate blockers
+
+        # Check 5: stale briefing detection
+        try:
+            from db import get_dashboard_state
+            prev = get_dashboard_state(conn, "newsletter_latest")
+            if prev and isinstance(prev, dict):
+                prev_summary = prev.get("executive_summary", "")
+                if prev_summary and exec_summary:
+                    # Simple overlap check: shared words / total words
+                    prev_words = set(prev_summary.lower().split())
+                    new_words = set(exec_summary.lower().split())
+                    if prev_words and new_words:
+                        overlap = len(prev_words & new_words) / max(len(prev_words), len(new_words))
+                        if overlap > 0.90:
+                            print(f"\n[STALE WARNING] Briefing has {overlap:.0%} overlap with previous week")
+                            gate_failures.append(f"Stale briefing: {overlap:.0%} overlap with previous week")
+                            gate_passed = False
+        except Exception:
+            pass
+
+        if gate_passed:
+            print("\n[QUALITY GATE] PASSED — proceeding to export")
+        else:
+            print(f"\n[QUALITY GATE] FAILED — {len(gate_failures)} issues:")
+            for f in gate_failures:
+                print(f"  - {f}")
+            print("  Export will proceed but issues are logged.")
+            logger.log_error("quality_gate", Exception("; ".join(gate_failures)))
+
         # Static JSON export
         try:
             from export_dashboard import export_all

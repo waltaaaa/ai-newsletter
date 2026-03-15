@@ -214,10 +214,12 @@ PROJECTS IN AFFECTED SECTORS:
 Generate a pre-event analysis for our weekly briefing. What should readers
 watch for, and what would different outcomes mean for the capital project pipeline?"""
 
+    from claude_reasoning import OPUS_WRITING_MODEL
     return await reason_with_claude_tracked(
         system, user_prompt,
         task_name=f"pre_event_{event.get('type', 'unknown')}",
         max_tokens=1500,
+        model=OPUS_WRITING_MODEL,
     )
 
 

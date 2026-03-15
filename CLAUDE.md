@@ -18,20 +18,21 @@ For full system specification (25 sections, every feature detailed), see `COMPLE
 - **Database:** SQLite (`dashboard.db`) via `db.py` single interface module
 - **Scheduling:** GitHub Actions — weekly Monday 5:30 AM ET + daily midnight ET
 - **User submissions:** GitHub Issues templates — pipeline reads via API
-- **Dependencies:** aiohttp, feedparser, beautifulsoup4, yfinance, reportlab, python-docx
+- **Dependencies:** aiohttp, feedparser, beautifulsoup4, yfinance, reportlab, python-docx, trafilatura
 
 ## Model Stack (DO NOT CHANGE)
+- **Claude Opus 4.6:** ALL writing — Calls 1-3 (macro, industries, provinces), weekly briefing, executive summary, market commentary, policy assessment, pre-event analysis, Under the Microscope. ~$120/year.
+- **Claude Sonnet 4.6:** Extraction and reasoning — Call 4 (project extraction), gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis, selective extraction. ~$30/year.
 - **Gemini 2.5 Flash (NO GROUNDING):** Classification, extraction, RSS processing, rehash detection. FREE TIER. Code must NEVER pass `google_search` tool or `groundingConfig` to the API.
-- **Claude Sonnet 4.6:** ALL reasoning and writing — briefing, executive summary, market commentary, policy assessment, pre-event analysis, Under the Microscope, gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis, selective extraction. ~$55/year.
 - **Tavily:** Targeted enrichment searches only (cost-finding, verification, named tracking). Free tier 1,000 credits/month.
-- **NO Claude Opus.** Removed (Phase 6). All writing goes through Claude Sonnet.
-- **NO Gemini Pro.** Removed. All reasoning goes through Claude Sonnet.
+- **NO Gemini Pro.** Removed. All reasoning goes through Claude.
 - **NO Gemini grounded search.** Caused $136/day in charges. Replaced by Google News RSS.
 - **NO Perplexity.** Removed. Do not add.
 - **NO GDELT.** Removed. Do not add.
 - **NO Claude Haiku in weekly pipeline.** Exception: seed_projects.py may use Haiku for one-time bulk seeding.
+- **Cost cap:** $8/run. Opus calls use $15/$75 per MTok (input/output). Sonnet calls use $3/$15 per MTok.
 
-## Annual Budget: ~$60/year
+## Annual Budget: ~$150/year
 Do not introduce paid services without explicit approval. Every new API must be free or use existing budgets.
 
 ## Editorial Policy: REPORTING ONLY — NO EDITORIALIZING
@@ -89,7 +90,7 @@ Plus: Regulatory feeds — 10 CanLII RSS feeds covering Federal Court, CER, Onta
 
 Pre-filter step 1: Metadata tagging — articles tagged with sector (NAICS keys) and geography (province codes) using 6 signal layers: source domain, feed label, RSS categories, URL path, headline geography, headline keywords. Zero API cost. Tags flow through to L1 (metadata boost bypasses keyword check), Claude extraction (sector/province hints), and cross-reference engine (article-indicator alignment).
 
-Pre-filter step 2: Articles with snippets shorter than 80 chars are enhanced via sumy (LexRank extractive summarization) before entering the 6-layer filter. This improves L4 keyword co-occurrence and L6 LLM classification accuracy. Zero API cost. Fails gracefully — original snippet preserved on any error. Government sources are skipped (they already bypass L1+L2).
+Pre-filter step 2: Articles with snippets shorter than 80 chars are enhanced via trafilatura (primary, purpose-built news article extractor) + sumy (LexRank extractive summarization) before entering the 6-layer filter. trafilatura handles boilerplate removal, varied HTML layouts, and paywall stubs better than basic BeautifulSoup parsing. Falls back to BeautifulSoup if trafilatura is unavailable or returns nothing. This improves L4 keyword co-occurrence and L6 LLM classification accuracy. Zero API cost. Fails gracefully — original snippet preserved on any error. Government sources are skipped (they already bypass L1+L2).
 
 ## Province GDP Thresholds
 ON $500M, QC $250M, AB $200M, BC $175M, SK $45M, MB $40M, NS $25M, NB $20M, NL $17M, PE $5M, YT/NT/NU $3M
@@ -227,4 +228,5 @@ Monitors the federal Impact Assessment Registry for status transitions on projec
 - Do not create new SQLite tables without documenting them here
 - Do not editorialize — no predictions, no recommendations, no "good news/bad news" framing, no "bullish/bearish"
 - Do not enable billing on any Google Cloud project without explicit approval
-- Do not use Claude Opus — removed in Phase 6. All writing uses Sonnet.
+- Do not route Opus to extraction tasks (Call 4, gap analysis, dedup QA) — use Sonnet for those.
+- Do not route Sonnet to writing tasks (Calls 1-3, briefing, market, microscope) — use Opus for those.

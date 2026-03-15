@@ -6,6 +6,7 @@ Uses Qwen 2.5 3B — no API key, no quota, no network calls beyond localhost.
 import json
 import os
 import logging
+import re
 import urllib.request
 import urllib.error
 
@@ -45,7 +46,7 @@ def get_model():
     return None
 
 
-def _chat(messages, max_tokens=512, temperature=0):
+def chat(messages, max_tokens=512, temperature=0):
     """Send a chat completion request to Ollama."""
     payload = json.dumps({
         "model": _MODEL,
@@ -64,7 +65,10 @@ def _chat(messages, max_tokens=512, temperature=0):
     )
     with urllib.request.urlopen(req, timeout=120) as resp:
         data = json.loads(resp.read())
-    return data["message"]["content"]
+    msg = data.get("message")
+    if not msg or not isinstance(msg, dict):
+        raise ValueError(f"Ollama returned unexpected response structure: {list(data.keys())}")
+    return msg.get("content", "")
 
 
 def classify_article(headline, snippet=""):
@@ -72,7 +76,7 @@ def classify_article(headline, snippet=""):
     if not _check_available():
         return "RELEVANT"  # fail-open if model unavailable
     try:
-        result = _chat([
+        result = chat([
             {"role": "system", "content": (
                 "You classify news articles as RELEVANT or IRRELEVANT to Canadian "
                 "economic development, infrastructure projects, or major capital "
@@ -86,31 +90,82 @@ def classify_article(headline, snippet=""):
         return "RELEVANT"  # fail-open
 
 
-def batch_classify(items, system_prompt):
-    """Classify a batch of items. Returns list of classification strings."""
+_BATCH_SIZE = 80  # headlines per Ollama call (increased from 30 for throughput)
+
+# Lean binary prompt with compact numbered output format.
+# Ollama callers only use RELEVANT/IRRELEVANT, so skip the 12-field JSON
+# the full _L3_PROMPT asks for. Numbered "1.R" format ensures exact 1:1 mapping,
+# avoids JSON parse issues, and cuts eval tokens by ~50%.
+_LEAN_CLASSIFY_PROMPT = """\
+Classify each numbered headline for a Canadian capital projects and economic development tracker.
+
+R = RELEVANT. Includes: construction, renovation, retrofit, expansion, infrastructure, \
+housing development, condo towers, mixed-use, transit, highway, bridge, energy (solar, wind, \
+LNG, pipeline, nuclear, hydrogen, battery), mining, data centres, defence, water/wastewater, \
+institutional (hospital, school, arena), government capital spending, P3, funding announcements, \
+building permits, housing starts, industrial facilities, environmental remediation, adaptive reuse.
+
+I = IRRELEVANT. Only: sports scores/trades/playoffs, crime/court/sentencing, entertainment/concerts, \
+weather alerts, health outbreaks, opinion/editorial without project details, dollar figures that are \
+lawsuits/salaries/fines.
+
+If uncertain, output R.
+
+Output format: one line per headline — number, period, R or I. Nothing else.
+
+Example:
+1.R
+2.I
+3.R"""
+
+
+def _classify_one_batch(batch, system_prompt):
+    """Classify a single batch. Returns list of classification strings."""
+    batch_text = "\n".join(
+        f"{j + 1}. {item.get('headline', item.get('title', str(item)))}"
+        for j, item in enumerate(batch)
+    )
+    try:
+        resp = chat([
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": batch_text}
+        ], max_tokens=len(batch) * 5 + 20)  # ~5 chars per "N.R\n" verdict
+        # Parse numbered R/I format: "1.R\n2.I\n3.R\n..."
+        verdicts = re.findall(r'(\d+)\.([RI])', resp, re.IGNORECASE)
+        # Build result keyed by 1-based index
+        result_map = {int(num): v.upper() for num, v in verdicts}
+        results = []
+        for j in range(len(batch)):
+            v = result_map.get(j + 1, "R")  # fail-open if missing
+            results.append("RELEVANT" if v == "R" else "IRRELEVANT")
+        return results
+    except Exception:
+        return ["RELEVANT"] * len(batch)
+
+
+def batch_classify(items, system_prompt=None):
+    """Classify a batch of items. Returns list of classification strings.
+
+    Uses a lean binary prompt for speed (the full _L3_PROMPT with 12-field JSON
+    is only useful for the Gemini path — Ollama callers discard everything except
+    RELEVANT/IRRELEVANT). Processes batches sequentially through Ollama.
+    """
     if not _check_available():
         return ["RELEVANT"] * len(items)
 
+    # Always use the lean prompt for Ollama — callers only check for "RELEVANT"
+    prompt = _LEAN_CLASSIFY_PROMPT
+
     results = []
-    for i in range(0, len(items), 25):
-        batch = items[i:i + 25]
-        batch_text = "\n".join(
-            f"{j + 1}. {item.get('headline', item.get('title', str(item)))}"
-            for j, item in enumerate(batch)
-        )
-        try:
-            resp = _chat([
-                {"role": "system", "content": (
-                    system_prompt
-                    + "\nRespond with a JSON array of classifications, one per item. "
-                    "Example: [\"RELEVANT\", \"IRRELEVANT\", \"RELEVANT\"]"
-                )},
-                {"role": "user", "content": batch_text}
-            ], max_tokens=512)
-            parsed = json.loads(resp)
-            results.extend(parsed)
-        except (json.JSONDecodeError, Exception):
-            results.extend(["RELEVANT"] * len(batch))  # fail-open
+    total_batches = (len(items) + _BATCH_SIZE - 1) // _BATCH_SIZE
+    for i in range(0, len(items), _BATCH_SIZE):
+        batch = items[i:i + _BATCH_SIZE]
+        batch_num = i // _BATCH_SIZE + 1
+        classifications = _classify_one_batch(batch, prompt)
+        results.extend(classifications)
+        if batch_num % 5 == 0 or batch_num == total_batches:
+            print(f"  [LOCAL LLM] {batch_num}/{total_batches} batches done")
+
     return results
 
 
@@ -119,7 +174,7 @@ def extract_sentiment(posts):
     if not _check_available():
         return []
     try:
-        resp = _chat([
+        resp = chat([
             {"role": "system", "content": (
                 "Rate each post as positive, negative, or neutral toward the Canadian "
                 "economy. Return a JSON array of objects: "
@@ -137,7 +192,7 @@ def repair_json(broken_json):
     if not _check_available():
         return None
     try:
-        resp = _chat([
+        resp = chat([
             {"role": "system", "content": (
                 "The following JSON is truncated or malformed. Complete/fix it and "
                 "return ONLY valid JSON. No explanation, no markdown fences."

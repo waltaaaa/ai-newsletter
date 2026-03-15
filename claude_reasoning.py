@@ -23,12 +23,13 @@ import logging
 
 import aiohttp
 
-from pipeline_config import SONNET_MODEL, CLAUDE_COST_CAP_USD
+from pipeline_config import SONNET_MODEL, OPUS_MODEL, CLAUDE_COST_CAP_USD, MODEL_RATES
 
 logger = logging.getLogger(__name__)
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-CLAUDE_MODEL = SONNET_MODEL
+CLAUDE_MODEL = SONNET_MODEL  # default for extraction/reasoning
+OPUS_WRITING_MODEL = OPUS_MODEL  # for all writing calls
 CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages"
 
 # Retry config for rate limits (429) and overloaded (529)
@@ -104,7 +105,15 @@ async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
                         _cumulative_cost_usd += cost
                         _cumulative_tokens["input"] += in_tok
                         _cumulative_tokens["output"] += out_tok
-                        return data["content"][0]["text"]
+                        content = data.get("content")
+                        if not content or not isinstance(content, list) or len(content) == 0:
+                            logger.warning("Claude API returned empty content array")
+                            return None
+                        text_val = content[0].get("text") if isinstance(content[0], dict) else None
+                        if text_val is None:
+                            logger.warning("Claude API response missing 'text' field in content[0]")
+                            return None
+                        return text_val
                     elif resp.status in (429, 529) and attempt < CLAUDE_MAX_RETRIES:
                         delay = CLAUDE_RETRY_BASE_DELAY * (2 ** attempt)
                         logger.warning(
@@ -132,8 +141,12 @@ async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
 
 
 async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
-                                     max_tokens=4096):
+                                     max_tokens=4096, model=None):
     """Same as reason_with_claude but tracks token usage for cost monitoring.
+
+    Args:
+        model: Override model. Defaults to CLAUDE_MODEL (Sonnet).
+               Pass OPUS_WRITING_MODEL for writing tasks.
 
     Returns:
         dict with text, input_tokens, output_tokens, cost_usd -- or None
@@ -141,6 +154,8 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
     if not ANTHROPIC_API_KEY:
         logger.warning("ANTHROPIC_API_KEY not set, skipping Claude reasoning")
         return None
+
+    use_model = model or CLAUDE_MODEL
 
     global _cumulative_cost_usd
     if _cumulative_cost_usd >= CLAUDE_COST_CAP_USD:
@@ -155,7 +170,7 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
     }
 
     payload = {
-        "model": CLAUDE_MODEL,
+        "model": use_model,
         "max_tokens": max_tokens,
         "system": system_prompt,
         "messages": [{"role": "user", "content": user_prompt}],
@@ -174,8 +189,9 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
                         input_tokens = usage.get("input_tokens", 0)
                         output_tokens = usage.get("output_tokens", 0)
 
-                        # Cost: Sonnet 4.6 = $3/MTok input + $15/MTok output
-                        cost = (input_tokens * 3 + output_tokens * 15) / 1_000_000
+                        # Cost: use per-model rates
+                        rates = MODEL_RATES.get(use_model, {'input': 3.0, 'output': 15.0})
+                        cost = (input_tokens * rates['input'] + output_tokens * rates['output']) / 1_000_000
                         _cumulative_cost_usd += cost
                         _cumulative_tokens["input"] += input_tokens
                         _cumulative_tokens["output"] += output_tokens
@@ -185,8 +201,16 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
                             f"{output_tokens} out = ${cost:.4f}"
                         )
 
+                        content = data.get("content")
+                        if not content or not isinstance(content, list) or len(content) == 0:
+                            logger.warning(f"Claude API [{task_name}] returned empty content array")
+                            return None
+                        text_val = content[0].get("text") if isinstance(content[0], dict) else None
+                        if text_val is None:
+                            logger.warning(f"Claude API [{task_name}] response missing 'text' field")
+                            return None
                         return {
-                            "text": data["content"][0]["text"],
+                            "text": text_val,
                             "input_tokens": input_tokens,
                             "output_tokens": output_tokens,
                             "cost_usd": cost,
@@ -217,26 +241,29 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
     return None
 
 
-def reason_sync(system_prompt, user_prompt, task_name="sync", max_tokens=4096):
+def reason_sync(system_prompt, user_prompt, task_name="sync", max_tokens=4096, model=None):
     """Synchronous wrapper for reason_with_claude_tracked."""
     try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+        if loop and loop.is_running():
             import nest_asyncio
             nest_asyncio.apply()
             return loop.run_until_complete(
                 reason_with_claude_tracked(system_prompt, user_prompt,
-                                           task_name, max_tokens)
+                                           task_name, max_tokens, model=model)
             )
         else:
             return asyncio.run(
                 reason_with_claude_tracked(system_prompt, user_prompt,
-                                           task_name, max_tokens)
+                                           task_name, max_tokens, model=model)
             )
     except RuntimeError:
         return asyncio.run(
             reason_with_claude_tracked(system_prompt, user_prompt,
-                                       task_name, max_tokens)
+                                       task_name, max_tokens, model=model)
         )
 
 
@@ -989,7 +1016,9 @@ def selective_extraction_sync(documents, flash_extractions=None):
     extracted = []
     today = date.today().isoformat()
 
-    for doc in top_docs:
+    for doc_idx, doc in enumerate(top_docs):
+        if (doc_idx + 1) % 5 == 0 or doc_idx == 0:
+            print(f"  [CLAUDE] Processing {doc_idx + 1}/{len(top_docs)}...")
         title = doc.get('title', '')
         url = doc.get('url', '')
         text = doc.get('text') or doc.get('summary', '')

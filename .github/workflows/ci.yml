@@ -1,0 +1,39 @@
+name: CI Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.py"
+      - "requirements.txt"
+  pull_request:
+    branches: [main]
+    paths:
+      - "**.py"
+      - "requirements.txt"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Download NLTK data for sumy
+        run: python -c "import nltk; nltk.download('punkt_tab', quiet=True)"
+
+      - name: Run tests
+        env:
+          GEMINI_SEARCH_ENABLED: "false"
+        run: pytest tests/ -v --tb=short

@@ -203,11 +203,13 @@ def compute_match_score(candidate: dict, existing: dict, conn=None) -> int:
 # NOTE: Building-type words (mall, centre, tower, facility, plant, station,
 # terminal, hub, campus) are NOT filler — they carry semantic meaning for
 # project identity. "Westbank Centre" and "Westbank Tower" are different projects.
-_FILLER = {'project', 'development', 'the', 'new', 'proposed', 'phase',
+_FILLER = {'project', 'development', 'the', 'new', 'proposed',
            'redevelopment', 'construction', 'of', 'and', 'for', 'in', 'at',
            'le', 'la', 'les', 'du', 'de', 'des',
            'expansion', 'renovation', 'retrofit', 'upgrade', 'replacement',
            'modernization', 'restoration', 'conversion', 'remediation'}
+# NOTE: "phase" deliberately excluded — "LNG Canada" and "LNG Canada Phase 1"
+# are distinct projects that must not merge.
 
 
 def generate_dedup_key(project):
