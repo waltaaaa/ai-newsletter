@@ -110,14 +110,31 @@ async def main():
         print("  ERROR: No briefing generated")
         return
 
-    # 3. Store in SQLite
-    print("\n[3/4] Storing briefing in SQLite...")
+    # 3. Generate infographic directives
+    print("\n[3/5] Generating infographic directives via Claude Sonnet...")
+    from weekly_briefing import generate_infographic_directives
+    exec_summary = newsletter.get('executive_summary', '') if newsletter else ''
+    infographic_directives = await generate_infographic_directives(
+        executive_summary=exec_summary,
+        indicator_trends=indicator_trends,
+        project_trends=project_trends,
+        market_commentary=market_commentary,
+    )
+    if infographic_directives:
+        from db import save_dashboard_state
+        save_dashboard_state(conn, 'infographic_directives', infographic_directives)
+        print(f"  Generated {len(infographic_directives)} infographic directives")
+    else:
+        print("  No infographic directives generated (will use defaults)")
+
+    # 4. Store in SQLite
+    print("\n[4/5] Storing briefing in SQLite...")
     await store_and_distribute_briefing(conn, briefing_result)
     print("  Stored in weekly_briefings table and dashboard_state/latest_briefing")
 
-    # 4. Summary
+    # 5. Summary
     now = datetime.now(timezone.utc)
-    print(f"\n[4/4] Done!")
+    print(f"\n[5/5] Done!")
     print(f"  Briefing date: {now.strftime('%Y-%m-%d')}")
     print(f"  Week number: {now.isocalendar()[1]}")
     print(f"  Cost: ${cost:.4f}")

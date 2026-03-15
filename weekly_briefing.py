@@ -334,3 +334,107 @@ async def store_and_distribute_briefing(conn, briefing_result):
                      f"{len(text)} chars, ${doc['cost_usd']:.4f}")
     except Exception as e:
         logger.warning(f"Failed to store briefing: {e}")
+
+
+async def generate_infographic_directives(
+    executive_summary: str,
+    indicator_trends: dict,
+    project_trends: dict,
+    market_commentary,
+):
+    """Generate 3-4 infographic specs tied to this week's key stories.
+
+    Uses Claude Sonnet (~$0.01 per call) to read the executive summary
+    and produce chart configurations that visualize the week's main points.
+    The frontend renders these dynamically instead of static default charts.
+    """
+    from claude_reasoning import reason_with_claude_tracked, SONNET_REASONING_MODEL
+
+    overall = project_trends.get("overall", {}) if project_trends else {}
+    momentum = project_trends.get("sector_momentum", {}) if project_trends else {}
+
+    # Build indicator summary
+    ind_lines = []
+    for k, v in (indicator_trends or {}).items():
+        if k.startswith("_"):
+            continue
+        val = v.get("latest_value", v.get("value"))
+        prev = v.get("previous_value", v.get("prev"))
+        d = v.get("direction", "")
+        if val is not None:
+            ind_lines.append(f"{k}: {val} (prev: {prev}, {d})")
+
+    # Sector momentum
+    sector_lines = []
+    for s, v in momentum.items():
+        label = v.get("label", "")
+        count = v.get("current_count", 0)
+        change = v.get("change", 0)
+        sector_lines.append(f"{s}: {count} projects ({change:+d}, {label})")
+
+    market_text = market_commentary if isinstance(market_commentary, str) else (
+        market_commentary or {}
+    ).get("text", "")
+
+    prompt = f"""You are a data visualization editor for a Canadian economic intelligence newsletter.
+
+Based on this week's executive summary and data, generate exactly 4 infographic directives.
+Each infographic should visualize a key point from this week's briefing to drive the story home.
+
+EXECUTIVE SUMMARY:
+{executive_summary[:2000] if executive_summary else 'No summary available.'}
+
+KEY INDICATORS:
+{chr(10).join(ind_lines[:20]) if ind_lines else 'No indicator data.'}
+
+SECTOR MOMENTUM:
+{chr(10).join(sector_lines[:15]) if sector_lines else 'No momentum data.'}
+
+MARKET COMMENTARY:
+{market_text[:500] if market_text else 'No market commentary.'}
+
+PROJECT STATS:
+Total: {overall.get('total_projects', 0)}, Active: {overall.get('active_projects', 0)}, Value: ${overall.get('total_value_millions', 0)/1000:.1f}B
+
+Return a JSON array of exactly 4 objects. Each object must have:
+- "type": one of "bar", "horizontal_bar", "doughnut", "line"
+- "title": short chart title (3-6 words)
+- "subtitle": one sentence connecting the chart to this week's story
+- "data_source": one of "indicators", "commodities", "projects", "sectors"
+- "metric": what to measure — "value", "count", "pct_change", "price"
+- "filter": object with optional keys: "names" (array of indicator/commodity names to include), "statuses" (array), "sectors" (array), "provinces" (array), "top_n" (number)
+- "group_by": one of "name", "status", "sector", "province", "category"
+- "sort": "desc" or "asc"
+- "insight": one sentence insight to display below the chart
+
+Rules:
+- Each chart should visualize a DIFFERENT aspect (don't repeat topics)
+- At least one must be about indicators/macro data
+- At least one must be about commodities or markets
+- Subtitles must reference specific numbers from the data
+- Keep it factual — no editorializing
+
+Return ONLY the JSON array, no other text."""
+
+    try:
+        result = await reason_with_claude_tracked(
+            "You are a data visualization editor. Return only valid JSON.",
+            prompt,
+            task_name="infographic_directives",
+            max_tokens=1000,
+            model=SONNET_REASONING_MODEL,
+        )
+        text = (result or {}).get("text", "").strip()
+        # Extract JSON from response
+        start = text.find("[")
+        end = text.rfind("]") + 1
+        if start >= 0 and end > start:
+            directives = json.loads(text[start:end])
+            if isinstance(directives, list) and len(directives) >= 2:
+                logger.info(f"Generated {len(directives)} infographic directives")
+                return directives
+        logger.warning(f"Invalid infographic directives format: {text[:200]}")
+        return []
+    except Exception as e:
+        logger.warning(f"Infographic directives generation failed: {e}")
+        return []

@@ -371,6 +371,12 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
         if not latest.get('yieldCurve'):
             latest['yieldCurve'] = market_data['yieldCurve']
 
+    # Merge infographic directives if available
+    if not latest.get('infographic_directives'):
+        infographic_directives = get_dashboard_state(conn, 'infographic_directives')
+        if infographic_directives and isinstance(infographic_directives, list):
+            latest['infographic_directives'] = infographic_directives
+
     latest_path = os.path.join(output_dir, "briefing_latest.json")
     with open(latest_path, "w", encoding="utf-8") as f:
         json.dump(latest, f, ensure_ascii=False, indent=2)

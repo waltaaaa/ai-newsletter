@@ -433,31 +433,8 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       <div id="execSummary"></div>
       <section id="indicatorExplorer"></section>
     </div>
-    <!-- Infographics -->
-    <div class="ws-row ws-row-2" style="margin-top:20px">
-      <div class="card fade-in" id="macroPulseCard" style="display:none">
-        <div class="card-header">Macro Pulse</div>
-        <div style="font-size:var(--text-xs);color:#5a6a85;margin:-6px 0 12px">Key national indicators — latest readings vs. previous period</div>
-        <div style="height:220px;position:relative"><canvas id="macroPulseChart"></canvas></div>
-      </div>
-      <div class="card fade-in" id="commodityMoversCard" style="display:none">
-        <div class="card-header">Commodity Movers This Week</div>
-        <div style="font-size:var(--text-xs);color:#5a6a85;margin:-6px 0 12px">Biggest weekly price changes across energy, metals, and agriculture</div>
-        <div style="height:220px;position:relative"><canvas id="commodityMoversChart"></canvas></div>
-      </div>
-    </div>
-    <div class="ws-row ws-row-2" style="margin-top:20px">
-      <div class="card fade-in" id="pipelineFunnelCard" style="display:none">
-        <div class="card-header">Project Pipeline</div>
-        <div style="font-size:var(--text-xs);color:#5a6a85;margin:-6px 0 12px">Capital projects tracked across Canada by lifecycle stage</div>
-        <div style="height:220px;position:relative"><canvas id="pipelineFunnelChart"></canvas></div>
-      </div>
-      <div class="card fade-in" id="sectorDonutCard" style="display:none">
-        <div class="card-header">Where Capital Is Flowing</div>
-        <div style="font-size:var(--text-xs);color:#5a6a85;margin:-6px 0 12px">Total tracked investment value by sector — top 8 sectors shown</div>
-        <div style="height:220px;position:relative"><canvas id="sectorDonutChart"></canvas></div>
-      </div>
-    </div>
+    <!-- Infographics — dynamic from editorial directives or defaults -->
+    <div id="infographicsContainer" style="margin-top:20px"></div>
     <!-- Key Indicators -->
     <section id="keyIndicators" style="margin-top:20px"></section>
     <!-- Microscope + National Analysis side by side -->
