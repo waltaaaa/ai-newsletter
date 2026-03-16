@@ -875,7 +875,7 @@ function buildIndicatorPanel(title,indRows,subtitle,chartCanvasId,chartTitle){
   html+='</tbody></table>';
   // Embedded chart inside the panel
   if(chartCanvasId){
-    html+='<div style="margin-top:12px;border-top:1px solid rgba(0,0,0,0.06);padding-top:10px">';
+    html+='<div style="margin-top:14px;border-top:2px solid rgba(37,99,235,0.15);padding-top:12px">';
     html+='<div class="ec-title">'+(chartTitle||'Investment by Sector')+'</div>';
     html+='<div style="height:180px;position:relative"><canvas id="'+chartCanvasId+'"></canvas></div>';
     html+='</div>';
