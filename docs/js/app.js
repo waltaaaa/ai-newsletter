@@ -408,7 +408,7 @@ async function renderEditorialFlow(){
       const parts=industryHtml.split('</p>');
       if(parts.length<=3)return industryHtml+chart;
       // Insert ~halfway through so chart bottom aligns with text end
-      const insertAt=Math.max(1,Math.floor(parts.length/2));
+      const insertAt=Math.max(1,Math.floor(parts.length*0.55));
       parts.splice(insertAt,0,chart);
       return parts.join('</p>');
     })()}
