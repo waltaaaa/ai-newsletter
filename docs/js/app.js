@@ -297,8 +297,8 @@ function renderTLDR(){
   }
   // Key Indicators — top-level pills only (no dropdown on TL;DR)
   renderKeyIndicators();
-  // Infographics
-  renderInfographics();
+  // Inline charts embedded between writing sections
+  renderInlineCharts();
   // Under the Microscope
   renderMicroscope();
   // Weekly Briefing
@@ -452,7 +452,79 @@ function collapseEmpty(){
   });
 }
 
-/* ====== INFOGRAPHICS ====== */
+/* ====== INLINE CHARTS (embedded between writing sections) ====== */
+async function renderInlineCharts(){
+  const ttCfg={backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8};
+  const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$'+fmtNum(v,0);
+  const palBlue=['#1E40AF','#2563EB','#3B82F6','#60A5FA','#93C5FD','#BFDBFE','#DBEAFE','#94A3B8','#CBD5E1'];
+  const palCat=['#2563EB','#10B981','#F59E0B','#8B5CF6','#EC4899','#EF4444','#0EA5E9','#84CC16','#94A3B8'];
+  let projects=[],comms=[];
+  try{const d=await fetchJSON('projects_all.json');projects=Array.isArray(d)?d:[]}catch(e){}
+  try{const cd=await fetchJSON('commodities.json');comms=Array.isArray(cd)?cd:Object.values(cd).flat().filter(c=>c&&c.pct_1w)}catch(e){}
+
+  // Slot 1: After key indicators — Macro Pulse + Commodity Movers
+  const s1=$('inlineChart1');
+  if(s1){
+    let html='<div class="ws-row ws-row-2" style="margin:12px 0">';
+    html+='<div class="card fade-in" id="ilMacroCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Macro Pulse</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Key indicators — current vs. previous</div><div style="height:180px;position:relative"><canvas id="ilMacroChart"></canvas></div></div>';
+    html+='<div class="card fade-in" id="ilCommodityCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Commodity Movers</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Biggest weekly price changes</div><div style="height:180px;position:relative"><canvas id="ilCommodityChart"></canvas></div></div>';
+    html+='</div>';
+    s1.innerHTML=html;
+    // Macro Pulse chart
+    if(indicators.length){
+      const macroKeys=['unemployment_rate','cpi','gdp_monthly','housing_starts_total','boc_rate','participation_rate'];
+      const macroLabels=['Unemployment','CPI','GDP Monthly','Housing Starts','BoC Rate','Participation'];
+      const found=[];
+      macroKeys.forEach((k,i)=>{const ind=indicators.find(x=>x.indicator_name===k&&(!x.province||x.province==='National'||x.province==='national'));if(ind&&ind.value!=null)found.push({label:macroLabels[i],current:parseFloat(ind.value)||0,prev:parseFloat(ind.previous_value)||(parseFloat(ind.value)||0)})});
+      if(found.length>=3){
+        $('ilMacroCard').style.display='';
+        if(charts._ilMacro)charts._ilMacro.destroy();
+        charts._ilMacro=new Chart($('ilMacroChart'),{type:'bar',data:{labels:found.map(f=>f.label),datasets:[{label:'Current',data:found.map(f=>f.current),backgroundColor:'#2563EB',borderRadius:4,barPercentage:0.6},{label:'Previous',data:found.map(f=>f.prev),backgroundColor:'#CBD5E1',borderRadius:4,barPercentage:0.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:8,font:{family:'Outfit',size:10},color:'#1a2744',usePointStyle:true,pointStyle:'circle'}},tooltip:{...ttCfg,callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}}},scales:{x:{grid:{display:false},ticks:{font:{family:'Outfit',size:9},color:'#5a6a85'}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{family:'Outfit',size:9},color:'#5a6a85'}}}}});
+      }
+    }
+    // Commodity Movers chart
+    const withPct=comms.filter(c=>c.pct_1w&&c.pct_1w!=='N/A').map(c=>({name:(c.name||c.indicator_name||'').replace(/_/g,' ').replace(/\b\w/g,x=>x.toUpperCase()),pct:parseFloat(c.pct_1w)||0})).filter(c=>Math.abs(c.pct)>0.1);
+    withPct.sort((a,b)=>Math.abs(b.pct)-Math.abs(a.pct));
+    const top10=withPct.slice(0,8);
+    if(top10.length>=3){
+      $('ilCommodityCard').style.display='';
+      if(charts._ilComm)charts._ilComm.destroy();
+      charts._ilComm=new Chart($('ilCommodityChart'),{type:'bar',data:{labels:top10.map(c=>c.name),datasets:[{data:top10.map(c=>c.pct),backgroundColor:top10.map(c=>c.pct>=0?'#10B981':'#EF4444'),borderRadius:4,barPercentage:0.65}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...ttCfg,callbacks:{label:ctx=>(ctx.raw>=0?'+':'')+ctx.raw.toFixed(1)+'%'}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{family:'Outfit',size:9},color:'#5a6a85',callback:v=>(v>=0?'+':'')+v+'%'}},y:{grid:{display:false},ticks:{font:{family:'Outfit',size:9,weight:500},color:'#1a2744'}}}}});
+    }
+  }
+
+  // Slot 2: After microscope — Pipeline + Sector breakdown
+  const s2=$('inlineChart2');
+  if(s2&&projects.length){
+    let html='<div class="ws-row ws-row-2" style="margin:12px 0">';
+    html+='<div class="card fade-in" id="ilPipelineCard"><div class="card-header" style="font-size:var(--text-sm)">Project Pipeline</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Capital projects by lifecycle stage</div><div style="height:180px;position:relative"><canvas id="ilPipelineChart"></canvas></div></div>';
+    html+='<div class="card fade-in" id="ilSectorCard"><div class="card-header" style="font-size:var(--text-sm)">Capital by Sector</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Tracked investment value — top 8 sectors</div><div style="height:180px;position:relative"><canvas id="ilSectorChart"></canvas></div></div>';
+    html+='</div>';
+    s2.innerHTML=html;
+    // Pipeline chart
+    const statusOrder=['Proposed','Under Review','Approved','Under Construction','Partially Complete','Complete','On Hold','Cancelled'];
+    const statusColors=['#94A3B8','#60A5FA','#3B82F6','#2563EB','#1D4ED8','#15803D','#F59E0B','#EF4444'];
+    const statusCounts={};projects.forEach(p=>{const s=p.status||'Proposed';statusCounts[s]=(statusCounts[s]||0)+1});
+    const pLabels=[],pData=[],pColors=[];
+    statusOrder.forEach((s,i)=>{if(statusCounts[s]){pLabels.push(s);pData.push(statusCounts[s]);pColors.push(statusColors[i])}});
+    if(pData.length){
+      if(charts._ilPipe)charts._ilPipe.destroy();
+      charts._ilPipe=new Chart($('ilPipelineChart'),{type:'bar',data:{labels:pLabels,datasets:[{data:pData,backgroundColor:pColors,borderRadius:6,barPercentage:0.7}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...ttCfg,callbacks:{label:ctx=>fmtNum(ctx.raw,0)+' projects'}}},scales:{x:{grid:{display:false},ticks:{font:{family:'Outfit',size:9},color:'#5a6a85'}},y:{grid:{display:false},ticks:{font:{family:'Outfit',size:9,weight:500},color:'#1a2744'}}}}});
+    }
+    // Sector donut
+    const sectorVal={};projects.forEach(p=>{const s=p.sector||'Other';const v=parseNumericValue(p.value);sectorVal[s]=(sectorVal[s]||0)+v});
+    const sorted=Object.entries(sectorVal).sort((a,b)=>b[1]-a[1]);
+    const top8=sorted.slice(0,8);
+    const otherVal=sorted.slice(8).reduce((s,e)=>s+e[1],0);
+    if(otherVal>0)top8.push(['Other',otherVal]);
+    if(top8.length){
+      if(charts._ilSector)charts._ilSector.destroy();
+      charts._ilSector=new Chart($('ilSectorChart'),{type:'doughnut',data:{labels:top8.map(e=>e[0].replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())),datasets:[{data:top8.map(e=>e[1]),backgroundColor:palCat.slice(0,top8.length),borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{boxWidth:10,padding:6,font:{family:'Outfit',size:9},color:'#1a2744',usePointStyle:true,pointStyle:'circle'}},tooltip:{...ttCfg,callbacks:{label:ctx=>ctx.label+': '+fv(ctx.raw)}}}}});
+    }
+  }
+}
+
+/* ====== INFOGRAPHICS (legacy — kept for non-TL;DR tabs) ====== */
 async function renderInfographics(){
   const container=$('infographicsContainer');
   if(!container)return;
