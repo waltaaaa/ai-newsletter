@@ -865,7 +865,6 @@ function buildIndicatorPanel(title,indRows,subtitle,chartCanvasId,chartTitle){
 
   let html='<div class="ed-map" style="position:relative">';
   html+='<div class="ed-stat-header">'+title+'</div>';
-  if(subtitle)html+='<div style="font-size:var(--text-xs);color:#475569;margin:-4px 0 8px;font-style:italic">'+subtitle+'</div>';
   html+='<table class="ed-ind-table"><thead><tr><th>Indicator</th><th style="text-align:right">Value</th><th style="text-align:right">Chg</th></tr></thead><tbody>';
   indRows.forEach(r=>{
     const chg=r.change||'';
