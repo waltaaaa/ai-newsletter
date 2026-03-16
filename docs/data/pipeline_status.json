@@ -1,6 +1,6 @@
 {
   "last_run": {
-    "started_at": "2026-03-16T03:33:47.095124",
+    "started_at": "2026-03-16T05:04:07.279973",
     "status": "running",
     "duration_seconds": 0,
     "discovery": {
@@ -15,27 +15,27 @@
         "error_type": "UnboundLocalError",
         "message": "cannot access local variable 'ThreadPoolExecutor' where it is not associated with a value",
         "recovered": true,
-        "timestamp": "2026-03-16T03:36:44.757823"
+        "timestamp": "2026-03-16T05:06:30.539216"
       },
       {
         "step": "Phase 3: Filtering",
         "error_type": "Exception",
         "message": "Timeout after 120s",
         "recovered": true,
-        "timestamp": "2026-03-16T03:38:44.779857"
+        "timestamp": "2026-03-16T05:08:30.555816"
       },
       {
         "step": "quality_gate",
         "error_type": "Exception",
-        "message": "Briefing executive_summary is empty or too short",
+        "message": "Stale briefing: 100% overlap with previous week",
         "recovered": true,
-        "timestamp": "2026-03-16T03:44:24.339502"
+        "timestamp": "2026-03-16T05:27:51.994012"
       }
     ]
   },
-  "analysis_incomplete": true,
+  "analysis_incomplete": false,
   "tavily": {
-    "used": 390,
+    "used": 570,
     "month": "2026-03"
   },
   "claude_tokens": {
@@ -44,7 +44,7 @@
   },
   "recent_runs": [
     {
-      "started_at": "2026-03-16T03:33:47.095124",
+      "started_at": "2026-03-16T05:04:07.279973",
       "status": "running",
       "duration_seconds": 0,
       "discovery": {
@@ -55,34 +55,34 @@
       }
     },
     {
-      "started_at": "2026-03-16T03:14:04.889020",
+      "started_at": "2026-03-16T04:36:21.049744",
       "status": "partial",
-      "duration_seconds": 1045,
+      "duration_seconds": 1576,
       "discovery": {
         "articles_found": 31,
-        "projects_added": 31,
-        "projects_updated": 0,
-        "projects_deduped": 0
-      }
-    },
-    {
-      "started_at": "2026-03-16T02:53:40.249969",
-      "status": "partial",
-      "duration_seconds": 852,
-      "discovery": {
-        "articles_found": 29,
         "projects_added": 29,
         "projects_updated": 0,
+        "projects_deduped": 2
+      }
+    },
+    {
+      "started_at": "2026-03-16T04:11:39.477151",
+      "status": "partial",
+      "duration_seconds": 1348,
+      "discovery": {
+        "articles_found": 30,
+        "projects_added": 30,
+        "projects_updated": 0,
         "projects_deduped": 0
       }
     },
     {
-      "started_at": "2026-03-16T02:28:46.654224",
+      "started_at": "2026-03-16T03:33:47.095124",
       "status": "partial",
-      "duration_seconds": 852,
+      "duration_seconds": 639,
       "discovery": {
-        "articles_found": 28,
-        "projects_added": 28,
+        "articles_found": 0,
+        "projects_added": 0,
         "projects_updated": 0,
         "projects_deduped": 0
       }
