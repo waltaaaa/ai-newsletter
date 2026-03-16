@@ -1915,22 +1915,43 @@ async function renderProvinceContent(){
   renderInsightCharts('prov',panel.movers,indicators,(D&&D.metrics)||{},(provData.indicatorMeta||{}));
 
 
-  // Projects
-  const topProvProj=provProj.slice(0,5);
-  let projHtml='<div class="ed-section"><div class="ed-section-title">Major Projects</div><div class="ed-section-subtitle">Top projects in '+prov.name+'</div></div>'+
+  // Newly Added Projects
+  const now=new Date();
+  const oneWeekAgo=new Date(now);oneWeekAgo.setDate(now.getDate()-7);
+  const fourWeeksAgo=new Date(now);fourWeeksAgo.setDate(now.getDate()-28);
+  const oneWeekStr=oneWeekAgo.toISOString().split('T')[0];
+  const fourWeekStr=fourWeeksAgo.toISOString().split('T')[0];
+
+  let newProj=provProj.filter(p=>p.firstTracked&&p.firstTracked>=oneWeekStr);
+  let isFallback=false;
+  if(!newProj.length){
+    newProj=provProj.filter(p=>p.firstTracked&&p.firstTracked>=fourWeekStr);
+    isFallback=newProj.length>0;
+  }
+  newProj.sort((a,b)=>(b.firstTracked||'').localeCompare(a.firstTracked||''));
+  const displayProj=newProj.slice(0,10);
+
+  const sectionTitle='Newly Added Projects';
+  const sectionSub=isFallback
+    ?'No new projects this week \u2014 showing projects added in the last 4 weeks'
+    :(displayProj.length?'Projects added this week in '+prov.name:'');
+
+  let projHtml='<div class="ed-section"><div class="ed-section-title">'+sectionTitle+'</div><div class="ed-section-subtitle">'+sectionSub+'</div></div>'+
     '<div class="editorial-meta" style="margin-bottom:12px">'+
     '<div class="editorial-meta-item"><strong>'+projCount+'</strong>Projects Tracked</div>'+
     (fmtVal?'<div class="editorial-meta-item"><strong>'+fmtVal+'</strong>Pipeline Value</div>':'')+
     '</div>';
-  if(topProvProj.length){
-    projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
-    topProvProj.forEach(p=>{
-      projHtml+='<tr><td class="col-value">'+fmtCurrency(p.value,p)+'</td><td class="col-name">'+((p.name||'').substring(0,60))+'</td><td>'+statusBadge(p.status||'Proposed')+'</td><td>'+srcLink((p.sources||[])[0]?.url,(p.sources||[])[0]?.title)+'</td></tr>';
+  if(displayProj.length){
+    projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Added</th><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
+    displayProj.forEach(p=>{
+      const addedDate=p.firstTracked||'\u2014';
+      projHtml+='<tr><td style="font-size:var(--text-xs);color:#475569;white-space:nowrap;font-family:var(--font-mono)">'+addedDate+'</td><td class="col-value">'+fmtCurrency(p.value,p)+'</td><td class="col-name">'+((p.name||'').substring(0,60))+'</td><td>'+statusBadge(p.status||'Proposed')+'</td><td>'+srcLink((p.sources||[])[0]?.url,(p.sources||[])[0]?.title)+'</td></tr>';
     });
     projHtml+='</tbody></table></div>';
+    if(isFallback)projHtml+='<div style="margin-top:8px;font-size:var(--text-xs);color:#64748B;font-style:italic">Showing last 4 weeks — no new projects discovered this week for '+prov.name+'.</div>';
     projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><a href="#" style="color:var(--accent-blue);text-decoration:none" onclick="event.preventDefault();switchTab(\'projects\')">View all projects \u2192</a></div>';
   }else{
-    projHtml+='<div class="empty-state"><div class="empty-state-text">No projects tracked for '+prov.name+' yet.</div></div>';
+    projHtml+='<div class="empty-state"><div class="empty-state-text">No new projects added for '+prov.name+' in the last 4 weeks.</div></div>';
   }
   $('provProjectsPreview').innerHTML=projHtml;
 }
