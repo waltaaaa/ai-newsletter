@@ -403,7 +403,7 @@ async function renderEditorialFlow(){
       <div class="ed-section-subtitle">${san(industrySub)}</div>
     </div>
     ${(()=>{
-      const chart='<div class="ed-industry-chart" id="tldrSectorCard"><div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div><div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div><div class="ec-source">Pipeline database</div></div>';
+      const chart='<div class="ed-industry-chart" id="tldrSectorCard"><div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div><div style="height:240px;position:relative"><canvas id="tldrSectorChart"></canvas></div><div class="ec-source">Pipeline database</div></div>';
       if(!industryHtml)return chart;
       const parts=industryHtml.split('</p>');
       if(parts.length<=3)return industryHtml+chart;
