@@ -263,7 +263,7 @@ function sourcesFooter(sources,containerId){
 /* ══ TL;DR TAB (Newsletter Digest) ══ */
 function renderTLDR(){
   const hasBriefing=D&&D.executive_summary;
-  // Executive Summary — newsletter hero
+  // Summary — newsletter hero with content headline
   if(hasBriefing){
     const headline=(D.headline||D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim();
     let metaHtml='';
@@ -277,7 +277,7 @@ function renderTLDR(){
       if(pipeVal)metaHtml+='<div class="hero-meta-item"><strong>$'+pipeVal+'B</strong>Pipeline Value</div>';
       metaHtml+='</div>';
     }
-    $('execSummary').innerHTML=`<div class="newsletter-hero fade-in">${headline?'<div class="hero-headline">'+san(headline)+'</div>':''}<div class="hero-prose">${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div>${metaHtml}</div>`;
+    $('execSummary').innerHTML=`<div class="newsletter-hero fade-in"><div class="hero-headline">${san(headline||'Weekly Summary')}</div><div class="hero-prose">${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div>${metaHtml}</div>`;
   }else{
     const indCount=indicators.length;
     $('execSummary').innerHTML=`<div class="newsletter-hero fade-in" style="text-align:center"><div style="color:#5a6a85;font-size:var(--text-sm)">Weekly briefing pending. ${indCount} indicators loaded from primary sources.</div></div>`;
