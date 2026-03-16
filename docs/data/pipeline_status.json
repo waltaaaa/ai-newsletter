@@ -1,8 +1,8 @@
 {
   "last_run": {
-    "started_at": "2026-03-16T02:28:46.654224",
-    "status": "partial",
-    "duration_seconds": 852,
+    "started_at": "2026-03-16T03:33:47.095124",
+    "status": "running",
+    "duration_seconds": 0,
     "discovery": {
       "articles_found": 0,
       "projects_added": 0,
@@ -15,48 +15,27 @@
         "error_type": "UnboundLocalError",
         "message": "cannot access local variable 'ThreadPoolExecutor' where it is not associated with a value",
         "recovered": true,
-        "timestamp": "2026-03-16T02:31:17.723825"
+        "timestamp": "2026-03-16T03:36:44.757823"
       },
       {
         "step": "Phase 3: Filtering",
         "error_type": "Exception",
         "message": "Timeout after 120s",
         "recovered": true,
-        "timestamp": "2026-03-16T02:33:17.757801"
-      },
-      {
-        "step": "Phase 5: Analysis",
-        "error_type": "Exception",
-        "message": "Timeout after 300s",
-        "recovered": true,
-        "timestamp": "2026-03-16T02:39:36.691919"
-      },
-      {
-        "step": "Phase 7: Narrative",
-        "error_type": "Exception",
-        "message": "Timeout after 120s",
-        "recovered": true,
-        "timestamp": "2026-03-16T02:41:36.738945"
+        "timestamp": "2026-03-16T03:38:44.779857"
       },
       {
         "step": "quality_gate",
         "error_type": "Exception",
         "message": "Briefing executive_summary is empty or too short",
         "recovered": true,
-        "timestamp": "2026-03-16T02:42:57.979986"
-      },
-      {
-        "step": "json_export",
-        "error_type": "ModuleNotFoundError",
-        "message": "No module named 'export_dashboard'",
-        "recovered": false,
-        "timestamp": "2026-03-16T02:42:58.706672"
+        "timestamp": "2026-03-16T03:44:24.339502"
       }
     ]
   },
-  "analysis_incomplete": false,
+  "analysis_incomplete": true,
   "tavily": {
-    "used": 210,
+    "used": 390,
     "month": "2026-03"
   },
   "claude_tokens": {
@@ -65,9 +44,9 @@
   },
   "recent_runs": [
     {
-      "started_at": "2026-03-16T02:28:46.654224",
-      "status": "partial",
-      "duration_seconds": 852,
+      "started_at": "2026-03-16T03:33:47.095124",
+      "status": "running",
+      "duration_seconds": 0,
       "discovery": {
         "articles_found": 0,
         "projects_added": 0,
@@ -76,36 +55,36 @@
       }
     },
     {
-      "started_at": "2026-03-15T12:50:15.296984",
+      "started_at": "2026-03-16T03:14:04.889020",
       "status": "partial",
-      "duration_seconds": 4818,
+      "duration_seconds": 1045,
       "discovery": {
-        "articles_found": 5762,
-        "projects_added": 9,
-        "projects_updated": 4922,
-        "projects_deduped": 807
+        "articles_found": 31,
+        "projects_added": 31,
+        "projects_updated": 0,
+        "projects_deduped": 0
       }
     },
     {
-      "started_at": "2026-03-15T05:12:10.422659",
-      "status": "running",
-      "duration_seconds": 0,
+      "started_at": "2026-03-16T02:53:40.249969",
+      "status": "partial",
+      "duration_seconds": 852,
       "discovery": {
-        "articles_found": 5764,
-        "projects_added": 19,
-        "projects_updated": 4910,
-        "projects_deduped": 811
+        "articles_found": 29,
+        "projects_added": 29,
+        "projects_updated": 0,
+        "projects_deduped": 0
       }
     },
     {
-      "started_at": "2026-03-15T03:59:39.683010",
-      "status": "error",
-      "duration_seconds": 4318,
+      "started_at": "2026-03-16T02:28:46.654224",
+      "status": "partial",
+      "duration_seconds": 852,
       "discovery": {
-        "articles_found": 5772,
-        "projects_added": 530,
-        "projects_updated": 4395,
-        "projects_deduped": 823
+        "articles_found": 28,
+        "projects_added": 28,
+        "projects_updated": 0,
+        "projects_deduped": 0
       }
     }
   ]

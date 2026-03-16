@@ -1,295 +1,313 @@
 {
-  "edition": "EDITION: MAR 08 – MAR 15 // STATUS: AI-SYNTHESIZED",
-  "updated_at": "2026-03-15",
+  "provinces": [],
   "consumer_pulse": "",
   "industry_executive_summary": "",
-  "id": 8,
-  "week_of": "2026-03-16",
-  "generated_at": "2026-03-16T02:42:01Z",
-  "financialMarkets": {
-    "indices": [
+  "citation_audit": {
+    "passed": true,
+    "total_citations": 0,
+    "total_failed": 0,
+    "total_archived": 0,
+    "calls": [
       {
-        "name": "S&P/TSX",
-        "value": "32,542",
-        "region": "Canada",
-        "change": "",
-        "day": "",
-        "yy": ""
+        "label": "call1-macro",
+        "passed": true,
+        "citations": 0,
+        "failed": 0,
+        "removal_pct": 0.0,
+        "archived": 0
       },
       {
-        "name": "S&P 500",
-        "value": "6,632",
-        "region": "USA",
-        "change": "",
-        "day": "",
-        "yy": ""
+        "label": "call2-industries",
+        "passed": true,
+        "citations": 0,
+        "failed": 0,
+        "removal_pct": 0.0,
+        "archived": 0
       },
       {
-        "name": "Dow Jones",
-        "value": "46,558",
-        "region": "USA",
-        "change": "",
-        "day": "",
-        "yy": ""
-      },
-      {
-        "name": "NASDAQ",
-        "value": "22,105",
-        "region": "USA",
-        "change": "",
-        "day": "",
-        "yy": ""
-      },
-      {
-        "name": "FTSE 100",
-        "value": "10,261",
-        "region": "UK",
-        "change": "",
-        "day": "",
-        "yy": ""
-      },
-      {
-        "name": "DAX",
-        "value": "23,447",
-        "region": "Germany",
-        "change": "",
-        "day": "",
-        "yy": ""
-      },
-      {
-        "name": "Nikkei 225",
-        "value": "53,820",
-        "region": "Japan",
-        "change": "",
-        "day": "",
-        "yy": ""
-      }
-    ],
-    "fx": [
-      {
-        "name": "CAD/USD",
-        "value": "0.7300",
-        "day": "",
-        "yy": ""
-      },
-      {
-        "name": "EUR/USD",
-        "value": "1.1400",
-        "day": "",
-        "yy": ""
-      },
-      {
-        "name": "USD/CNY",
-        "value": "6.9000",
-        "day": "",
-        "yy": ""
-      },
-      {
-        "name": "USD/JPY",
-        "value": "159.5700",
-        "day": "",
-        "yy": ""
+        "label": "call3-provinces",
+        "passed": true,
+        "citations": 0,
+        "failed": 0,
+        "removal_pct": 0.0,
+        "archived": 0
       }
     ]
   },
+  "_analysis_incomplete": true,
+  "_analysis_error": "Claude analysis empty or missing critical keys: {'executive_summary'}",
   "commodities": [
     {
       "category": "Energy",
+      "color": "text-orange-500",
       "items": [
         {
-          "name": "Crude Oil (WTI)",
-          "val": "98.71",
-          "unit": "bbl",
-          "yy": "",
-          "day": ""
-        },
-        {
           "name": "Crude Oil (Brent)",
-          "val": "99.56",
           "unit": "bbl",
-          "yy": "",
-          "day": ""
+          "val": "$99.56",
+          "yy": "+40.1%",
+          "day": "-3.5%"
         },
         {
           "name": "Natural Gas",
-          "val": "3.12",
           "unit": "MMBtu",
-          "yy": "",
-          "day": ""
-        },
-        {
-          "name": "Coal (Newcastle)",
-          "val": "96.0",
-          "unit": "t",
-          "yy": "",
-          "day": ""
+          "val": "$3.120",
+          "yy": "-22.3%",
+          "day": "-0.4%"
         }
       ]
     },
     {
       "category": "Precious Metals",
+      "color": "text-yellow-500",
       "items": [
         {
-          "name": "Gold",
-          "val": "5062.0",
-          "unit": "troy oz",
-          "yy": "",
-          "day": ""
-        },
-        {
-          "name": "Silver",
-          "val": "81.34",
-          "unit": "troy oz",
-          "yy": "",
-          "day": ""
-        },
-        {
           "name": "Platinum",
-          "val": "2028.0",
           "unit": "troy oz",
-          "yy": "",
-          "day": ""
+          "val": "$2,028",
+          "yy": "+98.1%",
+          "day": "-0.4%"
         },
         {
           "name": "Palladium",
-          "val": "1570.0",
           "unit": "troy oz",
-          "yy": "",
-          "day": ""
+          "val": "$1,570",
+          "yy": "+63.0%",
+          "day": "+1.1%"
         }
       ]
     },
     {
       "category": "Base Metals",
+      "color": "text-slate-500",
       "items": [
         {
           "name": "Copper",
-          "val": "5.7335",
           "unit": "lb",
-          "yy": "",
-          "day": ""
-        },
-        {
-          "name": "Aluminum",
-          "val": "3423.25",
-          "unit": "lb",
-          "yy": "",
-          "day": ""
+          "val": "$5.7335",
+          "yy": "+16.2%",
+          "day": "+0.3%"
         }
       ]
     },
     {
       "category": "Agriculture - Grains",
+      "color": "text-lime-600",
       "items": [
         {
           "name": "Wheat",
-          "val": "607.5",
           "unit": "bu",
-          "yy": "",
-          "day": ""
+          "val": "$607.50",
+          "yy": "+6.9%",
+          "day": "-1.8%"
         },
         {
           "name": "Corn",
-          "val": "465.25",
           "unit": "bu",
-          "yy": "",
-          "day": ""
-        },
-        {
-          "name": "Rice",
-          "val": "11.38",
-          "unit": "cwt",
-          "yy": "",
-          "day": ""
+          "val": "$465.25",
+          "yy": "+0.9%",
+          "day": "+2.8%"
         },
         {
           "name": "Soybeans",
-          "val": "1201.75",
           "unit": "bu",
-          "yy": "",
-          "day": ""
+          "val": "$1201.75",
+          "yy": "+18.3%",
+          "day": "-0.8%"
         }
       ]
     },
     {
       "category": "Agriculture - Softs",
+      "color": "text-emerald-600",
       "items": [
         {
           "name": "Coffee",
-          "val": "292.75",
           "unit": "lb",
-          "yy": "",
-          "day": ""
-        },
-        {
-          "name": "Cocoa",
-          "val": "3205.0",
-          "unit": "t",
-          "yy": "",
-          "day": ""
+          "val": "$292.7500",
+          "yy": "-24.8%",
+          "day": "-1.3%"
         },
         {
           "name": "Sugar #11",
-          "val": "14.37",
           "unit": "lb",
-          "yy": "",
-          "day": ""
-        },
-        {
-          "name": "Cotton",
-          "val": "65.72",
-          "unit": "lb",
-          "yy": "",
-          "day": ""
+          "val": "$14.3700",
+          "yy": "-28.0%",
+          "day": "-0.1%"
         }
       ]
     },
     {
       "category": "Agriculture - Oils & Meals",
+      "color": "text-green-600",
       "items": [
         {
           "name": "Soybean Oil",
-          "val": "66.74",
           "unit": "lb",
-          "yy": "",
-          "day": ""
+          "val": "$66.7400",
+          "yy": "+58.5%",
+          "day": "-0.9%"
         },
         {
           "name": "Soybean Meal",
-          "val": "317.3",
           "unit": "ton",
-          "yy": "",
-          "day": ""
-        }
-      ]
-    },
-    {
-      "category": "Forest Products",
-      "items": [
-        {
-          "name": "Lumber",
-          "val": "384.9",
-          "unit": "MBF",
-          "yy": "",
-          "day": ""
+          "val": "$317.30",
+          "yy": "+4.3%",
+          "day": "-0.8%"
         }
       ]
     }
   ],
+  "financialMarkets": {
+    "indices": [
+      {
+        "name": "TSX Composite",
+        "value": "32,542",
+        "day": "-0.91%",
+        "yy": "+34.5%",
+        "region": "Canada"
+      },
+      {
+        "name": "Dow Jones",
+        "value": "46,558",
+        "day": "-0.26%",
+        "yy": "+12.2%",
+        "region": "USA"
+      },
+      {
+        "name": "FTSE 100",
+        "value": "10,261",
+        "day": "-0.43%",
+        "yy": "+20.1%",
+        "region": "UK"
+      }
+    ],
+    "fx": [
+      {
+        "name": "EUR/USD",
+        "value": "1.14",
+        "day": "-0.63%",
+        "yy": "+5.2%"
+      },
+      {
+        "name": "USD/JPY",
+        "value": "159.57",
+        "day": "+0.23%",
+        "yy": "+7.4%"
+      }
+    ]
+  },
   "yieldCurve": [
     {
       "term": "2Y",
-      "yield": "2.82"
+      "yield": "2.82%",
+      "highlight": true
+    },
+    {
+      "term": "3Y",
+      "yield": "2.88%",
+      "highlight": false
     },
     {
       "term": "5Y",
-      "yield": "3.09"
+      "yield": "3.09%",
+      "highlight": false
+    },
+    {
+      "term": "7Y",
+      "yield": "3.31%",
+      "highlight": false
     },
     {
       "term": "10Y",
-      "yield": "3.52"
+      "yield": "3.52%",
+      "highlight": true
+    },
+    {
+      "term": "Long",
+      "yield": "3.96%",
+      "highlight": false
     }
   ],
+  "charts": {
+    "yieldCurveCurrent": [
+      2.82,
+      2.88,
+      3.09,
+      3.31,
+      3.52,
+      3.96
+    ],
+    "yieldCurveLastYear": [
+      2.56,
+      2.57,
+      2.72,
+      2.88,
+      3.06,
+      3.3
+    ]
+  },
+  "metrics": {
+    "bocRate": "2.25%",
+    "cpi": "+2.3%",
+    "unemployment": "6.7%",
+    "housingStarts": "238,049",
+    "realGdp": "-0.6%"
+  },
+  "indicatorSources": {
+    "bocRate": "BoC",
+    "cpi": "StatCan",
+    "unemployment": "StatCan",
+    "housingStarts": "CMHC",
+    "realGdp": "StatCan",
+    "shelterCpi": "StatCan",
+    "nomGdp": "N/A",
+    "outputGap": "N/A",
+    "participation": "N/A",
+    "wageGrowth": "N/A",
+    "currentAccount": "N/A",
+    "agCrop": "N/A",
+    "farmCash": "N/A"
+  },
+  "indicatorMeta": {
+    "cpi": {
+      "prev": "+2.4%",
+      "change": "-0.1pp",
+      "period": "Jan 2026",
+      "obsDate": "2026-01-01",
+      "source": "StatCan",
+      "context": ""
+    },
+    "unemployment": {
+      "prev": "6.5%",
+      "change": "+0.2pp",
+      "period": "Feb 2026",
+      "obsDate": "2026-02-01",
+      "source": "StatCan",
+      "context": ""
+    },
+    "bocRate": {
+      "prev": "2.25%",
+      "change": "+0.0pp",
+      "period": "Mar 2026",
+      "obsDate": "2026-03-11",
+      "source": "BoC",
+      "context": ""
+    },
+    "housingStarts": {
+      "prev": "",
+      "change": "",
+      "period": "",
+      "obsDate": "",
+      "source": "CMHC",
+      "context": ""
+    }
+  },
+  "edition": "EDITION: MAR 08 – MAR 15 // STATUS: AI-SYNTHESIZED",
+  "updated_at": "2026-03-15",
+  "id": 9,
+  "week_of": "2026-03-16",
+  "generated_at": "2026-03-16T03:30:04Z",
   "infographic_directives": [
     {
       "type": "horizontal_bar",
