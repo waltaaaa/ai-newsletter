@@ -967,7 +967,7 @@ async function renderCanadaSub(){
   const natSources=(D&&D.national&&D.national.sources)||[];
   const panel=buildIndicatorPanel('Canada \u2014 National',natIndicators,'natTopMoverChart');
 
-  let secHtml='<div class="ed-section"><div class="ed-section-title">Macro Pulse</div><div class="ed-section-subtitle">Key indicators and national analysis</div></div>';
+  let secHtml='';
   secHtml+=panel.html;
   if(natContent){
     secHtml+=san(linkFootnotes(natContent,natSources.length?natSources:(D&&D.sources||[])));
@@ -1815,7 +1815,7 @@ async function renderProvinceContent(){
   const provSources=provData.sources||[];
   const panel=buildIndicatorPanel(prov.name,provIndicators,'provTopMoverChart');
 
-  let secHtml='<div class="ed-section"><div class="ed-section-title">Analysis</div><div class="ed-section-subtitle">'+prov.name+' economic conditions and capital activity</div></div>';
+  let secHtml='';
   secHtml+=panel.html;
   if(provContent){
     secHtml+=san(linkFootnotes(provContent,provSources.length?provSources:(D&&D.sources||[])));
