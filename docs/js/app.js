@@ -135,11 +135,11 @@ async function switchEdition(editionId){
   Object.values(charts).forEach(c=>{if(c&&c.destroy)c.destroy()});charts={};
   // Static mode: only latest briefing is available as full content
   await loadNewsletter();
-  try{renderTab('overview');tabRendered.overview=true}catch(e){console.error('renderOverview:',e)}
+  try{renderTab('tldr');tabRendered.tldr=true}catch(e){console.error('renderTLDR:',e)}
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
   $('navMeta').textContent=edStr||'Latest Edition';
   const activeTab=document.querySelector('.nav-tab.active');
-  if(activeTab&&activeTab.dataset.tab!=='overview'){renderTab(activeTab.dataset.tab);tabRendered[activeTab.dataset.tab]=true}
+  if(activeTab&&activeTab.dataset.tab!=='tldr'){renderTab(activeTab.dataset.tab);tabRendered[activeTab.dataset.tab]=true}
   loadEditionList();
 }
 async function loadIndicators(){
@@ -205,9 +205,9 @@ async function loadAll(){
     await Promise.all([loadNewsletter(),loadIndicators()]);
   }catch(e){console.error('loadAll data fetch:',e)}
   try{
-    renderTab('overview');tabRendered.overview=true;
+    renderTab('tldr');tabRendered.tldr=true;
   }catch(e){
-    console.error('renderOverview:',e);
+    console.error('renderTLDR:',e);
     $('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">Error rendering: '+e.message+'</div></div>';
   }
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
@@ -223,7 +223,8 @@ $('editionList').addEventListener('click',e=>e.stopPropagation());
 /* ── Render Router ── */
 function renderTab(id){
   switch(id){
-    case'overview':renderOverview();renderIndicatorExplorer();break;
+    case'tldr':renderTLDR();break;
+    case'national':renderNational();break;
     case'provinces':renderProvinces();break;
     case'industries':renderIndustries();break;
     case'markets':renderMarkets();break;
@@ -248,51 +249,75 @@ function sourcesFooter(sources,containerId){
   return html+'</div>';
 }
 
-/* ══ OVERVIEW TAB ══ */
-function renderOverview(){
+/* ══ TL;DR TAB (Newsletter Digest) ══ */
+function renderTLDR(){
   const hasBriefing=D&&D.executive_summary;
-  // Executive Summary — show briefing content or a status message
+  // Executive Summary — newsletter hero
   if(hasBriefing){
-    $('execSummary').innerHTML=`<div class="card fade-in"><div class="card-header">TL;DR</div><div class="card-body">${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div></div>`;
+    const headline=(D.headline||D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim();
+    let metaHtml='';
+    // Build quick-stat callouts from briefing data
+    const projCount=D.discovery_stats?D.discovery_stats.total_projects||'':D.project_count||'';
+    const newProj=D.discovery_stats?D.discovery_stats.new_this_week||'':D.new_projects||'';
+    const pipeVal=D.discovery_stats?D.discovery_stats.total_value_billions||'':D.pipeline_value||'';
+    if(projCount||newProj||pipeVal){
+      metaHtml='<div class="hero-meta">';
+      if(projCount)metaHtml+='<div class="hero-meta-item"><strong>'+projCount+'</strong>Projects Tracked</div>';
+      if(newProj)metaHtml+='<div class="hero-meta-item"><strong>+'+newProj+'</strong>New This Week</div>';
+      if(pipeVal)metaHtml+='<div class="hero-meta-item"><strong>$'+pipeVal+'B</strong>Pipeline Value</div>';
+      metaHtml+='</div>';
+    }
+    $('execSummary').innerHTML=`<div class="newsletter-hero fade-in">${headline?'<div class="hero-headline">'+san(headline)+'</div>':''}<div class="hero-prose">${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div>${metaHtml}</div>`;
   }else{
     const indCount=indicators.length;
-    $('execSummary').innerHTML=`<div class="card fade-in" style="padding:24px;text-align:center"><div style="color:var(--text-secondary);font-size:var(--text-sm)">Weekly briefing pending. ${indCount} indicators loaded from primary sources.</div></div>`;
+    $('execSummary').innerHTML=`<div class="newsletter-hero fade-in" style="text-align:center"><div style="color:#5a6a85;font-size:var(--text-sm)">Weekly briefing pending. ${indCount} indicators loaded from primary sources.</div></div>`;
   }
   // Key Indicators — always render from indicators[] data
   renderKeyIndicators();
+  // Infographics
+  renderInfographics();
   // National Analysis
   if(hasBriefing){
     const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
     const natSources=(D.national&&D.national.sources)||[];
     $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(linkFootnotes(natContent,natSources.length?natSources:(D.sources||[])))}</div>${sourcesFooter(natSources)}</div>`;
   }else{$('nationalAnalysis').innerHTML=''}
-  // Sentiment
-  if(D)renderSentiment();
-  // Global Vectors
-  if(D)renderGlobalVectors();
-  // Trend Summary
-  renderTrendSummary();
-  // Async sections (non-blocking)
+  // Under the Microscope
   renderMicroscope();
-  renderPipelineStatus();
-  renderCostMonitor();
+  // Weekly Briefing
+  renderTrendSummary();
+  // Microscope History
   renderMicroscopeHistory();
-  renderPolicySection();
-  // Infographics
-  renderInfographics();
   // Sources
   $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
   // Collapse empty sections
   setTimeout(collapseEmpty,200);
 }
+
+/* ══ NATIONAL PICTURE TAB ══ */
+function renderNational(){
+  // Global Vectors
+  if(D)renderGlobalVectors();
+  // Consumer Sentiment
+  if(D)renderSentiment();
+  // Policy Monitor
+  renderPolicySection();
+  // Full Indicator Explorer
+  renderIndicatorExplorer();
+  // Pipeline Status & Cost
+  renderPipelineStatus();
+  renderCostMonitor();
+}
 function collapseEmpty(){
-  const panel=document.getElementById('tab-overview');
+  const panel=document.getElementById('tab-tldr');
   if(!panel)return;
-  panel.querySelectorAll(':scope > section, :scope > div[id]').forEach(el=>{
-    if(!el.innerHTML.trim())el.style.display='none';
-    else el.style.display='';
+  // Collapse empty newsletter sections
+  panel.querySelectorAll(':scope > .newsletter-section').forEach(sec=>{
+    const content=[...sec.querySelectorAll('div[id], section')];
+    const allEmpty=content.every(c=>!c.innerHTML.trim());
+    sec.style.display=allEmpty?'none':'';
   });
-  panel.querySelectorAll(':scope > .ws-row').forEach(row=>{
+  panel.querySelectorAll('.ws-row').forEach(row=>{
     const kids=[...row.children];
     const allEmpty=kids.every(c=>!c.innerHTML.trim());
     row.style.display=allEmpty?'none':'';
@@ -518,7 +543,6 @@ function renderKeyIndicators(){
   strip+=renderIndicatorDropdown(indicators,'All Indicators');
   $('keyIndicators').innerHTML=strip;
   sparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
-  renderIndicatorExplorer();
 }
 
 
@@ -2072,7 +2096,7 @@ window._doVcodeSearch=function(cat){
 
 /* ====== INITIALIZATION ====== */
 // Module scripts are deferred — DOM is already ready, run immediately
-$('execSummary').innerHTML='<div class="card">'+skeleton(4)+'</div>';
+$('execSummary').innerHTML='<div class="newsletter-hero" style="padding:28px 32px">'+skeleton(4)+'</div>';
 $('nationalAnalysis').innerHTML='<div class="card">'+skeleton(3)+'</div>';
 $('keyIndicators').innerHTML='<div class="indicator-strip">'+Array(7).fill('<div class="skeleton sk-pill"></div>').join('')+'</div>';
 // Section-level skeleton placeholders while async sections load
