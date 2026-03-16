@@ -336,166 +336,287 @@ async function renderEditorialFlow(){
   // Executive summary — convert bullets to paragraphs
   const execHtml=bulletsToParas(san(linkFootnotes((D.executive_summary)||'',((D.sources)||[]))));
 
-  // Microscope
-  let microHtml='';
-  try{
-    const data=await fetchJSON('microscope.json');
-    const m=(data&&data.current)||data||{};
-    if(m&&m.topic&&m.text){
-      const sectors=(m.affected_sectors||[]).map(s=>'<span class="editorial-sector-tag">'+s+'</span>').join(' ');
-      const weeksNote=m.weeks_running?' &middot; Week '+m.weeks_running+' of coverage':'';
-      microHtml=`<div class="ed-section"><div class="ed-section-title">Under the Microscope: ${m.topic||''}</div><div class="ed-section-sub">${sectors}${weeksNote}</div></div>${bulletsToParas(san(m.text||m.analysis||''))}`;
-    }
-  }catch(e){console.warn('Microscope JSON:',e)}
-
-  // National analysis
-  let nationalHtml='';
-  if(D.national&&D.national.analysis){
-    nationalHtml=`<div class="ed-section"><div class="ed-section-title">National Analysis</div></div>${bulletsToParas(san(linkFootnotes(D.national.analysis,(D.sources||[]))))}`;
-  }
+  // Unsplash or lead image
+  const imgUrl=D.unsplash_image_url||findLeadImage(D.sources||[]);
+  const imgHtml=imgUrl?`<img src="${san(imgUrl)}" alt="" class="ed-unsplash-img" onerror="this.style.display='none'" loading="lazy">`:'';
 
   // Consumer pulse
   let pulseHtml='';
   if(D.consumer_pulse){
-    pulseHtml=`<div class="ed-section"><div class="ed-section-title">Consumer Pulse</div></div>${bulletsToParas(san(D.consumer_pulse))}`;
+    pulseHtml=bulletsToParas(san(D.consumer_pulse));
   }
 
   // Industry summary
   let industryHtml='';
   if(D.industry_executive_summary){
-    industryHtml=`<div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>${bulletsToParas(san(D.industry_executive_summary))}`;
+    industryHtml=bulletsToParas(san(D.industry_executive_summary));
   }
 
-  // Briefing narrative
-  let briefHtml='';
-  try{
-    const briefing=await fetchJSON('briefing_latest.json');
-    const narrative=(briefing&&briefing.content)||'';
-    if(narrative){
-      const pdfUrl=(briefing.pdf_url)||'';const docxUrl=(briefing.docx_url)||'';
-      const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:16px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#EC4899;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#3B82F6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
-      briefHtml=`<div class="ed-section"><div class="ed-section-title">Weekly Briefing</div></div>${dlBtns}${bulletsToParas(san(narrative))}`;
-    }
-  }catch(e){console.warn('Briefing:',e)}
+  // Word cloud topics
+  const wcTopics=(D.word_cloud_topics&&D.word_cloud_topics.length)?D.word_cloud_topics:extractTopicsFromText();
 
-  // Pull quotes
-  const ki=(D.key_indicators)||[];
-  const pqItems=ki.filter(k=>k.change&&k.change.trim()).slice(0,2);
-  let pq1='',pq2='';
-  if(pqItems[0])pq1=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[0].label}</div>${pqItems[0].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[0].change})</span></div>`;
-  if(pqItems[1])pq2=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[1].label}</div>${pqItems[1].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[1].change})</span></div>`;
-
-  // Build Canada map infographic — D3 rendered from real TopoJSON
-  let mapHtml='';
-  try{
-    const projData=await fetchJSON('projects_all.json');
-    const projects=Array.isArray(projData)?projData:[];
-    if(projects.length>10){
-      const byCnt={};const byVal={};
-      projects.forEach(p=>{const pv=normProvince(p.province);if(pv){byCnt[pv]=(byCnt[pv]||0)+1;byVal[pv]=(byVal[pv]||0)+parseNumericValue(p.value)}});
-      const maxCnt=Math.max(...Object.values(byCnt),1);
-      const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$'+Math.round(v);
-      // Province stats for sidebar
-      const topProvs=Object.entries(byCnt).sort((a,b)=>b[1]-a[1]).slice(0,6);
-      let statsHtml='';
-      topProvs.forEach(([code,cnt])=>{
-        const val=byVal[code]||0;
-        const pName=PROVS.find(p=>p.code===code);
-        const pct=Math.round(cnt/maxCnt*100);
-        statsHtml+=`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px"><span style="font-weight:600;color:#0f1b33;font-size:var(--text-sm)">${pName?pName.name:code}</span><span style="font-family:var(--font-mono);font-size:var(--text-xs);color:#475569">${cnt} &middot; ${fv(val)}</span></div><div style="height:4px;background:rgba(0,0,0,0.04);border-radius:2px"><div style="height:100%;width:${pct}%;background:#2563EB;border-radius:2px;opacity:0.7"></div></div></div>`;
-      });
-
-      mapHtml=`<div class="ed-map">
-        <div class="ed-map-chart">
-          <div class="ec-title">Capital Projects by Province</div>
-          <div class="ec-sub">${projects.length} projects across ${Object.keys(byCnt).length} provinces</div>
-          <div id="canadaMapSvg" style="width:100%;min-height:240px"></div>
-          <div class="ed-map-legend"><span><span class="swatch" style="background:rgba(37,99,235,0.10)"></span>Fewer projects</span><span><span class="swatch" style="background:rgba(37,99,235,0.85)"></span>More projects</span></div>
-        </div>
-        <div class="ed-map-stats">
-          <div style="font-family:var(--font-heading);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#64748B;font-weight:600;margin-bottom:8px">Top Provinces</div>
-          ${statsHtml}
-          <div class="ec-source" style="margin-top:auto;padding-top:8px">Source: Pipeline database</div>
-        </div>
-      </div>`;
-
-      // Render D3 map after DOM insertion (deferred)
-      setTimeout(async()=>{
-        try{
-          const ID_TO_CODE={'CA.BC':'BC','CA.AB':'AB','CA.SK':'SK','CA.MB':'MB','CA.ON':'ON','CA.QC':'QC','CA.NB':'NB','CA.NS':'NS','CA.NF':'NL','CA.PE':'PE','CA.YT':'YT','CA.NT':'NT','CA.NU':'NU'};
-          const resp=await fetch('https://raw.githubusercontent.com/markmarkoh/datamaps/master/src/js/data/can.topo.json');
-          const topo=await resp.json();
-          const geojson=topojson.feature(topo,topo.objects.can);
-          const container=document.getElementById('canadaMapSvg');
-          if(!container)return;
-          const w=container.clientWidth||500;const h=Math.min(w*0.65,320);
-          const projection=d3.geoConicConformal().rotate([96,-1,0]).center([0,62]).parallels([49,77]).scale(w*0.55).translate([w/2,h/2]);
-          const path=d3.geoPath().projection(projection);
-          const svg=d3.select(container).append('svg').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`).attr('preserveAspectRatio','xMidYMid meet');
-          // Background
-          svg.append('rect').attr('width',w).attr('height',h).attr('fill','#F8FAFF').attr('rx',8);
-          // Province paths
-          svg.selectAll('path').data(geojson.features.filter(f=>f.id&&f.id!=='-99')).enter().append('path')
-            .attr('d',path)
-            .attr('fill',f=>{const code=ID_TO_CODE[f.id]||'';const n=byCnt[code]||0;const t=Math.min(n/maxCnt,1);return`rgba(37,99,235,${(0.08+0.92*t).toFixed(2)})`})
-            .attr('stroke','#fff').attr('stroke-width',1).attr('stroke-linejoin','round')
-            .append('title').text(f=>{const code=ID_TO_CODE[f.id]||f.id;const pName=(PROVS.find(p=>p.code===code)||{}).name||code;return pName+': '+(byCnt[code]||0)+' projects'});
-          // Labels for provinces with data
-          const CENTROIDS={BC:[-125,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,52],NB:[-66,47],NS:[-63,45],NL:[-57,53],PE:[-63,46.5],YT:[-136,63],NT:[-120,64],NU:[-95,67]};
-          Object.entries(byCnt).sort((a,b)=>b[1]-a[1]).forEach(([code,cnt])=>{
-            const c=CENTROIDS[code];if(!c)return;
-            const pt=projection(c);if(!pt)return;
-            const val=byVal[code]||0;
-            svg.append('text').attr('x',pt[0]).attr('y',pt[1]).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',11).attr('font-weight',700).attr('fill','#0f1b33').text(code);
-            svg.append('text').attr('x',pt[0]).attr('y',pt[1]+13).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',9).attr('fill','#475569').text(cnt+' proj');
-            if(val>1e6)svg.append('text').attr('x',pt[0]).attr('y',pt[1]+24).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',8.5).attr('font-weight',600).attr('fill','#2563EB').text(fv(val));
-          });
-        }catch(e){console.warn('Canada map render:',e)}
-      },100);
-    }
-  }catch(e){console.warn('Map data:',e)}
-
-  // Assemble — each section: clear, header on left, chart floats right, text wraps
+  // Assemble — 4 sections: Overview, Industry, Markets, Consumer Pulse
   flow.innerHTML=`
-    <div class="ed-chart-inline" id="tldrMacroCard">
-      <div class="ec-title">Macro Pulse</div><div class="ec-sub">Key indicators — current vs. previous</div>
-      <div style="height:180px;position:relative"><canvas id="tldrMacroChart"></canvas></div>
-      <div class="ec-source">Statistics Canada, Bank of Canada</div>
-    </div>
+    <div id="tldrMapSection"></div>
+    ${imgHtml}
     ${execHtml}
     <div class="ed-clear"></div>
-    ${pq1}
-    <div class="editorial-indicators"><section id="keyIndicators"></section></div>
-    <div class="ed-chart-inline" id="tldrCommodityCard">
-      <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
-      <div style="height:180px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
-      <div class="ec-source">Yahoo Finance</div>
-    </div>
+
+    <div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>
     ${industryHtml}
     <div class="ed-clear"></div>
-    ${mapHtml}
-    <div class="ed-chart-inline" id="briefPipelineInline" style="clear:none">
-      <div class="ec-title">Project Pipeline</div><div class="ec-sub">Projects by lifecycle stage</div>
-      <div style="height:180px;position:relative"><canvas id="briefPipelineChart"></canvas></div>
-      <div class="ec-source">Pipeline database</div>
-    </div>
-    ${pulseHtml}
+
+    <div class="ed-section"><div class="ed-section-title">Financial Markets</div></div>
+    <div id="tldrMarketsSection"></div>
     <div class="ed-clear"></div>
-    ${pq2}
-    <div class="ed-chart-inline" id="briefSectorCard">
-      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
-      <div style="height:180px;position:relative"><canvas id="briefSectorChart"></canvas></div>
-      <div class="ec-source">Pipeline database</div>
-    </div>
+
+    <div class="ed-section"><div class="ed-section-title">Consumer Pulse</div></div>
+    ${pulseHtml}
+    <div id="tldrWordCloud" class="ed-wordcloud"></div>
     <div class="ed-clear"></div>
   `;
-  renderKeyIndicators();
-  await renderWovenCharts('tldr');
-  await renderWovenCharts('brief');
+  await renderInteractiveMap();
+  renderTLDRMarkets();
+  if(wcTopics.length) renderTLDRWordCloud(wcTopics,'tldrWordCloud');
   }catch(e){
     console.error('renderEditorialFlow error:',e);
     flow.innerHTML='<div style="padding:24px;color:#991B1B;font-size:var(--text-sm)">Error rendering editorial flow: '+e.message+'</div>';
   }
+}
+
+/* ── Provincial indicator lookup for map ── */
+function getProvIndicators(){
+  const data={};
+  const FULL_TO_CODE={'Alberta':'AB','British Columbia':'BC','Manitoba':'MB','New Brunswick':'NB',
+    'Newfoundland and Labrador':'NL','Nova Scotia':'NS','Ontario':'ON','Prince Edward Island':'PE',
+    'Quebec':'QC','Québec':'QC','Saskatchewan':'SK','Northwest Territories':'NT','Nunavut':'NU','Yukon':'YT'};
+  indicators.forEach(ind=>{
+    const name=ind.indicator_name;
+    if(!['gdp','unemployment','cpi','housingStarts','unemployment_prev','cpi_prev'].includes(name))return;
+    let prov=ind.province;
+    if(FULL_TO_CODE[prov])prov=FULL_TO_CODE[prov];
+    else if(NAME_TO_CODE[prov])prov=NAME_TO_CODE[prov];
+    else return;
+    if(prov.toLowerCase()==='national'||prov.toLowerCase()==='global')return;
+    if(!data[prov])data[prov]={};
+    // Keep latest by period
+    const existing=data[prov]['_'+name+'_period']||'';
+    if(ind.period>=existing){
+      data[prov][name]=ind.value;
+      data[prov]['_'+name+'_period']=ind.period;
+    }
+  });
+  return data;
+}
+
+/* ── Interactive Canada Map with GDP choropleth + hover tooltips ── */
+async function renderInteractiveMap(){
+  const container=$('tldrMapSection');
+  if(!container)return;
+  const provData=getProvIndicators();
+  // National stat boxes
+  const ki=(D&&D.key_indicators)||[];
+  const m=(D&&D.metrics)||{};
+  const findKI=(label)=>{const item=ki.find(k=>k.label===label);return item?{value:item.value,change:item.change}:{value:'N/A',change:''}};
+  const stats=[
+    {label:'Real GDP',value:m.realGdp||'N/A',change:''},
+    {label:'Unemployment',value:findKI('UNEMPLOYMENT').value,change:findKI('UNEMPLOYMENT').change},
+    {label:'Employment',value:findKI('EMPLOYMENT').value,change:findKI('EMPLOYMENT').change},
+    {label:'Participation',value:m.participation||'N/A',change:''},
+    {label:'Wage Growth',value:m.wageGrowth||'N/A',change:''},
+    {label:'Trade Balance',value:findKI('TRADE BALANCE').value,change:findKI('TRADE BALANCE').change}
+  ];
+  let statsHtml='<div class="ed-stat-grid">';
+  stats.forEach(s=>{
+    const chgCls=s.change?(s.change.startsWith('-')||s.change.startsWith('\u2212')?'change-down':'change-up'):'';
+    statsHtml+=`<div class="ed-stat-box"><div class="ed-stat-label">${s.label}</div><div class="ed-stat-value">${s.value}</div>${s.change?`<div class="ed-stat-change ${chgCls}">${s.change}</div>`:''}`;
+    statsHtml+='</div>';
+  });
+  statsHtml+='</div>';
+
+  // Map container
+  container.innerHTML=`<div class="ed-map" style="position:relative">
+    <div class="ed-map-chart" style="flex:1">
+      ${statsHtml}
+      <div class="ec-title">Economic Indicators by Province</div>
+      <div class="ec-sub">Shaded by Real GDP growth &middot; Hover for details</div>
+      <div id="canadaMapSvg" style="width:100%;min-height:280px"></div>
+      <div class="ed-map-legend"><span><span class="swatch" style="background:rgba(37,99,235,0.15)"></span>Lower GDP growth</span><span><span class="swatch" style="background:rgba(37,99,235,0.90)"></span>Higher GDP growth</span></div>
+      <div class="ec-source">Statistics Canada, Provincial Accounts</div>
+    </div>
+    <div class="ed-map-tooltip" id="mapTooltip"></div>
+  </div>`;
+
+  // Render D3 map
+  setTimeout(async()=>{
+    try{
+      let topo;
+      try{
+        const resp=await fetch('data/canada-provinces.topo.json');
+        topo=await resp.json();
+      }catch(e){
+        console.warn('Local TopoJSON failed, falling back:',e);
+        const resp=await fetch('https://raw.githubusercontent.com/markmarkoh/datamaps/master/src/js/data/can.topo.json');
+        topo=await resp.json();
+      }
+      const objKey=Object.keys(topo.objects)[0];
+      const geojson=topojson.feature(topo,topo.objects[objKey]);
+      const mapDiv=document.getElementById('canadaMapSvg');
+      if(!mapDiv)return;
+      const w=mapDiv.clientWidth||500;const h=Math.min(w*0.65,340);
+      const projection=d3.geoConicConformal().rotate([96,-1,0]).center([0,62]).parallels([49,77]).scale(w*0.55).translate([w/2,h/2]);
+      const path=d3.geoPath().projection(projection);
+
+      // Parse GDP values for choropleth
+      const gdpVals={};
+      Object.entries(provData).forEach(([code,d])=>{
+        if(d.gdp){
+          const v=parseFloat(String(d.gdp).replace(/[+%]/g,''));
+          if(!isNaN(v))gdpVals[code]=v;
+        }
+      });
+      const gdpRange=Object.values(gdpVals);
+      const minGDP=gdpRange.length?Math.min(...gdpRange):0;
+      const maxGDP=gdpRange.length?Math.max(...gdpRange):5;
+      const colorScale=d3.scaleLinear().domain([minGDP,maxGDP]).range([0.15,0.90]).clamp(true);
+
+      // Province code from feature properties
+      function featureCode(f){
+        const p=f.properties||{};
+        if(p.postal)return p.postal;
+        if(p.iso_3166_2)return p.iso_3166_2.replace('CA-','');
+        if(p.name&&NAME_TO_CODE[p.name])return NAME_TO_CODE[p.name];
+        // Fallback for datamaps format
+        const idMap={'CA.BC':'BC','CA.AB':'AB','CA.SK':'SK','CA.MB':'MB','CA.ON':'ON','CA.QC':'QC','CA.NB':'NB','CA.NS':'NS','CA.NF':'NL','CA.PE':'PE','CA.YT':'YT','CA.NT':'NT','CA.NU':'NU'};
+        return idMap[f.id]||'';
+      }
+
+      const svg=d3.select(mapDiv).append('svg').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`).attr('preserveAspectRatio','xMidYMid meet');
+      svg.append('rect').attr('width',w).attr('height',h).attr('fill','#F8FAFF').attr('rx',8);
+
+      const tooltip=document.getElementById('mapTooltip');
+
+      svg.selectAll('path').data(geojson.features).enter().append('path')
+        .attr('d',path)
+        .attr('fill',f=>{
+          const code=featureCode(f);
+          const gdp=gdpVals[code];
+          if(gdp===undefined)return'#E2E8F0';
+          return`rgba(37,99,235,${colorScale(gdp).toFixed(2)})`;
+        })
+        .attr('stroke','#fff').attr('stroke-width',1).attr('stroke-linejoin','round')
+        .style('cursor','pointer')
+        .on('mouseover',function(event,f){
+          d3.select(this).attr('stroke','#1a2744').attr('stroke-width',2);
+          const code=featureCode(f);
+          const pName=(PROVS.find(p=>p.code===code)||{}).name||code;
+          const pd=provData[code]||{};
+          let rows='';
+          if(pd.gdp)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
+          if(pd.unemployment)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}${pd.unemployment_prev?' (prev '+pd.unemployment_prev+')':''}</span></div>`;
+          if(pd.cpi)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI</span><span class="ed-map-tooltip-value">${pd.cpi}${pd.cpi_prev?' (prev '+pd.cpi_prev+')':''}</span></div>`;
+          if(pd.housingStarts)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
+          if(!rows)rows='<div style="color:rgba(255,255,255,0.5)">No data available</div>';
+          tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${rows}`;
+          tooltip.classList.add('visible');
+        })
+        .on('mousemove',function(event){
+          const rect=container.getBoundingClientRect();
+          const x=event.clientX-rect.left+12;
+          const y=event.clientY-rect.top-10;
+          tooltip.style.left=Math.min(x,rect.width-220)+'px';
+          tooltip.style.top=y+'px';
+        })
+        .on('mouseout',function(){
+          d3.select(this).attr('stroke','#fff').attr('stroke-width',1);
+          tooltip.classList.remove('visible');
+        });
+
+      // Province labels — code + GDP for provinces with data
+      const CENTROIDS={BC:[-125,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,52],NB:[-66,47],NS:[-63,45],NL:[-57,53],PE:[-63,46.5],YT:[-136,63],NT:[-120,64],NU:[-95,67]};
+      Object.entries(gdpVals).sort((a,b)=>b[1]-a[1]).forEach(([code,gdp])=>{
+        const c=CENTROIDS[code];if(!c)return;
+        const pt=projection(c);if(!pt)return;
+        svg.append('text').attr('x',pt[0]).attr('y',pt[1]).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',11).attr('font-weight',700).attr('fill','#0f1b33').text(code);
+        svg.append('text').attr('x',pt[0]).attr('y',pt[1]+13).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',9).attr('font-weight',600).attr('fill','#2563EB').text((gdp>0?'+':'')+gdp.toFixed(1)+'%');
+      });
+    }catch(e){console.warn('Canada map render:',e)}
+  },100);
+}
+
+/* ── TLDR Word Cloud (theme blues) ── */
+function renderTLDRWordCloud(topics,containerId){
+  const container=document.getElementById(containerId);
+  if(!container||!topics||!topics.length)return;
+  const w=container.clientWidth||500,h=250;
+  container.innerHTML='';
+  const blues=['#1e40af','#2563EB','#3b82f6','#4B6CB7','#60A5FA','#6B8DD6','#93c5fd'];
+  const maxFreq=Math.max(...topics.map(t=>t.frequency||t.count||1));
+  const sorted=[...topics].sort((a,b)=>(b.frequency||b.count||1)-(a.frequency||a.count||1));
+  const words=sorted.slice(0,40).map((t,i)=>{
+    const freq=t.frequency||t.count||1;
+    return{text:t.topic||t.word||'',size:14+((freq/maxFreq)*38),freq,colorIdx:Math.min(Math.floor(i/6),blues.length-1)};
+  });
+  const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Outfit').fontSize(d=>d.size).on('end',drawn);
+  layout.start();
+  function drawn(wds){
+    const svg=d3.select(container).append('svg').attr('width',w).attr('height',h);
+    const g=svg.append('g').attr('transform','translate('+w/2+','+h/2+')');
+    g.selectAll('text').data(wds).enter().append('text')
+      .style('font-size',d=>d.size+'px').style('font-family','Outfit')
+      .style('font-weight',d=>d.size>35?'700':d.size>25?'600':'500')
+      .style('fill',d=>blues[d.colorIdx])
+      .style('opacity',d=>0.55+Math.min(d.size/52,0.45))
+      .attr('text-anchor','middle').attr('transform',d=>'translate('+d.x+','+d.y+')')
+      .text(d=>d.text)
+      .append('title').text(d=>d.text+' (frequency: '+d.freq+')');
+  }
+}
+
+/* ── TLDR Financial Markets section ── */
+function renderTLDRMarkets(){
+  const el=$('tldrMarketsSection');
+  if(!el)return;
+  const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
+  let indices=fm.indices||[];let fx=fm.fx||[];
+  // Build from indicators if needed
+  if(!indices.length&&indicators.length){
+    const idxMap=[{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'}];
+    idxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:''})});
+  }
+  if(!fx.length&&indicators.length){
+    const fxMap=[{name:'CAD/USD',ind:'cadusd'},{name:'CAD/USD',ind:'cad_usd'}];
+    fxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!fx.find(x=>x.name===m.name))fx.push({name:m.name,value:i.value})});
+  }
+  // Add key commodities
+  const commItems=[];
+  const commMap=[{name:'WTI',ind:'wti'},{name:'WTI',ind:'wti_oil'},{name:'Gold',ind:'gold'},{name:'Nat Gas',ind:'natural_gas'}];
+  commMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!commItems.find(x=>x.name===m.name))commItems.push({name:m.name,value:i.value,change:''})});
+
+  const all=[...indices.slice(0,2),...fx.slice(0,1),...commItems.slice(0,3)];
+  if(!all.length){el.innerHTML='<div style="color:#475569;font-size:var(--text-sm)">Markets data pending.</div>';return}
+
+  // Brief narrative
+  const tsx=indices.find(x=>x.name&&x.name.includes('TSX'));
+  const cad=fx.find(x=>x.name&&x.name.includes('CAD'));
+  const wti=commItems.find(x=>x.name==='WTI');
+  let narrative='';
+  if(tsx)narrative+=`The S&P/TSX traded at ${tsx.value||'N/A'}${tsx.change?' ('+tsx.change+')':''}. `;
+  if(cad)narrative+=`The Canadian dollar traded at ${cad.value||'N/A'} against the U.S. dollar. `;
+  if(wti)narrative+=`WTI crude at US$${wti.value||'N/A'}/bbl.`;
+  if(narrative)narrative=`<p style="margin-bottom:12px">${narrative}</p>`;
+
+  // Grid
+  let gridHtml='<div class="ed-markets-grid">';
+  all.forEach(item=>{
+    const chg=item.change||item.day||'';
+    const isNeg=chg.startsWith('-');
+    const cls=isNeg?'change-down':(chg?'change-up':'');
+    gridHtml+=`<div class="ed-markets-item"><div class="ed-markets-ticker">${item.name||''}</div><div class="ed-markets-price">${item.value||'N/A'}</div>${chg?`<div class="ed-markets-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg}</div>`:''}`;
+    gridHtml+='</div>';
+  });
+  gridHtml+='</div>';
+  el.innerHTML=narrative+gridHtml;
 }
 
 /* ══ NATIONAL TAB (subtabs: Canada + Global Players) ══ */

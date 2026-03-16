@@ -1089,9 +1089,10 @@ RECENT ARTICLES (grouped by industry — cite by article number, use URLs exactl
 
 Write:
 
-1. INDUSTRY EXECUTIVE SUMMARY (2-3 short paragraphs, 150-250 words):
+1. INDUSTRY EXECUTIVE SUMMARY (2-3 short paragraphs, 120-200 words):
 Format as HTML paragraphs: <p>paragraph text</p>
 Be concise — TL;DR style. Lead with the single biggest sectoral story and its key figure. Second paragraph covers the next 2-3 most notable sector movements. Optional third paragraph only for a genuinely significant cross-sector pattern. Cut filler — every sentence must carry a specific data point. NO forecasting, NO "expected to", NO "looking ahead". Every claim backed by <sup>N</sup> citation.
+IMPORTANT: Do NOT repeat developments already covered in the executive summary (Call 1). Focus on sector-specific data points, industry-level trends, and NAICS subsector details not mentioned in the national overview. If a topic was a headline item in the executive summary, reference it briefly and add NEW sector-specific detail rather than restating it.
 
 2. SECTOR ANALYSIS — goodsIndustries: Exactly 5 goods-producing sectors. Per sector: 150 words in bullets. 3-digit NAICS subsector commentary where data supports.
    For each:

@@ -218,6 +218,18 @@ def run(conn, context, logger):
             if sources_with_archives:
                 final_payload['sources'] = sources_with_archives
 
+            # Unsplash curated image for TLDR tab
+            try:
+                from tools.unsplash_image import fetch_unsplash_image
+                headline = final_payload.get('headline', '')
+                if headline:
+                    img_url = fetch_unsplash_image(headline)
+                    if img_url:
+                        final_payload['unsplash_image_url'] = img_url
+                        print(f"  [IMAGE] Unsplash image selected for TLDR")
+            except Exception as e:
+                print(f"  [IMAGE] Unsplash image skipped (non-critical): {e}")
+
             toronto_tz2 = pytz.timezone('America/Toronto')
             today2 = datetime.now(toronto_tz2)
             dated_id = today2.strftime('%Y-%m-%d')
