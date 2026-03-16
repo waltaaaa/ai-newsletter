@@ -340,6 +340,7 @@ async function renderTLDR(){
 }
 async function renderEditorialFlow(){
   const flow=$('editorialFlow');if(!flow){console.error('editorialFlow element not found');return}
+  if(!D){flow.innerHTML='<div style="padding:24px;color:#475569;font-size:var(--text-sm);text-align:center">Awaiting pipeline data.</div>';return}
   try{
   // Build microscope content — try dedicated JSON first, fall back to D fields
   let microHtml='';
@@ -398,7 +399,7 @@ async function renderEditorialFlow(){
       <div style="height:190px;position:relative"><canvas id="tldrMacroChart"></canvas></div>
       <div class="ec-source">Sources: Statistics Canada, Bank of Canada</div>
     </div>
-    ${san(linkFootnotes(D.executive_summary||'',(D.sources||[])))}
+    ${san(linkFootnotes((D&&D.executive_summary)||'',((D&&D.sources)||[])))}
     ${pq1}
     <div class="editorial-indicators"><section id="keyIndicators"></section></div>
     <div class="editorial-chart-right" id="tldrCommodityCard">
