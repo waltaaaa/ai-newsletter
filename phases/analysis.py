@@ -1169,12 +1169,18 @@ Ontario, Quebec, Alberta, British Columbia, Saskatchewan, Manitoba, Nova Scotia,
 
 For EACH:
 a) indicators: Set ALL four fields (gdp, unemployment, cpi, housingStarts) to "" — they will be overwritten from primary data APIs (StatCan) and must not be estimated or hallucinated.
-b) analysis: 5-8 bullets of SPECIFIC events from the past 1-4 weeks. Name events, companies, figures, and dates. Every bullet ends with <sup>N</sup>. Format: <ul class="list-disc list-inside space-y-2 text-slate-700"><li>...</li></ul>
-c) sources: Array matching bullet numbers. id, title (Publication — Article Title, Month YYYY), url (direct link to the publication — REQUIRED, use the publication's homepage if exact article URL unknown).
+b) analysis: 4-6 flowing prose paragraphs (300-450 words per province, shorter paragraphs of 2-4 sentences each — news article style). Format as HTML: <p>paragraph</p>. Write in the style of TD Economics Provincial Economic Forecast.
+   Structure each province's analysis as:
+   - Opening paragraph: Establish current economic performance vs expectations, with key GDP/employment data embedded inline ("grew at an annualized rate of 1.3%", "placing it above the national average").
+   - Sector drivers paragraph: 2-3 key sectors driving or dragging growth, with specific figures woven in ("manufacturing sales rising in two of the last three months", "exports to non-US partners up 20% year-to-date").
+   - Policy/fiscal paragraph: Government spending, capital plans, fiscal position stated factually ("The provincial government's capital plan features a 16% jump in planned outlays").
+   - Forward-looking paragraph: Near-term outlook with conditional framing ("Should tariffs remain at current levels...", "Looking ahead, housing starts are expected to...").
+   Use hedging naturally: "is likely to", "would be expected to", "suggests". Compare to national average where relevant. Use transitions: "On a positive note,", "However,", "Contrary to expectations,", "Looking ahead,". Every claim backed by <sup>N</sup> citation. No bullet points.
+c) sources: Array matching citation numbers. id, title (Publication — Article Title, Month YYYY), url (direct link — REQUIRED, use homepage if exact URL unknown).
 d) projects: 2-4 major capital projects. Each: name, description (1 sentence, max 20 words, names the proponent), sector, value (e.g. "$4.2B"), status (Announced/Approved/Under Construction/Operational/Completed/Cancelled), completionDate (e.g. "2027" or ""), cma (nearest city/CMA), tags (array of 1-3 strings), sources (array with id/title/url).
 
-BAD bullets: "Ontario's economy continues its growth trajectory" / "The sector is seeing significant investment"
-GOOD bullets: "StatCan reported Ontario unemployment rose to 6.8% in March, up from 6.5% in February, driven by layoffs in the Kitchener-Waterloo tech corridor. <sup>1</sup>"
+BAD: "Ontario's economy continues its growth trajectory" / "The sector is seeing significant investment"
+GOOD: "Recent data revisions suggest Ontario had stronger-than-anticipated momentum heading into 2026, underpinning an upgraded real GDP growth forecast. Most notable were positive revisions to business capital spending, which point to a less depressed investment backdrop than initially feared.<sup>1</sup>"
 
 DO NOT discuss stock market movements, equity index levels, or stock performance. Rate changes, yield changes, FX, and bond markets ARE fair game.
 
@@ -1186,7 +1192,7 @@ SCHEMA:
         {{
             "name": "Ontario",
             "indicators": {{"gdp": "+X.X%", "unemployment": "X.X%", "cpi": "+X.X%", "housingStarts": "XX,XXX"}},
-            "analysis": "<ul class=\\"list-disc list-inside space-y-2 text-slate-700\\"><li>specific event with figure and date. <sup>1</sup></li><li>another specific event. <sup>2</sup></li></ul>",
+            "analysis": "<p>Opening paragraph establishing performance with inline data.<sup>1</sup></p><p>Sector drivers with specific figures.<sup>2</sup></p><p>Policy and fiscal context.<sup>3</sup></p><p>Forward-looking outlook with conditional framing.<sup>4</sup></p>",
             "sources": [{{"id": 1, "title": "StatCan — Labour Force Survey, March 2026", "url": "https://..."}}, {{"id": 2, "title": "Globe and Mail — Article Title, March 2026", "url": "https://..."}}],
             "projects": [
                 {{
@@ -1266,15 +1272,15 @@ If no projects found, return: {{"projects": []}}"""
     workers = 5 if _call4b_prompt else 4
     with ThreadPoolExecutor(max_workers=workers) as executor:
         f1 = executor.submit(_call_claude, _call1_prompt, "call1-macro",
-                             max_tokens=12000, model=OPUS_MODEL,
+                             max_tokens=18000, model=OPUS_MODEL,
                              anthropic_client=anthropic_client, cost_state=cost_state,
                              conn=conn, gemini_client=gemini_client)
         f2 = executor.submit(_call_claude, _call2_prompt, "call2-industries",
-                             max_tokens=10000, model=OPUS_MODEL,
+                             max_tokens=15000, model=OPUS_MODEL,
                              anthropic_client=anthropic_client, cost_state=cost_state,
                              conn=conn, gemini_client=gemini_client)
         f3 = executor.submit(_call_claude, _call3_prompt, "call3-provinces",
-                             max_tokens=10000, model=OPUS_MODEL,
+                             max_tokens=15000, model=OPUS_MODEL,
                              anthropic_client=anthropic_client, cost_state=cost_state,
                              conn=conn, gemini_client=gemini_client)
         f4a = executor.submit(_call_claude, _call4a_prompt, "call4a-projects",
