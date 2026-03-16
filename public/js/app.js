@@ -374,12 +374,12 @@ async function renderEditorialFlow(){
     <div class="ed-clear"></div>
 
     <div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>
-    <div class="ed-chart-inline" id="tldrSectorCard">
+    ${industryHtml}
+    <div class="ed-chart-inline" id="tldrSectorCard" style="float:left;margin:0 20px 14px 0">
       <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
       <div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div>
       <div class="ec-source">Pipeline database</div>
     </div>
-    ${industryHtml}
     <div class="ed-clear"></div>
 
     <div class="ed-section"><div class="ed-section-title">Financial Markets</div></div>
