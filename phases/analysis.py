@@ -1212,7 +1212,8 @@ SCHEMA:
     "provinces": [
         {{
             "name": "Ontario",
-            "indicators": {{"gdp": "+X.X%", "unemployment": "X.X%", "cpi": "+X.X%", "housingStarts": "XX,XXX"}},
+            "indicators": {{"gdp": "+X.X%", "unemployment": "X.X%", "cpi": "+X.X%", "housingStarts": "XX,XXX", "participationRate": "XX.X%", "employmentRate": "XX.X%", "buildingPermits": "+X.X%"}},
+            "indicatorMeta": {{"gdp": {{"change": "+X.Xpp vs prior period", "prev": "prior value", "period": "e.g. Q3 2025"}}, "unemployment": {{"change": "+X.Xpp", "prev": "", "period": "e.g. Feb 2026"}}, "cpi": {{"change": "+X.Xpp", "prev": "", "period": ""}}, "housingStarts": {{"change": "+/-XXXX", "prev": "", "period": ""}}, "participationRate": {{"change": "", "prev": "", "period": ""}}, "employmentRate": {{"change": "", "prev": "", "period": ""}}, "buildingPermits": {{"change": "", "prev": "", "period": ""}}}},
             "analysis": "<p>2-3 sentences: latest data release with key figure.<sup>1</sup></p><p>Sector data point.<sup>2</sup></p><p>Second sector.<sup>3</sup></p><p>Policy action or fiscal data.<sup>4</sup></p><p>Project update.<sup>5</sup></p>",
             "sources": [{{"id": 1, "title": "StatCan — Labour Force Survey, March 2026", "url": "https://..."}}, {{"id": 2, "title": "Globe and Mail — Article Title, March 2026", "url": "https://..."}}],
             "projects": [
