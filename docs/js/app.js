@@ -266,13 +266,18 @@ function renderTLDR(){
   // Summary — newsletter hero with content headline
   if(hasBriefing){
     let headline=(D.headline||'').trim();
-    // If no real headline, extract the first strong/bold text or first sentence from exec summary
+    // If no real headline, extract the lead sentence and trim to headline length
     if(!headline||/^\d|^[A-Z]{3}\s\d/.test(headline)){
       const tmp=document.createElement('div');tmp.innerHTML=D.executive_summary||'';
-      const strong=tmp.querySelector('strong,b');
-      if(strong)headline=strong.textContent.trim();
-      else{const txt=tmp.textContent||'';headline=(txt.split(/[.!]\s/)[0]||'Weekly Summary').trim()}
-      if(headline.length>80)headline=headline.substring(0,77)+'...';
+      // Get first <li> text (the lead bullet is the top story)
+      const firstLi=tmp.querySelector('li');
+      const rawText=firstLi?firstLi.textContent.trim():(tmp.textContent||'').trim();
+      // Take the first clause/sentence, strip trailing citation numbers
+      const firstSentence=(rawText.split(/[.!]\s/)[0]||'').replace(/\d+$/,'').trim();
+      // Truncate to headline length, break at last word boundary
+      if(firstSentence.length>90){headline=firstSentence.substring(0,87).replace(/\s\S*$/,'')+'...';}
+      else{headline=firstSentence}
+      if(!headline)headline='Weekly Summary';
     }
     let metaHtml='';
     const projCount=D.discovery_stats?D.discovery_stats.total_projects||'':D.project_count||'';
