@@ -348,7 +348,8 @@ async def generate_infographic_directives(
     and produce chart configurations that visualize the week's main points.
     The frontend renders these dynamically instead of static default charts.
     """
-    from claude_reasoning import reason_with_claude_tracked, SONNET_REASONING_MODEL
+    from claude_reasoning import reason_with_claude_tracked
+    from pipeline_config import SONNET_MODEL as SONNET_REASONING_MODEL
 
     overall = project_trends.get("overall", {}) if project_trends else {}
     momentum = project_trends.get("sector_momentum", {}) if project_trends else {}
