@@ -581,7 +581,7 @@ async function renderInteractiveMap(){
 
       // Province labels — code only, skip Maritimes (shown in inset)
       const insetCodes=new Set(['NB','NS','PE']);
-      const CENTROIDS={BC:[-125,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,52],NL:[-57,53],YT:[-136,63],NT:[-120,64],NU:[-95,67]};
+      const CENTROIDS={BC:[-124,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,53],NL:[-60,53],YT:[-136,63],NT:[-120,65],NU:[-90,70]};
       Object.keys(gdpVals).forEach(code=>{
         if(insetCodes.has(code))return;
         const c=CENTROIDS[code];if(!c)return;
@@ -593,8 +593,8 @@ async function renderInteractiveMap(){
       const maritimeCodes=new Set(['NB','NS','PE']);
       const maritimeFeatures=geojson.features.filter(f=>maritimeCodes.has(featureCode(f)));
       if(maritimeFeatures.length){
-        const iw=Math.round(w*0.28);const ih=Math.round(iw*0.75);
-        const ix=w-iw-6;const iy=6;
+        const iw=Math.round(w*0.26);const ih=Math.round(iw*0.8);
+        const ix=w-iw-4;const iy=Math.round(h*0.38);
         const ig=svg.append('g').attr('class','maritime-inset');
         ig.append('rect').attr('x',ix).attr('y',iy).attr('width',iw).attr('height',ih).attr('fill','#F0F4FF').attr('stroke','rgba(37,99,235,0.25)').attr('stroke-width',1).attr('rx',6);
         ig.append('text').attr('x',ix+iw/2).attr('y',iy+12).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',8).attr('font-weight',600).attr('fill','#64748B').text('Maritimes');
