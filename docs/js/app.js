@@ -2516,9 +2516,10 @@ window._doVcodeSearch=function(cat){
 
 /* ====== INITIALIZATION ====== */
 // Module scripts are deferred — DOM is already ready, run immediately
-$('execSummary').innerHTML='<div class="newsletter-hero" style="padding:28px 32px">'+skeleton(4)+'</div>';
-$('nationalAnalysis').innerHTML='<div class="card">'+skeleton(3)+'</div>';
-$('keyIndicators').innerHTML='<div class="indicator-strip">'+Array(7).fill('<div class="skeleton sk-pill"></div>').join('')+'</div>';
+if($('execSummary'))$('execSummary').innerHTML='<div style="padding:28px 0">'+skeleton(4)+'</div>';
+if($('editorialFlow'))$('editorialFlow').innerHTML=skeleton(6);
+if($('nationalAnalysis'))$('nationalAnalysis').innerHTML='<div class="card">'+skeleton(3)+'</div>';
+if($('keyIndicators'))$('keyIndicators').innerHTML='<div class="indicator-strip">'+Array(7).fill('<div class="skeleton sk-pill"></div>').join('')+'</div>';
 // Section-level skeleton placeholders while async sections load
 if($('pipelineStatus'))$('pipelineStatus').innerHTML='<div class="card">'+skeleton(2)+'</div>';
 if($('costMonitor'))$('costMonitor').innerHTML='<div class="card">'+skeleton(2)+'</div>';
