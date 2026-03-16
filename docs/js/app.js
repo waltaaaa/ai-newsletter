@@ -850,7 +850,7 @@ async function renderNational(){
   renderAllGlobalPlayers();
 }
 /* == Indicator Panel + Infographic helpers == */
-function buildIndicatorPanel(title,indRows,canvasId){
+function buildIndicatorPanel(title,indRows,subtitle){
   // Find top mover
   let topMover=null;let topAbs=0;
   indRows.forEach(r=>{
@@ -861,24 +861,34 @@ function buildIndicatorPanel(title,indRows,canvasId){
   });
   let html='<div class="ed-map" style="position:relative">';
   html+='<div class="ed-stat-header">'+title+'</div>';
+  if(subtitle)html+='<div style="font-size:var(--text-xs);color:#475569;margin:-4px 0 8px;font-style:italic">'+subtitle+'</div>';
   html+='<table class="ed-ind-table"><thead><tr><th>Indicator</th><th style="text-align:right">Value</th><th style="text-align:right">Chg</th></tr></thead><tbody>';
   indRows.forEach(r=>{
     const chg=r.change||'';
     const cls=chg.startsWith('-')||chg.startsWith('\u2212')?'change-down':chg.startsWith('+')?'change-up':'';
     html+='<tr><td class="ind-label">'+r.label+'</td><td class="ind-value">'+r.value+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td></tr>';
   });
-  html+='</tbody></table>';
-  // Infographic area
-  const moverLabel=topMover?topMover.label:'Macro Pulse';
-  const moverSub=topMover?(topMover.change+' ('+topMover.value+')'):'Key indicators — current vs. previous';
-  const moverSrc=topMover?(topMover.source||'Statistics Canada'):'Statistics Canada, Bank of Canada';
-  html+='<div style="margin-top:12px;border-top:1px solid rgba(0,0,0,0.06);padding-top:10px">';
-  html+='<div class="ec-title">This Week: '+moverLabel+'</div>';
-  html+='<div class="ec-sub">'+moverSub+'</div>';
-  html+='<div style="height:160px;position:relative"><canvas id="'+canvasId+'"></canvas></div>';
-  html+='<div class="ec-source">'+moverSrc+'</div>';
-  html+='</div></div>';
+  html+='</tbody></table></div>';
   return {html:html,topMover:topMover};
+}
+
+function buildInfographicHtml(canvasId,topMover){
+  const moverLabel=topMover?topMover.label:'Macro Pulse';
+  const moverSub=topMover?(topMover.change+' ('+topMover.value+')'):'Key indicators \u2014 current vs. previous';
+  const moverSrc=topMover?(topMover.source||'Statistics Canada'):'Statistics Canada, Bank of Canada';
+  return '<div class="ed-industry-chart" id="'+canvasId+'Card"><div class="ec-title">This Week: '+moverLabel+'</div><div class="ec-sub">'+moverSub+'</div><div style="height:180px;position:relative"><canvas id="'+canvasId+'"></canvas></div><div class="ec-source">'+moverSrc+'</div></div>';
+}
+
+function deriveSubtitle(analysisText){
+  if(!analysisText)return '';
+  // Extract first sentence as a dynamic subtitle
+  const clean=(analysisText||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  const m=clean.match(/^(.+?[.!?])\s/);
+  if(m&&m[1].length<=120)return m[1];
+  // Fallback: truncate to ~100 chars at word boundary
+  if(clean.length<=100)return clean;
+  const cut=clean.substring(0,100).replace(/\s+\S*$/,'');
+  return cut+(cut.length<clean.length?'...':'');
 }
 
 function renderTopMoverChart(canvasId,topMover,allInds,m,im){
@@ -965,10 +975,13 @@ async function renderCanadaSub(){
   const hasBriefing=D&&D.executive_summary;
   const natContent=(D&&D.national&&D.national.analysis)||D&&D.national_analysis||'';
   const natSources=(D&&D.national&&D.national.sources)||[];
-  const panel=buildIndicatorPanel('Canada \u2014 National',natIndicators,'natTopMoverChart');
+  const natSubtitle=deriveSubtitle(natContent);
+  const panel=buildIndicatorPanel('Canada \u2014 National',natIndicators,natSubtitle);
 
   let secHtml='';
   secHtml+=panel.html;
+  // Infographic floats left
+  secHtml+=buildInfographicHtml('natTopMoverChart',panel.topMover);
   if(natContent){
     secHtml+=san(linkFootnotes(natContent,natSources.length?natSources:(D&&D.sources||[])));
   }else if(!hasBriefing){
@@ -1810,23 +1823,22 @@ async function renderProvinceContent(){
       '</div>';
   }
 
-  // Analysis section with floating indicator panel + sector chart
+  // Analysis section with floating indicator panel + infographic
   const provContent=provData.analysis||'';
   const provSources=provData.sources||[];
-  const panel=buildIndicatorPanel(prov.name,provIndicators,'provTopMoverChart');
+  const provSubtitle=deriveSubtitle(provContent);
+  const panel=buildIndicatorPanel(prov.name,provIndicators,provSubtitle);
 
   let secHtml='';
   secHtml+=panel.html;
+  // Infographic floats left (where sector chart used to be)
+  secHtml+=buildInfographicHtml('provTopMoverChart',panel.topMover);
   if(provContent){
     secHtml+=san(linkFootnotes(provContent,provSources.length?provSources:(D&&D.sources||[])));
   }else{
     secHtml+='<p style="color:#475569">No provincial analysis available for '+prov.name+'.</p>';
   }
   secHtml+='<div class="ed-clear"></div>';
-  // Sector chart floats left
-  if(provProj.length>=3){
-    secHtml+='<div class="ed-industry-chart" id="pvSectorCard"><div class="ec-title">'+prov.name+' by Sector</div><div class="ec-sub">Tracked investment value</div><div style="height:180px;position:relative"><canvas id="pvSectorChart"></canvas></div><div class="ec-source">Pipeline database ('+provProj.length+' projects)</div></div>';
-  }
   if(provSources.length)secHtml+=sourcesFooter(provSources);
   // Upcoming events
   const wl=D&&(D.watchlist||D.events)?D.watchlist||D.events||[]:[];
@@ -1841,11 +1853,8 @@ async function renderProvinceContent(){
   const pas=$('provAnalysisSection');
   if(pas)pas.innerHTML=secHtml;
 
-  // Render charts
+  // Render infographic chart
   renderTopMoverChart('provTopMoverChart',panel.topMover,indicators,(D&&D.metrics)||{},(provData.indicatorMeta||{}));
-  if(provProj.length>=3){
-    _renderSectorChart('pvSectorChart','pv',provProj);
-  }
 
 
   // Projects
@@ -1866,6 +1875,13 @@ async function renderProvinceContent(){
     projHtml+='<div class="empty-state"><div class="empty-state-text">No projects tracked for '+prov.name+' yet.</div></div>';
   }
   $('provProjectsPreview').innerHTML=projHtml;
+
+  // Sector chart below projects table
+  const pss=$('provSectorSection');
+  if(pss&&provProj.length>=3){
+    pss.innerHTML='<div class="ed-section"><div class="ed-section-title">'+prov.name+' by Sector</div><div class="ed-section-subtitle">Tracked investment value by industry</div></div><div style="max-width:500px"><div style="height:280px;position:relative"><canvas id="pvSectorChart"></canvas></div><div class="ec-source" style="margin-top:6px">Pipeline database ('+provProj.length+' projects)</div></div>';
+    _renderSectorChart('pvSectorChart','pv',provProj);
+  }else if(pss){pss.innerHTML=''}
 }
 
 
