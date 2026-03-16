@@ -1068,38 +1068,61 @@ function renderAllGlobalPlayers(){
   const gv=D?D.globalVectors||D.global_vectors||{}:{};
   const globalArr=D?D.global||[]:[];
   const REGION_MAP={'United States':'us','China':'china','European Union':'eu','United Kingdom':'uk'};
+  const EYEBROW_MAP={us:'United States Overview',china:'China Overview',eu:'European Union Overview',uk:'United Kingdom Overview'};
+  const SRC_MAP={us:{gdp:'BEA',cpi:'BLS',rate:'Federal Reserve',unemployment:'BLS'},china:{gdp:'NBS',cpi:'NBS',rate:'PBoC',unemployment:'NBS'},eu:{gdp:'Eurostat',cpi:'Eurostat',rate:'ECB',unemployment:'Eurostat'},uk:{gdp:'ONS',cpi:'ONS',rate:'Bank of England',unemployment:'ONS'}};
   const players=[{key:'us',name:'United States'},{key:'china',name:'China'},{key:'eu',name:'European Union'},{key:'uk',name:'United Kingdom'}];
+
   players.forEach(v=>{
-    const panel=$('nsub-'+v.key);if(!panel)return;
+    const panelEl=$('nsub-'+v.key);if(!panelEl)return;
     const gData=globalArr.find(g=>REGION_MAP[g.region]===v.key)||{};
     const analysis=gData.analysis||gv[v.key]||'';
-    let html='';
     const gi=gData.indicators||{};
     const giMeta=gData.indicatorMeta||{};
-    const SRC_MAP={us:{gdp:'BEA',cpi:'BLS',rate:'Federal Reserve',unemployment:'BLS'},china:{gdp:'NBS',cpi:'NBS',rate:'PBoC',unemployment:'NBS'},eu:{gdp:'Eurostat',cpi:'Eurostat',rate:'ECB',unemployment:'Eurostat'},uk:{gdp:'ONS',cpi:'ONS',rate:'Bank of England',unemployment:'ONS'}};
     const srcs=SRC_MAP[v.key]||{};
-    const hasInd=gi.gdp||gi.cpi||gi.rate||gi.unemployment;
-    if(hasInd){
-      html+='<div class="indicator-strip" style="margin-bottom:16px">';
-      [{key:'gdp',label:'GDP'},{key:'cpi',label:'CPI'},{key:'rate',label:'POLICY RATE'},{key:'unemployment',label:'UNEMPLOYMENT'}].forEach(x=>{
-        if(!gi[x.key])return;
-        const gm=giMeta[x.key]||{};const chg=gm.change||'';
-        const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
-        html+='<div class="indicator-pill"><div class="indicator-pill-label">'+x.label+'</div><div class="indicator-pill-value">'+gi[x.key]+'</div>';
-        if(chg)html+='<div class="indicator-pill-change '+chgCls+'">'+chg+'</div>';
-        html+='<div class="indicator-pill-meta">'+(srcs[x.key]||'')+(gm.period?' \u00b7 '+gm.period:'')+'</div></div>';
-      });
-      html+='</div>';
+
+    if(!analysis&&!gi.gdp&&!gi.cpi&&!gi.rate&&!gi.unemployment){
+      panelEl.innerHTML='<div class="empty-state" style="padding:48px 16px"><div class="empty-state-text">'+v.name+' analysis will be available after the next pipeline run.</div></div>';
+      _nationalSubRendered[v.key]=true;
+      return;
     }
+
+    // Build expanded indicator rows
+    const indRows=[];
+    [{key:'gdp',label:'GDP',metaKey:'gdp'},{key:'cpi',label:'CPI',metaKey:'cpi'},{key:'rate',label:'Policy Rate',metaKey:'rate'},{key:'unemployment',label:'Unemployment',metaKey:'unemployment'}].forEach(x=>{
+      if(gi[x.key]){
+        const gm=giMeta[x.key]||{};
+        indRows.push({label:x.label,value:gi[x.key],change:gm.change||'',source:srcs[x.key]||'',metaKey:x.metaKey});
+      }
+    });
+
+    const subtitle=deriveSubtitle(analysis);
+    const panel=buildIndicatorPanel(v.name,indRows,subtitle,null,null);
+
+    // Editorial article
+    let html='<div class="editorial-article"><div class="editorial-header"><div class="fade-in">';
+    html+='<div class="editorial-eyebrow">'+(EYEBROW_MAP[v.key]||v.name)+'</div>';
+    html+='<div class="editorial-headline">'+v.name+'</div>';
+    html+='<hr class="editorial-accent">';
+    html+='</div></div><div class="editorial-flow">';
+
+    // Indicator panel floats right
+    html+=panel.html;
+
+    // Analysis text
     if(analysis){
-      html+='<div class="card fade-in"><div class="card-header">'+v.name+' Analysis</div><div class="card-body">'+san(linkFootnotes(analysis,gData.sources||[]))+'</div>';
+      html+=san(linkFootnotes(analysis,gData.sources||[]));
       if(gData.sources&&gData.sources.length)html+=sourcesFooter(gData.sources);
-      html+='</div>';
     }
-    if(!analysis&&!hasInd){
-      html+='<div class="empty-state" style="padding:48px 16px"><div class="empty-state-text">'+v.name+' analysis will be available after the next pipeline run.</div></div>';
-    }
-    panel.innerHTML=html;
+    html+='<div class="ed-clear"></div>';
+
+    // Insight strip
+    html+=buildInsightStrip(v.key,panel.movers);
+
+    html+='</div></div>';
+    panelEl.innerHTML=html;
+
+    // Render insight charts
+    renderInsightCharts(v.key,panel.movers,indicators,(D&&D.metrics)||{},(giMeta||{}));
     _nationalSubRendered[v.key]=true;
   });
 }
