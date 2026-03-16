@@ -402,12 +402,15 @@ async function renderEditorialFlow(){
       <div class="ed-section-title">Industry Overview</div>
       <div class="ed-section-subtitle">${san(industrySub)}</div>
     </div>
-    ${industryHtml}
-    <div class="ed-industry-chart" id="tldrSectorCard">
-      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
-      <div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div>
-      <div class="ec-source">Pipeline database</div>
-    </div>
+    ${(()=>{
+      const chart='<div class="ed-industry-chart" id="tldrSectorCard"><div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div><div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div><div class="ec-source">Pipeline database</div></div>';
+      if(!industryHtml)return chart;
+      const parts=industryHtml.split('</p>');
+      if(parts.length<=3)return industryHtml+chart;
+      // Insert 2 paragraphs from the end so text wraps above and beside
+      parts.splice(parts.length-3,0,chart);
+      return parts.join('</p>');
+    })()}
     <div class="ed-clear"></div>
 
     <div class="ed-section">
