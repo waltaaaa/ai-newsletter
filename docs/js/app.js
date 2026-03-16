@@ -1069,7 +1069,7 @@ function renderAllGlobalPlayers(){
   const globalArr=D?D.global||[]:[];
   const REGION_MAP={'United States':'us','China':'china','European Union':'eu','United Kingdom':'uk'};
   const EYEBROW_MAP={us:'United States Overview',china:'China Overview',eu:'European Union Overview',uk:'United Kingdom Overview'};
-  const SRC_MAP={us:{gdp:'BEA',cpi:'BLS',rate:'Federal Reserve',unemployment:'BLS'},china:{gdp:'NBS',cpi:'NBS',rate:'PBoC',unemployment:'NBS'},eu:{gdp:'Eurostat',cpi:'Eurostat',rate:'ECB',unemployment:'Eurostat'},uk:{gdp:'ONS',cpi:'ONS',rate:'Bank of England',unemployment:'ONS'}};
+  const SRC_MAP={us:{gdp:'BEA',cpi:'BLS',rate:'Federal Reserve',unemployment:'BLS',tradeBalance:'BEA',productivityGrowth:'BLS'},china:{gdp:'NBS',cpi:'NBS',rate:'PBoC',unemployment:'NBS',tradeBalance:'NBS',productivityGrowth:'NBS'},eu:{gdp:'Eurostat',cpi:'Eurostat',rate:'ECB',unemployment:'Eurostat',tradeBalance:'Eurostat',productivityGrowth:'Eurostat'},uk:{gdp:'ONS',cpi:'ONS',rate:'Bank of England',unemployment:'ONS',tradeBalance:'ONS',productivityGrowth:'ONS'}};
   const players=[{key:'us',name:'United States'},{key:'china',name:'China'},{key:'eu',name:'European Union'},{key:'uk',name:'United Kingdom'}];
 
   players.forEach(v=>{
@@ -1088,7 +1088,7 @@ function renderAllGlobalPlayers(){
 
     // Build expanded indicator rows
     const indRows=[];
-    [{key:'gdp',label:'GDP',metaKey:'gdp'},{key:'cpi',label:'CPI',metaKey:'cpi'},{key:'rate',label:'Policy Rate',metaKey:'rate'},{key:'unemployment',label:'Unemployment',metaKey:'unemployment'}].forEach(x=>{
+    [{key:'gdp',label:'GDP',metaKey:'gdp'},{key:'cpi',label:'CPI',metaKey:'cpi'},{key:'rate',label:'Policy Rate',metaKey:'rate'},{key:'unemployment',label:'Unemployment',metaKey:'unemployment'},{key:'tradeBalance',label:'Trade Balance',metaKey:'tradeBalance'},{key:'productivityGrowth',label:'Productivity Growth',metaKey:'productivityGrowth'}].forEach(x=>{
       if(gi[x.key]){
         const gm=giMeta[x.key]||{};
         indRows.push({label:x.label,value:gi[x.key],change:gm.change||'',source:srcs[x.key]||'',metaKey:x.metaKey});
