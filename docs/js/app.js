@@ -359,6 +359,12 @@ async function renderEditorialFlow(){
     pulseHtml=`<div class="ed-section"><div class="ed-section-title">Consumer Pulse</div></div>${bulletsToParas(san(D.consumer_pulse))}`;
   }
 
+  // Industry summary
+  let industryHtml='';
+  if(D.industry_executive_summary){
+    industryHtml=`<div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>${bulletsToParas(san(D.industry_executive_summary))}`;
+  }
+
   // Briefing narrative
   let briefHtml='';
   try{
@@ -395,7 +401,6 @@ async function renderEditorialFlow(){
         <div class="ec-source">Source: Yahoo Finance</div>
       </div>
     </div>
-    ${microHtml}
     ${nationalHtml}
     ${pq2}
     <div class="ed-chart-row">
@@ -410,6 +415,8 @@ async function renderEditorialFlow(){
         <div class="ec-source">Source: Pipeline database</div>
       </div>
     </div>
+    ${industryHtml}
+    ${microHtml}
     ${pulseHtml}
     ${briefHtml}
   `;
@@ -570,15 +577,19 @@ const _chartCfg={tt:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bod
 let _chartProjects=null,_chartComms=null;
 async function _ensureChartData(){
   if(_chartProjects===null){try{const d=await fetchJSON('projects_all.json');_chartProjects=Array.isArray(d)?d:[]}catch(e){_chartProjects=[]}}
-  if(_chartComms===null){try{const cd=await fetchJSON('commodities.json');_chartComms=Array.isArray(cd)?cd:Object.values(cd).flat().filter(c=>c&&c.pct_1w)}catch(e){_chartComms=[]}}
+  if(_chartComms===null){try{const cd=await fetchJSON('commodities.json');if(Array.isArray(cd))_chartComms=cd;else if(cd&&cd.indicators&&typeof cd.indicators==='object')_chartComms=Object.entries(cd.indicators).map(([k,v])=>Object.assign({name:v.name||k.replace(/_/g,' ')},v)).filter(c=>c&&c.pct_1w);else _chartComms=Object.values(cd).flat().filter(c=>c&&typeof c==='object'&&c.pct_1w)}catch(e){_chartComms=[]}}
 }
 function _renderMacroChart(canvasId,cardId,prefix){
   if(!indicators.length)return;
-  const macroKeys=['unemployment_rate','cpi','gdp_monthly','housing_starts_total','boc_rate','participation_rate'];
-  const macroLabels=['Unemployment','CPI','GDP Monthly','Housing Starts','BoC Rate','Participation'];
+  const macroKeys=[['unemployment','unemployment_rate','unemployment_national'],['cpi','cpi_national'],['realGdp','gdp_monthly'],['housingStarts','housing_starts_total'],['overnight_rate','boc_rate'],['employmentRate','participation_rate']];
+  const macroLabels=['Unemployment','CPI','GDP','Housing Starts','BoC Rate','Employment Rate'];
   const found=[];
-  macroKeys.forEach((k,i)=>{const ind=indicators.find(x=>x.indicator_name===k&&(!x.province||x.province==='National'||x.province==='national'));if(ind&&ind.value!=null)found.push({label:macroLabels[i],current:parseFloat(ind.value)||0,prev:parseFloat(ind.previous_value)||(parseFloat(ind.value)||0)})});
-  if(found.length<3)return;
+  macroKeys.forEach((alts,i)=>{
+    let ind=null;
+    for(const k of alts){ind=indicators.find(x=>x.indicator_name===k&&(!x.province||x.province==='National'||x.province==='national'));if(ind&&ind.value!=null)break}
+    if(ind&&ind.value!=null)found.push({label:macroLabels[i],current:parseFloat(ind.value)||0,prev:parseFloat(ind.previous_value)||(parseFloat(ind.value)||0)})
+  });
+  if(found.length<2)return;
   const card=$(cardId);if(card)card.style.display='';
   const key='_mc_'+prefix;if(charts[key])charts[key].destroy();
   charts[key]=new Chart($(canvasId),{type:'bar',data:{labels:found.map(f=>f.label),datasets:[{label:'Current',data:found.map(f=>f.current),backgroundColor:'#2563EB',borderRadius:4,barPercentage:0.6},{label:'Previous',data:found.map(f=>f.prev),backgroundColor:'#CBD5E1',borderRadius:4,barPercentage:0.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:8,font:{family:'Outfit',size:10},color:'#1a2744',usePointStyle:true,pointStyle:'circle'}},tooltip:{..._chartCfg.tt,callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}}},scales:{x:{grid:{display:false},ticks:{font:{family:'Outfit',size:9},color:'#475569'}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{family:'Outfit',size:9},color:'#475569'}}}}});
