@@ -437,37 +437,39 @@ async function renderEditorialFlow(){
     }
   }catch(e){console.warn('Map data:',e)}
 
-  // Assemble — charts floated into text, map woven in
+  // Assemble — each section: clear, header on left, chart floats right, text wraps
   flow.innerHTML=`
-    <div class="ed-chart-left" id="tldrMacroCard">
+    <div class="ed-chart-inline" id="tldrMacroCard">
       <div class="ec-title">Macro Pulse</div><div class="ec-sub">Key indicators — current vs. previous</div>
       <div style="height:180px;position:relative"><canvas id="tldrMacroChart"></canvas></div>
-      <div class="ec-source">Sources: Statistics Canada, Bank of Canada</div>
+      <div class="ec-source">Statistics Canada, Bank of Canada</div>
     </div>
     ${execHtml}
+    <div class="ed-clear"></div>
     ${pq1}
-    <div class="ed-clearfix"></div>
     <div class="editorial-indicators"><section id="keyIndicators"></section></div>
-    <div class="ed-chart-right" id="tldrCommodityCard">
+    <div class="ed-chart-inline" id="tldrCommodityCard">
       <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
       <div style="height:180px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
-      <div class="ec-source">Source: Yahoo Finance</div>
+      <div class="ec-source">Yahoo Finance</div>
     </div>
     ${industryHtml}
-    <div class="ed-clearfix"></div>
+    <div class="ed-clear"></div>
     ${mapHtml}
-    <div class="ed-chart-left" id="briefPipelineCard">
-      <div class="ec-title">Project Pipeline</div><div class="ec-sub">Capital projects by lifecycle stage</div>
-      <div style="height:180px;position:relative"><canvas id="briefPipelineChart"></canvas></div>
-      <div class="ec-source">Source: Pipeline database</div>
-    </div>
     ${pulseHtml}
+    <div class="ed-clear"></div>
     ${pq2}
-    <div class="ed-clearfix"></div>
-    <div class="ed-chart-right" id="briefSectorCard">
-      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
-      <div style="height:180px;position:relative"><canvas id="briefSectorChart"></canvas></div>
-      <div class="ec-source">Source: Pipeline database</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+      <div class="ed-chart-pair" id="briefPipelineCard">
+        <div class="ec-title">Project Pipeline</div><div class="ec-sub">Projects by lifecycle stage</div>
+        <div style="height:180px;position:relative"><canvas id="briefPipelineChart"></canvas></div>
+        <div class="ec-source">Pipeline database</div>
+      </div>
+      <div class="ed-chart-pair" id="briefSectorCard">
+        <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
+        <div style="height:180px;position:relative"><canvas id="briefSectorChart"></canvas></div>
+        <div class="ec-source">Pipeline database</div>
+      </div>
     </div>
   `;
   renderKeyIndicators();
