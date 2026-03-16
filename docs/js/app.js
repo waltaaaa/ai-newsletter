@@ -340,25 +340,40 @@ async function renderTLDR(){
 }
 async function renderEditorialFlow(){
   const flow=$('editorialFlow');if(!flow)return;
-  // Build micro + briefing content first
+  // Build microscope content — try dedicated JSON first, fall back to D fields
   let microHtml='';
   try{
     const data=await fetchJSON('microscope.json');
     const m=(data&&data.current)||data||{};
-    if(m.topic||m.text){
+    if(m&&m.topic&&m.text){
       const sectors=(m.affected_sectors||[]).map(s=>'<span class="editorial-sector-tag">'+s+'</span>').join(' ');
       const weeks=m.weeks_running?' <span style="font-size:10px;color:#64748B">Week '+m.weeks_running+'</span>':'';
       microHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">Under the Microscope${weeks}</div><div class="editorial-section-title">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}</div>${san(m.text||m.analysis||'')}`;
     }
-  }catch(e){console.warn('Microscope:',e)}
+  }catch(e){console.warn('Microscope JSON:',e)}
 
+  // National analysis from D (this is the main analysis content)
+  let nationalHtml='';
+  const nat=D&&D.national;
+  if(nat&&nat.analysis){
+    nationalHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">National Analysis</div></div>${san(linkFootnotes(nat.analysis,(D.sources||[])))}`;
+  }
+
+  // Consumer pulse
+  let pulseHtml='';
+  if(D&&D.consumer_pulse){
+    pulseHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">Consumer Pulse</div></div>${san(D.consumer_pulse)}`;
+  }
+
+  // Weekly briefing narrative (may be empty — that's OK, we have national+pulse above)
   let briefHtml='';
   try{
     const briefing=await fetchJSON('briefing_latest.json');
-    if(briefing&&briefing.content){
+    const narrative=(briefing&&briefing.content)||'';
+    if(narrative){
       const pdfUrl=(briefing.pdf_url)||'';const docxUrl=(briefing.docx_url)||'';
       const dlBtns=(pdfUrl||docxUrl)?`<div class="editorial-span" style="margin:12px 0"><div style="display:flex;gap:8px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#EC4899;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#3B82F6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div></div>`:'';
-      briefHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">Weekly Briefing</div></div>${dlBtns}${san(briefing.content)}`;
+      briefHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">Weekly Briefing</div></div>${dlBtns}${san(narrative)}`;
     }
   }catch(e){console.warn('Briefing:',e)}
 
@@ -391,12 +406,14 @@ async function renderEditorialFlow(){
       <div class="ec-source">Source: Yahoo Finance</div>
     </div>
     ${microHtml}
+    ${nationalHtml}
     ${pq2}
     <div class="editorial-chart-left" id="briefPipelineCard">
       <div class="ec-title">Project Pipeline</div><div class="ec-sub">Capital projects by lifecycle stage</div>
       <div style="height:190px;position:relative"><canvas id="briefPipelineChart"></canvas></div>
       <div class="ec-source">Source: Pipeline database</div>
     </div>
+    ${pulseHtml}
     ${briefHtml}
     ${pq3}
     <div class="editorial-chart-right" id="briefSectorCard">
