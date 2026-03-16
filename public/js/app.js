@@ -665,7 +665,7 @@ async function renderInteractiveMap(){
 
       // Province labels — code only, skip Maritimes (shown in inset)
       const insetCodes=new Set(['NB','NS','PE']);
-      const CENTROIDS={BC:[-124,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,53],NL:[-60,53],YT:[-136,63],NT:[-120,65],NU:[-92,63.5]};
+      const CENTROIDS={BC:[-124,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,53],NL:[-60,53],YT:[-136,63],NT:[-120,65],NU:[-96,63.5]};
       Object.keys(gdpVals).forEach(code=>{
         if(insetCodes.has(code))return;
         const c=CENTROIDS[code];if(!c)return;
