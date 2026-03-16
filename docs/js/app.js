@@ -966,7 +966,7 @@ function renderGlobalVectors(){
     {key:'eu',name:'European Union',cls:'gv-eu'},
     {key:'uk',name:'United Kingdom',cls:'gv-uk'}
   ];
-  let html='<h2 style="font-size:var(--text-lg);font-weight:700;margin-bottom:12px">Global Vectors</h2>';
+  let html='<h2 style="font-size:var(--text-lg);font-weight:700;margin-bottom:12px">Global Players</h2>';
   let hasAny=false;
   vectors.forEach(v=>{
     // Try rich global array first, fall back to globalVectors text
