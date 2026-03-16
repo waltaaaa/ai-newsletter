@@ -450,8 +450,10 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .ed-chart-inline .ec-title{font-family:var(--font-heading);font-size:var(--text-sm);font-weight:600;color:#1a2744;margin-bottom:2px}
 .ed-chart-inline .ec-sub{font-size:10px;color:#64748B;margin-bottom:8px}
 .ed-chart-inline .ec-source{font-size:9px;color:#94A3B8;margin-top:6px;border-top:1px solid rgba(0,0,0,0.04);padding-top:4px}
-/* Canada map infographic — also floats right */
-.ed-map{float:right;width:46%;margin:0 0 14px 20px;border:1px solid rgba(0,0,0,0.06);border-radius:var(--radius-md);padding:14px;background:rgba(0,0,0,0.01)}
+/* Canada map infographic — full width row */
+.ed-map{width:100%;margin:20px 0;border:1px solid rgba(0,0,0,0.06);border-radius:var(--radius-md);padding:20px;background:rgba(0,0,0,0.01);display:flex;gap:24px;align-items:center}
+.ed-map-chart{flex:1;min-width:0}
+.ed-map-stats{flex:0 0 200px;display:flex;flex-direction:column;gap:8px}
 .ed-map .ec-title{font-family:var(--font-heading);font-size:var(--text-sm);font-weight:600;color:#1a2744;margin-bottom:2px}
 .ed-map .ec-sub{font-size:10px;color:#64748B;margin-bottom:6px}
 .ed-map svg{display:block;margin:0 auto}
@@ -475,7 +477,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .editorial-sector-tag{display:inline-block;background:rgba(37,99,235,0.06);color:#2563EB;padding:2px 8px;border-radius:4px;font-size:var(--text-xs);font-weight:500;margin-right:4px;margin-bottom:4px}
 .editorial-footer{margin-top:36px;padding-top:20px;border-top:2px solid rgba(0,0,0,0.06);display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .editorial-lead-img{float:right;max-width:260px;width:40%;border-radius:var(--radius-md);margin:4px 0 16px 24px;object-fit:cover;max-height:200px;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
-@media(max-width:899px){.ed-chart-inline,.ed-map{float:none;width:100%;margin:16px 0}.editorial-footer{grid-template-columns:1fr}.editorial-article{padding:24px 20px}.editorial-lead-img{float:none;max-width:100%;width:100%;margin:0 0 16px}}
+@media(max-width:899px){.ed-chart-inline{float:none;width:100%;margin:16px 0}.ed-map{flex-direction:column}.ed-map-stats{flex:none;width:100%;flex-direction:row;flex-wrap:wrap}.editorial-footer{grid-template-columns:1fr}.editorial-article{padding:24px 20px}.editorial-lead-img{float:none;max-width:100%;width:100%;margin:0 0 16px}}
 @media(max-width:599px){.editorial-article{padding:20px 16px}.editorial-headline{font-size:var(--text-xl)}.editorial-meta{flex-wrap:wrap;gap:12px}}
 .newsletter-hero{background:linear-gradient(135deg,rgba(255,255,255,0.97),rgba(240,245,255,0.95));border:1px solid rgba(255,255,255,0.5);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:28px 32px;position:relative;overflow:hidden}
 .newsletter-hero::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:#2563EB}
