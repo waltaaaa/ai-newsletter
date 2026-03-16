@@ -1000,12 +1000,17 @@ async function renderCanadaSub(){
       '</div>';
   }
 
-  // Analysis section with floating indicator panel (includes commodity chart inside)
+  // Load national projects for sector chart
+  let natProjects=[];
+  try{const d=await fetchJSON('projects_all.json');natProjects=Array.isArray(d)?d:[]}catch(e){}
+
+  // Analysis section with floating indicator panel (includes sector pie chart)
   const hasBriefing=D&&D.executive_summary;
   const natContent=(D&&D.national&&D.national.analysis)||D&&D.national_analysis||'';
   const natSources=(D&&D.national&&D.national.sources)||[];
   const natSubtitle=deriveSubtitle(natContent);
-  const panel=buildIndicatorPanel('Canada \u2014 National',natIndicators,natSubtitle,'natCommodityChart','Commodity Movers');
+  const sectorCanvas=natProjects.length>=3?'natSectorChart':null;
+  const panel=buildIndicatorPanel('Canada \u2014 National',natIndicators,natSubtitle,sectorCanvas,'Investment by Sector');
 
   let secHtml='';
   secHtml+=panel.html;
@@ -1023,8 +1028,9 @@ async function renderCanadaSub(){
   if(nas)nas.innerHTML=secHtml;
 
   // Render charts after DOM is set
-  await _ensureChartData();
-  _renderCommodityChart('natCommodityChart','natCommodityCard','nat');
+  if(natProjects.length>=3){
+    _renderSectorChart('natSectorChart','nat',natProjects);
+  }
   renderInsightCharts('nat',panel.movers,indicators,m,im);
 
   // Policy section with editorial header
