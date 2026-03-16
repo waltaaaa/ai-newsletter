@@ -192,9 +192,10 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .yield-spread .inversion{background:rgba(185,28,28,0.2);color:#f87171;padding:2px 8px;border-radius:4px;font-size:var(--text-xs);font-weight:600}
 /* Filter bar */
 .filter-bar{display:flex;flex-wrap:wrap;gap:var(--space-sm);align-items:center;padding:var(--space-sm) 0;margin-bottom:var(--space-sm)}
-.filter-bar input,.filter-bar select{font-family:var(--font-body);font-size:var(--text-sm);padding:8px 12px;border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);background:rgba(255,255,255,0.05);color:#FFFFFF;outline:none;transition:border-color .15s}
-.filter-bar select option{color:#1a2744;background:#ffffff}
-.filter-bar input:focus,.filter-bar select:focus{border-color:var(--accent-blue-soft)}
+.filter-bar input,.filter-bar select{font-family:var(--font-body);font-size:var(--text-sm);padding:8px 12px;border:1px solid rgba(0,0,0,0.12);border-radius:var(--radius-sm);background:#ffffff;color:#003153;outline:none;transition:border-color .15s}
+.filter-bar select option{color:#003153;background:#ffffff}
+.filter-bar input::placeholder{color:#64748B}
+.filter-bar input:focus,.filter-bar select:focus{border-color:#2563EB}
 .filter-bar input{flex:1;min-width:200px}
 .results-summary{font-family:var(--font-mono);font-size:var(--text-sm);color:rgba(255,255,255,0.65);margin-bottom:12px}
 .toggle-label{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-xs);cursor:pointer;white-space:nowrap;color:var(--text-secondary);user-select:none}
