@@ -339,28 +339,26 @@ async function renderCanadaSub(){
   const m=(D&&D.metrics)||{};const im=(D&&D.indicatorMeta)||{};
   function indVal(name){const i=indicators.find(x=>x.indicator_name===name);return i?i.value:null}
   const chartMetrics=[
-    {label:'BoC Rate',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'N/A',meta:im.bocRate||{},tsId:'boc_rate'},
-    {label:'GDP YoY',value:m.realGdp||m.gdp||indVal('realGdp')||'N/A',meta:im.realGdp||{},tsId:null},
-    {label:'CPI',value:m.cpi||indVal('cpi')||'N/A',meta:im.cpi||{},tsId:'canada_cpi'},
-    {label:'Unemployment',value:m.unemployment||indVal('unemployment')||'N/A',meta:im.unemployment||{},tsId:'canada_unemployment'},
-    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'N/A',meta:{},tsId:'cadusd'},
-    {label:'Housing Starts',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'N/A',meta:im.housingStarts||{},tsId:null}
+    {label:'BOC RATE',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'N/A',meta:im.bocRate||{},source:'Bank of Canada',freq:'8x/yr'},
+    {label:'GDP YOY',value:m.realGdp||m.gdp||indVal('realGdp')||'N/A',meta:im.realGdp||{},source:'Statistics Canada',freq:'Quarterly'},
+    {label:'CPI',value:m.cpi||indVal('cpi')||'N/A',meta:im.cpi||{},source:'Statistics Canada',freq:'Monthly'},
+    {label:'UNEMPLOYMENT',value:m.unemployment||indVal('unemployment')||'N/A',meta:im.unemployment||{},source:'Statistics Canada',freq:'Monthly'},
+    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'N/A',meta:{},source:'Bank of Canada',freq:'Daily'},
+    {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'N/A',meta:im.housingStarts||{},source:'CMHC',freq:'Monthly'}
   ];
   const mc=$('canadaMiniCharts');
   if(mc){
-    const natSparkJobs=[];
-    let miniHtml='<div class="mini-chart-grid">';
-    chartMetrics.forEach((cm,i)=>{
+    let miniHtml='<div class="indicator-strip">';
+    chartMetrics.forEach(cm=>{
       const chg=cm.meta.change||'';
       const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
-      const sparkId='spark_canada_'+i;
       const prd=cm.meta.period||'';
-      miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+cm.label+'</div><div class="mini-chart-value">'+cm.value+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#7a8aa5;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div></div>';
-      if(cm.tsId)natSparkJobs.push({canvasId:sparkId,docId:cm.tsId,change:chg});
+      miniHtml+='<div class="indicator-pill"><div class="indicator-pill-label">'+cm.label+'</div><div class="indicator-pill-value">'+cm.value+'</div>';
+      if(chg)miniHtml+='<div class="indicator-pill-change '+chgCls+'">'+chg+(cm.meta.prev?' (prev '+cm.meta.prev+')':'')+'</div>';
+      miniHtml+='<div class="indicator-pill-meta">'+cm.source+(prd?' \u00b7 '+prd:'')+' \u00b7 '+cm.freq+'</div></div>';
     });
     miniHtml+='</div>';
     mc.innerHTML=miniHtml;
-    natSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
   }
   const hasBriefing=D&&D.executive_summary;
   if(hasBriefing){
@@ -407,13 +405,20 @@ function renderAllGlobalPlayers(){
     const analysis=gData.analysis||gv[v.key]||'';
     let html='';
     const gi=gData.indicators||{};
+    const giMeta=gData.indicatorMeta||{};
+    const SRC_MAP={us:{gdp:'BEA',cpi:'BLS',rate:'Federal Reserve',unemployment:'BLS'},china:{gdp:'NBS',cpi:'NBS',rate:'PBoC',unemployment:'NBS'},eu:{gdp:'Eurostat',cpi:'Eurostat',rate:'ECB',unemployment:'Eurostat'},uk:{gdp:'ONS',cpi:'ONS',rate:'Bank of England',unemployment:'ONS'}};
+    const srcs=SRC_MAP[v.key]||{};
     const hasInd=gi.gdp||gi.cpi||gi.rate||gi.unemployment;
     if(hasInd){
-      html+='<div class="mini-chart-grid" style="margin-bottom:16px">';
-      if(gi.gdp)html+='<div class="mini-chart-card"><div class="mini-chart-label">GDP</div><div class="mini-chart-value">'+gi.gdp+'</div></div>';
-      if(gi.cpi)html+='<div class="mini-chart-card"><div class="mini-chart-label">CPI</div><div class="mini-chart-value">'+gi.cpi+'</div></div>';
-      if(gi.rate)html+='<div class="mini-chart-card"><div class="mini-chart-label">Policy Rate</div><div class="mini-chart-value">'+gi.rate+'</div></div>';
-      if(gi.unemployment)html+='<div class="mini-chart-card"><div class="mini-chart-label">Unemployment</div><div class="mini-chart-value">'+gi.unemployment+'</div></div>';
+      html+='<div class="indicator-strip" style="margin-bottom:16px">';
+      [{key:'gdp',label:'GDP'},{key:'cpi',label:'CPI'},{key:'rate',label:'POLICY RATE'},{key:'unemployment',label:'UNEMPLOYMENT'}].forEach(x=>{
+        if(!gi[x.key])return;
+        const gm=giMeta[x.key]||{};const chg=gm.change||'';
+        const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
+        html+='<div class="indicator-pill"><div class="indicator-pill-label">'+x.label+'</div><div class="indicator-pill-value">'+gi[x.key]+'</div>';
+        if(chg)html+='<div class="indicator-pill-change '+chgCls+'">'+chg+'</div>';
+        html+='<div class="indicator-pill-meta">'+(srcs[x.key]||'')+(gm.period?' \u00b7 '+gm.period:'')+'</div></div>';
+      });
       html+='</div>';
     }
     if(analysis){
@@ -1152,23 +1157,26 @@ async function renderProvinceContent(){
   headerHtml+='</div><span style="font-size:var(--text-xs);color:#7a8aa5">'+allProjects.length+' projects loaded</span></div>';
   $('provHeader').innerHTML=headerHtml;
 
-  // Mini chart cards
-  const chartMetrics=[{label:'GDP YoY',key:'gdp',tsId:null},{label:'Unemployment',key:'unemployment',tsId:'canada_unemployment'},{label:'CPI',key:'cpi',tsId:'canada_cpi'},{label:'Housing Starts',key:'housingStarts',tsId:null}];
-  let miniHtml='<div class="mini-chart-grid">';
-  const provSparkJobs=[];
-  chartMetrics.forEach((m,i)=>{
+  // Compact indicator pills (matching national layout)
+  const chartMetrics=[
+    {label:'GDP YOY',key:'gdp',source:'Statistics Canada',freq:'Quarterly'},
+    {label:'UNEMPLOYMENT',key:'unemployment',source:'Statistics Canada',freq:'Monthly'},
+    {label:'CPI',key:'cpi',source:'Statistics Canada',freq:'Monthly'},
+    {label:'HOUSING STARTS',key:'housingStarts',source:'CMHC',freq:'Monthly'}
+  ];
+  let miniHtml='<div class="indicator-strip">';
+  chartMetrics.forEach(m=>{
     const val=provInd[m.key]||provIndVal(m.key)||'N/A';
     const meta=provMeta[m.key]||{};
     const chg=meta.change||'';
     const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
-    const sparkId='spark_prov_'+selectedProvince+'_'+i;
     const prd=meta.period||'';
-    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#7a8aa5;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
-    if(m.tsId)provSparkJobs.push({canvasId:sparkId,docId:m.tsId,change:chg});
+    miniHtml+='<div class="indicator-pill"><div class="indicator-pill-label">'+m.label+'</div><div class="indicator-pill-value">'+val+'</div>';
+    if(chg)miniHtml+='<div class="indicator-pill-change '+chgCls+'">'+chg+(meta.prev?' (prev '+meta.prev+')':'')+'</div>';
+    miniHtml+='<div class="indicator-pill-meta">'+m.source+(prd?' \u00b7 '+prd:'')+' \u00b7 '+m.freq+'</div></div>';
   });
   miniHtml+='</div>';
   $('provMiniCharts').innerHTML=miniHtml;
-  provSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
 
   // Province indicator dropdown
   $('provIndicatorDropdown').innerHTML=renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');

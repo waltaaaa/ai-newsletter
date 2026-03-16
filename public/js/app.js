@@ -957,23 +957,26 @@ async function renderProvinceContent(){
   headerHtml+='</div><span style="font-size:var(--text-xs);color:#7a8aa5">'+allProjects.length+' projects loaded</span></div>';
   $('provHeader').innerHTML=headerHtml;
 
-  // Mini chart cards
-  const chartMetrics=[{label:'GDP YoY',key:'gdp',tsId:null},{label:'Unemployment',key:'unemployment',tsId:'canada_unemployment'},{label:'CPI',key:'cpi',tsId:'canada_cpi'},{label:'Housing Starts',key:'housingStarts',tsId:null}];
-  let miniHtml='<div class="mini-chart-grid">';
-  const provSparkJobs=[];
-  chartMetrics.forEach((m,i)=>{
+  // Compact indicator pills (matching national layout)
+  const chartMetrics=[
+    {label:'GDP YOY',key:'gdp',source:'Statistics Canada',freq:'Quarterly'},
+    {label:'UNEMPLOYMENT',key:'unemployment',source:'Statistics Canada',freq:'Monthly'},
+    {label:'CPI',key:'cpi',source:'Statistics Canada',freq:'Monthly'},
+    {label:'HOUSING STARTS',key:'housingStarts',source:'CMHC',freq:'Monthly'}
+  ];
+  let miniHtml='<div class="indicator-strip">';
+  chartMetrics.forEach(m=>{
     const val=provInd[m.key]||provIndVal(m.key)||'N/A';
     const meta=provMeta[m.key]||{};
     const chg=meta.change||'';
     const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
-    const sparkId='spark_prov_'+selectedProvince+'_'+i;
     const prd=meta.period||'';
-    miniHtml+='<div class="mini-chart-card"><div class="mini-chart-label">'+m.label+'</div><div class="mini-chart-value">'+val+'</div>'+(chg?'<div class="indicator-pill-change '+chgCls+'" style="font-size:var(--text-xs)">'+chg+'</div>':'')+(prd?'<div style="font-size:var(--text-xs);color:#7a8aa5;margin-top:2px">'+prd+'</div>':'')+'<div class="sparkline-wrap"><canvas class="sparkline" id="'+sparkId+'"></canvas></div><div style="font-size:var(--text-xs);color:var(--accent-blue);margin-top:4px">StatCan</div></div>';
-    if(m.tsId)provSparkJobs.push({canvasId:sparkId,docId:m.tsId,change:chg});
+    miniHtml+='<div class="indicator-pill"><div class="indicator-pill-label">'+m.label+'</div><div class="indicator-pill-value">'+val+'</div>';
+    if(chg)miniHtml+='<div class="indicator-pill-change '+chgCls+'">'+chg+(meta.prev?' (prev '+meta.prev+')':'')+'</div>';
+    miniHtml+='<div class="indicator-pill-meta">'+m.source+(prd?' \u00b7 '+prd:'')+' \u00b7 '+m.freq+'</div></div>';
   });
   miniHtml+='</div>';
   $('provMiniCharts').innerHTML=miniHtml;
-  provSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
 
   // Province indicator dropdown
   $('provIndicatorDropdown').innerHTML=renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
