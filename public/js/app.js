@@ -355,11 +355,22 @@ async function renderEditorialFlow(){
   // Word cloud topics
   const wcTopics=(D.word_cloud_topics&&D.word_cloud_topics.length)?D.word_cloud_topics:extractTopicsFromText();
 
+  // Insert image after 3rd paragraph so it doesn't compete with the map float
+  let execWithImg=execHtml;
+  if(imgHtml){
+    const parts=execWithImg.split('</p>');
+    if(parts.length>3){
+      parts.splice(3,0,imgHtml);
+      execWithImg=parts.join('</p>');
+    }else{
+      execWithImg=imgHtml+execWithImg;
+    }
+  }
+
   // Assemble — 4 sections: Overview, Industry, Markets, Consumer Pulse
   flow.innerHTML=`
     <div id="tldrMapSection"></div>
-    ${imgHtml}
-    ${execHtml}
+    ${execWithImg}
     <div class="ed-clear"></div>
 
     <div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>
@@ -376,7 +387,7 @@ async function renderEditorialFlow(){
     <div class="ed-clear"></div>
   `;
   await renderInteractiveMap();
-  renderTLDRMarkets();
+  await renderTLDRMarkets();
   if(wcTopics.length) renderTLDRWordCloud(wcTopics,'tldrWordCloud');
   }catch(e){
     console.error('renderEditorialFlow error:',e);
@@ -426,7 +437,7 @@ async function renderInteractiveMap(){
     {label:'Wage Growth',value:m.wageGrowth||'N/A',change:''},
     {label:'Trade Balance',value:findKI('TRADE BALANCE').value,change:findKI('TRADE BALANCE').change}
   ];
-  let statsHtml='<div class="ed-stat-grid">';
+  let statsHtml='<div class="ed-stat-header">Canada &mdash; National Indicators</div><div class="ed-stat-grid">';
   stats.forEach(s=>{
     const chgCls=s.change?(s.change.startsWith('-')||s.change.startsWith('\u2212')?'change-down':'change-up'):'';
     statsHtml+=`<div class="ed-stat-box"><div class="ed-stat-label">${s.label}</div><div class="ed-stat-value">${s.value}</div>${s.change?`<div class="ed-stat-change ${chgCls}">${s.change}</div>`:''}`;
@@ -434,14 +445,14 @@ async function renderInteractiveMap(){
   });
   statsHtml+='</div>';
 
-  // Map container
+  // Map container — floats right at 45%
   container.innerHTML=`<div class="ed-map" style="position:relative">
-    <div class="ed-map-chart" style="flex:1">
-      ${statsHtml}
-      <div class="ec-title">Economic Indicators by Province</div>
-      <div class="ec-sub">Shaded by Real GDP growth &middot; Hover for details</div>
-      <div id="canadaMapSvg" style="width:100%;min-height:280px"></div>
-      <div class="ed-map-legend"><span><span class="swatch" style="background:rgba(37,99,235,0.15)"></span>Lower GDP growth</span><span><span class="swatch" style="background:rgba(37,99,235,0.90)"></span>Higher GDP growth</span></div>
+    ${statsHtml}
+    <div class="ed-map-chart">
+      <div class="ec-title" style="margin-top:8px">Provincial GDP Growth</div>
+      <div class="ec-sub">Hover for province details</div>
+      <div id="canadaMapSvg" style="width:100%;min-height:320px;padding:12px 0"></div>
+      <div class="ed-map-legend"><span><span class="swatch" style="background:rgba(37,99,235,0.15)"></span>Lower growth</span><span><span class="swatch" style="background:rgba(37,99,235,0.90)"></span>Higher growth</span></div>
       <div class="ec-source">Statistics Canada, Provincial Accounts</div>
     </div>
     <div class="ed-map-tooltip" id="mapTooltip"></div>
@@ -463,8 +474,9 @@ async function renderInteractiveMap(){
       const geojson=topojson.feature(topo,topo.objects[objKey]);
       const mapDiv=document.getElementById('canadaMapSvg');
       if(!mapDiv)return;
-      const w=mapDiv.clientWidth||500;const h=Math.min(w*0.65,340);
-      const projection=d3.geoConicConformal().rotate([96,-1,0]).center([0,62]).parallels([49,77]).scale(w*0.55).translate([w/2,h/2]);
+      const w=mapDiv.clientWidth||400;const h=Math.max(Math.min(w*0.85,380),260);
+      const pad=12;
+      const projection=d3.geoConicConformal().rotate([96,-1,0]).center([0,62]).parallels([49,77]).scale((w-pad*2)*0.52).translate([w/2,h/2+pad]);
       const path=d3.geoPath().projection(projection);
 
       // Parse GDP values for choropleth
@@ -574,7 +586,7 @@ function renderTLDRWordCloud(topics,containerId){
 }
 
 /* ── TLDR Financial Markets section ── */
-function renderTLDRMarkets(){
+async function renderTLDRMarkets(){
   const el=$('tldrMarketsSection');
   if(!el)return;
   const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
@@ -616,7 +628,17 @@ function renderTLDRMarkets(){
     gridHtml+='</div>';
   });
   gridHtml+='</div>';
-  el.innerHTML=narrative+gridHtml;
+
+  // Commodity movers chart as supporting infographic
+  const chartHtml=`<div class="ed-chart-inline" id="tldrCommodityCard" style="float:none;width:100%;margin:16px 0">
+    <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
+    <div style="height:180px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
+    <div class="ec-source">Yahoo Finance</div>
+  </div>`;
+
+  el.innerHTML=narrative+gridHtml+chartHtml;
+  // Render commodity chart
+  try{await _ensureChartData();_renderCommodityChart('tldrCommodityChart','tldrCommodityCard','tldr')}catch(e){console.warn('Markets chart:',e)}
 }
 
 /* ══ NATIONAL TAB (subtabs: Canada + Global Players) ══ */

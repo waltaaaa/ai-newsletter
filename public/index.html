@@ -443,8 +443,8 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .editorial-flow sup{color:#2563EB;font-weight:600;cursor:pointer;font-size:.7em}
 .editorial-flow sup:hover{text-decoration:underline}
 /* Section headers */
-.ed-section{margin:28px 0 12px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.08);clear:both}
-.ed-section-title{font-family:var(--font-heading);font-size:var(--text-lg);font-weight:700;color:#1a2744;letter-spacing:-0.01em;margin-bottom:3px}
+.ed-section{margin:32px 0 16px;padding-top:24px;border-top:2px solid rgba(37,99,235,0.12);clear:both}
+.ed-section-title{font-family:var(--font-heading);font-size:1.2rem;font-weight:700;color:#1a2744;letter-spacing:-0.01em;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(0,0,0,0.06)}
 .ed-section-sub{font-size:var(--text-xs);color:#64748B;margin-bottom:10px}
 /* Inline charts — always float RIGHT so text starts left */
 .ed-chart-inline{float:right;width:46%;margin:0 0 14px 20px;border:1px solid rgba(0,0,0,0.06);border-radius:var(--radius-md);padding:14px;background:rgba(0,0,0,0.01)}
@@ -452,9 +452,9 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .ed-chart-inline .ec-sub{font-size:10px;color:#64748B;margin-bottom:8px}
 .ed-chart-inline .ec-source{font-size:9px;color:#94A3B8;margin-top:6px;border-top:1px solid rgba(0,0,0,0.04);padding-top:4px}
 /* Canada map infographic — full width row */
-.ed-map{width:100%;margin:20px 0;border:1px solid rgba(0,0,0,0.06);border-radius:var(--radius-md);padding:20px;background:rgba(0,0,0,0.01);display:flex;gap:24px;align-items:center}
-.ed-map-chart{flex:1;min-width:0}
-.ed-map-stats{flex:0 0 200px;display:flex;flex-direction:column;gap:8px}
+.ed-map{float:right;width:45%;margin:0 0 16px 20px;border:1px solid rgba(0,0,0,0.06);border-radius:var(--radius-md);padding:16px;background:rgba(0,0,0,0.01)}
+.ed-map-chart{width:100%}
+.ed-map-stats{display:flex;flex-direction:column;gap:8px}
 .ed-map .ec-title{font-family:var(--font-heading);font-size:var(--text-sm);font-weight:600;color:#1a2744;margin-bottom:2px}
 .ed-map .ec-sub{font-size:10px;color:#64748B;margin-bottom:6px}
 .ed-map svg{display:block;margin:0 auto}
@@ -478,12 +478,13 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .editorial-sector-tag{display:inline-block;background:rgba(37,99,235,0.06);color:#2563EB;padding:2px 8px;border-radius:4px;font-size:var(--text-xs);font-weight:500;margin-right:4px;margin-bottom:4px}
 .editorial-footer{margin-top:36px;padding-top:20px;border-top:2px solid rgba(0,0,0,0.06);display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .editorial-lead-img{float:right;max-width:260px;width:40%;border-radius:var(--radius-md);margin:4px 0 16px 24px;object-fit:cover;max-height:200px;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
-/* National stat boxes above map */
-.ed-stat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
-.ed-stat-box{background:rgba(37,99,235,0.04);border:1px solid rgba(37,99,235,0.10);border-radius:var(--radius-sm);padding:8px 10px;text-align:center}
-.ed-stat-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:#64748B;margin-bottom:2px;font-family:var(--font-body)}
-.ed-stat-value{font-family:var(--font-heading);font-size:var(--text-base);font-weight:700;color:#1a2744}
-.ed-stat-change{font-size:9px;font-family:var(--font-mono);margin-top:1px}
+/* National stat boxes — inside 45% map panel */
+.ed-stat-header{font-family:var(--font-heading);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#64748B;font-weight:600;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid rgba(0,0,0,0.06)}
+.ed-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
+.ed-stat-box{background:rgba(37,99,235,0.04);border:1px solid rgba(37,99,235,0.10);border-radius:var(--radius-sm);padding:6px 8px;text-align:center}
+.ed-stat-label{font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#64748B;margin-bottom:1px;font-family:var(--font-body)}
+.ed-stat-value{font-family:var(--font-heading);font-size:var(--text-sm);font-weight:700;color:#1a2744}
+.ed-stat-change{font-size:8px;font-family:var(--font-mono);margin-top:1px}
 /* Map tooltip */
 .ed-map-tooltip{position:absolute;pointer-events:none;background:rgba(15,27,51,0.95);color:#fff;border-radius:var(--radius-sm);padding:12px 16px;font-size:var(--text-xs);box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:50;min-width:200px;opacity:0;transition:opacity 0.15s ease;backdrop-filter:blur(8px)}
 .ed-map-tooltip.visible{opacity:1}
@@ -502,7 +503,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .ed-markets-change{font-size:10px;font-family:var(--font-mono)}
 /* Unsplash image in overview */
 .ed-unsplash-img{float:right;max-width:280px;width:38%;border-radius:var(--radius-md);margin:4px 0 16px 24px;object-fit:cover;max-height:200px;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
-@media(max-width:899px){.ed-chart-inline{float:none;width:100%;margin:16px 0}.ed-map{flex-direction:column}.ed-map-stats{flex:none;width:100%;flex-direction:row;flex-wrap:wrap}.editorial-footer{grid-template-columns:1fr}.editorial-article{padding:24px 20px}.editorial-lead-img{float:none;max-width:100%;width:100%;margin:0 0 16px}.ed-stat-grid{grid-template-columns:repeat(3,1fr)}.ed-unsplash-img{float:none;max-width:100%;width:100%;margin:0 0 16px}}
+@media(max-width:899px){.ed-chart-inline{float:none;width:100%;margin:16px 0}.ed-map{float:none;width:100%;margin:16px 0}.ed-map-stats{flex:none;width:100%;flex-direction:row;flex-wrap:wrap}.editorial-footer{grid-template-columns:1fr}.editorial-article{padding:24px 20px}.editorial-lead-img{float:none;max-width:100%;width:100%;margin:0 0 16px}.ed-stat-grid{grid-template-columns:repeat(3,1fr)}.ed-unsplash-img{float:none;max-width:100%;width:100%;margin:0 0 16px}}
 @media(max-width:599px){.editorial-article{padding:20px 16px}.editorial-headline{font-size:var(--text-xl)}.editorial-meta{flex-wrap:wrap;gap:12px}.ed-stat-grid{grid-template-columns:repeat(2,1fr)}}
 .newsletter-hero{background:linear-gradient(135deg,rgba(255,255,255,0.97),rgba(240,245,255,0.95));border:1px solid rgba(255,255,255,0.5);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:28px 32px;position:relative;overflow:hidden}
 .newsletter-hero::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:#2563EB}
