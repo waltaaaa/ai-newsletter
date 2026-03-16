@@ -360,9 +360,9 @@ async function renderEditorialFlow(){
   function _weaveChart(html){
     if(!html)return sectorChartHtml;
     const parts=html.split('</p>');
-    if(parts.length<=2)return sectorChartHtml+html;
-    // Insert after 1st paragraph
-    parts.splice(1,0,sectorChartHtml);
+    if(parts.length<=2)return html+sectorChartHtml;
+    // Insert before last paragraph so chart bottom aligns with end of text
+    parts.splice(parts.length-2,0,sectorChartHtml);
     return parts.join('</p>');
   }
 
