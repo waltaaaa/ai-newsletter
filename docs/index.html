@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Signal Dispatch — Weekly Canadian economic intelligence dashboard tracking capital projects, policy, markets, and indicators across all provinces.">
-<meta property="og:title" content="Signal Dispatch">
+<meta name="description" content="The Lagging Indicator — Weekly Canadian economic intelligence tracking capital projects, policy, markets, and indicators across all provinces.">
+<meta property="og:title" content="The Lagging Indicator">
 <meta property="og:description" content="Weekly Canadian economic intelligence — capital projects, policy, markets, and indicators.">
 <meta property="og:type" content="website">
-<title>Signal Dispatch</title>
+<title>The Lagging Indicator</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
@@ -304,10 +304,16 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .sources-list a{color:var(--accent-blue);text-decoration:none}
 .sources-list a:hover{text-decoration:underline}
 /* Calendar */
-.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border-light);border:1px solid var(--border-light);border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px}
-.calendar-header-cell{padding:8px;text-align:center;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;color:#fff;background:rgba(255,255,255,0.10)}
-.calendar-cell{background:rgba(255,255,255,0.05);padding:8px;min-height:60px;font-size:var(--text-xs);cursor:pointer;transition:background .1s;color:#ffffff;position:relative}
-.calendar-cell:hover{background:rgba(96,165,250,0.10)}
+.calendar-wrap{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-lg);padding:20px 22px;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));box-shadow:var(--shadow-sm);margin-bottom:20px}
+.calendar-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.calendar-nav-title{font-family:var(--font-heading);font-size:var(--text-lg);font-weight:700;color:#1a2744}
+.calendar-nav-btns{display:flex;gap:6px}
+.calendar-nav-btn{background:none;border:1px solid rgba(0,0,0,0.10);border-radius:var(--radius-sm);padding:5px 12px;cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#5a6a85;transition:all .15s}
+.calendar-nav-btn:hover{background:rgba(0,0,0,0.04);color:#1a2744}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:rgba(0,0,0,0.06);border-radius:var(--radius-sm);overflow:hidden}
+.calendar-header-cell{padding:8px;text-align:center;font-size:var(--text-xs);font-weight:600;text-transform:uppercase;color:#5a6a85;background:rgba(0,0,0,0.03)}
+.calendar-cell{background:#ffffff;padding:8px;min-height:60px;font-size:var(--text-xs);cursor:default;transition:background .1s;color:#1a2744;position:relative}
+.calendar-cell:hover{background:rgba(96,165,250,0.06)}
 .cal-tooltip{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);z-index:50;min-width:220px;max-width:300px;background:rgba(15,23,42,0.96);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,0.5);pointer-events:none;text-align:left}
 .calendar-cell:hover .cal-tooltip{display:block}
 .cal-tooltip-event{padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
@@ -320,12 +326,12 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .cal-tooltip-impact.high{background:rgba(251,113,133,0.25);color:#FB7185}
 .cal-tooltip-impact.medium{background:rgba(251,191,36,0.25);color:#FBBF24}
 .cal-tooltip-impact.low{background:rgba(96,165,250,0.20);color:#60A5FA}
-.calendar-cell.other-month{color:rgba(255,255,255,0.40);background:rgba(255,255,255,0.06)}
-.calendar-cell.today{background:rgba(96,165,250,0.15);box-shadow:inset 0 0 0 2px var(--accent-blue)}
-.calendar-cell.today .calendar-day-number{color:var(--accent-blue);font-weight:800}
-.calendar-day-number{font-weight:600;margin-bottom:4px;color:#ffffff}
+.calendar-cell.other-month{color:#c0c8d4;background:#f8f9fb}
+.calendar-cell.today{background:rgba(96,165,250,0.10);box-shadow:inset 0 0 0 2px var(--accent-blue)}
+.calendar-cell.today .calendar-day-number{color:#2563EB;font-weight:800}
+.calendar-day-number{font-weight:600;margin-bottom:4px;color:#1a2744}
 .cal-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin:1px}
-.cal-dot.high{background:var(--status-red)}.cal-dot.medium{background:var(--status-amber)}.cal-dot.low{background:var(--accent-blue-soft)}
+.cal-dot.high{background:#EF4444}.cal-dot.medium{background:#F59E0B}.cal-dot.low{background:#3B82F6}
 /* Events */
 .events-week-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:16px 20px;margin-bottom:12px;backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur))}
 .events-week-card h3{font-family:var(--font-heading);font-size:var(--text-base);font-weight:700;margin-bottom:10px;color:#1a2744}
@@ -422,7 +428,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
   <div class="container">
     <div class="hero-content">
       <div class="hero-eyebrow">WEEKLY INTELLIGENCE BRIEFING</div>
-      <h1 class="hero-title">Signal Dispatch</h1>
+      <h1 class="hero-title">The Lagging Indicator</h1>
       <p class="hero-subtitle">Weekly recap on the economy, provinces, industries, and markets.</p>
       <div class="hero-badges"><span>Updated Weekly</span><span>Primary Source Data</span><span>Institutional Research</span></div>
     </div>
@@ -433,7 +439,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 <a href="#tab-tldr" class="skip-link" style="position:absolute;top:-40px;left:0;background:rgba(255,255,255,0.12);color:#ffffff;padding:8px 16px;z-index:1000;font-size:var(--text-sm);transition:top .2s;backdrop-filter:blur(20px)" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
 <nav class="main-nav" id="mainNav" aria-label="Main navigation">
   <div class="nav-inner" style="display:flex;align-items:center;gap:16px">
-    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><svg viewBox="0 0 40 40" width="22" height="22"><circle cx="14" cy="20" r="10" fill="#FFFFFF" opacity="0.9"/><circle cx="26" cy="20" r="10" fill="#EC4899" opacity="0.9"/><circle cx="20" cy="12" r="10" fill="#93C5FD" opacity="0.7"/></svg><span style="font-family:var(--font-heading);font-weight:700;font-size:var(--text-sm);color:#FFFFFF;white-space:nowrap">Signal Dispatch</span></div>
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><svg viewBox="0 0 40 40" width="22" height="22"><circle cx="14" cy="20" r="10" fill="#FFFFFF" opacity="0.9"/><circle cx="26" cy="20" r="10" fill="#EC4899" opacity="0.9"/><circle cx="20" cy="12" r="10" fill="#93C5FD" opacity="0.7"/></svg><span style="font-family:var(--font-heading);font-weight:700;font-size:var(--text-sm);color:#FFFFFF;white-space:nowrap">The Lagging Indicator</span></div>
     <ul class="nav-tabs" id="navTabs" role="tablist" style="flex:1">
       <li class="nav-tab active" data-tab="tldr" role="tab" aria-selected="true" aria-controls="tab-tldr" tabindex="0">TL;DR</li>
       <li class="nav-tab" data-tab="national" role="tab" aria-selected="false" aria-controls="tab-national" tabindex="-1">Canada</li>
@@ -631,13 +637,13 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
   </div>
 </main>
 <footer class="site-footer">
-  <span style="font-weight:600;color:#FFFFFF">Signal Dispatch</span> &middot; Data from Bank of Canada, Statistics Canada, Yahoo Finance &middot; All claims independently sourced &middot; <span id="footerDate"></span>
+  <span style="font-weight:600;color:#FFFFFF">The Lagging Indicator</span> &middot; Data from Bank of Canada, Statistics Canada, Yahoo Finance &middot; All claims independently sourced &middot; <span id="footerDate"></span>
   &middot; <a href="#" onclick="document.getElementById('helpModal').classList.add('active');return false" style="color:#93C5FD;text-decoration:none;font-weight:500">Help &amp; Guide</a>
 </footer>
 <div class="help-modal-overlay" id="helpModal" onclick="if(event.target===this)this.classList.remove('active')">
   <div class="help-modal" style="position:relative">
     <button class="help-close" onclick="document.getElementById('helpModal').classList.remove('active')">&times;</button>
-    <h2>Signal Dispatch User Guide</h2>
+    <h2>The Lagging Indicator User Guide</h2>
     <h3>What is this?</h3>
     <p>A weekly intelligence briefing covering Canadian capital projects, economic indicators, policy, and markets. Updated every Monday. All content is factual reporting with sourced data.</p>
     <h3>Briefing Archive</h3>

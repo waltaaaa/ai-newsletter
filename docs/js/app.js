@@ -1579,29 +1579,42 @@ window.exportProjects=function(){
 
 
 /* ====== CALENDAR TAB ====== */
+let _calMonth=null,_calYear=null,_calEvents=[];
 async function renderCalendar(){
-  let events=(D&&(D.watchlist||D.events))||[];
-  // Load from static events.json if briefing has no events
-  if(!events.length){try{events=await fetchJSON('events.json')||[]}catch(_){events=[]}}
-  // Monthly calendar grid
+  _calEvents=(D&&(D.watchlist||D.events))||[];
+  if(!_calEvents.length){try{_calEvents=await fetchJSON('events.json')||[]}catch(_){_calEvents=[]}}
   const now=new Date();
-  const year=now.getFullYear(),month=now.getMonth();
+  _calMonth=now.getMonth();_calYear=now.getFullYear();
+  renderCalendarGrid();
+  renderCalendarEvents();
+}
+window._calNav=function(dir){
+  _calMonth+=dir;
+  if(_calMonth>11){_calMonth=0;_calYear++}
+  if(_calMonth<0){_calMonth=11;_calYear--}
+  renderCalendarGrid();
+};
+window._calToday=function(){
+  const now=new Date();_calMonth=now.getMonth();_calYear=now.getFullYear();
+  renderCalendarGrid();
+};
+function renderCalendarGrid(){
+  const events=_calEvents;
+  const now=new Date();
+  const realMonth=now.getMonth(),realYear=now.getFullYear(),realDay=now.getDate();
+  const year=_calYear,month=_calMonth;
   const firstDay=new Date(year,month,1).getDay();
   const daysInMonth=new Date(year,month+1,0).getDate();
-  const today=now.getDate();
-  const monthName=now.toLocaleDateString('en-CA',{month:'long',year:'numeric'});
+  const monthName=new Date(year,month,1).toLocaleDateString('en-CA',{month:'long',year:'numeric'});
 
-  // Map events to dates — handles ISO "2026-03-14" and short "Mar 14" formats
-  const eventsByDate={};
   const MONTHS_SHORT={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  const eventsByDate={};
   events.forEach(e=>{
     const d=e.date||'';if(!d)return;
     let eDay=0,eMonth=-1,eYear=year;
     if(d.includes('-')&&d.length>=8){
-      // ISO format: 2026-03-14
       eYear=parseInt(d.split('-')[0]);eMonth=parseInt(d.split('-')[1])-1;eDay=parseInt(d.split('-')[2]);
-    } else {
-      // Short format: "Mar 14" or "March 14"
+    }else{
       const parts=d.trim().split(/\s+/);
       if(parts.length>=2){eMonth=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)]??-1;eDay=parseInt(parts[1])||0;}
     }
@@ -1611,13 +1624,14 @@ async function renderCalendar(){
     }
   });
 
-  let calHtml='<h3 style="font-size:var(--text-lg);font-weight:600;margin-bottom:16px;color:#ffffff">'+monthName+'</h3>';
+  let calHtml='<div class="calendar-wrap">';
+  calHtml+='<div class="calendar-nav"><div class="calendar-nav-btns"><button class="calendar-nav-btn" onclick="_calNav(-1)">\u2039 Prev</button><button class="calendar-nav-btn" onclick="_calToday()">Today</button><button class="calendar-nav-btn" onclick="_calNav(1)">Next \u203a</button></div>';
+  calHtml+='<div class="calendar-nav-title">'+monthName+'</div></div>';
   calHtml+='<div class="calendar-grid">';
   ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{calHtml+='<div class="calendar-header-cell">'+d+'</div>'});
-  // Blank cells before first day
   for(let i=0;i<firstDay;i++)calHtml+='<div class="calendar-cell other-month"></div>';
   for(let d=1;d<=daysInMonth;d++){
-    const isToday=d===today;
+    const isToday=(d===realDay&&month===realMonth&&year===realYear);
     const dayEvents=eventsByDate[d]||[];
     calHtml+='<div class="calendar-cell'+(isToday?' today':'')+'">';
     calHtml+='<div class="calendar-day-number">'+d+'</div>';
@@ -1626,18 +1640,16 @@ async function renderCalendar(){
         const impact=(e.impact||'low').toLowerCase();
         calHtml+='<span class="cal-dot '+impact+'"></span>';
       });
-      // Rich tooltip with full event details
       calHtml+='<div class="cal-tooltip">';
       dayEvents.forEach(e=>{
         const impact=(e.impact||'low').toLowerCase();
         const impactLabel=impact.charAt(0).toUpperCase()+impact.slice(1);
-        const name=san(e.event_name||e.event||e.name||'');
-        const inst=san(e.institution||e.source||'');
-        const desc=san(e.description||'');
         calHtml+='<div class="cal-tooltip-event">';
-        calHtml+='<div class="cal-tooltip-name">'+name+'</div>';
-        if(inst)calHtml+='<div class="cal-tooltip-inst">'+inst+'</div>';
-        if(desc)calHtml+='<div class="cal-tooltip-desc">'+desc+'</div>';
+        calHtml+='<div class="cal-tooltip-name">'+san(e.event_name||e.event||e.name||'')+'</div>';
+        const inst=e.institution||e.source||'';
+        if(inst)calHtml+='<div class="cal-tooltip-inst">'+san(inst)+'</div>';
+        const desc=e.description||'';
+        if(desc)calHtml+='<div class="cal-tooltip-desc">'+san(desc)+'</div>';
         calHtml+='<span class="cal-tooltip-impact '+impact+'">'+impactLabel+'</span>';
         calHtml+='</div>';
       });
@@ -1645,12 +1657,17 @@ async function renderCalendar(){
     }
     calHtml+='</div>';
   }
-  // Trailing blank cells
   const totalCells=firstDay+daysInMonth;
   const remaining=7-(totalCells%7);
   if(remaining<7){for(let i=0;i<remaining;i++)calHtml+='<div class="calendar-cell other-month"></div>'}
-  calHtml+='</div>';
+  calHtml+='</div></div>';
   $('calendarGrid').innerHTML=calHtml;
+}
+function renderCalendarEvents(){
+  const events=_calEvents;
+  const now=new Date();
+  const year=now.getFullYear(),month=now.getMonth(),today=now.getDate();
+  const MONTHS_SHORT={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
 
   // Helper to parse both ISO "2026-03-14" and short "Mar 14" dates
   function parseEvtDate(d){
