@@ -568,34 +568,33 @@ async function renderInteractiveMap(){
           tooltip.classList.remove('visible');
         });
 
-      // Province labels — code + GDP for provinces with data
-      const CENTROIDS={BC:[-125,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,52],NB:[-66,47],NS:[-63,45],NL:[-57,53],PE:[-63,46.5],YT:[-136,63],NT:[-120,64],NU:[-95,67]};
-      Object.entries(gdpVals).sort((a,b)=>b[1]-a[1]).forEach(([code,gdp])=>{
+      // Province labels — code only, skip Maritimes (shown in inset)
+      const insetCodes=new Set(['NB','NS','PE']);
+      const CENTROIDS={BC:[-125,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,52],NL:[-57,53],YT:[-136,63],NT:[-120,64],NU:[-95,67]};
+      Object.keys(gdpVals).forEach(code=>{
+        if(insetCodes.has(code))return;
         const c=CENTROIDS[code];if(!c)return;
         const pt=projection(c);if(!pt)return;
         svg.append('text').attr('x',pt[0]).attr('y',pt[1]).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',11).attr('font-weight',700).attr('fill','#0f1b33').text(code);
-        svg.append('text').attr('x',pt[0]).attr('y',pt[1]+13).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',9).attr('font-weight',600).attr('fill','#2563EB').text((gdp>0?'+':'')+gdp.toFixed(1)+'%');
       });
 
-      // ── Atlantic inset (top-right corner) ──
-      const atlanticCodes=new Set(['NB','NS','PE','NL']);
-      const atlanticFeatures=geojson.features.filter(f=>atlanticCodes.has(featureCode(f)));
-      if(atlanticFeatures.length){
-        const iw=Math.round(w*0.35);const ih=Math.round(iw*0.85);
+      // ── Maritime inset (top-right corner) — NB, NS, PE ──
+      const maritimeCodes=new Set(['NB','NS','PE']);
+      const maritimeFeatures=geojson.features.filter(f=>maritimeCodes.has(featureCode(f)));
+      if(maritimeFeatures.length){
+        const iw=Math.round(w*0.28);const ih=Math.round(iw*0.75);
         const ix=w-iw-6;const iy=6;
-        // Inset background
-        const ig=svg.append('g').attr('class','atlantic-inset');
+        const ig=svg.append('g').attr('class','maritime-inset');
         ig.append('rect').attr('x',ix).attr('y',iy).attr('width',iw).attr('height',ih).attr('fill','#F0F4FF').attr('stroke','rgba(37,99,235,0.25)').attr('stroke-width',1).attr('rx',6);
-        ig.append('text').attr('x',ix+iw/2).attr('y',iy+12).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',8).attr('font-weight',600).attr('fill','#64748B').text('Atlantic');
-        // Zoomed projection for Atlantic region
-        const atlGeo={type:'FeatureCollection',features:atlanticFeatures};
-        const atlProj=d3.geoConicConformal().rotate([63,0,0]).center([0,47]).parallels([44,50]);
-        atlProj.fitExtent([[ix+6,iy+16],[ix+iw-6,iy+ih-6]],atlGeo);
-        const atlPath=d3.geoPath().projection(atlProj);
-        // Draw Atlantic provinces
-        ig.selectAll('path.atl').data(atlanticFeatures).enter().append('path')
-          .attr('class','atl')
-          .attr('d',atlPath)
+        ig.append('text').attr('x',ix+iw/2).attr('y',iy+12).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',8).attr('font-weight',600).attr('fill','#64748B').text('Maritimes');
+        // Zoomed projection
+        const mGeo={type:'FeatureCollection',features:maritimeFeatures};
+        const mProj=d3.geoConicConformal().rotate([65,0,0]).center([0,46.5]).parallels([44,49]);
+        mProj.fitExtent([[ix+6,iy+16],[ix+iw-6,iy+ih-6]],mGeo);
+        const mPath=d3.geoPath().projection(mProj);
+        ig.selectAll('path.mar').data(maritimeFeatures).enter().append('path')
+          .attr('class','mar')
+          .attr('d',mPath)
           .attr('fill',f=>{
             const code=featureCode(f);const gdp=gdpVals[code];
             if(gdp===undefined)return'rgba(37,99,235,0.07)';
@@ -632,11 +631,11 @@ async function renderInteractiveMap(){
             tooltip.classList.remove('visible');
           });
         // Inset labels
-        const ATL_CENTROIDS={NB:[-66,47],NS:[-63,45],PE:[-63,46.5],NL:[-57,52]};
-        atlanticFeatures.forEach(f=>{
+        const MAR_CENTROIDS={NB:[-66,47],NS:[-63,44.8],PE:[-63,46.5]};
+        maritimeFeatures.forEach(f=>{
           const code=featureCode(f);
-          const c=ATL_CENTROIDS[code];if(!c)return;
-          const pt=atlProj(c);if(!pt)return;
+          const c=MAR_CENTROIDS[code];if(!c)return;
+          const pt=mProj(c);if(!pt)return;
           ig.append('text').attr('x',pt[0]).attr('y',pt[1]).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',9).attr('font-weight',700).attr('fill','#0f1b33').text(code);
         });
       }
