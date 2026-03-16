@@ -349,7 +349,7 @@ async def generate_infographic_directives(
     The frontend renders these dynamically instead of static default charts.
     """
     from claude_reasoning import reason_with_claude_tracked
-    from pipeline_config import SONNET_MODEL as SONNET_REASONING_MODEL
+    from pipeline_config import OPUS_MODEL
 
     overall = project_trends.get("overall", {}) if project_trends else {}
     momentum = project_trends.get("sector_momentum", {}) if project_trends else {}
@@ -423,7 +423,7 @@ Return ONLY the JSON array, no other text."""
             prompt,
             task_name="infographic_directives",
             max_tokens=1000,
-            model=SONNET_REASONING_MODEL,
+            model=OPUS_MODEL,
         )
         text = (result or {}).get("text", "").strip()
         # Extract JSON from response
