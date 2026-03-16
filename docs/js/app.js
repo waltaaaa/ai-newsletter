@@ -298,18 +298,33 @@ function renderTLDR(){
   setTimeout(collapseEmpty,200);
 }
 
-/* ══ CANADA TAB (National Picture — mirrors Province pattern) ══ */
+/* ══ NATIONAL TAB (subtabs: Canada + Global Players) ══ */
+let _nationalSubRendered={};
+const NATIONAL_BANNERS={canada:{title:'Canada',sub:'National economic indicators, analysis, policy, and capital projects',img:'https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1200&q=80'},us:{title:'United States',sub:'U.S. macro indicators and policy developments affecting Canada',img:'https://images.unsplash.com/photo-1501466044931-62695aada8e9?w=1200&q=80'},china:{title:'China',sub:'Chinese economic data and trade developments relevant to Canada',img:'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=1200&q=80'},eu:{title:'European Union',sub:'EU economic conditions and policy affecting Canadian trade',img:'https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=1200&q=80'},uk:{title:'United Kingdom',sub:'UK economic data and bilateral trade with Canada',img:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1200&q=80'}};
+window.switchNationalSub=function(key){
+  document.querySelectorAll('.national-subtab').forEach(b=>b.classList.toggle('active',b.dataset.country===key));
+  document.querySelectorAll('.national-subpanel').forEach(p=>p.classList.toggle('active',p.id==='nsub-'+key));
+  const b=NATIONAL_BANNERS[key]||NATIONAL_BANNERS.canada;
+  $('nationalBannerTitle').textContent=b.title;
+  $('nationalBannerSub').textContent=b.sub;
+  $('nationalBanner').style.setProperty('--banner-img',"url('"+b.img+"')");
+  if(!_nationalSubRendered[key]){_nationalSubRendered[key]=true;if(key==='canada')renderCanadaSub();else renderGlobalPlayerSub(key)}
+};
 async function renderNational(){
-  // Header
+  _nationalSubRendered={};
+  renderCanadaSub();
+  _nationalSubRendered.canada=true;
+  // Pre-render global player subtabs
+  renderAllGlobalPlayers();
+}
+async function renderCanadaSub(){
   const el=$('canadaHeader');
   if(el){
     const projTotal=allProjects.length||(await fetchJSON('projects_all.json').then(d=>Array.isArray(d)?d.length:0).catch(()=>0));
     el.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:var(--text-xl);font-weight:700">Canada</span></div><span style="font-size:var(--text-xs);color:#7a8aa5">'+projTotal+' projects tracked nationally</span></div>';
   }
-  // Mini chart cards — national indicators
   const m=(D&&D.metrics)||{};const im=(D&&D.indicatorMeta)||{};
   function indVal(name){const i=indicators.find(x=>x.indicator_name===name);return i?i.value:null}
-  function indDate(name){const i=indicators.find(x=>x.indicator_name===name);return i?fmtDate(i.period):''}
   const chartMetrics=[
     {label:'BoC Rate',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'N/A',meta:im.bocRate||{},tsId:'boc_rate'},
     {label:'GDP YoY',value:m.realGdp||m.gdp||indVal('realGdp')||'N/A',meta:im.realGdp||{},tsId:null},
@@ -334,24 +349,17 @@ async function renderNational(){
     mc.innerHTML=miniHtml;
     natSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
   }
-  // National Analysis
   const hasBriefing=D&&D.executive_summary;
   if(hasBriefing){
     const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
     const natSources=(D.national&&D.national.sources)||[];
     $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(linkFootnotes(natContent,natSources.length?natSources:(D.sources||[])))}</div>${sourcesFooter(natSources)}</div>`;
   }else{$('nationalAnalysis').innerHTML=''}
-  // Global Vectors
-  if(D)renderGlobalVectors();
-  // Consumer Sentiment + Policy
   if(D)renderSentiment();
   renderPolicySection();
-  // All Indicators dropdown
   const dd=$('canadaIndicatorDropdown');
   if(dd)dd.innerHTML=renderIndicatorDropdown(indicators,'All National Indicators','_canada');
-  // Indicator Explorer
   renderIndicatorExplorer();
-  // National Projects Preview (top 10 by value)
   const pp=$('canadaProjectsPreview');
   if(pp){
     let projects=[];
@@ -372,9 +380,43 @@ async function renderNational(){
     projHtml+='</div>';
     pp.innerHTML=projHtml;
   }
-  // Pipeline Status & Cost
   renderPipelineStatus();
   renderCostMonitor();
+}
+function renderAllGlobalPlayers(){
+  const gv=D?D.globalVectors||D.global_vectors||{}:{};
+  const globalArr=D?D.global||[]:[];
+  const REGION_MAP={'United States':'us','China':'china','European Union':'eu','United Kingdom':'uk'};
+  const players=[{key:'us',name:'United States'},{key:'china',name:'China'},{key:'eu',name:'European Union'},{key:'uk',name:'United Kingdom'}];
+  players.forEach(v=>{
+    const panel=$('nsub-'+v.key);if(!panel)return;
+    const gData=globalArr.find(g=>REGION_MAP[g.region]===v.key)||{};
+    const analysis=gData.analysis||gv[v.key]||'';
+    let html='';
+    const gi=gData.indicators||{};
+    const hasInd=gi.gdp||gi.cpi||gi.rate||gi.unemployment;
+    if(hasInd){
+      html+='<div class="mini-chart-grid" style="margin-bottom:16px">';
+      if(gi.gdp)html+='<div class="mini-chart-card"><div class="mini-chart-label">GDP</div><div class="mini-chart-value">'+gi.gdp+'</div></div>';
+      if(gi.cpi)html+='<div class="mini-chart-card"><div class="mini-chart-label">CPI</div><div class="mini-chart-value">'+gi.cpi+'</div></div>';
+      if(gi.rate)html+='<div class="mini-chart-card"><div class="mini-chart-label">Policy Rate</div><div class="mini-chart-value">'+gi.rate+'</div></div>';
+      if(gi.unemployment)html+='<div class="mini-chart-card"><div class="mini-chart-label">Unemployment</div><div class="mini-chart-value">'+gi.unemployment+'</div></div>';
+      html+='</div>';
+    }
+    if(analysis){
+      html+='<div class="card fade-in"><div class="card-header">'+v.name+' Analysis</div><div class="card-body">'+san(linkFootnotes(analysis,gData.sources||[]))+'</div>';
+      if(gData.sources&&gData.sources.length)html+=sourcesFooter(gData.sources);
+      html+='</div>';
+    }
+    if(!analysis&&!hasInd){
+      html+='<div class="empty-state" style="padding:48px 16px"><div class="empty-state-text">'+v.name+' analysis will be available after the next pipeline run.</div></div>';
+    }
+    panel.innerHTML=html;
+    _nationalSubRendered[v.key]=true;
+  });
+}
+function renderGlobalPlayerSub(key){
+  renderAllGlobalPlayers();
 }
 function collapseEmpty(){
   const panel=document.getElementById('tab-tldr');
