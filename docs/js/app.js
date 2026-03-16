@@ -355,6 +355,17 @@ async function renderEditorialFlow(){
   // Word cloud topics
   const wcTopics=(D.word_cloud_topics&&D.word_cloud_topics.length)?D.word_cloud_topics:extractTopicsFromText();
 
+  // Helper: splice sector chart near the end of industry text
+  const sectorChartHtml=`<div class="ed-chart-inline" id="tldrSectorCard" style="float:left;margin:0 20px 14px 0"><div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div><div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div><div class="ec-source">Pipeline database</div></div>`;
+  function _weaveChart(html){
+    if(!html)return sectorChartHtml;
+    const parts=html.split('</p>');
+    if(parts.length<=2)return html+sectorChartHtml;
+    // Insert before the last paragraph
+    parts.splice(parts.length-2,0,sectorChartHtml);
+    return parts.join('</p>');
+  }
+
   // Insert image after 3rd paragraph so it doesn't compete with the map float
   let execWithImg=execHtml;
   if(imgHtml){
@@ -374,12 +385,7 @@ async function renderEditorialFlow(){
     <div class="ed-clear"></div>
 
     <div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>
-    <div class="ed-chart-inline" id="tldrSectorCard" style="float:left;margin:0 20px 14px 0">
-      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
-      <div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div>
-      <div class="ec-source">Pipeline database</div>
-    </div>
-    ${industryHtml}
+    ${_weaveChart(industryHtml)}
     <div class="ed-clear"></div>
 
     <div class="ed-section"><div class="ed-section-title">Financial Markets</div></div>
