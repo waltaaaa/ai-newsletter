@@ -323,7 +323,7 @@ def run(conn, context, logger):
 
         # Static JSON export
         try:
-            from export_dashboard import export_all
+            from tools.export_dashboard import export_all
             print("\n[STEP 9] Exporting static JSON files...")
             export_result = export_all(conn=conn)
             print(f"[OK] Exported {export_result['file_count']} files to {export_result['output_dir']}")

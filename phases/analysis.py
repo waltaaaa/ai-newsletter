@@ -903,34 +903,20 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
     cdn_officials_ctx = _build_canadian_officials_context(watchlist)
     global_officials_ctx = _build_global_officials_context(watchlist)
 
-    # Build consumer sentiment context (if available)
+    # Build consumer sentiment context (non-blocking — runs in background)
     sentiment_ctx = ''
+    _sentiment_future = None
     try:
         from sentiment import collect_sentiment, SENTIMENT_ENABLED
         if SENTIMENT_ENABLED:
-            sentiment_data = collect_sentiment()
-            if sentiment_data:
-                topics = sentiment_data.get('topics', [])
-                s_idx  = sentiment_data.get('sentiment_index', 'N/A')
-                top_5  = topics[:5] if topics else []
-                topic_lines = '\n'.join(
-                    f"  - {t.get('topic', '?')}: {t.get('sentiment', '?')} "
-                    f"(mentions: {t.get('mention_count', 0)}, sources: {t.get('source', '?')})"
-                    for t in top_5
-                )
-                sentiment_ctx = (
-                    f"\n\nCONSUMER SENTIMENT PULSE (from Reddit, Google Trends, CBC comments):\n"
-                    f"  Sentiment Index: {s_idx} (0=very negative, 100=very positive)\n"
-                    f"  Top concerns/topics ({len(topics)} total):\n{topic_lines}\n"
-                    f"  Use this data to add a 1-2 sentence consumer pulse note in the executive summary.\n"
-                )
-                # Store for Firestore push later
-                hard_data['_sentiment_result'] = sentiment_data
-                print(f"  [Sentiment] Collected {len(topics)} topics, index={s_idx}")
+            from concurrent.futures import ThreadPoolExecutor as _SentPool
+            _sent_pool = _SentPool(max_workers=1)
+            _sentiment_future = _sent_pool.submit(collect_sentiment)
+            print("  [Sentiment] Started collection in background...")
     except ImportError:
         pass
     except Exception as e:
-        print(f"  [Sentiment] Collection failed (non-critical): {type(e).__name__}")
+        print(f"  [Sentiment] Setup failed (non-critical): {type(e).__name__}")
 
     # ── Build signal context blocks from Prompts 11-19 data ────────
     _signal_blocks = _build_signal_context_blocks(signal_context)
@@ -946,6 +932,33 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
     # ── CALLS 1-4: Run in parallel (all independent) ─────────────
     # cost_state is shared across threads — add lock to protect mutations
     cost_state['_lock'] = threading.Lock()
+
+    # Resolve sentiment future (wait max 60s, then proceed without)
+    if _sentiment_future:
+        try:
+            from concurrent.futures import TimeoutError as _FutTimeout
+            sentiment_data = _sentiment_future.result(timeout=60)
+            if sentiment_data:
+                topics = sentiment_data.get('topics', [])
+                s_idx  = sentiment_data.get('sentiment_index', 'N/A')
+                top_5  = topics[:5] if topics else []
+                topic_lines = '\n'.join(
+                    f"  - {t.get('topic', '?')}: {t.get('sentiment', '?')} "
+                    f"(mentions: {t.get('mention_count', 0)}, sources: {t.get('source', '?')})"
+                    for t in top_5
+                )
+                sentiment_ctx = (
+                    f"\n\nCONSUMER SENTIMENT PULSE (from Reddit, Google Trends, CBC comments):\n"
+                    f"  Sentiment Index: {s_idx} (0=very negative, 100=very positive)\n"
+                    f"  Top concerns/topics ({len(topics)} total):\n{topic_lines}\n"
+                    f"  Use this data to add a 1-2 sentence consumer pulse note in the executive summary.\n"
+                )
+                hard_data['_sentiment_result'] = sentiment_data
+                print(f"  [Sentiment] Collected {len(topics)} topics, index={s_idx}")
+        except _FutTimeout:
+            print("  [Sentiment] Timed out after 60s — proceeding without")
+        except Exception as e:
+            print(f"  [Sentiment] Collection failed (non-critical): {type(e).__name__}")
 
     print(f"  [1-4] Running all Claude calls in parallel (Sonnet)...")
 

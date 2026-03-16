@@ -217,7 +217,7 @@ def classify_policy_articles(articles, max_batch=30):
         results = run_batch_sync([{
             "query": prompt,
             "grounding": False,
-        }])
+        }], "You are a policy classification assistant for Canadian economic intelligence.")
         if not results:
             return []
 

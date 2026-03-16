@@ -493,6 +493,16 @@ def init_db(path: str | None = None) -> sqlite3.Connection:
         conn.execute("ALTER TABLE projects ADD COLUMN official_ids TEXT DEFAULT '{}'")
         conn.commit()
 
+    # Confidence decay migration: add decay tracking columns if missing
+    try:
+        conn.execute("SELECT display_confidence FROM projects LIMIT 1")
+    except sqlite3.OperationalError:
+        conn.execute("ALTER TABLE projects ADD COLUMN display_confidence REAL DEFAULT 0.3")
+        conn.execute("ALTER TABLE projects ADD COLUMN days_since_update INTEGER DEFAULT 0")
+        conn.execute("ALTER TABLE projects ADD COLUMN is_stale INTEGER DEFAULT 0")
+        conn.execute("ALTER TABLE projects ADD COLUMN needs_review INTEGER DEFAULT 0")
+        conn.commit()
+
     logger.info(f"Database initialized: {path or _DEFAULT_DB_PATH}")
     return conn
 

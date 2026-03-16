@@ -120,6 +120,13 @@ async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_in
         response = model.generate_content(prompt)
         text = response.text.strip()
 
+        # Strip markdown code fences if present
+        if text.startswith("```"):
+            text = text.split("```")[1]
+            if text.startswith("json"):
+                text = text[4:]
+            text = text.strip()
+
         # Parse JSON response
         topic_data = json.loads(text)
         topic = topic_data.get("topic", "")
