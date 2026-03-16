@@ -423,7 +423,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
     <div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><svg viewBox="0 0 40 40" width="22" height="22"><circle cx="14" cy="20" r="10" fill="#FFFFFF" opacity="0.9"/><circle cx="26" cy="20" r="10" fill="#EC4899" opacity="0.9"/><circle cx="20" cy="12" r="10" fill="#93C5FD" opacity="0.7"/></svg><span style="font-family:var(--font-heading);font-weight:700;font-size:var(--text-sm);color:#FFFFFF;white-space:nowrap">Signal Dispatch</span></div>
     <ul class="nav-tabs" id="navTabs" role="tablist" style="flex:1">
       <li class="nav-tab active" data-tab="tldr" role="tab" aria-selected="true" aria-controls="tab-tldr" tabindex="0">TL;DR</li>
-      <li class="nav-tab" data-tab="national" role="tab" aria-selected="false" aria-controls="tab-national" tabindex="-1">National</li>
+      <li class="nav-tab" data-tab="national" role="tab" aria-selected="false" aria-controls="tab-national" tabindex="-1">Canada</li>
       <li class="nav-tab" data-tab="provinces" role="tab" aria-selected="false" aria-controls="tab-provinces" tabindex="-1">Provinces</li>
       <li class="nav-tab" data-tab="industries" role="tab" aria-selected="false" aria-controls="tab-industries" tabindex="-1">Industries</li>
       <li class="nav-tab" data-tab="markets" role="tab" aria-selected="false" aria-controls="tab-markets" tabindex="-1">Markets</li>
@@ -457,11 +457,8 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       <div id="infographicsContainer"></div>
     </div>
     <div class="newsletter-section">
-      <div class="newsletter-section-label">Analysis</div>
-      <div class="ws-row ws-row-2">
-        <div id="microscopeSection"></div>
-        <div id="nationalAnalysis"></div>
-      </div>
+      <div class="newsletter-section-label">Under the Microscope</div>
+      <div id="microscopeSection"></div>
     </div>
     <div class="newsletter-section">
       <div class="newsletter-section-label">Weekly Intelligence Briefing</div>
@@ -474,21 +471,26 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       </div>
     </div>
   </div>
-  <!-- NATIONAL PICTURE -->
+  <!-- CANADA -->
   <div class="tab-panel" id="tab-national" role="tabpanel" aria-labelledby="tab-national-label">
     <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1200&q=80')">
       <div class="section-banner-content">
-        <div class="section-banner-title">The National Picture</div>
-        <div class="section-banner-sub">Canada's macro economy — indicators, policy, and global context</div>
+        <div class="section-banner-title">Canada</div>
+        <div class="section-banner-sub">National economic indicators, analysis, policy, and capital projects</div>
       </div>
     </div>
-    <section id="globalVectors"></section>
-    <div class="ws-row ws-row-2">
+    <div id="canadaHeader" style="margin-bottom:12px"></div>
+    <div id="canadaMiniCharts"></div>
+    <div id="nationalAnalysis" style="margin-top:16px"></div>
+    <section id="globalVectors" style="margin-top:16px"></section>
+    <div class="ws-row ws-row-2" style="margin-top:16px">
       <div id="sentimentSection"></div>
       <div id="policySection"></div>
     </div>
-    <section id="indicatorExplorer"></section>
-    <div class="ws-row ws-row-2">
+    <div id="canadaIndicatorDropdown" style="margin-top:16px"></div>
+    <section id="indicatorExplorer" style="margin-top:16px"></section>
+    <div id="canadaProjectsPreview" style="margin-top:16px"></div>
+    <div class="ws-row ws-row-2" style="margin-top:16px">
       <div id="pipelineStatus"></div>
       <div id="costMonitor"></div>
     </div>
