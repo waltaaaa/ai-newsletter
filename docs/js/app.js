@@ -265,7 +265,15 @@ function renderTLDR(){
   const hasBriefing=D&&D.executive_summary;
   // Summary — newsletter hero with content headline
   if(hasBriefing){
-    const headline=(D.headline||D.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim();
+    let headline=(D.headline||'').trim();
+    // If no real headline, extract the first strong/bold text or first sentence from exec summary
+    if(!headline||/^\d|^[A-Z]{3}\s\d/.test(headline)){
+      const tmp=document.createElement('div');tmp.innerHTML=D.executive_summary||'';
+      const strong=tmp.querySelector('strong,b');
+      if(strong)headline=strong.textContent.trim();
+      else{const txt=tmp.textContent||'';headline=(txt.split(/[.!]\s/)[0]||'Weekly Summary').trim()}
+      if(headline.length>80)headline=headline.substring(0,77)+'...';
+    }
     let metaHtml='';
     const projCount=D.discovery_stats?D.discovery_stats.total_projects||'':D.project_count||'';
     const newProj=D.discovery_stats?D.discovery_stats.new_this_week||'':D.new_projects||'';

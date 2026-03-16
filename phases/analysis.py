@@ -1007,6 +1007,7 @@ OUTPUT: Valid JSON only. No markdown. No text outside the JSON.
 
 SCHEMA:
 {{
+    "headline": "8-12 word newspaper-style headline capturing the week's dominant macro story (e.g. 'BoC Holds Rates as February Jobs Report Shows 84,000 Lost')",
     "executive_summary": "<ul class='list-disc list-inside space-y-2 text-slate-700'><li>8-12 bullets with <sup>N</sup> citations and <strong> on key figures</li></ul>",
     "metrics": {{
         "realGdp": "", "nomGdp": "", "outputGap": "", "cpi": "", "shelterCpi": "",
