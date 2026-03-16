@@ -983,24 +983,24 @@ Write:
 
 1. EXECUTIVE SUMMARY (8-12 bullet points)
 Format as HTML: <ul class="list-disc list-inside space-y-2 text-slate-700"><li>...</li></ul>
-Each bullet is 1-2 sentences with a specific fact, figure, or development. Use <strong> tags on key figures.
-Cover: top macro story, supporting data, risks/counterpoints, consumer sentiment texture, upcoming catalysts.
+Each bullet is 1-2 sentences stating a specific fact, figure, or development that occurred. Use <strong> tags on key figures.
+Cover: what happened this week in the data — releases, changes, policy actions, project updates. NO forecasting, NO predictions, NO forward-looking language.
 Every bullet ends with <sup>N</sup> citation.
 
-2. NATIONAL ANALYSIS (4-6 flowing prose paragraphs, 400-550 words total)
+2. NATIONAL ANALYSIS (6-8 short paragraphs, 400-550 words total)
 Format as HTML paragraphs: <p>paragraph text</p>
-Write in the style of TD Economics Quarterly Economic Forecast — professionally conversational, data-embedded, narrative-driven.
-Structure: Open with the dominant macro theme and its key data point. Second paragraph: deep-dive into supporting data (embed specific figures inline: "grew at an annualized rate of 1.3%", "less than half its 2024 pace"). Third paragraph: secondary developments or counterpoints ("However," "Not all sectors reflected this pattern"). Final paragraph: forward-looking risks and catalysts with conditional framing ("If the CUSMA review proceeds as expected...", "should tariffs remain at current levels...").
-Use hedging language naturally: "is likely to", "would be expected to", "suggests some sluggishness has materialized". Reference period-over-period changes and comparisons. Every claim backed by <sup>N</sup> citation. No bullet points.
+Each paragraph is 2-3 sentences maximum. Write like a wire service dispatch — factual, specific, no editorializing.
+Structure: Open with the week's dominant data release and its key figure. Next paragraphs: report supporting data with specific figures inline ("grew at an annualized rate of 1.3%", "less than half its 2024 pace"). Report secondary developments or counterpoints ("Not all sectors reflected this pattern"). Report what policy actions occurred and what data they referenced.
+NEVER forecast. NEVER use "is likely to", "would be expected to", "going forward", "looking ahead", "outlook", "expected to". Only report what HAS happened — data releases, policy decisions, project announcements, price movements. Reference period-over-period changes and comparisons. Every claim backed by <sup>N</sup> citation. No bullet points.
 
-3. GLOBAL ANALYSIS (3-4 flowing prose paragraphs per region, 250-350 words each):
+3. GLOBAL ANALYSIS (4-6 short paragraphs per region, 250-350 words each):
 Format each as HTML paragraphs: <p>paragraph text</p>
-Write like a TD Economics global outlook section — each region gets its own narrative arc.
-US: Open with headline GDP/employment fact, embed rate/inflation data inline, close with implications for Canadian trade, rates, and currency. Use transitions: "Meanwhile," "In contrast," "Looking ahead,".
-China: Lead with growth data, discuss commodity demand implications for Canadian exporters, note policy responses. Use: "albeit," "this most recent development will...", temporal specifics ("second half of 2026").
-EU: Frame around fiscal/monetary policy shifts, defense spending, and trade implications for Canada. Acknowledge lags between announcements and impact.
-UK: Cover trade relationship, financial linkages, rate differentials.
-Per region: first paragraphs cover what happened with embedded data, final paragraph connects back to Canada. Every claim backed by <sup>N</sup> citation. No bullet points.
+Each paragraph is 2-3 sentences maximum. Write like a wire service report — state what happened, what data showed, and what the cross-border connection is.
+US: Report GDP/employment data, rate/inflation figures, and trade data relevant to Canada.
+China: Report growth data, commodity demand figures relevant to Canadian exporters, policy actions taken.
+EU: Report fiscal/monetary decisions, defense spending figures, and trade data relevant to Canada.
+UK: Report trade figures, rate decisions, and financial data.
+Per region: report what happened with embedded data. State factual connections to Canada (e.g. "X% of Canadian exports go to..."). NEVER forecast, predict, or use "looking ahead", "expected to", "is likely to". Every claim backed by <sup>N</sup> citation. No bullet points.
 
 4. INDICATOR CONTEXT LINES: 1 sentence each, under 20 words, plain English for: bocRate, cpi, unemployment, housingStarts, realGdp.
 
@@ -1014,7 +1014,7 @@ Each bullet: one specific consumer trend, sentiment signal, or discussion topic.
 
 8. WORD CLOUD TOPICS: Extract 40-60 meaningful economic topics/phrases from this week's news. These power a word cloud visualization. Each topic should be 1-3 words, e.g. "tariff threat", "rate cut", "housing affordability", "LNG exports", "auto layoffs", "tech hiring freeze", "lumber prices", "fiscal deficit", "immigration policy". Assign each a sentiment_score (-1.0 to +1.0, negative=bad for Canada, positive=good) and frequency (1-10 importance weight, 10=dominant story). Prioritize specificity over generality. BAD: "economy", "growth", "markets". GOOD: "tariff retaliation", "BoC rate hold", "Alberta oil sands", "EV battery plant".
 
-Style: TD Economics Quarterly Economic Forecast quality. Executive summary and consumer pulse use bullet points (<ul><li>). National analysis and global analysis use flowing prose paragraphs (<p>) — professionally conversational, data-first but narrative-driven. Embed specific figures inline ("grew at an annualized rate of 1.3%", "three straight quarters of businesses cutting back"). Use hedging devices naturally ("is likely to", "would be expected to", "suggests some sluggishness"). Use connective language: "However,", "Meanwhile,", "Looking ahead,", "In contrast,", "Not all is downtrodden,". Acknowledge uncertainty explicitly: "we do not expect clarity", "it remains unclear how much influence". Present multiple outcomes without advocating. DO NOT discuss stock market movements, equity index levels, or stock performance (e.g. TSX, S&P 500, Dow, NASDAQ gains/losses). Rate changes, yield changes, FX, and bond markets ARE fair game. BANNED: economy continues to grow, markets remain volatile, positive outlook contingent on demand, going forward, cautiously optimistic.
+Style: Wire service / Reuters dispatch quality. Short paragraphs (2-3 sentences each). Executive summary and consumer pulse use bullet points (<ul><li>). National analysis and global analysis use short prose paragraphs (<p>). Embed specific figures inline ("grew at an annualized rate of 1.3%", "three straight quarters of businesses cutting back"). REPORT ONLY — no editorializing, no forecasting, no opinions. State what happened, what data showed, what changed. DO NOT use: "is likely to", "would be expected to", "looking ahead", "going forward", "outlook", "expected to", "cautiously optimistic", "remains to be seen", "continues to grow", "markets remain volatile", "positive outlook", "encouraging", "concerning", "worrying", "promising". DO NOT discuss stock market movements, equity index levels, or stock performance (e.g. TSX, S&P 500, Dow, NASDAQ gains/losses). Rate changes, yield changes, FX, and bond markets ARE fair game.
 
 OUTPUT: Valid JSON only. No markdown. No text outside the JSON.
 
@@ -1032,7 +1032,7 @@ SCHEMA:
         "wageGrowth": "", "currentAccount": "", "agCrop": "", "farmCash": ""
     }},
     "national": {{
-        "analysis": "<p>First paragraph: dominant macro theme with key data point.<sup>1</sup></p><p>Second paragraph: supporting data deep-dive.<sup>2</sup></p><p>Third paragraph: secondary developments or counterpoints.<sup>3</sup></p><p>Final paragraph: forward-looking risks and catalysts.<sup>4</sup></p>",
+        "analysis": "<p>2-3 sentence paragraph: dominant data release with key figure.<sup>1</sup></p><p>Supporting data point.<sup>2</sup></p><p>Secondary development or counterpoint.<sup>3</sup></p><p>Policy action or project update.<sup>4</sup></p><p>Cross-reference to project database.<sup>5</sup></p>",
         "sources": [{{"id": 1, "title": "Publication — Title, Month YYYY", "url": "https://example.com/article"}}]
     }},
     "global": [
@@ -1089,7 +1089,7 @@ Write:
 
 1. INDUSTRY EXECUTIVE SUMMARY (8-12 bullet points):
 Format as HTML: <ul class="list-disc list-inside space-y-2 text-slate-700"><li>...</li></ul>
-Each bullet: one specific cross-cutting industry development with figures and citations. Lead with the single biggest sectoral story. Identify themes spanning multiple sectors. Note structural shifts or emerging trends. Every bullet ends with <sup>N</sup>.
+Each bullet: one specific industry development that occurred, with figures and citations. Lead with the single biggest sectoral data release or event. Report what happened across sectors. NO forecasting, NO "expected to", NO "looking ahead". Every bullet ends with <sup>N</sup>.
 
 2. SECTOR ANALYSIS — goodsIndustries: Exactly 5 goods-producing sectors. Per sector: 150 words in bullets. 3-digit NAICS subsector commentary where data supports.
    For each:
@@ -1187,18 +1187,18 @@ Ontario, Quebec, Alberta, British Columbia, Saskatchewan, Manitoba, Nova Scotia,
 
 For EACH:
 a) indicators: Set ALL four fields (gdp, unemployment, cpi, housingStarts) to "" — they will be overwritten from primary data APIs (StatCan) and must not be estimated or hallucinated.
-b) analysis: 4-6 flowing prose paragraphs (300-450 words per province, shorter paragraphs of 2-4 sentences each — news article style). Format as HTML: <p>paragraph</p>. Write in the style of TD Economics Provincial Economic Forecast.
+b) analysis: 6-8 short prose paragraphs (300-450 words per province, 2-3 sentences each). Format as HTML: <p>paragraph</p>. Write like a wire service dispatch — factual, specific, no editorializing.
    Structure each province's analysis as:
-   - Opening paragraph: Establish current economic performance vs expectations, with key GDP/employment data embedded inline ("grew at an annualized rate of 1.3%", "placing it above the national average").
-   - Sector drivers paragraph: 2-3 key sectors driving or dragging growth, with specific figures woven in ("manufacturing sales rising in two of the last three months", "exports to non-US partners up 20% year-to-date").
-   - Policy/fiscal paragraph: Government spending, capital plans, fiscal position stated factually ("The provincial government's capital plan features a 16% jump in planned outlays").
-   - Forward-looking paragraph: Near-term outlook with conditional framing ("Should tariffs remain at current levels...", "Looking ahead, housing starts are expected to...").
-   Use hedging naturally: "is likely to", "would be expected to", "suggests". Compare to national average where relevant. Use transitions: "On a positive note,", "However,", "Contrary to expectations,", "Looking ahead,". Every claim backed by <sup>N</sup> citation. No bullet points.
+   - Opening paragraph: State the latest GDP/employment data with figures inline ("grew at an annualized rate of 1.3%", "placing it above the national average").
+   - Sector paragraphs: Report what happened in 2-3 key sectors with specific figures ("manufacturing sales rose in two of the last three months", "exports to non-US partners were up 20% year-to-date").
+   - Policy/fiscal paragraph: Report government spending decisions, capital plans, fiscal position ("The provincial government's capital plan allocated a 16% increase in planned outlays").
+   - Project paragraph: Report specific capital projects announced, approved, or advancing.
+   NEVER forecast. NEVER use "looking ahead", "expected to", "is likely to", "outlook", "on a positive note", "going forward". Only report what HAS happened. Compare to national average where relevant. Every claim backed by <sup>N</sup> citation. No bullet points.
 c) sources: Array matching citation numbers. id, title (Publication — Article Title, Month YYYY), url (direct link — REQUIRED, use homepage if exact URL unknown).
 d) projects: 2-4 major capital projects. Each: name, description (1 sentence, max 20 words, names the proponent), sector, value (e.g. "$4.2B"), status (Announced/Approved/Under Construction/Operational/Completed/Cancelled), completionDate (e.g. "2027" or ""), cma (nearest city/CMA), tags (array of 1-3 strings), sources (array with id/title/url).
 
-BAD: "Ontario's economy continues its growth trajectory" / "The sector is seeing significant investment"
-GOOD: "Recent data revisions suggest Ontario had stronger-than-anticipated momentum heading into 2026, underpinning an upgraded real GDP growth forecast. Most notable were positive revisions to business capital spending, which point to a less depressed investment backdrop than initially feared.<sup>1</sup>"
+BAD: "Ontario's economy continues its growth trajectory" / "The sector is expected to see significant investment" / "Looking ahead, conditions should improve"
+GOOD: "Statistics Canada revised Ontario's Q3 2025 GDP growth upward to 1.8% annualized from an initial 1.2% estimate. Business capital spending was revised up $1.4B, the largest upward revision since 2019.<sup>1</sup>"
 
 DO NOT discuss stock market movements, equity index levels, or stock performance. Rate changes, yield changes, FX, and bond markets ARE fair game.
 
@@ -1210,7 +1210,7 @@ SCHEMA:
         {{
             "name": "Ontario",
             "indicators": {{"gdp": "+X.X%", "unemployment": "X.X%", "cpi": "+X.X%", "housingStarts": "XX,XXX"}},
-            "analysis": "<p>Opening paragraph establishing performance with inline data.<sup>1</sup></p><p>Sector drivers with specific figures.<sup>2</sup></p><p>Policy and fiscal context.<sup>3</sup></p><p>Forward-looking outlook with conditional framing.<sup>4</sup></p>",
+            "analysis": "<p>2-3 sentences: latest data release with key figure.<sup>1</sup></p><p>Sector data point.<sup>2</sup></p><p>Second sector.<sup>3</sup></p><p>Policy action or fiscal data.<sup>4</sup></p><p>Project update.<sup>5</sup></p>",
             "sources": [{{"id": 1, "title": "StatCan — Labour Force Survey, March 2026", "url": "https://..."}}, {{"id": 2, "title": "Globe and Mail — Article Title, March 2026", "url": "https://..."}}],
             "projects": [
                 {{

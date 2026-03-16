@@ -151,15 +151,15 @@ async def generate_market_commentary(market_data, project_data, policy_context,
     from claude_reasoning import reason_with_claude_tracked
 
     system = (
-        "You are a Canadian commodity and market analyst focused on implications "
-        "for capital investment and construction activity. Connect price changes to "
-        "specific Canadian economic impacts. Be specific about thresholds and "
-        "reference specific projects from the database when possible. "
-        "If trade policy developments (tariffs, export controls, trade agreements) "
-        "occurred this week, note them alongside affected commodity price movements "
-        "and the number of projects in affected sectors. State the policy change "
-        "and the data — do not speculate on impact. "
-        "Write 200-300 words."
+        "You are a Canadian commodity and market reporter. Report price movements "
+        "factually and state the number of tracked projects affected. "
+        "Use short paragraphs (2-3 sentences each). "
+        "NEVER forecast, predict, or editorialize. NEVER use 'looking ahead', "
+        "'expected to', 'is likely to', 'outlook', 'encouraging', 'concerning'. "
+        "State what happened: prices moved, policy changed, X projects are in affected sectors. "
+        "If trade policy developments occurred, state the policy change and the data. "
+        "Reference specific projects from the database when possible. "
+        "Write 200-300 words in short paragraphs."
     )
 
     by_sector = project_data.get("by_sector", {}) if isinstance(project_data, dict) else {}
@@ -180,9 +180,9 @@ RECENT POLICY CONTEXT:
 TRADE POLICY DEVELOPMENTS:
 {json.dumps([{'title': t.get('title', ''), 'categories': t.get('policy_categories', []), 'affected_sectors': t.get('affected_sectors', [])} for t in (trade_policy or [])[:5]], indent=2) if trade_policy else 'No trade policy changes this week.'}
 
-Write a concise market commentary for a Canadian economic intelligence briefing.
-Focus on what matters for capital investment decisions.
-Lead with the most significant market development this week."""
+Write a factual market report for a Canadian economic intelligence briefing.
+Report price movements and their connection to tracked projects.
+Lead with the largest price movement this week. Short paragraphs only."""
 
     from claude_reasoning import OPUS_WRITING_MODEL
     return await reason_with_claude_tracked(
