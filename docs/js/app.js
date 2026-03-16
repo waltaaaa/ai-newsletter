@@ -385,7 +385,7 @@ async function renderEditorialFlow(){
   if(pqItems[0])pq1=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[0].label}</div>${pqItems[0].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[0].change})</span></div>`;
   if(pqItems[1])pq2=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[1].label}</div>${pqItems[1].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[1].change})</span></div>`;
 
-  // Build Canada map infographic from project data
+  // Build Canada map infographic — D3 rendered from real TopoJSON
   let mapHtml='';
   try{
     const projData=await fetchJSON('projects_all.json');
@@ -395,44 +395,6 @@ async function renderEditorialFlow(){
       projects.forEach(p=>{const pv=normProvince(p.province);if(pv){byCnt[pv]=(byCnt[pv]||0)+1;byVal[pv]=(byVal[pv]||0)+parseNumericValue(p.value)}});
       const maxCnt=Math.max(...Object.values(byCnt),1);
       const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$'+Math.round(v);
-      // Gradient stop: 0=transparent light, 1=deep blue
-      const provOpacity=(code)=>{const n=byCnt[code]||0;return(0.08+0.92*Math.min(n/maxCnt,1)).toFixed(2)};
-      // Simplified but recognizable province paths (viewBox 0 0 1000 620)
-      const PP={
-        YT:'M30,20 L30,200 L100,200 L100,155 L80,140 L95,20Z',
-        NT:'M100,20 L95,140 L80,140 L100,200 L110,230 L140,240 L180,200 L260,200 L280,170 L310,175 L310,20Z',
-        NU:'M310,20 L310,175 L280,170 L260,200 L290,250 L330,210 L380,230 L420,180 L460,200 L500,155 L560,170 L620,120 L680,90 L700,20Z',
-        BC:'M30,200 L30,420 L55,430 L40,450 L65,460 L50,480 L70,490 L100,470 L130,475 L130,200Z',
-        AB:'M130,200 L130,475 L230,475 L230,200Z',
-        SK:'M230,200 L230,475 L325,475 L325,240Z',
-        MB:'M325,240 L325,475 L380,475 L400,430 L390,380 L420,340 L400,300 L420,240Z',
-        ON:'M420,240 L400,300 L420,340 L390,380 L400,430 L380,475 L400,510 L430,530 L465,500 L510,520 L530,490 L560,500 L570,470 L540,430 L560,380 L540,340 L560,300 L530,270 L500,290 L470,260Z',
-        QC:'M560,300 L540,340 L560,380 L540,430 L570,470 L600,450 L640,470 L680,440 L720,460 L740,420 L710,380 L730,340 L700,300 L720,260 L700,220 L660,200 L620,220 L590,260Z',
-        NL:'M740,180 L720,220 L750,260 L780,240 L790,200 L770,180Z M680,300 L700,300 L720,260 L700,220 L660,240Z',
-        NB:'M640,470 L640,520 L690,520 L690,480 L670,460Z',
-        NS:'M690,480 L690,530 L740,540 L760,520 L730,500 L710,480Z',
-        PE:'M710,470 L730,465 L740,475 L720,480Z'
-      };
-      const LABEL={
-        BC:[80,380],AB:[180,370],SK:[278,370],MB:[370,370],
-        ON:[480,420],QC:[650,360],NB:[665,500],NS:[720,515],
-        NL:[760,225],PE:[725,473],YT:[65,120],NT:[200,120],NU:[480,100]
-      };
-      let paths='';
-      let labels='';
-      Object.entries(PP).forEach(([code,d])=>{
-        const op=provOpacity(code);
-        const cnt=byCnt[code]||0;
-        paths+=`<path d="${d}" fill="#2563EB" fill-opacity="${op}" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"><title>${(PROVS.find(p=>p.code===code)||{}).name||code}: ${cnt} projects</title></path>`;
-      });
-      // Labels for provinces with projects
-      Object.entries(byCnt).sort((a,b)=>b[1]-a[1]).forEach(([code,cnt])=>{
-        const pos=LABEL[code];if(!pos)return;
-        const val=byVal[code]||0;
-        labels+=`<text x="${pos[0]}" y="${pos[1]}" font-family="Outfit" font-size="22" font-weight="700" fill="#0f1b33" text-anchor="middle">${code}</text>`;
-        labels+=`<text x="${pos[0]}" y="${pos[1]+18}" font-family="Outfit" font-size="14" fill="#475569" text-anchor="middle">${cnt} proj</text>`;
-        if(val>1e6)labels+=`<text x="${pos[0]}" y="${pos[1]+34}" font-family="Outfit" font-size="13" font-weight="600" fill="#2563EB" text-anchor="middle">${fv(val)}</text>`;
-      });
       // Province stats for sidebar
       const topProvs=Object.entries(byCnt).sort((a,b)=>b[1]-a[1]).slice(0,6);
       let statsHtml='';
@@ -447,12 +409,7 @@ async function renderEditorialFlow(){
         <div class="ed-map-chart">
           <div class="ec-title">Capital Projects by Province</div>
           <div class="ec-sub">${projects.length} projects across ${Object.keys(byCnt).length} provinces</div>
-          <svg viewBox="0 0 820 560" preserveAspectRatio="xMidYMid meet" width="100%" style="max-height:280px">
-            <defs><linearGradient id="mapBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F0F5FF"/><stop offset="100%" stop-color="#E8F0FE"/></linearGradient></defs>
-            <rect width="820" height="560" fill="url(#mapBg)" rx="8"/>
-            ${paths}
-            ${labels}
-          </svg>
+          <div id="canadaMapSvg" style="width:100%;min-height:240px"></div>
           <div class="ed-map-legend"><span><span class="swatch" style="background:rgba(37,99,235,0.10)"></span>Fewer projects</span><span><span class="swatch" style="background:rgba(37,99,235,0.85)"></span>More projects</span></div>
         </div>
         <div class="ed-map-stats">
@@ -461,6 +418,40 @@ async function renderEditorialFlow(){
           <div class="ec-source" style="margin-top:auto;padding-top:8px">Source: Pipeline database</div>
         </div>
       </div>`;
+
+      // Render D3 map after DOM insertion (deferred)
+      setTimeout(async()=>{
+        try{
+          const ID_TO_CODE={'CA.BC':'BC','CA.AB':'AB','CA.SK':'SK','CA.MB':'MB','CA.ON':'ON','CA.QC':'QC','CA.NB':'NB','CA.NS':'NS','CA.NF':'NL','CA.PE':'PE','CA.YT':'YT','CA.NT':'NT','CA.NU':'NU'};
+          const resp=await fetch('https://raw.githubusercontent.com/markmarkoh/datamaps/master/src/js/data/can.topo.json');
+          const topo=await resp.json();
+          const geojson=topojson.feature(topo,topo.objects.can);
+          const container=document.getElementById('canadaMapSvg');
+          if(!container)return;
+          const w=container.clientWidth||500;const h=Math.min(w*0.65,320);
+          const projection=d3.geoConicConformal().center([-96,62]).rotate([0,0]).parallels([49,77]).scale(w*0.55).translate([w/2,h/2]);
+          const path=d3.geoPath().projection(projection);
+          const svg=d3.select(container).append('svg').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`).attr('preserveAspectRatio','xMidYMid meet');
+          // Background
+          svg.append('rect').attr('width',w).attr('height',h).attr('fill','#F8FAFF').attr('rx',8);
+          // Province paths
+          svg.selectAll('path').data(geojson.features.filter(f=>f.id&&f.id!=='-99')).enter().append('path')
+            .attr('d',path)
+            .attr('fill',f=>{const code=ID_TO_CODE[f.id]||'';const n=byCnt[code]||0;const t=Math.min(n/maxCnt,1);return`rgba(37,99,235,${(0.08+0.92*t).toFixed(2)})`})
+            .attr('stroke','#fff').attr('stroke-width',1).attr('stroke-linejoin','round')
+            .append('title').text(f=>{const code=ID_TO_CODE[f.id]||f.id;const pName=(PROVS.find(p=>p.code===code)||{}).name||code;return pName+': '+(byCnt[code]||0)+' projects'});
+          // Labels for provinces with data
+          const CENTROIDS={BC:[-125,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,52],NB:[-66,47],NS:[-63,45],NL:[-57,53],PE:[-63,46.5],YT:[-136,63],NT:[-120,64],NU:[-95,67]};
+          Object.entries(byCnt).sort((a,b)=>b[1]-a[1]).forEach(([code,cnt])=>{
+            const c=CENTROIDS[code];if(!c)return;
+            const pt=projection(c);if(!pt)return;
+            const val=byVal[code]||0;
+            svg.append('text').attr('x',pt[0]).attr('y',pt[1]).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',11).attr('font-weight',700).attr('fill','#0f1b33').text(code);
+            svg.append('text').attr('x',pt[0]).attr('y',pt[1]+13).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',9).attr('fill','#475569').text(cnt+' proj');
+            if(val>1e6)svg.append('text').attr('x',pt[0]).attr('y',pt[1]+24).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',8.5).attr('font-weight',600).attr('fill','#2563EB').text(fv(val));
+          });
+        }catch(e){console.warn('Canada map render:',e)}
+      },100);
     }
   }catch(e){console.warn('Map data:',e)}
 
