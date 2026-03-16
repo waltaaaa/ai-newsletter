@@ -482,8 +482,8 @@ async function renderInlineCharts(){
   const s1=$('inlineChart1');
   if(s1){
     let html='<div class="ws-row ws-row-2" style="margin:12px 0">';
-    html+='<div class="card fade-in" id="ilMacroCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Macro Pulse</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Key indicators — current vs. previous</div><div style="height:180px;position:relative"><canvas id="ilMacroChart"></canvas></div></div>';
-    html+='<div class="card fade-in" id="ilCommodityCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Commodity Movers</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Biggest weekly price changes</div><div style="height:180px;position:relative"><canvas id="ilCommodityChart"></canvas></div></div>';
+    html+='<div class="card fade-in" id="ilMacroCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Macro Pulse</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Key indicators — current vs. previous</div><div style="height:180px;position:relative"><canvas id="ilMacroChart"></canvas></div><div style="font-size:8px;color:#9aabb5;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Sources: Statistics Canada (Table 14-10-0287, 18-10-0004, 36-10-0434, 34-10-0143), Bank of Canada Valet API</div></div>';
+    html+='<div class="card fade-in" id="ilCommodityCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Commodity Movers</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Biggest weekly price changes</div><div style="height:180px;position:relative"><canvas id="ilCommodityChart"></canvas></div><div style="font-size:8px;color:#9aabb5;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Yahoo Finance (futures market close prices, weekly % change)</div></div>';
     html+='</div>';
     s1.innerHTML=html;
     // Macro Pulse chart
@@ -513,8 +513,8 @@ async function renderInlineCharts(){
   const s2=$('inlineChart2');
   if(s2&&projects.length){
     let html='<div class="ws-row ws-row-2" style="margin:12px 0">';
-    html+='<div class="card fade-in" id="ilPipelineCard"><div class="card-header" style="font-size:var(--text-sm)">Project Pipeline</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Capital projects by lifecycle stage</div><div style="height:180px;position:relative"><canvas id="ilPipelineChart"></canvas></div></div>';
-    html+='<div class="card fade-in" id="ilSectorCard"><div class="card-header" style="font-size:var(--text-sm)">Capital by Sector</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Tracked investment value — top 8 sectors</div><div style="height:180px;position:relative"><canvas id="ilSectorChart"></canvas></div></div>';
+    html+='<div class="card fade-in" id="ilPipelineCard"><div class="card-header" style="font-size:var(--text-sm)">Project Pipeline</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Capital projects by lifecycle stage</div><div style="height:180px;position:relative"><canvas id="ilPipelineChart"></canvas></div><div style="font-size:8px;color:#9aabb5;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Pipeline database (IAAC, provincial EA registries, SEDAR+, municipal dev apps, news extraction). '+projects.length+' projects tracked.</div></div>';
+    html+='<div class="card fade-in" id="ilSectorCard"><div class="card-header" style="font-size:var(--text-sm)">Capital by Sector</div><div style="font-size:var(--text-xs);color:#5a6a85;margin:-4px 0 8px">Tracked investment value — top 8 sectors</div><div style="height:180px;position:relative"><canvas id="ilSectorChart"></canvas></div><div style="font-size:8px;color:#9aabb5;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Pipeline database. Values from project filings, Tavily cost-finding, government disclosures. NAICS-aligned sectors.</div></div>';
     html+='</div>';
     s2.innerHTML=html;
     // Pipeline chart
