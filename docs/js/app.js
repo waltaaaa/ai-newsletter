@@ -1000,12 +1000,6 @@ async function renderCanadaSub(){
   }
   renderPolicySection();
 
-  // Indicator section with editorial header
-  const cis=$('canadaIndicatorSection');
-  if(cis)cis.insertAdjacentHTML('afterbegin','<div class="ed-section"><div class="ed-section-title">Indicator Explorer</div><div class="ed-section-subtitle">All national indicators with time-series history</div></div>');
-  const dd=$('canadaIndicatorDropdown');
-  if(dd)dd.innerHTML=renderIndicatorDropdown(indicators,'All National Indicators','_canada');
-  renderIndicatorExplorer();
 
   // Projects with editorial header
   const pp=$('canadaProjectsPreview');
@@ -1855,12 +1849,6 @@ async function renderProvinceContent(){
     _renderSectorChart('pvSectorChart','pv',provProj);
   }
 
-  // Indicator dropdown
-  const pis=$('provIndicatorSection');
-  if(pis){
-    pis.innerHTML='<div class="ed-section"><div class="ed-section-title">Indicators</div><div class="ed-section-subtitle">Full indicator list for '+prov.name+'</div></div>'+
-      renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
-  }
 
   // Projects
   const topProvProj=provProj.slice(0,5);
@@ -2957,6 +2945,23 @@ function renderExplorer(){
   catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#2d3a52;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
 
   resEl.innerHTML='<div style="color:#556B7A;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
+
+  // National indicator dropdown + explorer
+  const cis=$('canadaIndicatorSection');
+  if(cis){
+    cis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">National Indicator Explorer</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">All national indicators with time-series history</p><div id="canadaIndicatorDropdown"></div><section id="indicatorExplorer" style="margin-top:16px"></section>';
+    const dd=$('canadaIndicatorDropdown');
+    if(dd)dd.innerHTML=renderIndicatorDropdown(indicators,'All National Indicators','_canada');
+    renderIndicatorExplorer();
+  }
+
+  // Provincial indicator dropdown
+  const pis=$('provIndicatorSection');
+  if(pis){
+    const prov=PROVS.find(p=>p.code===selectedProvince)||PROVS[0];
+    pis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">'+prov.name+' Indicators</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">Full indicator list for '+prov.name+'</p>'+
+      renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
+  }
 }
 
 window._doVcodeSearch=function(cat){
