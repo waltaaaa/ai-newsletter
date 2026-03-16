@@ -420,7 +420,7 @@ function getProvIndicators(){
     'Quebec':'QC','Québec':'QC','Saskatchewan':'SK','Northwest Territories':'NT','Nunavut':'NU','Yukon':'YT'};
   indicators.forEach(ind=>{
     const name=ind.indicator_name;
-    if(!['gdp','unemployment','cpi','housingStarts','unemployment_prev','cpi_prev'].includes(name))return;
+    if(!['gdp','unemployment','cpi','housingStarts','unemployment_prev','cpi_prev','participationRate','participationRate_prev','employmentRate','employmentRate_prev','wageGrowth'].includes(name))return;
     let prov=ind.province;
     if(FULL_TO_CODE[prov])prov=FULL_TO_CODE[prov];
     else if(NAME_TO_CODE[prov])prov=NAME_TO_CODE[prov];
@@ -470,12 +470,16 @@ async function renderInteractiveMap(){
   const ki=(D&&D.key_indicators)||[];
   const m=(D&&D.metrics)||{};
   const findKI=(label)=>{const item=ki.find(k=>k.label===label);return item?{value:item.value,change:item.change}:{value:'N/A',change:''}};
+  // Pull national participation rate, employment rate, wage growth from indicators
+  const natPart=indicators.find(x=>x.indicator_name==='participationRate'&&(x.province||'').toLowerCase()==='national');
+  const natEmp=indicators.find(x=>x.indicator_name==='employmentRate'&&(x.province||'').toLowerCase()==='national');
+  const natWage=indicators.find(x=>x.indicator_name==='wageGrowth'&&(x.province||'').toLowerCase()==='national');
   const stats=[
     {label:'Real GDP',value:m.realGdp||'N/A',change:''},
     {label:'Unemployment',value:findKI('UNEMPLOYMENT').value,change:findKI('UNEMPLOYMENT').change},
-    {label:'Employment',value:findKI('EMPLOYMENT').value,change:findKI('EMPLOYMENT').change},
-    {label:'Participation',value:m.participation||'N/A',change:''},
-    {label:'Wage Growth',value:m.wageGrowth||'N/A',change:''},
+    {label:'Participation',value:natPart?natPart.value:(m.participation||'N/A'),change:''},
+    {label:'Employment Rate',value:natEmp?natEmp.value:'N/A',change:''},
+    {label:'Wage Growth',value:natWage?natWage.value:(m.wageGrowth||'N/A'),change:''},
     {label:'Trade Balance',value:findKI('TRADE BALANCE').value,change:findKI('TRADE BALANCE').change}
   ];
   let statsHtml='<div class="ed-stat-header">Canada &mdash; National Indicators</div><div class="ed-stat-grid">';
@@ -595,6 +599,14 @@ async function renderInteractiveMap(){
               if(pd.cpi){
                 body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
                 if(pd.cpi_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
+              }
+              if(pd.participationRate){
+                body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Participation Rate</span><span class="ed-map-tooltip-value">${pd.participationRate}</span></div>`;
+                if(pd.participationRate_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.participationRate_prev}</span></div>`;
+              }
+              if(pd.employmentRate){
+                body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Employment Rate</span><span class="ed-map-tooltip-value">${pd.employmentRate}</span></div>`;
+                if(pd.employmentRate_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.employmentRate_prev}</span></div>`;
               }
               if(pd.housingStarts)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts (ann.)</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
               if(!body)body='<div style="color:rgba(255,255,255,0.5)">No indicator data</div>';

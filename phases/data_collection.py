@@ -8,6 +8,7 @@ import traceback
 import re
 import requests
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, date, timedelta
 
 import rss_monitor
@@ -225,7 +226,7 @@ def get_boc_rate() -> dict:
     print("Fetching live BoC Policy Rate...")
     try:
         url = "https://www.bankofcanada.ca/valet/observations/V39079/json?recent=2"
-        response = requests.get(url).json()
+        response = requests.get(url, timeout=15).json()
         obs = response['observations']
         rate = f"{float(obs[-1]['V39079']['v']):.2f}%"
         prev = f"{float(obs[0]['V39079']['v']):.2f}%" if len(obs) >= 2 else ''
@@ -642,32 +643,34 @@ _PROV_GDP_VIDS = {
 
 # Provincial employment rate — StatCan WDS vector IDs
 # Table 14-10-0287-01 (PID 14100287): Employment rate, both sexes, 15 years+, SA
+# Offset: unemployment_rate_vector + 2
 _PROV_EMPRATE_VIDS = {
-    "Newfoundland and Labrador": 2062998,
-    "Prince Edward Island":      2063187,
-    "Nova Scotia":               2063376,
-    "New Brunswick":             2063565,
-    "Quebec":                    2063754,
-    "Ontario":                   2063943,
-    "Manitoba":                  2064132,
-    "Saskatchewan":              2064321,
-    "Alberta":                   2064510,
-    "British Columbia":          2064699,
+    "Newfoundland and Labrador": 2063006,
+    "Prince Edward Island":      2063195,
+    "Nova Scotia":               2063384,
+    "New Brunswick":             2063573,
+    "Quebec":                    2063762,
+    "Ontario":                   2063951,
+    "Manitoba":                  2064140,
+    "Saskatchewan":              2064329,
+    "Alberta":                   2064518,
+    "British Columbia":          2064707,
 }
 
 # Provincial participation rate — StatCan WDS vector IDs
 # Table 14-10-0287-01 (PID 14100287): Participation rate, both sexes, 15 years+, SA
+# Offset: unemployment_rate_vector + 1
 _PROV_PARTRATE_VIDS = {
-    "Newfoundland and Labrador": 2062992,
-    "Prince Edward Island":      2063181,
-    "Nova Scotia":               2063370,
-    "New Brunswick":             2063559,
-    "Quebec":                    2063748,
-    "Ontario":                   2063937,
-    "Manitoba":                  2064126,
-    "Saskatchewan":              2064315,
-    "Alberta":                   2064504,
-    "British Columbia":          2064693,
+    "Newfoundland and Labrador": 2063005,
+    "Prince Edward Island":      2063194,
+    "Nova Scotia":               2063383,
+    "New Brunswick":             2063572,
+    "Quebec":                    2063761,
+    "Ontario":                   2063950,
+    "Manitoba":                  2064139,
+    "Saskatchewan":              2064328,
+    "Alberta":                   2064517,
+    "British Columbia":          2064706,
 }
 
 
@@ -1124,11 +1127,16 @@ def fetch_primary_indicators() -> dict:
         }
     Any field that exhausts all retries is omitted (caller sets N/A).
     """
-    print("\n[STEP 1b] Fetching ALL primary source indicators...")
-    nat  = get_national_indicators()
-    prov = get_provincial_indicators()
-    glob = get_global_indicators()
-    ind  = fetch_industry_indicators()
+    print("\n[STEP 1b] Fetching ALL primary source indicators (parallel)...")
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        f_nat  = executor.submit(get_national_indicators)
+        f_prov = executor.submit(get_provincial_indicators)
+        f_glob = executor.submit(get_global_indicators)
+        f_ind  = executor.submit(fetch_industry_indicators)
+    nat  = f_nat.result()
+    prov = f_prov.result()
+    glob = f_glob.result()
+    ind  = f_ind.result()
 
     # Inject quarterly real GDP into national values
     if ind.get('_gdp_quarterly'):
@@ -1368,16 +1376,34 @@ def run(conn, context, logger):
     try:
         deep_sweep = context.get("mode") == "deep-sweep"
 
-        # STEP 1: Hard Data
-        print("\n[STEP 1] Fetching hard data...")
-        commodity_data    = get_live_commodities()
-        financial_markets = get_financial_markets()
-        boc_data          = get_boc_rate()
-        yield_data        = get_goc_yields()
-
+        # STEP 1: Hard Data (parallel fetch — all sources independent)
+        print("\n[STEP 1] Fetching hard data (parallel)...")
         days_back = 30 if deep_sweep else 7
-        rss_items    = rss_monitor.fetch_all_feeds(days_back=days_back)
-        statcan_inds = fetch_statcan_indicators()
+
+        results = {}
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            futures = {
+                executor.submit(get_live_commodities): 'commodities',
+                executor.submit(get_financial_markets): 'markets',
+                executor.submit(get_boc_rate): 'boc',
+                executor.submit(get_goc_yields): 'yields',
+                executor.submit(rss_monitor.fetch_all_feeds, days_back): 'rss',
+                executor.submit(fetch_statcan_indicators): 'statcan',
+            }
+            for future in as_completed(futures):
+                key = futures[future]
+                try:
+                    results[key] = future.result()
+                except Exception as e:
+                    print(f"  [STEP 1] {key} fetch failed: {type(e).__name__}: {e}")
+                    results[key] = {} if key not in ('rss',) else []
+
+        commodity_data    = results.get('commodities', {})
+        financial_markets = results.get('markets', {})
+        boc_data          = results.get('boc', {})
+        yield_data        = results.get('yields', {})
+        rss_items         = results.get('rss', [])
+        statcan_inds      = results.get('statcan', {})
 
         hard_data = {
             'commodities':       commodity_data,
