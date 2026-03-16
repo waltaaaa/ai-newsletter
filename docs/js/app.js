@@ -333,29 +333,81 @@ function renderTLDR(){
   }else{
     $('execSummary').innerHTML=`<div class="fade-in" style="text-align:center;padding:24px 0"><div style="color:#475569;font-size:var(--text-sm)">Weekly briefing pending. ${indicators.length} indicators loaded from primary sources.</div></div>`;
   }
-  renderKeyIndicators();
-  renderEditorialCharts1();
-  renderMicroscope();
-  renderEditorialCharts2();
-  renderTrendSummary();
+  renderEditorialFlow();
   renderMicroscopeHistory();
   $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
-  setTimeout(collapseEmpty,200);
+  setTimeout(collapseEmpty,300);
 }
-async function renderEditorialCharts1(){
-  // Row 1: Macro Pulse + Commodity Movers — between indicators and microscope
-  const el=$('editorialCharts1');if(!el)return;
-  el.innerHTML=`
-    <div class="editorial-chart-block" id="tldrMacroCard"><div class="chart-label">Macro Pulse</div><div class="chart-sub">Key indicators — current vs. previous</div><div style="height:200px;position:relative"><canvas id="tldrMacroChart"></canvas></div><div class="chart-source">Sources: Statistics Canada, Bank of Canada</div></div>
-    <div class="editorial-chart-block" id="tldrCommodityCard"><div class="chart-label">Commodity Movers</div><div class="chart-sub">Biggest weekly price changes</div><div style="height:200px;position:relative"><canvas id="tldrCommodityChart"></canvas></div><div class="chart-source">Source: Yahoo Finance</div></div>`;
+async function renderEditorialFlow(){
+  const flow=$('editorialFlow');if(!flow)return;
+  // Build micro + briefing content first
+  let microHtml='';
+  try{
+    const data=await fetchJSON('microscope.json');
+    const m=(data&&data.current)||data||{};
+    if(m.topic||m.text){
+      const sectors=(m.affected_sectors||[]).map(s=>'<span class="editorial-sector-tag">'+s+'</span>').join(' ');
+      const weeks=m.weeks_running?' <span style="font-size:10px;color:#64748B">Week '+m.weeks_running+'</span>':'';
+      microHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">Under the Microscope${weeks}</div><div class="editorial-section-title">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}</div>${san(m.text||m.analysis||'')}`;
+    }
+  }catch(e){console.warn('Microscope:',e)}
+
+  let briefHtml='';
+  try{
+    const briefing=await fetchJSON('briefing_latest.json');
+    if(briefing&&briefing.content){
+      const pdfUrl=(briefing.pdf_url)||'';const docxUrl=(briefing.docx_url)||'';
+      const dlBtns=(pdfUrl||docxUrl)?`<div class="editorial-span" style="margin:12px 0"><div style="display:flex;gap:8px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#EC4899;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#3B82F6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div></div>`:'';
+      briefHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">Weekly Briefing</div></div>${dlBtns}${san(briefing.content)}`;
+    }
+  }catch(e){console.warn('Briefing:',e)}
+
+  // Pull quotes from key_indicators
+  const ki=(D&&D.key_indicators)||[];
+  const pqItems=ki.filter(k=>k.change&&k.change.trim()).slice(0,3);
+  let pq1='',pq2='',pq3='';
+  if(pqItems[0])pq1=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[0].label}</div>${pqItems[0].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[0].change})</span></div>`;
+  if(pqItems[1])pq2=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[1].label}</div>${pqItems[1].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[1].change})</span></div>`;
+  if(pqItems[2])pq3=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[2].label}</div>${pqItems[2].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[2].change})</span></div>`;
+
+  // Indicator strip (spans both columns)
+  const indEl=document.createElement('div');
+  indEl.id='keyIndicators';
+  // We'll render indicators into this after inserting
+
+  // Assemble the flow — charts float inside text, pullquotes break it up
+  flow.innerHTML=`
+    <div class="editorial-chart-left" id="tldrMacroCard">
+      <div class="ec-title">Macro Pulse</div><div class="ec-sub">Key indicators — current vs. previous</div>
+      <div style="height:190px;position:relative"><canvas id="tldrMacroChart"></canvas></div>
+      <div class="ec-source">Sources: Statistics Canada, Bank of Canada</div>
+    </div>
+    ${san(linkFootnotes(D.executive_summary||'',(D.sources||[])))}
+    ${pq1}
+    <div class="editorial-indicators"><section id="keyIndicators"></section></div>
+    <div class="editorial-chart-right" id="tldrCommodityCard">
+      <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
+      <div style="height:190px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
+      <div class="ec-source">Source: Yahoo Finance</div>
+    </div>
+    ${microHtml}
+    ${pq2}
+    <div class="editorial-chart-left" id="briefPipelineCard">
+      <div class="ec-title">Project Pipeline</div><div class="ec-sub">Capital projects by lifecycle stage</div>
+      <div style="height:190px;position:relative"><canvas id="briefPipelineChart"></canvas></div>
+      <div class="ec-source">Source: Pipeline database</div>
+    </div>
+    ${briefHtml}
+    ${pq3}
+    <div class="editorial-chart-right" id="briefSectorCard">
+      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
+      <div style="height:190px;position:relative"><canvas id="briefSectorChart"></canvas></div>
+      <div class="ec-source">Source: Pipeline database</div>
+    </div>
+  `;
+  // Render indicators and charts
+  renderKeyIndicators();
   await renderWovenCharts('tldr');
-}
-async function renderEditorialCharts2(){
-  // Row 2: Pipeline + Sector — between microscope and briefing
-  const el=$('editorialCharts2');if(!el)return;
-  el.innerHTML=`
-    <div class="editorial-chart-block" id="briefPipelineCard"><div class="chart-label">Project Pipeline</div><div class="chart-sub">Capital projects by lifecycle stage</div><div style="height:200px;position:relative"><canvas id="briefPipelineChart"></canvas></div><div class="chart-source">Source: Pipeline database</div></div>
-    <div class="editorial-chart-block" id="briefSectorCard"><div class="chart-label">Capital by Sector</div><div class="chart-sub">Tracked investment by sector</div><div style="height:200px;position:relative"><canvas id="briefSectorChart"></canvas></div><div class="chart-source">Source: Pipeline database</div></div>`;
   await renderWovenCharts('brief');
 }
 
