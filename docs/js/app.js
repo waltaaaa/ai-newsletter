@@ -314,41 +314,49 @@ function renderTLDR(){
       return '<li><span class="editorial-drop-cap">'+ch+'</span>';
     });
 
+    // Pull quote from key_indicators with biggest change
+    const ki=(D.key_indicators||[]).filter(k=>k.change&&k.change.trim());
+    let pullquoteHtml='';
+    if(ki.length){
+      const pq=ki[0];// Lead indicator is usually the most significant
+      pullquoteHtml=`<div class="editorial-pullquote" style="clear:both"><div class="pq-label">${pq.label||''}</div>${pq.value||''}${pq.change?' <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">('+pq.change+')</span>':''}</div>`;
+    }
+
     $('execSummary').innerHTML=`<div class="fade-in">
       <div class="editorial-eyebrow">Weekly Intelligence Briefing</div>
       <div class="editorial-headline">${san(headline)}</div>
       <hr class="editorial-accent">
       ${metaHtml}
       <div class="editorial-lead">${imgHtml}${summaryHtml}</div>
+      ${pullquoteHtml}
     </div>`;
   }else{
     $('execSummary').innerHTML=`<div class="fade-in" style="text-align:center;padding:24px 0"><div style="color:#475569;font-size:var(--text-sm)">Weekly briefing pending. ${indicators.length} indicators loaded from primary sources.</div></div>`;
   }
   renderKeyIndicators();
+  renderEditorialCharts1();
   renderMicroscope();
+  renderEditorialCharts2();
   renderTrendSummary();
-  renderEditorialSidebar();
   renderMicroscopeHistory();
   $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
   setTimeout(collapseEmpty,200);
 }
-function renderEditorialSidebar(){
-  const aside=$('editorialAside');if(!aside)return;
-  let html='';
-  // Pull quotes from key_indicators
-  const ki=(D&&D.key_indicators)||[];
-  const pqItems=ki.filter(k=>k.change&&k.change.trim()).slice(0,3);
-  pqItems.forEach(k=>{
-    html+=`<div class="editorial-pullquote"><div class="pq-label">${k.label||''}</div>${k.value||''}${k.change?' <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">('+k.change+')</span>':''}</div>`;
-  });
-  // Charts
-  html+=`<div class="editorial-chart-block" id="tldrMacroCard"><div class="chart-label">Macro Pulse</div><div class="chart-sub">Key indicators — current vs. previous</div><div style="height:180px;position:relative"><canvas id="tldrMacroChart"></canvas></div><div class="chart-source">Sources: Statistics Canada, Bank of Canada</div></div>`;
-  html+=`<div class="editorial-chart-block" id="tldrCommodityCard"><div class="chart-label">Commodity Movers</div><div class="chart-sub">Biggest weekly price changes</div><div style="height:180px;position:relative"><canvas id="tldrCommodityChart"></canvas></div><div class="chart-source">Source: Yahoo Finance</div></div>`;
-  html+=`<div class="editorial-chart-block" id="briefPipelineCard"><div class="chart-label">Project Pipeline</div><div class="chart-sub">Capital projects by lifecycle stage</div><div style="height:180px;position:relative"><canvas id="briefPipelineChart"></canvas></div><div class="chart-source">Source: Pipeline database</div></div>`;
-  html+=`<div class="editorial-chart-block" id="briefSectorCard"><div class="chart-label">Capital by Sector</div><div class="chart-sub">Tracked investment by sector</div><div style="height:180px;position:relative"><canvas id="briefSectorChart"></canvas></div><div class="chart-source">Source: Pipeline database</div></div>`;
-  aside.innerHTML=html;
-  renderWovenCharts('tldr');
-  renderWovenCharts('brief');
+async function renderEditorialCharts1(){
+  // Row 1: Macro Pulse + Commodity Movers — between indicators and microscope
+  const el=$('editorialCharts1');if(!el)return;
+  el.innerHTML=`
+    <div class="editorial-chart-block" id="tldrMacroCard"><div class="chart-label">Macro Pulse</div><div class="chart-sub">Key indicators — current vs. previous</div><div style="height:200px;position:relative"><canvas id="tldrMacroChart"></canvas></div><div class="chart-source">Sources: Statistics Canada, Bank of Canada</div></div>
+    <div class="editorial-chart-block" id="tldrCommodityCard"><div class="chart-label">Commodity Movers</div><div class="chart-sub">Biggest weekly price changes</div><div style="height:200px;position:relative"><canvas id="tldrCommodityChart"></canvas></div><div class="chart-source">Source: Yahoo Finance</div></div>`;
+  await renderWovenCharts('tldr');
+}
+async function renderEditorialCharts2(){
+  // Row 2: Pipeline + Sector — between microscope and briefing
+  const el=$('editorialCharts2');if(!el)return;
+  el.innerHTML=`
+    <div class="editorial-chart-block" id="briefPipelineCard"><div class="chart-label">Project Pipeline</div><div class="chart-sub">Capital projects by lifecycle stage</div><div style="height:200px;position:relative"><canvas id="briefPipelineChart"></canvas></div><div class="chart-source">Source: Pipeline database</div></div>
+    <div class="editorial-chart-block" id="briefSectorCard"><div class="chart-label">Capital by Sector</div><div class="chart-sub">Tracked investment by sector</div><div style="height:200px;position:relative"><canvas id="briefSectorChart"></canvas></div><div class="chart-source">Source: Pipeline database</div></div>`;
+  await renderWovenCharts('brief');
 }
 
 /* ══ NATIONAL TAB (subtabs: Canada + Global Players) ══ */
