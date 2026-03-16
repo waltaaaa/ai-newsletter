@@ -904,8 +904,8 @@ function extractAnalysisThemes(analysisText,projects){
   const text=(analysisText||'').replace(/<[^>]+>/g,' ').toLowerCase();
   const scored=[];
   INSIGHT_THEMES.forEach(theme=>{
-    const hits=theme.keywords.filter(kw=>text.includes(kw)).length;
-    if(hits>0){
+    const matched=theme.keywords.filter(kw=>text.includes(kw));
+    if(matched.length>0){
       // Count matching projects for sector themes
       let projCount=0,projValue=0;
       if(theme.sectors.length&&projects){
@@ -913,7 +913,7 @@ function extractAnalysisThemes(analysisText,projects){
           if(theme.sectors.includes(p.sector)){projCount++;projValue+=parseNumericValue(p.value)}
         });
       }
-      scored.push({...theme,score:hits,projCount:projCount,projValue:projValue});
+      scored.push({...theme,score:matched.length,projCount:projCount,projValue:projValue,_matchedText:text,_matchedKw:matched});
     }
   });
   return scored.sort((a,b)=>b.score-a.score).slice(0,3);
@@ -921,16 +921,30 @@ function extractAnalysisThemes(analysisText,projects){
 
 function buildInsightStrip(prefix,themes,projects){
   if(!themes||!themes.length)return '';
-  const count=themes.length;
+  // Filter: only keep themes that have chartable data (sector projects) or are the top theme
+  const chartable=themes.filter((t,i)=>i===0||(t.sectors.length&&t.projCount>=1));
+  if(!chartable.length)return '';
+  const count=chartable.length;
   const colStyle=count===1?'':'display:grid;grid-template-columns:repeat('+count+',1fr);gap:16px';
   let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(37,99,235,0.12);border-bottom:2px solid rgba(37,99,235,0.12);'+colStyle+'">';
-  themes.forEach((t,i)=>{
+  chartable.forEach((t,i)=>{
     const id=prefix+'Insight'+i;
-    const sub=t.sectors.length&&t.projCount?t.projCount+' projects \u00b7 '+(t.projValue>=1e9?'$'+(t.projValue/1e9).toFixed(1)+'B':t.projValue>=1e6?'$'+(t.projValue/1e6).toFixed(0)+'M':'$'+fmtNum(t.projValue,0)):'Identified from this week\u2019s analysis';
+    const hasSectorData=t.sectors.length&&t.projCount>=1;
+    const sub=hasSectorData?t.projCount+' projects \u00b7 '+(t.projValue>=1e9?'$'+(t.projValue/1e9).toFixed(1)+'B':t.projValue>=1e6?'$'+(t.projValue/1e6).toFixed(0)+'M':'$'+fmtNum(t.projValue,0)):'Key theme from this week\u2019s analysis';
     html+='<div style="text-align:center">';
     html+='<div style="font-size:var(--text-xs);font-weight:700;color:'+t.color+';text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">'+t.label+'</div>';
     html+='<div style="font-size:10px;color:#475569;margin-bottom:12px">'+sub+'</div>';
-    html+='<div style="height:220px;position:relative"><canvas id="'+id+'"></canvas></div>';
+    if(hasSectorData){
+      html+='<div style="height:220px;position:relative"><canvas id="'+id+'"></canvas></div>';
+    }else{
+      // Text-based insight card for non-chartable themes
+      const matchedKw=(t._matchedKw||[]).slice(0,4);
+      html+='<div style="height:220px;display:flex;flex-direction:column;justify-content:center;align-items:center;background:'+t.color+'08;border:1px solid '+t.color+'20;border-radius:var(--radius-md);padding:20px">';
+      html+='<div style="font-size:48px;font-weight:900;color:'+t.color+';font-family:var(--font-heading);line-height:1">'+t.score+'</div>';
+      html+='<div style="font-size:var(--text-xs);color:#475569;margin-top:8px">keyword mentions in analysis</div>';
+      if(matchedKw.length)html+='<div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'+matchedKw.map(kw=>'<span style="background:'+t.color+'15;color:'+t.color+';padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500">'+kw+'</span>').join('')+'</div>';
+      html+='</div>';
+    }
     html+='</div>';
   });
   html+='</div>';
@@ -974,11 +988,7 @@ function renderInsightCharts(prefix,themes,projects){
         return;
       }
     }
-    // Non-sector themes (labour, trade, inflation): show a themed label
-    try{
-      charts[key]=new Chart(canvas,{type:'bar',data:{labels:[theme.label],datasets:[{data:[theme.score],backgroundColor:theme.color+'80',borderRadius:6}]},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:theme.label+' — Key Theme This Week',font:{family:'Outfit',size:11,weight:600},color:'#1a2744'}},scales:{x:{display:false},y:{display:false}}}});
-    }catch(e){console.warn('Insight theme chart:',e)}
+    // Non-sector themes rendered as text cards in buildInsightStrip — no canvas needed
   });
 }
 
