@@ -402,7 +402,6 @@ async function renderEditorialFlow(){
         <div class="ec-source">Source: Yahoo Finance</div>
       </div>
     </div>
-    ${nationalHtml}
     ${pq2}
     <div class="ed-chart-row">
       <div class="ed-chart" id="briefPipelineCard">
@@ -417,9 +416,7 @@ async function renderEditorialFlow(){
       </div>
     </div>
     ${industryHtml}
-    ${microHtml}
     ${pulseHtml}
-    ${briefHtml}
   `;
   renderKeyIndicators();
   await renderWovenCharts('tldr');

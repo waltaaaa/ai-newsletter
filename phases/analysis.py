@@ -981,18 +981,18 @@ RECENT NEWS AND PRESS RELEASES (cite by article number):
 
 Write:
 
-1. EXECUTIVE SUMMARY (4-6 short paragraphs, 300-450 words)
+1. EXECUTIVE SUMMARY (3-4 short paragraphs, 200-300 words)
 Format as HTML paragraphs: <p>paragraph text</p>
-Write as flowing narrative prose — NOT bullet points. Each paragraph is 2-3 sentences covering a coherent thread. Use transitional phrases between paragraphs to create narrative flow ("Meanwhile", "On the trade front", "In the labour market", "Separately"). Use <strong> tags on key figures.
-Structure: Lead paragraph states the week's dominant story with its key figure. Following paragraphs group related developments together thematically (e.g. labour + wages in one paragraph, trade + manufacturing in another, policy actions in another). Close with a paragraph tying together cross-cutting themes.
-Cover: what happened this week in the data — releases, changes, policy actions, project updates. NO forecasting, NO predictions, NO forward-looking language.
-Every claim backed by <sup>N</sup> citation.
+This is a TL;DR — be concise and direct. Every sentence must carry a specific data point or fact. Cut filler, qualifiers, and scene-setting. No throat-clearing ("This week saw...", "The data revealed...") — lead with the fact.
+Each paragraph is 2-3 sentences max. Use <strong> tags on key figures. Use brief transitions between paragraphs.
+Structure: Lead paragraph states the week's single biggest story with its key number. Second paragraph covers the next 2-3 most important data points. Third paragraph covers policy actions or project developments. Optional fourth paragraph only if there's a genuinely significant cross-cutting theme.
+NO forecasting, NO predictions, NO forward-looking language. Every claim backed by <sup>N</sup> citation.
 
-2. NATIONAL ANALYSIS (6-8 short paragraphs, 400-550 words total)
+2. NATIONAL ANALYSIS (4-5 short paragraphs, 250-400 words total)
 Format as HTML paragraphs: <p>paragraph text</p>
-Each paragraph is 2-3 sentences maximum. Write like a wire service dispatch — factual, specific, no editorializing.
-Structure: Open with the week's dominant data release and its key figure. Next paragraphs: report supporting data with specific figures inline ("grew at an annualized rate of 1.3%", "less than half its 2024 pace"). Report secondary developments or counterpoints ("Not all sectors reflected this pattern"). Report what policy actions occurred and what data they referenced.
-NEVER forecast. NEVER use "is likely to", "would be expected to", "going forward", "looking ahead", "outlook", "expected to". Only report what HAS happened — data releases, policy decisions, project announcements, price movements. Reference period-over-period changes and comparisons. Every claim backed by <sup>N</sup> citation. No bullet points.
+Each paragraph is 2-3 sentences maximum. Write tight — cut qualifiers, scene-setting, and filler. Every sentence must deliver a specific figure or fact.
+Structure: Open with the dominant data release and its key figure. Following paragraphs: supporting data with figures inline, policy actions taken, and any notable counterpoints. Do not repeat facts already covered in the executive summary — add depth or different data points.
+NEVER forecast. NEVER use "is likely to", "would be expected to", "going forward", "looking ahead", "outlook", "expected to". Only report what HAS happened. Every claim backed by <sup>N</sup> citation. No bullet points.
 
 3. GLOBAL ANALYSIS (4-6 short paragraphs per region, 250-350 words each):
 Format each as HTML paragraphs: <p>paragraph text</p>
@@ -1007,9 +1007,9 @@ Per region: report what happened with embedded data. State factual connections t
 
 5. WATCHLIST: 15-25 upcoming events with dates, impact rating (high/medium/low), description, source URLs where available.
 
-6. CONSUMER PULSE (3-5 short paragraphs, 200-350 words):
+6. CONSUMER PULSE (2-3 short paragraphs, 120-200 words):
 Format as HTML paragraphs: <p>paragraph text</p>
-Write as flowing narrative prose — NOT bullet points. Each paragraph covers a coherent consumer sentiment thread. Use transitions between paragraphs. Ground in sentiment data. Note divergences (e.g. consumer anxiety about housing rising even as rate cuts accelerate). Tone: observational and analytical. Do NOT use footnote citations — reference sentiment data naturally: "Reddit discussions in r/PersonalFinanceCanada focused on..." or "Google search interest in tariff queries surged..."
+Be concise — this is a TL;DR snapshot. Each paragraph is 2-3 sentences max covering one sentiment thread. Lead with the dominant public discussion topic. Ground in data: cite subreddit names, search trend volumes, comment counts. Note divergences only if striking. Do NOT use footnote citations — reference naturally: "r/PersonalFinanceCanada discussion focused on..." or "Google search interest in tariff queries surged..."
 
 7. metrics: Fill ALL fields from articles EXCEPT — leave as "": cpi, shelterCpi, unemployment, participation, realGdp. These are injected from StatCan/BoC primary APIs. bocRate must match "{hard_data['boc_rate']}".
 
@@ -1088,9 +1088,9 @@ RECENT ARTICLES (grouped by industry — cite by article number, use URLs exactl
 
 Write:
 
-1. INDUSTRY EXECUTIVE SUMMARY (4-6 short paragraphs, 300-450 words):
+1. INDUSTRY EXECUTIVE SUMMARY (2-3 short paragraphs, 150-250 words):
 Format as HTML paragraphs: <p>paragraph text</p>
-Write as flowing narrative prose — NOT bullet points. Each paragraph covers a coherent industry thread. Use transitions between paragraphs. Lead with the single biggest sectoral data release or event. Group related sector developments together thematically. Report what happened across sectors. NO forecasting, NO "expected to", NO "looking ahead". Every claim backed by <sup>N</sup> citation.
+Be concise — TL;DR style. Lead with the single biggest sectoral story and its key figure. Second paragraph covers the next 2-3 most notable sector movements. Optional third paragraph only for a genuinely significant cross-sector pattern. Cut filler — every sentence must carry a specific data point. NO forecasting, NO "expected to", NO "looking ahead". Every claim backed by <sup>N</sup> citation.
 
 2. SECTOR ANALYSIS — goodsIndustries: Exactly 5 goods-producing sectors. Per sector: 150 words in bullets. 3-digit NAICS subsector commentary where data supports.
    For each:
