@@ -567,8 +567,12 @@ async function renderInteractiveMap(){
           tooltip.classList.add('visible');
         })
         .on('mousemove',function(event){
-          tooltip.style.left=(event.pageX+14)+'px';
-          tooltip.style.top=(event.pageY-10)+'px';
+          const tw=240,th=tooltip.offsetHeight||150;
+          let tx=event.pageX+14,ty=event.pageY-10;
+          if(event.clientX+14+tw>window.innerWidth)tx=event.pageX-tw-10;
+          if(event.clientY-10+th>window.innerHeight)ty=event.pageY-th-10;
+          tooltip.style.left=tx+'px';
+          tooltip.style.top=ty+'px';
         })
         .on('mouseout',function(){
           d3.select(this).attr('stroke','#fff').attr('stroke-width',1);
