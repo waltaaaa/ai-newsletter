@@ -1772,7 +1772,7 @@ function renderCalendarEvents(){
   const byWeek={};thisWeek.forEach(e=>{const wl=e.week_label||'This Week';if(!byWeek[wl])byWeek[wl]=[];byWeek[wl].push(e)});
 
   if(thisWeek.length){
-    let twHtml='';
+    let twHtml='<div class="events-section-wrap"><button class="events-toggle open" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')">This Week ('+thisWeek.length+') <span class="chevron">\u25be</span></button><div class="events-collapsible open">';
     Object.keys(byWeek).forEach(wl=>{
       twHtml+='<div class="events-week-card"><h3>'+wl+'</h3>';
       byWeek[wl].forEach(e=>{
@@ -1792,13 +1792,15 @@ function renderCalendarEvents(){
       });
       twHtml+='</div>';
     });
+    twHtml+='</div></div>';
     $('thisWeekEvents').innerHTML=twHtml;
   }
 
   // All events table
   const sorted=[...events].sort((a,b)=>{const da=parseEvtDate(a.date),db=parseEvtDate(b.date);return (da||new Date(0))-(db||new Date(0))}).slice(0,25);
   if(sorted.length){
-    let allHtml='<div class="events-week-card"><h3>All Events</h3>';
+    let allHtml='<div class="events-section-wrap"><button class="events-toggle" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')">All Events ('+sorted.length+') <span class="chevron">\u25be</span></button><div class="events-collapsible">';
+    allHtml+='<div class="events-week-card">';
     sorted.forEach(e=>{
       const impact=(e.impact||'low').toLowerCase();
       const isHigh=impact==='high';
@@ -1814,7 +1816,7 @@ function renderCalendarEvents(){
       allHtml+='<div>'+srcLink(e.source_url||e.url,'')+'</div>';
       allHtml+='</div>';
     });
-    allHtml+='</div>';
+    allHtml+='</div></div></div>';
     $('allEventsTable').innerHTML=allHtml;
   } else {
     $('allEventsTable').innerHTML='<div class="empty-state"><div class="empty-state-text">No upcoming economic events.</div></div>';
