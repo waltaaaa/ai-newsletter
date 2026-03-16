@@ -276,7 +276,7 @@ function leadImageHtml(sources,float){
 
 /* ══ TL;DR TAB (Editorial Digest) ══ */
 let _editorialMode=false;
-function renderTLDR(){
+async function renderTLDR(){
   _editorialMode=true;
   const hasBriefing=D&&D.executive_summary;
   if(hasBriefing){
@@ -333,10 +333,10 @@ function renderTLDR(){
   }else{
     $('execSummary').innerHTML=`<div class="fade-in" style="text-align:center;padding:24px 0"><div style="color:#475569;font-size:var(--text-sm)">Weekly briefing pending. ${indicators.length} indicators loaded from primary sources.</div></div>`;
   }
-  renderEditorialFlow();
+  await renderEditorialFlow();
   renderMicroscopeHistory();
   $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
-  setTimeout(collapseEmpty,300);
+  collapseEmpty();
 }
 async function renderEditorialFlow(){
   const flow=$('editorialFlow');if(!flow)return;
@@ -546,11 +546,7 @@ function renderGlobalPlayerSub(key){
 function collapseEmpty(){
   const panel=document.getElementById('tab-tldr');
   if(!panel)return;
-  // Collapse empty editorial sub-sections
-  panel.querySelectorAll('[id]').forEach(el=>{
-    if(!el.innerHTML.trim()&&!el.querySelector('canvas'))el.style.display='none';
-  });
-  // Hide footer row if both children empty
+  // Only hide the footer if both children are empty
   panel.querySelectorAll('.editorial-footer').forEach(row=>{
     const kids=[...row.children];
     const allEmpty=kids.every(c=>!c.innerHTML.trim());
