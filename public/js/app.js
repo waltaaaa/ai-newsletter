@@ -451,11 +451,10 @@ async function renderInteractiveMap(){
     <div class="ed-map-chart">
       <div class="ec-title" style="margin-top:8px">Provincial GDP Growth</div>
       <div class="ec-sub">Hover for province details</div>
-      <div id="canadaMapSvg" style="width:100%;min-height:320px;padding:12px 0"></div>
+      <div id="canadaMapSvg" style="width:100%"></div>
       <div class="ed-map-legend"><span><span class="swatch" style="background:rgba(37,99,235,0.15)"></span>Lower growth</span><span><span class="swatch" style="background:rgba(37,99,235,0.90)"></span>Higher growth</span></div>
       <div class="ec-source">Statistics Canada, Provincial Accounts</div>
     </div>
-    <div class="ed-map-tooltip" id="mapTooltip"></div>
   </div>`;
 
   // Render D3 map
@@ -474,12 +473,17 @@ async function renderInteractiveMap(){
       const geojson=topojson.feature(topo,topo.objects[objKey]);
       const mapDiv=document.getElementById('canadaMapSvg');
       if(!mapDiv)return;
-      const w=mapDiv.clientWidth||400;const h=Math.max(Math.min(w*0.85,380),260);
-      const pad=12;
-      const projection=d3.geoConicConformal().rotate([96,-1,0]).center([0,62]).parallels([49,77]).scale((w-pad*2)*0.52).translate([w/2,h/2+pad]);
+      const w=mapDiv.clientWidth||400;const h=Math.max(w*1.0,300);
+      mapDiv.style.minHeight=h+'px';
+
+      // Use fitExtent to fill the entire SVG with the map
+      const projection=d3.geoConicConformal().rotate([96,-1,0]).center([0,62]).parallels([49,77]);
+      const tempPath=d3.geoPath().projection(projection);
+      // Fit all features into the available space with small margin
+      projection.fitExtent([[8,8],[w-8,h-8]],geojson);
       const path=d3.geoPath().projection(projection);
 
-      // Parse GDP values for choropleth
+      // Parse GDP values for choropleth — also add a base tint for territories
       const gdpVals={};
       Object.entries(provData).forEach(([code,d])=>{
         if(d.gdp){
@@ -497,8 +501,12 @@ async function renderInteractiveMap(){
         const p=f.properties||{};
         if(p.postal)return p.postal;
         if(p.iso_3166_2)return p.iso_3166_2.replace('CA-','');
-        if(p.name&&NAME_TO_CODE[p.name])return NAME_TO_CODE[p.name];
-        // Fallback for datamaps format
+        if(p.name){
+          if(NAME_TO_CODE[p.name])return NAME_TO_CODE[p.name];
+          // Handle accented names like Québec
+          const plain=p.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+          if(NAME_TO_CODE[plain])return NAME_TO_CODE[plain];
+        }
         const idMap={'CA.BC':'BC','CA.AB':'AB','CA.SK':'SK','CA.MB':'MB','CA.ON':'ON','CA.QC':'QC','CA.NB':'NB','CA.NS':'NS','CA.NF':'NL','CA.PE':'PE','CA.YT':'YT','CA.NT':'NT','CA.NU':'NU'};
         return idMap[f.id]||'';
       }
@@ -506,14 +514,21 @@ async function renderInteractiveMap(){
       const svg=d3.select(mapDiv).append('svg').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`).attr('preserveAspectRatio','xMidYMid meet');
       svg.append('rect').attr('width',w).attr('height',h).attr('fill','#F8FAFF').attr('rx',8);
 
-      const tooltip=document.getElementById('mapTooltip');
+      // Tooltip — append to body so it escapes overflow:hidden on .editorial-article
+      let tooltip=document.getElementById('edMapTooltipGlobal');
+      if(!tooltip){
+        tooltip=document.createElement('div');
+        tooltip.id='edMapTooltipGlobal';
+        tooltip.className='ed-map-tooltip';
+        document.body.appendChild(tooltip);
+      }
 
       svg.selectAll('path').data(geojson.features).enter().append('path')
         .attr('d',path)
         .attr('fill',f=>{
           const code=featureCode(f);
           const gdp=gdpVals[code];
-          if(gdp===undefined)return'#E2E8F0';
+          if(gdp===undefined)return'rgba(37,99,235,0.07)';
           return`rgba(37,99,235,${colorScale(gdp).toFixed(2)})`;
         })
         .attr('stroke','#fff').attr('stroke-width',1).attr('stroke-linejoin','round')
@@ -528,16 +543,13 @@ async function renderInteractiveMap(){
           if(pd.unemployment)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}${pd.unemployment_prev?' (prev '+pd.unemployment_prev+')':''}</span></div>`;
           if(pd.cpi)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI</span><span class="ed-map-tooltip-value">${pd.cpi}${pd.cpi_prev?' (prev '+pd.cpi_prev+')':''}</span></div>`;
           if(pd.housingStarts)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
-          if(!rows)rows='<div style="color:rgba(255,255,255,0.5)">No data available</div>';
+          if(!rows)rows='<div style="color:rgba(255,255,255,0.5)">No provincial data</div>';
           tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${rows}`;
           tooltip.classList.add('visible');
         })
         .on('mousemove',function(event){
-          const rect=container.getBoundingClientRect();
-          const x=event.clientX-rect.left+12;
-          const y=event.clientY-rect.top-10;
-          tooltip.style.left=Math.min(x,rect.width-220)+'px';
-          tooltip.style.top=y+'px';
+          tooltip.style.left=(event.pageX+14)+'px';
+          tooltip.style.top=(event.pageY-10)+'px';
         })
         .on('mouseout',function(){
           d3.select(this).attr('stroke','#fff').attr('stroke-width',1);
