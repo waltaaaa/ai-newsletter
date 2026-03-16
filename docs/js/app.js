@@ -1027,7 +1027,6 @@ async function renderCanadaSub(){
     }
     pp.innerHTML=projHtml;
   }
-  renderPipelineStatus();
   renderCostMonitor();
 }
 function renderAllGlobalPlayers(){
@@ -2985,7 +2984,6 @@ if($('editorialFlow'))$('editorialFlow').innerHTML=skeleton(6);
 if($('natAnalysisSection'))$('natAnalysisSection').innerHTML='<div class="card">'+skeleton(3)+'</div>';
 if($('keyIndicators'))$('keyIndicators').innerHTML='<div class="indicator-strip">'+Array(7).fill('<div class="skeleton sk-pill"></div>').join('')+'</div>';
 // Section-level skeleton placeholders while async sections load
-if($('pipelineStatus'))$('pipelineStatus').innerHTML='<div class="card">'+skeleton(2)+'</div>';
 if($('costMonitor'))$('costMonitor').innerHTML='<div class="card">'+skeleton(2)+'</div>';
 if($('microscopeSection'))$('microscopeSection').innerHTML='<div class="card">'+skeleton(3)+'</div>';
 if($('microscopeHistory'))$('microscopeHistory').innerHTML='<div class="card">'+skeleton(2)+'</div>';
