@@ -895,7 +895,7 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
         }
 
     print(f"\n[STEP 3] Claude analysis (4 calls, {len(articles)} articles)...")
-    print(f"  Writing: Opus={OPUS_MODEL}, Extraction: Sonnet={SONNET_MODEL}")
+    print(f"  Call 1 (macro): Opus={OPUS_MODEL}, Calls 2-3 (industries/provinces): Sonnet={SONNET_MODEL}, Call 4 (extraction): Sonnet")
     today_str    = date.today().strftime('%B %d, %Y')
     hard_summary = _hard_data_summary(hard_data, rss_items)
 
@@ -1281,11 +1281,11 @@ If no projects found, return: {{"projects": []}}"""
                              anthropic_client=anthropic_client, cost_state=cost_state,
                              conn=conn, gemini_client=gemini_client)
         f2 = executor.submit(_call_claude, _call2_prompt, "call2-industries",
-                             max_tokens=15000, model=OPUS_MODEL,
+                             max_tokens=15000, model=SONNET_MODEL,
                              anthropic_client=anthropic_client, cost_state=cost_state,
                              conn=conn, gemini_client=gemini_client)
         f3 = executor.submit(_call_claude, _call3_prompt, "call3-provinces",
-                             max_tokens=15000, model=OPUS_MODEL,
+                             max_tokens=15000, model=SONNET_MODEL,
                              anthropic_client=anthropic_client, cost_state=cost_state,
                              conn=conn, gemini_client=gemini_client)
         f4a = executor.submit(_call_claude, _call4a_prompt, "call4a-projects",
