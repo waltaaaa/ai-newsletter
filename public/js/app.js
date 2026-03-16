@@ -958,11 +958,7 @@ async function renderCanadaSub(){
   if(hdr){
     hdr.innerHTML='<div class="fade-in"><div class="editorial-eyebrow">National Economic Overview</div>'+
       '<div class="editorial-headline">Canada</div><hr class="editorial-accent">'+
-      '<div class="editorial-meta">'+
-      '<div class="editorial-meta-item"><strong>'+projTotal+'</strong>Projects Tracked</div>'+
-      (newPrj?'<div class="editorial-meta-item"><strong>+'+newPrj+'</strong>New This Week</div>':'')+
-      (pipVal?'<div class="editorial-meta-item"><strong>$'+pipVal+'B</strong>Pipeline Value</div>':'')+
-      '</div></div>';
+      '</div>';
   }
 
   // Analysis section with floating indicator panel
@@ -1007,7 +1003,12 @@ async function renderCanadaSub(){
     let projects=[];
     try{const d=await fetchJSON('projects_all.json');projects=Array.isArray(d)?d:[]}catch(e){}
     const topProjects=projects.filter(p=>parseNumericValue(p.value)>0).sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value)).slice(0,10);
-    let projHtml='<div class="ed-section"><div class="ed-section-title">Capital Projects</div><div class="ed-section-subtitle">Major projects tracked nationally</div></div>';
+    let projHtml='<div class="ed-section"><div class="ed-section-title">Capital Projects</div><div class="ed-section-subtitle">Major projects tracked nationally</div></div>'+
+      '<div class="editorial-meta" style="margin-bottom:12px">'+
+      '<div class="editorial-meta-item"><strong>'+projTotal+'</strong>Projects Tracked</div>'+
+      (newPrj?'<div class="editorial-meta-item"><strong>+'+newPrj+'</strong>New This Week</div>':'')+
+      (pipVal?'<div class="editorial-meta-item"><strong>$'+pipVal+'B</strong>Pipeline Value</div>':'')+
+      '</div>';
     if(topProjects.length){
       projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Province</th><th scope="col">Status</th><th scope="col">Sector</th></tr></thead><tbody>';
       topProjects.forEach(p=>{
@@ -1806,10 +1807,7 @@ async function renderProvinceContent(){
   if(hdr){
     hdr.innerHTML='<div class="fade-in"><div class="editorial-eyebrow">Provincial Analysis</div>'+
       '<div class="editorial-headline">'+prov.name+'</div><hr class="editorial-accent">'+
-      '<div class="editorial-meta">'+
-      '<div class="editorial-meta-item"><strong>'+projCount+'</strong>Projects Tracked</div>'+
-      (fmtVal?'<div class="editorial-meta-item"><strong>'+fmtVal+'</strong>Pipeline Value</div>':'')+
-      '</div></div>';
+      '</div>';
   }
 
   // Analysis section with floating indicator panel + sector chart
@@ -1852,7 +1850,11 @@ async function renderProvinceContent(){
 
   // Projects
   const topProvProj=provProj.slice(0,5);
-  let projHtml='<div class="ed-section"><div class="ed-section-title">Major Projects</div><div class="ed-section-subtitle">Top projects in '+prov.name+'</div></div>';
+  let projHtml='<div class="ed-section"><div class="ed-section-title">Major Projects</div><div class="ed-section-subtitle">Top projects in '+prov.name+'</div></div>'+
+    '<div class="editorial-meta" style="margin-bottom:12px">'+
+    '<div class="editorial-meta-item"><strong>'+projCount+'</strong>Projects Tracked</div>'+
+    (fmtVal?'<div class="editorial-meta-item"><strong>'+fmtVal+'</strong>Pipeline Value</div>':'')+
+    '</div>';
   if(topProvProj.length){
     projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
     topProvProj.forEach(p=>{
