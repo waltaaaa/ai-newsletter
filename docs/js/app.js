@@ -274,55 +274,81 @@ function leadImageHtml(sources,float){
   return `<img src="${img}" alt="" style="float:${side};max-width:280px;width:40%;border-radius:var(--radius-md);margin:${margin};object-fit:cover;max-height:200px" onerror="this.style.display='none'" loading="lazy">`;
 }
 
-/* ══ TL;DR TAB (Newsletter Digest) ══ */
+/* ══ TL;DR TAB (Editorial Digest) ══ */
+let _editorialMode=false;
 function renderTLDR(){
+  _editorialMode=true;
   const hasBriefing=D&&D.executive_summary;
-  // Summary — newsletter hero with content headline
   if(hasBriefing){
     let headline=(D.headline||'').trim();
-    // If no real headline, extract the lead sentence and trim to headline length
     if(!headline||/^\d|^[A-Z]{3}\s\d/.test(headline)){
       const tmp=document.createElement('div');tmp.innerHTML=D.executive_summary||'';
-      // Get first <li> text (the lead bullet is the top story)
       const firstLi=tmp.querySelector('li');
       const rawText=firstLi?firstLi.textContent.trim():(tmp.textContent||'').trim();
-      // Take the first clause/sentence, strip trailing citation numbers
       const firstSentence=(rawText.split(/[.!]\s/)[0]||'').replace(/\d+$/,'').trim();
-      // Truncate to headline length, break at last word boundary
-      if(firstSentence.length>90){headline=firstSentence.substring(0,87).replace(/\s\S*$/,'')+'...';}
-      else{headline=firstSentence}
+      if(firstSentence.length>90)headline=firstSentence.substring(0,87).replace(/\s\S*$/,'')+'...';
+      else headline=firstSentence;
       if(!headline)headline='Weekly Summary';
     }
+    // Meta stats
     let metaHtml='';
     const projCount=D.discovery_stats?D.discovery_stats.total_projects||'':D.project_count||'';
     const newProj=D.discovery_stats?D.discovery_stats.new_this_week||'':D.new_projects||'';
     const pipeVal=D.discovery_stats?D.discovery_stats.total_value_billions||'':D.pipeline_value||'';
     if(projCount||newProj||pipeVal){
-      metaHtml='<div class="hero-meta">';
-      if(projCount)metaHtml+='<div class="hero-meta-item"><strong>'+projCount+'</strong>Projects Tracked</div>';
-      if(newProj)metaHtml+='<div class="hero-meta-item"><strong>+'+newProj+'</strong>New This Week</div>';
-      if(pipeVal)metaHtml+='<div class="hero-meta-item"><strong>$'+pipeVal+'B</strong>Pipeline Value</div>';
+      metaHtml='<div class="editorial-meta">';
+      if(projCount)metaHtml+='<div class="editorial-meta-item"><strong>'+projCount+'</strong>Projects Tracked</div>';
+      if(newProj)metaHtml+='<div class="editorial-meta-item"><strong>+'+newProj+'</strong>New This Week</div>';
+      if(pipeVal)metaHtml+='<div class="editorial-meta-item"><strong>$'+pipeVal+'B</strong>Pipeline Value</div>';
       metaHtml+='</div>';
     }
-    const _leadImg=leadImageHtml(D.sources||[],'right');
-    $('execSummary').innerHTML=`<div class="newsletter-hero fade-in"><div class="hero-headline">${san(headline||'Weekly Summary')}</div><div class="hero-prose">${_leadImg}${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div>${metaHtml}<div class="ws-row ws-row-2" style="margin-top:16px"><div class="card" id="tldrMacroCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Macro Pulse</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Key indicators — current vs. previous</div><div style="height:180px;position:relative"><canvas id="tldrMacroChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Sources: Statistics Canada, Bank of Canada</div></div><div class="card" id="tldrCommodityCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Commodity Movers</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Biggest weekly price changes</div><div style="height:180px;position:relative"><canvas id="tldrCommodityChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Yahoo Finance</div></div></div></div>`;
-    renderWovenCharts('tldr');
+    // Lead image as editorial float
+    const leadImg=findLeadImage(D.sources||[]);
+    const imgHtml=leadImg?`<img src="${leadImg}" alt="" class="editorial-lead-img" onerror="this.style.display='none'" loading="lazy">`:'';
+    // Apply drop cap to first bullet
+    let summaryHtml=san(linkFootnotes(D.executive_summary,(D.sources||[])));
+    // Wrap first text character after first <li> in drop cap span
+    let dcApplied=false;
+    summaryHtml=summaryHtml.replace(/<li>([A-Za-z])/,function(m,ch){
+      if(dcApplied)return m;dcApplied=true;
+      return '<li><span class="editorial-drop-cap">'+ch+'</span>';
+    });
+
+    $('execSummary').innerHTML=`<div class="fade-in">
+      <div class="editorial-eyebrow">Weekly Intelligence Briefing</div>
+      <div class="editorial-headline">${san(headline)}</div>
+      <hr class="editorial-accent">
+      ${metaHtml}
+      <div class="editorial-lead">${imgHtml}${summaryHtml}</div>
+    </div>`;
   }else{
-    const indCount=indicators.length;
-    $('execSummary').innerHTML=`<div class="newsletter-hero fade-in" style="text-align:center"><div style="color:#475569;font-size:var(--text-sm)">Weekly briefing pending. ${indCount} indicators loaded from primary sources.</div></div>`;
+    $('execSummary').innerHTML=`<div class="fade-in" style="text-align:center;padding:24px 0"><div style="color:#475569;font-size:var(--text-sm)">Weekly briefing pending. ${indicators.length} indicators loaded from primary sources.</div></div>`;
   }
-  // Key Indicators — top-level pills only (no dropdown on TL;DR)
   renderKeyIndicators();
-  // Under the Microscope
   renderMicroscope();
-  // Weekly Briefing
   renderTrendSummary();
-  // Microscope History
+  renderEditorialSidebar();
   renderMicroscopeHistory();
-  // Sources
   $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
-  // Collapse empty sections
   setTimeout(collapseEmpty,200);
+}
+function renderEditorialSidebar(){
+  const aside=$('editorialAside');if(!aside)return;
+  let html='';
+  // Pull quotes from key_indicators
+  const ki=(D&&D.key_indicators)||[];
+  const pqItems=ki.filter(k=>k.change&&k.change.trim()).slice(0,3);
+  pqItems.forEach(k=>{
+    html+=`<div class="editorial-pullquote"><div class="pq-label">${k.label||''}</div>${k.value||''}${k.change?' <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">('+k.change+')</span>':''}</div>`;
+  });
+  // Charts
+  html+=`<div class="editorial-chart-block" id="tldrMacroCard"><div class="chart-label">Macro Pulse</div><div class="chart-sub">Key indicators — current vs. previous</div><div style="height:180px;position:relative"><canvas id="tldrMacroChart"></canvas></div><div class="chart-source">Sources: Statistics Canada, Bank of Canada</div></div>`;
+  html+=`<div class="editorial-chart-block" id="tldrCommodityCard"><div class="chart-label">Commodity Movers</div><div class="chart-sub">Biggest weekly price changes</div><div style="height:180px;position:relative"><canvas id="tldrCommodityChart"></canvas></div><div class="chart-source">Source: Yahoo Finance</div></div>`;
+  html+=`<div class="editorial-chart-block" id="briefPipelineCard"><div class="chart-label">Project Pipeline</div><div class="chart-sub">Capital projects by lifecycle stage</div><div style="height:180px;position:relative"><canvas id="briefPipelineChart"></canvas></div><div class="chart-source">Source: Pipeline database</div></div>`;
+  html+=`<div class="editorial-chart-block" id="briefSectorCard"><div class="chart-label">Capital by Sector</div><div class="chart-sub">Tracked investment by sector</div><div style="height:180px;position:relative"><canvas id="briefSectorChart"></canvas></div><div class="chart-source">Source: Pipeline database</div></div>`;
+  aside.innerHTML=html;
+  renderWovenCharts('tldr');
+  renderWovenCharts('brief');
 }
 
 /* ══ NATIONAL TAB (subtabs: Canada + Global Players) ══ */
@@ -460,13 +486,12 @@ function renderGlobalPlayerSub(key){
 function collapseEmpty(){
   const panel=document.getElementById('tab-tldr');
   if(!panel)return;
-  // Collapse empty newsletter sections
-  panel.querySelectorAll(':scope > .newsletter-section').forEach(sec=>{
-    const content=[...sec.querySelectorAll('div[id], section')];
-    const allEmpty=content.every(c=>!c.innerHTML.trim());
-    sec.style.display=allEmpty?'none':'';
+  // Collapse empty editorial sub-sections
+  panel.querySelectorAll('[id]').forEach(el=>{
+    if(!el.innerHTML.trim()&&!el.querySelector('canvas'))el.style.display='none';
   });
-  panel.querySelectorAll('.ws-row').forEach(row=>{
+  // Hide footer row if both children empty
+  panel.querySelectorAll('.editorial-footer').forEach(row=>{
     const kids=[...row.children];
     const allEmpty=kids.every(c=>!c.innerHTML.trim());
     row.style.display=allEmpty?'none':'';
@@ -1134,16 +1159,19 @@ function renderWordCloud(topics){
 async function renderTrendSummary(){
   const el=$('trendSummary');if(!el)return;
   try{
-    let narrative='',title='Weekly Intelligence Briefing',ds={};
+    let narrative='';
     const briefing=await fetchJSON('briefing_latest.json');
-    if(briefing&&briefing.content){narrative=briefing.content;title='Weekly Intelligence Briefing'}
+    if(briefing&&briefing.content)narrative=briefing.content;
     if(!narrative){el.innerHTML='';return}
-    const chips=ds.total_projects?`<div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap"><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)"><strong style="font-family:var(--font-mono)">${ds.total_projects||0}</strong> projects</div><div style="background:var(--bg-subtle);padding:8px 14px;border-radius:8px;font-size:var(--text-xs)">$<strong style="font-family:var(--font-mono)">${((ds.total_value_millions||0)/1000).toFixed(1)}B</strong> pipeline</div></div>`:'';
-    // Download buttons — pdf_url and docx_url are optional fields in briefing_latest.json
     const pdfUrl=(briefing&&briefing.pdf_url)||'';const docxUrl=(briefing&&briefing.docx_url)||'';
     const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:12px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#EC4899;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#3B82F6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
-    el.innerHTML=`<div class="card fade-in"><div class="card-header">${title}</div><div class="card-body">${chips}${dlBtns}<div style="line-height:1.65;color:var(--text-secondary);white-space:pre-line">${san(narrative)}</div><div class="ws-row ws-row-2" style="margin-top:16px"><div class="card" id="briefPipelineCard"><div class="card-header" style="font-size:var(--text-sm)">Project Pipeline</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Capital projects by lifecycle stage</div><div style="height:180px;position:relative"><canvas id="briefPipelineChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Pipeline database</div></div><div class="card" id="briefSectorCard"><div class="card-header" style="font-size:var(--text-sm)">Capital by Sector</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Tracked investment by sector</div><div style="height:180px;position:relative"><canvas id="briefSectorChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Pipeline database</div></div></div></div></div>`;
-    renderWovenCharts('brief');
+    if(_editorialMode){
+      // Editorial: narrative flows as prose in main column; charts are in sidebar
+      el.innerHTML=`<div class="fade-in"><hr class="editorial-rule"><div class="editorial-section-label">Weekly Briefing</div>${dlBtns}<div class="editorial-prose" style="white-space:pre-line">${san(narrative)}</div></div>`;
+    }else{
+      el.innerHTML=`<div class="card fade-in"><div class="card-header">Weekly Intelligence Briefing</div><div class="card-body">${dlBtns}<div style="line-height:1.65;color:var(--text-secondary);white-space:pre-line">${san(narrative)}</div><div class="ws-row ws-row-2" style="margin-top:16px"><div class="card" id="briefPipelineCard"><div class="card-header" style="font-size:var(--text-sm)">Project Pipeline</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Capital projects by lifecycle stage</div><div style="height:180px;position:relative"><canvas id="briefPipelineChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Pipeline database</div></div><div class="card" id="briefSectorCard"><div class="card-header" style="font-size:var(--text-sm)">Capital by Sector</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Tracked investment by sector</div><div style="height:180px;position:relative"><canvas id="briefSectorChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Pipeline database</div></div></div></div></div>`;
+      renderWovenCharts('brief');
+    }
   }catch(e){console.warn('Trend summary:',e);el.innerHTML=''}
 }
 
@@ -2024,9 +2052,13 @@ async function renderMicroscope(){
     const data=await fetchJSON('microscope.json');
     const m=(data&&data.current)||data||{};
     if(!m.topic&&!m.text){el.innerHTML='';return}
-    const sectors=(m.affected_sectors||[]).map(s=>'<span style="background:var(--bg-subtle);color:var(--text-secondary);padding:2px 8px;border-radius:4px;font-size:var(--text-xs)">'+s+'</span>').join(' ');
-    const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:#556B7A;margin-left:8px">Week '+m.weeks_running+' of coverage</span>':'';
-    el.innerHTML=`<div class="card fade-in"><div class="card-header">Under the Microscope ${weeks}</div><div style="font-size:var(--text-sm);font-weight:600;color:var(--accent-blue);margin-bottom:8px">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}<div class="card-body">${san(m.text||m.analysis||'')}</div></div>`;
+    const sectors=(m.affected_sectors||[]).map(s=>'<span class="editorial-sector-tag">'+s+'</span>').join(' ');
+    const weeks=m.weeks_running?'<span style="font-size:var(--text-xs);color:#64748B;margin-left:8px">Week '+m.weeks_running+'</span>':'';
+    if(_editorialMode){
+      el.innerHTML=`<div class="fade-in"><hr class="editorial-rule"><div class="editorial-section-label">Under the Microscope ${weeks}</div><div class="editorial-section-title">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">'+sectors+'</div>':''}<div class="editorial-prose">${san(m.text||m.analysis||'')}</div></div>`;
+    }else{
+      el.innerHTML=`<div class="card fade-in"><div class="card-header">Under the Microscope ${weeks}</div><div style="font-size:var(--text-sm);font-weight:600;color:var(--accent-blue);margin-bottom:8px">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}<div class="card-body">${san(m.text||m.analysis||'')}</div></div>`;
+    }
   }catch(e){
     console.warn('Microscope:',e);
     el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
