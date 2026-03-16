@@ -260,6 +260,20 @@ function sourcesFooter(sources,containerId){
   return html+'</div>';
 }
 
+/* ── Lead image helper ── */
+function findLeadImage(sources){
+  if(!sources||!sources.length)return '';
+  for(const s of sources){if(s.image_url)return s.image_url}
+  return '';
+}
+function leadImageHtml(sources,float){
+  const img=findLeadImage(sources);
+  if(!img)return '';
+  const side=float==='right'?'right':'left';
+  const margin=side==='right'?'0 0 12px 20px':'0 20px 12px 0';
+  return `<img src="${img}" alt="" style="float:${side};max-width:280px;width:40%;border-radius:var(--radius-md);margin:${margin};object-fit:cover;max-height:200px" onerror="this.style.display='none'" loading="lazy">`;
+}
+
 /* ══ TL;DR TAB (Newsletter Digest) ══ */
 function renderTLDR(){
   const hasBriefing=D&&D.executive_summary;
@@ -290,7 +304,8 @@ function renderTLDR(){
       if(pipeVal)metaHtml+='<div class="hero-meta-item"><strong>$'+pipeVal+'B</strong>Pipeline Value</div>';
       metaHtml+='</div>';
     }
-    $('execSummary').innerHTML=`<div class="newsletter-hero fade-in"><div class="hero-headline">${san(headline||'Weekly Summary')}</div><div class="hero-prose">${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div>${metaHtml}</div>`;
+    const _leadImg=leadImageHtml(D.sources||[],'right');
+    $('execSummary').innerHTML=`<div class="newsletter-hero fade-in"><div class="hero-headline">${san(headline||'Weekly Summary')}</div><div class="hero-prose">${_leadImg}${san(linkFootnotes(D.executive_summary,(D.sources||[])))}</div>${metaHtml}</div>`;
   }else{
     const indCount=indicators.length;
     $('execSummary').innerHTML=`<div class="newsletter-hero fade-in" style="text-align:center"><div style="color:#5a6a85;font-size:var(--text-sm)">Weekly briefing pending. ${indCount} indicators loaded from primary sources.</div></div>`;
@@ -364,7 +379,8 @@ async function renderCanadaSub(){
   if(hasBriefing){
     const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
     const natSources=(D.national&&D.national.sources)||[];
-    $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${san(linkFootnotes(natContent,natSources.length?natSources:(D.sources||[])))}</div>${sourcesFooter(natSources)}</div>`;
+    const _natImg=leadImageHtml(natSources,'left');
+    $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${_natImg}${san(linkFootnotes(natContent,natSources.length?natSources:(D.sources||[])))}</div>${sourcesFooter(natSources)}</div>`;
   }else{$('nationalAnalysis').innerHTML=''}
   if(D)renderSentiment();
   renderPolicySection();
@@ -1256,7 +1272,8 @@ async function renderProvinceContent(){
   // Analysis
   const provContent=provData.analysis||'';
   const provSources=provData.sources||[];
-  let analysisHtml='<div class="card"><div class="card-header">Analysis</div><div class="card-body">'+(provContent?san(linkFootnotes(provContent,provSources.length?provSources:(D.sources||[]))):'<div class="empty-state"><div class="empty-state-text">No provincial analysis available for '+prov.name+'.</div></div>')+'</div></div>';
+  const _provImg=leadImageHtml(provSources,'right');
+  let analysisHtml='<div class="card"><div class="card-header">Analysis</div><div class="card-body">'+(provContent?_provImg+san(linkFootnotes(provContent,provSources.length?provSources:(D.sources||[]))):'<div class="empty-state"><div class="empty-state-text">No provincial analysis available for '+prov.name+'.</div></div>')+'</div></div>';
   // Province sources footer
   if(provData.sources&&provData.sources.length){analysisHtml+=sourcesFooter(provData.sources)}
   // Provincial upcoming events (from watchlist, filtered by province mention in description)

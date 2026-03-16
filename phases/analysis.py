@@ -1857,6 +1857,26 @@ def run(conn, context, logger):
         # ── STEP 4e: Verify source URLs ─────────────────────────────
         verify_source_urls(final_payload)
 
+        # ── STEP 4f: Enrich sources with article images ──────────────
+        _url_to_image = {}
+        for a in articles:
+            img = a.get('image_url', '')
+            if img and a.get('url'):
+                _url_to_image[a['url']] = img
+        for a in (rss_items or []):
+            img = a.get('image_url', '')
+            if img and a.get('url'):
+                _url_to_image[a['url']] = img
+        if _url_to_image:
+            enriched = 0
+            for src in _all_sources(final_payload):
+                u = src.get('url', '')
+                if u and u in _url_to_image:
+                    src['image_url'] = _url_to_image[u]
+                    enriched += 1
+            if enriched:
+                print(f"  [IMAGES] Enriched {enriched} sources with article images")
+
         logger.log_step(step_name, "success")
         return {"final_payload": final_payload}
     except Exception as e:

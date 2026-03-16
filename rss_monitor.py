@@ -526,6 +526,29 @@ def _entry_to_item(entry, meta: dict) -> dict:
             if term:
                 entry_tags.append(term)
 
+    # Extract image URL from media:content, media:thumbnail, or enclosures
+    image_url = ''
+    if hasattr(entry, 'media_content') and entry.media_content:
+        for mc in entry.media_content:
+            if mc.get('medium') == 'image' or (mc.get('type', '').startswith('image/')):
+                image_url = mc.get('url', '')
+                break
+            if mc.get('url', '').lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                image_url = mc.get('url', '')
+                break
+    if not image_url and hasattr(entry, 'media_thumbnail') and entry.media_thumbnail:
+        image_url = entry.media_thumbnail[0].get('url', '')
+    if not image_url and hasattr(entry, 'enclosures') and entry.enclosures:
+        for enc in entry.enclosures:
+            if enc.get('type', '').startswith('image/'):
+                image_url = enc.get('href', enc.get('url', ''))
+                break
+    if not image_url and hasattr(entry, 'links'):
+        for link in entry.links:
+            if link.get('type', '').startswith('image/'):
+                image_url = link.get('href', '')
+                break
+
     return {
         'title':        title,
         'summary':      summary,
@@ -536,6 +559,7 @@ def _entry_to_item(entry, meta: dict) -> dict:
         'province':     meta.get('province'),
         'category':     meta.get('category', 'general'),
         'tags':         entry_tags,
+        'image_url':    image_url,
     }
 
 
