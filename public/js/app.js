@@ -355,16 +355,6 @@ async function renderEditorialFlow(){
   // Word cloud topics
   const wcTopics=(D.word_cloud_topics&&D.word_cloud_topics.length)?D.word_cloud_topics:extractTopicsFromText();
 
-  // Helper: splice sector chart near the end of industry text
-  const sectorChartHtml=`<div class="ed-chart-inline" id="tldrSectorCard" style="float:left;margin:0 20px 14px 0"><div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div><div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div><div class="ec-source">Pipeline database</div></div>`;
-  function _weaveChart(html){
-    if(!html)return sectorChartHtml;
-    const parts=html.split('</p>');
-    if(parts.length<=2)return html+sectorChartHtml;
-    // Insert before last paragraph so chart bottom aligns with end of text
-    parts.splice(parts.length-2,0,sectorChartHtml);
-    return parts.join('</p>');
-  }
 
   // Insert image after 3rd paragraph so it doesn't compete with the map float
   let execWithImg=execHtml;
@@ -378,24 +368,29 @@ async function renderEditorialFlow(){
     }
   }
 
-  // Generate section subtitles from this week's data
-  function _firstSentence(html){
+  // Generate short section subtitles — data-driven, no repetition
+  function _shortSub(html,maxLen){
     if(!html)return '';
-    const plain=html.replace(/<[^>]+>/g,'');
-    const s=plain.match(/[^.!?]+[.!?]/);
-    return s?s[0].trim():'';
+    const plain=html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+    // Extract the key clause — up to first comma or period, capped at maxLen
+    const clause=plain.match(/^[^,.!?]+/);
+    let sub=clause?clause[0].trim():plain.slice(0,maxLen);
+    if(sub.length>maxLen)sub=sub.slice(0,maxLen).replace(/\s\S*$/,'')+'...';
+    return sub;
   }
-  const industrySub=_firstSentence(D.industry_executive_summary||'');
+  const industrySub=_shortSub(D.industry_executive_summary||'',70);
   const marketsSub=(()=>{
     const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
     const idx=(fm.indices||[])[0];
     const wti=indicators.find(x=>x.indicator_name==='wti'||x.indicator_name==='wti_oil');
+    const cad=indicators.find(x=>x.indicator_name==='cadusd'||x.indicator_name==='cad_usd');
     const parts=[];
-    if(idx)parts.push(`TSX at ${idx.value||'N/A'}${idx.change?' ('+idx.change+')':''}`);
-    if(wti)parts.push(`WTI at $${wti.value}`);
-    return parts.join(' · ')||'Weekly market movements and commodity prices';
+    if(idx)parts.push(`TSX ${idx.value||''}${idx.change?' ('+idx.change+')':''}`);
+    if(cad)parts.push(`CAD $${cad.value}`);
+    if(wti)parts.push(`WTI $${wti.value}`);
+    return parts.join(' · ')||'Markets and commodities';
   })();
-  const pulseSub=_firstSentence(D.consumer_pulse||'')||'Sentiment signals from Reddit, Google Trends, and social media';
+  const pulseSub=_shortSub(D.consumer_pulse||'',70)||'Public sentiment and social signals';
 
   // Assemble — 4 sections: Overview, Industry, Markets, Consumer Pulse
   flow.innerHTML=`
@@ -407,7 +402,14 @@ async function renderEditorialFlow(){
       <div class="ed-section-title">Industry Overview</div>
       <div class="ed-section-subtitle">${san(industrySub)}</div>
     </div>
-    ${_weaveChart(industryHtml)}
+    <div class="ed-industry-row">
+      <div class="ed-industry-text">${industryHtml}</div>
+      <div class="ed-industry-chart" id="tldrSectorCard">
+        <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
+        <div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div>
+        <div class="ec-source">Pipeline database</div>
+      </div>
+    </div>
     <div class="ed-clear"></div>
 
     <div class="ed-section">

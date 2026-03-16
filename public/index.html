@@ -510,9 +510,13 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .ed-markets-ticker{font-size:9px;font-weight:600;text-transform:uppercase;color:#64748B;letter-spacing:0.3px}
 .ed-markets-price{font-family:var(--font-heading);font-size:var(--text-sm);font-weight:700;color:#1a2744}
 .ed-markets-change{font-size:10px;font-family:var(--font-mono)}
+/* Industry row — text left, chart right, bottoms aligned */
+.ed-industry-row{display:flex;gap:20px;align-items:flex-end}
+.ed-industry-text{flex:1;min-width:0}
+.ed-industry-chart{flex:0 0 46%;border:1px solid rgba(0,0,0,0.06);border-radius:var(--radius-md);padding:14px;background:rgba(0,0,0,0.01)}
 /* Unsplash image in overview */
 .ed-unsplash-img{float:right;max-width:280px;width:38%;border-radius:var(--radius-md);margin:4px 0 16px 24px;object-fit:cover;max-height:200px;box-shadow:0 2px 12px rgba(0,0,0,0.08)}
-@media(max-width:899px){.ed-chart-inline{float:none;width:100%;margin:16px 0}.ed-map{float:none;width:100%;margin:16px 0}.ed-map-stats{flex:none;width:100%;flex-direction:row;flex-wrap:wrap}.editorial-footer{grid-template-columns:1fr}.editorial-article{padding:24px 20px}.editorial-lead-img{float:none;max-width:100%;width:100%;margin:0 0 16px}.ed-stat-grid{grid-template-columns:repeat(3,1fr)}.ed-unsplash-img{float:none;max-width:100%;width:100%;margin:0 0 16px}.ed-wordcloud{float:none;width:100%;margin:16px 0}}
+@media(max-width:899px){.ed-chart-inline{float:none;width:100%;margin:16px 0}.ed-map{float:none;width:100%;margin:16px 0}.ed-map-stats{flex:none;width:100%;flex-direction:row;flex-wrap:wrap}.editorial-footer{grid-template-columns:1fr}.editorial-article{padding:24px 20px}.editorial-lead-img{float:none;max-width:100%;width:100%;margin:0 0 16px}.ed-stat-grid{grid-template-columns:repeat(3,1fr)}.ed-unsplash-img{float:none;max-width:100%;width:100%;margin:0 0 16px}.ed-wordcloud{float:none;width:100%;margin:16px 0}.ed-industry-row{flex-direction:column}.ed-industry-chart{flex:none;width:100%}}
 @media(max-width:599px){.editorial-article{padding:20px 16px}.editorial-headline{font-size:var(--text-xl)}.editorial-meta{flex-wrap:wrap;gap:12px}.ed-stat-grid{grid-template-columns:repeat(2,1fr)}}
 .newsletter-hero{background:linear-gradient(135deg,rgba(255,255,255,0.97),rgba(240,245,255,0.95));border:1px solid rgba(255,255,255,0.5);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:28px 32px;position:relative;overflow:hidden}
 .newsletter-hero::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:#2563EB}
