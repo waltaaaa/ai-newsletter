@@ -213,6 +213,17 @@ async function loadAll(){
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
   $('navMeta').textContent=edStr||((indicators.length)?indicators.length+' indicators loaded':'Data loaded');
   $('footerDate').textContent=D&&D.updated_at?'Last pipeline run: '+fmtDate(D.updated_at):(indicators.length?'Live indicator data loaded':'Awaiting first pipeline run');
+  // Hero date subtitle
+  const heroDate=$('heroDate');
+  if(heroDate){
+    const briefingDate=D&&(D.week_of||D.updated_at||D.date);
+    if(briefingDate){
+      const dt=new Date(briefingDate+'T00:00:00');
+      heroDate.textContent='Week of '+dt.toLocaleDateString('en-CA',{month:'long',day:'numeric',year:'numeric'});
+    }else{
+      heroDate.textContent=new Date().toLocaleDateString('en-CA',{month:'long',day:'numeric',year:'numeric'});
+    }
+  }
   loadEditionList();
 }
 /* Edition dropdown toggle */
