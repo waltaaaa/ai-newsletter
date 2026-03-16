@@ -545,10 +545,16 @@ async function renderInteractiveMap(){
           const pName=(PROVS.find(p=>p.code===code)||{}).name||code;
           const pd=provData[code]||{};
           let rows='';
-          if(pd.gdp)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
-          if(pd.unemployment)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}${pd.unemployment_prev?' (prev '+pd.unemployment_prev+')':''}</span></div>`;
-          if(pd.cpi)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI</span><span class="ed-map-tooltip-value">${pd.cpi}${pd.cpi_prev?' (prev '+pd.cpi_prev+')':''}</span></div>`;
-          if(pd.housingStarts)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
+          if(pd.gdp)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
+          if(pd.unemployment){
+            rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
+            if(pd.unemployment_prev)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.unemployment_prev}</span></div>`;
+          }
+          if(pd.cpi){
+            rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
+            if(pd.cpi_prev)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
+          }
+          if(pd.housingStarts)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts (ann.)</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
           if(!rows)rows='<div style="color:rgba(255,255,255,0.5)">No provincial data</div>';
           tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${rows}`;
           tooltip.classList.add('visible');
