@@ -374,6 +374,11 @@ async function renderEditorialFlow(){
     <div class="ed-clear"></div>
 
     <div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>
+    <div class="ed-chart-inline" id="tldrSectorCard">
+      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
+      <div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div>
+      <div class="ec-source">Pipeline database</div>
+    </div>
     ${industryHtml}
     <div class="ed-clear"></div>
 
@@ -388,6 +393,7 @@ async function renderEditorialFlow(){
   `;
   await renderInteractiveMap();
   await renderTLDRMarkets();
+  try{await _ensureChartData();_renderSectorChart('tldrSectorChart','tldrSectorCard','tldr')}catch(e){console.warn('Sector chart:',e)}
   if(wcTopics.length) renderTLDRWordCloud(wcTopics,'tldrWordCloud');
   }catch(e){
     console.error('renderEditorialFlow error:',e);
