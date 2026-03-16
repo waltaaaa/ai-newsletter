@@ -135,7 +135,7 @@ async function switchEdition(editionId){
   Object.values(charts).forEach(c=>{if(c&&c.destroy)c.destroy()});charts={};
   // Static mode: only latest briefing is available as full content
   await loadNewsletter();
-  try{renderTab('tldr');tabRendered.tldr=true}catch(e){console.error('renderTLDR:',e)}
+  try{await renderTab('tldr');tabRendered.tldr=true}catch(e){console.error('renderTLDR:',e)}
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
   $('navMeta').textContent=edStr||'Latest Edition';
   const activeTab=document.querySelector('.nav-tab.active');
@@ -205,7 +205,7 @@ async function loadAll(){
     await Promise.all([loadNewsletter(),loadIndicators()]);
   }catch(e){console.error('loadAll data fetch:',e)}
   try{
-    renderTab('tldr');tabRendered.tldr=true;
+    await renderTab('tldr');tabRendered.tldr=true;
   }catch(e){
     console.error('renderTLDR:',e);
     $('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">Error rendering: '+e.message+'</div></div>';
@@ -232,9 +232,9 @@ document.addEventListener('click',()=>{$('editionList').style.display='none'});
 $('editionList').addEventListener('click',e=>e.stopPropagation());
 
 /* ── Render Router ── */
-function renderTab(id){
+async function renderTab(id){
   switch(id){
-    case'tldr':renderTLDR();break;
+    case'tldr':await renderTLDR();break;
     case'national':renderNational();break;
     case'provinces':renderProvinces();break;
     case'industries':renderIndustries();break;
@@ -339,7 +339,8 @@ async function renderTLDR(){
   collapseEmpty();
 }
 async function renderEditorialFlow(){
-  const flow=$('editorialFlow');if(!flow)return;
+  const flow=$('editorialFlow');if(!flow){console.error('editorialFlow element not found');return}
+  try{
   // Build microscope content — try dedicated JSON first, fall back to D fields
   let microHtml='';
   try{
@@ -426,6 +427,10 @@ async function renderEditorialFlow(){
   renderKeyIndicators();
   await renderWovenCharts('tldr');
   await renderWovenCharts('brief');
+  }catch(e){
+    console.error('renderEditorialFlow error:',e);
+    flow.innerHTML='<div style="padding:24px;color:#991B1B;font-size:var(--text-sm)">Error rendering editorial flow: '+e.message+'</div>';
+  }
 }
 
 /* ══ NATIONAL TAB (subtabs: Canada + Global Players) ══ */
