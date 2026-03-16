@@ -374,11 +374,6 @@ async function renderEditorialFlow(){
     <div class="ed-clear"></div>
 
     <div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>
-    <div class="ed-chart-inline" id="tldrSectorCard" style="float:left;margin:0 20px 14px 0">
-      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
-      <div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div>
-      <div class="ec-source">Pipeline database</div>
-    </div>
     ${industryHtml}
     <div class="ed-clear"></div>
 
@@ -386,15 +381,27 @@ async function renderEditorialFlow(){
     <div id="tldrMarketsSection"></div>
     <div class="ed-clear"></div>
 
-    <div class="ed-section"><div class="ed-section-title">Consumer Pulse</div></div>
+    <div class="ed-section"><div class="ed-section-title">Consumer Pulse</div><div class="ed-section-sub">Sentiment signals from Reddit, Google Trends, and social media</div></div>
+    <div id="tldrWordCloud" class="ed-wordcloud">
+      <div class="ec-title">Economic Sentiment</div>
+      <div class="ec-sub">Top themes from news articles and public discussion</div>
+      <div id="tldrWordCloudSvg" style="width:100%"></div>
+      <div class="ec-source">Pipeline: 300+ RSS feeds, Google News, Reddit, Google Trends</div>
+    </div>
     ${pulseHtml}
-    <div id="tldrWordCloud" class="ed-wordcloud"></div>
+    <div class="ed-clear"></div>
+
+    <div class="ed-chart-inline" id="tldrSectorCard" style="float:left;margin:0 20px 14px 0">
+      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
+      <div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div>
+      <div class="ec-source">Pipeline database</div>
+    </div>
     <div class="ed-clear"></div>
   `;
   await renderInteractiveMap();
   await renderTLDRMarkets();
   try{await _ensureChartData();_renderSectorChart('tldrSectorChart','tldrSectorCard','tldr')}catch(e){console.warn('Sector chart:',e)}
-  if(wcTopics.length) renderTLDRWordCloud(wcTopics,'tldrWordCloud');
+  if(wcTopics.length) renderTLDRWordCloud(wcTopics,'tldrWordCloudSvg');
   }catch(e){
     console.error('renderEditorialFlow error:',e);
     flow.innerHTML='<div style="padding:24px;color:#991B1B;font-size:var(--text-sm)">Error rendering editorial flow: '+e.message+'</div>';
@@ -647,14 +654,14 @@ async function renderInteractiveMap(){
 function renderTLDRWordCloud(topics,containerId){
   const container=document.getElementById(containerId);
   if(!container||!topics||!topics.length)return;
-  const w=container.clientWidth||500,h=250;
+  const w=container.clientWidth||300,h=Math.min(Math.round(w*0.65),200);
   container.innerHTML='';
   const blues=['#1e40af','#2563EB','#3b82f6','#4B6CB7','#60A5FA','#6B8DD6','#93c5fd'];
   const maxFreq=Math.max(...topics.map(t=>t.frequency||t.count||1));
   const sorted=[...topics].sort((a,b)=>(b.frequency||b.count||1)-(a.frequency||a.count||1));
-  const words=sorted.slice(0,40).map((t,i)=>{
+  const words=sorted.slice(0,30).map((t,i)=>{
     const freq=t.frequency||t.count||1;
-    return{text:t.topic||t.word||'',size:14+((freq/maxFreq)*38),freq,colorIdx:Math.min(Math.floor(i/6),blues.length-1)};
+    return{text:t.topic||t.word||'',size:11+((freq/maxFreq)*24),freq,colorIdx:Math.min(Math.floor(i/5),blues.length-1)};
   });
   const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Outfit').fontSize(d=>d.size).on('end',drawn);
   layout.start();
