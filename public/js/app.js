@@ -884,24 +884,102 @@ function buildIndicatorPanel(title,indRows,subtitle,chartCanvasId,chartTitle){
   return {html:html,topMover:topMover,movers:movers};
 }
 
-function buildInsightStrip(prefix,movers){
-  // Full-width strip with 1-3 infographic charts based on top movers
-  if(!movers||!movers.length)return '';
-  const count=movers.length;
-  const colStyle=count===1?'':'display:grid;grid-template-columns:repeat('+count+',1fr);gap:12px';
+/* == Analysis-driven insight system == */
+const INSIGHT_THEMES=[
+  {id:'housing',keywords:['housing','residential','home','apartment','condo','rent','shelter','cmhc','starts','dwelling'],label:'Housing & Residential',sectors:['residential'],color:'#2563EB'},
+  {id:'energy',keywords:['oil','gas','energy','petroleum','pipeline','lng','bitumen','crude','refinery','oilsands','wti','natural gas'],label:'Energy & Resources',sectors:['oil_gas','power_energy'],color:'#F59E0B'},
+  {id:'mining',keywords:['mining','mineral','lithium','potash','nickel','copper','gold','ore','smelter'],label:'Mining & Minerals',sectors:['mining'],color:'#8B5CF6'},
+  {id:'manufacturing',keywords:['manufactur','factory','plant','industrial','auto','ev battery','assembly'],label:'Manufacturing',sectors:['manufacturing'],color:'#10B981'},
+  {id:'transport',keywords:['transport','transit','rail','highway','bridge','port','airport','road','lrt','subway'],label:'Transportation & Infrastructure',sectors:['transport_logistics','infrastructure'],color:'#0EA5E9'},
+  {id:'healthcare',keywords:['health','hospital','medical','clinic','pharma','long-term care'],label:'Healthcare',sectors:['healthcare'],color:'#EC4899'},
+  {id:'labour',keywords:['unemploy','labour','labor','jobs','employment','hiring','workforce','layoff','vacancy'],label:'Labour Market',sectors:[],color:'#6366F1'},
+  {id:'trade',keywords:['trade','export','import','tariff','border','softwood','lumber','canola'],label:'Trade & Exports',sectors:[],color:'#14B8A6'},
+  {id:'construction',keywords:['construction','permit','development','tower','build','crane','renovation'],label:'Construction Activity',sectors:['infrastructure','commercial_mixed'],color:'#84CC16'},
+  {id:'agriculture',keywords:['agriculture','farm','crop','grain','wheat','canola','livestock','dairy'],label:'Agriculture',sectors:['agriculture'],color:'#D97706'},
+  {id:'defence',keywords:['defence','defense','military','naval','shipbuild','frigat'],label:'Defence & Shipbuilding',sectors:['defence'],color:'#64748B'},
+  {id:'education',keywords:['university','college','school','campus','research','education'],label:'Education & Research',sectors:['education'],color:'#A855F7'}
+];
+
+function extractAnalysisThemes(analysisText,projects){
+  const text=(analysisText||'').replace(/<[^>]+>/g,' ').toLowerCase();
+  const scored=[];
+  INSIGHT_THEMES.forEach(theme=>{
+    const hits=theme.keywords.filter(kw=>text.includes(kw)).length;
+    if(hits>0){
+      // Count matching projects for sector themes
+      let projCount=0,projValue=0;
+      if(theme.sectors.length&&projects){
+        projects.forEach(p=>{
+          if(theme.sectors.includes(p.sector)){projCount++;projValue+=parseNumericValue(p.value)}
+        });
+      }
+      scored.push({...theme,score:hits,projCount:projCount,projValue:projValue});
+    }
+  });
+  return scored.sort((a,b)=>b.score-a.score).slice(0,3);
+}
+
+function buildInsightStrip(prefix,themes,projects){
+  if(!themes||!themes.length)return '';
+  const count=themes.length;
+  const colStyle=count===1?'':'display:grid;grid-template-columns:repeat('+count+',1fr);gap:16px';
   let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(37,99,235,0.12);border-bottom:2px solid rgba(37,99,235,0.12);'+colStyle+'">';
-  movers.forEach((m,i)=>{
+  themes.forEach((t,i)=>{
     const id=prefix+'Insight'+i;
-    const chgText=m.change?(m.change+' ('+m.value+')'):(m.value||'');
+    const sub=t.sectors.length&&t.projCount?t.projCount+' projects \u00b7 '+(t.projValue>=1e9?'$'+(t.projValue/1e9).toFixed(1)+'B':t.projValue>=1e6?'$'+(t.projValue/1e6).toFixed(0)+'M':'$'+fmtNum(t.projValue,0)):'Identified from this week\u2019s analysis';
     html+='<div style="text-align:center">';
-    html+='<div style="font-size:var(--text-xs);font-weight:700;color:#003153;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">'+m.label+'</div>';
-    html+='<div style="font-size:10px;color:#475569;margin-bottom:12px">'+chgText+'</div>';
+    html+='<div style="font-size:var(--text-xs);font-weight:700;color:'+t.color+';text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">'+t.label+'</div>';
+    html+='<div style="font-size:10px;color:#475569;margin-bottom:12px">'+sub+'</div>';
     html+='<div style="height:220px;position:relative"><canvas id="'+id+'"></canvas></div>';
-    html+='<div style="font-size:9px;color:#94A3B8;margin-top:6px">'+(m.source||'Statistics Canada')+'</div>';
     html+='</div>';
   });
   html+='</div>';
   return html;
+}
+
+function renderInsightCharts(prefix,themes,projects){
+  themes.forEach((theme,i)=>{
+    const canvasId=prefix+'Insight'+i;
+    const canvas=document.getElementById(canvasId);
+    if(!canvas)return;
+    const key='_insight_'+canvasId;
+    if(charts[key]){charts[key].destroy();delete charts[key]}
+
+    if(theme.sectors.length&&projects){
+      // Sector-specific chart: projects by status in this sector
+      const sectorProj=projects.filter(p=>theme.sectors.includes(p.sector));
+      if(sectorProj.length>=2){
+        const statusOrder=['Proposed','Under Review','Approved','Under Construction','Complete','On Hold','Cancelled'];
+        const statusColors={'Proposed':'#94A3B8','Under Review':'#60A5FA','Approved':'#3B82F6','Under Construction':'#2563EB','Complete':'#15803D','On Hold':'#F59E0B','Cancelled':'#EF4444'};
+        const counts={};sectorProj.forEach(p=>{const s=p.status||'Proposed';counts[s]=(counts[s]||0)+1});
+        const labels=[],data=[],colors=[];
+        statusOrder.forEach(s=>{if(counts[s]){labels.push(s);data.push(counts[s]);colors.push(statusColors[s]||'#94A3B8')}});
+        if(labels.length){
+          try{
+            charts[key]=new Chart(canvas,{type:'bar',data:{labels:labels,datasets:[{data:data,backgroundColor:colors,borderRadius:4,barPercentage:0.7}]},
+              options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:theme.label+' Pipeline ('+sectorProj.length+')',font:{family:'Outfit',size:11,weight:600},color:'#1a2744'},tooltip:{..._chartCfg.tt,callbacks:{label:ctx=>ctx.raw+' projects'}}},scales:{x:{grid:{display:false},ticks:{font:{size:9},stepSize:1}},y:{grid:{display:false},ticks:{font:{family:'Outfit',size:9,weight:500},color:'#1a2744'}}}}});
+          }catch(e){console.warn('Insight sector chart:',e)}
+          return;
+        }
+      }
+      // Fallback for sector themes with few projects: show top projects by value
+      if(sectorProj.length>=1){
+        const top=sectorProj.sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value)).slice(0,6);
+        const labels=top.map(p=>(p.name||'').substring(0,25));
+        const vals=top.map(p=>parseNumericValue(p.value));
+        try{
+          charts[key]=new Chart(canvas,{type:'bar',data:{labels:labels,datasets:[{data:vals,backgroundColor:theme.color+'B3',borderRadius:4,barPercentage:0.7}]},
+            options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:'Top '+theme.label+' Projects',font:{family:'Outfit',size:11,weight:600},color:'#1a2744'},tooltip:{..._chartCfg.tt,callbacks:{label:ctx=>_chartCfg.fv(ctx.raw)}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:9},callback:v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$'+v}},y:{grid:{display:false},ticks:{font:{family:'Outfit',size:8},color:'#1a2744'}}}}});
+        }catch(e){console.warn('Insight project chart:',e)}
+        return;
+      }
+    }
+    // Non-sector themes (labour, trade, inflation): show a themed label
+    try{
+      charts[key]=new Chart(canvas,{type:'bar',data:{labels:[theme.label],datasets:[{data:[theme.score],backgroundColor:theme.color+'80',borderRadius:6}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:theme.label+' — Key Theme This Week',font:{family:'Outfit',size:11,weight:600},color:'#1a2744'}},scales:{x:{display:false},y:{display:false}}}});
+    }catch(e){console.warn('Insight theme chart:',e)}
+  });
 }
 
 function deriveSubtitle(analysisText){
@@ -912,58 +990,6 @@ function deriveSubtitle(analysisText){
   if(clean.length<=100)return clean;
   const cut=clean.substring(0,100).replace(/\s+\S*$/,'');
   return cut+(cut.length<clean.length?'...':'');
-}
-
-function renderTopMoverChart(canvasId,topMover,allInds,m,im){
-  const canvas=document.getElementById(canvasId);
-  if(!canvas)return;
-  // Destroy existing chart on this canvas
-  const existingKey='_topMover_'+canvasId;
-  if(charts[existingKey]){charts[existingKey].destroy();delete charts[existingKey]}
-  if(!topMover){
-    // Fallback: macro pulse comparison — current vs previous for core indicators
-    const labels=[];const cur=[];const prev=[];
-    const core=[
-      {label:'Unemp',key:'unemployment',mk:'unemployment'},
-      {label:'CPI',key:'cpi',mk:'cpi'},
-      {label:'GDP',key:'realGdp',mk:'realGdp'},
-      {label:'Housing',key:'housingStarts',mk:'housingStarts'},
-      {label:'BoC Rate',key:'overnight_rate',mk:'bocRate'},
-      {label:'Emp Rate',key:'employmentRate',mk:'employmentRate'}
-    ];
-    core.forEach(c=>{
-      const meta=(im&&im[c.mk])||{};
-      const val=parseFloat(String((m&&m[c.mk])||(allInds.find(x=>x.indicator_name===c.key)||{}).value||'0').replace(/[^0-9.\-]/g,''));
-      const prv=parseFloat(String(meta.prev||'0').replace(/[^0-9.\-]/g,''));
-      if(!isNaN(val)){labels.push(c.label);cur.push(val);prev.push(isNaN(prv)?val:prv)}
-    });
-    if(!labels.length)return;
-    try{
-      charts[existingKey]=new Chart(canvas,{type:'bar',data:{labels:labels,datasets:[
-        {label:'Current',data:cur,backgroundColor:'rgba(37,99,235,0.7)',borderRadius:3},
-        {label:'Previous',data:prev,backgroundColor:'rgba(37,99,235,0.2)',borderRadius:3}
-      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:9}}}},scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:9}}}}}});
-    }catch(e){console.warn('Top mover fallback chart error:',e)}
-    return;
-  }
-  // Single indicator chart — bar comparing current vs previous
-  const meta=(im&&im[topMover.metaKey])||{};
-  const curVal=parseFloat(String(topMover.value).replace(/[^0-9.\-]/g,''));
-  const prevVal=parseFloat(String(meta.prev||'0').replace(/[^0-9.\-]/g,''));
-  if(isNaN(curVal))return;
-  try{
-    charts[existingKey]=new Chart(canvas,{type:'bar',data:{labels:['Previous','Current'],datasets:[{
-      data:[isNaN(prevVal)?curVal:prevVal,curVal],
-      backgroundColor:['rgba(37,99,235,0.2)','rgba(37,99,235,0.7)'],borderRadius:4
-    }]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{font:{size:10,weight:'bold'}}}}}});
-  }catch(e){console.warn('Top mover chart error:',e)}
-}
-
-function renderInsightCharts(prefix,movers,allInds,m,im){
-  movers.forEach((mover,i)=>{
-    const canvasId=prefix+'Insight'+i;
-    renderTopMoverChart(canvasId,mover,allInds,m,im);
-  });
 }
 
 async function renderCanadaSub(){
@@ -1022,8 +1048,9 @@ async function renderCanadaSub(){
   }
   if(natSources.length)secHtml+=sourcesFooter(natSources);
   secHtml+='<div class="ed-clear"></div>';
-  // Insight strip — full width between analysis and projects
-  secHtml+=buildInsightStrip('nat',panel.movers);
+  // Analysis-driven insight strip
+  const natThemes=extractAnalysisThemes(natContent,natProjects);
+  secHtml+=buildInsightStrip('nat',natThemes,natProjects);
 
   const nas=$('natAnalysisSection');
   if(nas)nas.innerHTML=secHtml;
@@ -1032,7 +1059,7 @@ async function renderCanadaSub(){
   if(natProjects.length>=3){
     _renderSectorChart('natSectorChart','nat',natProjects);
   }
-  renderInsightCharts('nat',panel.movers,indicators,m,im);
+  renderInsightCharts('nat',natThemes,natProjects);
 
   // Policy section with editorial header
   const ps=$('policySection');
@@ -1120,14 +1147,15 @@ function renderAllGlobalPlayers(){
     }
     html+='<div class="ed-clear"></div>';
 
-    // Insight strip
-    html+=buildInsightStrip(v.key,panel.movers);
+    // Analysis-driven insight strip
+    const gThemes=extractAnalysisThemes(analysis,[]);
+    html+=buildInsightStrip(v.key,gThemes,[]);
 
     html+='</div></div>';
     panelEl.innerHTML=html;
 
     // Render insight charts
-    renderInsightCharts(v.key,panel.movers,indicators,(D&&D.metrics)||{},(giMeta||{}));
+    renderInsightCharts(v.key,gThemes,[]);
     _nationalSubRendered[v.key]=true;
   });
 }
@@ -1902,8 +1930,9 @@ async function renderProvinceContent(){
     secHtml+='</div></details>';
   }
   secHtml+='<div class="ed-clear"></div>';
-  // Insight strip — full width between analysis and projects
-  secHtml+=buildInsightStrip('prov',panel.movers);
+  // Analysis-driven insight strip — themes extracted from province analysis
+  const provThemes=extractAnalysisThemes(provContent,provProj);
+  secHtml+=buildInsightStrip('prov',provThemes,provProj);
 
   const pas=$('provAnalysisSection');
   if(pas)pas.innerHTML=secHtml;
@@ -1912,7 +1941,7 @@ async function renderProvinceContent(){
   if(provProj.length>=3){
     _renderSectorChart('pvSectorChart','pv',provProj);
   }
-  renderInsightCharts('prov',panel.movers,indicators,(D&&D.metrics)||{},(provData.indicatorMeta||{}));
+  renderInsightCharts('prov',provThemes,provProj);
 
 
   // Newly Added Projects
