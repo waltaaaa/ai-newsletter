@@ -642,7 +642,7 @@ async function renderInteractiveMap(){
       const maritimeFeatures=geojson.features.filter(f=>maritimeCodes.has(featureCode(f)));
       if(maritimeFeatures.length){
         const iw=Math.round(w*0.26);const ih=Math.round(iw*0.8);
-        const ix=w-iw-4;const iy=Math.round(h*0.38);
+        const ix=w-iw-12;const iy=12;
         const ig=svg.append('g').attr('class','maritime-inset');
         ig.append('rect').attr('x',ix).attr('y',iy).attr('width',iw).attr('height',ih).attr('fill','#F0F4FF').attr('stroke','rgba(37,99,235,0.25)').attr('stroke-width',1).attr('rx',6);
         ig.append('text').attr('x',ix+iw/2).attr('y',iy+12).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',8).attr('font-weight',600).attr('fill','#64748B').text('Maritimes');
