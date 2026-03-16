@@ -1906,7 +1906,7 @@ function renderCalendarEvents(){
   const byWeek={};thisWeek.forEach(e=>{const wl=e.week_label||'This Week';if(!byWeek[wl])byWeek[wl]=[];byWeek[wl].push(e)});
 
   if(thisWeek.length){
-    let twHtml='<div class="events-section-wrap"><button class="events-toggle open" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')">This Week ('+thisWeek.length+') <span class="chevron">\u25be</span></button><div class="events-collapsible open">';
+    let twHtml='<div class="events-section-wrap"><button class="events-toggle" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')">This Week ('+thisWeek.length+') <span class="chevron">\u25be</span></button><div class="events-collapsible">';
     Object.keys(byWeek).forEach(wl=>{
       twHtml+='<div class="events-week-card"><h3>'+wl+'</h3>';
       byWeek[wl].forEach(e=>{
