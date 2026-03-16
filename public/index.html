@@ -698,11 +698,11 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       <select id="filterStatus" aria-label="Filter by status"><option value="">All Statuses</option></select>
       <select id="sortProjects" aria-label="Sort projects"><option value="value_desc">Value (High to Low)</option><option value="updated">Recently Updated</option><option value="name_asc">Name A-Z</option><option value="confidence">Confidence</option></select>
       <label class="toggle-label" title="Show only projects with confirmed value above provincial threshold"><input type="checkbox" id="confirmedToggle" checked onchange="_confirmedOnly=this.checked;filterProjects()"><span class="toggle-slider"></span> Confirmed</label>
-      <button onclick="exportProjects()" style="background:var(--surface-elevated);border:1px solid var(--border);border-radius:6px;padding:0.4rem 0.8rem;cursor:pointer;font-size:var(--text-xs);color:var(--text-secondary);white-space:nowrap" title="Export filtered projects as CSV">Export CSV</button>
+      <button onclick="exportProjects()" style="background:#ffffff;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:0.4rem 0.8rem;cursor:pointer;font-size:var(--text-xs);color:#003153;white-space:nowrap" title="Export filtered projects as CSV">Export CSV</button>
     </div>
     <!-- Missing Project Submission Form -->
     <div id="missedProjectSection" style="margin-top:0.5rem;margin-bottom:1rem">
-      <button id="toggleMissedForm" onclick="document.getElementById('missedProjectForm').style.display=document.getElementById('missedProjectForm').style.display==='none'?'block':'none'" style="background:var(--surface-elevated);border:1px solid var(--border);border-radius:8px;padding:0.6rem 1rem;cursor:pointer;font-size:var(--text-sm);color:var(--text-secondary);width:100%;text-align:left">
+      <button id="toggleMissedForm" onclick="document.getElementById('missedProjectForm').style.display=document.getElementById('missedProjectForm').style.display==='none'?'block':'none'" style="background:#ffffff;border:1px solid rgba(0,0,0,0.12);border-radius:8px;padding:0.6rem 1rem;cursor:pointer;font-size:var(--text-sm);color:#003153;width:100%;text-align:left">
         + Report a Missing Project
       </button>
       <div id="missedProjectForm" style="display:none;background:var(--surface-elevated);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:1.2rem;margin-top:-1px">
