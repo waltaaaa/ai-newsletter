@@ -889,15 +889,15 @@ function buildInsightStrip(prefix,movers){
   if(!movers||!movers.length)return '';
   const count=movers.length;
   const colStyle=count===1?'':'display:grid;grid-template-columns:repeat('+count+',1fr);gap:12px';
-  let html='<div style="margin:24px 0;padding:20px 0;border-top:2px solid rgba(37,99,235,0.12);border-bottom:2px solid rgba(37,99,235,0.12);'+colStyle+'">';
+  let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(37,99,235,0.12);border-bottom:2px solid rgba(37,99,235,0.12);'+colStyle+'">';
   movers.forEach((m,i)=>{
     const id=prefix+'Insight'+i;
     const chgText=m.change?(m.change+' ('+m.value+')'):(m.value||'');
     html+='<div style="text-align:center">';
-    html+='<div style="font-size:var(--text-xs);font-weight:700;color:#003153;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">'+m.label+'</div>';
-    html+='<div style="font-size:10px;color:#475569;margin-bottom:8px">'+chgText+'</div>';
-    html+='<div style="height:160px;position:relative"><canvas id="'+id+'"></canvas></div>';
-    html+='<div style="font-size:9px;color:#94A3B8;margin-top:4px">'+(m.source||'Statistics Canada')+'</div>';
+    html+='<div style="font-size:var(--text-xs);font-weight:700;color:#003153;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">'+m.label+'</div>';
+    html+='<div style="font-size:10px;color:#475569;margin-bottom:12px">'+chgText+'</div>';
+    html+='<div style="height:220px;position:relative"><canvas id="'+id+'"></canvas></div>';
+    html+='<div style="font-size:9px;color:#94A3B8;margin-top:6px">'+(m.source||'Statistics Canada')+'</div>';
     html+='</div>';
   });
   html+='</div>';
