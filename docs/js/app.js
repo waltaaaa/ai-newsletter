@@ -394,60 +394,71 @@ async function renderEditorialFlow(){
       const byCnt={};const byVal={};
       projects.forEach(p=>{const pv=normProvince(p.province);if(pv){byCnt[pv]=(byCnt[pv]||0)+1;byVal[pv]=(byVal[pv]||0)+parseNumericValue(p.value)}});
       const maxCnt=Math.max(...Object.values(byCnt),1);
-      // Color scale: light blue to deep blue based on project count
-      const provFill=(code)=>{const n=byCnt[code]||0;const t=Math.min(n/maxCnt,1);const r=Math.round(219-t*180);const g=Math.round(234-t*140);const b=Math.round(254-t*60);return`rgb(${r},${g},${b})`};
       const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$'+Math.round(v);
-      // Province path data (simplified outlines)
-      const PROV_PATHS={
-        BC:'M151.8,281.2l1.7,2.6l.9,3.5l4.3,1.1l3-3.3l2.6,1.3l7.3.6l5.2-2.2l.9,7.2h3v-3l3,.2l7.5,8.9l5,3l-2.6,4.1l1.1,1.1l9.7,2l.2,4.3l2.6.4l.6-6.5l4.1-1.1l3,4.6l6.5,3l3.2.6l2.2-2.6l.2-4.1l3.9-2.4l1.3,3.5l-3.4,6.1l.4,3l1.9-3l3.9-3.5l.2-4.6l-2.2-3.5l.6-2.8l5.2-2.6l2.4,1.7l.4,15.2l3.7-3.3l2.2,1.3l-3,5.2l3.9.9l5.6-8.7l4.7,5l-1.9,8.9l-4.7,2.6l-4.5-2.2l-8.2,1.7l.9,2.8l-2.2,3.5l-6.7,1.5l-7.5,5.9l-6.7,8.9l-.9,2.8l4.5,1.7l1.7,4.3l6.2,6.3l9.9,4.3l-2.2,10l-.2,2.8l2.6,1.7l3.4-4.6l.4-8.7l5.4-.2l2.6-5l.4-7.6l6.9-13.5l8.6,3l4.5,6.3l-1.9,6.3l3.4,2l8.4-5.6l2.4,15.4l7.8,9.3l.2,4.8l-8.6,2.2l-4.1,4.3l-8.6-2l-4.3-.2l-7.5,5.9',
-        AB:'M192,355l0-30l20,0l0,30z',
-        SK:'M212,355l0-30l16,0l0,30z',
-        MB:'M228,355l0-30l14,0l0,30z',
-        ON:'M242,340l10,5l12,-2l8,10l-5,15l-20,5l-15,-10l5,-15z',
-        QC:'M262,320l15,5l10,15l-5,12l-15,5l-10,-15z'
+      // Gradient stop: 0=transparent light, 1=deep blue
+      const provOpacity=(code)=>{const n=byCnt[code]||0;return(0.08+0.92*Math.min(n/maxCnt,1)).toFixed(2)};
+      // Simplified but recognizable province paths (viewBox 0 0 1000 620)
+      const PP={
+        YT:'M30,20 L30,200 L100,200 L100,155 L80,140 L95,20Z',
+        NT:'M100,20 L95,140 L80,140 L100,200 L110,230 L140,240 L180,200 L260,200 L280,170 L310,175 L310,20Z',
+        NU:'M310,20 L310,175 L280,170 L260,200 L290,250 L330,210 L380,230 L420,180 L460,200 L500,155 L560,170 L620,120 L680,90 L700,20Z',
+        BC:'M30,200 L30,420 L55,430 L40,450 L65,460 L50,480 L70,490 L100,470 L130,475 L130,200Z',
+        AB:'M130,200 L130,475 L230,475 L230,200Z',
+        SK:'M230,200 L230,475 L325,475 L325,240Z',
+        MB:'M325,240 L325,475 L380,475 L400,430 L390,380 L420,340 L400,300 L420,240Z',
+        ON:'M420,240 L400,300 L420,340 L390,380 L400,430 L380,475 L400,510 L430,530 L465,500 L510,520 L530,490 L560,500 L570,470 L540,430 L560,380 L540,340 L560,300 L530,270 L500,290 L470,260Z',
+        QC:'M560,300 L540,340 L560,380 L540,430 L570,470 L600,450 L640,470 L680,440 L720,460 L740,420 L710,380 L730,340 L700,300 L720,260 L700,220 L660,200 L620,220 L590,260Z',
+        NL:'M740,180 L720,220 L750,260 L780,240 L790,200 L770,180Z M680,300 L700,300 L720,260 L700,220 L660,240Z',
+        NB:'M640,470 L640,520 L690,520 L690,480 L670,460Z',
+        NS:'M690,480 L690,530 L740,540 L760,520 L730,500 L710,480Z',
+        PE:'M710,470 L730,465 L740,475 L720,480Z'
       };
-      // Annotations for top provinces
-      const topProvs=Object.entries(byCnt).sort((a,b)=>b[1]-a[1]).slice(0,5);
-      let annotations='';
-      const labelPos={ON:[255,365],QC:[278,340],BC:[165,340],AB:[202,340],SK:[220,340],MB:[235,340],NS:[295,365],NB:[280,360]};
-      topProvs.forEach(([code,cnt])=>{
-        const pos=labelPos[code]||[220,350];
+      const LABEL={
+        BC:[80,380],AB:[180,370],SK:[278,370],MB:[370,370],
+        ON:[480,420],QC:[650,360],NB:[665,500],NS:[720,515],
+        NL:[760,225],PE:[725,473],YT:[65,120],NT:[200,120],NU:[480,100]
+      };
+      let paths='';
+      let labels='';
+      Object.entries(PP).forEach(([code,d])=>{
+        const op=provOpacity(code);
+        const cnt=byCnt[code]||0;
+        paths+=`<path d="${d}" fill="#2563EB" fill-opacity="${op}" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"><title>${(PROVS.find(p=>p.code===code)||{}).name||code}: ${cnt} projects</title></path>`;
+      });
+      // Labels for provinces with projects
+      Object.entries(byCnt).sort((a,b)=>b[1]-a[1]).forEach(([code,cnt])=>{
+        const pos=LABEL[code];if(!pos)return;
         const val=byVal[code]||0;
-        annotations+=`<text x="${pos[0]}" y="${pos[1]}" font-family="Outfit" font-size="7" font-weight="700" fill="#0f1b33" text-anchor="middle">${code}</text>`;
-        annotations+=`<text x="${pos[0]}" y="${pos[1]+9}" font-family="Outfit" font-size="6" fill="#475569" text-anchor="middle">${cnt} projects</text>`;
-        if(val>1e6)annotations+=`<text x="${pos[0]}" y="${pos[1]+17}" font-family="Outfit" font-size="5.5" fill="#2563EB" text-anchor="middle">${fv(val)}</text>`;
+        labels+=`<text x="${pos[0]}" y="${pos[1]}" font-family="Outfit" font-size="22" font-weight="700" fill="#0f1b33" text-anchor="middle">${code}</text>`;
+        labels+=`<text x="${pos[0]}" y="${pos[1]+18}" font-family="Outfit" font-size="14" fill="#475569" text-anchor="middle">${cnt} proj</text>`;
+        if(val>1e6)labels+=`<text x="${pos[0]}" y="${pos[1]+34}" font-family="Outfit" font-size="13" font-weight="600" fill="#2563EB" text-anchor="middle">${fv(val)}</text>`;
       });
       // Province stats for sidebar
+      const topProvs=Object.entries(byCnt).sort((a,b)=>b[1]-a[1]).slice(0,6);
       let statsHtml='';
       topProvs.forEach(([code,cnt])=>{
         const val=byVal[code]||0;
         const pName=PROVS.find(p=>p.code===code);
-        statsHtml+=`<div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.04)"><span style="font-weight:600;color:#0f1b33;font-size:var(--text-sm)">${pName?pName.name:code}</span><span style="font-family:var(--font-mono);font-size:var(--text-xs);color:#475569">${cnt} &middot; ${fv(val)}</span></div>`;
+        const pct=Math.round(cnt/maxCnt*100);
+        statsHtml+=`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px"><span style="font-weight:600;color:#0f1b33;font-size:var(--text-sm)">${pName?pName.name:code}</span><span style="font-family:var(--font-mono);font-size:var(--text-xs);color:#475569">${cnt} &middot; ${fv(val)}</span></div><div style="height:4px;background:rgba(0,0,0,0.04);border-radius:2px"><div style="height:100%;width:${pct}%;background:#2563EB;border-radius:2px;opacity:0.7"></div></div></div>`;
       });
 
       mapHtml=`<div class="ed-map">
         <div class="ed-map-chart">
           <div class="ec-title">Capital Projects by Province</div>
           <div class="ec-sub">${projects.length} projects across ${Object.keys(byCnt).length} provinces</div>
-          <svg viewBox="126 250 190 160" width="100%" height="auto" style="max-height:240px">
-            <path fill="${provFill('BC')}" stroke="#fff" stroke-width="0.5" d="M151.8,281.2l1.7,2.6l.9,3.5l4.3,1.1l3-3.3l2.6,1.3l7.3.6l5.2-2.2l.9,7.2h3v-3l3,.2l7.5,8.9l5,3l-2.6,4.1l1.1,1.1l9.7,2l.2,4.3l2.6.4l.6-6.5l4.1-1.1l3,4.6l6.5,3l3.2.6l2.2-2.6l.2-4.1l3.9-2.4l1.3,3.5l-3.4,6.1l.4,3l1.9-3l3.9-3.5l.2-4.6l-2.2-3.5l.6-2.8l5.2-2.6l2.4,1.7l.4,15.2l3.7-3.3l-61.1-10l-1-4.1l-5.6-5.2v-4.3l.9-3.9l-.4-2.2l-2.2-2.2l-.4-3.5l5.6-3.9l-3.4-18.7l-4.7-.2l-4.3-5.6z"/>
-            <rect x="175" y="285" width="12" height="55" rx="1" fill="${provFill('AB')}" stroke="#fff" stroke-width="0.5"/>
-            <rect x="187" y="285" width="11" height="55" rx="1" fill="${provFill('SK')}" stroke="#fff" stroke-width="0.5"/>
-            <rect x="198" y="290" width="12" height="50" rx="1" fill="${provFill('MB')}" stroke="#fff" stroke-width="0.5"/>
-            <path fill="${provFill('ON')}" stroke="#fff" stroke-width="0.5" d="M210,310l15,-5l20,5l10,15l-5,20l-8,5l-20,-5l-15,-10l-5,-15z"/>
-            <path fill="${provFill('QC')}" stroke="#fff" stroke-width="0.5" d="M255,280l10,5l15,20l5,15l-10,15l-15,5l-10,-10l5,-20l-5,-15z"/>
-            <path fill="${provFill('NB')}" stroke="#fff" stroke-width="0.5" d="M270,330l8,3l5,8l-3,5l-8,2l-5,-8z"/>
-            <path fill="${provFill('NS')}" stroke="#fff" stroke-width="0.5" d="M280,335l10,4l3,6l-5,4l-8,-2l-3,-7z"/>
-            <path fill="${provFill('NL')}" stroke="#fff" stroke-width="0.5" d="M285,295l8,5l3,10l-5,8l-8,-3l-3,-10z"/>
-            <circle cx="290" cy="345" r="4" fill="${provFill('PE')}" stroke="#fff" stroke-width="0.5"/>
-            ${annotations}
+          <svg viewBox="0 0 820 560" preserveAspectRatio="xMidYMid meet" width="100%" style="max-height:280px">
+            <defs><linearGradient id="mapBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F0F5FF"/><stop offset="100%" stop-color="#E8F0FE"/></linearGradient></defs>
+            <rect width="820" height="560" fill="url(#mapBg)" rx="8"/>
+            ${paths}
+            ${labels}
           </svg>
-          <div class="ed-map-legend"><span><span class="swatch" style="background:#DBEAFE"></span>Fewer</span><span><span class="swatch" style="background:#3B82F6"></span>More projects</span></div>
+          <div class="ed-map-legend"><span><span class="swatch" style="background:rgba(37,99,235,0.10)"></span>Fewer projects</span><span><span class="swatch" style="background:rgba(37,99,235,0.85)"></span>More projects</span></div>
         </div>
         <div class="ed-map-stats">
-          <div style="font-family:var(--font-heading);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#64748B;font-weight:600;margin-bottom:4px">Top Provinces</div>
+          <div style="font-family:var(--font-heading);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#64748B;font-weight:600;margin-bottom:8px">Top Provinces</div>
           ${statsHtml}
-          <div class="ec-source" style="margin-top:8px">Source: Pipeline database</div>
+          <div class="ec-source" style="margin-top:auto;padding-top:8px">Source: Pipeline database</div>
         </div>
       </div>`;
     }
