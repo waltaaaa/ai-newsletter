@@ -157,11 +157,11 @@ async function loadIndicators(){
         category:ind.category||categorizeIndicator(displayName)
       });
     });
-    // Deduplicate: keep latest by indicator_name
+    // Deduplicate: keep latest by indicator_name + province
     const seen={};
     indicators=indicators.filter(ind=>{
-      const key=ind.indicator_name;
-      if(!key)return true;
+      const key=(ind.indicator_name||'')+'|'+(ind.province||'');
+      if(!key||key==='|')return true;
       if(seen[key])return false;
       seen[key]=true;return true;
     });
