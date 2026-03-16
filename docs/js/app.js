@@ -657,28 +657,66 @@ function renderKeyIndicators(){
   const m=(D&&D.metrics)||{};const yc=(D&&D.yieldCurve)||[];
   const im=(D&&D.indicatorMeta)||{};
 
+  // Static metadata for grounding each indicator
+  const META={
+    'POLICY RATE':{imKey:'bocRate',source:'Bank of Canada',freq:'8x/yr',desc:'Overnight target rate'},
+    'BOC RATE':{imKey:'bocRate',source:'Bank of Canada',freq:'8x/yr',desc:'Overnight target rate'},
+    'GDP':{imKey:'realGdp',source:'Statistics Canada',freq:'Quarterly',desc:'Real GDP growth YoY'},
+    'GDP YOY':{imKey:'realGdp',source:'Statistics Canada',freq:'Quarterly',desc:'Real GDP growth YoY'},
+    'CPI':{imKey:'cpi',source:'Statistics Canada',freq:'Monthly',desc:'Consumer Price Index YoY'},
+    'INFLATION':{imKey:'cpi',source:'Statistics Canada',freq:'Monthly',desc:'Consumer Price Index YoY'},
+    'UNEMPLOYMENT':{imKey:'unemployment',source:'Statistics Canada',freq:'Monthly',desc:'National unemployment rate'},
+    'JOBS':{imKey:'unemployment',source:'Statistics Canada',freq:'Monthly',desc:'Employment change'},
+    'CAD/USD':{imKey:null,source:'Bank of Canada',freq:'Daily',desc:'Canadian dollar exchange rate'},
+    'CAD':{imKey:null,source:'Bank of Canada',freq:'Daily',desc:'Canadian dollar exchange rate'},
+    '10Y YIELD':{imKey:null,source:'Bank of Canada',freq:'Daily',desc:'Gov. of Canada 10-year bond yield'},
+    'HOUSING STARTS':{imKey:'housingStarts',source:'CMHC',freq:'Monthly',desc:'Annualized housing starts (SAAR)'},
+    'HOUSING':{imKey:'housingStarts',source:'CMHC',freq:'Monthly',desc:'Annualized housing starts (SAAR)'},
+    'WAGE GROWTH':{imKey:null,source:'Statistics Canada',freq:'Monthly',desc:'Average hourly wages YoY'},
+    'WAGES':{imKey:null,source:'Statistics Canada',freq:'Monthly',desc:'Average hourly wages YoY'},
+    'PARTICIPATION':{imKey:null,source:'Statistics Canada',freq:'Monthly',desc:'Labour force participation rate'},
+    'TRADE':{imKey:null,source:'Statistics Canada',freq:'Monthly',desc:'Merchandise trade balance'},
+    'OIL':{imKey:null,source:'Yahoo Finance',freq:'Daily',desc:'WTI crude oil price'},
+    'WTI':{imKey:null,source:'Yahoo Finance',freq:'Daily',desc:'WTI crude oil price'},
+  };
+
   // Pipeline-driven indicators (adapts to each week's narrative)
   const pipelineKI=D&&D.key_indicators;
   let headline;
   if(pipelineKI&&Array.isArray(pipelineKI)&&pipelineKI.length>=4){
-    headline=pipelineKI.map(ki=>({label:ki.label||'',value:ki.value||'',change:ki.change||''}));
+    headline=pipelineKI.map(ki=>{
+      const lbl=(ki.label||'').toUpperCase();
+      const meta=META[lbl]||{};
+      const imData=meta.imKey?im[meta.imKey]||{}:{};
+      return {label:ki.label||'',value:ki.value||'',change:ki.change||'',
+        prev:imData.prev||'',period:imData.period||'',
+        source:meta.source||'',freq:meta.freq||'',desc:meta.desc||''};
+    });
   }else{
     // Default fallback — core macro indicators
     headline=[
-      {label:'POLICY RATE',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'',change:(im.bocRate||{}).change||''},
-      {label:'GDP',value:m.realGdp||m.gdp||indVal('realGdp')||'',change:(im.realGdp||{}).change||''},
-      {label:'CPI',value:m.cpi||indVal('cpi')||'',change:(im.cpi||{}).change||''},
-      {label:'UNEMPLOYMENT',value:m.unemployment||indVal('unemployment')||'',change:(im.unemployment||{}).change||''},
-      {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'',change:''},
-      {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||indVal('goc_10y_yield')||'',change:''},
-      {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'',change:(im.housingStarts||{}).change||''}
-    ];
+      {label:'POLICY RATE',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||''},
+      {label:'GDP',value:m.realGdp||m.gdp||indVal('realGdp')||''},
+      {label:'CPI',value:m.cpi||indVal('cpi')||''},
+      {label:'UNEMPLOYMENT',value:m.unemployment||indVal('unemployment')||''},
+      {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||''},
+      {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||indVal('goc_10y_yield')||''},
+      {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||''}
+    ].map(h=>{
+      const meta=META[h.label]||{};
+      const imData=meta.imKey?im[meta.imKey]||{}:{};
+      return Object.assign(h,{change:imData.change||'',prev:imData.prev||'',
+        period:imData.period||'',source:meta.source||'',freq:meta.freq||'',desc:meta.desc||''});
+    });
   }
   let strip='<div class="indicator-strip">';
   headline.forEach(h=>{
     const chg=h.change||'';
     const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
-    strip+=`<div class="indicator-pill"><div class="indicator-pill-label">${h.label}</div><div class="indicator-pill-value">${h.value||'N/A'}</div>${chg?`<div class="indicator-pill-change ${chgCls}">${chg}</div>`:''}</div>`;
+    strip+=`<div class="indicator-pill" title="${h.desc}"><div class="indicator-pill-label">${h.label}</div><div class="indicator-pill-value">${h.value||'N/A'}</div>`;
+    if(chg)strip+=`<div class="indicator-pill-change ${chgCls}">${chg}${h.prev?' (prev '+h.prev+')':''}</div>`;
+    if(h.source||h.period)strip+=`<div class="indicator-pill-meta">${h.source}${h.period?' \u00b7 '+h.period:''}${h.freq?' \u00b7 '+h.freq:''}</div>`;
+    strip+='</div>';
   });
   strip+='</div>';
   $('keyIndicators').innerHTML=strip;
