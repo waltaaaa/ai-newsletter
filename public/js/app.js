@@ -1088,10 +1088,8 @@ function renderAllGlobalPlayers(){
     // Build expanded indicator rows
     const indRows=[];
     [{key:'gdp',label:'GDP',metaKey:'gdp'},{key:'cpi',label:'CPI',metaKey:'cpi'},{key:'rate',label:'Policy Rate',metaKey:'rate'},{key:'unemployment',label:'Unemployment',metaKey:'unemployment'},{key:'tradeBalance',label:'Trade Balance',metaKey:'tradeBalance'},{key:'productivityGrowth',label:'Productivity Growth',metaKey:'productivityGrowth'}].forEach(x=>{
-      if(gi[x.key]){
-        const gm=giMeta[x.key]||{};
-        indRows.push({label:x.label,value:gi[x.key],change:gm.change||'',source:srcs[x.key]||'',metaKey:x.metaKey});
-      }
+      const gm=giMeta[x.key]||{};
+      indRows.push({label:x.label,value:gi[x.key]||'\u2014',change:gm.change||'',source:srcs[x.key]||'',metaKey:x.metaKey});
     });
 
     const subtitle=deriveSubtitle(analysis);
