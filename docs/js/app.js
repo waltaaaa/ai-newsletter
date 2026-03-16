@@ -865,11 +865,12 @@ function buildIndicatorPanel(title,indRows,subtitle,chartCanvasId,chartTitle){
 
   let html='<div class="ed-map" style="position:relative">';
   html+='<div class="ed-stat-header">'+title+'</div>';
-  html+='<table class="ed-ind-table"><thead><tr><th>Indicator</th><th style="text-align:right">Value</th><th style="text-align:right">Chg</th></tr></thead><tbody>';
+  html+='<table class="ed-ind-table"><thead><tr><th>Indicator</th><th style="text-align:right">Value</th><th style="text-align:right">Chg</th><th style="text-align:right">Basis</th></tr></thead><tbody>';
   indRows.forEach(r=>{
     const chg=r.change||'';
     const cls=chg.startsWith('-')||chg.startsWith('\u2212')?'change-down':chg.startsWith('+')?'change-up':'';
-    html+='<tr><td class="ind-label">'+r.label+'</td><td class="ind-value">'+r.value+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td></tr>';
+    const basis=r.period||r.freq||'';
+    html+='<tr><td class="ind-label">'+r.label+'</td><td class="ind-value">'+r.value+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td><td class="ind-basis" style="font-size:9px;color:#64748B;text-align:right;white-space:nowrap">'+basis+'</td></tr>';
   });
   html+='</tbody></table>';
   // Embedded chart inside the panel
@@ -976,16 +977,16 @@ async function renderCanadaSub(){
 
   // Expanded indicator set (10)
   const natIndicators=[
-    {label:'BoC Rate',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'N/A',change:(indMeta('bocRate').change)||'',source:'Bank of Canada',metaKey:'bocRate'},
-    {label:'Real GDP YoY',value:m.realGdp||m.gdp||indVal('realGdp')||'N/A',change:(indMeta('realGdp').change)||'',source:'Statistics Canada',metaKey:'realGdp'},
-    {label:'CPI',value:m.cpi||indVal('cpi')||'N/A',change:(indMeta('cpi').change)||'',source:'Statistics Canada',metaKey:'cpi'},
-    {label:'Unemployment',value:m.unemployment||indVal('unemployment')||'N/A',change:(indMeta('unemployment').change)||'',source:'Statistics Canada',metaKey:'unemployment'},
-    {label:'Participation',value:natPart?natPart.value:(m.participation||'N/A'),change:'',source:'Statistics Canada',metaKey:'participationRate'},
-    {label:'Employment Rate',value:natEmp?natEmp.value:'N/A',change:'',source:'Statistics Canada',metaKey:'employmentRate'},
-    {label:'Wage Growth',value:natWage?natWage.value:(m.wageGrowth||'N/A'),change:'',source:'Statistics Canada',metaKey:'wageGrowth'},
-    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'N/A',change:'',source:'Bank of Canada',metaKey:'cadUsd'},
-    {label:'Housing Starts',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'N/A',change:(indMeta('housingStarts').change)||'',source:'CMHC',metaKey:'housingStarts'},
-    {label:'Trade Balance',value:natTrade?natTrade.value:'N/A',change:'',source:'Statistics Canada',metaKey:'tradeBalance'}
+    {label:'BoC Rate',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'N/A',change:(indMeta('bocRate').change)||'',source:'Bank of Canada',metaKey:'bocRate',period:indMeta('bocRate').period||'',freq:'8x/yr'},
+    {label:'Real GDP YoY',value:m.realGdp||m.gdp||indVal('realGdp')||'N/A',change:(indMeta('realGdp').change)||'',source:'Statistics Canada',metaKey:'realGdp',period:indMeta('realGdp').period||'',freq:'Quarterly'},
+    {label:'CPI',value:m.cpi||indVal('cpi')||'N/A',change:(indMeta('cpi').change)||'',source:'Statistics Canada',metaKey:'cpi',period:indMeta('cpi').period||'',freq:'Monthly'},
+    {label:'Unemployment',value:m.unemployment||indVal('unemployment')||'N/A',change:(indMeta('unemployment').change)||'',source:'Statistics Canada',metaKey:'unemployment',period:indMeta('unemployment').period||'',freq:'Monthly'},
+    {label:'Participation',value:natPart?natPart.value:(m.participation||'N/A'),change:'',source:'Statistics Canada',metaKey:'participationRate',period:'',freq:'Monthly'},
+    {label:'Employment Rate',value:natEmp?natEmp.value:'N/A',change:'',source:'Statistics Canada',metaKey:'employmentRate',period:'',freq:'Monthly'},
+    {label:'Wage Growth',value:natWage?natWage.value:(m.wageGrowth||'N/A'),change:'',source:'Statistics Canada',metaKey:'wageGrowth',period:'',freq:'Monthly'},
+    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'N/A',change:'',source:'Bank of Canada',metaKey:'cadUsd',period:'',freq:'Daily'},
+    {label:'Housing Starts',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'N/A',change:(indMeta('housingStarts').change)||'',source:'CMHC',metaKey:'housingStarts',period:indMeta('housingStarts').period||'',freq:'Monthly'},
+    {label:'Trade Balance',value:natTrade?natTrade.value:'N/A',change:'',source:'Statistics Canada',metaKey:'tradeBalance',period:'',freq:'Monthly'}
   ];
 
   // Editorial header
@@ -1092,10 +1093,11 @@ function renderAllGlobalPlayers(){
     }
 
     // Build expanded indicator rows
+    const FREQ_MAP={gdp:'Quarterly',cpi:'Monthly',rate:'Periodic',unemployment:'Monthly',tradeBalance:'Monthly',productivityGrowth:'Quarterly'};
     const indRows=[];
     [{key:'gdp',label:'GDP',metaKey:'gdp'},{key:'cpi',label:'CPI',metaKey:'cpi'},{key:'rate',label:'Policy Rate',metaKey:'rate'},{key:'unemployment',label:'Unemployment',metaKey:'unemployment'},{key:'tradeBalance',label:'Trade Balance',metaKey:'tradeBalance'},{key:'productivityGrowth',label:'Productivity Growth',metaKey:'productivityGrowth'}].forEach(x=>{
       const gm=giMeta[x.key]||{};
-      indRows.push({label:x.label,value:gi[x.key]||'\u2014',change:gm.change||'',source:srcs[x.key]||'',metaKey:x.metaKey});
+      indRows.push({label:x.label,value:gi[x.key]||'\u2014',change:gm.change||'',source:srcs[x.key]||'',metaKey:x.metaKey,period:gm.period||'',freq:FREQ_MAP[x.key]||''});
     });
 
     const subtitle=deriveSubtitle(analysis);
@@ -1854,14 +1856,14 @@ async function renderProvinceContent(){
 
   // Expanded indicator set (8)
   const provIndicators=[
-    {label:'GDP YoY',value:provInd.gdp||provIndVal('gdp')||'N/A',change:(provMeta.gdp||{}).change||'',source:'Statistics Canada',metaKey:'gdp'},
-    {label:'Unemployment',value:provInd.unemployment||provIndVal('unemployment')||'N/A',change:(provMeta.unemployment||{}).change||'',source:'Statistics Canada',metaKey:'unemployment'},
-    {label:'CPI',value:provInd.cpi||provIndVal('cpi')||'N/A',change:(provMeta.cpi||{}).change||'',source:'Statistics Canada',metaKey:'cpi'},
-    {label:'Participation',value:provInd.participationRate||provIndVal('participationRate')||'N/A',change:(provMeta.participationRate||{}).change||'',source:'Statistics Canada',metaKey:'participationRate'},
-    {label:'Employment Rate',value:provInd.employmentRate||provIndVal('employmentRate')||'N/A',change:(provMeta.employmentRate||{}).change||'',source:'Statistics Canada',metaKey:'employmentRate'},
-    {label:'Housing Starts',value:provInd.housingStarts||provIndVal('housingStarts')||'N/A',change:(provMeta.housingStarts||{}).change||'',source:'CMHC',metaKey:'housingStarts'},
-    {label:'Pop. Growth',value:provInd.populationGrowth||provIndVal('populationGrowth')||'N/A',change:'',source:'Statistics Canada',metaKey:'populationGrowth'},
-    {label:'Building Permits',value:provInd.buildingPermits||provIndVal('buildingPermits')||'N/A',change:(provMeta.buildingPermits||{}).change||'',source:'Statistics Canada',metaKey:'buildingPermits'}
+    {label:'GDP YoY',value:provInd.gdp||provIndVal('gdp')||'N/A',change:(provMeta.gdp||{}).change||'',source:'Statistics Canada',metaKey:'gdp',period:(provMeta.gdp||{}).period||'',freq:'Quarterly'},
+    {label:'Unemployment',value:provInd.unemployment||provIndVal('unemployment')||'N/A',change:(provMeta.unemployment||{}).change||'',source:'Statistics Canada',metaKey:'unemployment',period:(provMeta.unemployment||{}).period||'',freq:'Monthly'},
+    {label:'CPI',value:provInd.cpi||provIndVal('cpi')||'N/A',change:(provMeta.cpi||{}).change||'',source:'Statistics Canada',metaKey:'cpi',period:(provMeta.cpi||{}).period||'',freq:'Monthly'},
+    {label:'Participation',value:provInd.participationRate||provIndVal('participationRate')||'N/A',change:(provMeta.participationRate||{}).change||'',source:'Statistics Canada',metaKey:'participationRate',period:(provMeta.participationRate||{}).period||'',freq:'Monthly'},
+    {label:'Employment Rate',value:provInd.employmentRate||provIndVal('employmentRate')||'N/A',change:(provMeta.employmentRate||{}).change||'',source:'Statistics Canada',metaKey:'employmentRate',period:(provMeta.employmentRate||{}).period||'',freq:'Monthly'},
+    {label:'Housing Starts',value:provInd.housingStarts||provIndVal('housingStarts')||'N/A',change:(provMeta.housingStarts||{}).change||'',source:'CMHC',metaKey:'housingStarts',period:(provMeta.housingStarts||{}).period||'',freq:'Monthly'},
+    {label:'Pop. Growth',value:provInd.populationGrowth||provIndVal('populationGrowth')||'N/A',change:'',source:'Statistics Canada',metaKey:'populationGrowth',period:'',freq:'Annual'},
+    {label:'Building Permits',value:provInd.buildingPermits||provIndVal('buildingPermits')||'N/A',change:(provMeta.buildingPermits||{}).change||'',source:'Statistics Canada',metaKey:'buildingPermits',period:(provMeta.buildingPermits||{}).period||'',freq:'Monthly'}
   ];
 
   // Editorial header
