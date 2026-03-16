@@ -984,7 +984,7 @@ function renderGlobalVectors(){
       if(gi.gdp)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">GDP</div><div class="indicator-pill-value">'+gi.gdp+'</div></div>';
       if(gi.cpi)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">CPI</div><div class="indicator-pill-value">'+gi.cpi+'</div></div>';
       if(gi.rate)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">Rate</div><div class="indicator-pill-value">'+gi.rate+'</div></div>';
-      if(gi.unemployment)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">Unemp</div><div class="indicator-pill-value">'+gi.unemployment+'</div></div>';
+      if(gi.unemployment)html+='<div class="indicator-pill" style="padding:4px 10px"><div class="indicator-pill-label">Unemployment</div><div class="indicator-pill-value">'+gi.unemployment+'</div></div>';
       html+='</div>';
     }
     html+='<div class="gv-body">'+san(linkFootnotes(analysis,gData.sources||[]))+'</div>';
