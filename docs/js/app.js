@@ -479,7 +479,7 @@ async function renderInteractiveMap(){
       const geojson=topojson.feature(topo,topo.objects[objKey]);
       const mapDiv=document.getElementById('canadaMapSvg');
       if(!mapDiv)return;
-      const w=mapDiv.clientWidth||400;const h=Math.max(w*1.0,300);
+      const w=mapDiv.clientWidth||400;const h=Math.max(w*0.7,220);
       mapDiv.style.minHeight=h+'px';
 
       // Use fitExtent to fill the entire SVG with the map
