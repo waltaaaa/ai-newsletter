@@ -305,30 +305,11 @@ async function renderTLDR(){
     // Lead image as editorial float
     const leadImg=findLeadImage(D.sources||[]);
     const imgHtml=leadImg?`<img src="${leadImg}" alt="" class="editorial-lead-img" onerror="this.style.display='none'" loading="lazy">`:'';
-    // Apply drop cap to first bullet
-    let summaryHtml=san(linkFootnotes(D.executive_summary,(D.sources||[])));
-    // Wrap first text character after first <li> in drop cap span
-    let dcApplied=false;
-    summaryHtml=summaryHtml.replace(/<li>([A-Za-z])/,function(m,ch){
-      if(dcApplied)return m;dcApplied=true;
-      return '<li><span class="editorial-drop-cap">'+ch+'</span>';
-    });
-
-    // Pull quote from key_indicators with biggest change
-    const ki=(D.key_indicators||[]).filter(k=>k.change&&k.change.trim());
-    let pullquoteHtml='';
-    if(ki.length){
-      const pq=ki[0];// Lead indicator is usually the most significant
-      pullquoteHtml=`<div class="editorial-pullquote" style="clear:both"><div class="pq-label">${pq.label||''}</div>${pq.value||''}${pq.change?' <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">('+pq.change+')</span>':''}</div>`;
-    }
-
     $('execSummary').innerHTML=`<div class="fade-in">
       <div class="editorial-eyebrow">Weekly Intelligence Briefing</div>
       <div class="editorial-headline">${san(headline)}</div>
       <hr class="editorial-accent">
       ${metaHtml}
-      <div class="editorial-lead">${imgHtml}${summaryHtml}</div>
-      ${pullquoteHtml}
     </div>`;
   }else{
     $('execSummary').innerHTML=`<div class="fade-in" style="text-align:center;padding:24px 0"><div style="color:#475569;font-size:var(--text-sm)">Weekly briefing pending. ${indicators.length} indicators loaded from primary sources.</div></div>`;
@@ -338,93 +319,100 @@ async function renderTLDR(){
   $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
   collapseEmpty();
 }
+function bulletsToParas(html){
+  // Convert <ul><li>...</li></ul> bullet lists into <p> paragraphs for narrative flow
+  if(!html)return'';
+  return html
+    .replace(/<ul[^>]*>/gi,'')
+    .replace(/<\/ul>/gi,'')
+    .replace(/<li>/gi,'<p>')
+    .replace(/<\/li>/gi,'</p>');
+}
 async function renderEditorialFlow(){
   const flow=$('editorialFlow');if(!flow){console.error('editorialFlow element not found');return}
   if(!D){flow.innerHTML='<div style="padding:24px;color:#475569;font-size:var(--text-sm);text-align:center">Awaiting pipeline data.</div>';return}
   try{
-  // Build microscope content — try dedicated JSON first, fall back to D fields
+  // Executive summary — convert bullets to paragraphs
+  const execHtml=bulletsToParas(san(linkFootnotes((D.executive_summary)||'',((D.sources)||[]))));
+
+  // Microscope
   let microHtml='';
   try{
     const data=await fetchJSON('microscope.json');
     const m=(data&&data.current)||data||{};
     if(m&&m.topic&&m.text){
       const sectors=(m.affected_sectors||[]).map(s=>'<span class="editorial-sector-tag">'+s+'</span>').join(' ');
-      const weeks=m.weeks_running?' <span style="font-size:10px;color:#64748B">Week '+m.weeks_running+'</span>':'';
-      microHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">Under the Microscope${weeks}</div><div class="editorial-section-title">${m.topic||''}</div>${sectors?'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+sectors+'</div>':''}</div>${san(m.text||m.analysis||'')}`;
+      const weeksNote=m.weeks_running?' &middot; Week '+m.weeks_running+' of coverage':'';
+      microHtml=`<div class="ed-section"><div class="ed-section-eyebrow">Under the Microscope</div><div class="ed-section-title">${m.topic||''}</div><div class="ed-section-sub">${sectors}${weeksNote}</div></div>${bulletsToParas(san(m.text||m.analysis||''))}`;
     }
   }catch(e){console.warn('Microscope JSON:',e)}
 
-  // National analysis from D (this is the main analysis content)
+  // National analysis
   let nationalHtml='';
-  const nat=D&&D.national;
-  if(nat&&nat.analysis){
-    nationalHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">National Analysis</div></div>${san(linkFootnotes(nat.analysis,(D.sources||[])))}`;
+  if(D.national&&D.national.analysis){
+    nationalHtml=`<div class="ed-section"><div class="ed-section-eyebrow">National Analysis</div><div class="ed-section-title">Macro Conditions &amp; Policy</div></div>${bulletsToParas(san(linkFootnotes(D.national.analysis,(D.sources||[]))))}`;
   }
 
   // Consumer pulse
   let pulseHtml='';
-  if(D&&D.consumer_pulse){
-    pulseHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">Consumer Pulse</div></div>${san(D.consumer_pulse)}`;
+  if(D.consumer_pulse){
+    pulseHtml=`<div class="ed-section"><div class="ed-section-eyebrow">Consumer Pulse</div><div class="ed-section-title">Sentiment &amp; Public Discussion</div></div>${bulletsToParas(san(D.consumer_pulse))}`;
   }
 
-  // Weekly briefing narrative (may be empty — that's OK, we have national+pulse above)
+  // Briefing narrative
   let briefHtml='';
   try{
     const briefing=await fetchJSON('briefing_latest.json');
     const narrative=(briefing&&briefing.content)||'';
     if(narrative){
       const pdfUrl=(briefing.pdf_url)||'';const docxUrl=(briefing.docx_url)||'';
-      const dlBtns=(pdfUrl||docxUrl)?`<div class="editorial-span" style="margin:12px 0"><div style="display:flex;gap:8px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#EC4899;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#3B82F6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div></div>`:'';
-      briefHtml=`<div class="editorial-span"><hr class="editorial-rule"><div class="editorial-section-label">Weekly Briefing</div></div>${dlBtns}${san(narrative)}`;
+      const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:16px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#EC4899;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#3B82F6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
+      briefHtml=`<div class="ed-section"><div class="ed-section-eyebrow">Weekly Briefing</div><div class="ed-section-title">Full Intelligence Report</div></div>${dlBtns}${bulletsToParas(san(narrative))}`;
     }
   }catch(e){console.warn('Briefing:',e)}
 
-  // Pull quotes from key_indicators
-  const ki=(D&&D.key_indicators)||[];
-  const pqItems=ki.filter(k=>k.change&&k.change.trim()).slice(0,3);
-  let pq1='',pq2='',pq3='';
+  // Pull quotes
+  const ki=(D.key_indicators)||[];
+  const pqItems=ki.filter(k=>k.change&&k.change.trim()).slice(0,2);
+  let pq1='',pq2='';
   if(pqItems[0])pq1=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[0].label}</div>${pqItems[0].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[0].change})</span></div>`;
   if(pqItems[1])pq2=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[1].label}</div>${pqItems[1].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[1].change})</span></div>`;
-  if(pqItems[2])pq3=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[2].label}</div>${pqItems[2].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[2].change})</span></div>`;
 
-  // Indicator strip (spans both columns)
-  const indEl=document.createElement('div');
-  indEl.id='keyIndicators';
-  // We'll render indicators into this after inserting
-
-  // Assemble the flow — charts float inside text, pullquotes break it up
+  // Assemble — clean single-column with charts as pairs between sections
   flow.innerHTML=`
-    <div class="editorial-chart-left" id="tldrMacroCard">
-      <div class="ec-title">Macro Pulse</div><div class="ec-sub">Key indicators — current vs. previous</div>
-      <div style="height:190px;position:relative"><canvas id="tldrMacroChart"></canvas></div>
-      <div class="ec-source">Sources: Statistics Canada, Bank of Canada</div>
-    </div>
-    ${san(linkFootnotes((D&&D.executive_summary)||'',((D&&D.sources)||[])))}
+    ${execHtml}
     ${pq1}
     <div class="editorial-indicators"><section id="keyIndicators"></section></div>
-    <div class="editorial-chart-right" id="tldrCommodityCard">
-      <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
-      <div style="height:190px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
-      <div class="ec-source">Source: Yahoo Finance</div>
+    <div class="ed-chart-row">
+      <div class="ed-chart" id="tldrMacroCard">
+        <div class="ec-title">Macro Pulse</div><div class="ec-sub">Key indicators — current vs. previous</div>
+        <div style="height:200px;position:relative"><canvas id="tldrMacroChart"></canvas></div>
+        <div class="ec-source">Sources: Statistics Canada, Bank of Canada</div>
+      </div>
+      <div class="ed-chart" id="tldrCommodityCard">
+        <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
+        <div style="height:200px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
+        <div class="ec-source">Source: Yahoo Finance</div>
+      </div>
     </div>
     ${microHtml}
     ${nationalHtml}
     ${pq2}
-    <div class="editorial-chart-left" id="briefPipelineCard">
-      <div class="ec-title">Project Pipeline</div><div class="ec-sub">Capital projects by lifecycle stage</div>
-      <div style="height:190px;position:relative"><canvas id="briefPipelineChart"></canvas></div>
-      <div class="ec-source">Source: Pipeline database</div>
+    <div class="ed-chart-row">
+      <div class="ed-chart" id="briefPipelineCard">
+        <div class="ec-title">Project Pipeline</div><div class="ec-sub">Capital projects by lifecycle stage</div>
+        <div style="height:200px;position:relative"><canvas id="briefPipelineChart"></canvas></div>
+        <div class="ec-source">Source: Pipeline database</div>
+      </div>
+      <div class="ed-chart" id="briefSectorCard">
+        <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
+        <div style="height:200px;position:relative"><canvas id="briefSectorChart"></canvas></div>
+        <div class="ec-source">Source: Pipeline database</div>
+      </div>
     </div>
     ${pulseHtml}
     ${briefHtml}
-    ${pq3}
-    <div class="editorial-chart-right" id="briefSectorCard">
-      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
-      <div style="height:190px;position:relative"><canvas id="briefSectorChart"></canvas></div>
-      <div class="ec-source">Source: Pipeline database</div>
-    </div>
   `;
-  // Render indicators and charts
   renderKeyIndicators();
   await renderWovenCharts('tldr');
   await renderWovenCharts('brief');
