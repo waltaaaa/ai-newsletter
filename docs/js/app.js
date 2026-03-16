@@ -360,9 +360,9 @@ async function renderEditorialFlow(){
   function _weaveChart(html){
     if(!html)return sectorChartHtml;
     const parts=html.split('</p>');
-    if(parts.length<=2)return html+sectorChartHtml;
-    // Insert before the last paragraph
-    parts.splice(parts.length-2,0,sectorChartHtml);
+    if(parts.length<=2)return sectorChartHtml+html;
+    // Insert after 1st paragraph
+    parts.splice(1,0,sectorChartHtml);
     return parts.join('</p>');
   }
 
@@ -442,39 +442,19 @@ async function renderInteractiveMap(){
   const container=$('tldrMapSection');
   if(!container)return;
   const provData=getProvIndicators();
-  // Build province highlights from briefing data
-  const provHighlights={};
-  if(D&&D.provinces){
-    D.provinces.forEach(p=>{
-      const code=NAME_TO_CODE[p.name]||NAME_TO_CODE[p.name.replace('&','and')]||NAME_TO_CODE[p.name.replace('& ','and ')]||normProvince(p.name)||'';
-      if(!code)return;
-      const highlights=[];
-      // Extract first 2 sentences of analysis as key theme
-      const plain=(p.analysis||'').replace(/<[^>]+>/g,'');
-      const sentences=plain.match(/[^.!?]+[.!?]+/g)||[];
-      if(sentences.length)highlights.push({label:'This Week',text:sentences.slice(0,2).join(' ').trim()});
-      // New projects
-      const projs=(p.projects||[]).slice(0,2);
-      if(projs.length){
-        const projText=projs.map(pr=>(pr.name||'Unknown')+(pr.value?' ('+pr.value+')':'')).join('; ');
-        highlights.push({label:'New Projects',text:projText});
-      }
-      // Province-specific indicators from briefing
-      const pi=p.indicators||{};
-      if(pi.housingStarts)highlights.push({label:'Housing Starts',text:pi.housingStarts+' (annualized)'});
-      if(highlights.length)provHighlights[code]=highlights;
-    });
-  }
-  let _tooltipMode='indicators'; // 'indicators' or 'highlights'
+  // Shared toggle state — controls national panel AND province tooltips
+  let _mapMode='indicators'; // 'indicators' or 'thisweek'
+
   // National stat boxes
   const ki=(D&&D.key_indicators)||[];
   const m=(D&&D.metrics)||{};
   const findKI=(label)=>{const item=ki.find(k=>k.label===label);return item?{value:item.value,change:item.change}:{value:'N/A',change:''}};
-  // Pull national participation rate, employment rate, wage growth from indicators
   const natPart=indicators.find(x=>x.indicator_name==='participationRate'&&(x.province||'').toLowerCase()==='national');
   const natEmp=indicators.find(x=>x.indicator_name==='employmentRate'&&(x.province||'').toLowerCase()==='national');
   const natWage=indicators.find(x=>x.indicator_name==='wageGrowth'&&(x.province||'').toLowerCase()==='national');
-  const stats=[
+
+  // Two sets of national indicators
+  const statsDefault=[
     {label:'Real GDP',value:m.realGdp||'N/A',change:''},
     {label:'Unemployment',value:findKI('UNEMPLOYMENT').value,change:findKI('UNEMPLOYMENT').change},
     {label:'Participation',value:natPart?natPart.value:(m.participation||'N/A'),change:''},
@@ -482,57 +462,41 @@ async function renderInteractiveMap(){
     {label:'Wage Growth',value:natWage?natWage.value:(m.wageGrowth||'N/A'),change:''},
     {label:'Trade Balance',value:findKI('TRADE BALANCE').value,change:findKI('TRADE BALANCE').change}
   ];
-  // Build national highlights from executive summary
-  const natHighlights=[];
-  if(D&&D.executive_summary){
-    const plain=(D.executive_summary||'').replace(/<[^>]+>/g,'');
-    const sentences=plain.match(/[^.!?]+[.!?]+/g)||[];
-    if(sentences.length>=2)natHighlights.push({label:'Top Story',text:sentences.slice(0,2).join(' ').trim()});
-    if(sentences.length>=4)natHighlights.push({label:'Also This Week',text:sentences.slice(2,4).join(' ').trim()});
-  }
-  if(D&&D.watchlist&&D.watchlist.length){
-    const upcoming=D.watchlist.filter(w=>w.week_label==='This Week').slice(0,2);
-    if(upcoming.length){
-      natHighlights.push({label:'Upcoming',text:upcoming.map(w=>w.event_name).join('; ')});
-    }
-  }
+  // "This Week" indicators — the ones that moved or are newsworthy this week
+  const statsThisWeek=[];
+  ki.forEach(k=>{
+    if(k.change&&k.change.trim())statsThisWeek.push({label:k.label,value:k.value,change:k.change});
+  });
+  // Add MFG sales if present
+  const mfg=findKI('MFG SALES');if(mfg.value!=='N/A')statsThisWeek.push({label:'MFG Sales',value:mfg.value,change:mfg.change});
+  // Pad to 6 with other key indicators
+  if(statsThisWeek.length<6&&natWage)statsThisWeek.push({label:'Wage Growth',value:natWage.value,change:''});
+  if(statsThisWeek.length<6&&natPart)statsThisWeek.push({label:'Participation',value:natPart.value,change:''});
 
-  let _natMode='indicators';
   function buildNatPanel(){
-    const isInd=_natMode==='indicators';
+    const isInd=_mapMode==='indicators';
+    const activeStats=isInd?statsDefault:statsThisWeek.slice(0,6);
     let html=`<div class="ed-stat-header" style="display:flex;justify-content:space-between;align-items:center">
       <span>Canada &mdash; National</span>
       <span style="display:flex;gap:4px">
-        <span class="ed-tt-tab${isInd?' active':''}" id="natToggleInd">Indicators</span>
+        <span class="ed-tt-tab${isInd?' active':''}" id="natToggleInd">Key Indicators</span>
         <span class="ed-tt-tab${!isInd?' active':''}" id="natToggleHL">This Week</span>
       </span>
     </div>`;
-    if(isInd){
-      html+='<div class="ed-stat-grid">';
-      stats.forEach(s=>{
-        const chgCls=s.change?(s.change.startsWith('-')||s.change.startsWith('\u2212')?'change-down':'change-up'):'';
-        html+=`<div class="ed-stat-box"><div class="ed-stat-label">${s.label}</div><div class="ed-stat-value">${s.value}</div>${s.change?`<div class="ed-stat-change ${chgCls}">${s.change}</div>`:''}`;
-        html+='</div>';
-      });
+    html+='<div class="ed-stat-grid">';
+    activeStats.forEach(s=>{
+      const chgCls=s.change?(s.change.startsWith('-')||s.change.startsWith('\u2212')?'change-down':'change-up'):'';
+      html+=`<div class="ed-stat-box"><div class="ed-stat-label">${s.label}</div><div class="ed-stat-value">${s.value}</div>${s.change?`<div class="ed-stat-change ${chgCls}">${s.change}</div>`:''}`;
       html+='</div>';
-    }else{
-      html+='<div style="padding:4px 0">';
-      if(natHighlights.length){
-        natHighlights.slice(0,3).forEach(h=>{
-          html+=`<div style="margin-bottom:6px"><div style="font-weight:600;color:#2563EB;font-size:9px;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:1px">${h.label}</div><div style="font-size:11px;line-height:1.4;color:#1a2744">${h.text.length>120?h.text.slice(0,117)+'...':h.text}</div></div>`;
-        });
-      }else{
-        html+='<div style="color:#64748B;font-size:11px">No highlights this week</div>';
-      }
-      html+='</div>';
-    }
+    });
+    html+='</div>';
     const natPanel=document.getElementById('natStatsPanel');
     if(natPanel){
       natPanel.innerHTML=html;
       const indBtn=document.getElementById('natToggleInd');
       const hlBtn=document.getElementById('natToggleHL');
-      if(indBtn)indBtn.onclick=()=>{_natMode='indicators';buildNatPanel()};
-      if(hlBtn)hlBtn.onclick=()=>{_natMode='highlights';buildNatPanel()};
+      if(indBtn)indBtn.onclick=()=>{_mapMode='indicators';buildNatPanel()};
+      if(hlBtn)hlBtn.onclick=()=>{_mapMode='thisweek';buildNatPanel()};
     }
   }
 
@@ -630,53 +594,30 @@ async function renderInteractiveMap(){
           const code=featureCode(f);
           const pName=(PROVS.find(p=>p.code===code)||{}).name||code;
           const pd=provData[code]||{};
-          const hl=provHighlights[code]||[];
-          function buildTooltip(){
-            const isInd=_tooltipMode==='indicators';
-            let toggle=`<div style="display:flex;gap:4px;margin-bottom:8px">`;
-            toggle+=`<span class="ed-tt-tab${isInd?' active':''}" data-mode="indicators">Key Indicators</span>`;
-            toggle+=`<span class="ed-tt-tab${!isInd?' active':''}" data-mode="highlights">This Week</span></div>`;
-            let body='';
-            if(isInd){
-              if(pd.gdp)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
-              if(pd.unemployment){
-                body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
-                if(pd.unemployment_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.unemployment_prev}</span></div>`;
-              }
-              if(pd.cpi){
-                body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
-                if(pd.cpi_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
-              }
-              if(pd.participationRate){
-                body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Participation Rate</span><span class="ed-map-tooltip-value">${pd.participationRate}</span></div>`;
-                if(pd.participationRate_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.participationRate_prev}</span></div>`;
-              }
-              if(pd.employmentRate){
-                body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Employment Rate</span><span class="ed-map-tooltip-value">${pd.employmentRate}</span></div>`;
-                if(pd.employmentRate_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.employmentRate_prev}</span></div>`;
-              }
-              if(pd.housingStarts)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts (ann.)</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
-              if(!body)body='<div style="color:rgba(255,255,255,0.5)">No indicator data</div>';
-            }else{
-              if(hl.length){
-                hl.slice(0,3).forEach(h=>{
-                  body+=`<div style="margin-bottom:6px"><div style="font-weight:600;color:#60A5FA;font-size:10px;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:2px">${h.label}</div><div style="color:rgba(255,255,255,0.85);font-size:11px;line-height:1.4">${h.text}</div></div>`;
-                });
-              }else{
-                body='<div style="color:rgba(255,255,255,0.5)">No highlights this week</div>';
-              }
+          let body='';
+          if(_mapMode==='indicators'){
+            if(pd.gdp)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
+            if(pd.unemployment){
+              body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
+              if(pd.unemployment_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.unemployment_prev}</span></div>`;
             }
-            tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${toggle}${body}`;
-            // Attach toggle click handlers
-            tooltip.querySelectorAll('.ed-tt-tab').forEach(tab=>{
-              tab.onclick=function(e){
-                e.stopPropagation();
-                _tooltipMode=this.dataset.mode;
-                buildTooltip();
-              };
-            });
+            if(pd.cpi){
+              body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
+              if(pd.cpi_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
+            }
+            if(pd.participationRate)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Participation</span><span class="ed-map-tooltip-value">${pd.participationRate}</span></div>`;
+            if(pd.employmentRate)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Employment Rate</span><span class="ed-map-tooltip-value">${pd.employmentRate}</span></div>`;
+            if(pd.housingStarts)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
+          }else{
+            // This Week — show indicators that changed this week for this province
+            if(pd.unemployment&&pd.unemployment_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment} <span style="opacity:0.5">from ${pd.unemployment_prev}</span></span></div>`;
+            if(pd.cpi&&pd.cpi_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi} <span style="opacity:0.5">from ${pd.cpi_prev}</span></span></div>`;
+            if(pd.participationRate&&pd.participationRate_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Participation</span><span class="ed-map-tooltip-value">${pd.participationRate} <span style="opacity:0.5">from ${pd.participationRate_prev}</span></span></div>`;
+            if(pd.employmentRate&&pd.employmentRate_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Emp. Rate</span><span class="ed-map-tooltip-value">${pd.employmentRate} <span style="opacity:0.5">from ${pd.employmentRate_prev}</span></span></div>`;
+            if(pd.housingStarts)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
           }
-          buildTooltip();
+          if(!body)body='<div style="color:rgba(255,255,255,0.5)">No data available</div>';
+          tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${body}`;
           tooltip.classList.add('visible');
         })
         .on('mousemove',function(event){
@@ -694,7 +635,7 @@ async function renderInteractiveMap(){
 
       // Province labels — code only, skip Maritimes (shown in inset)
       const insetCodes=new Set(['NB','NS','PE']);
-      const CENTROIDS={BC:[-124,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,53],NL:[-60,53],YT:[-136,63],NT:[-120,65],NU:[-90,70]};
+      const CENTROIDS={BC:[-124,54],AB:[-115,54],SK:[-106,54],MB:[-98,55],ON:[-85,50],QC:[-72,53],NL:[-60,53],YT:[-136,63],NT:[-120,65],NU:[-88,62]};
       Object.keys(gdpVals).forEach(code=>{
         if(insetCodes.has(code))return;
         const c=CENTROIDS[code];if(!c)return;
@@ -731,40 +672,23 @@ async function renderInteractiveMap(){
             const code=featureCode(f);
             const pName=(PROVS.find(p=>p.code===code)||{}).name||code;
             const pd=provData[code]||{};
-            const hl=provHighlights[code]||[];
-            function buildTT(){
-              const isInd=_tooltipMode==='indicators';
-              let toggle=`<div style="display:flex;gap:4px;margin-bottom:8px">`;
-              toggle+=`<span class="ed-tt-tab${isInd?' active':''}" data-mode="indicators">Key Indicators</span>`;
-              toggle+=`<span class="ed-tt-tab${!isInd?' active':''}" data-mode="highlights">This Week</span></div>`;
-              let body='';
-              if(isInd){
-                if(pd.gdp)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
-                if(pd.unemployment){
-                  body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
-                  if(pd.unemployment_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.unemployment_prev}</span></div>`;
-                }
-                if(pd.cpi){
-                  body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
-                  if(pd.cpi_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
-                }
-                if(pd.housingStarts)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts (ann.)</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
-                if(!body)body='<div style="color:rgba(255,255,255,0.5)">No indicator data</div>';
-              }else{
-                if(hl.length){
-                  hl.slice(0,3).forEach(h=>{
-                    body+=`<div style="margin-bottom:6px"><div style="font-weight:600;color:#60A5FA;font-size:10px;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:2px">${h.label}</div><div style="color:rgba(255,255,255,0.85);font-size:11px;line-height:1.4">${h.text}</div></div>`;
-                  });
-                }else{
-                  body='<div style="color:rgba(255,255,255,0.5)">No highlights this week</div>';
-                }
-              }
-              tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${toggle}${body}`;
-              tooltip.querySelectorAll('.ed-tt-tab').forEach(tab=>{
-                tab.onclick=function(e){e.stopPropagation();_tooltipMode=this.dataset.mode;buildTT()};
-              });
+            let body='';
+            if(_mapMode==='indicators'){
+              if(pd.gdp)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
+              if(pd.unemployment)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
+              if(pd.cpi)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
+              if(pd.participationRate)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Participation</span><span class="ed-map-tooltip-value">${pd.participationRate}</span></div>`;
+              if(pd.employmentRate)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Employment Rate</span><span class="ed-map-tooltip-value">${pd.employmentRate}</span></div>`;
+              if(pd.housingStarts)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
+            }else{
+              if(pd.unemployment&&pd.unemployment_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment} <span style="opacity:0.5">from ${pd.unemployment_prev}</span></span></div>`;
+              if(pd.cpi&&pd.cpi_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi} <span style="opacity:0.5">from ${pd.cpi_prev}</span></span></div>`;
+              if(pd.participationRate&&pd.participationRate_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Participation</span><span class="ed-map-tooltip-value">${pd.participationRate} <span style="opacity:0.5">from ${pd.participationRate_prev}</span></span></div>`;
+              if(pd.employmentRate&&pd.employmentRate_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Emp. Rate</span><span class="ed-map-tooltip-value">${pd.employmentRate} <span style="opacity:0.5">from ${pd.employmentRate_prev}</span></span></div>`;
+              if(pd.housingStarts)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
             }
-            buildTT();
+            if(!body)body='<div style="color:rgba(255,255,255,0.5)">No data</div>';
+            tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${body}`;
             tooltip.classList.add('visible');
           })
           .on('mousemove',function(event){
