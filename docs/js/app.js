@@ -374,12 +374,12 @@ async function renderEditorialFlow(){
     <div class="ed-clear"></div>
 
     <div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>
-    <div class="ed-chart-inline" id="tldrSectorCard">
+    ${industryHtml}
+    <div class="ed-chart-inline" id="tldrSectorCard" style="float:left;margin:0 20px 14px 0">
       <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
       <div style="height:200px;position:relative"><canvas id="tldrSectorChart"></canvas></div>
       <div class="ec-source">Pipeline database</div>
     </div>
-    ${industryHtml}
     <div class="ed-clear"></div>
 
     <div class="ed-section"><div class="ed-section-title">Financial Markets</div></div>
@@ -436,6 +436,30 @@ async function renderInteractiveMap(){
   const container=$('tldrMapSection');
   if(!container)return;
   const provData=getProvIndicators();
+  // Build province highlights from briefing data
+  const provHighlights={};
+  if(D&&D.provinces){
+    D.provinces.forEach(p=>{
+      const code=NAME_TO_CODE[p.name]||NAME_TO_CODE[p.name.replace('&','and')]||NAME_TO_CODE[p.name.replace('& ','and ')]||normProvince(p.name)||'';
+      if(!code)return;
+      const highlights=[];
+      // Extract first 2 sentences of analysis as key theme
+      const plain=(p.analysis||'').replace(/<[^>]+>/g,'');
+      const sentences=plain.match(/[^.!?]+[.!?]+/g)||[];
+      if(sentences.length)highlights.push({label:'This Week',text:sentences.slice(0,2).join(' ').trim()});
+      // New projects
+      const projs=(p.projects||[]).slice(0,2);
+      if(projs.length){
+        const projText=projs.map(pr=>(pr.name||'Unknown')+(pr.value?' ('+pr.value+')':'')).join('; ');
+        highlights.push({label:'New Projects',text:projText});
+      }
+      // Province-specific indicators from briefing
+      const pi=p.indicators||{};
+      if(pi.housingStarts)highlights.push({label:'Housing Starts',text:pi.housingStarts+' (annualized)'});
+      if(highlights.length)provHighlights[code]=highlights;
+    });
+  }
+  let _tooltipMode='indicators'; // 'indicators' or 'highlights'
   // National stat boxes
   const ki=(D&&D.key_indicators)||[];
   const m=(D&&D.metrics)||{};
@@ -549,19 +573,45 @@ async function renderInteractiveMap(){
           const code=featureCode(f);
           const pName=(PROVS.find(p=>p.code===code)||{}).name||code;
           const pd=provData[code]||{};
-          let rows='';
-          if(pd.gdp)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
-          if(pd.unemployment){
-            rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
-            if(pd.unemployment_prev)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.unemployment_prev}</span></div>`;
+          const hl=provHighlights[code]||[];
+          function buildTooltip(){
+            const isInd=_tooltipMode==='indicators';
+            let toggle=`<div style="display:flex;gap:4px;margin-bottom:8px">`;
+            toggle+=`<span class="ed-tt-tab${isInd?' active':''}" data-mode="indicators">Key Indicators</span>`;
+            toggle+=`<span class="ed-tt-tab${!isInd?' active':''}" data-mode="highlights">This Week</span></div>`;
+            let body='';
+            if(isInd){
+              if(pd.gdp)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
+              if(pd.unemployment){
+                body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
+                if(pd.unemployment_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.unemployment_prev}</span></div>`;
+              }
+              if(pd.cpi){
+                body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
+                if(pd.cpi_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
+              }
+              if(pd.housingStarts)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts (ann.)</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
+              if(!body)body='<div style="color:rgba(255,255,255,0.5)">No indicator data</div>';
+            }else{
+              if(hl.length){
+                hl.slice(0,3).forEach(h=>{
+                  body+=`<div style="margin-bottom:6px"><div style="font-weight:600;color:#60A5FA;font-size:10px;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:2px">${h.label}</div><div style="color:rgba(255,255,255,0.85);font-size:11px;line-height:1.4">${h.text}</div></div>`;
+                });
+              }else{
+                body='<div style="color:rgba(255,255,255,0.5)">No highlights this week</div>';
+              }
+            }
+            tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${toggle}${body}`;
+            // Attach toggle click handlers
+            tooltip.querySelectorAll('.ed-tt-tab').forEach(tab=>{
+              tab.onclick=function(e){
+                e.stopPropagation();
+                _tooltipMode=this.dataset.mode;
+                buildTooltip();
+              };
+            });
           }
-          if(pd.cpi){
-            rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
-            if(pd.cpi_prev)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
-          }
-          if(pd.housingStarts)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts (ann.)</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
-          if(!rows)rows='<div style="color:rgba(255,255,255,0.5)">No provincial data</div>';
-          tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${rows}`;
+          buildTooltip();
           tooltip.classList.add('visible');
         })
         .on('mousemove',function(event){
@@ -616,19 +666,40 @@ async function renderInteractiveMap(){
             const code=featureCode(f);
             const pName=(PROVS.find(p=>p.code===code)||{}).name||code;
             const pd=provData[code]||{};
-            let rows='';
-            if(pd.gdp)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
-            if(pd.unemployment){
-              rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
-              if(pd.unemployment_prev)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.unemployment_prev}</span></div>`;
+            const hl=provHighlights[code]||[];
+            function buildTT(){
+              const isInd=_tooltipMode==='indicators';
+              let toggle=`<div style="display:flex;gap:4px;margin-bottom:8px">`;
+              toggle+=`<span class="ed-tt-tab${isInd?' active':''}" data-mode="indicators">Key Indicators</span>`;
+              toggle+=`<span class="ed-tt-tab${!isInd?' active':''}" data-mode="highlights">This Week</span></div>`;
+              let body='';
+              if(isInd){
+                if(pd.gdp)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
+                if(pd.unemployment){
+                  body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
+                  if(pd.unemployment_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.unemployment_prev}</span></div>`;
+                }
+                if(pd.cpi){
+                  body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
+                  if(pd.cpi_prev)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
+                }
+                if(pd.housingStarts)body+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts (ann.)</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
+                if(!body)body='<div style="color:rgba(255,255,255,0.5)">No indicator data</div>';
+              }else{
+                if(hl.length){
+                  hl.slice(0,3).forEach(h=>{
+                    body+=`<div style="margin-bottom:6px"><div style="font-weight:600;color:#60A5FA;font-size:10px;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:2px">${h.label}</div><div style="color:rgba(255,255,255,0.85);font-size:11px;line-height:1.4">${h.text}</div></div>`;
+                  });
+                }else{
+                  body='<div style="color:rgba(255,255,255,0.5)">No highlights this week</div>';
+                }
+              }
+              tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${toggle}${body}`;
+              tooltip.querySelectorAll('.ed-tt-tab').forEach(tab=>{
+                tab.onclick=function(e){e.stopPropagation();_tooltipMode=this.dataset.mode;buildTT()};
+              });
             }
-            if(pd.cpi){
-              rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
-              if(pd.cpi_prev)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
-            }
-            if(pd.housingStarts)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts (ann.)</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
-            if(!rows)rows='<div style="color:rgba(255,255,255,0.5)">No data</div>';
-            tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${rows}`;
+            buildTT();
             tooltip.classList.add('visible');
           })
           .on('mousemove',function(event){
