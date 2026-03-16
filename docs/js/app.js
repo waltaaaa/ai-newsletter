@@ -576,6 +576,70 @@ async function renderInteractiveMap(){
         svg.append('text').attr('x',pt[0]).attr('y',pt[1]).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',11).attr('font-weight',700).attr('fill','#0f1b33').text(code);
         svg.append('text').attr('x',pt[0]).attr('y',pt[1]+13).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',9).attr('font-weight',600).attr('fill','#2563EB').text((gdp>0?'+':'')+gdp.toFixed(1)+'%');
       });
+
+      // ── Atlantic inset (top-right corner) ──
+      const atlanticCodes=new Set(['NB','NS','PE','NL']);
+      const atlanticFeatures=geojson.features.filter(f=>atlanticCodes.has(featureCode(f)));
+      if(atlanticFeatures.length){
+        const iw=Math.round(w*0.35);const ih=Math.round(iw*0.85);
+        const ix=w-iw-6;const iy=6;
+        // Inset background
+        const ig=svg.append('g').attr('class','atlantic-inset');
+        ig.append('rect').attr('x',ix).attr('y',iy).attr('width',iw).attr('height',ih).attr('fill','#F0F4FF').attr('stroke','rgba(37,99,235,0.25)').attr('stroke-width',1).attr('rx',6);
+        ig.append('text').attr('x',ix+iw/2).attr('y',iy+12).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',8).attr('font-weight',600).attr('fill','#64748B').text('Atlantic');
+        // Zoomed projection for Atlantic region
+        const atlGeo={type:'FeatureCollection',features:atlanticFeatures};
+        const atlProj=d3.geoConicConformal().rotate([63,0,0]).center([0,47]).parallels([44,50]);
+        atlProj.fitExtent([[ix+6,iy+16],[ix+iw-6,iy+ih-6]],atlGeo);
+        const atlPath=d3.geoPath().projection(atlProj);
+        // Draw Atlantic provinces
+        ig.selectAll('path.atl').data(atlanticFeatures).enter().append('path')
+          .attr('class','atl')
+          .attr('d',atlPath)
+          .attr('fill',f=>{
+            const code=featureCode(f);const gdp=gdpVals[code];
+            if(gdp===undefined)return'rgba(37,99,235,0.07)';
+            return`rgba(37,99,235,${colorScale(gdp).toFixed(2)})`;
+          })
+          .attr('stroke','#fff').attr('stroke-width',0.5).attr('stroke-linejoin','round')
+          .style('cursor','pointer')
+          .on('mouseover',function(event,f){
+            d3.select(this).attr('stroke','#1a2744').attr('stroke-width',1.5);
+            const code=featureCode(f);
+            const pName=(PROVS.find(p=>p.code===code)||{}).name||code;
+            const pd=provData[code]||{};
+            let rows='';
+            if(pd.gdp)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">GDP Growth (YoY)</span><span class="ed-map-tooltip-value">${pd.gdp}</span></div>`;
+            if(pd.unemployment){
+              rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Unemployment</span><span class="ed-map-tooltip-value">${pd.unemployment}</span></div>`;
+              if(pd.unemployment_prev)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.unemployment_prev}</span></div>`;
+            }
+            if(pd.cpi){
+              rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">CPI (YoY)</span><span class="ed-map-tooltip-value">${pd.cpi}</span></div>`;
+              if(pd.cpi_prev)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label" style="padding-left:8px">Prior month</span><span class="ed-map-tooltip-value" style="opacity:0.6">${pd.cpi_prev}</span></div>`;
+            }
+            if(pd.housingStarts)rows+=`<div class="ed-map-tooltip-row"><span class="ed-map-tooltip-label">Housing Starts (ann.)</span><span class="ed-map-tooltip-value">${pd.housingStarts}</span></div>`;
+            if(!rows)rows='<div style="color:rgba(255,255,255,0.5)">No data</div>';
+            tooltip.innerHTML=`<div class="ed-map-tooltip-title">${pName}</div>${rows}`;
+            tooltip.classList.add('visible');
+          })
+          .on('mousemove',function(event){
+            tooltip.style.left=(event.pageX+14)+'px';
+            tooltip.style.top=(event.pageY-10)+'px';
+          })
+          .on('mouseout',function(){
+            d3.select(this).attr('stroke','#fff').attr('stroke-width',0.5);
+            tooltip.classList.remove('visible');
+          });
+        // Inset labels
+        const ATL_CENTROIDS={NB:[-66,47],NS:[-63,45],PE:[-63,46.5],NL:[-57,52]};
+        atlanticFeatures.forEach(f=>{
+          const code=featureCode(f);
+          const c=ATL_CENTROIDS[code];if(!c)return;
+          const pt=atlProj(c);if(!pt)return;
+          ig.append('text').attr('x',pt[0]).attr('y',pt[1]).attr('text-anchor','middle').attr('font-family','Outfit').attr('font-size',9).attr('font-weight',700).attr('fill','#0f1b33').text(code);
+        });
+      }
     }catch(e){console.warn('Canada map render:',e)}
   },100);
 }
