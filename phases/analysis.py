@@ -981,11 +981,12 @@ RECENT NEWS AND PRESS RELEASES (cite by article number):
 
 Write:
 
-1. EXECUTIVE SUMMARY (8-12 bullet points)
-Format as HTML: <ul class="list-disc list-inside space-y-2 text-slate-700"><li>...</li></ul>
-Each bullet is 1-2 sentences stating a specific fact, figure, or development that occurred. Use <strong> tags on key figures.
+1. EXECUTIVE SUMMARY (4-6 short paragraphs, 300-450 words)
+Format as HTML paragraphs: <p>paragraph text</p>
+Write as flowing narrative prose — NOT bullet points. Each paragraph is 2-3 sentences covering a coherent thread. Use transitional phrases between paragraphs to create narrative flow ("Meanwhile", "On the trade front", "In the labour market", "Separately"). Use <strong> tags on key figures.
+Structure: Lead paragraph states the week's dominant story with its key figure. Following paragraphs group related developments together thematically (e.g. labour + wages in one paragraph, trade + manufacturing in another, policy actions in another). Close with a paragraph tying together cross-cutting themes.
 Cover: what happened this week in the data — releases, changes, policy actions, project updates. NO forecasting, NO predictions, NO forward-looking language.
-Every bullet ends with <sup>N</sup> citation.
+Every claim backed by <sup>N</sup> citation.
 
 2. NATIONAL ANALYSIS (6-8 short paragraphs, 400-550 words total)
 Format as HTML paragraphs: <p>paragraph text</p>
@@ -1006,15 +1007,15 @@ Per region: report what happened with embedded data. State factual connections t
 
 5. WATCHLIST: 15-25 upcoming events with dates, impact rating (high/medium/low), description, source URLs where available.
 
-6. CONSUMER PULSE (6-8 bullet points):
-Format as HTML: <ul class="list-disc list-inside space-y-2 text-slate-700"><li>...</li></ul>
-Each bullet: one specific consumer trend, sentiment signal, or discussion topic. Ground in sentiment data. Note divergences (e.g. consumer anxiety about housing rising even as rate cuts accelerate). Tone: observational and analytical. Do NOT use footnote citations — reference sentiment data naturally: "Reddit discussions in r/PersonalFinanceCanada dominated by..." or "Google search interest in tariff queries surged..."
+6. CONSUMER PULSE (3-5 short paragraphs, 200-350 words):
+Format as HTML paragraphs: <p>paragraph text</p>
+Write as flowing narrative prose — NOT bullet points. Each paragraph covers a coherent consumer sentiment thread. Use transitions between paragraphs. Ground in sentiment data. Note divergences (e.g. consumer anxiety about housing rising even as rate cuts accelerate). Tone: observational and analytical. Do NOT use footnote citations — reference sentiment data naturally: "Reddit discussions in r/PersonalFinanceCanada focused on..." or "Google search interest in tariff queries surged..."
 
 7. metrics: Fill ALL fields from articles EXCEPT — leave as "": cpi, shelterCpi, unemployment, participation, realGdp. These are injected from StatCan/BoC primary APIs. bocRate must match "{hard_data['boc_rate']}".
 
 8. WORD CLOUD TOPICS: Extract 40-60 meaningful economic topics/phrases from this week's news. These power a word cloud visualization. Each topic should be 1-3 words, e.g. "tariff threat", "rate cut", "housing affordability", "LNG exports", "auto layoffs", "tech hiring freeze", "lumber prices", "fiscal deficit", "immigration policy". Assign each a sentiment_score (-1.0 to +1.0, negative=bad for Canada, positive=good) and frequency (1-10 importance weight, 10=dominant story). Prioritize specificity over generality. BAD: "economy", "growth", "markets". GOOD: "tariff retaliation", "BoC rate hold", "Alberta oil sands", "EV battery plant".
 
-Style: Wire service / Reuters dispatch quality. Short paragraphs (2-3 sentences each). Executive summary and consumer pulse use bullet points (<ul><li>). National analysis and global analysis use short prose paragraphs (<p>). Embed specific figures inline ("grew at an annualized rate of 1.3%", "three straight quarters of businesses cutting back"). REPORT ONLY — no editorializing, no forecasting, no opinions. State what happened, what data showed, what changed. DO NOT use: "is likely to", "would be expected to", "looking ahead", "going forward", "outlook", "expected to", "cautiously optimistic", "remains to be seen", "continues to grow", "markets remain volatile", "positive outlook", "encouraging", "concerning", "worrying", "promising". DO NOT discuss stock market movements, equity index levels, or stock performance (e.g. TSX, S&P 500, Dow, NASDAQ gains/losses). Rate changes, yield changes, FX, and bond markets ARE fair game.
+Style: Wire service / Reuters dispatch quality. ALL sections use short prose paragraphs (<p>) — NO bullet points anywhere. Each paragraph 2-3 sentences. Use transitional phrases between paragraphs for narrative flow. Embed specific figures inline ("grew at an annualized rate of 1.3%", "three straight quarters of businesses cutting back"). REPORT ONLY — no editorializing, no forecasting, no opinions. State what happened, what data showed, what changed. DO NOT use: "is likely to", "would be expected to", "looking ahead", "going forward", "outlook", "expected to", "cautiously optimistic", "remains to be seen", "continues to grow", "markets remain volatile", "positive outlook", "encouraging", "concerning", "worrying", "promising". DO NOT discuss stock market movements, equity index levels, or stock performance (e.g. TSX, S&P 500, Dow, NASDAQ gains/losses). Rate changes, yield changes, FX, and bond markets ARE fair game.
 
 OUTPUT: Valid JSON only. No markdown. No text outside the JSON.
 
@@ -1025,7 +1026,7 @@ SCHEMA:
         {{"label": "SHORT LABEL", "value": "latest value with unit", "change": "+/- change vs prior period or empty string"}},
         "Pick 5-7 indicators most relevant to THIS WEEK's story. Always include BoC rate, GDP, CPI, unemployment. Fill remaining slots with whichever indicators are most newsworthy this week (e.g. trade balance, housing starts, employment change, wage growth, oil price, CAD/USD, 10Y yield). Labels should be SHORT (1-2 words, uppercase)."
     ],
-    "executive_summary": "<ul class='list-disc list-inside space-y-2 text-slate-700'><li>8-12 bullets with <sup>N</sup> citations and <strong> on key figures</li></ul>",
+    "executive_summary": "<p>Lead paragraph with dominant story and <strong>key figure</strong>.<sup>1</sup></p><p>Related development with transition.<sup>2</sup></p><p>Policy or trade thread.<sup>3</sup></p><p>Closing paragraph tying themes together.<sup>4</sup></p>",
     "metrics": {{
         "realGdp": "", "nomGdp": "", "outputGap": "", "cpi": "", "shelterCpi": "",
         "bocRate": "{hard_data['boc_rate']}", "unemployment": "", "participation": "",
@@ -1042,7 +1043,7 @@ SCHEMA:
         {{"region": "United Kingdom", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": ""}}, "analysis": "<p>Flowing prose...</p>", "sources": []}}
     ],
     "globalVectors": {{"us": "", "china": "", "eu": ""}},
-    "consumer_pulse": "<ul class='list-disc list-inside space-y-2 text-slate-700'><li>6-8 bullets, no footnote citations, observational tone</li></ul>",
+    "consumer_pulse": "<p>Lead paragraph on dominant consumer sentiment thread.</p><p>Secondary theme with transition.</p><p>Divergences or counterpoints in public discussion.</p>",
     "indicatorContextLines": {{"bocRate": "", "cpi": "", "unemployment": "", "housingStarts": "", "realGdp": ""}},
     "watchlist": [
         {{
@@ -1087,9 +1088,9 @@ RECENT ARTICLES (grouped by industry — cite by article number, use URLs exactl
 
 Write:
 
-1. INDUSTRY EXECUTIVE SUMMARY (8-12 bullet points):
-Format as HTML: <ul class="list-disc list-inside space-y-2 text-slate-700"><li>...</li></ul>
-Each bullet: one specific industry development that occurred, with figures and citations. Lead with the single biggest sectoral data release or event. Report what happened across sectors. NO forecasting, NO "expected to", NO "looking ahead". Every bullet ends with <sup>N</sup>.
+1. INDUSTRY EXECUTIVE SUMMARY (4-6 short paragraphs, 300-450 words):
+Format as HTML paragraphs: <p>paragraph text</p>
+Write as flowing narrative prose — NOT bullet points. Each paragraph covers a coherent industry thread. Use transitions between paragraphs. Lead with the single biggest sectoral data release or event. Group related sector developments together thematically. Report what happened across sectors. NO forecasting, NO "expected to", NO "looking ahead". Every claim backed by <sup>N</sup> citation.
 
 2. SECTOR ANALYSIS — goodsIndustries: Exactly 5 goods-producing sectors. Per sector: 150 words in bullets. 3-digit NAICS subsector commentary where data supports.
    For each:
@@ -1118,7 +1119,7 @@ OUTPUT: Valid JSON only. No markdown. No text outside JSON.
 
 SCHEMA:
 {{
-    "industry_executive_summary": "<ul class='list-disc list-inside space-y-2 text-slate-700'><li>8-12 bullets with <sup>N</sup> citations</li></ul>",
+    "industry_executive_summary": "<p>Lead paragraph with dominant sectoral development.<sup>1</sup></p><p>Related industry thread with transition.<sup>2</sup></p><p>Secondary sectors and cross-cutting themes.<sup>3</sup></p>",
     "goodsIndustries": [
         {{
             "code": "11", "name": "Agriculture", "mm": "", "yy": "",

@@ -321,6 +321,7 @@ async function renderTLDR(){
 }
 function bulletsToParas(html){
   // Convert <ul><li>...</li></ul> bullet lists into <p> paragraphs for narrative flow
+  // Also handles content that's already <p> paragraphs (passes through unchanged)
   if(!html)return'';
   return html
     .replace(/<ul[^>]*>/gi,'')
