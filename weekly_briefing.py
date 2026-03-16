@@ -398,15 +398,16 @@ PROJECT STATS:
 Total: {overall.get('total_projects', 0)}, Active: {overall.get('active_projects', 0)}, Value: ${overall.get('total_value_millions', 0)/1000:.1f}B
 
 Return a JSON array of exactly 4 objects. Each object must have:
-- "type": one of "bar", "horizontal_bar", "doughnut", "line"
+- "type": one of "bar", "horizontal_bar", "doughnut"
 - "title": short chart title (3-6 words)
 - "subtitle": one sentence connecting the chart to this week's story
 - "data_source": one of "indicators", "commodities", "projects", "sectors"
-- "metric": what to measure — "value", "count", "pct_change", "price"
+- "metric": what to measure — "value" (dollar amounts), "count" (number of items), "pct_change" (percentage change)
+- "unit": axis label unit — "$" for dollars, "%" for percentages, "K" for thousands, "projects" for project counts, or a descriptive unit like "jobs" or "units". This controls the axis labels. CRITICAL: match the unit to what the data actually represents. Employment data uses "K" or "jobs", NOT "$". Project counts use "projects", NOT "$".
 - "filter": object with optional keys: "names" (array of indicator/commodity names to include), "statuses" (array), "sectors" (array), "provinces" (array), "top_n" (number)
 - "group_by": one of "name", "status", "sector", "province", "category"
 - "sort": "desc" or "asc"
-- "insight": one sentence insight to display below the chart
+- "insight": one sentence factual insight to display below the chart
 
 Rules:
 - Each chart should visualize a DIFFERENT aspect (don't repeat topics)
@@ -414,6 +415,7 @@ Rules:
 - At least one must be about commodities or markets
 - Subtitles must reference specific numbers from the data
 - Keep it factual — no editorializing
+- CRITICAL: metric and unit MUST match the data. Employment/jobs = count + "K". Dollar values = value + "$". Percentage changes = pct_change + "%". Project counts = count + "projects".
 
 Return ONLY the JSON array, no other text."""
 

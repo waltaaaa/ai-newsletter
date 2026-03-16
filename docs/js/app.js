@@ -502,15 +502,31 @@ async function renderInfographics(){
     const chartKey='_ig_'+canvasId;
     if(charts[chartKey])charts[chartKey].destroy();
 
-    const opts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:isDoughnut,position:'right',labels:{boxWidth:10,padding:8,font:{family:'Outfit',size:11},color:'#1a2744',usePointStyle:true,pointStyle:'circle'}},tooltip:{...ttCfg,callbacks:{label:ctx=>{
-      if(src==='commodities')return(ctx.raw>=0?'+':'')+ctx.raw.toFixed(1)+'%';
-      if(metric==='value')return fv(ctx.raw);
-      return fmtNum(ctx.raw,0)+(src==='projects'?' projects':'');
-    }}}}};
+    // Determine unit and formatting from directive
+    const unit=dir.unit||'';
+    const isCurrency=metric==='value'||unit==='$'||unit==='CAD';
+    const isPct=src==='commodities'||metric==='pct_change'||unit==='%';
+    const isCount=metric==='count'||(!isCurrency&&!isPct);
+    const unitSuffix=unit&&unit!=='$'&&unit!=='%'&&unit!=='CAD'?' '+unit:'';
+
+    function fmtAxis(v){
+      if(isPct)return(v>=0?'+':'')+v+'%';
+      if(isCurrency)return fv(v);
+      return fmtNum(v,0)+unitSuffix;
+    }
+    function fmtTooltip(ctx){
+      if(isPct)return(ctx.raw>=0?'+':'')+ctx.raw.toFixed(1)+'%';
+      if(isCurrency)return fv(ctx.raw);
+      return fmtNum(ctx.raw,0)+unitSuffix+(isCount&&src==='projects'?' projects':'');
+    }
+
+    const opts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:isDoughnut,position:'right',labels:{boxWidth:10,padding:8,font:{family:'Outfit',size:11},color:'#1a2744',usePointStyle:true,pointStyle:'circle'}},tooltip:{...ttCfg,callbacks:{label:fmtTooltip}}}};
 
     if(!isDoughnut){
       opts.indexAxis=isHoriz?'y':'x';
-      opts.scales={x:{grid:{display:isHoriz,color:'rgba(0,0,0,0.04)'},ticks:{font:{family:'Outfit',size:10},color:'#5a6a85',callback:src==='commodities'?(v=>(v>=0?'+':'')+v+'%'):metric==='value'?(v=>fv(v)):undefined}},y:{grid:{display:!isHoriz,color:'rgba(0,0,0,0.04)'},ticks:{font:{family:'Outfit',size:10,weight:isHoriz?500:400},color:isHoriz?'#1a2744':'#5a6a85'}}};
+      const valueAxis={grid:{display:true,color:'rgba(0,0,0,0.04)'},ticks:{font:{family:'Outfit',size:10},color:'#5a6a85',callback:fmtAxis}};
+      const labelAxis={grid:{display:false},ticks:{font:{family:'Outfit',size:10,weight:isHoriz?500:400},color:isHoriz?'#1a2744':'#5a6a85'}};
+      opts.scales=isHoriz?{x:valueAxis,y:labelAxis}:{x:labelAxis,y:valueAxis};
     }else{opts.cutout='55%'}
 
     charts[chartKey]=new Chart(canvas,{type:chartType,data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:isDoughnut?0:0,borderRadius:isDoughnut?0:6,barPercentage:0.65,hoverOffset:isDoughnut?6:0}]},options:opts});

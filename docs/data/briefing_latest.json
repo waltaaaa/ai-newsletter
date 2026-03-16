@@ -3845,28 +3845,12 @@
   "generated_at": "2026-03-15T14:06:39Z",
   "infographic_directives": [
     {
-      "type": "bar",
-      "title": "Capital Expenditure Snapshot",
-      "subtitle": "Total capex rose to $26.1B from $21.9B prior period, while machinery capex dipped to $15.3B from $16.2B amid industrial weakness.",
+      "type": "horizontal_bar",
+      "title": "Employment by Key Sector",
+      "subtitle": "Canada lost 84,000 jobs in February 2026, pushing unemployment to 6.7% amid tariff-driven contraction.",
       "data_source": "indicators",
       "metric": "value",
-      "filter": {
-        "names": [
-          "total_capex",
-          "construction_capex",
-          "machinery_capex"
-        ]
-      },
-      "group_by": "name",
-      "sort": "desc",
-      "insight": "Construction capex at $47.6B leads all capex categories, outpacing total capex and machinery capex combined in the current period."
-    },
-    {
-      "type": "bar",
-      "title": "Sector Employment Levels",
-      "subtitle": "Manufacturing employment edged up to 249.4K while mining/oil & gas fell to 340.0K from 343.6K, reflecting uneven labour market pressures.",
-      "data_source": "indicators",
-      "metric": "value",
+      "unit": "K",
       "filter": {
         "names": [
           "mining_og_employment",
@@ -3876,31 +3860,60 @@
       },
       "group_by": "name",
       "sort": "desc",
-      "insight": "Construction employment at 1,986.7K is more than five times larger than manufacturing employment at 249.4K across tracked sectors."
+      "insight": "Construction employment held steady at 1,986.7K while mining & oil/gas slipped to 340K, reflecting broad labour market softening across goods-producing industries."
+    },
+    {
+      "type": "bar",
+      "title": "Capital Expenditure Trends",
+      "subtitle": "Total capex rose 19.2% quarter-over-quarter to $26.1B even as machinery capex fell from $16.2B to $15.3B.",
+      "data_source": "indicators",
+      "metric": "pct_change",
+      "unit": "%",
+      "filter": {
+        "names": [
+          "total_capex",
+          "construction_capex",
+          "machinery_capex"
+        ]
+      },
+      "group_by": "name",
+      "sort": "desc",
+      "insight": "Construction capex surged 15.3% to $47.6B, offsetting a 5.6% decline in machinery capex — signaling firms are investing in structures while deferring equipment upgrades amid uncertainty."
     },
     {
       "type": "doughnut",
-      "title": "Active vs. All Projects",
-      "subtitle": "With 1,418 of 2,329 total tracked projects currently active, project pipeline activity remains a key indicator amid GDP contraction.",
-      "data_source": "projects",
-      "metric": "count",
-      "filter": {},
-      "group_by": "status",
+      "title": "Resource Export Composition",
+      "subtitle": "Forestry exports totaled $4.4B and agricultural exports $32.1B as Canada's trade deficit widened to $3.6 billion in January 2026.",
+      "data_source": "indicators",
+      "metric": "value",
+      "unit": "$",
+      "filter": {
+        "names": [
+          "agri_exports",
+          "mineral_exports",
+          "forestry_exports"
+        ]
+      },
+      "group_by": "name",
       "sort": "desc",
-      "insight": "Active projects represent approximately 60.9% of the total 2,329 tracked projects, leaving nearly 40% in non-active stages."
+      "insight": "Agricultural exports dominate at $32.1B, dwarfing forestry at $4.4B and mineral exports at $100M, underscoring Canada's heavy reliance on agri-trade amid widening deficits."
     },
     {
-      "type": "horizontal_bar",
-      "title": "Projects by Sector",
-      "subtitle": "Sector distribution of 2,329 tracked projects reveals where capital commitments are concentrated as tariff pressures weigh on industrial output.",
-      "data_source": "projects",
-      "metric": "count",
+      "type": "bar",
+      "title": "TSX vs S&P 500",
+      "subtitle": "With Brent crude at $98.91 and gold at $5,062, resource tailwinds help support the TSX composite at 32,542.",
+      "data_source": "indicators",
+      "metric": "value",
+      "unit": "points",
       "filter": {
-        "top_n": 8
+        "names": [
+          "tsx_composite",
+          "sp500"
+        ]
       },
-      "group_by": "sector",
+      "group_by": "name",
       "sort": "desc",
-      "insight": "The top 8 sectors by project count capture the breadth of Canada's capital pipeline across resource, infrastructure, and industrial categories."
+      "insight": "The TSX composite at 32,542 trades nearly 5x the S&P 500 level in index points, buoyed by elevated commodity prices despite broad economic headwinds."
     }
   ]
 }
