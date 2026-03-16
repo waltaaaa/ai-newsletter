@@ -208,28 +208,23 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .edit-form .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .edit-feedback{padding:6px 10px;border-radius:5px;font-size:var(--text-xs);margin-top:6px;display:none}
 /* Project table */
-.project-table-wrap{width:100%;max-width:100%;overflow-x:auto;border-radius:var(--radius-md)}
-.project-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);background:rgba(255,255,255,0.05);color:#FFFFFF;table-layout:fixed}
-.project-table thead th{position:sticky;top:var(--nav-height,44px);background:rgba(255,255,255,0.05);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.3px;color:rgba(255,255,255,0.65);padding:10px 8px;text-align:left;border-bottom:2px solid var(--border-strong);cursor:pointer;user-select:none;z-index:10;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.project-table thead th:hover{color:#FFFFFF}
-.project-table tbody tr{border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .1s;background:rgba(255,255,255,0.05)}
-.project-table tbody tr:nth-child(even){background:rgba(255,255,255,0.03)}
-.project-table tbody tr:hover{background:rgba(96,165,250,0.10)}
-.card .project-table{background:transparent;color:#1a2744}
-.card .project-table thead th{background:rgba(0,0,0,0.03);color:#5a6a85;border-bottom-color:rgba(0,0,0,0.10)}
-.card .project-table thead th:hover{color:#1a2744}
-.card .project-table tbody tr{background:transparent;border-bottom-color:rgba(0,0,0,0.06)}
-.card .project-table tbody tr:nth-child(even){background:rgba(0,0,0,0.02)}
-.card .project-table tbody tr:hover{background:rgba(96,165,250,0.08)}
-.project-table td{padding:10px 8px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.project-table-wrap{width:100%;max-width:100%;overflow-x:auto;border-radius:var(--radius-lg);background:var(--glass-bg);border:1px solid var(--glass-border);box-shadow:var(--shadow-sm);backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur))}
+.project-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);color:#1a2744;table-layout:fixed}
+.project-table thead th{position:sticky;top:var(--nav-height,44px);background:rgba(245,247,250,0.98);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.3px;color:#5a6a85;padding:12px 10px;text-align:left;border-bottom:2px solid rgba(0,0,0,0.08);cursor:pointer;user-select:none;z-index:10;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.project-table thead th:hover{color:#1a2744}
+.project-table tbody tr{border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;transition:background .1s;background:#ffffff}
+.project-table tbody tr:nth-child(even){background:#f9fafb}
+.project-table tbody tr:hover{background:rgba(96,165,250,0.08)}
+.project-table td{padding:12px 10px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .project-table .col-value{width:90px}.project-table .col-name{width:22%}.project-table .col-province{width:50px}.project-table .col-proponent{width:12%}.project-table .col-updated{width:70px}.project-table .col-source{width:50px}
-.col-value{font-family:var(--font-mono);font-weight:600;white-space:nowrap}
-.col-name{font-weight:600}.col-province{white-space:nowrap}
+.col-value{font-family:var(--font-mono);font-weight:600;white-space:nowrap;color:#1a2744}
+.col-name{font-weight:600;color:#1a2744}.col-province{white-space:nowrap}
 .col-cma{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .col-proponent{color:#5a6a85;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-updated{color:#5a6a85}.col-source a{color:#2563EB}
 .col-updated{white-space:nowrap}.col-source a{color:#2563EB;text-decoration:none}
 /* Project expansion */
-.project-expand{padding:16px 24px;background:rgba(255,255,255,0.05);border-bottom:2px solid var(--border-light)}
+.project-expand{padding:16px 24px;background:#f0f4f8;border-bottom:2px solid rgba(0,0,0,0.06);color:#1a2744}
 .project-timeline{position:relative;padding-left:20px;margin:12px 0}
 .project-timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--border-light)}
 .timeline-entry{position:relative;padding:8px 0 8px 16px;font-size:var(--text-sm)}
