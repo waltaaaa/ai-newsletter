@@ -378,21 +378,49 @@ async function renderEditorialFlow(){
     }
   }
 
+  // Generate section subtitles from this week's data
+  function _firstSentence(html){
+    if(!html)return '';
+    const plain=html.replace(/<[^>]+>/g,'');
+    const s=plain.match(/[^.!?]+[.!?]/);
+    return s?s[0].trim():'';
+  }
+  const industrySub=_firstSentence(D.industry_executive_summary||'');
+  const marketsSub=(()=>{
+    const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
+    const idx=(fm.indices||[])[0];
+    const wti=indicators.find(x=>x.indicator_name==='wti'||x.indicator_name==='wti_oil');
+    const parts=[];
+    if(idx)parts.push(`TSX at ${idx.value||'N/A'}${idx.change?' ('+idx.change+')':''}`);
+    if(wti)parts.push(`WTI at $${wti.value}`);
+    return parts.join(' · ')||'Weekly market movements and commodity prices';
+  })();
+  const pulseSub=_firstSentence(D.consumer_pulse||'')||'Sentiment signals from Reddit, Google Trends, and social media';
+
   // Assemble — 4 sections: Overview, Industry, Markets, Consumer Pulse
   flow.innerHTML=`
     <div id="tldrMapSection"></div>
     ${execWithImg}
     <div class="ed-clear"></div>
 
-    <div class="ed-section"><div class="ed-section-title">Industry Overview</div></div>
+    <div class="ed-section">
+      <div class="ed-section-title">Industry Overview</div>
+      <div class="ed-section-subtitle">${san(industrySub)}</div>
+    </div>
     ${_weaveChart(industryHtml)}
     <div class="ed-clear"></div>
 
-    <div class="ed-section"><div class="ed-section-title">Financial Markets</div></div>
+    <div class="ed-section">
+      <div class="ed-section-title">Financial Markets</div>
+      <div class="ed-section-subtitle">${san(marketsSub)}</div>
+    </div>
     <div id="tldrMarketsSection"></div>
     <div class="ed-clear"></div>
 
-    <div class="ed-section"><div class="ed-section-title">Consumer Pulse</div><div class="ed-section-sub">Sentiment signals from Reddit, Google Trends, and social media</div></div>
+    <div class="ed-section">
+      <div class="ed-section-title">Consumer Pulse</div>
+      <div class="ed-section-subtitle">${san(pulseSub)}</div>
+    </div>
     <div id="tldrWordCloud" class="ed-wordcloud">
       <div class="ed-wc-title">Economic Sentiment</div>
       <div class="ed-wc-sub">Top themes from news articles and public discussion</div>
