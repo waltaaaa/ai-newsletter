@@ -981,11 +981,12 @@ RECENT NEWS AND PRESS RELEASES (cite by article number):
 
 Write:
 
-1. EXECUTIVE SUMMARY (3-4 short paragraphs, 200-300 words)
+1. EXECUTIVE SUMMARY (4-6 short paragraphs, 350-450 words)
 Format as HTML paragraphs: <p>paragraph text</p>
 This is a TL;DR — be concise and direct. Every sentence must carry a specific data point or fact. Cut filler, qualifiers, and scene-setting. No throat-clearing ("This week saw...", "The data revealed...") — lead with the fact.
 Each paragraph is 2-3 sentences max. Use <strong> tags on key figures. Use brief transitions between paragraphs.
-Structure: Lead paragraph states the week's single biggest story with its key number. Second paragraph covers the next 2-3 most important data points. Third paragraph covers policy actions or project developments. Optional fourth paragraph only if there's a genuinely significant cross-cutting theme.
+Structure: Lead paragraph states the week's single biggest national story with its key number. Second paragraph covers the next 2-3 most important national data points. Third paragraph covers notable provincial developments — cite specific provinces, project names, and dollar figures where available (e.g. "Ontario approved a $2.1B transit expansion", "Alberta's oil sands investment reached $X"). Fourth paragraph covers federal or provincial policy actions and project developments. Optional fifth paragraph for a genuinely significant cross-cutting theme connecting national and provincial trends.
+Draw from BOTH national indicators AND provincial data/projects when reporting. Provincial stories that carry significant dollar values or affect multiple sectors deserve mention alongside national macro data.
 NO forecasting, NO predictions, NO forward-looking language. Every claim backed by <sup>N</sup> citation.
 
 2. NATIONAL ANALYSIS (4-5 short paragraphs, 250-400 words total)
@@ -1026,7 +1027,7 @@ SCHEMA:
         {{"label": "SHORT LABEL", "value": "latest value with unit", "change": "+/- change vs prior period or empty string"}},
         "Pick 5-7 indicators most relevant to THIS WEEK's story. Always include BoC rate, GDP, CPI, unemployment. Fill remaining slots with whichever indicators are most newsworthy this week (e.g. trade balance, housing starts, employment change, wage growth, oil price, CAD/USD, 10Y yield). Labels should be SHORT (1-2 words, uppercase)."
     ],
-    "executive_summary": "<p>Lead paragraph with dominant story and <strong>key figure</strong>.<sup>1</sup></p><p>Related development with transition.<sup>2</sup></p><p>Policy or trade thread.<sup>3</sup></p><p>Closing paragraph tying themes together.<sup>4</sup></p>",
+    "executive_summary": "<p>Lead paragraph with dominant national story and <strong>key figure</strong>.<sup>1</sup></p><p>Supporting national data points.<sup>2</sup></p><p>Notable provincial developments with specific projects and values.<sup>3</sup></p><p>Policy actions and project developments.<sup>4</sup></p><p>Cross-cutting national-provincial theme.<sup>5</sup></p>",
     "metrics": {{
         "realGdp": "", "nomGdp": "", "outputGap": "", "cpi": "", "shelterCpi": "",
         "bocRate": "{hard_data['boc_rate']}", "unemployment": "", "participation": "",
