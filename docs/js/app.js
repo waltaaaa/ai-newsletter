@@ -385,38 +385,90 @@ async function renderEditorialFlow(){
   if(pqItems[0])pq1=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[0].label}</div>${pqItems[0].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[0].change})</span></div>`;
   if(pqItems[1])pq2=`<div class="editorial-pullquote"><div class="pq-label">${pqItems[1].label}</div>${pqItems[1].value} <span style="font-size:var(--text-sm);color:#64748B;font-weight:400">(${pqItems[1].change})</span></div>`;
 
-  // Assemble — clean single-column with charts as pairs between sections
+  // Build Canada map infographic from project data
+  let mapHtml='';
+  try{
+    const projData=await fetchJSON('projects_all.json');
+    const projects=Array.isArray(projData)?projData:[];
+    if(projects.length>10){
+      const byCnt={};const byVal={};
+      projects.forEach(p=>{const pv=normProvince(p.province);if(pv){byCnt[pv]=(byCnt[pv]||0)+1;byVal[pv]=(byVal[pv]||0)+parseNumericValue(p.value)}});
+      const maxCnt=Math.max(...Object.values(byCnt),1);
+      // Color scale: light blue to deep blue based on project count
+      const provFill=(code)=>{const n=byCnt[code]||0;const t=Math.min(n/maxCnt,1);const r=Math.round(219-t*180);const g=Math.round(234-t*140);const b=Math.round(254-t*60);return`rgb(${r},${g},${b})`};
+      const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$'+Math.round(v);
+      // Province path data (simplified outlines)
+      const PROV_PATHS={
+        BC:'M151.8,281.2l1.7,2.6l.9,3.5l4.3,1.1l3-3.3l2.6,1.3l7.3.6l5.2-2.2l.9,7.2h3v-3l3,.2l7.5,8.9l5,3l-2.6,4.1l1.1,1.1l9.7,2l.2,4.3l2.6.4l.6-6.5l4.1-1.1l3,4.6l6.5,3l3.2.6l2.2-2.6l.2-4.1l3.9-2.4l1.3,3.5l-3.4,6.1l.4,3l1.9-3l3.9-3.5l.2-4.6l-2.2-3.5l.6-2.8l5.2-2.6l2.4,1.7l.4,15.2l3.7-3.3l2.2,1.3l-3,5.2l3.9.9l5.6-8.7l4.7,5l-1.9,8.9l-4.7,2.6l-4.5-2.2l-8.2,1.7l.9,2.8l-2.2,3.5l-6.7,1.5l-7.5,5.9l-6.7,8.9l-.9,2.8l4.5,1.7l1.7,4.3l6.2,6.3l9.9,4.3l-2.2,10l-.2,2.8l2.6,1.7l3.4-4.6l.4-8.7l5.4-.2l2.6-5l.4-7.6l6.9-13.5l8.6,3l4.5,6.3l-1.9,6.3l3.4,2l8.4-5.6l2.4,15.4l7.8,9.3l.2,4.8l-8.6,2.2l-4.1,4.3l-8.6-2l-4.3-.2l-7.5,5.9',
+        AB:'M192,355l0-30l20,0l0,30z',
+        SK:'M212,355l0-30l16,0l0,30z',
+        MB:'M228,355l0-30l14,0l0,30z',
+        ON:'M242,340l10,5l12,-2l8,10l-5,15l-20,5l-15,-10l5,-15z',
+        QC:'M262,320l15,5l10,15l-5,12l-15,5l-10,-15z'
+      };
+      // Annotations for top provinces
+      const topProvs=Object.entries(byCnt).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      let annotations='';
+      const labelPos={ON:[255,365],QC:[278,340],BC:[165,340],AB:[202,340],SK:[220,340],MB:[235,340],NS:[295,365],NB:[280,360]};
+      topProvs.forEach(([code,cnt])=>{
+        const pos=labelPos[code]||[220,350];
+        const val=byVal[code]||0;
+        annotations+=`<text x="${pos[0]}" y="${pos[1]}" font-family="Outfit" font-size="7" font-weight="700" fill="#0f1b33" text-anchor="middle">${code}</text>`;
+        annotations+=`<text x="${pos[0]}" y="${pos[1]+9}" font-family="Outfit" font-size="6" fill="#475569" text-anchor="middle">${cnt} projects</text>`;
+        if(val>1e6)annotations+=`<text x="${pos[0]}" y="${pos[1]+17}" font-family="Outfit" font-size="5.5" fill="#2563EB" text-anchor="middle">${fv(val)}</text>`;
+      });
+      mapHtml=`<div class="ed-map"><div class="ec-title">Capital Projects by Province</div><div class="ec-sub">${projects.length} projects tracked across ${Object.keys(byCnt).length} provinces</div>
+        <svg viewBox="126 250 190 160" width="100%" height="auto" style="max-height:220px">
+          <path fill="${provFill('BC')}" stroke="#fff" stroke-width="0.5" d="M151.8,281.2l1.7,2.6l.9,3.5l4.3,1.1l3-3.3l2.6,1.3l7.3.6l5.2-2.2l.9,7.2h3v-3l3,.2l7.5,8.9l5,3l-2.6,4.1l1.1,1.1l9.7,2l.2,4.3l2.6.4l.6-6.5l4.1-1.1l3,4.6l6.5,3l3.2.6l2.2-2.6l.2-4.1l3.9-2.4l1.3,3.5l-3.4,6.1l.4,3l1.9-3l3.9-3.5l.2-4.6l-2.2-3.5l.6-2.8l5.2-2.6l2.4,1.7l.4,15.2l3.7-3.3l-61.1-10l-1-4.1l-5.6-5.2v-4.3l.9-3.9l-.4-2.2l-2.2-2.2l-.4-3.5l5.6-3.9l-3.4-18.7l-4.7-.2l-4.3-5.6z"/>
+          <rect x="175" y="285" width="12" height="55" rx="1" fill="${provFill('AB')}" stroke="#fff" stroke-width="0.5"/>
+          <rect x="187" y="285" width="11" height="55" rx="1" fill="${provFill('SK')}" stroke="#fff" stroke-width="0.5"/>
+          <rect x="198" y="290" width="12" height="50" rx="1" fill="${provFill('MB')}" stroke="#fff" stroke-width="0.5"/>
+          <path fill="${provFill('ON')}" stroke="#fff" stroke-width="0.5" d="M210,310l15,-5l20,5l10,15l-5,20l-8,5l-20,-5l-15,-10l-5,-15z"/>
+          <path fill="${provFill('QC')}" stroke="#fff" stroke-width="0.5" d="M255,280l10,5l15,20l5,15l-10,15l-15,5l-10,-10l5,-20l-5,-15z"/>
+          <path fill="${provFill('NB')}" stroke="#fff" stroke-width="0.5" d="M270,330l8,3l5,8l-3,5l-8,2l-5,-8z"/>
+          <path fill="${provFill('NS')}" stroke="#fff" stroke-width="0.5" d="M280,335l10,4l3,6l-5,4l-8,-2l-3,-7z"/>
+          <path fill="${provFill('NL')}" stroke="#fff" stroke-width="0.5" d="M285,295l8,5l3,10l-5,8l-8,-3l-3,-10z"/>
+          <circle cx="290" cy="345" r="4" fill="${provFill('PE')}" stroke="#fff" stroke-width="0.5"/>
+          ${annotations}
+        </svg>
+        <div class="ed-map-legend"><span><span class="swatch" style="background:#DBEAFE"></span>Fewer</span><span><span class="swatch" style="background:#3B82F6"></span>More projects</span></div>
+        <div class="ec-source">Source: Pipeline database</div>
+      </div>`;
+    }
+  }catch(e){console.warn('Map data:',e)}
+
+  // Assemble — charts floated into text, map woven in
   flow.innerHTML=`
+    <div class="ed-chart-left" id="tldrMacroCard">
+      <div class="ec-title">Macro Pulse</div><div class="ec-sub">Key indicators — current vs. previous</div>
+      <div style="height:180px;position:relative"><canvas id="tldrMacroChart"></canvas></div>
+      <div class="ec-source">Sources: Statistics Canada, Bank of Canada</div>
+    </div>
     ${execHtml}
     ${pq1}
+    <div class="ed-clearfix"></div>
     <div class="editorial-indicators"><section id="keyIndicators"></section></div>
-    <div class="ed-chart-row">
-      <div class="ed-chart" id="tldrMacroCard">
-        <div class="ec-title">Macro Pulse</div><div class="ec-sub">Key indicators — current vs. previous</div>
-        <div style="height:200px;position:relative"><canvas id="tldrMacroChart"></canvas></div>
-        <div class="ec-source">Sources: Statistics Canada, Bank of Canada</div>
-      </div>
-      <div class="ed-chart" id="tldrCommodityCard">
-        <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
-        <div style="height:200px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
-        <div class="ec-source">Source: Yahoo Finance</div>
-      </div>
-    </div>
-    ${pq2}
-    <div class="ed-chart-row">
-      <div class="ed-chart" id="briefPipelineCard">
-        <div class="ec-title">Project Pipeline</div><div class="ec-sub">Capital projects by lifecycle stage</div>
-        <div style="height:200px;position:relative"><canvas id="briefPipelineChart"></canvas></div>
-        <div class="ec-source">Source: Pipeline database</div>
-      </div>
-      <div class="ed-chart" id="briefSectorCard">
-        <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
-        <div style="height:200px;position:relative"><canvas id="briefSectorChart"></canvas></div>
-        <div class="ec-source">Source: Pipeline database</div>
-      </div>
+    <div class="ed-chart-right" id="tldrCommodityCard">
+      <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
+      <div style="height:180px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
+      <div class="ec-source">Source: Yahoo Finance</div>
     </div>
     ${industryHtml}
+    <div class="ed-clearfix"></div>
+    ${mapHtml}
+    <div class="ed-chart-left" id="briefPipelineCard">
+      <div class="ec-title">Project Pipeline</div><div class="ec-sub">Capital projects by lifecycle stage</div>
+      <div style="height:180px;position:relative"><canvas id="briefPipelineChart"></canvas></div>
+      <div class="ec-source">Source: Pipeline database</div>
+    </div>
     ${pulseHtml}
+    ${pq2}
+    <div class="ed-clearfix"></div>
+    <div class="ed-chart-right" id="briefSectorCard">
+      <div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div>
+      <div style="height:180px;position:relative"><canvas id="briefSectorChart"></canvas></div>
+      <div class="ec-source">Source: Pipeline database</div>
+    </div>
   `;
   renderKeyIndicators();
   await renderWovenCharts('tldr');
