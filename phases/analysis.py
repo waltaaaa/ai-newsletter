@@ -974,16 +974,20 @@ Each bullet is 1-2 sentences with a specific fact, figure, or development. Use <
 Cover: top macro story, supporting data, risks/counterpoints, consumer sentiment texture, upcoming catalysts.
 Every bullet ends with <sup>N</sup> citation.
 
-2. NATIONAL ANALYSIS (8-12 bullet points)
-Format as HTML: <ul class="list-disc list-inside space-y-2 text-slate-700"><li>...</li></ul>
-Each bullet: one specific data point, event, or development with numbers and dates.
-Cover: dominant domestic theme, data deep-dive, secondary developments, implications.
-Every bullet ends with <sup>N</sup> citation.
+2. NATIONAL ANALYSIS (4-6 flowing prose paragraphs, 400-550 words total)
+Format as HTML paragraphs: <p>paragraph text</p>
+Write in the style of TD Economics Quarterly Economic Forecast — professionally conversational, data-embedded, narrative-driven.
+Structure: Open with the dominant macro theme and its key data point. Second paragraph: deep-dive into supporting data (embed specific figures inline: "grew at an annualized rate of 1.3%", "less than half its 2024 pace"). Third paragraph: secondary developments or counterpoints ("However," "Not all sectors reflected this pattern"). Final paragraph: forward-looking risks and catalysts with conditional framing ("If the CUSMA review proceeds as expected...", "should tariffs remain at current levels...").
+Use hedging language naturally: "is likely to", "would be expected to", "suggests some sluggishness has materialized". Reference period-over-period changes and comparisons. Every claim backed by <sup>N</sup> citation. No bullet points.
 
-3. GLOBAL VECTORS (6-8 bullets each):
-Format each as HTML: <ul class="list-disc list-inside space-y-2 text-slate-700"><li>...</li></ul>
-US: impact on Canadian trade, rates, currency. China: impact on commodities, investment. EU: impact on trade, regulatory alignment. UK: impact on trade, financial linkages.
-Per vector: first bullets cover what happened, last bullets cover what it means for Canada. No generic commentary. Each bullet ends with <sup>N</sup>.
+3. GLOBAL ANALYSIS (3-4 flowing prose paragraphs per region, 250-350 words each):
+Format each as HTML paragraphs: <p>paragraph text</p>
+Write like a TD Economics global outlook section — each region gets its own narrative arc.
+US: Open with headline GDP/employment fact, embed rate/inflation data inline, close with implications for Canadian trade, rates, and currency. Use transitions: "Meanwhile," "In contrast," "Looking ahead,".
+China: Lead with growth data, discuss commodity demand implications for Canadian exporters, note policy responses. Use: "albeit," "this most recent development will...", temporal specifics ("second half of 2026").
+EU: Frame around fiscal/monetary policy shifts, defense spending, and trade implications for Canada. Acknowledge lags between announcements and impact.
+UK: Cover trade relationship, financial linkages, rate differentials.
+Per region: first paragraphs cover what happened with embedded data, final paragraph connects back to Canada. Every claim backed by <sup>N</sup> citation. No bullet points.
 
 4. INDICATOR CONTEXT LINES: 1 sentence each, under 20 words, plain English for: bocRate, cpi, unemployment, housingStarts, realGdp.
 
@@ -997,7 +1001,7 @@ Each bullet: one specific consumer trend, sentiment signal, or discussion topic.
 
 8. WORD CLOUD TOPICS: Extract 40-60 meaningful economic topics/phrases from this week's news. These power a word cloud visualization. Each topic should be 1-3 words, e.g. "tariff threat", "rate cut", "housing affordability", "LNG exports", "auto layoffs", "tech hiring freeze", "lumber prices", "fiscal deficit", "immigration policy". Assign each a sentiment_score (-1.0 to +1.0, negative=bad for Canada, positive=good) and frequency (1-10 importance weight, 10=dominant story). Prioritize specificity over generality. BAD: "economy", "growth", "markets". GOOD: "tariff retaliation", "BoC rate hold", "Alberta oil sands", "EV battery plant".
 
-Style: Bloomberg terminal meets FT editorial. Use bullet points (<ul><li>) for ALL analysis sections — no paragraphs. Every bullet references a specific event, figure, or date. DO NOT discuss stock market movements, equity index levels, or stock performance (e.g. TSX, S&P 500, Dow, NASDAQ gains/losses). Rate changes, yield changes, FX, and bond markets ARE fair game. BANNED: economy continues to grow, markets remain volatile, positive outlook contingent on demand, remains to be seen, going forward.
+Style: TD Economics Quarterly Economic Forecast quality. Executive summary and consumer pulse use bullet points (<ul><li>). National analysis and global analysis use flowing prose paragraphs (<p>) — professionally conversational, data-first but narrative-driven. Embed specific figures inline ("grew at an annualized rate of 1.3%", "three straight quarters of businesses cutting back"). Use hedging devices naturally ("is likely to", "would be expected to", "suggests some sluggishness"). Use connective language: "However,", "Meanwhile,", "Looking ahead,", "In contrast,", "Not all is downtrodden,". Acknowledge uncertainty explicitly: "we do not expect clarity", "it remains unclear how much influence". Present multiple outcomes without advocating. DO NOT discuss stock market movements, equity index levels, or stock performance (e.g. TSX, S&P 500, Dow, NASDAQ gains/losses). Rate changes, yield changes, FX, and bond markets ARE fair game. BANNED: economy continues to grow, markets remain volatile, positive outlook contingent on demand, going forward, cautiously optimistic.
 
 OUTPUT: Valid JSON only. No markdown. No text outside the JSON.
 
@@ -1010,14 +1014,14 @@ SCHEMA:
         "wageGrowth": "", "currentAccount": "", "agCrop": "", "farmCash": ""
     }},
     "national": {{
-        "analysis": "<ul class='list-disc list-inside space-y-2 text-slate-700'><li>8-12 bullets with <sup>N</sup> citations</li></ul>",
+        "analysis": "<p>First paragraph: dominant macro theme with key data point.<sup>1</sup></p><p>Second paragraph: supporting data deep-dive.<sup>2</sup></p><p>Third paragraph: secondary developments or counterpoints.<sup>3</sup></p><p>Final paragraph: forward-looking risks and catalysts.<sup>4</sup></p>",
         "sources": [{{"id": 1, "title": "Publication — Title, Month YYYY", "url": "https://example.com/article"}}]
     }},
     "global": [
-        {{"region": "United States", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": ""}}, "analysis": "<ul class='list-disc list-inside space-y-2 text-slate-700'><li>6-8 bullets with <sup>N</sup> citations</li></ul>", "sources": [{{"id": 1, "title": "", "url": "https://..."}}]}},
-        {{"region": "China", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": ""}}, "analysis": "<ul>...</ul>", "sources": []}},
-        {{"region": "European Union", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": ""}}, "analysis": "<ul>...</ul>", "sources": []}},
-        {{"region": "United Kingdom", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": ""}}, "analysis": "<ul>...</ul>", "sources": []}}
+        {{"region": "United States", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": ""}}, "analysis": "<p>Flowing prose paragraphs with embedded data and <sup>N</sup> citations. 250-350 words.</p>", "sources": [{{"id": 1, "title": "", "url": "https://..."}}]}},
+        {{"region": "China", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": ""}}, "analysis": "<p>Flowing prose...</p>", "sources": []}},
+        {{"region": "European Union", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": ""}}, "analysis": "<p>Flowing prose...</p>", "sources": []}},
+        {{"region": "United Kingdom", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": ""}}, "analysis": "<p>Flowing prose...</p>", "sources": []}}
     ],
     "globalVectors": {{"us": "", "china": "", "eu": ""}},
     "consumer_pulse": "<ul class='list-disc list-inside space-y-2 text-slate-700'><li>6-8 bullets, no footnote citations, observational tone</li></ul>",
