@@ -692,7 +692,8 @@ async function renderInteractiveMap(){
             tooltip.classList.add('visible');
           })
           .on('mousemove',function(event){
-            tooltip.style.left=(event.pageX+14)+'px';
+            const tw=tooltip.offsetWidth||250;
+            tooltip.style.left=(event.pageX-tw-14)+'px';
             tooltip.style.top=(event.pageY-10)+'px';
           })
           .on('mouseout',function(){
