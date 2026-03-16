@@ -607,10 +607,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       <div id="canadaMiniCharts"></div>
       <div id="nationalCharts" style="margin-top:12px"></div>
       <div id="nationalAnalysis" style="margin-top:16px"></div>
-      <div class="ws-row ws-row-2" style="margin-top:16px">
-        <div id="sentimentSection"></div>
-        <div id="policySection"></div>
-      </div>
+      <div id="policySection" style="margin-top:16px"></div>
       <div id="canadaIndicatorDropdown" style="margin-top:16px"></div>
       <section id="indicatorExplorer" style="margin-top:16px"></section>
       <div id="canadaProjectsPreview" style="margin-top:16px"></div>
@@ -649,7 +646,6 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
         <div class="section-banner-sub">Industry trends by NAICS sector</div>
       </div>
     </div>
-    <div id="industryExecSummary" style="margin-bottom:16px"></div>
     <div id="industryToggle" style="display:flex;gap:0;margin-bottom:16px;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--border-light);width:fit-content">
       <button class="ind-toggle active" onclick="toggleIndustryView('all')" data-view="all" style="padding:8px 18px;font-size:var(--text-sm);font-weight:600;border:none;cursor:pointer;transition:all .15s ease">All</button>
       <button class="ind-toggle" onclick="toggleIndustryView('goods')" data-view="goods" style="padding:8px 18px;font-size:var(--text-sm);font-weight:600;border:none;cursor:pointer;transition:all .15s ease">Goods-Producing</button>

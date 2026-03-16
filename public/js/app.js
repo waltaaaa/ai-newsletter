@@ -892,7 +892,6 @@ async function renderCanadaSub(){
     const _natImg=leadImageHtml(natSources,'left');
     $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${_natImg}${san(linkFootnotes(natContent,natSources.length?natSources:(D.sources||[])))}</div>${sourcesFooter(natSources)}</div>`;
   }else{$('nationalAnalysis').innerHTML=''}
-  if(D)renderSentiment();
   renderPolicySection();
   const dd=$('canadaIndicatorDropdown');
   if(dd)dd.innerHTML=renderIndicatorDropdown(indicators,'All National Indicators','_canada');
@@ -1555,58 +1554,6 @@ async function loadIndExpData(){
   try{charts._indExp=new Chart(canvas,chartCfg);}catch(chartErr){console.warn('Chart with annotations failed, retrying without:',chartErr);try{chartCfg.options.plugins={legend:{display:false},tooltip:chartCfg.options.plugins.tooltip};chartCfg.plugins=[];charts._indExp=new Chart(canvas,chartCfg);}catch(e2){console.error('Chart creation failed completely:',e2);}}
 }
 
-/* == Sentiment + Word Cloud == */
-function renderSentiment(){
-  const cs=D.consumer_sentiment;const cp=D.consumer_pulse;
-  if(!cs&&!cp){$('sentimentSection').innerHTML='<div class="card"><div class="card-header">Consumer Sentiment</div><div class="empty-state"><div class="empty-state-text">Consumer sentiment data available after next pipeline run.</div></div></div>';return}
-  let html='<div class="card fade-in"><div class="card-header">Consumer Sentiment</div><div class="sentiment-section">';
-  if(cs){
-    const idx=cs.overall_index!=null?cs.overall_index:(cs.sentiment_index!=null?cs.sentiment_index:'N/A');
-    const lbl=cs.overall_label||cs.sentiment_label||'';
-    const neg=typeof idx==='number'&&idx<-0.1;const pos=typeof idx==='number'&&idx>0.1;
-    const bgc=neg?'var(--status-red-bg)':pos?'var(--status-green-bg)':'var(--status-amber-bg)';
-    const fgc=neg?'var(--status-red)':pos?'var(--status-green)':'var(--status-amber)';
-    html+='<div style="display:flex;align-items:center;gap:12px"><div class="sentiment-badge" style="background:'+bgc+';color:'+fgc+'">'+lbl+' ('+(typeof idx==='number'?idx.toFixed(2):idx)+')</div>';
-    const ss=cs.sources_summary||cs;
-    html+='<div class="sentiment-meta" style="margin-top:0;font-family:var(--font-mono)">'+(ss.reddit_posts||0)+' Reddit posts \u00b7 '+(ss.trends_queries||0)+' trending searches \u00b7 '+(ss.news_comments||0)+' news comments</div></div>';
-  }
-  html+='<details style="margin-top:12px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#475569;padding:6px 0;user-select:none">Word Cloud & Consumer Pulse <span style="font-weight:400;color:#556B7A;font-size:.75rem">(click to expand)</span></summary>';
-  html+='<div style="padding:12px 0"><div class="word-cloud-container" id="wordCloudSvg"></div></div>';
-  html+='<hr style="border:none;border-top:1px solid var(--border-light);margin:8px 0">';
-  if(cp)html+='<div style="padding:12px 0 8px"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:8px">Consumer Pulse</h4><div class="pulse-prose">'+san(cp)+'</div></div>';
-  html+='</details>';
-  if(cs&&cs.categories&&cs.categories.length){
-    html+='<div class="category-bar-container"><h4 style="font-size:var(--text-sm);font-weight:600;margin-bottom:6px;color:#475569">Category Sentiment</h4>';
-    const cats=cs.categories;
-    cats.forEach(cat=>{
-      const label=cat.name||cat.category||'';
-      const n=typeof cat.score==='number'?cat.score:parseFloat(cat.score)||0;
-      const pct=Math.min(Math.abs(n)*100,100);
-      const c=n>0.05?'var(--status-green)':n<-0.05?'var(--status-red)':'var(--text-tertiary)';
-      html+='<div class="category-bar-row"><div class="category-bar-label">'+label+'</div><div class="category-bar-track"><div class="category-bar-fill" style="width:'+pct+'%;background:'+c+'"></div></div><div class="category-bar-score" style="color:'+c+'">'+n.toFixed(2)+'</div></div>';
-    });
-    html+='</div>';
-  }
-  html+='</div></div>';
-  $('sentimentSection').innerHTML=html;
-  const wcTopics=(D.word_cloud_topics&&D.word_cloud_topics.length)?D.word_cloud_topics:(cs&&cs.topics&&cs.topics.length)?cs.topics:extractTopicsFromText();
-  if(wcTopics.length){
-    const det=$('sentimentSection').querySelector('details');
-    if(det){let wcDrawn=false;det.addEventListener('toggle',()=>{if(det.open&&!wcDrawn){wcDrawn=true;setTimeout(()=>renderWordCloud(wcTopics),50)}});}
-  }
-}
-
-function extractTopicsFromText(){
-  const stops=new Set(['the','and','for','are','but','not','you','all','can','had','her','was','one','our','out','has','its','let','say','she','too','use','that','with','have','this','will','your','from','they','been','call','come','each','make','like','long','look','many','over','such','take','than','them','then','what','when','more','some','time','very','most','also','into','just','may','new','now','old','see','way','who','did','get','well','back','much','before','being','does','other','about','after','could','their','which','would','these','only','still','between','through','where','while','should','during','both','under','because','those','since','against','another','around','without','within','across','among','along','however','further','beyond','above','below','until','upon','toward','onto','into','canada','canadian','percent','year','week','month','quarter','rate','data','according','reported','million','billion','said']);
-  let text='';
-  if(D.consumer_pulse)text+=D.consumer_pulse+' ';
-  if(D.executive_summary)text+=D.executive_summary+' ';
-  if(D.national&&D.national.analysis)text+=D.national.analysis+' ';
-  text=text.replace(/<[^>]+>/g,' ').replace(/[^a-zA-Z\s-]/g,' ').toLowerCase();
-  const freq={};
-  text.split(/\s+/).forEach(w=>{w=w.trim();if(w.length>3&&!stops.has(w)){freq[w]=(freq[w]||0)+1}});
-  return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,60).map(([word,count])=>({topic:word,frequency:count,sentiment_score:0}));
-}
 
 function renderWordCloud(topics){
   const container=document.getElementById('wordCloudSvg');
@@ -1821,12 +1768,6 @@ window.toggleIndustryView=function(view){
   renderIndustrySectors();
 };
 function renderIndustries(){
-  const ies=(D&&D.industry_executive_summary)||'';
-  if(ies){
-    $('industryExecSummary').innerHTML='<div class="card fade-in"><div class="card-header">Industry Executive Summary</div><div class="card-body">'+san(ies)+'</div></div>';
-  }else{
-    $('industryExecSummary').innerHTML='';
-  }
   renderIndustrySectors();
 }
 function renderIndustrySectors(){
