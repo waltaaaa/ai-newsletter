@@ -1008,6 +1008,10 @@ OUTPUT: Valid JSON only. No markdown. No text outside the JSON.
 SCHEMA:
 {{
     "headline": "8-12 word newspaper-style headline capturing the week's dominant macro story (e.g. 'BoC Holds Rates as February Jobs Report Shows 84,000 Lost')",
+    "key_indicators": [
+        {{"label": "SHORT LABEL", "value": "latest value with unit", "change": "+/- change vs prior period or empty string"}},
+        "Pick 5-7 indicators most relevant to THIS WEEK's story. Always include BoC rate, GDP, CPI, unemployment. Fill remaining slots with whichever indicators are most newsworthy this week (e.g. trade balance, housing starts, employment change, wage growth, oil price, CAD/USD, 10Y yield). Labels should be SHORT (1-2 words, uppercase)."
+    ],
     "executive_summary": "<ul class='list-disc list-inside space-y-2 text-slate-700'><li>8-12 bullets with <sup>N</sup> citations and <strong> on key figures</li></ul>",
     "metrics": {{
         "realGdp": "", "nomGdp": "", "outputGap": "", "cpi": "", "shelterCpi": "",

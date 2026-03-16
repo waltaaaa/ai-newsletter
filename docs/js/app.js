@@ -653,33 +653,35 @@ function renderDefaultInfographics(projects,comms,ttCfg,fv,palBlue,palCat){
 }
 
 function renderKeyIndicators(){
-  // Helper: look up a value from the indicators[] array by indicator_name
   function indVal(name){const i=indicators.find(x=>x.indicator_name===name);return i?i.value:null}
-  function indDate(name){const i=indicators.find(x=>x.indicator_name===name);return i?fmtDate(i.period):''}
   const m=(D&&D.metrics)||{};const yc=(D&&D.yieldCurve)||[];
   const im=(D&&D.indicatorMeta)||{};
-  const headline=[
-    {label:'POLICY RATE',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/',date:(im.bocRate||{}).period||indDate('overnight_rate'),tsId:'boc_rate'},
-    {label:'GDP YoY',value:m.realGdp||m.gdp||indVal('realGdp')||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.realGdp||{}).period||indDate('realGdp'),tsId:null},
-    {label:'CPI',value:m.cpi||indVal('cpi')||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.cpi||{}).period||indDate('cpi'),tsId:'canada_cpi'},
-    {label:'UNEMPLOYMENT',value:m.unemployment||indVal('unemployment')||'',source:'Statistics Canada',url:'https://www150.statcan.gc.ca/n1/daily-quotidien/en',date:(im.unemployment||{}).period||indDate('unemployment'),tsId:'canada_unemployment'},
-    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',date:fmtDate((D&&(D.updated_at||D.date))||'')||indDate('cad_usd'),tsId:'cadusd'},
-    {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||indVal('goc_10y_yield')||'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',date:fmtDate((D&&(D.updated_at||D.date))||'')||indDate('goc_10y_yield'),tsId:'yield_10y'},
-    {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',date:(im.housingStarts||{}).period||indDate('housingStarts'),tsId:null}
-  ];
+
+  // Pipeline-driven indicators (adapts to each week's narrative)
+  const pipelineKI=D&&D.key_indicators;
+  let headline;
+  if(pipelineKI&&Array.isArray(pipelineKI)&&pipelineKI.length>=4){
+    headline=pipelineKI.map(ki=>({label:ki.label||'',value:ki.value||'',change:ki.change||''}));
+  }else{
+    // Default fallback — core macro indicators
+    headline=[
+      {label:'POLICY RATE',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'',change:(im.bocRate||{}).change||''},
+      {label:'GDP',value:m.realGdp||m.gdp||indVal('realGdp')||'',change:(im.realGdp||{}).change||''},
+      {label:'CPI',value:m.cpi||indVal('cpi')||'',change:(im.cpi||{}).change||''},
+      {label:'UNEMPLOYMENT',value:m.unemployment||indVal('unemployment')||'',change:(im.unemployment||{}).change||''},
+      {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'',change:''},
+      {label:'10Y YIELD',value:(yc.find(y=>y.term==='10Y')||{}).yield||indVal('goc_10y_yield')||'',change:''},
+      {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'',change:(im.housingStarts||{}).change||''}
+    ];
+  }
   let strip='<div class="indicator-strip">';
-  const sparkJobs=[];
-  headline.forEach((h,i)=>{
-    const imKey={POLICY_RATE:'bocRate',GDP_YOY:'realGdp',CPI:'cpi',UNEMPLOYMENT:'unemployment',HOUSING_STARTS:'housingStarts'}[h.label.replace(/ /g,'_')]||'';
-    const meta=im[imKey]||{};const chg=meta.change||'';
+  headline.forEach(h=>{
+    const chg=h.change||'';
     const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
-    const sparkId='spark_ind_'+i;
-    strip+=`<div class="indicator-pill"><div class="indicator-pill-label">${h.label}</div><div class="indicator-pill-value">${h.value||'N/A'}</div>${chg?`<div class="indicator-pill-change ${chgCls}">${chg}</div>`:''}${h.tsId?`<div class="sparkline-wrap"><canvas class="sparkline" id="${sparkId}"></canvas></div>`:''}${h.date?`<div class="indicator-pill-date">${h.date}</div>`:''}<a class="indicator-pill-source" href="${h.url}" target="_blank" rel="noopener noreferrer">${h.source} \u2197</a></div>`;
-    if(h.tsId)sparkJobs.push({canvasId:sparkId,docId:h.tsId,change:chg});
+    strip+=`<div class="indicator-pill"><div class="indicator-pill-label">${h.label}</div><div class="indicator-pill-value">${h.value||'N/A'}</div>${chg?`<div class="indicator-pill-change ${chgCls}">${chg}</div>`:''}</div>`;
   });
   strip+='</div>';
   $('keyIndicators').innerHTML=strip;
-  sparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
 }
 
 
