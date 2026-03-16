@@ -95,7 +95,9 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .card:hover{box-shadow:var(--shadow-md);background:var(--glass-bg-hover)}
 .card-header{font-family:var(--font-heading);font-size:var(--text-lg);font-weight:700;color:#1a2744;margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .card-body{font-size:var(--text-sm);line-height:1.65;color:#2d3a52;padding:4px 6px}
-.card-body li{margin-bottom:6px}
+.card-body p{margin-bottom:14px}
+.card-body p:last-child{margin-bottom:0}
+.card-body li{margin-bottom:8px}
 .card-body strong{color:#2563EB;font-weight:600}
 .card-body sup{color:#2563EB;font-weight:600;cursor:pointer;font-size:.7em}
 .card-body sup:hover{text-decoration:underline}
@@ -158,8 +160,9 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .naics-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--accent-blue-light);color:var(--accent-blue);font-size:var(--text-xs);font-weight:700;padding:2px 8px;border-radius:4px;font-family:var(--font-mono)}
 .sector-card-name{font-size:var(--text-base);font-weight:600;color:#1a2744}
 .sector-card-body{font-size:var(--text-sm);color:#2d3a52;line-height:1.6}
+.sector-card-body p{margin-bottom:12px}
 .sector-card-body ul{padding-left:16px;margin:8px 0}
-.sector-card-body li{margin-bottom:4px}
+.sector-card-body li{margin-bottom:6px}
 .s-energy{border-left-color:#D97706}.s-mining{border-left-color:rgba(255,255,255,0.45)}.s-utilities{border-left-color:#2563EB}.s-construction{border-left-color:#EA580C}
 .s-manufacturing{border-left-color:#4F46E5}.s-trade{border-left-color:#059669}.s-transport{border-left-color:#7C3AED}.s-info{border-left-color:#8B5CF6}
 .s-finance{border-left-color:#059669}.s-realestate{border-left-color:#0891B2}.s-professional{border-left-color:#6366F1}.s-admin{border-left-color:#78716C}
@@ -425,6 +428,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .newsletter-hero::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:#2563EB}
 .newsletter-hero .hero-headline{font-family:var(--font-heading);font-size:var(--text-xl);font-weight:800;color:#0f1b33;line-height:1.25;margin-bottom:12px;letter-spacing:-0.02em}
 .newsletter-hero .hero-prose{font-size:var(--text-sm);line-height:1.7;color:#2d3a52}
+.newsletter-hero .hero-prose li{margin-bottom:10px}
 .newsletter-hero .hero-prose strong{color:#2563EB;font-weight:600}
 .newsletter-hero .hero-prose sup{color:#2563EB;font-weight:600;cursor:pointer;font-size:.7em}
 /* ── National Subtabs ── */
