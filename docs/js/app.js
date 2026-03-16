@@ -1198,9 +1198,9 @@ function sectorCard(s){
   const analysis=s.analysis||'';
   const mm=s.mm||'';const yy=s.yy||'';
   const mmCls=s.isNegative?'change-down':'change-up';
-  let footer='';
-  if(mm||yy)footer='<div style="margin-top:8px;font-size:var(--text-xs);color:#7a8aa5">'+(mm?'M/M: <span class="'+mmCls+'" style="font-family:var(--font-mono)">'+mm+'</span> ':'')+(yy?'Y/Y: <span style="font-family:var(--font-mono)">'+yy+'</span>':'')+(s.indicatorSrc?' · '+s.indicatorSrc:'')+'</div>';
-  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+(analysis?san(analysis):'<em style="color:#7a8aa5">No analysis available.</em>')+footer+'</div></div>';
+  let mmBadge='';
+  if(mm||yy)mmBadge='<div style="display:flex;gap:12px;margin-bottom:8px;font-size:var(--text-xs);color:#7a8aa5">'+(mm?'<span>M/M <span class="'+mmCls+'" style="font-family:var(--font-mono);font-weight:600">'+mm+'</span></span>':'')+(yy?'<span>Y/Y <span style="font-family:var(--font-mono);font-weight:600">'+yy+'</span></span>':'')+(s.indicatorSrc?'<span>'+s.indicatorSrc+'</span>':'')+'</div>';
+  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+mmBadge+(analysis?san(analysis):'<em style="color:#7a8aa5">No analysis available.</em>')+'</div></div>';
 }
 
 /* ====== MARKETS TAB ====== */
