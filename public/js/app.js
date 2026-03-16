@@ -849,59 +849,171 @@ async function renderNational(){
   // Pre-render global player subtabs
   renderAllGlobalPlayers();
 }
-async function renderCanadaSub(){
-  const el=$('canadaHeader');
-  if(el){
-    const projTotal=allProjects.length||(await fetchJSON('projects_all.json').then(d=>Array.isArray(d)?d.length:0).catch(()=>0));
-    el.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:var(--text-xl);font-weight:700">Canada</span></div><span style="font-size:var(--text-xs);color:#556B7A">'+projTotal+' projects tracked nationally</span></div>';
+/* == Indicator Panel + Infographic helpers == */
+function buildIndicatorPanel(title,indRows,canvasId){
+  // Find top mover
+  let topMover=null;let topAbs=0;
+  indRows.forEach(r=>{
+    if(r.change){
+      const n=parseFloat(String(r.change).replace(/[^0-9.\-]/g,''));
+      if(!isNaN(n)&&Math.abs(n)>topAbs){topAbs=Math.abs(n);topMover=r}
+    }
+  });
+  let html='<div class="ed-map" style="position:relative">';
+  html+='<div class="ed-stat-header">'+title+'</div>';
+  html+='<table class="ed-ind-table"><thead><tr><th>Indicator</th><th style="text-align:right">Value</th><th style="text-align:right">Chg</th></tr></thead><tbody>';
+  indRows.forEach(r=>{
+    const chg=r.change||'';
+    const cls=chg.startsWith('-')||chg.startsWith('\u2212')?'change-down':chg.startsWith('+')?'change-up':'';
+    html+='<tr><td class="ind-label">'+r.label+'</td><td class="ind-value">'+r.value+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  // Infographic area
+  const moverLabel=topMover?topMover.label:'Macro Pulse';
+  const moverSub=topMover?(topMover.change+' ('+topMover.value+')'):'Key indicators — current vs. previous';
+  const moverSrc=topMover?(topMover.source||'Statistics Canada'):'Statistics Canada, Bank of Canada';
+  html+='<div style="margin-top:12px;border-top:1px solid rgba(0,0,0,0.06);padding-top:10px">';
+  html+='<div class="ec-title">This Week: '+moverLabel+'</div>';
+  html+='<div class="ec-sub">'+moverSub+'</div>';
+  html+='<div style="height:160px;position:relative"><canvas id="'+canvasId+'"></canvas></div>';
+  html+='<div class="ec-source">'+moverSrc+'</div>';
+  html+='</div></div>';
+  return {html:html,topMover:topMover};
+}
+
+function renderTopMoverChart(canvasId,topMover,allInds,m,im){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  // Destroy existing chart on this canvas
+  const existingKey='_topMover_'+canvasId;
+  if(charts[existingKey]){charts[existingKey].destroy();delete charts[existingKey]}
+  if(!topMover){
+    // Fallback: macro pulse comparison — current vs previous for core indicators
+    const labels=[];const cur=[];const prev=[];
+    const core=[
+      {label:'Unemp',key:'unemployment',mk:'unemployment'},
+      {label:'CPI',key:'cpi',mk:'cpi'},
+      {label:'GDP',key:'realGdp',mk:'realGdp'},
+      {label:'Housing',key:'housingStarts',mk:'housingStarts'},
+      {label:'BoC Rate',key:'overnight_rate',mk:'bocRate'},
+      {label:'Emp Rate',key:'employmentRate',mk:'employmentRate'}
+    ];
+    core.forEach(c=>{
+      const meta=(im&&im[c.mk])||{};
+      const val=parseFloat(String((m&&m[c.mk])||(allInds.find(x=>x.indicator_name===c.key)||{}).value||'0').replace(/[^0-9.\-]/g,''));
+      const prv=parseFloat(String(meta.prev||'0').replace(/[^0-9.\-]/g,''));
+      if(!isNaN(val)){labels.push(c.label);cur.push(val);prev.push(isNaN(prv)?val:prv)}
+    });
+    if(!labels.length)return;
+    try{
+      charts[existingKey]=new Chart(canvas,{type:'bar',data:{labels:labels,datasets:[
+        {label:'Current',data:cur,backgroundColor:'rgba(37,99,235,0.7)',borderRadius:3},
+        {label:'Previous',data:prev,backgroundColor:'rgba(37,99,235,0.2)',borderRadius:3}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:9}}}},scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:9}}}}}});
+    }catch(e){console.warn('Top mover fallback chart error:',e)}
+    return;
   }
+  // Single indicator chart — bar comparing current vs previous
+  const meta=(im&&im[topMover.metaKey])||{};
+  const curVal=parseFloat(String(topMover.value).replace(/[^0-9.\-]/g,''));
+  const prevVal=parseFloat(String(meta.prev||'0').replace(/[^0-9.\-]/g,''));
+  if(isNaN(curVal))return;
+  try{
+    charts[existingKey]=new Chart(canvas,{type:'bar',data:{labels:['Previous','Current'],datasets:[{
+      data:[isNaN(prevVal)?curVal:prevVal,curVal],
+      backgroundColor:['rgba(37,99,235,0.2)','rgba(37,99,235,0.7)'],borderRadius:4
+    }]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{font:{size:10,weight:'bold'}}}}}});
+  }catch(e){console.warn('Top mover chart error:',e)}
+}
+
+async function renderCanadaSub(){
   const m=(D&&D.metrics)||{};const im=(D&&D.indicatorMeta)||{};
   function indVal(name){const i=indicators.find(x=>x.indicator_name===name);return i?i.value:null}
-  const chartMetrics=[
-    {label:'BOC RATE',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'N/A',meta:im.bocRate||{},source:'Bank of Canada',freq:'8x/yr'},
-    {label:'GDP YOY',value:m.realGdp||m.gdp||indVal('realGdp')||'N/A',meta:im.realGdp||{},source:'Statistics Canada',freq:'Quarterly'},
-    {label:'CPI',value:m.cpi||indVal('cpi')||'N/A',meta:im.cpi||{},source:'Statistics Canada',freq:'Monthly'},
-    {label:'UNEMPLOYMENT',value:m.unemployment||indVal('unemployment')||'N/A',meta:im.unemployment||{},source:'Statistics Canada',freq:'Monthly'},
-    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'N/A',meta:{},source:'Bank of Canada',freq:'Daily'},
-    {label:'HOUSING STARTS',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'N/A',meta:im.housingStarts||{},source:'CMHC',freq:'Monthly'}
+  function indMeta(name){return (im&&im[name])||{}}
+  const natPart=indicators.find(x=>x.indicator_name==='participationRate'&&(x.province||'').toLowerCase()==='national');
+  const natEmp=indicators.find(x=>x.indicator_name==='employmentRate'&&(x.province||'').toLowerCase()==='national');
+  const natWage=indicators.find(x=>x.indicator_name==='wageGrowth'&&(x.province||'').toLowerCase()==='national');
+  const natTrade=indicators.find(x=>x.indicator_name==='tradeBalance');
+
+  // Expanded indicator set (10)
+  const natIndicators=[
+    {label:'BoC Rate',value:m.bocRate||m.boc_rate||indVal('overnight_rate')||'N/A',change:(indMeta('bocRate').change)||'',source:'Bank of Canada',metaKey:'bocRate'},
+    {label:'Real GDP YoY',value:m.realGdp||m.gdp||indVal('realGdp')||'N/A',change:(indMeta('realGdp').change)||'',source:'Statistics Canada',metaKey:'realGdp'},
+    {label:'CPI',value:m.cpi||indVal('cpi')||'N/A',change:(indMeta('cpi').change)||'',source:'Statistics Canada',metaKey:'cpi'},
+    {label:'Unemployment',value:m.unemployment||indVal('unemployment')||'N/A',change:(indMeta('unemployment').change)||'',source:'Statistics Canada',metaKey:'unemployment'},
+    {label:'Participation',value:natPart?natPart.value:(m.participation||'N/A'),change:'',source:'Statistics Canada',metaKey:'participationRate'},
+    {label:'Employment Rate',value:natEmp?natEmp.value:'N/A',change:'',source:'Statistics Canada',metaKey:'employmentRate'},
+    {label:'Wage Growth',value:natWage?natWage.value:(m.wageGrowth||'N/A'),change:'',source:'Statistics Canada',metaKey:'wageGrowth'},
+    {label:'CAD/USD',value:m.cadUsd||m.cad_usd||indVal('cad_usd')||'N/A',change:'',source:'Bank of Canada',metaKey:'cadUsd'},
+    {label:'Housing Starts',value:m.housingStarts||m.housing_starts||indVal('housingStarts')||'N/A',change:(indMeta('housingStarts').change)||'',source:'CMHC',metaKey:'housingStarts'},
+    {label:'Trade Balance',value:natTrade?natTrade.value:'N/A',change:'',source:'Statistics Canada',metaKey:'tradeBalance'}
   ];
-  const mc=$('canadaMiniCharts');
-  if(mc){
-    let miniHtml='<div class="indicator-strip">';
-    chartMetrics.forEach(cm=>{
-      const chg=cm.meta.change||'';
-      const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
-      const prd=cm.meta.period||'';
-      miniHtml+='<div class="indicator-pill"><div class="indicator-pill-label">'+cm.label+'</div><div class="indicator-pill-value">'+cm.value+'</div>';
-      if(chg)miniHtml+='<div class="indicator-pill-change '+chgCls+'">'+chg+(cm.meta.prev?' (prev '+cm.meta.prev+')':'')+'</div>';
-      miniHtml+='<div class="indicator-pill-meta">'+cm.source+(prd?' \u00b7 '+prd:'')+' \u00b7 '+cm.freq+'</div></div>';
-    });
-    miniHtml+='</div>';
-    mc.innerHTML=miniHtml;
+
+  // Editorial header
+  const projTotal=allProjects.length||(await fetchJSON('projects_all.json').then(d=>Array.isArray(d)?d.length:0).catch(()=>0));
+  const ds=D&&D.discovery_stats||{};
+  const newPrj=ds.new_this_week||D&&D.new_projects||0;
+  const pipVal=ds.total_value_billions||D&&D.pipeline_value||'';
+  const hdr=$('canadaEditorialHeader');
+  if(hdr){
+    hdr.innerHTML='<div class="fade-in"><div class="editorial-eyebrow">National Economic Overview</div>'+
+      '<div class="editorial-headline">Canada</div><hr class="editorial-accent">'+
+      '<div class="editorial-meta">'+
+      '<div class="editorial-meta-item"><strong>'+projTotal+'</strong>Projects Tracked</div>'+
+      (newPrj?'<div class="editorial-meta-item"><strong>+'+newPrj+'</strong>New This Week</div>':'')+
+      (pipVal?'<div class="editorial-meta-item"><strong>$'+pipVal+'B</strong>Pipeline Value</div>':'')+
+      '</div></div>';
   }
+
+  // Analysis section with floating indicator panel
   const hasBriefing=D&&D.executive_summary;
-  // National charts
-  const nc=$('nationalCharts');
-  if(nc){
-    nc.innerHTML='<div class="ws-row ws-row-2"><div class="card" id="natMacroCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Macro Pulse</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Key indicators — current vs. previous</div><div style="height:180px;position:relative"><canvas id="natMacroChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Sources: Statistics Canada, Bank of Canada</div></div><div class="card" id="natCommodityCard" style="display:none"><div class="card-header" style="font-size:var(--text-sm)">Commodity Movers</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Biggest weekly price changes</div><div style="height:180px;position:relative"><canvas id="natCommodityChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Yahoo Finance</div></div></div>';
-    renderWovenCharts('nat');
+  const natContent=(D&&D.national&&D.national.analysis)||D&&D.national_analysis||'';
+  const natSources=(D&&D.national&&D.national.sources)||[];
+  const panel=buildIndicatorPanel('Canada \u2014 National',natIndicators,'natTopMoverChart');
+
+  let secHtml='<div class="ed-section"><div class="ed-section-title">Macro Pulse</div><div class="ed-section-subtitle">Key indicators and national analysis</div></div>';
+  secHtml+=panel.html;
+  if(natContent){
+    secHtml+=san(linkFootnotes(natContent,natSources.length?natSources:(D&&D.sources||[])));
+  }else if(!hasBriefing){
+    secHtml+='<p style="color:#475569">National analysis available after next pipeline run.</p>';
   }
-  if(hasBriefing){
-    const natContent=(D.national&&D.national.analysis)||D.national_analysis||'';
-    const natSources=(D.national&&D.national.sources)||[];
-    const _natImg=leadImageHtml(natSources,'left');
-    $('nationalAnalysis').innerHTML=`<div class="card fade-in"><div class="card-header">National Analysis</div><div class="card-body">${_natImg}${san(linkFootnotes(natContent,natSources.length?natSources:(D.sources||[])))}</div>${sourcesFooter(natSources)}</div>`;
-  }else{$('nationalAnalysis').innerHTML=''}
+  secHtml+='<div class="ed-clear"></div>';
+  // Commodity chart floats left
+  secHtml+='<div class="ed-industry-chart" id="natCommodityCard"><div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div><div style="height:180px;position:relative"><canvas id="natCommodityChart"></canvas></div><div class="ec-source">Source: Yahoo Finance</div></div>';
+  if(natSources.length)secHtml+=sourcesFooter(natSources);
+  secHtml+='<div class="ed-clear"></div>';
+
+  const nas=$('natAnalysisSection');
+  if(nas)nas.innerHTML=secHtml;
+
+  // Render charts after DOM is set
+  renderTopMoverChart('natTopMoverChart',panel.topMover,indicators,m,im);
+  await _ensureChartData();
+  _renderCommodityChart('natCommodityChart','natCommodityCard','nat');
+
+  // Policy section with editorial header
+  const ps=$('policySection');
+  if(ps){
+    // Wrap in editorial section — renderPolicySection targets 'policyContent' inside
+    ps.innerHTML='<div class="ed-section"><div class="ed-section-title">Policy Monitor</div><div class="ed-section-subtitle">Legislative and regulatory developments</div></div><div id="policyContent"></div>';
+  }
   renderPolicySection();
+
+  // Indicator section with editorial header
+  const cis=$('canadaIndicatorSection');
+  if(cis)cis.insertAdjacentHTML('afterbegin','<div class="ed-section"><div class="ed-section-title">Indicator Explorer</div><div class="ed-section-subtitle">All national indicators with time-series history</div></div>');
   const dd=$('canadaIndicatorDropdown');
   if(dd)dd.innerHTML=renderIndicatorDropdown(indicators,'All National Indicators','_canada');
   renderIndicatorExplorer();
+
+  // Projects with editorial header
   const pp=$('canadaProjectsPreview');
   if(pp){
     let projects=[];
     try{const d=await fetchJSON('projects_all.json');projects=Array.isArray(d)?d:[]}catch(e){}
     const topProjects=projects.filter(p=>parseNumericValue(p.value)>0).sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value)).slice(0,10);
-    let projHtml='<div class="card"><div class="card-header">Major Projects Across Canada <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:#556B7A;margin-left:8px">('+projects.length+' total)</span></div>';
+    let projHtml='<div class="ed-section"><div class="ed-section-title">Capital Projects</div><div class="ed-section-subtitle">Major projects tracked nationally</div></div>';
     if(topProjects.length){
       projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Province</th><th scope="col">Status</th><th scope="col">Sector</th></tr></thead><tbody>';
       topProjects.forEach(p=>{
@@ -913,7 +1025,6 @@ async function renderCanadaSub(){
     }else{
       projHtml+='<div class="empty-state"><div class="empty-state-text">No projects loaded yet.</div></div>';
     }
-    projHtml+='</div>';
     pp.innerHTML=projHtml;
   }
   renderPipelineStatus();
@@ -1665,96 +1776,106 @@ window.selectProvince=function(code){
 async function renderProvinceContent(){
   const prov=PROVS.find(p=>p.code===selectedProvince)||PROVS[0];
   $('provBannerTitle').textContent=prov.name;
-  // Load province projects if not loaded for this province
   if(_lastLoadedProvince!==prov.code){await loadProjects(prov.code)}
-  // Find province data from the provinces array
   const provArr=D?(D.provinces||[]):[];
   const norm=s=>(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z]/g,'');
   const provData=provArr.find(p=>norm(p.name)===norm(prov.name))||{};
   const provInd=provData.indicators||{};
   const provMeta=provData.indicatorMeta||{};
-  // Helper: find indicator value for this province from indicators[]
+  const provPrefix=prov.code.toLowerCase();
   function provIndVal(key){
-    // Map to province-specific indicator_name patterns
-    const provPrefix=prov.code.toLowerCase();
-    const nameMap={gdp:'realGdp',unemployment:'unemployment',cpi:'cpi',housingStarts:'housingStarts'};
+    const nameMap={gdp:'realGdp',unemployment:'unemployment',cpi:'cpi',housingStarts:'housingStarts',participationRate:'participationRate',employmentRate:'employmentRate',populationGrowth:'populationGrowth',buildingPermits:'buildingPermits'};
     const indName=nameMap[key]||key;
-    // Try province-specific first, then national
     const provMatch=indicators.find(x=>x.indicator_name===provPrefix+'_'+indName);
     if(provMatch)return provMatch.value;
     const natMatch=indicators.find(x=>x.indicator_name===indName);
     return natMatch?natMatch.value:null;
   }
-  let headerHtml='<div style="display:flex;justify-content:space-between;align-items:center"><div><span style="font-size:var(--text-xl);font-weight:700">'+prov.name+'</span>';
-  headerHtml+='</div><span style="font-size:var(--text-xs);color:#556B7A">'+allProjects.length+' projects loaded</span></div>';
-  $('provHeader').innerHTML=headerHtml;
 
-  // Compact indicator pills (matching national layout)
-  const chartMetrics=[
-    {label:'GDP YOY',key:'gdp',source:'Statistics Canada',freq:'Quarterly'},
-    {label:'UNEMPLOYMENT',key:'unemployment',source:'Statistics Canada',freq:'Monthly'},
-    {label:'CPI',key:'cpi',source:'Statistics Canada',freq:'Monthly'},
-    {label:'HOUSING STARTS',key:'housingStarts',source:'CMHC',freq:'Monthly'}
+  // Expanded indicator set (8)
+  const provIndicators=[
+    {label:'GDP YoY',value:provInd.gdp||provIndVal('gdp')||'N/A',change:(provMeta.gdp||{}).change||'',source:'Statistics Canada',metaKey:'gdp'},
+    {label:'Unemployment',value:provInd.unemployment||provIndVal('unemployment')||'N/A',change:(provMeta.unemployment||{}).change||'',source:'Statistics Canada',metaKey:'unemployment'},
+    {label:'CPI',value:provInd.cpi||provIndVal('cpi')||'N/A',change:(provMeta.cpi||{}).change||'',source:'Statistics Canada',metaKey:'cpi'},
+    {label:'Participation',value:provInd.participationRate||provIndVal('participationRate')||'N/A',change:(provMeta.participationRate||{}).change||'',source:'Statistics Canada',metaKey:'participationRate'},
+    {label:'Employment Rate',value:provInd.employmentRate||provIndVal('employmentRate')||'N/A',change:(provMeta.employmentRate||{}).change||'',source:'Statistics Canada',metaKey:'employmentRate'},
+    {label:'Housing Starts',value:provInd.housingStarts||provIndVal('housingStarts')||'N/A',change:(provMeta.housingStarts||{}).change||'',source:'CMHC',metaKey:'housingStarts'},
+    {label:'Pop. Growth',value:provInd.populationGrowth||provIndVal('populationGrowth')||'N/A',change:'',source:'Statistics Canada',metaKey:'populationGrowth'},
+    {label:'Building Permits',value:provInd.buildingPermits||provIndVal('buildingPermits')||'N/A',change:(provMeta.buildingPermits||{}).change||'',source:'Statistics Canada',metaKey:'buildingPermits'}
   ];
-  let miniHtml='<div class="indicator-strip">';
-  chartMetrics.forEach(m=>{
-    const val=provInd[m.key]||provIndVal(m.key)||'N/A';
-    const meta=provMeta[m.key]||{};
-    const chg=meta.change||'';
-    const chgCls=chg.startsWith('-')?'change-down':chg.startsWith('+')?'change-up':'change-flat';
-    const prd=meta.period||'';
-    miniHtml+='<div class="indicator-pill"><div class="indicator-pill-label">'+m.label+'</div><div class="indicator-pill-value">'+val+'</div>';
-    if(chg)miniHtml+='<div class="indicator-pill-change '+chgCls+'">'+chg+(meta.prev?' (prev '+meta.prev+')':'')+'</div>';
-    miniHtml+='<div class="indicator-pill-meta">'+m.source+(prd?' \u00b7 '+prd:'')+' \u00b7 '+m.freq+'</div></div>';
-  });
-  miniHtml+='</div>';
-  $('provMiniCharts').innerHTML=miniHtml;
 
-  // Province indicator dropdown
-  $('provIndicatorDropdown').innerHTML=renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
+  // Editorial header
+  const provProj=allProjects.filter(p=>p.province===prov.name||p.province===prov.code);
+  const projCount=provProj.length;
+  const projValue=provProj.reduce((s,p)=>s+parseNumericValue(p.value),0);
+  const fmtVal=projValue>=1e9?'$'+(projValue/1e9).toFixed(1)+'B':projValue>=1e6?'$'+(projValue/1e6).toFixed(0)+'M':'';
+  const hdr=$('provEditorialHeader');
+  if(hdr){
+    hdr.innerHTML='<div class="fade-in"><div class="editorial-eyebrow">Provincial Analysis</div>'+
+      '<div class="editorial-headline">'+prov.name+'</div><hr class="editorial-accent">'+
+      '<div class="editorial-meta">'+
+      '<div class="editorial-meta-item"><strong>'+projCount+'</strong>Projects Tracked</div>'+
+      (fmtVal?'<div class="editorial-meta-item"><strong>'+fmtVal+'</strong>Pipeline Value</div>':'')+
+      '</div></div>';
+  }
 
-  // Analysis
+  // Analysis section with floating indicator panel + sector chart
   const provContent=provData.analysis||'';
   const provSources=provData.sources||[];
-  const _provImg=leadImageHtml(provSources,'right');
-  let analysisHtml='<div class="card"><div class="card-header">Analysis</div><div class="card-body">'+(provContent?_provImg+san(linkFootnotes(provContent,provSources.length?provSources:(D.sources||[]))):'<div class="empty-state"><div class="empty-state-text">No provincial analysis available for '+prov.name+'.</div></div>')+'</div></div>';
-  // Province sources footer
-  if(provData.sources&&provData.sources.length){analysisHtml+=sourcesFooter(provData.sources)}
-  // Provincial upcoming events (from watchlist, filtered by province mention in description)
+  const panel=buildIndicatorPanel(prov.name,provIndicators,'provTopMoverChart');
+
+  let secHtml='<div class="ed-section"><div class="ed-section-title">Analysis</div><div class="ed-section-subtitle">'+prov.name+' economic conditions and capital activity</div></div>';
+  secHtml+=panel.html;
+  if(provContent){
+    secHtml+=san(linkFootnotes(provContent,provSources.length?provSources:(D&&D.sources||[])));
+  }else{
+    secHtml+='<p style="color:#475569">No provincial analysis available for '+prov.name+'.</p>';
+  }
+  secHtml+='<div class="ed-clear"></div>';
+  // Sector chart floats left
+  if(provProj.length>=3){
+    secHtml+='<div class="ed-industry-chart" id="pvSectorCard"><div class="ec-title">'+prov.name+' by Sector</div><div class="ec-sub">Tracked investment value</div><div style="height:180px;position:relative"><canvas id="pvSectorChart"></canvas></div><div class="ec-source">Pipeline database ('+provProj.length+' projects)</div></div>';
+  }
+  if(provSources.length)secHtml+=sourcesFooter(provSources);
+  // Upcoming events
   const wl=D&&(D.watchlist||D.events)?D.watchlist||D.events||[]:[];
   const provEvents=wl.filter(e=>{const desc=(e.description||'')+(e.event_name||'');return desc.toLowerCase().includes(prov.name.toLowerCase())});
   if(provEvents.length){
-    analysisHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#475569">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:#475569">';
-    provEvents.forEach(e=>{analysisHtml+='<div style="margin-bottom:4px">'+(e.date||'')+' \u2014 '+(e.event_name||e.event||'')+(e.institution?' ('+e.institution+')':'')+'</div>'});
-    analysisHtml+='</div></details>';
+    secHtml+='<details style="margin-top:16px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#475569">Upcoming Events ('+provEvents.length+')</summary><div style="padding:8px 0;font-size:var(--text-sm);color:#475569">';
+    provEvents.forEach(e=>{secHtml+='<div style="margin-bottom:4px">'+(e.date||'')+' \u2014 '+(e.event_name||e.event||'')+(e.institution?' ('+e.institution+')':'')+'</div>'});
+    secHtml+='</div></details>';
   }
-  $('provAnalysis').innerHTML=analysisHtml;
+  secHtml+='<div class="ed-clear"></div>';
 
-  // Province charts — pipeline + sector for this province
-  const pc=$('provCharts');
-  if(pc){
-    const provProj=allProjects.filter(p=>p.province===prov.name||p.province===prov.code);
-    if(provProj.length>=3){
-      pc.innerHTML='<div class="ws-row ws-row-2"><div class="card" id="pvPipelineCard"><div class="card-header" style="font-size:var(--text-sm)">'+prov.name+' Pipeline</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Projects by lifecycle stage</div><div style="height:180px;position:relative"><canvas id="pvPipelineChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Pipeline database ('+provProj.length+' projects)</div></div><div class="card" id="pvSectorCard"><div class="card-header" style="font-size:var(--text-sm)">'+prov.name+' by Sector</div><div style="font-size:8px;color:#475569;margin:-4px 0 8px">Tracked investment value</div><div style="height:180px;position:relative"><canvas id="pvSectorChart"></canvas></div><div style="font-size:8px;color:#64748B;margin-top:6px;border-top:1px solid rgba(0,0,0,0.06);padding-top:4px">Source: Pipeline database</div></div></div>';
-      _renderPipelineChart('pvPipelineChart','pv',provProj);
-      _renderSectorChart('pvSectorChart','pv',provProj);
-    }else{pc.innerHTML=''}
+  const pas=$('provAnalysisSection');
+  if(pas)pas.innerHTML=secHtml;
+
+  // Render charts
+  renderTopMoverChart('provTopMoverChart',panel.topMover,indicators,(D&&D.metrics)||{},(provData.indicatorMeta||{}));
+  if(provProj.length>=3){
+    _renderSectorChart('pvSectorChart','pv',provProj);
   }
 
-  // Projects preview
-  const provProjects=allProjects.filter(p=>p.province===prov.name||p.province===prov.code).slice(0,5);
-  let projHtml='<div class="card"><div class="card-header">Major Projects in '+prov.name+' <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:#556B7A;margin-left:8px">('+provProjects.length+')</span></div>';
-  if(provProjects.length){
+  // Indicator dropdown
+  const pis=$('provIndicatorSection');
+  if(pis){
+    pis.innerHTML='<div class="ed-section"><div class="ed-section-title">Indicators</div><div class="ed-section-subtitle">Full indicator list for '+prov.name+'</div></div>'+
+      renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
+  }
+
+  // Projects
+  const topProvProj=provProj.slice(0,5);
+  let projHtml='<div class="ed-section"><div class="ed-section-title">Major Projects</div><div class="ed-section-subtitle">Top projects in '+prov.name+'</div></div>';
+  if(topProvProj.length){
     projHtml+='<div class="project-table-wrap"><table class="project-table" style="margin-top:8px"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Status</th><th scope="col">Source</th></tr></thead><tbody>';
-    provProjects.forEach(p=>{
+    topProvProj.forEach(p=>{
       projHtml+='<tr><td class="col-value">'+fmtCurrency(p.value,p)+'</td><td class="col-name">'+((p.name||'').substring(0,60))+'</td><td>'+statusBadge(p.status||'Proposed')+'</td><td>'+srcLink((p.sources||[])[0]?.url,(p.sources||[])[0]?.title)+'</td></tr>';
     });
     projHtml+='</tbody></table></div>';
     projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><a href="#" style="color:var(--accent-blue);text-decoration:none" onclick="event.preventDefault();switchTab(\'projects\')">View all projects \u2192</a></div>';
-  } else {
+  }else{
     projHtml+='<div class="empty-state"><div class="empty-state-text">No projects tracked for '+prov.name+' yet.</div></div>';
   }
-  projHtml+='</div>';
   $('provProjectsPreview').innerHTML=projHtml;
 }
 
@@ -2491,7 +2612,7 @@ async function renderMicroscope(){
 
 /* ====== PHASE 2: POLICY SECTION ====== */
 async function renderPolicySection(){
-  const el=$('policySection');if(!el)return;
+  const el=$('policyContent')||$('policySection');if(!el)return;
   try{
     let policyData;
     try{policyData=await fetchJSON('policy.json')}catch(_){el.innerHTML='';return}
@@ -2861,7 +2982,7 @@ window._doVcodeSearch=function(cat){
 // Module scripts are deferred — DOM is already ready, run immediately
 if($('execSummary'))$('execSummary').innerHTML='<div style="padding:28px 0">'+skeleton(4)+'</div>';
 if($('editorialFlow'))$('editorialFlow').innerHTML=skeleton(6);
-if($('nationalAnalysis'))$('nationalAnalysis').innerHTML='<div class="card">'+skeleton(3)+'</div>';
+if($('natAnalysisSection'))$('natAnalysisSection').innerHTML='<div class="card">'+skeleton(3)+'</div>';
 if($('keyIndicators'))$('keyIndicators').innerHTML='<div class="indicator-strip">'+Array(7).fill('<div class="skeleton sk-pill"></div>').join('')+'</div>';
 // Section-level skeleton placeholders while async sections load
 if($('pipelineStatus'))$('pipelineStatus').innerHTML='<div class="card">'+skeleton(2)+'</div>';
