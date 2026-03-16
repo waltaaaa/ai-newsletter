@@ -343,20 +343,20 @@ async function renderEditorialFlow(){
     if(m&&m.topic&&m.text){
       const sectors=(m.affected_sectors||[]).map(s=>'<span class="editorial-sector-tag">'+s+'</span>').join(' ');
       const weeksNote=m.weeks_running?' &middot; Week '+m.weeks_running+' of coverage':'';
-      microHtml=`<div class="ed-section"><div class="ed-section-eyebrow">Under the Microscope</div><div class="ed-section-title">${m.topic||''}</div><div class="ed-section-sub">${sectors}${weeksNote}</div></div>${bulletsToParas(san(m.text||m.analysis||''))}`;
+      microHtml=`<div class="ed-section"><div class="ed-section-title">Under the Microscope: ${m.topic||''}</div><div class="ed-section-sub">${sectors}${weeksNote}</div></div>${bulletsToParas(san(m.text||m.analysis||''))}`;
     }
   }catch(e){console.warn('Microscope JSON:',e)}
 
   // National analysis
   let nationalHtml='';
   if(D.national&&D.national.analysis){
-    nationalHtml=`<div class="ed-section"><div class="ed-section-eyebrow">National Analysis</div><div class="ed-section-title">Macro Conditions &amp; Policy</div></div>${bulletsToParas(san(linkFootnotes(D.national.analysis,(D.sources||[]))))}`;
+    nationalHtml=`<div class="ed-section"><div class="ed-section-title">National Analysis</div></div>${bulletsToParas(san(linkFootnotes(D.national.analysis,(D.sources||[]))))}`;
   }
 
   // Consumer pulse
   let pulseHtml='';
   if(D.consumer_pulse){
-    pulseHtml=`<div class="ed-section"><div class="ed-section-eyebrow">Consumer Pulse</div><div class="ed-section-title">Sentiment &amp; Public Discussion</div></div>${bulletsToParas(san(D.consumer_pulse))}`;
+    pulseHtml=`<div class="ed-section"><div class="ed-section-title">Consumer Pulse</div></div>${bulletsToParas(san(D.consumer_pulse))}`;
   }
 
   // Briefing narrative
@@ -367,7 +367,7 @@ async function renderEditorialFlow(){
     if(narrative){
       const pdfUrl=(briefing.pdf_url)||'';const docxUrl=(briefing.docx_url)||'';
       const dlBtns=(pdfUrl||docxUrl)?`<div style="display:flex;gap:8px;margin-bottom:16px">${pdfUrl?`<a href="${san(pdfUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#EC4899;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download PDF</a>`:''}${docxUrl?`<a href="${san(docxUrl)}" target="_blank" download style="font-size:var(--text-xs);background:#3B82F6;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Download Word</a>`:''}</div>`:'';
-      briefHtml=`<div class="ed-section"><div class="ed-section-eyebrow">Weekly Briefing</div><div class="ed-section-title">Full Intelligence Report</div></div>${dlBtns}${bulletsToParas(san(narrative))}`;
+      briefHtml=`<div class="ed-section"><div class="ed-section-title">Weekly Briefing</div></div>${dlBtns}${bulletsToParas(san(narrative))}`;
     }
   }catch(e){console.warn('Briefing:',e)}
 
