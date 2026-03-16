@@ -1318,24 +1318,27 @@ If no projects found, return: {{"projects": []}}"""
     call4b_raw = f4b.result() if _call4b_prompt else {}
     print(f"  [1-4] All Claude calls completed (Opus: calls 1-3, Sonnet: call 4 x{1 + bool(_call4b_prompt)})")
 
-    # ── Citation audits (parallel, after all calls) ────────────────
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        fa1 = executor.submit(run_citation_audit, call1 or {}, 'call1-macro',
-                              anthropic_client=anthropic_client)
-        fa2 = executor.submit(run_citation_audit, call2 or {}, 'call2-industries',
-                              anthropic_client=anthropic_client)
-        fa3 = executor.submit(run_citation_audit, call3 or {}, 'call3-provinces',
-                              anthropic_client=anthropic_client)
+    # ── Citation audits (parallel, after all calls — non-fatal) ────
+    try:
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            fa1 = executor.submit(run_citation_audit, call1 or {}, 'call1-macro',
+                                  anthropic_client=anthropic_client)
+            fa2 = executor.submit(run_citation_audit, call2 or {}, 'call2-industries',
+                                  anthropic_client=anthropic_client)
+            fa3 = executor.submit(run_citation_audit, call3 or {}, 'call3-provinces',
+                                  anthropic_client=anthropic_client)
 
-    audit1 = fa1.result()
-    audit1['_label'] = 'call1-macro'
-    audit_results.append(audit1)
-    audit2 = fa2.result()
-    audit2['_label'] = 'call2-industries'
-    audit_results.append(audit2)
-    audit3 = fa3.result()
-    audit3['_label'] = 'call3-provinces'
-    audit_results.append(audit3)
+        audit1 = fa1.result()
+        audit1['_label'] = 'call1-macro'
+        audit_results.append(audit1)
+        audit2 = fa2.result()
+        audit2['_label'] = 'call2-industries'
+        audit_results.append(audit2)
+        audit3 = fa3.result()
+        audit3['_label'] = 'call3-provinces'
+        audit_results.append(audit3)
+    except RuntimeError as e:
+        print(f"  [Citation audit] Skipped (non-fatal): {e}")
 
     # Merge Call 4 batch results
     extracted_projects = (call4a_raw or {}).get('projects', []) + (call4b_raw or {}).get('projects', [])

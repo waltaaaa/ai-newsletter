@@ -76,6 +76,12 @@ async def query_one(session, semaphore, query_obj, system_prompt, attempt=0):
                     return _parse_raw(data, query_obj)
                 elif resp.status == 429 and attempt < MAX_RETRY:
                     health.record_failure("gemini", f"429 RESOURCE_EXHAUSTED")
+                    if not health.is_available("gemini"):
+                        return {
+                            "text": "", "grounding_urls": [],
+                            "query": query_obj,
+                            "error": "Gemini circuit breaker open after 429",
+                        }
                     logger.warning(
                         f"Rate limited, waiting {RETRY_DELAY}s "
                         f"(attempt {attempt + 1})"
@@ -169,14 +175,12 @@ async def is_rehash(session, semaphore, article_text, existing_project_summary):
     )
 
     # Try local LLM first
-    model = local_llm.get_model()
-    if model is not None:
+    if local_llm.get_model() is not None:
         try:
-            resp = model.create_chat_completion(messages=[
+            text = local_llm.chat([
                 {"role": "system", "content": "You classify whether articles contain new project information."},
                 {"role": "user", "content": prompt_text}
-            ], max_tokens=10, temperature=0)
-            text = resp["choices"][0]["message"]["content"].strip().upper()
+            ], max_tokens=10).strip().upper()
             return text == "REHASH"
         except Exception as e:
             logger.warning(f"Local LLM rehash check failed: {e}")
@@ -207,55 +211,54 @@ async def filter_rehashes(articles, existing_projects, max_concurrent=10):
     if not GEMINI_API_KEY or not articles or not existing_projects:
         return articles
 
-    from difflib import SequenceMatcher
-
-    # Build project summaries for matching
+    # Build project summaries for matching — only keep projects with
+    # names long enough to be meaningful (>5 chars)
     project_summaries = {}
     for p in existing_projects:
-        name = (p.get('name') or '').lower()
-        summary = (
-            f"Project: {p.get('name', '')}\n"
-            f"Province: {p.get('province', '')}\n"
-            f"Value: {p.get('value', 'Not disclosed')}\n"
-            f"Status: {p.get('status', '')}\n"
-            f"Proponent: {p.get('proponent', '')}\n"
-            f"Description: {p.get('description', '')}"
-        )
-        project_summaries[name] = summary
+        name = (p.get('name') or '').strip().lower()
+        if len(name) > 5:
+            summary = (
+                f"Project: {p.get('name', '')}\n"
+                f"Province: {p.get('province', '')}\n"
+                f"Value: {p.get('value', 'Not disclosed')}\n"
+                f"Status: {p.get('status', '')}\n"
+                f"Proponent: {p.get('proponent', '')}\n"
+                f"Description: {p.get('description', '')}"
+            )
+            project_summaries[name] = summary
 
     project_names = list(project_summaries.keys())
     semaphore = asyncio.Semaphore(max_concurrent)
     kept = []
+    llm_checks = 0
+
+    print(f"  [REHASH] Checking {len(articles)} articles against "
+          f"{len(project_names)} projects...")
 
     async with aiohttp.ClientSession() as session:
-        for article in articles:
+        for idx, article in enumerate(articles):
             title = (article.get('title') or '').lower()
             text = article.get('text') or article.get('summary') or ''
             combined = title + ' ' + text[:500]
 
-            # Find most similar existing project by name
+            # Fast path: check if any project name appears as substring
             best_match = None
-            best_ratio = 0
             for pname in project_names:
-                # Check if project name appears in article
-                if pname and len(pname) > 5 and pname in combined.lower():
+                if pname in combined:
                     best_match = pname
-                    best_ratio = 1.0
                     break
-                ratio = SequenceMatcher(None, pname, title).ratio()
-                if ratio > best_ratio:
-                    best_ratio = ratio
-                    best_match = pname
 
-            # Only check rehash if there's a reasonable match
-            if best_ratio < 0.4 or not best_match:
+            # No substring match — keep the article (it's likely new)
+            if not best_match:
                 kept.append(article)
                 continue
 
+            # Substring match found — check with LLM if it's a rehash
             article_text = f"{article.get('title', '')}\n{text}"
             try:
                 rehash = await is_rehash(session, semaphore, article_text,
                                          project_summaries[best_match])
+                llm_checks += 1
                 if not rehash:
                     kept.append(article)
                 else:
@@ -263,9 +266,13 @@ async def filter_rehashes(articles, existing_projects, max_concurrent=10):
             except Exception:
                 kept.append(article)  # on error, keep the article
 
+            if (idx + 1) % 50 == 0:
+                print(f"  [REHASH] {idx + 1}/{len(articles)} checked, "
+                      f"{llm_checks} LLM calls")
+
     filtered = len(articles) - len(kept)
-    if filtered:
-        print(f"  [REHASH] Filtered {filtered}/{len(articles)} rehash articles")
+    print(f"  [REHASH] Done: {filtered}/{len(articles)} filtered, "
+          f"{llm_checks} LLM checks")
     return kept
 
 
@@ -274,8 +281,11 @@ def filter_rehashes_sync(articles, existing_projects, max_concurrent=10):
     if not articles:
         return articles
     try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+        if loop and loop.is_running():
             import nest_asyncio
             nest_asyncio.apply()
             return loop.run_until_complete(
