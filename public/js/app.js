@@ -850,15 +850,19 @@ async function renderNational(){
   renderAllGlobalPlayers();
 }
 /* == Indicator Panel + Infographic helpers == */
-function buildIndicatorPanel(title,indRows,subtitle){
-  // Find top mover
-  let topMover=null;let topAbs=0;
-  indRows.forEach(r=>{
-    if(r.change){
-      const n=parseFloat(String(r.change).replace(/[^0-9.\-]/g,''));
-      if(!isNaN(n)&&Math.abs(n)>topAbs){topAbs=Math.abs(n);topMover=r}
-    }
-  });
+function buildIndicatorPanel(title,indRows,subtitle,chartCanvasId,chartTitle){
+  // Find top movers (up to 3)
+  const movers=indRows.filter(r=>{
+    if(!r.change)return false;
+    const n=parseFloat(String(r.change).replace(/[^0-9.\-]/g,''));
+    return !isNaN(n)&&Math.abs(n)>0;
+  }).sort((a,b)=>{
+    const an=Math.abs(parseFloat(String(a.change).replace(/[^0-9.\-]/g,'')));
+    const bn=Math.abs(parseFloat(String(b.change).replace(/[^0-9.\-]/g,'')));
+    return bn-an;
+  }).slice(0,3);
+  const topMover=movers[0]||null;
+
   let html='<div class="ed-map" style="position:relative">';
   html+='<div class="ed-stat-header">'+title+'</div>';
   if(subtitle)html+='<div style="font-size:var(--text-xs);color:#475569;margin:-4px 0 8px;font-style:italic">'+subtitle+'</div>';
@@ -868,24 +872,43 @@ function buildIndicatorPanel(title,indRows,subtitle){
     const cls=chg.startsWith('-')||chg.startsWith('\u2212')?'change-down':chg.startsWith('+')?'change-up':'';
     html+='<tr><td class="ind-label">'+r.label+'</td><td class="ind-value">'+r.value+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td></tr>';
   });
-  html+='</tbody></table></div>';
-  return {html:html,topMover:topMover};
+  html+='</tbody></table>';
+  // Embedded chart inside the panel
+  if(chartCanvasId){
+    html+='<div style="margin-top:12px;border-top:1px solid rgba(0,0,0,0.06);padding-top:10px">';
+    html+='<div class="ec-title">'+(chartTitle||'Investment by Sector')+'</div>';
+    html+='<div style="height:180px;position:relative"><canvas id="'+chartCanvasId+'"></canvas></div>';
+    html+='</div>';
+  }
+  html+='</div>';
+  return {html:html,topMover:topMover,movers:movers};
 }
 
-function buildInfographicHtml(canvasId,topMover){
-  const moverLabel=topMover?topMover.label:'Macro Pulse';
-  const moverSub=topMover?(topMover.change+' ('+topMover.value+')'):'Key indicators \u2014 current vs. previous';
-  const moverSrc=topMover?(topMover.source||'Statistics Canada'):'Statistics Canada, Bank of Canada';
-  return '<div class="ed-industry-chart" id="'+canvasId+'Card"><div class="ec-title">This Week: '+moverLabel+'</div><div class="ec-sub">'+moverSub+'</div><div style="height:180px;position:relative"><canvas id="'+canvasId+'"></canvas></div><div class="ec-source">'+moverSrc+'</div></div>';
+function buildInsightStrip(prefix,movers){
+  // Full-width strip with 1-3 infographic charts based on top movers
+  if(!movers||!movers.length)return '';
+  const count=movers.length;
+  const colStyle=count===1?'':'display:grid;grid-template-columns:repeat('+count+',1fr);gap:12px';
+  let html='<div style="margin:24px 0;padding:20px 0;border-top:2px solid rgba(37,99,235,0.12);border-bottom:2px solid rgba(37,99,235,0.12);'+colStyle+'">';
+  movers.forEach((m,i)=>{
+    const id=prefix+'Insight'+i;
+    const chgText=m.change?(m.change+' ('+m.value+')'):(m.value||'');
+    html+='<div style="text-align:center">';
+    html+='<div style="font-size:var(--text-xs);font-weight:700;color:#003153;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px">'+m.label+'</div>';
+    html+='<div style="font-size:10px;color:#475569;margin-bottom:8px">'+chgText+'</div>';
+    html+='<div style="height:160px;position:relative"><canvas id="'+id+'"></canvas></div>';
+    html+='<div style="font-size:9px;color:#94A3B8;margin-top:4px">'+(m.source||'Statistics Canada')+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  return html;
 }
 
 function deriveSubtitle(analysisText){
   if(!analysisText)return '';
-  // Extract first sentence as a dynamic subtitle
   const clean=(analysisText||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
   const m=clean.match(/^(.+?[.!?])\s/);
   if(m&&m[1].length<=120)return m[1];
-  // Fallback: truncate to ~100 chars at word boundary
   if(clean.length<=100)return clean;
   const cut=clean.substring(0,100).replace(/\s+\S*$/,'');
   return cut+(cut.length<clean.length?'...':'');
@@ -936,6 +959,13 @@ function renderTopMoverChart(canvasId,topMover,allInds,m,im){
   }catch(e){console.warn('Top mover chart error:',e)}
 }
 
+function renderInsightCharts(prefix,movers,allInds,m,im){
+  movers.forEach((mover,i)=>{
+    const canvasId=prefix+'Insight'+i;
+    renderTopMoverChart(canvasId,mover,allInds,m,im);
+  });
+}
+
 async function renderCanadaSub(){
   const m=(D&&D.metrics)||{};const im=(D&&D.indicatorMeta)||{};
   function indVal(name){const i=indicators.find(x=>x.indicator_name===name);return i?i.value:null}
@@ -971,35 +1001,32 @@ async function renderCanadaSub(){
       '</div>';
   }
 
-  // Analysis section with floating indicator panel
+  // Analysis section with floating indicator panel (includes commodity chart inside)
   const hasBriefing=D&&D.executive_summary;
   const natContent=(D&&D.national&&D.national.analysis)||D&&D.national_analysis||'';
   const natSources=(D&&D.national&&D.national.sources)||[];
   const natSubtitle=deriveSubtitle(natContent);
-  const panel=buildIndicatorPanel('Canada \u2014 National',natIndicators,natSubtitle);
+  const panel=buildIndicatorPanel('Canada \u2014 National',natIndicators,natSubtitle,'natCommodityChart','Commodity Movers');
 
   let secHtml='';
   secHtml+=panel.html;
-  // Infographic floats left
-  secHtml+=buildInfographicHtml('natTopMoverChart',panel.topMover);
   if(natContent){
     secHtml+=san(linkFootnotes(natContent,natSources.length?natSources:(D&&D.sources||[])));
   }else if(!hasBriefing){
     secHtml+='<p style="color:#475569">National analysis available after next pipeline run.</p>';
   }
-  secHtml+='<div class="ed-clear"></div>';
-  // Commodity chart floats left
-  secHtml+='<div class="ed-industry-chart" id="natCommodityCard"><div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div><div style="height:180px;position:relative"><canvas id="natCommodityChart"></canvas></div><div class="ec-source">Source: Yahoo Finance</div></div>';
   if(natSources.length)secHtml+=sourcesFooter(natSources);
   secHtml+='<div class="ed-clear"></div>';
+  // Insight strip — full width between analysis and projects
+  secHtml+=buildInsightStrip('nat',panel.movers);
 
   const nas=$('natAnalysisSection');
   if(nas)nas.innerHTML=secHtml;
 
   // Render charts after DOM is set
-  renderTopMoverChart('natTopMoverChart',panel.topMover,indicators,m,im);
   await _ensureChartData();
   _renderCommodityChart('natCommodityChart','natCommodityCard','nat');
+  renderInsightCharts('nat',panel.movers,indicators,m,im);
 
   // Policy section with editorial header
   const ps=$('policySection');
@@ -1823,22 +1850,20 @@ async function renderProvinceContent(){
       '</div>';
   }
 
-  // Analysis section with floating indicator panel + infographic
+  // Analysis section with floating indicator panel (includes sector pie chart)
   const provContent=provData.analysis||'';
   const provSources=provData.sources||[];
   const provSubtitle=deriveSubtitle(provContent);
-  const panel=buildIndicatorPanel(prov.name,provIndicators,provSubtitle);
+  const sectorCanvas=provProj.length>=3?'pvSectorChart':null;
+  const panel=buildIndicatorPanel(prov.name,provIndicators,provSubtitle,sectorCanvas);
 
   let secHtml='';
   secHtml+=panel.html;
-  // Infographic floats left (where sector chart used to be)
-  secHtml+=buildInfographicHtml('provTopMoverChart',panel.topMover);
   if(provContent){
     secHtml+=san(linkFootnotes(provContent,provSources.length?provSources:(D&&D.sources||[])));
   }else{
     secHtml+='<p style="color:#475569">No provincial analysis available for '+prov.name+'.</p>';
   }
-  secHtml+='<div class="ed-clear"></div>';
   if(provSources.length)secHtml+=sourcesFooter(provSources);
   // Upcoming events
   const wl=D&&(D.watchlist||D.events)?D.watchlist||D.events||[]:[];
@@ -1849,12 +1874,17 @@ async function renderProvinceContent(){
     secHtml+='</div></details>';
   }
   secHtml+='<div class="ed-clear"></div>';
+  // Insight strip — full width between analysis and projects
+  secHtml+=buildInsightStrip('prov',panel.movers);
 
   const pas=$('provAnalysisSection');
   if(pas)pas.innerHTML=secHtml;
 
-  // Render infographic chart
-  renderTopMoverChart('provTopMoverChart',panel.topMover,indicators,(D&&D.metrics)||{},(provData.indicatorMeta||{}));
+  // Render charts
+  if(provProj.length>=3){
+    _renderSectorChart('pvSectorChart','pv',provProj);
+  }
+  renderInsightCharts('prov',panel.movers,indicators,(D&&D.metrics)||{},(provData.indicatorMeta||{}));
 
 
   // Projects
@@ -1875,13 +1905,6 @@ async function renderProvinceContent(){
     projHtml+='<div class="empty-state"><div class="empty-state-text">No projects tracked for '+prov.name+' yet.</div></div>';
   }
   $('provProjectsPreview').innerHTML=projHtml;
-
-  // Sector chart below projects table
-  const pss=$('provSectorSection');
-  if(pss&&provProj.length>=3){
-    pss.innerHTML='<div class="ed-section"><div class="ed-section-title">'+prov.name+' by Sector</div><div class="ed-section-subtitle">Tracked investment value by industry</div></div><div style="max-width:500px"><div style="height:280px;position:relative"><canvas id="pvSectorChart"></canvas></div><div class="ec-source" style="margin-top:6px">Pipeline database ('+provProj.length+' projects)</div></div>';
-    _renderSectorChart('pvSectorChart','pv',provProj);
-  }else if(pss){pss.innerHTML=''}
 }
 
 
