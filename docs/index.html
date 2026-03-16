@@ -487,9 +487,12 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .ed-stat-change{font-size:8px;font-family:var(--font-mono);margin-top:1px}
 /* Map tooltip */
 .ed-map-tooltip{position:absolute;pointer-events:auto;background:rgba(15,27,51,0.95);color:#fff;border-radius:var(--radius-md);padding:16px 20px;font-size:var(--text-xs);box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:9999;min-width:250px;max-width:320px;opacity:0;transition:opacity 0.15s ease;backdrop-filter:blur(8px);line-height:1.5}
-.ed-tt-tab{display:inline-block;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;cursor:pointer;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);transition:all 0.15s}
-.ed-tt-tab:hover{color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.1)}
-.ed-tt-tab.active{color:#fff;background:rgba(96,165,250,0.3)}
+.ed-tt-tab{display:inline-block;padding:3px 8px;border-radius:4px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;cursor:pointer;color:#64748B;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.08);transition:all 0.15s}
+.ed-tt-tab:hover{color:#1a2744;background:rgba(37,99,235,0.08)}
+.ed-tt-tab.active{color:#fff;background:#2563EB;border-color:#2563EB}
+.ed-map-tooltip .ed-tt-tab{color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);border-color:transparent}
+.ed-map-tooltip .ed-tt-tab:hover{color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.1)}
+.ed-map-tooltip .ed-tt-tab.active{color:#fff;background:rgba(96,165,250,0.3);border-color:transparent}
 .ed-map-tooltip.visible{opacity:1}
 .ed-map-tooltip-title{font-family:var(--font-heading);font-weight:700;font-size:var(--text-base);margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:6px}
 .ed-map-tooltip-row{display:flex;justify-content:space-between;gap:20px;padding:3px 0}

@@ -482,17 +482,63 @@ async function renderInteractiveMap(){
     {label:'Wage Growth',value:natWage?natWage.value:(m.wageGrowth||'N/A'),change:''},
     {label:'Trade Balance',value:findKI('TRADE BALANCE').value,change:findKI('TRADE BALANCE').change}
   ];
-  let statsHtml='<div class="ed-stat-header">Canada &mdash; National Indicators</div><div class="ed-stat-grid">';
-  stats.forEach(s=>{
-    const chgCls=s.change?(s.change.startsWith('-')||s.change.startsWith('\u2212')?'change-down':'change-up'):'';
-    statsHtml+=`<div class="ed-stat-box"><div class="ed-stat-label">${s.label}</div><div class="ed-stat-value">${s.value}</div>${s.change?`<div class="ed-stat-change ${chgCls}">${s.change}</div>`:''}`;
-    statsHtml+='</div>';
-  });
-  statsHtml+='</div>';
+  // Build national highlights from executive summary
+  const natHighlights=[];
+  if(D&&D.executive_summary){
+    const plain=(D.executive_summary||'').replace(/<[^>]+>/g,'');
+    const sentences=plain.match(/[^.!?]+[.!?]+/g)||[];
+    if(sentences.length>=2)natHighlights.push({label:'Top Story',text:sentences.slice(0,2).join(' ').trim()});
+    if(sentences.length>=4)natHighlights.push({label:'Also This Week',text:sentences.slice(2,4).join(' ').trim()});
+  }
+  if(D&&D.watchlist&&D.watchlist.length){
+    const upcoming=D.watchlist.filter(w=>w.week_label==='This Week').slice(0,2);
+    if(upcoming.length){
+      natHighlights.push({label:'Upcoming',text:upcoming.map(w=>w.event_name).join('; ')});
+    }
+  }
+
+  let _natMode='indicators';
+  function buildNatPanel(){
+    const isInd=_natMode==='indicators';
+    let html=`<div class="ed-stat-header" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Canada &mdash; National</span>
+      <span style="display:flex;gap:4px">
+        <span class="ed-tt-tab${isInd?' active':''}" id="natToggleInd">Indicators</span>
+        <span class="ed-tt-tab${!isInd?' active':''}" id="natToggleHL">This Week</span>
+      </span>
+    </div>`;
+    if(isInd){
+      html+='<div class="ed-stat-grid">';
+      stats.forEach(s=>{
+        const chgCls=s.change?(s.change.startsWith('-')||s.change.startsWith('\u2212')?'change-down':'change-up'):'';
+        html+=`<div class="ed-stat-box"><div class="ed-stat-label">${s.label}</div><div class="ed-stat-value">${s.value}</div>${s.change?`<div class="ed-stat-change ${chgCls}">${s.change}</div>`:''}`;
+        html+='</div>';
+      });
+      html+='</div>';
+    }else{
+      html+='<div style="padding:4px 0">';
+      if(natHighlights.length){
+        natHighlights.slice(0,3).forEach(h=>{
+          html+=`<div style="margin-bottom:6px"><div style="font-weight:600;color:#2563EB;font-size:9px;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:1px">${h.label}</div><div style="font-size:11px;line-height:1.4;color:#1a2744">${h.text.length>120?h.text.slice(0,117)+'...':h.text}</div></div>`;
+        });
+      }else{
+        html+='<div style="color:#64748B;font-size:11px">No highlights this week</div>';
+      }
+      html+='</div>';
+    }
+    const natPanel=document.getElementById('natStatsPanel');
+    if(natPanel){
+      natPanel.innerHTML=html;
+      const indBtn=document.getElementById('natToggleInd');
+      const hlBtn=document.getElementById('natToggleHL');
+      if(indBtn)indBtn.onclick=()=>{_natMode='indicators';buildNatPanel()};
+      if(hlBtn)hlBtn.onclick=()=>{_natMode='highlights';buildNatPanel()};
+    }
+  }
 
   // Map container — floats right at 45%
   container.innerHTML=`<div class="ed-map" style="position:relative">
-    ${statsHtml}
+    <div id="natStatsPanel"></div>
     <div class="ed-map-chart">
       <div class="ec-title" style="margin-top:8px">Provincial GDP Growth</div>
       <div class="ec-sub">Hover for province details</div>
@@ -501,6 +547,7 @@ async function renderInteractiveMap(){
       <div class="ec-source">Statistics Canada, Provincial Accounts</div>
     </div>
   </div>`;
+  buildNatPanel();
 
   // Render D3 map
   setTimeout(async()=>{
