@@ -1618,13 +1618,30 @@ async function renderCalendar(){
   for(let i=0;i<firstDay;i++)calHtml+='<div class="calendar-cell other-month"></div>';
   for(let d=1;d<=daysInMonth;d++){
     const isToday=d===today;
+    const dayEvents=eventsByDate[d]||[];
     calHtml+='<div class="calendar-cell'+(isToday?' today':'')+'">';
     calHtml+='<div class="calendar-day-number">'+d+'</div>';
-    if(eventsByDate[d]){
-      eventsByDate[d].forEach(e=>{
+    if(dayEvents.length){
+      dayEvents.forEach(e=>{
         const impact=(e.impact||'low').toLowerCase();
-        calHtml+='<span class="cal-dot '+impact+'" title="'+(e.event_name||e.event||e.name||'')+'"></span>';
+        calHtml+='<span class="cal-dot '+impact+'"></span>';
       });
+      // Rich tooltip with full event details
+      calHtml+='<div class="cal-tooltip">';
+      dayEvents.forEach(e=>{
+        const impact=(e.impact||'low').toLowerCase();
+        const impactLabel=impact.charAt(0).toUpperCase()+impact.slice(1);
+        const name=san(e.event_name||e.event||e.name||'');
+        const inst=san(e.institution||e.source||'');
+        const desc=san(e.description||'');
+        calHtml+='<div class="cal-tooltip-event">';
+        calHtml+='<div class="cal-tooltip-name">'+name+'</div>';
+        if(inst)calHtml+='<div class="cal-tooltip-inst">'+inst+'</div>';
+        if(desc)calHtml+='<div class="cal-tooltip-desc">'+desc+'</div>';
+        calHtml+='<span class="cal-tooltip-impact '+impact+'">'+impactLabel+'</span>';
+        calHtml+='</div>';
+      });
+      calHtml+='</div>';
     }
     calHtml+='</div>';
   }
