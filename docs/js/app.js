@@ -921,8 +921,8 @@ function extractAnalysisThemes(analysisText,projects){
 
 function buildInsightStrip(prefix,themes,projects){
   if(!themes||!themes.length)return '';
-  // Filter: only keep themes that have chartable data (sector projects) or are the top theme
-  const chartable=themes.filter((t,i)=>i===0||(t.sectors.length&&t.projCount>=1));
+  // Only keep themes that have actual project data to chart
+  const chartable=themes.filter(t=>t.sectors.length&&t.projCount>=1);
   if(!chartable.length)return '';
   const count=chartable.length;
   const colStyle=count===1?'':'display:grid;grid-template-columns:repeat('+count+',1fr);gap:16px';
@@ -934,17 +934,7 @@ function buildInsightStrip(prefix,themes,projects){
     html+='<div style="text-align:center">';
     html+='<div style="font-size:var(--text-xs);font-weight:700;color:'+t.color+';text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">'+t.label+'</div>';
     html+='<div style="font-size:10px;color:#475569;margin-bottom:12px">'+sub+'</div>';
-    if(hasSectorData){
-      html+='<div style="height:220px;position:relative"><canvas id="'+id+'"></canvas></div>';
-    }else{
-      // Text-based insight card for non-chartable themes
-      const matchedKw=(t._matchedKw||[]).slice(0,4);
-      html+='<div style="height:220px;display:flex;flex-direction:column;justify-content:center;align-items:center;background:'+t.color+'08;border:1px solid '+t.color+'20;border-radius:var(--radius-md);padding:20px">';
-      html+='<div style="font-size:48px;font-weight:900;color:'+t.color+';font-family:var(--font-heading);line-height:1">'+t.score+'</div>';
-      html+='<div style="font-size:var(--text-xs);color:#475569;margin-top:8px">keyword mentions in analysis</div>';
-      if(matchedKw.length)html+='<div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'+matchedKw.map(kw=>'<span style="background:'+t.color+'15;color:'+t.color+';padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500">'+kw+'</span>').join('')+'</div>';
-      html+='</div>';
-    }
+    html+='<div style="height:220px;position:relative"><canvas id="'+id+'"></canvas></div>';
     html+='</div>';
   });
   html+='</div>';
