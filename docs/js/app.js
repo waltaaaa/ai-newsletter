@@ -429,7 +429,7 @@ async function renderEditorialFlow(){
           const container=document.getElementById('canadaMapSvg');
           if(!container)return;
           const w=container.clientWidth||500;const h=Math.min(w*0.65,320);
-          const projection=d3.geoConicConformal().center([-96,62]).rotate([0,0]).parallels([49,77]).scale(w*0.55).translate([w/2,h/2]);
+          const projection=d3.geoConicConformal().rotate([96,-1,0]).center([0,62]).parallels([49,77]).scale(w*0.55).translate([w/2,h/2]);
           const path=d3.geoPath().projection(projection);
           const svg=d3.select(container).append('svg').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`).attr('preserveAspectRatio','xMidYMid meet');
           // Background
