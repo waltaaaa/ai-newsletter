@@ -920,35 +920,51 @@ function extractAnalysisThemes(analysisText,projects){
   return scored.sort((a,b)=>b.score-a.score).slice(0,1);
 }
 
-// Descriptive chart titles that help the reader understand what the chart shows
-const THEME_CHART_TITLES={
-  energy:'Key commodity prices tracked by the pipeline as energy-sector indicators',
-  mining:'Metals prices that influence the economics of tracked mining projects',
-  agriculture:'Crop prices affecting agricultural project viability across Canada',
-  trade:'Currency and trade indicators shaping cross-border project economics',
-  housing:'Indicators tied to residential construction and housing supply',
-  labour:'Labour market conditions in the region covered by this analysis',
-  manufacturing:'Input costs and output indicators for the manufacturing sector',
-  construction:'Indicators linked to construction activity and building investment',
-  transport:'Market conditions relevant to transportation and infrastructure projects',
-  healthcare:'Market context for healthcare capital investment',
-  defence:'Market context for defence and shipbuilding projects',
-  education:'Market context for education and research capital projects'
-};
+// Build a narrative chart title from timeseries trend + analysis context
+function _buildNarrativeTitle(primaryLabel,data,analysisText,themeKeywords){
+  if(!data||data.length<2)return primaryLabel;
+  const first=data[0],last=data[data.length-1];
+  const pctChg=first!==0?((last-first)/Math.abs(first))*100:0;
+  const absPct=Math.abs(pctChg);
+  // Direction verb
+  let verb;
+  if(absPct<1)verb='held steady';
+  else if(pctChg>0)verb=absPct>10?'rose sharply':absPct>5?'rose notably':'rose';
+  else verb=absPct>10?'fell sharply':absPct>5?'fell notably':'declined';
+  const pctStr=absPct>=1?(' '+absPct.toFixed(1)+'%'):'';
+  let headline=primaryLabel+' '+verb+pctStr+' over the past year';
+  // Extract a short context clause from analysis matching theme keywords
+  if(analysisText&&themeKeywords&&themeKeywords.length){
+    const clean=analysisText.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
+    const sentences=clean.match(/[^.!?]+[.!?]+/g)||[];
+    for(const s of sentences){
+      const low=s.toLowerCase();
+      const hits=themeKeywords.filter(kw=>low.includes(kw));
+      if(hits.length>=2){
+        let clause=s.trim();
+        // Take first clause if sentence is long
+        if(clause.length>80){const parts=clause.split(/,\s*/);if(parts[0].length>15&&parts[0].length<80)clause=parts[0]}
+        if(clause.length>80)clause=clause.substring(0,77).replace(/\s+\S*$/,'')+'...';
+        // Remove leading connectors
+        clause=clause.replace(/^(Meanwhile|However|In addition|Additionally|Furthermore|Moreover|Also),?\s*/i,'').replace(/^\w/,c=>c.toLowerCase());
+        headline=primaryLabel+' '+verb+pctStr+' as '+clause;
+        break;
+      }
+    }
+  }
+  return headline;
+}
 
 function buildInsightStrip(prefix,themes,provCode){
   if(!themes||!themes.length)return '';
   const t=themes[0];
   const id=prefix+'Insight0';
-  const resolved=resolveThemeTimeseries(t.id,provCode||null);
-  const provObj=provCode?PROVS.find(p=>p.code===provCode):null;
-  const regionLabel=provObj?provObj.name:'Canada';
-  const title=resolved.title||THEME_CHART_TITLES[t.id]||t.label;
-  const sub=resolved.entries.length?resolved.entries.map(s=>s.label).join(', ')+' \u2014 12-month trend':'From this week\u2019s analysis';
+  const tsEntries=resolveThemeTimeseries(t.id,provCode||null);
+  const sub=tsEntries.length?tsEntries.map(s=>s.label).join(', ')+' \u2014 12-month trend':'From this week\u2019s analysis';
   let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(0,49,83,0.12);border-bottom:2px solid rgba(0,49,83,0.12)">';
-  html+='<div style="text-align:left;padding:0 4px">';
-  html+='<div style="font-family:Outfit;font-size:13px;font-weight:700;color:#003153;line-height:1.3;margin-bottom:2px">'+regionLabel+': '+title+'</div>';
-  html+='<div style="font-family:Outfit;font-size:10px;color:#475569;margin-bottom:14px">'+sub+'</div>';
+  html+='<div style="text-align:right;padding:0 4px">';
+  html+='<div id="'+prefix+'InsightTitle" style="font-family:Outfit;font-size:13px;font-weight:700;color:#003153;line-height:1.3;margin-bottom:2px">'+t.label+'</div>';
+  html+='<div id="'+prefix+'InsightSub" style="font-family:Outfit;font-size:10px;color:#475569;margin-bottom:14px">'+sub+'</div>';
   html+='<div style="height:280px;position:relative"><canvas id="'+id+'"></canvas></div>';
   html+='</div>';
   html+='</div>';
@@ -991,35 +1007,34 @@ const THEME_TIMESERIES_MAP={
 // Each returns {entries:[...], title:'...'} for province-specific descriptive titles.
 const PROV_THEME_TS={
   _common:{
-    labour:function(c){return{entries:[{key:c+'_unemployment',label:'Unemployment Rate',unit:'%'},{key:c+'_cpi',label:'CPI',unit:'%'}],title:'Provincial unemployment rate and consumer price trends'}},
-    housing:function(c){return{entries:[{key:c+'_unemployment',label:'Unemployment Rate',unit:'%'}],title:'Unemployment rate as a demand-side housing indicator'}},
-    construction:function(c){return{entries:[{key:c+'_cpi',label:'CPI',unit:'%'}],title:'Consumer price index tracking construction cost pressures'}}
+    labour:function(c){return[{key:c+'_unemployment',label:'Unemployment Rate',unit:'%'},{key:c+'_cpi',label:'CPI',unit:'%'}]},
+    housing:function(c){return[{key:c+'_unemployment',label:'Unemployment Rate',unit:'%'}]},
+    construction:function(c){return[{key:c+'_cpi',label:'CPI',unit:'%'}]}
   },
   ON:{
-    trade:function(){return{entries:[{key:'ON_on_exports',label:'Exports',unit:'$M'},{key:'ON_on_imports',label:'Imports',unit:'$M'}],title:'Export and import volumes from provincial GDP accounts'}},
-    manufacturing:function(){return{entries:[{key:'ON_on_gdp_goods',label:'Goods GDP',unit:'$M'}],title:'Goods-producing GDP tracking manufacturing output'}},
-    construction:function(){return{entries:[{key:'ON_on_real_capital_investment',label:'Capital Investment',unit:'$M'}],title:'Real capital investment from quarterly economic accounts'}},
-    housing:function(){return{entries:[{key:'ON_on_real_household',label:'Household Spending',unit:'$M'},{key:'ON_unemployment',label:'Unemployment Rate',unit:'%'}],title:'Household spending and unemployment as housing demand signals'}}
+    trade:function(){return[{key:'ON_on_exports',label:'Exports',unit:'$M'},{key:'ON_on_imports',label:'Imports',unit:'$M'}]},
+    manufacturing:function(){return[{key:'ON_on_gdp_goods',label:'Goods GDP',unit:'$M'}]},
+    construction:function(){return[{key:'ON_on_real_capital_investment',label:'Capital Investment',unit:'$M'}]},
+    housing:function(){return[{key:'ON_on_real_household',label:'Household Spending',unit:'$M'},{key:'ON_unemployment',label:'Unemployment Rate',unit:'%'}]}
   },
   QC:{
-    trade:function(){return{entries:[{key:'QC_qc_exports',label:'Exports',unit:'$M'},{key:'QC_qc_imports',label:'Imports',unit:'$M'}],title:'Export and import volumes from provincial economic accounts'}},
-    manufacturing:function(){return{entries:[{key:'QC_qc_manufacturing_sales',label:'Manufacturing Sales',unit:'$M'}],title:'Monthly manufacturing sales tracking industrial output'}},
-    construction:function(){return{entries:[{key:'QC_qc_bldg_permits_res',label:'Residential Permits',unit:'$M'},{key:'QC_qc_bldg_permits_nonres',label:'Non-Res Permits',unit:'$M'}],title:'Building permit values signalling near-term construction activity'}},
-    housing:function(){return{entries:[{key:'QC_qc_housing_starts',label:'Housing Starts',unit:'units'},{key:'QC_unemployment',label:'Unemployment Rate',unit:'%'}],title:'Housing starts and unemployment rate as supply-demand indicators'}},
-    labour:function(){return{entries:[{key:'QC_qc_unemployment_rate',label:'Unemployment Rate',unit:'%'},{key:'QC_qc_employment',label:'Employment',unit:'000s'}],title:'Unemployment rate and total employment from provincial labour data'}}
+    trade:function(){return[{key:'QC_qc_exports',label:'Exports',unit:'$M'},{key:'QC_qc_imports',label:'Imports',unit:'$M'}]},
+    manufacturing:function(){return[{key:'QC_qc_manufacturing_sales',label:'Manufacturing Sales',unit:'$M'}]},
+    construction:function(){return[{key:'QC_qc_bldg_permits_res',label:'Residential Permits',unit:'$M'},{key:'QC_qc_bldg_permits_nonres',label:'Non-Res Permits',unit:'$M'}]},
+    housing:function(){return[{key:'QC_qc_housing_starts',label:'Housing Starts',unit:'units'},{key:'QC_unemployment',label:'Unemployment Rate',unit:'%'}]},
+    labour:function(){return[{key:'QC_qc_unemployment_rate',label:'Unemployment Rate',unit:'%'},{key:'QC_qc_employment',label:'Employment',unit:'000s'}]}
   }
 };
 
 // Resolve the best timeseries entries for a theme + optional province code
-// Returns {entries:[...], title:string|null}
 function resolveThemeTimeseries(themeId,provCode){
   if(provCode){
     const provMap=PROV_THEME_TS[provCode];
-    if(provMap&&provMap[themeId]){const r=provMap[themeId](provCode);return{entries:r.entries,title:r.title}}
+    if(provMap&&provMap[themeId])return provMap[themeId](provCode);
     const common=PROV_THEME_TS._common;
-    if(common&&common[themeId]){const r=common[themeId](provCode);return{entries:r.entries,title:r.title}}
+    if(common&&common[themeId])return common[themeId](provCode);
   }
-  return{entries:THEME_TIMESERIES_MAP[themeId]||[],title:null};
+  return THEME_TIMESERIES_MAP[themeId]||[];
 }
 
 /* == Infographic Library — multiple chart types per data strategy == */
@@ -1201,7 +1216,7 @@ function _pickFromFit(suitable,strategyKey){
   return suitable[idx];
 }
 
-async function renderInsightCharts(prefix,themes,projects,provCode){
+async function renderInsightCharts(prefix,themes,projects,provCode,analysisText){
   if(!themes||!themes.length)return;
   const theme=themes[0];
   const canvasId=prefix+'Insight0';
@@ -1210,8 +1225,7 @@ async function renderInsightCharts(prefix,themes,projects,provCode){
   const key='_insight_'+canvasId;
   if(charts[key]){charts[key].destroy();delete charts[key]}
 
-  const resolved=resolveThemeTimeseries(theme.id,provCode||null);
-  const tsEntries=resolved.entries;
+  const tsEntries=resolveThemeTimeseries(theme.id,provCode||null);
   if(!tsEntries.length){
     canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:'+_ic.light+';font-size:var(--text-xs);padding:24px">No historical data available for this theme</div>');
     return;
@@ -1220,9 +1234,9 @@ async function renderInsightCharts(prefix,themes,projects,provCode){
   // Load all timeseries for this theme
   const allTs=await fetchJSON('timeseries.json').catch(()=>({}));
   const datasets=[];
-  // Use dashboard palette (accent blue primary, green secondary) — matches _ic.pal
   const lineColors=[_ic.accent,_ic.pos];
   let allLabels=[];
+  let primaryData=null,primaryLabel='';
 
   tsEntries.forEach((entry,idx)=>{
     let raw=allTs[entry.key];
@@ -1235,6 +1249,7 @@ async function renderInsightCharts(prefix,themes,projects,provCode){
     const labels=filtered.map(p=>fmtDate(p.date));
     const data=filtered.map(p=>p.value);
     if(labels.length>allLabels.length)allLabels=labels;
+    if(!primaryData){primaryData=data;primaryLabel=entry.label}
     const c=lineColors[idx%lineColors.length];
     datasets.push({label:entry.label+(entry.unit?' ('+entry.unit+')':''),data:data,borderColor:c,backgroundColor:_ic.hexAlpha(c,0.06),borderWidth:2,pointRadius:data.map((_,i)=>i===data.length-1?4:0),pointBackgroundColor:c,pointBorderColor:_ic.white,pointBorderWidth:2,fill:true,tension:0.3,yAxisID:datasets.length===0?'y':'y1'});
   });
@@ -1242,6 +1257,13 @@ async function renderInsightCharts(prefix,themes,projects,provCode){
   if(!datasets.length){
     canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:'+_ic.light+';font-size:var(--text-xs);padding:24px">No historical data available for this theme</div>');
     return;
+  }
+
+  // Update the title with a narrative description based on actual data trend
+  const titleEl=document.getElementById(prefix+'InsightTitle');
+  if(titleEl&&primaryData){
+    const narrative=_buildNarrativeTitle(primaryLabel,primaryData,analysisText||'',theme._matchedKw||theme.keywords||[]);
+    titleEl.textContent=narrative;
   }
 
   // Build scales — prussian blue text, dashboard grid tokens
@@ -1355,7 +1377,7 @@ async function renderCanadaSub(){
   if(natProjects.length>=3){
     _renderSectorChart('natSectorChart','nat',natProjects);
   }
-  await renderInsightCharts('nat',natThemes,natProjects);
+  await renderInsightCharts('nat',natThemes,natProjects,null,natContent);
 
   // Policy section with editorial header
   const ps=$('policySection');
@@ -1451,7 +1473,7 @@ async function renderAllGlobalPlayers(){
     panelEl.innerHTML=html;
 
     // Render insight charts
-    await renderInsightCharts(v.key,gThemes,[]);
+    await renderInsightCharts(v.key,gThemes,[],null,analysis);
     _nationalSubRendered[v.key]=true;
   }
 }
@@ -1904,7 +1926,7 @@ async function renderProvinceContent(){
   if(provProj.length>=3){
     _renderSectorChart('pvSectorChart','pv',provProj);
   }
-  await renderInsightCharts('prov',provThemes,provProj,prov.code);
+  await renderInsightCharts('prov',provThemes,provProj,prov.code,provContent);
 
 
   // Newly Added Projects
