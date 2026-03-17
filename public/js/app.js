@@ -436,7 +436,7 @@ async function renderEditorialFlow(){
   `;
   await renderInteractiveMap();
   await renderTLDRMarkets();
-  try{await _ensureChartData();_renderSectorChart('tldrSectorChart','tldrSectorCard','tldr')}catch(e){console.warn('Sector chart:',e)}
+  try{await _ensureChartData();_renderSectorChart('tldrSectorChart','tldr')}catch(e){console.warn('Sector chart:',e)}
   if(wcTopics.length) renderTLDRWordCloud(wcTopics,'tldrWordCloudSvg');
   }catch(e){
     console.error('renderEditorialFlow error:',e);
