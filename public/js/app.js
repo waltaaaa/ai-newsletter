@@ -961,7 +961,7 @@ function buildInsightStrip(prefix,themes,provCode){
   const id=prefix+'Insight0';
   const tsEntries=resolveThemeTimeseries(t.id,provCode||null);
   const sub=tsEntries.length?tsEntries.map(s=>s.label).join(', ')+' \u2014 12-month trend':'From this week\u2019s analysis';
-  let html='<div style="margin:36px 0;padding:32px 24px 20px;border-top:3px solid #003153">';
+  let html='<div style="margin:36px 0;padding:32px 24px 20px;border-top:3px solid #003153;background:#f8fafc;border-radius:0 0 8px 8px">';
   html+='<div style="text-align:left">';
   html+='<div id="'+prefix+'InsightTitle" style="font-family:Outfit;font-size:16px;font-weight:700;color:#003153;line-height:1.35;margin-bottom:4px">'+t.label+'</div>';
   html+='<div id="'+prefix+'InsightSub" style="font-family:Outfit;font-size:11px;color:#475569;margin-bottom:20px">'+sub+'</div>';
