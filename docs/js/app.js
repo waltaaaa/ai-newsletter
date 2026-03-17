@@ -965,7 +965,7 @@ function buildInsightStrip(prefix,themes,provCode){
   html+='<div style="text-align:left">';
   html+='<div id="'+prefix+'InsightTitle" style="font-family:Outfit;font-size:16px;font-weight:700;color:#003153;line-height:1.35;margin-bottom:4px">'+t.label+'</div>';
   html+='<div id="'+prefix+'InsightSub" style="font-family:Outfit;font-size:11px;color:#475569;margin-bottom:20px">'+sub+'</div>';
-  html+='<div style="height:300px;position:relative;padding:0 12px"><canvas id="'+id+'"></canvas></div>';
+  html+='<div style="height:300px;position:relative;padding:12px 16px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,49,83,0.08)"><canvas id="'+id+'"></canvas></div>';
   html+='<div style="margin-top:12px;padding-top:8px;border-top:1px solid rgba(0,49,83,0.08);font-family:Outfit;font-size:9px;color:#94A3B8">Source: Signal Dispatch pipeline data</div>';
   html+='</div>';
   html+='</div>';
