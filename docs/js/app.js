@@ -965,7 +965,7 @@ function buildInsightStrip(prefix,themes,provCode){
   html+='<div style="text-align:left">';
   html+='<div id="'+prefix+'InsightTitle" style="font-family:Outfit;font-size:16px;font-weight:700;color:#003153;line-height:1.35;margin-bottom:4px">'+t.label+'</div>';
   html+='<div id="'+prefix+'InsightSub" style="font-family:Outfit;font-size:11px;color:#475569;margin-bottom:20px">'+sub+'</div>';
-  html+='<div style="height:300px;position:relative;padding:0 8px"><canvas id="'+id+'"></canvas></div>';
+  html+='<div style="height:300px;position:relative;padding:0 12px"><canvas id="'+id+'"></canvas></div>';
   html+='<div style="margin-top:12px;padding-top:8px;border-top:1px solid rgba(0,49,83,0.08);font-family:Outfit;font-size:9px;color:#94A3B8">Source: Signal Dispatch pipeline data</div>';
   html+='</div>';
   html+='</div>';
@@ -1362,7 +1362,7 @@ async function renderInsightCharts(prefix,themes,projects,provCode,analysisText)
     options:{
       responsive:true,
       maintainAspectRatio:false,
-      layout:{padding:{top:10,right:20,bottom:6,left:4}},
+      layout:{padding:{top:10,right:50,bottom:6,left:4}},
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:legendCfg,
