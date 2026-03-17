@@ -1014,31 +1014,42 @@ const _insightLib={
       const absVals=vals.map(v=>Math.abs(v));
       return new Chart(canvas,{type:'radar',data:{labels,datasets:[{data:absVals,backgroundColor:_ic.hexAlpha(_ic.accent,0.1),borderColor:_ic.accent,borderWidth:2,pointBackgroundColor:vals.map(v=>v>=0?_ic.pos:_ic.neg),pointRadius:5,pointBorderColor:_ic.white,pointBorderWidth:1.5}]},
         options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel+' \u2014 |Weekly Change|'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>{const orig=vals[ctx.dataIndex];return(orig>=0?'+':'')+orig.toFixed(1)+'%'}}}},scales:{r:{angleLines:{color:_ic.gridSoft},grid:{color:_ic.gridSoft},ticks:{display:false},pointLabels:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading}}}}});
+    },
+    // 4: Line chart — connected points with green/red segment coloring
+    function(canvas,labels,vals,dm,theme,_cfg){
+      return new Chart(canvas,{type:'line',data:{labels,datasets:[{data:vals,borderColor:_ic.accent,backgroundColor:_ic.hexAlpha(_ic.accent,0.06),borderWidth:2.5,pointRadius:5,pointBackgroundColor:vals.map(v=>v>=0?_ic.pos:_ic.neg),pointBorderColor:_ic.white,pointBorderWidth:2,fill:true,tension:0.3}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel+' \u2014 Weekly Change'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>(ctx.raw>=0?'+':'')+ctx.raw.toFixed(1)+'%'}},annotation:{annotations:{zeroLine:{type:'line',yMin:0,yMax:0,borderColor:_ic.faint,borderWidth:1,borderDash:[3,3]}}}},scales:{y:{grid:{color:_ic.grid},ticks:{font:{family:_ic.font,size:9},color:_ic.muted,callback:v=>(v>=0?'+':'')+v+'%'}},x:{grid:{display:false},ticks:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading,maxRotation:45,minRotation:0}}}}});
     }
   ],
 
   // --- Indicator renderers (current values) ---
+  // All receive (canvas, raw, norm, dm, theme, _cfg) where raw=original values, norm=0-100 scaled
   indicator:[
-    // 0: Polar area (graduated opacity from palCat blue)
-    function(canvas,matched,dm,theme,_cfg){
+    // 0: Polar area — uses normalized data so different-scale indicators look proportional
+    function(canvas,raw,norm,dm,theme,_cfg){
       const polarColors=_ic.alphas(_ic.accent);
-      return new Chart(canvas,{type:'polarArea',data:{labels:matched.map(m=>m.label),datasets:[{data:matched.map(m=>m.value),backgroundColor:polarColors.slice(0,matched.length),borderColor:_ic.white,borderWidth:2}]},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:_ic.leg('right'),title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(ctx.raw)}}},scales:{r:{grid:{color:_ic.gridSoft},ticks:{display:false},pointLabels:{display:false}}}}});
+      return new Chart(canvas,{type:'polarArea',data:{labels:norm.map(m=>m.label),datasets:[{data:norm.map(m=>m.value),backgroundColor:polarColors.slice(0,norm.length),borderColor:_ic.white,borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:_ic.leg('right'),title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(norm[ctx.dataIndex].rawValue)}}},scales:{r:{grid:{color:_ic.gridSoft},ticks:{display:false},pointLabels:{display:false}}}}});
     },
-    // 1: Radar (accent blue web)
-    function(canvas,matched,dm,theme,_cfg){
-      return new Chart(canvas,{type:'radar',data:{labels:matched.map(m=>m.label),datasets:[{data:matched.map(m=>m.value),backgroundColor:_ic.hexAlpha(_ic.accent,0.08),borderColor:_ic.accent,borderWidth:2,pointBackgroundColor:_ic.accent,pointRadius:4,pointBorderColor:_ic.white,pointBorderWidth:1.5,fill:true}]},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(ctx.raw)}}},scales:{r:{angleLines:{color:_ic.gridSoft},grid:{color:_ic.gridSoft},ticks:{display:false},pointLabels:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading}}}}});
+    // 1: Radar — uses normalized data, tooltips show real values
+    function(canvas,raw,norm,dm,theme,_cfg){
+      return new Chart(canvas,{type:'radar',data:{labels:norm.map(m=>m.label),datasets:[{data:norm.map(m=>m.value),backgroundColor:_ic.hexAlpha(_ic.accent,0.08),borderColor:_ic.accent,borderWidth:2,pointBackgroundColor:_ic.accent,pointRadius:4,pointBorderColor:_ic.white,pointBorderWidth:1.5,fill:true}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(norm[ctx.dataIndex].rawValue)}}},scales:{r:{angleLines:{color:_ic.gridSoft},grid:{color:_ic.gridSoft},ticks:{display:false},pointLabels:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading}}}}});
     },
-    // 2: Horizontal bar (accent blue fill)
-    function(canvas,matched,dm,theme,_cfg){
-      return new Chart(canvas,{type:'bar',data:{labels:matched.map(m=>m.label),datasets:[{data:matched.map(m=>m.value),backgroundColor:_ic.hexAlpha(_ic.accent,0.7),borderRadius:4,barPercentage:0.65}]},
+    // 2: Horizontal bar — uses raw values (same axis, labels show magnitude)
+    function(canvas,raw,norm,dm,theme,_cfg){
+      return new Chart(canvas,{type:'bar',data:{labels:raw.map(m=>m.label),datasets:[{data:raw.map(m=>m.value),backgroundColor:_ic.hexAlpha(_ic.accent,0.7),borderRadius:4,barPercentage:0.65}]},
         options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>fmtNum(ctx.raw)}}},scales:{x:{grid:{color:_ic.grid},ticks:{font:{family:_ic.font,size:9},color:_ic.muted}},y:{grid:{display:false},ticks:_ic.tkLabel(9)}}}});
     },
-    // 3: Doughnut (palCat palette)
-    function(canvas,matched,dm,theme,_cfg){
-      return new Chart(canvas,{type:'doughnut',data:{labels:matched.map(m=>m.label),datasets:[{data:matched.map(m=>m.value),backgroundColor:_ic.pal.slice(0,matched.length),borderColor:_ic.white,borderWidth:2,hoverOffset:6}]},
-        options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:_ic.leg('right'),title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(ctx.raw)}}}}});
+    // 3: Doughnut — uses normalized data so slice sizes are meaningful
+    function(canvas,raw,norm,dm,theme,_cfg){
+      return new Chart(canvas,{type:'doughnut',data:{labels:norm.map(m=>m.label),datasets:[{data:norm.map(m=>m.value),backgroundColor:_ic.pal.slice(0,norm.length),borderColor:_ic.white,borderWidth:2,hoverOffset:6}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:_ic.leg('right'),title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(norm[ctx.dataIndex].rawValue)}}}}});
+    },
+    // 4: Line chart — uses raw values, good for showing relative levels across indicators
+    function(canvas,raw,norm,dm,theme,_cfg){
+      return new Chart(canvas,{type:'line',data:{labels:raw.map(m=>m.label),datasets:[{data:raw.map(m=>m.value),borderColor:_ic.accent,backgroundColor:_ic.hexAlpha(_ic.accent,0.08),borderWidth:2.5,pointBackgroundColor:_ic.accent,pointRadius:5,pointBorderColor:_ic.white,pointBorderWidth:2,fill:true,tension:0.3}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(ctx.raw)}}},scales:{y:{grid:{color:_ic.grid},ticks:{font:{family:_ic.font,size:9},color:_ic.muted}},x:{grid:{display:false},ticks:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading}}}}});
     }
   ],
 
@@ -1075,59 +1086,55 @@ const _insightLib={
 };
 
 // --- Data-aware renderer selection ---
-// Each function returns an array of renderer indices that make sense for the data.
+// Each fitness function returns renderer indices ordered variety-first.
+// Radial/circular charts come before bar charts so the picker reaches them.
 
-// Commodity: % change values — bars always work; radar needs ≥3 points for a polygon
-// 0=vertical bar, 1=horizontal bar, 2=lollipop, 3=radar
+// Commodity: % change values
+// 0=vertical bar, 1=horizontal bar, 2=lollipop, 3=radar, 4=line
 function _commFit(count){
-  const fit=[0,1,2]; // bars work for any count ≥2
-  if(count>=3)fit.push(3); // radar needs ≥3 vertices
-  return fit;
+  if(count>=5)return [3,4,2,0,1]; // radar, line, lollipop, then bars — max variety
+  if(count>=3)return [3,2,4,0,1]; // radar, lollipop, line, then bars
+  return [4,2,0,1]; // line, lollipop, then bars for 2 items
 }
 
-// Indicator: independent measurements on potentially very different scales
-// 0=polar area, 1=radar, 2=horizontal bar, 3=doughnut
-// Radial charts (polar, radar, doughnut) only make sense when values are on
-// comparable scales — unemployment 5% vs housing starts 200,000 on the same
-// radar axis is meaningless
-function _indFit(matched){
-  const n=matched.length;
+// Indicator: independent measurements — radar/polar use normalized 0-100 data
+// so scale disparity is handled visually; tooltips show real values.
+// 0=polar area, 1=radar, 2=horizontal bar, 3=doughnut, 4=line
+function _indFit(count){
+  if(count>=4)return [0,1,4,3,2]; // polar, radar, line, doughnut, bar
+  if(count>=3)return [1,0,4,3,2]; // radar, polar, line, doughnut, bar
+  return [4,3,2]; // line, doughnut, bar for 2 items
+}
+
+// Normalize indicator values to 0-100 range for radial chart display.
+// Returns [{label, value (normalized 0-100), rawValue (original)}]
+function _normalizeInd(matched){
   const vals=matched.map(m=>m.value);
   const mx=Math.max(...vals),mn=Math.min(...vals);
-  const ratio=mn>0?mx/mn:Infinity;
-  const fit=[2]; // horizontal bar always works
-  if(n>=3&&ratio<15){fit.push(0);fit.push(1)} // polar + radar: ≥3 items, comparable scale
-  if(n>=3&&ratio<30)fit.push(3); // doughnut: slightly looser — still needs visual proportion
-  return fit;
+  const range=mx-mn||1;
+  return matched.map(m=>({label:m.label,value:10+((m.value-mn)/range)*90,rawValue:m.value,prov:m.prov||''}));
 }
 
-// Pipeline: status counts are genuine parts of a whole (total projects)
-// All chart types are semantically valid, but radial shapes need ≥3 slices
+// Pipeline: status counts are parts of a whole — radial always makes sense
 // 0=doughnut, 1=horizontal bar, 2=pie, 3=polar area, 4=vertical bar
 function _pipeFit(count){
-  const fit=[1,4]; // bar charts work for any count ≥1
-  if(count>=3){fit.push(0);fit.push(2);fit.push(3)} // radial: ≥3 slices
-  else if(count===2){fit.push(0);fit.push(2)} // doughnut/pie ok with 2 large slices
-  return fit;
+  if(count>=3)return [0,3,2,4,1]; // doughnut, polar, pie first
+  if(count===2)return [0,2,1,4]; // doughnut, pie, then bars
+  return [1,4]; // single status — bar only
 }
 
-// Track which renderer index was used last per strategy to avoid adjacent repeats
-let _insightLastPick={commodity:-1,indicator:-1,pipeline:-1};
+// Cycling picker — walks through the suitable array so each call gets the next type
+let _insightCursor={commodity:0,indicator:0,pipeline:0};
 
 function _pickFromFit(suitable,strategyKey){
-  if(suitable.length===1)return suitable[0];
-  const last=_insightLastPick[strategyKey];
-  // Prefer one that differs from last used; cycle through suitable list
-  const avail=suitable.filter(i=>i!==last);
-  const pool=avail.length?avail:suitable;
-  const pick=pool[0];
-  _insightLastPick[strategyKey]=pick;
-  return pick;
+  const idx=_insightCursor[strategyKey]%suitable.length;
+  _insightCursor[strategyKey]++;
+  return suitable[idx];
 }
 
 function renderInsightCharts(prefix,themes,projects){
   // Reset per strip so each tab starts fresh
-  _insightLastPick={commodity:-1,indicator:-1,pipeline:-1};
+  _insightCursor={commodity:0,indicator:0,pipeline:0};
 
   themes.forEach((theme,i)=>{
     const canvasId=prefix+'Insight'+i;
@@ -1167,9 +1174,11 @@ function renderInsightCharts(prefix,themes,projects){
         }
       });
       if(matched.length>=2){
+        // Normalize for radial charts; renderers that need it use normalized, others use raw
+        const norm=_normalizeInd(matched);
         try{
-          const ri=_pickFromFit(_indFit(matched),'indicator');
-          charts[key]=_insightLib.indicator[ri](canvas,matched,dm,theme,_chartCfg);
+          const ri=_pickFromFit(_indFit(matched.length),'indicator');
+          charts[key]=_insightLib.indicator[ri](canvas,matched,norm,dm,theme,_chartCfg);
         }catch(e){console.warn('Insight indicator chart:',e)}
         return;
       }
