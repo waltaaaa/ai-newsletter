@@ -920,16 +920,35 @@ function extractAnalysisThemes(analysisText,projects){
   return scored.sort((a,b)=>b.score-a.score).slice(0,1);
 }
 
+// Descriptive chart titles that help the reader understand what the chart shows
+const THEME_CHART_TITLES={
+  energy:'Key commodity prices tracked by the pipeline as energy-sector indicators',
+  mining:'Metals prices that influence the economics of tracked mining projects',
+  agriculture:'Crop prices affecting agricultural project viability across Canada',
+  trade:'Currency and trade indicators shaping cross-border project economics',
+  housing:'Indicators tied to residential construction and housing supply',
+  labour:'Labour market conditions in the region covered by this analysis',
+  manufacturing:'Input costs and output indicators for the manufacturing sector',
+  construction:'Indicators linked to construction activity and building investment',
+  transport:'Market conditions relevant to transportation and infrastructure projects',
+  healthcare:'Market context for healthcare capital investment',
+  defence:'Market context for defence and shipbuilding projects',
+  education:'Market context for education and research capital projects'
+};
+
 function buildInsightStrip(prefix,themes,provCode){
   if(!themes||!themes.length)return '';
   const t=themes[0];
   const id=prefix+'Insight0';
-  const tsEntries=resolveThemeTimeseries(t.id,provCode||null);
-  const sub=tsEntries.length?tsEntries.map(s=>s.label).join(' & ')+' \u2014 12-Month Trend':'From this week\u2019s analysis';
+  const resolved=resolveThemeTimeseries(t.id,provCode||null);
+  const provObj=provCode?PROVS.find(p=>p.code===provCode):null;
+  const regionLabel=provObj?provObj.name:'Canada';
+  const title=resolved.title||THEME_CHART_TITLES[t.id]||t.label;
+  const sub=resolved.entries.length?resolved.entries.map(s=>s.label).join(', ')+' \u2014 12-month trend':'From this week\u2019s analysis';
   let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(0,49,83,0.12);border-bottom:2px solid rgba(0,49,83,0.12)">';
-  html+='<div style="text-align:center">';
-  html+='<div style="font-family:Outfit;font-size:var(--text-xs);font-weight:700;color:#003153;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">'+t.label+'</div>';
-  html+='<div style="font-family:Outfit;font-size:10px;color:#475569;margin-bottom:12px">'+sub+'</div>';
+  html+='<div style="text-align:left;padding:0 4px">';
+  html+='<div style="font-family:Outfit;font-size:13px;font-weight:700;color:#003153;line-height:1.3;margin-bottom:2px">'+regionLabel+': '+title+'</div>';
+  html+='<div style="font-family:Outfit;font-size:10px;color:#475569;margin-bottom:14px">'+sub+'</div>';
   html+='<div style="height:280px;position:relative"><canvas id="'+id+'"></canvas></div>';
   html+='</div>';
   html+='</div>';
@@ -969,40 +988,38 @@ const THEME_TIMESERIES_MAP={
 };
 
 // Province-specific timeseries overrides — keyed by province code
-// Each maps theme ID to timeseries entries. Falls through to THEME_TIMESERIES_MAP if not listed.
+// Each returns {entries:[...], title:'...'} for province-specific descriptive titles.
 const PROV_THEME_TS={
-  // All provinces get unemployment + CPI via {code}_unemployment / {code}_cpi
   _common:{
-    labour:function(c){return[{key:c+'_unemployment',label:c+' Unemployment Rate',unit:'%'},{key:c+'_cpi',label:c+' CPI',unit:'%'}]},
-    housing:function(c){return[{key:c+'_unemployment',label:c+' Unemployment Rate',unit:'%'}]},
-    construction:function(c){return[{key:c+'_cpi',label:c+' CPI',unit:'%'}]}
+    labour:function(c){return{entries:[{key:c+'_unemployment',label:'Unemployment Rate',unit:'%'},{key:c+'_cpi',label:'CPI',unit:'%'}],title:'Provincial unemployment rate and consumer price trends'}},
+    housing:function(c){return{entries:[{key:c+'_unemployment',label:'Unemployment Rate',unit:'%'}],title:'Unemployment rate as a demand-side housing indicator'}},
+    construction:function(c){return{entries:[{key:c+'_cpi',label:'CPI',unit:'%'}],title:'Consumer price index tracking construction cost pressures'}}
   },
   ON:{
-    trade:function(){return[{key:'ON_on_exports',label:'ON Exports',unit:'$M'},{key:'ON_on_imports',label:'ON Imports',unit:'$M'}]},
-    manufacturing:function(){return[{key:'ON_on_gdp_goods',label:'ON Goods GDP',unit:'$M'}]},
-    construction:function(){return[{key:'ON_on_real_capital_investment',label:'ON Capital Investment',unit:'$M'}]},
-    housing:function(){return[{key:'ON_on_real_household',label:'ON Household Spending',unit:'$M'},{key:'ON_unemployment',label:'ON Unemployment Rate',unit:'%'}]}
+    trade:function(){return{entries:[{key:'ON_on_exports',label:'Exports',unit:'$M'},{key:'ON_on_imports',label:'Imports',unit:'$M'}],title:'Export and import volumes from provincial GDP accounts'}},
+    manufacturing:function(){return{entries:[{key:'ON_on_gdp_goods',label:'Goods GDP',unit:'$M'}],title:'Goods-producing GDP tracking manufacturing output'}},
+    construction:function(){return{entries:[{key:'ON_on_real_capital_investment',label:'Capital Investment',unit:'$M'}],title:'Real capital investment from quarterly economic accounts'}},
+    housing:function(){return{entries:[{key:'ON_on_real_household',label:'Household Spending',unit:'$M'},{key:'ON_unemployment',label:'Unemployment Rate',unit:'%'}],title:'Household spending and unemployment as housing demand signals'}}
   },
   QC:{
-    trade:function(){return[{key:'QC_qc_exports',label:'QC Exports',unit:'$M'},{key:'QC_qc_imports',label:'QC Imports',unit:'$M'}]},
-    manufacturing:function(){return[{key:'QC_qc_manufacturing_sales',label:'QC Manufacturing Sales',unit:'$M'}]},
-    construction:function(){return[{key:'QC_qc_bldg_permits_res',label:'QC Residential Permits',unit:'$M'},{key:'QC_qc_bldg_permits_nonres',label:'QC Non-Res Permits',unit:'$M'}]},
-    housing:function(){return[{key:'QC_qc_housing_starts',label:'QC Housing Starts',unit:'units'},{key:'QC_unemployment',label:'QC Unemployment Rate',unit:'%'}]},
-    labour:function(){return[{key:'QC_qc_unemployment_rate',label:'QC Unemployment Rate',unit:'%'},{key:'QC_qc_employment',label:'QC Employment',unit:'000s'}]}
+    trade:function(){return{entries:[{key:'QC_qc_exports',label:'Exports',unit:'$M'},{key:'QC_qc_imports',label:'Imports',unit:'$M'}],title:'Export and import volumes from provincial economic accounts'}},
+    manufacturing:function(){return{entries:[{key:'QC_qc_manufacturing_sales',label:'Manufacturing Sales',unit:'$M'}],title:'Monthly manufacturing sales tracking industrial output'}},
+    construction:function(){return{entries:[{key:'QC_qc_bldg_permits_res',label:'Residential Permits',unit:'$M'},{key:'QC_qc_bldg_permits_nonres',label:'Non-Res Permits',unit:'$M'}],title:'Building permit values signalling near-term construction activity'}},
+    housing:function(){return{entries:[{key:'QC_qc_housing_starts',label:'Housing Starts',unit:'units'},{key:'QC_unemployment',label:'Unemployment Rate',unit:'%'}],title:'Housing starts and unemployment rate as supply-demand indicators'}},
+    labour:function(){return{entries:[{key:'QC_qc_unemployment_rate',label:'Unemployment Rate',unit:'%'},{key:'QC_qc_employment',label:'Employment',unit:'000s'}],title:'Unemployment rate and total employment from provincial labour data'}}
   }
 };
 
 // Resolve the best timeseries entries for a theme + optional province code
+// Returns {entries:[...], title:string|null}
 function resolveThemeTimeseries(themeId,provCode){
   if(provCode){
-    // Check province-specific override first
     const provMap=PROV_THEME_TS[provCode];
-    if(provMap&&provMap[themeId])return provMap[themeId](provCode);
-    // Check common province overrides
+    if(provMap&&provMap[themeId]){const r=provMap[themeId](provCode);return{entries:r.entries,title:r.title}}
     const common=PROV_THEME_TS._common;
-    if(common&&common[themeId])return common[themeId](provCode);
+    if(common&&common[themeId]){const r=common[themeId](provCode);return{entries:r.entries,title:r.title}}
   }
-  return THEME_TIMESERIES_MAP[themeId]||[];
+  return{entries:THEME_TIMESERIES_MAP[themeId]||[],title:null};
 }
 
 /* == Infographic Library — multiple chart types per data strategy == */
@@ -1193,7 +1210,8 @@ async function renderInsightCharts(prefix,themes,projects,provCode){
   const key='_insight_'+canvasId;
   if(charts[key]){charts[key].destroy();delete charts[key]}
 
-  const tsEntries=resolveThemeTimeseries(theme.id,provCode||null);
+  const resolved=resolveThemeTimeseries(theme.id,provCode||null);
+  const tsEntries=resolved.entries;
   if(!tsEntries.length){
     canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:'+_ic.light+';font-size:var(--text-xs);padding:24px">No historical data available for this theme</div>');
     return;
