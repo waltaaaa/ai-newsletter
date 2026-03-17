@@ -1074,21 +1074,60 @@ const _insightLib={
   ]
 };
 
-// Track which renderer index was used last per strategy to avoid repeats
-let _insightLastIdx={commodity:-1,indicator:-1,pipeline:-1};
+// --- Data-aware renderer selection ---
+// Each function returns an array of renderer indices that make sense for the data.
 
-function _pickRenderer(pool,strategyKey){
-  const n=pool.length;
-  if(n===1)return 0;
-  // Pick next in rotation, skipping the one just used
-  let idx=(_insightLastIdx[strategyKey]+1)%n;
-  _insightLastIdx[strategyKey]=idx;
-  return idx;
+// Commodity: % change values — bars always work; radar needs ≥3 points for a polygon
+// 0=vertical bar, 1=horizontal bar, 2=lollipop, 3=radar
+function _commFit(count){
+  const fit=[0,1,2]; // bars work for any count ≥2
+  if(count>=3)fit.push(3); // radar needs ≥3 vertices
+  return fit;
+}
+
+// Indicator: independent measurements on potentially very different scales
+// 0=polar area, 1=radar, 2=horizontal bar, 3=doughnut
+// Radial charts (polar, radar, doughnut) only make sense when values are on
+// comparable scales — unemployment 5% vs housing starts 200,000 on the same
+// radar axis is meaningless
+function _indFit(matched){
+  const n=matched.length;
+  const vals=matched.map(m=>m.value);
+  const mx=Math.max(...vals),mn=Math.min(...vals);
+  const ratio=mn>0?mx/mn:Infinity;
+  const fit=[2]; // horizontal bar always works
+  if(n>=3&&ratio<15){fit.push(0);fit.push(1)} // polar + radar: ≥3 items, comparable scale
+  if(n>=3&&ratio<30)fit.push(3); // doughnut: slightly looser — still needs visual proportion
+  return fit;
+}
+
+// Pipeline: status counts are genuine parts of a whole (total projects)
+// All chart types are semantically valid, but radial shapes need ≥3 slices
+// 0=doughnut, 1=horizontal bar, 2=pie, 3=polar area, 4=vertical bar
+function _pipeFit(count){
+  const fit=[1,4]; // bar charts work for any count ≥1
+  if(count>=3){fit.push(0);fit.push(2);fit.push(3)} // radial: ≥3 slices
+  else if(count===2){fit.push(0);fit.push(2)} // doughnut/pie ok with 2 large slices
+  return fit;
+}
+
+// Track which renderer index was used last per strategy to avoid adjacent repeats
+let _insightLastPick={commodity:-1,indicator:-1,pipeline:-1};
+
+function _pickFromFit(suitable,strategyKey){
+  if(suitable.length===1)return suitable[0];
+  const last=_insightLastPick[strategyKey];
+  // Prefer one that differs from last used; cycle through suitable list
+  const avail=suitable.filter(i=>i!==last);
+  const pool=avail.length?avail:suitable;
+  const pick=pool[0];
+  _insightLastPick[strategyKey]=pick;
+  return pick;
 }
 
 function renderInsightCharts(prefix,themes,projects){
-  // Reset rotation per strip so each tab's strip starts fresh
-  _insightLastIdx={commodity:-1,indicator:-1,pipeline:-1};
+  // Reset per strip so each tab starts fresh
+  _insightLastPick={commodity:-1,indicator:-1,pipeline:-1};
 
   themes.forEach((theme,i)=>{
     const canvasId=prefix+'Insight'+i;
@@ -1110,7 +1149,7 @@ function renderInsightCharts(prefix,themes,projects){
         const labels=top.map(c=>{let n=(c.name||'').replace(/_/g,' ').replace(/\b\w/g,x=>x.toUpperCase());return n.length>14?n.substring(0,13)+'\u2026':n});
         const vals=top.map(c=>parseFloat(c.pct_1w));
         try{
-          const ri=_pickRenderer(_insightLib.commodity,'commodity');
+          const ri=_pickFromFit(_commFit(top.length),'commodity');
           charts[key]=_insightLib.commodity[ri](canvas,labels,vals,dm,theme,_chartCfg);
         }catch(e){console.warn('Insight commodity chart:',e)}
         return;
@@ -1129,7 +1168,7 @@ function renderInsightCharts(prefix,themes,projects){
       });
       if(matched.length>=2){
         try{
-          const ri=_pickRenderer(_insightLib.indicator,'indicator');
+          const ri=_pickFromFit(_indFit(matched),'indicator');
           charts[key]=_insightLib.indicator[ri](canvas,matched,dm,theme,_chartCfg);
         }catch(e){console.warn('Insight indicator chart:',e)}
         return;
@@ -1151,7 +1190,7 @@ function renderInsightCharts(prefix,themes,projects){
           const totalVal=sectorProj.reduce((s,p)=>s+parseNumericValue(p.value),0);
           const valStr=totalVal>=1e9?'$'+(totalVal/1e9).toFixed(1)+'B':totalVal>=1e6?'$'+(totalVal/1e6).toFixed(0)+'M':'';
           try{
-            const ri=_pickRenderer(_insightLib.pipeline,'pipeline');
+            const ri=_pickFromFit(_pipeFit(labels.length),'pipeline');
             charts[key]=_insightLib.pipeline[ri](canvas,labels,data,colors,{total,valStr},theme,_chartCfg,key);
           }catch(e){console.warn('Insight pipeline chart:',e)}
           return;
