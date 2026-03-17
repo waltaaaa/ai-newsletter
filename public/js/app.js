@@ -962,9 +962,9 @@ function buildInsightStrip(prefix,themes,provCode){
   const tsEntries=resolveThemeTimeseries(t.id,provCode||null);
   const sub=tsEntries.length?tsEntries.map(s=>s.label).join(', ')+' \u2014 12-month trend':'From this week\u2019s analysis';
   let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(0,49,83,0.12);border-bottom:2px solid rgba(0,49,83,0.12)">';
-  html+='<div style="text-align:right;padding:0 4px">';
-  html+='<div id="'+prefix+'InsightTitle" style="font-family:Outfit;font-size:13px;font-weight:700;color:#003153;line-height:1.3;margin-bottom:2px">'+t.label+'</div>';
-  html+='<div id="'+prefix+'InsightSub" style="font-family:Outfit;font-size:10px;color:#475569;margin-bottom:14px">'+sub+'</div>';
+  html+='<div style="text-align:left;padding:0 4px">';
+  html+='<div id="'+prefix+'InsightTitle" style="font-family:Outfit;font-size:16px;font-weight:700;color:#003153;line-height:1.3;margin-bottom:3px">'+t.label+'</div>';
+  html+='<div id="'+prefix+'InsightSub" style="font-family:Outfit;font-size:11px;color:#475569;margin-bottom:14px">'+sub+'</div>';
   html+='<div style="height:280px;position:relative"><canvas id="'+id+'"></canvas></div>';
   html+='</div>';
   html+='</div>';
