@@ -619,6 +619,50 @@ def export_timeseries(conn, output_dir: str) -> str:
         if rows:
             bundle[name] = [dict(r) for r in rows]
 
+    # Province-level indicator history for theme line charts
+    # Export as {provCode}_{indicator} keys (e.g. AB_unemployment, QC_exports)
+    _PROV_CODES = ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'ON', 'PEI', 'QC', 'SK']
+    _PROV_INDICATORS = ['unemployment', 'cpi']
+    for prov in _PROV_CODES:
+        for ind in _PROV_INDICATORS:
+            key = f"{prov}_{ind}"
+            rows = conn.execute("""
+                SELECT period AS date, value, unit, source
+                FROM indicator_history
+                WHERE indicator_name = ? AND province = ? AND period IS NOT NULL
+                ORDER BY period DESC LIMIT 66
+            """, (ind, prov)).fetchall()
+            if rows:
+                bundle[key] = [dict(r) for r in rows]
+
+    # Ontario detailed series (quarterly GDP components)
+    for ind in ['on_exports', 'on_imports', 'on_real_capital_investment',
+                'on_gdp_goods', 'on_real_consumption', 'on_real_household']:
+        key = f"ON_{ind}"
+        rows = conn.execute("""
+            SELECT period AS date, value, unit, source
+            FROM indicator_history
+            WHERE indicator_name = ? AND province = 'ON' AND period IS NOT NULL
+            ORDER BY period DESC LIMIT 20
+        """, (ind,)).fetchall()
+        if rows:
+            bundle[key] = [dict(r) for r in rows]
+
+    # Quebec detailed series
+    for ind in ['qc_exports', 'qc_imports', 'qc_business_investment',
+                'qc_manufacturing_sales', 'qc_housing_starts', 'qc_employment',
+                'qc_unemployment_rate', 'qc_bldg_permits_res', 'qc_bldg_permits_nonres',
+                'qc_real_gdp', 'qc_intl_exports', 'qc_intl_imports', 'qc_retail_sales']:
+        key = f"QC_{ind}"
+        rows = conn.execute("""
+            SELECT period AS date, value, unit, source
+            FROM indicator_history
+            WHERE indicator_name = ? AND province = 'QC' AND period IS NOT NULL
+            ORDER BY period DESC LIMIT 20
+        """, (ind,)).fetchall()
+        if rows:
+            bundle[key] = [dict(r) for r in rows]
+
     out_path = os.path.join(output_dir, "timeseries.json")
     with open(out_path, "w", encoding="utf-8") as f:
         # Compact for potentially large commodity data

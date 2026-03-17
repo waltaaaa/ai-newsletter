@@ -920,12 +920,12 @@ function extractAnalysisThemes(analysisText,projects){
   return scored.sort((a,b)=>b.score-a.score).slice(0,1);
 }
 
-function buildInsightStrip(prefix,themes){
+function buildInsightStrip(prefix,themes,provCode){
   if(!themes||!themes.length)return '';
   const t=themes[0];
   const id=prefix+'Insight0';
-  const tsMap=THEME_TIMESERIES_MAP[t.id]||[];
-  const sub=tsMap.length?tsMap.map(s=>s.label).join(' & ')+' \u2014 12-Month Trend':'From this week\u2019s analysis';
+  const tsEntries=resolveThemeTimeseries(t.id,provCode||null);
+  const sub=tsEntries.length?tsEntries.map(s=>s.label).join(' & ')+' \u2014 12-Month Trend':'From this week\u2019s analysis';
   let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(37,99,235,0.12);border-bottom:2px solid rgba(37,99,235,0.12)">';
   html+='<div style="text-align:center">';
   html+='<div style="font-size:var(--text-xs);font-weight:700;color:'+t.color+';text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">'+t.label+'</div>';
@@ -952,21 +952,58 @@ const THEME_DATA_MAP={
   education:{indicators:[],commodities:[],chartLabel:'Education Projects'}
 };
 
-// Map themes to timeseries keys for historical line charts
+// Map themes to timeseries keys for historical line charts (national fallback)
 const THEME_TIMESERIES_MAP={
   energy:[{key:'wti',label:'WTI Crude Oil',unit:'USD/bbl'},{key:'natural_gas',label:'Natural Gas',unit:'USD/MMBtu'}],
   mining:[{key:'gold',label:'Gold',unit:'USD/oz'},{key:'copper',label:'Copper',unit:'USD/lb'}],
   agriculture:[{key:'wheat',label:'Wheat',unit:'USD/bu'},{key:'soybeans',label:'Soybeans',unit:'USD/bu'}],
   trade:[{key:'cadusd',label:'CAD/USD',unit:''}],
-  housing:[{key:'boc_rate',label:'BoC Rate',unit:'%'},{key:'tsx_composite',label:'TSX Composite',unit:'pts'}],
-  labour:[{key:'tsx_composite',label:'TSX Composite',unit:'pts'}],
+  housing:[{key:'boc_rate',label:'BoC Rate',unit:'%'}],
+  labour:[],
   manufacturing:[{key:'aluminum',label:'Aluminum',unit:'USD/lb'},{key:'copper',label:'Copper',unit:'USD/lb'}],
-  construction:[{key:'tsx_composite',label:'TSX Composite',unit:'pts'}],
-  transport:[{key:'tsx_composite',label:'TSX Composite',unit:'pts'}],
-  healthcare:[{key:'tsx_composite',label:'TSX Composite',unit:'pts'}],
-  defence:[{key:'tsx_composite',label:'TSX Composite',unit:'pts'}],
-  education:[{key:'tsx_composite',label:'TSX Composite',unit:'pts'}]
+  construction:[{key:'lumber',label:'Lumber',unit:'USD/MBF'}],
+  transport:[],
+  healthcare:[],
+  defence:[],
+  education:[]
 };
+
+// Province-specific timeseries overrides — keyed by province code
+// Each maps theme ID to timeseries entries. Falls through to THEME_TIMESERIES_MAP if not listed.
+const PROV_THEME_TS={
+  // All provinces get unemployment + CPI via {code}_unemployment / {code}_cpi
+  _common:{
+    labour:function(c){return[{key:c+'_unemployment',label:c+' Unemployment Rate',unit:'%'},{key:c+'_cpi',label:c+' CPI',unit:'%'}]},
+    housing:function(c){return[{key:c+'_unemployment',label:c+' Unemployment Rate',unit:'%'}]},
+    construction:function(c){return[{key:c+'_cpi',label:c+' CPI',unit:'%'}]}
+  },
+  ON:{
+    trade:function(){return[{key:'ON_on_exports',label:'ON Exports',unit:'$M'},{key:'ON_on_imports',label:'ON Imports',unit:'$M'}]},
+    manufacturing:function(){return[{key:'ON_on_gdp_goods',label:'ON Goods GDP',unit:'$M'}]},
+    construction:function(){return[{key:'ON_on_real_capital_investment',label:'ON Capital Investment',unit:'$M'}]},
+    housing:function(){return[{key:'ON_on_real_household',label:'ON Household Spending',unit:'$M'},{key:'ON_unemployment',label:'ON Unemployment Rate',unit:'%'}]}
+  },
+  QC:{
+    trade:function(){return[{key:'QC_qc_exports',label:'QC Exports',unit:'$M'},{key:'QC_qc_imports',label:'QC Imports',unit:'$M'}]},
+    manufacturing:function(){return[{key:'QC_qc_manufacturing_sales',label:'QC Manufacturing Sales',unit:'$M'}]},
+    construction:function(){return[{key:'QC_qc_bldg_permits_res',label:'QC Residential Permits',unit:'$M'},{key:'QC_qc_bldg_permits_nonres',label:'QC Non-Res Permits',unit:'$M'}]},
+    housing:function(){return[{key:'QC_qc_housing_starts',label:'QC Housing Starts',unit:'units'},{key:'QC_unemployment',label:'QC Unemployment Rate',unit:'%'}]},
+    labour:function(){return[{key:'QC_qc_unemployment_rate',label:'QC Unemployment Rate',unit:'%'},{key:'QC_qc_employment',label:'QC Employment',unit:'000s'}]}
+  }
+};
+
+// Resolve the best timeseries entries for a theme + optional province code
+function resolveThemeTimeseries(themeId,provCode){
+  if(provCode){
+    // Check province-specific override first
+    const provMap=PROV_THEME_TS[provCode];
+    if(provMap&&provMap[themeId])return provMap[themeId](provCode);
+    // Check common province overrides
+    const common=PROV_THEME_TS._common;
+    if(common&&common[themeId])return common[themeId](provCode);
+  }
+  return THEME_TIMESERIES_MAP[themeId]||[];
+}
 
 /* == Infographic Library — multiple chart types per data strategy == */
 // Each renderer returns a Chart instance or null. The system rotates through
@@ -1147,7 +1184,7 @@ function _pickFromFit(suitable,strategyKey){
   return suitable[idx];
 }
 
-async function renderInsightCharts(prefix,themes,projects){
+async function renderInsightCharts(prefix,themes,projects,provCode){
   if(!themes||!themes.length)return;
   const theme=themes[0];
   const canvasId=prefix+'Insight0';
@@ -1156,7 +1193,7 @@ async function renderInsightCharts(prefix,themes,projects){
   const key='_insight_'+canvasId;
   if(charts[key]){charts[key].destroy();delete charts[key]}
 
-  const tsEntries=THEME_TIMESERIES_MAP[theme.id]||[];
+  const tsEntries=resolveThemeTimeseries(theme.id,provCode||null);
   if(!tsEntries.length){
     canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#64748B;font-size:var(--text-xs);padding:24px">No historical data available for this theme</div>');
     return;
@@ -1836,7 +1873,7 @@ async function renderProvinceContent(){
   secHtml+='<div class="ed-clear"></div>';
   // Analysis-driven insight strip — themes extracted from province analysis
   const provThemes=extractAnalysisThemes(provContent,provProj);
-  secHtml+=buildInsightStrip('prov',provThemes);
+  secHtml+=buildInsightStrip('prov',provThemes,prov.code);
 
   const pas=$('provAnalysisSection');
   if(pas)pas.innerHTML=secHtml;
@@ -1846,7 +1883,7 @@ async function renderProvinceContent(){
   if(provProj.length>=3){
     _renderSectorChart('pvSectorChart','pv',provProj);
   }
-  await renderInsightCharts('prov',provThemes,provProj);
+  await renderInsightCharts('prov',provThemes,provProj,prov.code);
 
 
   // Newly Added Projects
