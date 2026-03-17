@@ -926,10 +926,10 @@ function buildInsightStrip(prefix,themes,provCode){
   const id=prefix+'Insight0';
   const tsEntries=resolveThemeTimeseries(t.id,provCode||null);
   const sub=tsEntries.length?tsEntries.map(s=>s.label).join(' & ')+' \u2014 12-Month Trend':'From this week\u2019s analysis';
-  let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(37,99,235,0.12);border-bottom:2px solid rgba(37,99,235,0.12)">';
+  let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(0,49,83,0.12);border-bottom:2px solid rgba(0,49,83,0.12)">';
   html+='<div style="text-align:center">';
-  html+='<div style="font-size:var(--text-xs);font-weight:700;color:'+t.color+';text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">'+t.label+'</div>';
-  html+='<div style="font-size:10px;color:#475569;margin-bottom:12px">'+sub+'</div>';
+  html+='<div style="font-family:Outfit;font-size:var(--text-xs);font-weight:700;color:#003153;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">'+t.label+'</div>';
+  html+='<div style="font-family:Outfit;font-size:10px;color:#475569;margin-bottom:12px">'+sub+'</div>';
   html+='<div style="height:280px;position:relative"><canvas id="'+id+'"></canvas></div>';
   html+='</div>';
   html+='</div>';
@@ -1195,20 +1195,20 @@ async function renderInsightCharts(prefix,themes,projects,provCode){
 
   const tsEntries=resolveThemeTimeseries(theme.id,provCode||null);
   if(!tsEntries.length){
-    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#64748B;font-size:var(--text-xs);padding:24px">No historical data available for this theme</div>');
+    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:'+_ic.light+';font-size:var(--text-xs);padding:24px">No historical data available for this theme</div>');
     return;
   }
 
   // Load all timeseries for this theme
   const allTs=await fetchJSON('timeseries.json').catch(()=>({}));
   const datasets=[];
-  const themeColors=[theme.color||'#2563EB','#10B981','#F59E0B','#8B5CF6'];
+  // Use dashboard palette (accent blue primary, green secondary) — matches _ic.pal
+  const lineColors=[_ic.accent,_ic.pos];
   let allLabels=[];
 
   tsEntries.forEach((entry,idx)=>{
     let raw=allTs[entry.key];
     if(!raw||!raw.length)return;
-    // timeseries.json stores arrays directly (not {series:[...]})
     const series=Array.isArray(raw)?raw:raw.series||[];
     if(!series.length)return;
     const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
@@ -1217,20 +1217,23 @@ async function renderInsightCharts(prefix,themes,projects,provCode){
     const labels=filtered.map(p=>fmtDate(p.date));
     const data=filtered.map(p=>p.value);
     if(labels.length>allLabels.length)allLabels=labels;
-    const c=themeColors[idx%themeColors.length];
-    datasets.push({label:entry.label+(entry.unit?' ('+entry.unit+')':''),data:data,borderColor:c,backgroundColor:c+'10',borderWidth:2,pointRadius:data.map((_,i)=>i===data.length-1?4:0),pointBackgroundColor:c,pointBorderColor:'#fff',pointBorderWidth:2,fill:true,tension:0.3,yAxisID:datasets.length===0?'y':'y1'});
+    const c=lineColors[idx%lineColors.length];
+    datasets.push({label:entry.label+(entry.unit?' ('+entry.unit+')':''),data:data,borderColor:c,backgroundColor:_ic.hexAlpha(c,0.06),borderWidth:2,pointRadius:data.map((_,i)=>i===data.length-1?4:0),pointBackgroundColor:c,pointBorderColor:_ic.white,pointBorderWidth:2,fill:true,tension:0.3,yAxisID:datasets.length===0?'y':'y1'});
   });
 
   if(!datasets.length){
-    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#64748B;font-size:var(--text-xs);padding:24px">No historical data available for this theme</div>');
+    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:'+_ic.light+';font-size:var(--text-xs);padding:24px">No historical data available for this theme</div>');
     return;
   }
 
-  // Build scales — dual y-axis if 2 datasets with different units
+  // Build scales — prussian blue text, dashboard grid tokens
   const needDualAxis=datasets.length>=2;
-  const scales={x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Outfit',size:10},color:'#636363'}},y:{position:'left',grid:{color:'rgba(0,0,0,0.06)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'Outfit',size:10},color:themeColors[0],callback:v=>fmtNum(v)}}};
+  const scales={
+    x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.muted}},
+    y:{position:'left',grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,callback:v=>fmtNum(v)}}
+  };
   if(needDualAxis){
-    scales.y1={position:'right',grid:{display:false},ticks:{font:{family:'Outfit',size:10},color:themeColors[1],callback:v=>fmtNum(v)}};
+    scales.y1={position:'right',grid:{display:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,callback:v=>fmtNum(v)}};
   }
 
   // Event annotations
@@ -1242,7 +1245,7 @@ async function renderInsightCharts(prefix,themes,projects,provCode){
         try{
           const ed=parseEvtDate(evt.date);if(!ed)return;
           const ds=fmtDate(ed);const li=allLabels.indexOf(ds);if(li===-1)return;
-          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Outfit',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
+          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(0,49,83,0.3)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(0,49,83,0.85)',color:_ic.white,font:{family:_ic.font,size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
         }catch(e2){}
       });
     }
@@ -1250,10 +1253,10 @@ async function renderInsightCharts(prefix,themes,projects,provCode){
   const hasAnnotation=typeof window.ChartAnnotation!=='undefined'||Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation');
   const annotationCfg=hasAnnotation&&Object.keys(evtAnnotations).length?{annotation:{annotations:{...evtAnnotations}}}:{};
 
-  // Endpoint label plugin
-  const endpointPlugin={id:'insightEndpoint_'+prefix,afterDraw(chart){datasets.forEach((ds,di)=>{const meta=chart.getDatasetMeta(di);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const lastVal=ds.data[ds.data.length-1];const ctx=chart.ctx;ctx.save();ctx.font='600 10px Outfit';ctx.fillStyle=ds.borderColor;ctx.textAlign=di===0?'left':'right';ctx.fillText(typeof lastVal==='number'?fmtNum(lastVal):lastVal,lastPt.x+(di===0?4:-4),lastPt.y-6);ctx.restore()})}};
+  // Endpoint label plugin — prussian blue text
+  const endpointPlugin={id:'insightEndpoint_'+prefix,afterDraw(chart){datasets.forEach((ds,di)=>{const meta=chart.getDatasetMeta(di);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const lastVal=ds.data[ds.data.length-1];const ctx=chart.ctx;ctx.save();ctx.font='600 10px '+_ic.font;ctx.fillStyle=_ic.prussian;ctx.textAlign=di===0?'left':'right';ctx.fillText(typeof lastVal==='number'?fmtNum(lastVal):lastVal,lastPt.x+(di===0?4:-4),lastPt.y-6);ctx.restore()})}};
 
-  charts[key]=new Chart(canvas,{type:'line',data:{labels:allLabels,datasets:datasets},plugins:[endpointPlugin],options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:datasets.length>1?{position:'top',labels:{boxWidth:10,padding:8,font:{family:'Outfit',size:10},color:'#1a2744',usePointStyle:true,pointStyle:'circle'}}:{display:false},...annotationCfg},scales:scales}});
+  charts[key]=new Chart(canvas,{type:'line',data:{labels:allLabels,datasets:datasets},plugins:[endpointPlugin],options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:datasets.length>1?{position:'top',labels:{boxWidth:10,padding:8,font:{family:_ic.font,size:10},color:_ic.prussian,usePointStyle:true,pointStyle:'circle'}}:{display:false},tooltip:{..._chartCfg.tt,callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}},...annotationCfg},scales:scales}});
 }
 
 function deriveSubtitle(analysisText){
