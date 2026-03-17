@@ -961,11 +961,12 @@ function buildInsightStrip(prefix,themes,provCode){
   const id=prefix+'Insight0';
   const tsEntries=resolveThemeTimeseries(t.id,provCode||null);
   const sub=tsEntries.length?tsEntries.map(s=>s.label).join(', ')+' \u2014 12-month trend':'From this week\u2019s analysis';
-  let html='<div style="margin:36px 0;padding:28px 0;border-top:2px solid rgba(0,49,83,0.12);border-bottom:2px solid rgba(0,49,83,0.12)">';
-  html+='<div style="text-align:left;padding:0 4px">';
-  html+='<div id="'+prefix+'InsightTitle" style="font-family:Outfit;font-size:16px;font-weight:700;color:#003153;line-height:1.3;margin-bottom:3px">'+t.label+'</div>';
-  html+='<div id="'+prefix+'InsightSub" style="font-family:Outfit;font-size:11px;color:#475569;margin-bottom:14px">'+sub+'</div>';
-  html+='<div style="height:280px;position:relative"><canvas id="'+id+'"></canvas></div>';
+  let html='<div style="margin:36px 0;padding:32px 24px 20px;border-top:3px solid #003153">';
+  html+='<div style="text-align:left">';
+  html+='<div id="'+prefix+'InsightTitle" style="font-family:Outfit;font-size:16px;font-weight:700;color:#003153;line-height:1.35;margin-bottom:4px">'+t.label+'</div>';
+  html+='<div id="'+prefix+'InsightSub" style="font-family:Outfit;font-size:11px;color:#475569;margin-bottom:20px">'+sub+'</div>';
+  html+='<div style="height:300px;position:relative;padding:0 8px"><canvas id="'+id+'"></canvas></div>';
+  html+='<div style="margin-top:12px;padding-top:8px;border-top:1px solid rgba(0,49,83,0.08);font-family:Outfit;font-size:9px;color:#94A3B8">Source: Signal Dispatch pipeline data</div>';
   html+='</div>';
   html+='</div>';
   return html;
@@ -1251,7 +1252,21 @@ async function renderInsightCharts(prefix,themes,projects,provCode,analysisText)
     if(labels.length>allLabels.length)allLabels=labels;
     if(!primaryData){primaryData=data;primaryLabel=entry.label}
     const c=lineColors[idx%lineColors.length];
-    datasets.push({label:entry.label+(entry.unit?' ('+entry.unit+')':''),data:data,borderColor:c,backgroundColor:_ic.hexAlpha(c,0.06),borderWidth:2,pointRadius:data.map((_,i)=>i===data.length-1?4:0),pointBackgroundColor:c,pointBorderColor:_ic.white,pointBorderWidth:2,fill:true,tension:0.3,yAxisID:datasets.length===0?'y':'y1'});
+    const isPrimary=datasets.length===0;
+    datasets.push({
+      label:entry.label+(entry.unit?' ('+entry.unit+')':''),
+      data:data,
+      borderColor:c,
+      backgroundColor:isPrimary?_ic.hexAlpha(c,0.05):'transparent',
+      borderWidth:isPrimary?2.5:2,
+      pointRadius:data.map((_,i)=>i===data.length-1?5:0),
+      pointBackgroundColor:c,
+      pointBorderColor:_ic.white,
+      pointBorderWidth:2,
+      fill:isPrimary,
+      tension:0.35,
+      yAxisID:isPrimary?'y':'y1'
+    });
   });
 
   if(!datasets.length){
@@ -1266,14 +1281,28 @@ async function renderInsightCharts(prefix,themes,projects,provCode,analysisText)
     titleEl.textContent=narrative;
   }
 
-  // Build scales — prussian blue text, dashboard grid tokens
+  // Economist-style scales: thin left axis border, light horizontal gridlines, no vertical grid
   const needDualAxis=datasets.length>=2;
   const scales={
-    x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.muted}},
-    y:{position:'left',grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,callback:v=>fmtNum(v)}}
+    x:{
+      border:{display:true,color:_ic.gridSoft},
+      grid:{display:false},
+      ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.muted,padding:8}
+    },
+    y:{
+      position:'left',
+      border:{display:true,color:_ic.gridSoft,width:1},
+      grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},
+      ticks:{font:{family:_ic.font,size:10},color:needDualAxis?lineColors[0]:_ic.prussian,padding:10,callback:v=>fmtNum(v)}
+    }
   };
   if(needDualAxis){
-    scales.y1={position:'right',grid:{display:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,callback:v=>fmtNum(v)}};
+    scales.y1={
+      position:'right',
+      border:{display:true,color:_ic.gridSoft,width:1},
+      grid:{display:false},
+      ticks:{font:{family:_ic.font,size:10},color:lineColors[1],padding:10,callback:v=>fmtNum(v)}
+    };
   }
 
   // Event annotations
@@ -1285,7 +1314,7 @@ async function renderInsightCharts(prefix,themes,projects,provCode,analysisText)
         try{
           const ed=parseEvtDate(evt.date);if(!ed)return;
           const ds=fmtDate(ed);const li=allLabels.indexOf(ds);if(li===-1)return;
-          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(0,49,83,0.3)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(0,49,83,0.85)',color:_ic.white,font:{family:_ic.font,size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
+          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(0,49,83,0.25)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(0,49,83,0.8)',color:_ic.white,font:{family:_ic.font,size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
         }catch(e2){}
       });
     }
@@ -1293,10 +1322,69 @@ async function renderInsightCharts(prefix,themes,projects,provCode,analysisText)
   const hasAnnotation=typeof window.ChartAnnotation!=='undefined'||Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation');
   const annotationCfg=hasAnnotation&&Object.keys(evtAnnotations).length?{annotation:{annotations:{...evtAnnotations}}}:{};
 
-  // Endpoint label plugin — prussian blue text
-  const endpointPlugin={id:'insightEndpoint_'+prefix,afterDraw(chart){datasets.forEach((ds,di)=>{const meta=chart.getDatasetMeta(di);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const lastVal=ds.data[ds.data.length-1];const ctx=chart.ctx;ctx.save();ctx.font='600 10px '+_ic.font;ctx.fillStyle=_ic.prussian;ctx.textAlign=di===0?'left':'right';ctx.fillText(typeof lastVal==='number'?fmtNum(lastVal):lastVal,lastPt.x+(di===0?4:-4),lastPt.y-6);ctx.restore()})}};
+  // Endpoint label plugin
+  const endpointPlugin={id:'insightEndpoint_'+prefix,afterDraw(chart){
+    datasets.forEach((ds,di)=>{
+      const meta=chart.getDatasetMeta(di);
+      const lastPt=meta.data[meta.data.length-1];
+      if(!lastPt)return;
+      const lastVal=ds.data[ds.data.length-1];
+      const ctx=chart.ctx;
+      ctx.save();
+      ctx.font='600 11px '+_ic.font;
+      ctx.fillStyle=ds.borderColor;
+      ctx.textAlign=di===0?'left':'right';
+      ctx.fillText(typeof lastVal==='number'?fmtNum(lastVal):lastVal,lastPt.x+(di===0?6:-6),lastPt.y-8);
+      ctx.restore();
+    });
+  }};
 
-  charts[key]=new Chart(canvas,{type:'line',data:{labels:allLabels,datasets:datasets},plugins:[endpointPlugin],options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:datasets.length>1?{position:'top',labels:{boxWidth:10,padding:8,font:{family:_ic.font,size:10},color:_ic.prussian,usePointStyle:true,pointStyle:'circle'}}:{display:false},tooltip:{..._chartCfg.tt,callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}},...annotationCfg},scales:scales}});
+  // Legend config — always show for dual-axis with colored labels matching axis
+  const legendCfg=needDualAxis?{
+    display:true,position:'top',align:'start',
+    labels:{
+      boxWidth:12,boxHeight:2,padding:16,
+      font:{family:_ic.font,size:11,weight:'500'},
+      color:_ic.prussian,
+      usePointStyle:false,
+      generateLabels:function(chart){
+        return chart.data.datasets.map(function(ds,i){
+          return{text:ds.label,fillColor:ds.borderColor,strokeColor:ds.borderColor,lineWidth:2,fontColor:ds.borderColor,hidden:false,datasetIndex:i};
+        });
+      }
+    }
+  }:{display:false};
+
+  charts[key]=new Chart(canvas,{
+    type:'line',
+    data:{labels:allLabels,datasets:datasets},
+    plugins:[endpointPlugin],
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      layout:{padding:{top:10,right:20,bottom:6,left:4}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:legendCfg,
+        tooltip:{
+          backgroundColor:'rgba(0,49,83,0.92)',
+          titleColor:'#fff',
+          titleFont:{family:_ic.font,size:11,weight:'600'},
+          bodyColor:'#CBD5E1',
+          bodyFont:{family:_ic.font,size:11},
+          padding:12,
+          cornerRadius:4,
+          borderColor:'rgba(0,49,83,0.15)',
+          borderWidth:1,
+          displayColors:needDualAxis,
+          boxWidth:8,boxHeight:2,
+          callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}
+        },
+        ...annotationCfg
+      },
+      scales:scales
+    }
+  });
 }
 
 function deriveSubtitle(analysisText){
