@@ -1285,23 +1285,23 @@ async function renderInsightCharts(prefix,themes,projects,provCode,analysisText)
   const needDualAxis=datasets.length>=2;
   const scales={
     x:{
-      border:{display:true,color:_ic.gridSoft},
+      border:{display:true,color:_ic.prussian,width:1},
       grid:{display:false},
-      ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.muted,padding:8}
+      ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.prussian,padding:10}
     },
     y:{
       position:'left',
-      border:{display:true,color:_ic.gridSoft,width:1},
+      border:{display:true,color:_ic.prussian,width:1},
       grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},
-      ticks:{font:{family:_ic.font,size:10},color:needDualAxis?lineColors[0]:_ic.prussian,padding:10,callback:v=>fmtNum(v)}
+      ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:v=>fmtNum(v)}
     }
   };
   if(needDualAxis){
     scales.y1={
       position:'right',
-      border:{display:true,color:_ic.gridSoft,width:1},
+      border:{display:true,color:_ic.prussian,width:1},
       grid:{display:false},
-      ticks:{font:{family:_ic.font,size:10},color:lineColors[1],padding:10,callback:v=>fmtNum(v)}
+      ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:v=>fmtNum(v)}
     };
   }
 
@@ -1339,17 +1339,18 @@ async function renderInsightCharts(prefix,themes,projects,provCode,analysisText)
     });
   }};
 
-  // Legend config — always show for dual-axis with colored labels matching axis
+  // Legend config — dual-axis shows (left) / (right) indicators with colored swatches
   const legendCfg=needDualAxis?{
     display:true,position:'top',align:'start',
     labels:{
-      boxWidth:12,boxHeight:2,padding:16,
+      boxWidth:14,boxHeight:3,padding:18,
       font:{family:_ic.font,size:11,weight:'500'},
       color:_ic.prussian,
       usePointStyle:false,
       generateLabels:function(chart){
         return chart.data.datasets.map(function(ds,i){
-          return{text:ds.label,fillColor:ds.borderColor,strokeColor:ds.borderColor,lineWidth:2,fontColor:ds.borderColor,hidden:false,datasetIndex:i};
+          const axis=i===0?'left axis':'right axis';
+          return{text:ds.label+' ('+axis+')',fillColor:ds.borderColor,strokeColor:ds.borderColor,lineWidth:2,fontColor:ds.borderColor,hidden:false,datasetIndex:i};
         });
       }
     }
@@ -1362,7 +1363,7 @@ async function renderInsightCharts(prefix,themes,projects,provCode,analysisText)
     options:{
       responsive:true,
       maintainAspectRatio:false,
-      layout:{padding:{top:10,right:50,bottom:6,left:4}},
+      layout:{padding:{top:10,right:50,bottom:6,left:10}},
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:legendCfg,
