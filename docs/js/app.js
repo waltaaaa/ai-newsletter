@@ -906,14 +906,15 @@ function extractAnalysisThemes(analysisText,projects){
   INSIGHT_THEMES.forEach(theme=>{
     const matched=theme.keywords.filter(kw=>text.includes(kw));
     if(matched.length>0){
-      // Count matching projects for sector themes
+      // Count matching projects for sector themes (case-insensitive)
       let projCount=0,projValue=0;
       if(theme.sectors.length&&projects){
+        const sectorSet=new Set(theme.sectors.map(s=>s.toLowerCase()));
         projects.forEach(p=>{
-          if(theme.sectors.includes(p.sector)){projCount++;projValue+=parseNumericValue(p.value)}
+          if(sectorSet.has((p.sector||'').toLowerCase())){projCount++;projValue+=parseNumericValue(p.value)}
         });
       }
-      scored.push({...theme,score:matched.length,projCount:projCount,projValue:projValue,_matchedText:text,_matchedKw:matched});
+      scored.push({...theme,score:matched.length,projCount:projCount,projValue:projValue,_matchedKw:matched});
     }
   });
   return scored.sort((a,b)=>b.score-a.score).slice(0,3);
@@ -951,7 +952,8 @@ function renderInsightCharts(prefix,themes,projects){
 
     if(theme.sectors.length&&projects){
       // Sector-specific chart: projects by status in this sector
-      const sectorProj=projects.filter(p=>theme.sectors.includes(p.sector));
+      const sectorSet=new Set(theme.sectors.map(s=>s.toLowerCase()));
+      const sectorProj=projects.filter(p=>sectorSet.has((p.sector||'').toLowerCase()));
       if(sectorProj.length>=2){
         const statusOrder=['Proposed','Under Review','Approved','Under Construction','Complete','On Hold','Cancelled'];
         const statusColors={'Proposed':'#94A3B8','Under Review':'#60A5FA','Approved':'#3B82F6','Under Construction':'#2563EB','Complete':'#15803D','On Hold':'#F59E0B','Cancelled':'#EF4444'};
