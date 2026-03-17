@@ -953,7 +953,143 @@ const THEME_DATA_MAP={
   education:{indicators:[],commodities:[],chartLabel:'Education Projects'}
 };
 
+/* == Infographic Library — multiple chart types per data strategy == */
+// Each renderer returns a Chart instance or null. The system rotates through
+// available renderers so adjacent charts in the same strip never repeat a shape.
+
+// Centralized design tokens — matches the dashboard CSS exactly
+const _ic={
+  // Text hierarchy (from CSS vars and editorial styles)
+  prussian:'#003153',heading:'#1a2744',body:'#2d3a52',muted:'#475569',light:'#64748B',faint:'#94A3B8',
+  // Accent (from --accent-blue and link color)
+  accent:'#2563EB',accentSoft:'#60A5FA',
+  // Semantic (chart positive/negative — matches palCat and existing _renderCommodityChart)
+  pos:'#10B981',neg:'#EF4444',
+  // Grid/border (from existing charts and CSS)
+  grid:'rgba(0,0,0,0.04)',gridSoft:'rgba(0,0,0,0.06)',border:'rgba(0,0,0,0.08)',
+  // Background
+  white:'#fff',
+  // Shared font
+  font:'Outfit',
+  // palCat from _chartCfg (blue-first editorial palette)
+  pal:['#2563EB','#10B981','#F59E0B','#8B5CF6','#EC4899','#EF4444','#0EA5E9','#84CC16','#94A3B8'],
+  // Title config factory
+  ttl:function(text){return{display:true,text:text,font:{family:'Outfit',size:11,weight:600},color:'#1a2744'}},
+  // Axis tick config factory
+  tk:function(sz,wt){return{font:{family:'Outfit',size:sz||9,weight:wt||400},color:'#475569'}},
+  tkLabel:function(sz){return{font:{family:'Outfit',size:sz||9,weight:500},color:'#1a2744'}},
+  // Legend config factory
+  leg:function(pos){return{position:pos||'right',labels:{boxWidth:10,padding:6,font:{family:'Outfit',size:9},color:'#1a2744',usePointStyle:true,pointStyle:'circle'}}},
+  // Generate opacity variants of a hex color for fills
+  alphas:function(hex,levels){return(levels||['E6','B3','80','59','33']).map(a=>hex+a)},
+  // Safe alpha for status colors (converts hex to rgba)
+  hexAlpha:function(hex,a){
+    const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+    return'rgba('+r+','+g+','+b+','+a+')';
+  }
+};
+
+const _insightLib={
+  // --- Commodity renderers (% change data) ---
+  commodity:[
+    // 0: Vertical diverging columns
+    function(canvas,labels,vals,dm,theme,_cfg){
+      return new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:vals,backgroundColor:vals.map(v=>v>=0?_ic.pos:_ic.neg),borderRadius:6,barPercentage:0.7,borderSkipped:false}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel+' \u2014 Weekly Change'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>(ctx.raw>=0?'+':'')+ctx.raw.toFixed(1)+'%'}},annotation:{annotations:{zeroLine:{type:'line',yMin:0,yMax:0,borderColor:_ic.faint,borderWidth:1,borderDash:[3,3]}}}},scales:{y:{grid:{color:_ic.grid},ticks:{font:{family:_ic.font,size:9},color:_ic.muted,callback:v=>(v>=0?'+':'')+v+'%'}},x:{grid:{display:false},ticks:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading,maxRotation:45,minRotation:0}}}}});
+    },
+    // 1: Horizontal bar
+    function(canvas,labels,vals,dm,theme,_cfg){
+      return new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:vals,backgroundColor:vals.map(v=>v>=0?_ic.pos:_ic.neg),borderRadius:4,barPercentage:0.65}]},
+        options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel+' \u2014 Weekly Change'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>(ctx.raw>=0?'+':'')+ctx.raw.toFixed(1)+'%'}}},scales:{x:{grid:{color:_ic.grid},ticks:{font:{family:_ic.font,size:9},color:_ic.muted,callback:v=>(v>=0?'+':'')+v+'%'}},y:{grid:{display:false},ticks:_ic.tkLabel(9)}}}});
+    },
+    // 2: Lollipop (thin stems + dots)
+    function(canvas,labels,vals,dm,theme,_cfg){
+      return new Chart(canvas,{type:'bar',data:{labels,datasets:[
+        {data:vals,backgroundColor:vals.map(v=>v>=0?_ic.pos:_ic.neg),borderRadius:6,barPercentage:0.12,borderSkipped:false,order:2},
+        {type:'line',data:vals,pointRadius:6,pointBackgroundColor:vals.map(v=>v>=0?_ic.pos:_ic.neg),pointBorderColor:_ic.white,pointBorderWidth:2,borderWidth:0,showLine:false,order:1}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel+' \u2014 Weekly Change'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>(ctx.raw>=0?'+':'')+ctx.raw.toFixed(1)+'%'}},annotation:{annotations:{zeroLine:{type:'line',yMin:0,yMax:0,borderColor:_ic.faint,borderWidth:1,borderDash:[3,3]}}}},scales:{y:{grid:{color:_ic.grid},ticks:{font:{family:_ic.font,size:9},color:_ic.muted,callback:v=>(v>=0?'+':'')+v+'%'}},x:{grid:{display:false},ticks:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading,maxRotation:45,minRotation:0}}}}});
+    },
+    // 3: Radar (absolute values, green/red dots show direction)
+    function(canvas,labels,vals,dm,theme,_cfg){
+      const absVals=vals.map(v=>Math.abs(v));
+      return new Chart(canvas,{type:'radar',data:{labels,datasets:[{data:absVals,backgroundColor:_ic.hexAlpha(_ic.accent,0.1),borderColor:_ic.accent,borderWidth:2,pointBackgroundColor:vals.map(v=>v>=0?_ic.pos:_ic.neg),pointRadius:5,pointBorderColor:_ic.white,pointBorderWidth:1.5}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel+' \u2014 |Weekly Change|'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>{const orig=vals[ctx.dataIndex];return(orig>=0?'+':'')+orig.toFixed(1)+'%'}}}},scales:{r:{angleLines:{color:_ic.gridSoft},grid:{color:_ic.gridSoft},ticks:{display:false},pointLabels:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading}}}}});
+    }
+  ],
+
+  // --- Indicator renderers (current values) ---
+  indicator:[
+    // 0: Polar area (graduated opacity from palCat blue)
+    function(canvas,matched,dm,theme,_cfg){
+      const polarColors=_ic.alphas(_ic.accent);
+      return new Chart(canvas,{type:'polarArea',data:{labels:matched.map(m=>m.label),datasets:[{data:matched.map(m=>m.value),backgroundColor:polarColors.slice(0,matched.length),borderColor:_ic.white,borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:_ic.leg('right'),title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(ctx.raw)}}},scales:{r:{grid:{color:_ic.gridSoft},ticks:{display:false},pointLabels:{display:false}}}}});
+    },
+    // 1: Radar (accent blue web)
+    function(canvas,matched,dm,theme,_cfg){
+      return new Chart(canvas,{type:'radar',data:{labels:matched.map(m=>m.label),datasets:[{data:matched.map(m=>m.value),backgroundColor:_ic.hexAlpha(_ic.accent,0.08),borderColor:_ic.accent,borderWidth:2,pointBackgroundColor:_ic.accent,pointRadius:4,pointBorderColor:_ic.white,pointBorderWidth:1.5,fill:true}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(ctx.raw)}}},scales:{r:{angleLines:{color:_ic.gridSoft},grid:{color:_ic.gridSoft},ticks:{display:false},pointLabels:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading}}}}});
+    },
+    // 2: Horizontal bar (accent blue fill)
+    function(canvas,matched,dm,theme,_cfg){
+      return new Chart(canvas,{type:'bar',data:{labels:matched.map(m=>m.label),datasets:[{data:matched.map(m=>m.value),backgroundColor:_ic.hexAlpha(_ic.accent,0.7),borderRadius:4,barPercentage:0.65}]},
+        options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>fmtNum(ctx.raw)}}},scales:{x:{grid:{color:_ic.grid},ticks:{font:{family:_ic.font,size:9},color:_ic.muted}},y:{grid:{display:false},ticks:_ic.tkLabel(9)}}}});
+    },
+    // 3: Doughnut (palCat palette)
+    function(canvas,matched,dm,theme,_cfg){
+      return new Chart(canvas,{type:'doughnut',data:{labels:matched.map(m=>m.label),datasets:[{data:matched.map(m=>m.value),backgroundColor:_ic.pal.slice(0,matched.length),borderColor:_ic.white,borderWidth:2,hoverOffset:6}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:_ic.leg('right'),title:_ic.ttl(dm.chartLabel),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+fmtNum(ctx.raw)}}}}});
+    }
+  ],
+
+  // --- Pipeline renderers (project counts by status) ---
+  pipeline:[
+    // 0: Doughnut with center text
+    function(canvas,labels,data,colors,meta,theme,_cfg,key){
+      const centerPlugin={id:'ct_'+key,afterDraw(chart){const{ctx:c,chartArea:{top,bottom,left,right}}=chart;const cx=(left+right)/2,cy=(top+bottom)/2;c.save();c.textAlign='center';c.textBaseline='middle';c.font='600 20px '+_ic.font;c.fillStyle=_ic.heading;c.fillText(meta.total,cx,cy-8);c.font='500 10px '+_ic.font;c.fillStyle=_ic.light;c.fillText('projects',cx,cy+8);if(meta.valStr){c.font='500 9px '+_ic.font;c.fillStyle=_ic.faint;c.fillText(meta.valStr,cx,cy+22)}c.restore()}};
+      return new Chart(canvas,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,borderColor:_ic.white,hoverOffset:6}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:_ic.leg('right'),title:_ic.ttl(theme.label+' Pipeline'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+ctx.raw+' projects'}}}},
+        plugins:[centerPlugin]});
+    },
+    // 1: Horizontal bar
+    function(canvas,labels,data,colors,meta,theme,_cfg){
+      return new Chart(canvas,{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:4,barPercentage:0.7}]},
+        options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(theme.label+' Pipeline ('+meta.total+(meta.valStr?' \u00b7 '+meta.valStr:'')+')'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.raw+' projects'}}},scales:{x:{grid:{display:false},ticks:{font:{family:_ic.font,size:9},color:_ic.muted,stepSize:1}},y:{grid:{display:false},ticks:_ic.tkLabel(9)}}}});
+    },
+    // 2: Pie
+    function(canvas,labels,data,colors,meta,theme,_cfg){
+      return new Chart(canvas,{type:'pie',data:{labels,datasets:[{data,backgroundColor:colors,borderColor:_ic.white,borderWidth:2,hoverOffset:6}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:_ic.leg('right'),title:_ic.ttl(theme.label+' Pipeline ('+meta.total+')'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+ctx.raw+' projects'}}}}});
+    },
+    // 3: Polar area (status colors at 80% opacity via rgba)
+    function(canvas,labels,data,colors,meta,theme,_cfg){
+      return new Chart(canvas,{type:'polarArea',data:{labels,datasets:[{data,backgroundColor:colors.map(c=>_ic.hexAlpha(c,0.8)),borderColor:_ic.white,borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:_ic.leg('right'),title:_ic.ttl(theme.label+' Pipeline ('+meta.total+')'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.label+': '+ctx.raw+' projects'}}},scales:{r:{grid:{color:_ic.gridSoft},ticks:{display:false}}}}});
+    },
+    // 4: Vertical bar
+    function(canvas,labels,data,colors,meta,theme,_cfg){
+      return new Chart(canvas,{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:6,barPercentage:0.7}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:_ic.ttl(theme.label+' Pipeline ('+meta.total+(meta.valStr?' \u00b7 '+meta.valStr:'')+')'),tooltip:{..._cfg.tt,callbacks:{label:ctx=>ctx.raw+' projects'}}},scales:{y:{grid:{color:_ic.grid},ticks:{font:{family:_ic.font,size:9},color:_ic.muted,stepSize:1}},x:{grid:{display:false},ticks:{font:{family:_ic.font,size:8,weight:500},color:_ic.heading,maxRotation:45,minRotation:0}}}}});
+    }
+  ]
+};
+
+// Track which renderer index was used last per strategy to avoid repeats
+let _insightLastIdx={commodity:-1,indicator:-1,pipeline:-1};
+
+function _pickRenderer(pool,strategyKey){
+  const n=pool.length;
+  if(n===1)return 0;
+  // Pick next in rotation, skipping the one just used
+  let idx=(_insightLastIdx[strategyKey]+1)%n;
+  _insightLastIdx[strategyKey]=idx;
+  return idx;
+}
+
 function renderInsightCharts(prefix,themes,projects){
+  // Reset rotation per strip so each tab's strip starts fresh
+  _insightLastIdx={commodity:-1,indicator:-1,pipeline:-1};
+
   themes.forEach((theme,i)=>{
     const canvasId=prefix+'Insight'+i;
     const canvas=document.getElementById(canvasId);
@@ -962,45 +1098,45 @@ function renderInsightCharts(prefix,themes,projects){
     if(charts[key]){charts[key].destroy();delete charts[key]}
     const dm=THEME_DATA_MAP[theme.id]||{};
 
-    // Strategy 1: Commodity price comparison (energy, mining, agriculture)
+    // Strategy 1: Commodity price comparison
     if(dm.commodities&&dm.commodities.length&&_chartComms){
       const commData=(Array.isArray(_chartComms)?_chartComms:Object.entries(_chartComms).map(([k,v])=>({name:v.name||k,...v}))).filter(c=>{
         const n=(c.name||c.indicator_name||'').toLowerCase();
         return dm.commodities.some(q=>n.includes(q));
       }).filter(c=>c.pct_1w!=null&&c.pct_1w!=='N/A'&&Math.abs(parseFloat(c.pct_1w))>0);
       if(commData.length>=2){
-        commData.sort((a,b)=>Math.abs(parseFloat(b.pct_1w))-Math.abs(parseFloat(a.pct_1w)));
+        commData.sort((a,b)=>parseFloat(b.pct_1w)-parseFloat(a.pct_1w));
         const top=commData.slice(0,8);
-        const labels=top.map(c=>(c.name||'').replace(/_/g,' ').replace(/\b\w/g,x=>x.toUpperCase()));
+        const labels=top.map(c=>{let n=(c.name||'').replace(/_/g,' ').replace(/\b\w/g,x=>x.toUpperCase());return n.length>14?n.substring(0,13)+'\u2026':n});
         const vals=top.map(c=>parseFloat(c.pct_1w));
         try{
-          charts[key]=new Chart(canvas,{type:'bar',data:{labels,datasets:[{data:vals,backgroundColor:vals.map(v=>v>=0?'#10B981':'#EF4444'),borderRadius:4,barPercentage:0.65}]},
-            options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:dm.chartLabel+' \u2014 Weekly Change',font:{family:'Outfit',size:11,weight:600},color:'#1a2744'},tooltip:{..._chartCfg.tt,callbacks:{label:ctx=>(ctx.raw>=0?'+':'')+ctx.raw.toFixed(1)+'%'}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:9},callback:v=>(v>=0?'+':'')+v+'%'}},y:{grid:{display:false},ticks:{font:{family:'Outfit',size:9,weight:500},color:'#1a2744'}}}}});
+          const ri=_pickRenderer(_insightLib.commodity,'commodity');
+          charts[key]=_insightLib.commodity[ri](canvas,labels,vals,dm,theme,_chartCfg);
         }catch(e){console.warn('Insight commodity chart:',e)}
         return;
       }
     }
 
-    // Strategy 2: Indicator comparison (labour, trade, housing, construction)
+    // Strategy 2: Indicator comparison
     if(dm.indicators&&dm.indicators.length){
       const matched=[];
       dm.indicators.forEach(name=>{
         const ind=indicators.find(x=>x.indicator_name===name||x.indicator_name.includes(name));
         if(ind&&ind.value!=null){
           const val=parseFloat(String(ind.value).replace(/[^0-9.\-]/g,''));
-          if(!isNaN(val))matched.push({label:(ind.indicator_name||'').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),value:val,prov:ind.province||''});
+          if(!isNaN(val)&&val>0)matched.push({label:(ind.indicator_name||'').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),value:val,prov:ind.province||''});
         }
       });
       if(matched.length>=2){
         try{
-          charts[key]=new Chart(canvas,{type:'bar',data:{labels:matched.map(m=>m.label),datasets:[{data:matched.map(m=>m.value),backgroundColor:theme.color+'B3',borderRadius:4,barPercentage:0.65}]},
-            options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:dm.chartLabel,font:{family:'Outfit',size:11,weight:600},color:'#1a2744'},tooltip:{..._chartCfg.tt}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:9}}},y:{grid:{display:false},ticks:{font:{family:'Outfit',size:9,weight:500},color:'#1a2744'}}}}});
+          const ri=_pickRenderer(_insightLib.indicator,'indicator');
+          charts[key]=_insightLib.indicator[ri](canvas,matched,dm,theme,_chartCfg);
         }catch(e){console.warn('Insight indicator chart:',e)}
         return;
       }
     }
 
-    // Strategy 3: Sector project pipeline (fallback — always works if projects exist)
+    // Strategy 3: Sector project pipeline
     if(theme.sectors.length&&projects){
       const sectorSet=new Set(theme.sectors.map(s=>s.toLowerCase()));
       const sectorProj=projects.filter(p=>sectorSet.has((p.sector||'').toLowerCase()));
@@ -1011,11 +1147,12 @@ function renderInsightCharts(prefix,themes,projects){
         const labels=[],data=[],colors=[];
         statusOrder.forEach(s=>{if(counts[s]){labels.push(s);data.push(counts[s]);colors.push(statusColors[s]||'#94A3B8')}});
         if(labels.length){
+          const total=sectorProj.length;
           const totalVal=sectorProj.reduce((s,p)=>s+parseNumericValue(p.value),0);
           const valStr=totalVal>=1e9?'$'+(totalVal/1e9).toFixed(1)+'B':totalVal>=1e6?'$'+(totalVal/1e6).toFixed(0)+'M':'';
           try{
-            charts[key]=new Chart(canvas,{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:4,barPercentage:0.7}]},
-              options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:theme.label+' Pipeline ('+sectorProj.length+(valStr?' \u00b7 '+valStr:'')+')' ,font:{family:'Outfit',size:11,weight:600},color:'#1a2744'},tooltip:{..._chartCfg.tt,callbacks:{label:ctx=>ctx.raw+' projects'}}},scales:{x:{grid:{display:false},ticks:{font:{size:9},stepSize:1}},y:{grid:{display:false},ticks:{font:{family:'Outfit',size:9,weight:500},color:'#1a2744'}}}}});
+            const ri=_pickRenderer(_insightLib.pipeline,'pipeline');
+            charts[key]=_insightLib.pipeline[ri](canvas,labels,data,colors,{total,valStr},theme,_chartCfg,key);
           }catch(e){console.warn('Insight pipeline chart:',e)}
           return;
         }
