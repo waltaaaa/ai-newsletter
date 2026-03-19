@@ -210,6 +210,9 @@ SOURCE TEXT:
             cost_state["usd"] += call_cost
             print(f"    [COST] {context_label}: {in_tok:,} in + {out_tok:,} out = ${call_cost:.4f} (run total: ${cost_state['usd']:.4f}/${cost_state['cap']:.2f})")
 
+            if not msg.content:
+                print(f"\n    [SONNET] Empty content from API for {context_label}")
+                return []
             content = msg.content[0].text.strip()
             if content.startswith("```"):
                 parts = content.split("```")
@@ -376,14 +379,13 @@ def run(conn, context, logger):
         extracted_articles = []
 
         # ── TIER 4: RSS feeds (filtered) ───────────────────────────
-        # rss_items already fetched above; run filter for project extraction
+        # Reuse Phase 1 RSS items instead of re-fetching from all feeds
         rss_filtered = rss_monitor.fetch_and_filter(
             days_back=days_back,
             include_media=True,
             gemini_client=gemini_client,
+            prefetched_items=rss_items if rss_items else None,
         )
-        # Note: rss_items was already fetched at STEP 1 for context;
-        # rss_filtered adds media feeds + three-layer filter for project extraction
 
         # ── POST-EXTRACTION: Deduplicate & upsert all discovered projects ──
         print("\n[POST-EXTRACTION] Collecting all discovered projects...")

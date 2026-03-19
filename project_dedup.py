@@ -20,6 +20,7 @@ Used by update_dashboard.py to deduplicate raw project mentions from:
   - Government registries (Tier 1)
 """
 
+import os
 import re
 from collections import defaultdict
 from difflib import SequenceMatcher
@@ -43,6 +44,8 @@ DEDUP_WEIGHTS = {
     'shared_evidence_url':      20,
     'contradictory_province':  -20,
     'contradictory_sector':    -15,
+    'semantic_similarity_above_90': 20,
+    'semantic_similarity_above_80': 10,
 }
 
 DEDUP_THRESHOLDS = {
@@ -158,6 +161,24 @@ def compute_match_score(candidate: dict, existing: dict, conn=None) -> int:
             score += DEDUP_WEIGHTS['exact_normalized_name']
         elif SequenceMatcher(None, cand_key, exist_key).ratio() >= 0.85:
             score += DEDUP_WEIGHTS['fuzzy_name_above_85']
+
+    # Semantic similarity via NIM embeddings
+    if os.environ.get('SEMANTIC_DEDUP_ENABLED', 'true').lower() == 'true':
+        try:
+            from embeddings_cache import get_similarity
+            sim = get_similarity(
+                f"{candidate.get('name', '')} {candidate.get('description', '')}",
+                f"{existing.get('name', '')} {existing.get('description', '')}",
+            )
+            if sim >= 0.90:
+                score += DEDUP_WEIGHTS['semantic_similarity_above_90']
+            elif sim >= 0.80:
+                score += DEDUP_WEIGHTS['semantic_similarity_above_80']
+        except ImportError:
+            pass
+        except Exception as e:
+            # NIM unavailable — dedup falls back to string matching
+            pass
 
     # Organization match
     cand_org = _resolve_org(candidate.get('proponent'), conn)

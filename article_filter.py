@@ -178,13 +178,15 @@ _CANADIAN_CMAS = frozenset({
 _ALL_CANADIAN_LOCATIONS = _CANADIAN_PROVINCES | _CANADIAN_CMAS
 
 
+_CANADIAN_LOCATION_RE = re.compile(
+    '|'.join(re.escape(loc) for loc in sorted(_ALL_CANADIAN_LOCATIONS, key=len, reverse=True)),
+    re.IGNORECASE,
+)
+
+
 def _mentions_canadian_location(text: str) -> bool:
     """Check if text mentions any Canadian province or CMA."""
-    text_lower = text.lower()
-    for loc in _ALL_CANADIAN_LOCATIONS:
-        if loc in text_lower:
-            return True
-    return False
+    return bool(_CANADIAN_LOCATION_RE.search(text))
 
 
 _ANY_DOLLAR_RE = re.compile(
@@ -198,12 +200,28 @@ def _has_any_dollar_mention(text: str) -> bool:
     return bool(_ANY_DOLLAR_RE.search(text))
 
 
-def _has_any(text: str, keywords: frozenset) -> bool:
-    """Check if text contains any keyword from the set."""
-    for kw in keywords:
-        if kw in text:
-            return True
-    return False
+def _compile_keyword_re(keywords: frozenset) -> re.Pattern:
+    """Compile a frozenset of keywords into a single regex for fast substring search."""
+    # Sort by length descending so longer matches take priority
+    sorted_kws = sorted(keywords, key=len, reverse=True)
+    return re.compile('|'.join(re.escape(kw) for kw in sorted_kws))
+
+
+# Pre-compiled keyword patterns (built once at import time)
+_CAT_A_RE = _compile_keyword_re(_CAT_A)
+_CAT_B_RE = _compile_keyword_re(_CAT_B)
+_CAT_C_RE = _compile_keyword_re(_CAT_C)
+
+
+def _has_any(text: str, keywords: frozenset, compiled_re: re.Pattern = None) -> bool:
+    """Check if text contains any keyword from the set.
+
+    When compiled_re is provided (pre-compiled at module load), uses fast
+    single-pass regex. Falls back to linear scan for ad-hoc keyword sets.
+    """
+    if compiled_re is not None:
+        return bool(compiled_re.search(text))
+    return any(kw in text for kw in keywords)
 
 
 def _has_dollar_value(text: str, min_millions: float = 1.0) -> bool:
@@ -243,9 +261,28 @@ def layer1_keyword_check(title: str, summary: str = '') -> bool:
         return True
 
     # L4: Keyword co-occurrence
-    if not _has_any(text, _CAT_A):
+    if not _has_any(text, _CAT_A, _CAT_A_RE):
         return False
-    return _has_any(text, _CAT_B) or _has_any(text, _CAT_C)
+    return _has_any(text, _CAT_B, _CAT_B_RE) or _has_any(text, _CAT_C, _CAT_C_RE)
+
+
+def layer1_strength(title: str, summary: str = '') -> str:
+    """Return L1 match strength: 'strong', 'bypass', or 'none'.
+
+    'strong' = Cat A + (Cat B or Cat C) all matched via keywords.
+    'bypass' = passed only via dollar-value bypass or location+dollar bypass.
+    'none'   = did not pass L1.
+    """
+    text = (title + ' ' + summary).lower()
+    has_a = _has_any(text, _CAT_A, _CAT_A_RE)
+    has_bc = _has_any(text, _CAT_B, _CAT_B_RE) or _has_any(text, _CAT_C, _CAT_C_RE)
+    if has_a and has_bc:
+        return "strong"
+    if _has_dollar_value(text):
+        return "bypass"
+    if _has_any_dollar_mention(text) and _mentions_canadian_location(text):
+        return "bypass"
+    return "none"
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -312,16 +349,15 @@ _ALL_REJECT = (
 )
 
 
+_ALL_REJECT_RE = _compile_keyword_re(_ALL_REJECT)
+
+
 def layer2_negative_check(title: str) -> bool:
     """
     Layer 2: Negative keyword exclusion on title only.
     Returns True if article should be REJECTED (contains exclusion term).
     """
-    title_lower = title.lower()
-    for term in _ALL_REJECT:
-        if term in title_lower:
-            return True
-    return False
+    return bool(_ALL_REJECT_RE.search(title.lower()))
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -530,14 +566,18 @@ def filter_articles(
     filtered_out = []
 
     # Layer 1: Keyword co-occurrence (+ dollar-value bypass + metadata boost)
+    # Also track L1 strength to skip L3 for strong keyword matches.
     if not skip_layer1:
         passed_l1 = []
         for art in articles:
             # Metadata boost: articles pre-tagged with sector by domain or feed
             # bypass L1 keyword check (still go through L2 negative + L3 LLM)
             if art.get('meta_sectors'):
+                art['_l1_strength'] = 'meta'
                 passed_l1.append(art)
             elif layer1_keyword_check(art.get('title', ''), art.get('summary', '')):
+                art['_l1_strength'] = layer1_strength(
+                    art.get('title', ''), art.get('summary', ''))
                 passed_l1.append(art)
             else:
                 filtered_out.append(('L1', art))
@@ -553,17 +593,44 @@ def filter_articles(
                 filtered_out.append(('L2', art))
         articles = passed_l2
 
-    # Layer 3: Gemini batch pre-screen (structured JSON output in Phase 5)
+    # Layer 3: LLM batch pre-screen (local LLM or Gemini Flash fallback).
+    # Skip L3 for articles with strong L1 keyword matches — they already have
+    # Cat A + (Cat B or Cat C), so the LLM call adds little value. Only send
+    # borderline articles (dollar-bypass, metadata-boost) for LLM verification.
     if gemini_client and articles:
-        relevant_idx = layer3_gemini_prescreen(articles, gemini_client=gemini_client, conn=conn)
-        relevant_set = set(relevant_idx)
-        passed_l3 = []
+        strong_articles = []
+        borderline_articles = []
+        borderline_indices = []
         for i, art in enumerate(articles):
-            if i in relevant_set:
-                passed_l3.append(art)
+            strength = art.pop('_l1_strength', 'strong')
+            if strength == 'strong':
+                strong_articles.append(art)
             else:
-                filtered_out.append(('L3', art))
-        articles = passed_l3
+                borderline_articles.append(art)
+                borderline_indices.append(i)
+
+        if borderline_articles:
+            l3_skipped = len(strong_articles)
+            relevant_idx = layer3_gemini_prescreen(
+                borderline_articles, gemini_client=gemini_client, conn=conn)
+            relevant_set = set(relevant_idx)
+            passed_l3 = list(strong_articles)
+            for i, art in enumerate(borderline_articles):
+                if i in relevant_set:
+                    passed_l3.append(art)
+                else:
+                    filtered_out.append(('L3', art))
+            if l3_skipped:
+                print(f"  [Filter L3] {l3_skipped} strong-match articles skipped L3")
+            articles = passed_l3
+        else:
+            # All articles are strong matches — skip L3 entirely
+            articles = strong_articles
+            print(f"  [Filter L3] All {len(articles)} articles are strong matches, L3 skipped")
+    else:
+        # Clean up _l1_strength if L3 was skipped
+        for art in articles:
+            art.pop('_l1_strength', None)
 
     l1_cut = sum(1 for layer, _ in filtered_out if layer == 'L1')
     l2_cut = sum(1 for layer, _ in filtered_out if layer == 'L2')

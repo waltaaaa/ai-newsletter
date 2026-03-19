@@ -801,6 +801,20 @@ def fetch_and_filter(
     except Exception as e:
         print(f"[WARN] Snippet enhancement failed, continuing with original snippets: {e}")
 
+    # Pre-filter step 2b: MinHash article dedup (remove syndicated near-duplicates)
+    if os.environ.get('MINHASH_DEDUP_ENABLED', 'true').lower() == 'true':
+        try:
+            from article_dedup import deduplicate_articles
+            pre_dedup = len(all_items)
+            all_items, dedup_dropped = deduplicate_articles(all_items)
+            if dedup_dropped:
+                print(f"  [RSS] MinHash article dedup: {pre_dedup} -> {len(all_items)} "
+                      f"(dropped {dedup_dropped} near-duplicates)")
+        except ImportError:
+            pass
+        except Exception as e:
+            print(f"[WARN] MinHash dedup failed, continuing without: {e}")
+
     # Pre-filter step 3: Canadian relevance filter for global newswire feeds
     # GlobeNewswire and PRNewswire are global — drop non-Canadian articles
     # before they burn LLM classification tokens. Canada Newswire is already

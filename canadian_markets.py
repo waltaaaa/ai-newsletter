@@ -209,7 +209,7 @@ def fetch_and_store_commodities(conn=None, db=None):
 
     print(f"  [MARKETS] {len(data)} commodity indicators fetched")
 
-    # Store in SQLite
+    # Store in SQLite dashboard_state (for frontend/export)
     if conn and hasattr(conn, 'execute'):
         try:
             from db import save_dashboard_state
@@ -219,5 +219,35 @@ def fetch_and_store_commodities(conn=None, db=None):
             })
         except Exception as e:
             logger.warning(f"Failed to store commodities: {e}")
+
+        # Also persist key Canadian commodity values to timeseries table
+        # so they appear in historical trend charts alongside standard commodities
+        try:
+            from db import save_timeseries_point
+            today_str = datetime.utcnow().strftime('%Y-%m-%d')
+            ts_count = 0
+
+            # Map canadian_markets indicator IDs to timeseries series names
+            COMMODITY_TS_MAP = {
+                'uranium_spot':       ('comm_uranium',    '$', 'yfinance (URA ETF)'),
+                'nickel':             ('comm_nickel',     '$', 'yfinance (JJN ETN)'),
+                'steel':              ('comm_steel',      '$', 'yfinance (SLX ETF)'),
+                'lumber':             ('comm_lumber',     '$/mbf', 'yfinance (LBS=F)'),
+                'wcs_discount':       ('comm_wcs_discount', '$/bbl', 'yfinance (WCS-WTI)'),
+                'tsx_infrastructure': ('comm_tsx_infra',  '$', 'yfinance (basket avg)'),
+            }
+
+            for ind_id, (series_name, unit, source) in COMMODITY_TS_MAP.items():
+                if ind_id in data and data[ind_id].get('current') is not None:
+                    save_timeseries_point(
+                        conn, series_name, today_str,
+                        data[ind_id]['current'], unit, source
+                    )
+                    ts_count += 1
+
+            if ts_count:
+                print(f"  [MARKETS] {ts_count} commodity values saved to timeseries")
+        except Exception as e:
+            logger.warning(f"Failed to save commodity timeseries: {e}")
 
     return data

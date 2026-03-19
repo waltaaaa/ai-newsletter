@@ -282,7 +282,7 @@ def _cmhc_housing_starts() -> float | None:
         url = (f"https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/"
                f"{year}/housing-starts-{month_name}-{year}")
         try:
-            resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
+            resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
             if resp.status_code != 200:
                 continue
             # "SAAR of housing starts for all areas in Canada was ... (238,049 units)"
@@ -333,7 +333,7 @@ def _cmhc_provincial_housing_starts() -> dict:
         url = (f"https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/"
                f"{year}/housing-starts-{month_name}-{year}")
         try:
-            resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
+            resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
             if resp.status_code != 200:
                 continue
 
@@ -829,10 +829,10 @@ def _fred_latest(series_id: str) -> float | None:
     """Latest observation from FRED public CSV endpoint (no API key required)."""
     try:
         url  = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
-        resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
+        resp = requests.get(url, timeout=45, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
         resp.raise_for_status()
         for line in reversed(resp.text.strip().split('\n')):
-            if line.startswith('DATE'):
+            if line.startswith('DATE') or line.startswith('observation'):
                 continue
             val = line.split(',')[-1].strip()
             if val and val != '.':
@@ -851,11 +851,11 @@ def _fred_yoy(series_id: str) -> float | None:
         start = (date.today() - timedelta(days=430)).isoformat()
         url   = (f"https://fred.stlouisfed.org/graph/fredgraph.csv"
                  f"?id={series_id}&observation_start={start}")
-        resp  = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
+        resp  = requests.get(url, timeout=45, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
         resp.raise_for_status()
         rows = []
         for line in resp.text.strip().split('\n'):
-            if line.startswith('DATE'):
+            if line.startswith('DATE') or line.startswith('observation'):
                 continue
             val = line.split(',')[-1].strip()
             if val and val != '.':
@@ -889,12 +889,23 @@ def _ecb_last(dataflow: str, key: str) -> float | None:
 
 
 def _boe_bank_rate() -> float | None:
-    """Latest Bank of England Bank Rate from BoE public IADB CSV download."""
+    """Latest Bank of England Bank Rate from BoE public IADB CSV download.
+
+    Falls back to FRED series (BOEBRBA) if BoE endpoint returns HTML instead
+    of CSV (the BoE changed their endpoint format periodically). The UK rate
+    is also available via FRED, so this is non-critical — all UK data is
+    covered by FRED with the 45s timeout.
+    """
+    # Try BoE IADB first
     try:
         url  = ("https://www.bankofengland.co.uk/boeapps/database/fromshowcolumns.asp"
                 "?Travel=NIxSUx&SeriesCodes=IUMABEDR&UsingCodes=Y&CSVF=TT&html.x=1&html.y=1")
-        resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
+        resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
         resp.raise_for_status()
+        # Detect HTML response (BoE sometimes returns a web page instead of CSV)
+        if '</html>' in resp.text.lower() or '<html' in resp.text.lower()[:500]:
+            print("  [WARN] BoE IADB returned HTML instead of CSV — trying FRED fallback")
+            raise ValueError("BoE returned HTML")
         for line in reversed(resp.text.strip().split('\n')):
             line = line.strip().strip('"')
             if not line or line.lower().startswith('date'):
@@ -909,6 +920,12 @@ def _boe_bank_rate() -> float | None:
                         pass
         return None
     except Exception:
+        pass
+
+    # Fallback: BoE Bank Rate via FRED (series BOEBRBA)
+    try:
+        return _fred_latest('BOEBRBA')
+    except Exception:
         return None
 
 
@@ -921,11 +938,11 @@ def _fred_qoq(series_id: str) -> float | None:
         start = (date.today() - timedelta(days=550)).isoformat()
         url   = (f"https://fred.stlouisfed.org/graph/fredgraph.csv"
                  f"?id={series_id}&observation_start={start}")
-        resp  = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
+        resp  = requests.get(url, timeout=45, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
         resp.raise_for_status()
         rows = []
         for line in resp.text.strip().split('\n'):
-            if line.startswith('DATE'):
+            if line.startswith('DATE') or line.startswith('observation'):
                 continue
             val = line.split(',')[-1].strip()
             if val and val != '.':
@@ -949,7 +966,7 @@ def _world_bank_latest(iso3: str, indicator: str) -> float | None:
     try:
         url  = (f"https://api.worldbank.org/v2/country/{iso3}/indicator/{indicator}"
                 f"?format=json&mrv=5&per_page=5")
-        resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
+        resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
         resp.raise_for_status()
         data = resp.json()
         if len(data) < 2 or not data[1]:
@@ -1196,6 +1213,24 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
                 'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'unemployment']) else '',
                 'source': prov_data.get(f'{field}_src', ''),
                 'frequency': 'monthly',
+                'backfilled': False,
+            })
+            count += 1
+
+    # Global indicators (US, EU, UK, China)
+    for region, region_data in primary_ind.get('global', {}).items():
+        for field, value in region_data.items():
+            if field.endswith('_src') or not value or value == 'N/A':
+                continue
+            save_indicator(conn, {
+                'indicator': f'global_{field}',
+                'province': region,
+                'date': today_str,
+                'value': str(value),
+                'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'gdp', 'unemployment']) else '',
+                'source': region_data.get(f'{field}_src', ''),
+                'frequency': 'monthly',
+                'category': 'Global',
                 'backfilled': False,
             })
             count += 1

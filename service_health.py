@@ -18,6 +18,8 @@ class ServiceHealth:
             "wayback": 2,
             "statcan": 3,
             "tavily": 3,
+            "searxng": 3,
+            "nvidia_nim": 3,
         }
 
     def record_failure(self, service, reason=""):

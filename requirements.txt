@@ -18,3 +18,5 @@ sumy
 nltk
 trafilatura
 openpyxl
+datasketch
+PyMuPDF

@@ -220,6 +220,8 @@ def spot_check_citations(
                     f"Answer with ONLY 'Yes' or 'No' followed by a brief reason (one sentence)."
                 )}],
             )
+            if not msg.content:
+                continue
             answer = msg.content[0].text.strip()
             supported = answer.lower().startswith('yes')
             results.append({

@@ -150,16 +150,32 @@ HOUSING_PRICE_INDEX = {
 }
 
 # ── All table groups ──────────────────────────────────────────────────────────
+# TODO: The following groups have TERMINATED vector IDs that return stale data
+# (2000-2012 vintage). They need to be refreshed from StatCan's current table
+# metadata using getSeriesInfoFromVector or the WDS table browser. Disabled
+# to prevent writing stale data to indicator_history. (2026-03-18)
+#
+# Disabled groups:
+#   INVESTMENT_BUILDING   — vectors 65642573-65642580 return 2012 data
+#   CONSTRUCTION_PRICE_INDEX — vector 18710109 returns 2000 data
+#   CAPITAL_EXPENDITURES  — vectors 65412182-65412184 return 2011 data
+#   HOUSING_STARTS        — vectors 47432007-47432009 return 2009-2011 data
+#   HOUSING_PRICE_INDEX   — vector 111350082 likely terminated
+#
+# Working groups (confirmed current data):
+#   EMPLOYMENT_INDUSTRY   — vectors 2057614, 2057606, 2057622 return 2026 data
+#   JOB_VACANCIES         — vectors 45169837, 45169829
+#   MERCHANDISE_EXPORTS   — vectors 21837355, 21837395, 21837439, 21837343
 
 ALL_TABLE_GROUPS = [
-    INVESTMENT_BUILDING,
-    CONSTRUCTION_PRICE_INDEX,
-    CAPITAL_EXPENDITURES,
+    # INVESTMENT_BUILDING,        # disabled — stale vector IDs (2012 data)
+    # CONSTRUCTION_PRICE_INDEX,   # disabled — stale vector ID (2000 data)
+    # CAPITAL_EXPENDITURES,       # disabled — stale vector IDs (2011 data)
     EMPLOYMENT_INDUSTRY,
     JOB_VACANCIES,
     MERCHANDISE_EXPORTS,
-    HOUSING_STARTS,
-    HOUSING_PRICE_INDEX,
+    # HOUSING_STARTS,             # disabled — stale vector IDs (2009-2011 data)
+    # HOUSING_PRICE_INDEX,        # disabled — stale vector ID (likely terminated)
 ]
 
 # Frequency classification for mode-aware skipping

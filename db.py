@@ -464,6 +464,78 @@ CREATE TABLE IF NOT EXISTS claude_checkpoints (
     created   TEXT DEFAULT (datetime('now')),
     PRIMARY KEY (run_id, call_name)
 );
+
+-- 25. Project changes (append-only change log for temporal detection)
+CREATE TABLE IF NOT EXISTS project_changes (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id  INTEGER NOT NULL,
+    change_date TEXT NOT NULL DEFAULT (date('now')),
+    change_type TEXT NOT NULL,
+    field       TEXT,
+    old_value   TEXT,
+    new_value   TEXT,
+    source_url  TEXT DEFAULT '',
+    significance REAL DEFAULT 0.5,
+    sweep_id    TEXT DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS idx_project_changes_project ON project_changes(project_id);
+CREATE INDEX IF NOT EXISTS idx_project_changes_date ON project_changes(change_date);
+
+-- 26. Cache (persistent pipeline cache — embeddings, page text, OCR, etc.)
+CREATE TABLE IF NOT EXISTS cache (
+    cache_key   TEXT PRIMARY KEY,
+    cache_type  TEXT NOT NULL,
+    value       BLOB NOT NULL,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    expires_at  TEXT NOT NULL,
+    hit_count   INTEGER DEFAULT 0,
+    last_hit_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_cache_type ON cache(cache_type);
+CREATE INDEX IF NOT EXISTS idx_cache_expires ON cache(expires_at);
+
+-- 27. Feedback (append-only learning signals from each sweep)
+CREATE TABLE IF NOT EXISTS feedback (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    sweep_id    TEXT NOT NULL,
+    sweep_date  TEXT NOT NULL DEFAULT (date('now')),
+    signal_type TEXT NOT NULL,
+    signal_key  TEXT NOT NULL,
+    signal_value TEXT,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_feedback_type ON feedback(signal_type);
+CREATE INDEX IF NOT EXISTS idx_feedback_sweep ON feedback(sweep_id);
+
+-- 28. Learned config (optimized configuration from learning engine)
+CREATE TABLE IF NOT EXISTS learned_config (
+    config_key   TEXT PRIMARY KEY,
+    config_value TEXT NOT NULL,
+    updated_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_by   TEXT NOT NULL,
+    prior_value  TEXT,
+    reason       TEXT
+);
+
+-- 29. Sweep metrics (per-sweep performance metrics for regression detection)
+CREATE TABLE IF NOT EXISTS sweep_metrics (
+    sweep_id                  TEXT PRIMARY KEY,
+    sweep_date                TEXT NOT NULL,
+    total_queries_run         INTEGER DEFAULT 0,
+    total_projects_extracted  INTEGER DEFAULT 0,
+    new_projects              INTEGER DEFAULT 0,
+    updated_projects          INTEGER DEFAULT 0,
+    claude_corrections        INTEGER DEFAULT 0,
+    claude_confirmations      INTEGER DEFAULT 0,
+    dedup_merges              INTEGER DEFAULT 0,
+    snowball_queries_generated INTEGER DEFAULT 0,
+    snowball_new_projects     INTEGER DEFAULT 0,
+    avg_confidence_score      REAL DEFAULT 0,
+    nim_api_calls             INTEGER DEFAULT 0,
+    claude_api_calls          INTEGER DEFAULT 0,
+    cache_hit_rate            REAL DEFAULT 0,
+    wall_time_seconds         INTEGER DEFAULT 0
+);
 """
 
 

@@ -549,3 +549,68 @@ WAYBACK_MAX_SNAPSHOTS_SEED = int(os.environ.get('WAYBACK_MAX_SNAPSHOTS_SEED', '8
 # Sonnet 4.6: $3/MTok input, $15/MTok output (call 4, gap analysis, dedup QA).
 # Normal run ≈ $3-5 with Opus writing. Cap prevents runaway costs.
 CLAUDE_COST_CAP_USD = float(os.environ.get('CLAUDE_COST_CAP_USD', '8.00'))
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# NVIDIA NIM (all models, one API key)
+# ══════════════════════════════════════════════════════════════════════════════
+
+NVIDIA_API_KEY = os.environ.get('NVIDIA_API_KEY', '')
+NIM_BASE_URL = os.environ.get('NIM_BASE_URL', 'https://integrate.api.nvidia.com/v1')
+NIM_RATE_LIMIT_RPM = int(os.environ.get('NIM_RATE_LIMIT_RPM', '40'))
+
+# Models
+NIM_EXTRACTION_MODEL = 'moonshotai/kimi-k2.5'
+NIM_EMBEDDING_MODEL = 'nvidia/nv-embedqa-e5-v5'
+NIM_RERANK_MODEL = 'nvidia/llama-3.2-nv-rerankqa-1b-v2'
+
+# Reranking uses a model-specific URL on ai.api.nvidia.com
+# NOTE: URL path uses underscores (llama-3_2) not dots
+NIM_RERANK_BASE_URL = os.environ.get(
+    'NIM_RERANK_BASE_URL',
+    'https://ai.api.nvidia.com/v1/retrieval'
+)
+NIM_RERANK_URL_MODEL = 'nvidia/llama-3_2-nv-rerankqa-1b-v2'  # URL-safe model path
+
+# OCR (PaddleOCR via NIM — for scanned/image PDF pages)
+NIM_OCR_MODEL = 'nvidia/ocdrnet'
+NIM_OCR_URL = os.environ.get(
+    'NIM_OCR_URL',
+    'https://ai.api.nvidia.com/v1/cv/nvidia/ocdrnet',
+)
+NIM_OCR_ENABLED = os.environ.get('NIM_OCR_ENABLED', 'true').lower() == 'true'
+
+# K2.5 thinking mode (better extraction, more tokens per call)
+NIM_THINKING_MODE = os.environ.get('NIM_THINKING_MODE', 'true').lower() == 'true'
+
+# Claude validation
+CLAUDE_VALIDATION_TOP_N = int(os.environ.get('CLAUDE_VALIDATION_TOP_N', '30'))
+
+# Snowball discovery
+SNOWBALL_MAX_PASSES = int(os.environ.get('SNOWBALL_MAX_PASSES', '3'))
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SEARXNG
+# ══════════════════════════════════════════════════════════════════════════════
+
+SEARXNG_ENABLED = os.environ.get('SEARXNG_ENABLED', 'true').lower() == 'true'
+SEARXNG_URL = os.environ.get('SEARXNG_URL', 'http://localhost:8080')
+SEARXNG_FALLBACK_URL = os.environ.get('SEARXNG_FALLBACK_URL', 'https://search.ononoki.org')
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# NIM ENHANCEMENT FLAGS
+# ══════════════════════════════════════════════════════════════════════════════
+
+MINHASH_DEDUP_ENABLED = os.environ.get('MINHASH_DEDUP_ENABLED', 'true').lower() == 'true'
+SEMANTIC_DEDUP_ENABLED = os.environ.get('SEMANTIC_DEDUP_ENABLED', 'true').lower() == 'true'
+NIM_RERANK_ENABLED = os.environ.get('NIM_RERANK_ENABLED', 'true').lower() == 'true'
+SNOWBALL_DISCOVERY_ENABLED = os.environ.get('SNOWBALL_DISCOVERY_ENABLED', 'true').lower() == 'true'
+CLAUDE_VALIDATION_ENABLED = os.environ.get('CLAUDE_VALIDATION_ENABLED', 'true').lower() == 'true'
+CHANGE_DETECTION_ENABLED = os.environ.get('CHANGE_DETECTION_ENABLED', 'true').lower() == 'true'
+CONFIDENCE_SCORING_ENABLED = os.environ.get('CONFIDENCE_SCORING_ENABLED', 'true').lower() == 'true'
+CACHE_ENABLED = os.environ.get('CACHE_ENABLED', 'true').lower() == 'true'
+LEARNING_ENGINE_ENABLED = os.environ.get('LEARNING_ENGINE_ENABLED', 'true').lower() == 'true'
+LEARNING_COLD_START_SWEEPS = int(os.environ.get('LEARNING_COLD_START_SWEEPS', '4'))
+LEARNING_PROMPT_REVISION_EVERY_N = int(os.environ.get('LEARNING_PROMPT_REVISION_EVERY_N', '4'))

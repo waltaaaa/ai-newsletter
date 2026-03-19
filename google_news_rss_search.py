@@ -244,8 +244,11 @@ def run_google_news_search(gemini_client=None):
 
     # Fetch RSS feeds
     try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+        if loop and loop.is_running():
             import nest_asyncio
             nest_asyncio.apply()
             articles = loop.run_until_complete(

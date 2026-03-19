@@ -1135,6 +1135,9 @@ ARTICLES:
                 system=system,
                 messages=[{'role': 'user', 'content': user}],
             )
+            if not msg.content:
+                print(f"  [Claude T2] Empty API response for {province}")
+                continue
             raw = msg.content[0].text.strip()
             if raw.startswith('```'):
                 raw = re.sub(r'^```[a-z]*\n?', '', raw)
@@ -1439,6 +1442,9 @@ SOURCE TEXT:
                 max_tokens=3000,
                 messages=[{'role': 'user', 'content': user}],
             )
+            if not msg.content:
+                print(f"  [Sonnet T3] Empty API response for {province}")
+                continue
             raw = msg.content[0].text.strip()
             if raw.startswith('```'):
                 raw = re.sub(r'^```[a-z]*\n?', '', raw)

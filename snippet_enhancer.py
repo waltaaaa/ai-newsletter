@@ -1,19 +1,31 @@
 """
-Snippet enhancer using sumy extractive summarization.
+Snippet enhancer using trafilatura article extraction + sumy summarization.
 For RSS articles with missing or truncated descriptions, fetches the full page
 and extracts the 2-3 most representative sentences. Zero API cost, no LLM needed.
+
+Primary extractor: trafilatura (purpose-built for news article text extraction).
+Fallback extractor: BeautifulSoup paragraph extraction (if trafilatura unavailable).
 
 Used as a pre-step before RSS filtering — gives L4 and L6 more text to work with.
 Falls back gracefully: if fetch fails or sumy fails, returns the original snippet.
 """
+import logging
+
 import requests
 from bs4 import BeautifulSoup
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
-import logging
 
 logger = logging.getLogger(__name__)
+
+# Check trafilatura availability at import time
+try:
+    import trafilatura
+    _HAS_TRAFILATURA = True
+except ImportError:
+    _HAS_TRAFILATURA = False
+    logger.info("[SNIPPET] trafilatura not installed, using BeautifulSoup fallback")
 
 # Minimum snippet length (chars) before we bother enhancing
 MIN_SNIPPET_LENGTH = 80
@@ -37,8 +49,30 @@ def _get_summarizer():
     return _summarizer
 
 
-def _fetch_article_text(url, timeout=FETCH_TIMEOUT):
-    """Fetch a URL and extract the main text content via BeautifulSoup."""
+def _fetch_article_text_trafilatura(url, timeout=FETCH_TIMEOUT):
+    """Fetch article text using trafilatura (purpose-built for news extraction).
+
+    Returns the extracted article body text, or empty string on failure.
+    trafilatura handles: varied HTML layouts, boilerplate removal, paywall stubs,
+    navigation/sidebar/comment stripping, and multi-page articles.
+    """
+    try:
+        downloaded = trafilatura.fetch_url(url)
+        if not downloaded:
+            return ""
+        text = trafilatura.extract(downloaded, favor_recall=True,
+                                   include_comments=False)
+        return (text or "").strip()
+    except Exception as e:
+        logger.debug(f"[SNIPPET] trafilatura extraction failed for {url}: {e}")
+        return ""
+
+
+def _fetch_article_text_bs4(url, timeout=FETCH_TIMEOUT):
+    """Fetch a URL and extract the main text content via BeautifulSoup.
+
+    Fallback extractor when trafilatura is unavailable or fails.
+    """
     resp = requests.get(url, timeout=timeout, headers=_HEADERS)
     resp.raise_for_status()
     soup = BeautifulSoup(resp.content, "lxml")
@@ -56,6 +90,17 @@ def _fetch_article_text(url, timeout=FETCH_TIMEOUT):
     paragraphs = main.find_all("p")
     text = " ".join(p.get_text(strip=True) for p in paragraphs)
     return text.strip()
+
+
+def _fetch_article_text(url, timeout=FETCH_TIMEOUT):
+    """Fetch article text — trafilatura primary, BS4 fallback."""
+    if _HAS_TRAFILATURA:
+        text = _fetch_article_text_trafilatura(url, timeout=timeout)
+        if text and len(text) >= 100:
+            return text
+        # trafilatura returned nothing useful — fall through to BS4
+
+    return _fetch_article_text_bs4(url, timeout=timeout)
 
 
 def enhance_snippet(url, existing_snippet="", timeout=FETCH_TIMEOUT):
@@ -113,6 +158,7 @@ def enhance_batch(articles, url_key="url", snippet_key="snippet",
     """
     enhanced_count = 0
     skipped_count = 0
+    extractor = "trafilatura" if _HAS_TRAFILATURA else "bs4"
 
     for article in articles:
         if enhanced_count >= max_enhance:
@@ -141,7 +187,7 @@ def enhance_batch(articles, url_key="url", snippet_key="snippet",
             enhanced_count += 1
 
     if enhanced_count > 0:
-        print(f"[SNIPPET] Enhanced {enhanced_count} articles, "
+        print(f"[SNIPPET] Enhanced {enhanced_count} articles ({extractor}), "
               f"skipped {skipped_count} (already had snippets or gov)")
 
     return articles

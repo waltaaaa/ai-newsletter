@@ -79,48 +79,48 @@ def _verify_project_evidence_urls(conn, batch_size=200) -> None:
     with concurrent.futures.ThreadPoolExecutor(max_workers=12) as ex:
         results = list(ex.map(_check_url, urls_only))
 
-    # Group dead indices by norm_key
-    dead_by_key = {}
+    # Group dead indices by norm_key, using already-fetched evidence
+    dead_by_key = {}   # norm_key -> (dead_indices, evidence_list)
     dead_count = 0
     for (norm_key, ev_idx, url, ev_list), is_live in zip(url_tasks, results):
         if not is_live:
             dead_count += 1
-            dead_by_key.setdefault(norm_key, []).append(ev_idx)
+            if norm_key not in dead_by_key:
+                dead_by_key[norm_key] = ([], ev_list)
+            dead_by_key[norm_key][0].append(ev_idx)
 
     today_str = date.today().isoformat()
     checked_keys = set()
-    for norm_key, dead_indices in dead_by_key.items():
+
+    # Batch update: mark dead URLs using already-fetched evidence (no re-query)
+    for norm_key, (dead_indices, ev_list) in dead_by_key.items():
         try:
-            row = conn.execute(
-                "SELECT evidence FROM projects WHERE norm_key = ?", (norm_key,)
-            ).fetchone()
-            if row:
-                ev_list = json.loads(row['evidence'] or '[]')
-                changed = False
-                for idx in dead_indices:
-                    if idx < len(ev_list) and not ev_list[idx].get('url_dead'):
-                        ev_list[idx]['url_dead'] = True
-                        changed = True
-                if changed:
-                    with conn:
-                        conn.execute(
-                            "UPDATE projects SET evidence = ?, urls_checked_at = ? WHERE norm_key = ?",
-                            (json.dumps(ev_list, ensure_ascii=False), today_str, norm_key)
-                        )
+            changed = False
+            for idx in dead_indices:
+                if idx < len(ev_list) and not ev_list[idx].get('url_dead'):
+                    ev_list[idx]['url_dead'] = True
+                    changed = True
+            if changed:
+                with conn:
+                    conn.execute(
+                        "UPDATE projects SET evidence = ?, urls_checked_at = ? WHERE norm_key = ?",
+                        (json.dumps(ev_list, ensure_ascii=False), today_str, norm_key)
+                    )
             checked_keys.add(norm_key)
         except Exception as e:
             print(f"  [WARN] Dead URL update failed ({norm_key}): {e}")
 
-    for doc in docs:
-        if doc['norm_key'] not in checked_keys:
-            try:
-                with conn:
-                    conn.execute(
-                        "UPDATE projects SET urls_checked_at = ? WHERE norm_key = ?",
-                        (today_str, doc['norm_key'])
-                    )
-            except Exception as e:
-                print(f"  [WARN] URL check timestamp update failed ({doc.get('norm_key', '?')}): {e}")
+    # Batch update timestamp for projects with no dead URLs
+    no_dead_keys = [doc['norm_key'] for doc in docs if doc['norm_key'] not in checked_keys]
+    if no_dead_keys:
+        try:
+            with conn:
+                conn.executemany(
+                    "UPDATE projects SET urls_checked_at = ? WHERE norm_key = ?",
+                    [(today_str, nk) for nk in no_dead_keys]
+                )
+        except Exception as e:
+            print(f"  [WARN] Batch URL check timestamp update failed: {e}")
 
     live_count = len(urls_only) - dead_count
     print(f"  [URL-CHECK] {live_count} live, {dead_count} dead across {len(docs)} projects")
@@ -346,7 +346,7 @@ def run(conn, context, logger):
         try:
             from anomaly_detection import check_cross_project_anomalies
             from db import get_all_projects
-            all_snap = get_all_projects(conn)
+            all_snap = get_all_projects(conn) or []
             cross_anomalies = check_cross_project_anomalies(all_snap)
             if cross_anomalies:
                 print(f"  [ANOMALY] {len(cross_anomalies)} possible cross-province duplicates")
