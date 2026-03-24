@@ -81,12 +81,79 @@ def load_compound_queries(json_path=os.path.join(os.path.dirname(__file__), "con
     return data.get("queries", data) if isinstance(data, dict) else data
 
 
-def _shorten_query(query_text, query_meta):
-    """Shorten a verbose Gemini query to concise Google News RSS keywords.
+def _load_naics_queries():
+    """Generate additional queries from three-digit NAICS codes × expanded CMA list.
 
-    Gemini: "Find all major mining projects in Saskatchewan..."
-    RSS:    "mining mine mineral project Saskatchewan 2026"
+    Returns list of query dicts compatible with the compound query format.
     """
+    config_dir = os.path.join(os.path.dirname(__file__), "config")
+    naics_path = os.path.join(config_dir, "naics_codes.json")
+    cmas_path = os.path.join(config_dir, "cmas_full.json")
+
+    if not os.path.exists(naics_path) or not os.path.exists(cmas_path):
+        return []
+
+    with open(naics_path, "r", encoding="utf-8") as f:
+        naics_codes = json.load(f)
+    with open(cmas_path, "r", encoding="utf-8") as f:
+        cmas = json.load(f)
+
+    queries = []
+    year = datetime.now().year
+
+    for naics in naics_codes:
+        code = naics.get("code", "")
+        en_terms = naics.get("search_terms_en", [])
+        fr_terms = naics.get("search_terms_fr", [])
+        pipeline_sector = naics.get("pipeline_sector", "")
+        if not en_terms:
+            continue
+
+        # Use the first search term for query generation
+        primary_en = en_terms[0]
+        primary_fr = fr_terms[0] if fr_terms else None
+
+        # CMA-level queries (English)
+        for cma in cmas:
+            geo = cma["search_name"]
+            prov = cma.get("province", "")
+            queries.append({
+                "query": f"{primary_en} project {geo} {year}",
+                "province": prov,
+                "sector": pipeline_sector,
+                "language": "en",
+                "geo_tier": "cma",
+                "cma": geo,
+                "naics_code": code,
+            })
+            # French variant for French CMAs
+            if cma.get("french") and primary_fr:
+                queries.append({
+                    "query": f"projet {primary_fr} {geo} {year}",
+                    "province": prov,
+                    "sector": pipeline_sector,
+                    "language": "fr",
+                    "geo_tier": "cma",
+                    "cma": geo,
+                    "naics_code": code,
+                })
+
+    logger.info(f"Generated {len(queries)} NAICS × CMA queries")
+    return queries
+
+
+def _shorten_query(query_text, query_meta):
+    """Shorten a verbose compound query to concise Google News RSS keywords.
+
+    Compound: "Find all major mining projects in Saskatchewan..."
+    RSS:      "mining mine mineral project Saskatchewan 2026"
+
+    NAICS queries are already short — pass through directly.
+    """
+    # NAICS-generated queries are already in the right format
+    if query_meta.get("naics_code"):
+        return query_text
+
     province = query_meta.get("province", "")
     sector = query_meta.get("sector", "")
     language = query_meta.get("language", "en")
@@ -186,44 +253,79 @@ async def fetch_rss_feed(session, feed, semaphore):
 
 
 async def run_google_news_discovery(json_path=None):
-    """Run all compound queries via Google News RSS.
+    """Run all compound queries + NAICS expansion via Google News RSS.
+
+    Two-pass batching strategy:
+      Pass 1: Compound queries (proven high-yield, 30 concurrent)
+      Pass 2: NAICS expansion (additive, 50 concurrent, skip already-seen URLs)
 
     Returns deduplicated list of article dicts.
     """
     queries = load_compound_queries(json_path) if json_path else load_compound_queries()
-    rss_feeds = convert_queries_to_rss_urls(queries)
 
-    logger.info(f"Google News RSS discovery: {len(queries)} queries → {len(rss_feeds)} unique feeds")
-    print(f"  [GOOGLE-NEWS] {len(queries)} queries → {len(rss_feeds)} unique RSS feeds")
+    # Separate compound and NAICS queries
+    naics_queries = []
+    try:
+        naics_queries = _load_naics_queries()
+        if naics_queries:
+            logger.info(f"Loaded {len(naics_queries)} NAICS expansion queries")
+    except Exception as e:
+        logger.warning(f"NAICS query expansion failed (non-fatal): {e}")
 
-    semaphore = asyncio.Semaphore(30)
+    # ── Pass 1: Compound queries (core discovery) ────────────────────
+    compound_feeds = convert_queries_to_rss_urls(queries)
+    print(f"  [GOOGLE-NEWS] Pass 1: {len(queries)} compound queries → {len(compound_feeds)} unique feeds")
+
+    semaphore_p1 = asyncio.Semaphore(30)
     all_articles = []
+    seen_urls = set()
 
     async with aiohttp.ClientSession() as session:
-        tasks = [
-            fetch_rss_feed(session, feed, semaphore)
-            for feed in rss_feeds
-        ]
+        tasks = [fetch_rss_feed(session, feed, semaphore_p1) for feed in compound_feeds]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
     for result in results:
         if isinstance(result, list):
-            all_articles.extend(result)
+            for article in result:
+                url = article.get("link", "")
+                if url and url not in seen_urls:
+                    seen_urls.add(url)
+                    all_articles.append(article)
 
-    # Dedup by URL
-    seen_urls = set()
-    unique_articles = []
-    for article in all_articles:
-        url = article.get("link", "")
-        if url and url not in seen_urls:
-            seen_urls.add(url)
-            unique_articles.append(article)
+    p1_count = len(all_articles)
+    print(f"  [GOOGLE-NEWS] Pass 1: {p1_count} unique articles")
 
-    print(
-        f"  [GOOGLE-NEWS] {len(all_articles)} total → "
-        f"{len(unique_articles)} unique articles"
-    )
-    return unique_articles
+    # ── Pass 2: NAICS expansion (additive discovery, skip seen URLs) ─
+    if naics_queries:
+        naics_feeds = convert_queries_to_rss_urls(naics_queries)
+
+        # Remove feeds whose URLs are already in compound set
+        compound_urls = {f["url"] for f in compound_feeds}
+        naics_feeds = [f for f in naics_feeds if f["url"] not in compound_urls]
+
+        if naics_feeds:
+            print(f"  [GOOGLE-NEWS] Pass 2: {len(naics_feeds)} new NAICS feeds (after compound dedup)")
+
+            semaphore_p2 = asyncio.Semaphore(50)  # higher concurrency for additive pass
+            async with aiohttp.ClientSession() as session:
+                tasks = [fetch_rss_feed(session, feed, semaphore_p2) for feed in naics_feeds]
+                results = await asyncio.gather(*tasks, return_exceptions=True)
+
+            naics_new = 0
+            for result in results:
+                if isinstance(result, list):
+                    for article in result:
+                        url = article.get("link", "")
+                        if url and url not in seen_urls:
+                            seen_urls.add(url)
+                            all_articles.append(article)
+                            naics_new += 1
+
+            print(f"  [GOOGLE-NEWS] Pass 2: {naics_new} new articles from NAICS expansion")
+
+    total_feeds = len(compound_feeds) + len(naics_feeds) if naics_queries else len(compound_feeds)
+    print(f"  [GOOGLE-NEWS] Total: {total_feeds} feeds → {len(all_articles)} unique articles")
+    return all_articles
 
 
 def run_google_news_search(gemini_client=None):

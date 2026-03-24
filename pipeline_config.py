@@ -37,7 +37,14 @@ TODAY = date.today().isoformat()
 
 SONNET_MODEL = os.environ.get('SONNET_MODEL', 'claude-sonnet-4-6')
 OPUS_MODEL = os.environ.get('OPUS_MODEL', 'claude-opus-4-6')
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')  # legacy fallback only
+
+# Groq — primary classifier (replaces Gemini Flash)
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
+GROQ_MODEL = os.environ.get('GROQ_MODEL', 'llama-3.3-70b-versatile')
+GROQ_BASE_URL = 'https://api.groq.com/openai/v1'
+GROQ_TPM_LIMIT = 6000    # tokens per minute (free tier)
+GROQ_TPD_LIMIT = 500000  # tokens per day (free tier)
 
 # Per-model cost rates (USD per million tokens)
 MODEL_RATES = {
@@ -559,24 +566,25 @@ NVIDIA_API_KEY = os.environ.get('NVIDIA_API_KEY', '')
 NIM_BASE_URL = os.environ.get('NIM_BASE_URL', 'https://integrate.api.nvidia.com/v1')
 NIM_RATE_LIMIT_RPM = int(os.environ.get('NIM_RATE_LIMIT_RPM', '40'))
 
-# Models
-NIM_EXTRACTION_MODEL = 'moonshotai/kimi-k2.5'
-NIM_EMBEDDING_MODEL = 'nvidia/nv-embedqa-e5-v5'
-NIM_RERANK_MODEL = 'nvidia/llama-3.2-nv-rerankqa-1b-v2'
+# Models — upgraded March 2026
+NIM_EXTRACTION_MODEL = 'nvidia/nemotron-3-super-120b-a12b'  # was: moonshotai/kimi-k2.5
+NIM_EXTRACTION_FALLBACK = 'moonshotai/kimi-k2.5'            # emergency fallback only
+NIM_HARD_CASE_MODEL = 'deepseek-ai/deepseek-v3_2'           # second-opinion on incomplete extractions
+NIM_EMBEDDING_MODEL = 'nvidia/llama-nemotron-embed-1b-v2'    # was: nvidia/nv-embedqa-e5-v5
+NIM_RERANK_MODEL = 'nvidia/llama-nemotron-rerank-1b-v2'      # was: nvidia/llama-3.2-nv-rerankqa-1b-v2
 
 # Reranking uses a model-specific URL on ai.api.nvidia.com
-# NOTE: URL path uses underscores (llama-3_2) not dots
 NIM_RERANK_BASE_URL = os.environ.get(
     'NIM_RERANK_BASE_URL',
     'https://ai.api.nvidia.com/v1/retrieval'
 )
-NIM_RERANK_URL_MODEL = 'nvidia/llama-3_2-nv-rerankqa-1b-v2'  # URL-safe model path
+NIM_RERANK_URL_MODEL = 'nvidia/llama-nemotron-rerank-1b-v2'
 
-# OCR (PaddleOCR via NIM — for scanned/image PDF pages)
-NIM_OCR_MODEL = 'nvidia/ocdrnet'
+# OCR (Nemotron OCR v1 — replaces PaddleOCR, better layout analysis)
+NIM_OCR_MODEL = 'nvidia/nemotron-ocr-v1'  # was: nvidia/ocdrnet
 NIM_OCR_URL = os.environ.get(
     'NIM_OCR_URL',
-    'https://ai.api.nvidia.com/v1/cv/nvidia/ocdrnet',
+    'https://integrate.api.nvidia.com/v1/chat/completions',
 )
 NIM_OCR_ENABLED = os.environ.get('NIM_OCR_ENABLED', 'true').lower() == 'true'
 

@@ -1,0 +1,920 @@
+[
+  {
+    "code": "111",
+    "title": "Crop Production",
+    "sector_2digit": "11",
+    "sector_name": "Agriculture, Forestry, Fishing and Hunting",
+    "pipeline_sector": "agriculture",
+    "search_terms_en": ["crop production", "farm facility", "agricultural greenhouse", "grain elevator"],
+    "search_terms_fr": ["production agricole", "installation agricole", "serre agricole", "silo à grains"]
+  },
+  {
+    "code": "112",
+    "title": "Animal Production and Aquaculture",
+    "sector_2digit": "11",
+    "sector_name": "Agriculture, Forestry, Fishing and Hunting",
+    "pipeline_sector": "agriculture",
+    "search_terms_en": ["livestock facility", "aquaculture farm", "poultry barn", "fish hatchery"],
+    "search_terms_fr": ["élevage", "ferme aquacole", "poulailler", "pisciculture"]
+  },
+  {
+    "code": "113",
+    "title": "Forestry and Logging",
+    "sector_2digit": "11",
+    "sector_name": "Agriculture, Forestry, Fishing and Hunting",
+    "pipeline_sector": "forestry",
+    "search_terms_en": ["forestry operation", "logging camp", "timber harvest", "silviculture"],
+    "search_terms_fr": ["exploitation forestière", "camp forestier", "récolte de bois", "sylviculture"]
+  },
+  {
+    "code": "114",
+    "title": "Fishing, Hunting and Trapping",
+    "sector_2digit": "11",
+    "sector_name": "Agriculture, Forestry, Fishing and Hunting",
+    "pipeline_sector": "agriculture",
+    "search_terms_en": ["fishing harbour", "fish processing plant", "commercial fishery", "wharf upgrade"],
+    "search_terms_fr": ["port de pêche", "usine de transformation du poisson", "pêche commerciale", "quai de pêche"]
+  },
+  {
+    "code": "115",
+    "title": "Support Activities for Agriculture and Forestry",
+    "sector_2digit": "11",
+    "sector_name": "Agriculture, Forestry, Fishing and Hunting",
+    "pipeline_sector": "agriculture",
+    "search_terms_en": ["seed cleaning plant", "farm equipment depot", "irrigation system", "crop spraying facility"],
+    "search_terms_fr": ["centre de semences", "dépôt d'équipement agricole", "système d'irrigation", "centre de pulvérisation"]
+  },
+  {
+    "code": "211",
+    "title": "Oil and Gas Extraction",
+    "sector_2digit": "21",
+    "sector_name": "Mining, Quarrying, and Oil and Gas Extraction",
+    "pipeline_sector": "oil_gas",
+    "search_terms_en": ["oil sands project", "natural gas well", "LNG terminal", "bitumen upgrader"],
+    "search_terms_fr": ["projet de sables bitumineux", "puits de gaz naturel", "terminal GNL", "valorisation du bitume"]
+  },
+  {
+    "code": "212",
+    "title": "Mining and Quarrying (except Oil and Gas)",
+    "sector_2digit": "21",
+    "sector_name": "Mining, Quarrying, and Oil and Gas Extraction",
+    "pipeline_sector": "mining",
+    "search_terms_en": ["mine development", "quarry expansion", "mineral processing plant", "tailings facility"],
+    "search_terms_fr": ["développement minier", "expansion de carrière", "usine de traitement des minéraux", "parc à résidus"]
+  },
+  {
+    "code": "213",
+    "title": "Support Activities for Mining, and Oil and Gas Extraction",
+    "sector_2digit": "21",
+    "sector_name": "Mining, Quarrying, and Oil and Gas Extraction",
+    "pipeline_sector": "mining",
+    "search_terms_en": ["drilling services", "mine site services", "exploration camp", "well servicing"],
+    "search_terms_fr": ["services de forage", "services miniers", "camp d'exploration", "entretien de puits"]
+  },
+  {
+    "code": "221",
+    "title": "Utilities",
+    "sector_2digit": "22",
+    "sector_name": "Utilities",
+    "pipeline_sector": "power_energy",
+    "search_terms_en": ["power plant", "electricity generation", "water treatment plant", "transmission line"],
+    "search_terms_fr": ["centrale électrique", "production d'électricité", "usine de traitement des eaux", "ligne de transmission"]
+  },
+  {
+    "code": "236",
+    "title": "Construction of Buildings",
+    "sector_2digit": "23",
+    "sector_name": "Construction",
+    "pipeline_sector": "residential",
+    "search_terms_en": ["building construction", "residential development", "condo tower", "housing project"],
+    "search_terms_fr": ["construction de bâtiments", "développement résidentiel", "tour de condos", "projet d'habitation"]
+  },
+  {
+    "code": "237",
+    "title": "Heavy and Civil Engineering Construction",
+    "sector_2digit": "23",
+    "sector_name": "Construction",
+    "pipeline_sector": "infrastructure",
+    "search_terms_en": ["highway construction", "bridge project", "pipeline construction", "dam construction"],
+    "search_terms_fr": ["construction d'autoroute", "projet de pont", "construction de pipeline", "construction de barrage"]
+  },
+  {
+    "code": "238",
+    "title": "Specialty Trade Contractors",
+    "sector_2digit": "23",
+    "sector_name": "Construction",
+    "pipeline_sector": "infrastructure",
+    "search_terms_en": ["electrical contractor", "plumbing contractor", "HVAC installation", "concrete work"],
+    "search_terms_fr": ["entrepreneur électricien", "entrepreneur en plomberie", "installation CVAC", "travaux de béton"]
+  },
+  {
+    "code": "311",
+    "title": "Food Manufacturing",
+    "sector_2digit": "31",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["food processing plant", "meat packing facility", "bakery plant", "dairy processing"],
+    "search_terms_fr": ["usine de transformation alimentaire", "abattoir", "boulangerie industrielle", "transformation laitière"]
+  },
+  {
+    "code": "312",
+    "title": "Beverage and Tobacco Product Manufacturing",
+    "sector_2digit": "31",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["brewery", "distillery", "beverage plant", "bottling facility"],
+    "search_terms_fr": ["brasserie", "distillerie", "usine de boissons", "usine d'embouteillage"]
+  },
+  {
+    "code": "313",
+    "title": "Textile Mills",
+    "sector_2digit": "31",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["textile mill", "fabric plant", "yarn manufacturing", "fibre processing"],
+    "search_terms_fr": ["usine textile", "usine de tissus", "fabrication de fils", "transformation de fibres"]
+  },
+  {
+    "code": "314",
+    "title": "Textile Product Mills",
+    "sector_2digit": "31",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["carpet factory", "textile product plant", "canvas manufacturing", "industrial fabric"],
+    "search_terms_fr": ["usine de tapis", "usine de produits textiles", "fabrication de toiles", "tissu industriel"]
+  },
+  {
+    "code": "315",
+    "title": "Clothing Manufacturing",
+    "sector_2digit": "31",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["garment factory", "clothing manufacturer", "apparel plant", "fashion production"],
+    "search_terms_fr": ["usine de vêtements", "fabricant de vêtements", "usine de confection", "production de mode"]
+  },
+  {
+    "code": "316",
+    "title": "Leather and Allied Product Manufacturing",
+    "sector_2digit": "31",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["leather goods factory", "footwear plant", "tannery", "leather processing"],
+    "search_terms_fr": ["usine de maroquinerie", "usine de chaussures", "tannerie", "transformation du cuir"]
+  },
+  {
+    "code": "321",
+    "title": "Wood Product Manufacturing",
+    "sector_2digit": "32",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "forestry",
+    "search_terms_en": ["sawmill", "lumber mill", "plywood plant", "wood pellet facility"],
+    "search_terms_fr": ["scierie", "usine de bois d'oeuvre", "usine de contreplaqué", "usine de granules de bois"]
+  },
+  {
+    "code": "322",
+    "title": "Paper Manufacturing",
+    "sector_2digit": "32",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "forestry",
+    "search_terms_en": ["pulp mill", "paper mill", "tissue plant", "cardboard factory"],
+    "search_terms_fr": ["usine de pâtes", "papeterie", "usine de papier tissu", "cartonnerie"]
+  },
+  {
+    "code": "323",
+    "title": "Printing and Related Support Activities",
+    "sector_2digit": "32",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["printing plant", "commercial printer", "packaging printing", "print facility"],
+    "search_terms_fr": ["imprimerie", "impression commerciale", "impression d'emballage", "installation d'impression"]
+  },
+  {
+    "code": "324",
+    "title": "Petroleum and Coal Product Manufacturing",
+    "sector_2digit": "32",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "oil_gas",
+    "search_terms_en": ["refinery", "petroleum refining", "asphalt plant", "petrochemical facility"],
+    "search_terms_fr": ["raffinerie", "raffinage du pétrole", "usine d'asphalte", "installation pétrochimique"]
+  },
+  {
+    "code": "325",
+    "title": "Chemical Manufacturing",
+    "sector_2digit": "32",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["chemical plant", "fertilizer factory", "pharmaceutical plant", "resin manufacturing"],
+    "search_terms_fr": ["usine chimique", "usine d'engrais", "usine pharmaceutique", "fabrication de résines"]
+  },
+  {
+    "code": "326",
+    "title": "Plastics and Rubber Products Manufacturing",
+    "sector_2digit": "32",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["plastics factory", "rubber plant", "injection molding", "tire manufacturing"],
+    "search_terms_fr": ["usine de plastique", "usine de caoutchouc", "moulage par injection", "fabrication de pneus"]
+  },
+  {
+    "code": "327",
+    "title": "Non-Metallic Mineral Product Manufacturing",
+    "sector_2digit": "32",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["cement plant", "glass factory", "concrete plant", "brick kiln"],
+    "search_terms_fr": ["cimenterie", "verrerie", "usine de béton", "briqueterie"]
+  },
+  {
+    "code": "331",
+    "title": "Primary Metal Manufacturing",
+    "sector_2digit": "33",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["steel mill", "aluminum smelter", "foundry", "metal processing plant"],
+    "search_terms_fr": ["aciérie", "aluminerie", "fonderie", "usine de traitement des métaux"]
+  },
+  {
+    "code": "332",
+    "title": "Fabricated Metal Product Manufacturing",
+    "sector_2digit": "33",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["metal fabrication shop", "machine shop", "structural steel plant", "boiler manufacturing"],
+    "search_terms_fr": ["atelier de fabrication métallique", "atelier d'usinage", "usine d'acier de structure", "fabrication de chaudières"]
+  },
+  {
+    "code": "333",
+    "title": "Machinery Manufacturing",
+    "sector_2digit": "33",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["machinery plant", "heavy equipment factory", "turbine manufacturing", "agricultural equipment"],
+    "search_terms_fr": ["usine de machinerie", "usine d'équipement lourd", "fabrication de turbines", "équipement agricole"]
+  },
+  {
+    "code": "334",
+    "title": "Computer and Electronic Product Manufacturing",
+    "sector_2digit": "33",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["semiconductor fab", "electronics factory", "chip manufacturing", "circuit board plant"],
+    "search_terms_fr": ["usine de semi-conducteurs", "usine d'électronique", "fabrication de puces", "usine de circuits imprimés"]
+  },
+  {
+    "code": "335",
+    "title": "Electrical Equipment, Appliance and Component Manufacturing",
+    "sector_2digit": "33",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["electrical equipment plant", "transformer factory", "battery manufacturing", "wire and cable plant"],
+    "search_terms_fr": ["usine d'équipement électrique", "usine de transformateurs", "fabrication de batteries", "usine de fils et câbles"]
+  },
+  {
+    "code": "336",
+    "title": "Transportation Equipment Manufacturing",
+    "sector_2digit": "33",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["auto assembly plant", "aerospace factory", "shipyard", "railcar manufacturing"],
+    "search_terms_fr": ["usine d'assemblage automobile", "usine aérospatiale", "chantier naval", "fabrication de wagons"]
+  },
+  {
+    "code": "337",
+    "title": "Furniture and Related Product Manufacturing",
+    "sector_2digit": "33",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["furniture factory", "cabinet plant", "mattress manufacturing", "office furniture plant"],
+    "search_terms_fr": ["usine de meubles", "usine d'armoires", "fabrication de matelas", "usine de meubles de bureau"]
+  },
+  {
+    "code": "339",
+    "title": "Miscellaneous Manufacturing",
+    "sector_2digit": "33",
+    "sector_name": "Manufacturing",
+    "pipeline_sector": "manufacturing",
+    "search_terms_en": ["medical device plant", "sporting goods factory", "sign manufacturing", "jewellery factory"],
+    "search_terms_fr": ["usine de dispositifs médicaux", "usine d'articles de sport", "fabrication d'enseignes", "bijouterie industrielle"]
+  },
+  {
+    "code": "411",
+    "title": "Farm Product Merchant Wholesalers",
+    "sector_2digit": "41",
+    "sector_name": "Wholesale Trade",
+    "pipeline_sector": "agriculture",
+    "search_terms_en": ["grain terminal", "farm product warehouse", "agricultural distribution centre", "grain handling facility"],
+    "search_terms_fr": ["terminal céréalier", "entrepôt de produits agricoles", "centre de distribution agricole", "installation de manutention de grains"]
+  },
+  {
+    "code": "412",
+    "title": "Petroleum and Petroleum Products Merchant Wholesalers",
+    "sector_2digit": "41",
+    "sector_name": "Wholesale Trade",
+    "pipeline_sector": "oil_gas",
+    "search_terms_en": ["fuel depot", "petroleum distribution terminal", "bulk fuel storage", "propane distribution"],
+    "search_terms_fr": ["dépôt de carburant", "terminal de distribution pétrolière", "stockage de carburant en vrac", "distribution de propane"]
+  },
+  {
+    "code": "413",
+    "title": "Food, Beverage and Tobacco Merchant Wholesalers",
+    "sector_2digit": "41",
+    "sector_name": "Wholesale Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["food distribution centre", "cold storage warehouse", "beverage distribution", "wholesale food depot"],
+    "search_terms_fr": ["centre de distribution alimentaire", "entrepôt frigorifique", "distribution de boissons", "dépôt alimentaire de gros"]
+  },
+  {
+    "code": "414",
+    "title": "Personal and Household Goods Merchant Wholesalers",
+    "sector_2digit": "41",
+    "sector_name": "Wholesale Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["consumer goods warehouse", "pharmaceutical distribution", "household goods depot", "wholesale distribution centre"],
+    "search_terms_fr": ["entrepôt de biens de consommation", "distribution pharmaceutique", "dépôt d'articles ménagers", "centre de distribution de gros"]
+  },
+  {
+    "code": "415",
+    "title": "Motor Vehicle and Motor Vehicle Parts and Accessories Merchant Wholesalers",
+    "sector_2digit": "41",
+    "sector_name": "Wholesale Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["auto parts warehouse", "vehicle distribution centre", "automotive wholesale depot", "parts distribution facility"],
+    "search_terms_fr": ["entrepôt de pièces automobiles", "centre de distribution de véhicules", "dépôt de gros automobile", "centre de distribution de pièces"]
+  },
+  {
+    "code": "416",
+    "title": "Building Material and Supplies Merchant Wholesalers",
+    "sector_2digit": "41",
+    "sector_name": "Wholesale Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["building supply warehouse", "lumber yard", "construction materials depot", "hardware distribution"],
+    "search_terms_fr": ["entrepôt de matériaux de construction", "cour à bois", "dépôt de matériaux", "distribution de quincaillerie"]
+  },
+  {
+    "code": "417",
+    "title": "Machinery, Equipment and Supplies Merchant Wholesalers",
+    "sector_2digit": "41",
+    "sector_name": "Wholesale Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["equipment warehouse", "industrial supply depot", "machinery distribution centre", "heavy equipment dealership"],
+    "search_terms_fr": ["entrepôt d'équipement", "dépôt de fournitures industrielles", "centre de distribution de machinerie", "concessionnaire d'équipement lourd"]
+  },
+  {
+    "code": "418",
+    "title": "Miscellaneous Merchant Wholesalers",
+    "sector_2digit": "41",
+    "sector_name": "Wholesale Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["recycling depot", "scrap metal yard", "wholesale warehouse", "general merchandise distribution"],
+    "search_terms_fr": ["dépôt de recyclage", "cour de ferraille", "entrepôt de gros", "distribution de marchandises générales"]
+  },
+  {
+    "code": "419",
+    "title": "Wholesale Electronic Markets, and Agents and Brokers",
+    "sector_2digit": "41",
+    "sector_name": "Wholesale Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["wholesale marketplace", "trade brokerage office", "commodity exchange", "wholesale logistics hub"],
+    "search_terms_fr": ["marché de gros", "bureau de courtage commercial", "bourse de marchandises", "centre logistique de gros"]
+  },
+  {
+    "code": "441",
+    "title": "Motor Vehicle and Parts Dealers",
+    "sector_2digit": "44",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["car dealership", "auto dealer", "vehicle showroom", "EV dealership"],
+    "search_terms_fr": ["concessionnaire automobile", "vendeur de voitures", "salle d'exposition de véhicules", "concessionnaire VÉ"]
+  },
+  {
+    "code": "442",
+    "title": "Furniture, Home Furnishings, Electronics and Appliance Retailers",
+    "sector_2digit": "44",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["furniture store", "electronics retailer", "home furnishings centre", "appliance showroom"],
+    "search_terms_fr": ["magasin de meubles", "détaillant d'électronique", "centre d'ameublement", "salle de montre d'appareils"]
+  },
+  {
+    "code": "443",
+    "title": "Building Material and Garden Equipment and Supplies Dealers",
+    "sector_2digit": "44",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["home improvement store", "garden centre", "hardware store", "building supply retailer"],
+    "search_terms_fr": ["magasin de rénovation", "jardinerie", "quincaillerie", "détaillant de matériaux de construction"]
+  },
+  {
+    "code": "444",
+    "title": "Food and Beverage Retailers",
+    "sector_2digit": "44",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["grocery store", "supermarket", "specialty food store", "liquor store"],
+    "search_terms_fr": ["épicerie", "supermarché", "magasin d'alimentation spécialisé", "magasin de spiritueux"]
+  },
+  {
+    "code": "445",
+    "title": "Health and Personal Care Retailers",
+    "sector_2digit": "44",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["pharmacy", "drugstore", "health food store", "optical store"],
+    "search_terms_fr": ["pharmacie", "droguerie", "magasin de produits naturels", "magasin d'optique"]
+  },
+  {
+    "code": "446",
+    "title": "Gasoline Stations and Fuel Dealers",
+    "sector_2digit": "44",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "oil_gas",
+    "search_terms_en": ["gas station", "fuel station", "EV charging station", "truck stop"],
+    "search_terms_fr": ["station-service", "poste d'essence", "borne de recharge VÉ", "relais routier"]
+  },
+  {
+    "code": "447",
+    "title": "Clothing, Shoe, Jewellery and Accessories Retailers",
+    "sector_2digit": "44",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["clothing store", "fashion retailer", "jewellery store", "shoe store"],
+    "search_terms_fr": ["magasin de vêtements", "détaillant de mode", "bijouterie", "magasin de chaussures"]
+  },
+  {
+    "code": "448",
+    "title": "Sporting Goods, Hobby, Musical Instrument, Book and Miscellaneous Retailers",
+    "sector_2digit": "44",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["sporting goods store", "bookstore", "hobby shop", "outdoor recreation retailer"],
+    "search_terms_fr": ["magasin de sport", "librairie", "magasin de loisirs", "détaillant de plein air"]
+  },
+  {
+    "code": "449",
+    "title": "Department Stores and Other General Merchandise Retailers",
+    "sector_2digit": "44",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["department store", "big box store", "warehouse club", "general merchandise store"],
+    "search_terms_fr": ["grand magasin", "magasin grande surface", "club-entrepôt", "magasin de marchandises générales"]
+  },
+  {
+    "code": "451",
+    "title": "Retail Trade, Not Elsewhere Classified",
+    "sector_2digit": "45",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["retail store", "pet store", "cannabis retail", "used goods store"],
+    "search_terms_fr": ["magasin de détail", "animalerie", "magasin de cannabis", "magasin d'occasion"]
+  },
+  {
+    "code": "452",
+    "title": "Non-Store Retailers, Including Vending Machine Operators",
+    "sector_2digit": "45",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["e-commerce warehouse", "fulfilment centre", "vending operation", "direct sales depot"],
+    "search_terms_fr": ["entrepôt de commerce électronique", "centre de traitement des commandes", "exploitation de distributeurs", "dépôt de vente directe"]
+  },
+  {
+    "code": "453",
+    "title": "Used Goods, Gift, Novelty and Souvenir Retailers",
+    "sector_2digit": "45",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["thrift store", "gift shop", "antique store", "souvenir shop"],
+    "search_terms_fr": ["friperie", "boutique de cadeaux", "antiquaire", "boutique de souvenirs"]
+  },
+  {
+    "code": "454",
+    "title": "Retail Trade Activities Carried Out Directly by Manufacturers or Wholesalers",
+    "sector_2digit": "45",
+    "sector_name": "Retail Trade",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["factory outlet", "manufacturer retail store", "wholesale retail outlet", "direct-to-consumer store"],
+    "search_terms_fr": ["magasin d'usine", "magasin de détail du fabricant", "détaillant de gros", "magasin de vente directe"]
+  },
+  {
+    "code": "481",
+    "title": "Air Transportation",
+    "sector_2digit": "48",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "transport_logistics",
+    "search_terms_en": ["airport terminal", "airline hangar", "air cargo facility", "runway expansion"],
+    "search_terms_fr": ["aérogare", "hangar d'aviation", "installation de fret aérien", "prolongement de piste"]
+  },
+  {
+    "code": "482",
+    "title": "Rail Transportation",
+    "sector_2digit": "48",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "transport_logistics",
+    "search_terms_en": ["rail yard", "intermodal terminal", "rail line extension", "train station"],
+    "search_terms_fr": ["gare de triage", "terminal intermodal", "prolongement ferroviaire", "gare ferroviaire"]
+  },
+  {
+    "code": "483",
+    "title": "Water Transportation",
+    "sector_2digit": "48",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "transport_logistics",
+    "search_terms_en": ["port terminal", "marine terminal", "ferry terminal", "shipyard dock"],
+    "search_terms_fr": ["terminal portuaire", "terminal maritime", "gare maritime", "quai de chantier naval"]
+  },
+  {
+    "code": "484",
+    "title": "Truck Transportation",
+    "sector_2digit": "48",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "transport_logistics",
+    "search_terms_en": ["trucking terminal", "freight depot", "truck maintenance facility", "cross-dock facility"],
+    "search_terms_fr": ["terminal de camionnage", "dépôt de fret", "centre d'entretien de camions", "installation de transbordement"]
+  },
+  {
+    "code": "485",
+    "title": "Transit and Ground Passenger Transportation",
+    "sector_2digit": "48",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "transport_logistics",
+    "search_terms_en": ["transit station", "bus depot", "LRT station", "commuter rail"],
+    "search_terms_fr": ["station de transport en commun", "dépôt d'autobus", "station de TLR", "train de banlieue"]
+  },
+  {
+    "code": "486",
+    "title": "Pipeline Transportation",
+    "sector_2digit": "48",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "oil_gas",
+    "search_terms_en": ["pipeline project", "pipeline expansion", "compressor station", "pump station"],
+    "search_terms_fr": ["projet de pipeline", "expansion de pipeline", "station de compression", "station de pompage"]
+  },
+  {
+    "code": "487",
+    "title": "Scenic and Sightseeing Transportation",
+    "sector_2digit": "48",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "tourism_culture",
+    "search_terms_en": ["tour boat dock", "scenic railway", "gondola lift", "sightseeing terminal"],
+    "search_terms_fr": ["quai de bateau touristique", "train panoramique", "télécabine", "terminal d'excursion"]
+  },
+  {
+    "code": "488",
+    "title": "Support Activities for Transportation",
+    "sector_2digit": "48",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "transport_logistics",
+    "search_terms_en": ["marine pilotage", "air traffic control tower", "cargo handling facility", "towing service depot"],
+    "search_terms_fr": ["pilotage maritime", "tour de contrôle aérien", "installation de manutention de cargo", "dépôt de remorquage"]
+  },
+  {
+    "code": "491",
+    "title": "Postal Service",
+    "sector_2digit": "49",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "government",
+    "search_terms_en": ["mail sorting facility", "postal depot", "post office", "mail processing centre"],
+    "search_terms_fr": ["centre de tri postal", "dépôt postal", "bureau de poste", "centre de traitement du courrier"]
+  },
+  {
+    "code": "492",
+    "title": "Couriers and Messengers",
+    "sector_2digit": "49",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "transport_logistics",
+    "search_terms_en": ["courier hub", "parcel sorting centre", "delivery depot", "express shipping terminal"],
+    "search_terms_fr": ["centre de messagerie", "centre de tri de colis", "dépôt de livraison", "terminal d'expédition express"]
+  },
+  {
+    "code": "493",
+    "title": "Warehousing and Storage",
+    "sector_2digit": "49",
+    "sector_name": "Transportation and Warehousing",
+    "pipeline_sector": "transport_logistics",
+    "search_terms_en": ["distribution centre", "warehouse facility", "cold storage", "fulfilment centre"],
+    "search_terms_fr": ["centre de distribution", "entrepôt", "entreposage frigorifique", "centre de traitement des commandes"]
+  },
+  {
+    "code": "511",
+    "title": "Publishing Industries",
+    "sector_2digit": "51",
+    "sector_name": "Information and Cultural Industries",
+    "pipeline_sector": "telecom",
+    "search_terms_en": ["publishing house", "software studio", "media office", "digital publishing"],
+    "search_terms_fr": ["maison d'édition", "studio de logiciels", "bureau de médias", "édition numérique"]
+  },
+  {
+    "code": "512",
+    "title": "Motion Picture and Sound Recording Industries",
+    "sector_2digit": "51",
+    "sector_name": "Information and Cultural Industries",
+    "pipeline_sector": "tourism_culture",
+    "search_terms_en": ["film studio", "sound stage", "production facility", "recording studio"],
+    "search_terms_fr": ["studio de cinéma", "plateau de tournage", "installation de production", "studio d'enregistrement"]
+  },
+  {
+    "code": "513",
+    "title": "Broadcasting and Telecommunications",
+    "sector_2digit": "51",
+    "sector_name": "Information and Cultural Industries",
+    "pipeline_sector": "telecom",
+    "search_terms_en": ["cell tower", "broadcast tower", "fibre optic network", "data centre"],
+    "search_terms_fr": ["tour cellulaire", "tour de diffusion", "réseau de fibre optique", "centre de données"]
+  },
+  {
+    "code": "514",
+    "title": "Data Processing, Hosting, and Related Services",
+    "sector_2digit": "51",
+    "sector_name": "Information and Cultural Industries",
+    "pipeline_sector": "telecom",
+    "search_terms_en": ["data centre", "cloud hosting facility", "server farm", "colocation facility"],
+    "search_terms_fr": ["centre de données", "installation d'hébergement infonuagique", "ferme de serveurs", "centre de colocalisation"]
+  },
+  {
+    "code": "519",
+    "title": "Other Information Services",
+    "sector_2digit": "51",
+    "sector_name": "Information and Cultural Industries",
+    "pipeline_sector": "telecom",
+    "search_terms_en": ["internet platform", "news agency", "digital archive", "web portal office"],
+    "search_terms_fr": ["plateforme internet", "agence de presse", "archives numériques", "bureau de portail web"]
+  },
+  {
+    "code": "521",
+    "title": "Monetary Authorities - Central Bank",
+    "sector_2digit": "52",
+    "sector_name": "Finance and Insurance",
+    "pipeline_sector": "government",
+    "search_terms_en": ["Bank of Canada", "central bank office", "currency centre", "monetary authority"],
+    "search_terms_fr": ["Banque du Canada", "bureau de la banque centrale", "centre monétaire", "autorité monétaire"]
+  },
+  {
+    "code": "522",
+    "title": "Depository Credit Intermediation",
+    "sector_2digit": "52",
+    "sector_name": "Finance and Insurance",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["bank branch", "credit union", "banking centre", "financial services hub"],
+    "search_terms_fr": ["succursale bancaire", "caisse populaire", "centre bancaire", "centre de services financiers"]
+  },
+  {
+    "code": "523",
+    "title": "Activities Related to Credit Intermediation",
+    "sector_2digit": "52",
+    "sector_name": "Finance and Insurance",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["mortgage brokerage", "loan servicing centre", "financial office", "credit services"],
+    "search_terms_fr": ["courtage hypothécaire", "centre de service de prêts", "bureau financier", "services de crédit"]
+  },
+  {
+    "code": "524",
+    "title": "Insurance Carriers and Related Activities",
+    "sector_2digit": "52",
+    "sector_name": "Finance and Insurance",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["insurance office", "claims centre", "insurance headquarters", "underwriting centre"],
+    "search_terms_fr": ["bureau d'assurance", "centre de réclamations", "siège social d'assurance", "centre de souscription"]
+  },
+  {
+    "code": "526",
+    "title": "Funds, Trusts and Other Financial Vehicles",
+    "sector_2digit": "52",
+    "sector_name": "Finance and Insurance",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["pension fund office", "investment trust", "fund management", "financial vehicle"],
+    "search_terms_fr": ["bureau de fonds de pension", "fiducie de placement", "gestion de fonds", "véhicule financier"]
+  },
+  {
+    "code": "531",
+    "title": "Real Estate",
+    "sector_2digit": "53",
+    "sector_name": "Real Estate and Rental and Leasing",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["real estate development", "property management", "office tower", "commercial lease"],
+    "search_terms_fr": ["développement immobilier", "gestion immobilière", "tour de bureaux", "bail commercial"]
+  },
+  {
+    "code": "532",
+    "title": "Rental and Leasing Services",
+    "sector_2digit": "53",
+    "sector_name": "Real Estate and Rental and Leasing",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["equipment rental yard", "car rental depot", "heavy machinery leasing", "tool rental centre"],
+    "search_terms_fr": ["cour de location d'équipement", "dépôt de location de voitures", "location de machinerie lourde", "centre de location d'outils"]
+  },
+  {
+    "code": "533",
+    "title": "Lessors of Non-Financial Intangible Assets",
+    "sector_2digit": "53",
+    "sector_name": "Real Estate and Rental and Leasing",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["franchise operation", "intellectual property", "patent licensing", "brand licensing office"],
+    "search_terms_fr": ["exploitation de franchise", "propriété intellectuelle", "licence de brevet", "bureau de licence de marque"]
+  },
+  {
+    "code": "541",
+    "title": "Professional, Scientific and Technical Services",
+    "sector_2digit": "54",
+    "sector_name": "Professional, Scientific and Technical Services",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["engineering office", "research laboratory", "tech campus", "consulting firm office"],
+    "search_terms_fr": ["bureau d'ingénierie", "laboratoire de recherche", "campus technologique", "bureau de consultation"]
+  },
+  {
+    "code": "551",
+    "title": "Management of Companies and Enterprises",
+    "sector_2digit": "55",
+    "sector_name": "Management of Companies and Enterprises",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["corporate headquarters", "regional head office", "holding company office", "management centre"],
+    "search_terms_fr": ["siège social", "bureau régional principal", "bureau de société de portefeuille", "centre de gestion"]
+  },
+  {
+    "code": "561",
+    "title": "Administrative and Support Services",
+    "sector_2digit": "56",
+    "sector_name": "Administrative and Support, Waste Management and Remediation Services",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["call centre", "security office", "staffing agency", "office support facility"],
+    "search_terms_fr": ["centre d'appels", "bureau de sécurité", "agence de placement", "installation de soutien administratif"]
+  },
+  {
+    "code": "562",
+    "title": "Waste Management and Remediation Services",
+    "sector_2digit": "56",
+    "sector_name": "Administrative and Support, Waste Management and Remediation Services",
+    "pipeline_sector": "environment",
+    "search_terms_en": ["landfill", "waste-to-energy plant", "recycling facility", "remediation site"],
+    "search_terms_fr": ["site d'enfouissement", "usine de valorisation énergétique", "centre de recyclage", "site de décontamination"]
+  },
+  {
+    "code": "611",
+    "title": "Educational Services",
+    "sector_2digit": "61",
+    "sector_name": "Educational Services",
+    "pipeline_sector": "education",
+    "search_terms_en": ["school construction", "university campus", "college building", "research institute"],
+    "search_terms_fr": ["construction d'école", "campus universitaire", "bâtiment collégial", "institut de recherche"]
+  },
+  {
+    "code": "621",
+    "title": "Ambulatory Health Care Services",
+    "sector_2digit": "62",
+    "sector_name": "Health Care and Social Assistance",
+    "pipeline_sector": "healthcare",
+    "search_terms_en": ["medical clinic", "outpatient centre", "diagnostic laboratory", "dental office"],
+    "search_terms_fr": ["clinique médicale", "centre ambulatoire", "laboratoire de diagnostic", "cabinet dentaire"]
+  },
+  {
+    "code": "622",
+    "title": "Hospitals",
+    "sector_2digit": "62",
+    "sector_name": "Health Care and Social Assistance",
+    "pipeline_sector": "healthcare",
+    "search_terms_en": ["hospital expansion", "hospital construction", "emergency department", "acute care facility"],
+    "search_terms_fr": ["agrandissement d'hôpital", "construction d'hôpital", "salle d'urgence", "centre de soins aigus"]
+  },
+  {
+    "code": "623",
+    "title": "Nursing and Residential Care Facilities",
+    "sector_2digit": "62",
+    "sector_name": "Health Care and Social Assistance",
+    "pipeline_sector": "healthcare",
+    "search_terms_en": ["long-term care home", "nursing home", "seniors residence", "assisted living facility"],
+    "search_terms_fr": ["centre d'hébergement de soins de longue durée", "maison de retraite", "résidence pour aînés", "résidence avec services"]
+  },
+  {
+    "code": "624",
+    "title": "Social Assistance",
+    "sector_2digit": "62",
+    "sector_name": "Health Care and Social Assistance",
+    "pipeline_sector": "healthcare",
+    "search_terms_en": ["community centre", "shelter facility", "daycare centre", "social services building"],
+    "search_terms_fr": ["centre communautaire", "centre d'hébergement", "garderie", "bâtiment de services sociaux"]
+  },
+  {
+    "code": "711",
+    "title": "Performing Arts, Spectator Sports and Related Industries",
+    "sector_2digit": "71",
+    "sector_name": "Arts, Entertainment and Recreation",
+    "pipeline_sector": "tourism_culture",
+    "search_terms_en": ["arena construction", "stadium project", "performing arts centre", "concert venue"],
+    "search_terms_fr": ["construction d'aréna", "projet de stade", "centre des arts de la scène", "salle de concert"]
+  },
+  {
+    "code": "712",
+    "title": "Heritage Institutions",
+    "sector_2digit": "71",
+    "sector_name": "Arts, Entertainment and Recreation",
+    "pipeline_sector": "tourism_culture",
+    "search_terms_en": ["museum expansion", "art gallery", "heritage building", "botanical garden"],
+    "search_terms_fr": ["agrandissement de musée", "galerie d'art", "bâtiment patrimonial", "jardin botanique"]
+  },
+  {
+    "code": "713",
+    "title": "Amusement, Gambling and Recreation Industries",
+    "sector_2digit": "71",
+    "sector_name": "Arts, Entertainment and Recreation",
+    "pipeline_sector": "tourism_culture",
+    "search_terms_en": ["casino expansion", "amusement park", "ski resort", "recreation complex"],
+    "search_terms_fr": ["agrandissement de casino", "parc d'attractions", "station de ski", "complexe récréatif"]
+  },
+  {
+    "code": "721",
+    "title": "Accommodation Services",
+    "sector_2digit": "72",
+    "sector_name": "Accommodation and Food Services",
+    "pipeline_sector": "tourism_culture",
+    "search_terms_en": ["hotel construction", "resort development", "motel renovation", "campground facility"],
+    "search_terms_fr": ["construction d'hôtel", "développement de villégiature", "rénovation de motel", "installation de camping"]
+  },
+  {
+    "code": "722",
+    "title": "Food Services and Drinking Places",
+    "sector_2digit": "72",
+    "sector_name": "Accommodation and Food Services",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["restaurant", "food court", "catering facility", "fast food location"],
+    "search_terms_fr": ["restaurant", "aire de restauration", "installation de traiteur", "restauration rapide"]
+  },
+  {
+    "code": "811",
+    "title": "Repair and Maintenance",
+    "sector_2digit": "81",
+    "sector_name": "Other Services (except Public Administration)",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["auto repair shop", "maintenance depot", "equipment service centre", "body shop"],
+    "search_terms_fr": ["atelier de réparation automobile", "dépôt d'entretien", "centre de service d'équipement", "atelier de carrosserie"]
+  },
+  {
+    "code": "812",
+    "title": "Personal and Laundry Services",
+    "sector_2digit": "81",
+    "sector_name": "Other Services (except Public Administration)",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["laundry facility", "funeral home", "salon", "dry cleaning plant"],
+    "search_terms_fr": ["buanderie", "salon funéraire", "salon de coiffure", "pressing"]
+  },
+  {
+    "code": "813",
+    "title": "Religious, Grant-Making, Civic, and Professional and Similar Organizations",
+    "sector_2digit": "81",
+    "sector_name": "Other Services (except Public Administration)",
+    "pipeline_sector": "commercial_mixed",
+    "search_terms_en": ["church construction", "community hall", "non-profit office", "civic centre"],
+    "search_terms_fr": ["construction d'église", "salle communautaire", "bureau d'organisme à but non lucratif", "centre civique"]
+  },
+  {
+    "code": "814",
+    "title": "Private Households",
+    "sector_2digit": "81",
+    "sector_name": "Other Services (except Public Administration)",
+    "pipeline_sector": "residential",
+    "search_terms_en": ["household services", "domestic staff", "private estate", "household employment"],
+    "search_terms_fr": ["services ménagers", "personnel domestique", "domaine privé", "emploi domestique"]
+  },
+  {
+    "code": "911",
+    "title": "Federal Government Public Administration",
+    "sector_2digit": "91",
+    "sector_name": "Public Administration",
+    "pipeline_sector": "government",
+    "search_terms_en": ["federal government building", "Government of Canada office", "federal courthouse", "federal laboratory"],
+    "search_terms_fr": ["édifice du gouvernement fédéral", "bureau du gouvernement du Canada", "palais de justice fédéral", "laboratoire fédéral"]
+  },
+  {
+    "code": "912",
+    "title": "Provincial and Territorial Public Administration",
+    "sector_2digit": "91",
+    "sector_name": "Public Administration",
+    "pipeline_sector": "government",
+    "search_terms_en": ["provincial government building", "legislature", "provincial courthouse", "provincial office"],
+    "search_terms_fr": ["édifice du gouvernement provincial", "assemblée législative", "palais de justice provincial", "bureau provincial"]
+  },
+  {
+    "code": "913",
+    "title": "Local, Municipal and Regional Public Administration",
+    "sector_2digit": "91",
+    "sector_name": "Public Administration",
+    "pipeline_sector": "government",
+    "search_terms_en": ["city hall", "municipal building", "fire station", "community recreation centre"],
+    "search_terms_fr": ["hôtel de ville", "édifice municipal", "caserne de pompiers", "centre récréatif communautaire"]
+  },
+  {
+    "code": "914",
+    "title": "Aboriginal Public Administration",
+    "sector_2digit": "91",
+    "sector_name": "Public Administration",
+    "pipeline_sector": "indigenous",
+    "search_terms_en": ["First Nations band office", "Indigenous governance centre", "tribal council building", "reserve infrastructure"],
+    "search_terms_fr": ["bureau de bande des Premières Nations", "centre de gouvernance autochtone", "édifice du conseil tribal", "infrastructure de réserve"]
+  },
+  {
+    "code": "919",
+    "title": "International and Other Extra-Territorial Public Administration",
+    "sector_2digit": "91",
+    "sector_name": "Public Administration",
+    "pipeline_sector": "government",
+    "search_terms_en": ["embassy", "consulate", "international organization office", "diplomatic mission"],
+    "search_terms_fr": ["ambassade", "consulat", "bureau d'organisation internationale", "mission diplomatique"]
+  }
+]

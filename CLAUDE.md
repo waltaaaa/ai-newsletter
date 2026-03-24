@@ -23,13 +23,21 @@ For full system specification (25 sections, every feature detailed), see `COMPLE
 ## Model Stack (DO NOT CHANGE)
 - **Claude Opus 4.6:** ALL writing — Calls 1-3 (macro, industries, provinces), weekly briefing, executive summary, market commentary, policy assessment, pre-event analysis, Under the Microscope. ~$120/year.
 - **Claude Sonnet 4.6:** Extraction and reasoning — Call 4 (project extraction), gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis, selective extraction. ~$30/year.
-- **Gemini 2.5 Flash (NO GROUNDING):** Classification, extraction, RSS processing, rehash detection. FREE TIER. Code must NEVER pass `google_search` tool or `groundingConfig` to the API.
+- **Groq LLaMA 3.3 70B:** Primary classifier — Layer 6 RSS classification, JSON repair, sentiment. FREE TIER (6K TPM / 500K TPD). Replaces Gemini Flash.
+- **Qwen 2.5 3B (Ollama):** Local classifier fallback — binary R/I triage before Groq. $0.
+- **NVIDIA NIM (free tier, 40 RPM shared):**
+  - Nemotron 3 Super 120B — deep extraction (replaces K2.5)
+  - DeepSeek V3.2 — second-opinion on hardest extraction cases
+  - Llama Nemotron Rerank 1B v2 — search result relevance scoring
+  - Llama Nemotron Embed 1B v2 — semantic dedup (26-language support)
+  - Nemotron OCR v1 — provincial PDF text extraction
 - **Tavily:** Targeted enrichment searches only (cost-finding, verification, named tracking). Free tier 1,000 credits/month.
+- **NO Gemini in active pipeline.** Removed from classification chain. Legacy fallback only. Code must NEVER pass `google_search` tool or `groundingConfig` to the API.
 - **NO Gemini Pro.** Removed. All reasoning goes through Claude.
 - **NO Gemini grounded search.** Caused $136/day in charges. Replaced by Google News RSS.
 - **NO Perplexity.** Removed. Do not add.
 - **NO GDELT.** Removed. Do not add.
-- **NO Claude Haiku in weekly pipeline.** Exception: seed_projects.py may use Haiku for one-time bulk seeding.
+- **NO Claude Haiku in weekly pipeline.** Exception: seed_projects.py may use Haiku for one-time bulk seeding. JSON repair uses Haiku as third fallback after local LLM and Groq.
 - **Cost cap:** $8/run. Opus calls use $15/$75 per MTok (input/output). Sonnet calls use $3/$15 per MTok.
 
 ## Annual Budget: ~$150/year
@@ -55,7 +63,7 @@ Rules:
 
 ## Discovery Pipeline (14 tiers)
 1. Federal IAAC registry
-2. Google News RSS search (2,574 queries, deduped to unique RSS URLs — replaces Gemini grounded search)
+2. Google News RSS search (2,574 compound queries + ~100 three-digit NAICS × 41 CMA expansion queries, deduped to unique RSS URLs)
 3. RSS feeds (324+ feeds, 6-layer remediated filter)
 4. Project status monitoring
 5. Provincial EA registries (13 provinces)
@@ -86,7 +94,7 @@ Plus: Regulatory feeds — 10 CanLII RSS feeds covering Federal Court, CER, Onta
 3. Below-threshold dampener
 4. Keyword co-occurrence (~80 project + ~30 economic signals)
 5. Negative keywords (crime/sports/weather ONLY — NOT mall, housing, office, heritage)
-6. Gemini Flash classification (uncertain = RELEVANT)
+6. LLM classification: local Qwen → Groq LLaMA 3.3 70B → fail-open (uncertain = RELEVANT)
 
 Pre-filter step 1: Metadata tagging — articles tagged with sector (NAICS keys) and geography (province codes) using 6 signal layers: source domain, feed label, RSS categories, URL path, headline geography, headline keywords. Zero API cost. Tags flow through to L1 (metadata boost bypasses keyword check), Claude extraction (sector/province hints), and cross-reference engine (article-indicator alignment).
 
@@ -213,6 +221,7 @@ Zero cost — all government RSS feeds are free public data.
 Monitors the federal Impact Assessment Registry for status transitions on projects under assessment. Maps IAAC phases (Planning Phase, Public Comment, Panel Review, Decision Statement, etc.) to project statuses and updates the database when projects advance through the assessment process. Also detects IAAC projects not yet in the database as new discoveries. Reuses the existing Tier 1 IAAC scraper from `gov_sources.py` — does not duplicate the HTTP/parsing logic. Status updates respect the non-regression rule (terminal states like Cancelled always apply). Zero cost.
 
 ## Common Mistakes to Avoid
+- Do not use Gemini for classification — replaced by Groq LLaMA 3.3 70B. Gemini is legacy fallback only.
 - Do not use Gemini grounded search — it costs $35/1,000 queries. Use Google News RSS instead.
 - Do not pass `google_search` tool or `groundingConfig` to Gemini API — this enables grounding fees
 - Do not use Gemini Pro — removed. All reasoning goes through Claude Sonnet.

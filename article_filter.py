@@ -426,7 +426,8 @@ def layer3_gemini_prescreen(
     conn=None,
 ) -> list[int]:
     """
-    Layer 3: Local LLM batch classification, falling back to Gemini Flash.
+    Layer 6: LLM batch classification.
+    Fallback chain: local LLM → Groq LLaMA 3.3 70B → fail-open.
     Returns list of indices (from the input list) that are RELEVANT.
 
     When conn is provided, stores classification_json in documents table.
@@ -448,73 +449,26 @@ def layer3_gemini_prescreen(
             for i, cls in enumerate(classifications):
                 if i < len(articles) and "RELEVANT" in str(cls).upper():
                     relevant_indices.append(i)
-            print(f"  [Filter L3] Local LLM: {len(relevant_indices)}/{len(articles)} relevant")
+            print(f"  [Filter L6] Local LLM: {len(relevant_indices)}/{len(articles)} relevant")
             return relevant_indices
         except Exception as e:
-            print(f"  [Filter L3] Local LLM failed, falling back to Gemini: {e}")
+            print(f"  [Filter L6] Local LLM failed, falling back to Groq: {e}")
 
-    if not gemini_client:
-        # No client — pass everything through (fail open)
-        return list(range(len(articles)))
+    # Try Groq LLaMA 3.3 70B (replaces Gemini Flash)
+    try:
+        import groq_client
+        if groq_client.can_use_groq():
+            relevant_indices = groq_client.batch_classify(articles, _L3_PROMPT, batch_size=batch_size)
+            print(f"  [Filter L6] Groq: {len(relevant_indices)}/{len(articles)} relevant")
+            return relevant_indices
+    except ImportError:
+        pass
+    except Exception as e:
+        print(f"  [Filter L6] Groq failed: {type(e).__name__}: {e}")
 
-    from google.genai import types
-
-    relevant_indices = []
-
-    for batch_start in range(0, len(articles), batch_size):
-        batch = articles[batch_start:batch_start + batch_size]
-        items_text = '\n'.join(
-            f"[{i}] {a.get('title', '')} — {(a.get('summary', '') or '')[:150]}"
-            for i, a in enumerate(batch)
-        )
-
-        prompt = _L3_PROMPT + items_text
-
-        try:
-            response = gemini_client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type='application/json',
-                    max_output_tokens=2048,
-                ),
-            )
-            raw = response.text.strip()
-            parsed = json.loads(raw)
-
-            # Handle both formats: array of objects (new) or array of ints (legacy)
-            if isinstance(parsed, list):
-                for item in parsed:
-                    if isinstance(item, int):
-                        # Legacy format: plain index array
-                        if 0 <= item < len(batch):
-                            relevant_indices.append(batch_start + item)
-                    elif isinstance(item, dict):
-                        idx = item.get('index', -1)
-                        is_relevant = item.get('is_relevant', True)
-                        if 0 <= idx < len(batch) and is_relevant:
-                            relevant_indices.append(batch_start + idx)
-
-                        # Store classification in documents table
-                        if conn and 0 <= idx < len(batch):
-                            art = batch[idx]
-                            url = art.get('url') or art.get('link', '')
-                            if url:
-                                try:
-                                    from db import update_document_classification
-                                    update_document_classification(
-                                        conn, url, is_relevant,
-                                        json.dumps(item, ensure_ascii=False)
-                                    )
-                                except Exception:
-                                    pass
-
-        except Exception as e:
-            # On error, pass everything in this batch through
-            print(f"  [Filter L3] Gemini pre-screen error: {type(e).__name__}")
-            relevant_indices.extend(range(batch_start, batch_start + len(batch)))
-
-    return relevant_indices
+    # Fail-open: no classifier available — pass everything through
+    print(f"  [Filter L6] No classifier available — passing all {len(articles)} articles through")
+    return list(range(len(articles)))
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -593,11 +547,11 @@ def filter_articles(
                 filtered_out.append(('L2', art))
         articles = passed_l2
 
-    # Layer 3: LLM batch pre-screen (local LLM or Gemini Flash fallback).
-    # Skip L3 for articles with strong L1 keyword matches — they already have
+    # Layer 6: LLM batch pre-screen (local LLM → Groq → fail-open).
+    # Skip L6 for articles with strong L1 keyword matches — they already have
     # Cat A + (Cat B or Cat C), so the LLM call adds little value. Only send
     # borderline articles (dollar-bypass, metadata-boost) for LLM verification.
-    if gemini_client and articles:
+    if articles:
         strong_articles = []
         borderline_articles = []
         borderline_indices = []
@@ -610,23 +564,23 @@ def filter_articles(
                 borderline_indices.append(i)
 
         if borderline_articles:
-            l3_skipped = len(strong_articles)
+            l6_skipped = len(strong_articles)
             relevant_idx = layer3_gemini_prescreen(
                 borderline_articles, gemini_client=gemini_client, conn=conn)
             relevant_set = set(relevant_idx)
-            passed_l3 = list(strong_articles)
+            passed_l6 = list(strong_articles)
             for i, art in enumerate(borderline_articles):
                 if i in relevant_set:
-                    passed_l3.append(art)
+                    passed_l6.append(art)
                 else:
-                    filtered_out.append(('L3', art))
-            if l3_skipped:
-                print(f"  [Filter L3] {l3_skipped} strong-match articles skipped L3")
-            articles = passed_l3
+                    filtered_out.append(('L6', art))
+            if l6_skipped:
+                print(f"  [Filter L6] {l6_skipped} strong-match articles skipped L6")
+            articles = passed_l6
         else:
-            # All articles are strong matches — skip L3 entirely
+            # All articles are strong matches — skip L6 entirely
             articles = strong_articles
-            print(f"  [Filter L3] All {len(articles)} articles are strong matches, L3 skipped")
+            print(f"  [Filter L6] All {len(articles)} articles are strong matches, L6 skipped")
     else:
         # Clean up _l1_strength if L3 was skipped
         for art in articles:
@@ -634,9 +588,9 @@ def filter_articles(
 
     l1_cut = sum(1 for layer, _ in filtered_out if layer == 'L1')
     l2_cut = sum(1 for layer, _ in filtered_out if layer == 'L2')
-    l3_cut = sum(1 for layer, _ in filtered_out if layer == 'L3')
+    l6_cut = sum(1 for layer, _ in filtered_out if layer == 'L6')
     print(f"  [Filter] {initial_count} -> {len(articles)} "
-          f"(L1: -{l1_cut}, L2: -{l2_cut}, L3: -{l3_cut})")
+          f"(L1: -{l1_cut}, L2: -{l2_cut}, L6: -{l6_cut})")
 
     # Log filtered articles for review
     if log_filtered and filtered_out:

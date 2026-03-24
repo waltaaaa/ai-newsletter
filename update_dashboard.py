@@ -150,8 +150,8 @@ def update_dashboard(deep_sweep: bool = False):
     # Per-phase timeout limits (seconds). Generous defaults.
     PHASE_TIMEOUTS = {
         "Phase 1: Data Collection": 600,
-        "Phase 2: Discovery": 300,
-        "Phase 3: Filtering": 120,
+        "Phase 2: Discovery": 600,
+        "Phase 3: Filtering": 300,
         "Phase 4: Signals": 180,
         "Phase 5: Analysis": 1800,
         "Phase 6: Reasoning": 120,

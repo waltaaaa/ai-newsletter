@@ -253,7 +253,7 @@ def _is_truncated(text: str) -> bool:
 
 def _repair_json(broken_json: str, label: str,
                  anthropic_client=None, gemini_client=None) -> dict:
-    """Try local LLM first, then Haiku, then Gemini."""
+    """Try local LLM first, then Groq, then Haiku."""
     if not broken_json:
         return {}
 
@@ -265,6 +265,18 @@ def _repair_json(broken_json: str, label: str,
             return result
     except Exception as e:
         print(f"    [LOCAL REPAIR FAILED] {label}: {e}")
+
+    # Try Groq LLaMA 3.3 70B (free, replaces Gemini)
+    try:
+        import groq_client
+        result = groq_client.repair_json(broken_json, label)
+        if result is not None:
+            print(f"    [GROQ REPAIR OK] {label}")
+            return result
+    except ImportError:
+        pass
+    except Exception as e:
+        print(f"    [GROQ REPAIR FAILED] {label}: {e}")
 
     repair_prompt = (
         "The following JSON is malformed or truncated. Return ONLY the corrected valid JSON. "
@@ -292,11 +304,6 @@ def _repair_json(broken_json: str, label: str,
             return result
         except Exception as e:
             print(f"    [HAIKU REPAIR FAILED] {label}: {e}")
-
-    # Fall back to Gemini if available via circuit breaker
-    health = service_health.get()
-    if health.is_available("gemini") and gemini_client:
-        return _repair_with_gemini(broken_json, label, gemini_client=gemini_client)
 
     print(f"    [REPAIR FAILED] {label}: all repair methods exhausted")
     return {}
