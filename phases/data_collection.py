@@ -1029,35 +1029,71 @@ def get_global_indicators() -> dict:
     v = _ecb_last('LFSI', 'M.I8.S.UNEHRT.TOTAL0.15_74.T') # Euro Area unemployment
     if v is not None:
         eu['unemployment'] = f"{v:.1f}%";  eu['unemployment_src'] = 'ECB/Eurostat'
+    if 'unemployment' not in eu:
+        v = _fred_latest('LRHUTTTTEUM156S')  # OECD harmonised EU unemployment via FRED
+        if v is not None:
+            eu['unemployment'] = f"{v:.1f}%";  eu['unemployment_src'] = 'FRED/OECD'
+    if 'unemployment' not in eu:
+        v = _world_bank_latest('EUU', 'SL.UEM.TOTL.ZS')  # World Bank fallback
+        if v is not None:
+            eu['unemployment'] = f"{v:.1f}%";  eu['unemployment_src'] = 'World Bank'
     # EA19 real GDP QoQ — FRED OECD Quarterly National Accounts series
     v = _fred_qoq('CLVMNACSCAB1GQEA19')
     if v is not None:
         eu['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  eu['gdp_src'] = 'FRED/Eurostat'
+    if 'gdp' not in eu:
+        v = _world_bank_latest('EUU', 'NY.GDP.MKTP.KD.ZG')  # World Bank fallback
+        if v is not None:
+            eu['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  eu['gdp_src'] = 'World Bank'
     result['European Union'] = eu
     print(f"rate={eu.get('rate','—')} cpi={eu.get('cpi','—')} "
           f"unemp={eu.get('unemployment','—')} gdp={eu.get('gdp','—')}")
 
-    # ── United Kingdom (BoE + FRED OECD harmonised series) ────────
-    print("  UK (BoE + FRED/ONS)...", end=" ", flush=True)
+    # ── United Kingdom (BoE + FRED/OECD + World Bank fallbacks) ────
+    print("  UK (BoE + FRED/ONS + World Bank)...", end=" ", flush=True)
     uk = {}
-    v = _boe_bank_rate()                 # BoE Bank Rate (BoE IADB)
+    # Rate: BoE IADB → FRED → FRED/OECD 3-month interbank
+    v = _boe_bank_rate()
     if v is not None:
         uk['rate'] = f"{v:.2f}%";  uk['rate_src'] = 'BoE'
-    v = _fred_yoy('GBRCPIALLMINMEI')     # UK CPI all items YoY (OECD/ONS via FRED)
+    if 'rate' not in uk:
+        v = _fred_latest('IR3TIB01GBM156N')  # UK 3-month interbank rate (OECD via FRED)
+        if v is not None:
+            uk['rate'] = f"{v:.2f}%";  uk['rate_src'] = 'FRED/OECD'
+    # CPI: FRED/OECD → World Bank
+    v = _fred_yoy('GBRCPIALLMINMEI')
     if v is not None:
         uk['cpi'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['cpi_src'] = 'FRED/ONS'
-    v = _fred_latest('LRHUTTTTGBM156S')  # UK harmonised unemployment rate (OECD/ONS)
+    if 'cpi' not in uk:
+        v = _world_bank_latest('GBR', 'FP.CPI.TOTL.ZG')
+        if v is not None:
+            uk['cpi'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['cpi_src'] = 'World Bank'
+    # Unemployment: FRED/OECD → World Bank
+    v = _fred_latest('LRHUTTTTGBM156S')
     if v is not None:
         uk['unemployment'] = f"{v:.1f}%";  uk['unemployment_src'] = 'FRED/ONS'
-    v = _fred_qoq('CLVMNACSCAB1GQGB')   # UK real GDP QoQ SA (ONS via FRED)
+    if 'unemployment' not in uk:
+        v = _world_bank_latest('GBR', 'SL.UEM.TOTL.ZS')
+        if v is not None:
+            uk['unemployment'] = f"{v:.1f}%";  uk['unemployment_src'] = 'World Bank'
+    # GDP: FRED/OECD QoQ → FRED/OECD YoY → World Bank
+    v = _fred_qoq('CLVMNACSCAB1GQGB')
     if v is not None:
         uk['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['gdp_src'] = 'FRED/ONS'
+    if 'gdp' not in uk:
+        v = _fred_latest('NAEXKP01GBQ657S')  # UK GDP growth rate QoQ (OECD via FRED)
+        if v is not None:
+            uk['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['gdp_src'] = 'FRED/OECD'
+    if 'gdp' not in uk:
+        v = _world_bank_latest('GBR', 'NY.GDP.MKTP.KD.ZG')
+        if v is not None:
+            uk['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['gdp_src'] = 'World Bank'
     result['United Kingdom'] = uk
     print(f"rate={uk.get('rate','—')} cpi={uk.get('cpi','—')} "
           f"unemp={uk.get('unemployment','—')} gdp={uk.get('gdp','—')}")
 
-    # ── China (World Bank Open Data — annual, best available source) ──
-    print("  China (World Bank)...", end=" ", flush=True)
+    # ── China (World Bank Open Data + FRED/OECD) ──
+    print("  China (World Bank + FRED/OECD)...", end=" ", flush=True)
     cn = {}
     v = _world_bank_latest('CHN', 'NY.GDP.MKTP.KD.ZG')  # GDP growth annual %
     if v is not None:
@@ -1065,9 +1101,17 @@ def get_global_indicators() -> dict:
     v = _world_bank_latest('CHN', 'FP.CPI.TOTL.ZG')     # CPI inflation annual %
     if v is not None:
         cn['cpi'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  cn['cpi_src'] = 'World Bank'
-    # Unemployment: China NBS urban rate not reliably available via free API
+    # Unemployment: World Bank ILO modelled estimate
+    v = _world_bank_latest('CHN', 'SL.UEM.TOTL.ZS')
+    if v is not None:
+        cn['unemployment'] = f"{v:.1f}%";  cn['unemployment_src'] = 'World Bank/ILO'
+    # Rate: PBoC 1-year LPR not on free APIs — try FRED
+    v = _fred_latest('INTDSRCNM193N')  # China interest rate (IMF via FRED)
+    if v is not None:
+        cn['rate'] = f"{v:.2f}%";  cn['rate_src'] = 'FRED/IMF'
     result['China'] = cn
-    print(f"gdp={cn.get('gdp','—')} cpi={cn.get('cpi','—')}")
+    print(f"gdp={cn.get('gdp','—')} cpi={cn.get('cpi','—')} "
+          f"unemp={cn.get('unemployment','—')} rate={cn.get('rate','—')}")
 
     # Cache for 24 hours
     if _cache:
