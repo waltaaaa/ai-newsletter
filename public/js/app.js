@@ -530,22 +530,26 @@ async function renderInteractiveMap(){
   // Shared toggle state — controls national panel AND province tooltips
   let _mapMode='indicators'; // 'indicators' or 'thisweek'
 
-  // National stat boxes
+  // National stat boxes — grounded with period, freq, source, change
   const ki=(D&&D.key_indicators)||[];
   const m=(D&&D.metrics)||{};
+  const im=(D&&D.indicatorMeta)||{};
+  function _indVal(name){const i=indicators.find(x=>x.indicator_name===name);return i?i.value:null}
+  function _indRec(name){return indicators.find(x=>x.indicator_name===name&&(x.province||'').toLowerCase()==='national')||indicators.find(x=>x.indicator_name===name)||null}
+  function _indMeta(name){return (im&&im[name])||{}}
   const findKI=(label)=>{const item=ki.find(k=>k.label===label);return item?{value:item.value,change:item.change}:{value:'N/A',change:''}};
-  const natPart=indicators.find(x=>x.indicator_name==='participationRate'&&(x.province||'').toLowerCase()==='national');
-  const natEmp=indicators.find(x=>x.indicator_name==='employmentRate'&&(x.province||'').toLowerCase()==='national');
-  const natWage=indicators.find(x=>x.indicator_name==='wageGrowth'&&(x.province||'').toLowerCase()==='national');
+  const _tGdp=_indRec('realGdp'),_tUn=_indRec('unemployment'),_tPart=_indRec('participationRate'),_tEmp=_indRec('employmentRate'),_tWage=_indRec('wageGrowth'),_tBoc=_indRec('overnight_rate');
+  function _tc(metaKey,indName){return pick(_indMeta(metaKey).change,computeChange(indName||metaKey,'national'))}
 
-  // Two sets of national indicators
   const statsDefault=[
-    {label:'Real GDP',value:m.realGdp||'N/A',change:''},
-    {label:'Unemployment',value:findKI('UNEMPLOYMENT').value,change:findKI('UNEMPLOYMENT').change},
-    {label:'Participation',value:natPart?natPart.value:(m.participation||'N/A'),change:''},
-    {label:'Employment Rate',value:natEmp?natEmp.value:'N/A',change:''},
-    {label:'Wage Growth',value:natWage?natWage.value:(m.wageGrowth||'N/A'),change:''},
-    {label:'Trade Balance',value:findKI('TRADE BALANCE').value,change:findKI('TRADE BALANCE').change}
+    {label:'BoC Rate',value:pick(m.bocRate,m.boc_rate,_indVal('overnight_rate')),change:_tc('bocRate','overnight_rate'),period:indBasis(_tBoc,_indMeta('bocRate').period,'scheduled'),freq:'8x/yr',source:indSource(_tBoc,'Bank of Canada')},
+    {label:'Real GDP',value:pick(m.realGdp,_indVal('realGdp')),change:_tc('realGdp','realGdp'),period:indBasis(_tGdp,_indMeta('realGdp').period,'quarterly'),freq:'Quarterly',source:indSource(_tGdp,'Statistics Canada')},
+    {label:'CPI',value:pick(m.cpi,_indVal('cpi'),_indVal('cpi_national')),change:_tc('cpi','cpi'),period:indBasis(_indRec('cpi'),_indMeta('cpi').period,'monthly'),freq:'Monthly',source:indSource(_indRec('cpi'),'Statistics Canada')},
+    {label:'Unemployment',value:pick(m.unemployment,_indVal('unemployment'),findKI('UNEMPLOYMENT').value),change:pick(findKI('UNEMPLOYMENT').change,_tc('unemployment','unemployment')),period:indBasis(_tUn,_indMeta('unemployment').period,'monthly'),freq:'Monthly',source:indSource(_tUn,'Statistics Canada')},
+    {label:'Participation',value:pick(_tPart&&_tPart.value,m.participation,_indVal('participationRate')),change:computeChange('participationRate','national'),period:indBasis(_tPart,'','monthly'),freq:'Monthly',source:indSource(_tPart,'Statistics Canada')},
+    {label:'Employment Rate',value:pick(_tEmp&&_tEmp.value,_indVal('employmentRate')),change:computeChange('employmentRate','national'),period:indBasis(_tEmp,'','monthly'),freq:'Monthly',source:indSource(_tEmp,'Statistics Canada')},
+    {label:'Wage Growth',value:pick(_tWage&&_tWage.value,m.wageGrowth,_indVal('wageGrowth')),change:computeChange('wageGrowth','national'),period:indBasis(_tWage,'','monthly'),freq:'Monthly',source:indSource(_tWage,'Statistics Canada')},
+    {label:'Housing Starts',value:pick(m.housingStarts,_indVal('housingStarts')),change:_tc('housingStarts','housingStarts'),period:indBasis(_indRec('housingStarts'),_indMeta('housingStarts').period,'monthly'),freq:'Monthly',source:indSource(_indRec('housingStarts'),'CMHC')}
   ];
   // "This Week" indicators — the ones that moved or are newsworthy this week
   const statsThisWeek=[];
@@ -560,7 +564,7 @@ async function renderInteractiveMap(){
 
   function buildNatPanel(){
     const isInd=_mapMode==='indicators';
-    const activeStats=isInd?statsDefault:statsThisWeek.slice(0,6);
+    const activeStats=isInd?statsDefault:statsThisWeek.slice(0,8);
     let html=`<div class="ed-stat-header" style="display:flex;justify-content:space-between;align-items:center">
       <span>Canada &mdash; National</span>
       <span style="display:flex;gap:4px">
@@ -568,13 +572,25 @@ async function renderInteractiveMap(){
         <span class="ed-tt-tab${!isInd?' active':''}" id="natToggleHL">This Week</span>
       </span>
     </div>`;
-    html+='<div class="ed-stat-grid">';
-    activeStats.forEach(s=>{
-      const chgCls=s.change?(s.change.startsWith('-')||s.change.startsWith('\u2212')?'change-down':'change-up'):'';
-      html+=`<div class="ed-stat-box"><div class="ed-stat-label">${s.label}</div><div class="ed-stat-value">${s.value}</div>${s.change?`<div class="ed-stat-change ${chgCls}">${s.change}</div>`:''}`;
+    if(isInd){
+      // Full grounded table with period, freq, source, change
+      html+='<table class="ed-ind-table"><thead><tr><th>Indicator</th><th style="text-align:right">Value</th><th style="text-align:right">Chg</th><th style="text-align:right">Period</th><th style="text-align:right">Freq</th><th style="text-align:right">Source</th></tr></thead><tbody>';
+      activeStats.forEach(s=>{
+        const chg=s.change||'';
+        const cls=chg.startsWith('-')||chg.startsWith('\u2212')?'change-down':chg.startsWith('+')?'change-up':'';
+        html+='<tr><td class="ind-label">'+s.label+'</td><td class="ind-value">'+fmtNum(s.value)+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td><td class="ind-basis" style="font-size:9px;color:#64748B;text-align:right;white-space:nowrap">'+(s.period||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+(s.freq||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+(s.source||'')+'</td></tr>';
+      });
+      html+='</tbody></table>';
+    }else{
+      // "This Week" mode — compact stat boxes for movers
+      html+='<div class="ed-stat-grid">';
+      activeStats.forEach(s=>{
+        const chgCls=s.change?(s.change.startsWith('-')||s.change.startsWith('\u2212')?'change-down':'change-up'):'';
+        html+=`<div class="ed-stat-box"><div class="ed-stat-label">${s.label}</div><div class="ed-stat-value">${fmtNum(s.value)}</div>${s.change?`<div class="ed-stat-change ${chgCls}">${s.change}</div>`:''}`;
+        html+='</div>';
+      });
       html+='</div>';
-    });
-    html+='</div>';
+    }
     const natPanel=document.getElementById('natStatsPanel');
     if(natPanel){
       natPanel.innerHTML=html;
