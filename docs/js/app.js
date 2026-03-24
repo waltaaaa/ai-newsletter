@@ -34,6 +34,7 @@ function pick(){for(let i=0;i<arguments.length;i++){if(hasVal(arguments[i]))retu
 function fmtPeriod(dateStr){if(!dateStr)return '';try{const d=new Date(dateStr+'T00:00:00');if(isNaN(d))return dateStr;return d.toLocaleDateString('en-CA',{month:'short',year:'numeric'})}catch(e){return dateStr}}
 function indBasis(rec,metaPeriod,freq){const p=pick(metaPeriod,rec&&rec.period);const dt=hasVal(p)?fmtPeriod(p):'';const f=freq||rec&&rec.frequency||'';const fLabel=f?f.charAt(0).toUpperCase()+f.slice(1):'';return dt||(fLabel||'')}
 function indSource(rec,fallback){return (rec&&rec.source)||fallback||''}
+function fmtNum(v){if(v==null||v==='N/A'||v==='\u2014'||v==='')return v;const s=String(v);const m=s.match(/^([+\-]?)(\$?)(\d[\d]*\.?\d*)(.*)/);if(!m)return s;const sign=m[1],prefix=m[2],num=m[3],suffix=m[4];const parts=num.split('.');parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');return sign+prefix+parts.join('.')+suffix}
 // Compute period-over-period change from indicator history array
 let _indHistory=null;
 function _getHistory(){if(_indHistory)return _indHistory;try{const d=_cache['indicators.json'];_indHistory=(d&&d.history)||[]}catch(e){_indHistory=[]}return _indHistory}
@@ -924,7 +925,7 @@ function buildIndicatorPanel(title,indRows,subtitle,chartCanvasId,chartTitle){
     const basis=r.period||'';
     const freq=r.freq||'';
     const src=r.source||'';
-    html+='<tr><td class="ind-label">'+r.label+'</td><td class="ind-value">'+r.value+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td><td class="ind-basis" style="font-size:9px;color:#64748B;text-align:right;white-space:nowrap">'+basis+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+freq+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+src+'</td></tr>';
+    html+='<tr><td class="ind-label">'+r.label+'</td><td class="ind-value">'+fmtNum(r.value)+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td><td class="ind-basis" style="font-size:9px;color:#64748B;text-align:right;white-space:nowrap">'+basis+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+freq+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+src+'</td></tr>';
   });
   html+='</tbody></table>';
   // Embedded chart inside the panel
