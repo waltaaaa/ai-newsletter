@@ -38,24 +38,44 @@ function indSource(rec,fallback){return (rec&&rec.source)||fallback||''}
 let _indHistory=null;
 function _getHistory(){if(_indHistory)return _indHistory;try{const d=_cache['indicators.json'];_indHistory=(d&&d.history)||[]}catch(e){_indHistory=[]}return _indHistory}
 function _parseNum(v){if(v==null)return NaN;const s=String(v).replace(/[,%+$]/g,'').trim();return parseFloat(s)}
+// Province code <-> name map for history matching
+const _provAlias={bc:'british columbia',ab:'alberta',sk:'saskatchewan',mb:'manitoba',on:'ontario',qc:'quebec',nb:'new brunswick',ns:'nova scotia',pe:'prince edward island',nl:'newfoundland and labrador',yt:'yukon',nt:'northwest territories',nu:'nunavut'};
+const _provReverse={};Object.entries(_provAlias).forEach(([k,v])=>{_provReverse[v]=k});
+function _matchProv(recProv,target){
+  if(!target)return (recProv||'')==='national'||(recProv||'')==='';
+  const rp=(recProv||'').toLowerCase(),tp=target.toLowerCase();
+  if(rp===tp)return true;
+  if(_provAlias[rp]===tp||_provAlias[tp]===rp)return true;
+  if(_provReverse[rp]===tp||_provReverse[tp]===rp)return true;
+  return false;
+}
 function computeChange(indName,prov){
   const h=_getHistory();
-  const match=h.filter(x=>x.indicator_name===indName&&(prov?(x.province||'').toLowerCase()===prov.toLowerCase():(x.province||'')==='national'||(x.province||'')===''));
+  const match=h.filter(x=>x.indicator_name===indName&&_matchProv(x.province,prov));
   if(!match.length)return '';
   match.sort((a,b)=>(a.period||'').localeCompare(b.period||''));
-  // Find two most recent distinct numeric values
+  // Find two most recent distinct numeric values of similar magnitude
+  // (skip mixed-unit data: e.g. CPI index 165 vs CPI YoY% 2.3)
   const seen=new Set();const distinct=[];
   for(let i=match.length-1;i>=0&&distinct.length<2;i--){
     const n=_parseNum(match[i].value);
     if(isNaN(n))continue;
     const k=n.toFixed(4);
-    if(!seen.has(k)){seen.add(k);distinct.push(n)}
+    if(seen.has(k))continue;
+    // If we have a first value, reject the second if magnitude differs >10x (mixed units)
+    if(distinct.length===1){
+      const ratio=Math.abs(distinct[0])>0?Math.abs(n)/Math.abs(distinct[0]):999;
+      if(ratio>10||ratio<0.1)continue;
+    }
+    seen.add(k);distinct.push(n);
   }
   if(distinct.length<2)return '';
   const curr=distinct[0],prev=distinct[1],diff=curr-prev;
-  // Format: percentage-like values use pp, others use absolute
-  const isSmall=Math.abs(curr)<100;
-  if(isSmall){return (diff>=0?'+':'')+diff.toFixed(1)+'pp'}
+  // Determine display format from the value itself:
+  // Rates and percentages (<100 absolute) → show as pp change
+  // Large values (GDP levels, index levels) → show as % change
+  const isRate=Math.abs(curr)<100&&Math.abs(prev)<100;
+  if(isRate){return (diff>=0?'+':'')+diff.toFixed(1)+'pp'}
   const pct=prev!==0?((diff/Math.abs(prev))*100):0;
   return (pct>=0?'+':'')+pct.toFixed(1)+'%';
 }
