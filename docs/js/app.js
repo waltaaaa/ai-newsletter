@@ -559,8 +559,8 @@ async function renderInteractiveMap(){
   // Add MFG sales if present
   const mfg=findKI('MFG SALES');if(mfg.value!=='N/A')statsThisWeek.push({label:'MFG Sales',value:mfg.value,change:mfg.change});
   // Pad to 6 with other key indicators
-  if(statsThisWeek.length<6&&natWage)statsThisWeek.push({label:'Wage Growth',value:natWage.value,change:''});
-  if(statsThisWeek.length<6&&natPart)statsThisWeek.push({label:'Participation',value:natPart.value,change:''});
+  if(statsThisWeek.length<6&&_tWage)statsThisWeek.push({label:'Wage Growth',value:_tWage.value,change:''});
+  if(statsThisWeek.length<6&&_tPart)statsThisWeek.push({label:'Participation',value:_tPart.value,change:''});
 
   function buildNatPanel(){
     const isInd=_mapMode==='indicators';
