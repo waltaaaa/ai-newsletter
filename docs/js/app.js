@@ -51,6 +51,9 @@ function _matchProv(recProv,target){
   return false;
 }
 function computeChange(indName,prov){
+  // Check if the indicator record itself has a pre-computed change
+  const rec=indicators.find(x=>x.indicator_name===indName&&_matchProv(x.province,prov));
+  if(rec&&hasVal(rec.change))return rec.change;
   const h=_getHistory();
   const match=h.filter(x=>x.indicator_name===indName&&_matchProv(x.province,prov));
   if(!match.length)return '';
