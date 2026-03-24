@@ -399,8 +399,15 @@ _UNEMP_VECTOR         = 2062815   # Table 14-10-0287-01, LFS unemployment rate C
 _HOUSING_STARTS_VECTOR = 44176028  # NOTE: actually Table 18-10-0049-01 (NHPI) — not used; national housing starts fetched via _cmhc_housing_starts() instead
 
 # National employment and participation — StatCan WDS vector IDs
-_EMPRATE_VECTOR   = 2062809   # Table 14-10-0287-01, Employment rate Canada SA
-_PARTRATE_VECTOR  = 2062803   # Table 14-10-0287-01, Participation rate Canada SA
+# NOTE: v2062809 returns total employment (thousands), NOT the rate.
+# Canada employment rate = v2062811 (unemp v2062815 minus 4, matching
+# the provincial pattern where emprate = unemp_vector + 2).
+# v2062803 (participation rate) is TERMINATED — returns no data.
+# For now, national emp/part rates come from the pipeline's provincial
+# aggregation path, not from direct WDS fetch. These vectors are kept
+# as documentation only.
+_EMPRATE_VECTOR   = 2062811   # Table 14-10-0287-01, Employment rate Canada SA (needs verification when StatCan is available)
+_PARTRATE_VECTOR  = 2062803   # Table 14-10-0287-01, Participation rate Canada SA (TERMINATED — returns no data)
 
 # StatCan WDS vector IDs for Table 36-10-0434-01
 # Real GDP at basic prices (2012=100), monthly, seasonally adjusted
