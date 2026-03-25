@@ -4,7 +4,7 @@ weekly_briefing.py -- Weekly narrative synthesis and storage.
 The crown jewel: combines all data dimensions into a single coherent
 weekly intelligence briefing via Claude Sonnet.
 
-Structure (8 sections, 1000-1500 words):
+Structure (8 sections, 1100-1600 words):
 1. HEADLINE -- single most important development
 2. MACRO PULSE -- national economic conditions
 3. UNDER THE MICROSCOPE -- deep-dive on dominant story (pre-generated)
@@ -37,12 +37,12 @@ REPORTING RULES — STRICTLY ENFORCED:
 - Use short paragraphs (2-3 sentences each). No walls of text.
 - Cite specific numbers, project names, provinces, percentages.
 - Balanced (cover all regions, not just Toronto/Vancouver)
-- Concise (1000-1500 words total)
+- Concise (1100-1600 words total)
 - Every factual claim traces to data in the provided context.
 
 Structure:
 1. HEADLINE -- single most important data release or event (1-2 sentences)
-2. MACRO PULSE -- national economic data released this week, period-over-period changes (150-200 words, short paragraphs)
+2. MACRO PULSE -- national economic data released this week, period-over-period changes (250-300 words, short paragraphs)
 3. UNDER THE MICROSCOPE -- deep-dive on the dominant story (200-300 words, pre-generated analysis provided below — incorporate it, editing for tone consistency)
 4. PROVINCIAL SPOTLIGHT -- one province with notable data or project activity this week (100-150 words)
 5. SECTOR WATCH -- sectors with largest data changes, with figures (150-200 words)

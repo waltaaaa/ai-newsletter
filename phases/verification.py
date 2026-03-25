@@ -342,6 +342,15 @@ def run(conn, context, logger):
         except Exception as e:
             print(f"  [MONITOR] Failed: {type(e).__name__}: {e}")
 
+        # Deactivate alerts for terminal projects
+        try:
+            from project_alert_tracker import deactivate_terminal_projects
+            deactivated = deactivate_terminal_projects(conn)
+            if deactivated:
+                print(f"  [ALERTS] Deactivated {deactivated} alerts for terminal projects")
+        except Exception as e:
+            print(f"  [ALERTS] Deactivation check failed: {type(e).__name__}: {e}")
+
         # Cross-project anomaly detection
         try:
             from anomaly_detection import check_cross_project_anomalies

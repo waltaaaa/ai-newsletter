@@ -185,6 +185,7 @@ The briefing integrates data from: indicator history, project database, discover
 - `job_snapshots` — weekly job posting aggregates and hiring spike alerts
 - `procurement_snapshots` — weekly government procurement contract snapshots
 - `policy_snapshots` — weekly policy/legislative developments with sector/project linkages
+- `project_alerts` — Google News RSS tracking per project (auto-registered on discovery, monthly check, deactivated on Cancelled/Complete)
 
 ## Directory Structure
 - `phases/` — Pipeline phase modules (data_collection, discovery, filtering, analysis, etc.)
@@ -202,6 +203,7 @@ The briefing integrates data from: indicator history, project database, discover
 - Signals: `job_monitor.py` (hiring spike detection — 15 CMAs, 9 sectors, Indeed/Job Bank RSS)
 - StatCan Extended: `statcan_extended.py` (8 additional WDS tables — investment, employment, trade, housing)
 - Regulatory: `article_filter.py` contains `is_regulatory_relevant()` pre-filter and `extract_regulatory_signal()` for CanLII feeds (10 feeds in `rss_feeds.json` `regulatory` category)
+- Alert Tracking: `project_alert_tracker.py` (per-project Google News RSS alerts, monthly check, auto-deactivate on Cancelled/Complete)
 - Search: `tavily_search.py` (targeted enrichment only)
 - Reasoning: `claude_reasoning.py` (all reasoning — no gemini_pro_reasoning.py)
 - Analysis: `sector_trends.py`, `cross_reference.py`, `indicator_trends.py`

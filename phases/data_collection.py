@@ -556,18 +556,24 @@ def get_national_indicators() -> dict:
         except Exception as e:
             print(f"  [WARN] Unemployment previous value parsing failed: {e}")
 
-    # Employment rate — latest observation
+    # Employment rate — latest observation (sanity-checked like provincial rates)
     emprate_obs = wds_data.get(_EMPRATE_VECTOR, [])
     if emprate_obs:
         try:
-            values['employmentRate']    = f"{float(emprate_obs[-1]['value']):.1f}%"
-            sources['employmentRate']   = 'StatCan'
-            obs_dates['employmentRate'] = emprate_obs[-1].get('refPer', '')
+            val = float(emprate_obs[-1]['value'])
+            if 30.0 <= val <= 80.0:
+                values['employmentRate']    = f"{val:.1f}%"
+                sources['employmentRate']   = 'StatCan'
+                obs_dates['employmentRate'] = emprate_obs[-1].get('refPer', '')
+            else:
+                print(f"  [WARN] National employment rate out of range: {val}, skipping")
         except Exception as e:
             print(f"  [WARN] Employment rate parsing failed: {e}")
     if len(emprate_obs) >= 2:
         try:
-            prev_values['employmentRate'] = f"{float(emprate_obs[-2]['value']):.1f}%"
+            prev_val = float(emprate_obs[-2]['value'])
+            if 30.0 <= prev_val <= 80.0:
+                prev_values['employmentRate'] = f"{prev_val:.1f}%"
         except Exception as e:
             print(f"  [WARN] Employment rate previous value parsing failed: {e}")
 

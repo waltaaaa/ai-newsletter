@@ -64,6 +64,16 @@ def run(conn, context, logger):
         except Exception as e:
             print(f"  [MARKETS] Failed: {type(e).__name__}: {e}")
 
+        # Province event search (Tavily, cached 7 days — runs if cache is stale)
+        try:
+            from event_calendar import get_cached_province_events, search_province_events
+            cached = get_cached_province_events(conn)
+            if not cached:
+                print("  [CALENDAR] Searching province events via Tavily...")
+                search_province_events(conn, days_ahead=30)
+        except Exception as e:
+            print(f"  [CALENDAR] Province event search failed (non-critical): {e}")
+
         # Economic event calendar
         upcoming_events = []
         try:

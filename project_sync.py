@@ -261,6 +261,7 @@ def upsert_flat_projects(conn, projects: list[dict]):
     new_count = 0
     updated_count = 0
     skipped = 0
+    new_keys = []
 
     for project in projects:
         proj_name = (project.get('name') or '').strip()
@@ -283,6 +284,7 @@ def upsert_flat_projects(conn, projects: list[dict]):
         # Check if project already exists to count new vs updated
         key = normalize_key(proj_name, prov_name)
         existing = get_project(conn, key)
+        _is_new = existing is None
 
         proj_dict = {
             'name':              proj_name,
@@ -314,8 +316,9 @@ def upsert_flat_projects(conn, projects: list[dict]):
         try:
             norm_key = upsert_project(conn, proj_dict)
             _sync_evidence_and_org(conn, norm_key, proj_dict, existing)
-            if existing is None:
+            if _is_new:
                 new_count += 1
+                new_keys.append(norm_key)
                 print(f"  [NEW] {prov_name}: {proj_name}")
             else:
                 updated_count += 1
@@ -329,4 +332,4 @@ def upsert_flat_projects(conn, projects: list[dict]):
     print(f"  Updated:        {updated_count}")
     print(f"  Skipped:        {skipped}")
 
-    return {"new": new_count, "updated": updated_count, "skipped": skipped}
+    return {"new": new_count, "updated": updated_count, "skipped": skipped, "new_keys": new_keys}

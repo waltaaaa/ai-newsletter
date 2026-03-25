@@ -120,8 +120,27 @@ def run(conn, context, logger):
             print(f"[WARN] Policy tracker failed: {type(e).__name__}: {e}")
             logger.log_error("policy_tracker", e)
 
+        # ── Project alert tracker (monthly — first week only) ─────────
+        alert_articles = []
+        try:
+            from project_alert_tracker import is_first_week_of_month, run_monthly_alert_check_sync
+            if is_first_week_of_month():
+                print("\n[ALERT-TRACKER] Monthly project alert check (first week of month)...")
+                alert_result = run_monthly_alert_check_sync(conn)
+                alert_articles = alert_result.get("articles", [])
+                print(f"  [ALERT-TRACKER] {alert_result.get('alerts_checked', 0)} alerts checked, "
+                      f"{len(alert_articles)} articles found, "
+                      f"{alert_result.get('deactivated', 0)} alerts deactivated")
+            else:
+                print("\n[ALERT-TRACKER] Skipped (not first week of month)")
+        except ImportError:
+            print("[WARN] project_alert_tracker not available")
+        except Exception as e:
+            print(f"[WARN] Project alert tracker failed: {type(e).__name__}: {e}")
+            logger.log_error("project_alert_tracker", e)
+
         # ── Tavily follow-ups (budget-constrained, must be sequential) ─
-        gemini_projects = list(news_articles)
+        gemini_projects = list(news_articles) + alert_articles
         tavily_searches_count = 0
         try:
             from pipeline_store import get_follow_up_queries

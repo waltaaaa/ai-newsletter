@@ -111,22 +111,33 @@ def _estimate_statcan_date(release, ref_month):
         return datetime(year, month, 15).date()
 
 
+_PROVINCE_CODES = ["AB", "BC", "MB", "NB", "NL", "NS", "NT", "NU", "ON", "PE", "QC", "SK", "YT"]
+
+_PROV_FULL_NAMES = {
+    "AB": "Alberta", "BC": "British Columbia", "MB": "Manitoba",
+    "NB": "New Brunswick", "NL": "Newfoundland and Labrador",
+    "NS": "Nova Scotia", "NT": "Northwest Territories", "NU": "Nunavut",
+    "ON": "Ontario", "PE": "Prince Edward Island", "QC": "Quebec",
+    "SK": "Saskatchewan", "YT": "Yukon",
+}
+
+
 def get_upcoming_events(conn=None, days_ahead=14, db=None):
-    """Get economic events in the next N days.
+    """Get economic events in the next N days, including province-specific events.
 
     Args:
-        conn: optional sqlite3.Connection (reserved for future project hearing lookups)
+        conn: optional sqlite3.Connection for province event lookups
         days_ahead: how far ahead to look
         db: deprecated Firestore client; ignored (kept for backward compatibility)
 
     Returns:
-        sorted list of event dicts
+        sorted list of event dicts, each with a 'province' field
     """
     today = datetime.utcnow().date()
     cutoff = today + timedelta(days=days_ahead)
     events = []
 
-    # BoC rate decisions
+    # BoC rate decisions — national, affects all provinces
     for date_str in BOC_RATE_DECISIONS_2026:
         try:
             event_date = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -139,12 +150,14 @@ def get_upcoming_events(conn=None, days_ahead=14, db=None):
                 "source": "Bank of Canada",
                 "type": "rate_decision",
                 "significance": "high",
+                "province": "national",
+                "provinces_affected": _PROVINCE_CODES,
                 "indicators_affected": ["policy_rate", "mortgage_5y_fixed", "prime_rate"],
                 "sectors_affected": ["Real Estate", "Construction", "Finance"],
                 "relevance": "Rate decisions directly affect mortgage rates, project financing costs, and housing market activity.",
             })
 
-    # StatsCan recurring releases -- check next 2 months
+    # StatsCan recurring releases — national, affects all provinces
     for release in STATCAN_RECURRING:
         for month_offset in range(3):
             ref_month = datetime(today.year, today.month, 1) + timedelta(days=30 * month_offset)
@@ -157,30 +170,199 @@ def get_upcoming_events(conn=None, days_ahead=14, db=None):
                     "type": "data_release",
                     "frequency": release["frequency"],
                     "significance": release.get("significance", "medium"),
+                    "province": "national",
+                    "provinces_affected": _PROVINCE_CODES,
                     "indicator": release["indicator"],
                     "relevance": release["relevance"],
                 })
                 break  # only add one occurrence per release
 
-    # Provincial budgets
+    # Provincial budgets — emit both confirmed and unconfirmed
     for budget in PROVINCIAL_BUDGETS_2026:
+        prov = budget["province"]
         if budget.get("confirmed_date"):
             try:
                 event_date = datetime.strptime(budget["confirmed_date"], "%Y-%m-%d").date()
             except ValueError:
                 continue
             if today <= event_date <= cutoff:
+                label = "Federal Budget" if prov == "federal" else f"{prov} Provincial Budget"
                 events.append({
                     "date": budget["confirmed_date"],
-                    "name": f"{budget['province']} Provincial Budget",
-                    "source": f"{budget['province']} Finance Ministry",
+                    "name": label,
+                    "source": f"{prov} Finance Ministry",
                     "type": "budget",
                     "significance": "high",
-                    "province": budget["province"],
-                    "relevance": f"Provincial budget may include capital spending allocations, tax incentives, and infrastructure funding for {budget['province']}.",
+                    "province": prov if prov != "federal" else "national",
+                    "relevance": f"Budget may include capital spending allocations, tax incentives, and infrastructure funding for {prov}.",
                 })
+        else:
+            # Emit unconfirmed budget with estimated month
+            expected = budget.get("expected", "")
+            if expected:
+                try:
+                    est_date = datetime.strptime(expected, "%B %Y").date()
+                    # Use mid-month as estimate
+                    est_date = est_date.replace(day=15)
+                    if today <= est_date <= cutoff:
+                        label = "Federal Budget (est.)" if prov == "federal" else f"{prov} Provincial Budget (est.)"
+                        events.append({
+                            "date": est_date.isoformat(),
+                            "name": label,
+                            "source": f"{prov} Finance Ministry",
+                            "type": "budget",
+                            "significance": "medium",
+                            "province": prov if prov != "federal" else "national",
+                            "relevance": f"Expected {expected}. Date not yet confirmed.",
+                        })
+                except ValueError:
+                    pass
+
+    # Pipeline-sourced province events (policy, IAAC)
+    if conn:
+        pipeline_events = get_pipeline_province_events(conn, days_ahead)
+        events.extend(pipeline_events)
+
+    # Tavily-sourced province events (cached)
+    if conn:
+        tavily_events = get_cached_province_events(conn, days_ahead)
+        events.extend(tavily_events)
 
     events.sort(key=lambda x: x.get("date", "9999"))
+    return events
+
+
+def get_pipeline_province_events(conn, days_ahead=14):
+    """Extract province-specific events from pipeline data (zero cost).
+
+    Sources: policy_snapshots (legislative/regulatory items)
+    """
+    events = []
+    today = datetime.utcnow().date()
+
+    # Policy items with province tags
+    try:
+        row = conn.execute(
+            "SELECT data FROM policy_snapshots ORDER BY week_of DESC LIMIT 1"
+        ).fetchone()
+        if row:
+            items = json.loads(row[0]) if isinstance(row[0], str) else row[0]
+            for item in (items or []):
+                province = item.get("province")
+                if not province:
+                    continue
+                # Policy items are recent legislative/regulatory developments
+                title = item.get("title", "")
+                if not title:
+                    continue
+                categories = item.get("policy_categories", [])
+                cat_label = categories[0].replace("_", " ").title() if categories else "Policy"
+                events.append({
+                    "date": today.isoformat(),  # Current week
+                    "name": f"{cat_label}: {title[:80]}",
+                    "source": item.get("source_description", "Government"),
+                    "type": "policy",
+                    "significance": "medium",
+                    "province": province,
+                    "url": item.get("url", ""),
+                    "relevance": item.get("summary", "")[:200],
+                })
+    except Exception as e:
+        logger.warning(f"Pipeline province events (policy): {e}")
+
+    return events
+
+
+def get_cached_province_events(conn, days_ahead=14):
+    """Get Tavily-sourced province events from cache.
+
+    Cache is stored in dashboard_state with key 'province_events_cache'.
+    Expires after 7 days.
+    """
+    try:
+        from db import get_dashboard_state
+        cache = get_dashboard_state(conn, "province_events_cache")
+        if not cache:
+            return []
+        # Check cache freshness
+        cached_date = cache.get("date", "")
+        if cached_date:
+            try:
+                cache_dt = datetime.strptime(cached_date, "%Y-%m-%d").date()
+                if (datetime.utcnow().date() - cache_dt).days > 7:
+                    return []  # Stale cache
+            except ValueError:
+                pass
+        return cache.get("events", [])
+    except Exception as e:
+        logger.warning(f"Province events cache read failed: {e}")
+        return []
+
+
+def search_province_events(conn, days_ahead=30):
+    """Search for province-specific upcoming events via Tavily.
+
+    Uses ~50 Tavily credits (5 per province for 10 provinces).
+    Results cached in dashboard_state for 7 days.
+
+    Args:
+        conn: SQLite connection for caching results
+        days_ahead: how far ahead to include events
+
+    Returns:
+        list of event dicts with province field
+    """
+    from tavily_search import tavily_search_sync, can_use_tavily
+    from db import save_dashboard_state
+
+    if not can_use_tavily():
+        print("  [CALENDAR] Tavily budget exhausted, skipping province event search")
+        return []
+
+    today = datetime.utcnow().date()
+    year = today.year
+    events = []
+
+    # Search national + each province
+    search_targets = [("national", "Canada")] + [
+        (code, _PROV_FULL_NAMES[code]) for code in
+        ["ON", "QC", "AB", "BC", "SK", "MB", "NS", "NB", "NL", "PE"]
+    ]
+
+    for prov_code, prov_name in search_targets:
+        if not can_use_tavily():
+            break
+        query = f'upcoming economic events budget policy announcement {prov_name} Canada {year}'
+        try:
+            results = tavily_search_sync(query, max_results=5, search_depth="basic")
+            for r in (results or []):
+                title = r.get("title", "")
+                if not title:
+                    continue
+                events.append({
+                    "date": today.isoformat(),  # Approximate — exact date from content
+                    "name": title[:100],
+                    "source": r.get("url", "").split("/")[2] if "/" in r.get("url", "") else "Web",
+                    "type": "watchlist",
+                    "significance": "low",
+                    "province": prov_code,
+                    "url": r.get("url", ""),
+                    "relevance": (r.get("content", "") or "")[:200],
+                })
+            print(f"  [CALENDAR] {prov_name}: {len(results or [])} results")
+        except Exception as e:
+            logger.warning(f"Province event search ({prov_name}): {e}")
+
+    # Cache results
+    try:
+        save_dashboard_state(conn, "province_events_cache", {
+            "date": today.isoformat(),
+            "events": events,
+        })
+        print(f"  [CALENDAR] Cached {len(events)} province events")
+    except Exception as e:
+        logger.warning(f"Province events cache write failed: {e}")
+
     return events
 
 

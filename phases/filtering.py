@@ -518,6 +518,16 @@ def run(conn, context, logger):
             if sync_result:
                 logger.log_metric("discovery", "projects_added", sync_result.get("new", 0))
                 logger.log_metric("discovery", "projects_updated", sync_result.get("updated", 0))
+                # Register newly discovered projects for alert tracking
+                try:
+                    from project_alert_tracker import register_batch
+                    new_norm_keys = sync_result.get("new_keys", [])
+                    if new_norm_keys:
+                        registered = register_batch(conn, new_norm_keys)
+                        if registered:
+                            print(f"  [ALERTS] {registered} new projects registered for alert tracking")
+                except Exception as e:
+                    print(f"  [ALERTS] Registration failed (non-critical): {e}")
             logger.log_metric("discovery", "articles_found", raw_count)
             logger.log_metric("discovery", "projects_deduped", dup_count)
         else:

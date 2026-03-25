@@ -536,6 +536,21 @@ CREATE TABLE IF NOT EXISTS sweep_metrics (
     cache_hit_rate            REAL DEFAULT 0,
     wall_time_seconds         INTEGER DEFAULT 0
 );
+
+-- 30. Project alerts (automatic Google News RSS tracking per project)
+CREATE TABLE IF NOT EXISTS project_alerts (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id          INTEGER NOT NULL,
+    norm_key            TEXT NOT NULL UNIQUE,
+    query_text          TEXT NOT NULL,
+    rss_url             TEXT NOT NULL,
+    created_at          TEXT NOT NULL DEFAULT (datetime('now')),
+    last_checked        TEXT DEFAULT NULL,
+    last_found_articles INTEGER DEFAULT 0,
+    check_count         INTEGER DEFAULT 0,
+    active              INTEGER DEFAULT 1
+);
+CREATE INDEX IF NOT EXISTS idx_project_alerts_active ON project_alerts(active);
 """
 
 
