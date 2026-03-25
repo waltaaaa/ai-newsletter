@@ -2,13 +2,13 @@
   "indicators": {
     "uranium_spot": {
       "description": "Uranium spot price proxy (URA ETF)",
-      "current": 49.29,
-      "week_ago": 48.78,
-      "month_ago": 53.71,
-      "year_ago": 22.81,
-      "pct_1w": 1.0,
-      "pct_1m": -8.2,
-      "pct_1y": 116.1,
+      "current": 48.19,
+      "week_ago": 50.52,
+      "month_ago": 53.44,
+      "year_ago": 23.74,
+      "pct_1w": -4.6,
+      "pct_1m": -9.8,
+      "pct_1y": 103.0,
       "affected_sectors": [
         "Mining & O&G",
         "Utilities"
@@ -42,13 +42,13 @@
     },
     "steel": {
       "description": "Steel price proxy (SLX ETF)",
-      "current": 88.28,
-      "week_ago": 91.25,
-      "month_ago": 102.46,
-      "year_ago": 62.9,
-      "pct_1w": -3.3,
-      "pct_1m": -13.8,
-      "pct_1y": 40.4,
+      "current": 89.08,
+      "week_ago": 90.42,
+      "month_ago": 99.83,
+      "year_ago": 63.27,
+      "pct_1w": -1.5,
+      "pct_1m": -10.8,
+      "pct_1y": 40.8,
       "affected_sectors": [
         "Construction",
         "Transportation"
@@ -58,13 +58,13 @@
     },
     "tsx_infrastructure": {
       "description": "Canadian infrastructure companies basket",
-      "current": 55.22,
-      "week_ago": 54.81,
-      "month_ago": 54.32,
-      "year_ago": 41.28,
-      "pct_1w": 0.7,
-      "pct_1m": 1.7,
-      "pct_1y": 33.8,
+      "current": 54.97,
+      "week_ago": 55.39,
+      "month_ago": 55.7,
+      "year_ago": 43.11,
+      "pct_1w": -0.8,
+      "pct_1m": -1.3,
+      "pct_1y": 27.5,
       "affected_sectors": [
         "Utilities",
         "Transportation"
@@ -73,5 +73,5 @@
       "relevance": "Market valuation of infrastructure companies signals investment appetite."
     }
   },
-  "updated_at": "2026-03-16T05:26:24.924516"
+  "updated_at": "2026-03-25T01:00:10.423373"
 }
