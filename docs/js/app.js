@@ -177,8 +177,8 @@ async function loadEditionList(){
     const list=$('editionList');
     list.innerHTML=editions.map(e=>{
       const label=(e.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim()||e.id;
-      const active=e.id===currentEdition?'font-weight:700;background:var(--bg-subtle)':'';
-      return'<div class="edition-item" data-id="'+e.id+'" style="padding:8px 14px;font-size:var(--text-xs);cursor:pointer;border-bottom:1px solid var(--border-light);'+active+'">'+label+'</div>';
+      const active=e.id===currentEdition?'font-weight:700;background:rgba(255,255,255,0.12);':'';
+      return'<div class="edition-item" data-id="'+e.id+'" style="padding:10px 14px;font-size:var(--text-xs);cursor:pointer;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.12);transition:background .15s ease;'+active+'" onmouseenter="this.style.background=\'rgba(255,255,255,0.10)\'" onmouseleave="this.style.background=\''+(e.id===currentEdition?'rgba(255,255,255,0.12)':'transparent')+'\'">'+label+'</div>';
     }).join('');
     list.querySelectorAll('.edition-item').forEach(el=>el.addEventListener('click',()=>switchEdition(el.dataset.id)));
   }catch(e){console.warn('Edition list load:',e)}
