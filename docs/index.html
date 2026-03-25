@@ -753,6 +753,25 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
         <div class="section-banner-sub">Economic events and watchlist</div>
       </div>
     </div>
+    <div class="filter-bar" id="calendarFilterBar" style="margin-bottom:12px">
+      <select id="calendarProvinceFilter" onchange="filterCalendarByProvince(this.value)" aria-label="Filter by province" style="padding:6px 12px;border-radius:8px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--text-primary);font-size:var(--text-sm);backdrop-filter:blur(8px);min-width:180px">
+        <option value="all">All Provinces</option>
+        <option value="national">National Only</option>
+        <option value="AB">Alberta</option>
+        <option value="BC">British Columbia</option>
+        <option value="MB">Manitoba</option>
+        <option value="NB">New Brunswick</option>
+        <option value="NL">Newfoundland and Labrador</option>
+        <option value="NS">Nova Scotia</option>
+        <option value="NT">Northwest Territories</option>
+        <option value="NU">Nunavut</option>
+        <option value="ON">Ontario</option>
+        <option value="PE">Prince Edward Island</option>
+        <option value="QC">Quebec</option>
+        <option value="SK">Saskatchewan</option>
+        <option value="YT">Yukon</option>
+      </select>
+    </div>
     <div id="calendarGrid"></div>
     <div id="thisWeekEvents"></div>
     <div id="allEventsTable"></div>

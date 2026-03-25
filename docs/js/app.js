@@ -2701,15 +2701,34 @@ window.exportProjects=function(){
 
 
 /* ====== CALENDAR TAB ====== */
-let _calMonth=null,_calYear=null,_calEvents=[];
+let _calMonth=null,_calYear=null,_calEvents=[],_calAllEvents=[],_calProvinceFilter='all';
 async function renderCalendar(){
-  _calEvents=(D&&(D.watchlist||D.events))||[];
-  if(!_calEvents.length){try{_calEvents=await fetchJSON('events.json')||[]}catch(_){_calEvents=[]}}
+  _calAllEvents=(D&&(D.watchlist||D.events))||[];
+  if(!_calAllEvents.length){try{_calAllEvents=await fetchJSON('events.json')||[]}catch(_){_calAllEvents=[]}}
+  _calEvents=_filterEventsByProvince(_calAllEvents,_calProvinceFilter);
   const now=new Date();
   _calMonth=now.getMonth();_calYear=now.getFullYear();
   renderCalendarGrid();
   renderCalendarEvents();
 }
+function _filterEventsByProvince(events,filter){
+  if(filter==='all')return events;
+  if(filter==='national')return events.filter(e=>{const p=(e.province||'').toLowerCase();return !p||p==='national'||p==='all'});
+  return events.filter(e=>{
+    const p=(e.province||'');
+    if(!p||p==='national'||p==='all')return true;
+    if(p===filter)return true;
+    const pa=e.provinces_affected||[];
+    if(Array.isArray(pa)&&pa.includes(filter))return true;
+    return false;
+  });
+}
+window.filterCalendarByProvince=function(code){
+  _calProvinceFilter=code;
+  _calEvents=_filterEventsByProvince(_calAllEvents,code);
+  renderCalendarGrid();
+  renderCalendarEvents();
+};
 window._calNav=function(dir){
   _calMonth+=dir;
   if(_calMonth>11){_calMonth=0;_calYear++}
