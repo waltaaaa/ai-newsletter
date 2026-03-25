@@ -58,7 +58,6 @@ def get_live_commodities():
         ("BZ=F",  "Energy",                     "Crude Oil (Brent)", "bbl",     lambda x: f"${x:.2f}"),
         ("NG=F",  "Energy",                     "Natural Gas",       "MMBtu",   lambda x: f"${x:.3f}"),
         ("MTF=F", "Energy",                     "Coal (Newcastle)",  "t",       lambda x: f"${x:.2f}"),
-        ("PN=F",  "Energy",                     "Propane",           "gal",     lambda x: f"${x:.4f}"),
         # Precious Metals
         ("GC=F",  "Precious Metals",            "Gold",              "troy oz", lambda x: f"${x:,.0f}"),
         ("SI=F",  "Precious Metals",            "Silver",            "troy oz", lambda x: f"${x:.2f}"),
@@ -80,7 +79,6 @@ def get_live_commodities():
         # Agriculture - Oils & Meals
         ("ZL=F",  "Agriculture - Oils & Meals", "Soybean Oil",       "lb",      lambda x: f"${x:.4f}"),
         ("ZM=F",  "Agriculture - Oils & Meals", "Soybean Meal",      "ton",     lambda x: f"${x:.2f}"),
-        ("RS=F",  "Agriculture - Oils & Meals", "Canola",            "t",       lambda x: f"${x:.2f}"),
         # Crypto
         ("BTC-USD", "Crypto",                   "Bitcoin",           "USD",     lambda x: f"${x:,.0f}"),
         ("ETH-USD", "Crypto",                   "Ethereum",          "USD",     lambda x: f"${x:,.0f}"),
@@ -119,13 +117,31 @@ def get_live_commodities():
     categories = {}
     summary = {}
 
+    def _get_ticker_series(ticker):
+        """Get price series for a ticker from batch data, falling back to individual download."""
+        if data is not None:
+            try:
+                col = data[ticker] if len(all_tickers) > 1 else data
+                col = col.dropna()
+                if len(col) >= 2:
+                    return col
+            except (KeyError, TypeError):
+                pass
+        # Individual fallback for tickers that failed in batch
+        try:
+            ind = yf.download(ticker, period="1y", progress=False)['Close']
+            if hasattr(ind, 'dropna'):
+                ind = ind.dropna()
+            if len(ind) >= 2:
+                return ind
+        except Exception:
+            pass
+        return None
+
     for ticker, category, name, unit, fmt in TICKER_MAP:
         try:
-            if data is None:
-                raise ValueError("No data available")
-            col = data[ticker] if len(all_tickers) > 1 else data
-            col = col.dropna()
-            if len(col) < 2:
+            col = _get_ticker_series(ticker)
+            if col is None or len(col) < 2:
                 continue
             current = float(col.iloc[-1])
             year_ago = float(col.iloc[0])
