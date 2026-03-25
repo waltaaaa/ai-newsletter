@@ -33,6 +33,7 @@ function hasVal(v){return v!=null&&v!==''&&v!=='N/A'&&v!=='\u2014'&&v!=='—'&&v
 function pick(){for(let i=0;i<arguments.length;i++){if(hasVal(arguments[i]))return arguments[i]}return 'N/A'}
 function fmtPeriod(dateStr){if(!dateStr)return '';try{const d=new Date(dateStr+'T00:00:00');if(isNaN(d))return dateStr;return d.toLocaleDateString('en-CA',{month:'short',year:'numeric'})}catch(e){return dateStr}}
 function indBasis(rec,metaPeriod,freq){const p=pick(metaPeriod,rec&&rec.period);const dt=hasVal(p)?fmtPeriod(p):'';const f=freq||rec&&rec.frequency||'';const fLabel=f?f.charAt(0).toUpperCase()+f.slice(1):'';return dt||(fLabel||'')}
+function indFreqLabel(rec,freq){const f=freq||(rec&&rec.frequency)||'';const fLabel=f?f.charAt(0).toUpperCase()+f.slice(1):'';if(!fLabel)return '';const p=rec&&rec.period;if(p&&hasVal(p)){return fLabel+' (latest: '+fmtPeriod(p)+')'}return fLabel}
 function indSource(rec,fallback){return (rec&&rec.source)||fallback||''}
 function fmtNum(v){if(v==null||v==='N/A'||v==='\u2014'||v==='')return v;const s=String(v).replace(/,/g,'');const m=s.match(/^([+\-]?)(\$?)(\d[\d]*\.?\d*)(.*)/);if(!m)return String(v);const sign=m[1],prefix=m[2],num=parseFloat(m[3]),suffix=m[4];if(isNaN(num))return String(v);const rounded=num%1===0&&num>=1000?num.toFixed(0):num.toFixed(1);const parts=rounded.split('.');parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');if(parts[1]==='0'&&num>=1000)return sign+prefix+parts[0]+suffix;return sign+prefix+parts.join('.')+suffix}
 // Compute period-over-period change from indicator history array
@@ -58,24 +59,21 @@ function computeChange(indName,prov){
   const match=h.filter(x=>x.indicator_name===indName&&_matchProv(x.province,prov));
   if(!match.length)return '';
   match.sort((a,b)=>(a.period||'').localeCompare(b.period||''));
-  // Find two most recent distinct numeric values of similar magnitude
-  // (skip mixed-unit data: e.g. CPI index 165 vs CPI YoY% 2.3)
-  const seen=new Set();const distinct=[];
-  for(let i=match.length-1;i>=0&&distinct.length<2;i--){
+  // Find the two most recent periods with valid numeric values
+  // This compares the latest official release to the prior one
+  const valid=[];
+  for(let i=match.length-1;i>=0&&valid.length<2;i--){
     const n=_parseNum(match[i].value);
     if(isNaN(n))continue;
-    const k=n.toFixed(4);
-    if(seen.has(k))continue;
-    // If we have a first value, reject the second if magnitude differs >10x (mixed units)
-    if(distinct.length===1){
-      const ratio=Math.abs(distinct[0])>0?Math.abs(n)/Math.abs(distinct[0]):999;
+    // Skip if magnitude differs >10x from first (mixed-unit data guard)
+    if(valid.length===1){
+      const ratio=Math.abs(valid[0].n)>0?Math.abs(n)/Math.abs(valid[0].n):999;
       if(ratio>10||ratio<0.1)continue;
     }
-    seen.add(k);distinct.push(n);
+    valid.push({n,period:match[i].period||''});
   }
-  if(distinct.length<2)return '';
-  const curr=distinct[0],prev=distinct[1],diff=curr-prev;
-  // Determine display format from the value itself:
+  if(valid.length<2)return '';
+  const curr=valid[0].n,prev=valid[1].n,diff=curr-prev;
   // Rates and percentages (<100 absolute) → show as pp change
   // Large values (GDP levels, index levels) → show as % change
   const isRate=Math.abs(curr)<100&&Math.abs(prev)<100;
@@ -559,14 +557,14 @@ async function renderInteractiveMap(){
   function _tc(metaKey,indName){return pick(_indMeta(metaKey).change,computeChange(indName||metaKey,'national'))}
 
   const statsDefault=[
-    {label:'BoC Rate',value:pick(m.bocRate,m.boc_rate,_indVal('overnight_rate')),change:_tc('bocRate','overnight_rate'),period:indBasis(_tBoc,_indMeta('bocRate').period,'scheduled'),freq:'8x/yr',source:indSource(_tBoc,'Bank of Canada')},
-    {label:'Real GDP',value:pick(m.realGdp,_indVal('realGdp')),change:_tc('realGdp','realGdp'),period:indBasis(_tGdp,_indMeta('realGdp').period,'quarterly'),freq:'Quarterly',source:indSource(_tGdp,'Statistics Canada')},
-    {label:'CPI',value:pick(m.cpi,_indVal('cpi'),_indVal('cpi_national')),change:_tc('cpi','cpi'),period:indBasis(_indRec('cpi'),_indMeta('cpi').period,'monthly'),freq:'Monthly',source:indSource(_indRec('cpi'),'Statistics Canada')},
-    {label:'Unemployment',value:pick(m.unemployment,_indVal('unemployment'),findKI('UNEMPLOYMENT').value),change:pick(findKI('UNEMPLOYMENT').change,_tc('unemployment','unemployment')),period:indBasis(_tUn,_indMeta('unemployment').period,'monthly'),freq:'Monthly',source:indSource(_tUn,'Statistics Canada')},
-    {label:'Participation',value:pick(_tPart&&_tPart.value,m.participation,_indVal('participationRate')),change:computeChange('participationRate','national'),period:indBasis(_tPart,'','monthly'),freq:'Monthly',source:indSource(_tPart,'Statistics Canada')},
-    {label:'Employment Rate',value:pick(_tEmp&&_tEmp.value,_indVal('employmentRate')),change:computeChange('employmentRate','national'),period:indBasis(_tEmp,'','monthly'),freq:'Monthly',source:indSource(_tEmp,'Statistics Canada')},
-    {label:'Wage Growth',value:pick(_tWage&&_tWage.value,m.wageGrowth,_indVal('wageGrowth')),change:computeChange('wageGrowth','national'),period:indBasis(_tWage,'','monthly'),freq:'Monthly',source:indSource(_tWage,'Statistics Canada')},
-    {label:'Housing Starts',value:pick(m.housingStarts,_indVal('housingStarts')),change:_tc('housingStarts','housingStarts'),period:indBasis(_indRec('housingStarts'),_indMeta('housingStarts').period,'monthly'),freq:'Monthly',source:indSource(_indRec('housingStarts'),'CMHC')}
+    {label:'BoC Rate',value:pick(m.bocRate,m.boc_rate,_indVal('overnight_rate')),change:_tc('bocRate','overnight_rate'),period:indBasis(_tBoc,_indMeta('bocRate').period,'scheduled'),freq:indFreqLabel(_tBoc,'scheduled'),source:indSource(_tBoc,'Bank of Canada')},
+    {label:'Real GDP',value:pick(m.realGdp,_indVal('realGdp')),change:_tc('realGdp','realGdp'),period:indBasis(_tGdp,_indMeta('realGdp').period,'quarterly'),freq:indFreqLabel(_tGdp,'quarterly'),source:indSource(_tGdp,'Statistics Canada')},
+    {label:'CPI',value:pick(m.cpi,_indVal('cpi'),_indVal('cpi_national')),change:_tc('cpi','cpi'),period:indBasis(_indRec('cpi'),_indMeta('cpi').period,'monthly'),freq:indFreqLabel(_indRec('cpi'),'monthly'),source:indSource(_indRec('cpi'),'Statistics Canada')},
+    {label:'Unemployment',value:pick(m.unemployment,_indVal('unemployment'),findKI('UNEMPLOYMENT').value),change:pick(findKI('UNEMPLOYMENT').change,_tc('unemployment','unemployment')),period:indBasis(_tUn,_indMeta('unemployment').period,'monthly'),freq:indFreqLabel(_tUn,'monthly'),source:indSource(_tUn,'Statistics Canada')},
+    {label:'Participation',value:pick(_tPart&&_tPart.value,m.participation,_indVal('participationRate')),change:computeChange('participationRate','national'),period:indBasis(_tPart,'','monthly'),freq:indFreqLabel(_tPart,'monthly'),source:indSource(_tPart,'Statistics Canada')},
+    {label:'Employment Rate',value:pick(_tEmp&&_tEmp.value,_indVal('employmentRate')),change:computeChange('employmentRate','national'),period:indBasis(_tEmp,'','monthly'),freq:indFreqLabel(_tEmp,'monthly'),source:indSource(_tEmp,'Statistics Canada')},
+    {label:'Wage Growth',value:pick(_tWage&&_tWage.value,m.wageGrowth,_indVal('wageGrowth')),change:computeChange('wageGrowth','national'),period:indBasis(_tWage,'','monthly'),freq:indFreqLabel(_tWage,'monthly'),source:indSource(_tWage,'Statistics Canada')},
+    {label:'Housing Starts',value:pick(m.housingStarts,_indVal('housingStarts')),change:_tc('housingStarts','housingStarts'),period:indBasis(_indRec('housingStarts'),_indMeta('housingStarts').period,'monthly'),freq:indFreqLabel(_indRec('housingStarts'),'monthly'),source:indSource(_indRec('housingStarts'),'CMHC')}
   ];
   // "This Week" indicators — the ones that moved or are newsworthy this week
   const statsThisWeek=[];
@@ -595,7 +593,7 @@ async function renderInteractiveMap(){
       activeStats.forEach(s=>{
         const chg=s.change||'';
         const cls=chg.startsWith('-')||chg.startsWith('\u2212')?'change-down':chg.startsWith('+')?'change-up':'';
-        html+='<tr><td class="ind-label">'+s.label+'</td><td class="ind-value">'+fmtNum(s.value)+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td><td class="ind-basis" style="font-size:9px;color:#64748B;text-align:right;white-space:nowrap">'+(s.period||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+(s.freq||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+(s.source||'')+'</td></tr>';
+        html+='<tr><td class="ind-label">'+s.label+'</td><td class="ind-value">'+fmtNum(s.value)+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td><td class="ind-basis" style="font-size:9px;color:#64748B;text-align:right;white-space:nowrap">'+(s.period||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap;max-width:160px">'+(s.freq||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+(s.source||'')+'</td></tr>';
       });
       html+='</tbody></table>';
     }else{
