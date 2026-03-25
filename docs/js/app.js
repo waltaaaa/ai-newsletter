@@ -1819,8 +1819,8 @@ const INDICATOR_CATALOG=[
     {id:'housingStarts',label:'Housing Starts',unit:'K',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',prov:false}
   ]},
   {group:'Markets',items:[
-    {id:'tsx',label:'S&P/TSX Composite',unit:'',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/%5EGSPTSE/',prov:false},
-    {id:'lumber',label:'Lumber',unit:'USD',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/LBS%3DF/',prov:false}
+    {id:'tsx',label:'S&P/TSX Composite',unit:'',source:'TMX',url:'https://money.tmx.com/en/quote/%5ETSX',prov:false},
+    {id:'lumber',label:'Lumber',unit:'USD',source:'Investing.com',url:'https://www.investing.com/commodities/lumber',prov:false}
   ]},
   {group:'Ontario (OEA)',items:[
     {id:'on_real_consumption',label:'ON Real Consumption',unit:'$M',source:'Ontario Economic Accounts',url:'https://data.ontario.ca/dataset/ontario-economic-accounts',prov:false},
