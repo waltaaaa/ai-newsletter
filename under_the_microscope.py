@@ -83,7 +83,7 @@ async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_in
     except Exception as e:
         logger.warning(f"Microscope override check failed: {e}")
 
-    # Automated selection via Gemini Flash
+    # Automated selection via Groq LLaMA 3.3 70B
     cutoff = datetime.utcnow() - timedelta(days=7)
     recent_headlines = []
     for article in (rss_articles or []):
@@ -95,19 +95,9 @@ async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_in
         logger.warning("No headlines for microscope topic selection")
         return None
 
-    # Use Gemini Flash for topic identification (1 free-tier query)
+    # Use Groq for topic identification (free tier)
     try:
-        from claude_reasoning import reason_with_claude_tracked
-        import google.generativeai as genai
-        import os
-
-        api_key = os.environ.get("GEMINI_API_KEY", "")
-        if not api_key:
-            logger.warning("No GEMINI_API_KEY for microscope topic selection")
-            return None
-
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        import groq_client
 
         # Build signal summary for topic selection
         _sig_lines = _format_signal_summary_for_topic(signal_context or {})
@@ -117,8 +107,15 @@ async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_in
         )
         if _sig_lines:
             prompt += f"\n\nAdditional signal data (consider when selecting topic):\n{_sig_lines}"
-        response = model.generate_content(prompt)
-        text = response.text.strip()
+        text = groq_client.generate(
+            "You are a Canadian economic analyst. Return only valid JSON.",
+            prompt,
+            max_tokens=2048,
+        )
+        if not text:
+            logger.warning("Groq returned empty response for microscope topic selection")
+            return None
+        text = text.strip()
 
         # Strip markdown code fences if present
         if text.startswith("```"):
@@ -135,7 +132,7 @@ async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_in
         affected_provinces = topic_data.get("affected_provinces", [])
 
         if not topic:
-            logger.warning("Gemini returned empty topic")
+            logger.warning("Groq returned empty topic")
             return None
 
         # Calculate signal convergence boost
@@ -150,7 +147,7 @@ async def select_microscope_topic(conn, rss_articles, indicator_trends, cross_in
 
     except json.JSONDecodeError:
         # Try to extract topic from non-JSON response
-        logger.warning(f"Gemini returned non-JSON for microscope topic: {text[:200]}")
+        logger.warning(f"Groq returned non-JSON for microscope topic: {text[:200]}")
         return None
     except Exception as e:
         logger.warning(f"Microscope topic selection failed: {e}")

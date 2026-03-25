@@ -8,10 +8,7 @@ import threading
 import anthropic
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, timedelta
-from google import genai
-from google.genai import types
-
-from pipeline_config import SONNET_MODEL, OPUS_MODEL, GEMINI_MODEL, CLAUDE_COST_CAP_USD
+from pipeline_config import SONNET_MODEL, OPUS_MODEL, CLAUDE_COST_CAP_USD
 from citation_audit import CITATION_RULES, run_citation_audit, save_audit_log, remove_failed_claims
 from db import save_checkpoint, get_checkpoint
 import local_llm
@@ -307,29 +304,6 @@ def _repair_json(broken_json: str, label: str,
 
     print(f"    [REPAIR FAILED] {label}: all repair methods exhausted")
     return {}
-
-
-def _repair_with_gemini(broken_json: str, label: str,
-                        gemini_client=None) -> dict:
-    """Use Gemini 2.5 Flash to repair malformed JSON output from Claude."""
-    if not broken_json or not gemini_client:
-        return {}
-    try:
-        response = gemini_client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=(
-                "The following JSON is malformed. Return ONLY the corrected valid JSON. "
-                "No markdown. No explanation.\n\n" + broken_json
-            ),
-            config=types.GenerateContentConfig(
-                response_mime_type='application/json',
-                max_output_tokens=32768,
-            )
-        )
-        return json.loads(response.text)
-    except Exception as e:
-        print(f"    [GEMINI REPAIR ERROR] {label}: {e}")
-        return {}
 
 
 # ── Claude API call with cost tracking ───────────────────────────────────────
@@ -1668,6 +1642,23 @@ def verify_source_urls(payload: dict) -> dict:
     return payload
 
 
+def _all_sources(payload):
+    """Yield all source dicts from the final payload (any nesting level)."""
+    if not payload or not isinstance(payload, dict):
+        return
+    for key, val in payload.items():
+        if key in ('sources', 'industrySources'):
+            for src in (val if isinstance(val, list) else []):
+                if isinstance(src, dict):
+                    yield src
+        elif isinstance(val, dict):
+            yield from _all_sources(val)
+        elif isinstance(val, list):
+            for item in val:
+                if isinstance(item, dict):
+                    yield from _all_sources(item)
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # PHASE ENTRY POINT
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1677,12 +1668,10 @@ def run(conn, context, logger):
     step_name = "Phase 5: Analysis"
     try:
         anthropic_client = context.get("anthropic_client")
-        gemini_client = context.get("gemini_client")
+        gemini_client = context.get("gemini_client")  # legacy, unused
         if not anthropic_client:
             print(f"  [ANALYSIS] ERROR: Missing anthropic_client in context — cannot run analysis")
             return {"analysis_error": "missing anthropic_client"}
-        if not gemini_client:
-            print(f"  [ANALYSIS] WARNING: Missing gemini_client in context")
         cost_state = context.get("claude_cost", {"total_usd": 0.0})
         watchlist = context.get("watchlist", {})
         hard_data = context.get("hard_data", {})
@@ -1870,7 +1859,7 @@ def run(conn, context, logger):
 
         # ── STEP 4f: Enrich sources with article images ──────────────
         _url_to_image = {}
-        for a in articles:
+        for a in extracted_articles:
             img = a.get('image_url', '')
             if img and a.get('url'):
                 _url_to_image[a['url']] = img

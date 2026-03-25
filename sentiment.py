@@ -329,7 +329,7 @@ def fetch_news_comments(articles: list[dict] | None = None) -> dict:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# GEMINI FLASH EXTRACTION
+# GROQ LLAMA 3.3 70B EXTRACTION (replaces Gemini Flash)
 # ══════════════════════════════════════════════════════════════════════════════
 
 SENTIMENT_PROMPT = """
@@ -366,26 +366,22 @@ Return ONLY the JSON array.
 """
 
 
-def extract_sentiment_gemini(
+def extract_sentiment_groq(
     reddit_corpus: str,
     trends_data: str,
     comments_corpus: str,
 ) -> list[dict]:
     """
-    Send combined corpus to Gemini 2.5 Flash for structured sentiment extraction.
+    Send combined corpus to Groq LLaMA 3.3 70B for structured sentiment extraction.
     Returns list of topic dicts.
     """
     try:
-        from google import genai
-        from google.genai import types
+        import groq_client
+        import re as _re
 
-        api_key = os.environ.get('GEMINI_API_KEY', '') or os.environ.get('GOOGLE_API_KEY', '')
-        api_key = api_key.strip()
-        if not api_key:
-            print("  [Sentiment] No Gemini API key — skipping extraction")
+        if not groq_client.can_use_groq():
+            print("  [Sentiment] Groq rate limit reached — skipping extraction")
             return []
-
-        client = genai.Client(api_key=api_key)
 
         # Truncate corpora to fit context
         prompt = SENTIMENT_PROMPT.format(
@@ -395,17 +391,18 @@ def extract_sentiment_gemini(
             max_topics=MAX_TOPICS,
         )
 
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                max_output_tokens=4096,
-            ),
+        raw = groq_client.generate(
+            "You are a Canadian economic sentiment analyst. Return only valid JSON arrays.",
+            prompt,
+            max_tokens=4096,
         )
 
-        raw = response.text.strip()
+        if not raw:
+            print("  [Sentiment] Groq returned empty response")
+            return []
+
+        raw = raw.strip()
         # Strip markdown fences if present
-        import re as _re
         raw = _re.sub(r'^```(?:json)?\s*', '', raw)
         raw = _re.sub(r'\s*```\s*$', '', raw)
         # Extract JSON array/object from surrounding text
@@ -418,17 +415,16 @@ def extract_sentiment_gemini(
         raw = raw.strip()
         topics = json.loads(raw)
         if isinstance(topics, list):
-            print(f"  [Sentiment] Gemini extracted {len(topics)} topics")
+            print(f"  [Sentiment] Groq extracted {len(topics)} topics")
             return topics
         if isinstance(topics, dict) and 'topics' in topics:
-            print(f"  [Sentiment] Gemini extracted {len(topics['topics'])} topics (wrapped)")
+            print(f"  [Sentiment] Groq extracted {len(topics['topics'])} topics (wrapped)")
             return topics['topics']
         return []
 
     except json.JSONDecodeError:
-        print("  [Sentiment] Gemini returned invalid JSON — retrying with simpler prompt")
+        print("  [Sentiment] Groq returned invalid JSON — retrying with simpler prompt")
         try:
-            # Retry with simpler prompt
             simple_prompt = (
                 f"Extract top 20 economic discussion topics from this Canadian text. "
                 f"Return JSON array with fields: topic (1-4 words), frequency (1-100), "
@@ -436,14 +432,14 @@ def extract_sentiment_gemini(
                 f"source_blend, sample_context.\n\n"
                 f"TEXT:\n{reddit_corpus[:6000]}\n\n{trends_data[:2000]}"
             )
-            response2 = client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=simple_prompt,
-                config=types.GenerateContentConfig(
-                    max_output_tokens=2048,
-                ),
+            raw2 = groq_client.generate(
+                "You are a sentiment analyst. Return only valid JSON arrays.",
+                simple_prompt,
+                max_tokens=2048,
             )
-            raw2 = response2.text.strip()
+            if not raw2:
+                return []
+            raw2 = raw2.strip()
             raw2 = _re.sub(r'^```(?:json)?\s*', '', raw2)
             raw2 = _re.sub(r'\s*```\s*$', '', raw2)
             arr_start2 = raw2.find('[')
@@ -452,11 +448,11 @@ def extract_sentiment_gemini(
             topics2 = json.loads(raw2.strip())
             return topics2 if isinstance(topics2, list) else []
         except Exception:
-            print("  [Sentiment] Gemini retry also failed")
+            print("  [Sentiment] Groq retry also failed")
             return []
 
     except Exception as e:
-        print(f"  [Sentiment] Gemini extraction error: {type(e).__name__}: {e}")
+        print(f"  [Sentiment] Groq extraction error: {type(e).__name__}: {e}")
         return []
 
 
@@ -622,15 +618,15 @@ def collect_sentiment(
         print("  [Sentiment] All sources failed or returned no data — skipping")
         return None
 
-    # ── Gemini Flash Extraction ──
-    topics = extract_sentiment_gemini(
+    # ── Groq LLaMA 3.3 70B Extraction ──
+    topics = extract_sentiment_groq(
         reddit_corpus=reddit['corpus'],
         trends_data=trends['data'],
         comments_corpus=comments['corpus'],
     )
 
     if not topics:
-        print("  [Sentiment] Gemini extraction returned no topics — skipping")
+        print("  [Sentiment] Groq extraction returned no topics — skipping")
         return None
 
     # ── Compute Aggregates ──

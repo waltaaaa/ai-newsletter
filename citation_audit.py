@@ -144,16 +144,13 @@ def verify_citation_urls(citations: list[dict]) -> tuple[list[dict], list[dict]]
 
 def detect_unsourced_claims(text: str) -> list[str]:
     """
-    Use Gemini Flash to find factual claims without footnote citations.
+    Use Groq LLaMA 3.3 70B to find factual claims without footnote citations.
     Returns list of unsourced claim strings.
     """
     try:
-        from google import genai
-        from google.genai import types
-        api_key = os.environ.get('GEMINI_API_KEY', '').strip()
-        if not api_key:
+        import groq_client
+        if not groq_client.can_use_groq():
             return []
-        client = genai.Client(api_key=api_key)
         prompt = (
             "Analyze the following text. List any factual claims (specific numbers, dates, "
             "events, policy decisions, named entities with specific roles) that do NOT have a "
@@ -162,19 +159,18 @@ def detect_unsourced_claims(text: str) -> list[str]:
             "If all claims are cited, return [].\n\n"
             f"TEXT:\n{text[:8000]}"
         )
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type='application/json',
-                max_output_tokens=2048,
-            )
+        raw = groq_client.generate(
+            "You are a citation auditor. Return only valid JSON arrays.",
+            prompt,
+            max_tokens=2048,
         )
-        raw = response.text.strip()
+        if not raw:
+            return []
+        raw = raw.strip()
         result = json.loads(raw)
         return result if isinstance(result, list) else []
     except Exception as e:
-        print(f"  [Citation Audit] Gemini unsourced detection error: {type(e).__name__}")
+        print(f"  [Citation Audit] Groq unsourced detection error: {type(e).__name__}")
         return []
 
 

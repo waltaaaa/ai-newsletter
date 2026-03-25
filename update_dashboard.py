@@ -30,7 +30,6 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace', line_buffering=True)
 import json
 import os
 import anthropic
-from google import genai
 from datetime import date
 from dotenv import load_dotenv
 
@@ -60,19 +59,15 @@ load_dotenv()
 # ══════════════════════════════════════════════════════════════════════════════
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
 TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY", "").strip()
 
 if not ANTHROPIC_API_KEY:
     raise ValueError("ANTHROPIC_API_KEY not set in .env")
-if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY not set in .env")
 if not TAVILY_API_KEY:
     print("[WARN] TAVILY_API_KEY not set — article extraction will be skipped")
 
 # API clients
 anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
 tavily_client = None
 try:
@@ -120,7 +115,6 @@ def update_dashboard(deep_sweep: bool = False):
     # Shared context dict — replaces local variable passing
     context = {
         "anthropic_client": anthropic_client,
-        "gemini_client": gemini_client,
         "tavily_client": tavily_client,
         "watchlist": _WATCHLIST,
         "mode": "deep-sweep" if deep_sweep else "weekly",
@@ -151,12 +145,12 @@ def update_dashboard(deep_sweep: bool = False):
     PHASE_TIMEOUTS = {
         "Phase 1: Data Collection": 600,
         "Phase 2: Discovery": 600,
-        "Phase 3: Filtering": 300,
-        "Phase 4: Signals": 180,
+        "Phase 3: Filtering": 600,
+        "Phase 4: Signals": 600,
         "Phase 5: Analysis": 1800,
         "Phase 6: Reasoning": 120,
-        "Phase 7: Narrative": 300,
-        "Phase 8: Verification": 180,
+        "Phase 7: Narrative": 600,
+        "Phase 8: Verification": 600,
         "Phase 9: Finalize": 120,
     }
 
@@ -282,7 +276,7 @@ def seed_projects(deep_sweep: bool = False) -> None:
     # Tier 2: Google News RSS discovery
     print("\n  [Seed] Google News RSS discovery...")
     try:
-        seed_articles = run_google_news_search(gemini_client=gemini_client)
+        seed_articles = run_google_news_search()
         if seed_articles:
             print(f"  [Seed] {len(seed_articles)} articles from Google News RSS")
     except Exception as e:

@@ -128,7 +128,6 @@ def run(conn, context, logger):
             from tavily_search import tavily_search_sync, can_use_tavily
             pro_follow_ups = get_follow_up_queries(db=None, conn=conn)
             if pro_follow_ups and can_use_tavily():
-                from concurrent.futures import ThreadPoolExecutor, as_completed
                 queries = pro_follow_ups[:30]
                 print(f"\n[TIER 2] Running {len(queries)} follow-up queries via Tavily (3 concurrent)...")
 

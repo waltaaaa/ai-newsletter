@@ -152,6 +152,10 @@ def apply_status_changes(changes, conn):
 
     applied = 0
     for change in changes:
+        # Skip entries with missing name or province (required by db.upsert_project)
+        if not change.get("project_name") or not change.get("province"):
+            continue
+
         if change.get("is_new_discovery"):
             # New project — insert via upsert_project with URL hard gate
             source_url = change.get("source", "")
@@ -160,7 +164,7 @@ def apply_status_changes(changes, conn):
 
             upsert_project(conn, {
                 "name": change["project_name"],
-                "province": change.get("province", ""),
+                "province": change["province"],
                 "status": change["new_status"],
                 "source_url": source_url,
                 "discovery_source": "iaac_status_tracker",

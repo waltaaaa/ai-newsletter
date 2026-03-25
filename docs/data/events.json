@@ -1,15 +1,5 @@
 [
   {
-    "date": "2026-03-24",
-    "name": "GDP by Industry",
-    "source": "Statistics Canada",
-    "type": "data_release",
-    "frequency": "monthly",
-    "significance": "medium",
-    "indicator": "gdp_monthly",
-    "relevance": "Economic growth breakdown. Construction and mining sectors directly reported."
-  },
-  {
     "date": "2026-04-03",
     "name": "Labour Force Survey",
     "source": "Statistics Canada",
@@ -76,5 +66,15 @@
     "significance": "medium",
     "indicator": "housing_starts",
     "relevance": "Current residential construction activity level."
+  },
+  {
+    "date": "2026-04-24",
+    "name": "GDP by Industry",
+    "source": "Statistics Canada",
+    "type": "data_release",
+    "frequency": "monthly",
+    "significance": "medium",
+    "indicator": "gdp_monthly",
+    "relevance": "Economic growth breakdown. Construction and mining sectors directly reported."
   }
 ]

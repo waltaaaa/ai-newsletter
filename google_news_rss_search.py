@@ -76,7 +76,7 @@ def build_google_news_url(query_text, language="en"):
 
 def load_compound_queries(json_path=os.path.join(os.path.dirname(__file__), "config", "compound_queries_final.json")):
     """Load compound queries from JSON file."""
-    with open(json_path, "r") as f:
+    with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
     return data.get("queries", data) if isinstance(data, dict) else data
 
