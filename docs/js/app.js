@@ -2468,6 +2468,7 @@ async function filterProjects(){
   else if(sort==='confidence')filteredProjects.sort((a,b)=>(b.confidence||0)-(a.confidence||0));
   projectPage=0;
   renderProjectSummary();
+  renderAddedThisWeek();
   renderProjectTable();
 }
 function renderProjectSummary(){
@@ -2489,6 +2490,57 @@ function renderProjectSummary(){
     '<div class="proj-stat-card"><div class="proj-stat-val">'+bf+'</div><div class="proj-stat-label">Brownfield</div></div>'+
     '<div class="proj-stat-card"><div class="proj-stat-val">'+uc+'</div><div class="proj-stat-label">Under Construction</div></div>';
 }
+const _BULK_SOURCES=new Set(['government_backfill','provincial_ea','infrastructure_canada','crown_corp','cer_registry','ontario_ero']);
+let _atwExpanded=false;
+function renderAddedThisWeek(){
+  const el=$('addedThisWeek');if(!el)return;
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
+  const cutStr=cutoff.toISOString().slice(0,10);
+  const newProjects=allProjects.filter(p=>{
+    const ft=p.firstTracked||'';
+    if(ft<cutStr)return false;
+    if(_BULK_SOURCES.has(p.discovery_source))return false;
+    return true;
+  }).sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value));
+  if(!newProjects.length){el.style.display='none';return;}
+  el.style.display='block';
+  const show=_atwExpanded?newProjects:newProjects.slice(0,6);
+  const srcLabel=s=>s==='rss_remediated'?'RSS':s==='iaac_status_tracker'?'IAAC':s==='iaac_registry'?'IAAC':s==='claude_selective'?'AI':'News';
+  let html='<div class="atw-section"><div class="atw-header"><span class="atw-title">Added This Week</span><span class="atw-count">'+newProjects.length+'</span></div><div class="atw-grid">';
+  show.forEach(p=>{
+    const prov=normProvince(p.province)||p.province||'';
+    const val=fmtCurrency(p.value,p);
+    const src=srcLabel(p.discovery_source||'');
+    html+='<div class="atw-card" onclick="scrollToProject(\''+encodeURIComponent(p.name)+'\')">';
+    html+='<div class="atw-card-name">'+((p.name||'').substring(0,65))+'</div>';
+    html+='<div class="atw-card-meta">';
+    html+='<span class="atw-tag atw-tag-new">NEW</span>';
+    if(val&&val!=='—')html+='<span>'+val+'</span>';
+    html+='<span>'+prov+'</span>';
+    html+='<span>'+statusBadge(p.status||'Proposed')+'</span>';
+    html+='<span style="color:#6b7280">via '+src+'</span>';
+    html+='</div></div>';
+  });
+  html+='</div>';
+  if(newProjects.length>6){
+    html+='<div style="text-align:center;margin-top:8px"><button class="atw-toggle" onclick="window._atwToggle()">'+(_atwExpanded?'Show less':'Show all '+newProjects.length+' new projects')+'</button></div>';
+  }
+  html+='</div>';
+  el.innerHTML=html;
+}
+window._atwToggle=function(){_atwExpanded=!_atwExpanded;renderAddedThisWeek()};
+window.scrollToProject=function(name){
+  const decoded=decodeURIComponent(name);
+  const idx=filteredProjects.findIndex(p=>p.name===decoded);
+  if(idx<0)return;
+  const neededPage=Math.floor(idx/PAGE_SIZE);
+  if(neededPage>projectPage){projectPage=neededPage;renderProjectTable();}
+  setTimeout(()=>{
+    const rows=document.querySelectorAll('.project-table tbody tr');
+    const rowIdx=idx*2;// each project has 2 rows (data + expand)
+    if(rows[rowIdx]){rows[rowIdx].scrollIntoView({behavior:'smooth',block:'center'});rows[rowIdx].style.background='rgba(96,165,250,0.15)';setTimeout(()=>{rows[rowIdx].style.background=''},2000);}
+  },100);
+};
 function renderProjectTable(){
   const shown=filteredProjects.slice(0,(projectPage+1)*PAGE_SIZE);
   // Summary line

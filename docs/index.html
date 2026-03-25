@@ -395,6 +395,21 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 /* Responsive */
 @media(max-width:1199px){.two-col,.sentiment-section{grid-template-columns:1fr}.market-grid{grid-template-columns:repeat(3,1fr)}.sector-grid{grid-template-columns:1fr}.mini-chart-grid{grid-template-columns:repeat(2,1fr)}.event-row{grid-template-columns:50px 1fr 120px 60px 28px}.ws-row-2,.ws-row-60-40{grid-template-columns:1fr}}
 @media(max-width:767px){.hero{padding:28px 0 20px}.hero-title{font-size:var(--text-2xl)}.hero-badges{flex-wrap:wrap;gap:6px}.nav-inner{position:relative}.nav-inner::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40px;background:linear-gradient(to right,transparent,rgba(45,74,122,0.90));pointer-events:none;z-index:10}.nav-tabs{overflow-x:auto;justify-content:flex-start;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-right:40px}.nav-tab{padding:10px 12px;font-size:var(--text-xs);white-space:nowrap;scroll-snap-align:start}.container{padding:0 var(--space-md)}.tab-panel{padding:var(--space-lg) 0 var(--space-2xl)}.market-grid,.mini-chart-grid{grid-template-columns:1fr 1fr}.indicator-strip{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:var(--space-sm)}.indicator-pill{flex:0 0 140px;min-width:140px}.indicator-row{grid-template-columns:1fr 80px 70px}.indicator-row-period,.indicator-row-source{display:none}.event-row{grid-template-columns:40px 1fr 60px}.event-institution,.event-row>:last-child{display:none}.project-table{font-size:var(--text-xs)}.col-cma,.col-proponent{display:none}.filter-bar{flex-direction:column;gap:var(--space-sm)}.filter-bar input{min-width:100%}.proj-type-toggle{width:100%}.proj-type-toggle button{flex:1}.calendar-cell{min-height:36px;padding:3px}.section-banner{min-height:72px;padding:var(--space-lg);margin-bottom:var(--space-md)}.section-banner-title{font-size:var(--text-lg)}.proj-timeline-bar{min-width:100px}}
+/* ── Added This Week ── */
+.atw-section{margin-bottom:20px}
+.atw-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.atw-title{font-family:var(--font-heading);font-size:var(--text-base);font-weight:700;color:#1a2744}
+.atw-count{background:#2563EB;color:#fff;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px}
+.atw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.atw-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-left:3px solid #2563EB;border-radius:var(--radius-md);padding:12px 14px;cursor:pointer;transition:box-shadow .15s ease,background .15s ease}
+.atw-card:hover{box-shadow:var(--shadow-md);background:rgba(96,165,250,0.06)}
+.atw-card-name{font-weight:600;font-size:var(--text-sm);color:#1a2744;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atw-card-meta{display:flex;gap:8px;flex-wrap:wrap;font-size:var(--text-xs);color:#475569}
+.atw-card-meta span{display:inline-flex;align-items:center;gap:3px}
+.atw-tag{font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px}
+.atw-tag-new{background:#DBEAFE;color:#1E40AF}
+.atw-toggle{font-size:var(--text-xs);color:#2563EB;cursor:pointer;border:none;background:none;font-weight:500;padding:0}
+.atw-toggle:hover{text-decoration:underline}
 /* ── Project Timeline ── */
 .proj-timeline{display:flex;align-items:center;gap:2px;height:10px;border-radius:5px;overflow:hidden;background:rgba(0,0,0,0.08);min-width:140px;max-width:240px;position:relative}
 .proj-timeline-seg{height:100%;min-width:3px;transition:width .2s}
@@ -725,6 +740,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       </div>
     </div>
     <div id="projSummaryStats" class="proj-stats"></div>
+    <div id="addedThisWeek" style="display:none"></div>
     <div id="projectResultsSummary" class="results-summary"></div>
     <div id="projectTableContainer"></div>
     <button id="loadMoreBtn" class="load-more-btn" style="display:none">Load more projects</button>
