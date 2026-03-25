@@ -52,6 +52,23 @@
       "metadata": {}
     },
     {
+      "id": 53720,
+      "indicator_name": "building_permits",
+      "category": "",
+      "province": "national",
+      "value": 107.2,
+      "period": "2007-04-01",
+      "previous_value": null,
+      "change": null,
+      "source": "Statistics Canada WDS",
+      "fetched_at": "2026-03-25T12:34:10Z",
+      "unit": "units",
+      "frequency": "monthly",
+      "description": "",
+      "backfilled": 1,
+      "metadata": {}
+    },
+    {
       "id": 10989,
       "indicator_name": "cad_usd",
       "category": "",
@@ -418,7 +435,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:09:26Z",
+      "fetched_at": "2026-03-25T12:28:10Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -435,7 +452,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:21Z",
+      "fetched_at": "2026-03-25T12:28:38Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -469,7 +486,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:24Z",
+      "fetched_at": "2026-03-25T12:29:03Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -486,7 +503,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:46Z",
+      "fetched_at": "2026-03-25T12:29:08Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -503,7 +520,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:47Z",
+      "fetched_at": "2026-03-25T12:29:11Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -520,7 +537,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:49Z",
+      "fetched_at": "2026-03-25T12:29:13Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -537,7 +554,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:50Z",
+      "fetched_at": "2026-03-25T12:29:16Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -554,7 +571,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:52Z",
+      "fetched_at": "2026-03-25T12:29:19Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -571,7 +588,24 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:53Z",
+      "fetched_at": "2026-03-25T12:29:22Z",
+      "unit": "%",
+      "frequency": "monthly",
+      "description": "",
+      "backfilled": 1,
+      "metadata": {}
+    },
+    {
+      "id": 51214,
+      "indicator_name": "cpi",
+      "category": "",
+      "province": "NB",
+      "value": 133.3,
+      "period": "2026-02-01",
+      "previous_value": null,
+      "change": null,
+      "source": "Statistics Canada WDS",
+      "fetched_at": "2026-03-25T12:29:05Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -1353,7 +1387,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:55Z",
+      "fetched_at": "2026-03-25T12:29:24Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -1370,7 +1404,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:58Z",
+      "fetched_at": "2026-03-25T12:29:30Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -1387,7 +1421,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:59Z",
+      "fetched_at": "2026-03-25T12:29:32Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -1404,7 +1438,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:11:01Z",
+      "fetched_at": "2026-03-25T12:29:35Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -1421,7 +1455,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:11:22Z",
+      "fetched_at": "2026-03-25T12:29:41Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -1438,7 +1472,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:11:44Z",
+      "fetched_at": "2026-03-25T12:29:46Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -1489,7 +1523,41 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:11:49Z",
+      "fetched_at": "2026-03-25T12:30:29Z",
+      "unit": "%",
+      "frequency": "monthly",
+      "description": "",
+      "backfilled": 1,
+      "metadata": {}
+    },
+    {
+      "id": 51940,
+      "indicator_name": "employment_rate",
+      "category": "",
+      "province": "NB",
+      "value": 724.9,
+      "period": "2026-02-01",
+      "previous_value": null,
+      "change": null,
+      "source": "Statistics Canada WDS",
+      "fetched_at": "2026-03-25T12:29:38Z",
+      "unit": "%",
+      "frequency": "monthly",
+      "description": "",
+      "backfilled": 1,
+      "metadata": {}
+    },
+    {
+      "id": 52072,
+      "indicator_name": "employment_rate",
+      "category": "",
+      "province": "ON",
+      "value": 13754.3,
+      "period": "2026-02-01",
+      "previous_value": null,
+      "change": null,
+      "source": "Statistics Canada WDS",
+      "fetched_at": "2026-03-25T12:29:44Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -1812,7 +1880,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:13:04Z",
+      "fetched_at": "2026-03-25T12:33:05Z",
       "unit": "$M",
       "frequency": "quarterly",
       "description": "",
@@ -1829,7 +1897,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:13:06Z",
+      "fetched_at": "2026-03-25T12:33:08Z",
       "unit": "$M",
       "frequency": "quarterly",
       "description": "",
@@ -1846,7 +1914,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:13:08Z",
+      "fetched_at": "2026-03-25T12:33:10Z",
       "unit": "$M",
       "frequency": "quarterly",
       "description": "",
@@ -1863,7 +1931,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:13:09Z",
+      "fetched_at": "2026-03-25T12:33:13Z",
       "unit": "$M",
       "frequency": "quarterly",
       "description": "",
@@ -1897,7 +1965,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:13:13Z",
+      "fetched_at": "2026-03-25T12:33:36Z",
       "unit": "$M",
       "frequency": "quarterly",
       "description": "",
@@ -1931,7 +1999,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:13:16Z",
+      "fetched_at": "2026-03-25T12:33:59Z",
       "unit": "$M",
       "frequency": "quarterly",
       "description": "",
@@ -1948,7 +2016,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:13:19Z",
+      "fetched_at": "2026-03-25T12:34:03Z",
       "unit": "$M",
       "frequency": "quarterly",
       "description": "",
@@ -1965,7 +2033,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:57Z",
+      "fetched_at": "2026-03-25T12:32:37Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -1982,7 +2050,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:50Z",
+      "fetched_at": "2026-03-25T12:32:27Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -1999,7 +2067,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:27Z",
+      "fetched_at": "2026-03-25T12:31:08Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -2016,7 +2084,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:32Z",
+      "fetched_at": "2026-03-25T12:31:13Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2203,7 +2271,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:52Z",
+      "fetched_at": "2026-03-25T12:32:29Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2220,7 +2288,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:56Z",
+      "fetched_at": "2026-03-25T12:32:35Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2237,7 +2305,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:43Z",
+      "fetched_at": "2026-03-25T12:31:43Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2254,7 +2322,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:54Z",
+      "fetched_at": "2026-03-25T12:32:32Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2271,7 +2339,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:41Z",
+      "fetched_at": "2026-03-25T12:31:41Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2322,7 +2390,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:28Z",
+      "fetched_at": "2026-03-25T12:31:10Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2339,7 +2407,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:59Z",
+      "fetched_at": "2026-03-25T12:32:40Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2356,7 +2424,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:46Z",
+      "fetched_at": "2026-03-25T12:32:05Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2373,7 +2441,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:13:01Z",
+      "fetched_at": "2026-03-25T12:32:42Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2407,7 +2475,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:37Z",
+      "fetched_at": "2026-03-25T12:31:37Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2424,7 +2492,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:39Z",
+      "fetched_at": "2026-03-25T12:31:39Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2441,7 +2509,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:30Z",
+      "fetched_at": "2026-03-25T12:31:11Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2458,7 +2526,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:35Z",
+      "fetched_at": "2026-03-25T12:31:35Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -2781,7 +2849,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:13:21Z",
+      "fetched_at": "2026-03-25T12:34:06Z",
       "unit": "units",
       "frequency": "monthly",
       "description": "",
@@ -5416,7 +5484,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:12:25Z",
+      "fetched_at": "2026-03-25T12:31:06Z",
       "unit": "$M",
       "frequency": "quarterly",
       "description": "",
@@ -5858,7 +5926,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:09:27Z",
+      "fetched_at": "2026-03-25T12:28:11Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -5875,7 +5943,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:09:29Z",
+      "fetched_at": "2026-03-25T12:28:14Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -5892,7 +5960,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:09:31Z",
+      "fetched_at": "2026-03-25T12:28:17Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -5909,7 +5977,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:09:32Z",
+      "fetched_at": "2026-03-25T12:28:19Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -5926,7 +5994,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:09:53Z",
+      "fetched_at": "2026-03-25T12:28:25Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -5943,7 +6011,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:09:55Z",
+      "fetched_at": "2026-03-25T12:28:27Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -5960,7 +6028,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:09:57Z",
+      "fetched_at": "2026-03-25T12:28:28Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -5977,7 +6045,7 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:09:58Z",
+      "fetched_at": "2026-03-25T12:28:30Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -5994,7 +6062,41 @@
       "previous_value": null,
       "change": null,
       "source": "Statistics Canada WDS",
-      "fetched_at": "2026-03-25T12:10:20Z",
+      "fetched_at": "2026-03-25T12:28:36Z",
+      "unit": "%",
+      "frequency": "monthly",
+      "description": "",
+      "backfilled": 1,
+      "metadata": {}
+    },
+    {
+      "id": 50620,
+      "indicator_name": "unemployment",
+      "category": "",
+      "province": "NB",
+      "value": 7.0,
+      "period": "2026-02-01",
+      "previous_value": null,
+      "change": null,
+      "source": "Statistics Canada WDS",
+      "fetched_at": "2026-03-25T12:28:22Z",
+      "unit": "%",
+      "frequency": "monthly",
+      "description": "",
+      "backfilled": 1,
+      "metadata": {}
+    },
+    {
+      "id": 50950,
+      "indicator_name": "unemployment",
+      "category": "",
+      "province": "AB",
+      "value": 6.3,
+      "period": "2026-02-01",
+      "previous_value": null,
+      "change": null,
+      "source": "Statistics Canada WDS",
+      "fetched_at": "2026-03-25T12:28:33Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -42470,6 +42572,478 @@
     },
     {
       "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2021-04-01",
+      "value": 124.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2021-05-01",
+      "value": 124.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2021-06-01",
+      "value": 124.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2021-07-01",
+      "value": 125.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2021-08-01",
+      "value": 125.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2021-09-01",
+      "value": 125.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2021-10-01",
+      "value": 126.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2021-11-01",
+      "value": 126.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2021-12-01",
+      "value": 127.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-01-01",
+      "value": 127.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-02-01",
+      "value": 127.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-03-01",
+      "value": 129.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-04-01",
+      "value": 129.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-05-01",
+      "value": 131.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-06-01",
+      "value": 131.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-07-01",
+      "value": 131.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-08-01",
+      "value": 132.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-09-01",
+      "value": 132.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-10-01",
+      "value": 132.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-11-01",
+      "value": 133.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2022-12-01",
+      "value": 132.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-01-01",
+      "value": 131.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-02-01",
+      "value": 132.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-03-01",
+      "value": 133.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-04-01",
+      "value": 133.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-05-01",
+      "value": 132.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-06-01",
+      "value": 132.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-07-01",
+      "value": 131.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-08-01",
+      "value": 131.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-09-01",
+      "value": 131.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-10-01",
+      "value": 130.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-11-01",
+      "value": 131.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2023-12-01",
+      "value": 130.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-01-01",
+      "value": 131.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-02-01",
+      "value": 130.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-03-01",
+      "value": 130.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-04-01",
+      "value": 130.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-05-01",
+      "value": 130.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-06-01",
+      "value": 131.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-07-01",
+      "value": 131.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-08-01",
+      "value": 130.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-09-01",
+      "value": 130.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-10-01",
+      "value": 130.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-11-01",
+      "value": 130.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2024-12-01",
+      "value": 129.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-01-01",
+      "value": 131.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-02-01",
+      "value": 131.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-03-01",
+      "value": 131.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-04-01",
+      "value": 131.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-05-01",
+      "value": 132.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-06-01",
+      "value": 132.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-07-01",
+      "value": 133.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-08-01",
+      "value": 133.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-09-01",
+      "value": 133.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-10-01",
+      "value": 134.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-11-01",
+      "value": 134.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2025-12-01",
+      "value": 134.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2026-01-01",
+      "value": 134.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
+      "province": "NB",
+      "period": "2026-02-01",
+      "value": 133.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "cpi",
       "province": "NL",
       "period": "2021-04-01",
       "value": 139.9,
@@ -62078,6 +62652,478 @@
     },
     {
       "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2021-04-01",
+      "value": 652.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2021-05-01",
+      "value": 652.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2021-06-01",
+      "value": 653.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2021-07-01",
+      "value": 654.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2021-08-01",
+      "value": 655.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2021-09-01",
+      "value": 656.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2021-10-01",
+      "value": 657.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2021-11-01",
+      "value": 658.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2021-12-01",
+      "value": 659.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-01-01",
+      "value": 660.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-02-01",
+      "value": 662.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-03-01",
+      "value": 663.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-04-01",
+      "value": 664.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-05-01",
+      "value": 666.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-06-01",
+      "value": 668.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-07-01",
+      "value": 669.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-08-01",
+      "value": 671.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-09-01",
+      "value": 673.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-10-01",
+      "value": 674.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-11-01",
+      "value": 675.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2022-12-01",
+      "value": 676.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-01-01",
+      "value": 678.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-02-01",
+      "value": 680.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-03-01",
+      "value": 682.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-04-01",
+      "value": 684.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-05-01",
+      "value": 686.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-06-01",
+      "value": 687.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-07-01",
+      "value": 690.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-08-01",
+      "value": 692.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-09-01",
+      "value": 693.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-10-01",
+      "value": 695.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-11-01",
+      "value": 696.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2023-12-01",
+      "value": 698.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-01-01",
+      "value": 700.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-02-01",
+      "value": 702.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-03-01",
+      "value": 704.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-04-01",
+      "value": 706.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-05-01",
+      "value": 708.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-06-01",
+      "value": 710.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-07-01",
+      "value": 712.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-08-01",
+      "value": 714.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-09-01",
+      "value": 715.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-10-01",
+      "value": 716.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-11-01",
+      "value": 716.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2024-12-01",
+      "value": 716.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-01-01",
+      "value": 717.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-02-01",
+      "value": 717.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-03-01",
+      "value": 718.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-04-01",
+      "value": 719.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-05-01",
+      "value": 719.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-06-01",
+      "value": 720.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-07-01",
+      "value": 721.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-08-01",
+      "value": 721.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-09-01",
+      "value": 722.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-10-01",
+      "value": 723.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-11-01",
+      "value": 723.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2025-12-01",
+      "value": 724.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2026-01-01",
+      "value": 724.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "NB",
+      "period": "2026-02-01",
+      "value": 724.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
       "province": "NL",
       "period": "2021-04-01",
       "value": 449.6,
@@ -63017,6 +64063,478 @@
       "province": "NS",
       "period": "2026-02-01",
       "value": 919.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2021-04-01",
+      "value": 12325.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2021-05-01",
+      "value": 12328.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2021-06-01",
+      "value": 12339.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2021-07-01",
+      "value": 12353.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2021-08-01",
+      "value": 12372.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2021-09-01",
+      "value": 12388.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2021-10-01",
+      "value": 12406.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2021-11-01",
+      "value": 12426.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2021-12-01",
+      "value": 12446.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-01-01",
+      "value": 12465.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-02-01",
+      "value": 12482.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-03-01",
+      "value": 12497.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-04-01",
+      "value": 12513.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-05-01",
+      "value": 12531.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-06-01",
+      "value": 12549.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-07-01",
+      "value": 12570.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-08-01",
+      "value": 12594.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-09-01",
+      "value": 12617.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-10-01",
+      "value": 12642.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-11-01",
+      "value": 12666.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2022-12-01",
+      "value": 12688.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-01-01",
+      "value": 12719.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-02-01",
+      "value": 12752.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-03-01",
+      "value": 12787.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-04-01",
+      "value": 12819.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-05-01",
+      "value": 12857.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-06-01",
+      "value": 12898.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-07-01",
+      "value": 12938.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-08-01",
+      "value": 12981.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-09-01",
+      "value": 13019.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-10-01",
+      "value": 13059.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-11-01",
+      "value": 13100.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2023-12-01",
+      "value": 13142.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-01-01",
+      "value": 13188.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-02-01",
+      "value": 13232.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-03-01",
+      "value": 13273.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-04-01",
+      "value": 13320.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-05-01",
+      "value": 13364.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-06-01",
+      "value": 13404.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-07-01",
+      "value": 13450.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-08-01",
+      "value": 13490.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-09-01",
+      "value": 13526.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-10-01",
+      "value": 13557.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-11-01",
+      "value": 13581.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2024-12-01",
+      "value": 13605.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-01-01",
+      "value": 13627.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-02-01",
+      "value": 13642.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-03-01",
+      "value": 13662.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-04-01",
+      "value": 13681.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-05-01",
+      "value": 13692.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-06-01",
+      "value": 13705.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-07-01",
+      "value": 13715.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-08-01",
+      "value": 13722.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-09-01",
+      "value": 13732.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-10-01",
+      "value": 13741.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-11-01",
+      "value": 13748.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2025-12-01",
+      "value": 13751.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2026-01-01",
+      "value": 13751.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "employment_rate",
+      "province": "ON",
+      "period": "2026-02-01",
+      "value": 13754.3,
       "unit": "%",
       "source": "Statistics Canada WDS"
     },
@@ -232178,6 +233696,478 @@
       "period": "2026-02-01",
       "value": 6.3,
       "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2021-04-01",
+      "value": 8.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2021-05-01",
+      "value": 8.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2021-06-01",
+      "value": 8.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2021-07-01",
+      "value": 8.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2021-08-01",
+      "value": 8.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2021-09-01",
+      "value": 7.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2021-10-01",
+      "value": 7.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2021-11-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2021-12-01",
+      "value": 6.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-01-01",
+      "value": 6.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-02-01",
+      "value": 6.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-03-01",
+      "value": 6.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-04-01",
+      "value": 6.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-05-01",
+      "value": 5.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-06-01",
+      "value": 5.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-07-01",
+      "value": 4.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-08-01",
+      "value": 5.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-09-01",
+      "value": 5.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-10-01",
+      "value": 5.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-11-01",
+      "value": 5.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2022-12-01",
+      "value": 5.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-01-01",
+      "value": 6.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-02-01",
+      "value": 6.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-03-01",
+      "value": 5.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-04-01",
+      "value": 5.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-05-01",
+      "value": 5.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-06-01",
+      "value": 5.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-07-01",
+      "value": 5.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-08-01",
+      "value": 5.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-09-01",
+      "value": 5.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-10-01",
+      "value": 5.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-11-01",
+      "value": 6.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2023-12-01",
+      "value": 6.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-01-01",
+      "value": 6.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-02-01",
+      "value": 6.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-03-01",
+      "value": 6.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-04-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-05-01",
+      "value": 7.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-06-01",
+      "value": 7.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-07-01",
+      "value": 7.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-08-01",
+      "value": 7.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-09-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-10-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-11-01",
+      "value": 7.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2024-12-01",
+      "value": 6.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-01-01",
+      "value": 6.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-02-01",
+      "value": 6.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-03-01",
+      "value": 7.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-04-01",
+      "value": 7.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-05-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-06-01",
+      "value": 6.8,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-07-01",
+      "value": 7.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-08-01",
+      "value": 8.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-09-01",
+      "value": 7.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-10-01",
+      "value": 7.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-11-01",
+      "value": 6.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2025-12-01",
+      "value": 6.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2026-01-01",
+      "value": 6.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "AB",
+      "period": "2026-02-01",
+      "value": 6.3,
+      "unit": "%",
       "source": "Statistics Canada"
     },
     {
@@ -234163,6 +236153,478 @@
       "value": 5.7,
       "unit": "%",
       "source": "StatCan"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2021-04-01",
+      "value": 8.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2021-05-01",
+      "value": 9.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2021-06-01",
+      "value": 10.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2021-07-01",
+      "value": 9.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2021-08-01",
+      "value": 9.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2021-09-01",
+      "value": 9.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2021-10-01",
+      "value": 9.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2021-11-01",
+      "value": 8.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2021-12-01",
+      "value": 7.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-01-01",
+      "value": 8.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-02-01",
+      "value": 7.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-03-01",
+      "value": 7.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-04-01",
+      "value": 6.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-05-01",
+      "value": 7.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-06-01",
+      "value": 6.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-07-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-08-01",
+      "value": 7.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-09-01",
+      "value": 6.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-10-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-11-01",
+      "value": 7.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2022-12-01",
+      "value": 7.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-01-01",
+      "value": 7.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-02-01",
+      "value": 6.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-03-01",
+      "value": 5.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-04-01",
+      "value": 6.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-05-01",
+      "value": 6.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-06-01",
+      "value": 6.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-07-01",
+      "value": 6.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-08-01",
+      "value": 7.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-09-01",
+      "value": 7.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-10-01",
+      "value": 6.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-11-01",
+      "value": 6.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2023-12-01",
+      "value": 6.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-01-01",
+      "value": 7.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-02-01",
+      "value": 6.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-03-01",
+      "value": 8.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-04-01",
+      "value": 7.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-05-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-06-01",
+      "value": 7.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-07-01",
+      "value": 7.1,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-08-01",
+      "value": 6.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-09-01",
+      "value": 6.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-10-01",
+      "value": 6.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-11-01",
+      "value": 7.2,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2024-12-01",
+      "value": 7.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-01-01",
+      "value": 6.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-02-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-03-01",
+      "value": 6.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-04-01",
+      "value": 6.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-05-01",
+      "value": 6.3,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-06-01",
+      "value": 7.4,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-07-01",
+      "value": 7.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-08-01",
+      "value": 7.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-09-01",
+      "value": 7.9,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-10-01",
+      "value": 7.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-11-01",
+      "value": 6.6,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2025-12-01",
+      "value": 6.5,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2026-01-01",
+      "value": 6.7,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
+    },
+    {
+      "indicator_name": "unemployment",
+      "province": "NB",
+      "period": "2026-02-01",
+      "value": 7.0,
+      "unit": "%",
+      "source": "Statistics Canada WDS"
     },
     {
       "indicator_name": "unemployment",

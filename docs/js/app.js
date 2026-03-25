@@ -205,7 +205,21 @@ async function loadIndicators(){
     // Normalize: SQLite uses indicator_name, frontend uses name
     indicators=raw.map(ind=>{
       const name=ind.name||ind.indicator_name||'';
-      const displayName=name.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      let displayName=name.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      // Improve GDP industry names for readability
+      const _gdpLabels={
+        'Gdp Agriculture':'GDP: Agriculture','Gdp Mining Og':'GDP: Mining & Oil/Gas',
+        'Gdp Utilities':'GDP: Utilities','Gdp Construction':'GDP: Construction',
+        'Gdp Manufacturing':'GDP: Manufacturing','Gdp Wholesale':'GDP: Wholesale Trade',
+        'Gdp Retail':'GDP: Retail Trade','Gdp Transportation':'GDP: Transportation',
+        'Gdp Information':'GDP: Information & Culture','Gdp Finance':'GDP: Finance & Insurance',
+        'Gdp Real Estate':'GDP: Real Estate','Gdp Professional':'GDP: Professional Services',
+        'Gdp Management':'GDP: Management','Gdp Admin Waste':'GDP: Admin & Waste Mgmt',
+        'Gdp Education':'GDP: Education','Gdp Healthcare':'GDP: Healthcare',
+        'Gdp Entertainment':'GDP: Arts & Entertainment','Gdp Accommodation':'GDP: Accommodation & Food',
+        'Gdp Other Services':'GDP: Other Services','Gdp Public Admin':'GDP: Public Administration',
+      };
+      if(_gdpLabels[displayName])displayName=_gdpLabels[displayName];
       return Object.assign({},ind,{
         name:displayName,
         indicator_name:ind.indicator_name||name,
