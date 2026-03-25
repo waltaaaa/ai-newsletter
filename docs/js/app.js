@@ -1578,7 +1578,7 @@ async function renderCanadaSub(){
     const topProjects=projects.filter(p=>parseNumericValue(p.value)>0).sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value)).slice(0,10);
     let projHtml='<div class="ed-section"><div class="ed-section-title">Capital Projects</div><div class="ed-section-subtitle">Major projects tracked nationally</div></div>'+
       '<div class="editorial-meta" style="margin-bottom:12px">'+
-      '<div class="editorial-meta-item"><strong>'+projTotal+'</strong>Projects Tracked</div>'+
+      '<div class="editorial-meta-item"><strong>'+(typeof projTotal==='number'?projTotal.toLocaleString():projTotal)+'</strong>Projects Tracked</div>'+
       (newPrj?'<div class="editorial-meta-item"><strong>+'+newPrj+'</strong>New This Week</div>':'')+
       (pipVal?'<div class="editorial-meta-item"><strong>$'+pipVal+'B</strong>Pipeline Value</div>':'')+
       '</div>';
@@ -2487,22 +2487,20 @@ async function filterProjects(){
 }
 function renderProjectSummary(){
   const total=filteredProjects.length;
-  const gf=filteredProjects.filter(p=>!p.is_brownfield).length;
-  const bf=filteredProjects.filter(p=>p.is_brownfield).length;
   const totalVal=filteredProjects.reduce((s,p)=>s+parseNumericValue(p.value),0);
   const uc=filteredProjects.filter(p=>(p.status||'').toLowerCase().includes('construction')).length;
+  const proposed=filteredProjects.filter(p=>(p.status||'').toLowerCase()==='proposed').length;
   const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$0';
   const withUrls=filteredProjects.filter(p=>(p.evidence||[]).length>0).length;
   const withGov=filteredProjects.filter(p=>p.has_government_source).length;
   const pctVerified=total>0?Math.round(withUrls/total*100):0;
   let banner='';
-  if(total>0)banner='<div class="verify-banner"><span>&#128279;</span><span>'+pctVerified+'% of projects have source links for independent verification.'+(withGov>0?' '+withGov+' backed by government sources.':'')+'</span></div>';
+  if(total>0)banner='<div class="verify-banner"><span>&#128279;</span><span>'+pctVerified+'% of projects have source links for independent verification.'+(withGov>0?' '+withGov.toLocaleString()+' backed by government sources.':'')+'</span></div>';
   $('projSummaryStats').innerHTML=banner+
-    '<div class="proj-stat-card"><div class="proj-stat-val">'+total+'</div><div class="proj-stat-label">Total Projects</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+total.toLocaleString()+'</div><div class="proj-stat-label">Total Projects</div></div>'+
     '<div class="proj-stat-card"><div class="proj-stat-val">'+fv(totalVal)+'</div><div class="proj-stat-label">Total Value</div></div>'+
-    '<div class="proj-stat-card"><div class="proj-stat-val">'+gf+'</div><div class="proj-stat-label">Greenfield</div></div>'+
-    '<div class="proj-stat-card"><div class="proj-stat-val">'+bf+'</div><div class="proj-stat-label">Brownfield</div></div>'+
-    '<div class="proj-stat-card"><div class="proj-stat-val">'+uc+'</div><div class="proj-stat-label">Under Construction</div></div>';
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+proposed.toLocaleString()+'</div><div class="proj-stat-label">Proposed</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+uc.toLocaleString()+'</div><div class="proj-stat-label">Under Construction</div></div>';
 }
 const _BULK_SOURCES=new Set(['government_backfill','provincial_ea','infrastructure_canada','crown_corp','cer_registry','ontario_ero']);
 let _atwExpanded=false;
@@ -2518,26 +2516,29 @@ function renderAddedThisWeek(){
   }).sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value));
   if(!newProjects.length){el.style.display='none';return;}
   el.style.display='block';
-  const show=_atwExpanded?newProjects:newProjects.slice(0,6);
-  const srcLabel=s=>s==='rss_remediated'?'RSS':s==='iaac_status_tracker'?'IAAC':s==='iaac_registry'?'IAAC':s==='claude_selective'?'AI':'News';
-  let html='<div class="atw-section"><div class="atw-header"><span class="atw-title">Added This Week</span><span class="atw-count">'+newProjects.length+'</span></div><div class="atw-grid">';
+  const show=_atwExpanded?newProjects:newProjects.slice(0,10);
+  let html='<div class="atw-section"><div class="atw-header"><span class="atw-title">Added This Week</span><span class="atw-count">'+newProjects.length.toLocaleString()+'</span></div>';
+  html+='<div class="project-table-wrap"><table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Src</th></tr></thead><tbody>';
   show.forEach(p=>{
     const prov=normProvince(p.province)||p.province||'';
     const val=fmtCurrency(p.value,p);
-    const src=srcLabel(p.discovery_source||'');
-    html+='<div class="atw-card" onclick="scrollToProject(\''+encodeURIComponent(p.name)+'\')">';
-    html+='<div class="atw-card-name">'+((p.name||'').substring(0,65))+'</div>';
-    html+='<div class="atw-card-meta">';
-    html+='<span class="atw-tag atw-tag-new">NEW</span>';
-    if(val&&val!=='—')html+='<span>'+val+'</span>';
-    html+='<span>'+prov+'</span>';
-    html+='<span>'+statusBadge(p.status||'Proposed')+'</span>';
-    html+='<span style="color:#6b7280">via '+src+'</span>';
-    html+='</div></div>';
+    const firstEv=(p.evidence||[])[0]||{};
+    const srcUrl=((p.sources&&p.sources[0])?p.sources[0].url:'');
+    const srcTitle=((p.sources&&p.sources[0])?p.sources[0].title:'');
+    const naicsShort=NAICS_NAMES[p.naics_code]||(p.sector||'').substring(0,20)||'';
+    html+='<tr onclick="scrollToProject(\''+encodeURIComponent(p.name)+'\')" style="cursor:pointer">';
+    html+='<td class="col-value">'+val+'</td>';
+    html+='<td class="col-name">'+((p.name||'').substring(0,50))+'</td>';
+    html+='<td class="col-province">'+prov+'</td>';
+    html+='<td class="col-proponent">'+(p.proponent||'')+'</td>';
+    html+='<td>'+statusBadge(p.status||'Proposed')+'</td>';
+    html+='<td style="font-size:var(--text-xs)">'+naicsShort+'</td>';
+    html+='<td class="col-source">'+srcLink(srcUrl,srcTitle)+'</td>';
+    html+='</tr>';
   });
-  html+='</div>';
-  if(newProjects.length>6){
-    html+='<div style="text-align:center;margin-top:8px"><button class="atw-toggle" onclick="window._atwToggle()">'+(_atwExpanded?'Show less':'Show all '+newProjects.length+' new projects')+'</button></div>';
+  html+='</tbody></table></div>';
+  if(newProjects.length>10){
+    html+='<div style="text-align:center;margin-top:8px"><button class="atw-toggle" onclick="window._atwToggle()">'+(_atwExpanded?'Show less':'Show all '+newProjects.length.toLocaleString()+' new projects')+'</button></div>';
   }
   html+='</div>';
   el.innerHTML=html;
@@ -2559,10 +2560,10 @@ function renderProjectTable(){
   const shown=filteredProjects.slice(0,(projectPage+1)*PAGE_SIZE);
   // Summary line
   const pf=$('filterProvince')?.value;
-  const countNote=(!pf||pf==='')?'Showing '+shown.length+' of '+filteredProjects.length+' projects. Select a province for complete results. ('+allProjects.length+' most recent loaded)':'Showing '+shown.length+' of '+filteredProjects.length+' '+(PROVS.find(p=>p.code===pf)||{}).name+' projects';
+  const countNote=(!pf||pf==='')?'Showing '+shown.length.toLocaleString()+' of '+filteredProjects.length.toLocaleString()+' projects. Select a province for complete results. ('+allProjects.length.toLocaleString()+' total loaded)':'Showing '+shown.length.toLocaleString()+' of '+filteredProjects.length.toLocaleString()+' '+(PROVS.find(p=>p.code===pf)||{}).name+' projects';
   $('projectResultsSummary').textContent=countNote;
   // Table
-  let html='<div class="project-table-wrap"><table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Type</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Updated</th><th scope="col">Src</th></tr></thead><tbody>';
+  let html='<div class="project-table-wrap"><table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Updated</th><th scope="col">Src</th></tr></thead><tbody>';
   shown.forEach((p,i)=>{
     const rowId='proj_'+i;
     const firstEv=(p.evidence||[])[0]||{};
@@ -2578,7 +2579,6 @@ function renderProjectTable(){
     html+='<tr onclick="window.toggleProjectRow(\''+rowId+'\')"'+(isUnconf&&!_confirmedOnly?' class="unconfirmed-row"':'')+'>';
     html+='<td class="col-value">'+fmtCurrency(p.value,p)+(isUnconf?'<span class="unconfirmed-badge">unconfirmed</span>':'')+'</td>';
     html+='<td class="col-name">'+((p.name||'').substring(0,50))+'</td>';
-    html+='<td>'+typeBadge(pType)+'</td>';
     html+='<td class="col-province">'+(provCode||((p.province||'').substring(0,3)))+(p.provinces_additional?'<span style="color:#556B7A;font-size:10px"> +'+p.provinces_additional.split(',').length+'</span>':'')+'</td>';
     html+='<td class="col-proponent">'+(p.proponent||'')+'</td>';
     html+='<td>'+statusBadge(p.status||'Proposed')+'</td>';
@@ -2587,7 +2587,7 @@ function renderProjectTable(){
     html+='<td class="col-source">'+srcLink(srcUrl,srcTitle)+'</td>';
     html+='</tr>';
     // Expansion row
-    const colSpan=9;
+    const colSpan=8;
     html+='<tr id="'+rowId+'" style="display:none"><td colspan="'+colSpan+'"><div class="project-expand">';
     html+='<div style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
     // Project timeline bar

@@ -706,7 +706,7 @@ def _project_for_export_slim(proj_dict: dict) -> dict:
 def export_all_projects(conn, output_dir: str) -> str:
     """Export projects_all.json — all projects across all provinces, no threshold filter.
 
-    Sorts by lastSeen desc, limits to 5000 rows (same as previous Firestore all-provinces query).
+    Sorts by lastSeen desc, no row limit (exports all projects).
     Uses slim export shape to keep file size manageable.
 
     Returns the path of the written file.
@@ -715,7 +715,6 @@ def export_all_projects(conn, output_dir: str) -> str:
         """
         SELECT * FROM projects
         ORDER BY lastSeen DESC
-        LIMIT 5000
         """
     ).fetchall()
 
