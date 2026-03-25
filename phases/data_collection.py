@@ -80,6 +80,12 @@ def get_live_commodities():
         # Agriculture - Oils & Meals
         ("ZL=F",  "Agriculture - Oils & Meals", "Soybean Oil",       "lb",      lambda x: f"${x:.4f}"),
         ("ZM=F",  "Agriculture - Oils & Meals", "Soybean Meal",      "ton",     lambda x: f"${x:.2f}"),
+        ("RS=F",  "Agriculture - Oils & Meals", "Canola",            "t",       lambda x: f"${x:.2f}"),
+        # Crypto
+        ("BTC-USD", "Crypto",                   "Bitcoin",           "USD",     lambda x: f"${x:,.0f}"),
+        ("ETH-USD", "Crypto",                   "Ethereum",          "USD",     lambda x: f"${x:,.0f}"),
+        # Shipping
+        ("BDRY",  "Shipping",                   "Dry Bulk (BDI proxy)", "USD",  lambda x: f"${x:.2f}"),
     ]
 
     CATEGORY_COLORS = {
@@ -89,6 +95,8 @@ def get_live_commodities():
         "Agriculture - Grains":       "text-lime-600",
         "Agriculture - Softs":        "text-emerald-600",
         "Agriculture - Oils & Meals": "text-green-600",
+        "Crypto":                     "text-violet-500",
+        "Shipping":                   "text-blue-600",
         "Fertilizers":                "text-teal-600",
         "Livestock":                  "text-rose-500",
     }
@@ -1353,6 +1361,9 @@ def _archive_market_data_to_history(conn, financial_markets: dict, commodity_dat
         'Sugar #11': 'sugar', 'Cotton': 'cotton',
         'Soybean Oil': 'soybean_oil', 'Soybean Meal': 'soybean_meal',
         'Coal (Newcastle)': 'coal', 'Propane': 'propane', 'Lumber': 'lumber',
+        'Canola': 'canola',
+        'Bitcoin': 'bitcoin', 'Ethereum': 'ethereum',
+        'Dry Bulk (BDI proxy)': 'dry_bulk_shipping',
     }
     for cat in commodity_data.get('structured', []):
         for item in cat.get('items', []):
@@ -1365,6 +1376,23 @@ def _archive_market_data_to_history(conn, financial_markets: dict, commodity_dat
         term = yc.get('term', '')
         if term:
             _save(f'goc_{term.lower()}_yield', yc.get('yield'), '%', 'Bank of Canada')
+
+    # FRED commodity prices and bond spreads (IMF monthly + daily)
+    FRED_COMMODITY_SERIES = {
+        'iron_ore': ('PIORECRUSDM', 'USD/t'),
+        'nickel': ('PNICKUSDM', 'USD/t'),
+        'zinc': ('PZINCUSDM', 'USD/t'),
+        'tin': ('PTINUSDM', 'USD/t'),
+        'lead': ('PLEADUSDM', 'USD/t'),
+        'lng_asia': ('PNGASJPUSDM', 'USD/MMBtu'),
+        'ig_spread': ('BAMLC0A0CM', '%'),
+        'hy_spread': ('BAMLH0A0HYM2', '%'),
+        'yield_curve_10y2y': ('T10Y2Y', '%'),
+    }
+    for ind_name, (series_id, unit) in FRED_COMMODITY_SERIES.items():
+        val = _fred_latest(series_id)
+        if val is not None:
+            _save(ind_name, str(val), unit, 'FRED')
 
     print(f"  [HISTORY] Archived {count} market data points to indicator_history")
 

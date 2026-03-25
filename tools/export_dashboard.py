@@ -606,6 +606,13 @@ def export_timeseries(conn, output_dir: str) -> str:
         'wti', 'brent', 'natural_gas', 'gold', 'silver', 'platinum', 'palladium',
         'copper', 'aluminum', 'wheat', 'corn', 'soybeans', 'coffee', 'cocoa',
         'sugar', 'cotton', 'lumber',
+        # New: FRED commodities + bond spreads
+        'iron_ore', 'nickel', 'zinc', 'tin', 'lead', 'lng_asia',
+        'ig_spread', 'hy_spread', 'yield_curve_10y2y',
+        # New: crypto, shipping, Canadian mining/agriculture
+        'bitcoin', 'ethereum', 'dry_bulk_shipping',
+        'potash_nutrien', 'cameco_uranium', 'sprott_uranium', 'canola',
+        'coal', 'propane', 'rice', 'soybean_oil', 'soybean_meal',
     ]
     for name in _IH_SERIES:
         if name in bundle:
@@ -614,7 +621,7 @@ def export_timeseries(conn, output_dir: str) -> str:
             SELECT period AS date, value, unit, source
             FROM indicator_history
             WHERE indicator_name = ? AND period IS NOT NULL
-            ORDER BY period DESC LIMIT 52
+            ORDER BY period DESC LIMIT 260
         """, (name,)).fetchall()
         if rows:
             bundle[name] = [dict(r) for r in rows]
@@ -630,7 +637,7 @@ def export_timeseries(conn, output_dir: str) -> str:
                 SELECT period AS date, value, unit, source
                 FROM indicator_history
                 WHERE indicator_name = ? AND province = ? AND period IS NOT NULL
-                ORDER BY period DESC LIMIT 66
+                ORDER BY period DESC LIMIT 260
             """, (ind, prov)).fetchall()
             if rows:
                 bundle[key] = [dict(r) for r in rows]
@@ -643,7 +650,7 @@ def export_timeseries(conn, output_dir: str) -> str:
             SELECT period AS date, value, unit, source
             FROM indicator_history
             WHERE indicator_name = ? AND province = 'ON' AND period IS NOT NULL
-            ORDER BY period DESC LIMIT 20
+            ORDER BY period DESC LIMIT 60
         """, (ind,)).fetchall()
         if rows:
             bundle[key] = [dict(r) for r in rows]
@@ -658,7 +665,7 @@ def export_timeseries(conn, output_dir: str) -> str:
             SELECT period AS date, value, unit, source
             FROM indicator_history
             WHERE indicator_name = ? AND province = 'QC' AND period IS NOT NULL
-            ORDER BY period DESC LIMIT 20
+            ORDER BY period DESC LIMIT 60
         """, (ind,)).fetchall()
         if rows:
             bundle[key] = [dict(r) for r in rows]

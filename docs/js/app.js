@@ -3287,6 +3287,49 @@ function renderExplorer(){
     pis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">'+prov.name+' Indicators</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">Full indicator list for '+prov.name+'</p>'+
       renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
   }
+
+  // OEA / ISQ section
+  _renderOeaIsqSection();
+}
+
+function _renderOeaIsqSection(){
+  const el=$('oeaIsqSection');
+  if(!el)return;
+  const hist=(D&&D.history)||[];
+  if(!hist.length){el.innerHTML='';return;}
+
+  function _buildCard(title,prefix,province){
+    const items=hist.filter(h=>h.indicator_name&&h.indicator_name.startsWith(prefix)&&(!province||(h.province||'')==province));
+    // Deduplicate: keep latest per indicator
+    const latest={};
+    items.forEach(h=>{
+      const k=h.indicator_name;
+      if(!latest[k]||h.period>latest[k].period)latest[k]=h;
+    });
+    const sorted=Object.values(latest).sort((a,b)=>(a.indicator_name||'').localeCompare(b.indicator_name||''));
+    if(!sorted.length)return '<div class="events-week-card" style="padding:16px"><h3 style="margin:0 0 8px;font-size:var(--text-base);color:#003153">'+title+'</h3><div style="color:#64748B;font-size:var(--text-sm)">No data available</div></div>';
+    let rows='';
+    sorted.forEach(h=>{
+      const name=(h.indicator_name||'').replace(prefix,'').replace(/_/g,' ').replace(/\bpct\b/,'%').trim();
+      const dispName=name.charAt(0).toUpperCase()+name.slice(1);
+      const val=h.value!=null?String(h.value):'—';
+      const unit=h.unit||'';
+      const period=h.period||'';
+      rows+='<div style="display:grid;grid-template-columns:1fr 90px 80px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.06);font-size:var(--text-sm);align-items:center">';
+      rows+='<div style="color:#1e293b;font-weight:500">'+san(dispName)+'</div>';
+      rows+='<div style="text-align:right;font-family:var(--font-mono);color:#1e293b">'+san(val)+' <span style="color:#64748B;font-size:var(--text-xs)">'+san(unit)+'</span></div>';
+      rows+='<div style="text-align:right;color:#64748B;font-size:var(--text-xs)">'+san(period.slice(0,7))+'</div>';
+      rows+='</div>';
+    });
+    return '<div class="events-week-card" style="padding:16px"><h3 style="margin:0 0 8px;font-size:var(--text-base);color:#003153">'+title+'</h3>'+rows+'</div>';
+  }
+
+  el.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">Provincial Economic Accounts</h3>'+
+    '<p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">Ontario Economic Accounts (OEA) and Quebec Institut de la statistique (ISQ/BSQ)</p>'+
+    '<div class="oea-isq-grid">'+
+    _buildCard('Ontario (OEA)','on_','ON')+
+    _buildCard('Quebec (ISQ/BSQ)','qc_','QC')+
+    '</div>';
 }
 
 window._doVcodeSearch=function(cat){

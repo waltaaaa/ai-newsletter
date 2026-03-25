@@ -60,6 +60,27 @@ CANADIAN_COMMODITY_INDICATORS = {
         "tickers": ["BIP-UN.TO", "AQN.TO", "BEPC.TO", "TRP.TO", "ENB.TO"],
         "compute": "basket_avg",
     },
+    "potash_nutrien": {
+        "description": "Nutrien Ltd (potash/fertilizer)",
+        "relevance": "World's largest potash producer. Saskatchewan economy proxy. Fertilizer prices affect agriculture project economics.",
+        "affected_sectors": ["Mining & O&G", "Agriculture"],
+        "affected_provinces": ["SK", "AB"],
+        "tickers": ["NTR.TO"],
+    },
+    "cameco_uranium": {
+        "description": "Cameco Corp (uranium mining)",
+        "relevance": "Largest Canadian uranium producer. Proxy for uranium sector activity and SMR supply chain.",
+        "affected_sectors": ["Mining & O&G", "Utilities"],
+        "affected_provinces": ["SK", "ON"],
+        "tickers": ["CCO.TO"],
+    },
+    "sprott_uranium": {
+        "description": "Sprott Physical Uranium Trust (spot price proxy)",
+        "relevance": "Closest free proxy for uranium spot price. TSX-listed. Tracks physical uranium holdings.",
+        "affected_sectors": ["Mining & O&G", "Utilities"],
+        "affected_provinces": ["SK", "ON", "NB"],
+        "tickers": ["U-UN.TO"],
+    },
 }
 
 
