@@ -1,16 +1,6 @@
 {
   "weeks": [
     {
-      "week_of": "2026-03-25",
-      "summary": {
-        "total_items": 0,
-        "by_category": {},
-        "by_province": {},
-        "by_level": {},
-        "top_developments": []
-      }
-    },
-    {
       "week_of": "2026-03-15",
       "summary": {
         "total_items": 0,
@@ -31,5 +21,5 @@
       }
     }
   ],
-  "last_updated": "2026-03-25T14:12:35.703919+00:00"
+  "last_updated": "2026-03-26T06:25:57.249480+00:00"
 }

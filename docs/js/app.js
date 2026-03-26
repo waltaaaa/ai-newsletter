@@ -33,7 +33,6 @@ function hasVal(v){return v!=null&&v!==''&&v!=='N/A'&&v!=='\u2014'&&v!=='—'&&v
 function pick(){for(let i=0;i<arguments.length;i++){if(hasVal(arguments[i]))return arguments[i]}return 'N/A'}
 function fmtPeriod(dateStr){if(!dateStr)return '';try{const d=new Date(dateStr+'T00:00:00');if(isNaN(d))return dateStr;return d.toLocaleDateString('en-CA',{month:'short',year:'numeric'})}catch(e){return dateStr}}
 function indBasis(rec,metaPeriod,freq){const p=pick(metaPeriod,rec&&rec.period);const dt=hasVal(p)?fmtPeriod(p):'';const f=freq||rec&&rec.frequency||'';const fLabel=f?f.charAt(0).toUpperCase()+f.slice(1):'';return dt||(fLabel||'')}
-function indFreqLabel(rec,freq){const f=freq||(rec&&rec.frequency)||'';const fLabel=f?f.charAt(0).toUpperCase()+f.slice(1):'';if(!fLabel)return '';const p=rec&&rec.period;if(p&&hasVal(p)){return fLabel+' (latest: '+fmtPeriod(p)+')'}return fLabel}
 function indSource(rec,fallback){return (rec&&rec.source)||fallback||''}
 function fmtNum(v){if(v==null||v==='N/A'||v==='\u2014'||v==='')return v;const s=String(v).replace(/,/g,'');const m=s.match(/^([+\-]?)(\$?)(\d[\d]*\.?\d*)(.*)/);if(!m)return String(v);const sign=m[1],prefix=m[2],num=parseFloat(m[3]),suffix=m[4];if(isNaN(num))return String(v);const rounded=num%1===0&&num>=1000?num.toFixed(0):num.toFixed(1);const parts=rounded.split('.');parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');if(parts[1]==='0'&&num>=1000)return sign+prefix+parts[0]+suffix;return sign+prefix+parts.join('.')+suffix}
 // Compute period-over-period change from indicator history array
@@ -59,21 +58,24 @@ function computeChange(indName,prov){
   const match=h.filter(x=>x.indicator_name===indName&&_matchProv(x.province,prov));
   if(!match.length)return '';
   match.sort((a,b)=>(a.period||'').localeCompare(b.period||''));
-  // Find the two most recent periods with valid numeric values
-  // This compares the latest official release to the prior one
-  const valid=[];
-  for(let i=match.length-1;i>=0&&valid.length<2;i--){
+  // Find two most recent distinct numeric values of similar magnitude
+  // (skip mixed-unit data: e.g. CPI index 165 vs CPI YoY% 2.3)
+  const seen=new Set();const distinct=[];
+  for(let i=match.length-1;i>=0&&distinct.length<2;i--){
     const n=_parseNum(match[i].value);
     if(isNaN(n))continue;
-    // Skip if magnitude differs >10x from first (mixed-unit data guard)
-    if(valid.length===1){
-      const ratio=Math.abs(valid[0].n)>0?Math.abs(n)/Math.abs(valid[0].n):999;
+    const k=n.toFixed(4);
+    if(seen.has(k))continue;
+    // If we have a first value, reject the second if magnitude differs >10x (mixed units)
+    if(distinct.length===1){
+      const ratio=Math.abs(distinct[0])>0?Math.abs(n)/Math.abs(distinct[0]):999;
       if(ratio>10||ratio<0.1)continue;
     }
-    valid.push({n,period:match[i].period||''});
+    seen.add(k);distinct.push(n);
   }
-  if(valid.length<2)return '';
-  const curr=valid[0].n,prev=valid[1].n,diff=curr-prev;
+  if(distinct.length<2)return '';
+  const curr=distinct[0],prev=distinct[1],diff=curr-prev;
+  // Determine display format from the value itself:
   // Rates and percentages (<100 absolute) → show as pp change
   // Large values (GDP levels, index levels) → show as % change
   const isRate=Math.abs(curr)<100&&Math.abs(prev)<100;
@@ -175,8 +177,8 @@ async function loadEditionList(){
     const list=$('editionList');
     list.innerHTML=editions.map(e=>{
       const label=(e.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim()||e.id;
-      const active=e.id===currentEdition?'font-weight:700;background:rgba(255,255,255,0.12);':'';
-      return'<div class="edition-item" data-id="'+e.id+'" style="padding:10px 14px;font-size:var(--text-xs);cursor:pointer;color:#e2e8f0;border-bottom:1px solid rgba(255,255,255,0.12);transition:background .15s ease;'+active+'" onmouseenter="this.style.background=\'rgba(255,255,255,0.10)\'" onmouseleave="this.style.background=\''+(e.id===currentEdition?'rgba(255,255,255,0.12)':'transparent')+'\'">'+label+'</div>';
+      const active=e.id===currentEdition?'font-weight:700;background:var(--bg-subtle)':'';
+      return'<div class="edition-item" data-id="'+e.id+'" style="padding:8px 14px;font-size:var(--text-xs);cursor:pointer;border-bottom:1px solid var(--border-light);'+active+'">'+label+'</div>';
     }).join('');
     list.querySelectorAll('.edition-item').forEach(el=>el.addEventListener('click',()=>switchEdition(el.dataset.id)));
   }catch(e){console.warn('Edition list load:',e)}
@@ -203,21 +205,7 @@ async function loadIndicators(){
     // Normalize: SQLite uses indicator_name, frontend uses name
     indicators=raw.map(ind=>{
       const name=ind.name||ind.indicator_name||'';
-      let displayName=name.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-      // Improve GDP industry names for readability
-      const _gdpLabels={
-        'Gdp Agriculture':'GDP: Agriculture','Gdp Mining Og':'GDP: Mining & Oil/Gas',
-        'Gdp Utilities':'GDP: Utilities','Gdp Construction':'GDP: Construction',
-        'Gdp Manufacturing':'GDP: Manufacturing','Gdp Wholesale':'GDP: Wholesale Trade',
-        'Gdp Retail':'GDP: Retail Trade','Gdp Transportation':'GDP: Transportation',
-        'Gdp Information':'GDP: Information & Culture','Gdp Finance':'GDP: Finance & Insurance',
-        'Gdp Real Estate':'GDP: Real Estate','Gdp Professional':'GDP: Professional Services',
-        'Gdp Management':'GDP: Management','Gdp Admin Waste':'GDP: Admin & Waste Mgmt',
-        'Gdp Education':'GDP: Education','Gdp Healthcare':'GDP: Healthcare',
-        'Gdp Entertainment':'GDP: Arts & Entertainment','Gdp Accommodation':'GDP: Accommodation & Food',
-        'Gdp Other Services':'GDP: Other Services','Gdp Public Admin':'GDP: Public Administration',
-      };
-      if(_gdpLabels[displayName])displayName=_gdpLabels[displayName];
+      const displayName=name.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
       return Object.assign({},ind,{
         name:displayName,
         indicator_name:ind.indicator_name||name,
@@ -557,14 +545,14 @@ async function renderInteractiveMap(){
   function _tc(metaKey,indName){return pick(_indMeta(metaKey).change,computeChange(indName||metaKey,'national'))}
 
   const statsDefault=[
-    {label:'BoC Rate',value:pick(m.bocRate,m.boc_rate,_indVal('overnight_rate')),change:_tc('bocRate','overnight_rate'),period:indBasis(_tBoc,_indMeta('bocRate').period,'scheduled'),freq:indFreqLabel(_tBoc,'scheduled'),source:indSource(_tBoc,'Bank of Canada')},
-    {label:'Real GDP',value:pick(m.realGdp,_indVal('realGdp')),change:_tc('realGdp','realGdp'),period:indBasis(_tGdp,_indMeta('realGdp').period,'quarterly'),freq:indFreqLabel(_tGdp,'quarterly'),source:indSource(_tGdp,'Statistics Canada')},
-    {label:'CPI',value:pick(m.cpi,_indVal('cpi'),_indVal('cpi_national')),change:_tc('cpi','cpi'),period:indBasis(_indRec('cpi'),_indMeta('cpi').period,'monthly'),freq:indFreqLabel(_indRec('cpi'),'monthly'),source:indSource(_indRec('cpi'),'Statistics Canada')},
-    {label:'Unemployment',value:pick(m.unemployment,_indVal('unemployment'),findKI('UNEMPLOYMENT').value),change:pick(findKI('UNEMPLOYMENT').change,_tc('unemployment','unemployment')),period:indBasis(_tUn,_indMeta('unemployment').period,'monthly'),freq:indFreqLabel(_tUn,'monthly'),source:indSource(_tUn,'Statistics Canada')},
-    {label:'Participation',value:pick(_tPart&&_tPart.value,m.participation,_indVal('participationRate')),change:computeChange('participationRate','national'),period:indBasis(_tPart,'','monthly'),freq:indFreqLabel(_tPart,'monthly'),source:indSource(_tPart,'Statistics Canada')},
-    {label:'Employment Rate',value:pick(_tEmp&&_tEmp.value,_indVal('employmentRate')),change:computeChange('employmentRate','national'),period:indBasis(_tEmp,'','monthly'),freq:indFreqLabel(_tEmp,'monthly'),source:indSource(_tEmp,'Statistics Canada')},
-    {label:'Wage Growth',value:pick(_tWage&&_tWage.value,m.wageGrowth,_indVal('wageGrowth')),change:computeChange('wageGrowth','national'),period:indBasis(_tWage,'','monthly'),freq:indFreqLabel(_tWage,'monthly'),source:indSource(_tWage,'Statistics Canada')},
-    {label:'Housing Starts',value:pick(m.housingStarts,_indVal('housingStarts')),change:_tc('housingStarts','housingStarts'),period:indBasis(_indRec('housingStarts'),_indMeta('housingStarts').period,'monthly'),freq:indFreqLabel(_indRec('housingStarts'),'monthly'),source:indSource(_indRec('housingStarts'),'CMHC')}
+    {label:'BoC Rate',value:pick(m.bocRate,m.boc_rate,_indVal('overnight_rate')),change:_tc('bocRate','overnight_rate'),period:indBasis(_tBoc,_indMeta('bocRate').period,'scheduled'),freq:'8x/yr',source:indSource(_tBoc,'Bank of Canada')},
+    {label:'Real GDP',value:pick(m.realGdp,_indVal('realGdp')),change:_tc('realGdp','realGdp'),period:indBasis(_tGdp,_indMeta('realGdp').period,'quarterly'),freq:'Quarterly',source:indSource(_tGdp,'Statistics Canada')},
+    {label:'CPI',value:pick(m.cpi,_indVal('cpi'),_indVal('cpi_national')),change:_tc('cpi','cpi'),period:indBasis(_indRec('cpi'),_indMeta('cpi').period,'monthly'),freq:'Monthly',source:indSource(_indRec('cpi'),'Statistics Canada')},
+    {label:'Unemployment',value:pick(m.unemployment,_indVal('unemployment'),findKI('UNEMPLOYMENT').value),change:pick(findKI('UNEMPLOYMENT').change,_tc('unemployment','unemployment')),period:indBasis(_tUn,_indMeta('unemployment').period,'monthly'),freq:'Monthly',source:indSource(_tUn,'Statistics Canada')},
+    {label:'Participation',value:pick(_tPart&&_tPart.value,m.participation,_indVal('participationRate')),change:computeChange('participationRate','national'),period:indBasis(_tPart,'','monthly'),freq:'Monthly',source:indSource(_tPart,'Statistics Canada')},
+    {label:'Employment Rate',value:pick(_tEmp&&_tEmp.value,_indVal('employmentRate')),change:computeChange('employmentRate','national'),period:indBasis(_tEmp,'','monthly'),freq:'Monthly',source:indSource(_tEmp,'Statistics Canada')},
+    {label:'Wage Growth',value:pick(_tWage&&_tWage.value,m.wageGrowth,_indVal('wageGrowth')),change:computeChange('wageGrowth','national'),period:indBasis(_tWage,'','monthly'),freq:'Monthly',source:indSource(_tWage,'Statistics Canada')},
+    {label:'Housing Starts',value:pick(m.housingStarts,_indVal('housingStarts')),change:_tc('housingStarts','housingStarts'),period:indBasis(_indRec('housingStarts'),_indMeta('housingStarts').period,'monthly'),freq:'Monthly',source:indSource(_indRec('housingStarts'),'CMHC')}
   ];
   // "This Week" indicators — the ones that moved or are newsworthy this week
   const statsThisWeek=[];
@@ -593,7 +581,7 @@ async function renderInteractiveMap(){
       activeStats.forEach(s=>{
         const chg=s.change||'';
         const cls=chg.startsWith('-')||chg.startsWith('\u2212')?'change-down':chg.startsWith('+')?'change-up':'';
-        html+='<tr><td class="ind-label">'+s.label+'</td><td class="ind-value">'+fmtNum(s.value)+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td><td class="ind-basis" style="font-size:9px;color:#64748B;text-align:right;white-space:nowrap">'+(s.period||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap;max-width:160px">'+(s.freq||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+(s.source||'')+'</td></tr>';
+        html+='<tr><td class="ind-label">'+s.label+'</td><td class="ind-value">'+fmtNum(s.value)+'</td><td class="ind-change '+cls+'">'+(chg||'\u2014')+'</td><td class="ind-basis" style="font-size:9px;color:#64748B;text-align:right;white-space:nowrap">'+(s.period||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+(s.freq||'')+'</td><td style="font-size:8px;color:#94A3B8;text-align:right;white-space:nowrap">'+(s.source||'')+'</td></tr>';
       });
       html+='</tbody></table>';
     }else{
@@ -1576,7 +1564,7 @@ async function renderCanadaSub(){
     const topProjects=projects.filter(p=>parseNumericValue(p.value)>0).sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value)).slice(0,10);
     let projHtml='<div class="ed-section"><div class="ed-section-title">Capital Projects</div><div class="ed-section-subtitle">Major projects tracked nationally</div></div>'+
       '<div class="editorial-meta" style="margin-bottom:12px">'+
-      '<div class="editorial-meta-item"><strong>'+(typeof projTotal==='number'?projTotal.toLocaleString():projTotal)+'</strong>Projects Tracked</div>'+
+      '<div class="editorial-meta-item"><strong>'+projTotal+'</strong>Projects Tracked</div>'+
       (newPrj?'<div class="editorial-meta-item"><strong>+'+newPrj+'</strong>New This Week</div>':'')+
       (pipVal?'<div class="editorial-meta-item"><strong>$'+pipVal+'B</strong>Pipeline Value</div>':'')+
       '</div>';
@@ -1817,8 +1805,8 @@ const INDICATOR_CATALOG=[
     {id:'housingStarts',label:'Housing Starts',unit:'K',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',prov:false}
   ]},
   {group:'Markets',items:[
-    {id:'tsx',label:'S&P/TSX Composite',unit:'',source:'TMX',url:'https://money.tmx.com/en/quote/%5ETSX',prov:false},
-    {id:'lumber',label:'Lumber',unit:'USD',source:'Investing.com',url:'https://www.investing.com/commodities/lumber',prov:false}
+    {id:'tsx',label:'S&P/TSX Composite',unit:'',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/%5EGSPTSE/',prov:false},
+    {id:'lumber',label:'Lumber',unit:'USD',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/LBS%3DF/',prov:false}
   ]},
   {group:'Ontario (OEA)',items:[
     {id:'on_real_consumption',label:'ON Real Consumption',unit:'$M',source:'Ontario Economic Accounts',url:'https://data.ontario.ca/dataset/ontario-economic-accounts',prov:false},
@@ -2480,88 +2468,35 @@ async function filterProjects(){
   else if(sort==='confidence')filteredProjects.sort((a,b)=>(b.confidence||0)-(a.confidence||0));
   projectPage=0;
   renderProjectSummary();
-  renderAddedThisWeek();
   renderProjectTable();
 }
 function renderProjectSummary(){
   const total=filteredProjects.length;
+  const gf=filteredProjects.filter(p=>!p.is_brownfield).length;
+  const bf=filteredProjects.filter(p=>p.is_brownfield).length;
   const totalVal=filteredProjects.reduce((s,p)=>s+parseNumericValue(p.value),0);
   const uc=filteredProjects.filter(p=>(p.status||'').toLowerCase().includes('construction')).length;
-  const proposed=filteredProjects.filter(p=>(p.status||'').toLowerCase()==='proposed').length;
   const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$0';
   const withUrls=filteredProjects.filter(p=>(p.evidence||[]).length>0).length;
   const withGov=filteredProjects.filter(p=>p.has_government_source).length;
   const pctVerified=total>0?Math.round(withUrls/total*100):0;
   let banner='';
-  if(total>0)banner='<div class="verify-banner"><span>&#128279;</span><span>'+pctVerified+'% of projects have source links for independent verification.'+(withGov>0?' '+withGov.toLocaleString()+' backed by government sources.':'')+'</span></div>';
+  if(total>0)banner='<div class="verify-banner"><span>&#128279;</span><span>'+pctVerified+'% of projects have source links for independent verification.'+(withGov>0?' '+withGov+' backed by government sources.':'')+'</span></div>';
   $('projSummaryStats').innerHTML=banner+
-    '<div class="proj-stat-card"><div class="proj-stat-val">'+total.toLocaleString()+'</div><div class="proj-stat-label">Total Projects</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+total+'</div><div class="proj-stat-label">Total Projects</div></div>'+
     '<div class="proj-stat-card"><div class="proj-stat-val">'+fv(totalVal)+'</div><div class="proj-stat-label">Total Value</div></div>'+
-    '<div class="proj-stat-card"><div class="proj-stat-val">'+proposed.toLocaleString()+'</div><div class="proj-stat-label">Proposed</div></div>'+
-    '<div class="proj-stat-card"><div class="proj-stat-val">'+uc.toLocaleString()+'</div><div class="proj-stat-label">Under Construction</div></div>';
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+gf+'</div><div class="proj-stat-label">Greenfield</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+bf+'</div><div class="proj-stat-label">Brownfield</div></div>'+
+    '<div class="proj-stat-card"><div class="proj-stat-val">'+uc+'</div><div class="proj-stat-label">Under Construction</div></div>';
 }
-const _BULK_SOURCES=new Set(['government_backfill','provincial_ea','infrastructure_canada','crown_corp','cer_registry','ontario_ero']);
-let _atwExpanded=false;
-function renderAddedThisWeek(){
-  const el=$('addedThisWeek');if(!el)return;
-  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
-  const cutStr=cutoff.toISOString().slice(0,10);
-  const newProjects=allProjects.filter(p=>{
-    const ft=p.firstTracked||'';
-    if(ft<cutStr)return false;
-    if(_BULK_SOURCES.has(p.discovery_source))return false;
-    return true;
-  }).sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value));
-  if(!newProjects.length){el.style.display='none';return;}
-  el.style.display='block';
-  const show=_atwExpanded?newProjects:newProjects.slice(0,10);
-  let html='<div class="atw-section"><div class="atw-header"><span class="atw-title">Added This Week</span><span class="atw-count">'+newProjects.length.toLocaleString()+'</span></div>';
-  html+='<div class="project-table-wrap"><table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Src</th></tr></thead><tbody>';
-  show.forEach(p=>{
-    const prov=normProvince(p.province)||p.province||'';
-    const val=fmtCurrency(p.value,p);
-    const firstEv=(p.evidence||[])[0]||{};
-    const srcUrl=((p.sources&&p.sources[0])?p.sources[0].url:'');
-    const srcTitle=((p.sources&&p.sources[0])?p.sources[0].title:'');
-    const naicsShort=NAICS_NAMES[p.naics_code]||(p.sector||'').substring(0,20)||'';
-    html+='<tr onclick="scrollToProject(\''+encodeURIComponent(p.name)+'\')" style="cursor:pointer">';
-    html+='<td class="col-value">'+val+'</td>';
-    html+='<td class="col-name">'+((p.name||'').substring(0,50))+'</td>';
-    html+='<td class="col-province">'+prov+'</td>';
-    html+='<td class="col-proponent">'+(p.proponent||'')+'</td>';
-    html+='<td>'+statusBadge(p.status||'Proposed')+'</td>';
-    html+='<td style="font-size:var(--text-xs)">'+naicsShort+'</td>';
-    html+='<td class="col-source">'+srcLink(srcUrl,srcTitle)+'</td>';
-    html+='</tr>';
-  });
-  html+='</tbody></table></div>';
-  if(newProjects.length>10){
-    html+='<div style="text-align:center;margin-top:8px"><button class="atw-toggle" onclick="window._atwToggle()">'+(_atwExpanded?'Show less':'Show all '+newProjects.length.toLocaleString()+' new projects')+'</button></div>';
-  }
-  html+='</div>';
-  el.innerHTML=html;
-}
-window._atwToggle=function(){_atwExpanded=!_atwExpanded;renderAddedThisWeek()};
-window.scrollToProject=function(name){
-  const decoded=decodeURIComponent(name);
-  const idx=filteredProjects.findIndex(p=>p.name===decoded);
-  if(idx<0)return;
-  const neededPage=Math.floor(idx/PAGE_SIZE);
-  if(neededPage>projectPage){projectPage=neededPage;renderProjectTable();}
-  setTimeout(()=>{
-    const rows=document.querySelectorAll('.project-table tbody tr');
-    const rowIdx=idx*2;// each project has 2 rows (data + expand)
-    if(rows[rowIdx]){rows[rowIdx].scrollIntoView({behavior:'smooth',block:'center'});rows[rowIdx].style.background='rgba(96,165,250,0.15)';setTimeout(()=>{rows[rowIdx].style.background=''},2000);}
-  },100);
-};
 function renderProjectTable(){
   const shown=filteredProjects.slice(0,(projectPage+1)*PAGE_SIZE);
   // Summary line
   const pf=$('filterProvince')?.value;
-  const countNote=(!pf||pf==='')?'Showing '+shown.length.toLocaleString()+' of '+filteredProjects.length.toLocaleString()+' projects. Select a province for complete results. ('+allProjects.length.toLocaleString()+' total loaded)':'Showing '+shown.length.toLocaleString()+' of '+filteredProjects.length.toLocaleString()+' '+(PROVS.find(p=>p.code===pf)||{}).name+' projects';
+  const countNote=(!pf||pf==='')?'Showing '+shown.length+' of '+filteredProjects.length+' projects. Select a province for complete results. ('+allProjects.length+' most recent loaded)':'Showing '+shown.length+' of '+filteredProjects.length+' '+(PROVS.find(p=>p.code===pf)||{}).name+' projects';
   $('projectResultsSummary').textContent=countNote;
   // Table
-  let html='<div class="project-table-wrap"><table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Updated</th><th scope="col">Src</th></tr></thead><tbody>';
+  let html='<div class="project-table-wrap"><table class="project-table"><thead><tr><th scope="col">Value</th><th scope="col">Project</th><th scope="col">Type</th><th scope="col">Province</th><th scope="col">Proponent</th><th scope="col">Status</th><th scope="col">Sector</th><th scope="col">Updated</th><th scope="col">Src</th></tr></thead><tbody>';
   shown.forEach((p,i)=>{
     const rowId='proj_'+i;
     const firstEv=(p.evidence||[])[0]||{};
@@ -2577,6 +2512,7 @@ function renderProjectTable(){
     html+='<tr onclick="window.toggleProjectRow(\''+rowId+'\')"'+(isUnconf&&!_confirmedOnly?' class="unconfirmed-row"':'')+'>';
     html+='<td class="col-value">'+fmtCurrency(p.value,p)+(isUnconf?'<span class="unconfirmed-badge">unconfirmed</span>':'')+'</td>';
     html+='<td class="col-name">'+((p.name||'').substring(0,50))+'</td>';
+    html+='<td>'+typeBadge(pType)+'</td>';
     html+='<td class="col-province">'+(provCode||((p.province||'').substring(0,3)))+(p.provinces_additional?'<span style="color:#556B7A;font-size:10px"> +'+p.provinces_additional.split(',').length+'</span>':'')+'</td>';
     html+='<td class="col-proponent">'+(p.proponent||'')+'</td>';
     html+='<td>'+statusBadge(p.status||'Proposed')+'</td>';
@@ -2585,7 +2521,7 @@ function renderProjectTable(){
     html+='<td class="col-source">'+srcLink(srcUrl,srcTitle)+'</td>';
     html+='</tr>';
     // Expansion row
-    const colSpan=8;
+    const colSpan=9;
     html+='<tr id="'+rowId+'" style="display:none"><td colspan="'+colSpan+'"><div class="project-expand">';
     html+='<div style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">'+(p.description||'No description available.')+'</div>';
     // Project timeline bar
@@ -2713,34 +2649,15 @@ window.exportProjects=function(){
 
 
 /* ====== CALENDAR TAB ====== */
-let _calMonth=null,_calYear=null,_calEvents=[],_calAllEvents=[],_calProvinceFilter='all';
+let _calMonth=null,_calYear=null,_calEvents=[];
 async function renderCalendar(){
-  _calAllEvents=(D&&(D.watchlist||D.events))||[];
-  if(!_calAllEvents.length){try{_calAllEvents=await fetchJSON('events.json')||[]}catch(_){_calAllEvents=[]}}
-  _calEvents=_filterEventsByProvince(_calAllEvents,_calProvinceFilter);
+  _calEvents=(D&&(D.watchlist||D.events))||[];
+  if(!_calEvents.length){try{_calEvents=await fetchJSON('events.json')||[]}catch(_){_calEvents=[]}}
   const now=new Date();
   _calMonth=now.getMonth();_calYear=now.getFullYear();
   renderCalendarGrid();
   renderCalendarEvents();
 }
-function _filterEventsByProvince(events,filter){
-  if(filter==='all')return events;
-  if(filter==='national')return events.filter(e=>{const p=(e.province||'').toLowerCase();return !p||p==='national'||p==='all'});
-  return events.filter(e=>{
-    const p=(e.province||'');
-    if(!p||p==='national'||p==='all')return true;
-    if(p===filter)return true;
-    const pa=e.provinces_affected||[];
-    if(Array.isArray(pa)&&pa.includes(filter))return true;
-    return false;
-  });
-}
-window.filterCalendarByProvince=function(code){
-  _calProvinceFilter=code;
-  _calEvents=_filterEventsByProvince(_calAllEvents,code);
-  renderCalendarGrid();
-  renderCalendarEvents();
-};
 window._calNav=function(dir){
   _calMonth+=dir;
   if(_calMonth>11){_calMonth=0;_calYear++}
@@ -3299,49 +3216,6 @@ function renderExplorer(){
     pis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">'+prov.name+' Indicators</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">Full indicator list for '+prov.name+'</p>'+
       renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
   }
-
-  // OEA / ISQ section
-  _renderOeaIsqSection();
-}
-
-function _renderOeaIsqSection(){
-  const el=$('oeaIsqSection');
-  if(!el)return;
-  const hist=(D&&D.history)||[];
-  if(!hist.length){el.innerHTML='';return;}
-
-  function _buildCard(title,prefix,province){
-    const items=hist.filter(h=>h.indicator_name&&h.indicator_name.startsWith(prefix)&&(!province||(h.province||'')==province));
-    // Deduplicate: keep latest per indicator
-    const latest={};
-    items.forEach(h=>{
-      const k=h.indicator_name;
-      if(!latest[k]||h.period>latest[k].period)latest[k]=h;
-    });
-    const sorted=Object.values(latest).sort((a,b)=>(a.indicator_name||'').localeCompare(b.indicator_name||''));
-    if(!sorted.length)return '<div class="events-week-card" style="padding:16px"><h3 style="margin:0 0 8px;font-size:var(--text-base);color:#003153">'+title+'</h3><div style="color:#64748B;font-size:var(--text-sm)">No data available</div></div>';
-    let rows='';
-    sorted.forEach(h=>{
-      const name=(h.indicator_name||'').replace(prefix,'').replace(/_/g,' ').replace(/\bpct\b/,'%').trim();
-      const dispName=name.charAt(0).toUpperCase()+name.slice(1);
-      const val=h.value!=null?String(h.value):'—';
-      const unit=h.unit||'';
-      const period=h.period||'';
-      rows+='<div style="display:grid;grid-template-columns:1fr 90px 80px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.06);font-size:var(--text-sm);align-items:center">';
-      rows+='<div style="color:#1e293b;font-weight:500">'+san(dispName)+'</div>';
-      rows+='<div style="text-align:right;font-family:var(--font-mono);color:#1e293b">'+san(val)+' <span style="color:#64748B;font-size:var(--text-xs)">'+san(unit)+'</span></div>';
-      rows+='<div style="text-align:right;color:#64748B;font-size:var(--text-xs)">'+san(period.slice(0,7))+'</div>';
-      rows+='</div>';
-    });
-    return '<div class="events-week-card" style="padding:16px"><h3 style="margin:0 0 8px;font-size:var(--text-base);color:#003153">'+title+'</h3>'+rows+'</div>';
-  }
-
-  el.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">Provincial Economic Accounts</h3>'+
-    '<p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">Ontario Economic Accounts (OEA) and Quebec Institut de la statistique (ISQ/BSQ)</p>'+
-    '<div class="oea-isq-grid">'+
-    _buildCard('Ontario (OEA)','on_','ON')+
-    _buildCard('Quebec (ISQ/BSQ)','qc_','QC')+
-    '</div>';
 }
 
 window._doVcodeSearch=function(cat){

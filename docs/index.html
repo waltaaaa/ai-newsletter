@@ -125,7 +125,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .indicator-dropdown-body.open{display:block}
 .indicator-filter{width:100%;padding:10px 16px;border:none;border-bottom:1px solid rgba(0,0,0,0.08);font-family:var(--font-body);font-size:var(--text-sm);outline:none;background:rgba(0,0,0,0.03);color:#1a2744}
 .indicator-filter:focus{background:rgba(255,255,255,0.05)}
-.indicator-group-header{padding:10px 16px;font-size:var(--text-sm);font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#1e293b;background:rgba(15,23,42,0.08);border-top:1px solid rgba(0,0,0,0.12)}
+.indicator-group-header{padding:10px 16px;font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#475569;background:rgba(0,0,0,0.04);border-top:1px solid rgba(0,0,0,0.08)}
 .indicator-row{display:grid;grid-template-columns:1fr 100px 100px 120px 60px;padding:8px 16px;font-size:var(--text-sm);align-items:center;border-bottom:1px solid #e6e6e6;color:#1a2744}
 .indicator-row:nth-child(even){background:rgba(255,255,255,0.03)}
 .indicator-row:hover{background:rgba(96,165,250,0.10)}
@@ -134,12 +134,6 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .indicator-row-change{text-align:right;font-weight:500}
 .indicator-row-period{color:#64748B;font-size:var(--text-xs)}
 .indicator-row-source a{color:#2563EB;text-decoration:none;font-size:var(--text-xs)}
-.chart-range-toggle{display:flex;gap:4px;margin-bottom:8px}
-.chart-range-toggle button{padding:4px 12px;border-radius:6px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--text-secondary);font-size:var(--text-xs);cursor:pointer;transition:all .15s}
-.chart-range-toggle button:hover{background:rgba(96,165,250,0.10)}
-.chart-range-toggle button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.oea-isq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:768px){.oea-isq-grid{grid-template-columns:1fr}}
 .indicator-row-source a:hover{text-decoration:underline}
 /* Province selector */
 .province-selector{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
@@ -401,21 +395,6 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 /* Responsive */
 @media(max-width:1199px){.two-col,.sentiment-section{grid-template-columns:1fr}.market-grid{grid-template-columns:repeat(3,1fr)}.sector-grid{grid-template-columns:1fr}.mini-chart-grid{grid-template-columns:repeat(2,1fr)}.event-row{grid-template-columns:50px 1fr 120px 60px 28px}.ws-row-2,.ws-row-60-40{grid-template-columns:1fr}}
 @media(max-width:767px){.hero{padding:28px 0 20px}.hero-title{font-size:var(--text-2xl)}.hero-badges{flex-wrap:wrap;gap:6px}.nav-inner{position:relative}.nav-inner::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40px;background:linear-gradient(to right,transparent,rgba(45,74,122,0.90));pointer-events:none;z-index:10}.nav-tabs{overflow-x:auto;justify-content:flex-start;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-right:40px}.nav-tab{padding:10px 12px;font-size:var(--text-xs);white-space:nowrap;scroll-snap-align:start}.container{padding:0 var(--space-md)}.tab-panel{padding:var(--space-lg) 0 var(--space-2xl)}.market-grid,.mini-chart-grid{grid-template-columns:1fr 1fr}.indicator-strip{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:var(--space-sm)}.indicator-pill{flex:0 0 140px;min-width:140px}.indicator-row{grid-template-columns:1fr 80px 70px}.indicator-row-period,.indicator-row-source{display:none}.event-row{grid-template-columns:40px 1fr 60px}.event-institution,.event-row>:last-child{display:none}.project-table{font-size:var(--text-xs)}.col-cma,.col-proponent{display:none}.filter-bar{flex-direction:column;gap:var(--space-sm)}.filter-bar input{min-width:100%}.proj-type-toggle{width:100%}.proj-type-toggle button{flex:1}.calendar-cell{min-height:36px;padding:3px}.section-banner{min-height:72px;padding:var(--space-lg);margin-bottom:var(--space-md)}.section-banner-title{font-size:var(--text-lg)}.proj-timeline-bar{min-width:100px}}
-/* ── Added This Week ── */
-.atw-section{margin-bottom:20px}
-.atw-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.atw-title{font-family:var(--font-heading);font-size:var(--text-base);font-weight:700;color:#1a2744}
-.atw-count{background:#2563EB;color:#fff;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px}
-.atw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
-.atw-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-left:3px solid #2563EB;border-radius:var(--radius-md);padding:12px 14px;cursor:pointer;transition:box-shadow .15s ease,background .15s ease}
-.atw-card:hover{box-shadow:var(--shadow-md);background:rgba(96,165,250,0.06)}
-.atw-card-name{font-weight:600;font-size:var(--text-sm);color:#1a2744;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.atw-card-meta{display:flex;gap:8px;flex-wrap:wrap;font-size:var(--text-xs);color:#475569}
-.atw-card-meta span{display:inline-flex;align-items:center;gap:3px}
-.atw-tag{font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px}
-.atw-tag-new{background:#DBEAFE;color:#1E40AF}
-.atw-toggle{font-size:var(--text-xs);color:#2563EB;cursor:pointer;border:none;background:none;font-weight:500;padding:0}
-.atw-toggle:hover{text-decoration:underline}
 /* ── Project Timeline ── */
 .proj-timeline{display:flex;align-items:center;gap:2px;height:10px;border-radius:5px;overflow:hidden;background:rgba(0,0,0,0.08);min-width:140px;max-width:240px;position:relative}
 .proj-timeline-seg{height:100%;min-width:3px;transition:width .2s}
@@ -599,7 +578,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
         <span id="navMeta">Loading...</span>
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      <div id="editionList" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#1e293b;border:1px solid rgba(255,255,255,0.25);border-radius:var(--radius-sm);box-shadow:0 8px 24px rgba(0,0,0,0.5);min-width:220px;max-height:300px;overflow-y:auto;z-index:200"></div>
+      <div id="editionList" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:var(--bg-subtle);border:1px solid var(--glass-border);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);min-width:200px;max-height:300px;overflow-y:auto;z-index:200"></div>
     </div>
   </div>
 </nav>
@@ -709,7 +688,11 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
     </div>
     <div class="filter-bar" id="projectFilterBar">
       <input type="text" id="projectSearch" placeholder="Search projects..." aria-label="Search projects">
-      <!-- greenfield/brownfield toggle removed -->
+      <div class="proj-type-toggle" id="projTypeToggle">
+        <button class="active" data-type="all">All</button>
+        <button data-type="greenfield">Greenfield</button>
+        <button data-type="brownfield">Brownfield</button>
+      </div>
       <select id="filterProvince" aria-label="Filter by province"><option value="">All Provinces</option></select>
       <select id="filterSector" aria-label="Filter by sector"><option value="">All Sectors</option></select>
       <select id="filterStatus" aria-label="Filter by status"><option value="">All Statuses</option></select>
@@ -742,7 +725,6 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       </div>
     </div>
     <div id="projSummaryStats" class="proj-stats"></div>
-    <div id="addedThisWeek" style="display:none"></div>
     <div id="projectResultsSummary" class="results-summary"></div>
     <div id="projectTableContainer"></div>
     <button id="loadMoreBtn" class="load-more-btn" style="display:none">Load more projects</button>
@@ -754,25 +736,6 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
         <div class="section-banner-title">Economic Calendar</div>
         <div class="section-banner-sub">Economic events and watchlist</div>
       </div>
-    </div>
-    <div class="filter-bar" id="calendarFilterBar" style="margin-bottom:12px">
-      <select id="calendarProvinceFilter" onchange="filterCalendarByProvince(this.value)" aria-label="Filter by province" style="padding:6px 12px;border-radius:8px;border:1px solid #c0c0c0;background:#f0f4f8;color:#1e293b;font-size:var(--text-sm);min-width:180px">
-        <option value="all">All Provinces</option>
-        <option value="national">National Only</option>
-        <option value="AB">Alberta</option>
-        <option value="BC">British Columbia</option>
-        <option value="MB">Manitoba</option>
-        <option value="NB">New Brunswick</option>
-        <option value="NL">Newfoundland and Labrador</option>
-        <option value="NS">Nova Scotia</option>
-        <option value="NT">Northwest Territories</option>
-        <option value="NU">Nunavut</option>
-        <option value="ON">Ontario</option>
-        <option value="PE">Prince Edward Island</option>
-        <option value="QC">Quebec</option>
-        <option value="SK">Saskatchewan</option>
-        <option value="YT">Yukon</option>
-      </select>
     </div>
     <div id="calendarGrid"></div>
     <div id="thisWeekEvents"></div>
@@ -791,7 +754,6 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       <section id="indicatorExplorer" style="margin-top:16px"></section>
     </div>
     <div id="provIndicatorSection" style="margin-bottom:24px"></div>
-    <div id="oeaIsqSection" style="margin-bottom:24px"></div>
     <div id="explorerSearch" style="margin-bottom:16px"></div>
     <div id="explorerStats" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap"></div>
     <div id="explorerCategories" style="margin-bottom:16px"></div>
