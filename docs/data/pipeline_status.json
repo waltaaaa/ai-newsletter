@@ -1,6 +1,6 @@
 {
   "last_run": {
-    "started_at": "2026-03-26T06:16:05.846741",
+    "started_at": "2026-03-27T06:16:37.257834",
     "status": "running",
     "duration_seconds": 0,
     "discovery": {
@@ -22,9 +22,20 @@
   },
   "recent_runs": [
     {
-      "started_at": "2026-03-26T06:16:05.846741",
+      "started_at": "2026-03-27T06:16:37.257834",
       "status": "running",
       "duration_seconds": 0,
+      "discovery": {
+        "articles_found": 0,
+        "projects_added": 0,
+        "projects_updated": 0,
+        "projects_deduped": 0
+      }
+    },
+    {
+      "started_at": "2026-03-26T06:16:05.846741",
+      "status": "success",
+      "duration_seconds": 591,
       "discovery": {
         "articles_found": 0,
         "projects_added": 0,
@@ -52,17 +63,6 @@
         "projects_added": 31,
         "projects_updated": 0,
         "projects_deduped": 0
-      }
-    },
-    {
-      "started_at": "2026-03-16T04:36:21.049744",
-      "status": "partial",
-      "duration_seconds": 1576,
-      "discovery": {
-        "articles_found": 31,
-        "projects_added": 29,
-        "projects_updated": 0,
-        "projects_deduped": 2
       }
     }
   ]
