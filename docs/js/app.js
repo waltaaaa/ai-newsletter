@@ -3382,7 +3382,13 @@ function renderExplorer(){
   if(cis){
     cis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">National Indicator Explorer</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">All national indicators with time-series history</p><div id="canadaIndicatorDropdown"></div><section id="indicatorExplorer" style="margin-top:16px"></section>';
     const dd=$('canadaIndicatorDropdown');
-    if(dd)dd.innerHTML=renderIndicatorDropdown(indicators,'All National Indicators','_canada');
+    if(dd){
+      const natInds=indicators.filter(ind=>{
+        const p=(ind.province||'').toLowerCase();
+        return !p||p==='national'||p==='canada';
+      });
+      dd.innerHTML=renderIndicatorDropdown(natInds,'All National Indicators ('+natInds.length+')','_canada');
+    }
     renderIndicatorExplorer();
   }
 
@@ -3390,8 +3396,12 @@ function renderExplorer(){
   const pis=$('provIndicatorSection');
   if(pis){
     const prov=PROVS.find(p=>p.code===selectedProvince)||PROVS[0];
+    const provInds=indicators.filter(ind=>{
+      const p=(ind.province||'').toLowerCase();
+      return p===prov.code.toLowerCase()||p===prov.name.toLowerCase();
+    });
     pis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">'+prov.name+' Indicators</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">Full indicator list for '+prov.name+'</p>'+
-      renderIndicatorDropdown(indicators,prov.name+' Indicators','_prov');
+      renderIndicatorDropdown(provInds,prov.name+' Indicators ('+provInds.length+')','_prov');
   }
 }
 
