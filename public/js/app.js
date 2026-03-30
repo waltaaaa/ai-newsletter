@@ -1818,44 +1818,6 @@ const INDICATOR_CATALOG=[
   {group:'Markets',items:[
     {id:'tsx',label:'S&P/TSX Composite',unit:'',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/%5EGSPTSE/',prov:false},
     {id:'lumber',label:'Lumber',unit:'USD',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/LBS%3DF/',prov:false}
-  ]},
-  {group:'Ontario (OEA)',items:[
-    {id:'on_real_consumption',label:'ON Real Consumption',unit:'$M',source:'Ontario Economic Accounts',url:'https://data.ontario.ca/dataset/ontario-economic-accounts',prov:false},
-    {id:'on_real_household',label:'ON Household Spending',unit:'$M',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_real_gov_expenditure',label:'ON Gov Expenditure',unit:'$M',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_real_capital_investment',label:'ON Capital Investment',unit:'$M',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_exports',label:'ON Exports',unit:'$M',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_imports',label:'ON Imports',unit:'$M',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_gdp_goods',label:'ON GDP Goods-Producing',unit:'$M',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_consumption_pct',label:'ON Consumption Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_household_pct',label:'ON Household Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_gov_expenditure_pct',label:'ON Gov Spend Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_capital_investment_pct',label:'ON Capital Inv Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_exports_pct',label:'ON Exports Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_imports_pct',label:'ON Imports Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false},
-    {id:'on_gdp_goods_pct',label:'ON GDP Goods Q/Q %',unit:'%',source:'Ontario Economic Accounts',prov:false}
-  ]},
-  {group:'Quebec (ISQ)',items:[
-    {id:'qc_real_gdp',label:'QC Real GDP',unit:'$M',source:'ISQ',url:'https://statistique.quebec.ca/en/document/comptes-economiques-du-quebec-quaterly',prov:false},
-    {id:'qc_nominal_gdp',label:'QC Nominal GDP',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_household_consumption',label:'QC Household Spending',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_gov_consumption',label:'QC Gov Spending',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_business_investment',label:'QC Business Investment',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_exports',label:'QC Exports',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_imports',label:'QC Imports',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_compensation',label:'QC Employee Compensation',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_household_income',label:'QC Household Income',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_real_gdp_pct',label:'QC Real GDP Q/Q %',unit:'%',source:'ISQ',prov:false},
-    {id:'qc_monthly_gdp',label:'QC Monthly GDP',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_housing_starts',label:'QC Housing Starts',unit:'units',source:'ISQ',prov:false},
-    {id:'qc_retail_sales',label:'QC Retail Sales',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_manufacturing_sales',label:'QC Manufacturing Sales',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_wholesale_sales',label:'QC Wholesale Sales',unit:'$M',source:'ISQ',prov:false},
-    {id:'qc_weekly_earnings',label:'QC Avg Weekly Earnings',unit:'$',source:'ISQ',prov:false},
-    {id:'qc_employment',label:'QC Employment',unit:'K',source:'ISQ',prov:false},
-    {id:'qc_unemployment_rate',label:'QC Unemployment Rate',unit:'%',source:'ISQ',prov:false},
-    {id:'qc_participation_rate',label:'QC Participation Rate',unit:'%',source:'ISQ',prov:false},
-    {id:'qc_cpi',label:'QC CPI Index',unit:'index',source:'ISQ',prov:false}
   ]}
 ];
 
