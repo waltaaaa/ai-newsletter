@@ -2211,126 +2211,296 @@ function sectorCard(s){
   return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+mmBadge+(analysis?san(analysis):'<em style="color:#556B7A">No analysis available.</em>')+'</div></div>';
 }
 
-/* ====== MARKETS TAB ====== */
+/* ====== MARKETS TAB (Interactive Charts) ====== */
+const _mktTsMap={'S&P/TSX':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'sp500','Dow Jones':'djia','NASDAQ':'nasdaq','FTSE 100':'ftse100','DAX':'dax','Nikkei 225':'nikkei225','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','EUR/USD':'eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'usdjpy','USD/CNY':'usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'wti','Crude Oil (Brent)':'brent','Natural Gas':'natural_gas','Gold':'gold','Silver':'silver','Platinum':'platinum','Palladium':'palladium','Copper':'copper','Aluminum':'aluminum','Wheat':'wheat','Corn':'corn','Rice':'comm_rice','Soybeans':'soybeans','Coffee':'coffee','Cocoa':'cocoa','Sugar #11':'sugar','Cotton':'cotton','Soybean Oil':'comm_soyoil','Soybean Meal':'comm_soymeal','Coal (Newcastle)':'comm_coal','Propane':'comm_propane','Lumber':'lumber'};
+const _mktPal=['#2563EB','#10B981','#F59E0B','#8B5CF6','#EC4899','#EF4444','#0EA5E9','#84CC16','#14B8A6','#D946EF','#F97316','#6366F1'];
+let _mktState={};
+
+/* Shared engine: renders one large multi-series chart with toggleable pills */
+function _mktBuildSection(containerId,title,items,defaults,chartKey){
+  const el=$(containerId);if(!el)return;
+  _mktState[chartKey]={items,active:new Set(defaults),mode:'price'};
+  const cid='mktChart_'+chartKey;
+  let html='<h3>'+title+'</h3>';
+  // Stat row for active items
+  html+='<div class="mkt-stat-row" id="mktStats_'+chartKey+'">';
+  items.forEach(it=>{
+    const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':(chg&&chg!=='0'&&chg!=='0%'?'up':'flat');
+    html+='<div class="mkt-stat" id="mktStat_'+chartKey+'_'+_pillId(it.name)+'" style="'+(defaults.includes(it.name)?'':'display:none')+'">';
+    html+='<div class="mkt-stat-label">'+it.name+'</div>';
+    html+='<div class="mkt-stat-val">'+(it.value||'N/A')+'</div>';
+    if(chg)html+='<div class="mkt-stat-chg '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
+    if(it.yy)html+='<div class="mkt-stat-chg flat" style="font-size:10px">YoY: '+it.yy+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  // Mode toggle (price vs % change)
+  html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">';
+  html+='<div class="mkt-pills" id="mktPills_'+chartKey+'">';
+  items.forEach((it,i)=>{
+    const isActive=defaults.includes(it.name);
+    const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':'up';
+    html+='<div class="mkt-pill'+(isActive?' active':'')+'" data-name="'+it.name+'" data-key="'+chartKey+'" onclick="_mktToggle(this)">';
+    html+='<span style="width:8px;height:8px;border-radius:50%;background:'+_mktPal[i%_mktPal.length]+'"></span> ';
+    html+=it.name;
+    if(it.value)html+=' <span class="pill-val">'+it.value+'</span>';
+    if(chg)html+=' <span class="pill-chg '+cls+'">'+chg+'</span>';
+    html+='</div>';
+  });
+  html+='</div>';
+  html+='<div class="mkt-mode-toggle" id="mktMode_'+chartKey+'">';
+  html+='<div class="mkt-mode-btn active" data-mode="price" data-key="'+chartKey+'" onclick="_mktSetMode(this)">Price</div>';
+  html+='<div class="mkt-mode-btn" data-mode="pct" data-key="'+chartKey+'" onclick="_mktSetMode(this)">% Change</div>';
+  html+='</div></div>';
+  // Chart canvas
+  html+='<div class="mkt-chart-wrap"><canvas id="'+cid+'"></canvas></div>';
+  el.innerHTML=html;
+  _mktDrawChart(chartKey);
+}
+
+function _pillId(name){return(name||'').replace(/[^a-zA-Z0-9]/g,'_')}
+
+function _mktToggle(pill){
+  const name=pill.dataset.name;const key=pill.dataset.key;
+  const st=_mktState[key];if(!st)return;
+  if(st.active.has(name)){if(st.active.size<=1)return;st.active.delete(name);pill.classList.remove('active')}
+  else{st.active.add(name);pill.classList.add('active')}
+  // Show/hide stat
+  const statEl=document.getElementById('mktStat_'+key+'_'+_pillId(name));
+  if(statEl)statEl.style.display=st.active.has(name)?'':'none';
+  _mktDrawChart(key);
+}
+
+function _mktSetMode(btn){
+  const key=btn.dataset.key;const mode=btn.dataset.mode;
+  const st=_mktState[key];if(!st)return;
+  st.mode=mode;
+  btn.parentElement.querySelectorAll('.mkt-mode-btn').forEach(b=>b.classList.toggle('active',b===btn));
+  _mktDrawChart(key);
+}
+
+async function _mktDrawChart(key){
+  const st=_mktState[key];if(!st)return;
+  const cid='mktChart_'+key;
+  const canvas=document.getElementById(cid);if(!canvas)return;
+  if(charts[cid])charts[cid].destroy();
+  const activeItems=st.items.filter(it=>st.active.has(it.name));
+  if(!activeItems.length)return;
+  // Load all timeseries in parallel
+  const tsPromises=activeItems.map(it=>loadTimeseries(_mktTsMap[it.name]||it.tsId||''));
+  const tsResults=await Promise.all(tsPromises);
+  // Find common date range (12 months)
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
+  const datasets=[];const allLabels=new Set();
+  activeItems.forEach((it,i)=>{
+    const ts=tsResults[i];if(!ts)return;
+    const raw=ts.series||ts;if(!Array.isArray(raw))return;
+    const filtered=raw.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
+    if(!filtered.length)return;
+    const color=_mktPal[st.items.indexOf(it)%_mktPal.length];
+    let data,labels;
+    if(st.mode==='pct'&&filtered.length>1){
+      const base=filtered[0].value;
+      data=filtered.map(p=>base?((p.value-base)/base*100):0);
+      labels=filtered.map(p=>p.date);
+    }else{
+      data=filtered.map(p=>p.value);
+      labels=filtered.map(p=>p.date);
+    }
+    labels.forEach(l=>allLabels.add(l));
+    datasets.push({label:it.name,data:labels.map((l,j)=>({x:l,y:data[j]})),borderColor:color,backgroundColor:color+'15',borderWidth:2,pointRadius:0,pointHoverRadius:4,pointBackgroundColor:color,fill:false,tension:0.3});
+  });
+  if(!datasets.length){canvas.parentElement.innerHTML='<div style="text-align:center;color:#64748B;padding:40px;font-size:13px">No timeseries data available for selected items</div>';return}
+  const sortedLabels=[...allLabels].sort();
+  // Determine if we need dual axes (>1 dataset with different scales in price mode)
+  let useDualAxis=false;
+  if(st.mode==='price'&&datasets.length===2){
+    const vals0=datasets[0].data.map(d=>d.y).filter(v=>v!=null);
+    const vals1=datasets[1].data.map(d=>d.y).filter(v=>v!=null);
+    if(vals0.length&&vals1.length){
+      const avg0=vals0.reduce((a,b)=>a+b,0)/vals0.length;
+      const avg1=vals1.reduce((a,b)=>a+b,0)/vals1.length;
+      if(avg0>0&&avg1>0&&(avg0/avg1>5||avg1/avg0>5))useDualAxis=true;
+    }
+  }
+  // Auto-switch to % mode if 3+ items selected in price mode with wildly different scales
+  if(st.mode==='price'&&datasets.length>=3){
+    const avgs=datasets.map(ds=>{const vals=ds.data.map(d=>d.y).filter(v=>v!=null);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0});
+    const mx=Math.max(...avgs),mn=Math.min(...avgs.filter(v=>v>0));
+    if(mn>0&&mx/mn>10){
+      // Silently normalize
+      datasets.forEach((ds,i)=>{
+        const vals=ds.data;if(!vals.length)return;
+        const base=vals[0].y;
+        if(base)vals.forEach(v=>{v.y=((v.y-base)/base)*100});
+      });
+      st.mode='pct';
+      const modeEl=document.getElementById('mktMode_'+key);
+      if(modeEl)modeEl.querySelectorAll('.mkt-mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode==='pct'));
+    }
+  }
+  const yAxes={y:{position:'left',grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'Outfit',size:11},color:'#636363',callback:v=>st.mode==='pct'?v.toFixed(1)+'%':fmtNum(v)}}};
+  if(useDualAxis){
+    datasets[0].yAxisID='y';datasets[1].yAxisID='y1';
+    yAxes.y1={position:'right',grid:{display:false},ticks:{font:{family:'Outfit',size:11},color:datasets[1].borderColor,callback:v=>fmtNum(v)}};
+    yAxes.y.ticks.color=datasets[0].borderColor;
+  }
+  charts[cid]=new Chart(canvas,{type:'line',data:{datasets},options:{
+    responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{display:datasets.length>1,position:'top',labels:{boxWidth:12,padding:8,font:{family:'Outfit',size:11},usePointStyle:true,pointStyle:'circle'}},
+      tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8,
+        callbacks:{label:ctx=>{const v=ctx.parsed.y;return ctx.dataset.label+': '+(st.mode==='pct'?v.toFixed(2)+'%':fmtNum(v))}}}
+    },
+    scales:{x:{type:'time',time:{unit:'month',tooltipFormat:'MMM d, yyyy',displayFormats:{month:'MMM yyyy'}},grid:{display:false},ticks:{font:{family:'Outfit',size:10},color:'#636363',maxTicksLimit:8}},...yAxes}
+  }});
+}
+
 function renderMarkets(){
   const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
   let indices=fm.indices||[];let fx=fm.fx||[];
   // Build from indicators[] if briefing has no market data
   if(!indices.length&&indicators.length){
-    const idxMap=[{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'},{name:'FTSE 100',ind:'ftse100'},{name:'DAX',ind:'dax'},{name:'Nikkei 225',ind:'nikkei225'}];
-    idxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:'',region:''})});
+    [{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'},{name:'FTSE 100',ind:'ftse100'},{name:'DAX',ind:'dax'},{name:'Nikkei 225',ind:'nikkei225'}].forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:'',region:''})});
   }
   if(!fx.length&&indicators.length){
-    const fxMap=[{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'},{name:'EUR/USD',ind:'eurusd'},{name:'USD/CNY',ind:'usdcny'},{name:'USD/JPY',ind:'usdjpy'}];
-    fxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!fx.find(x=>x.name===m.name))fx.push({name:m.name,value:i.value})});
+    [{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'},{name:'EUR/USD',ind:'eurusd'},{name:'USD/CNY',ind:'usdcny'},{name:'USD/JPY',ind:'usdjpy'}].forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!fx.find(x=>x.name===m.name))fx.push({name:m.name,value:i.value})});
   }
-  // Equity + Currency cards
-  const mktTsMap={'S&P/TSX':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'sp500','Dow Jones':'djia','NASDAQ':'nasdaq','FTSE 100':'ftse100','DAX':'dax','Nikkei 225':'nikkei225','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','EUR/USD':'eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'usdjpy','USD/CNY':'usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'wti','Crude Oil (Brent)':'brent','Natural Gas':'natural_gas','Gold':'gold','Silver':'silver','Platinum':'platinum','Palladium':'palladium','Copper':'copper','Aluminum':'aluminum','Wheat':'wheat','Corn':'corn','Rice':'comm_rice','Soybeans':'soybeans','Coffee':'coffee','Cocoa':'cocoa','Sugar #11':'sugar','Cotton':'cotton','Soybean Oil':'comm_soyoil','Soybean Meal':'comm_soymeal','Coal (Newcastle)':'comm_coal','Propane':'comm_propane','Lumber':'lumber'};
-  const normMktId=(name)=>(name||'').toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_');
-  const mktDate=D?fmtDate(D.updated_at||D.date)||'':'';
-  let eqHtml='';let mktSparkJobs=[];let mktIdx=0;
-  if(indices.length){
-    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Equity Indices</h3><div class="market-grid">';
-    indices.forEach(item=>{
-      const chg=item.change||item.day||'';const isNeg=chg.startsWith('-');
-      const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
-      const sid='spark_mkt_'+mktIdx++;
-      const tsId=mktTsMap[item.name]||null;
-      eqHtml+='<div class="market-card" data-cat="equity"><div class="market-card-ticker">'+(item.name||'')+(item.region?' <small style="color:#475569">'+item.region+'</small>':'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
-      if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#475569">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#666666;margin-top:2px">'+mktDate+'</div>';
-      eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
-      if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
-    });
-    eqHtml+='</div>';
-  }
-  if(fx.length){
-    eqHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">Foreign Exchange</h3><div class="market-grid">';
-    fx.forEach(item=>{
-      const chg=item.day||'';const isNeg=chg.startsWith('-');
-      const cls=isNeg?'change-down':(chg?'change-up':'change-flat');
-      const sid='spark_mkt_'+mktIdx++;
-      const tsId=mktTsMap[item.name]||null;
-      eqHtml+='<div class="market-card" data-cat="fx"><div class="market-card-ticker">'+(item.name||'')+'</div><div class="market-card-price">'+(item.value||'N/A')+'</div>';
-      if(chg)eqHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-      if(item.yy)eqHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#475569">YoY: '+item.yy+'</div>';
-      if(mktDate)eqHtml+='<div style="font-size:var(--text-xs);color:#666666;margin-top:2px">'+mktDate+'</div>';
-      eqHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+sid+'"></canvas></div></div>';
-      if(tsId)mktSparkJobs.push({canvasId:sid,docId:tsId,change:chg});
-    });
-    eqHtml+='</div>';
-  }
-  $('marketsGrid').innerHTML=eqHtml||'<div class="empty-state"><div class="empty-state-text">No equity/currency data.</div></div>';
-  mktSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
+  // Section 1: Equity Indices
+  const eqItems=indices.map(it=>({name:it.name,value:it.value||'',change:it.change||it.day||'',yy:it.yy||''}));
+  if(eqItems.length)_mktBuildSection('mktEquitiesSection','Equity Indices',eqItems,['S&P/TSX','S&P 500'],'equities');
+  else $('mktEquitiesSection').innerHTML='';
 
-  // Yield curve
+  // Section 2: Foreign Exchange
+  const fxItems=fx.map(it=>({name:it.name,value:it.value||'',change:it.day||'',yy:it.yy||''}));
+  if(fxItems.length)_mktBuildSection('mktFxSection','Foreign Exchange',fxItems,['CAD/USD','EUR/USD'],'fx');
+  else $('mktFxSection').innerHTML='';
+
+  // Section 3: Yield Curve
+  _mktRenderYield();
+
+  // Section 4: Commodities
+  _mktRenderCommodities(fm);
+}
+
+function _mktRenderYield(){
+  const el=$('mktYieldSection');if(!el)return;
   let yc=(D&&D.yieldCurve)||[];
-  // Build from indicators[] if briefing has no yield data
   if(!yc.length&&indicators.length){
-    const yieldTerms=[{term:'2Y',ind:'goc_2y_yield'},{term:'5Y',ind:'goc_5y_yield'},{term:'10Y',ind:'goc_10y_yield'}];
-    yieldTerms.forEach(t=>{const i=indicators.find(x=>x.indicator_name===t.ind);if(i)yc.push({term:t.term,yield:i.value})});
+    [{term:'2Y',ind:'goc_2y_yield'},{term:'5Y',ind:'goc_5y_yield'},{term:'10Y',ind:'goc_10y_yield'}].forEach(t=>{const i=indicators.find(x=>x.indicator_name===t.ind);if(i)yc.push({term:t.term,yield:i.value})});
   }
-  if(yc.length){
-    let ycHtml='<div class="yield-card" style="padding:16px"><h3 style="font-size:var(--text-sm);font-weight:600;margin:0 0 8px;color:#1a2744;text-transform:uppercase;letter-spacing:1px">Gov. of Canada Yield Curve</h3><canvas id="yieldChart" style="width:100%;max-height:200px"></canvas>';
-    const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
-    if(y2&&y10){
-      const spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);
-      ycHtml+='<div class="yield-spread">10Y-2Y Spread: '+spread+'bp';
-      if(parseInt(spread)<0)ycHtml+=' <span class="inversion">Inverted</span>';
-      ycHtml+='</div>';
+  if(!yc.length){el.innerHTML='';return}
+  let html='<h3>Government of Canada Yield Curve</h3>';
+  // Stat row with all terms
+  html+='<div class="mkt-stat-row">';
+  yc.forEach(y=>{html+='<div class="mkt-stat"><div class="mkt-stat-label">'+y.term+'</div><div class="mkt-stat-val">'+y.yield+'</div></div>'});
+  const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
+  if(y2&&y10){
+    const spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);
+    html+='<div class="mkt-stat"><div class="mkt-stat-label">10Y-2Y Spread</div><div class="mkt-stat-val">'+spread+'bp'+(parseInt(spread)<0?' <span style="color:#EF4444;font-size:11px;font-weight:600">Inverted</span>':'')+'</div></div>';
+  }
+  html+='</div>';
+  html+='<div class="mkt-chart-wrap" style="height:240px"><canvas id="mktYieldChart"></canvas></div>';
+  html+='<div style="font-size:11px;color:#64748B;margin-top:4px"><a href="https://www.bankofcanada.ca/rates/interest-rates/" target="_blank" style="color:#2563EB;text-decoration:none">Bank of Canada Valet API \u2197</a></div>';
+  el.innerHTML=html;
+  setTimeout(()=>{
+    const canvas=document.getElementById('mktYieldChart');if(!canvas)return;
+    if(charts.mktYield)charts.mktYield.destroy();
+    const labels=yc.map(y=>y.term);const data=yc.map(y=>parseFloat(y.yield)||0);
+    // Last year data if available
+    const dsArr=[{label:'Current',data,borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#2563EB',pointBorderColor:'#fff',pointBorderWidth:2,fill:true,tension:0.3}];
+    if(D&&D.yieldCurveLastYear&&D.yieldCurveLastYear.length){
+      dsArr.push({label:'1 Year Ago',data:D.yieldCurveLastYear,borderColor:'#94A3B8',backgroundColor:'transparent',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#94A3B8',borderDash:[5,3],fill:false,tension:0.3});
     }
-    ycHtml+='<a class="market-card-source" href="https://www.bankofcanada.ca/rates/interest-rates/" target="_blank">Bank of Canada Valet API \u2197</a></div>';
-    $('yieldCurveCard').innerHTML=ycHtml;
-    setTimeout(()=>drawYieldChart(yc),50);
-  } else {
-    $('yieldCurveCard').innerHTML='<div class="yield-card" style="padding:16px"><div class="empty-state"><div class="empty-state-text" style="color:#475569">No yield curve data.</div></div></div>';
-  }
+    charts.mktYield=new Chart(canvas,{type:'line',data:{labels,datasets:dsArr},options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:dsArr.length>1,position:'top',labels:{boxWidth:12,font:{family:'Outfit',size:11},usePointStyle:true}},
+        tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8}},
+      scales:{x:{grid:{display:false},ticks:{font:{family:'Outfit',size:12},color:'#475569'}},
+        y:{grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5},ticks:{font:{family:'Outfit',size:11},color:'#636363',callback:v=>v.toFixed(2)+'%'}}}
+    }});
+  },50);
+}
 
-  // Commodities — pipeline stores [{category, color, items: [{name, unit, val, yy, day}]}]
+function _mktRenderCommodities(fm){
+  const el=$('mktCommoditiesSection');if(!el)return;
   const rawComms=(D&&D.commodities)||fm.commodities||[];
-  // Build commodity cards from indicators[] if pipeline data is empty
+  // Build from indicators if empty
   if(!rawComms.length&&indicators.length){
-    const commMap=[{name:'Crude Oil (WTI)',ind:'wti'},{name:'Crude Oil (WTI)',ind:'wti_oil'},{name:'Crude Oil (Brent)',ind:'brent'},{name:'Natural Gas',ind:'natural_gas'},{name:'Gold',ind:'gold'},{name:'Silver',ind:'silver'},{name:'Platinum',ind:'platinum'},{name:'Palladium',ind:'palladium'},{name:'Copper',ind:'copper'},{name:'Aluminum',ind:'aluminum'},{name:'Wheat',ind:'wheat'},{name:'Corn',ind:'corn'},{name:'Soybeans',ind:'soybeans'},{name:'Coffee',ind:'coffee'},{name:'Cocoa',ind:'cocoa'},{name:'Sugar #11',ind:'sugar'},{name:'Cotton',ind:'cotton'},{name:'Lumber',ind:'lumber'}];
-    commMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!rawComms.find(x=>x.name===m.name))rawComms.push({name:m.name,val:i.value,change:''})});
+    [{name:'Crude Oil (WTI)',ind:'wti'},{name:'Crude Oil (WTI)',ind:'wti_oil'},{name:'Crude Oil (Brent)',ind:'brent'},{name:'Natural Gas',ind:'natural_gas'},{name:'Gold',ind:'gold'},{name:'Silver',ind:'silver'},{name:'Copper',ind:'copper'},{name:'Aluminum',ind:'aluminum'},{name:'Wheat',ind:'wheat'},{name:'Corn',ind:'corn'},{name:'Soybeans',ind:'soybeans'},{name:'Coffee',ind:'coffee'},{name:'Lumber',ind:'lumber'}].forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!rawComms.find(x=>x.name===m.name))rawComms.push({name:m.name,val:i.value,change:'',category:'Other'})});
   }
-  let commHtml='';
-  const commSparkJobs=[];
-  const commCatMap={'Energy':'energy','Precious Metals':'precious','Base Metals':'base','Agriculture - Grains':'agriculture','Agriculture - Softs':'agriculture','Agriculture - Oils & Meals':'agriculture','Fertilizers':'agriculture','Livestock':'agriculture','Forest Products':'forest'};
+  // Flatten nested category structure
+  let allComms=[];
+  const catSet=new Set();
   if(Array.isArray(rawComms)&&rawComms.length&&rawComms[0].items){
-    // Nested category structure from pipeline
     rawComms.forEach(cat=>{
-      const dataCat=commCatMap[cat.category]||'energy';
-      commHtml+='<h3 style="font-size:var(--text-sm);font-weight:600;margin:16px 0 8px;color:#8ea8cc;text-transform:uppercase;letter-spacing:1px">'+cat.category+'</h3><div class="market-grid">';
-      (cat.items||[]).forEach(c=>{
-        const yy=c.yy||'';const isNeg=yy.startsWith('-');
-        const cls=isNeg?'change-down':(yy?'change-up':'change-flat');
-        const cid='spark_comm_'+mktIdx++;
-        const tsId=mktTsMap[c.name]||null;
-        commHtml+='<div class="market-card" data-cat="'+dataCat+'"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||'N/A')+(c.unit?' <small style="color:#475569">'+c.unit+'</small>':'')+'</div>';
-        if(yy)commHtml+='<div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+yy+' YoY</div>';
-        if(c.day)commHtml+='<div style="font-family:var(--font-mono);font-size:var(--text-xs);color:#475569">'+c.day+' today</div>';
-        if(mktDate)commHtml+='<div style="font-size:var(--text-xs);color:#666666;margin-top:2px">'+mktDate+'</div>';
-        commHtml+='<div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
-        if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:yy});
-      });
-      commHtml+='</div>';
+      catSet.add(cat.category);
+      (cat.items||[]).forEach(c=>{allComms.push({name:c.name,value:c.val||'',change:c.yy||'',day:c.day||'',unit:c.unit||'',category:cat.category})});
     });
-  } else if(Array.isArray(rawComms)){
-    // Flat array fallback
-    rawComms.forEach(c=>{
-      const chg=c.change||c.yy||'';const isNeg=chg.startsWith('-');
-      const cls=isNeg?'change-down':'change-up';
-      const cid='spark_comm_'+mktIdx++;
-      const tsId=mktTsMap[c.name]||null;
-      commHtml+='<div class="market-card" data-cat="energy"><div class="market-card-ticker">'+(c.name||'')+'</div><div class="market-card-price">'+(c.val||c.value||'N/A')+'</div><div class="market-card-change '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div><div class="sparkline-wrap"><canvas class="sparkline" id="'+cid+'"></canvas></div></div>';
-      if(tsId)commSparkJobs.push({canvasId:cid,docId:tsId,change:chg});
-    });
+  }else if(Array.isArray(rawComms)){
+    rawComms.forEach(c=>{const cat=c.category||'Other';catSet.add(cat);allComms.push({name:c.name,value:c.val||c.value||'',change:c.yy||c.change||'',unit:c.unit||'',category:cat})});
   }
-  $('commoditiesGrid').innerHTML=commHtml||'<div class="empty-state"><div class="empty-state-text">No commodity data.</div></div>';
-  commSparkJobs.forEach(j=>loadAndDrawSparkline(j.canvasId,j.docId,j.change));
-  // Canadian-specific commodities
-  renderCanadianCommodities();
+  if(!allComms.length){el.innerHTML='';return}
+  const categories=['All',...catSet];
+  _mktState.commCat='All';_mktState.commAll=allComms;_mktState.commCats=categories;
+  let html='<h3>Commodities</h3>';
+  // Category tabs
+  html+='<div class="mkt-cat-tabs" id="mktCommCatTabs">';
+  categories.forEach(cat=>{html+='<div class="mkt-cat-tab'+(cat==='All'?' active':'')+'" data-cat="'+cat+'" onclick="_mktSetCommCat(this)">'+cat+'</div>'});
+  html+='</div>';
+  // Pills + chart placeholder
+  html+='<div id="mktCommPillWrap"></div>';
+  html+='<div id="mktCommChartWrap"></div>';
+  el.innerHTML=html;
+  _mktRenderCommPills('All');
+}
+
+function _mktSetCommCat(tab){
+  const cat=tab.dataset.cat;
+  _mktState.commCat=cat;
+  tab.parentElement.querySelectorAll('.mkt-cat-tab').forEach(t=>t.classList.toggle('active',t===tab));
+  _mktRenderCommPills(cat);
+}
+
+function _mktRenderCommPills(cat){
+  const allComms=_mktState.commAll||[];
+  const filtered=cat==='All'?allComms:allComms.filter(c=>c.category===cat);
+  // Pick first 2 as defaults
+  const defaults=filtered.slice(0,2).map(c=>c.name);
+  const items=filtered.map(c=>({name:c.name,value:c.value,change:c.change,yy:'',unit:c.unit}));
+  if(!items.length){$('mktCommPillWrap').innerHTML='<div style="color:#64748B;font-size:13px;padding:20px">No data for this category.</div>';$('mktCommChartWrap').innerHTML='';return}
+  // Build inline (not using _mktBuildSection since we need to render into sub-containers)
+  _mktState.commodities={items,active:new Set(defaults),mode:'price'};
+  const key='commodities';const cid='mktChart_'+key;
+  let html='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div class="mkt-pills" id="mktPills_'+key+'">';
+  items.forEach((it,i)=>{
+    const isActive=defaults.includes(it.name);
+    const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':'up';
+    html+='<div class="mkt-pill'+(isActive?' active':'')+'" data-name="'+it.name+'" data-key="'+key+'" onclick="_mktToggle(this)">';
+    html+='<span style="width:8px;height:8px;border-radius:50%;background:'+_mktPal[i%_mktPal.length]+'"></span> ';
+    html+=it.name;
+    if(it.value)html+=' <span class="pill-val">'+it.value+(it.unit?' '+it.unit:'')+'</span>';
+    if(chg)html+=' <span class="pill-chg '+cls+'">'+chg+'</span>';
+    html+='</div>';
+  });
+  html+='</div>';
+  html+='<div class="mkt-mode-toggle" id="mktMode_'+key+'">';
+  html+='<div class="mkt-mode-btn active" data-mode="price" data-key="'+key+'" onclick="_mktSetMode(this)">Price</div>';
+  html+='<div class="mkt-mode-btn" data-mode="pct" data-key="'+key+'" onclick="_mktSetMode(this)">% Change</div>';
+  html+='</div></div>';
+  // Stat row
+  html+='<div class="mkt-stat-row" id="mktStats_'+key+'">';
+  items.forEach(it=>{
+    const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':'up';
+    html+='<div class="mkt-stat" id="mktStat_'+key+'_'+_pillId(it.name)+'" style="'+(defaults.includes(it.name)?'':'display:none')+'">';
+    html+='<div class="mkt-stat-label">'+it.name+'</div><div class="mkt-stat-val">'+(it.value||'N/A')+(it.unit?' <small style="color:#64748B">'+it.unit+'</small>':'')+'</div>';
+    if(chg)html+='<div class="mkt-stat-chg '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  $('mktCommPillWrap').innerHTML=html;
+  $('mktCommChartWrap').innerHTML='<div class="mkt-chart-wrap"><canvas id="'+cid+'"></canvas></div>';
+  _mktDrawChart(key);
 }
 
 /* == Chart Helpers == */
