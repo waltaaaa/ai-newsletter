@@ -2205,25 +2205,22 @@ function _mktBuildSection(containerId,title,items,defaults,chartKey){
     html+='</div>';
   });
   html+='</div>';
-  // Controls row: Date range + Frequency + Price/% toggle
-  html+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">';
-  // Date range buttons
-  html+='<div class="mkt-mode-toggle" id="mktRange_'+chartKey+'">';
+  // Controls: stacked rows, left-aligned
+  html+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;align-items:flex-start">';
+  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">Range</span><div class="mkt-mode-toggle" id="mktRange_'+chartKey+'">';
   [{m:1,l:'1M'},{m:3,l:'3M'},{m:6,l:'6M'},{m:12,l:'1Y'},{m:36,l:'3Y'},{m:60,l:'5Y'},{m:0,l:'All'}].forEach(r=>{
     html+='<div class="mkt-mode-btn'+(r.m===12?' active':'')+'" data-range="'+r.m+'" data-key="'+chartKey+'" onclick="_mktSetRange(this)">'+r.l+'</div>';
   });
-  html+='</div>';
-  // Frequency filter
-  html+='<div class="mkt-mode-toggle" id="mktFreq_'+chartKey+'">';
+  html+='</div></div>';
+  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">Freq</span><div class="mkt-mode-toggle" id="mktFreq_'+chartKey+'">';
   [{f:'all',l:'All'},{f:'daily',l:'Daily'},{f:'weekly',l:'Weekly'},{f:'monthly',l:'Monthly'}].forEach(r=>{
     html+='<div class="mkt-mode-btn'+(r.f==='all'?' active':'')+'" data-freq="'+r.f+'" data-key="'+chartKey+'" onclick="_mktSetFreq(this)">'+r.l+'</div>';
   });
-  html+='</div>';
-  // Price / % Change toggle
-  html+='<div class="mkt-mode-toggle" id="mktMode_'+chartKey+'">';
+  html+='</div></div>';
+  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">View</span><div class="mkt-mode-toggle" id="mktMode_'+chartKey+'">';
   html+='<div class="mkt-mode-btn active" data-mode="price" data-key="'+chartKey+'" onclick="_mktSetMode(this)">Price</div>';
   html+='<div class="mkt-mode-btn" data-mode="pct" data-key="'+chartKey+'" onclick="_mktSetMode(this)">% Change</div>';
-  html+='</div>';
+  html+='</div></div>';
   html+='</div>';
   // Chart canvas
   html+='<div class="mkt-chart-wrap"><canvas id="'+cid+'"></canvas></div>';
@@ -2487,22 +2484,23 @@ function _mktRenderCommPills(cat){
     html+='</div>';
   });
   html+='</div>';
-  // Controls row
-  html+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">';
-  html+='<div class="mkt-mode-toggle" id="mktRange_'+key+'">';
+  // Controls: stacked rows, left-aligned
+  html+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;align-items:flex-start">';
+  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">Range</span><div class="mkt-mode-toggle" id="mktRange_'+key+'">';
   [{m:1,l:'1M'},{m:3,l:'3M'},{m:6,l:'6M'},{m:12,l:'1Y'},{m:36,l:'3Y'},{m:60,l:'5Y'},{m:0,l:'All'}].forEach(r=>{
     html+='<div class="mkt-mode-btn'+(r.m===12?' active':'')+'" data-range="'+r.m+'" data-key="'+key+'" onclick="_mktSetRange(this)">'+r.l+'</div>';
   });
-  html+='</div>';
-  html+='<div class="mkt-mode-toggle" id="mktFreq_'+key+'">';
+  html+='</div></div>';
+  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">Freq</span><div class="mkt-mode-toggle" id="mktFreq_'+key+'">';
   [{f:'all',l:'All'},{f:'daily',l:'Daily'},{f:'weekly',l:'Weekly'},{f:'monthly',l:'Monthly'}].forEach(r=>{
     html+='<div class="mkt-mode-btn'+(r.f==='all'?' active':'')+'" data-freq="'+r.f+'" data-key="'+key+'" onclick="_mktSetFreq(this)">'+r.l+'</div>';
   });
-  html+='</div>';
-  html+='<div class="mkt-mode-toggle" id="mktMode_'+key+'">';
+  html+='</div></div>';
+  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">View</span><div class="mkt-mode-toggle" id="mktMode_'+key+'">';
   html+='<div class="mkt-mode-btn active" data-mode="price" data-key="'+key+'" onclick="_mktSetMode(this)">Price</div>';
   html+='<div class="mkt-mode-btn" data-mode="pct" data-key="'+key+'" onclick="_mktSetMode(this)">% Change</div>';
   html+='</div></div>';
+  html+='</div>';
   // Stat row
   html+='<div class="mkt-stat-row" id="mktStats_'+key+'">';
   items.forEach(it=>{
