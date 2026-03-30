@@ -188,20 +188,20 @@
       "metadata": {}
     },
     {
-      "id": 12760,
+      "id": 54003,
       "indicator_name": "construction_employment",
       "category": "Employment",
       "province": "National",
-      "value": 1986.7,
-      "period": "2026-02-01",
-      "previous_value": 1986.8,
-      "change": "-0.0%",
+      "value": 1986.8,
+      "period": "2026-01-01",
+      "previous_value": null,
+      "change": null,
       "source": "StatCan 14-10-0022",
-      "fetched_at": "2026-03-25T13:18:29Z",
+      "fetched_at": "2026-03-30T17:46:18Z",
       "unit": "thousands",
       "frequency": "monthly",
       "description": "",
-      "backfilled": 0,
+      "backfilled": 1,
       "metadata": {}
     },
     {
@@ -811,6 +811,23 @@
       "source": "Statistics Canada WDS",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "%",
+      "frequency": "monthly",
+      "description": "",
+      "backfilled": 1,
+      "metadata": {}
+    },
+    {
+      "id": 54187,
+      "indicator_name": "cpi_national",
+      "category": "Prices",
+      "province": "National",
+      "value": 165.9,
+      "period": "2026-02-01",
+      "previous_value": null,
+      "change": null,
+      "source": "StatCan 18-10-0004",
+      "fetched_at": "2026-03-30T17:46:18Z",
+      "unit": "index",
       "frequency": "monthly",
       "description": "",
       "backfilled": 1,
@@ -3741,20 +3758,20 @@
       "metadata": {}
     },
     {
-      "id": 12761,
+      "id": 54063,
       "indicator_name": "manufacturing_employment",
       "category": "Employment",
       "province": "National",
-      "value": 249.4,
-      "period": "2026-02-01",
-      "previous_value": 247.3,
-      "change": "+0.8%",
+      "value": 247.3,
+      "period": "2026-01-01",
+      "previous_value": null,
+      "change": null,
       "source": "StatCan 14-10-0022",
-      "fetched_at": "2026-03-25T13:18:29Z",
+      "fetched_at": "2026-03-30T17:46:18Z",
       "unit": "thousands",
       "frequency": "monthly",
       "description": "",
-      "backfilled": 0,
+      "backfilled": 1,
       "metadata": {}
     },
     {
@@ -3775,20 +3792,20 @@
       "metadata": {}
     },
     {
-      "id": 12759,
+      "id": 54123,
       "indicator_name": "mining_og_employment",
       "category": "Employment",
       "province": "National",
-      "value": 340.0,
-      "period": "2026-02-01",
-      "previous_value": 343.6,
-      "change": "-1.0%",
+      "value": 343.6,
+      "period": "2026-01-01",
+      "previous_value": null,
+      "change": null,
       "source": "StatCan 14-10-0022",
-      "fetched_at": "2026-03-25T13:18:29Z",
+      "fetched_at": "2026-03-30T17:46:18Z",
       "unit": "thousands",
       "frequency": "monthly",
       "description": "",
-      "backfilled": 0,
+      "backfilled": 1,
       "metadata": {}
     },
     {
@@ -6903,6 +6920,23 @@
       "metadata": {}
     },
     {
+      "id": 54247,
+      "indicator_name": "unemployment_national",
+      "category": "Labour",
+      "province": "National",
+      "value": 6.7,
+      "period": "2026-02-01",
+      "previous_value": null,
+      "change": null,
+      "source": "StatCan 14-10-0287",
+      "fetched_at": "2026-03-30T17:46:18Z",
+      "unit": "%",
+      "frequency": "monthly",
+      "description": "",
+      "backfilled": 1,
+      "metadata": {}
+    },
+    {
       "id": 53727,
       "indicator_name": "unemployment_prev",
       "category": "",
@@ -7189,6 +7223,23 @@
       "frequency": "monthly",
       "description": "",
       "backfilled": 0,
+      "metadata": {}
+    },
+    {
+      "id": 54307,
+      "indicator_name": "wageGrowth",
+      "category": "Labour",
+      "province": "National",
+      "value": 1369.76,
+      "period": "2026-01-01",
+      "previous_value": null,
+      "change": null,
+      "source": "StatCan 14-10-0223",
+      "fetched_at": "2026-03-30T17:46:18Z",
+      "unit": "$",
+      "frequency": "monthly",
+      "description": "",
+      "backfilled": 1,
       "metadata": {}
     },
     {
@@ -29718,6 +29769,470 @@
       "value": 309.75,
       "unit": "USD",
       "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2021-04-01",
+      "value": 1673.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2021-05-01",
+      "value": 1690.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2021-06-01",
+      "value": 1709.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2021-07-01",
+      "value": 1716.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2021-08-01",
+      "value": 1715.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2021-09-01",
+      "value": 1719.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2021-10-01",
+      "value": 1715.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2021-11-01",
+      "value": 1750.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2021-12-01",
+      "value": 1745.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-01-01",
+      "value": 1735.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-02-01",
+      "value": 1780.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-03-01",
+      "value": 1780.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-04-01",
+      "value": 1802.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-05-01",
+      "value": 1813.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-06-01",
+      "value": 1835.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-07-01",
+      "value": 1835.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-08-01",
+      "value": 1833.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-09-01",
+      "value": 1837.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-10-01",
+      "value": 1856.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-11-01",
+      "value": 1852.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2022-12-01",
+      "value": 1862.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-01-01",
+      "value": 1867.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-02-01",
+      "value": 1865.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-03-01",
+      "value": 1880.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-04-01",
+      "value": 1867.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-05-01",
+      "value": 1867.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-06-01",
+      "value": 1871.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-07-01",
+      "value": 1869.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-08-01",
+      "value": 1919.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-09-01",
+      "value": 1921.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-10-01",
+      "value": 1924.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-11-01",
+      "value": 1926.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2023-12-01",
+      "value": 1962.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-01-01",
+      "value": 1947.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-02-01",
+      "value": 1969.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-03-01",
+      "value": 1952.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-04-01",
+      "value": 1967.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-05-01",
+      "value": 1969.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-06-01",
+      "value": 1961.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-07-01",
+      "value": 1978.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-08-01",
+      "value": 1970.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-09-01",
+      "value": 1984.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-10-01",
+      "value": 1993.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-11-01",
+      "value": 2007.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2024-12-01",
+      "value": 1999.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-01-01",
+      "value": 2014.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-02-01",
+      "value": 1985.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-03-01",
+      "value": 1998.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-04-01",
+      "value": 2002.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-05-01",
+      "value": 2010.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-06-01",
+      "value": 2019.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-07-01",
+      "value": 2022.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-08-01",
+      "value": 2000.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-09-01",
+      "value": 2007.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-10-01",
+      "value": 2008.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-11-01",
+      "value": 2012.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2025-12-01",
+      "value": 1998.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "construction_employment",
+      "province": "national",
+      "period": "2026-01-01",
+      "value": 1986.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
     },
     {
       "indicator_name": "construction_employment",
@@ -160426,8 +160941,936 @@
     {
       "indicator_name": "manufacturing_employment",
       "province": "national",
+      "period": "2021-04-01",
+      "value": 225.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2021-05-01",
+      "value": 222.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2021-06-01",
+      "value": 226.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2021-07-01",
+      "value": 226.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2021-08-01",
+      "value": 225.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2021-09-01",
+      "value": 224.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2021-10-01",
+      "value": 224.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2021-11-01",
+      "value": 230.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2021-12-01",
+      "value": 228.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-01-01",
+      "value": 226.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-02-01",
+      "value": 232.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-03-01",
+      "value": 231.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-04-01",
+      "value": 232.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-05-01",
+      "value": 236.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-06-01",
+      "value": 234.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-07-01",
+      "value": 234.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-08-01",
+      "value": 235.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-09-01",
+      "value": 236.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-10-01",
+      "value": 236.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-11-01",
+      "value": 237.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2022-12-01",
+      "value": 239.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-01-01",
+      "value": 236.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-02-01",
+      "value": 237.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-03-01",
+      "value": 237.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-04-01",
+      "value": 237.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-05-01",
+      "value": 233.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-06-01",
+      "value": 236.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-07-01",
+      "value": 238.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-08-01",
+      "value": 240.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-09-01",
+      "value": 240.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-10-01",
+      "value": 239.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-11-01",
+      "value": 240.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2023-12-01",
+      "value": 241.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-01-01",
+      "value": 247.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-02-01",
+      "value": 246.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-03-01",
+      "value": 245.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-04-01",
+      "value": 244.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-05-01",
+      "value": 242.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-06-01",
+      "value": 246.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-07-01",
+      "value": 245.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-08-01",
+      "value": 244.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-09-01",
+      "value": 245.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-10-01",
+      "value": 243.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-11-01",
+      "value": 241.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2024-12-01",
+      "value": 243.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-01-01",
+      "value": 243.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-02-01",
+      "value": 243.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-03-01",
+      "value": 244.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-04-01",
+      "value": 248.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-05-01",
+      "value": 247.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-06-01",
+      "value": 244.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-07-01",
+      "value": 245.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-08-01",
+      "value": 242.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-09-01",
+      "value": 241.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-10-01",
+      "value": 245.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-11-01",
+      "value": 243.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2025-12-01",
+      "value": 243.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
+      "period": "2026-01-01",
+      "value": 247.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "manufacturing_employment",
+      "province": "national",
       "period": "2026-02-01",
       "value": 249.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2021-04-01",
+      "value": 324.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2021-05-01",
+      "value": 329.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2021-06-01",
+      "value": 328.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2021-07-01",
+      "value": 337.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2021-08-01",
+      "value": 324.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2021-09-01",
+      "value": 331.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2021-10-01",
+      "value": 327.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2021-11-01",
+      "value": 322.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2021-12-01",
+      "value": 329.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-01-01",
+      "value": 330.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-02-01",
+      "value": 331.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-03-01",
+      "value": 337.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-04-01",
+      "value": 335.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-05-01",
+      "value": 335.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-06-01",
+      "value": 324.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-07-01",
+      "value": 326.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-08-01",
+      "value": 326.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-09-01",
+      "value": 324.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-10-01",
+      "value": 323.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-11-01",
+      "value": 327.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2022-12-01",
+      "value": 323.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-01-01",
+      "value": 327.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-02-01",
+      "value": 332.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-03-01",
+      "value": 322.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-04-01",
+      "value": 323.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-05-01",
+      "value": 324.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-06-01",
+      "value": 328.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-07-01",
+      "value": 327.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-08-01",
+      "value": 334.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-09-01",
+      "value": 335.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-10-01",
+      "value": 340.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-11-01",
+      "value": 338.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2023-12-01",
+      "value": 345.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-01-01",
+      "value": 345.8,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-02-01",
+      "value": 348.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-03-01",
+      "value": 349.4,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-04-01",
+      "value": 357.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-05-01",
+      "value": 356.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-06-01",
+      "value": 359.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-07-01",
+      "value": 363.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-08-01",
+      "value": 361.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-09-01",
+      "value": 354.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-10-01",
+      "value": 354.5,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-11-01",
+      "value": 346.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2024-12-01",
+      "value": 341.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-01-01",
+      "value": 336.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-02-01",
+      "value": 336.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-03-01",
+      "value": 340.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-04-01",
+      "value": 333.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-05-01",
+      "value": 337.3,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-06-01",
+      "value": 336.9,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-07-01",
+      "value": 336.1,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-08-01",
+      "value": 331.7,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-09-01",
+      "value": 338.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-10-01",
+      "value": 337.0,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-11-01",
+      "value": 347.2,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2025-12-01",
+      "value": 343.6,
+      "unit": "thousands",
+      "source": "StatCan 14-10-0022"
+    },
+    {
+      "indicator_name": "mining_og_employment",
+      "province": "national",
+      "period": "2026-01-01",
+      "value": 343.6,
       "unit": "thousands",
       "source": "StatCan 14-10-0022"
     },
@@ -251374,6 +252817,470 @@
       "value": 159.79,
       "unit": "USD",
       "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2021-04-01",
+      "value": 1221.43,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2021-05-01",
+      "value": 1223.18,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2021-06-01",
+      "value": 1215.18,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2021-07-01",
+      "value": 1232.66,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2021-08-01",
+      "value": 1219.21,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2021-09-01",
+      "value": 1229.0,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2021-10-01",
+      "value": 1223.18,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2021-11-01",
+      "value": 1227.5,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2021-12-01",
+      "value": 1243.75,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-01-01",
+      "value": 1247.39,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-02-01",
+      "value": 1249.2,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-03-01",
+      "value": 1259.24,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-04-01",
+      "value": 1242.33,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-05-01",
+      "value": 1247.08,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-06-01",
+      "value": 1255.1,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-07-01",
+      "value": 1241.48,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-08-01",
+      "value": 1256.52,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-09-01",
+      "value": 1263.0,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-10-01",
+      "value": 1264.73,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-11-01",
+      "value": 1277.52,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2022-12-01",
+      "value": 1271.95,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-01-01",
+      "value": 1264.71,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-02-01",
+      "value": 1259.67,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-03-01",
+      "value": 1274.41,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-04-01",
+      "value": 1284.84,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-05-01",
+      "value": 1283.3,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-06-01",
+      "value": 1277.21,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-07-01",
+      "value": 1288.78,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-08-01",
+      "value": 1283.95,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-09-01",
+      "value": 1285.84,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-10-01",
+      "value": 1294.82,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-11-01",
+      "value": 1300.66,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2023-12-01",
+      "value": 1294.98,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-01-01",
+      "value": 1296.19,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-02-01",
+      "value": 1296.32,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-03-01",
+      "value": 1301.66,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-04-01",
+      "value": 1317.33,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-05-01",
+      "value": 1332.7,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-06-01",
+      "value": 1330.95,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-07-01",
+      "value": 1332.02,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-08-01",
+      "value": 1352.04,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-09-01",
+      "value": 1345.41,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-10-01",
+      "value": 1348.48,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-11-01",
+      "value": 1338.33,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2024-12-01",
+      "value": 1341.88,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-01-01",
+      "value": 1364.36,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-02-01",
+      "value": 1351.57,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-03-01",
+      "value": 1345.7,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-04-01",
+      "value": 1361.01,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-05-01",
+      "value": 1359.66,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-06-01",
+      "value": 1361.32,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-07-01",
+      "value": 1365.68,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-08-01",
+      "value": 1356.69,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-09-01",
+      "value": 1366.74,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-10-01",
+      "value": 1349.45,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-11-01",
+      "value": 1360.9,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2025-12-01",
+      "value": 1349.61,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
+    },
+    {
+      "indicator_name": "wageGrowth",
+      "province": "national",
+      "period": "2026-01-01",
+      "value": 1369.76,
+      "unit": "$",
+      "source": "StatCan 14-10-0223"
     },
     {
       "indicator_name": "wageGrowth",
