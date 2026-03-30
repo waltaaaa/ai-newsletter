@@ -205,9 +205,11 @@ async function switchEdition(editionId){
   if(activeTab&&activeTab.dataset.tab!=='tldr'){renderTab(activeTab.dataset.tab);tabRendered[activeTab.dataset.tab]=true}
   loadEditionList();
 }
+let _indJsonCache=null;
 async function loadIndicators(){
   try{
     const data=await fetchJSON('indicators.json');
+    _indJsonCache=data;
     const raw=(data&&data.indicators)||data||[];
     // Normalize: SQLite uses indicator_name, frontend uses name
     indicators=raw.map(ind=>{
@@ -3377,17 +3379,51 @@ function renderExplorer(){
 
   resEl.innerHTML='<div style="color:#556B7A;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
 
-  // National indicator dropdown + explorer
+  // National indicator section: StatCan key economic indicators + explorer chart
   const cis=$('canadaIndicatorSection');
   if(cis){
-    cis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">National Indicator Explorer</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">All national indicators with time-series history</p><div id="canadaIndicatorDropdown"></div><section id="indicatorExplorer" style="margin-top:16px"></section>';
+    cis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">Statistics Canada \u2014 Key Economic Indicators</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">Official economic indicators published by Statistics Canada (<a href="https://www150.statcan.gc.ca/n1/dai-quo/ssi/homepage/ind-econ-eng.htm" target="_blank" style="color:#2563EB">source</a>)</p><div id="canadaIndicatorDropdown"></div><section id="indicatorExplorer" style="margin-top:16px"></section>';
     const dd=$('canadaIndicatorDropdown');
     if(dd){
-      const natInds=indicators.filter(ind=>{
-        const p=(ind.province||'').toLowerCase();
-        return !p||p==='national'||p==='canada';
-      });
-      dd.innerHTML=renderIndicatorDropdown(natInds,'All National Indicators ('+natInds.length+')','_canada');
+      // Use StatCan feed indicators if available, otherwise fall back to raw national indicators
+      const scData=_indJsonCache&&_indJsonCache.statcan_latest;
+      const scInds=(scData&&scData.indicators)||[];
+      if(scInds.length){
+        // Categorize StatCan indicators
+        const _catMap=(name)=>{
+          const n=(name||'').toLowerCase();
+          if(n.includes('gdp')||n.includes('capacity'))return 'GDP & Output';
+          if(n.includes('employ')||n.includes('labour')||n.includes('wage')||n.includes('earning')||n.includes('insurance benefic'))return 'Labour Market';
+          if(n.includes('price index')||n.includes('cpi')||n.includes('food')||n.includes('shelter')||n.includes('transportation'))return 'Prices';
+          if(n.includes('housing')||n.includes('building')||n.includes('construction'))return 'Housing & Construction';
+          if(n.includes('export')||n.includes('import')||n.includes('trade')||n.includes('inventory')||n.includes('merchandise')||n.includes('unfilled'))return 'Trade & Manufacturing';
+          if(n.includes('household')||n.includes('saving')||n.includes('debt')||n.includes('net worth')||n.includes('retail')||n.includes('wholesale'))return 'Household & Retail';
+          if(n.includes('tourism')||n.includes('visitor')||n.includes('returning'))return 'Tourism & Travel';
+          if(n.includes('farm')||n.includes('canola')||n.includes('wheat')||n.includes('corn')||n.includes('soy'))return 'Agriculture';
+          if(n.includes('investment')||n.includes('capital')||n.includes('securities')||n.includes('profit')||n.includes('current account')||n.includes('terms of trade'))return 'Investment & Finance';
+          if(n.includes('productivity'))return 'Productivity';
+          return 'Other';
+        };
+        const scFormatted=scInds.map(i=>({
+          name:i.name||'',
+          indicator_name:(i.name||'').toLowerCase().replace(/[^a-z0-9]/g,'_'),
+          value:i.value||'',
+          change:i.change||'',
+          arrow:i.arrow||0,
+          refPer:i.refPer||'',
+          category:_catMap(i.name),
+          source:'Statistics Canada',
+          tableUrl:i.tableUrl||'',
+          frequency:i.frequency||''
+        }));
+        dd.innerHTML=renderIndicatorDropdown(scFormatted,'Statistics Canada Indicators ('+scFormatted.length+')','_canada');
+      }else{
+        const natInds=indicators.filter(ind=>{
+          const p=(ind.province||'').toLowerCase();
+          return !p||p==='national'||p==='canada';
+        });
+        dd.innerHTML=renderIndicatorDropdown(natInds,'All National Indicators ('+natInds.length+')','_canada');
+      }
     }
     renderIndicatorExplorer();
   }

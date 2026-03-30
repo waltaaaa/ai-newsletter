@@ -1111,6 +1111,8 @@ def get_indicators(conn: sqlite3.Connection, category: str | None = None,
 
 def get_latest_indicators(conn: sqlite3.Connection) -> list[dict]:
     """Return the most recent value for each indicator_name+province combination."""
+    old_factory = conn.row_factory
+    conn.row_factory = sqlite3.Row
     rows = conn.execute("""
         SELECT * FROM indicator_history
         WHERE rowid IN (
@@ -1119,6 +1121,7 @@ def get_latest_indicators(conn: sqlite3.Connection) -> list[dict]:
         )
         ORDER BY indicator_name
     """).fetchall()
+    conn.row_factory = old_factory
     return [dict(row) for row in rows]
 
 

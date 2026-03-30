@@ -422,6 +422,9 @@ def export_indicators(conn, output_dir: str) -> str:
 
     # Export full indicator history (last 5 years) for the explorer chart
     # Deduplicate by keeping one value per indicator+province+period
+    import sqlite3 as _sql
+    old_rf = conn.row_factory
+    conn.row_factory = _sql.Row
     history_rows = conn.execute("""
         SELECT indicator_name, province, period, value, unit, source
         FROM indicator_history
@@ -429,6 +432,7 @@ def export_indicators(conn, output_dir: str) -> str:
         GROUP BY indicator_name, province, period
         ORDER BY indicator_name, province, period
     """).fetchall()
+    conn.row_factory = old_rf
 
     # Normalize province names to 2-letter codes (frontend uses codes)
     _PROV_NORMALIZE = {
@@ -459,8 +463,8 @@ def export_indicators(conn, output_dir: str) -> str:
             pass
         history_list.append(row)
 
-    # Also include statcan_latest from dashboard_state
-    statcan_latest = get_dashboard_state(conn, "statcan_latest")
+    # Include StatCan key economic indicators from dashboard_state
+    statcan_latest = get_dashboard_state(conn, "statcan_indicators_latest") or get_dashboard_state(conn, "statcan_latest")
 
     output = {
         "indicators": indicators_list,
