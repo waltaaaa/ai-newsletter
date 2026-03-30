@@ -54,6 +54,8 @@ function computeChange(indName,prov){
   // Check if the indicator record itself has a pre-computed change
   const rec=indicators.find(x=>x.indicator_name===indName&&_matchProv(x.province,prov));
   if(rec&&hasVal(rec.change))return rec.change;
+  // Check D.indicatorMeta (briefing-level pre-computed changes)
+  if(D&&D.indicatorMeta&&D.indicatorMeta[indName]&&hasVal(D.indicatorMeta[indName].change))return D.indicatorMeta[indName].change;
   const h=_getHistory();
   const match=h.filter(x=>x.indicator_name===indName&&_matchProv(x.province,prov));
   if(!match.length)return '';
