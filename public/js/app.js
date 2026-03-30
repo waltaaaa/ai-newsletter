@@ -3392,7 +3392,16 @@ function renderExplorer(){
     renderIndicatorExplorer();
   }
 
-  // Provincial indicator dropdown
+  // Provincial Indicator Explorer (like national but with province selector)
+  _renderProvExplorer();
+
+  // Ontario Economic Accounts (OEA) section
+  _renderOeaSection();
+
+  // Quebec ISQ section
+  _renderIsqSection();
+
+  // Provincial indicator dropdown (raw list)
   const pis=$('provIndicatorSection');
   if(pis){
     const prov=PROVS.find(p=>p.code===selectedProvince)||PROVS[0];
@@ -3400,9 +3409,287 @@ function renderExplorer(){
       const p=(ind.province||'').toLowerCase();
       return p===prov.code.toLowerCase()||p===prov.name.toLowerCase();
     });
-    pis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">'+prov.name+' Indicators</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">Full indicator list for '+prov.name+'</p>'+
+    pis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">'+prov.name+' Raw Indicators</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">All indicator records for '+prov.name+'</p>'+
       renderIndicatorDropdown(provInds,prov.name+' Indicators ('+provInds.length+')','_prov');
   }
+}
+
+/* Provincial Indicator Explorer — like the national one but with province selector */
+let _provExpSel='cpi',_provExpProv='ON',_provExpRange=12,_provExpData={};
+
+function _renderProvExplorer(){
+  const el=$('provExpSection');if(!el)return;
+  const prov=PROVS.find(p=>p.code===_provExpProv)||PROVS[0];
+  const provItems=[
+    {id:'cpi',label:'CPI (All Items)',unit:'%'},
+    {id:'unemployment',label:'Unemployment Rate',unit:'%'},
+    {id:'employmentRate',label:'Employment Rate',unit:'%'},
+    {id:'participationRate',label:'Participation Rate',unit:'%'},
+    {id:'wageGrowth',label:'Wage Growth',unit:'%'},
+    {id:'housingStarts',label:'Housing Starts',unit:'units'}
+  ];
+
+  let html='<div class="mkt-section" style="background:rgba(255,255,255,0.95);border-radius:var(--radius-md);padding:20px">';
+  html+='<h3 style="font-family:var(--font-heading);font-size:15px;font-weight:700;color:#003153;margin:0 0 4px">Provincial Indicator Explorer</h3>';
+  html+='<p style="font-size:var(--text-sm);color:#475569;margin:0 0 14px">Compare provincial indicators with interactive charts</p>';
+
+  // Province selector + indicator selector + range buttons
+  html+='<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px">';
+  html+='<select id="provExpProvSel" onchange="_provExpProv=this.value;_provExpData={};_renderProvExplorer()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+  PROVS.forEach(p=>{html+='<option value="'+p.code+'"'+(p.code===_provExpProv?' selected':'')+'>'+p.name+'</option>'});
+  html+='</select>';
+  html+='<select id="provExpIndSel" onchange="_provExpSel=this.value;_loadProvExpData()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+  provItems.forEach(it=>{html+='<option value="'+it.id+'"'+(it.id===_provExpSel?' selected':'')+'>'+it.label+'</option>'});
+  html+='</select>';
+  html+='<div style="display:flex;gap:4px">';
+  [3,12,36,60].forEach(m=>{
+    const lbl=m===3?'3M':m===12?'1Y':m===36?'3Y':'5Y';
+    const active=_provExpRange===m?'background:#2563EB;color:#FFFFFF':'background:rgba(0,0,0,0.05);color:#475569';
+    html+='<button onclick="_provExpRange='+m+';_loadProvExpData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
+  });
+  html+='</div></div>';
+  html+='<div id="provExpCallout" style="margin-bottom:8px"></div>';
+  html+='<div style="height:220px;position:relative"><canvas id="provExpCanvas"></canvas></div>';
+  html+='</div>';
+  el.innerHTML=html;
+  _loadProvExpData();
+}
+
+async function _loadProvExpData(){
+  const cacheKey=_provExpSel+'_'+_provExpProv;
+  if(!_provExpData[cacheKey]){
+    try{
+      const all=await fetchJSON('indicators.json');
+      const hist=all.history||all.indicators||all;
+      const pts=(Array.isArray(hist)?hist:[])
+        .filter(r=>(r.indicator_name||r.indicator)===_provExpSel&&(r.province||'')==_provExpProv)
+        .map(r=>({date:r.period||r.date,value:parseFloat(r.value)||0}))
+        .sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+      _provExpData[cacheKey]=pts;
+    }catch(e){_provExpData[cacheKey]=[]}
+  }
+  const allPts=_provExpData[cacheKey]||[];
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-_provExpRange);
+  const pts=allPts.filter(p=>new Date(p.date)>=cutoff);
+  // Callout
+  const callout=$('provExpCallout');
+  if(callout){
+    if(pts.length>=2){
+      const latest=pts[pts.length-1];const prev=pts[pts.length-2];
+      const diff=latest.value-prev.value;
+      const arrow=diff>0?'\u25b2':diff<0?'\u25bc':'\u25cf';
+      const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
+      callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:Outfit,sans-serif">'+fmtNum(latest.value)+'</span><span class="'+cls+'" style="font-family:var(--font-mono);font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span style="font-size:var(--text-xs);color:var(--text-muted)">'+latest.date+'</span></div>';
+    }else if(pts.length===1){
+      callout.innerHTML='<span style="font-size:1.5rem;font-weight:700">'+fmtNum(pts[0].value)+'</span>';
+    }else{
+      callout.innerHTML='<span style="color:#64748B;font-size:var(--text-sm)">No data for '+_provExpProv+' / '+_provExpSel+' in this period.</span>';
+    }
+  }
+  // Chart
+  const canvas=$('provExpCanvas');if(!canvas)return;
+  if(charts._provExp)charts._provExp.destroy();
+  if(!pts.length)return;
+  charts._provExp=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',borderWidth:2,pointRadius:pts.length>40?0:3,pointBackgroundColor:'#2563EB',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Outfit',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5},ticks:{font:{family:'Outfit',size:10},color:'#636363',callback:v=>fmtNum(v)}}}}});
+}
+
+/* Ontario Economic Accounts (OEA) Section */
+let _oeaSel='on_real_consumption',_oeaRange=36,_oeaData={};
+
+function _renderOeaSection(){
+  const el=$('oeaSection');if(!el)return;
+  const oeaItems=[
+    {id:'on_real_consumption',label:'Real Consumption'},
+    {id:'on_real_household',label:'Household Spending'},
+    {id:'on_real_gov_expenditure',label:'Gov Expenditure'},
+    {id:'on_real_capital_investment',label:'Capital Investment'},
+    {id:'on_exports',label:'Exports'},
+    {id:'on_imports',label:'Imports'},
+    {id:'on_gdp_goods',label:'GDP Goods-Producing'},
+    {id:'on_consumption_pct',label:'Consumption Q/Q %'},
+    {id:'on_household_pct',label:'Household Q/Q %'},
+    {id:'on_gov_expenditure_pct',label:'Gov Spend Q/Q %'},
+    {id:'on_capital_investment_pct',label:'Capital Inv Q/Q %'},
+    {id:'on_exports_pct',label:'Exports Q/Q %'},
+    {id:'on_imports_pct',label:'Imports Q/Q %'},
+    {id:'on_gdp_goods_pct',label:'GDP Goods Q/Q %'}
+  ];
+
+  let html='<div class="mkt-section" style="background:rgba(255,255,255,0.95);border-radius:var(--radius-md);padding:20px">';
+  html+='<h3 style="font-family:var(--font-heading);font-size:15px;font-weight:700;color:#003153;margin:0 0 4px">Ontario Economic Accounts (OEA)</h3>';
+  html+='<p style="font-size:var(--text-sm);color:#475569;margin:0 0 14px">Quarterly provincial accounts from <a href="https://data.ontario.ca/dataset/ontario-economic-accounts" target="_blank" style="color:#2563EB">Ontario Data Catalogue</a></p>';
+  html+='<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px">';
+  html+='<select id="oeaIndSel" onchange="_oeaSel=this.value;_loadOeaData()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+  oeaItems.forEach(it=>{html+='<option value="'+it.id+'"'+(it.id===_oeaSel?' selected':'')+'>'+it.label+'</option>'});
+  html+='</select>';
+  html+='<div style="display:flex;gap:4px">';
+  [12,36,60].forEach(m=>{
+    const lbl=m===12?'1Y':m===36?'3Y':'5Y';
+    const active=_oeaRange===m?'background:#2563EB;color:#FFFFFF':'background:rgba(0,0,0,0.05);color:#475569';
+    html+='<button onclick="_oeaRange='+m+';_loadOeaData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
+  });
+  html+='</div></div>';
+  // Latest values table
+  html+='<div id="oeaLatestTable" style="margin-bottom:14px"></div>';
+  html+='<div id="oeaCallout" style="margin-bottom:8px"></div>';
+  html+='<div style="height:220px;position:relative"><canvas id="oeaCanvas"></canvas></div>';
+  html+='</div>';
+  el.innerHTML=html;
+  _renderOeaLatestTable(oeaItems);
+  _loadOeaData();
+}
+
+function _renderOeaLatestTable(oeaItems){
+  const tbl=$('oeaLatestTable');if(!tbl)return;
+  // Find latest value for each OEA indicator from indicators[]
+  const rows=oeaItems.map(it=>{
+    const ind=indicators.find(x=>(x.indicator_name||'')==it.id);
+    return {label:it.label,value:ind?ind.value:'—',period:ind?(ind.refPer||ind.period||''):'',unit:it.id.includes('_pct')?'%':'$M'};
+  }).filter(r=>r.value!=='—'&&r.value!=null);
+  if(!rows.length){tbl.innerHTML='';return}
+  let html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">';
+  rows.forEach(r=>{
+    html+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px">';
+    html+='<div style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">'+r.label+'</div>';
+    html+='<div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:#003153">'+fmtNum(parseFloat(r.value)||0)+' <small style="color:#64748B;font-size:11px">'+r.unit+'</small></div>';
+    if(r.period)html+='<div style="font-size:10px;color:#94A3B8">'+r.period+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  tbl.innerHTML=html;
+}
+
+async function _loadOeaData(){
+  if(!_oeaData[_oeaSel]){
+    try{
+      const all=await fetchJSON('indicators.json');
+      const hist=all.history||[];
+      const pts=hist.filter(r=>(r.indicator_name||'')==_oeaSel)
+        .map(r=>({date:r.period||r.date,value:parseFloat(r.value)||0}))
+        .sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+      _oeaData[_oeaSel]=pts;
+    }catch(e){_oeaData[_oeaSel]=[]}
+  }
+  const allPts=_oeaData[_oeaSel]||[];
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-_oeaRange);
+  const pts=allPts.filter(p=>new Date(p.date)>=cutoff);
+  const callout=$('oeaCallout');
+  if(callout){
+    if(pts.length>=2){
+      const latest=pts[pts.length-1];const prev=pts[pts.length-2];
+      const diff=latest.value-prev.value;const arrow=diff>0?'\u25b2':diff<0?'\u25bc':'\u25cf';
+      const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
+      callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:Outfit,sans-serif">'+fmtNum(latest.value)+'</span><span class="'+cls+'" style="font-family:var(--font-mono);font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span style="font-size:var(--text-xs);color:#64748B">'+latest.date+'</span></div>';
+    }else{callout.innerHTML='<span style="color:#64748B;font-size:var(--text-sm)">No history available.</span>'}
+  }
+  const canvas=$('oeaCanvas');if(!canvas)return;
+  if(charts._oea)charts._oea.destroy();
+  if(!pts.length)return;
+  charts._oea=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',borderWidth:2,pointRadius:pts.length>30?0:4,pointBackgroundColor:'#2563EB',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Outfit',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5},ticks:{font:{family:'Outfit',size:10},color:'#636363',callback:v=>fmtNum(v)}}}}});
+}
+
+/* Quebec ISQ Section */
+let _isqSel='qc_real_gdp',_isqRange=36,_isqData={};
+
+function _renderIsqSection(){
+  const el=$('isqSection');if(!el)return;
+  const isqItems=[
+    {id:'qc_real_gdp',label:'Real GDP'},
+    {id:'qc_nominal_gdp',label:'Nominal GDP'},
+    {id:'qc_monthly_gdp',label:'Monthly GDP'},
+    {id:'qc_household_consumption',label:'Household Spending'},
+    {id:'qc_gov_consumption',label:'Gov Spending'},
+    {id:'qc_business_investment',label:'Business Investment'},
+    {id:'qc_exports',label:'Exports'},
+    {id:'qc_imports',label:'Imports'},
+    {id:'qc_intl_exports',label:'Int\'l Exports'},
+    {id:'qc_intl_imports',label:'Int\'l Imports'},
+    {id:'qc_compensation',label:'Employee Compensation'},
+    {id:'qc_household_income',label:'Household Income'},
+    {id:'qc_real_gdp_pct',label:'Real GDP Q/Q %'},
+    {id:'qc_housing_starts',label:'Housing Starts'},
+    {id:'qc_retail_sales',label:'Retail Sales'},
+    {id:'qc_manufacturing_sales',label:'Manufacturing Sales'},
+    {id:'qc_wholesale_sales',label:'Wholesale Sales'},
+    {id:'qc_weekly_earnings',label:'Avg Weekly Earnings'},
+    {id:'qc_employment',label:'Employment'},
+    {id:'qc_unemployment_rate',label:'Unemployment Rate'},
+    {id:'qc_participation_rate',label:'Participation Rate'},
+    {id:'qc_cpi',label:'CPI Index'},
+    {id:'qc_bldg_permits_res',label:'Building Permits (Res)'},
+    {id:'qc_bldg_permits_nonres',label:'Building Permits (Non-Res)'}
+  ];
+
+  let html='<div class="mkt-section" style="background:rgba(255,255,255,0.95);border-radius:var(--radius-md);padding:20px">';
+  html+='<h3 style="font-family:var(--font-heading);font-size:15px;font-weight:700;color:#003153;margin:0 0 4px">Quebec Economic Accounts (ISQ)</h3>';
+  html+='<p style="font-size:var(--text-sm);color:#475569;margin:0 0 14px">Provincial accounts from <a href="https://statistique.quebec.ca/en/document/comptes-economiques-du-quebec-quaterly" target="_blank" style="color:#2563EB">Institut de la statistique du Qu\u00e9bec</a></p>';
+  html+='<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px">';
+  html+='<select id="isqIndSel" onchange="_isqSel=this.value;_loadIsqData()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+  isqItems.forEach(it=>{html+='<option value="'+it.id+'"'+(it.id===_isqSel?' selected':'')+'>'+it.label+'</option>'});
+  html+='</select>';
+  html+='<div style="display:flex;gap:4px">';
+  [12,36,60].forEach(m=>{
+    const lbl=m===12?'1Y':m===36?'3Y':'5Y';
+    const active=_isqRange===m?'background:#2563EB;color:#FFFFFF':'background:rgba(0,0,0,0.05);color:#475569';
+    html+='<button onclick="_isqRange='+m+';_loadIsqData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
+  });
+  html+='</div></div>';
+  html+='<div id="isqLatestTable" style="margin-bottom:14px"></div>';
+  html+='<div id="isqCallout" style="margin-bottom:8px"></div>';
+  html+='<div style="height:220px;position:relative"><canvas id="isqCanvas"></canvas></div>';
+  html+='</div>';
+  el.innerHTML=html;
+  _renderIsqLatestTable(isqItems);
+  _loadIsqData();
+}
+
+function _renderIsqLatestTable(isqItems){
+  const tbl=$('isqLatestTable');if(!tbl)return;
+  const rows=isqItems.map(it=>{
+    const ind=indicators.find(x=>(x.indicator_name||'')==it.id);
+    const isPct=it.id.includes('_pct')||it.id.includes('unemployment')||it.id.includes('participation')||it.id.includes('cpi');
+    return {label:it.label,value:ind?ind.value:'—',period:ind?(ind.refPer||ind.period||''):'',unit:isPct?'%':(it.id.includes('earnings')?'$':'$M')};
+  }).filter(r=>r.value!=='—'&&r.value!=null);
+  if(!rows.length){tbl.innerHTML='';return}
+  let html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">';
+  rows.forEach(r=>{
+    html+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px">';
+    html+='<div style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">'+r.label+'</div>';
+    html+='<div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:#003153">'+fmtNum(parseFloat(r.value)||0)+' <small style="color:#64748B;font-size:11px">'+r.unit+'</small></div>';
+    if(r.period)html+='<div style="font-size:10px;color:#94A3B8">'+r.period+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  tbl.innerHTML=html;
+}
+
+async function _loadIsqData(){
+  if(!_isqData[_isqSel]){
+    try{
+      const all=await fetchJSON('indicators.json');
+      const hist=all.history||[];
+      const pts=hist.filter(r=>(r.indicator_name||'')==_isqSel)
+        .map(r=>({date:r.period||r.date,value:parseFloat(r.value)||0}))
+        .sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+      _isqData[_isqSel]=pts;
+    }catch(e){_isqData[_isqSel]=[]}
+  }
+  const allPts=_isqData[_isqSel]||[];
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-_isqRange);
+  const pts=allPts.filter(p=>new Date(p.date)>=cutoff);
+  const callout=$('isqCallout');
+  if(callout){
+    if(pts.length>=2){
+      const latest=pts[pts.length-1];const prev=pts[pts.length-2];
+      const diff=latest.value-prev.value;const arrow=diff>0?'\u25b2':diff<0?'\u25bc':'\u25cf';
+      const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
+      callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:Outfit,sans-serif">'+fmtNum(latest.value)+'</span><span class="'+cls+'" style="font-family:var(--font-mono);font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span style="font-size:var(--text-xs);color:#64748B">'+latest.date+'</span></div>';
+    }else{callout.innerHTML='<span style="color:#64748B;font-size:var(--text-sm)">No history available.</span>'}
+  }
+  const canvas=$('isqCanvas');if(!canvas)return;
+  if(charts._isq)charts._isq.destroy();
+  if(!pts.length)return;
+  charts._isq=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',borderWidth:2,pointRadius:pts.length>30?0:4,pointBackgroundColor:'#2563EB',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Outfit',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5},ticks:{font:{family:'Outfit',size:10},color:'#636363',callback:v=>fmtNum(v)}}}}});
 }
 
 window._doVcodeSearch=function(cat){
