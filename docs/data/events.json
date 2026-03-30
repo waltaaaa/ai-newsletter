@@ -1,5 +1,565 @@
 [
   {
+    "date": "2026-03-30",
+    "name": "Housing: Opening more homes in West Vancouver",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026HMA0028-000325",
+    "relevance": "Two new rental buildings expand housing options for workers, families with middle incomes"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Canada Growth Summit 2026 - Public Policy Forum",
+    "source": "ppforum.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "national",
+    "url": "https://ppforum.ca/event/canada-growth-summit-2026/",
+    "relevance": "39 days, 3 hours until the biggest policy event of the year. The Canada Growth Summit has become a must attend event on the country's economic policy"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Budget secures B.C.'s future, protects critical services - BC Gov News",
+    "source": "news.gov.bc.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "national",
+    "url": "https://news.gov.bc.ca/releases/2026FIN0003-000158",
+    "relevance": "Budget 2026 is built on disciplined choices to protect critical services and make targeted investments to grow B.C.'s economy, while improving the long-term"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Canada Key Themes 2026: Policy shifts are prompting structural ...",
+    "source": "www.oxfordeconomics.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "national",
+    "url": "https://www.oxfordeconomics.com/resource/canada-key-themes-2026-policy-shifts-are-prompting-structural-change/",
+    "relevance": "Canada's 2026 outlook hinges on USMCA renegotiation. If trade risks ease, the year could mark an inflection point for investment and growth."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Bank of Canada maintains policy rate at 2¼%",
+    "source": "www.bankofcanada.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "national",
+    "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/",
+    "relevance": "Information note. The next scheduled date for announcing the overnight rate target is April 29, 2026. The Bank's next MPR will be released at"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "2026–27 Estimates - Canada.ca",
+    "source": "www.canada.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "national",
+    "url": "https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending/government-expenditure-plan-main-estimates/2026-27-estimates.html",
+    "relevance": "The 2026–27 Main Estimates present a total of $502.8 billion in budgetary spending, which reflects $230.4 billion to be voted and $272.4 billion in forecast"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Unifor responds to Ontario Budget 2026: Progress noted, but ...",
+    "source": "finance.yahoo.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "ON",
+    "url": "https://finance.yahoo.com/economy/policy/articles/unifor-responds-ontario-budget-2026-001800703.html",
+    "relevance": "Unifor welcomes targeted investments in Ontario's 2026 Budget that support workers including improved pension protections."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "2026 Ontario Budget: Highlights and Takeaways for CPAs",
+    "source": "www.cpaontario.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "ON",
+    "url": "https://www.cpaontario.ca/insights/blog/2026-ontario-budget",
+    "relevance": "March 27, 2026. The 2026 Ontario budget is the latest in a series of fiscal updates titled: A Plan to Protect Ontario."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Ontario 2026 Budget Highlights | MNP",
+    "source": "www.mnp.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "ON",
+    "url": "https://www.mnp.ca/en/insights/directory/ontario-2026-budget-highlights",
+    "relevance": "This year's budget, titled A Plan to Protect Ontario, seeks to attract investment, encourage economic growth, and support job creation, while"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Ontario budget 2026: Not many new affordability initiatives, deficit ...",
+    "source": "ottawa.citynews.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "ON",
+    "url": "https://ottawa.citynews.ca/2026/03/26/ontario-budget-2026-not-many-new-affordability-initiatives-deficit-climbs-to-13-8b/",
+    "relevance": "There are no new affordability measures for Ontarians beyond previously announced measures like removing the HST tax on new homes, and extending"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] 2026-ontario-budget-en.pdf",
+    "source": "budget.ontario.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "ON",
+    "url": "https://budget.ontario.ca/2026/pdf/2026-ontario-budget-en.pdf",
+    "relevance": "Our government's plan to build a more competitive provincial economy includes a multi-year Tax. Action Plan, which will attract investment,"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] a responsible budget with targeted measures for quebecers",
+    "source": "www.finances.gouv.qc.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "QC",
+    "url": "https://www.finances.gouv.qc.ca/Budget_and_update/budget/documents/Budget2627_BudgetSpeech.pdf",
+    "relevance": "I am announcing that, as at March 31, 2026, Québec's net debt will represent 38.8% of GDP, a decrease of 4.1 percentage points from the level of"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Quebec's 2026-2027 Budget | What you need to know",
+    "source": "www.demersbeaulne.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "QC",
+    "url": "https://www.demersbeaulne.com/en/2026/03/18/quebecs-2026-2027-budget-what-you-need-to-know/",
+    "relevance": "Objectives · $1.7 billion to accelerate business adaptation and Quebec's economic transformation · $4.3 billion to support the government's major"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "BUDGET 2026-2027 - Press release no. 3 of 3 - More than $1.7 ...",
+    "source": "www.newswire.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "QC",
+    "url": "https://www.newswire.ca/news-releases/budget-2026-2027-press-release-no-3-of-3-more-than-1-7-billion-to-accelerate-quebec-s-economic-transformation-813258618.html",
+    "relevance": "BUDGET 2026-2027 - Press release no. 3 of 3 - More than $1.7 billion to accelerate Québec's economic transformation Français. News provided"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] Canada Economic Development for Quebec Regions 2026–27 ...",
+    "source": "publications.gc.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "QC",
+    "url": "https://publications.gc.ca/collections/collection_2026/dec-ced/Iu90-1-15-2026-eng.pdf",
+    "relevance": "In 2026–27, CED will play a key role in boosting the Canadian economy by actively contributing to the implementation of the major measures outlined in Budget"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] Budget 2025-2026 – Budget Plan - Assemblée nationale du Québec",
+    "source": "www.assnat.qc.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "QC",
+    "url": "https://www.assnat.qc.ca/depots-du-jour/2026-03-18/Discours%20du%20budget/05-Budget%202026-2027-Plan%20budg%C3%A9taire-va.pdf",
+    "relevance": "The government is also increasing investment in infrastructure by more than $5 billion over six years. In Budget 2026-2027, the government is"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Budget in a Blink: Your 5-Minute Breakdown of the 2026 Alberta ...",
+    "source": "www.edmontonchamber.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "AB",
+    "url": "https://www.edmontonchamber.com/2026/02/27/2026-provincial-budget/",
+    "relevance": "Yesterday, the Government of Alberta released Budget 2026, sending a clear signal: Alberta is investing in infrastructure, workforce development"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] Alberta 2026 Budget - National Bank",
+    "source": "www.nbc.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "AB",
+    "url": "https://www.nbc.ca/content/dam/bnc/taux-analyses/analyse-eco/budget/alberta-budget.pdf",
+    "relevance": "The Budget sees WTI averaging US$60.50/bbl in the coming fiscal year, before rising to US$67.50/bbl by 2028-29, with official sensitivity"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Alberta Budget 2026: Province delivers $9.4-billion deficit",
+    "source": "edmontonjournal.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "AB",
+    "url": "https://edmontonjournal.com/news/politics/alberta-budget-2026-deficit-ucp-spending",
+    "relevance": "Budget 2026 projects a $9.4-billion deficit for the fiscal year beginning on April 1, followed by subsequent deficits of $7.6 billion and $6.9"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] 2026-29 Fiscal Plan (Alberta Budget 2026)",
+    "source": "open.alberta.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "AB",
+    "url": "https://open.alberta.ca/dataset/3393a7b5-07bf-4b9f-8aaf-a6d89273297b/resource/58a8d024-398f-482e-b1c2-81a754a97253/download/budget-2026-fiscal-plan-2026-29.pdf",
+    "relevance": "That is why. Budget 2026 is focused on what matters: investing in programs and services important to Albertans like health care, education,"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Alberta Budget 2026: Managing Economic Uncertainty - LinkedIn",
+    "source": "www.linkedin.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "AB",
+    "url": "https://www.linkedin.com/posts/navigator-ltd_navigator-alberta-budget-2026-summary-activity-7433227689500573696-Ueno",
+    "relevance": "The first months of 2026 have been defined by an uncertain global economic landscape, requiring governments to adjust course."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] Budget and Fiscal Plan 2026/27 - 2028/29",
+    "source": "www.bcbudget.gov.bc.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "BC",
+    "url": "https://www.bcbudget.gov.bc.ca/2026/pdf/2026_Budget_and_Fiscal_Plan.pdf",
+    "relevance": "Budget 2026 allocates $400 million in funding for the new British Columbia Strategic ... of British Columbia's new long-term economic strategy"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "BC 2026 Budget moves to future-proof the economy, with ...",
+    "source": "finance.yahoo.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "BC",
+    "url": "https://finance.yahoo.com/news/bc-2026-budget-moves-future-192700474.html",
+    "relevance": "BC 2026 Budget moves to future-proof the economy, with opportunities to further advance energy transition and boost competitiveness. Oops,"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Overview of Budget 2026: Securing BC's Future | SWRBOT",
+    "source": "swrbot.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "BC",
+    "url": "https://swrbot.com/resources/overview-of-budget-2026-securing-bcs-future/",
+    "relevance": "BC's economy is projected to grow modestly – 1.3% in 2026 and 1.8% in 2027, but debt accumulation continues to outpace economic growth. Tax"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "BC Chamber of Commerce Statement on Budget 2026",
+    "source": "bcchamber.org",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "BC",
+    "url": "https://bcchamber.org/news/bc-chamber-commerce-statement-budget-2026",
+    "relevance": "Budget 2026 has introduced tax changes that will impact citizens and businesses alike. The increase to personal income tax and the freezing of"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Budget analysis from around BC - BC Society for Policy Solutions",
+    "source": "bcpolicy.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "BC",
+    "url": "https://bcpolicy.ca/2026/03/10/2026budget-roundup/",
+    "relevance": "We've rounded up BC Budget 2026 responses and analyses from our partners, colleagues and allies across the province."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "2026-27 Provincial Budget: Protecting Saskatchewan",
+    "source": "www.saskatchewan.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "SK",
+    "url": "https://www.saskatchewan.ca/government/news-and-media/2026/march/18/2026-27-budget-protecting-saskatchewan",
+    "relevance": "Released on March 18, 2026 · The 2026-27 Budget will protect Saskatchewan people through lower taxes, improved access to health care, safer"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] 2026-27 Budget",
+    "source": "pubsaskdev.blob.core.windows.net",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "SK",
+    "url": "https://pubsaskdev.blob.core.windows.net/pubsask-prod/153853/2026-27-Budget-Document.pdf",
+    "relevance": "The 2026-27 Budget, Protecting Saskatchewan, prioritizes protecting the areas that matter most to Saskatchewan residents."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "2026 Saskatchewan Budget Highlights | MNP",
+    "source": "www.mnp.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "SK",
+    "url": "https://www.mnp.ca/en/insights/directory/2026-saskatchewan-budget-highlights",
+    "relevance": "2026 Saskatchewan Budget Highlights · Enhancements to the Research and Development Tax Credit program · Saskatchewan Chemical Fertilizer Incentive."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "EY Tax Alert 2026 no 18 - Saskatchewan Budget 2026 | EY - Canada",
+    "source": "www.ey.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "SK",
+    "url": "https://www.ey.com/en_ca/technical/tax/tax-alerts/2026/tax-alert-2026-no-18",
+    "relevance": "Saskatchewan Finance Minister Jim Reiter tabled the province's fiscal 2026 budget on 18 March 2026."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Saskatchewan: 2026–27 Budget | Post - Scotia Bank",
+    "source": "www.scotiabank.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "SK",
+    "url": "https://www.scotiabank.com/ca/en/about/economics/economics-publications/post.other-publications.fiscal-policy.fiscal-pulse.provincial-budget-analyses-and-updates.saskatchewan-.saskatchewan--2026-27-budget--march-18-2026-.html",
+    "relevance": "Saskatchewan's 2026–27 Budget projects a higher deficit that gradually returns to balance over the next five years. The deficit for fiscal year"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Manitoba Should Stay the Course on Sovereign, Value-Added ...",
+    "source": "www.canadianinnovators.org",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "MB",
+    "url": "https://www.canadianinnovators.org/content/manitoba-should-stay-the-course-on-sovereign-value-added-economic-strategy-in-budget-2026",
+    "relevance": "Manitoba Should Stay the Course on Sovereign, Value-Added Economic Strategy in Budget 2026. March 23, 2026. By Jess Sinclair CCI Director of"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "News Releases | Manitoba Government Announces Budget 2026",
+    "source": "news.gov.mb.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "MB",
+    "url": "https://news.gov.mb.ca/news/index.html?item=73197",
+    "relevance": "Budget 2026 goes further by removing the provincial sales tax from all food sold in grocery stores starting July 1. Additional measures to lower"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Manitoba Government Announces Budget 2026 https://bit.ly/4bIsJ6j",
+    "source": "www.facebook.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "MB",
+    "url": "https://www.facebook.com/ManitobaGovernment/posts/manitoba-government-announces-budget-2026-httpsbitly4bisj6j/1356316493197183/",
+    "relevance": "The plan forecasts deficits of $9.4 billion in 2026-27, $7.6 billion in 2027-28 and $6.9 billion in 2028 to 29. For the 2025-2026 fiscal year,"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Manitoba Budget 2026 - CCPA",
+    "source": "www.policyalternatives.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "MB",
+    "url": "https://www.policyalternatives.ca/news-research/manitoba-budget-2026/",
+    "relevance": "Budget 2026 projects a deficit of $498 million in 2026/27, down $1.2 billion from the $1.66 billion deficit projected for 2025/26. This dramatic"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Province of Manitoba | Budget 2026",
+    "source": "www.gov.mb.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "MB",
+    "url": "https://www.gov.mb.ca/budget2026/index.html",
+    "relevance": "Budget 2026 is focused on: · Good Jobs Since 2023, employment has been growing in Manitoba. · Lower Costs For generations, Manitoba has been an affordable place"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Nova Scotia Budget 2026",
+    "source": "www.doanegrantthornton.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NS",
+    "url": "https://www.doanegrantthornton.ca/insights/budgets/nova-scotia-budget-2026/",
+    "relevance": "NS Budget 2026 introduces a new electric and hybrid vehicle levy, effective October 1, 2026. Taxpayers will be required to pay the following"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Nova Scotia: 2026–27 Budget | Post",
+    "source": "www.scotiabank.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NS",
+    "url": "https://www.scotiabank.com/ca/en/about/economics/economics-publications/post.other-publications.fiscal-policy.fiscal-pulse.provincial-budget-analyses-and-updates.nova-scotia-.nova-scotia--2026-27-budget--february-23-2026-.html",
+    "relevance": "Nova Scotia's Budget 2026–27 sees a deterioration in the budget balance over the forecast horizon amid higher spending and a weaker economic"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Highlights of the 2026 Nova Scotia budget",
+    "source": "kpmg.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NS",
+    "url": "https://kpmg.com/ca/en/insights/2026/02/highlights-of-the-2026-nova-scotia-budget.html",
+    "relevance": "The budget anticipates a deficit of $1.25 billion for 2025-26 and projects deficits of $1.19 billion for 2026-27 and $1.05 billion for 2027-28."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Canada | Nova Scotia Budget 2026",
+    "source": "www.ey.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NS",
+    "url": "https://www.ey.com/en_gl/technical/tax-alerts/canada-nova-scotia-budget-2026",
+    "relevance": "Nova Scotia's 2026 budget adds no new taxes but proposes raising the financial institutions capital tax starting in 2026."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Nova Scotia Budget 2026: Departs from previous deficit ... - RBC",
+    "source": "www.rbc.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NS",
+    "url": "https://www.rbc.com/en/economics/canadian-analysis/provincial-and-fiscal-outlooks/provincial-budgets-and-economic-statements/nova-scotia-budget-2026-departs-from-previous-deficit-reduction-plan/",
+    "relevance": "Nova Scotia projects a $1.24 billion deficit for 2026–27 that will remain above $1 billion through 2028–29, a stark shift from last year's"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "New Brunswick: 2026–27 Budget | Post - Scotiabank Global Site",
+    "source": "www.scotiabank.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NB",
+    "url": "https://www.scotiabank.com/ca/en/about/economics/economics-publications/post.other-publications.fiscal-policy.fiscal-pulse.provincial-budget-analyses-and-updates.new-brunswick-.new-brunswick--2026-27-budget--march-17-2026-.html",
+    "relevance": "New Brunswick's 2026–2027 Budget projects an extended period of higher deficits over the outlook as the province looks to address spending"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] 2026-2027 BUDGET - Legislative Assembly of New Brunswick",
+    "source": "legnb.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NB",
+    "url": "https://legnb.ca/content/house_business/61/2/tabled_documents/2026-03-17%20Budget%202026-2027%20%20Foundation%20for%20the%20Future.pdf",
+    "relevance": "Revenues are projected to be. $14.24 billion, while expenses are projected to reach $15.63 billion. Madam Speaker, herein lies our challenge –"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Tomorrow, we're releasing the 2026-27 provincial budget which ...",
+    "source": "www.facebook.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NB",
+    "url": "https://www.facebook.com/GovNB/posts/tomorrow-were-releasing-the-2026-27-provincial-budget-which-includes-generationa/1338126038349675/",
+    "relevance": "Tomorrow, we're releasing the 2026-27 provincial budget which includes generational investments in health care. New Brunswickers have told"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "EY Tax Alert 2026 no 16 - New Brunswick Budget 2026 | EY - Canada",
+    "source": "www.ey.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NB",
+    "url": "https://www.ey.com/en_ca/technical/tax/tax-alerts/2026/tax-alert-2026-no-16",
+    "relevance": "New Brunswick Finance Minister René Legacy tabled the province's fiscal 2026 budget on 17 March 2026."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "New Brunswick Budget 2026: The age of deep deficits - RBC",
+    "source": "www.rbc.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NB",
+    "url": "https://www.rbc.com/en/economics/canadian-analysis/provincial-and-fiscal-outlooks/provincial-budgets-and-economic-statements/new-brunswick-budget-2026-the-age-of-deep-deficits/",
+    "relevance": "Provincial government projects record-high deficit of $1.39 billion in 2026-27, virtually unchanged from $1.38 billion in 2025-26."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Budget 2026 | EngageNL",
+    "source": "www.engagenl.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NL",
+    "url": "https://www.engagenl.ca/en/budget-2026",
+    "relevance": "The Government of Newfoundland and Labrador is now planning Budget 2026-27. We Want Your Ideas. Before we finish the plan, we want to hear from you! What do you"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Let's Hear it! Share Your Priorities for Budget 2026 - News Releases",
+    "source": "www.gov.nl.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NL",
+    "url": "https://www.gov.nl.ca/releases/2026/fin/0120n01/",
+    "relevance": "With a focus on the new government's platform priorities of better healthcare, lower taxes, and safer communities, Budget 2026 will be shaped"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "PROVINCE LAUNCHES PUBLIC INPUT FOR BUDGET 2026 ...",
+    "source": "www.facebook.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NL",
+    "url": "https://www.facebook.com/NFLDBulletin/posts/province-launches-public-input-for-budget-2026january-20-2026the-provincial-gove/122168675120836930/",
+    "relevance": "Government officials say Budget 2026 will align with the government's platform priorities, which include healthcare, taxation, and community"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "What you need to know about NL's 2025-2026 budget - SaltWire",
+    "source": "www.saltwire.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NL",
+    "url": "https://www.saltwire.com/newfoundland-labrador/what-you-need-to-know-about-nls-2025-2026-budget",
+    "relevance": "The 2025-2026 provincial budget, which was brought down on Wednesday, April 9, focuses on helping Newfoundlanders and Labradorians with affordability."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Government of Newfoundland and Labrador's Post - LinkedIn",
+    "source": "www.linkedin.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "NL",
+    "url": "https://www.linkedin.com/posts/govnl_the-closing-date-for-input-on-budget-2026-activity-7429983992797552642-aRH1",
+    "relevance": "The closing date for input on Budget 2026 has been extended to Friday, February 20. Tell us what you'd like to see in the next budget."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "PEI has announced its Capital Budget for 2026-27, outlining a five ...",
+    "source": "www.instagram.com",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "PE",
+    "url": "https://www.instagram.com/p/DQpV2I-kr55/",
+    "relevance": "PEI has announced its Capital Budget for 2026-27, outlining a five-year plan for the Island. The budget prioritizes investing in schools,"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "New P.E.I. capital budget focuses on 'what Islanders need most ...",
+    "source": "www.cbc.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "PE",
+    "url": "https://www.cbc.ca/news/canada/prince-edward-island/pei-capital-budget-2026-27-9.6966441",
+    "relevance": "P.E.I.'s capital budget for 2026-27 is prioritizing what Islanders need most, with health-care infrastructure and education leading the way"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "[PDF] Fiscal and Economic Update - Government of Prince Edward Island",
+    "source": "www.princeedwardisland.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "PE",
+    "url": "https://www.princeedwardisland.ca/sites/default/files/8062/2025-2026%20Fiscal%20Economic%20Update.pdf",
+    "relevance": "Compared to the 2025-2026 Operating Budget, the Province is now projecting a deficit position of $367.4M, an increase of $183.4M since the Budget was tabled in"
+  },
+  {
+    "date": "2026-03-30",
+    "name": "PEI Budget 2026 must shore up fragile small business confidence ...",
+    "source": "www.cfib-fcei.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "PE",
+    "url": "https://www.cfib-fcei.ca/en/media/pei-budget-2026-must-shore-up-fragile-small-business-confidence-as-legislature-returns",
+    "relevance": "As the PEI Legislature returns March 24, CFIB calls for Budget 2026 to prioritize small business stability and competitiveness."
+  },
+  {
+    "date": "2026-03-30",
+    "name": "Pre-Budget Consultations 2026 | Government of Prince Edward Island",
+    "source": "www.princeedwardisland.ca",
+    "type": "watchlist",
+    "significance": "low",
+    "province": "PE",
+    "url": "https://www.princeedwardisland.ca/en/service/pre-budget-consultations-2026",
+    "relevance": "Pre-Budget Consultations for the 2026-2027 Operating Budget Pre-budget consultations are now open; this is your opportunity to get involved."
+  },
+  {
     "date": "2026-04-03",
     "name": "Labour Force Survey",
     "source": "Statistics Canada",

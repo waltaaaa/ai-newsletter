@@ -1,5 +1,1978 @@
 [
   {
+    "id": 11,
+    "week_of": "2026-W13",
+    "snapshot": {
+      "computed_at": "2026-03-30T11:59:03.638554",
+      "total_projects": 6615,
+      "overall": {
+        "total_projects": 6615,
+        "active_projects": 3413,
+        "completed": 0,
+        "cancelled": 152,
+        "suspended": 0,
+        "cancellation_rate": 0.023,
+        "completion_rate": 0.0,
+        "valued_projects": 1126,
+        "value_coverage": 0.17,
+        "total_value_millions": 1161963.3
+      },
+      "status_breakdown": {
+        "Under Construction": 987,
+        "Proposed": 1916,
+        "Approved": 510,
+        "Under Review": 2555,
+        "Complete": 464,
+        "On Hold": 31,
+        "Cancelled": 152
+      },
+      "type_breakdown": {
+        "greenfield": 6042,
+        "brownfield": 573,
+        "unknown": 0
+      },
+      "sectors": {
+        "manufacturing": {
+          "count": 45,
+          "value": 67337.0
+        },
+        "power_energy": {
+          "count": 312,
+          "value": 490884.0
+        },
+        "oil_gas": {
+          "count": 39,
+          "value": 97280.0
+        },
+        "infrastructure": {
+          "count": 714,
+          "value": 135670.0
+        },
+        "commercial_mixed": {
+          "count": 64,
+          "value": 27490.0
+        },
+        "government": {
+          "count": 173,
+          "value": 6525.0
+        },
+        "tourism_culture": {
+          "count": 142,
+          "value": 21915.4
+        },
+        "mining": {
+          "count": 139,
+          "value": 145952.0
+        },
+        "forestry": {
+          "count": 12,
+          "value": 4731.0
+        },
+        "residential": {
+          "count": 138,
+          "value": 31929.0
+        },
+        "transport_logistics": {
+          "count": 69,
+          "value": 27309.700000000004
+        },
+        "healthcare": {
+          "count": 218,
+          "value": 20224.0
+        },
+        "education": {
+          "count": 143,
+          "value": 5243.0
+        },
+        "telecom": {
+          "count": 15,
+          "value": 728.0
+        },
+        "environment": {
+          "count": 12,
+          "value": 1939.0
+        },
+        "indigenous": {
+          "count": 5,
+          "value": 0.0
+        },
+        "defence": {
+          "count": 4,
+          "value": 76800.0
+        },
+        "agriculture": {
+          "count": 1,
+          "value": 6.2
+        },
+        "Other": {
+          "count": 2345,
+          "value": 0.0
+        },
+        "Infrastructure": {
+          "count": 318,
+          "value": 0.0
+        },
+        "Energy": {
+          "count": 238,
+          "value": 0.0
+        },
+        "Housing": {
+          "count": 28,
+          "value": 0.0
+        },
+        "Ports & Logistics": {
+          "count": 114,
+          "value": 0.0
+        },
+        "Water & Wastewater": {
+          "count": 516,
+          "value": 0.0
+        },
+        "Defence": {
+          "count": 12,
+          "value": 0.0
+        },
+        "Clean Energy": {
+          "count": 187,
+          "value": 0.0
+        },
+        "Mining": {
+          "count": 166,
+          "value": 0.0
+        },
+        "Power Plants": {
+          "count": 21,
+          "value": 0.0
+        },
+        "Transmission Pipelines": {
+          "count": 11,
+          "value": 0.0
+        },
+        "Railways": {
+          "count": 2,
+          "value": 0.0
+        },
+        "Coal Mines": {
+          "count": 14,
+          "value": 0.0
+        },
+        "Local Government Solid Waste Management Facilities": {
+          "count": 2,
+          "value": 0.0
+        },
+        "Sand and Gravel Pits": {
+          "count": 6,
+          "value": 0.0
+        },
+        "Mineral Mines": {
+          "count": 21,
+          "value": 0.0
+        },
+        "Electric Transmission Lines": {
+          "count": 2,
+          "value": 0.0
+        },
+        "Shoreline Modification": {
+          "count": 4,
+          "value": 0.0
+        },
+        "Groundwater Extraction ": {
+          "count": 3,
+          "value": 0.0
+        },
+        "Shoreline Modification ": {
+          "count": 5,
+          "value": 0.0
+        },
+        "Organic and Inorganic Chemical Industry": {
+          "count": 4,
+          "value": 0.0
+        },
+        "Groundwater Extraction": {
+          "count": 4,
+          "value": 0.0
+        },
+        "Natural Gas Processing Plants": {
+          "count": 8,
+          "value": 0.0
+        },
+        "Energy Storage Facilities": {
+          "count": 15,
+          "value": 0.0
+        },
+        "Construction Stone and Industrial Mineral Quarries": {
+          "count": 2,
+          "value": 0.0
+        },
+        "Water Diversion ": {
+          "count": 2,
+          "value": 0.0
+        },
+        "Marine Port Facilities": {
+          "count": 3,
+          "value": 0.0
+        },
+        "Public Highways": {
+          "count": 1,
+          "value": 0.0
+        },
+        "Water Diversion": {
+          "count": 4,
+          "value": 0.0
+        },
+        "Dams": {
+          "count": 2,
+          "value": 0.0
+        },
+        "Hazardous Waste Management": {
+          "count": 1,
+          "value": 0.0
+        },
+        "Non-metallic Mineral Products Industries": {
+          "count": 1,
+          "value": 0.0
+        },
+        "Marine Port Projects": {
+          "count": 2,
+          "value": 0.0
+        },
+        "Oil Refineries": {
+          "count": 1,
+          "value": 0.0
+        },
+        "Solid Waste Management": {
+          "count": 1,
+          "value": 0.0
+        },
+        "Resort Developments": {
+          "count": 2,
+          "value": 0.0
+        },
+        "Ski Resorts": {
+          "count": 1,
+          "value": 0.0
+        },
+        "Telecommunications": {
+          "count": 19,
+          "value": 0.0
+        },
+        "Transit & Rail": {
+          "count": 265,
+          "value": 0.0
+        },
+        "Healthcare": {
+          "count": 15,
+          "value": 0.0
+        },
+        "Education": {
+          "count": 2,
+          "value": 0.0
+        }
+      },
+      "provinces": {
+        "AB": {
+          "count": 657,
+          "value": 291949.4
+        },
+        "BC": {
+          "count": 528,
+          "value": 490487.0
+        },
+        "MB": {
+          "count": 2023,
+          "value": 6509.0
+        },
+        "NB": {
+          "count": 166,
+          "value": 4852.0
+        },
+        "NL": {
+          "count": 1510,
+          "value": 24162.0
+        },
+        "NS": {
+          "count": 295,
+          "value": 13002.0
+        },
+        "NT": {
+          "count": 175,
+          "value": 40160.0
+        },
+        "NU": {
+          "count": 37,
+          "value": 1871.0
+        },
+        "ON": {
+          "count": 497,
+          "value": 136780.69999999998
+        },
+        "PE": {
+          "count": 78,
+          "value": 1546.0
+        },
+        "QC": {
+          "count": 429,
+          "value": 75947.0
+        },
+        "SK": {
+          "count": 123,
+          "value": 28409.2
+        },
+        "YT": {
+          "count": 97,
+          "value": 46288.0
+        }
+      },
+      "period_trends": {
+        "weekly": {
+          "period": "weekly",
+          "period_days": 7,
+          "current": {
+            "count": 4408,
+            "value_millions": 804.0,
+            "sectors": {
+              "manufacturing": {
+                "count": 3,
+                "value": 374.0
+              },
+              "infrastructure": {
+                "count": 13,
+                "value": 8.0
+              },
+              "tourism_culture": {
+                "count": 2,
+                "value": 0.0
+              },
+              "government": {
+                "count": 1,
+                "value": 0.0
+              },
+              "power_energy": {
+                "count": 6,
+                "value": 0.0
+              },
+              "mining": {
+                "count": 7,
+                "value": 422.0
+              },
+              "transport_logistics": {
+                "count": 2,
+                "value": 0.0
+              },
+              "oil_gas": {
+                "count": 1,
+                "value": 0.0
+              },
+              "education": {
+                "count": 1,
+                "value": 0.0
+              },
+              "residential": {
+                "count": 1,
+                "value": 0.0
+              },
+              "commercial_mixed": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Other": {
+                "count": 2345,
+                "value": 0.0
+              },
+              "Infrastructure": {
+                "count": 318,
+                "value": 0.0
+              },
+              "Energy": {
+                "count": 238,
+                "value": 0.0
+              },
+              "Housing": {
+                "count": 28,
+                "value": 0.0
+              },
+              "Ports & Logistics": {
+                "count": 114,
+                "value": 0.0
+              },
+              "Water & Wastewater": {
+                "count": 516,
+                "value": 0.0
+              },
+              "Defence": {
+                "count": 12,
+                "value": 0.0
+              },
+              "Clean Energy": {
+                "count": 187,
+                "value": 0.0
+              },
+              "Mining": {
+                "count": 166,
+                "value": 0.0
+              },
+              "Power Plants": {
+                "count": 21,
+                "value": 0.0
+              },
+              "Transmission Pipelines": {
+                "count": 11,
+                "value": 0.0
+              },
+              "Railways": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Coal Mines": {
+                "count": 14,
+                "value": 0.0
+              },
+              "Local Government Solid Waste Management Facilities": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Sand and Gravel Pits": {
+                "count": 6,
+                "value": 0.0
+              },
+              "Mineral Mines": {
+                "count": 21,
+                "value": 0.0
+              },
+              "Electric Transmission Lines": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Shoreline Modification": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Groundwater Extraction ": {
+                "count": 3,
+                "value": 0.0
+              },
+              "Shoreline Modification ": {
+                "count": 5,
+                "value": 0.0
+              },
+              "Organic and Inorganic Chemical Industry": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Groundwater Extraction": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Natural Gas Processing Plants": {
+                "count": 8,
+                "value": 0.0
+              },
+              "Energy Storage Facilities": {
+                "count": 15,
+                "value": 0.0
+              },
+              "Construction Stone and Industrial Mineral Quarries": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Water Diversion ": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Marine Port Facilities": {
+                "count": 3,
+                "value": 0.0
+              },
+              "Public Highways": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Water Diversion": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Dams": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Hazardous Waste Management": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Non-metallic Mineral Products Industries": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Marine Port Projects": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Oil Refineries": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Solid Waste Management": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Resort Developments": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Ski Resorts": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Telecommunications": {
+                "count": 19,
+                "value": 0.0
+              },
+              "Transit & Rail": {
+                "count": 265,
+                "value": 0.0
+              },
+              "Healthcare": {
+                "count": 15,
+                "value": 0.0
+              },
+              "Education": {
+                "count": 2,
+                "value": 0.0
+              }
+            },
+            "provinces": {
+              "AB": {
+                "count": 120,
+                "value": 374.0
+              },
+              "BC": {
+                "count": 175,
+                "value": 0.0
+              },
+              "NL": {
+                "count": 1466,
+                "value": 422.0
+              },
+              "ON": {
+                "count": 136,
+                "value": 0.0
+              },
+              "YT": {
+                "count": 1,
+                "value": 8.0
+              },
+              "QC": {
+                "count": 21,
+                "value": 0.0
+              },
+              "SK": {
+                "count": 74,
+                "value": 0.0
+              },
+              "NS": {
+                "count": 241,
+                "value": 0.0
+              },
+              "NB": {
+                "count": 110,
+                "value": 0.0
+              },
+              "PE": {
+                "count": 1,
+                "value": 0.0
+              },
+              "MB": {
+                "count": 1973,
+                "value": 0.0
+              },
+              "NT": {
+                "count": 90,
+                "value": 0.0
+              }
+            }
+          },
+          "previous": {
+            "count": 0,
+            "value_millions": 0,
+            "sectors": {},
+            "provinces": {}
+          },
+          "count_change": 4408,
+          "count_pct_change": 0,
+          "value_change_millions": 804.0,
+          "value_pct_change": 0
+        },
+        "monthly": {
+          "period": "monthly",
+          "period_days": 30,
+          "current": {
+            "count": 6615,
+            "value_millions": 1161963.3,
+            "sectors": {
+              "manufacturing": {
+                "count": 45,
+                "value": 67337.0
+              },
+              "power_energy": {
+                "count": 312,
+                "value": 490884.0
+              },
+              "oil_gas": {
+                "count": 39,
+                "value": 97280.0
+              },
+              "infrastructure": {
+                "count": 714,
+                "value": 135670.0
+              },
+              "commercial_mixed": {
+                "count": 64,
+                "value": 27490.0
+              },
+              "government": {
+                "count": 173,
+                "value": 6525.0
+              },
+              "tourism_culture": {
+                "count": 142,
+                "value": 21915.4
+              },
+              "mining": {
+                "count": 139,
+                "value": 145952.0
+              },
+              "forestry": {
+                "count": 12,
+                "value": 4731.0
+              },
+              "residential": {
+                "count": 138,
+                "value": 31929.0
+              },
+              "transport_logistics": {
+                "count": 69,
+                "value": 27309.700000000004
+              },
+              "healthcare": {
+                "count": 218,
+                "value": 20224.0
+              },
+              "education": {
+                "count": 143,
+                "value": 5243.0
+              },
+              "telecom": {
+                "count": 15,
+                "value": 728.0
+              },
+              "environment": {
+                "count": 12,
+                "value": 1939.0
+              },
+              "indigenous": {
+                "count": 5,
+                "value": 0.0
+              },
+              "defence": {
+                "count": 4,
+                "value": 76800.0
+              },
+              "agriculture": {
+                "count": 1,
+                "value": 6.2
+              },
+              "Other": {
+                "count": 2345,
+                "value": 0.0
+              },
+              "Infrastructure": {
+                "count": 318,
+                "value": 0.0
+              },
+              "Energy": {
+                "count": 238,
+                "value": 0.0
+              },
+              "Housing": {
+                "count": 28,
+                "value": 0.0
+              },
+              "Ports & Logistics": {
+                "count": 114,
+                "value": 0.0
+              },
+              "Water & Wastewater": {
+                "count": 516,
+                "value": 0.0
+              },
+              "Defence": {
+                "count": 12,
+                "value": 0.0
+              },
+              "Clean Energy": {
+                "count": 187,
+                "value": 0.0
+              },
+              "Mining": {
+                "count": 166,
+                "value": 0.0
+              },
+              "Power Plants": {
+                "count": 21,
+                "value": 0.0
+              },
+              "Transmission Pipelines": {
+                "count": 11,
+                "value": 0.0
+              },
+              "Railways": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Coal Mines": {
+                "count": 14,
+                "value": 0.0
+              },
+              "Local Government Solid Waste Management Facilities": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Sand and Gravel Pits": {
+                "count": 6,
+                "value": 0.0
+              },
+              "Mineral Mines": {
+                "count": 21,
+                "value": 0.0
+              },
+              "Electric Transmission Lines": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Shoreline Modification": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Groundwater Extraction ": {
+                "count": 3,
+                "value": 0.0
+              },
+              "Shoreline Modification ": {
+                "count": 5,
+                "value": 0.0
+              },
+              "Organic and Inorganic Chemical Industry": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Groundwater Extraction": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Natural Gas Processing Plants": {
+                "count": 8,
+                "value": 0.0
+              },
+              "Energy Storage Facilities": {
+                "count": 15,
+                "value": 0.0
+              },
+              "Construction Stone and Industrial Mineral Quarries": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Water Diversion ": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Marine Port Facilities": {
+                "count": 3,
+                "value": 0.0
+              },
+              "Public Highways": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Water Diversion": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Dams": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Hazardous Waste Management": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Non-metallic Mineral Products Industries": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Marine Port Projects": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Oil Refineries": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Solid Waste Management": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Resort Developments": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Ski Resorts": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Telecommunications": {
+                "count": 19,
+                "value": 0.0
+              },
+              "Transit & Rail": {
+                "count": 265,
+                "value": 0.0
+              },
+              "Healthcare": {
+                "count": 15,
+                "value": 0.0
+              },
+              "Education": {
+                "count": 2,
+                "value": 0.0
+              }
+            },
+            "provinces": {
+              "AB": {
+                "count": 657,
+                "value": 291949.4
+              },
+              "BC": {
+                "count": 528,
+                "value": 490487.0
+              },
+              "MB": {
+                "count": 2023,
+                "value": 6509.0
+              },
+              "NB": {
+                "count": 166,
+                "value": 4852.0
+              },
+              "NL": {
+                "count": 1510,
+                "value": 24162.0
+              },
+              "NS": {
+                "count": 295,
+                "value": 13002.0
+              },
+              "NT": {
+                "count": 175,
+                "value": 40160.0
+              },
+              "NU": {
+                "count": 37,
+                "value": 1871.0
+              },
+              "ON": {
+                "count": 497,
+                "value": 136780.69999999998
+              },
+              "PE": {
+                "count": 78,
+                "value": 1546.0
+              },
+              "QC": {
+                "count": 429,
+                "value": 75947.0
+              },
+              "SK": {
+                "count": 123,
+                "value": 28409.2
+              },
+              "YT": {
+                "count": 97,
+                "value": 46288.0
+              }
+            }
+          },
+          "previous": {
+            "count": 0,
+            "value_millions": 0,
+            "sectors": {},
+            "provinces": {}
+          },
+          "count_change": 6615,
+          "count_pct_change": 0,
+          "value_change_millions": 1161963.3,
+          "value_pct_change": 0
+        },
+        "quarterly": {
+          "period": "quarterly",
+          "period_days": 90,
+          "current": {
+            "count": 6615,
+            "value_millions": 1161963.3,
+            "sectors": {
+              "manufacturing": {
+                "count": 45,
+                "value": 67337.0
+              },
+              "power_energy": {
+                "count": 312,
+                "value": 490884.0
+              },
+              "oil_gas": {
+                "count": 39,
+                "value": 97280.0
+              },
+              "infrastructure": {
+                "count": 714,
+                "value": 135670.0
+              },
+              "commercial_mixed": {
+                "count": 64,
+                "value": 27490.0
+              },
+              "government": {
+                "count": 173,
+                "value": 6525.0
+              },
+              "tourism_culture": {
+                "count": 142,
+                "value": 21915.4
+              },
+              "mining": {
+                "count": 139,
+                "value": 145952.0
+              },
+              "forestry": {
+                "count": 12,
+                "value": 4731.0
+              },
+              "residential": {
+                "count": 138,
+                "value": 31929.0
+              },
+              "transport_logistics": {
+                "count": 69,
+                "value": 27309.700000000004
+              },
+              "healthcare": {
+                "count": 218,
+                "value": 20224.0
+              },
+              "education": {
+                "count": 143,
+                "value": 5243.0
+              },
+              "telecom": {
+                "count": 15,
+                "value": 728.0
+              },
+              "environment": {
+                "count": 12,
+                "value": 1939.0
+              },
+              "indigenous": {
+                "count": 5,
+                "value": 0.0
+              },
+              "defence": {
+                "count": 4,
+                "value": 76800.0
+              },
+              "agriculture": {
+                "count": 1,
+                "value": 6.2
+              },
+              "Other": {
+                "count": 2345,
+                "value": 0.0
+              },
+              "Infrastructure": {
+                "count": 318,
+                "value": 0.0
+              },
+              "Energy": {
+                "count": 238,
+                "value": 0.0
+              },
+              "Housing": {
+                "count": 28,
+                "value": 0.0
+              },
+              "Ports & Logistics": {
+                "count": 114,
+                "value": 0.0
+              },
+              "Water & Wastewater": {
+                "count": 516,
+                "value": 0.0
+              },
+              "Defence": {
+                "count": 12,
+                "value": 0.0
+              },
+              "Clean Energy": {
+                "count": 187,
+                "value": 0.0
+              },
+              "Mining": {
+                "count": 166,
+                "value": 0.0
+              },
+              "Power Plants": {
+                "count": 21,
+                "value": 0.0
+              },
+              "Transmission Pipelines": {
+                "count": 11,
+                "value": 0.0
+              },
+              "Railways": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Coal Mines": {
+                "count": 14,
+                "value": 0.0
+              },
+              "Local Government Solid Waste Management Facilities": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Sand and Gravel Pits": {
+                "count": 6,
+                "value": 0.0
+              },
+              "Mineral Mines": {
+                "count": 21,
+                "value": 0.0
+              },
+              "Electric Transmission Lines": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Shoreline Modification": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Groundwater Extraction ": {
+                "count": 3,
+                "value": 0.0
+              },
+              "Shoreline Modification ": {
+                "count": 5,
+                "value": 0.0
+              },
+              "Organic and Inorganic Chemical Industry": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Groundwater Extraction": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Natural Gas Processing Plants": {
+                "count": 8,
+                "value": 0.0
+              },
+              "Energy Storage Facilities": {
+                "count": 15,
+                "value": 0.0
+              },
+              "Construction Stone and Industrial Mineral Quarries": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Water Diversion ": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Marine Port Facilities": {
+                "count": 3,
+                "value": 0.0
+              },
+              "Public Highways": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Water Diversion": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Dams": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Hazardous Waste Management": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Non-metallic Mineral Products Industries": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Marine Port Projects": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Oil Refineries": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Solid Waste Management": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Resort Developments": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Ski Resorts": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Telecommunications": {
+                "count": 19,
+                "value": 0.0
+              },
+              "Transit & Rail": {
+                "count": 265,
+                "value": 0.0
+              },
+              "Healthcare": {
+                "count": 15,
+                "value": 0.0
+              },
+              "Education": {
+                "count": 2,
+                "value": 0.0
+              }
+            },
+            "provinces": {
+              "AB": {
+                "count": 657,
+                "value": 291949.4
+              },
+              "BC": {
+                "count": 528,
+                "value": 490487.0
+              },
+              "MB": {
+                "count": 2023,
+                "value": 6509.0
+              },
+              "NB": {
+                "count": 166,
+                "value": 4852.0
+              },
+              "NL": {
+                "count": 1510,
+                "value": 24162.0
+              },
+              "NS": {
+                "count": 295,
+                "value": 13002.0
+              },
+              "NT": {
+                "count": 175,
+                "value": 40160.0
+              },
+              "NU": {
+                "count": 37,
+                "value": 1871.0
+              },
+              "ON": {
+                "count": 497,
+                "value": 136780.69999999998
+              },
+              "PE": {
+                "count": 78,
+                "value": 1546.0
+              },
+              "QC": {
+                "count": 429,
+                "value": 75947.0
+              },
+              "SK": {
+                "count": 123,
+                "value": 28409.2
+              },
+              "YT": {
+                "count": 97,
+                "value": 46288.0
+              }
+            }
+          },
+          "previous": {
+            "count": 0,
+            "value_millions": 0,
+            "sectors": {},
+            "provinces": {}
+          },
+          "count_change": 6615,
+          "count_pct_change": 0,
+          "value_change_millions": 1161963.3,
+          "value_pct_change": 0
+        },
+        "yearly": {
+          "period": "yearly",
+          "period_days": 365,
+          "current": {
+            "count": 6615,
+            "value_millions": 1161963.3,
+            "sectors": {
+              "manufacturing": {
+                "count": 45,
+                "value": 67337.0
+              },
+              "power_energy": {
+                "count": 312,
+                "value": 490884.0
+              },
+              "oil_gas": {
+                "count": 39,
+                "value": 97280.0
+              },
+              "infrastructure": {
+                "count": 714,
+                "value": 135670.0
+              },
+              "commercial_mixed": {
+                "count": 64,
+                "value": 27490.0
+              },
+              "government": {
+                "count": 173,
+                "value": 6525.0
+              },
+              "tourism_culture": {
+                "count": 142,
+                "value": 21915.4
+              },
+              "mining": {
+                "count": 139,
+                "value": 145952.0
+              },
+              "forestry": {
+                "count": 12,
+                "value": 4731.0
+              },
+              "residential": {
+                "count": 138,
+                "value": 31929.0
+              },
+              "transport_logistics": {
+                "count": 69,
+                "value": 27309.700000000004
+              },
+              "healthcare": {
+                "count": 218,
+                "value": 20224.0
+              },
+              "education": {
+                "count": 143,
+                "value": 5243.0
+              },
+              "telecom": {
+                "count": 15,
+                "value": 728.0
+              },
+              "environment": {
+                "count": 12,
+                "value": 1939.0
+              },
+              "indigenous": {
+                "count": 5,
+                "value": 0.0
+              },
+              "defence": {
+                "count": 4,
+                "value": 76800.0
+              },
+              "agriculture": {
+                "count": 1,
+                "value": 6.2
+              },
+              "Other": {
+                "count": 2345,
+                "value": 0.0
+              },
+              "Infrastructure": {
+                "count": 318,
+                "value": 0.0
+              },
+              "Energy": {
+                "count": 238,
+                "value": 0.0
+              },
+              "Housing": {
+                "count": 28,
+                "value": 0.0
+              },
+              "Ports & Logistics": {
+                "count": 114,
+                "value": 0.0
+              },
+              "Water & Wastewater": {
+                "count": 516,
+                "value": 0.0
+              },
+              "Defence": {
+                "count": 12,
+                "value": 0.0
+              },
+              "Clean Energy": {
+                "count": 187,
+                "value": 0.0
+              },
+              "Mining": {
+                "count": 166,
+                "value": 0.0
+              },
+              "Power Plants": {
+                "count": 21,
+                "value": 0.0
+              },
+              "Transmission Pipelines": {
+                "count": 11,
+                "value": 0.0
+              },
+              "Railways": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Coal Mines": {
+                "count": 14,
+                "value": 0.0
+              },
+              "Local Government Solid Waste Management Facilities": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Sand and Gravel Pits": {
+                "count": 6,
+                "value": 0.0
+              },
+              "Mineral Mines": {
+                "count": 21,
+                "value": 0.0
+              },
+              "Electric Transmission Lines": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Shoreline Modification": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Groundwater Extraction ": {
+                "count": 3,
+                "value": 0.0
+              },
+              "Shoreline Modification ": {
+                "count": 5,
+                "value": 0.0
+              },
+              "Organic and Inorganic Chemical Industry": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Groundwater Extraction": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Natural Gas Processing Plants": {
+                "count": 8,
+                "value": 0.0
+              },
+              "Energy Storage Facilities": {
+                "count": 15,
+                "value": 0.0
+              },
+              "Construction Stone and Industrial Mineral Quarries": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Water Diversion ": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Marine Port Facilities": {
+                "count": 3,
+                "value": 0.0
+              },
+              "Public Highways": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Water Diversion": {
+                "count": 4,
+                "value": 0.0
+              },
+              "Dams": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Hazardous Waste Management": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Non-metallic Mineral Products Industries": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Marine Port Projects": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Oil Refineries": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Solid Waste Management": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Resort Developments": {
+                "count": 2,
+                "value": 0.0
+              },
+              "Ski Resorts": {
+                "count": 1,
+                "value": 0.0
+              },
+              "Telecommunications": {
+                "count": 19,
+                "value": 0.0
+              },
+              "Transit & Rail": {
+                "count": 265,
+                "value": 0.0
+              },
+              "Healthcare": {
+                "count": 15,
+                "value": 0.0
+              },
+              "Education": {
+                "count": 2,
+                "value": 0.0
+              }
+            },
+            "provinces": {
+              "AB": {
+                "count": 657,
+                "value": 291949.4
+              },
+              "BC": {
+                "count": 528,
+                "value": 490487.0
+              },
+              "MB": {
+                "count": 2023,
+                "value": 6509.0
+              },
+              "NB": {
+                "count": 166,
+                "value": 4852.0
+              },
+              "NL": {
+                "count": 1510,
+                "value": 24162.0
+              },
+              "NS": {
+                "count": 295,
+                "value": 13002.0
+              },
+              "NT": {
+                "count": 175,
+                "value": 40160.0
+              },
+              "NU": {
+                "count": 37,
+                "value": 1871.0
+              },
+              "ON": {
+                "count": 497,
+                "value": 136780.69999999998
+              },
+              "PE": {
+                "count": 78,
+                "value": 1546.0
+              },
+              "QC": {
+                "count": 429,
+                "value": 75947.0
+              },
+              "SK": {
+                "count": 123,
+                "value": 28409.2
+              },
+              "YT": {
+                "count": 97,
+                "value": 46288.0
+              }
+            }
+          },
+          "previous": {
+            "count": 0,
+            "value_millions": 0,
+            "sectors": {},
+            "provinces": {}
+          },
+          "count_change": 6615,
+          "count_pct_change": 0,
+          "value_change_millions": 1161963.3,
+          "value_pct_change": 0
+        }
+      },
+      "sector_momentum": {
+        "Transit & Rail": {
+          "label": "accelerating",
+          "current_count": 265,
+          "previous_count": 0,
+          "change": 265
+        },
+        "power_energy": {
+          "label": "accelerating",
+          "current_count": 312,
+          "previous_count": 0,
+          "change": 312
+        },
+        "residential": {
+          "label": "accelerating",
+          "current_count": 138,
+          "previous_count": 0,
+          "change": 138
+        },
+        "Shoreline Modification ": {
+          "label": "accelerating",
+          "current_count": 5,
+          "previous_count": 0,
+          "change": 5
+        },
+        "Telecommunications": {
+          "label": "accelerating",
+          "current_count": 19,
+          "previous_count": 0,
+          "change": 19
+        },
+        "Sand and Gravel Pits": {
+          "label": "accelerating",
+          "current_count": 6,
+          "previous_count": 0,
+          "change": 6
+        },
+        "Organic and Inorganic Chemical Industry": {
+          "label": "accelerating",
+          "current_count": 4,
+          "previous_count": 0,
+          "change": 4
+        },
+        "Oil Refineries": {
+          "label": "accelerating",
+          "current_count": 1,
+          "previous_count": 0,
+          "change": 1
+        },
+        "Healthcare": {
+          "label": "accelerating",
+          "current_count": 15,
+          "previous_count": 0,
+          "change": 15
+        },
+        "Education": {
+          "label": "accelerating",
+          "current_count": 2,
+          "previous_count": 0,
+          "change": 2
+        },
+        "infrastructure": {
+          "label": "accelerating",
+          "current_count": 714,
+          "previous_count": 0,
+          "change": 714
+        },
+        "Solid Waste Management": {
+          "label": "accelerating",
+          "current_count": 1,
+          "previous_count": 0,
+          "change": 1
+        },
+        "transport_logistics": {
+          "label": "accelerating",
+          "current_count": 69,
+          "previous_count": 0,
+          "change": 69
+        },
+        "government": {
+          "label": "accelerating",
+          "current_count": 173,
+          "previous_count": 0,
+          "change": 173
+        },
+        "oil_gas": {
+          "label": "accelerating",
+          "current_count": 39,
+          "previous_count": 0,
+          "change": 39
+        },
+        "Electric Transmission Lines": {
+          "label": "accelerating",
+          "current_count": 2,
+          "previous_count": 0,
+          "change": 2
+        },
+        "Resort Developments": {
+          "label": "accelerating",
+          "current_count": 2,
+          "previous_count": 0,
+          "change": 2
+        },
+        "Transmission Pipelines": {
+          "label": "accelerating",
+          "current_count": 11,
+          "previous_count": 0,
+          "change": 11
+        },
+        "Groundwater Extraction": {
+          "label": "accelerating",
+          "current_count": 4,
+          "previous_count": 0,
+          "change": 4
+        },
+        "indigenous": {
+          "label": "accelerating",
+          "current_count": 5,
+          "previous_count": 0,
+          "change": 5
+        },
+        "Ports & Logistics": {
+          "label": "accelerating",
+          "current_count": 114,
+          "previous_count": 0,
+          "change": 114
+        },
+        "Water & Wastewater": {
+          "label": "accelerating",
+          "current_count": 516,
+          "previous_count": 0,
+          "change": 516
+        },
+        "Coal Mines": {
+          "label": "accelerating",
+          "current_count": 14,
+          "previous_count": 0,
+          "change": 14
+        },
+        "mining": {
+          "label": "accelerating",
+          "current_count": 139,
+          "previous_count": 0,
+          "change": 139
+        },
+        "Natural Gas Processing Plants": {
+          "label": "accelerating",
+          "current_count": 8,
+          "previous_count": 0,
+          "change": 8
+        },
+        "commercial_mixed": {
+          "label": "accelerating",
+          "current_count": 64,
+          "previous_count": 0,
+          "change": 64
+        },
+        "Clean Energy": {
+          "label": "accelerating",
+          "current_count": 187,
+          "previous_count": 0,
+          "change": 187
+        },
+        "Water Diversion ": {
+          "label": "accelerating",
+          "current_count": 2,
+          "previous_count": 0,
+          "change": 2
+        },
+        "Non-metallic Mineral Products Industries": {
+          "label": "accelerating",
+          "current_count": 1,
+          "previous_count": 0,
+          "change": 1
+        },
+        "Marine Port Projects": {
+          "label": "accelerating",
+          "current_count": 2,
+          "previous_count": 0,
+          "change": 2
+        },
+        "education": {
+          "label": "accelerating",
+          "current_count": 143,
+          "previous_count": 0,
+          "change": 143
+        },
+        "Energy": {
+          "label": "accelerating",
+          "current_count": 238,
+          "previous_count": 0,
+          "change": 238
+        },
+        "Hazardous Waste Management": {
+          "label": "accelerating",
+          "current_count": 1,
+          "previous_count": 0,
+          "change": 1
+        },
+        "Public Highways": {
+          "label": "accelerating",
+          "current_count": 1,
+          "previous_count": 0,
+          "change": 1
+        },
+        "tourism_culture": {
+          "label": "accelerating",
+          "current_count": 142,
+          "previous_count": 0,
+          "change": 142
+        },
+        "environment": {
+          "label": "accelerating",
+          "current_count": 12,
+          "previous_count": 0,
+          "change": 12
+        },
+        "defence": {
+          "label": "accelerating",
+          "current_count": 4,
+          "previous_count": 0,
+          "change": 4
+        },
+        "Infrastructure": {
+          "label": "accelerating",
+          "current_count": 318,
+          "previous_count": 0,
+          "change": 318
+        },
+        "healthcare": {
+          "label": "accelerating",
+          "current_count": 218,
+          "previous_count": 0,
+          "change": 218
+        },
+        "Mineral Mines": {
+          "label": "accelerating",
+          "current_count": 21,
+          "previous_count": 0,
+          "change": 21
+        },
+        "Groundwater Extraction ": {
+          "label": "accelerating",
+          "current_count": 3,
+          "previous_count": 0,
+          "change": 3
+        },
+        "Dams": {
+          "label": "accelerating",
+          "current_count": 2,
+          "previous_count": 0,
+          "change": 2
+        },
+        "Railways": {
+          "label": "accelerating",
+          "current_count": 2,
+          "previous_count": 0,
+          "change": 2
+        },
+        "agriculture": {
+          "label": "accelerating",
+          "current_count": 1,
+          "previous_count": 0,
+          "change": 1
+        },
+        "Ski Resorts": {
+          "label": "accelerating",
+          "current_count": 1,
+          "previous_count": 0,
+          "change": 1
+        },
+        "Power Plants": {
+          "label": "accelerating",
+          "current_count": 21,
+          "previous_count": 0,
+          "change": 21
+        },
+        "Construction Stone and Industrial Mineral Quarries": {
+          "label": "accelerating",
+          "current_count": 2,
+          "previous_count": 0,
+          "change": 2
+        },
+        "Housing": {
+          "label": "accelerating",
+          "current_count": 28,
+          "previous_count": 0,
+          "change": 28
+        },
+        "forestry": {
+          "label": "accelerating",
+          "current_count": 12,
+          "previous_count": 0,
+          "change": 12
+        },
+        "Marine Port Facilities": {
+          "label": "accelerating",
+          "current_count": 3,
+          "previous_count": 0,
+          "change": 3
+        },
+        "Local Government Solid Waste Management Facilities": {
+          "label": "accelerating",
+          "current_count": 2,
+          "previous_count": 0,
+          "change": 2
+        },
+        "Mining": {
+          "label": "accelerating",
+          "current_count": 166,
+          "previous_count": 0,
+          "change": 166
+        },
+        "Energy Storage Facilities": {
+          "label": "accelerating",
+          "current_count": 15,
+          "previous_count": 0,
+          "change": 15
+        },
+        "Defence": {
+          "label": "accelerating",
+          "current_count": 12,
+          "previous_count": 0,
+          "change": 12
+        },
+        "Other": {
+          "label": "accelerating",
+          "current_count": 2345,
+          "previous_count": 0,
+          "change": 2345
+        },
+        "Shoreline Modification": {
+          "label": "accelerating",
+          "current_count": 4,
+          "previous_count": 0,
+          "change": 4
+        },
+        "telecom": {
+          "label": "accelerating",
+          "current_count": 15,
+          "previous_count": 0,
+          "change": 15
+        },
+        "Water Diversion": {
+          "label": "accelerating",
+          "current_count": 4,
+          "previous_count": 0,
+          "change": 4
+        },
+        "manufacturing": {
+          "label": "accelerating",
+          "current_count": 45,
+          "previous_count": 0,
+          "change": 45
+        }
+      },
+      "geographic_shifts": {
+        "NS": {
+          "current_share": 0.045,
+          "previous_share": 0.0,
+          "shift": 0.045,
+          "direction": "growing"
+        },
+        "AB": {
+          "current_share": 0.099,
+          "previous_share": 0.0,
+          "shift": 0.099,
+          "direction": "growing"
+        },
+        "BC": {
+          "current_share": 0.08,
+          "previous_share": 0.0,
+          "shift": 0.08,
+          "direction": "growing"
+        },
+        "NU": {
+          "current_share": 0.006,
+          "previous_share": 0.0,
+          "shift": 0.006,
+          "direction": "stable"
+        },
+        "NB": {
+          "current_share": 0.025,
+          "previous_share": 0.0,
+          "shift": 0.025,
+          "direction": "growing"
+        },
+        "YT": {
+          "current_share": 0.015,
+          "previous_share": 0.0,
+          "shift": 0.015,
+          "direction": "stable"
+        },
+        "ON": {
+          "current_share": 0.075,
+          "previous_share": 0.0,
+          "shift": 0.075,
+          "direction": "growing"
+        },
+        "PE": {
+          "current_share": 0.012,
+          "previous_share": 0.0,
+          "shift": 0.012,
+          "direction": "stable"
+        },
+        "NT": {
+          "current_share": 0.026,
+          "previous_share": 0.0,
+          "shift": 0.026,
+          "direction": "growing"
+        },
+        "NL": {
+          "current_share": 0.228,
+          "previous_share": 0.0,
+          "shift": 0.228,
+          "direction": "growing"
+        },
+        "QC": {
+          "current_share": 0.065,
+          "previous_share": 0.0,
+          "shift": 0.065,
+          "direction": "growing"
+        },
+        "SK": {
+          "current_share": 0.019,
+          "previous_share": 0.0,
+          "shift": 0.019,
+          "direction": "stable"
+        },
+        "MB": {
+          "current_share": 0.306,
+          "previous_share": 0.0,
+          "shift": 0.306,
+          "direction": "growing"
+        }
+      }
+    },
+    "created_at": "2026-03-30T11:59:16Z"
+  },
+  {
     "id": 10,
     "week_of": "2026-W11",
     "snapshot": {
