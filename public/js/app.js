@@ -167,7 +167,15 @@ document.querySelectorAll('.nav-tab').forEach(t=>{
 /* ── Data Loading ── */
 let currentEdition='latest';
 async function loadNewsletter(editionId){
-  try{D=await fetchJSON('briefing_latest.json')}
+  try{
+    if(editionId&&editionId!=='latest'){
+      // Try edition-specific file first
+      try{D=await fetchJSON('briefing_'+editionId+'.json')}
+      catch(e2){console.warn('Edition file not found, falling back to latest:',e2);D=await fetchJSON('briefing_latest.json')}
+    }else{
+      D=await fetchJSON('briefing_latest.json');
+    }
+  }
   catch(e){console.error('Newsletter load:',e)}
 }
 async function loadEditionList(){
@@ -177,8 +185,8 @@ async function loadEditionList(){
     const list=$('editionList');
     list.innerHTML=editions.map(e=>{
       const label=(e.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim()||e.id;
-      const active=e.id===currentEdition?'font-weight:700;background:var(--bg-subtle)':'';
-      return'<div class="edition-item" data-id="'+e.id+'" style="padding:8px 14px;font-size:var(--text-xs);cursor:pointer;border-bottom:1px solid var(--border-light);'+active+'">'+label+'</div>';
+      const active=e.id===currentEdition?'font-weight:700;background:#e2e8f0;':'';
+      return'<div class="edition-item" data-id="'+e.id+'" style="padding:8px 14px;font-size:var(--text-xs);cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.06);color:#1a2744;'+active+'">'+label+'</div>';
     }).join('');
     list.querySelectorAll('.edition-item').forEach(el=>el.addEventListener('click',()=>switchEdition(el.dataset.id)));
   }catch(e){console.warn('Edition list load:',e)}
@@ -189,8 +197,7 @@ async function switchEdition(editionId){
   $('navMeta').textContent='Loading...';
   tabRendered={};
   Object.values(charts).forEach(c=>{if(c&&c.destroy)c.destroy()});charts={};
-  // Static mode: only latest briefing is available as full content
-  await loadNewsletter();
+  await loadNewsletter(editionId);
   try{await renderTab('tldr');tabRendered.tldr=true}catch(e){console.error('renderTLDR:',e)}
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
   $('navMeta').textContent=edStr||'Latest Edition';
