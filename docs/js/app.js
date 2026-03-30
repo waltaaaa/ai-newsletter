@@ -1614,7 +1614,9 @@ async function renderAllGlobalPlayers(){
     [{key:'gdp',label:'GDP',metaKey:'gdp'},{key:'cpi',label:'CPI',metaKey:'cpi'},{key:'rate',label:'Policy Rate',metaKey:'rate'},{key:'unemployment',label:'Unemployment',metaKey:'unemployment'},{key:'tradeBalance',label:'Trade Balance',metaKey:'tradeBalance'},{key:'productivityGrowth',label:'Productivity Growth',metaKey:'productivityGrowth'}].forEach(x=>{
       const gm=giMeta[x.key]||{};
       const per=hasVal(gm.period)?fmtPeriod(gm.period):(FREQ_MAP[x.key]||'');
-      indRows.push({label:x.label,value:pick(gi[x.key]),change:gm.change||'',source:srcs[x.key]||'',metaKey:x.metaKey,period:per,freq:FREQ_MAP[x.key]||''});
+      const val=pick(gi[x.key]);
+      const chg=hasVal(gm.change)?gm.change:(val&&/^[+-]?\d/.test(String(val))&&String(val).includes('%')?String(val):'');
+      indRows.push({label:x.label,value:val,change:chg,source:srcs[x.key]||'',metaKey:x.metaKey,period:per,freq:FREQ_MAP[x.key]||''});
     });
 
     const subtitle=deriveSubtitle(analysis);
@@ -2021,14 +2023,14 @@ async function renderProvinceContent(){
   // Expanded indicator set (8) — computeChange() derives period-over-period diff from history
   const _prGdp=provIndRec('gdp'),_prUn=provIndRec('unemployment'),_prCpi=provIndRec('cpi'),_prPart=provIndRec('participationRate'),_prEmp=provIndRec('employmentRate'),_prHs=provIndRec('housingStarts'),_prWage=provIndRec('wageGrowth');
   const _prExp=indicators.find(x=>x.indicator_name===provPrefix+'_exports')||indicators.find(x=>x.indicator_name==='energy_exports');
-  function pchg(metaKey,indName){const mc=(provMeta[metaKey]||{}).change;return pick(mc,computeChange(indName||metaKey,prov.name))}
+  function pchg(metaKey,indName,valFallback){const mc=(provMeta[metaKey]||{}).change;const cc=computeChange(indName||metaKey,prov.name);const vf=valFallback&&/^[+-]?\d/.test(String(valFallback))&&String(valFallback).includes('%')?String(valFallback):'';return pick(mc,cc,vf)}
   const provIndicators=[
-    {label:'GDP YoY',value:pick(provInd.gdp,provIndVal('gdp')),change:pchg('gdp','realGdp'),source:indSource(_prGdp,'Statistics Canada'),metaKey:'gdp',period:indBasis(_prGdp,(provMeta.gdp||{}).period,'quarterly'),freq:'Quarterly'},
-    {label:'Unemployment',value:pick(provInd.unemployment,provIndVal('unemployment')),change:pchg('unemployment','unemployment'),source:indSource(_prUn,'Statistics Canada'),metaKey:'unemployment',period:indBasis(_prUn,(provMeta.unemployment||{}).period,'monthly'),freq:'Monthly'},
-    {label:'CPI',value:pick(provInd.cpi,provIndVal('cpi')),change:pchg('cpi','cpi'),source:indSource(_prCpi,'Statistics Canada'),metaKey:'cpi',period:indBasis(_prCpi,(provMeta.cpi||{}).period,'monthly'),freq:'Monthly'},
-    {label:'Participation',value:pick(provInd.participationRate,provIndVal('participationRate')),change:pchg('participationRate','participationRate'),source:indSource(_prPart,'Statistics Canada'),metaKey:'participationRate',period:indBasis(_prPart,(provMeta.participationRate||{}).period,'monthly'),freq:'Monthly'},
-    {label:'Employment Rate',value:pick(provInd.employmentRate,provIndVal('employmentRate')),change:pchg('employmentRate','employmentRate'),source:indSource(_prEmp,'Statistics Canada'),metaKey:'employmentRate',period:indBasis(_prEmp,(provMeta.employmentRate||{}).period,'monthly'),freq:'Monthly'},
-    {label:'Wage Growth',value:pick(provInd.wageGrowth,provIndVal('wageGrowth')),change:computeChange('wageGrowth',prov.name),source:indSource(_prWage,'Statistics Canada'),metaKey:'wageGrowth',period:indBasis(_prWage,'','monthly'),freq:'Monthly'},
+    {label:'GDP YoY',value:pick(provInd.gdp,provIndVal('gdp')),change:pchg('gdp','realGdp',provInd.gdp),source:indSource(_prGdp,'Statistics Canada'),metaKey:'gdp',period:indBasis(_prGdp,(provMeta.gdp||{}).period,'quarterly'),freq:'Quarterly'},
+    {label:'Unemployment',value:pick(provInd.unemployment,provIndVal('unemployment')),change:pchg('unemployment','unemployment',provInd.unemployment),source:indSource(_prUn,'Statistics Canada'),metaKey:'unemployment',period:indBasis(_prUn,(provMeta.unemployment||{}).period,'monthly'),freq:'Monthly'},
+    {label:'CPI',value:pick(provInd.cpi,provIndVal('cpi')),change:pchg('cpi','cpi',provInd.cpi),source:indSource(_prCpi,'Statistics Canada'),metaKey:'cpi',period:indBasis(_prCpi,(provMeta.cpi||{}).period,'monthly'),freq:'Monthly'},
+    {label:'Participation',value:pick(provInd.participationRate,provIndVal('participationRate')),change:pchg('participationRate','participationRate',provInd.participationRate),source:indSource(_prPart,'Statistics Canada'),metaKey:'participationRate',period:indBasis(_prPart,(provMeta.participationRate||{}).period,'monthly'),freq:'Monthly'},
+    {label:'Employment Rate',value:pick(provInd.employmentRate,provIndVal('employmentRate')),change:pchg('employmentRate','employmentRate',provInd.employmentRate),source:indSource(_prEmp,'Statistics Canada'),metaKey:'employmentRate',period:indBasis(_prEmp,(provMeta.employmentRate||{}).period,'monthly'),freq:'Monthly'},
+    {label:'Wage Growth',value:pick(provInd.wageGrowth,provIndVal('wageGrowth')),change:pchg('wageGrowth','wageGrowth',provInd.wageGrowth),source:indSource(_prWage,'Statistics Canada'),metaKey:'wageGrowth',period:indBasis(_prWage,'','monthly'),freq:'Monthly'},
     {label:'Housing Starts',value:pick(provInd.housingStarts,provIndVal('housingStarts')),change:pchg('housingStarts','housingStarts'),source:indSource(_prHs,'CMHC'),metaKey:'housingStarts',period:indBasis(_prHs,(provMeta.housingStarts||{}).period,'monthly'),freq:'Monthly'},
     {label:'Exports',value:pick(_prExp&&_prExp.value),change:computeChange(_prExp?_prExp.indicator_name:'',prov.name),source:indSource(_prExp,'Statistics Canada'),metaKey:'exports',period:indBasis(_prExp,'','monthly'),freq:'Monthly'}
   ];
