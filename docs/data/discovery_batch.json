@@ -1,0 +1,692 @@
+[
+  {
+    "name": "Kraft Heinz Montreal Facility Modernization",
+    "province": "QC",
+    "cma": "Montreal",
+    "sector": "manufacturing",
+    "naics_code": "3117",
+    "value": "$250M",
+    "status": "under_construction",
+    "confidence": 0.5,
+    "project_type": "modernization",
+    "proponent": "Kraft Heinz Canada",
+    "description": "Kraft Heinz Canada is upgrading and modernizing its Mont Royal factory in Montreal, introducing new production volume to strengthen domestic food manufacturing and support over 1,000 employees.",
+    "evidence": [
+      {
+        "url": "https://www.foodengineeringmag.com/articles/103599-kraft-heinz-launches-250m-investment-in-canadian-facility",
+        "title": "Kraft Heinz Launches $250M Investment in Canadian Facility",
+        "date": "2026-03-01",
+        "snippet": "Kraft Heinz Canada has announced a $250 million investment to upgrade and modernize its Mont Royal factory"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Alinova Non-GMO Soymilk Powder Plant",
+    "province": "ON",
+    "cma": "Morrisburg",
+    "sector": "manufacturing",
+    "naics_code": "3117",
+    "value": "$24M",
+    "status": "under_construction",
+    "confidence": 0.45,
+    "project_type": "greenfield",
+    "proponent": "Alinova",
+    "description": "Alinova is building Canada's first non-GMO soymilk powder plant in Morrisburg, Ontario, creating jobs and supporting Ontario farmers.",
+    "evidence": [
+      {
+        "url": "https://igrownews.com/fcc-latest-news/",
+        "title": "Food Processing Investment",
+        "date": "2026-03-01",
+        "snippet": "Alinova invests nearly $24 million to build Canada's first non-GMO soymilk powder plant"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Phytokana Fava Bean Processing Facility",
+    "province": "AB",
+    "cma": "Strathmore",
+    "sector": "manufacturing",
+    "naics_code": "3117",
+    "value": "$32.5M",
+    "status": "approved",
+    "confidence": 0.5,
+    "project_type": "greenfield",
+    "proponent": "Phytokana Ingredients",
+    "description": "Phytokana Ingredients is building a 30,000 metric tonne processing facility for Canadian-grown fava beans, backed by $32.5 million from Protein Industries Canada.",
+    "evidence": [
+      {
+        "url": "https://www.proteinindustriescanada.ca/news-releases/supply-chain-program-second-cohort",
+        "title": "Protein Industries Supply Chain",
+        "date": "2026-03-01",
+        "snippet": "Phytokana backed by $32.5 million from Protein Industries Canada"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Atlantic Beef Products Halal Processing Upgrade",
+    "province": "PE",
+    "cma": "Charlottetown",
+    "sector": "manufacturing",
+    "naics_code": "3117",
+    "value": "$2.3M",
+    "status": "approved",
+    "confidence": 0.45,
+    "project_type": "modernization",
+    "proponent": "Atlantic Beef Products Inc.",
+    "description": "Atlantic Beef Products Inc. is upgrading processing equipment including steam vacuum systems, packaging technology, and x-ray analyzers for improved food safety.",
+    "evidence": [
+      {
+        "url": "https://www.newswire.ca/news-releases/government-of-canada-invests-in-improved-halal-beef-processing-and-packaging-in-prince-edward-island",
+        "title": "Kosher and Halal Investment Program",
+        "date": "2026-01-15",
+        "snippet": "Atlantic Beef Products receives $2.2M for halal beef processing"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Western Archrib Mass Timber Plant",
+    "province": "AB",
+    "cma": "Sturgeon County",
+    "sector": "forestry",
+    "naics_code": "3212",
+    "value": "$80M",
+    "status": "under_construction",
+    "confidence": 0.55,
+    "project_type": "greenfield",
+    "proponent": "Western Archrib Enterprises Ltd.",
+    "description": "160,000-square-foot mass timber plant transforming operations to fully automated manufacturing, increasing capacity from 12 to 30-35 million board feet annually.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/02/government-of-canada-launches-500-million-in-support-for-retooling-canada-forest-sector.html",
+        "title": "Forest Sector Transformation",
+        "date": "2026-02-15",
+        "snippet": "Western Archrib building mass timber plant with $80M capital investment"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Irving Pulp and Paper Saint John Mill Upgrade",
+    "province": "NB",
+    "cma": "Saint John",
+    "sector": "forestry",
+    "naics_code": "3221",
+    "value": "$1100M",
+    "status": "proposed",
+    "confidence": 0.5,
+    "project_type": "modernization",
+    "proponent": "Irving Pulp & Paper",
+    "description": "$1.1 billion upgrade to west side pulp mill upgrading 1970s boiler, increasing pulp output by 65 percent with new 20-storey boiler building.",
+    "evidence": [
+      {
+        "url": "https://www.pulpandpapercanada.com/irving-plans-1-1b-pulp-mill-upgrade/",
+        "title": "Irving Pulp Mill Upgrade",
+        "date": "2026-02-01",
+        "snippet": "Irving planning $1.1 billion upgrade to Saint John mill"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Gorman Group Princeton Forestry Hub",
+    "province": "BC",
+    "cma": "Princeton",
+    "sector": "forestry",
+    "naics_code": "3212",
+    "value": "$120M",
+    "status": "approved",
+    "confidence": 0.5,
+    "project_type": "expansion",
+    "proponent": "Gorman Group",
+    "description": "$120 million investment from Gorman Group via tenure transfer, transforming Princeton into a forestry hub with expanded value-added operations.",
+    "evidence": [
+      {
+        "url": "https://news.gov.bc.ca/releases/2026FOR0006-000289",
+        "title": "B.C. Forestry Investment",
+        "date": "2026-03-01",
+        "snippet": "$120M investment into B.C. forestry via Gorman Group tenure transfer"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "CFB Gagetown Recapitalization",
+    "province": "NB",
+    "cma": "Gagetown",
+    "sector": "defence",
+    "naics_code": "9211",
+    "value": "$1000M",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "major_renovation",
+    "proponent": "Department of National Defence",
+    "description": "$1 billion+ investment to recapitalize primary army training area, introduce new ground-based air defence systems, and modernize training infrastructure.",
+    "evidence": [
+      {
+        "url": "https://www.cbc.ca/news/canada/new-brunswick/ottawa-invests-more-than-1-billion-in-5th-canadian-support-base-gagetown-9.7143352",
+        "title": "CFB Gagetown Investment",
+        "date": "2026-03-15",
+        "snippet": "$1 billion invested in CFB Gagetown recapitalization"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "CFB Halifax and Greenwood Infrastructure Upgrades",
+    "province": "NS",
+    "cma": "Halifax",
+    "sector": "defence",
+    "naics_code": "9211",
+    "value": "$1848M",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "major_renovation",
+    "proponent": "Department of National Defence",
+    "description": "Combined $1.8B for CFB Halifax Dockyard/Stadacona upgrades, aviation support facilities at 14 Wing Greenwood, and Combatant Training Centre for Royal Canadian Navy.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/department-national-defence/news/2026/02/government-of-canada-investing-in-historic-military-housing-expansion-to-support-caf-members-and-families.html",
+        "title": "Defence Infrastructure Upgrades",
+        "date": "2026-02-15",
+        "snippet": "Halifax and Greenwood defence infrastructure upgrades"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Military Housing Expansion Phase 2",
+    "province": "ON",
+    "cma": "Ottawa",
+    "sector": "residential",
+    "naics_code": "2361",
+    "value": "$3740M",
+    "status": "proposed",
+    "confidence": 0.5,
+    "project_type": "greenfield",
+    "proponent": "Department of National Defence",
+    "description": "Phase 2 of national military housing program to deliver 7,500 new residential units across Canada, with Defence Construction Canada procuring projects valued at $3.74 billion.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/department-national-defence/news/2026/02/government-of-canada-investing-in-historic-military-housing-expansion-to-support-caf-members-and-families.html",
+        "title": "Military Housing Expansion",
+        "date": "2026-02-15",
+        "snippet": "$3.74B military housing projects across Canada"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Semiahmoo First Nation Infrastructure",
+    "province": "BC",
+    "cma": "Surrey",
+    "sector": "indigenous",
+    "naics_code": "2361",
+    "value": "$6M",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "greenfield",
+    "proponent": "Semiahmoo First Nation",
+    "description": "$6M federal investment for water/wastewater systems expansion, site preparation, road construction, and utilities to support 32-unit BC Housing development.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/indigenous-services-canada/news/2026/01/semiahmoo-first-nation-advances-community-infrastructure-to-support-future-housing.html",
+        "title": "Semiahmoo Infrastructure",
+        "date": "2026-01-20",
+        "snippet": "$6M for Semiahmoo First Nation infrastructure"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Toronto Disco Road Organics Processing Expansion",
+    "province": "ON",
+    "cma": "Toronto",
+    "sector": "environment",
+    "naics_code": "5621",
+    "value": "$50M",
+    "status": "under_construction",
+    "confidence": 0.45,
+    "project_type": "expansion",
+    "proponent": "City of Toronto",
+    "description": "Expansion of Disco Road Organics Processing Facility increasing capacity to 125,000 tonnes annually with pre-treatment and anaerobic digestion process upgrades.",
+    "evidence": [
+      {
+        "url": "https://www.constructioncanada.net/designing-the-next-phase-of-organics-processing-infrastructure",
+        "title": "Organics Processing Expansion",
+        "date": "2026-03-01",
+        "snippet": "Toronto Disco Road facility expansion design underway"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Calgary Fish Creek Wastewater Treatment Upgrades",
+    "province": "AB",
+    "cma": "Calgary",
+    "sector": "infrastructure",
+    "naics_code": "2213",
+    "value": "$60M",
+    "status": "under_construction",
+    "confidence": 0.5,
+    "project_type": "expansion",
+    "proponent": "City of Calgary",
+    "description": "UV disinfection expansion doubling capacity with new channels, plus mass timber LEED-certified Operations and Administration Building completion expected mid-2028.",
+    "evidence": [
+      {
+        "url": "https://www.calgary.ca/planning/water/fish-creek-wastewater-treatment-plant-upgrades.html",
+        "title": "Fish Creek WWTP Upgrades",
+        "date": "2026-02-01",
+        "snippet": "Spring 2026 construction start for Fish Creek wastewater upgrades"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Arthur Wastewater Treatment Plant Expansion",
+    "province": "ON",
+    "cma": "Arthur",
+    "sector": "infrastructure",
+    "naics_code": "2213",
+    "value": "$26.1M",
+    "status": "approved",
+    "confidence": 0.5,
+    "project_type": "expansion",
+    "proponent": "Township of Wellington North",
+    "description": "Expansion of Arthur Wastewater Treatment Plant and upgrade of forcemain, plus replacement and expansion of Drayton Sewage Pumping Station in Mapleton.",
+    "evidence": [
+      {
+        "url": "https://www.link2build.ca/news/articles/2026/march/ontario-commits-29-million-to-water-infrastructure-in-perth-and-wellington-counties/",
+        "title": "Ontario Water Infrastructure",
+        "date": "2026-03-01",
+        "snippet": "$26.1M for Arthur wastewater plant expansion"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Cohere & CoreWeave AI Centre Toronto",
+    "province": "ON",
+    "cma": "Toronto",
+    "sector": "telecom",
+    "naics_code": "5182",
+    "value": "$240M",
+    "status": "under_construction",
+    "confidence": 0.55,
+    "project_type": "greenfield",
+    "proponent": "Cohere & CoreWeave",
+    "description": "Canada's largest AI facility backed by $240M federal funding powered by NVIDIA GPUs, coming online in 2025 for AI compute infrastructure.",
+    "evidence": [
+      {
+        "url": "https://outpostrecruitment.com/blog/job-search/canada-data-centre-construction-projects/",
+        "title": "Canada Data Centre Projects",
+        "date": "2026-03-01",
+        "snippet": "$240M AI facility Cohere & CoreWeave Toronto"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Synapse Data Center Olds Alberta",
+    "province": "AB",
+    "cma": "Olds",
+    "sector": "telecom",
+    "naics_code": "5182",
+    "value": "$10000M",
+    "status": "proposed",
+    "confidence": 0.5,
+    "project_type": "greenfield",
+    "proponent": "Synapse Data Center",
+    "description": "$10B data center campus, country's first 1-gigawatt facility with ten 100MW buildings. First phase ready mid-2026, creating 2,000 construction and 1,000+ tech jobs.",
+    "evidence": [
+      {
+        "url": "https://www.datacenterdynamics.com/en/news/1gw-data-center-campus-proposed-in-alberta-canada/",
+        "title": "1GW Data Center Campus Alberta",
+        "date": "2026-03-01",
+        "snippet": "$10B Synapse data center Olds Alberta"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "BCE AI Data Center Regina Saskatchewan",
+    "province": "SK",
+    "cma": "Regina",
+    "sector": "telecom",
+    "naics_code": "5182",
+    "value": "$500M",
+    "status": "proposed",
+    "confidence": 0.5,
+    "project_type": "greenfield",
+    "proponent": "BCE Inc.",
+    "description": "BCE building largest AI data center in Canada on southern edge of Regina, Saskatchewan as part of strategic AI infrastructure expansion.",
+    "evidence": [
+      {
+        "url": "https://www.bloomberg.com/news/newsletters/2026-03-16/bce-inc-set-to-build-canada-s-largest-ai-data-center",
+        "title": "BCE Largest AI Data Center",
+        "date": "2026-03-16",
+        "snippet": "BCE largest AI data center Canada Regina"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Halifax Infirmary Expansion",
+    "province": "NS",
+    "cma": "Halifax",
+    "sector": "healthcare",
+    "naics_code": "6221",
+    "value": "$1200M",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "expansion",
+    "proponent": "Province of Nova Scotia",
+    "description": "$1.2B investment in Halifax Infirmary expansion as part of More, Faster: The Action for Health Build plan.",
+    "evidence": [
+      {
+        "url": "https://news.novascotia.ca/en/2026/02/23/capital-plan-2026-27-released",
+        "title": "Nova Scotia Capital Plan",
+        "date": "2026-02-23",
+        "snippet": "$1.2B Halifax Infirmary expansion"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "St. Clare's Hospital Redevelopment",
+    "province": "NL",
+    "cma": "St. John's",
+    "sector": "healthcare",
+    "naics_code": "6221",
+    "value": "$150M",
+    "status": "proposed",
+    "confidence": 0.4,
+    "project_type": "redevelopment",
+    "proponent": "Government of Newfoundland and Labrador",
+    "description": "Planning beginning for St. Clare's Hospital redevelopment in St. John's with refocused Downtown Health Centre to include services not available at St. Clare's.",
+    "evidence": [
+      {
+        "url": "https://www.gov.nl.ca/releases/2026/ti/0128n03/",
+        "title": "NL Infrastructure Priorities",
+        "date": "2026-01-28",
+        "snippet": "St. Clare's Hospital redevelopment planning"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Pickering Generating Station Refurbishment",
+    "province": "ON",
+    "cma": "Toronto",
+    "sector": "power_energy",
+    "naics_code": "2211",
+    "value": "$24000M",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "major_renovation",
+    "proponent": "Ontario Power Generation",
+    "description": "Ontario's major nuclear refurbishment initiative to extend life and modernize Pickering Generating Station, nearly $25B investment.",
+    "evidence": [
+      {
+        "url": "https://canada.constructconnect.com/dcn/news/projects/2026/01/renew-canadas-2026-top100-projects-show-43b-increase",
+        "title": "ReNew Canada Top100 Projects",
+        "date": "2026-01-15",
+        "snippet": "Pickering Generating Station refurbishment"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Darlington New Nuclear Project",
+    "province": "ON",
+    "cma": "Darlington",
+    "sector": "power_energy",
+    "naics_code": "2211",
+    "value": "$25000M",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "greenfield",
+    "proponent": "Ontario Power Generation",
+    "description": "Ontario commitment to clean energy with ~$25B investment to build small modular reactors (SMRs) and associated infrastructure.",
+    "evidence": [
+      {
+        "url": "https://www.pm.gc.ca/en/news/news-releases/2025/09/07/prime-minister-carney-launches-major-projects-accelerate-clean-growth-and",
+        "title": "Major Projects Clean Growth",
+        "date": "2025-09-07",
+        "snippet": "Darlington New Nuclear Project small modular reactors"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Ksi Lisims LNG Project",
+    "province": "BC",
+    "cma": "Multiple",
+    "sector": "oil_gas",
+    "naics_code": "2111",
+    "value": "$30000M",
+    "status": "proposed",
+    "confidence": 0.5,
+    "project_type": "greenfield",
+    "proponent": "Gitxaala Nation & Partners",
+    "description": "~$30B investment expected for Ksi Lisims LNG project creating thousands of skilled careers and strengthening Canada's LNG export position.",
+    "evidence": [
+      {
+        "url": "https://canada.constructconnect.com/dcn/news/projects/2026/01/renew-canadas-2026-top100-projects-show-43b-increase",
+        "title": "ReNew Canada Top100",
+        "date": "2026-01-15",
+        "snippet": "Ksi Lisims LNG $30B investment"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Railside at The Forks Housing Development",
+    "province": "MB",
+    "cma": "Winnipeg",
+    "sector": "residential",
+    "naics_code": "2361",
+    "value": "$150M",
+    "status": "under_construction",
+    "confidence": 0.5,
+    "project_type": "greenfield",
+    "proponent": "The Forks",
+    "description": "First housing development at The Forks with 10 mid-rise buildings featuring condominiums, market rentals, and deeply affordable units.",
+    "evidence": [
+      {
+        "url": "https://www.cbc.ca/news/canada/manitoba/the-forks-railside-housing-development-construction-starts-9.7047511",
+        "title": "Forks Housing Development",
+        "date": "2026-03-01",
+        "snippet": "Railside at The Forks construction starts"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Métis National Heritage Centre",
+    "province": "MB",
+    "cma": "Winnipeg",
+    "sector": "commercial_mixed",
+    "naics_code": "7139",
+    "value": "$75M",
+    "status": "under_construction",
+    "confidence": 0.45,
+    "project_type": "adaptive_reuse",
+    "proponent": "Manitoba Métis Federation",
+    "description": "Adaptive reuse of Bank of Montreal Building at Portage and Main into Red River Métis National Heritage Centre with completion by end 2026.",
+    "evidence": [
+      {
+        "url": "https://www.cbc.ca/news/canada/manitoba/major-winnipeg-projects-2026-9.7047651",
+        "title": "Winnipeg Major Projects",
+        "date": "2026-03-01",
+        "snippet": "Métis Heritage Centre conversion"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Hudson's Bay Company Flagship Adaptive Reuse",
+    "province": "MB",
+    "cma": "Winnipeg",
+    "sector": "residential",
+    "naics_code": "2361",
+    "value": "$310M",
+    "status": "under_construction",
+    "confidence": 0.5,
+    "project_type": "adaptive_reuse",
+    "proponent": "Southern Chiefs' Organization",
+    "description": "$310M adaptive reuse of defunct HBC flagship store at Memorial Boulevard with atrium and residential units construction in 2026.",
+    "evidence": [
+      {
+        "url": "https://www.cbc.ca/news/canada/manitoba/major-winnipeg-projects-2026-9.7047651",
+        "title": "Winnipeg Major Projects",
+        "date": "2026-03-01",
+        "snippet": "HBC flagship store $310M adaptive reuse"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Nunavut Build Canada Homes Program",
+    "province": "NU",
+    "cma": "Multiple",
+    "sector": "residential",
+    "naics_code": "2361",
+    "value": "$480M",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "greenfield",
+    "proponent": "Government of Nunavut & Partners",
+    "description": "Build Canada Homes partnership delivering 750 homes across Nunavut including public, affordable, and supportive housing with $480M investment.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/03/delivering-on-more-homes-for-nunavut.html",
+        "title": "Nunavut Homes Program",
+        "date": "2026-03-16",
+        "snippet": "750 homes $480M Build Canada Homes Nunavut"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Arviat Modular Homes Factory",
+    "province": "NU",
+    "cma": "Arviat",
+    "sector": "manufacturing",
+    "naics_code": "3212",
+    "value": "$45M",
+    "status": "approved",
+    "confidence": 0.5,
+    "project_type": "greenfield",
+    "proponent": "Government of Nunavut",
+    "description": "64,000-square-foot modular homes factory expected to manufacture 40 homes/year starting spring 2026.",
+    "evidence": [
+      {
+        "url": "https://nunatsiaq.com/stories/article/modular-homes-are-future-of-nunavut-housing-federal-minister-says/",
+        "title": "Nunavut Modular Homes",
+        "date": "2026-03-01",
+        "snippet": "Arviat modular homes factory"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "McIlvenna Bay Copper Mine",
+    "province": "SK",
+    "cma": "Foran Mining Region",
+    "sector": "mining",
+    "naics_code": "2122",
+    "value": "$850M",
+    "status": "under_construction",
+    "confidence": 0.55,
+    "project_type": "greenfield",
+    "proponent": "Foran Mining",
+    "description": "64% complete and scheduled to begin operation mid-2026 with FID announced July 2024.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-12-1-billion-in-mining-project-capital.html",
+        "title": "Critical Minerals Production",
+        "date": "2026-03-01",
+        "snippet": "McIlvenna Bay scheduled to begin operation 2026"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Red Chris Copper Mine Expansion",
+    "province": "BC",
+    "cma": "Northern BC",
+    "sector": "mining",
+    "naics_code": "2122",
+    "value": "$450M",
+    "status": "approved",
+    "confidence": 0.5,
+    "project_type": "expansion",
+    "proponent": "Newmont Corporation",
+    "description": "Copper mine expansion in northwestern BC with BC Hydro Northwest Transmission Line upgrades supplying 145MW.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-12-1-billion-in-mining-project-capital.html",
+        "title": "Critical Minerals",
+        "date": "2026-03-01",
+        "snippet": "Red Chris expansion critical minerals"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  },
+  {
+    "name": "Saskatchewan Telecommunications Broadband",
+    "province": "SK",
+    "cma": "Multiple",
+    "sector": "telecom",
+    "naics_code": "5171",
+    "value": "$15M",
+    "status": "approved",
+    "confidence": 0.5,
+    "project_type": "greenfield",
+    "proponent": "SaskTel & Access Communications",
+    "description": "455km of new transport fibre infrastructure connecting 3,880 households across 27 Saskatchewan communities.",
+    "evidence": [
+      {
+        "url": "https://crtc.gc.ca/eng/internet/select.htm",
+        "title": "CRTC Broadband Fund",
+        "date": "2026-03-01",
+        "snippet": "SaskTel 455km fibre infrastructure"
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-03-30"
+  }
+]
