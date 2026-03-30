@@ -482,13 +482,6 @@ async function renderEditorialFlow(){
     <div class="ed-clear"></div>
 
     <div class="ed-section">
-      <div class="ed-section-title">Financial Markets</div>
-      <div class="ed-section-subtitle">${san(marketsSub)}</div>
-    </div>
-    <div id="tldrMarketsSection"></div>
-    <div class="ed-clear"></div>
-
-    <div class="ed-section">
       <div class="ed-section-title">Consumer Pulse</div>
       <div class="ed-section-subtitle">${san(pulseSub)}</div>
     </div>
@@ -502,7 +495,6 @@ async function renderEditorialFlow(){
     <div class="ed-clear"></div>
   `;
   await renderInteractiveMap();
-  await renderTLDRMarkets();
   try{await _ensureChartData();_renderSectorChart('tldrSectorChart','tldr')}catch(e){console.warn('Sector chart:',e)}
   if(wcTopics.length) renderTLDRWordCloud(wcTopics,'tldrWordCloudSvg');
   }catch(e){
