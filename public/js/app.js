@@ -2177,7 +2177,7 @@ let _mktState={};
 /* Shared engine: renders one large multi-series chart with toggleable pills */
 function _mktBuildSection(containerId,title,items,defaults,chartKey){
   const el=$(containerId);if(!el)return;
-  _mktState[chartKey]={items,active:new Set(defaults),mode:'price'};
+  _mktState[chartKey]={items,active:new Set(defaults),mode:'price',range:12,freq:'all'};
   const cid='mktChart_'+chartKey;
   let html='<h3>'+title+'</h3>';
   // Stat row for active items
@@ -2192,9 +2192,8 @@ function _mktBuildSection(containerId,title,items,defaults,chartKey){
     html+='</div>';
   });
   html+='</div>';
-  // Mode toggle (price vs % change)
-  html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">';
-  html+='<div class="mkt-pills" id="mktPills_'+chartKey+'">';
+  // Series pills
+  html+='<div class="mkt-pills" id="mktPills_'+chartKey+'" style="margin-bottom:8px">';
   items.forEach((it,i)=>{
     const isActive=defaults.includes(it.name);
     const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':'up';
@@ -2206,10 +2205,26 @@ function _mktBuildSection(containerId,title,items,defaults,chartKey){
     html+='</div>';
   });
   html+='</div>';
+  // Controls row: Date range + Frequency + Price/% toggle
+  html+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">';
+  // Date range buttons
+  html+='<div class="mkt-mode-toggle" id="mktRange_'+chartKey+'">';
+  [{m:1,l:'1M'},{m:3,l:'3M'},{m:6,l:'6M'},{m:12,l:'1Y'},{m:36,l:'3Y'},{m:60,l:'5Y'},{m:0,l:'All'}].forEach(r=>{
+    html+='<div class="mkt-mode-btn'+(r.m===12?' active':'')+'" data-range="'+r.m+'" data-key="'+chartKey+'" onclick="_mktSetRange(this)">'+r.l+'</div>';
+  });
+  html+='</div>';
+  // Frequency filter
+  html+='<div class="mkt-mode-toggle" id="mktFreq_'+chartKey+'">';
+  [{f:'all',l:'All'},{f:'daily',l:'Daily'},{f:'weekly',l:'Weekly'},{f:'monthly',l:'Monthly'}].forEach(r=>{
+    html+='<div class="mkt-mode-btn'+(r.f==='all'?' active':'')+'" data-freq="'+r.f+'" data-key="'+chartKey+'" onclick="_mktSetFreq(this)">'+r.l+'</div>';
+  });
+  html+='</div>';
+  // Price / % Change toggle
   html+='<div class="mkt-mode-toggle" id="mktMode_'+chartKey+'">';
   html+='<div class="mkt-mode-btn active" data-mode="price" data-key="'+chartKey+'" onclick="_mktSetMode(this)">Price</div>';
   html+='<div class="mkt-mode-btn" data-mode="pct" data-key="'+chartKey+'" onclick="_mktSetMode(this)">% Change</div>';
-  html+='</div></div>';
+  html+='</div>';
+  html+='</div>';
   // Chart canvas
   html+='<div class="mkt-chart-wrap"><canvas id="'+cid+'"></canvas></div>';
   el.innerHTML=html;
@@ -2237,6 +2252,22 @@ function _mktSetMode(btn){
   _mktDrawChart(key);
 }
 
+function _mktSetRange(btn){
+  const key=btn.dataset.key;const range=parseInt(btn.dataset.range);
+  const st=_mktState[key];if(!st)return;
+  st.range=range;
+  btn.parentElement.querySelectorAll('.mkt-mode-btn').forEach(b=>b.classList.toggle('active',b===btn));
+  _mktDrawChart(key);
+}
+
+function _mktSetFreq(btn){
+  const key=btn.dataset.key;const freq=btn.dataset.freq;
+  const st=_mktState[key];if(!st)return;
+  st.freq=freq;
+  btn.parentElement.querySelectorAll('.mkt-mode-btn').forEach(b=>b.classList.toggle('active',b===btn));
+  _mktDrawChart(key);
+}
+
 async function _mktDrawChart(key){
   const st=_mktState[key];if(!st)return;
   const cid='mktChart_'+key;
@@ -2247,13 +2278,26 @@ async function _mktDrawChart(key){
   // Load all timeseries in parallel
   const tsPromises=activeItems.map(it=>loadTimeseries(_mktTsMap[it.name]||it.tsId||''));
   const tsResults=await Promise.all(tsPromises);
-  // Find common date range (12 months)
-  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
+  // Date range filter
+  const rangeMonths=st.range||12;
+  const cutoff=rangeMonths>0?(()=>{const d=new Date();d.setMonth(d.getMonth()-rangeMonths);return d})():new Date('1900-01-01');
   const datasets=[];const allLabels=new Set();
   activeItems.forEach((it,i)=>{
     const ts=tsResults[i];if(!ts)return;
     const raw=ts.series||ts;if(!Array.isArray(raw))return;
-    const filtered=raw.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
+    let filtered=raw.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
+    // Frequency filter: resample to weekly or monthly if requested
+    if(st.freq==='weekly'&&filtered.length>1){
+      const sampled=[];let lastWeek='';
+      filtered.forEach(p=>{const d=new Date(p.date);const wk=d.getFullYear()+'-W'+String(Math.ceil(((d-new Date(d.getFullYear(),0,1))/86400000+1)/7)).padStart(2,'0');if(wk!==lastWeek){sampled.push(p);lastWeek=wk}});
+      filtered=sampled;
+    }else if(st.freq==='monthly'&&filtered.length>1){
+      const sampled=[];let lastMon='';
+      filtered.forEach(p=>{const mon=p.date.substring(0,7);if(mon!==lastMon){sampled.push(p);lastMon=mon}});
+      filtered=sampled;
+    }else if(st.freq==='daily'){
+      // already daily, no change
+    }
     if(!filtered.length)return;
     const color=_mktPal[st.items.indexOf(it)%_mktPal.length];
     let data,labels;
@@ -2310,7 +2354,7 @@ async function _mktDrawChart(key){
       tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8,
         callbacks:{label:ctx=>{const v=ctx.parsed.y;return ctx.dataset.label+': '+(st.mode==='pct'?v.toFixed(2)+'%':fmtNum(v))}}}
     },
-    scales:{x:{type:'time',time:{unit:'month',tooltipFormat:'MMM d, yyyy',displayFormats:{month:'MMM yyyy'}},grid:{display:false},ticks:{font:{family:'Outfit',size:10},color:'#636363',maxTicksLimit:8}},...yAxes}
+    scales:{x:{type:'time',time:{unit:rangeMonths<=3?'week':rangeMonths<=12?'month':'quarter',tooltipFormat:'MMM d, yyyy',displayFormats:{week:'MMM d',month:'MMM yyyy',quarter:'QQQ yyyy'}},grid:{display:false},ticks:{font:{family:'Outfit',size:10},color:'#636363',maxTicksLimit:rangeMonths<=6?10:8}},...yAxes}
   }});
 }
 
@@ -2428,9 +2472,10 @@ function _mktRenderCommPills(cat){
   const items=filtered.map(c=>({name:c.name,value:c.value,change:c.change,yy:'',unit:c.unit}));
   if(!items.length){$('mktCommPillWrap').innerHTML='<div style="color:#64748B;font-size:13px;padding:20px">No data for this category.</div>';$('mktCommChartWrap').innerHTML='';return}
   // Build inline (not using _mktBuildSection since we need to render into sub-containers)
-  _mktState.commodities={items,active:new Set(defaults),mode:'price'};
+  _mktState.commodities={items,active:new Set(defaults),mode:'price',range:12,freq:'all'};
   const key='commodities';const cid='mktChart_'+key;
-  let html='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><div class="mkt-pills" id="mktPills_'+key+'">';
+  // Series pills
+  let html='<div class="mkt-pills" id="mktPills_'+key+'" style="margin-bottom:8px">';
   items.forEach((it,i)=>{
     const isActive=defaults.includes(it.name);
     const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':'up';
@@ -2440,6 +2485,18 @@ function _mktRenderCommPills(cat){
     if(it.value)html+=' <span class="pill-val">'+it.value+(it.unit?' '+it.unit:'')+'</span>';
     if(chg)html+=' <span class="pill-chg '+cls+'">'+chg+'</span>';
     html+='</div>';
+  });
+  html+='</div>';
+  // Controls row
+  html+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">';
+  html+='<div class="mkt-mode-toggle" id="mktRange_'+key+'">';
+  [{m:1,l:'1M'},{m:3,l:'3M'},{m:6,l:'6M'},{m:12,l:'1Y'},{m:36,l:'3Y'},{m:60,l:'5Y'},{m:0,l:'All'}].forEach(r=>{
+    html+='<div class="mkt-mode-btn'+(r.m===12?' active':'')+'" data-range="'+r.m+'" data-key="'+key+'" onclick="_mktSetRange(this)">'+r.l+'</div>';
+  });
+  html+='</div>';
+  html+='<div class="mkt-mode-toggle" id="mktFreq_'+key+'">';
+  [{f:'all',l:'All'},{f:'daily',l:'Daily'},{f:'weekly',l:'Weekly'},{f:'monthly',l:'Monthly'}].forEach(r=>{
+    html+='<div class="mkt-mode-btn'+(r.f==='all'?' active':'')+'" data-freq="'+r.f+'" data-key="'+key+'" onclick="_mktSetFreq(this)">'+r.l+'</div>';
   });
   html+='</div>';
   html+='<div class="mkt-mode-toggle" id="mktMode_'+key+'">';
