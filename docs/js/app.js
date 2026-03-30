@@ -549,8 +549,8 @@ async function renderInteractiveMap(){
 
   const statsDefault=[
     {label:'BoC Rate',value:pick(m.bocRate,m.boc_rate,_indVal('overnight_rate')),change:_tc('bocRate','overnight_rate'),period:indBasis(_tBoc,_indMeta('bocRate').period,'scheduled'),freq:'8x/yr',source:indSource(_tBoc,'Bank of Canada')},
-    {label:'Real GDP',value:pick(m.realGdp,_indVal('realGdp')),change:_tc('realGdp','realGdp'),period:indBasis(_tGdp,_indMeta('realGdp').period,'quarterly'),freq:'Quarterly',source:indSource(_tGdp,'Statistics Canada')},
-    {label:'CPI',value:pick(m.cpi,_indVal('cpi'),_indVal('cpi_national')),change:_tc('cpi','cpi'),period:indBasis(_indRec('cpi'),_indMeta('cpi').period,'monthly'),freq:'Monthly',source:indSource(_indRec('cpi'),'Statistics Canada')},
+    {label:'Real GDP',value:pick(m.realGdp,_indVal('realGdp')),change:pick(_tc('realGdp','realGdp'),m.realGdp||''),period:indBasis(_tGdp,_indMeta('realGdp').period,'quarterly'),freq:'Quarterly',source:indSource(_tGdp,'Statistics Canada')},
+    {label:'CPI',value:pick(m.cpi,_indVal('cpi'),_indVal('cpi_national')),change:pick(_tc('cpi','cpi'),m.cpi||''),period:indBasis(_indRec('cpi'),_indMeta('cpi').period,'monthly'),freq:'Monthly',source:indSource(_indRec('cpi'),'Statistics Canada')},
     {label:'Unemployment',value:pick(m.unemployment,_indVal('unemployment'),findKI('UNEMPLOYMENT').value),change:pick(findKI('UNEMPLOYMENT').change,_tc('unemployment','unemployment')),period:indBasis(_tUn,_indMeta('unemployment').period,'monthly'),freq:'Monthly',source:indSource(_tUn,'Statistics Canada')},
     {label:'Participation',value:pick(_tPart&&_tPart.value,m.participation,_indVal('participationRate')),change:computeChange('participationRate','national'),period:indBasis(_tPart,'','monthly'),freq:'Monthly',source:indSource(_tPart,'Statistics Canada')},
     {label:'Employment Rate',value:pick(_tEmp&&_tEmp.value,_indVal('employmentRate')),change:computeChange('employmentRate','national'),period:indBasis(_tEmp,'','monthly'),freq:'Monthly',source:indSource(_tEmp,'Statistics Canada')},
@@ -1490,8 +1490,8 @@ async function renderCanadaSub(){
   function chg(metaKey,indName){return pick(indMeta(metaKey).change,computeChange(indName||metaKey,'national'))}
   const natIndicators=[
     {label:'BoC Rate',value:pick(m.bocRate,m.boc_rate,indVal('overnight_rate')),change:chg('bocRate','overnight_rate'),source:indSource(_rBoc,'Bank of Canada'),metaKey:'bocRate',period:indBasis(_rBoc,indMeta('bocRate').period,'scheduled'),freq:'8x/yr'},
-    {label:'Real GDP YoY',value:pick(m.realGdp,m.gdp,indVal('realGdp'),indVal('gdp')),change:chg('realGdp','realGdp'),source:indSource(_rGdp,'Statistics Canada'),metaKey:'realGdp',period:indBasis(_rGdp,indMeta('realGdp').period,'quarterly'),freq:'Quarterly'},
-    {label:'CPI',value:pick(m.cpi,indVal('cpi'),indVal('cpi_national')),change:chg('cpi','cpi'),source:indSource(_rCpi,'Statistics Canada'),metaKey:'cpi',period:indBasis(_rCpi,indMeta('cpi').period,'monthly'),freq:'Monthly'},
+    {label:'Real GDP YoY',value:pick(m.realGdp,m.gdp,indVal('realGdp'),indVal('gdp')),change:pick(chg('realGdp','realGdp'),m.realGdp||''),source:indSource(_rGdp,'Statistics Canada'),metaKey:'realGdp',period:indBasis(_rGdp,indMeta('realGdp').period,'quarterly'),freq:'Quarterly'},
+    {label:'CPI',value:pick(m.cpi,indVal('cpi'),indVal('cpi_national')),change:pick(chg('cpi','cpi'),m.cpi||''),source:indSource(_rCpi,'Statistics Canada'),metaKey:'cpi',period:indBasis(_rCpi,indMeta('cpi').period,'monthly'),freq:'Monthly'},
     {label:'Unemployment',value:pick(m.unemployment,indVal('unemployment'),indVal('unemployment_national')),change:chg('unemployment','unemployment'),source:indSource(_rUnemp,'Statistics Canada'),metaKey:'unemployment',period:indBasis(_rUnemp,indMeta('unemployment').period,'monthly'),freq:'Monthly'},
     {label:'Participation',value:pick(natPart&&natPart.value,m.participation,indVal('participationRate')),change:computeChange('participationRate','national'),source:indSource(natPart,'Statistics Canada'),metaKey:'participationRate',period:indBasis(natPart,'','monthly'),freq:'Monthly'},
     {label:'Employment Rate',value:pick(natEmp&&natEmp.value,indVal('employmentRate')),change:computeChange('employmentRate','national'),source:indSource(natEmp,'Statistics Canada'),metaKey:'employmentRate',period:indBasis(natEmp,'','monthly'),freq:'Monthly'},
