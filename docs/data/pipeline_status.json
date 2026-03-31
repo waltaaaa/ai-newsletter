@@ -1,6 +1,6 @@
 {
   "last_run": {
-    "started_at": "2026-03-31T01:53:20.043609",
+    "started_at": "2026-03-31T03:49:38.022448",
     "status": "running",
     "duration_seconds": 0,
     "discovery": {
@@ -11,11 +11,18 @@
     },
     "errors": [
       {
+        "step": "Phase 3: Filtering",
+        "error_type": "Exception",
+        "message": "Timeout after 1200s",
+        "recovered": true,
+        "timestamp": "2026-03-31T04:21:23.145511"
+      },
+      {
         "step": "quality_gate",
         "error_type": "Exception",
         "message": "Stale briefing: 100% overlap with previous week",
         "recovered": true,
-        "timestamp": "2026-03-31T01:54:49.501618"
+        "timestamp": "2026-03-31T04:53:17.478472"
       }
     ]
   },
@@ -30,7 +37,7 @@
   },
   "recent_runs": [
     {
-      "started_at": "2026-03-31T01:53:20.043609",
+      "started_at": "2026-03-31T03:49:38.022448",
       "status": "running",
       "duration_seconds": 0,
       "discovery": {
@@ -41,31 +48,31 @@
       }
     },
     {
-      "started_at": "2026-03-31T01:31:10.097576",
+      "started_at": "2026-03-31T02:56:37.779768",
       "status": "partial",
-      "duration_seconds": 1115,
+      "duration_seconds": 3000,
       "discovery": {
-        "articles_found": 0,
-        "projects_added": 0,
+        "articles_found": 29,
+        "projects_added": 26,
+        "projects_updated": 0,
+        "projects_deduped": 2
+      }
+    },
+    {
+      "started_at": "2026-03-31T02:35:08.209087",
+      "status": "partial",
+      "duration_seconds": 3566,
+      "discovery": {
+        "articles_found": 24,
+        "projects_added": 24,
         "projects_updated": 0,
         "projects_deduped": 0
       }
     },
     {
-      "started_at": "2026-03-31T01:07:03.965029",
-      "status": "partial",
-      "duration_seconds": 1293,
-      "discovery": {
-        "articles_found": 0,
-        "projects_added": 0,
-        "projects_updated": 0,
-        "projects_deduped": 0
-      }
-    },
-    {
-      "started_at": "2026-03-31T00:59:36.003885",
-      "status": "partial",
-      "duration_seconds": 359,
+      "started_at": "2026-03-31T02:34:36.217646",
+      "status": "success",
+      "duration_seconds": 0,
       "discovery": {
         "articles_found": 0,
         "projects_added": 0,

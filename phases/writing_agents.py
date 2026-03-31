@@ -82,7 +82,7 @@ def _call_claude_code(prompt: str, label: str, max_turns: int = 2) -> dict | Non
             '--output-format', 'json',
             '--max-turns', str(max_turns),
         ]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=180,
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300,
                                 encoding='utf-8', errors='replace', env=_CLAUDE_ENV)
         if result.returncode != 0:
             print(f"    [{label}] Claude Code exit code {result.returncode}")
@@ -102,7 +102,7 @@ def _call_claude_code(prompt: str, label: str, max_turns: int = 2) -> dict | Non
             pass
         return _extract_json(output, label)
     except subprocess.TimeoutExpired:
-        print(f"    [{label}] Timed out after 180s")
+        print(f"    [{label}] Timed out after 300s")
         return None
     except FileNotFoundError:
         print(f"    [{label}] 'claude' CLI not found")

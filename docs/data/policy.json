@@ -1,6 +1,41 @@
 {
   "weeks": [
     {
+      "week_of": "2026-03-31",
+      "summary": {
+        "total_items": 1,
+        "by_category": {
+          "housing": 1
+        },
+        "by_province": {
+          "BC": 1
+        },
+        "by_level": {
+          "provincial": 1
+        },
+        "top_developments": [
+          {
+            "title": "Opening more homes in West Vancouver",
+            "source_type": "policy_announcement",
+            "categories": [
+              "housing"
+            ],
+            "affected_sectors": [
+              "residential"
+            ],
+            "affected_projects_total": 51,
+            "affected_projects_value": 0,
+            "province": "BC",
+            "level": "provincial",
+            "summary": "Two new rental buildings expand housing options for workers, families with middle incomes",
+            "date": "Fri, 27 Mar 2026 11:15:00 -0700",
+            "source_description": "BC Government News",
+            "url": "https://news.gov.bc.ca/releases/2026HMA0028-000325"
+          }
+        ]
+      }
+    },
+    {
       "week_of": "2026-03-30",
       "summary": {
         "total_items": 1,
@@ -66,5 +101,5 @@
       }
     }
   ],
-  "last_updated": "2026-03-31T01:54:51.067206+00:00"
+  "last_updated": "2026-03-31T04:53:19.333865+00:00"
 }
