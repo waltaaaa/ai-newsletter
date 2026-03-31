@@ -583,34 +583,37 @@ def run_all_writing_agents(hard_data: dict, articles: list[dict],
 
         dossier_context = '\n'.join(dossier_lines)
 
-    # Use extracted articles if available, otherwise convert RSS items
-    economy_arts = [a for a in articles if a.get('topic') == 'economy']
-    if not economy_arts and rss_items:
-        economy_arts = [
-            {
-                'title': r.get('title', ''),
-                'text': r.get('summary', '') or r.get('snippet', ''),
-                'url': r.get('url', ''),
-                'topic': 'economy',
-                'feed_id': r.get('source_name', ''),
-                'meta_sectors': r.get('tags', []),
-                'meta_provinces': [r['province']] if r.get('province') else [],
-            }
-            for r in rss_items
-            if r.get('title')
-        ]
-    all_arts_text = _format_articles_for_prompt(economy_arts[:50])
-    industry_arts = [a for a in economy_arts if any(
-        kw in (a.get('title', '') + a.get('text', '')).lower()
-        for kw in ('energy', 'oil', 'mining', 'manufactur', 'housing', 'finance',
-                    'health', 'retail', 'transit', 'transport', 'education',
-                    'agriculture', 'defence', 'telecom', 'real estate')
-    )]
-    industry_arts_text = _format_articles_for_prompt(industry_arts[:50])
-
-    # Append dossier context to hard_summary so all agents see it
+    # When dossier is available, it's the primary context — skip raw article dump
+    # to keep prompts within context window limits
     if dossier_context:
         hard_summary = hard_summary + '\n\n' + dossier_context
+        all_arts_text = '(Articles already analyzed in dossier above — cite sources from dossier)'
+        industry_arts_text = '(Industry articles already analyzed in dossier above)'
+    else:
+        # Fallback: use extracted articles or RSS items
+        economy_arts = [a for a in articles if a.get('topic') == 'economy']
+        if not economy_arts and rss_items:
+            economy_arts = [
+                {
+                    'title': r.get('title', ''),
+                    'text': r.get('summary', '') or r.get('snippet', ''),
+                    'url': r.get('url', ''),
+                    'topic': 'economy',
+                    'feed_id': r.get('source_name', ''),
+                    'meta_sectors': r.get('tags', []),
+                    'meta_provinces': [r['province']] if r.get('province') else [],
+                }
+                for r in rss_items
+                if r.get('title')
+            ]
+        all_arts_text = _format_articles_for_prompt(economy_arts[:50])
+        industry_arts = [a for a in economy_arts if any(
+            kw in (a.get('title', '') + a.get('text', '')).lower()
+            for kw in ('energy', 'oil', 'mining', 'manufactur', 'housing', 'finance',
+                        'health', 'retail', 'transit', 'transport', 'education',
+                        'agriculture', 'defence', 'telecom', 'real estate')
+        )]
+        industry_arts_text = _format_articles_for_prompt(industry_arts[:50])
 
     cdn_officials = _build_canadian_officials_context(watchlist or {})
     global_officials = _build_global_officials_context(watchlist or {})
