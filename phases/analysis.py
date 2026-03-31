@@ -275,32 +275,27 @@ def _repair_json(broken_json: str, label: str,
     except Exception as e:
         print(f"    [GROQ REPAIR FAILED] {label}: {e}")
 
-    repair_prompt = (
-        "The following JSON is malformed or truncated. Return ONLY the corrected valid JSON. "
-        "No markdown. No explanation.\n\n" + broken_json
-    )
-    # Try Claude Haiku (cheap, always available)
-    if anthropic_client:
-        try:
-            msg = anthropic_client.messages.create(
-                model="claude-haiku-4-5-20251001",
-                max_tokens=16384,
-                messages=[{"role": "user", "content": repair_prompt}],
-            )
-            if not msg.content:
-                print(f"    [HAIKU REPAIR FAILED] {label}: empty API response")
-                return None
-            raw = msg.content[0].text.strip()
+    # Try Claude Code as third fallback (free, subscription)
+    from claude_reasoning import REASONING_AGENT_MODE, _call_claude_code_sync
+    if REASONING_AGENT_MODE == 'claude_code':
+        repair_prompt = (
+            "The following JSON is malformed or truncated. Return ONLY the corrected valid JSON. "
+            "No markdown. No explanation.\n\n" + broken_json
+        )
+        raw = _call_claude_code_sync(repair_prompt, f"repair-{label}", model='haiku')
+        if raw:
+            raw = raw.strip()
             if raw.startswith("```"):
                 parts = raw.split("```")
                 raw = parts[1] if len(parts) > 1 else raw
                 if raw.startswith("json"):
                     raw = raw[4:]
-            result = json.loads(raw)
-            print(f"    [HAIKU REPAIR OK] {label}")
-            return result
-        except Exception as e:
-            print(f"    [HAIKU REPAIR FAILED] {label}: {e}")
+            try:
+                result = json.loads(raw)
+                print(f"    [CLAUDE CODE REPAIR OK] {label}")
+                return result
+            except json.JSONDecodeError:
+                print(f"    [CLAUDE CODE REPAIR FAILED] {label}: still invalid JSON")
 
     print(f"    [REPAIR FAILED] {label}: all repair methods exhausted")
     return {}
@@ -314,10 +309,12 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
                  gemini_client=None) -> dict:
     """Call Claude with specified model and parse JSON.
 
+    Default: Claude Code subprocess ($0). Fallback: Anthropic API.
+
     Features:
     - Checkpointing: if run_id is set, checks for cached response before calling
-    - Truncation detection: if response hit max_tokens, retries with +4096
-    - JSON repair: tries Haiku first, then Gemini fallback
+    - Truncation detection: if response hit max_tokens, retries with +4096 (API only)
+    - JSON repair: tries Groq, then Gemini fallback
 
     Args:
         cost_state: mutable dict with keys 'usd', 'input', 'output', 'cap',
@@ -341,7 +338,54 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
             except (json.JSONDecodeError, TypeError):
                 pass  # corrupted checkpoint, re-run
 
-    # ── Pre-call cost cap check ──────────────────────────────────────────────
+    # ── Claude Code mode (default, $0) ───────────────────────────────────
+    from claude_reasoning import REASONING_AGENT_MODE, _call_claude_code_sync
+    if REASONING_AGENT_MODE == 'claude_code':
+        use_model = model or SONNET_MODEL
+        cc_model = os.environ.get('REASONING_AGENT_MODEL', 'sonnet')
+        if 'opus' in use_model.lower():
+            cc_model = 'opus'
+
+        # Prepend system prompt to user prompt for Claude Code
+        full_prompt = f"{_CLAUDE_SYSTEM}\n\n{prompt}"
+        raw = _call_claude_code_sync(full_prompt, label, model=cc_model)
+        if raw:
+            # Parse JSON from response
+            raw_content = raw.strip()
+            if raw_content.startswith("```"):
+                parts = raw_content.split("```")
+                raw_content = parts[1] if len(parts) > 1 else raw_content
+                if raw_content.startswith("json"):
+                    raw_content = raw_content[4:]
+            try:
+                parsed = json.loads(raw_content)
+                print(f"    [Claude Code] {label}: OK ($0 — subscription)")
+                # Save checkpoint
+                if run_id and conn:
+                    try:
+                        save_checkpoint(conn, run_id, label, json.dumps(parsed, ensure_ascii=False), 0.0)
+                    except Exception:
+                        pass
+                return parsed
+            except json.JSONDecodeError:
+                print(f"    [Claude Code] {label}: JSON parse failed — trying repair...")
+                repaired = _repair_json(raw_content, label,
+                                        anthropic_client=anthropic_client,
+                                        gemini_client=gemini_client)
+                if repaired:
+                    if run_id and conn:
+                        try:
+                            save_checkpoint(conn, run_id, label, json.dumps(repaired, ensure_ascii=False), 0.0)
+                        except Exception:
+                            pass
+                    return repaired
+        # If Claude Code failed, fall through to API if available
+        if not anthropic_client:
+            print(f"    [Claude Code] {label}: failed, no API fallback available")
+            return {}
+        print(f"    [Claude Code] {label}: failed, falling back to API...")
+
+    # ── API mode (fallback) ──────────────────────────────────────────────
     cap = cost_state.get('cap', CLAUDE_COST_CAP_USD)
     if cost_state['usd'] >= cap:
         print(f"    [COST CAP] ${cost_state['usd']:.4f} >= ${cap:.2f} cap — skipping {label}")
@@ -350,7 +394,6 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
     use_model = model or SONNET_MODEL
     raw_content = ""
     current_max_tokens = max_tokens
-    # Use per-model rates if available, fallback to cost_state defaults
     from pipeline_config import MODEL_RATES
     rates = MODEL_RATES.get(use_model, {})
     input_cost = rates.get('input', cost_state.get('input_cost_per_mtok', 3.0))
@@ -364,7 +407,6 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
                 system=_CLAUDE_SYSTEM,
                 messages=[{"role": "user", "content": prompt}],
             )
-            # ── Track cost (thread-safe when _lock present) ────────────
             in_tok = getattr(msg.usage, 'input_tokens', 0)
             out_tok = getattr(msg.usage, 'output_tokens', 0)
             call_cost = (in_tok * input_cost + out_tok * output_cost) / 1_000_000
@@ -388,14 +430,12 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
                 continue
             raw_content = msg.content[0].text.strip()
 
-            # ── Truncation detection ─────────────────────────────────────
             if out_tok >= current_max_tokens - 10 and _is_truncated(raw_content):
                 current_max_tokens += 4096
                 print(f"    [TRUNCATED] {label}: hit {out_tok} tokens — retrying with max_tokens={current_max_tokens}")
                 time.sleep(1)
                 continue
 
-            # Strip accidental markdown fences
             if raw_content.startswith("```"):
                 parts = raw_content.split("```")
                 raw_content = parts[1] if len(parts) > 1 else raw_content
@@ -403,7 +443,6 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
                     raw_content = raw_content[4:]
             parsed = json.loads(raw_content)
 
-            # ── Save checkpoint on success ────────────────────────────────
             if run_id and conn:
                 try:
                     save_checkpoint(conn, run_id, label, json.dumps(parsed, ensure_ascii=False), call_cost)
@@ -854,7 +893,8 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
                              anthropic_client=None, gemini_client=None,
                              cost_state=None, conn=None,
                              watchlist=None,
-                             signal_context=None) -> dict:
+                             signal_context=None,
+                             events: list[dict] | None = None) -> dict:
     """
     Four-call Claude pipeline with model routing:
       Call 1: Macro — Claude Sonnet (executive_summary, national, global, globalVectors, watchlist)
@@ -876,7 +916,7 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
         }
 
     print(f"\n[STEP 3] Claude analysis (4 calls, {len(articles)} articles)...")
-    print(f"  Call 1 (macro): Opus={OPUS_MODEL}, Calls 2-3 (industries/provinces): Sonnet={SONNET_MODEL}, Call 4 (extraction): Sonnet")
+    print(f"  Writing agents (macro+industry): Claude Code, Province agents: Claude Code, Call 4 (extraction): Sonnet={SONNET_MODEL}")
     today_str    = date.today().strftime('%B %d, %Y')
     hard_summary = _hard_data_summary(hard_data, rss_items)
 
@@ -884,16 +924,23 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
     cdn_officials_ctx = _build_canadian_officials_context(watchlist)
     global_officials_ctx = _build_global_officials_context(watchlist)
 
-    # Build consumer sentiment context (non-blocking — runs in background)
+    # Consumer sentiment context — DISABLED (2026-03-30)
+    # Consumer pulse and word cloud topics are now derived entirely from
+    # the news-article corpus already passed to Call 1.  Reddit/Google
+    # Trends/CBC comment collection (sentiment.py) has been retired from
+    # the active pipeline.  Set SENTIMENT_ENABLED=true in .env to re-enable.
     sentiment_ctx = ''
     _sentiment_future = None
     try:
-        from sentiment import collect_sentiment, SENTIMENT_ENABLED
+        from sentiment import SENTIMENT_ENABLED
         if SENTIMENT_ENABLED:
+            from sentiment import collect_sentiment
             from concurrent.futures import ThreadPoolExecutor as _SentPool
             _sent_pool = _SentPool(max_workers=1)
             _sentiment_future = _sent_pool.submit(collect_sentiment)
             print("  [Sentiment] Started collection in background...")
+        else:
+            print("  [Sentiment] Disabled — consumer pulse derived from news articles")
     except ImportError:
         pass
     except Exception as e:
@@ -941,7 +988,12 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
         except Exception as e:
             print(f"  [Sentiment] Collection failed (non-critical): {type(e).__name__}")
 
-    print(f"  [1-4] Running all Claude calls in parallel (Sonnet)...")
+    print(f"  [1-4] Running all calls (Writing Agents + Province Agents + API extraction)...")
+
+    # NOTE: _call1_prompt and _call2_prompt below are VESTIGIAL — they are no longer
+    # submitted to _call_claude(). Writing is handled by phases/writing_agents.py
+    # (run_all_writing_agents). Kept as documentation of the expected output schema.
+    # TODO: Remove once writing_agents.py is stable.
 
     _call1_prompt = f"""Today: {today_str}
 
@@ -991,11 +1043,11 @@ Per region: report what happened with embedded data. State factual connections t
 
 6. CONSUMER PULSE (2-3 short paragraphs, 120-200 words):
 Format as HTML paragraphs: <p>paragraph text</p>
-Be concise — this is a TL;DR snapshot. Each paragraph is 2-3 sentences max covering one sentiment thread. Lead with the dominant public discussion topic. Ground in data: cite subreddit names, search trend volumes, comment counts. Note divergences only if striking. Do NOT use footnote citations — reference naturally: "r/PersonalFinanceCanada discussion focused on..." or "Google search interest in tariff queries surged..."
+Derive ENTIRELY from the news articles provided above — identify the dominant consumer-facing themes reported in the press this week (cost of living, housing, employment, energy prices, trade/tariff impacts, grocery prices, interest rates, wages, etc.). Lead with the single most-covered consumer story. Each paragraph is 2-3 sentences max covering one theme. Ground in data: cite specific figures, policy actions, or survey results mentioned in the articles. Note divergences between reported consumer conditions only if striking. Use <sup>N</sup> footnote citations referencing the article numbers above. Do NOT reference Reddit, Google Trends, or social media.
 
 7. metrics: Fill ALL fields from articles EXCEPT — leave as "": cpi, shelterCpi, unemployment, participation, realGdp. These are injected from StatCan/BoC primary APIs. bocRate must match "{hard_data['boc_rate']}".
 
-8. WORD CLOUD TOPICS: Extract 40-60 meaningful economic topics/phrases from this week's news. These power a word cloud visualization. Each topic should be 1-3 words, e.g. "tariff threat", "rate cut", "housing affordability", "LNG exports", "auto layoffs", "tech hiring freeze", "lumber prices", "fiscal deficit", "immigration policy". Assign each a sentiment_score (-1.0 to +1.0, negative=bad for Canada, positive=good) and frequency (1-10 importance weight, 10=dominant story). Prioritize specificity over generality. BAD: "economy", "growth", "markets". GOOD: "tariff retaliation", "BoC rate hold", "Alberta oil sands", "EV battery plant".
+8. WORD CLOUD TOPICS: Extract 40-60 meaningful economic topics/phrases ONLY from the news articles and verified data provided above. These power a word cloud visualization. Each topic should be 1-3 words, e.g. "tariff threat", "rate cut", "housing affordability", "LNG exports", "auto layoffs", "tech hiring freeze", "lumber prices", "fiscal deficit", "immigration policy". Assign each a sentiment_score (-1.0 to +1.0, negative=bad for Canada, positive=good) and frequency (1-10 importance weight, 10=dominant story of the week based on article coverage volume). Prioritize specificity over generality. BAD: "economy", "growth", "markets". GOOD: "tariff retaliation", "BoC rate hold", "Alberta oil sands", "EV battery plant". Frequency should reflect how many articles covered this topic, not social media mentions.
 
 Style: Wire service / Reuters dispatch quality. ALL sections use short prose paragraphs (<p>) — NO bullet points anywhere. Each paragraph 2-3 sentences. Use transitional phrases between paragraphs for narrative flow. Embed specific figures inline ("grew at an annualized rate of 1.3%", "three straight quarters of businesses cutting back"). REPORT ONLY — no editorializing, no forecasting, no opinions. State what happened, what data showed, what changed. DO NOT use: "is likely to", "would be expected to", "looking ahead", "going forward", "outlook", "expected to", "cautiously optimistic", "remains to be seen", "continues to grow", "markets remain volatile", "positive outlook", "encouraging", "concerning", "worrying", "promising". DO NOT discuss stock market movements, equity index levels, or stock performance (e.g. TSX, S&P 500, Dow, NASDAQ gains/losses). Rate changes, yield changes, FX, and bond markets ARE fair game.
 
@@ -1025,7 +1077,7 @@ SCHEMA:
         {{"region": "United Kingdom", "emoji": "", "indicators": {{"gdp": "", "cpi": "", "rate": "", "unemployment": "", "tradeBalance": "", "productivityGrowth": ""}}, "indicatorMeta": {{"gdp": {{"change": "", "prev": ""}}, "cpi": {{"change": "", "prev": ""}}, "rate": {{"change": "", "prev": ""}}, "unemployment": {{"change": "", "prev": ""}}, "tradeBalance": {{"change": "", "prev": ""}}, "productivityGrowth": {{"change": "", "prev": ""}}}}, "analysis": "<p>Flowing prose...</p>", "sources": []}}
     ],
     "globalVectors": {{"us": "", "china": "", "eu": ""}},
-    "consumer_pulse": "<p>Lead paragraph on dominant consumer sentiment thread.</p><p>Secondary theme with transition.</p><p>Divergences or counterpoints in public discussion.</p>",
+    "consumer_pulse": "<p>Lead paragraph on dominant consumer-facing theme from this week's news coverage.<sup>N</sup></p><p>Secondary consumer theme with transition.<sup>N</sup></p><p>Third theme or divergence in consumer conditions reported.<sup>N</sup></p>",
     "indicatorContextLines": {{"bocRate": "", "cpi": "", "unemployment": "", "housingStarts": "", "realGdp": ""}},
     "watchlist": [
         {{
@@ -1200,7 +1252,7 @@ SCHEMA:
             "projects": [
                 {{
                     "name": "Project Name",
-                    "description": "One sentence max 20 words naming what it is and who is building it.",
+                    "description": "1-2 sentences describing what the project is, who is building/operating it, and its scope or purpose.",
                     "sector": "Energy",
                     "value": "$X.XB",
                     "status": "Under Construction",
@@ -1267,25 +1319,15 @@ SCHEMA:
 
 If no projects found, return: {{"projects": []}}"""
 
-    # ── Execute calls in parallel ─────────────────────────────────
-    # Calls 1-3: writing (Opus), Call 4: extraction (Sonnet), split into 2 batches
+    # ── Execute calls ──────────────────────────────────────────────
+    # Calls 1+2: writing agents (Claude Code subprocess or API fallback)
+    # Call 3: province agents (Claude Code subprocess or API fallback)
+    # Call 4: extraction (API — Sonnet)
     _call4a_prompt = _call4_prompt.replace("{proj_batch_text}", proj_arts_text_1)
     _call4b_prompt = _call4_prompt.replace("{proj_batch_text}", proj_arts_text_2) if proj_arts_text_2 else None
 
-    workers = 5 if _call4b_prompt else 4
-    with ThreadPoolExecutor(max_workers=workers) as executor:
-        f1 = executor.submit(_call_claude, _call1_prompt, "call1-macro",
-                             max_tokens=18000, model=OPUS_MODEL,
-                             anthropic_client=anthropic_client, cost_state=cost_state,
-                             conn=conn, gemini_client=gemini_client)
-        f2 = executor.submit(_call_claude, _call2_prompt, "call2-industries",
-                             max_tokens=15000, model=SONNET_MODEL,
-                             anthropic_client=anthropic_client, cost_state=cost_state,
-                             conn=conn, gemini_client=gemini_client)
-        f3 = executor.submit(_call_claude, _call3_prompt, "call3-provinces",
-                             max_tokens=15000, model=SONNET_MODEL,
-                             anthropic_client=anthropic_client, cost_state=cost_state,
-                             conn=conn, gemini_client=gemini_client)
+    # Call 4 (extraction) runs via API in parallel with agents
+    with ThreadPoolExecutor(max_workers=2 if _call4b_prompt else 1) as executor:
         f4a = executor.submit(_call_claude, _call4a_prompt, "call4a-projects",
                               max_tokens=8096, model=SONNET_MODEL,
                               anthropic_client=anthropic_client, cost_state=cost_state,
@@ -1296,12 +1338,69 @@ If no projects found, return: {{"projects": []}}"""
                                   anthropic_client=anthropic_client, cost_state=cost_state,
                                   conn=conn, gemini_client=gemini_client)
 
-    call1 = f1.result()
-    call2 = f2.result()
-    call3 = f3.result()
-    call4a_raw = f4a.result()
-    call4b_raw = f4b.result() if _call4b_prompt else {}
-    print(f"  [1-4] All Claude calls completed (Opus: calls 1-3, Sonnet: call 4 x{1 + bool(_call4b_prompt)})")
+        # ── Writing agents (replaces Calls 1+2) ─────────────────────
+        from phases.writing_agents import run_all_writing_agents
+        print(f"  [Writing Agents] Starting macro + industry writing agents...")
+        writing_payload = run_all_writing_agents(
+            hard_data=hard_data,
+            articles=articles,
+            rss_items=rss_items,
+            events=events,
+            signal_context=signal_context,
+            watchlist=watchlist,
+            anthropic_client=anthropic_client,
+            cost_state=cost_state,
+            conn=conn,
+            gemini_client=gemini_client,
+        )
+
+        # ── Province agents (replaces Call 3) ────────────────────────
+        from phases.province_agents import run_province_agents
+        print(f"  [Province Agents] Starting per-province writing agents...")
+        province_events = events or []
+        call3_provinces = run_province_agents(
+            articles=articles,
+            rss_items=rss_items or [],
+            events=province_events,
+            signal_context=signal_context or {},
+            watchlist=watchlist or {},
+            hard_data=hard_data,
+            anthropic_client=anthropic_client,
+            cost_state=cost_state,
+            conn=conn,
+            gemini_client=gemini_client,
+        )
+
+        # Wait for Call 4 extraction results
+        call4a_raw = f4a.result()
+        call4b_raw = f4b.result() if _call4b_prompt else {}
+
+    # ── Build call1/call2/call3 from agent outputs ───────────────
+    # call1 = writing_payload fields that correspond to the old Call 1 output
+    call1 = {
+        'headline': writing_payload.get('headline', ''),
+        'key_indicators': writing_payload.get('key_indicators', []),
+        'executive_summary': writing_payload.get('executive_summary', ''),
+        'metrics': writing_payload.get('metrics', {}),
+        'national': writing_payload.get('national', {'analysis': '', 'sources': []}),
+        'global': writing_payload.get('global', []),
+        'globalVectors': writing_payload.get('globalVectors', {}),
+        'consumer_pulse': writing_payload.get('consumer_pulse', ''),
+        'word_cloud_topics': writing_payload.get('word_cloud_topics', []),
+        'indicatorContextLines': writing_payload.get('indicatorContextLines', {}),
+        'watchlist': writing_payload.get('watchlist', []),
+        'insightChart': writing_payload.get('insightChart', None),
+    }
+    # call2 = writing_payload fields that correspond to the old Call 2 output
+    call2 = {
+        'industry_executive_summary': writing_payload.get('industry_executive_summary', ''),
+        'goodsIndustries': writing_payload.get('goodsIndustries', []),
+        'servicesIndustries': writing_payload.get('servicesIndustries', []),
+        'yieldCurve': writing_payload.get('yieldCurve', []),
+        'charts': writing_payload.get('charts', {}),
+    }
+    call3 = {'provinces': call3_provinces}
+    print(f"  [1-4] All calls completed (Writing Agents: macro+industry, Province Agents: {len(call3_provinces)} provinces, API: extraction)")
 
     # ── Citation audits (parallel, after all calls — non-fatal) ────
     try:
@@ -1499,12 +1598,11 @@ def _build_indicator_meta(nat: dict, boc_data: dict) -> dict:
 
 def generate_context_lines(ind_meta: dict, national_values: dict,
                            anthropic_client=None) -> dict:
-    """Single Sonnet call to generate plain-English context for each national indicator."""
+    """Generate plain-English context for each national indicator.
+
+    Default: Claude Code subprocess ($0). Fallback: Anthropic API.
+    """
     try:
-        if anthropic_client is None:
-            anthropic_client = anthropic.Anthropic(
-                api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip()
-            )
         items = []
         for field, m in ind_meta.items():
             cur = national_values.get(field, '')
@@ -1518,15 +1616,39 @@ def generate_context_lines(ind_meta: dict, national_values: dict,
             "Respond with a JSON object: {\"field\": \"sentence\"}.\n\n"
             + "\n".join(items)
         )
-        msg = anthropic_client.messages.create(
-            model=SONNET_MODEL,
-            max_tokens=400,
-            messages=[{'role': 'user', 'content': prompt}]
-        )
-        if not msg.content:
-            print(f"  [CONTEXT LINES] Empty API response (non-critical)")
+
+        text = None
+
+        # ── Claude Code mode (default, $0) ──────────────────────────
+        from claude_reasoning import REASONING_AGENT_MODE, _call_claude_code_sync
+        if REASONING_AGENT_MODE == 'claude_code':
+            text = _call_claude_code_sync(prompt, "context-lines")
+
+        # ── API fallback ────────────────────────────────────────────
+        if not text and anthropic_client:
+            msg = anthropic_client.messages.create(
+                model=SONNET_MODEL,
+                max_tokens=400,
+                messages=[{'role': 'user', 'content': prompt}]
+            )
+            if msg.content:
+                text = msg.content[0].text
+        elif not text:
+            if anthropic_client is None:
+                anthropic_client = anthropic.Anthropic(
+                    api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip()
+                )
+                msg = anthropic_client.messages.create(
+                    model=SONNET_MODEL,
+                    max_tokens=400,
+                    messages=[{'role': 'user', 'content': prompt}]
+                )
+                if msg.content:
+                    text = msg.content[0].text
+
+        if not text:
+            print(f"  [CONTEXT LINES] Empty response (non-critical)")
             return {}
-        text = msg.content[0].text
         json_match = re.search(r'\{[\s\S]*\}', text)
         if json_match:
             lines = json.loads(json_match.group())
@@ -1697,6 +1819,15 @@ def run(conn, context, logger):
             'statcan_extended_saved': context.get('statcan_extended_saved', 0),
         }
 
+        # Load events from database for province agents
+        events = []
+        try:
+            from event_calendar import get_upcoming_events
+            events = get_upcoming_events(conn=conn, days_ahead=14) or []
+            print(f"  [Events] Loaded {len(events)} events for province agents")
+        except Exception as e:
+            print(f"  [Events] Could not load events (non-critical): {e}")
+
         # Call Claude analysis
         final_payload = generate_claude_analysis(
             hard_data, extracted_articles, rss_items,
@@ -1706,6 +1837,7 @@ def run(conn, context, logger):
             conn=conn,
             watchlist=watchlist,
             signal_context=signal_context,
+            events=events,
         )
         logger.log_step("step_3_claude_analysis")
 

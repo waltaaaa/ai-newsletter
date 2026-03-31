@@ -590,6 +590,24 @@ def init_db(path: str | None = None) -> sqlite3.Connection:
         conn.execute("ALTER TABLE projects ADD COLUMN needs_review INTEGER DEFAULT 0")
         conn.commit()
 
+    # Verification & cost-finding migration: add columns needed by Phase 8
+    for col, typedef in [
+        ("value_millions", "REAL DEFAULT NULL"),
+        ("urls_checked_at", "TEXT DEFAULT ''"),
+        ("last_verification_check", "TEXT DEFAULT ''"),
+        ("cost_unfindable", "INTEGER DEFAULT 0"),
+        ("cost_search_attempts", "INTEGER DEFAULT 0"),
+        ("last_cost_search", "TEXT DEFAULT ''"),
+        ("verification_status", "TEXT DEFAULT ''"),
+        ("value_notes", "TEXT DEFAULT ''"),
+        ("value_low_millions", "REAL DEFAULT NULL"),
+    ]:
+        try:
+            conn.execute(f"SELECT {col} FROM projects LIMIT 1")
+        except sqlite3.OperationalError:
+            conn.execute(f"ALTER TABLE projects ADD COLUMN {col} {typedef}")
+            conn.commit()
+
     logger.info(f"Database initialized: {path or _DEFAULT_DB_PATH}")
     return conn
 

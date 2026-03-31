@@ -1,5 +1,5 @@
 """
-claude_reasoning.py -- Claude Sonnet reasoning engine.
+claude_reasoning.py -- Claude reasoning engine (Claude Code agents).
 
 ALL reasoning tasks route through this module:
 - Interpreting trends and connecting patterns
@@ -7,19 +7,22 @@ ALL reasoning tasks route through this module:
 - Pre-event analysis with historical context
 - Policy implication assessment
 - Cross-reference insight generation
-- Gap analysis (formerly Gemini Pro)
-- Extraction recovery (formerly Gemini Pro)
-- Dedup QA (formerly Gemini Pro)
-- Signal investigation (formerly Gemini Pro)
-- Monthly meta-analysis (formerly Gemini Pro)
+- Gap analysis
+- Extraction recovery
+- Dedup QA
+- Signal investigation
+- Monthly meta-analysis
 
-Gemini Flash: classification and extraction only (free, NO grounding)
-Claude Sonnet: ALL reasoning (~$55/year)
+Default mode: Claude Code subprocess (user subscription, $0 API cost).
+Set REASONING_AGENT_MODE=api in .env for Anthropic API fallback.
 """
 
 import os
 import asyncio
 import logging
+import shutil
+import tempfile
+import subprocess
 
 import aiohttp
 
@@ -31,6 +34,23 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 CLAUDE_MODEL = SONNET_MODEL  # default for extraction/reasoning
 OPUS_WRITING_MODEL = OPUS_MODEL  # for all writing calls
 CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages"
+
+# Agent mode: 'claude_code' (default, $0) or 'api' (Anthropic API)
+REASONING_AGENT_MODE = os.environ.get('REASONING_AGENT_MODE', 'claude_code')
+REASONING_AGENT_MODEL = os.environ.get('REASONING_AGENT_MODEL', 'sonnet')
+
+# Resolve claude CLI path — npm installs to AppData/Roaming/npm which may not
+# be on the PATH that Python's subprocess inherits on Windows.
+_CLAUDE_CLI = shutil.which('claude')
+if not _CLAUDE_CLI:
+    _npm_dir = os.path.join(os.environ.get('APPDATA', ''), 'npm')
+    _candidate = os.path.join(_npm_dir, 'claude.cmd')
+    if os.path.isfile(_candidate):
+        _CLAUDE_CLI = _candidate
+
+# Strip ANTHROPIC_API_KEY from subprocess env so claude CLI uses the
+# subscription instead of the API (which may have no credits).
+_CLAUDE_ENV = {k: v for k, v in os.environ.items() if k != 'ANTHROPIC_API_KEY'}
 
 # Retry config for rate limits (429) and overloaded (529)
 CLAUDE_MAX_RETRIES = 4
@@ -53,9 +73,60 @@ def get_cumulative_cost():
     return _cumulative_cost_usd, _cumulative_tokens.copy()
 
 
-async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
-    """Send a reasoning request to Claude Sonnet.
+# ── Claude Code subprocess ─────────────────────────────────────────────────────
 
+def _call_claude_code_sync(prompt: str, label: str = "reasoning",
+                           model: str = '') -> str | None:
+    """Call Claude via Claude Code CLI subprocess. Returns raw text or None.
+
+    Uses the user's Claude subscription — $0 API cost.
+    """
+    use_model = model or REASONING_AGENT_MODEL
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
+                                     encoding='utf-8') as f:
+        f.write(prompt)
+        prompt_file = f.name
+
+    try:
+        if not _CLAUDE_CLI:
+            raise FileNotFoundError("claude CLI not resolved")
+        cmd = [_CLAUDE_CLI, '-p', '--output-format', 'text',
+               '--model', use_model, '--max-turns', '1']
+        logger.info(f"  [Claude Code] [{label}] Calling {use_model}...")
+        result = subprocess.run(
+            cmd, input=prompt, capture_output=True, text=True,
+            timeout=180, encoding='utf-8', env=_CLAUDE_ENV,
+        )
+        if result.returncode != 0:
+            stderr = (result.stderr or '')[:500]
+            logger.warning(f"  [Claude Code] [{label}] Exit code {result.returncode}: {stderr}")
+            return None
+        text = (result.stdout or '').strip()
+        if not text:
+            logger.warning(f"  [Claude Code] [{label}] Empty response")
+            return None
+        logger.info(f"  [Claude Code] [{label}] OK ({len(text)} chars)")
+        return text
+    except subprocess.TimeoutExpired:
+        logger.warning(f"  [Claude Code] [{label}] Timeout (180s)")
+        return None
+    except FileNotFoundError:
+        logger.warning(f"  [Claude Code] [{label}] 'claude' CLI not found — falling back to API")
+        return None
+    except Exception as e:
+        logger.warning(f"  [Claude Code] [{label}] Error: {e}")
+        return None
+    finally:
+        try:
+            os.unlink(prompt_file)
+        except OSError:
+            pass
+
+
+async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
+    """Send a reasoning request to Claude.
+
+    Default: Claude Code subprocess ($0). Fallback: Anthropic API.
     No web search, no tools -- pure analysis of provided context.
 
     Args:
@@ -66,6 +137,20 @@ async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
     Returns:
         str: Claude's analysis text, or None on failure
     """
+    # ── Claude Code mode (default, $0) ──────────────────────────
+    if REASONING_AGENT_MODE == 'claude_code':
+        combined = f"{system_prompt}\n\n{user_prompt}" if system_prompt else user_prompt
+        text = await asyncio.get_event_loop().run_in_executor(
+            None, _call_claude_code_sync, combined, "reason"
+        )
+        if text:
+            return text
+        # If Claude Code failed and API key exists, fall through to API
+        if not ANTHROPIC_API_KEY:
+            return None
+        logger.info("  [Claude Code] Falling back to API...")
+
+    # ── API mode (fallback) ─────────────────────────────────────
     if not ANTHROPIC_API_KEY:
         logger.warning("ANTHROPIC_API_KEY not set, skipping Claude reasoning")
         return None
@@ -142,7 +227,9 @@ async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
 
 async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
                                      max_tokens=4096, model=None):
-    """Same as reason_with_claude but tracks token usage for cost monitoring.
+    """Reasoning call with token/cost tracking.
+
+    Default: Claude Code subprocess ($0). Fallback: Anthropic API.
 
     Args:
         model: Override model. Defaults to CLAUDE_MODEL (Sonnet).
@@ -151,6 +238,34 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
     Returns:
         dict with text, input_tokens, output_tokens, cost_usd -- or None
     """
+    # ── Claude Code mode (default, $0) ──────────────────────────
+    if REASONING_AGENT_MODE == 'claude_code':
+        # Map API model names to Claude Code model names
+        use_model = model or CLAUDE_MODEL
+        cc_model = REASONING_AGENT_MODEL  # default: 'sonnet'
+        if use_model and 'opus' in use_model.lower():
+            cc_model = 'opus'
+        elif use_model and 'haiku' in use_model.lower():
+            cc_model = 'haiku'
+
+        combined = f"{system_prompt}\n\n{user_prompt}" if system_prompt else user_prompt
+        text = await asyncio.get_event_loop().run_in_executor(
+            None, lambda: _call_claude_code_sync(combined, task_name, model=cc_model)
+        )
+        if text:
+            logger.info(f"  [Claude Code] [{task_name}] Complete ($0 — subscription)")
+            return {
+                "text": text,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "cost_usd": 0.0,
+            }
+        # If Claude Code failed and API key exists, fall through to API
+        if not ANTHROPIC_API_KEY:
+            return None
+        logger.info(f"  [Claude Code] [{task_name}] Falling back to API...")
+
+    # ── API mode (fallback) ─────────────────────────────────────
     if not ANTHROPIC_API_KEY:
         logger.warning("ANTHROPIC_API_KEY not set, skipping Claude reasoning")
         return None
@@ -409,7 +524,7 @@ For each project found, return JSON:
       "value_millions": null or number,
       "status": "Proposed|Approved|Under Construction|Completed|Delayed|Cancelled",
       "sector": "sector description",
-      "description": "One sentence",
+      "description": "1-2 sentences describing what the project is, who is building/operating it, and its scope or purpose",
       "confidence_notes": "Why this was hard to extract",
       "official_ids": {}
     }

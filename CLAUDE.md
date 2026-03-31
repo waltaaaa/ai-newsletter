@@ -21,8 +21,7 @@ For full system specification (25 sections, every feature detailed), see `COMPLE
 - **Dependencies:** aiohttp, feedparser, beautifulsoup4, yfinance, reportlab, python-docx, trafilatura
 
 ## Model Stack (DO NOT CHANGE)
-- **Claude Opus 4.6:** ALL writing — Calls 1-3 (macro, industries, provinces), weekly briefing, executive summary, market commentary, policy assessment, pre-event analysis, Under the Microscope. ~$120/year.
-- **Claude Sonnet 4.6:** Extraction and reasoning — Call 4 (project extraction), gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis, selective extraction. ~$30/year.
+- **Claude Code Agents (subscription, $0 API cost):** ALL writing and reasoning runs via `claude -p` subprocess on user's Claude subscription. Covers: macro/industry writing agents (~30 agents), province writing agents (13 agents), weekly briefing, executive summary, market commentary, policy assessment, pre-event analysis, Under the Microscope, project extraction, gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis, selective extraction, citation audit, context lines, JSON repair fallback.
 - **Groq LLaMA 3.3 70B:** Primary classifier — Layer 6 RSS classification, JSON repair, sentiment. FREE TIER (6K TPM / 500K TPD). Replaces Gemini Flash.
 - **Qwen 2.5 3B (Ollama):** Local classifier fallback — binary R/I triage before Groq. $0.
 - **NVIDIA NIM (free tier, 40 RPM shared):**
@@ -32,16 +31,15 @@ For full system specification (25 sections, every feature detailed), see `COMPLE
   - Llama Nemotron Embed 1B v2 — semantic dedup (26-language support)
   - Nemotron OCR v1 — provincial PDF text extraction
 - **Tavily:** Targeted enrichment searches only (cost-finding, verification, named tracking). Free tier 1,000 credits/month.
+- **Anthropic API:** OPTIONAL fallback only. Set `REASONING_AGENT_MODE=api` / `WRITING_AGENT_MODE=api` / `PROVINCE_AGENT_MODE=api` to use API instead of Claude Code agents. Required for GitHub Actions where `claude` CLI is unavailable.
 - **NO Gemini in active pipeline.** Removed from classification chain. Legacy fallback only. Code must NEVER pass `google_search` tool or `groundingConfig` to the API.
-- **NO Gemini Pro.** Removed. All reasoning goes through Claude.
+- **NO Gemini Pro.** Removed. All reasoning goes through Claude agents.
 - **NO Gemini grounded search.** Caused $136/day in charges. Replaced by Google News RSS.
 - **NO Perplexity.** Removed. Do not add.
 - **NO GDELT.** Removed. Do not add.
-- **NO Claude Haiku in weekly pipeline.** Exception: seed_projects.py may use Haiku for one-time bulk seeding. JSON repair uses Haiku as third fallback after local LLM and Groq.
-- **Cost cap:** $8/run. Opus calls use $15/$75 per MTok (input/output). Sonnet calls use $3/$15 per MTok.
 
-## Annual Budget: ~$150/year
-Do not introduce paid services without explicit approval. Every new API must be free or use existing budgets.
+## Annual Budget: ~$20/year (Tavily only)
+Claude API costs eliminated by Claude Code agents running on subscription. Do not introduce paid services without explicit approval. Every new API must be free or use existing budgets.
 
 ## Editorial Policy: REPORTING ONLY — NO EDITORIALIZING
 All output — briefings, market commentary, policy assessments, Under the Microscope, pre-event analysis — must be factual reporting. Present data, context, and connections. Never take positions, make recommendations, express opinions, or use language that implies something is good, bad, welcome, worrying, concerning, promising, or encouraging.

@@ -544,7 +544,7 @@ Return a JSON object with this structure:
       "project_type": "greenfield | redevelopment | expansion | retrofit | restoration | remediation | conversion | modernization",
       "sector": "Sector description",
       "naics_2digit": "Best-fit 2-digit NAICS code",
-      "description": "One-sentence project description",
+      "description": "1-2 sentences describing what the project is, who is building/operating it, and its scope or purpose",
       "source_url": "URL of the source article",
       "source_name": "Publication name",
       "date_reported": "YYYY-MM-DD",

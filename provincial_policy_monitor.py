@@ -196,14 +196,14 @@ def fetch_all_policy_feeds(since_days=7):
 
 
 def classify_policy_articles(articles, max_batch=30):
-    """Classify articles using Gemini Flash.
+    """Classify articles using Groq LLaMA 3.3 70B (replaces Gemini Flash).
 
     Returns list of policy-relevant articles with category.
     """
     if not articles:
         return []
 
-    from gemini_engine import run_batch_sync
+    from groq_client import generate as groq_generate
 
     # Format articles for classification
     batch_text = "\n\n".join(
@@ -212,18 +212,15 @@ def classify_policy_articles(articles, max_batch=30):
     )
 
     prompt = POLICY_CLASSIFICATION_PROMPT.format(articles=batch_text)
+    system = "You are a policy classification assistant for Canadian economic intelligence."
 
     try:
-        results = run_batch_sync([{
-            "query": prompt,
-            "grounding": False,
-        }], "You are a policy classification assistant for Canadian economic intelligence.")
-        if not results:
+        text = groq_generate(system, prompt)
+        if not text:
             return []
 
         # Parse JSON response
         import re
-        text = results[0] if isinstance(results[0], str) else str(results[0])
         text = re.sub(r'```json\s*', '', text)
         text = re.sub(r'```\s*', '', text).strip()
 

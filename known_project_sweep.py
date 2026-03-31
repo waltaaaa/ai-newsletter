@@ -294,7 +294,7 @@ Return a JSON object with this structure:
       "project_type": "greenfield | redevelopment | adaptive_reuse | major_renovation | expansion | retrofit | restoration | remediation | conversion | modernization | decommission_replace",
       "sector": "Sector description",
       "naics_2digit": "Best-fit 2-digit NAICS code",
-      "description": "One-sentence project description",
+      "description": "1-2 sentences describing what the project is, who is building/operating it, and its scope or purpose",
       "source_url": "URL of the source article or announcement",
       "source_name": "Publication or organization name",
       "date_reported": "YYYY-MM-DD",

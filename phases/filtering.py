@@ -26,7 +26,7 @@ _PROJECT_SCHEMA = """\
   "projects": [
     {
       "name": "Full official project name",
-      "description": "One concise sentence (max 20 words) describing the project and its proponent",
+      "description": "1-2 sentences describing what the project is, who is building/operating it, and its scope or purpose",
       "province": "Exact Canadian province or territory name",
       "cma": "Census Metropolitan Area or nearest city/town",
       "sector": "One of: Energy | Mining | Transit | Housing | Defence | Manufacturing | Technology | Healthcare | Agriculture | Telecommunications | Ports & Logistics | Other",
@@ -193,6 +193,36 @@ SOURCE TEXT:
         print(f"    [COST CAP] ${cost_state['usd']:.4f} >= ${cost_state['cap']:.2f} cap — skipping {context_label}")
         return []
 
+    # ── Claude Code mode (default, $0) ──────────────────────────
+    from claude_reasoning import REASONING_AGENT_MODE, _call_claude_code_sync
+    if REASONING_AGENT_MODE == 'claude_code':
+        full_prompt = f"{system_prompt}\n\n{user_prompt}"
+        raw = _call_claude_code_sync(full_prompt, f"filter-{context_label}")
+        if raw:
+            content = raw.strip()
+            if content.startswith("```"):
+                parts = content.split("```")
+                content = parts[1] if len(parts) > 1 else content
+                if content.startswith("json"):
+                    content = content[4:]
+            try:
+                parsed = json.loads(content)
+                if isinstance(parsed, dict):
+                    projects = parsed.get("projects", [])
+                    if isinstance(projects, list):
+                        if province and province != "Canada":
+                            for p in projects:
+                                p['province'] = province
+                        print(f"    [Claude Code] {context_label}: {len(projects)} projects ($0)")
+                        return projects
+            except json.JSONDecodeError:
+                print(f"    [Claude Code] {context_label}: JSON parse failed")
+        # Fall through to API if available
+        if not anthropic_client:
+            return []
+        print(f"    [Claude Code] {context_label}: falling back to API...")
+
+    # ── API mode (fallback) ─────────────────────────────────────
     for attempt in range(4):
         try:
             msg = anthropic_client.messages.create(
@@ -201,7 +231,6 @@ SOURCE TEXT:
                 system=system_prompt,
                 messages=[{"role": "user", "content": user_prompt}],
             )
-            # Track cost
             in_tok = getattr(msg.usage, 'input_tokens', 0)
             out_tok = getattr(msg.usage, 'output_tokens', 0)
             cost_state["input"] += in_tok
@@ -223,7 +252,6 @@ SOURCE TEXT:
             if isinstance(parsed, dict):
                 projects = parsed.get("projects", [])
                 if isinstance(projects, list):
-                    # Force province if explicitly specified
                     if province and province != "Canada":
                         for p in projects:
                             p['province'] = province

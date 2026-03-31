@@ -33,7 +33,7 @@ Respond in JSON format:
     "value_numeric": 123,
     "proponent": "Company Name",
     "status": "Proposed|Approved|Under Construction|Completed|Delayed|Cancelled",
-    "description": "One-sentence summary",
+    "description": "1-2 sentences describing what the project is, who is building/operating it, and its scope or purpose",
     "naics_2digit": "23",
     "source_url": "https://...",
     "source_title": "Source name"

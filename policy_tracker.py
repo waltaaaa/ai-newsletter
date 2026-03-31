@@ -440,13 +440,17 @@ def generate_policy_summary(items):
                 "affected_projects_total": item.get("affected_projects_total", 0),
                 "affected_projects_value": item.get("affected_projects_value", 0),
                 "province": item.get("province"),
+                "level": item.get("level", "federal"),
+                "summary": (item.get("summary") or "")[:300],
+                "date": item.get("date", ""),
+                "source_description": item.get("source_description", ""),
                 "url": item["url"],
             }
             for item in sorted(
                 items,
                 key=lambda x: x.get("affected_projects_value", 0),
                 reverse=True
-            )[:10]
+            )[:20]
         ],
     }
 

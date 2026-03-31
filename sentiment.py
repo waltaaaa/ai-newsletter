@@ -33,7 +33,7 @@ load_dotenv()
 
 # ── Config ───────────────────────────────────────────────────────────────────
 
-SENTIMENT_ENABLED    = os.environ.get('SENTIMENT_ENABLED', 'true').lower() == 'true'
+SENTIMENT_ENABLED    = os.environ.get('SENTIMENT_ENABLED', 'false').lower() == 'true'
 REDDIT_USER_AGENT    = os.environ.get('REDDIT_USER_AGENT', 'CanMacroDashboard/1.0')
 REDDIT_DELAY         = float(os.environ.get('SENTIMENT_REDDIT_DELAY', '1.0'))
 TRENDS_DELAY         = float(os.environ.get('SENTIMENT_TRENDS_DELAY', '2.0'))

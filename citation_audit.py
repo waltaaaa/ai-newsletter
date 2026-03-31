@@ -188,7 +188,7 @@ def spot_check_citations(
     Spot-check a sample of citations using Claude Sonnet to verify claim-source alignment.
     Returns list of {citation, claim, supported, reason} dicts.
     """
-    if not anthropic_client or not citations:
+    if not citations:
         return []
 
     # Select up to max_checks citations that have URLs and excerpts
@@ -196,29 +196,38 @@ def spot_check_citations(
     import random
     sample = random.sample(checkable, min(max_checks, len(checkable)))
 
+    # Determine execution mode
+    from claude_reasoning import REASONING_AGENT_MODE, _call_claude_code_sync
+
     results = []
     for cite in sample:
-        # Find the claim that references this citation
         cite_id = cite.get('id', '')
         claim = _find_claim_for_citation(text, cite_id)
         if not claim:
             continue
 
+        prompt = (
+            f"Does this source support this claim?\n\n"
+            f"Claim: {claim}\n"
+            f"Source title: {cite.get('title', '')}\n"
+            f"Source URL: {cite.get('url', '')}\n\n"
+            f"Answer with ONLY 'Yes' or 'No' followed by a brief reason (one sentence)."
+        )
+
         try:
-            msg = anthropic_client.messages.create(
-                model=SONNET_MODEL,
-                max_tokens=200,
-                messages=[{'role': 'user', 'content': (
-                    f"Does this source support this claim?\n\n"
-                    f"Claim: {claim}\n"
-                    f"Source title: {cite.get('title', '')}\n"
-                    f"Source URL: {cite.get('url', '')}\n\n"
-                    f"Answer with ONLY 'Yes' or 'No' followed by a brief reason (one sentence)."
-                )}],
-            )
-            if not msg.content:
+            answer = None
+            if REASONING_AGENT_MODE == 'claude_code':
+                answer = _call_claude_code_sync(prompt, f"cite-check-{cite_id}")
+            if not answer and anthropic_client:
+                msg = anthropic_client.messages.create(
+                    model=SONNET_MODEL,
+                    max_tokens=200,
+                    messages=[{'role': 'user', 'content': prompt}],
+                )
+                if msg.content:
+                    answer = msg.content[0].text.strip()
+            if not answer:
                 continue
-            answer = msg.content[0].text.strip()
             supported = answer.lower().startswith('yes')
             results.append({
                 'citation': cite,
