@@ -33,7 +33,7 @@ from datetime import date
 
 AGENT_MODE = os.environ.get('WRITING_AGENT_MODE', 'claude_code')
 CLAUDE_CODE_MODEL = os.environ.get('WRITING_AGENT_MODEL', 'opus')
-MAX_WORKERS = int(os.environ.get('WRITING_AGENT_WORKERS', '4'))
+MAX_WORKERS = int(os.environ.get('WRITING_AGENT_WORKERS', '2'))
 
 # Resolve claude CLI path — npm installs to AppData/Roaming/npm which may not
 # be on the PATH that Python's subprocess inherits on Windows.

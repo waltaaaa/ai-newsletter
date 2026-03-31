@@ -32,7 +32,7 @@ from datetime import date
 AGENT_MODE = os.environ.get('PROVINCE_AGENT_MODE', 'claude_code')  # 'claude_code' or 'api'
 CLAUDE_CODE_MODEL = os.environ.get('PROVINCE_AGENT_MODEL', 'opus')  # claude code model flag
 CLAUDE_CODE_MAX_TURNS = int(os.environ.get('PROVINCE_AGENT_MAX_TURNS', '2'))  # needs 2: read file + respond
-PROVINCE_AGENT_WORKERS = int(os.environ.get('PROVINCE_AGENT_WORKERS', '4'))  # parallel agents
+PROVINCE_AGENT_WORKERS = int(os.environ.get('PROVINCE_AGENT_WORKERS', '2'))  # parallel agents (Opus needs breathing room)
 
 # Resolve claude CLI path — npm installs to AppData/Roaming/npm which may not
 # be on the PATH that Python's subprocess inherits on Windows.

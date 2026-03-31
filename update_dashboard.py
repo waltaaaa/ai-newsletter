@@ -147,7 +147,7 @@ def update_dashboard(deep_sweep: bool = False):
         "Phase 2: Discovery": 1200,
         "Phase 3: Filtering": 1200,
         "Phase 4: Signals": 600,
-        "Phase 5: Analysis": 3000,
+        "Phase 5: Analysis": 7200,
         "Phase 6: Reasoning": 120,
         "Phase 7: Narrative": 600,
         "Phase 8: Verification": 600,
