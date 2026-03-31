@@ -61,22 +61,17 @@ def _call_research_agent(prompt: str, label: str) -> dict | None:
     try:
         if not _CLAUDE_CLI:
             raise FileNotFoundError("claude CLI not resolved")
-        if len(prompt) > 30000:
-            import tempfile
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
-                                             encoding='utf-8') as f:
-                f.write(prompt)
-                prompt_file = f.name
-            prompt_arg = f'Read the file {prompt_file} and follow the instructions. Output ONLY valid JSON.'
-            turns = MAX_TURNS
-        else:
-            prompt_arg = prompt
-            turns = MAX_TURNS
+        import tempfile
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
+                                         encoding='utf-8') as f:
+            f.write(prompt)
+            prompt_file = f.name
+        prompt_arg = f'Read the file {prompt_file} and follow the instructions exactly. Output ONLY valid JSON.'
         cmd = [
             _CLAUDE_CLI, '-p', prompt_arg,
             '--model', CLAUDE_CODE_MODEL,
             '--output-format', 'json',
-            '--max-turns', str(turns),
+            '--max-turns', str(MAX_TURNS),
         ]
         result = subprocess.run(
             cmd, capture_output=True, text=True, timeout=AGENT_TIMEOUT,

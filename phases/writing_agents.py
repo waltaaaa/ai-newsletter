@@ -72,22 +72,16 @@ def _call_claude_code(prompt: str, label: str, max_turns: int = 1) -> dict | Non
     try:
         if not _CLAUDE_CLI:
             raise FileNotFoundError("claude CLI not resolved")
-        # Use temp file for long prompts (Windows 32K CLI limit)
-        if len(prompt) > 30000:
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
-                                             encoding='utf-8') as f:
-                f.write(prompt)
-                prompt_file = f.name
-            prompt_arg = f'Read the file {prompt_file} and follow the instructions exactly. Output ONLY valid JSON.'
-            turns = max(max_turns, 2)
-        else:
-            prompt_arg = prompt
-            turns = max_turns
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
+                                         encoding='utf-8') as f:
+            f.write(prompt)
+            prompt_file = f.name
+        prompt_arg = f'Read the file {prompt_file} and follow the instructions exactly. Output ONLY valid JSON.'
         cmd = [
             _CLAUDE_CLI, '-p', prompt_arg,
             '--model', CLAUDE_CODE_MODEL,
             '--output-format', 'json',
-            '--max-turns', str(turns),
+            '--max-turns', str(max(max_turns, 2)),
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=420,
                                 encoding='utf-8', errors='replace', env=_CLAUDE_ENV)
