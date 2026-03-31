@@ -32,7 +32,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 
 AGENT_MODE = os.environ.get('WRITING_AGENT_MODE', 'claude_code')
-CLAUDE_CODE_MODEL = os.environ.get('WRITING_AGENT_MODEL', 'sonnet')
+CLAUDE_CODE_MODEL = os.environ.get('WRITING_AGENT_MODEL', 'opus')
 MAX_WORKERS = int(os.environ.get('WRITING_AGENT_WORKERS', '4'))
 
 # Resolve claude CLI path — npm installs to AppData/Roaming/npm which may not
@@ -66,23 +66,19 @@ EDITORIAL_RULES = (
 
 # ── Claude Code execution (shared with province_agents.py) ───────────────────
 
-def _call_claude_code(prompt: str, label: str, max_turns: int = 2) -> dict | None:
-    """Call Claude via Claude Code CLI. Returns parsed JSON dict or None."""
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
-                                     encoding='utf-8') as f:
-        f.write(prompt)
-        prompt_file = f.name
+def _call_claude_code(prompt: str, label: str, max_turns: int = 1) -> dict | None:
+    """Call Claude via Claude Code CLI with direct prompt. Returns parsed JSON dict or None."""
     try:
         if not _CLAUDE_CLI:
             raise FileNotFoundError("claude CLI not resolved")
+        # Pass prompt directly — no temp file, no extra turn to read it
         cmd = [
-            _CLAUDE_CLI, '-p',
-            f'Read the file {prompt_file} and follow the instructions exactly. Output ONLY valid JSON.',
+            _CLAUDE_CLI, '-p', prompt,
             '--model', CLAUDE_CODE_MODEL,
             '--output-format', 'json',
             '--max-turns', str(max_turns),
         ]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300,
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=420,
                                 encoding='utf-8', errors='replace', env=_CLAUDE_ENV)
         if result.returncode != 0:
             print(f"    [{label}] Claude Code exit code {result.returncode}")
@@ -102,7 +98,7 @@ def _call_claude_code(prompt: str, label: str, max_turns: int = 2) -> dict | Non
             pass
         return _extract_json(output, label)
     except subprocess.TimeoutExpired:
-        print(f"    [{label}] Timed out after 300s")
+        print(f"    [{label}] Timed out after 420s")
         return None
     except FileNotFoundError:
         print(f"    [{label}] 'claude' CLI not found")
@@ -110,11 +106,6 @@ def _call_claude_code(prompt: str, label: str, max_turns: int = 2) -> dict | Non
     except Exception as e:
         print(f"    [{label}] Error: {type(e).__name__}: {e}")
         return None
-    finally:
-        try:
-            os.unlink(prompt_file)
-        except OSError:
-            pass
 
 
 def _extract_json(text: str, label: str) -> dict | None:

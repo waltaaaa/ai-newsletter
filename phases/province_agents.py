@@ -30,7 +30,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 
 AGENT_MODE = os.environ.get('PROVINCE_AGENT_MODE', 'claude_code')  # 'claude_code' or 'api'
-CLAUDE_CODE_MODEL = os.environ.get('PROVINCE_AGENT_MODEL', 'sonnet')  # claude code model flag
+CLAUDE_CODE_MODEL = os.environ.get('PROVINCE_AGENT_MODEL', 'opus')  # claude code model flag
 CLAUDE_CODE_MAX_TURNS = int(os.environ.get('PROVINCE_AGENT_MAX_TURNS', '2'))  # needs 2: read file + respond
 PROVINCE_AGENT_WORKERS = int(os.environ.get('PROVINCE_AGENT_WORKERS', '4'))  # parallel agents
 
@@ -719,33 +719,24 @@ def _call_claude_code(prompt: str, label: str) -> dict | None:
     """
     Call Claude via the Claude Code CLI (uses subscription, $0 API cost).
 
-    Writes the prompt to a temp file and invokes:
-      claude -p <prompt> --model <model> --output-format json --max-turns 1
-
+    Passes prompt directly to claude -p (no temp file, no extra turn).
     Returns parsed JSON dict or None on failure.
     """
-    # Write prompt to temp file (avoids shell escaping issues with long prompts)
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
-                                     encoding='utf-8') as f:
-        f.write(prompt)
-        prompt_file = f.name
-
     try:
         if not _CLAUDE_CLI:
             raise FileNotFoundError("claude CLI not resolved")
         cmd = [
-            _CLAUDE_CLI, '-p',
-            f'Read the file {prompt_file} and follow the instructions exactly. Output ONLY valid JSON.',
+            _CLAUDE_CLI, '-p', prompt,
             '--model', CLAUDE_CODE_MODEL,
             '--output-format', 'json',
-            '--max-turns', str(CLAUDE_CODE_MAX_TURNS),
+            '--max-turns', '1',
         ]
 
         result = subprocess.run(
             cmd,
             capture_output=True,
             text=True,
-            timeout=300,
+            timeout=420,
             encoding='utf-8',
             env=_CLAUDE_ENV,
             errors='replace',
@@ -763,24 +754,20 @@ def _call_claude_code(prompt: str, label: str) -> dict | None:
             return None
 
         # Claude Code --output-format json wraps the response
-        # Try to parse the outer JSON first
         try:
             outer = json.loads(output)
-            # Claude Code JSON format has a 'result' field with the text
             text = outer.get('result', outer.get('text', output))
             if isinstance(text, str):
-                # The text itself should be JSON from Claude
                 return _extract_json(text, label)
             elif isinstance(text, dict):
                 return text
         except (json.JSONDecodeError, TypeError):
             pass
 
-        # Try direct parse
         return _extract_json(output, label)
 
     except subprocess.TimeoutExpired:
-        print(f"    [{label}] Claude Code timed out after 120s")
+        print(f"    [{label}] Claude Code timed out after 420s")
         return None
     except FileNotFoundError:
         print(f"    [{label}] 'claude' CLI not found — is Claude Code installed?")
@@ -788,11 +775,6 @@ def _call_claude_code(prompt: str, label: str) -> dict | None:
     except Exception as e:
         print(f"    [{label}] Error: {type(e).__name__}: {e}")
         return None
-    finally:
-        try:
-            os.unlink(prompt_file)
-        except OSError:
-            pass
 
 
 def _extract_json(text: str, label: str) -> dict | None:
