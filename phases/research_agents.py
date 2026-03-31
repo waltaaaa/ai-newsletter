@@ -57,14 +57,26 @@ _CLAUDE_ENV = {k: v for k, v in os.environ.items() if k != 'ANTHROPIC_API_KEY'}
 
 def _call_research_agent(prompt: str, label: str) -> dict | None:
     """Call Opus research agent with multi-turn web search enabled."""
+    prompt_file = None
     try:
         if not _CLAUDE_CLI:
             raise FileNotFoundError("claude CLI not resolved")
+        if len(prompt) > 30000:
+            import tempfile
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
+                                             encoding='utf-8') as f:
+                f.write(prompt)
+                prompt_file = f.name
+            prompt_arg = f'Read the file {prompt_file} and follow the instructions. Output ONLY valid JSON.'
+            turns = MAX_TURNS
+        else:
+            prompt_arg = prompt
+            turns = MAX_TURNS
         cmd = [
-            _CLAUDE_CLI, '-p', prompt,
+            _CLAUDE_CLI, '-p', prompt_arg,
             '--model', CLAUDE_CODE_MODEL,
             '--output-format', 'json',
-            '--max-turns', str(MAX_TURNS),
+            '--max-turns', str(turns),
         ]
         result = subprocess.run(
             cmd, capture_output=True, text=True, timeout=AGENT_TIMEOUT,
@@ -86,6 +98,12 @@ def _call_research_agent(prompt: str, label: str) -> dict | None:
     except Exception as e:
         print(f"    [{label}] Error: {type(e).__name__}: {e}")
         return None
+    finally:
+        if prompt_file:
+            try:
+                os.unlink(prompt_file)
+            except OSError:
+                pass
 
 
 def _extract_json(output: str, label: str) -> dict | None:
@@ -449,8 +467,9 @@ def run(conn, context: dict, run_log) -> dict:
         # Ingest findings into project database
         if result.get('research_findings'):
             try:
-                from phases.filtering import upsert_flat_projects, deduplicate_projects
-                from normalize import normalize_project_type, is_brownfield
+                from project_sync import upsert_flat_projects
+                from project_dedup import deduplicate_projects
+                from project_schema import normalize_project_type, is_brownfield
 
                 flat_projects = []
                 for f in result['research_findings']:

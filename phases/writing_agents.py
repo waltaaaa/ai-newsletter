@@ -68,15 +68,26 @@ EDITORIAL_RULES = (
 
 def _call_claude_code(prompt: str, label: str, max_turns: int = 1) -> dict | None:
     """Call Claude via Claude Code CLI with direct prompt. Returns parsed JSON dict or None."""
+    prompt_file = None
     try:
         if not _CLAUDE_CLI:
             raise FileNotFoundError("claude CLI not resolved")
-        # Pass prompt directly — no temp file, no extra turn to read it
+        # Use temp file for long prompts (Windows 32K CLI limit)
+        if len(prompt) > 30000:
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
+                                             encoding='utf-8') as f:
+                f.write(prompt)
+                prompt_file = f.name
+            prompt_arg = f'Read the file {prompt_file} and follow the instructions exactly. Output ONLY valid JSON.'
+            turns = max(max_turns, 2)
+        else:
+            prompt_arg = prompt
+            turns = max_turns
         cmd = [
-            _CLAUDE_CLI, '-p', prompt,
+            _CLAUDE_CLI, '-p', prompt_arg,
             '--model', CLAUDE_CODE_MODEL,
             '--output-format', 'json',
-            '--max-turns', str(max_turns),
+            '--max-turns', str(turns),
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=420,
                                 encoding='utf-8', errors='replace', env=_CLAUDE_ENV)
@@ -106,6 +117,12 @@ def _call_claude_code(prompt: str, label: str, max_turns: int = 1) -> dict | Non
     except Exception as e:
         print(f"    [{label}] Error: {type(e).__name__}: {e}")
         return None
+    finally:
+        if prompt_file:
+            try:
+                os.unlink(prompt_file)
+            except OSError:
+                pass
 
 
 def _extract_json(text: str, label: str) -> dict | None:

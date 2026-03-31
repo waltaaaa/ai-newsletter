@@ -894,7 +894,8 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
                              cost_state=None, conn=None,
                              watchlist=None,
                              signal_context=None,
-                             events: list[dict] | None = None) -> dict:
+                             events: list[dict] | None = None,
+                             dossier: dict | None = None) -> dict:
     """
     Four-call Claude pipeline with model routing:
       Call 1: Macro — Claude Sonnet (executive_summary, national, global, globalVectors, watchlist)
@@ -1355,7 +1356,7 @@ If no projects found, return: {{"projects": []}}"""
 
         # ── Writing agents (replaces Calls 1+2) ─────────────────────
         from phases.writing_agents import run_all_writing_agents
-        dossier = context.get('dossier', {})
+        dossier = dossier or {}
         if dossier:
             print(f"  [Writing Agents] Starting with dossier ({len(dossier.get('top_stories',[]))} stories)...")
         else:
@@ -1859,6 +1860,7 @@ def run(conn, context, logger):
             watchlist=watchlist,
             signal_context=signal_context,
             events=events,
+            dossier=context.get('dossier', {}),
         )
         logger.log_step("step_3_claude_analysis")
 

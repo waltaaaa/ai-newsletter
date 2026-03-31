@@ -47,14 +47,26 @@ EDITORIAL_RULES = (
 
 def _call_analysis_agent(prompt: str, label: str) -> dict | None:
     """Call Opus analysis agent — single turn, deep analytical output."""
+    prompt_file = None
     try:
         if not _CLAUDE_CLI:
             raise FileNotFoundError("claude CLI not resolved")
+        if len(prompt) > 30000:
+            import tempfile
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
+                                             encoding='utf-8') as f:
+                f.write(prompt)
+                prompt_file = f.name
+            prompt_arg = f'Read the file {prompt_file} and follow the instructions exactly. Output ONLY valid JSON.'
+            turns = 2
+        else:
+            prompt_arg = prompt
+            turns = 1
         cmd = [
-            _CLAUDE_CLI, '-p', prompt,
+            _CLAUDE_CLI, '-p', prompt_arg,
             '--model', CLAUDE_CODE_MODEL,
             '--output-format', 'json',
-            '--max-turns', '1',
+            '--max-turns', str(turns),
         ]
         result = subprocess.run(
             cmd, capture_output=True, text=True, timeout=AGENT_TIMEOUT,
@@ -76,6 +88,12 @@ def _call_analysis_agent(prompt: str, label: str) -> dict | None:
     except Exception as e:
         print(f"    [{label}] Error: {type(e).__name__}: {e}")
         return None
+    finally:
+        if prompt_file:
+            try:
+                os.unlink(prompt_file)
+            except OSError:
+                pass
 
 
 def _extract_json(output: str, label: str) -> dict | None:
