@@ -99,7 +99,7 @@ def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate:
 
 def run(conn, context, logger):
     """Final assembly, timeseries, quality report, and static JSON export."""
-    step_name = "Phase 9: Finalize"
+    step_name = "Phase 6: Finalize"
     try:
         final_payload = context.get("final_payload", {})
         financial_markets = context.get("financial_markets", {})
@@ -107,7 +107,11 @@ def run(conn, context, logger):
         commodity_data = context.get("commodity_data", {})
         hard_data = context.get("hard_data", {})
         statcan_inds = context.get("statcan_inds")
-        all_verified_sources = context.get("all_verified_sources", [])
+
+        # If conductor produced the briefing, sources are inside the payload
+        all_verified_sources = context.get("all_verified_sources",
+                                            final_payload.get("_all_verified_sources",
+                                            final_payload.get("sources", [])))
 
         # StatCan indicators snapshot
         try:

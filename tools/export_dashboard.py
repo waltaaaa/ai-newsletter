@@ -819,6 +819,164 @@ def export_pipeline_status(conn, output_dir: str) -> str:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# SIGNAL EXPORTS — Job spikes, procurement, IAAC changes
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def export_jobs(conn, output_dir: str) -> str:
+    """Export job monitor data (hiring spikes, sector postings) to jobs.json."""
+    import sqlite3 as _sql
+    old_rf = conn.row_factory
+    conn.row_factory = _sql.Row
+
+    rows = conn.execute("""
+        SELECT week_of, data, spikes
+        FROM job_snapshots
+        ORDER BY week_of DESC
+        LIMIT 8
+    """).fetchall()
+    conn.row_factory = old_rf
+
+    snapshots = []
+    for r in rows:
+        week = r["week_of"]
+        data = _safe_json_loads(r["data"], {})
+        spikes = _safe_json_loads(r["spikes"], [])
+        snapshots.append({
+            "week_of": week,
+            "data": data,
+            "spikes": spikes,
+        })
+
+    out_path = os.path.join(output_dir, "jobs.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(snapshots, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
+def export_procurement(conn, output_dir: str) -> str:
+    """Export procurement contract awards to procurement.json."""
+    import sqlite3 as _sql
+    old_rf = conn.row_factory
+    conn.row_factory = _sql.Row
+
+    rows = conn.execute("""
+        SELECT week_of, data
+        FROM procurement_snapshots
+        ORDER BY week_of DESC
+        LIMIT 8
+    """).fetchall()
+    conn.row_factory = old_rf
+
+    snapshots = []
+    for r in rows:
+        data = _safe_json_loads(r["data"], [])
+        snapshots.append({
+            "week_of": r["week_of"],
+            "contracts": data,
+        })
+
+    out_path = os.path.join(output_dir, "procurement.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(snapshots, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
+def export_iaac(conn, output_dir: str) -> str:
+    """Export IAAC-tracked projects and recent status info to iaac.json."""
+    import sqlite3 as _sql
+    old_rf = conn.row_factory
+    conn.row_factory = _sql.Row
+
+    rows = conn.execute("""
+        SELECT name, status, province, sector, value, lastSeen,
+               discovery_source, statusHistory
+        FROM projects
+        WHERE discovery_source LIKE '%iaac%'
+        ORDER BY lastSeen DESC
+    """).fetchall()
+    conn.row_factory = old_rf
+
+    projects = []
+    for r in rows:
+        sh = _safe_json_loads(r["statusHistory"], [])
+        projects.append({
+            "name": r["name"],
+            "status": r["status"],
+            "province": r["province"],
+            "sector": r["sector"],
+            "value": r["value"],
+            "lastSeen": r["lastSeen"],
+            "status_history": sh,
+        })
+
+    out_path = os.path.join(output_dir, "iaac.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(projects, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
+def export_signals(conn, output_dir: str) -> str:
+    """Export combined signals summary (permits, lobby, jobs, procurement) to signals.json."""
+    from db import get_dashboard_state
+
+    # Gather latest signals from all sources
+    signals = {
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    # Job spikes (latest week)
+    try:
+        import sqlite3 as _sql
+        old_rf = conn.row_factory
+        conn.row_factory = _sql.Row
+        row = conn.execute(
+            "SELECT week_of, spikes FROM job_snapshots ORDER BY week_of DESC LIMIT 1"
+        ).fetchone()
+        conn.row_factory = old_rf
+        if row:
+            signals["job_spikes"] = {
+                "week_of": row["week_of"],
+                "spikes": _safe_json_loads(row["spikes"], []),
+            }
+    except Exception:
+        pass
+
+    # Procurement (latest week)
+    try:
+        old_rf = conn.row_factory
+        conn.row_factory = _sql.Row
+        row = conn.execute(
+            "SELECT week_of, data FROM procurement_snapshots ORDER BY week_of DESC LIMIT 1"
+        ).fetchone()
+        conn.row_factory = old_rf
+        if row:
+            signals["procurement"] = {
+                "week_of": row["week_of"],
+                "contracts": _safe_json_loads(row["data"], []),
+            }
+    except Exception:
+        pass
+
+    # IAAC summary
+    try:
+        total = conn.execute(
+            "SELECT COUNT(*) FROM projects WHERE discovery_source LIKE '%iaac%'"
+        ).fetchone()[0]
+        recent = conn.execute(
+            "SELECT COUNT(*) FROM projects WHERE discovery_source LIKE '%iaac%' AND lastSeen >= date('now', '-7 days')"
+        ).fetchone()[0]
+        signals["iaac"] = {"total_tracked": total, "seen_this_week": recent}
+    except Exception:
+        pass
+
+    out_path = os.path.join(output_dir, "signals.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(signals, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # MAIN ENTRY POINT
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -874,10 +1032,6 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
     path = export_events(conn, output_dir)
     files_written.append(os.path.basename(path))
 
-    # Microscope
-    path = export_microscope(conn, output_dir)
-    files_written.append(os.path.basename(path))
-
     # Timeseries
     path = export_timeseries(conn, output_dir)
     files_written.append(os.path.basename(path))
@@ -897,6 +1051,14 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
     # Canadian commodity indicators
     path = export_commodities(conn, output_dir)
     files_written.append(os.path.basename(path))
+
+    # Signal data (jobs, procurement, IAAC)
+    for export_fn in (export_jobs, export_procurement, export_iaac, export_signals):
+        try:
+            path = export_fn(conn, output_dir)
+            files_written.append(os.path.basename(path))
+        except Exception as e:
+            logger.warning("Export %s failed: %s", export_fn.__name__, e)
 
     # Manifest
     manifest = {

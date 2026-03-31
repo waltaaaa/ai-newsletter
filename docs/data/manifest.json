@@ -1,16 +1,18 @@
 {
-  "exported_at": "2026-03-31T20:46:46.067368+00:00",
+  "exported_at": "2026-03-31T22:14:01.019950+00:00",
   "province_count": 13,
-  "file_count": 24,
+  "file_count": 27,
   "file_list": [
     "briefing_archive.json",
     "briefing_latest.json",
     "commodities.json",
     "events.json",
+    "iaac.json",
     "indicators.json",
-    "microscope.json",
+    "jobs.json",
     "pipeline_status.json",
     "policy.json",
+    "procurement.json",
     "projects_alberta.json",
     "projects_all.json",
     "projects_british_columbia.json",
@@ -25,6 +27,7 @@
     "projects_quebec.json",
     "projects_saskatchewan.json",
     "projects_yukon.json",
+    "signals.json",
     "timeseries.json",
     "trends.json"
   ]

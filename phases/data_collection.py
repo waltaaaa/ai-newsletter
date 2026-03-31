@@ -1316,6 +1316,38 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
             })
             count += 1
 
+    # Industry GDP (per-NAICS M/M and Y/Y from StatCan WDS)
+    for naics_code, ind_data in primary_ind.get('industries', {}).items():
+        if naics_code.startswith('_'):
+            continue
+        mm = ind_data.get('mm', 'N/A')
+        yy = ind_data.get('yy', 'N/A')
+        src = ind_data.get('src', 'StatCan')
+        if mm and mm != 'N/A':
+            save_indicator(conn, {
+                'indicator': f'industry_gdp_mm_{naics_code}',
+                'province': 'national',
+                'date': today_str,
+                'value': str(mm),
+                'unit': '%',
+                'source': src,
+                'frequency': 'monthly',
+                'backfilled': False,
+            })
+            count += 1
+        if yy and yy != 'N/A':
+            save_indicator(conn, {
+                'indicator': f'industry_gdp_yy_{naics_code}',
+                'province': 'national',
+                'date': today_str,
+                'value': str(yy),
+                'unit': '%',
+                'source': src,
+                'frequency': 'monthly',
+                'backfilled': False,
+            })
+            count += 1
+
     print(f"  [HISTORY] Archived {count} indicator values to indicator_history")
 
 
