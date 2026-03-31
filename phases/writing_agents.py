@@ -549,7 +549,22 @@ def run_all_writing_agents(hard_data: dict, articles: list[dict],
     hard_summary = _hard_data_summary(hard_data, rss_items)
     signal_blocks = _build_signal_context_blocks(signal_context or {})
 
+    # Use extracted articles if available, otherwise convert RSS items
     economy_arts = [a for a in articles if a.get('topic') == 'economy']
+    if not economy_arts and rss_items:
+        economy_arts = [
+            {
+                'title': r.get('title', ''),
+                'text': r.get('summary', '') or r.get('snippet', ''),
+                'url': r.get('url', ''),
+                'topic': 'economy',
+                'feed_id': r.get('source_name', ''),
+                'meta_sectors': r.get('tags', []),
+                'meta_provinces': [r['province']] if r.get('province') else [],
+            }
+            for r in rss_items
+            if r.get('title')
+        ]
     all_arts_text = _format_articles_for_prompt(economy_arts[:50])
     industry_arts = [a for a in economy_arts if any(
         kw in (a.get('title', '') + a.get('text', '')).lower()

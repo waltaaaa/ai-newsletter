@@ -851,8 +851,22 @@ def run_province_agents(articles: list[dict], rss_items: list[dict],
     today_str = date.today().strftime('%B %d, %Y')
     boc_rate = hard_data.get('boc_rate', '2.25%')
 
-    # Economy articles for fallback
+    # Economy articles — use extracted articles if available, otherwise convert RSS items
     economy_arts = [a for a in articles if a.get('topic') == 'economy']
+    if not economy_arts and rss_items:
+        economy_arts = [
+            {
+                'title': r.get('title', ''),
+                'text': r.get('summary', '') or r.get('snippet', ''),
+                'url': r.get('url', ''),
+                'topic': 'economy',
+                'feed_id': r.get('source_name', ''),
+                'meta_sectors': r.get('tags', []),
+                'meta_provinces': [r['province']] if r.get('province') else [],
+            }
+            for r in rss_items
+            if r.get('title')
+        ]
 
     # Build context packages for all provinces
     print(f"  [Province Agents] Building context packages for {len(PROVINCES)} provinces...")

@@ -915,7 +915,8 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
             'input_cost_per_mtok': 3.0, 'output_cost_per_mtok': 15.0,
         }
 
-    print(f"\n[STEP 3] Claude analysis (4 calls, {len(articles)} articles)...")
+    arts_count = len(articles) or (len(rss_items) if rss_items else 0)
+    print(f"\n[STEP 3] Claude analysis (4 calls, {arts_count} articles)...")
     print(f"  Writing agents (macro+industry): Claude Code, Province agents: Claude Code, Call 4 (extraction): Sonnet={SONNET_MODEL}")
     today_str    = date.today().strftime('%B %d, %Y')
     hard_summary = _hard_data_summary(hard_data, rss_items)
@@ -949,8 +950,22 @@ def generate_claude_analysis(hard_data: dict, articles: list[dict],
     # ── Build signal context blocks from Prompts 11-19 data ────────
     _signal_blocks = _build_signal_context_blocks(signal_context)
 
-    # Split articles by topic for focused prompts
+    # Split articles by topic for focused prompts — fall back to RSS items
     economy_arts  = [a for a in articles if a.get('topic') == 'economy']
+    if not economy_arts and rss_items:
+        economy_arts = [
+            {
+                'title': r.get('title', ''),
+                'text': r.get('summary', '') or r.get('snippet', ''),
+                'url': r.get('url', ''),
+                'topic': 'economy',
+                'feed_id': r.get('source_name', ''),
+                'meta_sectors': r.get('tags', []),
+                'meta_provinces': [r['province']] if r.get('province') else [],
+            }
+            for r in rss_items
+            if r.get('title')
+        ]
     project_arts  = [a for a in articles if a.get('topic') == 'project']
     all_arts_text = _format_articles_for_prompt(economy_arts[:50])
 
