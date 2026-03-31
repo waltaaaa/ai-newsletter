@@ -1696,16 +1696,18 @@ async function renderCanadaSub(){
   if(nas)nas.innerHTML=secHtml;
 
   // Render charts after DOM is set
-  await _ensureChartData();
+  try{await _ensureChartData()}catch(e){console.warn('Chart data:',e)}
   if(natProjects.length>=3){
-    _renderSectorChart('natSectorChart','nat',natProjects);
+    try{_renderSectorChart('natSectorChart','nat',natProjects)}catch(e){console.warn('Sector chart:',e)}
   }
   // Agent-driven chart or keyword-based fallback
-  if(natChartSpec&&natChartSpec.dataKeys&&natChartSpec.dataKeys.length){
-    await renderAgentInsightChart('nat',natChartSpec);
-  }else{
-    await renderInsightCharts('nat',natThemes,natProjects,null,natContent);
-  }
+  try{
+    if(natChartSpec&&natChartSpec.dataKeys&&natChartSpec.dataKeys.length){
+      await renderAgentInsightChart('nat',natChartSpec);
+    }else{
+      await renderInsightCharts('nat',natThemes,natProjects,null,natContent);
+    }
+  }catch(e){console.warn('Insight charts:',e)}
 
   // Policy section with editorial header
   const ps=$('policySection');

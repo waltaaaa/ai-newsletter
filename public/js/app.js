@@ -419,7 +419,15 @@ async function renderEditorialFlow(){
     industryHtml=bulletsToParas(san(D.industry_executive_summary));
   }
 
-  // Word cloud topics
+  // Word cloud topics — fall back to extracting from briefing text
+  function extractTopicsFromText(){
+    const stops=new Set(['the','and','for','that','this','with','from','are','was','were','has','have','been','will','but','not','all','can','had','her','his','one','our','out','its','also','than','then','them','they','into','over','such','some','more','most','very','just','about','would','could','should','which','their','other','after','these','being','both','between','each','during','before','while','where','there','when','what','does','only','under','first','last','those','still','down','through','another','same','said','many','since','well','make','like','back','much','made','even','upon','year','years','new','per','may','two','now']);
+    const src=[D.executive_summary,D.consumer_pulse,D.industry_executive_summary,D.market_commentary].filter(Boolean).join(' ');
+    if(!src)return[];
+    const words=src.replace(/<[^>]+>/g,' ').replace(/[^a-zA-Z\s-]/g,' ').toLowerCase().split(/\s+/).filter(w=>w.length>3&&!stops.has(w));
+    const freq={};words.forEach(w=>{freq[w]=(freq[w]||0)+1});
+    return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,35).map(([word,count])=>({topic:word,frequency:count}));
+  }
   const wcTopics=(D.word_cloud_topics&&D.word_cloud_topics.length)?D.word_cloud_topics:extractTopicsFromText();
 
 
@@ -1696,16 +1704,18 @@ async function renderCanadaSub(){
   if(nas)nas.innerHTML=secHtml;
 
   // Render charts after DOM is set
-  await _ensureChartData();
+  try{await _ensureChartData()}catch(e){console.warn('Chart data:',e)}
   if(natProjects.length>=3){
-    _renderSectorChart('natSectorChart','nat',natProjects);
+    try{_renderSectorChart('natSectorChart','nat',natProjects)}catch(e){console.warn('Sector chart:',e)}
   }
   // Agent-driven chart or keyword-based fallback
-  if(natChartSpec&&natChartSpec.dataKeys&&natChartSpec.dataKeys.length){
-    await renderAgentInsightChart('nat',natChartSpec);
-  }else{
-    await renderInsightCharts('nat',natThemes,natProjects,null,natContent);
-  }
+  try{
+    if(natChartSpec&&natChartSpec.dataKeys&&natChartSpec.dataKeys.length){
+      await renderAgentInsightChart('nat',natChartSpec);
+    }else{
+      await renderInsightCharts('nat',natThemes,natProjects,null,natContent);
+    }
+  }catch(e){console.warn('Insight charts:',e)}
 
   // Policy section with editorial header
   const ps=$('policySection');
