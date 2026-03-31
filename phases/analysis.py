@@ -1355,7 +1355,11 @@ If no projects found, return: {{"projects": []}}"""
 
         # ── Writing agents (replaces Calls 1+2) ─────────────────────
         from phases.writing_agents import run_all_writing_agents
-        print(f"  [Writing Agents] Starting macro + industry writing agents...")
+        dossier = context.get('dossier', {})
+        if dossier:
+            print(f"  [Writing Agents] Starting with dossier ({len(dossier.get('top_stories',[]))} stories)...")
+        else:
+            print(f"  [Writing Agents] Starting macro + industry writing agents...")
         writing_payload = run_all_writing_agents(
             hard_data=hard_data,
             articles=articles,
@@ -1367,6 +1371,7 @@ If no projects found, return: {{"projects": []}}"""
             cost_state=cost_state,
             conn=conn,
             gemini_client=gemini_client,
+            dossier=dossier,
         )
 
         # ── Province agents (replaces Call 3) ────────────────────────
@@ -1384,6 +1389,7 @@ If no projects found, return: {{"projects": []}}"""
             cost_state=cost_state,
             conn=conn,
             gemini_client=gemini_client,
+            dossier=dossier,
         )
 
         # Wait for Call 4 extraction results

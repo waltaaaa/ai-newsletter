@@ -1,16 +1,19 @@
 """
 update_dashboard.py — CAN-MACRO Strategic Dashboard Pipeline (Orchestrator)
 
-Thin orchestrator that runs 9 phases in sequence:
-  1. Data Collection  — Hard data from APIs (BoC, StatCan, FRED, ECB, BoE, Yahoo)
-  2. Discovery        — Tiers 1-14 project discovery
-  3. Filtering        — RSS filter, project extraction, dedup, URL hard gate
-  4. Signals          — Permits, lobbyists (runs BEFORE analysis)
-  5. Analysis         — Claude Sonnet 4-call pipeline + hard data override
-  6. Reasoning        — Gap analysis, dedup QA, extraction recovery, meta-analysis
-  7. Narrative        — Trends, market commentary, microscope, briefing
-  8. Verification     — Source URL checks, Wayback, cost-finding, enrichment, stale
-  9. Finalize         — Timeseries, assembly, quality report, export, deploy
+Thin orchestrator that runs 12 phases in sequence:
+  1. Data Collection    — Hard data from APIs (BoC, StatCan, FRED, ECB, BoE, Yahoo)
+  2. Discovery          — Tiers 1-14 project discovery
+  3. Filtering          — RSS filter, project extraction, dedup, URL hard gate
+  4. Signals            — Permits, lobbyists (runs BEFORE analysis)
+  5. Research Agents    — Opus agents: per-province + federal discovery, gap-filling
+  6. Analysis Agents    — Opus agents: macro, provincial, sector, policy, cross-ref
+  7. Synthesis          — Opus agent: produces editor's dossier from all research
+  8. Writing            — Opus agents: briefing from dossier + Claude extraction
+  9. Reasoning          — Gap analysis, dedup QA, extraction recovery, meta-analysis
+  10. Narrative          — Trends, market commentary, microscope, briefing
+  11. Verification       — Source URL checks, Wayback, cost-finding, enrichment, stale
+  12. Finalize           — Timeseries, assembly, quality report, export, deploy
 
 Flags:
   python update_dashboard.py               — normal weekly run
@@ -50,6 +53,9 @@ from phases import (
     narrative,
     verification,
     finalize,
+    research_agents,
+    analysis_agents,
+    synthesis_agent,
 )
 
 load_dotenv()
@@ -129,16 +135,21 @@ def update_dashboard(deep_sweep: bool = False):
     }
 
     # Phase pipeline — order matters
+    # Layers: Sweep (1-4) → Research (5) → Analysis (6) → Synthesis (7)
+    #         → Writing (8) → Reasoning (9) → Narrative (10) → Verify (11) → Finalize (12)
     phases = [
-        ("Phase 1: Data Collection", data_collection),
-        ("Phase 2: Discovery",       discovery),
-        ("Phase 3: Filtering",       filtering),
-        ("Phase 4: Signals",         signals),
-        ("Phase 5: Analysis",        analysis),
-        ("Phase 6: Reasoning",       reasoning),
-        ("Phase 7: Narrative",       narrative),
-        ("Phase 8: Verification",    verification),
-        ("Phase 9: Finalize",        finalize),
+        ("Phase 1: Data Collection",   data_collection),
+        ("Phase 2: Discovery",         discovery),
+        ("Phase 3: Filtering",         filtering),
+        ("Phase 4: Signals",           signals),
+        ("Phase 5: Research Agents",   research_agents),
+        ("Phase 6: Analysis Agents",   analysis_agents),
+        ("Phase 7: Synthesis",         synthesis_agent),
+        ("Phase 8: Writing",           analysis),
+        ("Phase 9: Reasoning",         reasoning),
+        ("Phase 10: Narrative",        narrative),
+        ("Phase 11: Verification",     verification),
+        ("Phase 12: Finalize",         finalize),
     ]
 
     # Per-phase timeout limits (seconds). Generous defaults.
@@ -147,11 +158,14 @@ def update_dashboard(deep_sweep: bool = False):
         "Phase 2: Discovery": 1200,
         "Phase 3: Filtering": 1200,
         "Phase 4: Signals": 600,
-        "Phase 5: Analysis": 7200,
-        "Phase 6: Reasoning": 120,
-        "Phase 7: Narrative": 600,
-        "Phase 8: Verification": 600,
-        "Phase 9: Finalize": 300,
+        "Phase 5: Research Agents": 3600,
+        "Phase 6: Analysis Agents": 1200,
+        "Phase 7: Synthesis": 900,
+        "Phase 8: Writing": 7200,
+        "Phase 9: Reasoning": 120,
+        "Phase 10: Narrative": 600,
+        "Phase 11: Verification": 600,
+        "Phase 12: Finalize": 300,
     }
 
     # Phase-level caching: check for run_id-based cache key

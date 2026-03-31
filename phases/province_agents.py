@@ -812,7 +812,7 @@ def run_province_agents(articles: list[dict], rss_items: list[dict],
                         watchlist: dict, hard_data: dict,
                         anthropic_client=None, cost_state=None,
                         conn=None, gemini_client=None,
-                        model: str = '') -> list[dict]:
+                        model: str = '', dossier: dict = None) -> list[dict]:
     """
     Run 13 parallel province writing agents and return a provinces array.
 
@@ -832,6 +832,19 @@ def run_province_agents(articles: list[dict], rss_items: list[dict],
     mode = AGENT_MODE
     today_str = date.today().strftime('%B %d, %Y')
     boc_rate = hard_data.get('boc_rate', '2.25%')
+
+    # Build per-province dossier context from synthesis agent
+    _dossier_by_prov = {}
+    if dossier and isinstance(dossier, dict):
+        for ph in dossier.get('provincial_highlights', []):
+            pname = ph.get('province', '')
+            if pname:
+                lines = [f"DOSSIER GUIDANCE FOR {pname}:"]
+                lines.append(f"  Headline: {ph.get('headline', '')}")
+                lines.append(f"  Details: {ph.get('details', '')}")
+                for dp in ph.get('data_points', []):
+                    lines.append(f"  • {dp}")
+                _dossier_by_prov[pname] = '\n'.join(lines)
 
     # Economy articles — use extracted articles if available, otherwise convert RSS items
     economy_arts = [a for a in articles if a.get('topic') == 'economy']

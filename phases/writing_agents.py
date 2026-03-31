@@ -522,9 +522,13 @@ def run_all_writing_agents(hard_data: dict, articles: list[dict],
                            signal_context: dict | None = None,
                            watchlist: dict | None = None,
                            anthropic_client=None, cost_state=None,
-                           conn=None, gemini_client=None) -> dict:
+                           conn=None, gemini_client=None,
+                           dossier: dict | None = None) -> dict:
     """
     Run all writing agents and return a merged payload (replaces Calls 1+2).
+
+    When a dossier is provided (from synthesis agent), writing agents receive
+    focused, pre-analyzed context instead of raw data dumps.
 
     Returns dict with: headline, key_indicators, executive_summary, metrics,
     national, global, globalVectors, consumer_pulse, word_cloud_topics,
@@ -539,6 +543,34 @@ def run_all_writing_agents(hard_data: dict, articles: list[dict],
     today_str = date.today().strftime('%B %d, %Y')
     hard_summary = _hard_data_summary(hard_data, rss_items)
     signal_blocks = _build_signal_context_blocks(signal_context or {})
+
+    # Build dossier context block if available
+    dossier_context = ''
+    if dossier and isinstance(dossier, dict) and dossier.get('top_stories'):
+        dossier_lines = ["\nEDITOR'S DOSSIER (pre-analyzed — use this as your primary guide):\n"]
+        dossier_lines.append(f"Edition headline: {dossier.get('edition_headline', '')}\n")
+
+        nat_ctx = dossier.get('national_context', {})
+        if nat_ctx:
+            dossier_lines.append(f"MACRO NARRATIVE: {nat_ctx.get('macro_narrative', '')}")
+            dossier_lines.append(f"BOC CONTEXT: {nat_ctx.get('boc_context', '')}\n")
+
+        for story in dossier.get('top_stories', [])[:7]:
+            dossier_lines.append(f"TOP STORY #{story.get('rank', '?')}: {story.get('headline', '')}")
+            dossier_lines.append(f"  {story.get('summary', '')}")
+            for dp in story.get('data_points', [])[:5]:
+                dossier_lines.append(f"  • {dp}")
+            dossier_lines.append(f"  Sources: {', '.join(story.get('source_urls', [])[:3])}")
+            dossier_lines.append("")
+
+        for theme in dossier.get('cross_cutting_themes', [])[:3]:
+            dossier_lines.append(f"THEME: {theme.get('theme', '')}: {theme.get('description', '')}")
+
+        notes = dossier.get('writer_notes', {})
+        if notes.get('data_warnings'):
+            dossier_lines.append(f"\nDATA WARNINGS: {'; '.join(notes['data_warnings'])}")
+
+        dossier_context = '\n'.join(dossier_lines)
 
     # Use extracted articles if available, otherwise convert RSS items
     economy_arts = [a for a in articles if a.get('topic') == 'economy']
@@ -564,6 +596,10 @@ def run_all_writing_agents(hard_data: dict, articles: list[dict],
                     'agriculture', 'defence', 'telecom', 'real estate')
     )]
     industry_arts_text = _format_articles_for_prompt(industry_arts[:50])
+
+    # Append dossier context to hard_summary so all agents see it
+    if dossier_context:
+        hard_summary = hard_summary + '\n\n' + dossier_context
 
     cdn_officials = _build_canadian_officials_context(watchlist or {})
     global_officials = _build_global_officials_context(watchlist or {})
