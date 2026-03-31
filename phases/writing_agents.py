@@ -585,6 +585,7 @@ def run_all_writing_agents(hard_data: dict, articles: list[dict],
 
     # When dossier is available, it's the primary context — skip raw article dump
     # to keep prompts within context window limits
+    economy_arts = []
     if dossier_context:
         hard_summary = hard_summary + '\n\n' + dossier_context
         all_arts_text = '(Articles already analyzed in dossier above — cite sources from dossier)'
