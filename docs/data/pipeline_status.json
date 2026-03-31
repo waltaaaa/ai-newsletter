@@ -1,8 +1,8 @@
 {
   "last_run": {
     "started_at": "2026-03-31T15:37:10.040653",
-    "status": "running",
-    "duration_seconds": 0,
+    "status": "partial",
+    "duration_seconds": 730,
     "discovery": {
       "articles_found": 0,
       "projects_added": 0,
@@ -38,8 +38,8 @@
   "recent_runs": [
     {
       "started_at": "2026-03-31T15:37:10.040653",
-      "status": "running",
-      "duration_seconds": 0,
+      "status": "partial",
+      "duration_seconds": 730,
       "discovery": {
         "articles_found": 0,
         "projects_added": 0,
