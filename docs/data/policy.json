@@ -32,7 +32,8 @@
             "source_description": "BC Government News",
             "url": "https://news.gov.bc.ca/releases/2026HMA0028-000325"
           }
-        ]
+        ],
+        "narrative": "The policy tracker recorded one provincial development this week. British Columbia announced the completion of two new rental buildings in West Vancouver, expanding housing options for workers and middle-income families (BC Government News, March 27). The announcement aligns with BC's ongoing housing supply strategy. The project database tracks 90 residential and commercial-mixed projects in British Columbia, 51 of which fall within sectors directly affected by provincial housing policy. No federal policy developments were recorded this week. The Bank of Canada's next scheduled rate decision is April 16, 2026 — rate-sensitive residential projects across all provinces will be monitored for status changes following that announcement. The pipeline monitors 17 federal and provincial RSS feeds for legislative and regulatory developments, including LEGISinfo, Canada Gazette, and ministry news feeds across five provinces (ON, BC, AB, QC, SK)."
       }
     },
     {
@@ -67,7 +68,8 @@
             "source_description": "BC Government News",
             "url": "https://news.gov.bc.ca/releases/2026HMA0028-000325"
           }
-        ]
+        ],
+        "narrative": "The policy tracker recorded one provincial development this week. British Columbia announced the completion of two new rental buildings in West Vancouver, expanding housing options for workers and middle-income families (BC Government News, March 27). The announcement aligns with BC's ongoing housing supply strategy. The project database tracks 90 residential and commercial-mixed projects in British Columbia, 51 of which fall within sectors directly affected by provincial housing policy. No federal policy developments were recorded this week. The Bank of Canada's next scheduled rate decision is April 16, 2026 — rate-sensitive residential projects across all provinces will be monitored for status changes following that announcement. The pipeline monitors 17 federal and provincial RSS feeds for legislative and regulatory developments, including LEGISinfo, Canada Gazette, and ministry news feeds across five provinces (ON, BC, AB, QC, SK)."
       }
     },
     {
@@ -101,5 +103,5 @@
       }
     }
   ],
-  "last_updated": "2026-04-01T01:21:44.538182+00:00"
+  "last_updated": "2026-04-01T01:28:08.693782+00:00"
 }

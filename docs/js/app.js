@@ -3193,18 +3193,20 @@ async function _loadPolicyData(){
     const raw=await fetchJSON('policy.json');
     // Normalize: extract all top_developments across weeks
     let items=[];
+    let narrative='';
     if(raw.weeks&&Array.isArray(raw.weeks)){
       raw.weeks.forEach(w=>{
         const devs=w.summary?.top_developments||[];
         devs.forEach(d=>{d._week=w.week_of;if(!d.date)d.date=w.week_of});
         items=items.concat(devs);
+        if(!narrative&&w.summary?.narrative)narrative=w.summary.narrative;
       });
     }
     // Legacy fallback: flat articles array
     if(!items.length&&raw.articles)items=raw.articles;
-    _policyCache={items,raw};
+    _policyCache={items,raw,narrative};
     return _policyCache;
-  }catch(e){_policyCache={items:[],raw:{}};return _policyCache}
+  }catch(e){_policyCache={items:[],raw:{},narrative:''};return _policyCache}
 }
 
 function _renderPolicyItems(items,maxItems){
@@ -3236,10 +3238,11 @@ function _renderPolicyItems(items,maxItems){
 async function renderPolicySection(){
   const el=$('policyContent')||$('policySection');if(!el)return;
   try{
-    const{items}=await _loadPolicyData();
-    if(!items.length){el.innerHTML='';return}
+    const{items,narrative}=await _loadPolicyData();
+    if(!items.length&&!narrative){el.innerHTML='';return}
     const{catBadges,listHtml,count}=_renderPolicyItems(items,10);
-    el.innerHTML='<details class="card fade-in" open><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#475569;padding:14px 18px;user-select:none">Policy Monitor (<span style="font-family:var(--font-mono)">'+count+'</span> developments this week)</summary><div style="padding:0 18px 14px"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">'+catBadges+'</div>'+listHtml+'</div></details>';
+    const narrativeHtml=narrative?'<div style="font-size:var(--text-xs);color:var(--text-secondary,#475569);line-height:1.6;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-light,#e2e8f0)">'+narrative+'</div>':'';
+    el.innerHTML='<details class="card fade-in" open><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#475569;padding:14px 18px;user-select:none">Policy Monitor ('+count+' development'+(count!==1?'s':'')+' this week)</summary><div style="padding:0 18px 14px">'+narrativeHtml+'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">'+catBadges+'</div>'+listHtml+'</div></details>';
   }catch(e){console.warn('Policy section:',e);el.innerHTML=''}
 }
 
@@ -3256,7 +3259,7 @@ async function renderProvincePolicySection(provCode,provName,containerEl){
     });
     if(!provItems.length){
       containerEl.innerHTML='<div class="prov-enrichment-section" style="margin-top:20px;padding:16px;background:var(--bg-alt,#f8fafc);border-radius:8px;border-left:3px solid var(--accent,#3b82f6)">'+
-        '<div style="font-size:var(--text-sm);font-weight:700;color:var(--fg,#1e293b);margin-bottom:8px">\u2696\uFE0F Policy Monitor</div>'+
+        '<div style="font-size:var(--text-sm);font-weight:700;color:var(--fg,#1e293b);margin-bottom:8px">Policy Monitor</div>'+
         '<div style="font-size:var(--text-xs);color:#94A3B8">No policy developments tracked for '+provName+' this week.</div></div>';
       return;
     }
@@ -3274,7 +3277,7 @@ async function renderProvincePolicySection(provCode,provName,containerEl){
       :provSpecific?provSpecific+' provincial developments'
       :fedCount+' federal developments affecting '+provName;
     containerEl.innerHTML='<div class="prov-enrichment-section" style="margin-top:20px;padding:16px;background:var(--bg-alt,#f8fafc);border-radius:8px;border-left:3px solid var(--accent,#3b82f6)">'+
-      '<div style="font-size:var(--text-sm);font-weight:700;color:var(--fg,#1e293b);margin-bottom:4px">\u2696\uFE0F Policy Monitor</div>'+
+      '<div style="font-size:var(--text-sm);font-weight:700;color:var(--fg,#1e293b);margin-bottom:4px">Policy Monitor</div>'+
       '<div style="font-size:10px;color:#94A3B8;margin-bottom:10px">'+subtitle+'</div>'+
       '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">'+catBadges+'</div>'+
       listHtml+'</div>';
