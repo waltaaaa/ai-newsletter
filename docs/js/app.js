@@ -576,43 +576,80 @@ async function _tldrBuildPolicy(){
   </div>`;
 }
 
-/* ── TL;DR: Project Pipeline ── */
+/* ── TL;DR: Project Pipeline This Week ── */
 async function _tldrBuildProjects(){
   const stats=D.discovery_stats||{};
   const newCount=stats.new_this_week||D.new_projects||0;
-  const statusCounts=stats.status_counts||{};
   const totalProjects=stats.total_projects||D.project_count||0;
-  // Load recent projects
-  let projects=[];
+
+  // Determine week range from briefing date
+  const weekOf=D.week_of||'';
+  let weekStart='',weekEnd='';
+  if(weekOf){
+    const dt=new Date(weekOf+'T00:00:00');
+    const mon=new Date(dt);mon.setDate(dt.getDate()-dt.getDay()+1);// Monday
+    const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+    weekStart=mon.toISOString().slice(0,10);
+    weekEnd=sun.toISOString().slice(0,10);
+  }
+
+  // Load projects and filter for this week's activity
+  let newProjects=[],statusChanges=[];
   try{
     const all=await fetchJSON('projects_all.json');
-    if(Array.isArray(all)){
-      // Sort by firstTracked desc, take top projects with values
-      const valued=all.filter(p=>p.value&&p.value!=='Not disclosed')
-        .sort((a,b)=>(b.firstTracked||'').localeCompare(a.firstTracked||''));
-      projects=valued.slice(0,8);
-      if(projects.length<8){
-        const extra=all.filter(p=>!projects.includes(p))
-          .sort((a,b)=>(b.firstTracked||'').localeCompare(a.firstTracked||''));
-        projects=projects.concat(extra.slice(0,8-projects.length));
-      }
+    if(Array.isArray(all)&&weekStart){
+      all.forEach(p=>{
+        const tracked=(p.firstTracked||'').slice(0,10);
+        const updated=(p.lastUpdated||'').slice(0,10);
+        const isNew=tracked>=weekStart&&tracked<=weekEnd;
+        // Check statusHistory for actual status changes this week
+        let hadStatusChange=false;
+        const sh=p.statusHistory;
+        if(Array.isArray(sh)&&sh.length){
+          sh.forEach(entry=>{
+            if(entry&&entry.date&&entry.date.slice(0,10)>=weekStart&&entry.date.slice(0,10)<=weekEnd){
+              hadStatusChange=true;
+            }
+          });
+        }
+        // Categorize: new this week vs status change this week
+        if(isNew&&newCount>0){newProjects.push(p)}
+        else if(hadStatusChange&&!isNew){statusChanges.push(p)}
+        else if(!isNew&&updated>=weekStart&&updated<=weekEnd){statusChanges.push(p)}
+      });
+      // If new_this_week from pipeline says 0 but we found thousands, it's a bulk import — clear
+      if(newCount===0)newProjects=[];
+      // Sort both by parsed value descending
+      const valSort=(a,b)=>(parseNumericValue(b.value)||0)-(parseNumericValue(a.value)||0);
+      newProjects.sort(valSort);
+      statusChanges.sort(valSort);
     }
   }catch(e){}
-  // Status summary
-  const statusParts=Object.entries(statusCounts).map(([k,v])=>v.toLocaleString()+' '+k);
-  const subText=statusParts.length?statusParts.slice(0,3).join(' \u00B7 '):(totalProjects.toLocaleString()+' total');
+
+  // Build subtitle
+  const subParts=[];
+  if(newCount>0)subParts.push(newCount+' new');
+  if(statusChanges.length>0)subParts.push(statusChanges.length+' status changes');
+  const subText=subParts.length?subParts.join(' \u00B7 '):'No changes this week';
+
   // Narrative
-  const narrativeHtml=newCount>0
-    ?`<div class="tldr-update-narrative"><p>The pipeline added ${newCount} project${newCount!==1?'s':''} this week, bringing the total to ${totalProjects.toLocaleString()} tracked projects across Canada.</p></div>`
-    :`<div class="tldr-update-narrative"><p>The pipeline tracks ${totalProjects.toLocaleString()} capital projects across Canada with a combined value of ${D.pipeline_value||'$'+(stats.total_value_billions||0).toFixed(1)+'B'}.</p></div>`;
-  // Table
+  let narrativeParts=[];
+  if(newCount>0)narrativeParts.push(`The pipeline added ${newCount} new project${newCount!==1?'s':''} this week.`);
+  if(statusChanges.length>0)narrativeParts.push(`${statusChanges.length} project${statusChanges.length!==1?'s':''} had status updates.`);
+  if(!narrativeParts.length)narrativeParts.push(`No new projects or status changes recorded this week. The pipeline tracks ${totalProjects.toLocaleString()} projects across Canada.`);
+  const narrativeHtml=`<div class="tldr-update-narrative"><p>${narrativeParts.join(' ')}</p></div>`;
+
+  // Combine for table: new first, then status changes, cap at 12
+  const tableProjects=[...newProjects.slice(0,6),...statusChanges.slice(0,12-Math.min(newProjects.length,6))];
+
   let tableHtml='';
-  if(projects.length){
+  if(tableProjects.length){
     let rows='';
-    projects.forEach(p=>{
+    tableProjects.forEach(p=>{
       const statusSlug=(p.status||'proposed').toLowerCase().replace(/\s+/g,'-');
+      const isNew=newProjects.includes(p);
       rows+=`<tr>
-        <td class="proj-name">${san(p.name||'')}</td>
+        <td class="proj-name">${san(p.name||'')}${isNew?' <span class="tldr-freq-tag">NEW</span>':''}</td>
         <td>${san(p.province||'')}</td>
         <td>${_normSector(p.sector||'')}</td>
         <td class="proj-val">${fmtCurrency(p.value,p)}</td>
