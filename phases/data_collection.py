@@ -65,7 +65,7 @@ def get_live_commodities():
         ("PA=F",  "Precious Metals",            "Palladium",        "troy oz", lambda x: f"${x:,.0f}"),
         # Base Metals
         ("HG=F",  "Base Metals",                "Copper",            "lb",      lambda x: f"${x:.4f}"),
-        ("ALI=F", "Base Metals",                "Aluminum",          "lb",      lambda x: f"${x:.4f}"),
+        ("ALI=F", "Base Metals",                "Aluminum",          "t",       lambda x: f"${x:,.0f}"),
         # Agriculture - Grains
         ("ZW=F",  "Agriculture - Grains",       "Wheat",             "bu",      lambda x: f"${x:.2f}"),
         ("ZC=F",  "Agriculture - Grains",       "Corn",              "bu",      lambda x: f"${x:.2f}"),
@@ -144,15 +144,25 @@ def get_live_commodities():
             if col is None or len(col) < 2:
                 continue
             current = float(col.iloc[-1])
+            prev_close = float(col.iloc[-2])
             year_ago = float(col.iloc[0])
-            yy_pct = ((current - year_ago) / year_ago) * 100
+
+            # Contract rollover / bad data detection: if day change > 50%,
+            # use previous close as current (the latest point is likely a
+            # rolled contract with a different price scale)
+            if prev_close and abs((current - prev_close) / prev_close) > 0.50:
+                print(f"  [WARN] {name} ({ticker}): day change "
+                      f"{((current - prev_close) / prev_close) * 100:.0f}% "
+                      f"exceeds 50% — likely contract rollover. "
+                      f"Using previous close ${prev_close:.2f}")
+                current = prev_close
+
+            yy_pct = ((current - year_ago) / year_ago) * 100 if year_ago else 0
             yy_str = f"{'+' if yy_pct >= 0 else ''}{yy_pct:.1f}%"
             day_str = ''
-            if len(col) >= 2:
-                prev_close = float(col.iloc[-2])
-                if prev_close:
-                    day_pct = ((current - prev_close) / prev_close) * 100
-                    day_str = f"{'+' if day_pct >= 0 else ''}{day_pct:.1f}%"
+            if prev_close:
+                day_pct = ((current - prev_close) / prev_close) * 100
+                day_str = f"{'+' if day_pct >= 0 else ''}{day_pct:.1f}%"
             val_str = fmt(current)
             if category not in categories:
                 categories[category] = []

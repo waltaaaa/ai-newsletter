@@ -89,7 +89,9 @@ function computeChange(indName,prov){
 /* ── State ── */
 let D=null,indicators=[],allProjects=[],filteredProjects=[],projectPage=0,selectedProvince='BC',tsCache={},charts={},tabRendered={};
 const PAGE_SIZE=25;
-let _confirmedOnly=false;
+let _confirmedOnly=true;
+const _MONTHS_SHORT={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+function parseEvtDate(d){if(!d)return null;if(d.includes('-')&&d.length>=8)return new Date(d+'T00:00:00');const parts=d.trim().split(/\s+/);const yr=new Date().getFullYear();if(parts.length>=2){const m=_MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)];if(m!=null)return new Date(yr,m,parseInt(parts[1])||1)}return null;}
 let _lastLoadedProvince=null,_loadSeq=0;
 const PROVS=[{code:'BC',name:'British Columbia'},{code:'AB',name:'Alberta'},{code:'SK',name:'Saskatchewan'},{code:'MB',name:'Manitoba'},{code:'ON',name:'Ontario'},{code:'QC',name:'Quebec'},{code:'NB',name:'New Brunswick'},{code:'NS',name:'Nova Scotia'},{code:'PE',name:'Prince Edward Island'},{code:'NL',name:'Newfoundland and Labrador'},{code:'YT',name:'Yukon'},{code:'NT',name:'Northwest Territories'},{code:'NU',name:'Nunavut'}];
 const NAME_TO_CODE={};PROVS.forEach(p=>{NAME_TO_CODE[p.name]=p.code;NAME_TO_CODE[p.code]=p.code});NAME_TO_CODE['Newfoundland']='NL';NAME_TO_CODE['PEI']='PE';
@@ -134,7 +136,7 @@ function confMeter(conf){if(conf==null)return'';const n=Math.round(conf*5);const
 function buildTimeline(p){const ann=p.announcement_date||p.firstTracked||'';const start=p.start_date||'';const end=p.completionDate||'';if(!ann&&!start&&!end)return'';const STATUS_COLORS={Proposed:'proposed','Under Review':'proposed',Approved:'approved','Under Construction':'construction','Partially Complete':'construction',Complete:'complete',Cancelled:'proposed','On Hold':'hold'};const now=new Date();const d=s=>{if(!s)return null;const dt=new Date(s+'T00:00:00');return isNaN(dt)?null:dt};const dAnn=d(ann);const dStart=d(start);const dEnd=d(end);const earliest=dAnn||dStart||now;const latest=dEnd||new Date(now.getTime()+365*86400000);const span=Math.max(latest-earliest,86400000);const pct=dt=>dt?Math.max(0,Math.min(100,((dt-earliest)/span)*100)):null;const nowPct=pct(now);let bar='<div style="margin-bottom:10px"><div class="proj-timeline">';const segColor=STATUS_COLORS[p.status]||'proposed';bar+='<div class="proj-timeline-seg '+segColor+'" style="width:100%"></div>';if(nowPct!==null&&nowPct>0&&nowPct<100)bar+='<div class="proj-timeline-marker" style="left:'+nowPct+'%"></div>';bar+='</div><div class="proj-timeline-dates">';bar+='<span>'+(ann?fmtDateShort(ann):(p.firstTracked?'Disc. '+fmtDateShort(p.firstTracked):''))+'</span>';if(start)bar+='<span>Start: '+fmtDateShort(start)+'</span>';if(end)bar+='<span>End: '+fmtDateShort(end)+'</span>';bar+='</div></div>';return bar}
 function fmtDateShort(s){if(!s)return'';const parts=s.split('-');if(parts.length<2)return s;const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return months[parseInt(parts[1])-1]+' '+parts[0]}
 function srcLink(url,title){if(!url)return'';return`<a href="${url}" target="_blank" rel="noopener noreferrer" title="${title||'Source'}">\u2197</a>`}
-function fmtNum(n,d){if(typeof n!=='number'||isNaN(n))return String(n);const dec=d!=null?d:(Math.abs(n)>=100?0:Math.abs(n)>=1?1:2);return n.toLocaleString('en-CA',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function fmtNumeric(n,d){if(typeof n!=='number'||isNaN(n))return String(n);const dec=d!=null?d:(Math.abs(n)>=100?0:Math.abs(n)>=1?1:2);return n.toLocaleString('en-CA',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
 function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#556B7A">N/D</span>';return v}
 function parseNumericValue(v){if(!v)return 0;const s=String(v).toUpperCase();const m=s.match(/([\d.]+)\s*(B|M|K)?/);if(!m)return 0;let n=parseFloat(m[1])||0;if(m[2]==='B')n*=1e9;else if(m[2]==='M')n*=1e6;else if(m[2]==='K')n*=1e3;return n}
 function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:#556B7A;font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:#556B7A;font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:#556B7A">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:#556B7A;font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:#556B7A;font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
@@ -382,7 +384,6 @@ async function renderTLDR(){
     $('execSummary').innerHTML=`<div class="fade-in" style="text-align:center;padding:24px 0"><div style="color:#475569;font-size:var(--text-sm)">Weekly briefing pending. ${indicators.length} indicators loaded from primary sources.</div></div>`;
   }
   await renderEditorialFlow();
-  renderMicroscopeHistory();
   $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
   collapseEmpty();
 }
@@ -497,7 +498,7 @@ async function renderEditorialFlow(){
       <div class="ed-wc-title">Economic Sentiment</div>
       <div class="ed-wc-sub">Top themes from news articles and public discussion</div>
       <div id="tldrWordCloudSvg" style="width:100%"></div>
-      <div class="ec-source">Pipeline: 300+ RSS feeds, Google News, Reddit, Google Trends</div>
+      <div class="ec-source">Pipeline: 324+ RSS feeds, Google News RSS, StatCan WDS</div>
     </div>
     ${pulseHtml}
     <div class="ed-clear"></div>
@@ -1057,7 +1058,7 @@ function buildAgentInsightStrip(prefix,chartSpec){
   html+='<div id="'+prefix+'AgentInsightSub" style="font-family:Outfit;font-size:11px;color:#475569;margin-bottom:4px">'+subtitle+'</div>';
   if(reasoning){html+='<div style="font-family:Outfit;font-size:10px;color:#94A3B8;font-style:italic;margin-bottom:16px">'+reasoning+'</div>'}
   html+='<div style="height:300px;position:relative;padding:12px 16px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,49,83,0.08)"><canvas id="'+id+'"></canvas></div>';
-  html+='<div style="margin-top:12px;padding-top:8px;border-top:1px solid rgba(0,49,83,0.08);font-family:Outfit;font-size:9px;color:#94A3B8">Source: Signal Dispatch pipeline data \u2022 Chart selected by analysis agent</div>';
+  html+='<div style="margin-top:12px;padding-top:8px;border-top:1px solid rgba(0,49,83,0.08);font-family:Outfit;font-size:9px;color:#94A3B8">Source: The Lagging Indicator</div>';
   html+='</div>';
   html+='</div>';
   return html;
@@ -1751,7 +1752,6 @@ async function renderCanadaSub(){
     }
     pp.innerHTML=projHtml;
   }
-  renderCostMonitor();
 }
 async function renderAllGlobalPlayers(){
   const gv=D?D.globalVectors||D.global_vectors||{}:{};
@@ -1908,7 +1908,7 @@ async function renderWovenCharts(ctx,projPool){
 function renderIndicatorDropdown(inds,title,idSuffix){
   const id='indDropdown'+(idSuffix||'');const filtId='indFilter'+(idSuffix||'');
   const n=inds.length;
-  let html='<div class="indicator-dropdown"><button class="indicator-dropdown-toggle" onclick="this.classList.toggle(\x27open\x27);this.nextElementSibling.classList.toggle(\x27open\x27)">'+title+' ('+n+') <span class="chevron">\u25be</span></button>';
+  let html='<div class="indicator-dropdown"><button class="indicator-dropdown-toggle" onclick="this.classList.toggle(\x27open\x27);this.nextElementSibling.classList.toggle(\x27open\x27)">'+title+' <span class="chevron">\u25be</span></button>';
   html+='<div class="indicator-dropdown-body" id="'+id+'"><input class="indicator-filter" id="'+filtId+'" placeholder="Filter indicators..." oninput="filterIndicators(\x27'+id+'\x27,\x27'+filtId+'\x27)">';
   const groups={};
   inds.forEach(ind=>{
@@ -2908,7 +2908,7 @@ function renderProjectTable(){
     const pType=p.project_type||'greenfield';
     const isUnconf=!meetsThreshold(p);
     html+='<tr onclick="window.toggleProjectRow(\''+rowId+'\')"'+(isUnconf&&!_confirmedOnly?' class="unconfirmed-row"':'')+'>';
-    html+='<td class="col-value">'+fmtCurrency(p.value,p)+(isUnconf?'<span class="unconfirmed-badge">unconfirmed</span>':'')+'</td>';
+    html+='<td class="col-value">'+fmtCurrency(p.value,p)+(isUnconf?' <span class="unconfirmed-badge">unconfirmed</span>':'')+'</td>';
     html+='<td class="col-name">'+((p.name||'').substring(0,50))+'</td>';
     html+='<td>'+typeBadge(pType)+'</td>';
     html+='<td class="col-province">'+(provCode||((p.province||'').substring(0,3)))+(p.provinces_additional?'<span style="color:#556B7A;font-size:10px"> +'+p.provinces_additional.split(',').length+'</span>':'')+'</td>';
@@ -3135,16 +3135,7 @@ function renderCalendarEvents(){
   const events=_calEvents;
   const now=new Date();
   const year=now.getFullYear(),month=now.getMonth(),today=now.getDate();
-  const MONTHS_SHORT={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
-
-  // Helper to parse both ISO "2026-03-14" and short "Mar 14" dates
-  function parseEvtDate(d){
-    if(!d)return null;
-    if(d.includes('-')&&d.length>=8)return new Date(d+'T00:00:00');
-    const parts=d.trim().split(/\s+/);
-    if(parts.length>=2){const m=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)];if(m!=null)return new Date(year,m,parseInt(parts[1])||1)}
-    return null;
-  }
+  const MONTHS_SHORT=_MONTHS_SHORT;
 
   // This week events
   const weekFromNow=new Date(now.getTime()+7*864e5);
@@ -3209,46 +3200,6 @@ function renderCalendarEvents(){
 
 
 /* ====== PHASE 1: COST MONITOR WIDGET ====== */
-async function renderCostMonitor(){
-  const el=$('costMonitor');if(!el)return;
-  try{
-    const ps=await fetchJSON('pipeline_status.json');
-    const tavilyUsed=ps.tavily?.used||0;
-    const tavilyMonth=ps.tavily?.month||'';
-    const claudeIn=ps.claude_tokens?.input||0;
-    const claudeOut=ps.claude_tokens?.output||0;
-    const claudeCost=((claudeIn/1e6)*3+(claudeOut/1e6)*15).toFixed(2);
-    const tavilyPct=Math.round((tavilyUsed/1000)*100);
-    el.innerHTML=`<details class="card fade-in" style="padding:14px 18px"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#475569;user-select:none">Cost Monitor <span style="font-weight:400;color:#556B7A;font-size:.75rem">(click to expand)</span></summary><div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:10px;font-size:var(--text-xs);color:#475569"><div><div style="margin-bottom:4px">Tavily Credits</div><div style="background:#e5e7eb;border-radius:4px;height:8px;width:120px"><div style="background:${tavilyPct>80?'var(--status-red)':'var(--status-green)'};height:100%;border-radius:4px;width:${Math.min(tavilyPct,100)}%"></div></div><div style="font-family:var(--font-mono);margin-top:2px">${tavilyUsed} / 1,000 (${tavilyMonth})</div></div><div><div style="margin-bottom:4px">Claude Sonnet (est.)</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">~$${claudeCost}</div><div style="font-family:var(--font-mono);margin-top:2px">${(claudeIn/1000).toFixed(0)}K in / ${(claudeOut/1000).toFixed(0)}K out tokens</div></div><div><div style="margin-bottom:4px">Annual Budget</div><div style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600">$55/yr</div></div></div></details>`;
-  }catch(e){
-    console.warn('Cost monitor:',e);
-    el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
-      '<div style="color:var(--status-red);font-size:var(--text-sm);margin-bottom:8px">Could not load cost data</div>'+
-      '<button onclick="renderCostMonitor()" style="padding:6px 16px;border:1px solid var(--border-light);border-radius:var(--radius-sm);background:var(--bg-subtle);color:var(--text-primary);cursor:pointer;font-size:var(--text-xs)">Retry</button></div>';
-  }
-}
-
-/* ====== PHASE 1: MICROSCOPE HISTORY ====== */
-async function renderMicroscopeHistory(){
-  const el=$('microscopeHistory');if(!el)return;
-  try{
-    const data=await fetchJSON('microscope.json');
-    const history=(data&&(data.topics||data.history))||[];
-    if(!history.length){el.innerHTML='';return}
-    let items='';
-    history.slice(0,12).forEach(h=>{
-      items+=`<div style="padding:8px 0;border-bottom:1px solid var(--border-light)"><div style="display:flex;justify-content:space-between"><span style="font-weight:600;font-size:var(--text-sm)">${h.topic||h.title||''}</span><span style="font-size:var(--text-xs);color:#556B7A">${h.date||h.week||''}</span></div>${h.description?'<div style="font-size:var(--text-xs);color:#475569;margin-top:2px">'+h.description+'</div>':''}</div>`;
-    });
-    el.innerHTML=`<details class="card fade-in"><summary style="cursor:pointer;font-size:var(--text-sm);font-weight:600;color:#475569;padding:14px 18px;user-select:none">Under the Microscope Archives (<span style="font-family:var(--font-mono)">${history.length}</span> weeks)</summary><div style="padding:0 18px 14px">${items}</div></details>`;
-  }catch(e){
-    console.warn('Microscope history:',e);
-    el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
-      '<div style="color:var(--status-red);font-size:var(--text-sm);margin-bottom:8px">Could not load microscope history</div>'+
-      '<button onclick="renderMicroscopeHistory()" style="padding:6px 16px;border:1px solid var(--border-light);border-radius:var(--radius-sm);background:var(--bg-subtle);color:var(--text-primary);cursor:pointer;font-size:var(--text-xs)">Retry</button></div>';
-  }
-}
-
-
 /* ====== PHASE 2: POLICY SECTION ====== */
 // Shared policy data cache — loaded once, reused by national + province renderers
 let _policyCache=null;

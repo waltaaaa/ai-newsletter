@@ -136,6 +136,22 @@
       "obsDate": "2026-03-01",
       "source": "Conference Board of Canada",
       "context": "Consumer confidence declined to 47.50 from 49.30 in January. Bloomberg/Nanos index showed a three-week slide into late March."
+    },
+    "participation": {
+      "prev": "65.0%",
+      "change": "-0.1pp",
+      "period": "Feb 2026",
+      "obsDate": "2026-03-13",
+      "source": "Statistics Canada",
+      "context": "Participation rate at 64.9% in February 2026, down 0.1 percentage points from January."
+    },
+    "employmentChange": {
+      "prev": "+76,000",
+      "change": "-160,000",
+      "period": "Feb 2026",
+      "obsDate": "2026-03-13",
+      "source": "Statistics Canada",
+      "context": "Employment declined 84,000 in February after gaining 76,000 in January. Full-time employment fell 108,000."
     }
   },
   "indicatorSources": {
@@ -4215,9 +4231,9 @@
     }
   ],
   "discovery_stats": {
-    "total_projects": 7358,
+    "total_projects": 7351,
     "new_this_week": 0,
-    "total_value_billions": 2180.9,
+    "total_value_billions": 2239.9,
     "status_counts": {
       "Under Review": 2591,
       "Proposed": 2528,
@@ -4249,9 +4265,9 @@
       "other": 2691
     }
   },
-  "project_count": 7358,
+  "project_count": 7351,
   "new_projects": 0,
-  "pipeline_value": "$2,180.9B",
+  "pipeline_value": "$2,239.9B",
   "_all_verified_sources": [
     {
       "id": 1,
