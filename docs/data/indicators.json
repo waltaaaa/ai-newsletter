@@ -694,39 +694,51 @@
       "validation_status": "under_review"
     },
     {
-      "id": 59868,
-      "indicator_name": "aluminum",
-      "category": "Markets",
-      "province": "National",
-      "value": 3143.5,
-      "period": "2026-03-25",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "lb",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
       "id": 68162,
       "indicator_name": "aluminum",
       "category": "",
       "province": "national",
-      "value": 1927.3,
+      "value": 3361.5,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 3336.25,
+      "change": "+0.8%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "lb",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/t",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68517,
+      "indicator_name": "aluminum",
+      "category": "",
+      "province": "National",
+      "value": 3361.5,
+      "period": "2026-03-31",
+      "previous_value": 3336.25,
+      "change": "+0.8%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/t",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -784,39 +796,51 @@
       "validation_status": "passed"
     },
     {
-      "id": 58250,
-      "indicator_name": "brent",
-      "category": "Markets",
-      "province": "National",
-      "value": 95.23,
-      "period": "2026-03-25",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "bbl",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
       "id": 68154,
       "indicator_name": "brent",
       "category": "",
       "province": "national",
-      "value": 106.17,
+      "value": 105.55,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 112.78,
+      "change": "-6.4%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "bbl",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/bbl",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68507,
+      "indicator_name": "brent",
+      "category": "",
+      "province": "National",
+      "value": 105.55,
+      "period": "2026-03-31",
+      "previous_value": 112.78,
+      "change": "-6.4%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/bbl",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -1054,39 +1078,51 @@
       "validation_status": "passed"
     },
     {
-      "id": 55042,
+      "id": 68518,
       "indicator_name": "comm_aluminum",
-      "category": "Markets",
+      "category": "",
       "province": "National",
-      "value": 3143.5,
-      "period": "2026-03-25",
-      "previous_value": null,
-      "change": null,
+      "value": 3361.5,
+      "period": "2026-03-31",
+      "previous_value": 3336.25,
+      "change": "+0.8%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "t",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/t",
       "frequency": "daily",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
-      "id": 55028,
+      "id": 68509,
       "indicator_name": "comm_brent",
-      "category": "Markets",
+      "category": "",
       "province": "National",
-      "value": 95.23,
-      "period": "2026-03-25",
-      "previous_value": null,
-      "change": null,
+      "value": 105.55,
+      "period": "2026-03-31",
+      "previous_value": 112.78,
+      "change": "-6.4%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "bbl",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/bbl",
       "frequency": "daily",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -1144,21 +1180,27 @@
       "validation_status": "passed"
     },
     {
-      "id": 55040,
+      "id": 68500,
       "indicator_name": "comm_copper",
-      "category": "Markets",
+      "category": "",
       "province": "National",
-      "value": 5.7335,
-      "period": "2026-03-16",
-      "previous_value": null,
-      "change": null,
+      "value": 5.65,
+      "period": "2026-03-31",
+      "previous_value": 5.48,
+      "change": "+3.1%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "lb",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/lb",
       "frequency": "daily",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -1198,21 +1240,27 @@
       "validation_status": "passed"
     },
     {
-      "id": 55031,
+      "id": 68490,
       "indicator_name": "comm_gold",
-      "category": "Markets",
+      "category": "",
       "province": "National",
-      "value": 5062.0,
-      "period": "2026-03-15",
-      "previous_value": null,
-      "change": null,
+      "value": 4718.1,
+      "period": "2026-03-31",
+      "previous_value": 4526.0,
+      "change": "+4.2%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "troy oz",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
       "frequency": "daily",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -1234,57 +1282,75 @@
       "validation_status": "passed"
     },
     {
-      "id": 55038,
+      "id": 68513,
       "indicator_name": "comm_palladium",
-      "category": "Markets",
+      "category": "",
       "province": "National",
-      "value": 1570.0,
-      "period": "2026-03-16",
-      "previous_value": null,
-      "change": null,
+      "value": 1488.0,
+      "period": "2026-03-31",
+      "previous_value": 1418.0,
+      "change": "+4.9%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "troy oz",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
       "frequency": "daily",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
-      "id": 55036,
+      "id": 68497,
       "indicator_name": "comm_platinum",
-      "category": "Markets",
+      "category": "",
       "province": "National",
-      "value": 1950.0,
-      "period": "2026-03-25",
-      "previous_value": null,
-      "change": null,
+      "value": 1969.9,
+      "period": "2026-03-31",
+      "previous_value": 1885.6,
+      "change": "+4.5%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "troy oz",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
       "frequency": "daily",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
-      "id": 55033,
+      "id": 68494,
       "indicator_name": "comm_silver",
-      "category": "Markets",
+      "category": "",
       "province": "National",
-      "value": 73.33,
-      "period": "2026-03-25",
-      "previous_value": null,
-      "change": null,
+      "value": 74.89,
+      "period": "2026-03-31",
+      "previous_value": 70.32,
+      "change": "+6.5%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "troy oz",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
       "frequency": "daily",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -1378,21 +1444,27 @@
       "validation_status": "passed"
     },
     {
-      "id": 55025,
+      "id": 68504,
       "indicator_name": "comm_wti",
-      "category": "Markets",
+      "category": "",
       "province": "National",
-      "value": 87.84,
-      "period": "2026-03-25",
-      "previous_value": null,
-      "change": null,
+      "value": 102.77,
+      "period": "2026-03-31",
+      "previous_value": 102.88,
+      "change": "-0.1%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "bbl",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/bbl",
       "frequency": "daily",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -1468,58 +1540,76 @@
       "validation_status": "passed"
     },
     {
-      "id": 10854,
-      "indicator_name": "copper",
-      "category": "",
-      "province": "global",
-      "value": 5.77,
-      "period": "2026-03-03",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-10T00:52:01Z",
-      "unit": "USD",
-      "frequency": "weekly",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
-      "id": 59608,
-      "indicator_name": "copper",
-      "category": "Markets",
-      "province": "National",
-      "value": 5.34,
-      "period": "2026-03-20",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "USD",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
       "id": 68161,
       "indicator_name": "copper",
       "category": "",
       "province": "national",
-      "value": 315.0,
+      "value": 5.65,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 5.48,
+      "change": "+3.1%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "lb",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/lb",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
-      "validation_status": "under_review"
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68501,
+      "indicator_name": "copper",
+      "category": "",
+      "province": "global",
+      "value": 5.65,
+      "period": "2026-03-31",
+      "previous_value": 5.48,
+      "change": "+3.1%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/lb",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68503,
+      "indicator_name": "copper",
+      "category": "",
+      "province": "National",
+      "value": 5.65,
+      "period": "2026-03-31",
+      "previous_value": 5.48,
+      "change": "+3.1%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/lb",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
     },
     {
       "id": 53918,
@@ -4771,58 +4861,76 @@
       "validation_status": "passed"
     },
     {
-      "id": 10865,
-      "indicator_name": "gold",
-      "category": "",
-      "province": "global",
-      "value": 5120.2,
-      "period": "2026-03-04",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-10T00:52:01Z",
-      "unit": "USD",
-      "frequency": "weekly",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
-      "id": 58653,
-      "indicator_name": "gold",
-      "category": "Markets",
-      "province": "National",
-      "value": 4569.0,
-      "period": "2026-03-30",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "USD/oz",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
       "id": 68157,
       "indicator_name": "gold",
       "category": "",
       "province": "national",
-      "value": 1445.0,
+      "value": 4718.1,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 4526.0,
+      "change": "+4.2%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "troy oz",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
-      "validation_status": "under_review"
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68491,
+      "indicator_name": "gold",
+      "category": "",
+      "province": "National",
+      "value": 4718.1,
+      "period": "2026-03-31",
+      "previous_value": 4526.0,
+      "change": "+4.2%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68492,
+      "indicator_name": "gold",
+      "category": "",
+      "province": "global",
+      "value": 4718.1,
+      "period": "2026-03-31",
+      "previous_value": 4526.0,
+      "change": "+4.2%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
     },
     {
       "id": 54383,
@@ -6832,57 +6940,75 @@
       "validation_status": "passed"
     },
     {
-      "id": 10859,
-      "indicator_name": "natural_gas",
-      "category": "",
-      "province": "global",
-      "value": 3.05,
-      "period": "2026-03-03",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-10T00:52:01Z",
-      "unit": "USD",
-      "frequency": "weekly",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
-      "id": 58425,
-      "indicator_name": "natural_gas",
-      "category": "Markets",
-      "province": "National",
-      "value": 3.1,
-      "period": "2026-03-20",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "USD",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
       "id": 68155,
       "indicator_name": "natural_gas",
       "category": "",
       "province": "national",
-      "value": 2.846,
+      "value": 2.87,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 2.89,
+      "change": "-0.7%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "MMBtu",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/MMBtu",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68510,
+      "indicator_name": "natural_gas",
+      "category": "",
+      "province": "global",
+      "value": 2.87,
+      "period": "2026-03-31",
+      "previous_value": 2.89,
+      "change": "-0.7%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/MMBtu",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68512,
+      "indicator_name": "natural_gas",
+      "category": "",
+      "province": "National",
+      "value": 2.87,
+      "period": "2026-03-31",
+      "previous_value": 2.89,
+      "change": "-0.7%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/MMBtu",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -7552,40 +7678,52 @@
       "validation_status": "passed"
     },
     {
-      "id": 59433,
-      "indicator_name": "palladium",
-      "category": "Markets",
-      "province": "National",
-      "value": 1411.2,
-      "period": "2026-03-24",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "USD",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
       "id": 68160,
       "indicator_name": "palladium",
       "category": "",
       "province": "national",
-      "value": 68.0,
+      "value": 1488.0,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 1418.0,
+      "change": "+4.9%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "troy oz",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
-      "validation_status": "under_review"
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68515,
+      "indicator_name": "palladium",
+      "category": "",
+      "province": "National",
+      "value": 1488.0,
+      "period": "2026-03-31",
+      "previous_value": 1418.0,
+      "change": "+4.9%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
     },
     {
       "id": 14724,
@@ -8164,40 +8302,52 @@
       "validation_status": "passed"
     },
     {
-      "id": 59173,
-      "indicator_name": "platinum",
-      "category": "Markets",
-      "province": "National",
-      "value": 1950.0,
-      "period": "2026-03-25",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "troy oz",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
       "id": 68159,
       "indicator_name": "platinum",
       "category": "",
       "province": "national",
-      "value": 6.0,
+      "value": 1969.9,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 1885.6,
+      "change": "+4.5%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "troy oz",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
-      "validation_status": "under_review"
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68499,
+      "indicator_name": "platinum",
+      "category": "",
+      "province": "National",
+      "value": 1969.9,
+      "period": "2026-03-31",
+      "previous_value": 1885.6,
+      "change": "+4.5%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
     },
     {
       "id": 38165,
@@ -9487,57 +9637,51 @@
       "validation_status": "under_review"
     },
     {
-      "id": 65688,
-      "indicator_name": "rice",
-      "category": "Markets",
-      "province": "National",
-      "value": 1099.0,
-      "period": "2026-03-24",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "USD",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
       "id": 68164,
       "indicator_name": "rice",
       "category": "",
       "province": "national",
-      "value": 11.28,
+      "value": 11.34,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 11.28,
+      "change": "+0.5%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "cwt",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "¢/cwt",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
-      "id": 58913,
-      "indicator_name": "silver",
-      "category": "Markets",
+      "id": 68519,
+      "indicator_name": "rice",
+      "category": "",
       "province": "National",
-      "value": 73.33,
-      "period": "2026-03-25",
-      "previous_value": null,
-      "change": null,
+      "value": 11.34,
+      "period": "2026-03-31",
+      "previous_value": 11.28,
+      "change": "+0.5%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "troy oz",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "¢/cwt",
       "frequency": "daily",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -9545,17 +9689,47 @@
       "indicator_name": "silver",
       "category": "",
       "province": "national",
-      "value": 72.68,
+      "value": 74.89,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 70.32,
+      "change": "+6.5%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "troy oz",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68496,
+      "indicator_name": "silver",
+      "category": "",
+      "province": "National",
+      "value": 74.89,
+      "period": "2026-03-31",
+      "previous_value": 70.32,
+      "change": "+6.5%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/oz",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -11008,39 +11182,51 @@
       "validation_status": "passed"
     },
     {
-      "id": 57994,
-      "indicator_name": "wti",
-      "category": "Markets",
-      "province": "National",
-      "value": 101.01,
-      "period": "2026-03-30",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T17:49:56Z",
-      "unit": "USD/bbl",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 1,
-      "metadata": {},
-      "validation_status": "passed"
-    },
-    {
       "id": 68153,
       "indicator_name": "wti",
       "category": "",
       "province": "national",
-      "value": 102.18,
+      "value": 102.77,
       "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
+      "previous_value": 102.88,
+      "change": "-0.1%",
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-31T11:58:42Z",
-      "unit": "bbl",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/bbl",
       "frequency": "daily",
       "description": "",
       "backfilled": 0,
-      "metadata": {},
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
+      "validation_status": "passed"
+    },
+    {
+      "id": 68506,
+      "indicator_name": "wti",
+      "category": "",
+      "province": "National",
+      "value": 102.77,
+      "period": "2026-03-31",
+      "previous_value": 102.88,
+      "change": "-0.1%",
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-04-01T02:21:32Z",
+      "unit": "$/bbl",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-03-31",
+          "retrieved_at": "2026-04-01T02:21:32Z"
+        }
+      },
       "validation_status": "passed"
     },
     {
@@ -23700,6 +23886,14 @@
     {
       "indicator_name": "aluminum",
       "province": "national",
+      "period": "2026-03-31",
+      "value": 3361.5,
+      "unit": "$/t",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "aluminum",
+      "province": "national",
       "period": "2021-04-01",
       "value": 2234.5,
       "unit": "USD",
@@ -26149,8 +26343,8 @@
       "indicator_name": "aluminum",
       "province": "national",
       "period": "2026-03-31",
-      "value": 1927.3,
-      "unit": "lb",
+      "value": 3361.5,
+      "unit": "$/t",
       "source": "Yahoo Finance"
     },
     {
@@ -33364,6 +33558,14 @@
     {
       "indicator_name": "brent",
       "province": "national",
+      "period": "2026-03-31",
+      "value": 105.55,
+      "unit": "$/bbl",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "brent",
+      "province": "national",
       "period": "2021-04-01",
       "value": 64.86,
       "unit": "USD",
@@ -35413,8 +35615,8 @@
       "indicator_name": "brent",
       "province": "national",
       "period": "2026-03-31",
-      "value": 106.17,
-      "unit": "bbl",
+      "value": 105.55,
+      "unit": "$/bbl",
       "source": "Yahoo Finance"
     },
     {
@@ -60626,6 +60828,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "comm_aluminum",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 3361.5,
+      "unit": "$/t",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "comm_brent",
       "province": "national",
       "period": "2026-03-15",
@@ -60647,6 +60857,14 @@
       "period": "2026-03-25",
       "value": 95.23,
       "unit": "bbl",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "comm_brent",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 105.55,
+      "unit": "$/bbl",
       "source": "Yahoo Finance"
     },
     {
@@ -60706,6 +60924,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "comm_copper",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 5.65,
+      "unit": "$/lb",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "comm_corn",
       "province": "national",
       "period": "2026-03-15",
@@ -60746,6 +60972,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "comm_gold",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 4718.1,
+      "unit": "$/oz",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "comm_natgas",
       "province": "national",
       "period": "2026-03-15",
@@ -60778,6 +61012,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "comm_palladium",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 1488.0,
+      "unit": "$/oz",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "comm_platinum",
       "province": "national",
       "period": "2026-03-15",
@@ -60802,6 +61044,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "comm_platinum",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 1969.9,
+      "unit": "$/oz",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "comm_silver",
       "province": "national",
       "period": "2026-03-15",
@@ -60815,6 +61065,14 @@
       "period": "2026-03-25",
       "value": 73.33,
       "unit": "troy oz",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "comm_silver",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 74.89,
+      "unit": "$/oz",
       "source": "Yahoo Finance"
     },
     {
@@ -60927,6 +61185,14 @@
       "period": "2026-03-25",
       "value": 87.84,
       "unit": "bbl",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "comm_wti",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 102.77,
+      "unit": "$/bbl",
       "source": "Yahoo Finance"
     },
     {
@@ -62815,6 +63081,14 @@
       "period": "2026-03-20",
       "value": 5.34,
       "unit": "USD",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "copper",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 5.65,
+      "unit": "$/lb",
       "source": "Yahoo Finance"
     },
     {
@@ -64799,6 +65073,14 @@
       "period": "2026-03-03",
       "value": 5.77,
       "unit": "USD",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "copper",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 5.65,
+      "unit": "$/lb",
       "source": "Yahoo Finance"
     },
     {
@@ -68829,8 +69111,8 @@
       "indicator_name": "copper",
       "province": "national",
       "period": "2026-03-31",
-      "value": 315.0,
-      "unit": "lb",
+      "value": 5.65,
+      "unit": "$/lb",
       "source": "Yahoo Finance"
     },
     {
@@ -197868,6 +198150,14 @@
     {
       "indicator_name": "gold",
       "province": "national",
+      "period": "2026-03-31",
+      "value": 4718.1,
+      "unit": "$/oz",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "gold",
+      "province": "national",
       "period": "2021-04-06",
       "value": 1741.5,
       "unit": "USD",
@@ -199847,6 +200137,14 @@
       "period": "2026-03-04",
       "value": 5120.2,
       "unit": "USD",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "gold",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 4718.1,
+      "unit": "$/oz",
       "source": "Yahoo Finance"
     },
     {
@@ -204277,8 +204575,8 @@
       "indicator_name": "gold",
       "province": "national",
       "period": "2026-03-31",
-      "value": 1445.0,
-      "unit": "troy oz",
+      "value": 4718.1,
+      "unit": "$/oz",
       "source": "Yahoo Finance"
     },
     {
@@ -228236,6 +228534,14 @@
     {
       "indicator_name": "natural_gas",
       "province": "national",
+      "period": "2026-03-31",
+      "value": 2.87,
+      "unit": "$/MMBtu",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "natural_gas",
+      "province": "national",
       "period": "2021-04-06",
       "value": 2.46,
       "unit": "USD",
@@ -230215,6 +230521,14 @@
       "period": "2026-03-03",
       "value": 3.05,
       "unit": "USD",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "natural_gas",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 2.87,
+      "unit": "$/MMBtu",
       "source": "Yahoo Finance"
     },
     {
@@ -234245,8 +234559,8 @@
       "indicator_name": "natural_gas",
       "province": "national",
       "period": "2026-03-31",
-      "value": 2.846,
-      "unit": "MMBtu",
+      "value": 2.87,
+      "unit": "$/MMBtu",
       "source": "Yahoo Finance"
     },
     {
@@ -256244,6 +256558,14 @@
     {
       "indicator_name": "palladium",
       "province": "national",
+      "period": "2026-03-31",
+      "value": 1488.0,
+      "unit": "$/oz",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "palladium",
+      "province": "national",
       "period": "2021-04-01",
       "value": 2653.4,
       "unit": "USD",
@@ -258693,8 +259015,8 @@
       "indicator_name": "palladium",
       "province": "national",
       "period": "2026-03-31",
-      "value": 68.0,
-      "unit": "troy oz",
+      "value": 1488.0,
+      "unit": "$/oz",
       "source": "Yahoo Finance"
     },
     {
@@ -266780,6 +267102,14 @@
     {
       "indicator_name": "platinum",
       "province": "national",
+      "period": "2026-03-31",
+      "value": 1969.9,
+      "unit": "$/oz",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "platinum",
+      "province": "national",
       "period": "2021-04-01",
       "value": 1206.2,
       "unit": "USD",
@@ -269229,8 +269559,8 @@
       "indicator_name": "platinum",
       "province": "national",
       "period": "2026-03-31",
-      "value": 6.0,
-      "unit": "troy oz",
+      "value": 1969.9,
+      "unit": "$/oz",
       "source": "Yahoo Finance"
     },
     {
@@ -283420,6 +283750,14 @@
     {
       "indicator_name": "rice",
       "province": "national",
+      "period": "2026-03-31",
+      "value": 11.34,
+      "unit": "¢/cwt",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "rice",
+      "province": "national",
       "period": "2021-04-01",
       "value": 1311.5,
       "unit": "USD",
@@ -285453,8 +285791,8 @@
       "indicator_name": "rice",
       "province": "national",
       "period": "2026-03-31",
-      "value": 11.28,
-      "unit": "cwt",
+      "value": 11.34,
+      "unit": "¢/cwt",
       "source": "Yahoo Finance"
     },
     {
@@ -287535,6 +287873,14 @@
       "period": "2026-03-25",
       "value": 73.33,
       "unit": "troy oz",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "silver",
+      "province": "national",
+      "period": "2026-03-31",
+      "value": 74.89,
+      "unit": "$/oz",
       "source": "Yahoo Finance"
     },
     {
@@ -289989,8 +290335,8 @@
       "indicator_name": "silver",
       "province": "national",
       "period": "2026-03-31",
-      "value": 72.68,
-      "unit": "troy oz",
+      "value": 74.89,
+      "unit": "$/oz",
       "source": "Yahoo Finance"
     },
     {
@@ -355932,6 +356278,14 @@
     {
       "indicator_name": "wti",
       "province": "national",
+      "period": "2026-03-31",
+      "value": 102.77,
+      "unit": "$/bbl",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "wti",
+      "province": "national",
       "period": "2021-04-01",
       "value": 61.45,
       "unit": "USD",
@@ -360365,8 +360719,8 @@
       "indicator_name": "wti",
       "province": "national",
       "period": "2026-03-31",
-      "value": 102.18,
-      "unit": "bbl",
+      "value": 102.77,
+      "unit": "$/bbl",
       "source": "Yahoo Finance"
     },
     {
@@ -367907,7 +368261,7 @@
     ]
   },
   "validation": {
-    "failed_count": 48,
+    "failed_count": 44,
     "failed_indicators": [
       {
         "indicator": "AB_cpi",
@@ -367960,10 +368314,6 @@
       {
         "indicator": "commercial_building_investment",
         "province": "National"
-      },
-      {
-        "indicator": "copper",
-        "province": "national"
       },
       {
         "indicator": "cpi",
@@ -368054,10 +368404,6 @@
         "province": "National"
       },
       {
-        "indicator": "gold",
-        "province": "national"
-      },
-      {
         "indicator": "industrial_building_investment",
         "province": "National"
       },
@@ -368088,14 +368434,6 @@
       {
         "indicator": "non_residential_building_investment",
         "province": "National"
-      },
-      {
-        "indicator": "palladium",
-        "province": "national"
-      },
-      {
-        "indicator": "platinum",
-        "province": "national"
       },
       {
         "indicator": "residential_building_investment",

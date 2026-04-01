@@ -1810,8 +1810,35 @@ async function renderAllGlobalPlayers(){
     const gThemes=extractAnalysisThemes(analysis,[]);
     html+=buildInsightStrip(v.key,gThemes);
 
+    // EU/UK dedicated charts from available timeseries
+    const _GLOBAL_CHARTS={
+      eu:{series:'eurusd',label:'EUR/USD Exchange Rate',unit:'',color:'#2563EB'},
+      uk:{series:'ftse100',label:'FTSE 100 Index',unit:'pts',color:'#DC2626'},
+    };
+    if(_GLOBAL_CHARTS[v.key]){
+      const gc=_GLOBAL_CHARTS[v.key];
+      html+='<div class="card" style="padding:16px;margin-top:16px"><div style="font-size:var(--text-sm);font-weight:700;color:#1a2744;margin-bottom:8px">'+gc.label+'</div><div style="height:200px;position:relative"><canvas id="globalChart_'+v.key+'"></canvas></div><div class="ec-source">Source: Yahoo Finance</div></div>';
+    }
+
     html+='</div></div>';
     panelEl.innerHTML=html;
+
+    // Render EU/UK dedicated charts
+    if(_GLOBAL_CHARTS[v.key]){
+      const gc=_GLOBAL_CHARTS[v.key];
+      try{
+        await _ensureChartData();
+        const ts=tsCache[gc.series]||[];
+        if(ts.length>=5){
+          const labels=ts.map(p=>p.date||p[0]||'');
+          const values=ts.map(p=>p.value!=null?p.value:(p[1]||0));
+          const canvas=document.getElementById('globalChart_'+v.key);
+          if(canvas){
+            new Chart(canvas,{type:'line',data:{labels,datasets:[{label:gc.label,data:values,borderColor:gc.color,backgroundColor:gc.color+'20',fill:true,tension:0.3,pointRadius:0,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{display:true,ticks:{maxTicksLimit:6,font:{size:10}}},y:{display:true,ticks:{font:{size:10}}}}}});
+          }
+        }
+      }catch(e){console.warn('Global chart '+v.key+':',e)}
+    }
 
     // Render insight charts
     await renderInsightCharts(v.key,gThemes,[],null,analysis);
