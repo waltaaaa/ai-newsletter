@@ -277,7 +277,7 @@ async function loadAll(){
     await renderTab('tldr');tabRendered.tldr=true;
   }catch(e){
     console.error('renderTLDR:',e);
-    $('execSummary').innerHTML='<div class="empty-state"><div class="empty-state-text">Error rendering: '+e.message+'</div></div>';
+    const tp=$('tldrPage');if(tp)tp.innerHTML='<div class="tldr-page"><div class="tldr-empty">Error rendering: '+e.message+'</div></div>';
   }
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
   $('navMeta').textContent=edStr||((indicators.length)?indicators.length+' indicators loaded':'Data loaded');
@@ -343,173 +343,295 @@ function leadImageHtml(sources,float){
   return `<img src="${img}" alt="" style="float:${side};max-width:280px;width:40%;border-radius:var(--radius-md);margin:${margin};object-fit:cover;max-height:200px" onerror="this.style.display='none'" loading="lazy">`;
 }
 
-/* ══ TL;DR TAB (Editorial Digest) ══ */
+/* ══ TL;DR TAB (Prussian Blue Redesign) ══ */
 let _editorialMode=false;
 async function renderTLDR(){
   _editorialMode=true;
-  const hasBriefing=D&&D.executive_summary;
-  if(hasBriefing){
-    let headline=(D.headline||'').trim();
-    if(!headline||/^\d|^[A-Z]{3}\s\d/.test(headline)){
-      const tmp=document.createElement('div');tmp.innerHTML=D.executive_summary||'';
-      const firstLi=tmp.querySelector('li');
-      const rawText=firstLi?firstLi.textContent.trim():(tmp.textContent||'').trim();
-      const firstSentence=(rawText.split(/[.!]\s/)[0]||'').replace(/\d+$/,'').trim();
-      if(firstSentence.length>90)headline=firstSentence.substring(0,87).replace(/\s\S*$/,'')+'...';
-      else headline=firstSentence;
-      if(!headline)headline='Weekly Summary';
-    }
-    // Meta stats
-    let metaHtml='';
-    const projCount=D.discovery_stats?D.discovery_stats.total_projects||'':D.project_count||'';
-    const newProj=D.discovery_stats?D.discovery_stats.new_this_week||'':D.new_projects||'';
-    const pipeVal=D.discovery_stats?D.discovery_stats.total_value_billions||'':D.pipeline_value||'';
-    if(projCount||newProj||pipeVal){
-      metaHtml='<div class="editorial-meta">';
-      if(projCount)metaHtml+='<div class="editorial-meta-item"><strong>'+projCount+'</strong>Projects Tracked</div>';
-      if(newProj)metaHtml+='<div class="editorial-meta-item"><strong>+'+newProj+'</strong>New This Week</div>';
-      if(pipeVal)metaHtml+='<div class="editorial-meta-item"><strong>$'+pipeVal+'B</strong>Pipeline Value</div>';
-      metaHtml+='</div>';
-    }
-    // Lead image as editorial float
-    const leadImg=findLeadImage(D.sources||[]);
-    const imgHtml=leadImg?`<img src="${leadImg}" alt="" class="editorial-lead-img" onerror="this.style.display='none'" loading="lazy">`:'';
-    $('execSummary').innerHTML=`<div class="fade-in">
-      <div class="editorial-eyebrow">Weekly Intelligence Briefing</div>
-      <div class="editorial-headline">${san(headline)}</div>
-      <hr class="editorial-accent">
-      ${metaHtml}
-    </div>`;
-  }else{
-    $('execSummary').innerHTML=`<div class="fade-in" style="text-align:center;padding:24px 0"><div style="color:#475569;font-size:var(--text-sm)">Weekly briefing pending. ${indicators.length} indicators loaded from primary sources.</div></div>`;
+  const page=$('tldrPage');
+  if(!page)return;
+
+  if(!D||!D.executive_summary){
+    page.innerHTML='<div class="tldr-page"><div class="tldr-empty">Weekly briefing pending. '+indicators.length+' indicators loaded from primary sources.</div></div>';
+    return;
   }
-  await renderEditorialFlow();
-  $('overviewSources').innerHTML=sourcesFooter((D&&D.sources)||[]);
-  collapseEmpty();
+
+  // Headline
+  let headline=(D.headline||'').trim();
+  if(!headline||/^\d|^[A-Z]{3}\s\d/.test(headline)){
+    const tmp=document.createElement('div');tmp.innerHTML=D.executive_summary||'';
+    const firstLi=tmp.querySelector('li');
+    const rawText=firstLi?firstLi.textContent.trim():(tmp.textContent||'').trim();
+    const firstSentence=(rawText.split(/[.!]\s/)[0]||'').replace(/\d+$/,'').trim();
+    headline=firstSentence.length>90?firstSentence.substring(0,87).replace(/\s\S*$/,'')+'...':firstSentence;
+    if(!headline)headline='Weekly Summary';
+  }
+
+  // Date
+  const weekOf=D.week_of||'';
+  let dateDisplay='';
+  if(weekOf){try{const dt=new Date(weekOf+'T00:00:00');dateDisplay=dt.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})+', 5:45 AM ET'}catch(e){dateDisplay=weekOf}}
+
+  // Key Indicators table
+  const kiHtml=_tldrBuildIndicatorTable();
+  // Markets table
+  const mkHtml=_tldrBuildMarketsTable();
+  // Briefing narrative
+  const briefingHtml=_tldrBuildBriefing();
+  // Policy section
+  const policyHtml=await _tldrBuildPolicy();
+  // Project pipeline
+  const projectsHtml=await _tldrBuildProjects();
+
+  page.innerHTML=`<div class="tldr-page fade-in">
+    <div class="tldr-headline-band">
+      <h2>${san(headline)}</h2>
+      <div class="tldr-headline-meta"><span>${dateDisplay}</span></div>
+    </div>
+
+    <details class="tldr-glance">
+      <summary>Numbers at a Glance</summary>
+      <div class="tldr-glance-body">
+        <div class="tldr-toggle-row">
+          <span class="tldr-glance-label">Canada \u2014 National</span>
+          <div class="tldr-toggle" id="tldrGlanceToggle">
+            <button class="active" data-view="indicators">Key Indicators</button>
+            <button data-view="markets">Markets</button>
+          </div>
+        </div>
+        <div id="tldrIndicatorsView">${kiHtml}</div>
+        <div id="tldrMarketsView" style="display:none">${mkHtml}</div>
+      </div>
+    </details>
+
+    ${briefingHtml}
+    ${policyHtml}
+    ${projectsHtml}
+  </div>`;
+
+  // Wire up toggle
+  const tog=$('tldrGlanceToggle');
+  if(tog){tog.querySelectorAll('button').forEach(btn=>{btn.addEventListener('click',()=>{
+    tog.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const v=btn.dataset.view;
+    $('tldrIndicatorsView').style.display=v==='indicators'?'':'none';
+    $('tldrMarketsView').style.display=v==='markets'?'':'none';
+  })})}
 }
 function bulletsToParas(html){
-  // Convert <ul><li>...</li></ul> bullet lists into <p> paragraphs for narrative flow
-  // Also handles content that's already <p> paragraphs (passes through unchanged)
   if(!html)return'';
-  return html
-    .replace(/<ul[^>]*>/gi,'')
-    .replace(/<\/ul>/gi,'')
-    .replace(/<li>/gi,'<p>')
-    .replace(/<\/li>/gi,'</p>');
+  return html.replace(/<ul[^>]*>/gi,'').replace(/<\/ul>/gi,'').replace(/<li>/gi,'<p>').replace(/<\/li>/gi,'</p>');
 }
-async function renderEditorialFlow(){
-  const flow=$('editorialFlow');if(!flow){console.error('editorialFlow element not found');return}
-  if(!D){flow.innerHTML='<div style="padding:24px;color:#475569;font-size:var(--text-sm);text-align:center">Awaiting pipeline data.</div>';return}
+
+/* ── TL;DR: Key Indicators table ── */
+function _tldrBuildIndicatorTable(){
+  const ki=D.key_indicators||[];
+  const meta=D.indicatorMeta||{};
+  const metaKeys=['bocRate','realGdp','cpi','unemployment','housingStarts','tradeBalance','retailSales','consumerConfidence'];
+  const labelMap={'BOC RATE':'bocRate','REAL GDP':'realGdp','CPI':'cpi','UNEMPLOYMENT':'unemployment',
+    'HOUSING STARTS':'housingStarts','TRADE BALANCE':'tradeBalance','RETAIL SALES':'retailSales',
+    'CONSUMER CONFIDENCE':'consumerConfidence','PARTICIPATION':'participation','EMPLOYMENT CHANGE':'employmentChange',
+    'WAGE GROWTH':'wageGrowth','PARTICIPATION RATE':'participation','EMPLOYMENT':'employmentChange'};
+  const freqMap={'bocRate':'8x/year','realGdp':'Monthly','cpi':'Monthly','unemployment':'Monthly',
+    'housingStarts':'Monthly','tradeBalance':'Monthly','retailSales':'Monthly','consumerConfidence':'Monthly',
+    'participation':'Monthly','employmentChange':'Monthly','wageGrowth':'Monthly'};
+  if(!ki.length)return'<div class="tldr-empty">Indicator data pending.</div>';
+  let rows='';
+  ki.forEach(ind=>{
+    const key=labelMap[(ind.label||'').toUpperCase()]||'';
+    const m=meta[key]||{};
+    const freq=freqMap[key]||'';
+    const chgText=ind.change||m.change||'';
+    let cls='unch';
+    if(/^\+|▲|\bup\b|\bgain\b|\brose\b|\bincreas/i.test(chgText))cls='up';
+    else if(/^-|▼|\bdown\b|\bfell\b|\bdeclin|\bdrop/i.test(chgText))cls='down';
+    else if(/held|unchanged|flat|0bp/i.test(chgText))cls='unch';
+    const arrow=cls==='up'?'\u25B2 ':cls==='down'?'\u25BC ':'';
+    const src=m.source||(D.indicatorSources&&D.indicatorSources[key])||'';
+    rows+=`<tr>
+      <td class="ind-t-name">${san(ind.label||'')}${freq?' <span class="tldr-freq-tag">'+freq+'</span>':''}</td>
+      <td class="ind-t-val">${san(ind.value||'')}</td>
+      <td class="ind-t-chg ${cls}">${arrow}${san(chgText)}</td>
+      <td class="ind-t-ref">${san(ind.period||m.period||'')}</td>
+      <td class="ind-t-next">\u2014</td>
+      <td class="ind-t-src">${san(src)}</td>
+    </tr>`;
+  });
+  return`<table class="tldr-ind-table"><thead><tr>
+    <th>Indicator</th><th class="r">Value</th><th class="r">Change (from prior)</th>
+    <th>Reference Period</th><th class="r">Next Release</th><th class="r">Source</th>
+  </tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+/* ── TL;DR: Markets table ── */
+function _tldrBuildMarketsTable(){
+  const comms=D.commodities||[];
+  const fm=D.financialMarkets||D.financial_markets||{};
+  let items=[];
+  // Add commodities
+  comms.forEach(c=>{
+    items.push({name:c.name||c.symbol||'',value:c.price||c.value||'',change:c.change||'',source:c.source||'yfinance'});
+  });
+  // Add FX if available
+  if(fm.fx&&fm.fx.length){fm.fx.forEach(f=>{items.push({name:f.name||'',value:f.value||'',change:f.change||'',source:'yfinance'})})}
+  // Add indices
+  if(fm.indices&&fm.indices.length){fm.indices.forEach(idx=>{items.push({name:idx.name||'',value:idx.value||'',change:idx.change||'',source:'yfinance'})})}
+  if(!items.length)return'<div class="tldr-empty">Markets data pending.</div>';
+  let rows='';
+  items.forEach(it=>{
+    const chg=it.change||'';
+    let cls='unch';
+    if(/^\+|▲|\bup\b|\bgain/i.test(chg)||(/^[\d.]/.test(chg)&&!chg.startsWith('-')&&!chg.startsWith('0')))cls='up';
+    if(/^-|▼|\bdown\b|\bfell\b|\bdrop/i.test(chg))cls='down';
+    if(!chg||/flat|unchanged|0\.0/i.test(chg))cls='unch';
+    const arrow=cls==='up'?'\u25B2 ':cls==='down'?'\u25BC ':'';
+    rows+=`<tr>
+      <td class="ind-t-name">${san(it.name)} <span class="tldr-freq-tag">Daily</span></td>
+      <td class="ind-t-val">${san(String(it.value))}</td>
+      <td class="ind-t-chg ${cls}">${arrow}${san(chg)}</td>
+      <td class="ind-t-ref">\u2014</td>
+      <td class="ind-t-next">\u2014</td>
+      <td class="ind-t-src">${san(it.source)}</td>
+    </tr>`;
+  });
+  return`<table class="tldr-ind-table"><thead><tr>
+    <th>Indicator</th><th class="r">Value</th><th class="r">Change</th>
+    <th>Reference Period</th><th class="r">Next Release</th><th class="r">Source</th>
+  </tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+/* ── TL;DR: Weekly Briefing narrative ── */
+function _tldrBuildBriefing(){
+  const raw=D.executive_summary||'';
+  const sources=D.sources||[];
+  let html=bulletsToParas(san(linkFootnotes(raw,sources)));
+  // Add lead-sentence styling to first sentence of each paragraph
+  html=html.replace(/<p>([^<]{20,}?[.!?])\s/g,(m,first)=>'<p><span class="tldr-lead-sentence">'+first+'</span> ');
+  // Callout boxes from cross-reference data
+  let calloutHtml='';
+  const stats=D.discovery_stats||{};
+  if(stats.total_projects){
+    calloutHtml=`<div class="tldr-callout">Pipeline snapshot: ${(stats.total_projects||0).toLocaleString()} projects tracked across Canada (${D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B'} total pipeline value). ${stats.new_this_week||0} new projects discovered this week. ${stats.status_counts?Object.entries(stats.status_counts).map(([k,v])=>v.toLocaleString()+' '+k.toLowerCase()).join(', '):''}</div>`;
+  }
+  // Sources
+  let srcHtml='';
+  if(sources.length){
+    srcHtml=`<details class="tldr-sources"><summary>Sources (${sources.length})</summary><ol>`;
+    sources.forEach(s=>{
+      const url=s.url||s.archive_url||'';
+      const title=san(s.title||'Source');
+      srcHtml+=url?`<li><a href="${url}" target="_blank" rel="noopener">${title}</a></li>`:`<li>${title}</li>`;
+    });
+    srcHtml+='</ol></details>';
+  }
+  return`<div class="tldr-section">
+    <div class="tldr-section-header">
+      <div class="tldr-section-accent"></div>
+      <h3>Weekly Briefing</h3>
+    </div>
+    <div class="tldr-narrative">${html}</div>
+    ${calloutHtml}
+    ${srcHtml}
+  </div>`;
+}
+
+/* ── TL;DR: Policy Developments ── */
+async function _tldrBuildPolicy(){
+  let policyItems=[];
   try{
-  // Executive summary — convert bullets to paragraphs
-  const execHtml=bulletsToParas(san(linkFootnotes((D.executive_summary)||'',((D.sources)||[]))));
-
-  // Unsplash or lead image
-  const imgUrl=D.unsplash_image_url||findLeadImage(D.sources||[]);
-  const imgHtml=imgUrl?`<img src="${san(imgUrl)}" alt="" class="ed-unsplash-img" onerror="this.style.display='none'" loading="lazy">`:'';
-
-  // Consumer pulse
-  let pulseHtml='';
-  if(D.consumer_pulse){
-    pulseHtml=bulletsToParas(san(D.consumer_pulse));
+    const raw=await fetchJSON('policy.json');
+    const weeks=raw&&raw.weeks?raw.weeks:[];
+    if(weeks.length&&weeks[0].items)policyItems=weeks[0].items;
+  }catch(e){}
+  if(!policyItems.length){
+    return`<div class="tldr-section">
+      <div class="tldr-section-header">
+        <div class="tldr-section-accent"></div>
+        <h3>Major Policy Developments</h3>
+      </div>
+      <div class="tldr-empty">No policy items tracked this week.</div>
+    </div>`;
   }
+  let itemsHtml='';
+  policyItems.forEach(p=>{
+    const title=san(p.title||p.name||'');
+    const body=san(p.description||p.summary||p.body||'');
+    const url=p.url||p.source_url||'';
+    const linkHtml=url?` <a class="tldr-policy-item-link" href="${url}" target="_blank">View source \u2192</a>`:'';
+    itemsHtml+=`<details class="tldr-policy-item" open>
+      <summary><span class="tldr-policy-item-title">${title}</span></summary>
+      <div class="tldr-policy-item-body">${body}${linkHtml}</div>
+    </details>`;
+  });
+  return`<div class="tldr-section">
+    <div class="tldr-section-header">
+      <div class="tldr-section-accent"></div>
+      <h3>Major Policy Developments</h3>
+      <span class="tldr-section-sub">${policyItems.length} items</span>
+    </div>
+    <div class="tldr-inner-card tldr-policy-items">${itemsHtml}</div>
+  </div>`;
+}
 
-  // Industry summary
-  let industryHtml='';
-  if(D.industry_executive_summary){
-    industryHtml=bulletsToParas(san(D.industry_executive_summary));
-  }
-
-  // Word cloud topics — fall back to extracting from briefing text
-  function extractTopicsFromText(){
-    const stops=new Set(['the','and','for','that','this','with','from','are','was','were','has','have','been','will','but','not','all','can','had','her','his','one','our','out','its','also','than','then','them','they','into','over','such','some','more','most','very','just','about','would','could','should','which','their','other','after','these','being','both','between','each','during','before','while','where','there','when','what','does','only','under','first','last','those','still','down','through','another','same','said','many','since','well','make','like','back','much','made','even','upon','year','years','new','per','may','two','now']);
-    const src=[D.executive_summary,D.consumer_pulse,D.industry_executive_summary,D.market_commentary].filter(Boolean).join(' ');
-    if(!src)return[];
-    const words=src.replace(/<[^>]+>/g,' ').replace(/[^a-zA-Z\s-]/g,' ').toLowerCase().split(/\s+/).filter(w=>w.length>3&&!stops.has(w));
-    const freq={};words.forEach(w=>{freq[w]=(freq[w]||0)+1});
-    return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,35).map(([word,count])=>({topic:word,frequency:count}));
-  }
-  const wcTopics=(D.word_cloud_topics&&D.word_cloud_topics.length)?D.word_cloud_topics:extractTopicsFromText();
-
-
-  // Insert image after 3rd paragraph so it doesn't compete with the map float
-  let execWithImg=execHtml;
-  if(imgHtml){
-    const parts=execWithImg.split('</p>');
-    if(parts.length>3){
-      parts.splice(3,0,imgHtml);
-      execWithImg=parts.join('</p>');
-    }else{
-      execWithImg=imgHtml+execWithImg;
+/* ── TL;DR: Project Pipeline ── */
+async function _tldrBuildProjects(){
+  const stats=D.discovery_stats||{};
+  const newCount=stats.new_this_week||D.new_projects||0;
+  const statusCounts=stats.status_counts||{};
+  const totalProjects=stats.total_projects||D.project_count||0;
+  // Load recent projects
+  let projects=[];
+  try{
+    const all=await fetchJSON('projects_all.json');
+    if(Array.isArray(all)){
+      // Sort by firstTracked desc, take top projects with values
+      const valued=all.filter(p=>p.value&&p.value!=='Not disclosed')
+        .sort((a,b)=>(b.firstTracked||'').localeCompare(a.firstTracked||''));
+      projects=valued.slice(0,8);
+      if(projects.length<8){
+        const extra=all.filter(p=>!projects.includes(p))
+          .sort((a,b)=>(b.firstTracked||'').localeCompare(a.firstTracked||''));
+        projects=projects.concat(extra.slice(0,8-projects.length));
+      }
     }
+  }catch(e){}
+  // Status summary
+  const statusParts=Object.entries(statusCounts).map(([k,v])=>v.toLocaleString()+' '+k);
+  const subText=statusParts.length?statusParts.slice(0,3).join(' \u00B7 '):(totalProjects.toLocaleString()+' total');
+  // Narrative
+  const narrativeHtml=newCount>0
+    ?`<div class="tldr-update-narrative"><p>The pipeline added ${newCount} project${newCount!==1?'s':''} this week, bringing the total to ${totalProjects.toLocaleString()} tracked projects across Canada.</p></div>`
+    :`<div class="tldr-update-narrative"><p>The pipeline tracks ${totalProjects.toLocaleString()} capital projects across Canada with a combined value of ${D.pipeline_value||'$'+(stats.total_value_billions||0).toFixed(1)+'B'}.</p></div>`;
+  // Table
+  let tableHtml='';
+  if(projects.length){
+    let rows='';
+    projects.forEach(p=>{
+      const statusSlug=(p.status||'proposed').toLowerCase().replace(/\s+/g,'-');
+      rows+=`<tr>
+        <td class="proj-name">${san(p.name||'')}</td>
+        <td>${san(p.province||'')}</td>
+        <td>${_normSector(p.sector||'')}</td>
+        <td class="proj-val">${fmtCurrency(p.value,p)}</td>
+        <td><span class="tldr-status-badge ${statusSlug}">${san(p.status||'Proposed')}</span></td>
+      </tr>`;
+    });
+    tableHtml=`<div class="tldr-inner-card" style="padding:0;overflow:hidden">
+      <table class="tldr-projects-table"><thead><tr>
+        <th>Project</th><th>Province</th><th>Sector</th><th>Value</th><th>Status</th>
+      </tr></thead><tbody>${rows}</tbody></table>
+      <div class="tldr-view-all" onclick="switchTab('projects')">View all ${totalProjects.toLocaleString()} projects \u2192</div>
+    </div>`;
   }
-
-  // Generate short section subtitles — data-driven, no repetition
-  function _shortSub(html,maxLen){
-    if(!html)return '';
-    const plain=html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
-    // Extract the key clause — up to first comma or period, capped at maxLen
-    const clause=plain.match(/^[^,.!?]+/);
-    let sub=clause?clause[0].trim():plain.slice(0,maxLen);
-    if(sub.length>maxLen)sub=sub.slice(0,maxLen).replace(/\s\S*$/,'')+'...';
-    return sub;
-  }
-  const industrySub=_shortSub(D.industry_executive_summary||'',70);
-  const marketsSub=(()=>{
-    const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
-    const idx=(fm.indices||[])[0];
-    const wti=indicators.find(x=>x.indicator_name==='wti'||x.indicator_name==='wti_oil');
-    const cad=indicators.find(x=>x.indicator_name==='cadusd'||x.indicator_name==='cad_usd');
-    const parts=[];
-    if(idx)parts.push(`TSX ${idx.value||''}${idx.change?' ('+idx.change+')':''}`);
-    if(cad)parts.push(`CAD $${cad.value}`);
-    if(wti)parts.push(`WTI $${wti.value}`);
-    return parts.join(' · ')||'Markets and commodities';
-  })();
-  const pulseSub=_shortSub(D.consumer_pulse||'',70)||'Public sentiment and social signals';
-
-  // Assemble — 4 sections: Overview, Industry, Markets, Consumer Pulse
-  flow.innerHTML=`
-    <div id="tldrMapSection"></div>
-    ${execWithImg}
-    <div class="ed-clear"></div>
-
-    <div class="ed-section">
-      <div class="ed-section-title">Industry Overview</div>
-      <div class="ed-section-subtitle">${san(industrySub)}</div>
+  return`<div class="tldr-section">
+    <div class="tldr-section-header">
+      <div class="tldr-section-accent"></div>
+      <h3>Project Pipeline This Week</h3>
+      <span class="tldr-section-sub">${subText}</span>
     </div>
-    ${(()=>{
-      const chart='<div class="ed-industry-chart" id="tldrSectorCard"><div class="ec-title">Capital by Sector</div><div class="ec-sub">Tracked investment by sector</div><div style="height:240px;position:relative"><canvas id="tldrSectorChart"></canvas></div><div class="ec-source">Pipeline database</div></div>';
-      if(!industryHtml)return chart;
-      const parts=industryHtml.split('</p>');
-      if(parts.length<=3)return industryHtml+chart;
-      // Insert ~halfway through so chart bottom aligns with text end
-      const insertAt=Math.max(1,Math.floor(parts.length*0.57));
-      parts.splice(insertAt,0,chart);
-      return parts.join('</p>');
-    })()}
-    <div class="ed-clear"></div>
-
-    <div class="ed-section">
-      <div class="ed-section-title">Consumer Pulse</div>
-      <div class="ed-section-subtitle">${san(pulseSub)}</div>
-    </div>
-    <div id="tldrWordCloud" class="ed-wordcloud">
-      <div class="ed-wc-title">Economic Sentiment</div>
-      <div class="ed-wc-sub">Top themes from news articles and public discussion</div>
-      <div id="tldrWordCloudSvg" style="width:100%"></div>
-      <div class="ec-source">Pipeline: 324+ RSS feeds, Google News RSS, StatCan WDS</div>
-    </div>
-    ${pulseHtml}
-    <div class="ed-clear"></div>
-  `;
-  await renderInteractiveMap();
-  try{await _ensureChartData();_renderSectorChart('tldrSectorChart','tldr')}catch(e){console.warn('Sector chart:',e)}
-  if(wcTopics.length) renderTLDRWordCloud(wcTopics,'tldrWordCloudSvg');
-  }catch(e){
-    console.error('renderEditorialFlow error:',e);
-    flow.innerHTML='<div style="padding:24px;color:#991B1B;font-size:var(--text-sm)">Error rendering editorial flow: '+e.message+'</div>';
-  }
+    ${narrativeHtml}
+    ${tableHtml}
+  </div>`;
 }
 
 /* ── Provincial indicator lookup for map ── */
@@ -527,7 +649,6 @@ function getProvIndicators(){
     else return;
     if(prov.toLowerCase()==='national'||prov.toLowerCase()==='global')return;
     if(!data[prov])data[prov]={};
-    // Keep latest by period
     const existing=data[prov]['_'+name+'_period']||'';
     if(ind.period>=existing){
       data[prov][name]=ind.value;
@@ -537,7 +658,7 @@ function getProvIndicators(){
   return data;
 }
 
-/* ── Interactive Canada Map with GDP choropleth + hover tooltips ── */
+/* ── Interactive Canada Map (used by other tabs) ── */
 async function renderInteractiveMap(){
   const container=$('tldrMapSection');
   if(!container)return;
@@ -4051,8 +4172,7 @@ function addDataVintage(){
 
 /* ====== INITIALIZATION ====== */
 // Module scripts are deferred — DOM is already ready, run immediately
-if($('execSummary'))$('execSummary').innerHTML='<div style="padding:28px 0">'+skeleton(4)+'</div>';
-if($('editorialFlow'))$('editorialFlow').innerHTML=skeleton(6);
+if($('tldrPage'))$('tldrPage').innerHTML='<div class="tldr-page" style="padding:28px 40px">'+skeleton(6)+'</div>';
 if($('natAnalysisSection'))$('natAnalysisSection').innerHTML='<div class="card">'+skeleton(3)+'</div>';
 // Section-level skeleton placeholders while async sections load
 if($('costMonitor'))$('costMonitor').innerHTML='<div class="card">'+skeleton(2)+'</div>';
