@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-03-31T22:14:00.959424+00:00",
+  "exported_at": "2026-04-01T01:21:44.605885+00:00",
   "job_spikes": {
     "week_of": "2026-03-31",
     "spikes": []
@@ -9,7 +9,7 @@
     "contracts": []
   },
   "iaac": {
-    "total_tracked": 62,
-    "seen_this_week": 62
+    "total_tracked": 58,
+    "seen_this_week": 58
   }
 }

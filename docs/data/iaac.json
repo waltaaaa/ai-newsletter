@@ -1,20 +1,5 @@
 [
   {
-    "name": "Removal of Antennas 602 and 603, Newport Corner Naval Radio Station - CFB Halifax",
-    "status": "Under Review",
-    "province": "NS",
-    "sector": "Ports & Logistics",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
     "name": "Maliseet Road and Principale Street - Stormwater and Drainage Upgrades - Madawaska Maliseet First Nation",
     "status": "Under Review",
     "province": "NB",
@@ -170,21 +155,6 @@
     ]
   },
   {
-    "name": "Pulteney Point Tower Install",
-    "status": "Under Review",
-    "province": "BC",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
     "name": "Bath Institution - New 96 Bed Living Unit",
     "status": "Under Review",
     "province": "ON",
@@ -219,21 +189,6 @@
     "status": "Under Review",
     "province": "NS",
     "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Riprap and repairs at the Tourist Wharf and the Saint-Siméon Ferry Wharf",
-    "status": "Under Review",
-    "province": "QC",
-    "sector": "Ports & Logistics",
     "value": "—",
     "lastSeen": "2026-03-31",
     "status_history": [
@@ -774,22 +729,7 @@
     "status": "Under Review",
     "province": "ON",
     "sector": "Other",
-    "value": "C$8.9B",
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Laydown and Logistics areas",
-    "status": "Under Review",
-    "province": "ON",
-    "sector": "Ports & Logistics",
-    "value": "C$244.0B",
+    "value": "Not disclosed",
     "lastSeen": "2026-03-25",
     "status_history": [
       {
@@ -804,7 +744,7 @@
     "status": "Under Review",
     "province": "ON",
     "sector": "Transit & Rail",
-    "value": "C$14.4B",
+    "value": "Not disclosed",
     "lastSeen": "2026-03-25",
     "status_history": [
       {
@@ -834,7 +774,7 @@
     "status": "Under Review",
     "province": "BC",
     "sector": "Other",
-    "value": "C$47.8B",
+    "value": "Not disclosed",
     "lastSeen": "2026-03-25",
     "status_history": [
       {
