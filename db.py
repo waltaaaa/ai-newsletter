@@ -1042,7 +1042,19 @@ def save_indicator(conn: sqlite3.Connection, indicator_dict: dict) -> None:
     Accepts both Firestore-shaped dicts (with 'indicator' and 'date' keys)
     and SQLite-shaped dicts (with 'indicator_name' and 'period' keys).
 
-    Also accepts extra fields: unit, frequency, description, backfilled.
+    Also accepts extra fields: unit, frequency, description, backfilled, source_meta.
+
+    source_meta (optional dict) stores provenance metadata for data grounding:
+        {
+            "authority": "StatCan",           # institution that published the number
+            "reference_period": "2026-03",    # exact period the number covers
+            "retrieved_at": "2026-03-31T...", # when the pipeline fetched this value
+            "source_url": "https://...",      # direct link to the source
+            "table_id": "14-10-0287",         # StatCan table ID (if applicable)
+            "vector_id": 2057614,             # StatCan vector ID (if applicable)
+        }
+    source_meta is stored in the existing metadata JSON column, merged with
+    any existing metadata rather than overwriting.
 
     Args:
         conn: SQLite connection.
@@ -1060,13 +1072,33 @@ def save_indicator(conn: sqlite3.Connection, indicator_dict: dict) -> None:
     province = d.get("province", "National")
     now = _now_iso()
 
+    # Build metadata JSON — merge source_meta into existing metadata
+    metadata = {}
+    if d.get("metadata"):
+        if isinstance(d["metadata"], str):
+            try:
+                metadata = json.loads(d["metadata"])
+            except (json.JSONDecodeError, TypeError):
+                metadata = {}
+        elif isinstance(d["metadata"], dict):
+            metadata = dict(d["metadata"])
+
+    source_meta = d.get("source_meta")
+    if source_meta and isinstance(source_meta, dict):
+        # Always set retrieved_at to now if not explicitly provided
+        if "retrieved_at" not in source_meta:
+            source_meta["retrieved_at"] = now
+        metadata["source_meta"] = source_meta
+
+    metadata_json = json.dumps(metadata, ensure_ascii=False) if metadata else '{}'
+
     with conn:
         conn.execute("""
             INSERT INTO indicator_history (
                 indicator_name, category, province, value, period,
                 previous_value, change, source, fetched_at,
-                unit, frequency, description, backfilled
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                unit, frequency, description, backfilled, metadata
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(indicator_name, period, province)
             DO UPDATE SET
                 value = excluded.value,
@@ -1077,7 +1109,11 @@ def save_indicator(conn: sqlite3.Connection, indicator_dict: dict) -> None:
                 unit = COALESCE(excluded.unit, unit),
                 frequency = COALESCE(excluded.frequency, frequency),
                 description = COALESCE(excluded.description, description),
-                backfilled = excluded.backfilled
+                backfilled = excluded.backfilled,
+                metadata = CASE
+                    WHEN excluded.metadata != '{}' THEN excluded.metadata
+                    ELSE metadata
+                END
         """, (
             indicator_name,
             d.get("category", ""),
@@ -1092,6 +1128,7 @@ def save_indicator(conn: sqlite3.Connection, indicator_dict: dict) -> None:
             d.get("frequency", ""),
             d.get("description", ""),
             1 if d.get("backfilled") else 0,
+            metadata_json,
         ))
 
 

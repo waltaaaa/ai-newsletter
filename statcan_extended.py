@@ -50,38 +50,41 @@ _WDS_HEADERS = {
 # ── Investment & Capital Expenditure ──────────────────────────────────────────
 
 # Table 34-10-0175-01: Investment in building construction (quarterly)
-# Geography=Canada, current dollars, seasonally adjusted
+# Geography=Canada, seasonally adjusted, current dollars
+# Vectors refreshed 2026-03-31 via WDS coordinate lookup (old vectors returned 2012 data)
+# Note: values are in raw dollars (not $M) — converted to $M in _fetch_table_group
 INVESTMENT_BUILDING = {
     "table": "34-10-0175",
     "frequency": "quarterly",
+    "raw_dollars": True,  # values are in raw CAD, divide by 1e6 for $M
     "vectors": {
-        "residential_building_investment":      (65642573, "$M", "Investment"),
-        "non_residential_building_investment":   (65642577, "$M", "Investment"),
-        "industrial_building_investment":        (65642578, "$M", "Investment"),
-        "commercial_building_investment":        (65642579, "$M", "Investment"),
-        "institutional_building_investment":     (65642580, "$M", "Investment"),
+        "residential_building_investment":      (1014954064, "$M", "Investment"),
+        "non_residential_building_investment":   (1014954170, "$M", "Investment"),
+        "industrial_building_investment":        (1014954182, "$M", "Investment"),
+        "commercial_building_investment":        (1014954234, "$M", "Investment"),
+        "institutional_building_investment":     (1014954316, "$M", "Investment"),
     },
 }
 
 # Table 18-10-0135-01: Non-residential building construction price index (quarterly)
-# Geography=Canada, composite index (2017=100)
+# DISCONTINUED — no active vectors found via WDS coordinate search (2026-03-31).
+# Old vector 18710109 returned year-2000 data. Kept as reference but not re-enabled.
 CONSTRUCTION_PRICE_INDEX = {
     "table": "18-10-0135",
     "frequency": "quarterly",
-    "vectors": {
-        "construction_price_index_composite":    (18710109, "index", "Prices"),
-    },
+    "vectors": {},  # empty — table discontinued
 }
 
 # Table 34-10-0035-01: Capital and repair expenditures by industry (annual)
 # Geography=Canada, all industries, current dollars
+# Vectors refreshed 2026-03-31 via WDS coordinate lookup (old vectors returned 2011 data)
 CAPITAL_EXPENDITURES = {
     "table": "34-10-0035",
     "frequency": "annual",
     "vectors": {
-        "total_capex":          (65412182, "$M", "Investment"),
-        "construction_capex":   (65412183, "$M", "Investment"),
-        "machinery_capex":      (65412184, "$M", "Investment"),
+        "total_capex":          (95923552, "$M", "Investment"),
+        "construction_capex":   (95923606, "$M", "Investment"),
+        "machinery_capex":      (95923660, "$M", "Investment"),
     },
 }
 
@@ -128,54 +131,55 @@ MERCHANDISE_EXPORTS = {
 # ── Housing ───────────────────────────────────────────────────────────────────
 
 # Table 34-10-0143-01: Housing starts, by type and province (monthly)
-# Geography=Canada, SA annual rates
+# Geography=Canada, all areas
+# Vectors refreshed 2026-03-31 via WDS coordinate lookup (old vectors returned 2009-2011 data)
 HOUSING_STARTS = {
     "table": "34-10-0143",
     "frequency": "monthly",
     "vectors": {
-        "housing_starts_total":    (47432007, "units", "Housing"),
-        "housing_starts_single":   (47432008, "units", "Housing"),
-        "housing_starts_multi":    (47432009, "units", "Housing"),
+        "housing_starts_total":    (729949, "units", "Housing"),
+        "housing_starts_single":   (729996, "units", "Housing"),
+        "housing_starts_multi":    (13946611, "units", "Housing"),
     },
 }
 
 # Table 18-10-0205-01: New housing price index (monthly)
 # Geography=Canada, total (house + land), 201612=100
+# Vector refreshed 2026-03-31 via WDS coordinate lookup (old vector 111350082 was terminated)
 HOUSING_PRICE_INDEX = {
     "table": "18-10-0205",
     "frequency": "monthly",
     "vectors": {
-        "new_housing_price_index":    (111350082, "index", "Housing"),
+        "new_housing_price_index":    (111955442, "index", "Housing"),
     },
 }
 
 # ── All table groups ──────────────────────────────────────────────────────────
-# TODO: The following groups have TERMINATED vector IDs that return stale data
-# (2000-2012 vintage). They need to be refreshed from StatCan's current table
-# metadata using getSeriesInfoFromVector or the WDS table browser. Disabled
-# to prevent writing stale data to indicator_history. (2026-03-18)
+# Vectors refreshed 2026-03-31 via WDS getSeriesInfoFromCubePidCoord.
 #
-# Disabled groups:
-#   INVESTMENT_BUILDING   — vectors 65642573-65642580 return 2012 data
-#   CONSTRUCTION_PRICE_INDEX — vector 18710109 returns 2000 data
-#   CAPITAL_EXPENDITURES  — vectors 65412182-65412184 return 2011 data
-#   HOUSING_STARTS        — vectors 47432007-47432009 return 2009-2011 data
-#   HOUSING_PRICE_INDEX   — vector 111350082 likely terminated
+# Re-enabled (4 of 5 previously disabled):
+#   INVESTMENT_BUILDING   — new vectors (1014954064 etc.), Q3 2023 latest
+#   CAPITAL_EXPENDITURES  — new vectors (95923552 etc.), 2026 intentions data
+#   HOUSING_STARTS        — new vectors (729949 etc.), Dec 2025 latest
+#   HOUSING_PRICE_INDEX   — new vector (111955442), Feb 2026 latest
 #
-# Working groups (confirmed current data):
-#   EMPLOYMENT_INDUSTRY   — vectors 2057614, 2057606, 2057622 return 2026 data
+# Still disabled:
+#   CONSTRUCTION_PRICE_INDEX — table 18-10-0135 appears discontinued, no active vectors found
+#
+# Previously working (unchanged):
+#   EMPLOYMENT_INDUSTRY   — vectors 2057614, 2057606, 2057622
 #   JOB_VACANCIES         — vectors 45169837, 45169829
 #   MERCHANDISE_EXPORTS   — vectors 21837355, 21837395, 21837439, 21837343
 
 ALL_TABLE_GROUPS = [
-    # INVESTMENT_BUILDING,        # disabled — stale vector IDs (2012 data)
-    # CONSTRUCTION_PRICE_INDEX,   # disabled — stale vector ID (2000 data)
-    # CAPITAL_EXPENDITURES,       # disabled — stale vector IDs (2011 data)
+    INVESTMENT_BUILDING,
+    # CONSTRUCTION_PRICE_INDEX,   # disabled — table 18-10-0135 discontinued
+    CAPITAL_EXPENDITURES,
     EMPLOYMENT_INDUSTRY,
     JOB_VACANCIES,
     MERCHANDISE_EXPORTS,
-    # HOUSING_STARTS,             # disabled — stale vector IDs (2009-2011 data)
-    # HOUSING_PRICE_INDEX,        # disabled — stale vector ID (likely terminated)
+    HOUSING_STARTS,
+    HOUSING_PRICE_INDEX,
 ]
 
 # Frequency classification for mode-aware skipping
@@ -259,6 +263,9 @@ def _fetch_table_group(conn, group: dict) -> tuple[int, int]:
     fetched = 0
     saved = 0
 
+    # Some tables (34-10-0175) return raw dollars, need conversion to $M
+    raw_dollars = group.get("raw_dollars", False)
+
     for vid, points in data.items():
         info = vid_to_info.get(vid)
         if not info or not points:
@@ -272,6 +279,10 @@ def _fetch_table_group(conn, group: dict) -> tuple[int, int]:
         if value is None:
             continue
 
+        # Convert raw dollars to millions if needed
+        if raw_dollars and unit == "$M":
+            value = round(value / 1_000_000, 1)
+
         fetched += 1
 
         # Compute period-over-period change if enough data
@@ -279,6 +290,8 @@ def _fetch_table_group(conn, group: dict) -> tuple[int, int]:
         change = None
         if len(points) >= 2:
             prev_value = points[-2].get('value')
+            if raw_dollars and unit == "$M" and prev_value is not None:
+                prev_value = round(prev_value / 1_000_000, 1)
             if prev_value and prev_value != 0:
                 change = f"{((value - prev_value) / abs(prev_value)) * 100:+.1f}%"
 
@@ -295,6 +308,13 @@ def _fetch_table_group(conn, group: dict) -> tuple[int, int]:
                 'frequency': frequency,
                 'category': category,
                 'backfilled': False,
+                'source_meta': {
+                    'authority': 'Statistics Canada',
+                    'reference_period': ref_per,
+                    'source_url': f'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid={table_pid.replace("-", "")}',
+                    'table_id': table_pid,
+                    'vector_id': vid,
+                },
             })
             saved += 1
         except Exception as e:

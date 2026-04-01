@@ -120,7 +120,6 @@ decommission_replace:{label:'Replacement',cls:'type-replace',cat:'Brownfield'},
 };
 function typeBadge(pt){const c=PROJ_TYPE_CFG[pt]||PROJ_TYPE_CFG.greenfield;return'<span class="type-badge '+c.cls+'">'+c.label+'</span>'}
 function confBadge(conf,evCount){if(conf==null)return'';const pct=Math.round(conf*100);const cls=pct>=70?'conf-high':pct>=40?'conf-mid':'conf-low';return'<span class="'+cls+'" title="'+evCount+' source(s)">'+pct+'%'+(evCount?(' ('+evCount+' src'+(evCount>1?'s':'')+')'):'')+'</span>'}
-let _projTypeFilter='all';
 
 /* ── Helpers ── */
 const $=id=>document.getElementById(id);
@@ -2813,15 +2812,6 @@ async function renderProjectsTab(){
   $('filterStatus').onchange=filterProjects;
   $('sortProjects').onchange=filterProjects;
   $('loadMoreBtn').onclick=()=>{projectPage++;renderProjectTable()};
-  // Type toggle
-  document.querySelectorAll('#projTypeToggle button').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      document.querySelectorAll('#projTypeToggle button').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      _projTypeFilter=btn.dataset.type;
-      filterProjects();
-    });
-  });
   filterProjects();
   // Populate missed project form dropdowns
   const mpProv=$('mpProvince');
@@ -2856,8 +2846,6 @@ async function filterProjects(){
     if(prov&&normProvince(p.province)!==prov)return false;
     if(sector&&p.naics_code!==sector)return false;
     if(status&&p.status!==status)return false;
-    if(_projTypeFilter==='greenfield'&&p.is_brownfield)return false;
-    if(_projTypeFilter==='brownfield'&&!p.is_brownfield)return false;
     return true;
   });
   if(sort==='value_desc')filteredProjects.sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value));
@@ -2870,8 +2858,6 @@ async function filterProjects(){
 }
 function renderProjectSummary(){
   const total=filteredProjects.length;
-  const gf=filteredProjects.filter(p=>!p.is_brownfield).length;
-  const bf=filteredProjects.filter(p=>p.is_brownfield).length;
   const totalVal=filteredProjects.reduce((s,p)=>s+parseNumericValue(p.value),0);
   const uc=filteredProjects.filter(p=>(p.status||'').toLowerCase().includes('construction')).length;
   const fv=v=>v>=1e9?'$'+(v/1e9).toFixed(1)+'B':v>=1e6?'$'+(v/1e6).toFixed(0)+'M':'$0';
@@ -2883,8 +2869,6 @@ function renderProjectSummary(){
   $('projSummaryStats').innerHTML=banner+
     '<div class="proj-stat-card"><div class="proj-stat-val">'+total+'</div><div class="proj-stat-label">Total Projects</div></div>'+
     '<div class="proj-stat-card"><div class="proj-stat-val">'+fv(totalVal)+'</div><div class="proj-stat-label">Total Value</div></div>'+
-    '<div class="proj-stat-card"><div class="proj-stat-val">'+gf+'</div><div class="proj-stat-label">Greenfield</div></div>'+
-    '<div class="proj-stat-card"><div class="proj-stat-val">'+bf+'</div><div class="proj-stat-label">Brownfield</div></div>'+
     '<div class="proj-stat-card"><div class="proj-stat-val">'+uc+'</div><div class="proj-stat-label">Under Construction</div></div>';
 }
 function renderProjectTable(){

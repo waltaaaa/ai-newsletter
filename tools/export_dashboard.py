@@ -404,8 +404,24 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
 
 
 def export_indicators(conn, output_dir: str) -> str:
-    """Export indicators.json with full history for the indicator explorer chart."""
+    """Export indicators.json with full history for the indicator explorer chart.
+
+    Runs the ground-truth validation layer before export. Indicators that fail
+    validation are flagged with validation_status='under_review' so the frontend
+    can display '— (under review)' instead of a wrong number.
+    """
     from db import get_dashboard_state, get_latest_indicators
+
+    # Run validation layer — get set of (indicator_name, province) that failed
+    failed_indicators = set()
+    try:
+        from indicator_validator import get_failed_indicators, run_validation_report
+        report = run_validation_report(conn, verbose=True)
+        failed_indicators = get_failed_indicators(conn)
+        logger.info(f"Indicator validation: {report['passed']}/{report['total']} passed, "
+                     f"{report['failed']} failed")
+    except Exception as e:
+        logger.warning(f"Indicator validation skipped: {e}")
 
     indicators = get_latest_indicators(conn)
     # Convert sqlite3.Row objects to plain dicts
@@ -416,6 +432,12 @@ def export_indicators(conn, output_dir: str) -> str:
             # Parse metadata JSON string if present
             if "metadata" in row and isinstance(row["metadata"], str):
                 row["metadata"] = _safe_json_loads(row["metadata"], {})
+            # Flag indicators that failed validation
+            key = (row.get("indicator_name", ""), row.get("province", "National"))
+            if key in failed_indicators:
+                row["validation_status"] = "under_review"
+            else:
+                row["validation_status"] = "passed"
             indicators_list.append(row)
         else:
             indicators_list.append(ind)
@@ -470,6 +492,13 @@ def export_indicators(conn, output_dir: str) -> str:
         "indicators": indicators_list,
         "history": history_list,
         "statcan_latest": statcan_latest,
+        "validation": {
+            "failed_count": len(failed_indicators),
+            "failed_indicators": [
+                {"indicator": k[0], "province": k[1]}
+                for k in sorted(failed_indicators)
+            ],
+        },
     }
 
     out_path = os.path.join(output_dir, "indicators.json")

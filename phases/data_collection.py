@@ -1279,15 +1279,20 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
     for field, value in nat_vals.items():
         if not value or value == 'N/A':
             continue
+        source_label = nat_srcs.get(field, '')
         save_indicator(conn, {
             'indicator': field,
             'province': 'national',
             'date': today_str,
             'value': str(value),
             'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'gdp', 'unemployment']) else '',
-            'source': nat_srcs.get(field, ''),
+            'source': source_label,
             'frequency': 'monthly',
             'backfilled': False,
+            'source_meta': {
+                'authority': source_label or 'StatCan',
+                'reference_period': today_str,
+            },
         })
         count += 1
 
@@ -1296,33 +1301,52 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
         for field, value in prov_data.items():
             if field.endswith('_src') or not value or value == 'N/A':
                 continue
+            source_label = prov_data.get(f'{field}_src', '')
             save_indicator(conn, {
                 'indicator': field,
                 'province': province,
                 'date': today_str,
                 'value': str(value),
                 'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'unemployment']) else '',
-                'source': prov_data.get(f'{field}_src', ''),
+                'source': source_label,
                 'frequency': 'monthly',
                 'backfilled': False,
+                'source_meta': {
+                    'authority': source_label or 'StatCan',
+                    'reference_period': today_str,
+                },
             })
             count += 1
 
     # Global indicators (US, EU, UK, China)
+    _GLOBAL_AUTHORITIES = {
+        'United States': 'BLS/BEA/Fed',
+        'US': 'BLS/BEA/Fed',
+        'China': 'NBS/PBoC',
+        'European Union': 'Eurostat/ECB',
+        'EU': 'Eurostat/ECB',
+        'United Kingdom': 'ONS/BoE',
+        'UK': 'ONS/BoE',
+    }
     for region, region_data in primary_ind.get('global', {}).items():
         for field, value in region_data.items():
             if field.endswith('_src') or not value or value == 'N/A':
                 continue
+            source_label = region_data.get(f'{field}_src', '')
             save_indicator(conn, {
                 'indicator': f'global_{field}',
                 'province': region,
                 'date': today_str,
                 'value': str(value),
                 'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'gdp', 'unemployment']) else '',
-                'source': region_data.get(f'{field}_src', ''),
+                'source': source_label,
                 'frequency': 'monthly',
                 'category': 'Global',
                 'backfilled': False,
+                'source_meta': {
+                    'authority': _GLOBAL_AUTHORITIES.get(region, source_label),
+                    'reference_period': today_str,
+                },
             })
             count += 1
 
@@ -1343,6 +1367,11 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
                 'source': src,
                 'frequency': 'monthly',
                 'backfilled': False,
+                'source_meta': {
+                    'authority': 'Statistics Canada',
+                    'reference_period': today_str,
+                    'table_id': '36-10-0434',
+                },
             })
             count += 1
         if yy and yy != 'N/A':
@@ -1355,6 +1384,11 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
                 'source': src,
                 'frequency': 'monthly',
                 'backfilled': False,
+                'source_meta': {
+                    'authority': 'Statistics Canada',
+                    'reference_period': today_str,
+                    'table_id': '36-10-0434',
+                },
             })
             count += 1
 
@@ -1384,6 +1418,10 @@ def _archive_market_data_to_history(conn, financial_markets: dict, commodity_dat
             'source': source,
             'frequency': 'daily',
             'backfilled': False,
+            'source_meta': {
+                'authority': source,
+                'reference_period': today_str,
+            },
         })
         count += 1
 
