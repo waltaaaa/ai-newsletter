@@ -787,7 +787,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 </main>
 <footer class="site-footer">
   <span style="font-weight:600;color:#FFFFFF">The Lagging Indicator</span> &middot; Data from Bank of Canada, Statistics Canada, Yahoo Finance &middot; All claims independently sourced &middot; <span id="footerDate"></span>
-  &middot; <a href="#" onclick="document.getElementById('helpModal').classList.add('active');return false" style="color:#93C5FD;text-decoration:none;font-weight:500">Help &amp; Guide</a>
+  &middot; <button onclick="document.getElementById('helpModal').classList.add('active')" style="background:none;border:none;color:#93C5FD;text-decoration:none;font-weight:500;cursor:pointer;padding:0;font-size:inherit">Help &amp; Guide</button>
 </footer>
 <div class="help-modal-overlay" id="helpModal" onclick="if(event.target===this)this.classList.remove('active')">
   <div class="help-modal" style="position:relative">

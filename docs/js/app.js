@@ -139,6 +139,7 @@ function fmtNumeric(n,d){if(typeof n!=='number'||isNaN(n))return String(n);const
 function fmtVal(v){if(!v||v==='N/A'||v==='Not disclosed')return'<span style="color:#556B7A">N/D</span>';return v}
 function parseNumericValue(v){if(!v)return 0;const s=String(v).toUpperCase();const m=s.match(/([\d.]+)\s*(B|M|K)?/);if(!m)return 0;let n=parseFloat(m[1])||0;if(m[2]==='B')n*=1e9;else if(m[2]==='M')n*=1e6;else if(m[2]==='K')n*=1e3;return n}
 function fmtCurrency(v,p){if(!v||v==='—'||v==='N/A'||v==='Not disclosed'){if(p&&p.cost_unfindable)return'<span style="color:#556B7A;font-style:italic" title="Cost not publicly available after 3 search attempts">N/A</span>';if(p&&p.cost_search_attempts>0)return'<span style="color:#556B7A;font-style:italic" title="Searching for value (attempt '+p.cost_search_attempts+'/3)">Searching\u2026</span>';return'<span style="color:#556B7A">N/D</span>'}let out='';if(typeof v==='string'&&v.match(/\$[\d.]+[BMK]/i))out=v;else{const n=parseNumericValue(v);if(!n)out=String(v);else if(n>=1e9)out='$'+(n/1e9).toFixed(1)+'B';else if(n>=1e6)out='$'+(n/1e6).toFixed(0)+'M';else if(n>=1e3)out='$'+(n/1e3).toFixed(0)+'K';else out='$'+n.toLocaleString()}if(p&&p.value_low_millions&&p.value_high_millions)out+='<span style="color:#556B7A;font-size:10px;margin-left:3px" title="Range: $'+Math.round(p.value_low_millions)+'M\u2013$'+Math.round(p.value_high_millions)+'M">*</span>';if(p&&p.value_notes)out+='<span style="color:#556B7A;font-size:10px;margin-left:2px" title="'+p.value_notes.replace(/"/g,"&quot;")+'">\u2020</span>';return out}
+function _normSector(s){if(!s)return'';const _SECTOR_MAP={'oil_gas':'Oil & Gas','power_energy':'Power & Energy','transport_logistics':'Transport & Logistics','commercial_mixed':'Commercial & Mixed Use','tourism_culture':'Tourism & Culture','infrastructure':'Infrastructure','healthcare':'Healthcare','education':'Education','residential':'Residential','manufacturing':'Manufacturing','mining':'Mining','agriculture':'Agriculture','forestry':'Forestry','defence':'Defence','telecom':'Telecommunications','indigenous':'Indigenous','environment':'Environment','government':'Government'};if(_SECTOR_MAP[s])return _SECTOR_MAP[s];return s.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()).substring(0,25)}
 function skeleton(n=3){return Array(n).fill('<div class="skeleton sk-line"></div><div class="skeleton sk-line med"></div><div class="skeleton sk-line short"></div>').join('')}
 
 /* ── Tab Switching ── */
@@ -1745,7 +1746,7 @@ async function renderCanadaSub(){
         projHtml+='<tr><td class="col-value">'+fmtCurrency(p.value,p)+'</td><td class="col-name">'+((p.name||'').substring(0,55))+'</td><td class="col-province">'+normProvince(p.province)+'</td><td>'+statusBadge(p.status||'Proposed')+'</td><td style="font-size:var(--text-xs);color:#475569">'+sectorName+'</td></tr>';
       });
       projHtml+='</tbody></table></div>';
-      projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><a href="#" style="color:var(--accent-blue);text-decoration:none" onclick="event.preventDefault();switchTab(\'projects\')">View all projects \u2192</a></div>';
+      projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><button style="background:none;border:none;color:var(--accent-blue);cursor:pointer;padding:0;font-size:inherit;text-decoration:none" onclick="switchTab(\'projects\')">View all projects \u2192</button></div>';
     }else{
       projHtml+='<div class="empty-state"><div class="empty-state-text">No projects loaded yet.</div></div>';
     }
@@ -2234,14 +2235,14 @@ async function renderProvinceContent(){
     const content=provData[key]||'';
     if(!content||content.length<20)return '';
     return '<div class="prov-enrichment-section" style="margin-top:20px;padding:16px;background:var(--bg-alt,#f8fafc);border-radius:8px;border-left:3px solid var(--accent,#3b82f6)">'+
-      '<div style="font-size:var(--text-sm);font-weight:700;color:var(--fg,#1e293b);margin-bottom:8px">'+icon+' '+title+'</div>'+
+      '<div style="font-size:var(--text-sm);font-weight:700;color:var(--fg,#1e293b);margin-bottom:8px">'+(icon?icon+' ':'')+title+'</div>'+
       '<div style="font-size:var(--text-sm);color:var(--fg-muted,#475569);line-height:1.6">'+san(linkFootnotes(content,provSources.length?provSources:(D&&D.sources||[])))+'</div></div>';
   };
-  secHtml+=_provSec('sectorHighlights','Sector Highlights','\u{1F4CA}');
-  secHtml+=_provSec('labourDeepDive','Labour Market','\u{1F4BC}');
-  secHtml+=_provSec('consumerPulse','Consumer Pulse','\u{1F6D2}');
-  secHtml+=_provSec('tradeExposure','Trade & Commodities','\u{1F4E6}');
-  secHtml+=_provSec('marketContext','Market Impact','\u{1F4C8}');
+  secHtml+=_provSec('sectorHighlights','Sector Highlights','');
+  secHtml+=_provSec('labourDeepDive','Labour Market','');
+  secHtml+=_provSec('consumerPulse','Consumer Pulse','');
+  secHtml+=_provSec('tradeExposure','Trade & Commodities','');
+  secHtml+=_provSec('marketContext','Market Impact','');
 
   // Watchlist items (enriched — from agent with impact notes)
   const agentWl=provData.watchlistItems||[];
@@ -2325,7 +2326,7 @@ async function renderProvinceContent(){
     });
     projHtml+='</tbody></table></div>';
     if(isFallback)projHtml+='<div style="margin-top:8px;font-size:var(--text-xs);color:#64748B;font-style:italic">Showing last 4 weeks — no new projects discovered this week for '+prov.name+'.</div>';
-    projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><a href="#" style="color:var(--accent-blue);text-decoration:none" onclick="event.preventDefault();switchTab(\'projects\')">View all projects \u2192</a></div>';
+    projHtml+='<div style="margin-top:12px;font-size:var(--text-sm)"><button style="background:none;border:none;color:var(--accent-blue);cursor:pointer;padding:0;font-size:inherit;text-decoration:none" onclick="switchTab(\'projects\')">View all projects \u2192</button></div>';
   }else{
     projHtml+='<div class="empty-state"><div class="empty-state-text">No new projects added for '+prov.name+' in the last 4 weeks.</div></div>';
   }
@@ -2888,7 +2889,7 @@ function renderProjectTable(){
     const updatedAgo=relDate(p.lastSeen||p.updated_at||'');
     const staleWarn=p.is_stale||(p.lastSeen&&(Date.now()-new Date(p.lastSeen+'T00:00:00').getTime())>2592000000);
     const provCode=normProvince(p.province);
-    const naicsShort=NAICS_NAMES[p.naics_code]||(p.sector||'').substring(0,20)||'';
+    const naicsShort=NAICS_NAMES[p.naics_code]||_normSector(p.sector)||'';
     const pType=p.project_type||'greenfield';
     const isUnconf=!meetsThreshold(p);
     html+='<tr onclick="window.toggleProjectRow(\''+rowId+'\')"'+(isUnconf&&!_confirmedOnly?' class="unconfirmed-row"':'')+'>';
