@@ -770,6 +770,22 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
         if raw_value:
             project_dict["parsed_value"] = parse_value(raw_value)
 
+    # Value reasonableness gate: flag projects > $50B as suspicious
+    pv = project_dict.get("parsed_value")
+    if pv and pv > 50_000_000_000:
+        logger.warning(f"[DB] Project value ${pv/1e9:.1f}B exceeds $50B cap: {name} ({province}). "
+                       "Capping at $50B — may be program budget assigned to sub-project.")
+        project_dict["parsed_value"] = 50_000_000_000
+        project_dict["value"] = "C$50.0B (capped)"
+        if "anomalies" not in project_dict:
+            project_dict["anomalies"] = []
+        if isinstance(project_dict["anomalies"], str):
+            try:
+                project_dict["anomalies"] = json.loads(project_dict["anomalies"])
+            except (json.JSONDecodeError, TypeError):
+                project_dict["anomalies"] = []
+        project_dict["anomalies"].append(f"Original value ${pv/1e9:.1f}B exceeded $50B cap")
+
     # URL hard gate: reject projects with no evidence URLs
     evidence = project_dict.get("evidence", [])
     if isinstance(evidence, str):

@@ -304,8 +304,8 @@ $('editionList').addEventListener('click',e=>e.stopPropagation());
 async function renderTab(id){
   switch(id){
     case'tldr':await renderTLDR();break;
-    case'national':renderNational();break;
-    case'provinces':renderProvinces();break;
+    case'national':renderNational();addDataVintage();break;
+    case'provinces':renderProvinces();renderProvinceComparison();break;
     case'industries':renderIndustries();break;
     case'markets':renderMarkets();break;
     case'projects':renderProjectsTab();break;
@@ -2845,7 +2845,7 @@ async function filterProjects(){
     if(_confirmedOnly&&!meetsThreshold(p))return false;
     if(search&&!(p.name||'').toLowerCase().includes(search)&&!(p.cma||'').toLowerCase().includes(search)&&!(p.proponent||'').toLowerCase().includes(search))return false;
     if(prov&&normProvince(p.province)!==prov)return false;
-    if(sector&&p.naics_code!==sector)return false;
+    if(sector&&p.naics_code!==sector&&!(NAICS_NAMES[sector]&&(NAICS_NAMES[sector].toLowerCase().includes((p.sector||'').replace(/_/g,' ').toLowerCase())||(p.sector||'').toLowerCase().includes(NAICS_NAMES[sector].toLowerCase().split(',')[0].trim().toLowerCase()))))return false;
     if(status&&p.status!==status)return false;
     return true;
   });
@@ -3979,6 +3979,48 @@ window._doVcodeSearch=function(cat){
   });
   resEl.innerHTML=html;
 };
+
+/* ====== PROVINCE COMPARISON VIEW ====== */
+function renderProvinceComparison(){
+  const el=$('provComparisonView');if(!el||!D)return;
+  const provs=D.provinces||[];if(!provs.length)return;
+  const codes=['ON','QC','AB','BC','SK','MB','NS','NB','NL','PE','YT','NT','NU'];
+  let hdr='<th style="padding:6px 8px;font-size:9px;font-weight:600;color:#64748B;text-align:left;position:sticky;left:0;background:#fff;z-index:1">Indicator</th>';
+  codes.forEach(c=>hdr+='<th style="padding:6px 8px;font-size:9px;font-weight:600;color:#64748B;text-align:right">'+c+'</th>');
+  const _findProv=(code)=>provs.find(p=>(NAME_TO_CODE[p.name]||'')===code)||{};
+  const _val=(p,key)=>{const inds=p.indicators||{};const v=inds[key];return(v&&v!=='N/A')?v:'--';};
+  const rows=[
+    {label:'Unemployment',key:'unemployment'},
+    {label:'CPI',key:'cpi'},
+    {label:'GDP',key:'gdp'},
+    {label:'Projects',fn:p=>(p.projects||[]).length||'--'},
+  ];
+  let body='';
+  rows.forEach((r,ri)=>{
+    const bg=ri%2===0?'':'background:#f9fafb';
+    body+='<tr style="'+bg+'">';
+    body+='<td style="padding:6px 8px;font-size:11px;font-weight:600;color:#1a2744;white-space:nowrap;position:sticky;left:0;background:'+(bg||'#fff')+';z-index:1">'+r.label+'</td>';
+    codes.forEach(c=>{
+      const p=_findProv(c);
+      const v=r.fn?r.fn(p):_val(p,r.key);
+      body+='<td style="padding:6px 8px;font-size:11px;font-family:var(--font-mono);text-align:right;color:#475569">'+v+'</td>';
+    });
+    body+='</tr>';
+  });
+  el.innerHTML='<details class="card" style="margin-bottom:0"><summary style="cursor:pointer;padding:12px 16px;font-size:var(--text-sm);font-weight:600;color:#475569;user-select:none">Province Comparison</summary><div style="overflow-x:auto;padding:0 16px 12px"><table style="width:100%;border-collapse:collapse;min-width:700px"><thead><tr style="border-bottom:2px solid #e2e8f0">'+hdr+'</tr></thead><tbody>'+body+'</tbody></table></div></details>';
+}
+
+/* ====== DATA VINTAGE BADGES ====== */
+function addDataVintage(){
+  if(!D)return;
+  const gen=D.generated_at||D.updated_at||'';
+  if(!gen)return;
+  const d=gen.split('T')[0];
+  const badge='<span style="display:inline-block;font-size:10px;color:#64748B;background:#f1f5f9;padding:2px 8px;border-radius:4px;margin-left:8px">Data as of '+d+'</span>';
+  // Add to national tab
+  const natEl=$('natAnalysisSection');
+  if(natEl){const existing=natEl.querySelector('.data-vintage');if(!existing){const dv=document.createElement('div');dv.className='data-vintage';dv.style.cssText='text-align:right;padding:4px 0;font-size:10px;color:#94A3B8';dv.innerHTML='Generated: '+gen.replace('T',' ').replace('Z',' UTC');natEl.prepend(dv)}}
+}
 
 /* ====== INITIALIZATION ====== */
 // Module scripts are deferred — DOM is already ready, run immediately

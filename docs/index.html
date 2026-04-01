@@ -128,7 +128,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .indicator-filter:focus{background:rgba(255,255,255,0.05)}
 .indicator-group-header{padding:10px 16px;font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#475569;background:rgba(0,0,0,0.04);border-top:1px solid rgba(0,0,0,0.08)}
 .indicator-row{display:grid;grid-template-columns:1fr 100px 100px 120px 60px;padding:8px 16px;font-size:var(--text-sm);align-items:center;border-bottom:1px solid #e6e6e6;color:#1a2744}
-.indicator-row:nth-child(even){background:rgba(255,255,255,0.03)}
+.indicator-row:nth-child(even){background:rgba(0,0,0,0.025)}
 .indicator-row:hover{background:rgba(96,165,250,0.10)}
 .indicator-row-name{color:#1a2744;font-weight:500}
 .indicator-row-value{font-family:var(--font-mono);font-weight:500;text-align:right;color:#1a2744}
@@ -515,8 +515,10 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
 .ed-stat-change{font-size:8px;font-family:var(--font-mono);margin-top:1px}
 /* Indicator table inside floating panel */
 .ed-ind-table{width:100%;border-collapse:collapse;font-size:11px}
-.ed-ind-table th{text-align:left;font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#64748B;padding:4px 6px;border-bottom:1px solid rgba(0,0,0,0.08)}
+.ed-ind-table th{text-align:left;font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#64748B;padding:4px 6px;border-bottom:1px solid rgba(0,0,0,0.08);position:sticky;top:0;background:#fff;z-index:2}
 .ed-ind-table td{padding:4px 6px;border-bottom:1px solid rgba(0,0,0,0.04)}
+.ed-ind-table tbody tr:nth-child(even){background:rgba(0,0,0,0.02)}
+.ed-ind-table tbody tr:hover{background:rgba(96,165,250,0.06)}
 .ed-ind-table .ind-label{color:#475569;font-weight:500}
 .ed-ind-table .ind-value{font-family:var(--font-mono);font-weight:700;color:#1a2744;text-align:right}
 .ed-ind-table .ind-change{font-family:var(--font-mono);font-size:10px;text-align:right;width:50px}
@@ -597,6 +599,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       <li class="nav-tab" data-tab="projects" role="tab" aria-selected="false" aria-controls="tab-projects" tabindex="-1">Projects</li>
       <li class="nav-tab" data-tab="calendar" role="tab" aria-selected="false" aria-controls="tab-calendar" tabindex="-1">Calendar</li>
       <li class="nav-tab" data-tab="explorer" role="tab" aria-selected="false" aria-controls="tab-explorer" tabindex="-1">Data Explorer</li>
+      <li class="nav-tab" data-tab="methodology" role="tab" aria-selected="false" aria-controls="tab-methodology" tabindex="-1">Methodology</li>
     </ul>
     <div class="edition-dropdown" id="editionDropdown" style="position:relative;flex-shrink:0">
       <button id="editionBtn" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:var(--text-xs);font-weight:500;color:var(--text-secondary);background:var(--bg-subtle);border:1px solid var(--glass-border);border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-body)">
@@ -662,6 +665,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
         <div class="section-banner-sub">Provincial economic trends, updated weekly</div>
       </div>
     </div>
+    <div id="provComparisonView" style="margin-bottom:16px"></div>
     <div class="province-selector" id="provSelector"></div>
     <div class="editorial-article" id="provEditorialArticle">
       <div class="editorial-header" id="provEditorialHeader"></div>
@@ -719,7 +723,7 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
       <select id="filterSector" aria-label="Filter by sector"><option value="">All Sectors</option></select>
       <select id="filterStatus" aria-label="Filter by status"><option value="">All Statuses</option></select>
       <select id="sortProjects" aria-label="Sort projects"><option value="value_desc">Value (High to Low)</option><option value="updated">Recently Updated</option><option value="name_asc">Name A-Z</option><option value="confidence">Confidence</option></select>
-      <label class="toggle-label" title="Show only projects with confirmed value above provincial threshold"><input type="checkbox" id="confirmedToggle" checked onchange="_confirmedOnly=this.checked;filterProjects()"><span class="toggle-slider"></span> Confirmed</label>
+      <label class="toggle-label" title="Show only projects with estimated value above provincial GDP threshold"><input type="checkbox" id="confirmedToggle" checked onchange="_confirmedOnly=this.checked;filterProjects()"><span class="toggle-slider"></span> Above Threshold</label>
       <button onclick="exportProjects()" style="background:#ffffff;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:0.4rem 0.8rem;cursor:pointer;font-size:var(--text-xs);color:#003153;white-space:nowrap" title="Export filtered projects as CSV">Export CSV</button>
     </div>
     <!-- Missing Project Submission Form -->
@@ -783,6 +787,117 @@ body{font-family:var(--font-body);background:linear-gradient(135deg,#2d4a7a 0%,#
     <div id="explorerStats" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap"></div>
     <div id="explorerCategories" style="margin-bottom:16px"></div>
     <div id="explorerResults"></div>
+  </div>
+  <!-- METHODOLOGY -->
+  <div class="tab-panel" id="tab-methodology" role="tabpanel" aria-labelledby="tab-methodology-label">
+    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80')">
+      <div class="section-banner-content">
+        <div class="section-banner-title">Methodology</div>
+        <div class="section-banner-sub">Data sources, definitions, and quality standards</div>
+      </div>
+    </div>
+    <div style="max-width:800px;margin:0 auto;padding:24px 0">
+      <div class="card" style="padding:24px;margin-bottom:20px">
+        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Data Sources</h3>
+        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">The Lagging Indicator aggregates data from a 14-tier discovery pipeline covering federal, provincial, and municipal sources across Canada, plus international economic data from four major economies.</p>
+        <table style="width:100%;border-collapse:collapse;font-size:var(--text-xs);margin-bottom:16px">
+          <thead><tr style="border-bottom:2px solid #e2e8f0"><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Tier</th><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Source</th><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Coverage</th></tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">1</td><td style="padding:6px 8px">Federal IAAC Registry</td><td style="padding:6px 8px">Impact assessments, environmental reviews</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">2</td><td style="padding:6px 8px">Google News RSS</td><td style="padding:6px 8px">2,574 compound queries across sectors and regions</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">3</td><td style="padding:6px 8px">RSS Feeds</td><td style="padding:6px 8px">324+ feeds with 6-layer classification filter</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">4</td><td style="padding:6px 8px">Project Status Monitoring</td><td style="padding:6px 8px">Active project updates and status changes</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">5</td><td style="padding:6px 8px">Provincial EA Registries</td><td style="padding:6px 8px">13 provinces and territories</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">6</td><td style="padding:6px 8px">SEDAR+ Securities Filings</td><td style="padding:6px 8px">Capital project disclosures</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">7</td><td style="padding:6px 8px">Crown Corporation Capital Plans</td><td style="padding:6px 8px">25+ crown corporations</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">8</td><td style="padding:6px 8px">Canada Energy Regulator</td><td style="padding:6px 8px">Pipeline and energy project filings</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">9</td><td style="padding:6px 8px">StatCan Building Permits</td><td style="padding:6px 8px">Monthly permit anomaly signals</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">10</td><td style="padding:6px 8px">Lobbyist Registries</td><td style="padding:6px 8px">Capital project lobbying signals</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">11</td><td style="padding:6px 8px">Municipal Development Applications</td><td style="padding:6px 8px">15 census metropolitan areas</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">12</td><td style="padding:6px 8px">Google Alerts</td><td style="padding:6px 8px">~25 targeted RSS alerts</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">13</td><td style="padding:6px 8px">Industry Trade RSS</td><td style="padding:6px 8px">~15 sector-specific feeds</td></tr>
+            <tr><td style="padding:6px 8px">14</td><td style="padding:6px 8px">University &amp; Institutional Capital Plans</td><td style="padding:6px 8px">Post-secondary and institutional projects</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:var(--text-xs);color:#64748B">Additional sources: Procurement monitor (Open Canada, BuyAndSell, Ontario BPS, BC Bid), corporate newswires (GlobeNewswire, Canada Newswire, Cision), CanLII regulatory feeds (10 tribunals), and per-project Google News alerts.</p>
+      </div>
+      <div class="card" style="padding:24px;margin-bottom:20px">
+        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Update Frequency</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:var(--text-sm)">
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744;width:40%">National Indicators</td><td style="padding:8px;color:#475569">Weekly, Monday 5:30 AM ET</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:8px;font-weight:600;color:#1a2744">Provincial Indicators</td><td style="padding:8px;color:#475569">Weekly</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744">Project Discovery</td><td style="padding:8px;color:#475569">Continuous with weekly consolidation</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:8px;font-weight:600;color:#1a2744">Financial Markets</td><td style="padding:8px;color:#475569">Weekly (Yahoo Finance)</td></tr>
+          <tr><td style="padding:8px;font-weight:600;color:#1a2744">Weekly Briefing</td><td style="padding:8px;color:#475569">Published Monday, covers prior 7 days</td></tr>
+        </table>
+      </div>
+      <div class="card" style="padding:24px;margin-bottom:20px">
+        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Indicator Definitions</h3>
+        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">Canadian indicators are sourced from Statistics Canada Web Data Service (WDS) API. All values are seasonally adjusted unless otherwise noted.</p>
+        <table style="width:100%;border-collapse:collapse;font-size:var(--text-xs)">
+          <thead><tr style="border-bottom:2px solid #e2e8f0"><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Indicator</th><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">StatCan Table</th><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Frequency</th></tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">Unemployment Rate</td><td style="padding:6px 8px">14-10-0287</td><td style="padding:6px 8px">Monthly, SA</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">Employment by Industry</td><td style="padding:6px 8px">14-10-0022</td><td style="padding:6px 8px">Monthly, SA</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">CPI (All Items)</td><td style="padding:6px 8px">18-10-0004</td><td style="padding:6px 8px">Monthly</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">GDP by Industry</td><td style="padding:6px 8px">36-10-0434</td><td style="padding:6px 8px">Monthly</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">Housing Starts</td><td style="padding:6px 8px">34-10-0143</td><td style="padding:6px 8px">Monthly</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">Building Permits</td><td style="padding:6px 8px">34-10-0066</td><td style="padding:6px 8px">Monthly</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">Merchandise Exports</td><td style="padding:6px 8px">12-10-0129</td><td style="padding:6px 8px">Monthly</td></tr>
+            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">Capital Expenditures</td><td style="padding:6px 8px">34-10-0035</td><td style="padding:6px 8px">Annual</td></tr>
+            <tr><td style="padding:6px 8px">New Housing Price Index</td><td style="padding:6px 8px">18-10-0205</td><td style="padding:6px 8px">Monthly</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:var(--text-xs);color:#64748B;margin-top:12px">International data: US (BLS, BEA, Federal Reserve), China (NBS, PBoC), EU (Eurostat, ECB), UK (ONS, Bank of England). Commodity prices: Yahoo Finance (yfinance).</p>
+      </div>
+      <div class="card" style="padding:24px;margin-bottom:20px">
+        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Project Confidence Scoring</h3>
+        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">Each tracked project receives a confidence score from 0.0 to 1.0 based on evidence quality:</p>
+        <table style="width:100%;border-collapse:collapse;font-size:var(--text-sm)">
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744;width:50%">Base score</td><td style="padding:8px;color:#475569">0.1</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:8px;font-weight:600;color:#1a2744">Per evidence source</td><td style="padding:8px;color:#475569">+0.1 (max +0.3)</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744">Per government source</td><td style="padding:8px;color:#475569">+0.15 (max +0.3)</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:8px;font-weight:600;color:#1a2744">Verified dollar value</td><td style="padding:8px;color:#475569">+0.1</td></tr>
+          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744">Multi-tier discovery</td><td style="padding:8px;color:#475569">+0.05 to +0.1</td></tr>
+          <tr><td style="padding:8px;font-weight:600;color:#1a2744">Staleness decay</td><td style="padding:8px;color:#475569">-0.05 to -0.20 after 30+ days without re-confirmation</td></tr>
+        </table>
+      </div>
+      <div class="card" style="padding:24px;margin-bottom:20px">
+        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Editorial Policy</h3>
+        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">All content on The Lagging Indicator is factual reporting. The platform presents data, context, and connections between indicators and projects. It does not take positions, make recommendations, or express opinions.</p>
+        <ul style="font-size:var(--text-sm);color:#475569;line-height:1.8;padding-left:20px">
+          <li>Every factual claim cites a specific source</li>
+          <li>Indicator values reference the exact StatCan table or source API</li>
+          <li>Project data includes evidence URLs for independent verification</li>
+          <li>No language implying events are good, bad, promising, or worrying</li>
+          <li>Conditional language for projections ("if rates hold..." not "rates will...")</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:24px;margin-bottom:20px">
+        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Data Validation</h3>
+        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">A 7-rule validation layer runs before every data export:</p>
+        <ol style="font-size:var(--text-sm);color:#475569;line-height:1.8;padding-left:20px">
+          <li><strong>Range check</strong> — values within plausible bounds for each indicator class</li>
+          <li><strong>Delta check</strong> — period-over-period changes within historical thresholds</li>
+          <li><strong>Null consistency</strong> — if value is null, change must also be null</li>
+          <li><strong>Period recency</strong> — reference period within expected freshness window</li>
+          <li><strong>Change verification</strong> — stored change independently recomputed from values</li>
+          <li><strong>Duplicate detection</strong> — flags identical values across unrelated indicators</li>
+          <li><strong>Unit verification</strong> — cross-checks stored units against expected units</li>
+        </ol>
+        <p style="font-size:var(--text-xs);color:#64748B;margin-top:8px">Indicators that fail validation are flagged as "under review" rather than displayed with incorrect values.</p>
+      </div>
+      <div class="card" style="padding:24px">
+        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Known Limitations</h3>
+        <ul style="font-size:var(--text-sm);color:#475569;line-height:1.8;padding-left:20px">
+          <li>Productivity Growth data is sparse for some economies (US, China, EU)</li>
+          <li>Some commodity prices may show stale data when yfinance returns cached values</li>
+          <li>Project classification is under development — most projects currently tagged as Greenfield</li>
+          <li>Provincial GDP data uses annual figures (StatCan does not publish provincial quarterly GDP)</li>
+          <li>The construction price index (Table 18-10-0135) has been discontinued by Statistics Canada</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </main>
 <footer class="site-footer">

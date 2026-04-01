@@ -1328,6 +1328,15 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
         'United Kingdom': 'ONS/BoE',
         'UK': 'ONS/BoE',
     }
+    _CANONICAL_URLS = {
+        'United States': 'https://www.federalreserve.gov/monetarypolicy/openmarket.htm',
+        'US': 'https://www.federalreserve.gov/monetarypolicy/openmarket.htm',
+        'China': 'http://www.stats.gov.cn/english/',
+        'European Union': 'https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html',
+        'EU': 'https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html',
+        'United Kingdom': 'https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes',
+        'UK': 'https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes',
+    }
     for region, region_data in primary_ind.get('global', {}).items():
         for field, value in region_data.items():
             if field.endswith('_src') or not value or value == 'N/A':
@@ -1346,6 +1355,7 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
                 'source_meta': {
                     'authority': _GLOBAL_AUTHORITIES.get(region, source_label),
                     'reference_period': today_str,
+                    'source_url': _CANONICAL_URLS.get(region, ''),
                 },
             })
             count += 1

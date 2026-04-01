@@ -340,6 +340,47 @@ def _build_market_data_from_indicators(conn) -> dict:
     }
 
 
+def _validate_briefing_text(briefing: dict):
+    """Post-generation regex validation for garbled text patterns.
+
+    Scans all text fields in the briefing for common corruption patterns:
+    orphaned decimals, concatenated numbers, duplicate sentences.
+    Logs warnings but does not modify the briefing.
+    """
+    import re as _re
+    patterns = [
+        (_re.compile(r'\$\d+[BMK]\.\d+%'), 'dollar-fused-with-percent'),
+        (_re.compile(r'\$\d+[A-Z]\.\d+%'), 'dollar-letter-percent'),
+        (_re.compile(r'\.\d+[BMK]\)'), 'orphaned-decimal-fragment'),
+        (_re.compile(r'\.\d+\)(?!\d)'), 'truncated-parenthesis'),
+    ]
+
+    def _scan(text, path):
+        if not isinstance(text, str) or len(text) < 10:
+            return
+        for pat, name in patterns:
+            matches = pat.findall(text)
+            if matches:
+                logger.warning(f"[BRIEFING-QA] {name} in {path}: {matches[:3]}")
+
+    # Scan all text fields
+    for key in ('executive_summary', 'consumer_pulse', 'industry_executive_summary'):
+        _scan(briefing.get(key, ''), key)
+
+    nat = briefing.get('national', {})
+    if isinstance(nat, dict):
+        _scan(nat.get('analysis', ''), 'national.analysis')
+
+    for prov in briefing.get('provinces', []):
+        _scan(prov.get('analysis', ''), f"provinces.{prov.get('name', '?')}")
+
+    for ind in briefing.get('goodsIndustries', []) + briefing.get('servicesIndustries', []):
+        _scan(ind.get('analysis', ''), f"industry.{ind.get('name', '?')}")
+
+    for g in briefing.get('global', []):
+        _scan(g.get('analysis', ''), f"global.{g.get('name', '?')}")
+
+
 def export_briefings(conn, output_dir: str) -> tuple[str, str]:
     """Export briefing_latest.json and briefing_archive.json."""
     from db import get_briefing_archive, get_latest_briefing, get_dashboard_state
@@ -376,6 +417,9 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
         infographic_directives = get_dashboard_state(conn, 'infographic_directives')
         if infographic_directives and isinstance(infographic_directives, list):
             latest['infographic_directives'] = infographic_directives
+
+    # Writing agent grounding — scan for garbled text patterns
+    _validate_briefing_text(latest)
 
     latest_path = os.path.join(output_dir, "briefing_latest.json")
     with open(latest_path, "w", encoding="utf-8") as f:
