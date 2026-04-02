@@ -644,6 +644,185 @@ body{font-family:'Inter','Work Sans',-apple-system,sans-serif;background:#f4f6f8
 .tldr-empty{text-align:center;padding:24px;color:#7a8599;font-size:13px;font-style:italic}
 @media(max-width:899px){.tldr-page{padding:20px 16px}.tldr-headline-band h2{font-size:22px}.tldr-ind-table td,.tldr-ind-table th{padding:4px}.tldr-projects-table td,.tldr-projects-table th{padding:6px 8px}}
 @media(max-width:599px){.tldr-page{padding:16px 12px}.tldr-headline-band h2{font-size:20px}.tldr-headline-meta{flex-wrap:wrap;gap:8px}.tldr-projects-table{font-size:11px}}
+/* ── Provinces Tab ── */
+#tab-provinces .page{max-width:1200px;margin:0 auto;padding:32px 40px;display:flex;gap:32px}
+#tab-provinces .prov-sidebar{width:200px;flex-shrink:0;position:sticky;top:56px;align-self:flex-start;max-height:calc(100vh - 80px);overflow-y:auto}
+#tab-provinces .prov-sidebar-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#7a8599;padding:0 12px 10px;border-bottom:1px solid #e8ecf0;margin-bottom:6px}
+#tab-provinces .prov-radio{display:none}
+#tab-provinces .prov-label{display:block;padding:8px 12px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:#4a5568;border-radius:6px;transition:background 0.1s,color 0.1s;border-left:3px solid transparent;margin-bottom:1px}
+#tab-provinces .prov-label:hover{background:#e8eef4;color:#1a1a1a}
+#tab-provinces .prov-radio:checked+.prov-label{color:#003153;font-weight:600;background:#e8eef4;border-left-color:#003153}
+#tab-provinces .page-main{flex:1;min-width:0}
+#tab-provinces .province-header-card{background:#003153;border-radius:8px;padding:28px 32px;color:#fff;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end}
+#tab-provinces .province-header-card h2{font-family:'Source Serif 4',Georgia,serif;font-size:28px;font-weight:700;margin-bottom:4px}
+#tab-provinces .province-sub{font-size:13px;color:rgba(255,255,255,0.65)}
+#tab-provinces .province-header-stats{display:flex;gap:32px;text-align:right}
+#tab-provinces .province-header-stats .stat-value{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+#tab-provinces .province-header-stats .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:rgba(255,255,255,0.6)}
+#tab-provinces .section-header{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #e8ecf0;margin-bottom:20px}
+#tab-provinces .section-header .accent-bar{width:4px;height:22px;background:#003153;border-radius:2px;flex-shrink:0}
+#tab-provinces .section-header h3{font-family:'Source Serif 4',Georgia,serif;font-size:20px;font-weight:700;color:#1a1a1a;flex:1;margin:0}
+#tab-provinces .section-header .section-meta{font-size:12px;color:#7a8599;white-space:nowrap}
+#tab-provinces .section-block{padding:0 0 28px;margin-bottom:28px}
+#tab-provinces .narrative{font-family:'Source Serif 4',Georgia,serif;font-size:16px;line-height:1.75;color:#1a1a1a}
+#tab-provinces .narrative p{margin-bottom:16px}
+#tab-provinces .narrative .lead-sentence{font-weight:600}
+#tab-provinces .narrative sup{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#003153;cursor:pointer}
+#tab-provinces .callout{background:#e8eef4;border-left:3px solid #003153;border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0 20px;font-family:'Inter',sans-serif;font-size:13px;color:#4a5568;line-height:1.6}
+#tab-provinces .callout strong{color:#1a1a1a;font-weight:600}
+#tab-provinces .indicator-panel{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;overflow:hidden;margin-bottom:24px}
+#tab-provinces .ind-table{width:100%;border-collapse:collapse;font-size:11px}
+#tab-provinces .ind-table thead th{background:#003153;color:#ffffff;padding:8px 12px;text-align:left;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+#tab-provinces .ind-table thead th:nth-child(n+2){text-align:right}
+#tab-provinces .ind-table tbody td{padding:9px 12px;border-bottom:1px solid #e8ecf0;vertical-align:middle}
+#tab-provinces .ind-table tbody tr:last-child td{border-bottom:none}
+#tab-provinces .ind-table tbody tr:hover{background:#e8eef4}
+#tab-provinces .ind-table tbody td:nth-child(n+2){text-align:right}
+#tab-provinces .ind-table .ind-name{font-weight:500;color:#1a1a1a;white-space:normal}
+#tab-provinces .ind-table .ind-val{font-weight:700;color:#1a1a1a;font-variant-numeric:tabular-nums}
+#tab-provinces .ind-freq{font-size:10px;font-weight:500;color:#7a8599;text-align:center}
+#tab-provinces .chg-up{color:#0d7a3f}
+#tab-provinces .chg-down{color:#c4320a}
+#tab-provinces .chg-flat{color:#7a8599}
+#tab-provinces .ind-period{font-size:10px;color:#7a8599}
+#tab-provinces .ind-source{font-size:10px;color:#7a8599}
+#tab-provinces .ind-section-label{font-size:13px;font-weight:600;color:#003153;margin:20px 0 8px;padding:0}
+#tab-provinces .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+#tab-provinces .enrichment-card{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:18px 20px}
+#tab-provinces .enrichment-card-title{font-size:12px;font-weight:600;color:#003153;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+#tab-provinces .enrichment-card-title .dot{width:6px;height:6px;border-radius:50%;background:#003153}
+#tab-provinces .enrichment-card p{font-family:'Source Serif 4',Georgia,serif;font-size:14px;color:#4a5568;line-height:1.6}
+#tab-provinces .enrichment-metric{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid #e8ecf0;font-size:13px}
+#tab-provinces .enrichment-metric:last-child{border-bottom:none}
+#tab-provinces .enrichment-metric .label{color:#4a5568}
+#tab-provinces .enrichment-metric .value{font-weight:600;color:#1a1a1a;font-variant-numeric:tabular-nums}
+#tab-provinces .insight-chart-wrapper{background:#ffffff;border:1px solid #d5dbe3;border-top:3px solid #003153;border-radius:0 0 8px 8px;padding:24px;margin:24px 0}
+#tab-provinces .insight-chart-title{font-size:14px;font-weight:700;color:#003153;margin-bottom:4px}
+#tab-provinces .insight-chart-subtitle{font-size:12px;color:#1a1a1a;margin-bottom:16px}
+#tab-provinces .chart-wrap{position:relative;height:220px;width:100%}
+#tab-provinces .chart-source{margin-top:10px;font-size:10px;color:#4a5568;border-top:1px solid rgba(0,49,83,0.08);padding-top:8px}
+#tab-provinces .inner-card{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:16px 20px}
+#tab-provinces .policy-item{border-bottom:1px solid #e8ecf0}
+#tab-provinces .policy-item:last-child{border-bottom:none}
+#tab-provinces .policy-item summary{padding:12px 0;font-size:13px;font-weight:600;color:#1a1a1a;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+#tab-provinces .policy-item summary::-webkit-details-marker{display:none}
+#tab-provinces .policy-item summary::before{content:'\25B8';font-size:11px;color:#7a8599}
+#tab-provinces .policy-item[open] summary::before{content:'\25BE'}
+#tab-provinces .policy-item .policy-body{padding:0 0 14px 22px;font-family:'Source Serif 4',Georgia,serif;font-size:13px;color:#4a5568;line-height:1.65}
+#tab-provinces .policy-link{display:inline-block;margin-top:6px;font-family:'Inter',sans-serif;font-size:11px;color:#003153;text-decoration:none}
+#tab-provinces .policy-link:hover{text-decoration:underline}
+#tab-provinces .projects-table{width:100%;border-collapse:collapse;font-size:13px}
+#tab-provinces .projects-table thead th{background:#003153;color:#fff;padding:10px 12px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+#tab-provinces .projects-table tbody td{padding:10px 12px;border-bottom:1px solid #e8ecf0;vertical-align:middle}
+#tab-provinces .projects-table tbody tr:hover{background:#e8eef4}
+#tab-provinces .status-badge{display:inline-block;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:500;white-space:nowrap}
+#tab-provinces .status-proposed{background:#fef3c7;color:#92400e}
+#tab-provinces .status-pre{background:#dbeafe;color:#1e40af}
+#tab-provinces .status-construction{background:#d1fae5;color:#065f46}
+#tab-provinces .status-review{background:#ede9fe;color:#5b21b6}
+#tab-provinces .footer-link{display:block;text-align:right;padding:12px 16px;font-size:12px;color:#003153;text-decoration:none;border-top:1px solid #e8ecf0}
+#tab-provinces .footer-link:hover{text-decoration:underline}
+#tab-provinces .sources-section{margin-top:28px;padding-top:20px;border-top:1px solid #d5dbe3}
+#tab-provinces .sources-section summary{font-size:13px;font-weight:600;color:#7a8599;cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px}
+#tab-provinces .sources-section summary::-webkit-details-marker{display:none}
+#tab-provinces .sources-section summary::before{content:'\25B8';font-size:11px}
+#tab-provinces .sources-section[open] summary::before{content:'\25BE'}
+#tab-provinces .sources-section ol{margin-top:12px;padding-left:24px;font-size:12px;color:#7a8599;line-height:1.8}
+#tab-provinces .sources-section ol a{color:#003153;text-decoration:none}
+#tab-provinces .sources-section ol a:hover{text-decoration:underline}
+#tab-provinces .watchlist-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #e8ecf0;font-size:13px}
+#tab-provinces .watchlist-item:last-child{border-bottom:none}
+#tab-provinces .watchlist-date{font-weight:600;color:#003153;white-space:nowrap;min-width:70px;font-size:12px}
+#tab-provinces .watchlist-event{color:#1a1a1a;flex:1}
+#tab-provinces .watchlist-institution{font-size:11px;color:#7a8599;white-space:nowrap}
+#tab-provinces .impact-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+#tab-provinces .impact-high{background:#c4320a}
+#tab-provinces .impact-medium{background:#d97706}
+#tab-provinces .impact-low{background:#7a8599}
+@media(max-width:899px){#tab-provinces .page{flex-direction:column;padding:20px 16px}#tab-provinces .prov-sidebar{width:100%;position:static;max-height:none;display:flex;flex-wrap:wrap;gap:4px}#tab-provinces .prov-sidebar-title{width:100%;padding:8px 0 4px;border-bottom:none}#tab-provinces .prov-label{display:inline-block;padding:6px 10px}#tab-provinces .two-col{grid-template-columns:1fr}#tab-provinces .province-header-card{flex-direction:column;align-items:flex-start;gap:16px}#tab-provinces .province-header-stats{text-align:left}}
+/* ── National Tab Scoped Styles ── */
+#tab-national .country-tabs{display:flex;gap:0;border-bottom:1px solid #d5dbe3;margin-bottom:28px}
+#tab-national .country-tab{padding:10px 20px;font-size:13px;font-weight:500;color:#7a8599;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Inter',-apple-system,sans-serif}
+#tab-national .country-tab:hover{color:#4a5568}
+#tab-national .country-tab.active{color:#003153;border-bottom-color:#003153;font-weight:600}
+#tab-national .section-header{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #e8ecf0;margin-bottom:20px}
+#tab-national .section-header .accent-bar{width:4px;height:22px;background:#003153;border-radius:2px;flex-shrink:0}
+#tab-national .section-header h3{font-family:'Source Serif 4',Georgia,serif;font-size:20px;font-weight:700;color:#1a1a1a;flex:1;margin:0}
+#tab-national .section-header .section-meta{font-size:12px;color:#7a8599;white-space:nowrap}
+#tab-national .section-block{padding:0 0 28px;margin-bottom:28px}
+#tab-national .indicator-panel{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;overflow:hidden;margin-bottom:24px}
+#tab-national .indicator-panel-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #e8ecf0}
+#tab-national .indicator-panel-title{font-size:14px;font-weight:600;color:#1a1a1a;display:flex;align-items:center;gap:8px}
+#tab-national .indicator-panel-title .flag{font-size:18px}
+#tab-national .dash-ind-table{width:100%;border-collapse:collapse;font-size:11px}
+#tab-national .dash-ind-table thead th{background:#003153;color:#ffffff;padding:8px 12px;text-align:left;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+#tab-national .dash-ind-table thead th:nth-child(n+2){text-align:right}
+#tab-national .dash-ind-table tbody td{padding:9px 12px;border-bottom:1px solid #e8ecf0;vertical-align:middle}
+#tab-national .dash-ind-table tbody tr:last-child td{border-bottom:none}
+#tab-national .dash-ind-table tbody tr:hover{background:#e8eef4}
+#tab-national .dash-ind-table tbody td:nth-child(n+2){text-align:right}
+#tab-national .dash-ind-table .ind-name{font-weight:500;color:#1a1a1a;white-space:normal}
+#tab-national .dash-ind-table .ind-val{font-weight:700;color:#1a1a1a;font-variant-numeric:tabular-nums}
+#tab-national .ind-freq{display:inline-block;font-size:9px;font-weight:500;color:#7a8599;background:#e8eef4;border:1px solid #d5dbe3;padding:1px 5px;border-radius:3px;margin-left:6px;text-transform:uppercase;letter-spacing:0.3px;vertical-align:middle}
+#tab-national .chg-up{color:#0d7a3f}
+#tab-national .chg-down{color:#c4320a}
+#tab-national .chg-flat{color:#7a8599}
+#tab-national .ind-period{font-size:10px;color:#7a8599}
+#tab-national .ind-source{font-size:10px;color:#7a8599}
+#tab-national .dash-narrative{font-family:'Source Serif 4',Georgia,serif;font-size:16px;line-height:1.75;color:#1a1a1a}
+#tab-national .dash-narrative p{margin-bottom:16px}
+#tab-national .dash-narrative .lead{font-weight:600}
+#tab-national .dash-narrative sup{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#003153;cursor:pointer}
+#tab-national .dash-callout{background:#e8eef4;border-left:3px solid #003153;border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0 20px;font-family:'Inter',sans-serif;font-size:13px;color:#4a5568;line-height:1.6}
+#tab-national .dash-callout strong{color:#1a1a1a;font-weight:600}
+#tab-national .insight-chart-wrapper{background:#ffffff;border:1px solid #d5dbe3;border-top:3px solid #003153;border-radius:0 0 8px 8px;padding:24px;margin:24px 0}
+#tab-national .insight-chart-title{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#003153;margin-bottom:4px}
+#tab-national .insight-chart-subtitle{font-size:12px;color:#1a1a1a;margin-bottom:16px}
+#tab-national .chart-wrap{position:relative;height:220px;width:100%}
+#tab-national .chart-source{margin-top:10px;font-size:10px;color:#4a5568;border-top:1px solid rgba(0,49,83,0.08);padding-top:8px}
+#tab-national .chart-placeholder{height:220px;background:#ffffff;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px;border:1px dashed #d5dbe3}
+#tab-national .inner-card{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:16px 20px}
+#tab-national .policy-item{border-bottom:1px solid #e8ecf0}
+#tab-national .policy-item:last-child{border-bottom:none}
+#tab-national .policy-item summary{padding:12px 0;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#1a1a1a;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+#tab-national .policy-item summary::-webkit-details-marker{display:none}
+#tab-national .policy-item summary::before{content:'\25B8';font-size:11px;color:#7a8599;transition:transform 0.15s}
+#tab-national .policy-item[open] summary::before{content:'\25BE'}
+#tab-national .policy-item .policy-body{padding:0 0 14px 22px;font-family:'Source Serif 4',Georgia,serif;font-size:13px;color:#4a5568;line-height:1.65}
+#tab-national .policy-link{display:inline-block;margin-top:6px;font-family:'Inter',sans-serif;font-size:11px;color:#003153;text-decoration:none}
+#tab-national .policy-link:hover{text-decoration:underline}
+#tab-national .dash-projects-table{width:100%;border-collapse:collapse;font-size:13px}
+#tab-national .dash-projects-table thead th{background:#003153;color:#ffffff;padding:10px 12px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+#tab-national .dash-projects-table tbody td{padding:10px 12px;border-bottom:1px solid #e8ecf0;vertical-align:middle}
+#tab-national .dash-projects-table tbody tr:hover{background:#e8eef4}
+#tab-national .dash-status-badge{display:inline-block;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:500;white-space:nowrap}
+#tab-national .status-proposed{background:#fef3c7;color:#92400e}
+#tab-national .status-pre{background:#dbeafe;color:#1e40af}
+#tab-national .status-construction{background:#d1fae5;color:#065f46}
+#tab-national .status-review{background:#ede9fe;color:#5b21b6}
+#tab-national .dash-footer-link{display:block;text-align:right;padding:12px 16px;font-size:12px;color:#003153;text-decoration:none;border-top:1px solid #e8ecf0;cursor:pointer;background:none;border-left:none;border-right:none;border-bottom:none;width:100%;font-family:'Inter',sans-serif}
+#tab-national .dash-footer-link:hover{text-decoration:underline}
+#tab-national .dash-sources-section{margin-top:28px;padding-top:20px;border-top:1px solid #d5dbe3}
+#tab-national .dash-sources-section summary{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#7a8599;cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px}
+#tab-national .dash-sources-section summary::-webkit-details-marker{display:none}
+#tab-national .dash-sources-section summary::before{content:'\25B8';font-size:11px}
+#tab-national .dash-sources-section[open] summary::before{content:'\25BE'}
+#tab-national .dash-sources-section ol{margin-top:12px;padding-left:24px;font-size:12px;color:#7a8599;line-height:1.8}
+#tab-national .dash-sources-section ol a{color:#003153;text-decoration:none}
+#tab-national .dash-sources-section ol a:hover{text-decoration:underline}
+#tab-national .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+#tab-national .enrichment-card{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:18px 20px}
+#tab-national .enrichment-card-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#003153;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+#tab-national .enrichment-card-title .dot{width:6px;height:6px;border-radius:50%;background:#003153}
+#tab-national .enrichment-card p{font-family:'Source Serif 4',Georgia,serif;font-size:14px;color:#4a5568;line-height:1.6}
+#tab-national .enrichment-metric{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid #e8ecf0;font-size:13px}
+#tab-national .enrichment-metric:last-child{border-bottom:none}
+#tab-national .enrichment-metric .label{color:#4a5568}
+#tab-national .enrichment-metric .value{font-weight:600;color:#1a1a1a;font-variant-numeric:tabular-nums}
+#tab-national .subtab-panel{display:none}
+#tab-national .subtab-panel.active{display:block}
+@media(max-width:899px){#tab-national .two-col{grid-template-columns:1fr}#tab-national .dash-narrative{font-size:15px}#tab-national .dash-ind-table{font-size:10px}}
+@media(max-width:599px){#tab-national .country-tabs{overflow-x:auto}#tab-national .country-tab{padding:8px 14px;font-size:12px}#tab-national .dash-projects-table{font-size:11px}}
 .newsletter-hero{background:linear-gradient(135deg,rgba(255,255,255,0.97),rgba(240,245,255,0.95));border:1px solid rgba(255,255,255,0.5);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:28px 32px;position:relative;overflow:hidden}
 .newsletter-hero::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:#003153}
 .newsletter-hero .hero-headline{font-family:var(--font-heading);font-size:var(--text-xl);font-weight:800;color:#0f1b33;line-height:1.25;margin-bottom:12px;letter-spacing:-0.02em}
@@ -708,57 +887,11 @@ body{font-family:'Inter','Work Sans',-apple-system,sans-serif;background:#f4f6f8
   </div>
   <!-- NATIONAL -->
   <div class="tab-panel" id="tab-national" role="tabpanel" aria-labelledby="tab-national-label">
-    <div class="section-banner" id="nationalBanner" style="--banner-img:url('https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1200&q=80')">
-      <div class="section-banner-content">
-        <div class="section-banner-title" id="nationalBannerTitle">Canada</div>
-        <div class="section-banner-sub" id="nationalBannerSub">National economic indicators, analysis, policy, and capital projects</div>
-      </div>
-    </div>
-    <div class="national-subtabs" id="nationalSubtabs">
-      <button class="national-subtab active" data-country="canada" onclick="switchNationalSub('canada')">Canada</button>
-      <button class="national-subtab" data-country="us" onclick="switchNationalSub('us')">United States</button>
-      <button class="national-subtab" data-country="china" onclick="switchNationalSub('china')">China</button>
-      <button class="national-subtab" data-country="eu" onclick="switchNationalSub('eu')">European Union</button>
-      <button class="national-subtab" data-country="uk" onclick="switchNationalSub('uk')">United Kingdom</button>
-    </div>
-    <!-- Canada subpanel -->
-    <div class="national-subpanel active" id="nsub-canada">
-      <div class="editorial-article">
-        <div class="editorial-header" id="canadaEditorialHeader"></div>
-        <div class="editorial-flow">
-          <div id="natAnalysisSection"></div>
-          <div class="ed-clear"></div>
-          <div id="policySection"></div>
-          <div class="ed-clear"></div>
-          <div id="canadaProjectsPreview"></div>
-          <div class="ed-clear"></div>
-        </div>
-      </div>
-    </div>
-    <!-- Global player subpanels -->
-    <div class="national-subpanel" id="nsub-us"></div>
-    <div class="national-subpanel" id="nsub-china"></div>
-    <div class="national-subpanel" id="nsub-eu"></div>
-    <div class="national-subpanel" id="nsub-uk"></div>
+    <div id="nationalPage" style="max-width:1200px;margin:0 auto;padding:32px 40px"></div>
   </div>
   <!-- PROVINCES -->
   <div class="tab-panel" id="tab-provinces" role="tabpanel" aria-labelledby="tab-provinces-label">
-    <div class="section-banner" id="provBanner" style="--banner-img:url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80')">
-      <div class="section-banner-content">
-        <div class="section-banner-title" id="provBannerTitle">Provincial Analysis</div>
-        <div class="section-banner-sub">Provincial economic trends, updated weekly</div>
-      </div>
-    </div>
-    <div id="provComparisonView" style="margin-bottom:16px"></div>
-    <div class="province-selector" id="provSelector"></div>
-    <div class="editorial-article" id="provEditorialArticle">
-      <div class="editorial-header" id="provEditorialHeader"></div>
-      <div class="editorial-flow">
-        <div id="provAnalysisSection"></div>
-        <div class="ed-clear"></div>
-        <div id="provProjectsPreview"></div>
-      </div>
-    </div>
+    <div id="provincesPage"></div>
   </div>
   <!-- INDUSTRIES -->
   <div class="tab-panel" id="tab-industries" role="tabpanel" aria-labelledby="tab-industries-label">
