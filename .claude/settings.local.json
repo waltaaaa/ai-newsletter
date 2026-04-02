@@ -88,7 +88,8 @@
       "Bash(python -c \"import local_llm; print\\(''Available:'', local_llm.get_model\\(\\)\\); print\\(local_llm.classify_article\\(''TransAlta $1.2B gas plant expansion in Alberta''\\)\\)\")",
       "Bash(pip install:*)",
       "Bash(rm -f nul pipeline.log pipeline2.log pipeline3.log seed_run_2026-03-02.log seed_run_2026-03-02b.log fix_log_prompt_01.txt fix_log_prompt_02.txt fix_log_prompt_03.txt fix_log_prompt_04.txt fix_log_prompt_05.txt fix_log_prompt_06.txt fix_log_prompt_07.txt fix_log_prompt_08.txt fix_log_prompt_09.txt fix_log_prompt_10.txt fix_log_all.txt)",
-      "Bash(ls filtered_*.txt)"
+      "Bash(ls filtered_*.txt)",
+      "Bash(python:*)"
     ]
   }
 }
