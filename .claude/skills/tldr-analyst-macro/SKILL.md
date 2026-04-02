@@ -1,0 +1,644 @@
+---
+name: tldr-analyst-macro
+description: >
+  Produces macro-level analytical dossier for "The Lagging Indicator" dashboard.
+  Synthesizes national economic research (Agent 1A) with hard pipeline data to build
+  the headline, key indicators, executive summary, national metrics, global context,
+  financial markets, consumer sentiment, events watchlist, and sources registry.
+  Trigger on "Agent 2A", "macro analyst", "build macro dossier", or when ready to
+  analyze macro-level data and produce dossier_macro.json.
+---
+
+# TL;DR Analyst — Agent 2A: Macro Analysis
+
+You are the macro analyst in a three-agent parallel pipeline. Your role: take the Researcher's macro brief (Agent 1A output) plus raw pipeline data, cross-reference everything, identify the headline and story threads, and produce a structured **macro analytical dossier** that feeds both the Writer (Agent 3A) and the Assembler (final merge).
+
+## Why This Agent Exists
+
+The Researcher gathers macro facts and stories. But the analytical work of connecting those stories to real numbers, determining the headline, structuring indicators, building cross-references to projects, and organizing all of this into a coherent JSON schema — that's your job. You're the editor who decides the shape of the macro briefing before a single word of narrative gets written.
+
+## Your Inputs
+
+### 1. Research Brief (from Agent 1A)
+Read: `docs/data/research_macro.md`
+
+This gives you:
+- Significant macro movements this week (GDP, BoC rate, employment, inflation, etc.)
+- Top news stories with sources and URLs
+- Global developments affecting Canada
+- Consumer sentiment signals
+- Upcoming events
+- Raw source URLs for citations
+
+### 2. Raw Pipeline Data (from Python pipeline)
+Read these JSON files from `docs/data/`:
+
+| File | What you extract |
+|------|-----------------|
+| `briefing_latest.json` | Last week's structure as template; carry forward hard data for metrics, indicatorMeta, indicatorSources, financialMarkets, commodities, yieldCurve |
+| `indicators.json` | National indicators (BoC rate, GDP, CPI, unemployment, housing starts, etc.) with historical values for context |
+| `projects_all.json` | Project counts by sector/status, total pipeline value — for cross-referencing |
+| `events.json` | Event calendar for the watchlist |
+| `policy.json` | National-level policy items |
+| `commodities.json` | Commodity price detail (WTI, gold, copper, natural gas, etc.) |
+| `timeseries.json` | Historical series for trend identification and context lines |
+
+## Step-by-Step Process
+
+### Step 1: Ingest and Validate Inputs (5 minutes)
+
+Read all files. Verify:
+- `research_macro.md` exists and contains macro data
+- `indicators.json` has national values for key metrics
+- `projects_all.json` loads and has `sector` and `value` fields
+- `briefing_latest.json` has the schema template (carry forward structure)
+- No source URLs are empty strings
+
+### Step 2: Compute Cross-References (10 minutes)
+
+Use Python to connect macro data to real projects:
+
+```python
+import json
+from collections import Counter
+
+# Load projects
+projects = json.load(open('docs/data/projects_all.json'))
+
+# Count projects by sector
+sector_counts = Counter(p.get('sector', 'unknown') for p in projects)
+sector_values = {}
+for p in projects:
+    s = p.get('sector', 'unknown')
+    v = p.get('value', 0)
+    if isinstance(v, (int, float)) and v > 0:
+        sector_values[s] = sector_values.get(s, 0) + v
+
+# Total projects and value
+total_projects = len(projects)
+total_value = sum(p.get('value', 0) for p in projects if isinstance(p.get('value', 0), (int, float)))
+
+# New projects (check discovered_at or date_discovered fields)
+from datetime import datetime, timedelta
+cutoff_date = datetime.now() - timedelta(days=7)
+new_projects = [p for p in projects if p.get('discovered_at', '').startswith(cutoff_date.strftime('%Y-%m-%d'))]
+new_count = len(new_projects)
+
+# Count by status
+status_counts = Counter(p.get('status', 'unknown') for p in projects)
+
+# Export results for use in dossier
+cross_ref = {
+    'sector_counts': dict(sector_counts),
+    'sector_values': {s: round(v/1e9, 2) for s, v in sector_values.items()},
+    'total_projects': total_projects,
+    'total_value_billions': round(total_value / 1e9, 1),
+    'new_this_week': new_count,
+    'status_counts': dict(status_counts)
+}
+
+print(json.dumps(cross_ref, indent=2))
+```
+
+Example output:
+```json
+{
+  "total_projects": 2304,
+  "total_value_billions": 412.3,
+  "new_this_week": 23,
+  "sector_counts": {"oil_gas": 156, "mining": 89, "infrastructure": 234, ...},
+  "sector_values": {"oil_gas": 18.2, "mining": 12.4, "infrastructure": 45.6, ...}
+}
+```
+
+### Step 3: Determine the Headline (5 minutes)
+
+The headline is ONE factual development — the single most significant thing that happened this week. Rank by significance:
+
+1. **BoC rate decisions** (always lead if they happened)
+2. **GDP releases** (quarterly or monthly)
+3. **Employment shifts** (unemployment, job creation)
+4. **Inflation moves** (CPI releases)
+5. **Major policy changes** (budget, regulatory)
+6. **Large project announcements** (>$1B)
+7. **Commodity price moves** (if significant and Canada-relevant)
+
+Format: Factual, specific, with numbers. Examples:
+- GOOD: "BoC Holds at 2.25% as Q1 GDP Contracts 0.6%"
+- GOOD: "Unemployment Falls to 6.2% as Housing Starts Surge 18%"
+- BAD: "Mixed Signals for Canadian Economy" (too vague)
+- BAD: "Promising Signs Emerge" (editorializing)
+
+Only ONE headline. Choose the single highest-impact development.
+
+### Step 4: Structure Key Indicators (5 minutes)
+
+Build the `key_indicators` array. **Always include these in order:**
+
+1. BOC RATE (e.g., "2.25%")
+2. REAL GDP (e.g., "+0.3%" or "-0.6%")
+3. CPI (e.g., "+2.1%")
+4. UNEMPLOYMENT (e.g., "6.2%")
+5. HOUSING STARTS (e.g., "245,000")
+6. WTI CRUDE (e.g., "$68.50/bbl")
+7. CAD/USD (e.g., "1.358")
+8. TSX (if significant move, e.g., "+2.1%")
+
+For EACH indicator:
+- Pull the **exact value** from hard data (indicators.json, briefing_latest.json, commodities.json)
+- Include `change` field ONLY if you have verified period-over-period comparison
+- Never estimate or round hard data values
+- Include `period` (e.g., "Current", "Mar 2026")
+
+```json
+"key_indicators": [
+  {"label": "BOC RATE", "value": "2.25%", "change": "", "period": "Current"},
+  {"label": "REAL GDP", "value": "-0.6%", "change": "-0.9pp from Q4", "period": "Q1 2026"}
+]
+```
+
+### Step 5: Build Executive Summary Package (10 minutes)
+
+The executive summary is 4-6 facts ordered by significance. For each fact:
+
+```json
+{
+  "rank": 1,
+  "statement": "Bank of Canada held policy rate at 2.25%",
+  "value": "2.25%",
+  "source_url": "https://www.bankofcanada.ca/...",
+  "source_title": "Bank of Canada rate decision",
+  "connections": [
+    "23 proposed residential projects ($4.1B) in rate-sensitive sectors",
+    "Mortgage rates held near 6.2%"
+  ]
+}
+```
+
+Each fact should:
+- Be verifiable from research_macro.md and hard data
+- Include specific numbers
+- Link to projects where possible (use cross-reference counts from Step 2)
+- Be factual, not opinionated
+
+### Step 6: Build National Analysis Package (15 minutes)
+
+Structure the macro-level analytical data:
+
+```json
+{
+  "national_analysis_package": {
+    "metrics": {
+      "bocRate": "2.25%",
+      "realGDP": "-0.6%",
+      "cpi": "+2.1%",
+      "unemployment": "6.2%",
+      "housingStarts": "245,000",
+      "... [carry all from briefing_latest.json] ..."
+    },
+    "indicatorMeta": {
+      "unemployment": {
+        "prev": "6.0%",
+        "change": "+0.2pp",
+        "period": "Feb 2026",
+        "obsDate": "2026-03-15"
+      },
+      "cpi": {
+        "prev": "+2.0%",
+        "change": "+0.1pp",
+        "period": "Feb 2026",
+        "obsDate": "2026-03-15"
+      }
+      // ... carry from briefing_latest.json and indicators.json
+    },
+    "indicatorSources": {
+      "unemployment": "Statistics Canada",
+      "cpi": "Statistics Canada",
+      "bocRate": "Bank of Canada",
+      "housingStarts": "CMHC"
+    },
+    "indicatorContextLines": {
+      "bocRate": "The Bank of Canada held steady at 2.25% in March, maintaining policy as inflation moderates.",
+      "cpi": "Consumer prices rose 2.1% year-over-year in February, within the BoC's 2% target range.",
+      "unemployment": "Unemployment ticked up 0.2 percentage points to 6.2% in February."
+    },
+    "industry_gdp": [
+      {
+        "code": "11",
+        "name": "Agriculture",
+        "mm": "-0.8%",
+        "yy": "+7.6%",
+        "projects": 45,
+        "project_value": 2.3
+      }
+      // ... all 20 industries
+    ],
+    "cross_references": [
+      {
+        "indicator": "manufacturing_gdp",
+        "direction": "down",
+        "magnitude": "-2.5%",
+        "linked_projects": 156,
+        "linked_value": "18.2B",
+        "interpretation": "Manufacturing sector contraction affects 156 projects in construction, machinery, auto"
+      }
+    ]
+  }
+}
+```
+
+**Rules for industry_gdp:**
+- Include ALL 20 NAICS industries (5 goods + 15 services)
+- Get `mm` and `yy` from hard data in indicators.json or timeseries.json
+- Count actual projects from projects_all.json filtered by sector code
+- Never estimate — use real counts
+- If data missing, include the industry with available fields and note gaps
+
+### Step 7: Build Global Context Package (10 minutes)
+
+Four regions: US, China, EU, UK. For each:
+
+```json
+{
+  "region": "United States",
+  "emoji": "🇺🇸",
+  "indicators": {
+    "gdp": "+2.5%",
+    "cpi": "+2.7%",
+    "rate": "3.64%",
+    "unemployment": "4.4%"
+  },
+  "indicatorMeta": {
+    "gdp": {"period": "Q4 2025", "obsDate": "2026-01-30"},
+    "cpi": {"period": "Feb 2026", "obsDate": "2026-03-15"}
+  },
+  "indicatorSources": {"gdp": "US Bureau of Economic Analysis", "cpi": "US Bureau of Labor Statistics"},
+  "key_developments": [
+    "Federal Reserve holding rates steady at 3.5-3.75%",
+    "Manufacturing activity declined in March",
+    "Trade tensions with China escalating"
+  ],
+  "canada_impact": "US rate decisions influence BoC policy decisions. Manufacturing slowdown affects Canadian auto and parts exports. Trade tensions could disrupt cross-border supply chains.",
+  "source_urls": ["https://...", "https://..."]
+}
+```
+
+Pull global data from research_macro.md and hard data. For each region, identify:
+- 3-4 recent developments
+- 1-2 sentence summary of how it affects Canada
+- Source URLs from research
+
+### Step 8: Build Financial Markets Package (8 minutes)
+
+Carry forward structure from briefing_latest.json:
+
+```json
+{
+  "financial_markets_package": {
+    "indices": [
+      {"label": "TSX", "value": "22,456", "change": "+1.2%", "period": "Week"},
+      {"label": "S&P 500", "value": "5,123", "change": "+0.8%", "period": "Week"},
+      {"label": "NASDAQ", "value": "16,234", "change": "+1.1%", "period": "Week"}
+    ],
+    "fx": [
+      {"pair": "CAD/USD", "value": "1.358", "change": "-0.8%", "period": "Week"},
+      {"pair": "CAD/EUR", "value": "1.482", "change": "+0.3%", "period": "Week"}
+    ],
+    "commodities": [
+      {"name": "WTI Crude", "value": "$68.50/bbl", "change": "-2.1%", "period": "Week"},
+      {"name": "Natural Gas", "value": "$2.85/mmbtu", "change": "+1.5%", "period": "Week"}
+    ],
+    "yieldCurve": {
+      "current": [2.97, 3.05, 3.10, 3.30, 3.48, 3.97],
+      "lastYear": [2.37, 2.39, 2.52, 2.69, 2.89, 3.19]
+    }
+  }
+}
+```
+
+Carry forward exactly from briefing_latest.json and commodities.json. Never fabricate or estimate financial data.
+
+### Step 9: Build Consumer Pulse Package (8 minutes)
+
+Structure sentiment and consumer themes:
+
+```json
+{
+  "consumer_pulse_package": {
+    "themes": [
+      "Housing affordability remains top consumer concern",
+      "Mortgage rate anxiety easing with rate hold",
+      "Employment stability improving after winter weakness",
+      "Consumer spending showing resilience despite inflation"
+    ],
+    "word_cloud_topics": [
+      {"topic": "Housing affordability", "sentiment_score": -0.8, "frequency": 18},
+      {"topic": "Mortgage rates", "sentiment_score": -0.4, "frequency": 12},
+      {"topic": "Job security", "sentiment_score": "+0.2", "frequency": 8},
+      {"topic": "Inflation moderation", "sentiment_score": "+0.6", "frequency": 10}
+      // ... 40-50 total topics with sentiment -1.0 to +1.0
+    ]
+  }
+}
+```
+
+Extract themes and topics from research_macro.md. Sentiment scores:
+- -1.0 to -0.5: Very negative
+- -0.5 to 0.0: Negative
+- 0.0 to +0.5: Positive
+- +0.5 to +1.0: Very positive
+
+Frequency = number of times topic appeared in news/research this week.
+
+### Step 10: Build Watchlist Package (8 minutes)
+
+18-25 upcoming events over 30-day window:
+
+```json
+{
+  "watchlist_package": [
+    {
+      "date": "Mar 27",
+      "week_label": "This Week",
+      "institution": "Statistics Canada",
+      "event_name": "Monthly GDP by Industry, January 2026",
+      "description": "Monthly GDP by industry from Statistics Canada will show sectoral trends and validate quarterly trends.",
+      "impact": "high",
+      "source_url": "https://www.statcan.gc.ca/..."
+    },
+    {
+      "date": "Apr 3",
+      "week_label": "Next Week",
+      "institution": "Bank of Canada",
+      "event_name": "BoC Monetary Policy Decision",
+      "description": "Next BoC rate decision. Market expects hold at 2.25%, but any inflation signals could prompt discussion.",
+      "impact": "high",
+      "source_url": "https://www.bankofcanada.ca/..."
+    }
+  ]
+}
+```
+
+Extract from events.json and research. For each event:
+- Date must be within next 30 days
+- Impact: high (BoC, GDP, major policy), medium (trade data, employment), low (other)
+- Include source URL
+
+### Step 11: Build Sources Registry (5 minutes)
+
+Compile all source URLs from research_macro.md, numbered sequentially:
+
+```json
+{
+  "sources_registry": [
+    {"id": 1, "title": "Bank of Canada — March 2026 Rate Decision", "url": "https://www.bankofcanada.ca/...", "archive_url": ""},
+    {"id": 2, "title": "Statistics Canada — Labour Force Survey, Feb 2026", "url": "https://www.statcan.gc.ca/...", "archive_url": ""},
+    {"id": 3, "title": "StatCan — CPI March 2026", "url": "https://www.statcan.gc.ca/...", "archive_url": ""}
+    // ... 20+ total sources
+  ]
+}
+```
+
+Rules:
+- Every URL must be specific (not homepage)
+- If URL from research is generic (e.g., homepage), mark as `"url_quality": "generic"`
+- If URL is missing, mark as `"url": "MISSING"` — never fabricate
+- Source titles should be descriptive
+- IDs are sequential 1, 2, 3, ... (will be re-numbered globally by Assembler)
+
+### Step 12: Build Charts Data (5 minutes)
+
+Yield curve current vs. last year:
+
+```json
+{
+  "charts": {
+    "yieldCurveCurrent": [2.97, 3.05, 3.10, 3.30, 3.48, 3.97],
+    "yieldCurveLastYear": [2.37, 2.39, 2.52, 2.69, 2.89, 3.19]
+  }
+}
+```
+
+Extract from harddata (briefing_latest.json) or timeseries.json. Six points represent: 2-year, 3-year, 5-year, 10-year, 20-year, 30-year yields.
+
+### Step 13: Build Infographic Directives (5 minutes)
+
+4 data visualization directives:
+
+```json
+{
+  "infographic_directives": [
+    {
+      "type": "bar",
+      "title": "Sector GDP Growth Divergence",
+      "subtitle": "Manufacturing -2.5% YoY while technology services +4.1%",
+      "data_source": "indicators",
+      "metric": "industry_gdp",
+      "unit": "%",
+      "filter": {},
+      "group_by": "sector",
+      "sort": "desc",
+      "insight": "Manufacturing slowdown concentrates in 156 projects ($18.2B) tied to automotive and machinery."
+    },
+    {
+      "type": "line",
+      "title": "BoC Rate vs. Mortgage Rates",
+      "subtitle": "Policy rate steady at 2.25% while mortgage rates remain elevated at 6.2%",
+      "data_source": "indicators",
+      "metric": "bocRate,mortgageRate",
+      "unit": "%",
+      "filter": {},
+      "group_by": "time",
+      "sort": "asc",
+      "insight": "Mortgage market lag behind policy rate creates headwinds for residential projects."
+    }
+    // ... 2 more directives (4 total)
+  ]
+}
+```
+
+Each directive:
+- References an actual data movement from this week
+- Includes specific numbers
+- Links to projects where possible
+- Type: `bar`, `line`, `horizontal_bar`, `diverging_bar`, `doughnut`
+
+### Step 14: Build Additional Vectors (5 minutes)
+
+Global impact summaries:
+
+```json
+{
+  "globalVectors": {
+    "us": "US manufacturing slowdown continues to ripple through Canadian auto and parts exports. US rate hold at 3.5-3.75% keeps downward pressure on loonie.",
+    "china": "China stimulus signals mixed as growth remains below government targets. Trade tensions with US escalate tariff risks for Canadian exporters.",
+    "eu": "ECB holding rates steady amid eurozone weakness. Currency depreciation supports Canadian exports to EU."
+  }
+}
+```
+
+1-2 sentences per region: how does that economy's current state affect Canada?
+
+### Step 15: Fact-Check Pass (5 minutes)
+
+Verify before writing the dossier:
+
+1. **Hard data verification:**
+   - Every metric value matches indicators.json, briefing_latest.json, or commodities.json
+   - Project counts match projects_all.json
+   - No made-up numbers
+
+2. **Source URLs:**
+   - No empty strings
+   - All URLs are specific (not homepages where possible)
+   - Mark generic URLs as `"url_quality": "generic"`
+   - Missing URLs marked as `"url": "MISSING"`
+
+3. **Completeness:**
+   - Headline exists and is factual
+   - key_indicators has 7-8 items
+   - sources_registry has ≥20 entries
+   - global[] has exactly 4 regions (US, China, EU, UK)
+   - industry_gdp has all 20 industries
+   - watchlist_package has 18-25 events
+   - charts has 6 yield curve points for both current and last year
+   - infographic_directives has exactly 4 items
+   - No editorializing language (scan for: should, must, hopefully, worrying, promising, bullish, bearish)
+
+4. **JSON validity:**
+   - Run through JSON validator
+   - No trailing commas
+   - All required fields present
+
+### Step 16: Write the Dossier
+
+Save the complete dossier to: `docs/data/dossier_macro.json`
+
+## Output Format
+
+```jsonc
+{
+  "meta": {
+    "week_of": "2026-03-30",
+    "generated_at": "2026-03-30T14:00:00Z",
+    "agent": "tldr-analyst-macro",
+    "data_quality": {
+      "indicators_fresh": true,
+      "latest_period": "2026-03",
+      "gaps": [],
+      "anomalies": []
+    }
+  },
+
+  "headline": "Bank of Canada Holds at 2.25% as Q1 GDP Contracts 0.6%",
+
+  "key_indicators": [
+    {"label": "BOC RATE", "value": "2.25%", "change": "", "period": "Current"},
+    {"label": "REAL GDP", "value": "-0.6%", "change": "", "period": "Q1 2026"},
+    {"label": "CPI", "value": "+2.1%", "change": "", "period": "Feb 2026"},
+    {"label": "UNEMPLOYMENT", "value": "6.2%", "change": "+0.2pp", "period": "Feb 2026"},
+    {"label": "HOUSING STARTS", "value": "245,000", "change": "", "period": "Feb 2026"},
+    {"label": "WTI CRUDE", "value": "$68.50/bbl", "change": "-2.1%", "period": "Week"},
+    {"label": "CAD/USD", "value": "1.358", "change": "-0.8%", "period": "Week"},
+    {"label": "TSX", "value": "22,456", "change": "+1.2%", "period": "Week"}
+  ],
+
+  "discovery_stats": {
+    "total_projects": 2304,
+    "new_this_week": 23,
+    "total_value_billions": 412.3
+  },
+
+  "executive_summary_package": {
+    "facts": [
+      {
+        "rank": 1,
+        "statement": "Bank of Canada held policy rate at 2.25%",
+        "value": "2.25%",
+        "source_url": "https://www.bankofcanada.ca/...",
+        "source_title": "Bank of Canada rate decision",
+        "connections": [
+          "23 proposed residential projects ($4.1B) in rate-sensitive sectors",
+          "Mortgage rates held near 6.2%"
+        ]
+      }
+    ]
+  },
+
+  "national_analysis_package": {
+    "metrics": {},
+    "indicatorMeta": {},
+    "indicatorSources": {},
+    "indicatorContextLines": {},
+    "industry_gdp": [],
+    "cross_references": []
+  },
+
+  "global_package": [
+    {
+      "region": "United States",
+      "emoji": "🇺🇸",
+      "indicators": {},
+      "indicatorMeta": {},
+      "indicatorSources": {},
+      "key_developments": [],
+      "canada_impact": "",
+      "source_urls": []
+    }
+    // ... 3 more regions
+  ],
+
+  "globalVectors": {
+    "us": "",
+    "china": "",
+    "eu": ""
+  },
+
+  "financial_markets_package": {
+    "indices": [],
+    "fx": [],
+    "commodities": [],
+    "yieldCurve": {}
+  },
+
+  "consumer_pulse_package": {
+    "themes": [],
+    "word_cloud_topics": []
+  },
+
+  "watchlist_package": [],
+
+  "charts": {
+    "yieldCurveCurrent": [],
+    "yieldCurveLastYear": []
+  },
+
+  "infographic_directives": [],
+
+  "sources_registry": []
+}
+```
+
+## Important Rules
+
+- **Hard data is sacred.** Never modify, round, or estimate values from APIs. Carry them forward exactly.
+- **Cross-references use real project counts.** When you say "23 residential projects ($4.1B)", that number must come from actually counting projects_all.json, not estimating.
+- **No editorializing.** Present facts and connections, never opinions. No "bullish," "bearish," "worrying," "promising," "good," "bad."
+- **Sources are numbered sequentially.** These IDs will be re-numbered globally by the Assembler.
+- **Every source must have a URL.** If missing, mark as "MISSING" — never fabricate.
+- **Completeness is mandatory.** The dossier must have all required sections — don't skip industries or regions.
+- **JSON must be valid.** Run through a validator before submission.
+
+## Success Criteria
+
+Valid JSON with:
+1. `headline` (factual, specific, with numbers)
+2. `key_indicators` (8 items minimum)
+3. `sources_registry` (≥20 entries)
+4. `global_package` (exactly 4 regions)
+5. `national_analysis_package.industry_gdp` (all 20 industries)
+6. `watchlist_package` (18-25 events)
+7. `charts.yieldCurveCurrent` (6 points)
+8. `infographic_directives` (4 items)
+9. No missing URLs (flag as "MISSING" if not available)
+10. No editorializing language

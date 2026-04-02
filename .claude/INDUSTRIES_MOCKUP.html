@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lagging Indicator — Industries</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --border: #d5dbe3;
+    --border-light: #e8ecf0;
+    --text: #1a1a1a;
+    --text-secondary: #4a5568;
+    --text-muted: #7a8599;
+    --accent: #003153;
+    --accent-light: #e8eef4;
+    --green: #0d7a3f;
+    --green-bg: #ecfdf5;
+    --red: #c4320a;
+    --red-bg: #fef2f2;
+    --grey: #7a8599;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header & Tabs ── */
+  .header { background: var(--accent); padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; color: #fff; }
+  .header .subtitle { color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 1px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .header-right .date-badge { font-size: 12px; font-weight: 600; color: #fff; background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 6px; }
+  .header-right .freshness { font-size: 11px; color: rgba(255,255,255,0.55); }
+  .tabs { background: #00253f; padding: 0 40px; display: flex; gap: 0; position: sticky; top: 0; z-index: 100; }
+  .tab { padding: 11px 18px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; cursor: pointer; transition: color 0.15s; }
+  .tab:hover { color: rgba(255,255,255,0.75); }
+  .tab.active { color: #fff; border-bottom-color: #fff; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 32px 40px; }
+
+  /* ── Section ── */
+  .section-header {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border-light); margin-bottom: 20px;
+  }
+  .section-header .accent-bar { width: 4px; height: 22px; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
+  .section-header h3 { font-family: 'Source Serif 4', Georgia, serif; font-size: 20px; font-weight: 700; color: var(--text); flex: 1; }
+  .section-header .section-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .section-block { padding: 0 0 28px; margin-bottom: 28px; }
+
+  /* ── Narrative ── */
+  .narrative { font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; line-height: 1.75; color: var(--text); }
+  .narrative p { margin-bottom: 16px; }
+  .narrative .lead-sentence { font-weight: 600; }
+  .callout {
+    background: var(--accent-light); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+    padding: 14px 18px; margin: 12px 0 20px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  }
+  .callout strong { color: var(--text); font-weight: 600; }
+
+  /* ── Mover Card ── */
+  .mover-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+  }
+  .mover-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .naics-badge { display: none; }
+  .mover-title { font-size: 16px; font-weight: 700; color: var(--text); flex: 1; }
+  .mover-direction { font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 6px; }
+  .mover-direction.up { background: var(--green-bg); color: var(--green); }
+  .mover-direction.down { background: var(--red-bg); color: var(--red); }
+  .mover-metrics {
+    display: flex; gap: 24px;
+    padding: 12px 0; margin-bottom: 12px;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .mover-metric { display: flex; flex-direction: column; gap: 2px; }
+  .mover-metric-label { font-size: 10px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+  .mover-metric-value { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .mover-analysis {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 14px; line-height: 1.65; color: var(--text-secondary);
+  }
+  .mover-analysis .lead-sentence { font-weight: 600; color: var(--text); }
+
+  /* ── View Toggle ── */
+  .controls-row { display: flex; align-items: center; gap: 24px; margin-bottom: 24px; }
+  .view-toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .toggle-btn {
+    padding: 8px 20px; font-size: 13px; font-weight: 600; border: none; cursor: pointer;
+    transition: all 0.15s; background: var(--surface); color: var(--text-muted);
+    border-right: 1px solid var(--border);
+  }
+  .toggle-btn:last-child { border-right: none; }
+  .toggle-btn:hover { background: var(--accent-light); color: var(--accent); }
+  .toggle-btn.active { background: var(--accent); color: #fff; }
+
+  /* ── Subsection Divider ── */
+  .subsection-divider {
+    font-size: 12px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 20px 0 12px; border-bottom: 1px solid var(--border-light); margin-bottom: 0;
+  }
+
+  /* ── Sector Table ── */
+  .sector-table-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden; margin-bottom: 24px;
+  }
+  .sector-table {
+    width: 100%; border-collapse: collapse; font-size: 14px;
+  }
+  .sector-table thead th {
+    background: var(--accent); color: #fff; padding: 11px 16px;
+    text-align: left; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .sector-table thead th:nth-child(n+3) { text-align: right; }
+
+  /* ── Data Row ── */
+  .sector-row { cursor: pointer; transition: background 0.1s; }
+  .sector-row:hover { background: var(--accent-light); }
+  .sector-row td {
+    padding: 13px 16px; border-bottom: 1px solid var(--border-light); vertical-align: middle;
+  }
+  .sector-row td:nth-child(n+3) { text-align: right; }
+  .sector-row td:first-child { display: none; }
+  .sector-table thead th:first-child { display: none; }
+
+  /* Chevron */
+  .row-chevron {
+    display: inline-block; width: 16px; height: 16px; text-align: center;
+    font-size: 10px; color: var(--text-muted); transition: transform 0.2s;
+    margin-right: 6px; vertical-align: middle;
+  }
+  .sector-row.expanded .row-chevron { transform: rotate(90deg); }
+
+  /* ── Expand Row ── */
+  .expand-row { display: none; }
+  .expand-row.visible { display: table-row; }
+  .expand-row td {
+    padding: 0; border-bottom: 1px solid var(--border-light);
+  }
+  .expand-content {
+    padding: 18px 24px 20px 24px;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 14px; line-height: 1.7; color: var(--text-secondary);
+    background: #fafbfc;
+    border-top: 1px dashed var(--border-light);
+  }
+  .expand-content .lead-sentence { font-weight: 600; color: var(--text); }
+  .expand-metrics {
+    display: flex; gap: 20px; margin-bottom: 10px;
+    font-family: 'Inter', sans-serif; font-size: 12px;
+  }
+  .expand-metric { display: flex; flex-direction: column; gap: 1px; }
+  .expand-metric-label { font-size: 9px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+  .expand-metric-value { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); }
+
+  .tbl-badge { display: none; }
+  .tbl-name { font-weight: 600; color: var(--text); }
+  .tbl-gdp { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tbl-projects { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .tbl-value { font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 13px; }
+
+  .chg-up { color: var(--green); font-weight: 600; }
+  .chg-down { color: var(--red); font-weight: 600; }
+  .chg-flat { color: var(--grey); }
+
+  /* ── Sources ── */
+  .sources {
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-light);
+    font-family: 'Inter', sans-serif; font-size: 11px; color: var(--text-muted); line-height: 1.6;
+  }
+  .sources span { font-weight: 600; color: var(--text-secondary); }
+  .sources a { color: var(--accent); text-decoration: none; }
+  .sources a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>The Lagging Indicator</h1>
+    <div class="subtitle">Canadian Economic Intelligence</div>
+  </div>
+  <div class="header-right">
+    <div class="date-badge">Week of March 30, 2026</div>
+    <div class="freshness">Updated 2h ago</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab">TL;DR</div>
+  <div class="tab">National</div>
+  <div class="tab">Provinces</div>
+  <div class="tab active">Industries</div>
+  <div class="tab">Markets</div>
+  <div class="tab">Projects</div>
+  <div class="tab">Calendar</div>
+  <div class="tab">Data Explorer</div>
+</div>
+
+<div class="page">
+
+  <!-- ═══ SECTION 1: Industry Overview ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Industry Overview</h3>
+      <span class="section-meta">20 NAICS sectors · GDP by industry, January 2026</span>
+    </div>
+    <div class="narrative">
+      <p><span class="lead-sentence">Fourteen of 20 NAICS sectors recorded positive month-over-month GDP growth in January</span> — led by utilities (+1.1%), construction (+0.8%), and arts & recreation (+0.6%). The six contracting sectors were concentrated in resource extraction and trade, with mining and oil & gas posting the steepest decline at −1.2%.</p>
+      <div class="callout">
+        <strong>Pipeline cross-reference:</strong> The database tracks 1,247 active projects ($418B) across all sectors. Goods-producing sectors account for 378 projects ($195B), services-producing sectors 869 projects ($223B). 34 projects changed status this week.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: Biggest Movers ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Biggest Movers</h3>
+      <span class="section-meta">Largest month-over-month changes</span>
+    </div>
+
+    <!-- Mover 1: Utilities -->
+    <div class="mover-card">
+      <div class="mover-card-header">
+        <div class="naics-badge">22</div>
+        <div class="mover-title">Utilities</div>
+        <span class="mover-direction up">▲ +1.1% month-over-month</span>
+      </div>
+      <div class="mover-metrics">
+        <div class="mover-metric"><span class="mover-metric-label">GDP (Monthly)</span><span class="mover-metric-value">$3.4B</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Year-over-Year</span><span class="mover-metric-value chg-up">+3.8%</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Active Projects</span><span class="mover-metric-value">42</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Pipeline Value</span><span class="mover-metric-value">$19B</span></div>
+      </div>
+      <div class="mover-analysis">
+        <span class="lead-sentence">Utility output rose 1.1% in January, the strongest month-over-month gain across all sectors</span> — driven by increased electricity generation in Ontario and Quebec during a colder-than-average month. Natural gas (AECO) spot prices averaged $2.85, down 8% from December. The database tracks 42 power and energy projects ($19B), with 6 new transmission and distribution projects added in the past month.
+        <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · AECO NGX · Project Database · IESO Ontario</div>
+      </div>
+    </div>
+
+    <!-- Mover 2: Construction -->
+    <div class="mover-card">
+      <div class="mover-card-header">
+        <div class="naics-badge">23</div>
+        <div class="mover-title">Construction</div>
+        <span class="mover-direction up">▲ +0.8% month-over-month</span>
+      </div>
+      <div class="mover-metrics">
+        <div class="mover-metric"><span class="mover-metric-label">GDP (Monthly)</span><span class="mover-metric-value">$9.6B</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Year-over-Year</span><span class="mover-metric-value chg-up">+2.1%</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Active Projects</span><span class="mover-metric-value">156</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Pipeline Value</span><span class="mover-metric-value">$84B</span></div>
+      </div>
+      <div class="mover-analysis">
+        <span class="lead-sentence">Construction GDP rose 0.8% in January as residential building activity accelerated</span> — building permits issued nationally reached $12.1B in February. Lumber prices rose 4.2% week-over-week, the largest weekly gain since November 2025. The database tracks 156 infrastructure and construction projects ($84B), with 8 status changes this week including 3 projects advancing to under construction.
+        <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · StatCan Table 34-10-0066 · Random Lengths Lumber · Project Database</div>
+      </div>
+    </div>
+
+    <!-- Mover 3: Mining -->
+    <div class="mover-card">
+      <div class="mover-card-header">
+        <div class="naics-badge">21</div>
+        <div class="mover-title">Mining, Quarrying, and Oil &amp; Gas</div>
+        <span class="mover-direction down">▼ −1.2% month-over-month</span>
+      </div>
+      <div class="mover-metrics">
+        <div class="mover-metric"><span class="mover-metric-label">GDP (Monthly)</span><span class="mover-metric-value">$14.8B</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Year-over-Year</span><span class="mover-metric-value chg-down">−3.4%</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Active Projects</span><span class="mover-metric-value">94</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Pipeline Value</span><span class="mover-metric-value">$62B</span></div>
+      </div>
+      <div class="mover-analysis">
+        <span class="lead-sentence">GDP in the mining and oil & gas sector declined 1.2% month-over-month in January, the third consecutive monthly decline</span> — WTI crude prices averaged $68 during the month, below the $70 breakeven for 12 tracked Alberta oil sands projects totalling $18.2B. The hiring signal monitor detected a −4% decline in energy sector postings in Calgary CMA.
+        <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · NYMEX WTI · Job Monitor (Indeed/Job Bank) · Project Database</div>
+      </div>
+    </div>
+
+    <!-- Mover 4: Information & Cultural -->
+    <div class="mover-card">
+      <div class="mover-card-header">
+        <div class="naics-badge">51</div>
+        <div class="mover-title">Information and Cultural Industries</div>
+        <span class="mover-direction down">▼ −0.4% month-over-month</span>
+      </div>
+      <div class="mover-metrics">
+        <div class="mover-metric"><span class="mover-metric-label">GDP (Monthly)</span><span class="mover-metric-value">$4.6B</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Year-over-Year</span><span class="mover-metric-value chg-down">−1.8%</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Active Projects</span><span class="mover-metric-value">31</span></div>
+        <div class="mover-metric"><span class="mover-metric-label">Pipeline Value</span><span class="mover-metric-value">$6.4B</span></div>
+      </div>
+      <div class="mover-analysis">
+        <span class="lead-sentence">Information and cultural industries GDP declined 0.4% in January, the second consecutive monthly contraction</span> — telecommunications revenue was flat while film and video production declined following the completion of several major studio projects in Vancouver and Toronto. The database tracks 31 telecom and cultural projects ($6.4B), including 8 data centre builds.
+        <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · CRTC Telecom Monitoring · Project Database</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: All Sectors (Expandable) ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>All Sectors</h3>
+      <span class="section-meta">Click any row to read the analysis · 20 NAICS industries</span>
+    </div>
+
+    <div class="controls-row">
+      <div class="view-toggle">
+        <button class="toggle-btn active">All</button>
+        <button class="toggle-btn">Goods-Producing</button>
+        <button class="toggle-btn">Services-Producing</button>
+      </div>
+    </div>
+
+    <!-- ── Goods-Producing ── -->
+    <div class="subsection-divider">Goods-Producing Industries</div>
+
+    <div class="sector-table-wrap">
+      <table class="sector-table">
+        <thead>
+          <tr>
+            <th style="width: 40px;"></th>
+            <th>Sector</th>
+            <th>GDP</th>
+            <th>Month-over-Month</th>
+            <th>Year-over-Year</th>
+            <th>Projects</th>
+            <th>Pipeline Value</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- 21 Mining -->
+          <tr class="sector-row expanded" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">21</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Mining, Quarrying, and Oil &amp; Gas</td>
+            <td class="tbl-gdp">$14.8B</td>
+            <td class="chg-down">▼ −1.2%</td>
+            <td class="chg-down">−3.4%</td>
+            <td class="tbl-projects">94</td>
+            <td class="tbl-value">$62B</td>
+          </tr>
+          <tr class="expand-row visible">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">3</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">WTI Average</span><span class="expand-metric-value">$68</span></div>
+                </div>
+                <span class="lead-sentence">GDP in the mining and oil & gas sector declined 1.2% month-over-month in January, the third consecutive monthly decline</span> — WTI crude prices averaged $68 during the month, below the $70 breakeven for 12 tracked Alberta oil sands projects totalling $18.2B. Western Canadian Select traded at a $14 discount to WTI. The hiring signal monitor detected a −4% decline in energy sector postings in Calgary CMA. Gold prices rose 2.1% to $2,045/oz, supporting 18 tracked gold mining projects ($8.4B) in Ontario and Quebec.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · NYMEX WTI · WCS Net Energy · LBMA Gold · Job Monitor · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 31-33 Manufacturing -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">31-33</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Manufacturing</td>
+            <td class="tbl-gdp">$12.2B</td>
+            <td class="chg-up">▲ +0.3%</td>
+            <td class="chg-down">−0.8%</td>
+            <td class="tbl-projects">68</td>
+            <td class="tbl-value">$28B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">4</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">2</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Hiring Signal</span><span class="expand-metric-value chg-up">+6%</span></div>
+                </div>
+                <span class="lead-sentence">Manufacturing GDP edged up 0.3% in January, recovering partially from a 0.5% decline in December</span> — food manufacturing led the rebound with a 1.2% gain, while transportation equipment manufacturing remained flat amid ongoing supply chain adjustments. The database tracks 68 manufacturing projects ($28B), including 14 EV battery and critical minerals processing facilities. The hiring signal monitor detected a +6% increase in manufacturing postings across southern Ontario CMAs.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Job Monitor (Indeed/Job Bank) · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 23 Construction -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">23</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Construction</td>
+            <td class="tbl-gdp">$9.6B</td>
+            <td class="chg-up">▲ +0.8%</td>
+            <td class="chg-up">+2.1%</td>
+            <td class="tbl-projects">156</td>
+            <td class="tbl-value">$84B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">8</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">5</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Permits (February)</span><span class="expand-metric-value">$12.1B</span></div>
+                </div>
+                <span class="lead-sentence">Construction GDP rose 0.8% in January as residential building activity accelerated</span> — building permits issued nationally reached $12.1B in February, up 4.8% from the prior month. Lumber prices rose 4.2% week-over-week, the largest weekly gain since November 2025. The database tracks 156 infrastructure and construction projects ($84B), with 3 projects advancing to under construction this week. Non-residential construction was flat, with institutional projects offsetting a decline in commercial starts.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · StatCan Table 34-10-0066 · Random Lengths Lumber · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 22 Utilities -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">22</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Utilities</td>
+            <td class="tbl-gdp">$3.4B</td>
+            <td class="chg-up">▲ +1.1%</td>
+            <td class="chg-up">+3.8%</td>
+            <td class="tbl-projects">42</td>
+            <td class="tbl-value">$19B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">2</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">2</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">AECO Spot</span><span class="expand-metric-value">$2.85</span></div>
+                </div>
+                <span class="lead-sentence">Utility output rose 1.1% in January, the strongest month-over-month gain across all sectors</span> — driven by increased electricity generation in Ontario and Quebec during a colder-than-average month. Natural gas (AECO) spot prices averaged $2.85, down 8% from December. The database tracks 42 power and energy projects ($19B), with 6 new transmission and distribution projects added in the past month. Ontario's Pickering nuclear refurbishment ($4.8B) advanced to detailed engineering.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · AECO NGX · IESO Ontario · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 11 Agriculture -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">11</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Agriculture, Forestry, Fishing and Hunting</td>
+            <td class="tbl-gdp">$2.8B</td>
+            <td class="chg-flat">— 0.0%</td>
+            <td class="chg-up">+1.2%</td>
+            <td class="tbl-projects">18</td>
+            <td class="tbl-value">$2.4B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Canola Price</span><span class="expand-metric-value">$685/t</span></div>
+                </div>
+                <span class="lead-sentence">Agriculture and forestry GDP was flat in January, continuing a seasonal pattern of low winter activity</span> — crop production was in its off-season while livestock output held steady. Canola futures traded at $685 per tonne, up 3% month-over-month. The database tracks 18 agriculture and forestry projects ($2.4B), including 4 food processing plant expansions in Saskatchewan and Manitoba. Lumber production in British Columbia declined 2% as mills adjusted to lower North American demand.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · ICE Canola Futures · Project Database</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Services-Producing ── -->
+    <div class="subsection-divider">Services-Producing Industries</div>
+
+    <div class="sector-table-wrap">
+      <table class="sector-table">
+        <thead>
+          <tr>
+            <th style="width: 40px;"></th>
+            <th>Sector</th>
+            <th>GDP</th>
+            <th>Month-over-Month</th>
+            <th>Year-over-Year</th>
+            <th>Projects</th>
+            <th>Pipeline Value</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- 53 Real Estate -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">53</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Real Estate and Rental and Leasing</td>
+            <td class="tbl-gdp">$18.6B</td>
+            <td class="chg-up">▲ +0.2%</td>
+            <td class="chg-up">+1.4%</td>
+            <td class="tbl-projects">312</td>
+            <td class="tbl-value">$86B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">6</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">4</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Policy Links</span><span class="expand-metric-value">3</span></div>
+                </div>
+                <span class="lead-sentence">Real estate GDP rose 0.2% in January, the fourth consecutive month of growth</span> — residential resale activity increased 3.1% nationally, with Toronto and Vancouver accounting for 42% of the volume. The Bank of Canada's overnight rate held at 3.25%. The database tracks 312 residential and commercial projects ($86B), the largest pipeline of any sector. Three housing policy items were flagged this week, including Ontario's accelerated permitting framework affecting 23 proposed residential projects ($4.1B).
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · CREA National Statistics · Bank of Canada · Policy Tracker · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 52 Finance -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">52</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Finance and Insurance</td>
+            <td class="tbl-gdp">$11.8B</td>
+            <td class="chg-up">▲ +0.3%</td>
+            <td class="chg-up">+1.1%</td>
+            <td class="tbl-projects">24</td>
+            <td class="tbl-value">$8.2B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">TSX Financials</span><span class="expand-metric-value chg-up">+1.8%</span></div>
+                </div>
+                <span class="lead-sentence">Finance and insurance GDP rose 0.3% in January, supported by increased lending activity and insurance premium growth</span> — the TSX Financials index gained 1.8% over the month. Mortgage origination volume rose 5.2% month-over-month, coinciding with the stabilization of the overnight rate. The database tracks 24 financial sector capital projects ($8.2B), primarily bank headquarters renovations and data centre builds in Toronto and Montreal.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · TMX TSX Financials · CMHC · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 91 Public Administration -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">91</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Public Administration</td>
+            <td class="tbl-gdp">$11.2B</td>
+            <td class="chg-up">▲ +0.1%</td>
+            <td class="chg-up">+0.6%</td>
+            <td class="tbl-projects">45</td>
+            <td class="tbl-value">$14B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">2</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Procurement Awards</span><span class="expand-metric-value">$320M</span></div>
+                </div>
+                <span class="lead-sentence">Public administration GDP edged up 0.1% in January, consistent with its low-volatility historical pattern</span> — federal procurement awards totalled $320M this week, including two defence infrastructure contracts. The database tracks 45 government projects ($14B), with 12 classified as defence-related. The policy tracker flagged 4 new legislative items affecting government capital spending, including a DND infrastructure modernization announcement.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Open Canada Procurement · Policy Tracker · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 62 Health Care -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">62</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Health Care and Social Assistance</td>
+            <td class="tbl-gdp">$10.4B</td>
+            <td class="chg-up">▲ +0.4%</td>
+            <td class="chg-up">+2.8%</td>
+            <td class="tbl-projects">54</td>
+            <td class="tbl-value">$22B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">3</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">2</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Hiring Signal</span><span class="expand-metric-value chg-up">+8%</span></div>
+                </div>
+                <span class="lead-sentence">Health care GDP rose 0.4% in January, continuing a sustained expansion driven by provincial capacity investments</span> — the job monitor detected an 8% increase in health care postings across all CMAs, the strongest hiring signal of any sector this week. The database tracks 54 health care infrastructure projects ($22B), including 9 hospital builds and 16 long-term care facilities. Two Ontario hospital projects advanced from proposed to pre-construction.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Job Monitor (Indeed/Job Bank) · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 54 Professional Services -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">54</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Professional, Scientific and Technical Services</td>
+            <td class="tbl-gdp">$8.4B</td>
+            <td class="chg-up">▲ +0.5%</td>
+            <td class="chg-up">+2.2%</td>
+            <td class="tbl-projects">15</td>
+            <td class="tbl-value">$4.1B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Hiring Signal</span><span class="expand-metric-value chg-up">+5%</span></div>
+                </div>
+                <span class="lead-sentence">Professional and technical services GDP grew 0.5% in January, one of the strongest performances among services sectors</span> — computer systems design and engineering services led the gain. The job monitor flagged a 5% increase in professional services postings in Toronto, Ottawa, and Montreal CMAs. The database tracks 15 projects ($4.1B) in this sector, primarily research campuses and technology hubs. Waterloo Region's tech corridor added one new R&D facility proposal.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Job Monitor (Indeed/Job Bank) · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 48-49 Transportation -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">48-49</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Transportation and Warehousing</td>
+            <td class="tbl-gdp">$6.8B</td>
+            <td class="chg-down">▼ −0.3%</td>
+            <td class="chg-flat">0.0%</td>
+            <td class="tbl-projects">78</td>
+            <td class="tbl-value">$38B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">2</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Rail Volume</span><span class="expand-metric-value chg-down">−2.4%</span></div>
+                </div>
+                <span class="lead-sentence">Transportation and warehousing GDP declined 0.3% in January as rail freight volume dropped 2.4%</span> — winter weather disruptions in the Prairies contributed to the rail decline. Air transportation was flat while trucking rose 0.5%. The database tracks 78 transport and logistics projects ($38B), including major transit expansions in Toronto, Vancouver, and Montreal. The Ontario Line ($19B) remained on schedule in pre-construction. Port of Vancouver throughput was down 1.8% year-over-year.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · CN/CP Rail Carloadings · Port of Vancouver · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 44-45 Retail Trade -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">44-45</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Retail Trade</td>
+            <td class="tbl-gdp">$6.2B</td>
+            <td class="chg-down">▼ −0.2%</td>
+            <td class="chg-down">−0.5%</td>
+            <td class="tbl-projects">22</td>
+            <td class="tbl-value">$3.8B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Retail Sales</span><span class="expand-metric-value chg-down">−0.8%</span></div>
+                </div>
+                <span class="lead-sentence">Retail trade GDP declined 0.2% in January following a post-holiday spending pullback</span> — retail sales fell 0.8% month-over-month nationally. Motor vehicle dealers led the decline at −1.4%, while food and beverage stores rose 0.3%. The database tracks 22 retail and commercial mixed-use projects ($3.8B), with one shopping centre redevelopment in Edmonton advancing to pre-construction. E-commerce sales grew 4.2% year-over-year, continuing to shift the commercial real estate mix.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · StatCan Table 20-10-0008 · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 41 Wholesale Trade -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">41</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Wholesale Trade</td>
+            <td class="tbl-gdp">$5.8B</td>
+            <td class="chg-up">▲ +0.1%</td>
+            <td class="chg-up">+0.4%</td>
+            <td class="tbl-projects">8</td>
+            <td class="tbl-value">$1.2B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Merchandise Trade</span><span class="expand-metric-value chg-flat">+0.1%</span></div>
+                </div>
+                <span class="lead-sentence">Wholesale trade GDP edged up 0.1% in January, holding near flat for the third consecutive month</span> — machinery and equipment wholesalers drove the marginal gain while petroleum product wholesalers declined. Merchandise trade volumes rose 0.1%. The database tracks 8 wholesale distribution and logistics projects ($1.2B), concentrated in the Greater Toronto and Hamilton Area. No status changes were recorded this week.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · StatCan Table 12-10-0129 · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 51 Information & Cultural -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">51</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Information and Cultural Industries</td>
+            <td class="tbl-gdp">$4.6B</td>
+            <td class="chg-down">▼ −0.4%</td>
+            <td class="chg-down">−1.8%</td>
+            <td class="tbl-projects">31</td>
+            <td class="tbl-value">$6.4B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Data Centre Projects</span><span class="expand-metric-value">8</span></div>
+                </div>
+                <span class="lead-sentence">Information and cultural industries GDP declined 0.4% in January, the second consecutive monthly contraction</span> — telecommunications revenue was flat while film and video production declined following the completion of several major studio projects in Vancouver and Toronto. The database tracks 31 telecom and cultural projects ($6.4B), including 8 data centre builds. A new 50MW data centre proposal was registered in Montreal this week.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · CRTC Telecom Monitoring · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 56 Administrative -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">56</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Administrative and Support Services</td>
+            <td class="tbl-gdp">$3.6B</td>
+            <td class="chg-up">▲ +0.2%</td>
+            <td class="chg-up">+0.9%</td>
+            <td class="tbl-projects">6</td>
+            <td class="tbl-value">$0.8B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Hiring Signal</span><span class="expand-metric-value chg-up">+2%</span></div>
+                </div>
+                <span class="lead-sentence">Administrative and support services GDP rose 0.2% in January, in line with its 12-month average growth rate</span> — employment services and building services led the gain. The job monitor detected a modest 2% increase in administrative postings nationally. The database tracks 6 projects ($0.8B) in this sector, primarily office and facilities management builds. No status changes this week.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Job Monitor (Indeed/Job Bank) · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 61 Educational Services -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">61</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Educational Services</td>
+            <td class="tbl-gdp">$3.4B</td>
+            <td class="chg-up">▲ +0.1%</td>
+            <td class="chg-up">+0.8%</td>
+            <td class="tbl-projects">38</td>
+            <td class="tbl-value">$12B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">2</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Under Construction</span><span class="expand-metric-value">14</span></div>
+                </div>
+                <span class="lead-sentence">Educational services GDP rose 0.1% in January, tracking the academic calendar pattern</span> — post-secondary enrolment growth of 2.8% year-over-year continued to drive institutional expansion. The database tracks 38 education projects ($12B), including 14 currently under construction. University of Toronto's Scarborough campus expansion ($1.2B) advanced from pre-construction to construction. The University of British Columbia registered a new science building proposal ($280M).
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 72 Accommodation & Food -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">72</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Accommodation and Food Services</td>
+            <td class="tbl-gdp">$2.8B</td>
+            <td class="chg-up">▲ +0.3%</td>
+            <td class="chg-up">+1.5%</td>
+            <td class="tbl-projects">14</td>
+            <td class="tbl-value">$2.6B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Occupancy Rate</span><span class="expand-metric-value">62%</span></div>
+                </div>
+                <span class="lead-sentence">Accommodation and food services GDP rose 0.3% in January, continuing a recovery that began in Q3 2025</span> — hotel occupancy rates averaged 62% nationally, up from 58% in January 2025. Food services revenue was up 1.8% year-over-year. The database tracks 14 tourism and hospitality projects ($2.6B), including 3 resort developments in British Columbia. A new hotel and convention centre proposal ($180M) was registered in Niagara Falls, Ontario.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Tourism Industry Association · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 81 Other Services -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">81</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Other Services</td>
+            <td class="tbl-gdp">$2.4B</td>
+            <td class="chg-flat">— 0.0%</td>
+            <td class="chg-up">+0.3%</td>
+            <td class="tbl-projects">5</td>
+            <td class="tbl-value">$0.4B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">0</span></div>
+                </div>
+                <span class="lead-sentence">Other services GDP was flat in January, consistent with its limited cyclical sensitivity</span> — this sector includes personal and laundry services, religious organizations, and civic associations. Automotive repair and maintenance was up 0.4% while personal care services were flat. The database tracks 5 projects ($0.4B) in this category, primarily community centre and religious facility builds. No status changes this week.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 55 Management of Companies -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">55</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Management of Companies and Enterprises</td>
+            <td class="tbl-gdp">$1.6B</td>
+            <td class="chg-down">▼ −0.1%</td>
+            <td class="chg-flat">0.0%</td>
+            <td class="tbl-projects">3</td>
+            <td class="tbl-value">$0.5B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">0</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">0</span></div>
+                </div>
+                <span class="lead-sentence">Management of companies and enterprises GDP dipped 0.1% in January, within normal fluctuation range</span> — this sector captures holding companies and head offices. The slight decline aligns with Q4 2025 corporate restructuring activity. The database tracks 3 projects ($0.5B), all corporate headquarters builds or renovations in Toronto's financial district. No status changes this week.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- 71 Arts & Recreation -->
+          <tr class="sector-row" onclick="toggleRow(this)">
+            <td><span class="tbl-badge">71</span></td>
+            <td class="tbl-name"><span class="row-chevron">&#9654;</span>Arts, Entertainment and Recreation</td>
+            <td class="tbl-gdp">$1.2B</td>
+            <td class="chg-up">▲ +0.6%</td>
+            <td class="chg-up">+2.4%</td>
+            <td class="tbl-projects">19</td>
+            <td class="tbl-value">$5.8B</td>
+          </tr>
+          <tr class="expand-row">
+            <td colspan="7">
+              <div class="expand-content">
+                <div class="expand-metrics">
+                  <div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">1</span></div>
+                  <div class="expand-metric"><span class="expand-metric-label">Under Construction</span><span class="expand-metric-value">6</span></div>
+                </div>
+                <span class="lead-sentence">Arts, entertainment and recreation GDP rose 0.6% in January, the third-strongest monthly gain across all sectors</span> — performing arts and spectator sports led the increase. The database tracks 19 tourism and culture projects ($5.8B), including 6 currently under construction. Calgary's Event Centre ($800M) is in the structural phase. A new performing arts centre proposal ($95M) was registered in Halifax this week.
+                <div class="sources"><span>Sources:</span> StatCan Table 36-10-0434 · Project Database</div>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleRow(row) {
+  var expandRow = row.nextElementSibling;
+  if (row.classList.contains('expanded')) {
+    row.classList.remove('expanded');
+    expandRow.classList.remove('visible');
+  } else {
+    row.classList.add('expanded');
+    expandRow.classList.add('visible');
+  }
+}
+</script>
+
+</body>
+</html>

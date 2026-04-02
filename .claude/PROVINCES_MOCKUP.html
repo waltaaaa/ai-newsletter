@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lagging Indicator — Provinces</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --border: #d5dbe3;
+    --border-light: #e8ecf0;
+    --text: #1a1a1a;
+    --text-secondary: #4a5568;
+    --text-muted: #7a8599;
+    --accent: #003153;
+    --accent-light: #e8eef4;
+    --green: #0d7a3f;
+    --green-bg: #ecfdf5;
+    --red: #c4320a;
+    --red-bg: #fef2f2;
+    --grey: #7a8599;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--accent);
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; color: #fff; }
+  .header .subtitle { color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 1px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .header-right .date-badge { font-size: 12px; font-weight: 600; color: #fff; background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 6px; }
+  .header-right .freshness { font-size: 11px; color: rgba(255,255,255,0.55); }
+
+  /* ── Tabs ── */
+  .tabs { background: #00253f; padding: 0 40px; display: flex; gap: 0; position: sticky; top: 0; z-index: 100; }
+  .tab { padding: 11px 18px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; cursor: pointer; transition: color 0.15s; }
+  .tab:hover { color: rgba(255,255,255,0.75); }
+  .tab.active { color: #fff; border-bottom-color: #fff; }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 40px;
+    display: flex;
+    gap: 32px;
+  }
+
+  /* ── Province Sidebar ── */
+  .prov-sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 56px;
+    align-self: flex-start;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+  }
+  .prov-sidebar-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    padding: 0 12px 10px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 6px;
+  }
+  .prov-radio { display: none; }
+  .prov-label {
+    display: block;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    transition: background 0.1s, color 0.1s;
+    border-left: 3px solid transparent;
+    margin-bottom: 1px;
+  }
+  .prov-label:hover {
+    background: var(--accent-light);
+    color: var(--text);
+  }
+  .prov-radio:checked + .prov-label {
+    color: var(--accent);
+    font-weight: 600;
+    background: var(--accent-light);
+    border-left-color: var(--accent);
+  }
+
+  /* ── Page Main (content area beside sidebar) ── */
+  .page-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ── Section Header ── */
+  .section-header {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 20px;
+  }
+  .section-header .accent-bar { width: 4px; height: 22px; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
+  .section-header h3 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 20px; font-weight: 700; color: var(--text); flex: 1;
+  }
+  .section-header .section-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .section-block { padding: 0 0 28px; margin-bottom: 28px; }
+
+  /* ── Province Header Card ── */
+  .province-header-card {
+    background: var(--accent);
+    border-radius: 8px;
+    padding: 28px 32px;
+    color: #fff;
+    margin-bottom: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .province-header-card h2 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 28px; font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .province-header-card .province-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+  }
+  .province-header-stats {
+    display: flex;
+    gap: 32px;
+    text-align: right;
+  }
+  .province-header-stats .stat-item { }
+  .province-header-stats .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .province-header-stats .stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* ── Indicator Panel ── */
+  .indicator-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .indicator-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .indicator-panel-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .indicator-panel-title .flag {
+    font-size: 18px;
+  }
+
+  /* ── Indicator Table ── */
+  .ind-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+  .ind-table thead th {
+    background: var(--accent);
+    color: #ffffff;
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .ind-table thead th:nth-child(n+2) { text-align: right; }
+  .ind-table tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border-light);
+    vertical-align: middle;
+  }
+  .ind-table tbody tr:last-child td { border-bottom: none; }
+  .ind-table tbody tr:hover { background: var(--accent-light); }
+  .ind-table tbody td:nth-child(n+2) { text-align: right; }
+  .ind-table .ind-name {
+    font-weight: 500;
+    color: var(--text);
+    white-space: normal;
+  }
+  .ind-table .ind-val {
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .ind-freq {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .chg-up { color: var(--green); }
+  .chg-down { color: var(--red); }
+  .chg-flat { color: var(--grey); }
+  .ind-period { font-size: 10px; color: var(--text-muted); }
+  .ind-source { font-size: 10px; color: var(--text-muted); }
+  .ind-section-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 20px 0 8px;
+    padding: 0;
+  }
+
+  /* ── Narrative ── */
+  .narrative {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px; line-height: 1.75; color: var(--text);
+  }
+  .narrative p { margin-bottom: 16px; }
+  .narrative .lead-sentence { font-weight: 600; }
+  .narrative sup { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; color: var(--accent); cursor: pointer; }
+
+  /* ── Callout ── */
+  .callout {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 12px 0 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  }
+  .callout strong { color: var(--text); font-weight: 600; }
+
+  /* ── Two-Column ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+
+  /* ── Enrichment Cards ── */
+  .enrichment-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px;
+  }
+  .enrichment-card-title {
+    font-size: 12px; font-weight: 600; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .enrichment-card-title .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .enrichment-card p {
+    font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+  }
+  .enrichment-metric {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 6px 0; border-bottom: 1px solid var(--border-light); font-size: 13px;
+  }
+  .enrichment-metric:last-child { border-bottom: none; }
+  .enrichment-metric .label { color: var(--text-secondary); }
+  .enrichment-metric .value { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+
+  /* ── Insight Chart ── */
+  .insight-chart-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 0 0 8px 8px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+  .insight-chart-title { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .insight-chart-subtitle { font-size: 12px; color: var(--text); margin-bottom: 16px; }
+  .chart-wrap { position: relative; height: 220px; width: 100%; }
+  .chart-source { margin-top: 10px; font-size: 10px; color: var(--text-secondary); border-top: 1px solid rgba(0,49,83,0.08); padding-top: 8px; }
+
+  /* ── Inner Card ── */
+  .inner-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; }
+
+  /* ── Policy Items ── */
+  .policy-item { border-bottom: 1px solid var(--border-light); }
+  .policy-item:last-child { border-bottom: none; }
+  .policy-item summary {
+    padding: 12px 0; font-size: 13px; font-weight: 600; color: var(--text);
+    cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px;
+  }
+  .policy-item summary::-webkit-details-marker { display: none; }
+  .policy-item summary::before { content: '▸'; font-size: 11px; color: var(--text-muted); }
+  .policy-item[open] summary::before { content: '▾'; }
+  .policy-item .policy-body {
+    padding: 0 0 14px 22px;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 13px; color: var(--text-secondary); line-height: 1.65;
+  }
+  .policy-link { display: inline-block; margin-top: 6px; font-family: 'Inter', sans-serif; font-size: 11px; color: var(--accent); text-decoration: none; }
+  .policy-link:hover { text-decoration: underline; }
+
+  /* ── Projects Table ── */
+  .projects-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .projects-table thead th {
+    background: var(--accent); color: #fff; padding: 10px 12px; text-align: left;
+    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .projects-table tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+  .projects-table tbody tr:hover { background: var(--accent-light); }
+  .status-badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+  .status-proposed { background: #fef3c7; color: #92400e; }
+  .status-pre { background: #dbeafe; color: #1e40af; }
+  .status-construction { background: #d1fae5; color: #065f46; }
+  .status-review { background: #ede9fe; color: #5b21b6; }
+  .footer-link { display: block; text-align: right; padding: 12px 16px; font-size: 12px; color: var(--accent); text-decoration: none; border-top: 1px solid var(--border-light); }
+  .footer-link:hover { text-decoration: underline; }
+
+  /* ── Sources ── */
+  .sources-section { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .sources-section summary { font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; }
+  .sources-section summary::-webkit-details-marker { display: none; }
+  .sources-section summary::before { content: '▸'; font-size: 11px; }
+  .sources-section[open] summary::before { content: '▾'; }
+  .sources-section ol { margin-top: 12px; padding-left: 24px; font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+  .sources-section ol a { color: var(--accent); text-decoration: none; }
+  .sources-section ol a:hover { text-decoration: underline; }
+
+  /* ── Watchlist ── */
+  .watchlist-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 13px;
+  }
+  .watchlist-item:last-child { border-bottom: none; }
+  .watchlist-date {
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    min-width: 70px;
+    font-size: 12px;
+  }
+  .watchlist-event { color: var(--text); flex: 1; }
+  .watchlist-institution {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .impact-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .impact-high { background: var(--red); }
+  .impact-medium { background: #d97706; }
+  .impact-low { background: var(--grey); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div>
+    <h1>The Lagging Indicator</h1>
+    <div class="subtitle">Canadian Economic Intelligence</div>
+  </div>
+  <div class="header-right">
+    <div class="date-badge">Week of March 30, 2026</div>
+    <div class="freshness">Updated 2h ago</div>
+  </div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tabs">
+  <div class="tab">TL;DR</div>
+  <div class="tab">National</div>
+  <div class="tab active">Provinces</div>
+  <div class="tab">Industries</div>
+  <div class="tab">Markets</div>
+  <div class="tab">Projects</div>
+  <div class="tab">Calendar</div>
+  <div class="tab">Data Explorer</div>
+</div>
+
+<div class="page">
+
+  <!-- Province Sidebar -->
+  <nav class="prov-sidebar">
+    <div class="prov-sidebar-title">Provinces</div>
+    <input type="radio" name="province" id="prov-ON" value="ON" class="prov-radio" checked>
+    <label for="prov-ON" class="prov-label">Ontario</label>
+    <input type="radio" name="province" id="prov-QC" value="QC" class="prov-radio">
+    <label for="prov-QC" class="prov-label">Quebec</label>
+    <input type="radio" name="province" id="prov-AB" value="AB" class="prov-radio">
+    <label for="prov-AB" class="prov-label">Alberta</label>
+    <input type="radio" name="province" id="prov-BC" value="BC" class="prov-radio">
+    <label for="prov-BC" class="prov-label">British Columbia</label>
+    <input type="radio" name="province" id="prov-SK" value="SK" class="prov-radio">
+    <label for="prov-SK" class="prov-label">Saskatchewan</label>
+    <input type="radio" name="province" id="prov-MB" value="MB" class="prov-radio">
+    <label for="prov-MB" class="prov-label">Manitoba</label>
+    <input type="radio" name="province" id="prov-NS" value="NS" class="prov-radio">
+    <label for="prov-NS" class="prov-label">Nova Scotia</label>
+    <input type="radio" name="province" id="prov-NB" value="NB" class="prov-radio">
+    <label for="prov-NB" class="prov-label">New Brunswick</label>
+    <input type="radio" name="province" id="prov-NL" value="NL" class="prov-radio">
+    <label for="prov-NL" class="prov-label">Newfoundland &amp; Labrador</label>
+    <input type="radio" name="province" id="prov-PE" value="PE" class="prov-radio">
+    <label for="prov-PE" class="prov-label">Prince Edward Island</label>
+    <div class="prov-sidebar-title" style="margin-top: 12px;">Territories</div>
+    <input type="radio" name="province" id="prov-YT" value="YT" class="prov-radio">
+    <label for="prov-YT" class="prov-label">Yukon</label>
+    <input type="radio" name="province" id="prov-NT" value="NT" class="prov-radio">
+    <label for="prov-NT" class="prov-label">Northwest Territories</label>
+    <input type="radio" name="province" id="prov-NU" value="NU" class="prov-radio">
+    <label for="prov-NU" class="prov-label">Nunavut</label>
+  </nav>
+
+  <!-- Page Main Content -->
+  <div class="page-main">
+
+  <!-- Province Header Card -->
+  <div class="province-header-card">
+    <div>
+      <h2>Ontario</h2>
+      <div class="province-sub">Weekly provincial economic analysis · GDP threshold: $500M</div>
+    </div>
+    <div class="province-header-stats">
+      <div class="stat-item">
+        <div class="stat-value">287</div>
+        <div class="stat-label">Active Projects</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">$148B</div>
+        <div class="stat-label">Pipeline Value</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">12</div>
+        <div class="stat-label">New This Week</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 1: Provincial Analysis ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Provincial Analysis</h3>
+    </div>
+
+    <div class="narrative">
+      <p><span class="lead-sentence">Ontario's labour market added 5,200 jobs in March, a deceleration from the 18,400 recorded in February</span> — the provincial unemployment rate rose to 6.4%, above the national average of 6.7% for the first time since September 2025.<sup>1</sup> Goods-producing sectors shed 2,100 positions while services-producing industries added 7,300.</p>
+
+      <div class="callout">
+        <strong>Cross-reference:</strong> The database tracks 287 active projects ($148B) in Ontario. Of those, 42 are in the construction sector — 8 list labour availability as a risk factor. The hiring signal monitor detected a +12% spike in construction postings across the Greater Toronto Area this week.
+      </div>
+
+      <p><span class="lead-sentence">The province tabled its 2026-27 budget on March 27, committing $4.8B in new capital infrastructure spending</span> — building permits in Ontario for February reached $4.2 billion, a 7.7% increase from January, driven primarily by non-residential permits in the Greater Golden Horseshoe.<sup>2</sup></p>
+
+      <div class="insight-chart-wrapper">
+        <div class="insight-chart-title">Ontario Unemployment Rose to 6.4% as Goods-Producing Sector Contracted</div>
+        <div class="insight-chart-subtitle">12-month trend · Seasonally adjusted</div>
+        <div class="chart-wrap"><canvas id="chart-prov-unemployment"></canvas></div>
+        <div class="chart-source">Source: Statistics Canada, Table 14-10-0287</div>
+      </div>
+
+      <p><span class="lead-sentence">Consumer price inflation in Ontario registered 2.4% year-over-year in March, below the national average of 2.6%</span> — shelter costs remained the primary driver at 4.6%, while transportation costs fell 0.8% year-over-year as gasoline prices declined.<sup>3</sup></p>
+    </div>
+
+    <details class="sources-section">
+      <summary>Sources (5)</summary>
+      <ol>
+        <li><a href="#">Statistics Canada — Labour Force Survey, March 2026 (Ontario)</a></li>
+        <li><a href="#">Statistics Canada — Building Permits, February 2026 (Ontario)</a></li>
+        <li><a href="#">Statistics Canada — Consumer Price Index, March 2026 (Ontario)</a></li>
+        <li><a href="#">CMHC — Housing Starts, March 2026</a></li>
+        <li><a href="#">Statistics Canada — GDP by Province, Q4 2025</a></li>
+      </ol>
+    </details>
+  </div>
+
+  <!-- ═══ SECTION 2: Policy Developments ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Policy Developments</h3>
+      <span class="section-meta">2 items · 1 provincial · 1 regulatory</span>
+    </div>
+
+    <div class="narrative" style="margin-bottom: 16px;">
+      <p style="font-size: 15px; line-height: 1.7;"><span class="lead-sentence">Provincial policy activity this week centred on a capital infrastructure budget commitment</span> — and a land-use tribunal decision affecting residential development in the Greater Golden Horseshoe.</p>
+    </div>
+
+    <div class="inner-card">
+      <details class="policy-item" open>
+        <summary>Ontario Budget 2026-27: $4.8B Capital Infrastructure Commitment</summary>
+        <div class="policy-body">
+          Ontario tabled its 2026-27 budget on March 27 with $4.8B in new capital infrastructure spending: $1.9B for highway construction, $1.2B for hospital expansions, $680M for transit, and the balance across education and broadband. 14 projects in the database are referenced by name.
+          <a href="#" class="policy-link">View on Ontario Ministry of Finance →</a>
+        </div>
+      </details>
+      <details class="policy-item" open>
+        <summary>Ontario Land Planning Appeal Tribunal — Barrie South Urban Growth Ruling</summary>
+        <div class="policy-body">
+          The LPAT approved the Barrie South urban growth boundary expansion on March 26, enabling development on 420 hectares of land south of Highway 400. Two proposed residential projects ($680M combined) in the database are located within the expansion area.
+          <a href="#" class="policy-link">View on CanLII →</a>
+        </div>
+      </details>
+    </div>
+
+    <details class="sources-section">
+      <summary>Sources (2)</summary>
+      <ol>
+        <li><a href="#">Ontario Ministry of Finance — Budget 2026-27</a></li>
+        <li><a href="#">CanLII — LPAT Decision: Barrie South Urban Growth Boundary</a></li>
+      </ol>
+    </details>
+  </div>
+
+  <!-- ═══ SECTION 3: Key Indicators ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Key Indicators — Ontario</h3>
+      <span class="section-meta">12 indicators · Updated March 31</span>
+    </div>
+
+    <div class="indicator-panel">
+      <table class="ind-table">
+        <thead>
+          <tr>
+            <th>Indicator</th>
+            <th>Frequency</th>
+            <th>Value</th>
+            <th>Change</th>
+            <th>Reference Period</th>
+            <th>Next Release</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ind-name">GDP Growth (Real)</td>
+            <td class="ind-freq">Quarterly</td>
+            <td class="ind-val">1.8%</td>
+            <td class="chg-down">▼ −0.4pp from Q3 (2.2%)</td>
+            <td class="ind-period">Q4 2025</td>
+            <td class="ind-period">May 30</td>
+            <td class="ind-source">StatCan 36-10-0402</td>
+          </tr>
+          <tr>
+            <td class="ind-name">Unemployment Rate</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">6.4%</td>
+            <td class="chg-up">▲ +0.2pp from Feb (6.2%)</td>
+            <td class="ind-period">March 2026</td>
+            <td class="ind-period">Apr 11</td>
+            <td class="ind-source">StatCan 14-10-0287</td>
+          </tr>
+          <tr>
+            <td class="ind-name">CPI Inflation</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">2.4%</td>
+            <td class="chg-up">▲ +0.1pp from Feb (2.3%)</td>
+            <td class="ind-period">March 2026</td>
+            <td class="ind-period">Apr 15</td>
+            <td class="ind-source">StatCan 18-10-0004</td>
+          </tr>
+          <tr>
+            <td class="ind-name">Employment Rate</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">61.8%</td>
+            <td class="chg-down">▼ −0.1pp from Feb (61.9%)</td>
+            <td class="ind-period">March 2026</td>
+            <td class="ind-period">Apr 11</td>
+            <td class="ind-source">StatCan 14-10-0287</td>
+          </tr>
+          <tr>
+            <td class="ind-name">Participation Rate</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">66.0%</td>
+            <td class="chg-flat">— unchanged from Feb (66.0%)</td>
+            <td class="ind-period">March 2026</td>
+            <td class="ind-period">Apr 11</td>
+            <td class="ind-source">StatCan 14-10-0287</td>
+          </tr>
+          <tr>
+            <td class="ind-name">Wage Growth</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">4.1%</td>
+            <td class="chg-down">▼ −0.3pp from Feb (4.4%)</td>
+            <td class="ind-period">March 2026</td>
+            <td class="ind-period">Apr 11</td>
+            <td class="ind-source">StatCan 14-10-0287</td>
+          </tr>
+          <tr>
+            <td class="ind-name">Housing Starts</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">82,400</td>
+            <td class="chg-up">▲ +3.2K from Feb (79.2K)</td>
+            <td class="ind-period">March 2026</td>
+            <td class="ind-period">Apr 16</td>
+            <td class="ind-source">CMHC</td>
+          </tr>
+          <tr>
+            <td class="ind-name">Building Permits</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">$4.2B</td>
+            <td class="chg-up">▲ +$0.3B from Jan ($3.9B)</td>
+            <td class="ind-period">February 2026</td>
+            <td class="ind-period">Apr 8</td>
+            <td class="ind-source">StatCan 34-10-0066</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 class="ind-section-label">Ontario-Specific Indicators</h4>
+    <div class="indicator-panel">
+      <table class="ind-table">
+        <thead>
+          <tr>
+            <th>Indicator</th>
+            <th>Frequency</th>
+            <th>Value</th>
+            <th>Change</th>
+            <th>Reference Period</th>
+            <th>Next Release</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ind-name">Auto Production (vehicles)</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">142,300</td>
+            <td class="chg-up">▲ +4.8% from Feb (135,800)</td>
+            <td class="ind-period">March 2026</td>
+            <td class="ind-period">Apr 22</td>
+            <td class="ind-source">DesRosiers Automotive</td>
+          </tr>
+          <tr>
+            <td class="ind-name">Toronto Home Price Index</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">$1,082,400</td>
+            <td class="chg-down">▼ −1.2% from Feb ($1,095,500)</td>
+            <td class="ind-period">March 2026</td>
+            <td class="ind-period">Apr 14</td>
+            <td class="ind-source">TRREB MLS HPI</td>
+          </tr>
+          <tr>
+            <td class="ind-name">Financial Services Employment</td>
+            <td class="ind-freq">Monthly</td>
+            <td class="ind-val">468,200</td>
+            <td class="chg-up">▲ +2,100 from Feb (466,100)</td>
+            <td class="ind-period">March 2026</td>
+            <td class="ind-period">Apr 11</td>
+            <td class="ind-source">StatCan 14-10-0022</td>
+          </tr>
+          <tr>
+            <td class="ind-name">Ring of Fire Mining Permits</td>
+            <td class="ind-freq">Quarterly</td>
+            <td class="ind-val">3 active</td>
+            <td class="chg-flat">— unchanged from Q3</td>
+            <td class="ind-period">Q4 2025</td>
+            <td class="ind-period">May 15</td>
+            <td class="ind-source">Ontario MNDM</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: Sector Signals ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Sector Signals</h3>
+      <span class="section-meta">4 sector categories</span>
+    </div>
+
+    <div class="two-col">
+      <div class="enrichment-card">
+        <div class="enrichment-card-title"><span class="dot"></span> Sector Highlights</div>
+        <div class="enrichment-metric">
+          <span class="label">Largest Sector (by projects)</span>
+          <span class="value">Residential (68)</span>
+        </div>
+        <div class="enrichment-metric">
+          <span class="label">Largest Sector (by value)</span>
+          <span class="value">Infrastructure ($42B)</span>
+        </div>
+        <div class="enrichment-metric">
+          <span class="label">Most Active This Week</span>
+          <span class="value">Healthcare (4 new)</span>
+        </div>
+      </div>
+
+      <div class="enrichment-card">
+        <div class="enrichment-card-title"><span class="dot"></span> Labour Market</div>
+        <div class="enrichment-metric">
+          <span class="label">Employment Change</span>
+          <span class="value">+5,200</span>
+        </div>
+        <div class="enrichment-metric">
+          <span class="label">Full-time</span>
+          <span class="value chg-down">−1,800</span>
+        </div>
+        <div class="enrichment-metric">
+          <span class="label">Part-time</span>
+          <span class="value chg-up">+7,000</span>
+        </div>
+      </div>
+
+      <div class="enrichment-card">
+        <div class="enrichment-card-title"><span class="dot"></span> Trade &amp; Commodities</div>
+        <div class="enrichment-metric">
+          <span class="label">Exports</span>
+          <span class="value">$22.1B</span>
+        </div>
+        <div class="enrichment-metric">
+          <span class="label">Imports</span>
+          <span class="value">$26.8B</span>
+        </div>
+        <div class="enrichment-metric">
+          <span class="label">Trade Balance</span>
+          <span class="value chg-down">−$4.7B</span>
+        </div>
+      </div>
+
+      <div class="enrichment-card">
+        <div class="enrichment-card-title"><span class="dot"></span> Hiring Signals</div>
+        <p><strong>Construction (+12%)</strong> in the Greater Toronto Area and <strong>healthcare (+8%)</strong> in Ottawa-Gatineau showed elevated posting activity this week. 23 tracked projects are in sectors with active hiring spikes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5: Projects Preview ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Project Pipeline — Ontario</h3>
+      <span class="section-meta">287 tracked · $148B total value</span>
+    </div>
+
+    <div class="narrative" style="margin-bottom: 16px;">
+      <p style="font-size: 15px; line-height: 1.7;"><span class="lead-sentence">The Ontario pipeline added 12 new projects this week, with 6 status changes recorded</span> — the largest new entry is the Markham Stouffville Hospital Expansion ($1.2B), which advanced to pre-construction after receiving Ministry of Health approval.</p>
+    </div>
+
+    <div class="inner-card" style="padding: 0; overflow: hidden;">
+      <table class="projects-table">
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>City</th>
+            <th>Sector</th>
+            <th>Value</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight: 500;">Markham Stouffville Hospital Expansion</td>
+            <td>Markham</td>
+            <td>Healthcare</td>
+            <td style="font-variant-numeric: tabular-nums;">$1.2B</td>
+            <td><span class="status-badge status-pre">Pre-Construction</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 500;">Queen Street East Mixed-Use Development</td>
+            <td>Toronto</td>
+            <td>Commercial / Mixed-Use</td>
+            <td style="font-variant-numeric: tabular-nums;">$890M</td>
+            <td><span class="status-badge status-proposed">Proposed</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 500;">Highway 413 Phase 2 Grading</td>
+            <td>Vaughan</td>
+            <td>Infrastructure</td>
+            <td style="font-variant-numeric: tabular-nums;">$640M</td>
+            <td><span class="status-badge status-construction">Under Construction</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight: 500;">Ottawa LRT Trillium Line Extension</td>
+            <td>Ottawa</td>
+            <td>Infrastructure</td>
+            <td style="font-variant-numeric: tabular-nums;">$520M</td>
+            <td><span class="status-badge status-review">Under Review</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="#" class="footer-link">View all 12 new Ontario projects →</a>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 6: Upcoming Events ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Upcoming Events — Ontario</h3>
+      <span class="section-meta">Next 2 weeks</span>
+    </div>
+
+    <div class="inner-card">
+      <div class="watchlist-item">
+        <span class="impact-dot impact-high"></span>
+        <span class="watchlist-date">Apr 3</span>
+        <span class="watchlist-event">Statistics Canada — Employment, March (Ontario breakdown)</span>
+        <span class="watchlist-institution">StatCan</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="impact-dot impact-high"></span>
+        <span class="watchlist-date">Apr 8</span>
+        <span class="watchlist-event">Statistics Canada — Building Permits, February (provincial)</span>
+        <span class="watchlist-institution">StatCan</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="impact-dot impact-medium"></span>
+        <span class="watchlist-date">Apr 10</span>
+        <span class="watchlist-event">Ontario Infrastructure Planning Board — Q1 Report</span>
+        <span class="watchlist-institution">Ontario MoI</span>
+      </div>
+      <div class="watchlist-item">
+        <span class="impact-dot impact-low"></span>
+        <span class="watchlist-date">Apr 14</span>
+        <span class="watchlist-event">CMHC — Housing Starts, March (CMA breakdown)</span>
+        <span class="watchlist-institution">CMHC</span>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /.page-main -->
+</div><!-- /.page -->
+
+<script>
+  /* ── Chart ── */
+  (function() {
+    var ctx = document.getElementById('chart-prov-unemployment');
+    if (!ctx) return;
+    var months = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+    var data = [5.9, 6.0, 6.1, 6.0, 6.1, 6.2, 6.3, 6.2, 6.3, 6.2, 6.2, 6.4];
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: 'Ontario Unemployment Rate',
+            data: data,
+            borderColor: '#003153',
+            backgroundColor: 'rgba(0,49,83,0.10)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: '#003153',
+            pointHoverBorderColor: '#fff',
+            pointHoverBorderWidth: 2
+          },
+          {
+            label: 'Current (6.4%)',
+            data: Array(12).fill(6.4),
+            borderColor: '#c4320a',
+            borderWidth: 1,
+            borderDash: [4, 3],
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#00253f',
+            titleFont: { family: 'Inter', size: 11, weight: '600' },
+            bodyFont: { family: 'Inter', size: 12 },
+            padding: 10,
+            cornerRadius: 6,
+            displayColors: false,
+            filter: function(item) { return item.datasetIndex === 0; },
+            callbacks: { label: function(c) { return 'Unemployment: ' + c.parsed.y.toFixed(1) + '%'; } }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { font: { family: 'Inter', size: 11, weight: '500' }, color: '#4a5568' },
+            border: { color: '#9aa5b4' }
+          },
+          y: {
+            min: 5.5,
+            max: 6.8,
+            grid: { display: false },
+            ticks: { font: { family: 'Inter', size: 11, weight: '500' }, color: '#4a5568', callback: function(v) { return v.toFixed(1) + '%'; } },
+            border: { display: false }
+          }
+        }
+      }
+    });
+  })();
+
+</script>
+</body>
+</html>

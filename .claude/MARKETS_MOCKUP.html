@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lagging Indicator — Markets</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --border: #d5dbe3;
+    --border-light: #e8ecf0;
+    --text: #1a1a1a;
+    --text-secondary: #4a5568;
+    --text-muted: #7a8599;
+    --accent: #003153;
+    --accent-light: #e8eef4;
+    --green: #0d7a3f;
+    --green-bg: #ecfdf5;
+    --red: #c4320a;
+    --red-bg: #fef2f2;
+    --grey: #7a8599;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+
+  .header { background: var(--accent); padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; color: #fff; }
+  .header .subtitle { color: rgba(255,255,255,0.65); font-size: 12px; margin-top: 1px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .header-right .date-badge { font-size: 12px; font-weight: 600; color: #fff; background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 6px; }
+  .header-right .freshness { font-size: 11px; color: rgba(255,255,255,0.55); }
+  .tabs { background: #00253f; padding: 0 40px; display: flex; gap: 0; position: sticky; top: 0; z-index: 100; }
+  .tab { padding: 11px 18px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.5); border-bottom: 2px solid transparent; cursor: pointer; transition: color 0.15s; }
+  .tab:hover { color: rgba(255,255,255,0.75); }
+  .tab.active { color: #fff; border-bottom-color: #fff; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 32px 40px; }
+
+  .section-header {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border-light); margin-bottom: 20px;
+  }
+  .section-header .accent-bar { width: 4px; height: 22px; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
+  .section-header h3 { font-family: 'Source Serif 4', Georgia, serif; font-size: 20px; font-weight: 700; color: var(--text); flex: 1; }
+  .section-header .section-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .section-block { padding: 0 0 28px; margin-bottom: 28px; }
+
+  .narrative { font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; line-height: 1.75; color: var(--text); }
+  .narrative p { margin-bottom: 16px; }
+  .narrative .lead-sentence { font-weight: 600; }
+  .callout {
+    background: var(--accent-light); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+    padding: 14px 18px; margin: 12px 0 20px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  }
+  .callout strong { color: var(--text); font-weight: 600; }
+
+  .sources {
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-light);
+    font-family: 'Inter', sans-serif; font-size: 11px; color: var(--text-muted); line-height: 1.6;
+  }
+  .sources span { font-weight: 600; color: var(--text-secondary); }
+
+  /* ── Market Card ── */
+  .market-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  /* ── Series Pills ── */
+  .series-row {
+    display: flex; gap: 8px; padding: 16px 20px;
+    overflow-x: auto; border-bottom: 1px solid var(--border-light);
+  }
+  .series-pill {
+    flex-shrink: 0; min-width: 130px; padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    cursor: pointer; transition: all 0.15s; background: var(--surface);
+  }
+  .series-pill:hover { background: var(--accent-light); }
+  .series-pill.active { border-color: var(--accent); background: var(--accent-light); }
+  .pill-name { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; white-space: nowrap; }
+  .series-pill.active .pill-name { color: var(--accent); }
+  .pill-value { font-size: 18px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; margin-bottom: 2px; }
+  .pill-change { font-size: 12px; font-weight: 600; }
+  .pill-change.up { color: var(--green); }
+  .pill-change.down { color: var(--red); }
+  .pill-change.flat { color: var(--grey); }
+
+  /* ── FX Compact Pills ── */
+  .fx-series-row {
+    display: flex; gap: 4px; padding: 10px 20px;
+    overflow-x: auto; border-bottom: 1px solid var(--border-light);
+  }
+  .fx-pill {
+    flex: 1; min-width: 0; padding: 6px 8px;
+    border: 1px solid var(--border); border-radius: 5px;
+    cursor: pointer; transition: all 0.15s; background: var(--surface);
+    text-align: center;
+  }
+  .fx-pill:hover { background: var(--accent-light); }
+  .fx-pill.active { border-color: var(--accent); background: var(--accent-light); }
+  .fx-pill .pill-name { font-size: 9px; margin-bottom: 1px; }
+  .fx-pill.active .pill-name { color: var(--accent); }
+  .fx-pill .pill-value { font-size: 13px; margin-bottom: 0; }
+  .fx-pill .pill-change { font-size: 10px; }
+
+  /* ── Chart Controls ── */
+  .chart-controls {
+    display: flex; align-items: center; justify-content: space-between; padding: 12px 20px;
+  }
+  .range-selector {
+    display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+  }
+  .range-btn {
+    padding: 4px 12px; font-size: 11px; font-weight: 500; border: none; cursor: pointer;
+    background: var(--surface); color: var(--text-muted); border-right: 1px solid var(--border); transition: all 0.15s;
+  }
+  .range-btn:last-child { border-right: none; }
+  .range-btn:hover { background: var(--accent-light); color: var(--accent); }
+  .range-btn.active { background: var(--accent); color: #fff; }
+
+  /* ── Chart Area ── */
+  .chart-area { padding: 8px 20px 16px; position: relative; }
+  .chart-area svg { width: 100%; display: block; }
+
+  /* ── Stat Row ── */
+  .stat-row {
+    display: flex; gap: 24px; padding: 14px 20px;
+    border-top: 1px solid var(--border-light); flex-wrap: wrap;
+  }
+  .stat-item { display: flex; flex-direction: column; gap: 2px; }
+  .stat-label { font-size: 9px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+  .stat-val { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); }
+
+  /* ── Market Narrative ── */
+  .market-narrative {
+    padding: 16px 20px; border-top: 1px solid var(--border-light);
+    font-family: 'Source Serif 4', Georgia, serif; font-size: 14px; line-height: 1.65; color: var(--text-secondary);
+  }
+  .market-narrative .lead-sentence { font-weight: 600; color: var(--text); }
+
+  /* ── Yield Table ── */
+  .yield-table-wrap { padding: 0 20px 12px; }
+  .yield-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .yield-table th {
+    padding: 10px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.3px; color: #fff; background: var(--accent); text-align: center;
+  }
+  .yield-table th:first-child { text-align: left; border-radius: 6px 0 0 0; }
+  .yield-table th:last-child { border-radius: 0 6px 0 0; }
+  .yield-table td { padding: 10px 12px; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; border-bottom: 1px solid var(--border-light); }
+  .yield-table td:first-child { text-align: left; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+  .yield-table .yield-current { font-size: 16px; font-weight: 700; color: var(--text); }
+  .yield-table .yield-prev { font-size: 12px; color: var(--text-muted); }
+  .yield-table .yield-chg { font-size: 12px; font-weight: 600; }
+  .spread-badge {
+    display: inline-flex; align-items: center; padding: 4px 12px;
+    border-radius: 6px; font-size: 12px; font-weight: 600;
+  }
+  .spread-badge.normal { background: var(--green-bg); color: var(--green); }
+  .spread-badge.inverted { background: var(--red-bg); color: var(--red); }
+
+  /* ── Commodity Accordion Table ── */
+  .commodity-table-wrap {
+    background: var(--surface); overflow: hidden;
+  }
+  .commodity-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .commodity-table thead th {
+    background: var(--accent); color: #fff; padding: 11px 16px;
+    text-align: left; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .commodity-table thead th:nth-child(n+3) { text-align: right; }
+
+  .commodity-row { cursor: pointer; transition: background 0.1s; }
+  .commodity-row:hover { background: var(--accent-light); }
+  .commodity-row td {
+    padding: 12px 16px; border-bottom: 1px solid var(--border-light); vertical-align: middle;
+  }
+  .commodity-row td:nth-child(n+3) { text-align: right; }
+  .commodity-row.expanded { background: var(--accent-light); }
+
+  .cmd-name { font-weight: 600; color: var(--text); }
+  .cmd-unit { font-size: 11px; color: var(--text-muted); margin-left: 6px; }
+  .cmd-price { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .row-chevron {
+    display: inline-block; width: 16px; height: 16px; text-align: center;
+    font-size: 10px; color: var(--text-muted); transition: transform 0.2s;
+    margin-right: 6px; vertical-align: middle;
+  }
+  .commodity-row.expanded .row-chevron { transform: rotate(90deg); }
+
+  .cmd-expand-row { display: none; }
+  .cmd-expand-row.visible { display: table-row; }
+  .cmd-expand-row td { padding: 0; border-bottom: 1px solid var(--border-light); }
+
+  .cmd-expand-content {
+    padding: 16px 24px 20px;
+    background: #fafbfc;
+    border-top: 1px dashed var(--border-light);
+  }
+  .cmd-expand-content svg { width: 100%; display: block; margin-top: 12px; }
+
+  .cmd-ts-stats {
+    display: flex; gap: 20px; margin-bottom: 10px;
+    font-family: 'Inter', sans-serif; font-size: 12px;
+  }
+  .cmd-ts-stat { display: flex; flex-direction: column; gap: 1px; }
+  .cmd-ts-label { font-size: 9px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+  .cmd-ts-val { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); }
+
+  .cmd-narrative {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 13px; line-height: 1.6; color: var(--text-secondary);
+  }
+  .cmd-narrative .lead-sentence { font-weight: 600; color: var(--text); }
+
+  /* ── Commodity Category Tabs ── */
+  .cat-tabs {
+    display: flex; gap: 0; padding: 0 20px; border-bottom: 1px solid var(--border-light);
+  }
+  .cat-tab {
+    padding: 10px 16px; font-size: 12px; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s;
+  }
+  .cat-tab:hover { color: var(--text); }
+  .cat-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+  /* ── Subsection Divider ── */
+  .cmd-group-divider {
+    padding: 6px 16px; font-size: 10px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px; background: var(--bg);
+    border-bottom: 1px solid var(--border-light);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>The Lagging Indicator</h1>
+    <div class="subtitle">Canadian Economic Intelligence</div>
+  </div>
+  <div class="header-right">
+    <div class="date-badge">Week of March 30, 2026</div>
+    <div class="freshness">Updated 2h ago</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab">TL;DR</div>
+  <div class="tab">National</div>
+  <div class="tab">Provinces</div>
+  <div class="tab">Industries</div>
+  <div class="tab active">Markets</div>
+  <div class="tab">Projects</div>
+  <div class="tab">Calendar</div>
+  <div class="tab">Data Explorer</div>
+</div>
+
+<div class="page">
+
+  <!-- ═══ MARKET COMMENTARY ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Market Commentary</h3>
+      <span class="section-meta">Week ending March 28, 2026</span>
+    </div>
+    <div class="narrative">
+      <p><span class="lead-sentence">The S&P/TSX Composite gained 1.5% to close at 25,427, outperforming the S&P 500 (+0.8%) for the third consecutive week</span> — resource-heavy sectors led the advance, with the TSX Materials sub-index up 3.2% on rising gold and copper prices. WTI crude traded in a $67–$71 range before settling at $69.40, while the Canadian dollar weakened 0.4% against the U.S. dollar to 0.7198.</p>
+      <p><span class="lead-sentence">The Government of Canada 10-year yield rose 8 basis points to 3.58%, widening the 2s10s spread to 63 basis points</span> — the yield curve remained positively sloped for the fourth consecutive month. The Bank of Canada held its overnight rate at 3.25% at its March 12 decision; the next announcement is April 16.</p>
+      <div class="callout">
+        <strong>Project cross-reference:</strong> The database tracks 94 mining and oil & gas projects ($62B) sensitive to commodity price movements. Of these, 12 Alberta oil sands projects ($18.2B) have breakeven costs above the current WTI level. 42 power and energy projects ($19B) are linked to natural gas pricing.
+      </div>
+      <div class="sources"><span>Sources:</span> TMX Group · Yahoo Finance · Bank of Canada · NYMEX · Project Database</div>
+    </div>
+  </div>
+
+  <!-- ═══ EQUITY INDICES ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Equity Indices</h3>
+      <span class="section-meta">7 indices · closing prices</span>
+    </div>
+
+    <div class="market-card">
+      <!-- Data pills -->
+      <div class="series-row">
+        <div class="series-pill active">
+          <div class="pill-name">S&P/TSX Composite</div>
+          <div class="pill-value">25,427</div>
+          <div class="pill-change up">▲ +1.54%</div>
+        </div>
+        <div class="series-pill">
+          <div class="pill-name">S&P 500</div>
+          <div class="pill-value">5,862</div>
+          <div class="pill-change up">▲ +0.81%</div>
+        </div>
+        <div class="series-pill">
+          <div class="pill-name">Dow Jones</div>
+          <div class="pill-value">43,840</div>
+          <div class="pill-change up">▲ +0.62%</div>
+        </div>
+        <div class="series-pill">
+          <div class="pill-name">NASDAQ</div>
+          <div class="pill-value">18,295</div>
+          <div class="pill-change up">▲ +1.12%</div>
+        </div>
+        <div class="series-pill">
+          <div class="pill-name">FTSE 100</div>
+          <div class="pill-value">8,612</div>
+          <div class="pill-change down">▼ −0.34%</div>
+        </div>
+        <div class="series-pill">
+          <div class="pill-name">DAX</div>
+          <div class="pill-value">22,148</div>
+          <div class="pill-change up">▲ +0.92%</div>
+        </div>
+        <div class="series-pill">
+          <div class="pill-name">Nikkei 225</div>
+          <div class="pill-value">40,128</div>
+          <div class="pill-change down">▼ −0.18%</div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-row">
+        <div class="stat-item"><span class="stat-label">52-Week High</span><span class="stat-val">26,148</span></div>
+        <div class="stat-item"><span class="stat-label">52-Week Low</span><span class="stat-val">22,835</span></div>
+        <div class="stat-item"><span class="stat-label">Year-to-Date</span><span class="stat-val pill-change up">+4.8%</span></div>
+        <div class="stat-item"><span class="stat-label">Year-over-Year</span><span class="stat-val pill-change up">+11.2%</span></div>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-controls">
+        <div class="range-selector">
+          <button class="range-btn">1M</button>
+          <button class="range-btn active">3M</button>
+          <button class="range-btn">6M</button>
+          <button class="range-btn">1Y</button>
+          <button class="range-btn">3Y</button>
+        </div>
+      </div>
+
+      <div class="chart-area">
+        <svg viewBox="0 0 800 220" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="tsxFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#003153" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#003153" stop-opacity="0.01"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="55" x2="800" y2="55" stroke="#e8ecf0" stroke-width="1"/>
+          <line x1="0" y1="110" x2="800" y2="110" stroke="#e8ecf0" stroke-width="1"/>
+          <line x1="0" y1="165" x2="800" y2="165" stroke="#e8ecf0" stroke-width="1"/>
+          <text x="4" y="52" fill="#7a8599" font-size="10" font-family="Inter">26,000</text>
+          <text x="4" y="107" fill="#7a8599" font-size="10" font-family="Inter">25,000</text>
+          <text x="4" y="162" fill="#7a8599" font-size="10" font-family="Inter">24,000</text>
+          <path d="M60,180 L120,165 L180,155 L240,140 L300,130 L360,145 L420,120 L480,105 L540,95 L600,110 L660,85 L720,75 L780,60 L780,220 L60,220 Z" fill="url(#tsxFill)"/>
+          <polyline points="60,180 120,165 180,155 240,140 300,130 360,145 420,120 480,105 540,95 600,110 660,85 720,75 780,60" fill="none" stroke="#003153" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="780" cy="60" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>
+          <text x="60" y="215" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">Jan</text>
+          <text x="300" y="215" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">Feb</text>
+          <text x="540" y="215" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">Mar</text>
+          <text x="780" y="215" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">Now</text>
+        </svg>
+      </div>
+
+      <!-- Commentary below chart -->
+      <div class="market-narrative">
+        <span class="lead-sentence">The TSX gained 1.5% this week, closing at 25,427</span> — materials (+3.2%) and energy (+2.1%) led the advance. Financials were flat as bank earnings season concluded. The index trades 2.8% below its 52-week high. The database tracks 312 real estate projects and 94 mining projects linked to TSX-listed companies.
+        <div class="sources"><span>Sources:</span> TMX Group · Yahoo Finance · Project Database</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FOREIGN EXCHANGE (full width, stacked, compact pills) ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Foreign Exchange</h3>
+      <span class="section-meta">4 pairs</span>
+    </div>
+
+    <div class="market-card">
+      <!-- Compact FX pills -->
+      <div class="fx-series-row">
+        <div class="fx-pill active">
+          <div class="pill-name">CAD/USD</div>
+          <div class="pill-value">0.7198</div>
+          <div class="pill-change down">▼ −0.42%</div>
+        </div>
+        <div class="fx-pill">
+          <div class="pill-name">EUR/USD</div>
+          <div class="pill-value">1.0842</div>
+          <div class="pill-change up">▲ +0.18%</div>
+        </div>
+        <div class="fx-pill">
+          <div class="pill-name">USD/CNY</div>
+          <div class="pill-value">7.2614</div>
+          <div class="pill-change flat">— 0.00%</div>
+        </div>
+        <div class="fx-pill">
+          <div class="pill-name">USD/JPY</div>
+          <div class="pill-value">150.82</div>
+          <div class="pill-change up">▲ +0.64%</div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-row">
+        <div class="stat-item"><span class="stat-label">Month-over-Month</span><span class="stat-val pill-change down">−1.85%</span></div>
+        <div class="stat-item"><span class="stat-label">Year-over-Year</span><span class="stat-val pill-change down">−3.2%</span></div>
+        <div class="stat-item"><span class="stat-label">Bank of Canada Rate</span><span class="stat-val">3.25%</span></div>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-area" style="height: auto;">
+        <svg viewBox="0 0 800 180" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="cadFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#003153" stop-opacity="0.10"/>
+              <stop offset="100%" stop-color="#003153" stop-opacity="0.01"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="40" x2="800" y2="40" stroke="#e8ecf0" stroke-width="1"/>
+          <line x1="0" y1="80" x2="800" y2="80" stroke="#e8ecf0" stroke-width="1"/>
+          <line x1="0" y1="120" x2="800" y2="120" stroke="#e8ecf0" stroke-width="1"/>
+          <text x="4" y="37" fill="#7a8599" font-size="10" font-family="Inter">0.730</text>
+          <text x="4" y="77" fill="#7a8599" font-size="10" font-family="Inter">0.720</text>
+          <text x="4" y="117" fill="#7a8599" font-size="10" font-family="Inter">0.710</text>
+          <path d="M60,55 L160,50 L260,42 L360,60 L460,68 L560,78 L660,84 L760,92 L760,160 L60,160 Z" fill="url(#cadFill)"/>
+          <polyline points="60,55 160,50 260,42 360,60 460,68 560,78 660,84 760,92" fill="none" stroke="#003153" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="760" cy="92" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>
+          <text x="60" y="175" fill="#7a8599" font-size="10" font-family="Inter">Jan</text>
+          <text x="400" y="175" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">Feb</text>
+          <text x="760" y="175" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="end">Now</text>
+        </svg>
+      </div>
+
+      <!-- Commentary below chart -->
+      <div class="market-narrative">
+        <span class="lead-sentence">The Canadian dollar weakened 0.4% to 0.7198 against the U.S. dollar</span> — the decline tracked lower oil prices. CAD is down 1.85% month-over-month. Trade-exposed projects ($38B in transport and logistics) are sensitive to FX movements.
+        <div class="sources"><span>Sources:</span> Bank of Canada · Yahoo Finance · Project Database</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GOVERNMENT OF CANADA YIELDS (table + curve chart) ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Government of Canada Yields</h3>
+      <span class="section-meta">Yield curve · 7 tenors</span>
+    </div>
+
+    <div class="market-card">
+      <!-- Yield data table with Prussian blue header -->
+      <div class="yield-table-wrap" style="padding-top: 16px;">
+        <table class="yield-table">
+          <thead>
+            <tr><th>Tenor</th><th>3 Month</th><th>1 Year</th><th>2 Year</th><th>5 Year</th><th>10 Year</th><th>30 Year</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Current</td>
+              <td class="yield-current">3.12%</td><td class="yield-current">3.08%</td>
+              <td class="yield-current">2.95%</td><td class="yield-current">3.18%</td>
+              <td class="yield-current">3.58%</td><td class="yield-current">3.72%</td>
+            </tr>
+            <tr>
+              <td>1 Year Ago</td>
+              <td class="yield-prev">4.68%</td><td class="yield-prev">4.22%</td>
+              <td class="yield-prev">3.85%</td><td class="yield-prev">3.62%</td>
+              <td class="yield-prev">3.48%</td><td class="yield-prev">3.55%</td>
+            </tr>
+            <tr>
+              <td>Change</td>
+              <td class="yield-chg pill-change down">−156 bps</td>
+              <td class="yield-chg pill-change down">−114 bps</td>
+              <td class="yield-chg pill-change down">−90 bps</td>
+              <td class="yield-chg pill-change down">−44 bps</td>
+              <td class="yield-chg pill-change up">+10 bps</td>
+              <td class="yield-chg pill-change up">+17 bps</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="padding: 8px 20px 14px; display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border-light);">
+        <span class="stat-label">2s10s Spread</span>
+        <span class="spread-badge normal">+63 basis points — Normal</span>
+        <span style="margin-left: auto; font-size: 11px; color: var(--text-muted);">Bank of Canada overnight rate: <strong style="color: var(--text); font-weight: 700;">3.25%</strong></span>
+      </div>
+
+      <!-- Yield curve chart -->
+      <div class="chart-area" style="height: auto; padding-top: 8px;">
+        <svg viewBox="0 0 800 180" preserveAspectRatio="none">
+          <!-- Grid -->
+          <line x1="50" y1="20" x2="760" y2="20" stroke="#e8ecf0" stroke-width="1"/>
+          <line x1="50" y1="55" x2="760" y2="55" stroke="#e8ecf0" stroke-width="1"/>
+          <line x1="50" y1="90" x2="760" y2="90" stroke="#e8ecf0" stroke-width="1"/>
+          <line x1="50" y1="125" x2="760" y2="125" stroke="#e8ecf0" stroke-width="1"/>
+          <text x="4" y="24" fill="#7a8599" font-size="10" font-family="Inter">5.0%</text>
+          <text x="4" y="59" fill="#7a8599" font-size="10" font-family="Inter">4.0%</text>
+          <text x="4" y="94" fill="#7a8599" font-size="10" font-family="Inter">3.0%</text>
+          <text x="4" y="129" fill="#7a8599" font-size="10" font-family="Inter">2.0%</text>
+          <!-- 1Y ago (inverted curve) — dashed red -->
+          <polyline points="80,17 195,30 310,43 425,51 540,55 655,53 740,56" fill="none" stroke="#c4320a" stroke-width="1.5" stroke-dasharray="5,3" stroke-linejoin="round"/>
+          <!-- Current (normal curve) — solid blue -->
+          <polyline points="80,82 195,84 310,90 425,78 540,58 655,54 740,50" fill="none" stroke="#003153" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- Dots on current -->
+          <circle cx="80" cy="82" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>
+          <circle cx="195" cy="84" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>
+          <circle cx="310" cy="90" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>
+          <circle cx="425" cy="78" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>
+          <circle cx="540" cy="58" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>
+          <circle cx="655" cy="54" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>
+          <circle cx="740" cy="50" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>
+          <!-- X labels -->
+          <text x="80" y="155" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">3M</text>
+          <text x="195" y="155" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">1Y</text>
+          <text x="310" y="155" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">2Y</text>
+          <text x="425" y="155" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">5Y</text>
+          <text x="540" y="155" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">10Y</text>
+          <text x="655" y="155" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">20Y</text>
+          <text x="740" y="155" fill="#7a8599" font-size="10" font-family="Inter" text-anchor="middle">30Y</text>
+          <!-- Legend -->
+          <line x1="480" y1="10" x2="505" y2="10" stroke="#003153" stroke-width="2.5"/>
+          <text x="510" y="14" fill="#4a5568" font-size="10" font-family="Inter">Current</text>
+          <line x1="580" y1="10" x2="605" y2="10" stroke="#c4320a" stroke-width="1.5" stroke-dasharray="5,3"/>
+          <text x="610" y="14" fill="#4a5568" font-size="10" font-family="Inter">1 Year Ago</text>
+        </svg>
+      </div>
+
+      <!-- Commentary below chart -->
+      <div class="market-narrative">
+        <span class="lead-sentence">The yield curve remained positively sloped, with the 2s10s spread at 63 basis points</span> — the short end fell sharply year-over-year (2Y down 90 basis points) reflecting rate cuts, while the long end is roughly flat. Rate-sensitive sectors include 312 residential projects ($86B) and 156 construction projects ($84B).
+        <div class="sources"><span>Sources:</span> Bank of Canada · Project Database</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ COMMODITIES ACCORDION TABLE ═══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="accent-bar"></div>
+      <h3>Commodities</h3>
+      <span class="section-meta">Click any row for timeseries · 20 commodities</span>
+    </div>
+
+    <div class="market-card">
+      <div class="cat-tabs">
+        <div class="cat-tab active">All</div>
+        <div class="cat-tab">Energy</div>
+        <div class="cat-tab">Precious Metals</div>
+        <div class="cat-tab">Base Metals</div>
+        <div class="cat-tab">Agriculture</div>
+        <div class="cat-tab">Forest Products</div>
+      </div>
+
+      <div class="commodity-table-wrap">
+        <table class="commodity-table">
+          <thead>
+            <tr>
+              <th>Commodity</th>
+              <th>Price</th>
+              <th>Weekly</th>
+              <th>Month-over-Month</th>
+              <th>Year-over-Year</th>
+              <th>52-Week Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- ── Energy ── -->
+            <tr><td colspan="6" class="cmd-group-divider">Energy</td></tr>
+
+            <tr class="commodity-row expanded" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>WTI Crude <span class="cmd-unit">USD/bbl</span></td>
+              <td class="cmd-price">$69.40</td>
+              <td class="pill-change down">▼ −2.1%</td>
+              <td class="pill-change down">−6.8%</td>
+              <td class="pill-change down">−12.4%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$62.10 – $84.20</td>
+            </tr>
+            <tr class="cmd-expand-row visible">
+              <td colspan="6">
+                <div class="cmd-expand-content">
+                  <div class="cmd-narrative">
+                    <span class="lead-sentence">WTI crude declined 2.1% to $69.40, the third consecutive weekly decline</span> — trading below the $70 breakeven threshold for 12 Alberta oil sands projects ($18.2B). The WCS discount widened to $14.20. OPEC+ production cuts remain in effect through June.
+                  </div>
+                  <div class="cmd-ts-stats" style="margin-top: 10px;">
+                    <div class="cmd-ts-stat"><span class="cmd-ts-label">1-Year Average</span><span class="cmd-ts-val">$74.20</span></div>
+                    <div class="cmd-ts-stat"><span class="cmd-ts-label">Projects Affected</span><span class="cmd-ts-val">52</span></div>
+                    <div class="cmd-ts-stat"><span class="cmd-ts-label">Above Breakeven</span><span class="cmd-ts-val pill-change down">12 projects ($18.2B)</span></div>
+                  </div>
+                  <svg viewBox="0 0 800 120" preserveAspectRatio="none" style="margin-top:14px;">
+                    <defs>
+                      <linearGradient id="wtiFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#c4320a" stop-opacity="0.08"/>
+                        <stop offset="100%" stop-color="#c4320a" stop-opacity="0.01"/>
+                      </linearGradient>
+                    </defs>
+                    <line x1="0" y1="30" x2="800" y2="30" stroke="#e8ecf0" stroke-width="1"/>
+                    <line x1="0" y1="60" x2="800" y2="60" stroke="#e8ecf0" stroke-width="1"/>
+                    <line x1="0" y1="90" x2="800" y2="90" stroke="#e8ecf0" stroke-width="1"/>
+                    <text x="4" y="28" fill="#7a8599" font-size="9" font-family="Inter">$80</text>
+                    <text x="4" y="58" fill="#7a8599" font-size="9" font-family="Inter">$70</text>
+                    <text x="4" y="88" fill="#7a8599" font-size="9" font-family="Inter">$60</text>
+                    <path d="M40,15 L105,18 L170,12 L235,20 L300,28 L365,32 L430,35 L495,40 L560,48 L625,52 L690,55 L755,62 L755,108 L40,108 Z" fill="url(#wtiFill)"/>
+                    <polyline points="40,15 105,18 170,12 235,20 300,28 365,32 430,35 495,40 560,48 625,52 690,55 755,62" fill="none" stroke="#c4320a" stroke-width="2" stroke-linejoin="round"/>
+                    <circle cx="755" cy="62" r="3.5" fill="#c4320a" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="40" y1="55" x2="755" y2="55" stroke="#7a8599" stroke-width="1" stroke-dasharray="4,3"/>
+                    <text x="760" y="53" fill="#7a8599" font-size="8" font-family="Inter">$70 breakeven</text>
+                    <text x="40" y="115" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text>
+                    <text x="400" y="115" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="middle">Oct 2025</text>
+                    <text x="755" y="115" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text>
+                  </svg>
+                  <div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> NYMEX · Alberta Energy Regulator · Project Database</div>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Brent Crude <span class="cmd-unit">USD/bbl</span></td>
+              <td class="cmd-price">$73.15</td>
+              <td class="pill-change down">▼ −1.8%</td>
+              <td class="pill-change down">−5.2%</td>
+              <td class="pill-change down">−10.8%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$66.40 – $88.50</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Brent crude fell 1.8% to $73.15, tracking WTI lower</span> — the Brent-WTI spread held at $3.75. Global demand forecasts from the IEA were revised down by 100,000 bpd for Q2 2026.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,20 170,18 300,25 430,35 560,42 690,48 755,55" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="55" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> ICE · IEA</div></div></td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Natural Gas <span class="cmd-unit">USD/MMBtu</span></td>
+              <td class="cmd-price">$2.85</td>
+              <td class="pill-change down">▼ −3.4%</td>
+              <td class="pill-change down">−8.0%</td>
+              <td class="pill-change down">−18.6%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$2.42 – $4.18</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Natural gas declined 3.4% to $2.85/MMBtu as warmer-than-expected spring temperatures reduced heating demand</span> — AECO spot prices tracked lower. The database links 42 power and energy projects ($19B) to natural gas pricing.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,15 170,10 300,25 430,45 560,50 690,55 755,58" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="58" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> NYMEX · AECO NGX · Project Database</div></div></td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>WCS Discount <span class="cmd-unit">USD/bbl spread</span></td>
+              <td class="cmd-price">$14.20</td>
+              <td class="pill-change up">▲ +0.8%</td>
+              <td class="pill-change up">+4.2%</td>
+              <td class="pill-change up">+22.4%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$10.50 – $16.80</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">The WCS-WTI discount widened to $14.20, up 22.4% year-over-year</span> — pipeline constraints and refinery maintenance contributed to the wider spread. TMX pipeline throughput data for March is pending. Alberta oil sands projects are exposed to both WTI level and WCS discount.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,55 170,50 300,42 430,38 560,30 690,25 755,22" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="22" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> Net Energy · Trans Mountain · Project Database</div></div></td></tr>
+
+            <!-- ── Precious Metals ── -->
+            <tr><td colspan="6" class="cmd-group-divider">Precious Metals</td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Gold <span class="cmd-unit">USD/troy oz</span></td>
+              <td class="cmd-price">$2,045</td>
+              <td class="pill-change up">▲ +2.1%</td>
+              <td class="pill-change up">+4.8%</td>
+              <td class="pill-change up">+12.6%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$1,824 – $2,088</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Gold rose 2.1% to $2,045, its highest weekly close since December 2025</span> — the advance supports 18 tracked gold mining projects ($8.4B) in Ontario and Quebec. Central bank buying and geopolitical risk continued to support prices.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,65 170,58 300,50 430,40 560,30 690,20 755,15" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="15" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> COMEX · LBMA · Project Database</div></div></td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Silver <span class="cmd-unit">USD/troy oz</span></td>
+              <td class="cmd-price">$24.82</td>
+              <td class="pill-change up">▲ +3.4%</td>
+              <td class="pill-change up">+6.1%</td>
+              <td class="pill-change up">+8.2%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$21.40 – $26.10</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Silver gained 3.4% to $24.82, outperforming gold on industrial demand</span> — the gold-to-silver ratio compressed to 82.4x. Silver-dependent projects are limited in the database, but the metal's industrial applications overlap with 12 electronics manufacturing projects.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,60 170,52 300,48 430,35 560,28 690,18 755,12" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="12" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> COMEX · LBMA</div></div></td></tr>
+
+            <!-- ── Base Metals ── -->
+            <tr><td colspan="6" class="cmd-group-divider">Base Metals</td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Copper <span class="cmd-unit">USD/lb</span></td>
+              <td class="cmd-price">$4.28</td>
+              <td class="pill-change up">▲ +1.8%</td>
+              <td class="pill-change up">+3.4%</td>
+              <td class="pill-change up">+9.8%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$3.68 – $4.52</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Copper rose 1.8% to $4.28/lb on continued electrification demand</span> — the metal is linked to 24 tracked mining projects ($6.8B) in British Columbia and Ontario. EV battery supply chain projects represent the primary demand driver.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,55 170,48 300,42 430,30 560,22 690,18 755,14" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="14" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> COMEX · LME · Project Database</div></div></td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Uranium <span class="cmd-unit">USD/lb</span></td>
+              <td class="cmd-price">$82.50</td>
+              <td class="pill-change up">▲ +2.6%</td>
+              <td class="pill-change up">+5.4%</td>
+              <td class="pill-change up">+18.2%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$62.80 – $91.40</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Uranium rose 2.6% to $82.50/lb, up 18.2% year-over-year</span> — Saskatchewan's Cameco (CCO.TO) and Sprott Uranium Trust (U-UN.TO) tracked the spot price higher. The database links 8 uranium mining and nuclear projects ($12.4B) to uranium pricing, including Saskatchewan mines and Ontario's Pickering refurbishment.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,60 170,50 300,35 430,28 560,18 690,15 755,12" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="12" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> UxC · Cameco · Project Database</div></div></td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Nickel <span class="cmd-unit">USD/t</span></td>
+              <td class="cmd-price">$16,240</td>
+              <td class="pill-change down">▼ −1.4%</td>
+              <td class="pill-change down">−3.8%</td>
+              <td class="pill-change down">−8.6%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$14,800 – $19,200</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Nickel declined 1.4% to $16,240/t, continuing a year-long downtrend driven by Indonesian supply growth</span> — 6 tracked nickel mining projects ($2.1B) in Ontario and Manitoba are sensitive to LME nickel pricing.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,15 170,20 300,28 430,38 560,45 690,52 755,55" fill="none" stroke="#c4320a" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="55" r="3" fill="#c4320a" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> LME · Project Database</div></div></td></tr>
+
+            <!-- ── Agriculture ── -->
+            <tr><td colspan="6" class="cmd-group-divider">Agriculture</td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Canola <span class="cmd-unit">CAD/t</span></td>
+              <td class="cmd-price">$685</td>
+              <td class="pill-change up">▲ +3.0%</td>
+              <td class="pill-change up">+6.2%</td>
+              <td class="pill-change up">+14.8%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$568 – $720</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Canola gained 3.0% to $685/t on strong Chinese import demand</span> — 4 tracked food processing plant expansions ($1.8B) in Saskatchewan and Manitoba are linked to canola pricing. Prairie planting season begins in April.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,62 170,55 300,45 430,35 560,22 690,15 755,12" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="12" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> ICE Canola Futures · Project Database</div></div></td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Wheat <span class="cmd-unit">USD/bu</span></td>
+              <td class="cmd-price">$5.84</td>
+              <td class="pill-change down">▼ −0.8%</td>
+              <td class="pill-change down">−2.4%</td>
+              <td class="pill-change down">−6.2%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$5.18 – $6.92</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Wheat declined 0.8% to $5.84/bu on ample global supply</span> — Black Sea exports remained steady. The decline has limited direct project impact but contributes to the broader agricultural commodity environment tracked by the pipeline.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,18 170,22 300,30 430,38 560,42 690,48 755,50" fill="none" stroke="#c4320a" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="50" r="3" fill="#c4320a" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> CME Group</div></div></td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Potash (Nutrien) <span class="cmd-unit">CAD/share</span></td>
+              <td class="cmd-price">$68.42</td>
+              <td class="pill-change up">▲ +1.4%</td>
+              <td class="pill-change up">+3.8%</td>
+              <td class="pill-change up">+8.4%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$58.20 – $74.80</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Nutrien (NTR.TO) gained 1.4% to $68.42, used as a potash proxy</span> — Saskatchewan potash mines represent the largest concentration of tracked mining projects by province. The database links 6 potash mining projects ($3.2B) to Nutrien's production outlook.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,58 170,50 300,42 430,32 560,25 690,18 755,15" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="15" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> TMX Group · Project Database</div></div></td></tr>
+
+            <!-- ── Forest Products ── -->
+            <tr><td colspan="6" class="cmd-group-divider">Forest Products</td></tr>
+
+            <tr class="commodity-row" onclick="toggleCmdRow(this)">
+              <td class="cmd-name"><span class="row-chevron">&#9654;</span>Lumber <span class="cmd-unit">USD/MBF</span></td>
+              <td class="cmd-price">$562</td>
+              <td class="pill-change up">▲ +4.2%</td>
+              <td class="pill-change up">+8.6%</td>
+              <td class="pill-change up">+15.4%</td>
+              <td style="font-size:12px; color: var(--text-muted);">$420 – $612</td>
+            </tr>
+            <tr class="cmd-expand-row"><td colspan="6"><div class="cmd-expand-content"><div class="cmd-narrative"><span class="lead-sentence">Lumber surged 4.2% to $562/MBF, the largest weekly gain since November 2025</span> — spring building season demand and BC mill curtailments tightened supply. The price is directly relevant to 156 construction projects ($84B) and 18 forestry projects ($2.4B). Building permit data for February showed a 4.8% national increase.</div><svg viewBox="0 0 800 80" preserveAspectRatio="none"><polyline points="40,62 170,55 300,48 430,38 560,28 690,18 755,10" fill="none" stroke="#003153" stroke-width="2" stroke-linejoin="round"/><circle cx="755" cy="10" r="3" fill="#003153" stroke="#fff" stroke-width="1.5"/><text x="40" y="75" fill="#7a8599" font-size="9" font-family="Inter">Apr 2025</text><text x="755" y="75" fill="#7a8599" font-size="9" font-family="Inter" text-anchor="end">Mar 2026</text></svg><div class="sources" style="margin-top:8px; padding-top:8px;"><span>Sources:</span> Random Lengths · CME Group · StatCan Table 34-10-0066 · Project Database</div></div></td></tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Commodity commentary below table -->
+      <div class="market-narrative">
+        <span class="lead-sentence">Precious metals led commodity gains this week, with gold up 2.1% to $2,045 and silver up 3.4%</span> — the advance supports 18 tracked gold mining projects ($8.4B) in Ontario and Quebec. Lumber rose 4.2%, relevant to 156 construction projects ($84B). WTI declined 2.1% to $69.40, trading below the $70 breakeven for 12 Alberta oil sands projects ($18.2B). Canola gained 3.0% to $685 per tonne.
+        <div class="sources"><span>Sources:</span> NYMEX · COMEX · ICE · CME Group · TMX Group · Yahoo Finance · Project Database</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleCmdRow(row) {
+  var expandRow = row.nextElementSibling;
+  if (row.classList.contains('expanded')) {
+    row.classList.remove('expanded');
+    expandRow.classList.remove('visible');
+  } else {
+    row.classList.add('expanded');
+    expandRow.classList.add('visible');
+  }
+}
+</script>
+
+</body>
+</html>

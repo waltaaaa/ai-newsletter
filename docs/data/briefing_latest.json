@@ -3,7 +3,7 @@
   "edition": "EDITION: Mar 31 – Apr 6 // STATUS: AI-SYNTHESIZED",
   "week_of": "2026-03-31",
   "generated_at": "2026-03-31T20:27:15Z",
-  "updated_at": "2026-03-31",
+  "updated_at": "2026-04-02T15:56:36Z",
   "id": 20,
   "unsplash_image_url": "",
   "executive_summary": "<p><strong>Commodities &amp; Energy</strong></p>\n<p>The Strait of Hormuz has been effectively closed since approximately March 2, disrupting an estimated <strong>20 million barrels per day</strong> of seaborne oil flows.<sup>104</sup> WTI crude settled at <strong>US$102.88/bbl</strong> on March 30 — the first close above $100 since July 2022.<sup>104</sup> Brent crude surged approximately <strong>55%</strong> in March to <strong>US$112.78/bbl</strong>, a record monthly gain since the contract's 1988 inception.<sup>104</sup> The Dallas Federal Reserve estimated a one-quarter closure could raise WTI to $98/bbl and reduce global GDP growth by <strong>2.9 percentage points</strong> in Q2 2026.<sup>108</sup> The project database tracks <strong>63 oil and gas projects</strong> and <strong>785 power and energy projects</strong> across Canada. Alberta accounts for 727 of these tracked projects.</p>\n\n<p><strong>Labour Market</strong></p>\n<p>Employment declined by <strong>84,000</strong> (<strong>-0.4%</strong>) in February, reversing Q4 2025 gains.<sup>144</sup> Full-time positions fell <strong>108,000</strong> and private-sector employment dropped <strong>73,000</strong>.<sup>144</sup> The unemployment rate rose to <strong>6.7%</strong>, up 0.2 percentage points from January.<sup>144</sup> Services-producing industries lost 56,000 positions. Goods-producing industries lost 28,000, with wholesale and retail trade recording the largest decline at 18,000 jobs.<sup>144</sup> The database tracks <strong>1,034 projects</strong> currently under construction that depend on labour market conditions.</p>\n\n<p><strong>GDP &amp; Monetary Policy</strong></p>\n<p>Real GDP rose <strong>0.1%</strong> in January 2026, a second consecutive monthly increase.<sup>149</sup> Mining, quarrying, and oil and gas extraction expanded <strong>1.2%</strong>. Manufacturing contracted <strong>1.4%</strong>.<sup>149</sup> The advance estimate indicates <strong>0.2%</strong> growth in February.<sup>149</sup> Headline CPI fell to <strong>1.8%</strong> year-over-year in February — the lowest since early 2021.<sup>145</sup> Core measures converged near 2.3-2.4%.<sup>145</sup> The Bank of Canada held its overnight rate at <strong>2.25%</strong> on March 18, citing weaker near-term growth from US tariffs.<sup>67</sup></p>\n\n<p><strong>Trade</strong></p>\n<p>The merchandise trade deficit widened to <strong>$3.6 billion</strong> in January from $1.3 billion in December.<sup>143</sup> Motor vehicle and parts exports dropped <strong>21.2%</strong> to $5.4 billion — the lowest since September 2021.<sup>143</sup> Energy exports partially offset the decline, rising <strong>4.1%</strong>.<sup>143</sup></p>\n\n<p><strong>Looking Ahead</strong></p>\n<p>The April 2 trade data release covers the first full month of the Strait of Hormuz closure. Statistics Canada releases the March Labour Force Survey on April 3.<sup>150</sup> The Bank of Canada delivers its next rate decision on April 15, alongside the Monetary Policy Report and March CPI data.<sup>69</sup></p>",
@@ -4918,6 +4918,186 @@
       "id": 130,
       "title": "Yukon Budget 2026-27",
       "url": "https://yukon.ca/en/budget-2026-27"
+    },
+    {
+      "id": 131,
+      "title": "CNBC — Brent Record Monthly Surge, WTI Above $100",
+      "url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-year-in-review.html"
+    },
+    {
+      "id": 132,
+      "title": "CNBC — Brent Record Monthly Surge, WTI Above $100",
+      "url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-year-in-review.html"
+    },
+    {
+      "id": 133,
+      "title": "BNN Bloomberg — TSX March 27",
+      "url": "https://www.bnnbloomberg.ca/business/2026/03/27/sptsx-composite-positive-late-morning-friday-us-markets-moving-lower/"
+    },
+    {
+      "id": 134,
+      "title": "Fortune — Gold Price March 31, 2026",
+      "url": "https://fortune.com/article/current-price-of-gold-03-31-2026"
+    },
+    {
+      "id": 135,
+      "title": "Bank of Canada — March 18, 2026 Rate Decision",
+      "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18"
+    },
+    {
+      "id": 136,
+      "title": "Signal Dispatch Project Database — Oil & Gas Projects",
+      "url": ""
+    },
+    {
+      "id": 137,
+      "title": "Signal Dispatch Project Database — Mining Projects",
+      "url": ""
+    },
+    {
+      "id": 138,
+      "title": "Signal Dispatch Project Database — Under Construction",
+      "url": ""
+    },
+    {
+      "id": 139,
+      "title": "Trading Economics — Canada Stock Market (TSX)",
+      "url": "https://tradingeconomics.com/canada/stock-market"
+    },
+    {
+      "id": 140,
+      "title": "BNN Bloomberg — TSX March 27",
+      "url": "https://www.bnnbloomberg.ca/business/2026/03/27/sptsx-composite-positive-late-morning-friday-us-markets-moving-lower/"
+    },
+    {
+      "id": 141,
+      "title": "Signal Dispatch Project Database — Alberta Projects",
+      "url": ""
+    },
+    {
+      "id": 142,
+      "title": "Trading Economics — US Stock Market",
+      "url": "https://tradingeconomics.com/united-states/stock-market"
+    },
+    {
+      "id": 143,
+      "title": "Wikipedia — 2026 Strait of Hormuz Crisis",
+      "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis"
+    },
+    {
+      "id": 144,
+      "title": "CNBC — Dow Surges 600 Points, March 22",
+      "url": "https://www.cnbc.com/2026/03/22/stock-market-today-live-updates.html"
+    },
+    {
+      "id": 145,
+      "title": "Trading Economics — US Stock Market",
+      "url": "https://tradingeconomics.com/united-states/stock-market"
+    },
+    {
+      "id": 146,
+      "title": "Trading Economics — Canadian Dollar",
+      "url": "https://tradingeconomics.com/canada/currency"
+    },
+    {
+      "id": 147,
+      "title": "Bank of Canada — March 18, 2026 Rate Decision",
+      "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18"
+    },
+    {
+      "id": 148,
+      "title": "Federal Reserve — March 18 Implementation Note",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a1.htm"
+    },
+    {
+      "id": 149,
+      "title": "Exchange Rates — EUR/USD 2026 History",
+      "url": "https://www.exchangerates.org.uk/EUR-USD-spot-exchange-rates-history-2026.html"
+    },
+    {
+      "id": 150,
+      "title": "Signal Dispatch Project Database — Manufacturing Projects",
+      "url": ""
+    },
+    {
+      "id": 151,
+      "title": "Bank of Canada — Policy Interest Rate",
+      "url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
+    },
+    {
+      "id": 152,
+      "title": "Federal Reserve — H.10 Foreign Exchange Rates, March 30, 2026",
+      "url": "https://www.federalreserve.gov/releases/h10/hist/dat00_eu.htm"
+    },
+    {
+      "id": 153,
+      "title": "Signal Dispatch Project Database — Under Construction",
+      "url": ""
+    },
+    {
+      "id": 154,
+      "title": "CNBC — Brent Record Monthly Surge, WTI Above $100",
+      "url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-year-in-review.html"
+    },
+    {
+      "id": 155,
+      "title": "Fortune — Gold Price March 31, 2026",
+      "url": "https://fortune.com/article/current-price-of-gold-03-31-2026"
+    },
+    {
+      "id": 156,
+      "title": "Signal Dispatch Project Database — Mining Projects",
+      "url": ""
+    },
+    {
+      "id": 157,
+      "title": "Dallas Fed — Strait of Hormuz Economic Impact",
+      "url": "https://www.dallasfed.org/research/economics/2026/0320"
+    },
+    {
+      "id": 158,
+      "title": "EIA — Short-Term Energy Outlook",
+      "url": "https://www.eia.gov/outlooks/steo/"
+    },
+    {
+      "id": 159,
+      "title": "Trading Economics — Silver",
+      "url": "https://tradingeconomics.com/commodity/silver"
+    },
+    {
+      "id": 160,
+      "title": "Trading Economics — Copper",
+      "url": "https://tradingeconomics.com/commodity/copper"
+    },
+    {
+      "id": 161,
+      "title": "Trading Economics — Uranium (URA ETF)",
+      "url": "https://tradingeconomics.com/ura:us:stock-price"
+    },
+    {
+      "id": 162,
+      "title": "Trading Economics — Nickel",
+      "url": "https://tradingeconomics.com/commodity/nickel"
+    },
+    {
+      "id": 163,
+      "title": "Trading Economics — Wheat",
+      "url": "https://tradingeconomics.com/commodity/wheat"
+    },
+    {
+      "id": 164,
+      "title": "ICE Futures Canada — Canola",
+      "url": "https://www.theice.com/products/251/Canola-Futures"
+    },
+    {
+      "id": 165,
+      "title": "Nutrien — NTR.TO Investor Relations",
+      "url": "https://www.nutrien.com/investors"
+    },
+    {
+      "id": 166,
+      "title": "Signal Dispatch Pipeline Data — Lumber Note",
+      "url": ""
     }
   ],
   "infographic_directives": [
@@ -5681,6 +5861,91 @@
       "id": 130,
       "title": "Yukon Budget 2026-27",
       "url": "https://yukon.ca/en/budget-2026-27"
+    },
+    {
+      "id": 131,
+      "title": "CNBC — Brent Record Monthly Surge, WTI Above $100",
+      "url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-year-in-review.html"
+    },
+    {
+      "id": 134,
+      "title": "Fortune — Gold Price March 31, 2026",
+      "url": "https://fortune.com/article/current-price-of-gold-03-31-2026"
+    },
+    {
+      "id": 135,
+      "title": "Bank of Canada — March 18, 2026 Rate Decision",
+      "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18"
+    },
+    {
+      "id": 136,
+      "title": "Signal Dispatch Project Database — Oil & Gas Projects",
+      "url": ""
+    },
+    {
+      "id": 137,
+      "title": "Signal Dispatch Project Database — Mining Projects",
+      "url": ""
+    },
+    {
+      "id": 138,
+      "title": "Signal Dispatch Project Database — Under Construction",
+      "url": ""
+    },
+    {
+      "id": 141,
+      "title": "Signal Dispatch Project Database — Alberta Projects",
+      "url": ""
+    },
+    {
+      "id": 150,
+      "title": "Signal Dispatch Project Database — Manufacturing Projects",
+      "url": ""
+    },
+    {
+      "id": 153,
+      "title": "Signal Dispatch Project Database — Under Construction",
+      "url": ""
+    },
+    {
+      "id": 156,
+      "title": "Signal Dispatch Project Database — Mining Projects",
+      "url": ""
+    },
+    {
+      "id": 159,
+      "title": "Trading Economics — Silver",
+      "url": "https://tradingeconomics.com/commodity/silver"
+    },
+    {
+      "id": 161,
+      "title": "Trading Economics — Uranium (URA ETF)",
+      "url": "https://tradingeconomics.com/ura:us:stock-price"
+    },
+    {
+      "id": 162,
+      "title": "Trading Economics — Nickel",
+      "url": "https://tradingeconomics.com/commodity/nickel"
+    },
+    {
+      "id": 163,
+      "title": "Trading Economics — Wheat",
+      "url": "https://tradingeconomics.com/commodity/wheat"
+    },
+    {
+      "id": 164,
+      "title": "ICE Futures Canada — Canola",
+      "url": "https://www.theice.com/products/251/Canola-Futures"
+    },
+    {
+      "id": 165,
+      "title": "Nutrien — NTR.TO Investor Relations",
+      "url": "https://www.nutrien.com/investors"
+    },
+    {
+      "id": 166,
+      "title": "Signal Dispatch Pipeline Data — Lumber Note",
+      "url": ""
     }
   ],
   "charts": {
@@ -5702,10 +5967,316 @@
     ]
   },
   "citation_audit": {
-    "passed": true,
-    "total_citations": 150,
-    "total_failed": 0,
-    "total_archived": 0,
-    "calls": []
-  }
+    "audited_at": "2026-04-02T15:56:36Z",
+    "total_sources": 166,
+    "unique_urls": 139,
+    "orphaned_citations": 0,
+    "notes": "Market fragment sources (131-166) added by Agents 3F/3G/3H/3I in pipeline continuation run"
+  },
+  "marketCommentary": {
+    "text": "<p><span class=\"lead-sentence\"><strong>WTI crude settled at US$102.88/bbl on March 31</strong> — its first weekly close above $100 since July 2022 — as the Strait of Hormuz closure disrupted an estimated 20 million barrels per day of seaborne oil flows.<sup>131</sup></span> Brent rose to US$112.78/bbl, recording its largest monthly gain since contract inception in 1988.<sup>131</sup> The TSX Composite closed at <strong>32,427</strong>, gaining 1.54% on March 31 while declining approximately 6% over the full month.<sup>133</sup> Gold fell to approximately <strong>US$4,578/oz</strong> — down 14% from a March 3 peak of US$5,161/oz — while the Bank of Canada held its overnight rate at <strong>2.25%</strong>.<sup>134</sup><sup>135</sup></p><p><span class=\"lead-sentence\"><strong>The cross-reference engine links 63 oil and gas projects to the current WTI price environment</strong>, with 727 Alberta projects carrying direct commodity exposure.<sup>136</sup></span> The 364 mining projects in the database hold exposure to gold's 14% monthly decline. The Government of Canada yield curve held a normal shape with the 2-year/10-year spread at <strong>63 basis points</strong>, covering 1,034 under-construction projects in the database.<sup>138</sup></p>",
+    "callout": {
+      "title": "Pipeline Cross-Reference",
+      "items": [
+        {
+          "label": "Oil & gas projects (WTI-linked)",
+          "value": "63 projects",
+          "amount": "AB/SK focus"
+        },
+        {
+          "label": "Mining projects (gold-linked)",
+          "value": "364 projects",
+          "amount": "-14% M/M"
+        },
+        {
+          "label": "Projects under construction",
+          "value": "1,034 projects",
+          "amount": "2Y/10Y +63bps"
+        }
+      ]
+    }
+  },
+  "equities": [
+    {
+      "name": "TSX Composite",
+      "symbol": "^GSPTSE",
+      "value": "32,427",
+      "weekly_pct": "-6.0% MTD",
+      "ytd_pct": "+28.2% YoY",
+      "yoy_pct": "+28.2%",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "commentary": "<p><span class=\"lead-sentence\"><strong>The TSX Composite closed at 32,427 on March 31</strong>, gaining 1.54% on the day as reports of potential US-Iran negotiations drove energy and risk-sensitive sectors higher.<sup>139</sup></span> The index declined approximately 6% over the full month of March, reflecting elevated uncertainty from Middle East supply disruption and the February employment loss of 84,000 jobs.<sup>140</sup> Energy sub-indices posted the largest monthly gains within the TSX, consistent with WTI crude's advance above $100/bbl, while materials underperformed amid gold's 14% monthly decline. The database tracks 727 Alberta projects — the province most directly exposed to TSX energy sector performance — and 364 mining projects with direct materials sector linkage.<sup>141</sup></p>"
+    },
+    {
+      "name": "S&P 500",
+      "symbol": "^GSPC",
+      "value": "6,496",
+      "weekly_pct": "+2.40% day",
+      "ytd_pct": "-9.4% from Jan peak",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "commentary": "<p><span class=\"lead-sentence\"><strong>The S&P 500 closed at approximately 6,496 on March 31</strong>, rising 2.40% on the day, though the index remained approximately 9.4% below its January 2026 peak on a closing basis.<sup>142</sup></span> March was characterized by elevated volatility driven by Middle East geopolitical developments and the Strait of Hormuz supply disruption; the March 31 advance followed reports that the US government is considering diplomatic resolution to the Iranian standoff.<sup>143</sup></p>"
+    },
+    {
+      "name": "DJIA",
+      "symbol": "^DJI",
+      "value": "46,117",
+      "weekly_pct": "+2.0% day",
+      "ytd_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "commentary": "<p><span class=\"lead-sentence\"><strong>The Dow Jones Industrial Average closed at approximately 46,117 on March 31</strong>, advancing approximately 2.0% on the day alongside the broader US market rally.<sup>144</sup></span> Blue-chip industrials with Canadian supply chain exposure — including steel and energy equipment names — tracked the energy sector's advance as WTI moved above $100/bbl.</p>"
+    },
+    {
+      "name": "Nasdaq Composite",
+      "symbol": "^IXIC",
+      "value": "21,469",
+      "weekly_pct": "+3.24% day",
+      "ytd_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "commentary": "<p><span class=\"lead-sentence\"><strong>The Nasdaq Composite closed at approximately 21,469 on March 31</strong>, the largest percentage advance among major US indices at 3.24% on the day.<sup>145</sup></span> Technology-linked names outperformed on the expectation that diplomatic resolution of the Hormuz crisis would reduce input cost pressure on data centre and grid electrification projects; the database tracks 18 telecom and data infrastructure projects in Canada with US market linkages.</p>"
+    }
+  ],
+  "fxYields": {
+    "fx": {
+      "fx_commentary": "<p><span class=\"lead-sentence\"><strong>The Canadian dollar closed at 0.7198 USD/CAD on March 31</strong>, declining 1.85% month-over-month to a two-month low as geopolitical uncertainty drove safe-haven demand for the US dollar.<sup>146</sup></span> The USD/CAD rate moved to 1.3893, reflecting a widening differential between the Bank of Canada's overnight rate of 2.25% and the US Federal Reserve's target rate of 4.25-4.50% — a spread of approximately 200-225 basis points favoring the US dollar.<sup>147</sup><sup>148</sup> The euro strengthened to 1.1460 against the US dollar as European markets repriced geopolitical risk premiums; this EUR/USD level reflects a divergence between the ECB's rate path and US monetary policy expectations.<sup>149</sup> If the CAD/USD rate holds near 0.72, the database's 49 export-exposed manufacturing projects would face elevated input cost pressure from US dollar-denominated material costs, while energy exporters would see higher CAD-denominated revenues from US-dollar-priced crude.<sup>150</sup></p>",
+      "pairs": [
+        {
+          "name": "CAD/USD",
+          "value": "0.7198",
+          "weekly_pct": "-1.85% M/M",
+          "mom_pct": "-1.85%",
+          "yoy_pct": ""
+        },
+        {
+          "name": "USD/CAD",
+          "value": "1.3893",
+          "weekly_pct": "",
+          "mom_pct": "",
+          "yoy_pct": ""
+        },
+        {
+          "name": "EUR/USD",
+          "value": "1.1460",
+          "weekly_pct": "",
+          "mom_pct": "",
+          "yoy_pct": ""
+        }
+      ]
+    },
+    "yieldCurve": {
+      "yield_commentary": "<p><span class=\"lead-sentence\"><strong>The Government of Canada yield curve maintained a normal (upward-sloping) shape through the week of March 24-30</strong>, with the 2-year/10-year spread at 63 basis points — wider than the 60 basis point spread recorded a year ago.<sup>151</sup></span> The 2-year yield closed at 2.95%, up 33 basis points from 2.62% a year ago, while the 10-year yield closed at 3.58%, up 36 basis points from 3.22% a year ago, reflecting higher term premiums associated with elevated federal government debt issuance and geopolitical uncertainty.<sup>152</sup> The 30-year yield closed at 3.94%, up 41 basis points from 3.53% a year ago. If the current long-end yield environment persists, the database's 1,034 under-construction projects — which depend on long-term financing rates for project completion — would face funding costs at the higher end of their feasibility study assumptions.<sup>153</sup></p>",
+      "tenors": [
+        {
+          "term": "2Y",
+          "yield": "2.95%",
+          "year_ago": "2.62%",
+          "change_bps": "+33",
+          "highlight": true
+        },
+        {
+          "term": "3Y",
+          "yield": "3.01%",
+          "year_ago": "2.64%",
+          "change_bps": "+37",
+          "highlight": false
+        },
+        {
+          "term": "5Y",
+          "yield": "3.18%",
+          "year_ago": "2.81%",
+          "change_bps": "+37",
+          "highlight": false
+        },
+        {
+          "term": "7Y",
+          "yield": "3.36%",
+          "year_ago": "3.00%",
+          "change_bps": "+36",
+          "highlight": false
+        },
+        {
+          "term": "10Y",
+          "yield": "3.58%",
+          "year_ago": "3.22%",
+          "change_bps": "+36",
+          "highlight": true
+        },
+        {
+          "term": "30Y",
+          "yield": "3.94%",
+          "year_ago": "3.53%",
+          "change_bps": "+41",
+          "highlight": false
+        }
+      ],
+      "spread_2_10": "+63bps",
+      "curve_shape": "normal"
+    }
+  },
+  "commodityCommentary": "<p><span class=\"lead-sentence\"><strong>The Strait of Hormuz closure drove WTI crude above $100/bbl for the first time since July 2022</strong>, producing the most significant commodity repricing event of the current cycle and placing the database's 63 oil and gas projects directly in scope.<sup>154</sup></span> Energy dominated March commodity performance, with WTI gaining more than 50% month-over-month and Brent recording its largest monthly gain since contract inception in 1988. Gold recorded its steepest monthly decline since October 2008 — down 14% from a peak of US$5,161/oz on March 3 to US$4,578 by month-end — as margin liquidation and US dollar strength overwhelmed safe-haven demand.<sup>155</sup> Base metals were mixed, with copper holding its range and nickel declining, while agricultural commodities remained broadly stable. The database tracks 364 mining projects with direct commodity price exposure.<sup>156</sup></p>",
+  "wcsAnalysis": "<p>The Western Canadian Select differential narrowed to approximately US$2.50/bbl below WTI as of March 27, compared to the 12-month average of approximately US$9.95/bbl. The narrow differential reflects elevated North American refinery demand for non-Hormuz crude during the supply disruption, which reduces the typical pricing disadvantage for Canadian heavy oil producers. The TMX pipeline, operational since May 2024, provides Alberta producers with Pacific Coast access at 890,000 b/d capacity, supporting crude export alternatives independent of the Gulf Coast market.<sup>157</sup></p>",
+  "commoditiesFull": [
+    {
+      "name": "WTI Crude Oil",
+      "symbol": "CL=F",
+      "price": "US$102.88/bbl",
+      "weekly_pct": "+50%+ M/M",
+      "mom_pct": "+50%+",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 63,
+      "commentary": "<span class=\"lead-sentence\"><strong>WTI settled at US$102.88/bbl on March 31</strong> — its first close above $100 since July 2022 — driven by the ongoing Strait of Hormuz closure that has disrupted an estimated 20 million barrels per day of seaborne oil flows.<sup>154</sup></span> The database tracks 63 oil and gas projects and 727 Alberta projects with direct exposure to this price environment."
+    },
+    {
+      "name": "Western Canadian Select (WCS)",
+      "symbol": "WCS",
+      "price": "US$97.14/bbl",
+      "weekly_pct": "Discount: ~US$2.50/bbl",
+      "mom_pct": "",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 63,
+      "commentary": "<span class=\"lead-sentence\"><strong>WCS traded at approximately US$97.14/bbl on March 27</strong>, reflecting a narrow US$2.50 differential below WTI compared to the 12-month average differential of approximately US$9.95/bbl.<sup>157</sup></span> The narrow discount reflects elevated North American demand for non-Hormuz crude; Alberta oil sands producers with TMX pipeline access to Pacific Coast markets benefit from an additional export option."
+    },
+    {
+      "name": "Brent Crude",
+      "symbol": "BZ=F",
+      "price": "US$112.78/bbl",
+      "weekly_pct": "+55% M/M",
+      "mom_pct": "+55%",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 63,
+      "commentary": "<span class=\"lead-sentence\"><strong>Brent crude closed at US$112.78/bbl on March 31</strong>, recording its largest monthly percentage gain since contract inception in 1988 as the Hormuz supply disruption affected a greater share of Brent-priced flows.<sup>154</sup></span> The Brent-WTI spread of approximately US$9.90 reflects the differential impact of the disruption on international versus North American crude benchmarks."
+    },
+    {
+      "name": "Natural Gas (Henry Hub)",
+      "symbol": "NG=F",
+      "price": "~US$3.05/MMBtu",
+      "weekly_pct": "",
+      "mom_pct": "",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 0,
+      "commentary": "<span class=\"lead-sentence\"><strong>Henry Hub natural gas prices held at approximately US$3.05/MMBtu in late March</strong>, with the EIA Short-Term Energy Outlook projecting an average of US$3.80/MMBtu for 2026.<sup>158</sup></span> AECO prices remained elevated on global supply tightness; BC LNG project economics and Alberta gas production operations are tracked through the oil and gas project segment of the database."
+    },
+    {
+      "name": "Gold",
+      "symbol": "GC=F",
+      "price": "~US$4,578/oz",
+      "weekly_pct": "-14% M/M",
+      "mom_pct": "-14%",
+      "yoy_pct": "",
+      "high_52w": "US$5,161 (Mar 3, 2026)",
+      "low_52w": "",
+      "projects_affected": 364,
+      "commentary": "<span class=\"lead-sentence\"><strong>Gold declined to approximately US$4,578/oz by month-end</strong>, its steepest monthly drop since October 2008, falling from a peak of US$5,161/oz on March 3 as margin calls and US dollar strength drove sellers.<sup>155</sup></span> The 364 mining projects in the database include concentrations in British Columbia, Ontario, and Quebec, where gold mine expansion economics are sensitive to sustained price levels."
+    },
+    {
+      "name": "Silver",
+      "symbol": "SI=F",
+      "price": "~US$73.33/oz",
+      "weekly_pct": "-10% M/M",
+      "mom_pct": "-10%",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 364,
+      "commentary": "<span class=\"lead-sentence\"><strong>Silver traded at approximately US$73.33/oz as of March 25</strong>, declining month-over-month alongside gold as precious metals broadly repriced in the second half of March.<sup>159</sup></span> Ontario and British Columbia silver-bearing mining projects in the database share exposure to the broader precious metals price environment."
+    },
+    {
+      "name": "Copper",
+      "symbol": "HG=F",
+      "price": "~US$5.90/lb",
+      "weekly_pct": "Range: $5.25-$6.01",
+      "mom_pct": "",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 364,
+      "commentary": "<span class=\"lead-sentence\"><strong>Copper traded in a US$5.25 to US$6.01/lb range through March</strong>, with mixed signals from China PMI recovery and US tariff uncertainty preventing a clear directional move.<sup>160</sup></span> British Columbia copper mining projects — the largest cluster of copper-linked projects in the database — and grid electrification projects with copper input cost exposure are tracked in the mining and power/energy sectors."
+    },
+    {
+      "name": "Uranium (URA ETF / CCO.TO)",
+      "symbol": "CCO.TO",
+      "price": "URA ETF: US$46.86 / CCO.TO: C$147.75",
+      "weekly_pct": "-2.8% W/W; -17.0% M/M (URA)",
+      "mom_pct": "-17.0%",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 0,
+      "commentary": "<span class=\"lead-sentence\"><strong>The URA ETF uranium proxy closed at US$46.86</strong>, declining 2.8% week-over-week and 17.0% month-over-month alongside broader risk-off sentiment in metals, while Cameco (CCO.TO) closed at C$147.75, down 14.1% month-over-month.<sup>161</sup></span> Saskatchewan uranium operations — including Cameco's McArthur River and Cigar Lake mines — represent the primary North American uranium production base; physical uranium spot prices (approximately US$92/lb) remain above the $65-70 mine operating cost range cited in Cameco's annual filings."
+    },
+    {
+      "name": "Nickel",
+      "symbol": "NI (LME)",
+      "price": "~US$14,641/MT",
+      "weekly_pct": "",
+      "mom_pct": "",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 364,
+      "commentary": "<span class=\"lead-sentence\"><strong>LME nickel traded at approximately US$14,641/MT in late March</strong>, declining month-over-month amid weak demand signals from battery supply chain markets.<sup>162</sup></span> Ontario and Manitoba nickel projects — including the Vale Voisey's Bay processing expansion and Sudbury operations — and battery supply chain projects in the database carry exposure to nickel price levels."
+    },
+    {
+      "name": "Wheat",
+      "symbol": "ZW=F",
+      "price": "~$6.075/bu (607.5¢/bu)",
+      "weekly_pct": "",
+      "mom_pct": "",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 0,
+      "commentary": "<span class=\"lead-sentence\"><strong>Wheat futures held at approximately 607.5 cents per bushel ($6.075/bu) in mid-to-late March</strong>, with prices stable following earlier seasonal adjustments.<sup>163</sup></span> Prairie grain storage and handling infrastructure projects in the database are tracked under the agriculture sector; wheat prices at current levels are consistent with the feasibility economics of grain terminal expansion projects tracked in Saskatchewan and Manitoba."
+    },
+    {
+      "name": "Canola",
+      "symbol": "RS=F",
+      "price": "~C$633/MT",
+      "weekly_pct": "",
+      "mom_pct": "",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 0,
+      "commentary": "<span class=\"lead-sentence\"><strong>Canola futures traded at approximately C$633/MT in late March</strong>, reflecting stable Prairie oilseed demand and refinery consumption.<sup>164</sup></span> Saskatchewan and Manitoba canola crushing capacity projects tracked in the database depend on the sustained margin between canola and canola oil/meal prices; the current level is broadly consistent with reported crush margin feasibility thresholds."
+    },
+    {
+      "name": "Potash (Nutrien NTR proxy)",
+      "symbol": "NTR.TO",
+      "price": "C$104.62 (NTR proxy) / ~US$455/MT (MOP)",
+      "weekly_pct": "-1.0% W/W; +1.0% M/M",
+      "mom_pct": "+1.0%",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 0,
+      "commentary": "<span class=\"lead-sentence\"><strong>Nutrien (NTR.TO) closed at C$104.62</strong>, down 1.0% week-over-week and up 1.0% month-over-month, as a proxy for Saskatchewan potash mine operating conditions.<sup>165</sup></span> Mosaic and Nutrien's Saskatchewan operations — tracked in the database under the mining sector — represent the world's largest potash-producing basin; muriate of potash (MOP) spot prices of approximately US$455/MT are consistent with the economics reported in recent expansion announcements."
+    },
+    {
+      "name": "Lumber (Random Length)",
+      "symbol": "LBS=F",
+      "price": "~US$510/MBF",
+      "weekly_pct": "",
+      "mom_pct": "",
+      "yoy_pct": "",
+      "high_52w": "",
+      "low_52w": "",
+      "projects_affected": 211,
+      "commentary": "<span class=\"lead-sentence\"><strong>Lumber futures data was limited in coverage through the week of March 30</strong>, with available pricing indicating approximately US$510/MBF based on early March data; current real-time lumber data was not obtained in this pipeline run.<sup>166</sup></span> British Columbia forestry projects and residential construction projects (211 tracked in the database) carry exposure to lumber pricing; US tariffs on Canadian lumber products remain a material factor for BC softwood producers."
+    }
+  ]
 }
