@@ -5281,16 +5281,19 @@
     {
       "chartType": "line",
       "dataKeys": [
-        "boc_rate",
-        "ON_cpi"
+        "gold"
       ],
-      "title": "BoC Rate vs. Ontario CPI",
-      "subtitle": "Monthly trend · rate % / index",
-      "reasoning": "The BoC held at 2.25% for the seventh consecutive meeting while CPI fell to 1.8% YoY — the lowest since early 2021. The divergence between a steady policy rate and decelerating inflation, combined with 84,000 job losses, frames the monetary policy tension heading into the April 15 decision.",
+      "title": "Gold Drops 14% — Steepest Since 2008",
+      "subtitle": "12-month trend · USD/oz",
+      "reasoning": "Gold fell from US$5,161/oz on March 3 to US$4,578 by month-end — a 14% decline and the steepest monthly drop since October 2008. Margin liquidation and US dollar strength overwhelmed safe-haven demand as energy markets absorbed capital. The database tracks 364 mining projects with direct gold price exposure, concentrated in British Columbia, Ontario, and Quebec.",
       "annotations": [
         {
-          "date": "2026-03-18",
-          "label": "BoC holds 2.25%"
+          "date": "2026-03-03",
+          "label": "Peak: $5,161/oz"
+        },
+        {
+          "date": "2026-03-31",
+          "label": "$4,578 — down 14%"
         }
       ]
     }
