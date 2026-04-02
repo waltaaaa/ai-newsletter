@@ -60,8 +60,8 @@ body{font-family:'Inter','Work Sans',-apple-system,sans-serif;background:#f4f6f8
 .container{max-width:1600px;margin:0 auto;padding:0 40px}
 /* Header — Prussian blue */
 .site-header{background:#003153;border-bottom:1px solid rgba(255,255,255,0.08);padding:20px 40px;display:flex;align-items:center;justify-content:space-between}
-.site-header h1{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;letter-spacing:-0.4px;color:#ffffff;margin:0}
-.site-header .subtitle{color:rgba(255,255,255,0.65);font-size:12px;margin-top:1px}
+.site-header h1{font-family:'Inter',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.4px;color:#ffffff;margin:0}
+.site-header .subtitle{color:rgba(255,255,255,0.65);font-size:13px;margin-top:1px}
 .site-header .header-right{display:flex;align-items:center;gap:16px}
 .site-header .date-badge{font-size:12px;font-weight:600;color:#ffffff;background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:6px}
 .site-header .freshness{font-size:11px;color:rgba(255,255,255,0.55)}
@@ -72,7 +72,7 @@ body{font-family:'Inter','Work Sans',-apple-system,sans-serif;background:#f4f6f8
 .main-nav{position:sticky;top:0;z-index:100;background:#00253f;border-bottom:1px solid rgba(255,255,255,0.08)}
 .nav-inner{max-width:1600px;margin:0 auto;padding:0 40px}
 .nav-tabs{display:flex;justify-content:flex-start;gap:0;list-style:none}
-.nav-tab{padding:11px 18px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;border-bottom:2px solid transparent;transition:color .15s;user-select:none}
+.nav-tab{padding:12px 20px;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:rgba(255,255,255,0.5);cursor:pointer;border-bottom:2px solid transparent;transition:color .15s;user-select:none}
 .nav-tab:hover{color:rgba(255,255,255,0.75)}
 .nav-tab.active{color:#ffffff;border-bottom-color:#ffffff}
 .nav-meta{text-align:center;font-size:var(--text-xs);color:var(--text-tertiary);padding:4px 0 6px}
@@ -552,84 +552,84 @@ body{font-family:'Inter','Work Sans',-apple-system,sans-serif;background:#f4f6f8
 /* ── TL;DR Redesign — Prussian Blue Theme ── */
 .tldr-page{padding:32px 40px;max-width:1600px;margin:0 auto;color:#1a1a1a;font-family:'Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
 .tldr-headline-band{margin-bottom:28px}
-.tldr-headline-band h2{font-family:'Source Serif 4',Georgia,serif;font-size:28px;font-weight:700;line-height:1.25;letter-spacing:-0.5px;color:#1a1a1a;margin-bottom:8px}
-.tldr-headline-meta{font-size:12px;color:#7a8599;display:flex;gap:20px}
+.tldr-headline-band h2{font-family:'Source Serif 4',Georgia,serif;font-size:32px;font-weight:700;line-height:1.25;letter-spacing:-0.5px;color:#1a1a1a;margin-bottom:8px}
+.tldr-headline-meta{font-size:14px;color:#7a8599;display:flex;gap:20px}
 .tldr-headline-meta span::before{content:'';display:inline-block;width:3px;height:3px;border-radius:50%;background:#d5dbe3;margin-right:8px;vertical-align:middle}
 .tldr-headline-meta span:first-child::before{display:none}
 .tldr-glance{margin-bottom:24px;border:1px solid #d5dbe3;border-radius:8px;background:#ffffff;overflow:hidden}
-.tldr-glance>summary{cursor:pointer;list-style:none;padding:12px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#4a5568;display:flex;align-items:center;gap:6px}
+.tldr-glance>summary{cursor:pointer;list-style:none;padding:12px 20px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:#4a5568;display:flex;align-items:center;gap:6px}
 .tldr-glance>summary::-webkit-details-marker{display:none}
 .tldr-glance>summary::before{content:"▸";font-size:10px;color:#7a8599}
 .tldr-glance[open]>summary::before{content:"▾"}
 .tldr-glance[open]>summary{border-bottom:1px solid #e8ecf0}
 .tldr-glance-body{padding:16px 20px}
 .tldr-toggle-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.tldr-glance-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:#7a8599}
+.tldr-glance-label{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:#7a8599}
 .tldr-toggle{display:flex;gap:0}
-.tldr-toggle button{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:4px 10px;border:1px solid #d5dbe3;background:#f4f6f8;color:#7a8599;cursor:pointer;text-transform:uppercase;letter-spacing:0.3px;transition:all .15s}
+.tldr-toggle button{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:5px 12px;border:1px solid #d5dbe3;background:#f4f6f8;color:#7a8599;cursor:pointer;text-transform:uppercase;letter-spacing:0.3px;transition:all .15s}
 .tldr-toggle button:first-child{border-radius:4px 0 0 4px}
 .tldr-toggle button:last-child{border-radius:0 4px 4px 0;border-left:none}
 .tldr-toggle button.active{background:#003153;color:#fff;border-color:#003153}
 .tldr-map-section{margin-top:16px;padding-top:16px;border-top:1px solid #e8ecf0}
 .tldr-ind-table{width:100%;border-collapse:collapse}
-.tldr-ind-table th{padding:6px;font-family:'Inter',sans-serif;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;color:#ffffff;background:#003153;border-bottom:2px solid #d5dbe3;text-align:left;white-space:nowrap}
+.tldr-ind-table th{padding:8px 8px;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;color:#ffffff;background:#003153;border-bottom:2px solid #d5dbe3;text-align:left;white-space:nowrap}
 .tldr-ind-table th.r{text-align:right}
-.tldr-ind-table td{padding:6px;border-bottom:1px solid #e8ecf0;font-size:11px}
+.tldr-ind-table td{padding:8px 8px;border-bottom:1px solid #e8ecf0;font-size:13px}
 .tldr-ind-table tr:last-child td{border-bottom:none}
-.tldr-ind-table .ind-t-name{color:#1a1a1a;font-weight:600;font-size:11px;white-space:normal}
-.tldr-freq-tag{display:inline-block;font-size:9px;font-weight:500;color:#7a8599;background:#f4f6f8;border:1px solid #e8ecf0;border-radius:3px;padding:0 4px;margin-left:4px;vertical-align:middle;text-transform:uppercase;letter-spacing:0.2px}
-.tldr-ind-table .ind-t-val{font-weight:700;color:#1a1a1a;text-align:right;font-size:11px}
-.tldr-ind-table .ind-t-chg{font-weight:600;font-size:10px;text-align:right}
+.tldr-ind-table .ind-t-name{color:#1a1a1a;font-weight:600;font-size:13px;white-space:normal}
+.tldr-freq-tag{display:inline-block;font-size:10px;font-weight:500;color:#7a8599;background:#f4f6f8;border:1px solid #e8ecf0;border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle;text-transform:uppercase;letter-spacing:0.2px}
+.tldr-ind-table .ind-t-val{font-weight:700;color:#1a1a1a;text-align:right;font-size:13px}
+.tldr-ind-table .ind-t-chg{font-weight:600;font-size:12px;text-align:right}
 .tldr-ind-table .ind-t-chg.up{color:#0d7a3f}
 .tldr-ind-table .ind-t-chg.down{color:#c4320a}
 .tldr-ind-table .ind-t-chg.unch{color:#7a8599}
-.tldr-ind-table .ind-t-ref{font-size:10px;color:#7a8599}
-.tldr-ind-table .ind-t-next{font-size:10px;color:#7a8599;text-align:right}
-.tldr-ind-table .ind-t-src{font-size:10px;color:#7a8599;text-align:right}
+.tldr-ind-table .ind-t-ref{font-size:12px;color:#7a8599}
+.tldr-ind-table .ind-t-next{font-size:12px;color:#7a8599;text-align:right}
+.tldr-ind-table .ind-t-src{font-size:12px;color:#7a8599;text-align:right}
 .tldr-section{padding:0 0 28px;margin-bottom:28px}
 .tldr-inner-card{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:16px 20px}
 .tldr-section-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #e8ecf0}
 .tldr-section-accent{width:4px;height:22px;border-radius:2px;flex-shrink:0;background:#003153}
-.tldr-section-header h3{font-family:'Source Serif 4',Georgia,serif;font-size:20px;font-weight:700;color:#1a1a1a;margin:0}
-.tldr-section-header .tldr-section-sub{font-size:12px;color:#7a8599;margin-left:auto}
-.tldr-narrative p{font-family:'Source Serif 4',Georgia,serif;font-size:16px;line-height:1.75;color:#1a1a1a;margin-bottom:16px}
+.tldr-section-header h3{font-family:'Source Serif 4',Georgia,serif;font-size:24px;font-weight:700;color:#1a1a1a;margin:0}
+.tldr-section-header .tldr-section-sub{font-size:14px;color:#7a8599;margin-left:auto}
+.tldr-narrative p{font-family:'Source Serif 4',Georgia,serif;font-size:18px;line-height:1.75;color:#1a1a1a;margin-bottom:18px}
 .tldr-lead-sentence{font-weight:600}
-.tldr-narrative sup{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#003153;cursor:pointer;vertical-align:super}
+.tldr-narrative sup{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:#003153;cursor:pointer;vertical-align:super}
 .tldr-narrative sup:hover{text-decoration:underline}
-.tldr-callout{background:#e8eef4;border-left:3px solid #003153;border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0 20px;font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;color:#4a5568}
+.tldr-callout{background:#e8eef4;border-left:3px solid #003153;border-radius:0 8px 8px 0;padding:16px 20px;margin:14px 0 22px;font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;color:#4a5568}
 .tldr-callout-chart{margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,49,83,0.12)}
 .tldr-callout-chart-title{font-size:10px;font-weight:600;color:#4a5568;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:4px}
 .tldr-chart-legend{display:flex;gap:14px;margin:4px 0 2px}
 .tldr-chart-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:#999;font-family:'Inter',sans-serif}
 .tldr-chart-legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .tldr-callout-source{font-size:9px;color:#7a8599;margin-top:4px}
-.tldr-sources>summary{cursor:pointer;font-size:13px;font-weight:600;color:#7a8599;padding:10px 0;list-style:none}
+.tldr-sources>summary{cursor:pointer;font-size:15px;font-weight:600;color:#7a8599;padding:10px 0;list-style:none}
 .tldr-sources>summary::-webkit-details-marker{display:none}
 .tldr-sources>summary::before{content:"▸ ";font-size:11px}
 .tldr-sources[open]>summary::before{content:"▾ "}
 .tldr-sources{margin-top:28px;padding-top:20px;border-top:1px solid #d5dbe3}
 .tldr-sources ol{padding-left:18px}
-.tldr-sources li{font-size:12px;color:#7a8599;margin-bottom:3px}
+.tldr-sources li{font-size:14px;color:#7a8599;margin-bottom:4px}
 .tldr-sources a{color:#003153;text-decoration:none}
 .tldr-sources a:hover{text-decoration:underline}
-.tldr-policy-narrative{font-family:'Source Serif 4',Georgia,serif;font-size:15px;line-height:1.7;color:#1a1a1a;margin-bottom:20px}
+.tldr-policy-narrative{font-family:'Source Serif 4',Georgia,serif;font-size:17px;line-height:1.7;color:#1a1a1a;margin-bottom:20px}
 .tldr-policy-items{display:flex;flex-direction:column;gap:0;border-top:1px solid #e8ecf0}
 .tldr-policy-item{border-bottom:1px solid #e8ecf0}
-.tldr-policy-item>summary{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;list-style:none}
+.tldr-policy-item>summary{display:flex;align-items:center;gap:10px;padding:12px 0;cursor:pointer;list-style:none}
 .tldr-policy-item>summary::-webkit-details-marker{display:none}
 .tldr-policy-item>summary::before{content:"▸";font-size:10px;color:#7a8599;flex-shrink:0;width:12px}
 .tldr-policy-item[open]>summary::before{content:"▾"}
-.tldr-policy-item-title{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#1a1a1a;flex:1}
-.tldr-policy-item-body{font-family:'Source Serif 4',Georgia,serif;font-size:13px;line-height:1.6;color:#4a5568;padding:0 0 12px 22px}
-.tldr-policy-item-link{display:inline-flex;align-items:center;gap:2px;font-size:11px;color:#003153;margin-top:6px;text-decoration:none;font-family:'Inter',sans-serif}
+.tldr-policy-item-title{font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:#1a1a1a;flex:1}
+.tldr-policy-item-body{font-family:'Source Serif 4',Georgia,serif;font-size:15px;line-height:1.6;color:#4a5568;padding:0 0 14px 22px}
+.tldr-policy-item-link{display:inline-flex;align-items:center;gap:2px;font-size:13px;color:#003153;margin-top:6px;text-decoration:none;font-family:'Inter',sans-serif}
 .tldr-policy-item-link:hover{text-decoration:underline}
-.tldr-projects-table{width:100%;border-collapse:collapse;font-size:13px}
-.tldr-projects-table th{text-align:left;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#ffffff;padding:8px 12px;border-bottom:2px solid #d5dbe3;background:#003153}
-.tldr-projects-table td{padding:10px 12px;border-bottom:1px solid #e8ecf0;vertical-align:top}
+.tldr-projects-table{width:100%;border-collapse:collapse;font-size:14px}
+.tldr-projects-table th{text-align:left;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#ffffff;padding:10px 14px;border-bottom:2px solid #d5dbe3;background:#003153}
+.tldr-projects-table td{padding:10px 14px;border-bottom:1px solid #e8ecf0;vertical-align:top}
 .tldr-projects-table tr:hover{background:#e8eef4}
 .tldr-projects-table .proj-name{font-weight:600;color:#1a1a1a}
 .tldr-projects-table .proj-val{font-weight:600;white-space:nowrap}
-.tldr-status-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;white-space:nowrap}
+.tldr-status-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:12px;font-weight:500;white-space:nowrap}
 .tldr-status-badge.proposed{background:#fef3c7;color:#92400e}
 .tldr-status-badge.pre-construction{background:#dbeafe;color:#1e40af}
 .tldr-status-badge.under-construction{background:#d1fae5;color:#065f46}
@@ -638,10 +638,10 @@ body{font-family:'Inter','Work Sans',-apple-system,sans-serif;background:#f4f6f8
 .tldr-status-badge.on-hold{background:#fef3c7;color:#92400e}
 .tldr-status-badge.cancelled{background:#fef2f2;color:#c4320a}
 .tldr-status-badge.complete{background:#d1fae5;color:#065f46}
-.tldr-view-all{text-align:right;padding:10px 16px;font-size:12px;color:#003153;cursor:pointer;font-family:'Inter',sans-serif}
+.tldr-view-all{text-align:right;padding:12px 16px;font-size:14px;color:#003153;cursor:pointer;font-family:'Inter',sans-serif}
 .tldr-view-all:hover{text-decoration:underline}
-.tldr-update-narrative{font-family:'Source Serif 4',Georgia,serif;font-size:15px;line-height:1.7;color:#1a1a1a;margin-bottom:24px}
-.tldr-empty{text-align:center;padding:24px;color:#7a8599;font-size:13px;font-style:italic}
+.tldr-update-narrative{font-family:'Source Serif 4',Georgia,serif;font-size:17px;line-height:1.7;color:#1a1a1a;margin-bottom:24px}
+.tldr-empty{text-align:center;padding:24px;color:#7a8599;font-size:15px;font-style:italic}
 @media(max-width:899px){.tldr-page{padding:20px 16px}.tldr-headline-band h2{font-size:22px}.tldr-ind-table td,.tldr-ind-table th{padding:4px}.tldr-projects-table td,.tldr-projects-table th{padding:6px 8px}}
 @media(max-width:599px){.tldr-page{padding:16px 12px}.tldr-headline-band h2{font-size:20px}.tldr-headline-meta{flex-wrap:wrap;gap:8px}.tldr-projects-table{font-size:11px}}
 /* ── Provinces Tab ── */
