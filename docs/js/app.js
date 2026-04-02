@@ -711,17 +711,16 @@ function _svgCalloutChart(seriesArr,annotations){
 /* ── TL;DR: Policy Developments ── */
 async function _tldrBuildPolicy(){
   let policyItems=[];
+  let policySummary='';
   try{
     const raw=await fetchJSON('policy.json');
     const weeks=raw&&raw.weeks?raw.weeks:[];
-    if(weeks.length&&weeks[0].items)policyItems=weeks[0].items;
-  }catch(e){}
-  // Policy summary narrative (from first week's summary if available)
-  let policySummary='';
-  try{
-    const raw2=await fetchJSON('policy.json');
-    const weeks2=raw2&&raw2.weeks?raw2.weeks:[];
-    if(weeks2.length&&weeks2[0].summary&&weeks2[0].summary.length>10)policySummary=weeks2[0].summary;
+    if(weeks.length){
+      const w=weeks[0];
+      policyItems=w.items||(w.summary&&w.summary.top_developments)||[];
+      if(w.summary&&typeof w.summary.narrative==='string'&&w.summary.narrative.length>10)policySummary=w.summary.narrative;
+      else if(typeof w.summary==='string'&&w.summary.length>10)policySummary=w.summary;
+    }
   }catch(e){}
 
   if(!policyItems.length){
@@ -738,9 +737,13 @@ async function _tldrBuildPolicy(){
     const title=san(p.title||p.name||'');
     const body=san(p.description||p.summary||p.body||'');
     const url=p.url||p.source_url||'';
+    const level=(p.level||'').toLowerCase();
+    const tagCls=level==='federal'?'federal':level==='regulatory'?'regulatory':'provincial';
+    const tagLabel=level?level.charAt(0).toUpperCase()+level.slice(1):'';
+    const tagHtml=tagLabel?`<span class="tldr-policy-tag ${tagCls}">${tagLabel}</span>`:'';
     const linkHtml=url?` <a class="tldr-policy-item-link" href="${url}" target="_blank">View source \u2192</a>`:'';
     itemsHtml+=`<details class="tldr-policy-item" open>
-      <summary><span class="tldr-policy-item-title">${title}</span></summary>
+      <summary><span class="tldr-policy-item-title">${title}</span>${tagHtml}</summary>
       <div class="tldr-policy-item-body">${body}${linkHtml}</div>
     </details>`;
   });
@@ -757,7 +760,7 @@ async function _tldrBuildPolicy(){
     <div class="tldr-section-header">
       <div class="tldr-section-accent"></div>
       <h3>Major Policy Developments</h3>
-      <span class="tldr-section-sub">${policyItems.length} items</span>
+      <span class="tldr-section-sub">${(function(){const counts={};policyItems.forEach(p=>{const l=(p.level||'other').toLowerCase();counts[l]=(counts[l]||0)+1});const parts=[policyItems.length+' item'+(policyItems.length!==1?'s':'')];Object.keys(counts).forEach(k=>{parts.push(counts[k]+' '+k)});return parts.join(' \u00B7 ')})()}</span>
     </div>
     ${policySummary?'<div class="tldr-policy-narrative"><p>'+san(policySummary)+'</p></div>':''}
     <div class="tldr-inner-card tldr-policy-items">${itemsHtml}</div>
