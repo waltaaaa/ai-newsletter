@@ -59,12 +59,13 @@ body{font-family:'Inter','Work Sans',-apple-system,sans-serif;background:#f4f6f8
 .fade-in{animation:fadeIn .3s ease both}
 .container{max-width:1600px;margin:0 auto;padding:0 40px}
 /* Header — Prussian blue */
-.site-header{background:#003153;border-bottom:1px solid rgba(255,255,255,0.08);padding:36px 48px;display:flex;align-items:center;justify-content:space-between}
-.site-header h1{font-family:'Inter',sans-serif;font-size:26px;font-weight:700;letter-spacing:-0.4px;color:#ffffff;margin:0}
-.site-header .subtitle{color:rgba(255,255,255,0.65);font-size:15px;margin-top:3px}
+.site-header{background:linear-gradient(135deg,#003153 0%,#00426e 50%,#003153 100%);border-bottom:none;padding:52px 56px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.site-header::before{content:'';position:absolute;top:-60%;right:-5%;width:400px;height:400px;background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);pointer-events:none}
+.site-header h1{font-family:'Source Serif 4','Inter',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.5px;color:#ffffff;margin:0}
+.site-header .subtitle{color:rgba(255,255,255,0.55);font-size:15px;margin-top:6px;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;font-size:12px}
 .site-header .header-right{display:flex;align-items:center;gap:20px}
-.site-header .date-badge{font-size:14px;font-weight:600;color:#ffffff;background:rgba(255,255,255,0.15);padding:6px 16px;border-radius:6px}
-.site-header .freshness{font-size:13px;color:rgba(255,255,255,0.55)}
+.site-header .date-badge{font-size:15px;font-weight:600;color:#ffffff;background:rgba(255,255,255,0.12);padding:8px 20px;border-radius:8px;border:1px solid rgba(255,255,255,0.1)}
+.site-header .freshness{font-size:13px;color:rgba(255,255,255,0.45)}
 /* Legacy hero — hidden, replaced by site-header */
 .hero{display:none}
 /* Nav — dark Prussian blue tab bar */
@@ -847,8 +848,8 @@ body{font-family:'Inter','Work Sans',-apple-system,sans-serif;background:#f4f6f8
 <!-- Header — Prussian blue -->
 <header class="site-header">
   <div>
-    <h1>The Lagging Indicator</h1>
     <div class="subtitle">Canadian Macro Strategic Dashboard</div>
+    <h1>The Lagging Indicator</h1>
   </div>
   <div class="header-right">
     <span class="date-badge" id="heroDate"></span>
