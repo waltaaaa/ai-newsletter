@@ -22,14 +22,14 @@ For full system specification (25 sections, every feature detailed), see `COMPLE
 
 ## Model Stack (DO NOT CHANGE)
 - **Claude Code Agents (subscription, $0 API cost):** ALL writing and reasoning runs via `claude -p` subprocess on user's Claude subscription. Covers: macro/industry writing agents (~30 agents), province writing agents (13 agents), weekly briefing, executive summary, market commentary, policy assessment, pre-event analysis, Under the Microscope, project extraction, gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis, selective extraction, citation audit, context lines, JSON repair fallback.
-- **Groq LLaMA 3.3 70B:** Primary classifier — Layer 6 RSS classification, JSON repair, sentiment. FREE TIER (6K TPM / 500K TPD). Replaces Gemini Flash.
-- **Qwen 2.5 3B (Ollama):** Local classifier fallback — binary R/I triage before Groq. $0.
+- **Groq LLaMA 3.3 70B:** Fallback classifier — Layer 6 RSS classification, JSON repair, sentiment. FREE TIER (6K TPM / 500K TPD).
 - **NVIDIA NIM (free tier, 40 RPM shared):**
-  - Nemotron 3 Super 120B — deep extraction (replaces K2.5)
+  - Nemotron 3 Super 120B — L6 article classification (primary) + deep extraction + JSON repair + rehash detection
   - DeepSeek V3.2 — second-opinion on hardest extraction cases
-  - Llama Nemotron Rerank 1B v2 — search result relevance scoring
-  - Llama Nemotron Embed 1B v2 — semantic dedup (26-language support)
+  - Llama Nemotron Rerank 1B v2 — L7 article relevance scoring + search result scoring
+  - Llama Nemotron Embed 1B v2 — semantic article dedup + semantic project dedup (26-language support)
   - Nemotron OCR v1 — provincial PDF text extraction
+- **NO Ollama/Qwen.** Removed. All classification runs through NIM Nemotron (Groq fallback).
 - **Tavily:** Targeted enrichment searches only (cost-finding, verification, named tracking). Free tier 1,000 credits/month.
 - **Anthropic API:** OPTIONAL fallback only. Set `REASONING_AGENT_MODE=api` / `WRITING_AGENT_MODE=api` / `PROVINCE_AGENT_MODE=api` to use API instead of Claude Code agents. Required for GitHub Actions where `claude` CLI is unavailable.
 - **NO Gemini in active pipeline.** Removed from classification chain. Legacy fallback only. Code must NEVER pass `google_search` tool or `groundingConfig` to the API.
@@ -92,7 +92,8 @@ Plus: Regulatory feeds — 10 CanLII RSS feeds covering Federal Court, CER, Onta
 3. Below-threshold dampener
 4. Keyword co-occurrence (~80 project + ~30 economic signals)
 5. Negative keywords (crime/sports/weather ONLY — NOT mall, housing, office, heritage)
-6. LLM classification: local Qwen → Groq LLaMA 3.3 70B → fail-open (uncertain = RELEVANT)
+6. LLM classification: NIM Nemotron Super 120B → Groq LLaMA 3.3 70B → fail-open (uncertain = RELEVANT)
+7. NIM Rerank: relevance scoring of classified articles, top-N pass to extraction
 
 Pre-filter step 1: Metadata tagging — articles tagged with sector (NAICS keys) and geography (province codes) using 6 signal layers: source domain, feed label, RSS categories, URL path, headline geography, headline keywords. Zero API cost. Tags flow through to L1 (metadata boost bypasses keyword check), Claude extraction (sector/province hints), and cross-reference engine (article-indicator alignment).
 
@@ -153,6 +154,17 @@ The briefing integrates data from: indicator history, project database, discover
 | 1 (Macro) | Policy summary, top hiring spikes, procurement ≥$10M, IAAC changes, extended StatCan summary |
 | 2 (Industries) | Per-sector signals: policy items, hiring spikes, procurement awards |
 | 3 (Provinces) | Per-province signals: policy items, hiring spikes, procurement awards, IAAC changes |
+
+## Insight Charts (Agent 4 — tldr-charts)
+- **Skill:** `.claude/skills/tldr-charts/SKILL.md`
+- **Purpose:** Generates 2 data visualizations per province + 2 for National (28 total per briefing)
+- **Runs after:** Writer agent (Agent 3) completes the briefing narrative
+- **Output:** Adds `insightCharts` array (2 chart specs) to top-level JSON and to each province object
+- **Data source:** `timeseries.json` (102 keys — commodities, provincial indicators, indices, currencies)
+- **Chart types:** `line` (trends), `bar` (comparisons), `diverging_bar` (changes)
+- **Design reference:** `.claude/skills/lagging_indicator_charts.md` (10-chart design library)
+- **Frontend rendering:** `buildAgentInsightStripMulti()` and `renderAgentInsightChartMulti()` in `app.js`
+- **Backward compatible:** Falls back to single `insightChart` or keyword-based charts if `insightCharts` array is absent
 
 ## Briefing Export
 - PDF via reportlab, DOCX via python-docx

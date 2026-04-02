@@ -23,7 +23,9 @@ import re
 from datetime import date
 
 from dotenv import load_dotenv
-import local_llm
+
+from nim_client import get_client as get_nim_client
+from pipeline_config import NIM_CLASSIFY_MODEL
 
 load_dotenv()
 
@@ -419,6 +421,29 @@ Return a JSON array with one object per input article (same order as input). Eac
 """
 
 
+_NIM_CLASSIFY_PROMPT = """\
+Classify each numbered headline for a Canadian capital projects and economic development tracker.
+
+R = RELEVANT. Includes: construction, renovation, retrofit, expansion, infrastructure, \
+housing development, condo towers, mixed-use, transit, highway, bridge, energy (solar, wind, \
+LNG, pipeline, nuclear, hydrogen, battery), mining, data centres, defence, water/wastewater, \
+institutional (hospital, school, arena), government capital spending, P3, funding announcements, \
+building permits, housing starts, industrial facilities, environmental remediation, adaptive reuse.
+
+I = IRRELEVANT. Only: sports scores/trades/playoffs, crime/court/sentencing, entertainment/concerts, \
+weather alerts, health outbreaks, opinion/editorial without project details, dollar figures that are \
+lawsuits/salaries/fines.
+
+If uncertain, output R.
+
+Output format: one line per headline — number, period, R or I. Nothing else.
+
+Example:
+1.R
+2.I
+3.R"""
+
+
 def layer3_gemini_prescreen(
     articles: list[dict],
     batch_size: int = 20,
@@ -427,34 +452,44 @@ def layer3_gemini_prescreen(
 ) -> list[int]:
     """
     Layer 6: LLM batch classification.
-    Fallback chain: local LLM → Groq LLaMA 3.3 70B → fail-open.
+    Fallback chain: NIM Nemotron Super 120B → Groq LLaMA 3.3 70B → fail-open.
     Returns list of indices (from the input list) that are RELEVANT.
-
-    When conn is provided, stores classification_json in documents table.
-    Each article dict should have 'title' and optionally 'summary'.
     """
     if not articles:
         return []
 
-    # Try local LLM first
-    local_model = local_llm.get_model()
-    if local_model is not None:
-        try:
-            items = [
-                {"headline": a.get("title", ""), "snippet": (a.get("summary", "") or "")[:150]}
-                for a in articles
-            ]
-            classifications = local_llm.batch_classify(items, _L3_PROMPT)
-            relevant_indices = []
-            for i, cls in enumerate(classifications):
-                if i < len(articles) and "RELEVANT" in str(cls).upper():
-                    relevant_indices.append(i)
-            print(f"  [Filter L6] Local LLM: {len(relevant_indices)}/{len(articles)} relevant")
-            return relevant_indices
-        except Exception as e:
-            print(f"  [Filter L6] Local LLM failed, falling back to Groq: {e}")
+    # Try NIM Nemotron Super 120B first
+    try:
+        nim = get_nim_client()
+        relevant_indices = []
+        for batch_start in range(0, len(articles), batch_size):
+            batch = articles[batch_start:batch_start + batch_size]
+            batch_text = "\n".join(
+                f"{j+1}. {a.get('title', '')} — {(a.get('summary', '') or '')[:150]}"
+                for j, a in enumerate(batch)
+            )
+            resp = nim.chat_sync(
+                model=NIM_CLASSIFY_MODEL,
+                messages=[
+                    {"role": "system", "content": _NIM_CLASSIFY_PROMPT},
+                    {"role": "user", "content": batch_text},
+                ],
+                max_tokens=len(batch) * 5 + 20,
+                temperature=0.1,
+                thinking=False,
+            )
+            verdicts = re.findall(r'(\d+)\.([RI])', resp, re.IGNORECASE)
+            result_map = {int(num): v.upper() for num, v in verdicts}
+            for j in range(len(batch)):
+                v = result_map.get(j + 1, "R")  # fail-open if missing
+                if v == "R":
+                    relevant_indices.append(batch_start + j)
+        print(f"  [Filter L6] NIM Nemotron: {len(relevant_indices)}/{len(articles)} relevant")
+        return relevant_indices
+    except Exception as e:
+        print(f"  [Filter L6] NIM failed, falling back to Groq: {e}")
 
-    # Try Groq LLaMA 3.3 70B (replaces Gemini Flash)
+    # Try Groq LLaMA 3.3 70B
     try:
         import groq_client
         if groq_client.can_use_groq():
@@ -586,11 +621,49 @@ def filter_articles(
         for art in articles:
             art.pop('_l1_strength', None)
 
+    # Layer 7: NIM Rerank — score and filter by relevance (optional)
+    RERANK_TOP_N = int(os.environ.get('RERANK_TOP_N', '50'))
+    RERANK_MIN_LOGIT = float(os.environ.get('RERANK_MIN_LOGIT', '-2.0'))
+    nim_rerank_enabled = os.environ.get('NIM_RERANK_ENABLED', 'true').lower() == 'true'
+    if nim_rerank_enabled and len(articles) > RERANK_TOP_N:
+        try:
+            nim = get_nim_client()
+            rerank_query = (
+                "Canadian infrastructure capital project construction development "
+                "investment funding announcement approval"
+            )
+            passages = [
+                f"{a.get('title', '')} — {(a.get('summary', '') or '')[:200]}"
+                for a in articles
+            ]
+            ranked = nim.rerank_sync(
+                query=rerank_query,
+                passages=passages,
+                top_n=min(RERANK_TOP_N, len(articles)),
+            )
+            if ranked:
+                keep_indices = set()
+                for r in ranked:
+                    idx = r.get("index", -1)
+                    logit = r.get("logit", 0.0)
+                    if 0 <= idx < len(articles) and logit >= RERANK_MIN_LOGIT:
+                        keep_indices.add(idx)
+                rerank_cut = len(articles) - len(keep_indices)
+                if rerank_cut > 0:
+                    for i, art in enumerate(articles):
+                        if i not in keep_indices:
+                            filtered_out.append(('L7', art))
+                    articles = [articles[i] for i in sorted(keep_indices)]
+                    print(f"  [Filter L7] NIM Rerank: kept {len(articles)}, dropped {rerank_cut}")
+        except Exception as e:
+            print(f"  [Filter L7] NIM Rerank failed (non-fatal): {type(e).__name__}: {e}")
+
     l1_cut = sum(1 for layer, _ in filtered_out if layer == 'L1')
     l2_cut = sum(1 for layer, _ in filtered_out if layer == 'L2')
     l6_cut = sum(1 for layer, _ in filtered_out if layer == 'L6')
+    l7_cut = sum(1 for layer, _ in filtered_out if layer == 'L7')
     print(f"  [Filter] {initial_count} -> {len(articles)} "
-          f"(L1: -{l1_cut}, L2: -{l2_cut}, L6: -{l6_cut})")
+          f"(L1: -{l1_cut}, L2: -{l2_cut}, L6: -{l6_cut}, L7: -{l7_cut})")
 
     # Log filtered articles for review
     if log_filtered and filtered_out:

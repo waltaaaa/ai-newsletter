@@ -567,6 +567,7 @@ NIM_BASE_URL = os.environ.get('NIM_BASE_URL', 'https://integrate.api.nvidia.com/
 NIM_RATE_LIMIT_RPM = int(os.environ.get('NIM_RATE_LIMIT_RPM', '40'))
 
 # Models — upgraded March 2026
+NIM_CLASSIFY_MODEL = 'nvidia/nemotron-3-super-120b-a12b'    # L6 article classification (was: Ollama Qwen 2.5 3B)
 NIM_EXTRACTION_MODEL = 'nvidia/nemotron-3-super-120b-a12b'  # was: moonshotai/kimi-k2.5
 NIM_EXTRACTION_FALLBACK = 'moonshotai/kimi-k2.5'            # emergency fallback only
 NIM_HARD_CASE_MODEL = 'deepseek-ai/deepseek-v3_2'           # second-opinion on incomplete extractions

@@ -815,6 +815,20 @@ def fetch_and_filter(
         except Exception as e:
             print(f"[WARN] MinHash dedup failed, continuing without: {e}")
 
+    # Pre-filter step 2c: NIM semantic dedup (catch paraphrased near-duplicates)
+    if os.environ.get('SEMANTIC_DEDUP_ENABLED', 'true').lower() == 'true':
+        try:
+            from semantic_article_dedup import semantic_deduplicate_articles
+            pre_sem = len(all_items)
+            all_items, sem_dropped = semantic_deduplicate_articles(all_items)
+            if sem_dropped:
+                print(f"  [RSS] Semantic article dedup: {pre_sem} -> {len(all_items)} "
+                      f"(dropped {sem_dropped} semantic duplicates)")
+        except ImportError:
+            pass
+        except Exception as e:
+            print(f"[WARN] Semantic dedup failed, continuing: {type(e).__name__}: {e}")
+
     # Pre-filter step 3: Canadian relevance filter for global newswire feeds
     # GlobeNewswire and PRNewswire are global — drop non-Canadian articles
     # before they burn LLM classification tokens. Canada Newswire is already

@@ -244,6 +244,141 @@ def export_province_projects(conn, province_name: str, threshold_val: int, outpu
     return out_path
 
 
+def _calc_changes(conn, indicator_name: str, *, alt_names: list | None = None) -> dict:
+    """Compute change metrics for a market instrument from indicator_history.
+
+    Queries indicator_history for the given indicator_name (or alt_names as
+    fallbacks) and computes:
+      - current: latest value (float)
+      - wow: week-over-week change (%)
+      - mom: month-over-month change (%)
+      - yoy: year-over-year change (%)
+      - high_52w: 52-week high
+      - low_52w: 52-week low
+      - direction: "up" | "down" | "flat" based on wow
+
+    Missing deltas are returned as None (the frontend renders "N/A").
+
+    Parameters
+    ----------
+    conn : sqlite3.Connection
+    indicator_name : str
+        Primary key in indicator_history.indicator_name.
+    alt_names : list[str] | None
+        Fallback names to try if primary has no rows (e.g. 'comm_wti' for 'wti').
+
+    Returns
+    -------
+    dict  with keys: current, wow, mom, yoy, high_52w, low_52w, direction
+          All numeric values are floats rounded to 2 decimal places.
+          Returns all-None dict if no data found.
+    """
+    from datetime import datetime, timedelta
+
+    empty = {
+        'current': None, 'wow': None, 'mom': None, 'yoy': None,
+        'high_52w': None, 'low_52w': None, 'direction': 'flat',
+    }
+
+    # Try primary name, then alternates
+    names_to_try = [indicator_name] + (alt_names or [])
+    rows = []
+    for name in names_to_try:
+        rows = conn.execute("""
+            SELECT period, value
+            FROM indicator_history
+            WHERE indicator_name = ? AND period IS NOT NULL AND value IS NOT NULL
+            ORDER BY period DESC
+            LIMIT 260
+        """, (name,)).fetchall()
+        if rows:
+            break
+
+    if not rows:
+        return empty
+
+    # Parse into (date_str, float_value) pairs, skipping unparseable values
+    points = []
+    for r in rows:
+        date_str = r[0] if isinstance(r, (list, tuple)) else r['period']
+        val_raw = r[1] if isinstance(r, (list, tuple)) else r['value']
+        try:
+            val = float(str(val_raw).replace(',', '').replace('%', '').replace('+', '').replace('$', ''))
+            points.append((date_str, val))
+        except (ValueError, TypeError):
+            continue
+
+    if not points:
+        return empty
+
+    # Points are sorted descending by date from the query
+    current_date, current_val = points[0]
+
+    today = datetime.now().date()
+
+    def _find_nearest(target_date_str: str, tolerance_days: int = 7):
+        """Find the value closest to target_date within tolerance."""
+        try:
+            target = datetime.fromisoformat(target_date_str).date()
+        except (ValueError, TypeError):
+            return None
+        best_val = None
+        best_diff = tolerance_days + 1
+        for d_str, v in points:
+            try:
+                d = datetime.fromisoformat(d_str).date()
+                diff = abs((d - target).days)
+                if diff <= tolerance_days and diff < best_diff:
+                    best_diff = diff
+                    best_val = v
+            except (ValueError, TypeError):
+                continue
+        return best_val
+
+    # Week ago
+    week_ago = (today - timedelta(days=7)).isoformat()
+    week_val = _find_nearest(week_ago, tolerance_days=5)
+
+    # Month ago
+    month_ago = (today - timedelta(days=30)).isoformat()
+    month_val = _find_nearest(month_ago, tolerance_days=10)
+
+    # Year ago
+    year_ago = (today - timedelta(days=365)).isoformat()
+    year_val = _find_nearest(year_ago, tolerance_days=30)
+
+    def _pct_change(old, new):
+        if old is None or new is None or old == 0:
+            return None
+        return round(((new - old) / abs(old)) * 100, 2)
+
+    wow = _pct_change(week_val, current_val)
+    mom = _pct_change(month_val, current_val)
+    yoy = _pct_change(year_val, current_val)
+
+    # 52-week high/low from all points within last 365 days
+    cutoff = (today - timedelta(days=365)).isoformat()
+    recent_vals = [v for d, v in points if d >= cutoff]
+    high_52w = round(max(recent_vals), 2) if recent_vals else None
+    low_52w = round(min(recent_vals), 2) if recent_vals else None
+
+    # Direction
+    if wow is not None:
+        direction = 'up' if wow > 0.05 else ('down' if wow < -0.05 else 'flat')
+    else:
+        direction = 'flat'
+
+    return {
+        'current': round(current_val, 2),
+        'wow': wow,
+        'mom': mom,
+        'yoy': yoy,
+        'high_52w': high_52w,
+        'low_52w': low_52w,
+        'direction': direction,
+    }
+
+
 def _build_market_data_from_indicators(conn) -> dict:
     """Build financialMarkets + commodities + yieldCurve from indicator_history."""
     rows = conn.execute("""
@@ -291,7 +426,16 @@ def _build_market_data_from_indicators(conn) -> dict:
     for key, label, region in IDX:
         v = _fmt(key, 0)
         if v:
-            indices.append({'name': label, 'value': v, 'region': region, 'change': '', 'day': '', 'yy': ''})
+            entry = {'name': label, 'value': v, 'region': region, 'change': '', 'day': '', 'yy': ''}
+            changes = _calc_changes(conn, key)
+            if changes['current'] is not None:
+                entry['weekly_pct'] = changes['wow']
+                entry['mom_pct'] = changes['mom']
+                entry['yoy_pct'] = changes['yoy']
+                entry['high_52w'] = changes['high_52w']
+                entry['low_52w'] = changes['low_52w']
+                entry['direction'] = changes['direction']
+            indices.append(entry)
 
     # FX
     FX = [('cadusd', 'CAD/USD'), ('eurusd', 'EUR/USD'), ('usdcny', 'USD/CNY'), ('usdjpy', 'USD/JPY')]
@@ -299,7 +443,14 @@ def _build_market_data_from_indicators(conn) -> dict:
     for key, label in FX:
         v = _fmt(key, 4)
         if v:
-            fx.append({'name': label, 'value': v, 'day': '', 'yy': ''})
+            entry = {'name': label, 'value': v, 'day': '', 'yy': ''}
+            changes = _calc_changes(conn, key)
+            if changes['current'] is not None:
+                entry['weekly_pct'] = changes['wow']
+                entry['mom_pct'] = changes['mom']
+                entry['yoy_pct'] = changes['yoy']
+                entry['direction'] = changes['direction']
+            fx.append(entry)
 
     # Commodities
     COMMS = {
@@ -322,7 +473,16 @@ def _build_market_data_from_indicators(conn) -> dict:
         for key, label, unit in items:
             v = vals.get(key, {}).get('value')
             if v is not None:
-                cat_items.append({'name': label, 'val': str(v), 'unit': unit, 'yy': '', 'day': ''})
+                item = {'name': label, 'val': str(v), 'unit': unit, 'yy': '', 'day': ''}
+                changes = _calc_changes(conn, key, alt_names=[f'comm_{key}'])
+                if changes['current'] is not None:
+                    item['weekly_pct'] = changes['wow']
+                    item['mom_pct'] = changes['mom']
+                    item['yoy_pct'] = changes['yoy']
+                    item['high_52w'] = changes['high_52w']
+                    item['low_52w'] = changes['low_52w']
+                    item['direction'] = changes['direction']
+                cat_items.append(item)
         if cat_items:
             commodities.append({'category': cat, 'items': cat_items})
 
@@ -331,7 +491,14 @@ def _build_market_data_from_indicators(conn) -> dict:
     for term in ['2Y', '5Y', '10Y']:
         v = vals.get(f'goc_{term.lower()}_yield', {}).get('value')
         if v is not None:
-            yieldCurve.append({'term': term, 'yield': str(v)})
+            yc_entry = {'term': term, 'yield': str(v)}
+            ts_key = f'goc_{term.lower()}_yield'
+            changes = _calc_changes(conn, ts_key)
+            if changes['yoy'] is not None:
+                yc_entry['yield_year_ago'] = changes.get('high_52w')
+                yc_entry['bp_change_yoy'] = round((changes['current'] - (changes['current'] / (1 + changes['yoy']/100))) * 100, 0) if changes['yoy'] else None
+            yc_entry['direction'] = changes['direction']
+            yieldCurve.append(yc_entry)
 
     return {
         'financialMarkets': {'indices': indices, 'fx': fx},
@@ -990,244 +1157,4 @@ def export_iaac(conn, output_dir: str) -> str:
 
 
 def export_signals(conn, output_dir: str) -> str:
-    """Export combined signals summary (permits, lobby, jobs, procurement) to signals.json."""
-    from db import get_dashboard_state
-
-    # Gather latest signals from all sources
-    signals = {
-        "exported_at": datetime.now(timezone.utc).isoformat(),
-    }
-
-    # Job spikes (latest week)
-    try:
-        import sqlite3 as _sql
-        old_rf = conn.row_factory
-        conn.row_factory = _sql.Row
-        row = conn.execute(
-            "SELECT week_of, spikes FROM job_snapshots ORDER BY week_of DESC LIMIT 1"
-        ).fetchone()
-        conn.row_factory = old_rf
-        if row:
-            signals["job_spikes"] = {
-                "week_of": row["week_of"],
-                "spikes": _safe_json_loads(row["spikes"], []),
-            }
-    except Exception:
-        pass
-
-    # Procurement (latest week)
-    try:
-        old_rf = conn.row_factory
-        conn.row_factory = _sql.Row
-        row = conn.execute(
-            "SELECT week_of, data FROM procurement_snapshots ORDER BY week_of DESC LIMIT 1"
-        ).fetchone()
-        conn.row_factory = old_rf
-        if row:
-            signals["procurement"] = {
-                "week_of": row["week_of"],
-                "contracts": _safe_json_loads(row["data"], []),
-            }
-    except Exception:
-        pass
-
-    # IAAC summary
-    try:
-        total = conn.execute(
-            "SELECT COUNT(*) FROM projects WHERE discovery_source LIKE '%iaac%'"
-        ).fetchone()[0]
-        recent = conn.execute(
-            "SELECT COUNT(*) FROM projects WHERE discovery_source LIKE '%iaac%' AND lastSeen >= date('now', '-7 days')"
-        ).fetchone()[0]
-        signals["iaac"] = {"total_tracked": total, "seen_this_week": recent}
-    except Exception:
-        pass
-
-    out_path = os.path.join(output_dir, "signals.json")
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(signals, f, ensure_ascii=False, indent=2)
-    return out_path
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# MAIN ENTRY POINT
-# ═══════════════════════════════════════════════════════════════════════════════
-
-
-def export_all(conn=None, output_dir: str = "docs/data") -> dict:
-    """Export all dashboard data to static JSON files.
-
-    Args:
-        conn: sqlite3.Connection from db.py. If None, creates one via get_db().
-        output_dir: Directory to write JSON files. Created if it does not exist.
-
-    Returns:
-        dict with keys: file_count, output_dir, files_written
-    """
-    from db import get_db, init_db
-    from pipeline_config import PROVINCES
-
-    _own_conn = False
-    if conn is None:
-        conn = init_db()
-        _own_conn = True
-
-    os.makedirs(output_dir, exist_ok=True)
-
-    files_written = []
-
-    # Province files
-    for prov in PROVINCES:
-        path = export_province_projects(
-            conn,
-            prov["name"],
-            prov["threshold_val"],
-            output_dir,
-        )
-        files_written.append(os.path.basename(path))
-
-    # Briefings
-    latest_path, archive_path = export_briefings(conn, output_dir)
-    files_written.extend([
-        os.path.basename(latest_path),
-        os.path.basename(archive_path),
-    ])
-
-    # Indicators
-    path = export_indicators(conn, output_dir)
-    files_written.append(os.path.basename(path))
-
-    # Trends
-    path = export_trends(conn, output_dir)
-    files_written.append(os.path.basename(path))
-
-    # Events
-    path = export_events(conn, output_dir)
-    files_written.append(os.path.basename(path))
-
-    # Timeseries
-    path = export_timeseries(conn, output_dir)
-    files_written.append(os.path.basename(path))
-
-    # All projects (combined, no threshold)
-    path = export_all_projects(conn, output_dir)
-    files_written.append(os.path.basename(path))
-
-    # Pipeline status (run info + cost data)
-    path = export_pipeline_status(conn, output_dir)
-    files_written.append(os.path.basename(path))
-
-    # Policy developments
-    path = export_policy(conn, output_dir)
-    files_written.append(os.path.basename(path))
-
-    # Canadian commodity indicators
-    path = export_commodities(conn, output_dir)
-    files_written.append(os.path.basename(path))
-
-    # Signal data (jobs, procurement, IAAC)
-    for export_fn in (export_jobs, export_procurement, export_iaac, export_signals):
-        try:
-            path = export_fn(conn, output_dir)
-            files_written.append(os.path.basename(path))
-        except Exception as e:
-            logger.warning("Export %s failed: %s", export_fn.__name__, e)
-
-    # Manifest
-    manifest = {
-        "exported_at": datetime.now(timezone.utc).isoformat(),
-        "province_count": len(PROVINCES),
-        "file_count": len(files_written),
-        "file_list": sorted(files_written),
-    }
-    manifest_path = os.path.join(output_dir, "manifest.json")
-    with open(manifest_path, "w", encoding="utf-8") as f:
-        json.dump(manifest, f, ensure_ascii=False, indent=2)
-    files_written.append("manifest.json")
-
-    print(f"[EXPORT] Wrote {len(files_written)} files to {output_dir}/")
-
-    if _own_conn:
-        conn.close()
-
-    return {
-        "file_count": len(files_written),
-        "output_dir": output_dir,
-        "files_written": files_written,
-    }
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# STANDALONE VALIDATION (run after export_all in __main__)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-
-def _validate_output(output_dir: str) -> bool:
-    """Load each JSON file and print a summary line per file."""
-    json_files = sorted(glob.glob(os.path.join(output_dir, "*.json")))
-    if not json_files:
-        print(f"[VALIDATE] No JSON files found in {output_dir}/")
-        return False
-
-    all_ok = True
-    print(f"\n[VALIDATE] Checking {len(json_files)} files in {output_dir}/")
-    print(f"{'File':<45} {'Size (KB)':>10} {'Entries':>10}")
-    print("-" * 70)
-
-    for fpath in json_files:
-        fname = os.path.basename(fpath)
-        size_kb = os.path.getsize(fpath) / 1024
-        try:
-            with open(fpath, encoding="utf-8") as f:
-                data = json.load(f)
-            if isinstance(data, list):
-                entry_count = len(data)
-            elif isinstance(data, dict):
-                entry_count = len(data)
-            else:
-                entry_count = 1
-            print(f"{fname:<45} {size_kb:>9.1f}K {entry_count:>10}")
-        except json.JSONDecodeError as e:
-            print(f"{fname:<45} INVALID JSON: {e}")
-            all_ok = False
-
-    print("-" * 70)
-    status = "PASSED" if all_ok else "FAILED"
-    print(f"[VALIDATE] {status} — all files valid JSON\n")
-    return all_ok
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# CLI
-# ═══════════════════════════════════════════════════════════════════════════════
-
-
-if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    )
-
-    parser = argparse.ArgumentParser(
-        description="Export CAN-MACRO dashboard data to static JSON files."
-    )
-    parser.add_argument(
-        "--out",
-        default="docs/data",
-        help="Output directory (default: docs/data)",
-    )
-    parser.add_argument(
-        "--db",
-        default=None,
-        help="Path to SQLite database (default: dashboard.db or DB_PATH env var)",
-    )
-    args = parser.parse_args()
-
-    from db import init_db
-
-    db_conn = init_db(args.db)
-    result = export_all(conn=db_conn, output_dir=args.out)
-    _validate_output(args.out)
-    db_conn.close()
-
-    sys.exit(0)
+    """Export combined sign

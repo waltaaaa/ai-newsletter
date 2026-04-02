@@ -399,11 +399,19 @@ RECENT ARTICLES RELEVANT TO THIS SECTOR (cite by article number):
 {CITATION_RULES}
 {EDITORIAL_RULES}
 
-Write sector analysis as HTML bullets (150 words):
-Format: <ul class="list-disc list-inside space-y-2 text-slate-600 text-xs"><li>...</li></ul>
-Each bullet ends with <sup>N</sup>. Reference M/M and Y/Y GDP changes if available.
+Write sector analysis as narrative prose (3-4 sentences, 150-200 words):
+Format: <p><span class="lead-sentence">{{sector name}} — {{key fact with data}}</span> — {{supporting detail connecting indicator to project database impacts, with specific numbers}}<sup>N</sup></p>
+Use em dash lead sentences: open each paragraph with the sector name, an em dash, and the most important data point, then flow into supporting detail.
+Write 1-2 short paragraphs. NO bullet points, NO <ul>/<li> tags.
+Each claim ends with <sup>N</sup>. Reference M/M and Y/Y GDP changes if available.
 Include commodity prices, trade data, or policy actions relevant to this sector.
 DO NOT discuss stock market movements.
+
+BEFORE (wrong — bullets):
+<ul class="list-disc list-inside space-y-2 text-slate-600 text-xs"><li>Mining & Energy GDP declined 1.2% month-over-month<sup>1</sup></li><li>WTI crude traded below $70/bbl for the third week<sup>2</sup></li></ul>
+
+AFTER (correct — narrative prose with em dash lead):
+<p><span class="lead-sentence">Mining & Energy — GDP contracted 1.2% month-over-month as WTI crude traded below $70/bbl for the third consecutive week</span>, affecting 12 Alberta oil sands projects ($18.2B) with breakeven costs above the current price.<sup>1,2</sup> Gold rose 1.8% to $3,042/oz, supporting 23 mining projects in BC and Ontario ($6.4B) linked to precious metal prices.<sup>3</sup></p>
 
 Also provide: sources, subsectors (2-3 with code/name), isNegative (based on M/M).
 
@@ -414,7 +422,7 @@ SCHEMA:
     "name": "{name}",
     "mm": "",
     "yy": "",
-    "analysis": "<ul class=\\"list-disc list-inside space-y-2 text-slate-600 text-xs\\"><li>...</li></ul>",
+    "analysis": "<p><span class=\\"lead-sentence\\">{{sector}} — {{key fact}}</span> — {{detail with data}}<sup>N</sup></p>",
     "industrySources": [{{"id": 1, "title": "", "url": ""}}],
     "isNegative": false,
     "subsectors": [{{"code": "", "name": "", "mm": ""}}],

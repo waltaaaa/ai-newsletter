@@ -15,7 +15,8 @@ import os
 import logging
 
 import service_health
-import local_llm
+from nim_client import get_client as get_nim_client
+from pipeline_config import NIM_CLASSIFY_MODEL
 
 logger = logging.getLogger(__name__)
 
@@ -174,16 +175,20 @@ async def is_rehash(session, semaphore, article_text, existing_project_summary):
         'Respond with ONLY "NEW" or "REHASH".'
     )
 
-    # Try local LLM first
-    if local_llm.get_model() is not None:
-        try:
-            text = local_llm.chat([
+    # Try NIM Nemotron first
+    try:
+        nim = get_nim_client()
+        text = nim.chat_sync(
+            model=NIM_CLASSIFY_MODEL,
+            messages=[
                 {"role": "system", "content": "You classify whether articles contain new project information."},
-                {"role": "user", "content": prompt_text}
-            ], max_tokens=10).strip().upper()
-            return text == "REHASH"
-        except Exception as e:
-            logger.warning(f"Local LLM rehash check failed: {e}")
+                {"role": "user", "content": prompt_text},
+            ],
+            max_tokens=10, temperature=0, thinking=False,
+        ).strip().upper()
+        return text == "REHASH"
+    except Exception as e:
+        logger.warning(f"NIM rehash check failed: {e}")
 
     # Fall back to Gemini
     health = service_health.get()

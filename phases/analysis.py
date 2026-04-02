@@ -11,7 +11,7 @@ from datetime import date, timedelta
 from pipeline_config import SONNET_MODEL, OPUS_MODEL, CLAUDE_COST_CAP_USD
 from citation_audit import CITATION_RULES, run_citation_audit, save_audit_log, remove_failed_claims
 from db import save_checkpoint, get_checkpoint
-import local_llm
+from nim_client import get_client as get_nim_client
 import service_health
 import rss_monitor
 
@@ -254,14 +254,23 @@ def _repair_json(broken_json: str, label: str,
     if not broken_json:
         return {}
 
-    # Try local LLM first (free, no network)
+    # Try NIM Nemotron first
     try:
-        result = local_llm.repair_json(broken_json)
+        nim = get_nim_client()
+        resp = nim.chat_sync(
+            messages=[
+                {"role": "system", "content": "The following JSON is truncated or malformed. Complete/fix it and return ONLY valid JSON. No explanation, no markdown fences."},
+                {"role": "user", "content": broken_json[-3000:]},
+            ],
+            max_tokens=4096, temperature=0, thinking=False,
+        )
+        import json as _json
+        result = _json.loads(resp)
         if result is not None:
-            print(f"    [LOCAL REPAIR OK] {label}")
+            print(f"    [NIM REPAIR OK] {label}")
             return result
     except Exception as e:
-        print(f"    [LOCAL REPAIR FAILED] {label}: {e}")
+        print(f"    [NIM REPAIR FAILED] {label}: {e}")
 
     # Try Groq LLaMA 3.3 70B (free, replaces Gemini)
     try:
