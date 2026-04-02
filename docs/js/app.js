@@ -2382,6 +2382,13 @@ const PROV_SPECIFIC_INDICATORS={
 const PROV_ORDER=['ON','QC','AB','BC','SK','MB','NS','NB','NL','PE'];
 const TERR_ORDER=['YT','NT','NU'];
 
+function _provFindData(code){
+  if(!D||!D.provinces)return null;
+  const name=PROV_NAMES[code];
+  const norm=s=>(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z]/g,'');
+  return D.provinces.find(p=>p.name===name||p.name===code||norm(p.name)===norm(name))||null;
+}
+
 function renderProvinces(){
   const container=$('provincesPage');
   if(!container)return;
@@ -2398,7 +2405,7 @@ function renderProvinces(){
   });
   sidebarHtml+='</nav>';
 
-  container.innerHTML='<div class="page">'+sidebarHtml+'<div class="page-main" id="provMainContent"></div></div>';
+  container.innerHTML='<div class="prov-page">'+sidebarHtml+'<div class="prov-page-main" id="provMainContent"></div></div>';
 
   // Wire up radio change events
   container.querySelectorAll('.prov-radio').forEach(radio=>{
@@ -2421,9 +2428,7 @@ async function _renderProvContent(){
   if(_lastLoadedProvince!==code){await loadProjects(code)}
 
   // Get province data from D
-  const provArr=D?(D.provinces||[]):[];
-  const norm=s=>(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z]/g,'');
-  const provData=provArr.find(p=>norm(p.name)===norm(provName))||{};
+  const provData=_provFindData(code)||{};
   const provInd=provData.indicators||{};
   const provMeta=provData.indicatorMeta||{};
   const provPrefix=code.toLowerCase();
@@ -4429,6 +4434,7 @@ window._doVcodeSearch=function(cat){
 
 /* ====== PROVINCE COMPARISON VIEW ====== */
 function renderProvinceComparison(){
+  return; // Province comparison moved to sidebar navigation layout
   const el=$('provComparisonView');if(!el||!D)return;
   const provs=D.provinces||[];if(!provs.length)return;
   const codes=['ON','QC','AB','BC','SK','MB','NS','NB','NL','PE','YT','NT','NU'];
