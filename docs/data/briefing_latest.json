@@ -1,7 +1,7 @@
 {
   "headline": "Strait of Hormuz Crisis Drives WTI Above $100 as Canada Posts 0.1% GDP Growth and 84,000 Job Losses",
-  "edition": "EDITION: Mar 31 – Apr 6 // STATUS: AI-SYNTHESIZED",
-  "week_of": "2026-03-31",
+  "edition": "Demo — March 24 to March 30, 2026",
+  "week_of": "2026-03-24",
   "generated_at": "2026-03-31T20:27:15Z",
   "updated_at": "2026-04-02T15:56:36Z",
   "id": 20,
@@ -3719,7 +3719,11 @@
         "day": "+3.24% day",
         "yy": ""
       }
-    ]
+    ],
+    "commentary": "<p><span class=\"lead-sentence\"><strong>WTI crude settled at US$102.88/bbl on March 31</strong> — its first weekly close above $100 since July 2022 — as the Strait of Hormuz closure disrupted an estimated 20 million barrels per day of seaborne oil flows.<sup>131</sup></span> Brent rose to US$112.78/bbl, recording its largest monthly gain since contract inception in 1988.<sup>131</sup> The TSX Composite closed at <strong>32,427</strong>, gaining 1.54% on March 31 while declining approximately 6% over the full month.<sup>133</sup> Gold fell to approximately <strong>US$4,578/oz</strong> — down 14% from a March 3 peak of US$5,161/oz — while the Bank of Canada held its overnight rate at <strong>2.25%</strong>.<sup>134</sup><sup>135</sup></p><p><span class=\"lead-sentence\"><strong>The cross-reference engine links 63 oil and gas projects to the current WTI price environment</strong>, with 727 Alberta projects carrying direct commodity exposure.<sup>136</sup></span> The 364 mining projects in the database hold exposure to gold's 14% monthly decline. The Government of Canada yield curve held a normal shape with the 2-year/10-year spread at <strong>63 basis points</strong>, covering 1,034 under-construction projects in the database.<sup>138</sup></p>",
+    "equityNarrative": "<p><span class=\"lead-sentence\"><strong>The TSX Composite closed at 32,427 on March 31</strong>, gaining 1.54% on the day as reports of potential US-Iran negotiations drove energy and risk-sensitive sectors higher.<sup>139</sup></span> The index declined approximately 6% over the full month of March, reflecting elevated uncertainty from Middle East supply disruption and the February employment loss of 84,000 jobs.<sup>140</sup> Energy sub-indices posted the largest monthly gains within the TSX, consistent with WTI crude's advance above $100/bbl, while materials underperformed amid gold's 14% monthly decline. The database tracks 727 Alberta projects — the province most directly exposed to TSX energy sector performance — and 364 mining projects with direct materials sector linkage.<sup>141</sup></p><p><span class=\"lead-sentence\"><strong>The S&P 500 closed at approximately 6,496 on March 31</strong>, rising 2.40% on the day, though the index remained approximately 9.4% below its January 2026 peak on a closing basis.<sup>142</sup></span> March was characterized by elevated volatility driven by Middle East geopolitical developments and the Strait of Hormuz supply disruption; the March 31 advance followed reports that the US government is considering diplomatic resolution to the Iranian standoff.<sup>143</sup></p><p><span class=\"lead-sentence\"><strong>The Dow Jones Industrial Average closed at approximately 46,117 on March 31</strong>, advancing approximately 2.0% on the day alongside the broader US market rally.<sup>144</sup></span> Blue-chip industrials with Canadian supply chain exposure — including steel and energy equipment names — tracked the energy sector's advance as WTI moved above $100/bbl.</p><p><span class=\"lead-sentence\"><strong>The Nasdaq Composite closed at approximately 21,469 on March 31</strong>, the largest percentage advance among major US indices at 3.24% on the day.<sup>145</sup></span> Technology-linked names outperformed on the expectation that diplomatic resolution of the Hormuz crisis would reduce input cost pressure on data centre and grid electrification projects; the database tracks 18 telecom and data infrastructure projects in Canada with US market linkages.</p>",
+    "fxNarrative": "<p><span class=\"lead-sentence\"><strong>The Canadian dollar closed at 0.7198 USD/CAD on March 31</strong>, declining 1.85% month-over-month to a two-month low as geopolitical uncertainty drove safe-haven demand for the US dollar.<sup>146</sup></span> The USD/CAD rate moved to 1.3893, reflecting a widening differential between the Bank of Canada's overnight rate of 2.25% and the US Federal Reserve's target rate of 4.25-4.50% — a spread of approximately 200-225 basis points favoring the US dollar.<sup>147</sup><sup>148</sup> The euro strengthened to 1.1460 against the US dollar as European markets repriced geopolitical risk premiums; this EUR/USD level reflects a divergence between the ECB's rate path and US monetary policy expectations.<sup>149</sup> If the CAD/USD rate holds near 0.72, the database's 49 export-exposed manufacturing projects would face elevated input cost pressure from US dollar-denominated material costs, while energy exporters would see higher CAD-denominated revenues from US-dollar-priced crude.<sup>150</sup></p>",
+    "yieldNarrative": "<p><span class=\"lead-sentence\"><strong>The Government of Canada yield curve maintained a normal (upward-sloping) shape through the week of March 24-30</strong>, with the 2-year/10-year spread at 63 basis points — wider than the 60 basis point spread recorded a year ago.<sup>151</sup></span> The 2-year yield closed at 2.95%, up 33 basis points from 2.62% a year ago, while the 10-year yield closed at 3.58%, up 36 basis points from 3.22% a year ago, reflecting higher term premiums associated with elevated federal government debt issuance and geopolitical uncertainty.<sup>152</sup> The 30-year yield closed at 3.94%, up 41 basis points from 3.53% a year ago. If the current long-end yield environment persists, the database's 1,034 under-construction projects — which depend on long-term financing rates for project completion — would face funding costs at the higher end of their feasibility study assumptions.<sup>153</sup></p>"
   },
   "commodities": [
     {
@@ -3783,32 +3787,38 @@
     {
       "term": "2Y",
       "yield": "2.95%",
-      "highlight": true
+      "highlight": true,
+      "prevYield": "2.62%"
     },
     {
       "term": "3Y",
       "yield": "3.01%",
-      "highlight": false
+      "highlight": false,
+      "prevYield": "2.64%"
     },
     {
       "term": "5Y",
       "yield": "3.18%",
-      "highlight": false
+      "highlight": false,
+      "prevYield": "2.81%"
     },
     {
       "term": "7Y",
       "yield": "3.36%",
-      "highlight": false
+      "highlight": false,
+      "prevYield": "3.00%"
     },
     {
       "term": "10Y",
       "yield": "3.58%",
-      "highlight": true
+      "highlight": true,
+      "prevYield": "3.22%"
     },
     {
-      "term": "Long",
+      "term": "30Y",
       "yield": "3.94%",
-      "highlight": false
+      "highlight": false,
+      "prevYield": "3.53%"
     }
   ],
   "consumer_pulse": "<p>The Conference Board of Canada's consumer confidence index declined to <strong>47.50</strong> in February from 49.30 in January.<sup>57</sup> The Bloomberg/Nanos Canadian Confidence Index recorded a three-week slide into late March, with the index moving toward the neutral threshold.<sup>48</sup> The proportion of Canadians expecting the economy to strengthen in six months rose from <strong>17%</strong> to <strong>26%</strong> over the four-week period, according to Nanos Research.<sup>48</sup> Rising energy costs — with WTI above $100/bbl for the first time since 2022 — and US trade friction were the most frequently cited sources of consumer anxiety in sentiment tracking.</p><p>Retail sales rose <strong>1.1%</strong> to <strong>$70.7 billion</strong> in January, according to Statistics Canada.<sup>146</sup> Motor vehicle and parts dealers led the increase at <strong>+2.0%</strong>, while general merchandise retailers posted a fourth consecutive monthly gain at <strong>+3.0%</strong>.<sup>146</sup><sup>76</sup> Core retail sales (excluding gasoline stations and motor vehicle dealers) increased <strong>0.9%</strong>. E-commerce sales rose <strong>1.5%</strong> to <strong>$4.4 billion</strong>, representing 6.2% of total retail trade.<sup>146</sup> Alberta recorded the largest provincial retail increase at <strong>+3.5%</strong>, led by motor vehicle sales.<sup>76</sup> The advance estimate for February retail sales is <strong>+0.9%</strong>.<sup>146</sup> Statistics Canada's CPI report showed food inflation decelerating to <strong>5.3%</strong> from 7.3% in January, while headline inflation fell to <strong>1.8%</strong> year-over-year — the lowest since early 2021.<sup>145</sup><sup>90</sup></p>",
@@ -5973,29 +5983,7 @@
     "orphaned_citations": 0,
     "notes": "Market fragment sources (131-166) added by Agents 3F/3G/3H/3I in pipeline continuation run"
   },
-  "marketCommentary": {
-    "text": "<p><span class=\"lead-sentence\"><strong>WTI crude settled at US$102.88/bbl on March 31</strong> — its first weekly close above $100 since July 2022 — as the Strait of Hormuz closure disrupted an estimated 20 million barrels per day of seaborne oil flows.<sup>131</sup></span> Brent rose to US$112.78/bbl, recording its largest monthly gain since contract inception in 1988.<sup>131</sup> The TSX Composite closed at <strong>32,427</strong>, gaining 1.54% on March 31 while declining approximately 6% over the full month.<sup>133</sup> Gold fell to approximately <strong>US$4,578/oz</strong> — down 14% from a March 3 peak of US$5,161/oz — while the Bank of Canada held its overnight rate at <strong>2.25%</strong>.<sup>134</sup><sup>135</sup></p><p><span class=\"lead-sentence\"><strong>The cross-reference engine links 63 oil and gas projects to the current WTI price environment</strong>, with 727 Alberta projects carrying direct commodity exposure.<sup>136</sup></span> The 364 mining projects in the database hold exposure to gold's 14% monthly decline. The Government of Canada yield curve held a normal shape with the 2-year/10-year spread at <strong>63 basis points</strong>, covering 1,034 under-construction projects in the database.<sup>138</sup></p>",
-    "callout": {
-      "title": "Pipeline Cross-Reference",
-      "items": [
-        {
-          "label": "Oil & gas projects (WTI-linked)",
-          "value": "63 projects",
-          "amount": "AB/SK focus"
-        },
-        {
-          "label": "Mining projects (gold-linked)",
-          "value": "364 projects",
-          "amount": "-14% M/M"
-        },
-        {
-          "label": "Projects under construction",
-          "value": "1,034 projects",
-          "amount": "2Y/10Y +63bps"
-        }
-      ]
-    }
-  },
+  "marketCommentary": "<p><span class=\"lead-sentence\"><strong>WTI crude settled at US$102.88/bbl on March 31</strong> — its first weekly close above $100 since July 2022 — as the Strait of Hormuz closure disrupted an estimated 20 million barrels per day of seaborne oil flows.<sup>131</sup></span> Brent rose to US$112.78/bbl, recording its largest monthly gain since contract inception in 1988.<sup>131</sup> The TSX Composite closed at <strong>32,427</strong>, gaining 1.54% on March 31 while declining approximately 6% over the full month.<sup>133</sup> Gold fell to approximately <strong>US$4,578/oz</strong> — down 14% from a March 3 peak of US$5,161/oz — while the Bank of Canada held its overnight rate at <strong>2.25%</strong>.<sup>134</sup><sup>135</sup></p><p><span class=\"lead-sentence\"><strong>The cross-reference engine links 63 oil and gas projects to the current WTI price environment</strong>, with 727 Alberta projects carrying direct commodity exposure.<sup>136</sup></span> The 364 mining projects in the database hold exposure to gold's 14% monthly decline. The Government of Canada yield curve held a normal shape with the 2-year/10-year spread at <strong>63 basis points</strong>, covering 1,034 under-construction projects in the database.<sup>138</sup></p>",
   "equities": [
     {
       "name": "TSX Composite",
@@ -6278,5 +6266,25 @@
       "projects_affected": 211,
       "commentary": "<span class=\"lead-sentence\"><strong>Lumber futures data was limited in coverage through the week of March 30</strong>, with available pricing indicating approximately US$510/MBF based on early March data; current real-time lumber data was not obtained in this pipeline run.<sup>166</sup></span> British Columbia forestry projects and residential construction projects (211 tracked in the database) carry exposure to lumber pricing; US tariffs on Canadian lumber products remain a material factor for BC softwood producers."
     }
-  ]
+  ],
+  "marketCommentaryCallout": {
+    "title": "Pipeline Cross-Reference",
+    "items": [
+      {
+        "label": "Oil & gas projects (WTI-linked)",
+        "value": "63 projects",
+        "amount": "AB/SK focus"
+      },
+      {
+        "label": "Mining projects (gold-linked)",
+        "value": "364 projects",
+        "amount": "-14% M/M"
+      },
+      {
+        "label": "Projects under construction",
+        "value": "1,034 projects",
+        "amount": "2Y/10Y +63bps"
+      }
+    ]
+  }
 }
