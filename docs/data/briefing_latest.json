@@ -3728,59 +3728,133 @@
   "commodities": [
     {
       "name": "WTI Crude",
-      "symbol": "WTI",
-      "price": "US$102.88/bbl",
-      "change": "+50%+ M/M",
-      "context": "First settlement above $100 since July 2022; Strait of Hormuz closure disrupting ~20M bbl/day of seaborne flows"
+      "val": "US$102.88/bbl",
+      "day": "",
+      "mm": "+50%+",
+      "yy": "+45.5%",
+      "category": "Energy",
+      "unit": "bbl",
+      "context": "First settlement above $100 since July 2022; Strait of Hormuz closure disrupting ~20M bbl/day"
     },
     {
       "name": "Brent Crude",
-      "symbol": "BRENT",
-      "price": "US$112.78/bbl",
-      "change": "+55% M/M",
+      "val": "US$112.78/bbl",
+      "day": "",
+      "mm": "+55%",
+      "yy": "+48.3%",
+      "category": "Energy",
+      "unit": "bbl",
       "context": "Record monthly gain since contract inception in 1988"
     },
     {
-      "name": "Natural Gas (Henry Hub)",
-      "symbol": "NYMEX",
-      "price": "~US$3.05/MMBtu",
-      "change": "EIA projects $3.80 avg for 2026",
-      "context": "Henry Hub and AECO prices elevated on global supply uncertainty from Middle East conflict"
+      "name": "WCS (Alberta)",
+      "val": "US$97.14/bbl",
+      "day": "",
+      "mm": "",
+      "yy": "",
+      "category": "Energy",
+      "unit": "bbl",
+      "context": "WCS-WTI discount narrowed to ~US$2.50 from avg US$9.95"
+    },
+    {
+      "name": "Natural Gas",
+      "val": "~US$3.05/MMBtu",
+      "day": "",
+      "mm": "",
+      "yy": "",
+      "category": "Energy",
+      "unit": "MMBtu",
+      "context": "EIA projects $3.80 avg for 2026"
     },
     {
       "name": "Gold",
-      "symbol": "COMEX",
-      "price": "~US$4,578/oz",
-      "change": "-14% M/M",
-      "context": "Steepest monthly decline since October 2008; margin liquidation and USD strength drove sellers"
+      "val": "~US$4,578/oz",
+      "day": "",
+      "mm": "-14%",
+      "yy": "",
+      "category": "Precious Metals",
+      "unit": "troy oz",
+      "context": "Steepest monthly decline since Oct 2008; peaked at $5,161 on Mar 3"
+    },
+    {
+      "name": "Silver",
+      "val": "~US$73.33/oz",
+      "day": "",
+      "mm": "-10%",
+      "yy": "",
+      "category": "Precious Metals",
+      "unit": "troy oz",
+      "context": "Declined alongside gold in broader precious metals repricing"
     },
     {
       "name": "Copper",
-      "symbol": "COMEX",
-      "price": "US$5.25-$6.01/lb range",
-      "change": "Range-bound in March",
-      "context": "March trading range reflects mixed signals from China PMI recovery and global supply chain disruption"
+      "val": "~US$5.90/lb",
+      "day": "",
+      "mm": "",
+      "yy": "",
+      "category": "Base Metals",
+      "unit": "lb",
+      "context": "Range $5.25-$6.01 in March; mixed China PMI and tariff signals"
     },
     {
-      "name": "Uranium (URA ETF)",
-      "symbol": "URA",
-      "price": "US$46.86",
-      "change": "-2.8% W/W; -17.0% M/M",
-      "context": "Uranium proxy declined alongside broader risk-off sentiment in metals"
+      "name": "Nickel",
+      "val": "~US$14,641/MT",
+      "day": "",
+      "mm": "",
+      "yy": "",
+      "category": "Base Metals",
+      "unit": "MT",
+      "context": "Weak battery supply chain demand weighed on prices"
     },
     {
-      "name": "Steel (SLX ETF)",
-      "symbol": "SLX",
-      "price": "US$90.13",
-      "change": "+1.2% W/W; -10.4% M/M",
-      "context": "US tariffs on Canadian steel remain in effect; proxy declined over the month"
+      "name": "Uranium (CCO.TO)",
+      "val": "C$147.75",
+      "day": "-0.6% W/W",
+      "mm": "-14.1%",
+      "yy": "",
+      "category": "Base Metals",
+      "unit": "share",
+      "context": "URA ETF $46.86 (-17% M/M); physical U3O8 ~$92/lb"
     },
     {
-      "name": "Potash (Nutrien NTR)",
-      "symbol": "NTR",
-      "price": "C$104.62",
-      "change": "-1.0% W/W; +1.0% M/M",
-      "context": "Saskatchewan potash operations stable; Nutrien proxy essentially flat in March"
+      "name": "Wheat",
+      "val": "607.5¢/bu",
+      "day": "",
+      "mm": "",
+      "yy": "",
+      "category": "Agriculture",
+      "unit": "bu",
+      "context": "Stable; Prairie grain storage infrastructure in scope"
+    },
+    {
+      "name": "Canola",
+      "val": "~C$633/MT",
+      "day": "",
+      "mm": "",
+      "yy": "",
+      "category": "Agriculture",
+      "unit": "MT",
+      "context": "Prairie oilseed crush margins stable"
+    },
+    {
+      "name": "Potash (NTR)",
+      "val": "C$104.62",
+      "day": "-1.0% W/W",
+      "mm": "+1.0%",
+      "yy": "",
+      "category": "Agriculture",
+      "unit": "share",
+      "context": "SK operations stable; MOP ~US$455/MT"
+    },
+    {
+      "name": "Lumber",
+      "val": "~US$510/MBF",
+      "day": "",
+      "mm": "",
+      "yy": "",
+      "category": "Forest Products",
+      "unit": "MBF",
+      "context": "Limited current data; US tariffs on Canadian softwood remain in effect"
     }
   ],
   "yieldCurve": [
