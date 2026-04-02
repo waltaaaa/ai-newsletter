@@ -541,29 +541,24 @@ function _tldrBuildBriefing(){
   const raw=D.executive_summary||'';
   const sources=D.sources||[];
   let html=bulletsToParas(san(linkFootnotes(raw,sources)));
-  // Add lead-sentence styling to first sentence of each paragraph
-  html=html.replace(/<p>([^<]{20,}?[.!?])\s/g,function(m,first){return'<p><span class="tldr-lead-sentence">'+first+'</span> '});
+
+  // Merge short header paragraphs into the following content paragraph.
+  // The executive_summary has <p><strong>Section Name</strong></p> headers
+  // followed by content <p>. Merge them: header becomes the em-dash lead sentence.
+  html=html.replace(/<p>\s*<strong>([^<]{3,60})<\/strong>\s*<\/p>\s*<p>/gi,function(m,heading){
+    return '<p><span class="tldr-lead-sentence">'+heading.replace(/&amp;/g,'&')+' \u2014</span> ';
+  });
+
+  // For remaining content paragraphs without a lead-sentence, auto-wrap first sentence
+  html=html.replace(/<p>(?!<span class="tldr-lead-sentence")([^<]{20,}?[.!?])\s/g,function(m,first){return'<p><span class="tldr-lead-sentence">'+first+'</span> '});
 
   // Build contextual callout boxes and intersperse after paragraphs
   const stats=D.discovery_stats||{};
   const callout1=(stats.total_projects)?`<div class="tldr-callout"><strong>Cross-reference:</strong> The database tracks ${(stats.total_projects||0).toLocaleString()} active projects valued at ${D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B'} across Canada. ${stats.new_this_week?stats.new_this_week+' new projects discovered this week.':''}${stats.status_counts?' '+Object.entries(stats.status_counts).slice(0,3).map(function(e){return e[1].toLocaleString()+' '+e[0].toLowerCase()}).join(', ')+'.':''}</div>`:'';
 
-  // Build second callout from commodity/market data
-  const comms=D.commodities||[];
-  const wti=comms.find(function(c){return(c.name||'').toLowerCase().indexOf('wti')>=0||(c.name||'').toLowerCase().indexOf('crude')>=0});
-  const gold=comms.find(function(c){return(c.name||'').toLowerCase().indexOf('gold')>=0});
-  let callout2='';
-  if(wti||gold){
-    let parts=[];
-    if(wti)parts.push('WTI crude at '+san(String(wti.price||wti.value||''))+(wti.change?' ('+san(wti.change)+')':''));
-    if(gold)parts.push('Gold at '+san(String(gold.price||gold.value||''))+(gold.change?' ('+san(gold.change)+')':''));
-    callout2=`<div class="tldr-callout"><strong>Markets:</strong> ${parts.join('. ')}.</div>`;
-  }
-
-  // Intersperse callouts between paragraphs
+  // Intersperse callout after 1st content paragraph
   const paras=html.split('</p>');
-  if(paras.length>3&&callout1){paras.splice(2,0,'</p>'+callout1);} // after 2nd paragraph
-  if(paras.length>5&&callout2){paras.splice(5,0,'</p>'+callout2);} // after ~4th paragraph
+  if(paras.length>2&&callout1){paras.splice(1,0,'</p>'+callout1);}
   html=paras.join('</p>');
 
   // Sources
