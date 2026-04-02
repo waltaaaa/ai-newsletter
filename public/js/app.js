@@ -2857,104 +2857,132 @@ async function _renderProvContent(){
 
 /* ====== INDUSTRIES TAB ====== */
 let _industryView='all';
-window.toggleIndustryView=function(view){
-  _industryView=view;
-  document.querySelectorAll('.ind-toggle').forEach(b=>{b.classList.toggle('active',b.dataset.view===view)});
-  renderIndustrySectors();
-};
+
 function renderIndustries(){
-  renderIndustrySectors();
-}
-function renderIndustrySectors(){
-  const goodsArr=(D&&D.goodsIndustries)||[];
-  const servArr=(D&&D.servicesIndustries)||[];
-  const showGoods=_industryView==='all'||_industryView==='goods';
-  const showServ=_industryView==='all'||_industryView==='services';
-  let html='';
-  if(showGoods){
-    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Goods-Producing Industries</h3><div class="sector-grid" style="margin-bottom:16px">';
-    goodsArr.forEach(s=>{html+=sectorCard(s)});
-    if(!goodsArr.length)['11','21','22','23','31-33'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
+  var el=$('industriesPage');if(!el)return;
+  var goodsArr=(D&&D.goodsIndustries)||[];
+  var servArr=(D&&D.servicesIndustries)||[];
+  if(!goodsArr.length)['11','21','22','23','31-33'].forEach(function(code){goodsArr.push({code:code,name:NAICS_NAMES[code]})});
+  if(!servArr.length)['41','44-45','48-49','51','52','53','54','55','56','61','62','71','72','81','91'].forEach(function(code){servArr.push({code:code,name:NAICS_NAMES[code]})});
+  var allSectors=goodsArr.concat(servArr);
+
+  var html='<div class="ind-page">';
+
+  /* --- Section 1: Industry Overview --- */
+  html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Industry Overview</h3>';
+  html+='<span class="section-meta">'+allSectors.length+' NAICS sectors</span></div>';
+  var overview=(D&&(D.industryOverview||D.industry_overview||D.industries_overview))||'';
+  if(overview){
+    html+='<div class="narrative">'+san(overview)+'</div>';
+  }else{
+    var upCount=allSectors.filter(function(s){return s.mm&&!s.isNegative&&s.mm!=='0.0%'&&s.mm!=='\u2014 0.0%'}).length;
+    if(upCount)html+='<div class="narrative"><p><span class="lead-sentence">'+upCount+' of '+allSectors.length+' NAICS sectors recorded positive month-over-month GDP growth.</span></p></div>';
+  }
+  var totalProj=0,goodsProj=0,servProj=0;
+  allSectors.forEach(function(s){totalProj+=parseInt(s.projects)||0});
+  goodsArr.forEach(function(s){goodsProj+=parseInt(s.projects)||0});
+  servArr.forEach(function(s){servProj+=parseInt(s.projects)||0});
+  if(totalProj>0){
+    html+='<div class="callout"><strong>Pipeline cross-reference:</strong> The database tracks '+fmtNum(totalProj)+' active projects across all sectors.';
+    if(goodsProj||servProj)html+=' Goods-producing: '+fmtNum(goodsProj)+' projects. Services-producing: '+fmtNum(servProj)+' projects.';
     html+='</div>';
   }
-  if(showServ){
-    html+='<h3 style="font-size:var(--text-sm);font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:.5px;margin:'+(showGoods?'12px':'0')+' 0 8px">Services-Producing Industries</h3><div class="sector-grid">';
-    servArr.forEach(s=>{html+=sectorCard(s)});
-    if(!servArr.length)['41','44-45','48-49','51','52','53','54','55','56','61','62','71','72','81','91'].forEach(code=>{html+=sectorCard({code,name:NAICS_NAMES[code]})});
+  html+='</div>';
+
+  /* --- Section 2: Biggest Movers --- */
+  var movers=_indGetMovers(allSectors);
+  if(movers.length){
+    html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Biggest Movers</h3>';
+    html+='<span class="section-meta">Largest month-over-month changes</span></div>';
+    movers.forEach(function(s){html+=_indMoverCard(s)});
     html+='</div>';
   }
-  $('industrySectorGrid').innerHTML=html;
+
+  /* --- Section 3: All Sectors --- */
+  html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>All Sectors</h3>';
+  html+='<span class="section-meta">Click any row to read the analysis</span></div>';
+  html+='<div class="controls-row"><div class="view-toggle">';
+  html+='<button class="toggle-btn'+(_industryView==='all'?' active':'')+'" onclick="_indToggleView(\'all\')">All</button>';
+  html+='<button class="toggle-btn'+(_industryView==='goods'?' active':'')+'" onclick="_indToggleView(\'goods\')">Goods-Producing</button>';
+  html+='<button class="toggle-btn'+(_industryView==='services'?' active':'')+'" onclick="_indToggleView(\'services\')">Services-Producing</button>';
+  html+='</div></div>';
+  var showGoods=_industryView==='all'||_industryView==='goods';
+  var showServ=_industryView==='all'||_industryView==='services';
+  if(showGoods){html+='<div class="subsection-divider">Goods-Producing Industries</div>';html+=_indSectorTable(goodsArr,'g');}
+  if(showServ){html+='<div class="subsection-divider">Services-Producing Industries</div>';html+=_indSectorTable(servArr,'s');}
+  html+='</div></div>';
+  el.innerHTML=html;
 }
-function sectorCard(s){
-  const code=s.code||'';
-  const name=s.name||NAICS_NAMES[code]||code;
-  const cls=NAICS_CLS[code]||'';
-  const analysis=s.analysis||'';
-  const mm=s.mm||'';const yy=s.yy||'';
-  const mmCls=s.isNegative?'change-down':'change-up';
-  let mmBadge='';
-  if(mm||yy)mmBadge='<div style="display:flex;gap:12px;margin-bottom:8px;font-size:var(--text-xs);color:#556B7A">'+(mm?'<span>M/M <span class="'+mmCls+'" style="font-family:var(--font-mono);font-weight:600">'+mm+'</span></span>':'')+(yy?'<span>Y/Y <span style="font-family:var(--font-mono);font-weight:600">'+yy+'</span></span>':'')+(s.indicatorSrc?'<span>'+s.indicatorSrc+'</span>':'')+'</div>';
-  return '<div class="sector-card '+cls+'"><div class="sector-card-header"><span class="naics-badge">'+code+'</span><span class="sector-card-name">'+name+'</span></div><div class="sector-card-body">'+mmBadge+(analysis?san(analysis):'<em style="color:#556B7A">No analysis available.</em>')+'</div></div>';
+
+function _indGetMovers(sectors){
+  var withMM=sectors.filter(function(s){return s.mm&&s.mm!=='\u2014'&&s.mm!=='N/A'});
+  var gainers=withMM.filter(function(s){return !s.isNegative&&s.mm!=='0.0%'&&s.mm!=='\u2014 0.0%'}).sort(function(a,b){return _absChg(b.mm)-_absChg(a.mm)}).slice(0,2);
+  var decliners=withMM.filter(function(s){return s.isNegative}).sort(function(a,b){return _absChg(b.mm)-_absChg(a.mm)}).slice(0,2);
+  return gainers.concat(decliners);
 }
+function _absChg(mm){if(!mm)return 0;var n=parseFloat(String(mm).replace(/[^0-9.\-]/g,''));return isNaN(n)?0:Math.abs(n)}
+
+function _indMoverCard(s){
+  var name=s.name||NAICS_NAMES[s.code]||s.code;
+  var isUp=!s.isNegative;var dirCls=isUp?'up':'down';var arrow=isUp?'\u25B2':'\u25BC';
+  var h='<div class="mover-card"><div class="mover-card-header"><div class="mover-title">'+name+'</div>';
+  h+='<span class="mover-direction '+dirCls+'">'+arrow+' '+(s.mm||'')+' month-over-month</span></div>';
+  h+='<div class="mover-metrics">';
+  if(s.gdp)h+='<div class="mover-metric"><span class="mover-metric-label">GDP (Monthly)</span><span class="mover-metric-value">'+s.gdp+'</span></div>';
+  if(s.yy){var yc=(s.yy.indexOf('-')>=0||s.yy.indexOf('\u2212')>=0)?'chg-down':'chg-up';h+='<div class="mover-metric"><span class="mover-metric-label">Year-over-Year</span><span class="mover-metric-value '+yc+'">'+s.yy+'</span></div>';}
+  if(s.projects!=null)h+='<div class="mover-metric"><span class="mover-metric-label">Active Projects</span><span class="mover-metric-value">'+s.projects+'</span></div>';
+  if(s.pipelineValue)h+='<div class="mover-metric"><span class="mover-metric-label">Pipeline Value</span><span class="mover-metric-value">'+s.pipelineValue+'</span></div>';
+  h+='</div>';
+  if(s.analysis){h+='<div class="mover-analysis">'+san(s.analysis);if(s.indicatorSrc)h+='<div class="sources"><span>Sources:</span> '+san(s.indicatorSrc)+'</div>';h+='</div>';}
+  h+='</div>';return h;
+}
+
+function _indSectorTable(sectors,prefix){
+  var h='<div class="sector-table-wrap"><table class="sector-table"><thead><tr>';
+  h+='<th>Sector</th><th>GDP</th><th>M/M</th><th>Y/Y</th><th>Projects</th><th>Pipeline Value</th>';
+  h+='</tr></thead><tbody>';
+  sectors.forEach(function(s,i){
+    var name=s.name||NAICS_NAMES[s.code]||s.code;
+    var mmCls=s.isNegative?'chg-down':(!s.mm||s.mm==='0.0%'||s.mm==='\u2014 0.0%'?'chg-flat':'chg-up');
+    var yyCls='chg-flat';if(s.yy){if(s.yy.indexOf('-')>=0||s.yy.indexOf('\u2212')>=0)yyCls='chg-down';else if(s.yy.indexOf('+')>=0||parseFloat(s.yy)>0)yyCls='chg-up';}
+    var mmArr=s.isNegative?'\u25BC ': (s.mm&&s.mm!=='0.0%'&&s.mm!=='\u2014 0.0%'?'\u25B2 ':'');
+    var uid=prefix+'_'+i;
+    h+='<tr class="sector-row" onclick="_indToggleRow(\''+uid+'\')">';
+    h+='<td class="tbl-name"><span class="row-chevron" id="indChev_'+uid+'">\u25B6</span>'+name+'</td>';
+    h+='<td class="tbl-gdp">'+(s.gdp||'\u2014')+'</td>';
+    h+='<td class="'+mmCls+'">'+mmArr+(s.mm||'\u2014')+'</td>';
+    h+='<td class="'+yyCls+'">'+(s.yy||'\u2014')+'</td>';
+    h+='<td class="tbl-projects">'+(s.projects!=null?s.projects:'\u2014')+'</td>';
+    h+='<td class="tbl-value">'+(s.pipelineValue||'\u2014')+'</td></tr>';
+    /* expand row */
+    h+='<tr class="expand-row" id="indExp_'+uid+'"><td colspan="6"><div class="expand-content">';
+    if(s.statusChanges!=null||s.newThisWeek!=null){
+      h+='<div class="expand-metrics">';
+      if(s.statusChanges!=null)h+='<div class="expand-metric"><span class="expand-metric-label">Status Changes</span><span class="expand-metric-value">'+s.statusChanges+'</span></div>';
+      if(s.newThisWeek!=null)h+='<div class="expand-metric"><span class="expand-metric-label">New This Week</span><span class="expand-metric-value">'+s.newThisWeek+'</span></div>';
+      h+='</div>';
+    }
+    if(s.analysis){h+=san(s.analysis);if(s.indicatorSrc)h+='<div class="sources"><span>Sources:</span> '+san(s.indicatorSrc)+'</div>';}
+    else h+='<em style="color:#7a8599">No analysis available.</em>';
+    h+='</div></td></tr>';
+  });
+  h+='</tbody></table></div>';return h;
+}
+
+window._indToggleView=function(view){_industryView=view;renderIndustries()};
+window._indToggleRow=function(uid){
+  var exp=document.getElementById('indExp_'+uid);if(!exp)return;
+  var row=exp.previousElementSibling;var open=exp.classList.contains('visible');
+  if(open){exp.classList.remove('visible');if(row)row.classList.remove('expanded')}
+  else{exp.classList.add('visible');if(row)row.classList.add('expanded')}
+};
 
 /* ====== MARKETS TAB (Interactive Charts) ====== */
 const _mktTsMap={'S&P/TSX':'tsx_composite','S&P/TSX Composite':'tsx_composite','TSX Composite':'tsx_composite','S&P 500':'sp500','Dow Jones':'djia','NASDAQ':'nasdaq','FTSE 100':'ftse100','DAX':'dax','Nikkei 225':'nikkei225','Hang Seng':'idx_hangseng','Shanghai':'idx_shanghai','CAD/USD':'cadusd','USD/CAD':'cadusd','EUR/USD':'eurusd','GBP/USD':'fx_gbpusd','USD/JPY':'usdjpy','USD/CNY':'usdcny','AUD/USD':'fx_audusd','Crude Oil (WTI)':'wti','Crude Oil (Brent)':'brent','Natural Gas':'natural_gas','Gold':'gold','Silver':'silver','Platinum':'platinum','Palladium':'palladium','Copper':'copper','Aluminum':'aluminum','Nickel':'nickel','Zinc':'zinc','Iron Ore':'iron_ore','Wheat':'wheat','Corn':'corn','Rice':'rice','Soybeans':'soybeans','Coffee':'coffee','Cocoa':'cocoa','Sugar #11':'sugar','Cotton':'cotton','Soybean Oil':'soybean_oil','Soybean Meal':'soybean_meal','Coal (Newcastle)':'coal','Propane':'comm_propane','Lumber':'lumber','Potash (Nutrien)':'potash_nutrien','Uranium (Cameco)':'cameco_uranium','Uranium (Sprott)':'sprott_uranium','Bitcoin':'bitcoin','Ethereum':'ethereum','Dry Bulk Shipping':'dry_bulk_shipping','LNG Asia':'lng_asia','Lead':'lead','Tin':'tin'};
 const _mktPal=['#2563EB','#10B981','#F59E0B','#8B5CF6','#EC4899','#EF4444','#0EA5E9','#84CC16','#14B8A6','#D946EF','#F97316','#6366F1'];
 let _mktState={};
 
-/* Shared engine: renders one large multi-series chart with toggleable pills */
-function _mktBuildSection(containerId,title,items,defaults,chartKey){
-  const el=$(containerId);if(!el)return;
-  _mktState[chartKey]={items,active:new Set(defaults),mode:'price',range:12,freq:'all'};
-  const cid='mktChart_'+chartKey;
-  let html='<h3>'+title+'</h3>';
-  // Stat row for active items
-  html+='<div class="mkt-stat-row" id="mktStats_'+chartKey+'">';
-  items.forEach(it=>{
-    const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':(chg&&chg!=='0'&&chg!=='0%'?'up':'flat');
-    html+='<div class="mkt-stat" id="mktStat_'+chartKey+'_'+_pillId(it.name)+'" style="'+(defaults.includes(it.name)?'':'display:none')+'">';
-    html+='<div class="mkt-stat-label">'+it.name+'</div>';
-    html+='<div class="mkt-stat-val">'+(it.value||'N/A')+'</div>';
-    if(chg)html+='<div class="mkt-stat-chg '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-    if(it.yy)html+='<div class="mkt-stat-chg flat" style="font-size:10px">YoY: '+it.yy+'</div>';
-    html+='</div>';
-  });
-  html+='</div>';
-  // Series pills
-  html+='<div class="mkt-pills" id="mktPills_'+chartKey+'" style="margin-bottom:8px">';
-  items.forEach((it,i)=>{
-    const isActive=defaults.includes(it.name);
-    const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':'up';
-    html+='<div class="mkt-pill'+(isActive?' active':'')+'" data-name="'+it.name+'" data-key="'+chartKey+'" onclick="_mktToggle(this)">';
-    html+='<span style="width:8px;height:8px;border-radius:50%;background:'+_mktPal[i%_mktPal.length]+'"></span> ';
-    html+=it.name;
-    if(it.value)html+=' <span class="pill-val">'+it.value+'</span>';
-    if(chg)html+=' <span class="pill-chg '+cls+'">'+chg+'</span>';
-    html+='</div>';
-  });
-  html+='</div>';
-  // Controls: stacked rows, left-aligned
-  html+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;align-items:flex-start">';
-  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">Range</span><div class="mkt-mode-toggle" id="mktRange_'+chartKey+'">';
-  [{m:1,l:'1M'},{m:3,l:'3M'},{m:6,l:'6M'},{m:12,l:'1Y'},{m:36,l:'3Y'},{m:60,l:'5Y'},{m:0,l:'All'}].forEach(r=>{
-    html+='<div class="mkt-mode-btn'+(r.m===12?' active':'')+'" data-range="'+r.m+'" data-key="'+chartKey+'" onclick="_mktSetRange(this)">'+r.l+'</div>';
-  });
-  html+='</div></div>';
-  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">Freq</span><div class="mkt-mode-toggle" id="mktFreq_'+chartKey+'">';
-  [{f:'all',l:'All'},{f:'daily',l:'Daily'},{f:'weekly',l:'Weekly'},{f:'monthly',l:'Monthly'}].forEach(r=>{
-    html+='<div class="mkt-mode-btn'+(r.f==='all'?' active':'')+'" data-freq="'+r.f+'" data-key="'+chartKey+'" onclick="_mktSetFreq(this)">'+r.l+'</div>';
-  });
-  html+='</div></div>';
-  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">View</span><div class="mkt-mode-toggle" id="mktMode_'+chartKey+'">';
-  html+='<div class="mkt-mode-btn active" data-mode="price" data-key="'+chartKey+'" onclick="_mktSetMode(this)">Price</div>';
-  html+='<div class="mkt-mode-btn" data-mode="pct" data-key="'+chartKey+'" onclick="_mktSetMode(this)">% Change</div>';
-  html+='</div></div>';
-  html+='</div>';
-  // Chart canvas
-  html+='<div class="mkt-chart-wrap"><canvas id="'+cid+'"></canvas></div>';
-  el.innerHTML=html;
-  _mktDrawChart(chartKey);
-}
+/* _mktBuildSection kept for backward compat — not called by new layout */
 
 function _pillId(name){return(name||'').replace(/[^a-zA-Z0-9]/g,'_')}
 
@@ -3084,165 +3112,228 @@ async function _mktDrawChart(key){
 }
 
 function renderMarkets(){
-  const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
-  let indices=fm.indices||[];let fx=fm.fx||[];
-  // Build from indicators[] if briefing has no market data
-  if(!indices.length&&indicators.length){
-    [{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'},{name:'FTSE 100',ind:'ftse100'},{name:'DAX',ind:'dax'},{name:'Nikkei 225',ind:'nikkei225'}].forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:'',region:''})});
-  }
-  if(!fx.length&&indicators.length){
-    [{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'},{name:'EUR/USD',ind:'eurusd'},{name:'USD/CNY',ind:'usdcny'},{name:'USD/JPY',ind:'usdjpy'}].forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!fx.find(x=>x.name===m.name))fx.push({name:m.name,value:i.value})});
-  }
-  // Section 1: Equity Indices
-  const eqItems=indices.map(it=>({name:it.name,value:it.value||'',change:it.change||it.day||'',yy:it.yy||''}));
-  if(eqItems.length)_mktBuildSection('mktEquitiesSection','Equity Indices',eqItems,['S&P/TSX','S&P 500'],'equities');
-  else $('mktEquitiesSection').innerHTML='';
-
-  // Section 2: Foreign Exchange
-  const fxItems=fx.map(it=>({name:it.name,value:it.value||'',change:it.day||'',yy:it.yy||''}));
-  if(fxItems.length)_mktBuildSection('mktFxSection','Foreign Exchange',fxItems,['CAD/USD','EUR/USD'],'fx');
-  else $('mktFxSection').innerHTML='';
-
-  // Section 3: Yield Curve
-  _mktRenderYield();
-
-  // Section 4: Commodities
-  _mktRenderCommodities(fm);
-}
-
-function _mktRenderYield(){
-  const el=$('mktYieldSection');if(!el)return;
-  let yc=(D&&D.yieldCurve)||[];
-  if(!yc.length&&indicators.length){
-    [{term:'2Y',ind:'goc_2y_yield'},{term:'5Y',ind:'goc_5y_yield'},{term:'10Y',ind:'goc_10y_yield'}].forEach(t=>{const i=indicators.find(x=>x.indicator_name===t.ind);if(i)yc.push({term:t.term,yield:i.value})});
-  }
-  if(!yc.length){el.innerHTML='';return}
-  let html='<h3>Government of Canada Yield Curve</h3>';
-  // Stat row with all terms
-  html+='<div class="mkt-stat-row">';
-  yc.forEach(y=>{html+='<div class="mkt-stat"><div class="mkt-stat-label">'+y.term+'</div><div class="mkt-stat-val">'+y.yield+'</div></div>'});
-  const y2=yc.find(y=>y.term==='2Y');const y10=yc.find(y=>y.term==='10Y');
-  if(y2&&y10){
-    const spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);
-    html+='<div class="mkt-stat"><div class="mkt-stat-label">10Y-2Y Spread</div><div class="mkt-stat-val">'+spread+'bp'+(parseInt(spread)<0?' <span style="color:#EF4444;font-size:11px;font-weight:600">Inverted</span>':'')+'</div></div>';
-  }
+  var el=$('marketsPage');if(!el)return;
+  var fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
+  var html='<div class="mkt-page">';
+  html+=_buildMktCommentary(fm);
+  html+=_buildMktEquities(fm);
+  html+=_buildMktFx(fm);
+  html+=_buildMktYields();
+  html+=_buildMktCommodities(fm);
   html+='</div>';
-  html+='<div class="mkt-chart-wrap" style="height:240px"><canvas id="mktYieldChart"></canvas></div>';
-  html+='<div style="font-size:11px;color:#64748B;margin-top:4px"><a href="https://www.bankofcanada.ca/rates/interest-rates/" target="_blank" style="color:#2563EB;text-decoration:none">Bank of Canada Valet API \u2197</a></div>';
   el.innerHTML=html;
-  setTimeout(()=>{
-    const canvas=document.getElementById('mktYieldChart');if(!canvas)return;
-    if(charts.mktYield)charts.mktYield.destroy();
-    const labels=yc.map(y=>y.term);const data=yc.map(y=>parseFloat(y.yield)||0);
-    // Last year data if available
-    const dsArr=[{label:'Current',data,borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#2563EB',pointBorderColor:'#fff',pointBorderWidth:2,fill:true,tension:0.3}];
-    if(D&&D.yieldCurveLastYear&&D.yieldCurveLastYear.length){
-      dsArr.push({label:'1 Year Ago',data:D.yieldCurveLastYear,borderColor:'#94A3B8',backgroundColor:'transparent',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#94A3B8',borderDash:[5,3],fill:false,tension:0.3});
-    }
-    charts.mktYield=new Chart(canvas,{type:'line',data:{labels,datasets:dsArr},options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:dsArr.length>1,position:'top',labels:{boxWidth:12,font:{family:'Outfit',size:11},usePointStyle:true}},
-        tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8}},
-      scales:{x:{grid:{display:false},ticks:{font:{family:'Outfit',size:12},color:'#475569'}},
-        y:{grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5},ticks:{font:{family:'Outfit',size:11},color:'#636363',callback:v=>v.toFixed(2)+'%'}}}
-    }});
+  setTimeout(function(){
+    if(_mktState.equities)_mktDrawChart('equities');
+    if(_mktState.fx)_mktDrawChart('fx');
+    _drawMktYieldChart();
   },50);
 }
 
-function _mktRenderCommodities(fm){
-  const el=$('mktCommoditiesSection');if(!el)return;
-  const rawComms=(D&&D.commodities)||fm.commodities||[];
-  // Build from indicators if empty
+function _chgCls(v){if(!v)return'flat';if(String(v).indexOf('-')>=0||String(v).indexOf('\u2212')>=0)return'down';if(String(v).indexOf('+')>=0||parseFloat(v)>0)return'up';return'flat'}
+function _chgArrow(v){var c=_chgCls(v);return c==='down'?'\u25BC ':c==='up'?'\u25B2 ':''}
+
+function _buildMktCommentary(fm){
+  var summary=(fm.summary||fm.commentary||(D&&(D.marketCommentary||D.market_commentary)))||'';
+  if(!summary)return '';
+  var h='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Market Commentary</h3><span class="section-meta"></span></div>';
+  h+='<div class="narrative">'+san(summary)+'</div></div>';
+  return h;
+}
+
+function _buildMktEquities(fm){
+  var indices=fm.indices||[];
+  if(!indices.length&&indicators.length){
+    [{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'},{name:'FTSE 100',ind:'ftse100'},{name:'DAX',ind:'dax'},{name:'Nikkei 225',ind:'nikkei225'}].forEach(function(m){var i=indicators.find(function(x){return x.indicator_name===m.ind});if(i&&!indices.find(function(x){return x.name===m.name}))indices.push({name:m.name,value:i.value,change:'',region:''})});
+  }
+  if(!indices.length)return '';
+  var items=indices.map(function(it){return{name:it.name,value:it.value||'',change:it.change||it.day||'',yy:it.yy||''}});
+  var defaults=[items[0].name];
+  _mktState.equities={items:items,active:new Set(defaults),mode:'price',range:3,freq:'all'};
+
+  var h='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Equity Indices</h3>';
+  h+='<span class="section-meta">'+items.length+' indices</span></div><div class="market-card">';
+  h+='<div class="series-row">';
+  items.forEach(function(it){
+    var act=defaults.indexOf(it.name)>=0;var c=_chgCls(it.change);
+    h+='<div class="series-pill'+(act?' active':'')+'" data-name="'+it.name+'" data-key="equities" onclick="_mktToggle(this)">';
+    h+='<div class="pill-name">'+it.name+'</div><div class="pill-value">'+(it.value||'\u2014')+'</div>';
+    if(it.change)h+='<div class="pill-change '+c+'">'+_chgArrow(it.change)+it.change+'</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  h+='<div class="stat-row">';
+  var fi=items[0];
+  if(fi.yy)h+='<div class="stat-item"><span class="stat-label">Year-over-Year</span><span class="stat-val pill-change '+_chgCls(fi.yy)+'">'+fi.yy+'</span></div>';
+  h+='</div>';
+  h+='<div class="chart-controls"><div class="range-selector">';
+  [{m:1,l:'1M'},{m:3,l:'3M'},{m:6,l:'6M'},{m:12,l:'1Y'},{m:36,l:'3Y'}].forEach(function(r){
+    h+='<button class="range-btn mkt-mode-btn'+(r.m===3?' active':'')+'" data-range="'+r.m+'" data-key="equities" onclick="_mktSetRange(this)">'+r.l+'</button>';
+  });
+  h+='</div><div class="range-selector">';
+  h+='<button class="range-btn mkt-mode-btn active" data-mode="price" data-key="equities" onclick="_mktSetMode(this)">Price</button>';
+  h+='<button class="range-btn mkt-mode-btn" data-mode="pct" data-key="equities" onclick="_mktSetMode(this)">% Change</button>';
+  h+='</div></div>';
+  h+='<div class="chart-area"><div class="mkt-chart-wrap"><canvas id="mktChart_equities"></canvas></div></div>';
+  var eqNarr=(fm.equityNarrative||fm.equity_narrative)||'';
+  if(eqNarr)h+='<div class="market-narrative">'+san(eqNarr)+'</div>';
+  h+='</div></div>';
+  return h;
+}
+
+function _buildMktFx(fm){
+  var fx=fm.fx||[];
+  if(!fx.length&&indicators.length){
+    [{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'},{name:'EUR/USD',ind:'eurusd'},{name:'USD/CNY',ind:'usdcny'},{name:'USD/JPY',ind:'usdjpy'}].forEach(function(m){var i=indicators.find(function(x){return x.indicator_name===m.ind});if(i&&!fx.find(function(x){return x.name===m.name}))fx.push({name:m.name,value:i.value})});
+  }
+  if(!fx.length)return '';
+  var items=fx.map(function(it){return{name:it.name,value:it.value||'',change:it.day||it.change||'',yy:it.yy||''}});
+  var defaults=[items[0].name];
+  _mktState.fx={items:items,active:new Set(defaults),mode:'price',range:3,freq:'all'};
+
+  var h='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Foreign Exchange</h3>';
+  h+='<span class="section-meta">'+items.length+' pairs</span></div><div class="market-card">';
+  h+='<div class="fx-series-row">';
+  items.forEach(function(it){
+    var act=defaults.indexOf(it.name)>=0;var c=_chgCls(it.change);
+    h+='<div class="fx-pill'+(act?' active':'')+'" data-name="'+it.name+'" data-key="fx" onclick="_mktToggle(this)">';
+    h+='<div class="pill-name">'+it.name+'</div><div class="pill-value">'+(it.value||'\u2014')+'</div>';
+    if(it.change)h+='<div class="pill-change '+c+'">'+_chgArrow(it.change)+it.change+'</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  var bocRate=(fm.bocRate||fm.boc_rate||(D&&D.bocRate))||'';
+  h+='<div class="stat-row">';
+  if(items[0].yy)h+='<div class="stat-item"><span class="stat-label">Year-over-Year</span><span class="stat-val pill-change '+_chgCls(items[0].yy)+'">'+items[0].yy+'</span></div>';
+  if(bocRate)h+='<div class="stat-item"><span class="stat-label">Bank of Canada Rate</span><span class="stat-val">'+bocRate+'</span></div>';
+  h+='</div>';
+  h+='<div class="chart-controls"><div class="range-selector">';
+  [{m:1,l:'1M'},{m:3,l:'3M'},{m:6,l:'6M'},{m:12,l:'1Y'},{m:36,l:'3Y'}].forEach(function(r){
+    h+='<button class="range-btn mkt-mode-btn'+(r.m===3?' active':'')+'" data-range="'+r.m+'" data-key="fx" onclick="_mktSetRange(this)">'+r.l+'</button>';
+  });
+  h+='</div></div>';
+  h+='<div class="chart-area"><div class="mkt-chart-wrap"><canvas id="mktChart_fx"></canvas></div></div>';
+  var fxNarr=(fm.fxNarrative||fm.fx_narrative)||'';
+  if(fxNarr)h+='<div class="market-narrative">'+san(fxNarr)+'</div>';
+  h+='</div></div>';
+  return h;
+}
+
+function _buildMktYields(){
+  var yc=(D&&D.yieldCurve)||[];
+  if(!yc.length&&indicators.length){
+    [{term:'3M',ind:'goc_3m_yield'},{term:'1Y',ind:'goc_1y_yield'},{term:'2Y',ind:'goc_2y_yield'},{term:'5Y',ind:'goc_5y_yield'},{term:'10Y',ind:'goc_10y_yield'},{term:'30Y',ind:'goc_30y_yield'}].forEach(function(t){var i=indicators.find(function(x){return x.indicator_name===t.ind});if(i)yc.push({term:t.term,yield:i.value})});
+  }
+  if(!yc.length)return '';
+  var h='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Government of Canada Yields</h3>';
+  h+='<span class="section-meta">Yield curve \u00B7 '+yc.length+' tenors</span></div><div class="market-card">';
+  h+='<div class="yield-table-wrap"><table class="yield-table"><thead><tr><th>Tenor</th>';
+  yc.forEach(function(y){h+='<th>'+y.term+'</th>'});
+  h+='</tr></thead><tbody><tr><td>Current</td>';
+  yc.forEach(function(y){h+='<td class="yield-current">'+(y.yield||'\u2014')+'</td>'});
+  h+='</tr>';
+  var hasPrev=yc.some(function(y){return y.prevYield||y.prev_yield});
+  if(hasPrev){
+    h+='<tr><td>1 Year Ago</td>';yc.forEach(function(y){h+='<td class="yield-prev">'+(y.prevYield||y.prev_yield||'\u2014')+'</td>'});h+='</tr>';
+    h+='<tr><td>Change</td>';yc.forEach(function(y){var cur=parseFloat(y.yield)||0,prev=parseFloat(y.prevYield||y.prev_yield)||0;if(prev){var diff=Math.round((cur-prev)*100);var cls=diff>0?'chg-up':'chg-down';h+='<td class="yield-chg '+cls+'">'+(diff>0?'+':'')+diff+' bps</td>'}else h+='<td>\u2014</td>'});h+='</tr>';
+  }
+  h+='</tbody></table></div>';
+  var y2=yc.find(function(y){return y.term==='2Y'});var y10=yc.find(function(y){return y.term==='10Y'});
+  if(y2&&y10){
+    var spread=((parseFloat(y10.yield)-parseFloat(y2.yield))*100).toFixed(0);var inv=parseInt(spread)<0;
+    var boc=(D&&D.financialMarkets&&D.financialMarkets.bocRate)||(D&&D.bocRate)||'';
+    h+='<div class="spread-row"><span class="stat-label">2s10s Spread</span> <span class="spread-badge '+(inv?'inverted':'normal')+'">'+spread+' basis points \u2014 '+(inv?'Inverted':'Normal')+'</span>';
+    if(boc)h+='<span style="margin-left:auto;font-size:13px;color:#7a8599">Bank of Canada overnight rate: <strong style="color:#1a1a1a;font-weight:700">'+boc+'</strong></span>';
+    h+='</div>';
+  }
+  h+='<div class="chart-area"><div class="mkt-chart-wrap" style="height:240px"><canvas id="mktYieldChartNew"></canvas></div></div>';
+  var yieldNarr=(D&&D.financialMarkets&&(D.financialMarkets.yieldNarrative||D.financialMarkets.yield_narrative))||'';
+  if(yieldNarr)h+='<div class="market-narrative">'+san(yieldNarr)+'</div>';
+  h+='</div></div>';return h;
+}
+
+function _drawMktYieldChart(){
+  var yc=(D&&D.yieldCurve)||[];
+  if(!yc.length&&indicators.length){
+    [{term:'2Y',ind:'goc_2y_yield'},{term:'5Y',ind:'goc_5y_yield'},{term:'10Y',ind:'goc_10y_yield'}].forEach(function(t){var i=indicators.find(function(x){return x.indicator_name===t.ind});if(i)yc.push({term:t.term,yield:i.value})});
+  }
+  var canvas=document.getElementById('mktYieldChartNew');if(!canvas||!yc.length)return;
+  if(charts.mktYieldNew)charts.mktYieldNew.destroy();
+  var labels=yc.map(function(y){return y.term});var data=yc.map(function(y){return parseFloat(y.yield)||0});
+  var dsArr=[{label:'Current',data:data,borderColor:'#003153',backgroundColor:'rgba(0,49,83,0.08)',borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#003153',pointBorderColor:'#fff',pointBorderWidth:2,fill:true,tension:0.3}];
+  if(D&&D.yieldCurveLastYear&&D.yieldCurveLastYear.length){
+    dsArr.push({label:'1 Year Ago',data:D.yieldCurveLastYear,borderColor:'#c4320a',backgroundColor:'transparent',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#c4320a',borderDash:[5,3],fill:false,tension:0.3});
+  }
+  charts.mktYieldNew=new Chart(canvas,{type:'line',data:{labels:labels,datasets:dsArr},options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:dsArr.length>1,position:'top',labels:{boxWidth:12,font:{family:'DM Sans',size:11},usePointStyle:true}},
+      tooltip:{backgroundColor:'#00253f',titleFont:{family:'DM Sans',size:11,weight:600},bodyFont:{family:'DM Sans',size:12},padding:10,cornerRadius:6,displayColors:false}},
+    scales:{x:{grid:{display:false},ticks:{font:{family:'DM Sans',size:12,weight:500},color:'#4a5568'}},
+      y:{grid:{display:false},ticks:{font:{family:'DM Sans',size:11,weight:500},color:'#4a5568',callback:function(v){return v.toFixed(2)+'%'}},border:{display:false}}}
+  }});
+}
+
+function _buildMktCommodities(fm){
+  var rawComms=(D&&D.commodities)||fm.commodities||[];
   if(!rawComms.length&&indicators.length){
-    [{name:'Crude Oil (WTI)',ind:'wti'},{name:'Crude Oil (WTI)',ind:'wti_oil'},{name:'Crude Oil (Brent)',ind:'brent'},{name:'Natural Gas',ind:'natural_gas'},{name:'Gold',ind:'gold'},{name:'Silver',ind:'silver'},{name:'Copper',ind:'copper'},{name:'Aluminum',ind:'aluminum'},{name:'Wheat',ind:'wheat'},{name:'Corn',ind:'corn'},{name:'Soybeans',ind:'soybeans'},{name:'Coffee',ind:'coffee'},{name:'Lumber',ind:'lumber'}].forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!rawComms.find(x=>x.name===m.name))rawComms.push({name:m.name,val:i.value,change:'',category:'Other'})});
+    [{name:'Crude Oil (WTI)',ind:'wti',cat:'Energy'},{name:'Crude Oil (WTI)',ind:'wti_oil',cat:'Energy'},{name:'Crude Oil (Brent)',ind:'brent',cat:'Energy'},{name:'Natural Gas',ind:'natural_gas',cat:'Energy'},{name:'Gold',ind:'gold',cat:'Precious Metals'},{name:'Silver',ind:'silver',cat:'Precious Metals'},{name:'Copper',ind:'copper',cat:'Base Metals'},{name:'Aluminum',ind:'aluminum',cat:'Base Metals'},{name:'Wheat',ind:'wheat',cat:'Agriculture'},{name:'Lumber',ind:'lumber',cat:'Forest Products'}].forEach(function(m){var i=indicators.find(function(x){return x.indicator_name===m.ind});if(i&&!rawComms.find(function(x){return x.name===m.name}))rawComms.push({name:m.name,val:i.value,change:'',category:m.cat,unit:''})});
   }
-  // Flatten nested category structure
-  let allComms=[];
-  const catSet=new Set();
+  var allComms=[],catSet=new Set();
   if(Array.isArray(rawComms)&&rawComms.length&&rawComms[0].items){
-    rawComms.forEach(cat=>{
-      catSet.add(cat.category);
-      (cat.items||[]).forEach(c=>{allComms.push({name:c.name,value:c.val||'',change:c.yy||'',day:c.day||'',unit:c.unit||'',category:cat.category})});
-    });
+    rawComms.forEach(function(cat){catSet.add(cat.category);(cat.items||[]).forEach(function(c){allComms.push({name:c.name,value:c.val||c.value||c.price||'',change:c.day||'',mm:c.mm||'',yy:c.yy||c.change||'',unit:c.unit||'',category:cat.category,context:c.context||''})})});
   }else if(Array.isArray(rawComms)){
-    rawComms.forEach(c=>{const cat=c.category||'Other';catSet.add(cat);allComms.push({name:c.name,value:c.val||c.value||'',change:c.yy||c.change||'',unit:c.unit||'',category:cat})});
+    rawComms.forEach(function(c){var cat=c.category||'Other';catSet.add(cat);allComms.push({name:c.name,value:c.val||c.value||c.price||'',change:c.day||'',mm:c.mm||'',yy:c.yy||c.change||'',unit:c.unit||'',category:cat,context:c.context||''})});
   }
-  if(!allComms.length){el.innerHTML='';return}
-  const categories=['All',...catSet];
-  _mktState.commCat='All';_mktState.commAll=allComms;_mktState.commCats=categories;
-  let html='<h3>Commodities</h3>';
-  // Category tabs
-  html+='<div class="mkt-cat-tabs" id="mktCommCatTabs">';
-  categories.forEach(cat=>{html+='<div class="mkt-cat-tab'+(cat==='All'?' active':'')+'" data-cat="'+cat+'" onclick="_mktSetCommCat(this)">'+cat+'</div>'});
-  html+='</div>';
-  // Pills + chart placeholder
-  html+='<div id="mktCommPillWrap"></div>';
-  html+='<div id="mktCommChartWrap"></div>';
-  el.innerHTML=html;
-  _mktRenderCommPills('All');
+  if(!allComms.length)return '';
+  _mktState._commAll=allComms;_mktState._commCat='All';
+  var categories=['All'];catSet.forEach(function(c){categories.push(c)});
+
+  var h='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Commodities</h3>';
+  h+='<span class="section-meta">Click any row for details \u00B7 '+allComms.length+' commodities</span></div><div class="market-card">';
+  h+='<div class="cat-tabs">';
+  categories.forEach(function(cat){h+='<div class="cat-tab'+(cat==='All'?' active':'')+'" data-cat="'+cat+'" onclick="_mktSetCatTab(this)">'+cat+'</div>'});
+  h+='</div><div id="mktCmdTableWrap">'+_buildCmdTable(allComms,'All')+'</div>';
+  var commNarr=(fm.commodityNarrative||fm.commodity_narrative||(D&&D.commodityCommentary))||'';
+  if(commNarr)h+='<div class="market-narrative">'+san(commNarr)+'</div>';
+  h+='</div></div>';return h;
 }
 
-function _mktSetCommCat(tab){
-  const cat=tab.dataset.cat;
-  _mktState.commCat=cat;
-  tab.parentElement.querySelectorAll('.mkt-cat-tab').forEach(t=>t.classList.toggle('active',t===tab));
-  _mktRenderCommPills(cat);
+function _buildCmdTable(comms,catFilter){
+  if(!comms.length)return '<div style="padding:20px;color:#7a8599;font-size:14px">No commodity data available.</div>';
+  var h='<div class="commodity-table-wrap"><table class="commodity-table"><thead><tr>';
+  h+='<th>Commodity</th><th>Price</th><th>Weekly</th><th>M/M</th><th>Y/Y</th></tr></thead><tbody>';
+  var lastCat='';
+  comms.forEach(function(c,i){
+    if(c.category&&c.category!==lastCat&&catFilter==='All'){h+='<tr><td colspan="5" class="cmd-group-divider">'+c.category+'</td></tr>';lastCat=c.category;}
+    var uid='cmd_'+i;
+    h+='<tr class="commodity-row" onclick="_mktToggleCmdRow(\''+uid+'\')">';
+    h+='<td class="cmd-name"><span class="row-chevron" id="cmdChev_'+uid+'">\u25B6</span>'+c.name;
+    if(c.unit)h+=' <span class="cmd-unit">'+c.unit+'</span>';
+    h+='</td><td class="cmd-price">'+(c.value||'\u2014')+'</td>';
+    h+='<td class="chg-'+_chgCls(c.change)+'">'+(c.change?_chgArrow(c.change)+c.change:'\u2014')+'</td>';
+    h+='<td class="chg-'+_chgCls(c.mm)+'">'+(c.mm||'\u2014')+'</td>';
+    h+='<td class="chg-'+_chgCls(c.yy)+'">'+(c.yy||'\u2014')+'</td></tr>';
+    h+='<tr class="cmd-expand-row" id="cmdExp_'+uid+'"><td colspan="5"><div class="cmd-expand-content">';
+    if(c.context)h+='<div class="cmd-narrative">'+san(c.context)+'</div>';
+    else h+='<div class="cmd-narrative" style="color:#7a8599">No additional context available.</div>';
+    h+='</div></td></tr>';
+  });
+  h+='</tbody></table></div>';return h;
 }
 
-function _mktRenderCommPills(cat){
-  const allComms=_mktState.commAll||[];
-  const filtered=cat==='All'?allComms:allComms.filter(c=>c.category===cat);
-  // Pick first 2 as defaults
-  const defaults=filtered.slice(0,2).map(c=>c.name);
-  const items=filtered.map(c=>({name:c.name,value:c.value,change:c.change,yy:'',unit:c.unit}));
-  if(!items.length){$('mktCommPillWrap').innerHTML='<div style="color:#64748B;font-size:13px;padding:20px">No data for this category.</div>';$('mktCommChartWrap').innerHTML='';return}
-  // Build inline (not using _mktBuildSection since we need to render into sub-containers)
-  _mktState.commodities={items,active:new Set(defaults),mode:'price',range:12,freq:'all'};
-  const key='commodities';const cid='mktChart_'+key;
-  // Series pills
-  let html='<div class="mkt-pills" id="mktPills_'+key+'" style="margin-bottom:8px">';
-  items.forEach((it,i)=>{
-    const isActive=defaults.includes(it.name);
-    const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':'up';
-    html+='<div class="mkt-pill'+(isActive?' active':'')+'" data-name="'+it.name+'" data-key="'+key+'" onclick="_mktToggle(this)">';
-    html+='<span style="width:8px;height:8px;border-radius:50%;background:'+_mktPal[i%_mktPal.length]+'"></span> ';
-    html+=it.name;
-    if(it.value)html+=' <span class="pill-val">'+it.value+(it.unit?' '+it.unit:'')+'</span>';
-    if(chg)html+=' <span class="pill-chg '+cls+'">'+chg+'</span>';
-    html+='</div>';
-  });
-  html+='</div>';
-  // Controls: stacked rows, left-aligned
-  html+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;align-items:flex-start">';
-  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">Range</span><div class="mkt-mode-toggle" id="mktRange_'+key+'">';
-  [{m:1,l:'1M'},{m:3,l:'3M'},{m:6,l:'6M'},{m:12,l:'1Y'},{m:36,l:'3Y'},{m:60,l:'5Y'},{m:0,l:'All'}].forEach(r=>{
-    html+='<div class="mkt-mode-btn'+(r.m===12?' active':'')+'" data-range="'+r.m+'" data-key="'+key+'" onclick="_mktSetRange(this)">'+r.l+'</div>';
-  });
-  html+='</div></div>';
-  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">Freq</span><div class="mkt-mode-toggle" id="mktFreq_'+key+'">';
-  [{f:'all',l:'All'},{f:'daily',l:'Daily'},{f:'weekly',l:'Weekly'},{f:'monthly',l:'Monthly'}].forEach(r=>{
-    html+='<div class="mkt-mode-btn'+(r.f==='all'?' active':'')+'" data-freq="'+r.f+'" data-key="'+key+'" onclick="_mktSetFreq(this)">'+r.l+'</div>';
-  });
-  html+='</div></div>';
-  html+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;width:52px;flex-shrink:0">View</span><div class="mkt-mode-toggle" id="mktMode_'+key+'">';
-  html+='<div class="mkt-mode-btn active" data-mode="price" data-key="'+key+'" onclick="_mktSetMode(this)">Price</div>';
-  html+='<div class="mkt-mode-btn" data-mode="pct" data-key="'+key+'" onclick="_mktSetMode(this)">% Change</div>';
-  html+='</div></div>';
-  html+='</div>';
-  // Stat row
-  html+='<div class="mkt-stat-row" id="mktStats_'+key+'">';
-  items.forEach(it=>{
-    const chg=it.change||'';const isNeg=chg.startsWith('-');const cls=isNeg?'dn':'up';
-    html+='<div class="mkt-stat" id="mktStat_'+key+'_'+_pillId(it.name)+'" style="'+(defaults.includes(it.name)?'':'display:none')+'">';
-    html+='<div class="mkt-stat-label">'+it.name+'</div><div class="mkt-stat-val">'+(it.value||'N/A')+(it.unit?' <small style="color:#64748B">'+it.unit+'</small>':'')+'</div>';
-    if(chg)html+='<div class="mkt-stat-chg '+cls+'">'+(isNeg?'\u2193':'\u2191')+' '+chg+'</div>';
-    html+='</div>';
-  });
-  html+='</div>';
-  $('mktCommPillWrap').innerHTML=html;
-  $('mktCommChartWrap').innerHTML='<div class="mkt-chart-wrap"><canvas id="'+cid+'"></canvas></div>';
-  _mktDrawChart(key);
-}
+window._mktToggleCmdRow=function(uid){
+  var exp=document.getElementById('cmdExp_'+uid);if(!exp)return;
+  var row=exp.previousElementSibling;
+  if(exp.classList.contains('visible')){exp.classList.remove('visible');if(row)row.classList.remove('expanded')}
+  else{exp.classList.add('visible');if(row)row.classList.add('expanded')}
+};
+window._mktSetCatTab=function(tab){
+  var cat=tab.dataset.cat;_mktState._commCat=cat;
+  tab.parentElement.querySelectorAll('.cat-tab').forEach(function(t){t.classList.toggle('active',t===tab)});
+  var allComms=_mktState._commAll||[];
+  var filtered=cat==='All'?allComms:allComms.filter(function(c){return c.category===cat});
+  var wrap=document.getElementById('mktCmdTableWrap');
+  if(wrap)wrap.innerHTML=_buildCmdTable(filtered,cat);
+};
 
 /* == Chart Helpers == */
 function drawYieldChart(yc){
