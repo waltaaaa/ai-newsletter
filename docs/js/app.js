@@ -277,7 +277,7 @@ async function loadAll(){
     await renderTab('tldr');tabRendered.tldr=true;
   }catch(e){
     console.error('renderTLDR:',e);
-    const tp=$('tldrPage');if(tp)tp.innerHTML='<div class="tldr-page"><div class="tldr-empty">Error rendering: '+e.message+'</div></div>';
+    const tp=$('tldrPage');if(tp)tp.innerHTML='<div class="tldr-empty">Error rendering: '+e.message+'</div>';
   }
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
   $('navMeta').textContent=edStr||((indicators.length)?indicators.length+' indicators loaded':'Data loaded');
@@ -354,7 +354,7 @@ async function renderTLDR(){
   if(!page)return;
 
   if(!D||!D.executive_summary){
-    page.innerHTML='<div class="tldr-page"><div class="tldr-empty">Weekly briefing pending. '+indicators.length+' indicators loaded from primary sources.</div></div>';
+    page.innerHTML='<div class="tldr-empty">Weekly briefing pending. '+indicators.length+' indicators loaded from primary sources.</div>';
     return;
   }
 
@@ -385,8 +385,8 @@ async function renderTLDR(){
   // Project pipeline
   const projectsHtml=await _tldrBuildProjects();
 
-  page.innerHTML=`<div class="tldr-page fade-in">
-    <div class="tldr-headline-band">
+  page.innerHTML=`
+    <div class="tldr-headline-band fade-in">
       <h2>${san(headline)}</h2>
       <div class="tldr-headline-meta"><span>${dateDisplay}</span></div>
     </div>
@@ -408,8 +408,7 @@ async function renderTLDR(){
 
     ${briefingHtml}
     ${policyHtml}
-    ${projectsHtml}
-  </div>`;
+    ${projectsHtml}`;
 
   // Wire up toggle
   const tog=$('tldrGlanceToggle');
@@ -4477,7 +4476,7 @@ function addDataVintage(){
 
 /* ====== INITIALIZATION ====== */
 // Module scripts are deferred — DOM is already ready, run immediately
-if($('tldrPage'))$('tldrPage').innerHTML='<div class="tldr-page" style="padding:28px 40px">'+skeleton(6)+'</div>';
+if($('tldrPage'))$('tldrPage').innerHTML=skeleton(6);
 if($('natAnalysisSection'))$('natAnalysisSection').innerHTML='<div class="card">'+skeleton(3)+'</div>';
 // Section-level skeleton placeholders while async sections load
 if($('costMonitor'))$('costMonitor').innerHTML='<div class="card">'+skeleton(2)+'</div>';
