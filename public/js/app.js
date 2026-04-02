@@ -385,6 +385,9 @@ async function renderTLDR(){
   // Project pipeline
   const projectsHtml=await _tldrBuildProjects();
 
+  // "This Week's Key Data" table (commodities + notable items)
+  const weeklyDataHtml=_tldrBuildWeeklyDataTable();
+
   page.innerHTML=`
     <div class="tldr-headline-band fade-in">
       <h2>${san(headline)}</h2>
@@ -403,6 +406,7 @@ async function renderTLDR(){
         </div>
         <div id="tldrIndicatorsView">${kiHtml}</div>
         <div id="tldrMarketsView" style="display:none">${mkHtml}</div>
+        ${weeklyDataHtml}
       </div>
     </details>
 
@@ -502,24 +506,71 @@ function _tldrBuildMarketsTable(){
   </tr></thead><tbody>${rows}</tbody></table>`;
 }
 
+/* ── TL;DR: "This Week's Key Data" table (second section in Numbers at a Glance) ── */
+function _tldrBuildWeeklyDataTable(){
+  const comms=D.commodities||[];
+  const stats=D.discovery_stats||{};
+  let rows='';
+  // Add top commodities
+  comms.slice(0,4).forEach(function(c){
+    const chg=c.change||'';
+    let cls='unch';
+    if(/^\+|▲|\bup\b|\bgain/i.test(chg))cls='up';
+    else if(/^-|▼|\bdown\b|\bfell\b|\bdrop/i.test(chg))cls='down';
+    const arrow=cls==='up'?'\u25B2 ':cls==='down'?'\u25BC ':'';
+    rows+=`<tr>
+      <td class="ind-t-name">${san(c.name||'')} <span class="tldr-freq-tag">Daily</span></td>
+      <td class="ind-t-val">${san(String(c.price||c.value||''))}</td>
+      <td class="ind-t-chg ${cls}">${arrow}${san(chg)}</td>
+      <td class="ind-t-ref">\u2014</td><td class="ind-t-next">\u2014</td>
+      <td class="ind-t-src">${san(c.source||'yfinance')}</td>
+    </tr>`;
+  });
+  if(!rows)return'';
+  return`<div class="tldr-map-section">
+    <div class="tldr-toggle-row"><span class="tldr-glance-label">This Week\u2019s Key Data</span></div>
+    <table class="tldr-ind-table"><thead><tr>
+      <th>Indicator</th><th class="r">Value</th><th class="r">Change (from prior)</th>
+      <th>Reference Period</th><th class="r">Next Release</th><th class="r">Source</th>
+    </tr></thead><tbody>${rows}</tbody></table>
+  </div>`;
+}
+
 /* ── TL;DR: Weekly Briefing narrative ── */
 function _tldrBuildBriefing(){
   const raw=D.executive_summary||'';
   const sources=D.sources||[];
   let html=bulletsToParas(san(linkFootnotes(raw,sources)));
   // Add lead-sentence styling to first sentence of each paragraph
-  html=html.replace(/<p>([^<]{20,}?[.!?])\s/g,(m,first)=>'<p><span class="tldr-lead-sentence">'+first+'</span> ');
-  // Callout boxes from cross-reference data
-  let calloutHtml='';
+  html=html.replace(/<p>([^<]{20,}?[.!?])\s/g,function(m,first){return'<p><span class="tldr-lead-sentence">'+first+'</span> '});
+
+  // Build contextual callout boxes and intersperse after paragraphs
   const stats=D.discovery_stats||{};
-  if(stats.total_projects){
-    calloutHtml=`<div class="tldr-callout">Pipeline snapshot: ${(stats.total_projects||0).toLocaleString()} projects tracked across Canada (${D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B'} total pipeline value). ${stats.new_this_week||0} new projects discovered this week. ${stats.status_counts?Object.entries(stats.status_counts).map(([k,v])=>v.toLocaleString()+' '+k.toLowerCase()).join(', '):''}</div>`;
+  const callout1=(stats.total_projects)?`<div class="tldr-callout"><strong>Cross-reference:</strong> The database tracks ${(stats.total_projects||0).toLocaleString()} active projects valued at ${D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B'} across Canada. ${stats.new_this_week?stats.new_this_week+' new projects discovered this week.':''}${stats.status_counts?' '+Object.entries(stats.status_counts).slice(0,3).map(function(e){return e[1].toLocaleString()+' '+e[0].toLowerCase()}).join(', ')+'.':''}</div>`:'';
+
+  // Build second callout from commodity/market data
+  const comms=D.commodities||[];
+  const wti=comms.find(function(c){return(c.name||'').toLowerCase().indexOf('wti')>=0||(c.name||'').toLowerCase().indexOf('crude')>=0});
+  const gold=comms.find(function(c){return(c.name||'').toLowerCase().indexOf('gold')>=0});
+  let callout2='';
+  if(wti||gold){
+    let parts=[];
+    if(wti)parts.push('WTI crude at '+san(String(wti.price||wti.value||''))+(wti.change?' ('+san(wti.change)+')':''));
+    if(gold)parts.push('Gold at '+san(String(gold.price||gold.value||''))+(gold.change?' ('+san(gold.change)+')':''));
+    callout2=`<div class="tldr-callout"><strong>Markets:</strong> ${parts.join('. ')}.</div>`;
   }
+
+  // Intersperse callouts between paragraphs
+  const paras=html.split('</p>');
+  if(paras.length>3&&callout1){paras.splice(2,0,'</p>'+callout1);} // after 2nd paragraph
+  if(paras.length>5&&callout2){paras.splice(5,0,'</p>'+callout2);} // after ~4th paragraph
+  html=paras.join('</p>');
+
   // Sources
   let srcHtml='';
   if(sources.length){
     srcHtml=`<details class="tldr-sources"><summary>Sources (${sources.length})</summary><ol>`;
-    sources.forEach(s=>{
+    sources.forEach(function(s){
       const url=s.url||s.archive_url||'';
       const title=san(s.title||'Source');
       srcHtml+=url?`<li><a href="${url}" target="_blank" rel="noopener">${title}</a></li>`:`<li>${title}</li>`;
@@ -532,7 +583,6 @@ function _tldrBuildBriefing(){
       <h3>Weekly Briefing</h3>
     </div>
     <div class="tldr-narrative">${html}</div>
-    ${calloutHtml}
     ${srcHtml}
   </div>`;
 }
@@ -545,13 +595,21 @@ async function _tldrBuildPolicy(){
     const weeks=raw&&raw.weeks?raw.weeks:[];
     if(weeks.length&&weeks[0].items)policyItems=weeks[0].items;
   }catch(e){}
+  // Policy summary narrative (from first week's summary if available)
+  let policySummary='';
+  try{
+    const raw2=await fetchJSON('policy.json');
+    const weeks2=raw2&&raw2.weeks?raw2.weeks:[];
+    if(weeks2.length&&weeks2[0].summary&&weeks2[0].summary.length>10)policySummary=weeks2[0].summary;
+  }catch(e){}
+
   if(!policyItems.length){
     return`<div class="tldr-section">
       <div class="tldr-section-header">
         <div class="tldr-section-accent"></div>
         <h3>Major Policy Developments</h3>
       </div>
-      <div class="tldr-empty">No policy items tracked this week.</div>
+      <div class="tldr-policy-narrative"><p>No federal or provincial policy items tracked this week. The policy monitor scans LEGISinfo, Canada Gazette, and ministry feeds for legislative and regulatory developments affecting capital investment.</p></div>
     </div>`;
   }
   let itemsHtml='';
@@ -565,13 +623,24 @@ async function _tldrBuildPolicy(){
       <div class="tldr-policy-item-body">${body}${linkHtml}</div>
     </details>`;
   });
+  // Build policy sources list
+  let policySrcHtml='';
+  const policySources=policyItems.filter(function(p){return p.url||p.source_url}).map(function(p){return{url:p.url||p.source_url,title:p.title||p.name||'Source'}});
+  if(policySources.length){
+    policySrcHtml=`<details class="tldr-sources"><summary>Sources (${policySources.length})</summary><ol>`;
+    policySources.forEach(function(s){policySrcHtml+=`<li><a href="${san(s.url)}" target="_blank" rel="noopener">${san(s.title)}</a></li>`});
+    policySrcHtml+='</ol></details>';
+  }
+
   return`<div class="tldr-section">
     <div class="tldr-section-header">
       <div class="tldr-section-accent"></div>
       <h3>Major Policy Developments</h3>
       <span class="tldr-section-sub">${policyItems.length} items</span>
     </div>
+    ${policySummary?'<div class="tldr-policy-narrative"><p>'+san(policySummary)+'</p></div>':''}
     <div class="tldr-inner-card tldr-policy-items">${itemsHtml}</div>
+    ${policySrcHtml}
   </div>`;
 }
 
