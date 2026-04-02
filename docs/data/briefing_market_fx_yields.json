@@ -1,0 +1,116 @@
+{
+  "fx": {
+    "pairs": [
+      {
+        "name": "CAD/USD",
+        "value": "0.7198",
+        "weekly_pct": "-0.3%",
+        "mom_pct": "-1.85%",
+        "yoy_pct": "+2.61%"
+      },
+      {
+        "name": "USD/CAD",
+        "value": "1.3893",
+        "weekly_pct": "+0.3%",
+        "mom_pct": "+1.85%",
+        "yoy_pct": "-2.54%"
+      },
+      {
+        "name": "EUR/USD",
+        "value": "1.1460",
+        "weekly_pct": "+0.4%",
+        "mom_pct": "+1.2%",
+        "yoy_pct": "+3.5%"
+      },
+      {
+        "name": "USD/JPY",
+        "value": "149.80",
+        "weekly_pct": "+0.2%",
+        "mom_pct": "+1.1%",
+        "yoy_pct": ""
+      }
+    ],
+    "boc_rate": "2.25%",
+    "fed_rate": "3.50–3.75%",
+    "rate_differential_bp": 125,
+    "fx_commentary": "<p><span class=\"lead-sentence\">The Canadian dollar fell to <strong>0.7198 CAD/USD</strong> (1.3893 USD/CAD) on March 30 — down <strong>1.85%</strong> month-over-month to a two-month low</span> — the move occurred against the backdrop of the <strong>125–150 basis point</strong> spread between the Federal Reserve's <strong>3.50–3.75%</strong> target and the Bank of Canada's <strong>2.25%</strong> policy rate.<sup>1</sup> Year-over-year, the loonie is up <strong>2.61%</strong> against the US dollar.<sup>1</sup> The euro traded at <strong>1.1460 EUR/USD</strong> amid geopolitical uncertainty.<sup>2</sup> The database tracks <strong>653 projects</strong> in trade-exposed sectors (manufacturing, agriculture, transport logistics) where FX movements directly affect input costs or export revenue.<sup>3</sup></p>"
+  },
+  "yieldCurve": {
+    "tenors": [
+      {
+        "tenor": "3M",
+        "current": "2.28%",
+        "year_ago": "3.50%",
+        "change_bp": -122
+      },
+      {
+        "tenor": "1Y",
+        "current": "2.55%",
+        "year_ago": "3.20%",
+        "change_bp": -65
+      },
+      {
+        "tenor": "2Y",
+        "current": "2.95%",
+        "year_ago": "2.62%",
+        "change_bp": 33
+      },
+      {
+        "tenor": "5Y",
+        "current": "3.18%",
+        "year_ago": "2.81%",
+        "change_bp": 37
+      },
+      {
+        "tenor": "10Y",
+        "current": "3.58%",
+        "year_ago": "3.22%",
+        "change_bp": 36
+      },
+      {
+        "tenor": "20Y",
+        "current": "3.85%",
+        "year_ago": "3.45%",
+        "change_bp": 40
+      },
+      {
+        "tenor": "30Y",
+        "current": "3.94%",
+        "year_ago": "3.53%",
+        "change_bp": 41
+      }
+    ],
+    "spread_2_10": "63bp",
+    "spread_2_10_prior_week": "58bp",
+    "curve_shape": "normal",
+    "boc_rate": "2.25%",
+    "yield_commentary": "<p><span class=\"lead-sentence\">The Government of Canada yield curve maintained a normal shape in the week ending March 30, with the 2–10 year spread at <strong>63 basis points</strong></span> — the 10-year yield stood at <strong>3.58%</strong> against the 2-year at <strong>2.95%</strong>.<sup>4</sup> Across the full curve: the 3-month at <strong>2.28%</strong>, the 1-year at <strong>2.55%</strong>, the 5-year at <strong>3.18%</strong>, the 20-year at <strong>3.85%</strong>, and the 30-year at <strong>3.94%</strong>.<sup>4</sup> Year-over-year, the belly and long end rose: the 2-year is up <strong>33 basis points</strong> from 2.62%, the 10-year up <strong>36 basis points</strong> from 3.22%, while the 3-month fell <strong>122 basis points</strong> from 3.50% as the Bank of Canada completed seven consecutive cuts from the June 2024 peak of 5.00%.<sup>4</sup><sup>5</sup> The database tracks <strong>2,739 projects</strong> in proposed or approved status in rate-sensitive sectors, including <strong>211 residential</strong> and <strong>68 commercial-mixed</strong> projects.<sup>3</sup></p>"
+  },
+  "sources": [
+    {
+      "id": 1,
+      "title": "Trading Economics — Canadian Dollar",
+      "url": "https://tradingeconomics.com/canada/currency"
+    },
+    {
+      "id": 2,
+      "title": "Federal Reserve — H.10 Foreign Exchange Rates, March 30, 2026",
+      "url": "https://www.federalreserve.gov/releases/h10/hist/dat00_eu.htm"
+    },
+    {
+      "id": 3,
+      "title": "The Lagging Indicator — Project Database (7,372 projects as of March 31, 2026)",
+      "url": "https://walte.github.io/can-macro-dashboard/"
+    },
+    {
+      "id": 4,
+      "title": "Bank of Canada — Canadian Interest Rates and Monetary Policy Variables",
+      "url": "https://www.bankofcanada.ca/rates/interest-rates/canadian-interest-rates/"
+    },
+    {
+      "id": 5,
+      "title": "Bank of Canada — March 18 Rate Decision",
+      "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/"
+    }
+  ]
+}

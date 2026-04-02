@@ -1,0 +1,65 @@
+{
+  "equities": [
+    {
+      "name": "TSX Composite",
+      "symbol": "^GSPTSE",
+      "value": "32,427",
+      "weekly_pct": "+1.5%",
+      "ytd_pct": "N/A",
+      "yoy_pct": "+28.2%",
+      "high_52w": "",
+      "low_52w": "",
+      "commentary": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at <strong>32,427</strong> on March 31, rising <strong>1.54%</strong> on the day</span> — the advance followed reports of potential US-Iran diplomatic talks; the Strait of Hormuz closure had pushed the index approximately <strong>6%</strong> lower over March.<sup>1</sup> Year-over-year, the TSX is up <strong>28.2%</strong>, with energy and materials sub-indices contributing to cumulative gains.<sup>1</sup> The database tracks <strong>63 oil and gas projects</strong> and <strong>785 power and energy projects</strong> across Canada.<sup>3</sup></p>"
+    },
+    {
+      "name": "S&P 500",
+      "symbol": "^GSPC",
+      "value": "6,368.85",
+      "weekly_pct": "N/A",
+      "ytd_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "",
+      "low_52w": "",
+      "commentary": "<p><span class=\"lead-sentence\">The S&P 500 closed at approximately <strong>6,497</strong> on March 31, up <strong>2.40%</strong> on the day</span> — the index ended March approximately <strong>9.4%</strong> below its January 2026 peak, with Hormuz-driven energy disruption dominating the month.<sup>2</sup></p>"
+    },
+    {
+      "name": "DJIA",
+      "symbol": "^DJI",
+      "value": "45,166.64",
+      "weekly_pct": "N/A",
+      "ytd_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "",
+      "low_52w": "",
+      "commentary": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average closed at approximately <strong>46,117</strong> on March 31, up approximately <strong>2.0%</strong> on the day</span> — industrial and energy-linked components led the session move on the Iran diplomatic reports.<sup>2</sup></p>"
+    },
+    {
+      "name": "Nasdaq Composite",
+      "symbol": "^IXIC",
+      "value": "20,948.36",
+      "weekly_pct": "N/A",
+      "ytd_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "",
+      "low_52w": "",
+      "commentary": "<p><span class=\"lead-sentence\">The Nasdaq Composite closed at approximately <strong>21,469</strong> on March 31, up <strong>3.24%</strong> on the day</span> — the largest single-session advance among the four major US indices in this edition.<sup>2</sup></p>"
+    }
+  ],
+  "sources": [
+    {
+      "id": 1,
+      "title": "Trading Economics — Canada Stock Market (TSX)",
+      "url": "https://tradingeconomics.com/canada/stock-market"
+    },
+    {
+      "id": 2,
+      "title": "Trading Economics — US Stock Market",
+      "url": "https://tradingeconomics.com/united-states/stock-market"
+    },
+    {
+      "id": 3,
+      "title": "The Lagging Indicator — Project Pipeline Database",
+      "url": "https://canadamacro.ca"
+    }
+  ]
+}

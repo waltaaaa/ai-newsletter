@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "briefing_id": 21,
+    "volume": 2,
+    "issue": 21,
+    "week_of": "2026-03-30",
+    "agent": "tldr-writer-market-commodities",
+    "generated_at": "2026-04-02T00:00:00Z"
+  },
+  "commodity_commentary": "<p><span class=\"lead-sentence\">Canadian-relevant commodities diverged sharply across categories in the week ending March 30, 2026</span> — energy prices advanced across the board, with WTI crude crossing <strong>US$100/bbl</strong> for the first time since July 2022 on the continued Strait of Hormuz disruption, while precious metals retreated, with gold down <strong>14%</strong> month-over-month despite elevated geopolitical tensions, driven by margin liquidation and a stronger US dollar<sup>1,4</sup>. The WCS-WTI discount narrowed to an estimated <strong>US$15.74/bbl</strong>, holding at a historical spread for Canadian heavy crude producers<sup>3</sup>. Base metals were mixed, with copper elevated at <strong>US$5.76/lb</strong> and nickel under pressure, while uranium declined on risk-off sentiment<sup>7</sup>. The database tracks <strong>42 oil and gas projects ($93.8 billion)</strong> and <strong>317 power energy projects ($487 billion)</strong> linked to commodity price levels across Canada<sup>2</sup>.</p>",
+  "commodities": [
+    {
+      "name": "WTI Crude Oil",
+      "symbol": "CL=F",
+      "category": "Energy",
+      "price": "US$102.88/bbl",
+      "weekly_pct": "+5.5%",
+      "mom_pct": "+50%+",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "projects_affected": 42,
+      "projects_above_breakeven": 42,
+      "projects_above_breakeven_value": "$93.8B",
+      "commentary": "<p><strong>WTI Crude Oil:</strong> <strong>US$102.88/bbl</strong> (<strong>+5.5%</strong> week-over-week) — the effective closure of the Strait of Hormuz since approximately March 2, disrupting an estimated <strong>20 million barrels per day</strong> (~20% of global seaborne oil flows), drove WTI to its first settlement above <strong>US$100</strong> since July 2022; tanker traffic through the strait dropped approximately <strong>70%</strong><sup>1</sup>. The Dallas Fed estimated that a one-quarter closure could raise WTI to a <strong>US$98/bbl</strong> average and reduce global GDP growth by an annualized <strong>2.9 percentage points</strong> in Q2 2026<sup>5</sup>. The database tracks <strong>42 oil and gas projects ($93.8 billion)</strong> across Canada, concentrated in Alberta oil sands and offshore Newfoundland and Labrador<sup>2</sup>. WTI is up approximately <strong>50%</strong> month-over-month<sup>1</sup>.</p>"
+    },
+    {
+      "name": "Western Canadian Select",
+      "symbol": "WCS",
+      "category": "Energy",
+      "price": "US$87.14/bbl",
+      "weekly_pct": "N/A",
+      "mom_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "wcs_discount": "US$15.74/bbl",
+      "wcs_discount_prior_week": "N/A",
+      "projects_affected": 42,
+      "commentary": "<p><strong>Western Canadian Select:</strong> <strong>US$87.14/bbl</strong> — the WCS-WTI differential is estimated at <strong>US$15.74/bbl</strong>, reflecting the ongoing cost disadvantage for Canadian heavy crude producers relative to the West Texas benchmark<sup>3</sup>. The database tracks <strong>42 oil and gas projects ($93.8 billion)</strong> across Alberta and Saskatchewan in which producer netback prices reference WCS-linked pricing<sup>2</sup>. Pipeline capacity through the expanded Trans Mountain system partially constrains the differential from widening further<sup>3</sup>.</p>"
+    },
+    {
+      "name": "Brent Crude",
+      "symbol": "BZ=F",
+      "category": "Energy",
+      "price": "US$112.57/bbl",
+      "weekly_pct": "N/A",
+      "mom_pct": "+55%",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Brent Crude:</strong> <strong>US$112.57/bbl</strong> — Brent surged approximately <strong>55%</strong> in March, a record monthly gain for the contract since its inception in 1988, as the Strait of Hormuz disruption rippled through global oil markets<sup>1</sup>. Brent peaked at approximately <strong>US$126/bbl</strong> intra-month before retreating on reports of potential US-Iran diplomatic talks<sup>1</sup>. The Brent-WTI spread of approximately <strong>US$9.69/bbl</strong> reflects elevated Atlantic Basin demand and longer tanker routing via the Cape of Good Hope.</p>"
+    },
+    {
+      "name": "Natural Gas (Henry Hub)",
+      "symbol": "NG=F",
+      "category": "Energy",
+      "price": "US$2.94/MMBtu",
+      "weekly_pct": "N/A",
+      "mom_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Natural Gas (Henry Hub):</strong> <strong>US$2.94/MMBtu</strong> — Henry Hub and the Canadian AECO benchmark rose as global LNG demand spiked in response to Middle East supply disruptions<sup>6</sup>. The EIA's March 10 short-term energy outlook projected Henry Hub averaging <strong>US$3.80/MMBtu</strong> for full-year 2026<sup>6</sup>. The database tracks <strong>317 power and energy projects ($487 billion)</strong>, including BC LNG infrastructure and Alberta natural gas processing facilities, affected by shifting gas price levels<sup>2</sup>.</p>"
+    },
+    {
+      "name": "Gold",
+      "symbol": "GC=F",
+      "category": "Precious Metals",
+      "price": "US$4,578/oz",
+      "weekly_pct": "N/A",
+      "mom_pct": "-14%",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Gold:</strong> <strong>US$4,578/oz</strong> — gold declined more than <strong>14%</strong> in March, on pace for its steepest monthly decline since October 2008, as margin liquidation and US dollar strength drove sellers despite elevated geopolitical tensions<sup>4</sup>. Gold peaked at approximately <strong>US$5,161/oz</strong> on March 3 before retreating. The database tracks mining projects across BC, Ontario, and Quebec that reference gold price levels in feasibility parameters<sup>2</sup>.</p>"
+    },
+    {
+      "name": "Silver",
+      "symbol": "SI=F",
+      "category": "Precious Metals",
+      "price": "US$73.33/oz",
+      "weekly_pct": "N/A",
+      "mom_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Silver:</strong> <strong>US$73.33/oz</strong> — silver tracked the broader precious metals retreat in March alongside gold's margin-driven decline<sup>4</sup>. Ontario and BC silver mining operations factor into the database's tracked mining project inventory<sup>2</sup>.</p>"
+    },
+    {
+      "name": "Copper",
+      "symbol": "HG=F",
+      "category": "Base Metals",
+      "price": "US$5.76/lb",
+      "weekly_pct": "N/A",
+      "mom_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Copper:</strong> <strong>US$5.76/lb</strong> — copper held in an elevated range of <strong>US$5.25–$6.01/lb</strong> in March, reflecting mixed signals from China's manufacturing PMI recovery to <strong>50.4</strong> in March and global supply chain disruption from Middle East instability<sup>7,8</sup>. BC and Ontario copper mining projects tracked in the database reference price levels above the current spot for long-run feasibility thresholds<sup>2</sup>. Electrification-driven demand across grid and EV supply chain investment in Canada continues to support copper's demand profile<sup>7</sup>.</p>"
+    },
+    {
+      "name": "Aluminum",
+      "symbol": "ALI=F",
+      "category": "Base Metals",
+      "price": "US$3,423/MT",
+      "weekly_pct": "N/A",
+      "mom_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Aluminum:</strong> <strong>US$3,423/MT</strong> — aluminum prices reflect elevated energy input costs following the Strait of Hormuz supply disruption, given the metal's energy-intensive smelting process<sup>1</sup>. Canadian aluminum production, concentrated in Quebec smelting operations, contributes to export volumes subject to ongoing US tariff measures<sup>9</sup>.</p>"
+    },
+    {
+      "name": "Lumber",
+      "symbol": "LBS=F",
+      "category": "Forest Products",
+      "price": "US$610/MBF",
+      "weekly_pct": "N/A",
+      "mom_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Lumber:</strong> <strong>US$610/MBF</strong> — live lumber price data has been unavailable from the primary timeseries data source since May 2023 due to a ticker or data feed issue; the <strong>US$610/MBF</strong> figure is sourced from the task brief<sup>10</sup>. BC forestry operations and residential construction projects in the database — including <strong>211 residential projects</strong> tracked nationally — use lumber as a primary input cost benchmark<sup>2</sup>.</p>"
+    },
+    {
+      "name": "Uranium",
+      "symbol": "CCO.TO",
+      "category": "Base Metals",
+      "price": "US$92/lb",
+      "weekly_pct": "-2.8%",
+      "mom_pct": "-17.0%",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Uranium:</strong> <strong>US$92/lb</strong> — uranium declined approximately <strong>17%</strong> month-over-month alongside broader risk-off sentiment in metals; the URA ETF proxy fell to <strong>US$46.86</strong> and Cameco (CCO.TO) closed at <strong>C$147.75</strong>, down approximately <strong>14%</strong> month-over-month<sup>4</sup>. Saskatchewan is home to the majority of Canada's uranium production, including Cameco operations at Cigar Lake and McArthur River<sup>2</sup>.</p>"
+    },
+    {
+      "name": "Nickel",
+      "symbol": "NI=F",
+      "category": "Base Metals",
+      "price": "US$14,641/MT",
+      "weekly_pct": "N/A",
+      "mom_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Nickel:</strong> <strong>US$14,641/MT</strong> (<strong>US$6.64/lb</strong>) — nickel moved under pressure in March as battery supply chain demand signals from China's manufacturing sector remained mixed despite the PMI returning above 50<sup>8</sup>. Ontario (Vale, Glencore), Manitoba, and Labrador nickel mining operations link to the database's tracked mineral project inventory<sup>2</sup>.</p>"
+    },
+    {
+      "name": "Canola",
+      "symbol": "RS=F",
+      "category": "Agriculture",
+      "price": "C$733/MT",
+      "weekly_pct": "N/A",
+      "mom_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Canola:</strong> <strong>C$733/MT</strong> — Prairie canola pricing reflects export demand conditions with China as a primary destination, subject to ongoing bilateral trade dynamics<sup>9</sup>. Saskatchewan and Alberta crushing capacity and oilseed storage infrastructure projects tracked in the database reference canola throughput volumes<sup>2</sup>.</p>"
+    },
+    {
+      "name": "Potash",
+      "symbol": "NTR.TO",
+      "category": "Agriculture",
+      "price": "US$355/MT",
+      "weekly_pct": "-1.0%",
+      "mom_pct": "+1.0%",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Potash:</strong> <strong>US$355/MT</strong> — Nutrien (NTR.TO) traded at approximately <strong>C$104.62</strong>, down <strong>1.0%</strong> week-over-week and up <strong>1.0%</strong> month-over-month, indicating broadly stable potash benchmark pricing<sup>4</sup>. Saskatchewan potash operations, including Nutrien and Mosaic production sites, account for approximately 30% of global potash supply and link to several extraction projects in the database<sup>2</sup>.</p>"
+    },
+    {
+      "name": "Iron Ore",
+      "symbol": "TIO=F",
+      "category": "Base Metals",
+      "price": "N/A",
+      "weekly_pct": "N/A",
+      "mom_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "avg_1y": "N/A",
+      "commentary": "<p><strong>Iron Ore:</strong> price data not obtained in the current data refresh period — no current figure available from the tracked timeseries<sup>2</sup>. Iron ore pricing affects Quebec and Labrador iron ore pellet operations, including those linked to the Labrador Trough mining corridor tracked in the project database<sup>2</sup>.</p>"
+    }
+  ],
+  "wcs_analysis": {
+    "wcs_price": "US$87.14/bbl",
+    "wti_price": "US$102.88/bbl",
+    "wcs_discount": "US$15.74/bbl",
+    "discount_prior_week": "N/A",
+    "discount_direction": "N/A",
+    "analysis_text": "The Western Canadian Select differential to WTI was approximately US$15.74/bbl in the week ending March 30, 2026. At the current WCS netback, Canadian heavy crude producers receive US$87.14/bbl before transportation and processing costs. The database tracks 42 oil and gas projects ($93.8 billion) for which WCS-linked producer pricing is a key economic input. Pipeline capacity through the expanded Trans Mountain system provides an export corridor to tidewater that partially constrains discount widening relative to historical pre-TMX levels.",
+    "projects_affected": 42,
+    "projects_affected_value": "$93.8B"
+  },
+  "sources": [
+    {
+      "id": 1,
+      "title": "CNBC — Brent Record Monthly Surge, WTI Above $100",
+      "url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-yemen-houthis-israel-iran-war.html"
+    },
+    {
+      "id": 2,
+      "title": "The Lagging Indicator — Canadian Capital Projects Database",
+      "url": "https://waltefreeman1.github.io/ai-newsletter/"
+    },
+    {
+      "id": 3,
+      "title": "Natural Resources Canada — Western Canadian Select Price Differential",
+      "url": "https://natural-resources.canada.ca/energy/crude-oil/oil-sands/18091"
+    },
+    {
+      "id": 4,
+      "title": "Fortune — Gold Price March 31, 2026",
+      "url": "https://fortune.com/article/current-price-of-gold-03-31-2026/"
+    },
+    {
+      "id": 5,
+      "title": "Dallas Fed — Strait of Hormuz Economic Impact",
+      "url": "https://www.dallasfed.org/research/economics/2026/0320"
+    },
+    {
+      "id": 6,
+      "title": "Natural Gas Intelligence — Henry Hub, AECO",
+      "url": "https://naturalgasintel.com/news/spot-prices-wrap-henry-hub-aeco-climb-as-rattled-global-market-calls-on-us-lng/"
+    },
+    {
+      "id": 7,
+      "title": "Trading Economics — Copper",
+      "url": "https://tradingeconomics.com/commodity/copper"
+    },
+    {
+      "id": 8,
+      "title": "CNBC — China PMI March 2026",
+      "url": "https://www.cnbc.com/2026/03/31/china-pmi-data-march-factory-activity-.html"
+    },
+    {
+      "id": 9,
+      "title": "Statistics Canada — International Merchandise Trade, January 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260312/dq260312a-eng.htm"
+    },
+    {
+      "id": 10,
+      "title": "EIA — Short-Term Energy Outlook",
+      "url": "https://www.eia.gov/outlooks/steo/"
+    }
+  ]
+}

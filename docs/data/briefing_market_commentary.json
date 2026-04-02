@@ -1,0 +1,44 @@
+{
+  "market_commentary": "<p><span class=\"lead-sentence\">Canadian financial markets closed March with a broad rally on March 31</span> — the S&amp;P/TSX Composite rose <strong>1.54%</strong> on the day to <strong>32,427</strong><sup>1</sup> after reports of potential US-Iran diplomatic talks, though the index still declined approximately <strong>6%</strong> over the month as the Strait of Hormuz closure — effective since approximately March 2 — drove energy supply disruption across global markets. WTI crude settled at <strong>$102.88/bbl</strong> on March 30, the first settlement above $100 since July 2022 and a gain of more than <strong>50%</strong> in March<sup>2</sup>; Brent reached <strong>$112.78/bbl</strong>, a record monthly gain for that contract since 1988. The Bank of Canada held its overnight rate at <strong>2.25%</strong> on March 18<sup>3</sup>, and the Canadian dollar closed at <strong>0.7198 USD</strong>, down <strong>1.85%</strong> month-over-month despite elevated crude prices<sup>4</sup>.</p><p><span class=\"lead-sentence\">The project pipeline's commodity exposure diverged sharply along energy lines</span> — the database tracks <strong>42 oil_gas projects ($93.8B)</strong> and <strong>317 power_energy projects ($487B)</strong> whose development economics intersect with the crude price environment<sup>5</sup>. The 10-year Government of Canada bond yield stood at <strong>3.58%</strong>, up <strong>36 basis points</strong> year-over-year, with the 2-10 spread at <strong>63 basis points</strong>; the database contains <strong>211 residential projects</strong> in proposed or planning stages that carry financing cost exposure to the yield curve<sup>5</sup>. Gold declined <strong>14%</strong> in March to <strong>$4,578/oz</strong> from a peak of $5,161 on March 3, driven by margin liquidation and US dollar appreciation<sup>6</sup>; the database tracks <strong>364 mining projects</strong> across Canada with precious-metals exposure.</p>",
+  "market_commentary_callout": {
+    "title": "Pipeline Cross-Reference",
+    "items": [
+      {"label": "Oil & gas projects", "value": "42 projects", "amount": "$93.8B"},
+      {"label": "Power & energy projects", "value": "317 projects", "amount": "$487B"},
+      {"label": "Residential (yield-sensitive)", "value": "211 projects", "amount": "N/A"},
+      {"label": "Mining (commodity-linked)", "value": "364 projects", "amount": "N/A"}
+    ]
+  },
+  "sources": [
+    {
+      "id": 1,
+      "title": "Trading Economics — Canada Stock Market (TSX)",
+      "url": "https://tradingeconomics.com/canada/stock-market"
+    },
+    {
+      "id": 2,
+      "title": "CNBC — Brent Record Monthly Surge, WTI Above $100",
+      "url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-yemen-houthis-israel-iran-war.html"
+    },
+    {
+      "id": 3,
+      "title": "Bank of Canada — March 18 Rate Decision",
+      "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/"
+    },
+    {
+      "id": 4,
+      "title": "Trading Economics — Canadian Dollar",
+      "url": "https://tradingeconomics.com/canada/currency"
+    },
+    {
+      "id": 5,
+      "title": "The Lagging Indicator — Project Pipeline Database",
+      "url": "https://canadamacro.ca"
+    },
+    {
+      "id": 6,
+      "title": "Fortune — Gold Price March 31, 2026",
+      "url": "https://fortune.com/article/current-price-of-gold-03-31-2026/"
+    }
+  ]
+}
