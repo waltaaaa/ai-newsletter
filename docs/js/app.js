@@ -423,6 +423,8 @@ async function renderTLDR(){
     $('tldrIndicatorsView').style.display=v==='indicators'?'':'none';
     $('tldrMarketsView').style.display=v==='markets'?'':'none';
   })})}
+  // Render callout charts async
+  setTimeout(function(){_tldrRenderCalloutCharts()},100);
 }
 function bulletsToParas(html){
   if(!html)return'';
@@ -543,23 +545,47 @@ function _tldrBuildBriefing(){
   let html=bulletsToParas(san(linkFootnotes(raw,sources)));
 
   // Merge short header paragraphs into the following content paragraph.
-  // The executive_summary has <p><strong>Section Name</strong></p> headers
-  // followed by content <p>. Merge them: header becomes the em-dash lead sentence.
   html=html.replace(/<p>\s*<strong>([^<]{3,60})<\/strong>\s*<\/p>\s*<p>/gi,function(m,heading){
     return '<p><span class="tldr-lead-sentence">'+heading.replace(/&amp;/g,'&')+' \u2014</span> ';
   });
-
   // For remaining content paragraphs without a lead-sentence, auto-wrap first sentence
   html=html.replace(/<p>(?!<span class="tldr-lead-sentence")([^<]{20,}?[.!?])\s/g,function(m,first){return'<p><span class="tldr-lead-sentence">'+first+'</span> '});
 
-  // Build contextual callout boxes and intersperse after paragraphs
+  // Build callout boxes with inline charts from D.insightCharts
+  const ic=D.insightCharts||D.insight_charts||[];
   const stats=D.discovery_stats||{};
-  const callout1=(stats.total_projects)?`<div class="tldr-callout"><strong>Cross-reference:</strong> The database tracks ${(stats.total_projects||0).toLocaleString()} active projects valued at ${D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B'} across Canada. ${stats.new_this_week?stats.new_this_week+' new projects discovered this week.':''}${stats.status_counts?' '+Object.entries(stats.status_counts).slice(0,3).map(function(e){return e[1].toLocaleString()+' '+e[0].toLowerCase()}).join(', ')+'.':''}</div>`:'';
+  var callouts=[];
 
-  // Intersperse callout after 1st content paragraph
-  const paras=html.split('</p>');
-  if(paras.length>2&&callout1){paras.splice(1,0,'</p>'+callout1);}
-  html=paras.join('</p>');
+  // First callout: pipeline cross-reference + first insight chart
+  var c1Text=(stats.total_projects)?'<strong>Cross-reference:</strong> The database tracks '+(stats.total_projects||0).toLocaleString()+' active projects valued at '+(D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B')+' across Canada.'+(stats.new_this_week?' '+stats.new_this_week+' new projects discovered this week.':''):'';
+  if(ic.length>=1){
+    var ch=ic[0];
+    c1Text=(ch.reasoning?san(ch.reasoning):c1Text);
+    callouts.push({text:c1Text,chart:ch});
+  }else if(c1Text){
+    callouts.push({text:c1Text,chart:null});
+  }
+
+  // Second callout: second insight chart
+  if(ic.length>=2){
+    var ch2=ic[1];
+    callouts.push({text:ch2.reasoning?san(ch2.reasoning):'',chart:ch2});
+  }
+
+  // Intersperse callouts between paragraphs
+  var paras=html.split('</p>').filter(function(p){return p.trim().length>0});
+  // Place callout 1 after paragraph 1, callout 2 after paragraph 3
+  var positions=[{after:1,idx:0},{after:3,idx:1}];
+  var inserted=0;
+  positions.forEach(function(pos){
+    if(pos.idx>=callouts.length)return;
+    var insertAt=pos.after+inserted;
+    if(insertAt<paras.length){
+      paras.splice(insertAt,0,'</p>'+_tldrCalloutHtml(callouts[pos.idx],pos.idx));
+      inserted++;
+    }
+  });
+  html=paras.join('</p>')+'</p>';
 
   // Sources
   let srcHtml='';
@@ -580,6 +606,106 @@ function _tldrBuildBriefing(){
     <div class="tldr-narrative">${html}</div>
     ${srcHtml}
   </div>`;
+}
+
+/* Build a callout box with optional inline SVG chart */
+function _tldrCalloutHtml(co,idx){
+  var h='<div class="tldr-callout">';
+  if(co.text)h+=co.text;
+  if(co.chart){
+    var ch=co.chart;
+    var keys=ch.dataKeys||[];
+    h+='<div class="tldr-callout-chart" id="tldrCalloutChart_'+idx+'">';
+    h+='<div class="tldr-callout-chart-title">'+(ch.title||'')+(ch.subtitle?' \u00B7 '+ch.subtitle:'')+'</div>';
+    // Legend
+    var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
+    if(keys.length>1){
+      h+='<div class="tldr-chart-legend">';
+      keys.forEach(function(k,i){h+='<span class="tldr-chart-legend-item"><span class="tldr-chart-legend-dot" style="background:'+colors[i%colors.length]+'"></span>'+k+'</span>'});
+      h+='</div>';
+    }
+    // Chart placeholder — filled async after render
+    h+='<div class="tldr-callout-svg" id="tldrCalloutSvg_'+idx+'"><div style="height:120px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div>';
+    h+='</div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+/* Render callout SVG charts async after page paint */
+async function _tldrRenderCalloutCharts(){
+  var ic=D.insightCharts||D.insight_charts||[];
+  var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
+  for(var idx=0;idx<ic.length&&idx<2;idx++){
+    var ch=ic[idx];var keys=ch.dataKeys||[];
+    var el=document.getElementById('tldrCalloutSvg_'+idx);
+    if(!el||!keys.length)continue;
+    // Load all timeseries for this chart
+    var allSeries=[];
+    for(var ki=0;ki<keys.length;ki++){
+      var ts=await loadTimeseries(keys[ki]);
+      if(!ts){ts=await loadTimeseries('comm_'+keys[ki])}
+      var raw=ts&&(ts.series||ts);
+      if(Array.isArray(raw)&&raw.length)allSeries.push({key:keys[ki],data:raw,color:colors[ki%colors.length]});
+    }
+    if(!allSeries.length){el.innerHTML='<div style="height:120px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
+    // Filter to last 12 months
+    var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
+    allSeries.forEach(function(s){s.data=s.data.filter(function(p){return new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)})});
+    // Build multi-line SVG
+    el.innerHTML=_svgCalloutChart(allSeries,ch.annotations||[]);
+  }
+}
+
+function _svgCalloutChart(seriesArr,annotations){
+  var W=700,H=120,pL=45,pR=10,pT=10,pB=18;
+  // Compute global min/max across all series
+  var allVals=[];seriesArr.forEach(function(s){s.data.forEach(function(p){allVals.push(p.value)})});
+  if(!allVals.length)return '';
+  var mn=Math.min.apply(null,allVals),mx=Math.max.apply(null,allVals),rng=mx-mn;
+  if(rng===0)rng=Math.abs(mn)*0.1||1;
+  mn-=rng*0.08;mx+=rng*0.08;rng=mx-mn;
+  var pW=W-pL-pR,pH=H-pT-pB;
+  function xPos(date,dates){var i=dates.indexOf(date);return pL+(i/(dates.length-1))*pW}
+  function yPos(v){return pT+(1-(v-mn)/rng)*pH}
+
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;">';
+  // Grid
+  for(var g=0;g<4;g++){var gy=pT+(g/3)*pH;var gv=mx-(g/3)*rng;svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="#e4e2dd" stroke-width="0.5"/>';svg+='<text x="'+(pL-4)+'" y="'+(gy+3)+'" text-anchor="end" fill="#aaa" font-size="7" font-family="DM Sans">'+_svgFmtVal(gv)+'</text>';}
+  // X-axis labels
+  var refDates=seriesArr[0].data;
+  var xLabels=Math.min(4,refDates.length);
+  for(var xi=0;xi<xLabels;xi++){var di=Math.round(xi/(xLabels-1)*(refDates.length-1));var dx=pL+(di/(refDates.length-1))*pW;svg+='<text x="'+dx+'" y="'+(H-3)+'" text-anchor="middle" fill="#aaa" font-size="7" font-family="DM Sans">'+_svgFmtDate(refDates[di].date)+'</text>';}
+
+  // Draw each series
+  seriesArr.forEach(function(s){
+    if(!s.data.length)return;
+    var pts=s.data.map(function(p,i){return{x:pL+(i/(s.data.length-1))*pW,y:yPos(p.value)}});
+    var poly=pts.map(function(p){return p.x+','+p.y}).join(' ');
+    // Area fill for first series only
+    if(s===seriesArr[0]){
+      var fid='tldrCF_'+(++_svgUid);
+      svg+='<defs><linearGradient id="'+fid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+s.color+'" stop-opacity="0.08"/><stop offset="100%" stop-color="'+s.color+'" stop-opacity="0"/></linearGradient></defs>';
+      var lp=pts[pts.length-1],fp=pts[0],bot=pT+pH;
+      svg+='<polygon fill="url(#'+fid+')" points="'+poly+' '+lp.x+','+bot+' '+fp.x+','+bot+'"/>';
+    }
+    svg+='<polyline fill="none" stroke="'+s.color+'" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" points="'+poly+'"/>';
+    var last=pts[pts.length-1];
+    svg+='<circle cx="'+last.x+'" cy="'+last.y+'" r="2.5" fill="'+s.color+'"/>';
+  });
+
+  // Annotations (vertical markers)
+  annotations.forEach(function(a){
+    if(!a.date)return;
+    // Find x position from first series dates
+    var rd=seriesArr[0].data;
+    var closest=0,minDiff=Infinity;
+    rd.forEach(function(p,i){var diff=Math.abs(new Date(p.date)-new Date(a.date));if(diff<minDiff){minDiff=diff;closest=i}});
+    var ax=pL+(closest/(rd.length-1))*pW;
+    svg+='<line x1="'+ax+'" y1="'+pT+'" x2="'+ax+'" y2="'+(pT+pH)+'" stroke="#7a8599" stroke-width="0.5" stroke-dasharray="3,2"/>';
+  });
+
+  svg+='</svg>';return svg;
 }
 
 /* ── TL;DR: Policy Developments ── */
