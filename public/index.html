@@ -58,8 +58,10 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 .fade-in{animation:fadeIn .3s ease both}
 .container{max-width:1600px;margin:0 auto;padding:0 40px}
 /* Header — Prussian blue */
-.site-header{background:linear-gradient(135deg,#003153 0%,#00426e 50%,#003153 100%);border-bottom:none;padding:52px 56px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
-.site-header::before{content:'';position:absolute;top:-60%;right:-5%;width:400px;height:400px;background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);pointer-events:none}
+.site-header{background:#003153;border-bottom:none;padding:52px 56px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.site-header::before{content:'';position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1519832979-6fa011b87667?w=1600&q=80');background-size:cover;background-position:center 35%;opacity:0.15;z-index:0;pointer-events:none}
+.site-header::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,49,83,0.92) 0%,rgba(0,66,110,0.85) 50%,rgba(0,49,83,0.92) 100%);z-index:1;pointer-events:none}
+.site-header>*{position:relative;z-index:2}
 .site-header h1{font-family:'DM Sans',sans-serif;font-size:36px;font-weight:700;letter-spacing:-0.5px;color:#ffffff;margin:0}
 .site-header .subtitle{color:rgba(255,255,255,0.50);font-size:12px;margin-bottom:6px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500}
 .site-header .tagline{color:rgba(255,255,255,0.60);font-size:16px;margin-top:8px;font-weight:400;letter-spacing:0.1px}
