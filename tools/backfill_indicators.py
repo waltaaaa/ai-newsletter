@@ -185,6 +185,78 @@ def backfill_statcan(conn, years=5):
         # Housing-related
         'housingStarts_national': '735337',
         'building_permits': '735391',
+        # Building permits by province (Table 34-10-0066, residential total value, $M, SAAR)
+        # Source: StatCan Table 34-10-0066-01 "Building permits, by type of structure"
+        # Note: Vector IDs are placeholders — confirm with StatCan before first run
+        'bldg_permits_res_NL': '42068',
+        'bldg_permits_res_PE': '42069',
+        'bldg_permits_res_NS': '42070',
+        'bldg_permits_res_NB': '42071',
+        'bldg_permits_res_QC': '42072',
+        'bldg_permits_res_ON': '42073',
+        'bldg_permits_res_MB': '42074',
+        'bldg_permits_res_SK': '42075',
+        'bldg_permits_res_AB': '42076',
+        'bldg_permits_res_BC': '42077',
+        # Non-residential building permits by province
+        'bldg_permits_nonres_NL': '42078',
+        'bldg_permits_nonres_PE': '42079',
+        'bldg_permits_nonres_NS': '42080',
+        'bldg_permits_nonres_NB': '42081',
+        'bldg_permits_nonres_QC': '42082',
+        'bldg_permits_nonres_ON': '42083',
+        'bldg_permits_nonres_MB': '42084',
+        'bldg_permits_nonres_SK': '42085',
+        'bldg_permits_nonres_AB': '42086',
+        'bldg_permits_nonres_BC': '42087',
+        # Household sector by province (StatCan Table 36-10-0226-01)
+        # Provides household disposable income, DSR, savings rate per province, annual
+        # Vector IDs are placeholders — validate against StatCan WDS catalog before first run
+        'household_disposable_income_NL': '130000001',
+        'household_disposable_income_PE': '130000002',
+        'household_disposable_income_NS': '130000003',
+        'household_disposable_income_NB': '130000004',
+        'household_disposable_income_QC': '130000005',
+        'household_disposable_income_ON': '130000006',
+        'household_disposable_income_MB': '130000007',
+        'household_disposable_income_SK': '130000008',
+        'household_disposable_income_AB': '130000009',
+        'household_disposable_income_BC': '130000010',
+        'household_debt_service_ratio_NL': '130000011',
+        'household_debt_service_ratio_PE': '130000012',
+        'household_debt_service_ratio_NS': '130000013',
+        'household_debt_service_ratio_NB': '130000014',
+        'household_debt_service_ratio_QC': '130000015',
+        'household_debt_service_ratio_ON': '130000016',
+        'household_debt_service_ratio_MB': '130000017',
+        'household_debt_service_ratio_SK': '130000018',
+        'household_debt_service_ratio_AB': '130000019',
+        'household_debt_service_ratio_BC': '130000020',
+        'household_savings_rate_NL': '130000021',
+        'household_savings_rate_PE': '130000022',
+        'household_savings_rate_NS': '130000023',
+        'household_savings_rate_NB': '130000024',
+        'household_savings_rate_QC': '130000025',
+        'household_savings_rate_ON': '130000026',
+        'household_savings_rate_MB': '130000027',
+        'household_savings_rate_SK': '130000028',
+        'household_savings_rate_AB': '130000029',
+        'household_savings_rate_BC': '130000030',
+        # Keep national DSR/savings as fallback
+        'household_debt_service_ratio': '122739026',
+        'household_savings_rate': '62296149',
+        # Provincial average hourly wage rate (Table 14-10-0063-01, monthly LFS, all employees both sexes)
+        # Vector IDs below are placeholders — validate against StatCan before first pipeline run
+        'avg_hourly_wage_NL': '1606000',
+        'avg_hourly_wage_PE': '1606001',
+        'avg_hourly_wage_NS': '1606002',
+        'avg_hourly_wage_NB': '1606003',
+        'avg_hourly_wage_QC': '1606004',
+        'avg_hourly_wage_ON': '1606005',
+        'avg_hourly_wage_MB': '1606006',
+        'avg_hourly_wage_SK': '1606007',
+        'avg_hourly_wage_AB': '1606008',
+        'avg_hourly_wage_BC': '1606009',
     }
 
     total = 0
@@ -481,6 +553,11 @@ def backfill_oea(conn, years=5):
     _extract_oea_series('Table 3', [2, 4, 16, 18], [
         'on_real_consumption', 'on_real_household', 'on_real_gov_expenditure', 'on_real_capital_investment'
     ], '$M')
+
+    # Table 3 Row 42: Total Real GDP at market prices (chained 2017$, quarterly, $M)
+    # Row 43: QoQ % change (the official OEA quarterly real GDP growth rate)
+    _extract_oea_series('Table 3', [42], ['on_real_gdp'], '$M')
+    _extract_oea_series('Table 3', [43], ['on_real_gdp_pct'], '%')
 
     # Table 3 % changes: Row 3, 5, 17, 19
     _extract_oea_series('Table 3', [3, 5, 17, 19], [

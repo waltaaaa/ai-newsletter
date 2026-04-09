@@ -2607,10 +2607,10 @@
       "category": "",
       "province": "Newfoundland and Labrador",
       "value": "52.7%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 52.3,
+      "change": "+0.4pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2625,10 +2625,10 @@
       "category": "",
       "province": "Prince Edward Island",
       "value": "61.8%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 61.5,
+      "change": "+0.3pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2643,10 +2643,10 @@
       "category": "",
       "province": "Nova Scotia",
       "value": "57.0%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 57.1,
+      "change": "-0.1pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2661,10 +2661,10 @@
       "category": "",
       "province": "New Brunswick",
       "value": "56.5%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 56.5,
+      "change": "+0.0pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2679,10 +2679,10 @@
       "category": "",
       "province": "Quebec",
       "value": "60.7%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 61.5,
+      "change": "-0.8pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2697,10 +2697,10 @@
       "category": "",
       "province": "Ontario",
       "value": "59.7%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 59.7,
+      "change": "+0.0pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2715,10 +2715,10 @@
       "category": "",
       "province": "Manitoba",
       "value": "62.5%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 62.9,
+      "change": "-0.4pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2733,10 +2733,10 @@
       "category": "",
       "province": "Saskatchewan",
       "value": "63.4%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 64.0,
+      "change": "-0.6pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2751,10 +2751,10 @@
       "category": "",
       "province": "Alberta",
       "value": "64.4%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 64.5,
+      "change": "-0.1pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2769,10 +2769,10 @@
       "category": "",
       "province": "British Columbia",
       "value": "60.5%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 60.9,
+      "change": "-0.4pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7767,10 +7767,10 @@
       "category": "",
       "province": "Newfoundland and Labrador",
       "value": "58.1%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 57.6,
+      "change": "+0.5pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7785,10 +7785,10 @@
       "category": "",
       "province": "Prince Edward Island",
       "value": "66.6%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 66.5,
+      "change": "+0.1pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7803,10 +7803,10 @@
       "category": "",
       "province": "Nova Scotia",
       "value": "61.3%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 61.4,
+      "change": "-0.1pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7821,10 +7821,10 @@
       "category": "",
       "province": "New Brunswick",
       "value": "60.7%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 60.6,
+      "change": "+0.1pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7839,10 +7839,10 @@
       "category": "",
       "province": "Quebec",
       "value": "64.5%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 64.8,
+      "change": "-0.3pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7857,10 +7857,10 @@
       "category": "",
       "province": "Ontario",
       "value": "64.6%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 64.4,
+      "change": "+0.2pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7875,10 +7875,10 @@
       "category": "",
       "province": "Manitoba",
       "value": "66.3%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 67.1,
+      "change": "-0.8pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7893,10 +7893,10 @@
       "category": "",
       "province": "Saskatchewan",
       "value": "67.1%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 67.6,
+      "change": "-0.5pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7911,10 +7911,10 @@
       "category": "",
       "province": "Alberta",
       "value": "68.7%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 69.0,
+      "change": "-0.3pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -7929,10 +7929,10 @@
       "category": "",
       "province": "British Columbia",
       "value": "64.4%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 64.8,
+      "change": "-0.4pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10395,10 +10395,10 @@
       "category": "",
       "province": "Newfoundland and Labrador",
       "value": "9.2%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 9.2,
+      "change": "+0.0pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10413,10 +10413,10 @@
       "category": "",
       "province": "Prince Edward Island",
       "value": "7.2%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 7.6,
+      "change": "-0.4pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10431,10 +10431,10 @@
       "category": "",
       "province": "Nova Scotia",
       "value": "7.1%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 6.9,
+      "change": "+0.2pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10449,10 +10449,10 @@
       "category": "",
       "province": "New Brunswick",
       "value": "7.0%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 6.7,
+      "change": "+0.3pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10467,10 +10467,10 @@
       "category": "",
       "province": "Quebec",
       "value": "5.9%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 5.2,
+      "change": "+0.7pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10485,10 +10485,10 @@
       "category": "",
       "province": "Ontario",
       "value": "7.6%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 7.3,
+      "change": "+0.3pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10503,10 +10503,10 @@
       "category": "",
       "province": "Manitoba",
       "value": "5.7%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 6.3,
+      "change": "-0.6pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:41Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10521,10 +10521,10 @@
       "category": "",
       "province": "Saskatchewan",
       "value": "5.6%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 5.3,
+      "change": "+0.3pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10539,10 +10539,10 @@
       "category": "",
       "province": "Alberta",
       "value": "6.3%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 6.4,
+      "change": "-0.1pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -10557,10 +10557,10 @@
       "category": "",
       "province": "British Columbia",
       "value": "6.1%",
-      "period": "2026-03-31",
-      "previous_value": null,
-      "change": null,
-      "source": "StatCan",
+      "period": "2026-02-01",
+      "previous_value": 6.1,
+      "change": "+0.0pp",
+      "source": "StatCan 14-10-0287",
       "fetched_at": "2026-03-31T11:58:42Z",
       "unit": "%",
       "frequency": "monthly",
@@ -11335,6 +11335,936 @@
       "description": "",
       "backfilled": 0,
       "metadata": {},
+      "validation_status": "passed"
+    },
+    {
+      "id": 68520,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "Newfoundland and Labrador",
+      "value": 33.58,
+      "period": "2026-02-01",
+      "previous_value": 33.37,
+      "change": "+0.6%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68521,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "Prince Edward Island",
+      "value": 31.78,
+      "period": "2026-02-01",
+      "previous_value": 31.6,
+      "change": "+0.6%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68522,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "Nova Scotia",
+      "value": 33.61,
+      "period": "2026-02-01",
+      "previous_value": 33.63,
+      "change": "-0.1%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68523,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "New Brunswick",
+      "value": 32.33,
+      "period": "2026-02-01",
+      "previous_value": 32.32,
+      "change": "+0.0%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68524,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "Quebec",
+      "value": 36.45,
+      "period": "2026-02-01",
+      "previous_value": 36.28,
+      "change": "+0.5%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68525,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "Ontario",
+      "value": 38.97,
+      "period": "2026-02-01",
+      "previous_value": 38.49,
+      "change": "+1.2%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68526,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "Manitoba",
+      "value": 32.36,
+      "period": "2026-02-01",
+      "previous_value": 32.03,
+      "change": "+1.0%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68527,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "Saskatchewan",
+      "value": 34.09,
+      "period": "2026-02-01",
+      "previous_value": 33.42,
+      "change": "+2.0%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68528,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "Alberta",
+      "value": 38.26,
+      "period": "2026-02-01",
+      "previous_value": 37.84,
+      "change": "+1.1%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68529,
+      "indicator_name": "avg_hourly_wage",
+      "category": "Labour",
+      "province": "British Columbia",
+      "value": 38.92,
+      "period": "2026-02-01",
+      "previous_value": 38.32,
+      "change": "+1.6%",
+      "source": "StatCan 14-10-0063",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$/hr",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68530,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "Newfoundland and Labrador",
+      "value": 74108.0,
+      "period": "2026-01-01",
+      "previous_value": 61091.0,
+      "change": "+21.3%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68531,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "Newfoundland and Labrador",
+      "value": 17761.0,
+      "period": "2026-01-01",
+      "previous_value": 3612.0,
+      "change": "+391.7%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68532,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "Prince Edward Island",
+      "value": 24095.0,
+      "period": "2026-01-01",
+      "previous_value": 15723.0,
+      "change": "+53.2%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68533,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "Prince Edward Island",
+      "value": 2890.0,
+      "period": "2026-01-01",
+      "previous_value": 9428.0,
+      "change": "-69.3%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68534,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "Nova Scotia",
+      "value": 242875.0,
+      "period": "2026-01-01",
+      "previous_value": 187285.0,
+      "change": "+29.7%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68535,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "Nova Scotia",
+      "value": 118625.0,
+      "period": "2026-01-01",
+      "previous_value": 138828.0,
+      "change": "-14.6%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68536,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "New Brunswick",
+      "value": 131904.0,
+      "period": "2026-01-01",
+      "previous_value": 140271.0,
+      "change": "-6.0%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68537,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "New Brunswick",
+      "value": 57313.0,
+      "period": "2026-01-01",
+      "previous_value": 94445.0,
+      "change": "-39.3%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68538,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "Quebec",
+      "value": 2155557.0,
+      "period": "2026-01-01",
+      "previous_value": 1738117.0,
+      "change": "+24.0%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68539,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "Quebec",
+      "value": 855919.0,
+      "period": "2026-01-01",
+      "previous_value": 624410.0,
+      "change": "+37.1%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68540,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "Ontario",
+      "value": 2690772.0,
+      "period": "2026-01-01",
+      "previous_value": 2605256.0,
+      "change": "+3.3%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68541,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "Ontario",
+      "value": 2853323.0,
+      "period": "2026-01-01",
+      "previous_value": 2315928.0,
+      "change": "+23.2%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68542,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "Manitoba",
+      "value": 231452.0,
+      "period": "2026-01-01",
+      "previous_value": 470625.0,
+      "change": "-50.8%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68543,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "Manitoba",
+      "value": 94219.0,
+      "period": "2026-01-01",
+      "previous_value": 79790.0,
+      "change": "+18.1%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68544,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "Saskatchewan",
+      "value": 154443.0,
+      "period": "2026-01-01",
+      "previous_value": 138124.0,
+      "change": "+11.8%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68545,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "Saskatchewan",
+      "value": 112948.0,
+      "period": "2026-01-01",
+      "previous_value": 110491.0,
+      "change": "+2.2%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68546,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "Alberta",
+      "value": 1127124.0,
+      "period": "2026-01-01",
+      "previous_value": 1199558.0,
+      "change": "-6.0%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68547,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "Alberta",
+      "value": 778494.0,
+      "period": "2026-01-01",
+      "previous_value": 702099.0,
+      "change": "+10.9%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68548,
+      "indicator_name": "bldg_permits_res",
+      "category": "Housing",
+      "province": "British Columbia",
+      "value": 1121933.0,
+      "period": "2026-01-01",
+      "previous_value": 1247352.0,
+      "change": "-10.1%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68549,
+      "indicator_name": "bldg_permits_nonres",
+      "category": "Housing",
+      "province": "British Columbia",
+      "value": 472771.0,
+      "period": "2026-01-01",
+      "previous_value": 827109.0,
+      "change": "-42.8%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$K",
+      "frequency": "monthly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68550,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "Newfoundland and Labrador",
+      "value": 5.7,
+      "period": "2024-01-01",
+      "previous_value": 5.97,
+      "change": "-0.3pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68551,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "Newfoundland and Labrador",
+      "value": 0.9,
+      "period": "2024-01-01",
+      "previous_value": -0.7,
+      "change": "+1.5pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68552,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "Newfoundland and Labrador",
+      "value": 24006.0,
+      "period": "2024-01-01",
+      "previous_value": 22527.0,
+      "change": "+6.6%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68553,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "Prince Edward Island",
+      "value": 6.01,
+      "period": "2024-01-01",
+      "previous_value": 6.1,
+      "change": "-0.1pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68554,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "Prince Edward Island",
+      "value": 3.9,
+      "period": "2024-01-01",
+      "previous_value": -0.2,
+      "change": "+4.1pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68555,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "Prince Edward Island",
+      "value": 7420.0,
+      "period": "2024-01-01",
+      "previous_value": 6819.0,
+      "change": "+8.8%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68556,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "Nova Scotia",
+      "value": 6.41,
+      "period": "2024-01-01",
+      "previous_value": 6.53,
+      "change": "-0.1pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68557,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "Nova Scotia",
+      "value": -3.8,
+      "period": "2024-01-01",
+      "previous_value": -5.3,
+      "change": "+1.6pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68558,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "Nova Scotia",
+      "value": 44510.0,
+      "period": "2024-01-01",
+      "previous_value": 41167.0,
+      "change": "+8.1%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68559,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "New Brunswick",
+      "value": 5.62,
+      "period": "2024-01-01",
+      "previous_value": 5.8,
+      "change": "-0.2pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68560,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "New Brunswick",
+      "value": -1.0,
+      "period": "2024-01-01",
+      "previous_value": -3.4,
+      "change": "+2.3pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68561,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "New Brunswick",
+      "value": 34661.0,
+      "period": "2024-01-01",
+      "previous_value": 31731.0,
+      "change": "+9.2%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68562,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "Quebec",
+      "value": 7.8,
+      "period": "2024-01-01",
+      "previous_value": 7.61,
+      "change": "+0.2pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68563,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "Quebec",
+      "value": 0.6,
+      "period": "2024-01-01",
+      "previous_value": -0.5,
+      "change": "+1.0pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68564,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "Quebec",
+      "value": 374908.0,
+      "period": "2024-01-01",
+      "previous_value": 349897.0,
+      "change": "+7.1%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68565,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "Ontario",
+      "value": 10.87,
+      "period": "2024-01-01",
+      "previous_value": 10.71,
+      "change": "+0.2pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68566,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "Ontario",
+      "value": 1.1,
+      "period": "2024-01-01",
+      "previous_value": -1.1,
+      "change": "+2.2pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68567,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "Ontario",
+      "value": 752163.0,
+      "period": "2024-01-01",
+      "previous_value": 693429.0,
+      "change": "+8.5%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68568,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "Manitoba",
+      "value": 6.46,
+      "period": "2024-01-01",
+      "previous_value": 6.33,
+      "change": "+0.1pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68569,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "Manitoba",
+      "value": -0.2,
+      "period": "2024-01-01",
+      "previous_value": -0.7,
+      "change": "+0.5pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68570,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "Manitoba",
+      "value": 59181.0,
+      "period": "2024-01-01",
+      "previous_value": 55715.0,
+      "change": "+6.2%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68571,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "Saskatchewan",
+      "value": 6.43,
+      "period": "2024-01-01",
+      "previous_value": 6.34,
+      "change": "+0.1pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68572,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "Saskatchewan",
+      "value": 2.5,
+      "period": "2024-01-01",
+      "previous_value": 1.4,
+      "change": "+1.1pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68573,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "Saskatchewan",
+      "value": 54894.0,
+      "period": "2024-01-01",
+      "previous_value": 51232.0,
+      "change": "+7.1%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68574,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "Alberta",
+      "value": 7.45,
+      "period": "2024-01-01",
+      "previous_value": 7.37,
+      "change": "+0.1pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68575,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "Alberta",
+      "value": 6.2,
+      "period": "2024-01-01",
+      "previous_value": 5.3,
+      "change": "+0.9pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68576,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "Alberta",
+      "value": 245636.0,
+      "period": "2024-01-01",
+      "previous_value": 228151.0,
+      "change": "+7.7%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68577,
+      "indicator_name": "household_debt_service_ratio",
+      "category": "Household",
+      "province": "British Columbia",
+      "value": 10.28,
+      "period": "2024-01-01",
+      "previous_value": 10.06,
+      "change": "+0.2pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68578,
+      "indicator_name": "household_savings_rate",
+      "category": "Household",
+      "province": "British Columbia",
+      "value": 0.1,
+      "period": "2024-01-01",
+      "previous_value": -2.0,
+      "change": "+2.1pp",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68579,
+      "indicator_name": "household_disposable_income",
+      "category": "Household",
+      "province": "British Columbia",
+      "value": 286653.0,
+      "period": "2024-01-01",
+      "previous_value": 266274.0,
+      "change": "+7.7%",
+      "source": "StatCan 36-10-0226",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "annual",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68580,
+      "indicator_name": "on_real_gdp",
+      "category": "GDP",
+      "province": "Ontario",
+      "value": 969002.0,
+      "period": "2025-07-01",
+      "previous_value": 964502.0,
+      "change": null,
+      "source": "Ontario Economic Accounts",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "$M",
+      "frequency": "quarterly",
+      "validation_status": "passed"
+    },
+    {
+      "id": 68581,
+      "indicator_name": "on_real_gdp_pct",
+      "category": "GDP",
+      "province": "Ontario",
+      "value": "+0.5%",
+      "period": "2025-07-01",
+      "previous_value": "-0.7%",
+      "change": null,
+      "source": "Ontario Economic Accounts",
+      "fetched_at": "2026-04-09T00:00:00Z",
+      "unit": "%",
+      "frequency": "quarterly",
       "validation_status": "passed"
     }
   ],
@@ -101461,30 +102391,6 @@
     },
     {
       "indicator_name": "employmentRate",
-      "province": "AB",
-      "period": "2026-03-25",
-      "value": 64.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "AB",
-      "period": "2026-03-30",
-      "value": 64.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "AB",
-      "period": "2026-03-31",
-      "value": 64.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
       "province": "BC",
       "period": "2021-04-01",
       "value": 60.9,
@@ -101957,30 +102863,6 @@
     },
     {
       "indicator_name": "employmentRate",
-      "province": "BC",
-      "period": "2026-03-25",
-      "value": 60.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "BC",
-      "period": "2026-03-30",
-      "value": 60.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "BC",
-      "period": "2026-03-31",
-      "value": 60.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
       "province": "MB",
       "period": "2021-04-01",
       "value": 62.7,
@@ -102450,30 +103332,6 @@
       "value": 62.5,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "MB",
-      "period": "2026-03-25",
-      "value": 62.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "MB",
-      "period": "2026-03-30",
-      "value": 62.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "MB",
-      "period": "2026-03-31",
-      "value": 62.5,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "employmentRate",
@@ -102949,30 +103807,6 @@
     },
     {
       "indicator_name": "employmentRate",
-      "province": "NB",
-      "period": "2026-03-25",
-      "value": 56.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "NB",
-      "period": "2026-03-30",
-      "value": 56.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "NB",
-      "period": "2026-03-31",
-      "value": 56.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
       "province": "NL",
       "period": "2021-04-01",
       "value": 50.2,
@@ -103442,30 +104276,6 @@
       "value": 52.7,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "NL",
-      "period": "2026-03-25",
-      "value": 52.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "NL",
-      "period": "2026-03-30",
-      "value": 52.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "NL",
-      "period": "2026-03-31",
-      "value": 52.7,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "employmentRate",
@@ -103941,30 +104751,6 @@
     },
     {
       "indicator_name": "employmentRate",
-      "province": "NS",
-      "period": "2026-03-25",
-      "value": 57.0,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "NS",
-      "period": "2026-03-30",
-      "value": 57.0,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "NS",
-      "period": "2026-03-31",
-      "value": 57.0,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
       "province": "ON",
       "period": "2021-04-01",
       "value": 58.7,
@@ -104434,30 +105220,6 @@
       "value": 59.7,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "ON",
-      "period": "2026-03-25",
-      "value": 59.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "ON",
-      "period": "2026-03-30",
-      "value": 59.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "ON",
-      "period": "2026-03-31",
-      "value": 59.7,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "employmentRate",
@@ -104933,30 +105695,6 @@
     },
     {
       "indicator_name": "employmentRate",
-      "province": "PE",
-      "period": "2026-03-25",
-      "value": 61.8,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "PE",
-      "period": "2026-03-30",
-      "value": 61.8,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "PE",
-      "period": "2026-03-31",
-      "value": 61.8,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
       "province": "QC",
       "period": "2021-04-01",
       "value": 59.7,
@@ -105429,30 +106167,6 @@
     },
     {
       "indicator_name": "employmentRate",
-      "province": "QC",
-      "period": "2026-03-25",
-      "value": 60.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "QC",
-      "period": "2026-03-30",
-      "value": 60.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "QC",
-      "period": "2026-03-31",
-      "value": 60.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
       "province": "SK",
       "period": "2021-04-01",
       "value": 63.0,
@@ -105922,30 +106636,6 @@
       "value": 63.4,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "SK",
-      "period": "2026-03-25",
-      "value": 63.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "SK",
-      "period": "2026-03-30",
-      "value": 63.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "employmentRate",
-      "province": "SK",
-      "period": "2026-03-31",
-      "value": 63.4,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "employmentRate_date",
@@ -259493,30 +260183,6 @@
     },
     {
       "indicator_name": "participationRate",
-      "province": "AB",
-      "period": "2026-03-25",
-      "value": 68.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "AB",
-      "period": "2026-03-30",
-      "value": 68.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "AB",
-      "period": "2026-03-31",
-      "value": 68.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
       "province": "BC",
       "period": "2021-04-01",
       "value": 65.6,
@@ -259989,30 +260655,6 @@
     },
     {
       "indicator_name": "participationRate",
-      "province": "BC",
-      "period": "2026-03-25",
-      "value": 64.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "BC",
-      "period": "2026-03-30",
-      "value": 64.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "BC",
-      "period": "2026-03-31",
-      "value": 64.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
       "province": "MB",
       "period": "2021-04-01",
       "value": 67.5,
@@ -260482,30 +261124,6 @@
       "value": 66.3,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "MB",
-      "period": "2026-03-25",
-      "value": 66.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "MB",
-      "period": "2026-03-30",
-      "value": 66.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "MB",
-      "period": "2026-03-31",
-      "value": 66.3,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "participationRate",
@@ -261453,30 +262071,6 @@
     },
     {
       "indicator_name": "participationRate",
-      "province": "NB",
-      "period": "2026-03-25",
-      "value": 60.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "NB",
-      "period": "2026-03-30",
-      "value": 60.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "NB",
-      "period": "2026-03-31",
-      "value": 60.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
       "province": "NL",
       "period": "2021-04-01",
       "value": 57.6,
@@ -261946,30 +262540,6 @@
       "value": 58.1,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "NL",
-      "period": "2026-03-25",
-      "value": 58.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "NL",
-      "period": "2026-03-30",
-      "value": 58.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "NL",
-      "period": "2026-03-31",
-      "value": 58.1,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "participationRate",
@@ -262445,30 +263015,6 @@
     },
     {
       "indicator_name": "participationRate",
-      "province": "NS",
-      "period": "2026-03-25",
-      "value": 61.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "NS",
-      "period": "2026-03-30",
-      "value": 61.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "NS",
-      "period": "2026-03-31",
-      "value": 61.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
       "province": "ON",
       "period": "2021-04-01",
       "value": 64.7,
@@ -262938,30 +263484,6 @@
       "value": 64.6,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "ON",
-      "period": "2026-03-25",
-      "value": 64.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "ON",
-      "period": "2026-03-30",
-      "value": 64.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "ON",
-      "period": "2026-03-31",
-      "value": 64.6,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "participationRate",
@@ -263437,30 +263959,6 @@
     },
     {
       "indicator_name": "participationRate",
-      "province": "PE",
-      "period": "2026-03-25",
-      "value": 66.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "PE",
-      "period": "2026-03-30",
-      "value": 66.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "PE",
-      "period": "2026-03-31",
-      "value": 66.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
       "province": "QC",
       "period": "2021-04-01",
       "value": 64.0,
@@ -263933,30 +264431,6 @@
     },
     {
       "indicator_name": "participationRate",
-      "province": "QC",
-      "period": "2026-03-25",
-      "value": 64.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "QC",
-      "period": "2026-03-30",
-      "value": 64.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "QC",
-      "period": "2026-03-31",
-      "value": 64.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
       "province": "SK",
       "period": "2021-04-01",
       "value": 67.3,
@@ -264426,30 +264900,6 @@
       "value": 67.1,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "SK",
-      "period": "2026-03-25",
-      "value": 67.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "SK",
-      "period": "2026-03-30",
-      "value": 67.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "participationRate",
-      "province": "SK",
-      "period": "2026-03-31",
-      "value": 67.1,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "participationRate",
@@ -328709,62 +329159,6 @@
     },
     {
       "indicator_name": "unemployment",
-      "province": "AB",
-      "period": "2026-03-06",
-      "value": 6.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "AB",
-      "period": "2026-03-09",
-      "value": 6.4,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "AB",
-      "period": "2026-03-14",
-      "value": 6.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "AB",
-      "period": "2026-03-15",
-      "value": 6.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "AB",
-      "period": "2026-03-25",
-      "value": 6.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "AB",
-      "period": "2026-03-30",
-      "value": 6.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "AB",
-      "period": "2026-03-31",
-      "value": 6.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
       "province": "BC",
       "period": "2021-04-01",
       "value": 7.0,
@@ -329709,62 +330103,6 @@
     },
     {
       "indicator_name": "unemployment",
-      "province": "BC",
-      "period": "2026-03-06",
-      "value": 6.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "BC",
-      "period": "2026-03-09",
-      "value": 6.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "BC",
-      "period": "2026-03-14",
-      "value": 6.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "BC",
-      "period": "2026-03-15",
-      "value": 6.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "BC",
-      "period": "2026-03-25",
-      "value": 6.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "BC",
-      "period": "2026-03-30",
-      "value": 6.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "BC",
-      "period": "2026-03-31",
-      "value": 6.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
       "province": "MB",
       "period": "2021-04-01",
       "value": 7.2,
@@ -330706,62 +331044,6 @@
       "value": 5.7,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "MB",
-      "period": "2026-03-06",
-      "value": 6.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "MB",
-      "period": "2026-03-09",
-      "value": 6.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "MB",
-      "period": "2026-03-14",
-      "value": 5.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "MB",
-      "period": "2026-03-15",
-      "value": 5.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "MB",
-      "period": "2026-03-25",
-      "value": 5.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "MB",
-      "period": "2026-03-30",
-      "value": 5.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "MB",
-      "period": "2026-03-31",
-      "value": 5.7,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "unemployment",
@@ -332181,14 +332463,6 @@
     },
     {
       "indicator_name": "unemployment",
-      "province": "national",
-      "period": "2026-03-30",
-      "value": 6.7,
-      "unit": "%",
-      "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "unemployment",
       "province": "NB",
       "period": "2021-04-01",
       "value": 8.9,
@@ -332661,62 +332935,6 @@
     },
     {
       "indicator_name": "unemployment",
-      "province": "NB",
-      "period": "2026-03-06",
-      "value": 6.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NB",
-      "period": "2026-03-09",
-      "value": 6.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NB",
-      "period": "2026-03-14",
-      "value": 7.0,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NB",
-      "period": "2026-03-15",
-      "value": 7.0,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NB",
-      "period": "2026-03-25",
-      "value": 7.0,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NB",
-      "period": "2026-03-30",
-      "value": 7.0,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NB",
-      "period": "2026-03-31",
-      "value": 7.0,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
       "province": "NL",
       "period": "2021-04-01",
       "value": 12.9,
@@ -333186,62 +333404,6 @@
       "value": 9.2,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NL",
-      "period": "2026-03-06",
-      "value": 9.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NL",
-      "period": "2026-03-09",
-      "value": 9.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NL",
-      "period": "2026-03-14",
-      "value": 9.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NL",
-      "period": "2026-03-15",
-      "value": 9.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NL",
-      "period": "2026-03-25",
-      "value": 9.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NL",
-      "period": "2026-03-30",
-      "value": 9.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NL",
-      "period": "2026-03-31",
-      "value": 9.2,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "unemployment",
@@ -333722,62 +333884,6 @@
       "value": 7.1,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NS",
-      "period": "2026-03-06",
-      "value": 6.9,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NS",
-      "period": "2026-03-09",
-      "value": 6.9,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NS",
-      "period": "2026-03-14",
-      "value": 7.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NS",
-      "period": "2026-03-15",
-      "value": 7.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NS",
-      "period": "2026-03-25",
-      "value": 7.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NS",
-      "period": "2026-03-30",
-      "value": 7.1,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "NS",
-      "period": "2026-03-31",
-      "value": 7.1,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "unemployment",
@@ -334733,62 +334839,6 @@
     },
     {
       "indicator_name": "unemployment",
-      "province": "ON",
-      "period": "2026-03-06",
-      "value": 7.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "ON",
-      "period": "2026-03-09",
-      "value": 7.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "ON",
-      "period": "2026-03-14",
-      "value": 7.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "ON",
-      "period": "2026-03-15",
-      "value": 7.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "ON",
-      "period": "2026-03-25",
-      "value": 7.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "ON",
-      "period": "2026-03-30",
-      "value": 7.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "ON",
-      "period": "2026-03-31",
-      "value": 7.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
       "province": "PE",
       "period": "2021-04-01",
       "value": 9.7,
@@ -335730,62 +335780,6 @@
       "value": 7.2,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "PE",
-      "period": "2026-03-06",
-      "value": 7.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "PE",
-      "period": "2026-03-09",
-      "value": 7.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "PE",
-      "period": "2026-03-14",
-      "value": 7.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "PE",
-      "period": "2026-03-15",
-      "value": 7.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "PE",
-      "period": "2026-03-25",
-      "value": 7.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "PE",
-      "period": "2026-03-30",
-      "value": 7.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "PE",
-      "period": "2026-03-31",
-      "value": 7.2,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "unemployment",
@@ -336733,62 +336727,6 @@
     },
     {
       "indicator_name": "unemployment",
-      "province": "QC",
-      "period": "2026-03-06",
-      "value": 5.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "QC",
-      "period": "2026-03-09",
-      "value": 5.2,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "QC",
-      "period": "2026-03-14",
-      "value": 5.9,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "QC",
-      "period": "2026-03-15",
-      "value": 5.9,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "QC",
-      "period": "2026-03-25",
-      "value": 5.9,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "QC",
-      "period": "2026-03-30",
-      "value": 5.9,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "QC",
-      "period": "2026-03-31",
-      "value": 5.9,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
       "province": "SK",
       "period": "2021-04-01",
       "value": 6.3,
@@ -337730,62 +337668,6 @@
       "value": 5.6,
       "unit": "%",
       "source": "Statistics Canada"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "SK",
-      "period": "2026-03-06",
-      "value": 5.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "SK",
-      "period": "2026-03-09",
-      "value": 5.3,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "SK",
-      "period": "2026-03-14",
-      "value": 5.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "SK",
-      "period": "2026-03-15",
-      "value": 5.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "SK",
-      "period": "2026-03-25",
-      "value": 5.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "SK",
-      "period": "2026-03-30",
-      "value": 5.6,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "SK",
-      "period": "2026-03-31",
-      "value": 5.6,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "unemployment",
@@ -338266,62 +338148,6 @@
       "value": 6.7,
       "unit": "%",
       "source": "Statistics Canada WDS"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "national",
-      "period": "2026-03-06",
-      "value": 6.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "national",
-      "period": "2026-03-09",
-      "value": 6.5,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "national",
-      "period": "2026-03-14",
-      "value": 6.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "national",
-      "period": "2026-03-15",
-      "value": 6.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "national",
-      "period": "2026-03-25",
-      "value": 6.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "national",
-      "period": "2026-03-30",
-      "value": 6.7,
-      "unit": "%",
-      "source": "StatCan"
-    },
-    {
-      "indicator_name": "unemployment",
-      "province": "national",
-      "period": "2026-03-31",
-      "value": 6.7,
-      "unit": "%",
-      "source": "StatCan"
     },
     {
       "indicator_name": "us_cpi_index",
@@ -367330,6 +367156,2862 @@
       "value": 3323.7125,
       "unit": "USD/t",
       "source": "FRED"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1981-01-01",
+      "value": 329265.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1981-04-01",
+      "value": 332830.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1981-04-01",
+      "value": 1.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1981-07-01",
+      "value": 335333.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1981-07-01",
+      "value": 0.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1981-10-01",
+      "value": 338117.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1981-10-01",
+      "value": 0.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1982-01-01",
+      "value": 329620.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1982-01-01",
+      "value": -2.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1982-04-01",
+      "value": 324621.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1982-04-01",
+      "value": -1.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1982-07-01",
+      "value": 317920.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1982-07-01",
+      "value": -2.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1982-10-01",
+      "value": 320997.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1982-10-01",
+      "value": 1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1983-01-01",
+      "value": 324701.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1983-01-01",
+      "value": 1.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1983-04-01",
+      "value": 336681.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1983-04-01",
+      "value": 3.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1983-07-01",
+      "value": 347710.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1983-07-01",
+      "value": 3.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1983-10-01",
+      "value": 350014.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1983-10-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1984-01-01",
+      "value": 356708.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1984-01-01",
+      "value": 1.9,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1984-04-01",
+      "value": 366218.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1984-04-01",
+      "value": 2.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1984-07-01",
+      "value": 374359.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1984-07-01",
+      "value": 2.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1984-10-01",
+      "value": 381791.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1984-10-01",
+      "value": 2.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1985-01-01",
+      "value": 383233.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1985-01-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1985-04-01",
+      "value": 385007.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1985-04-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1985-07-01",
+      "value": 390824.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1985-07-01",
+      "value": 1.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1985-10-01",
+      "value": 395423.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1985-10-01",
+      "value": 1.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1986-01-01",
+      "value": 397769.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1986-01-01",
+      "value": 0.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1986-04-01",
+      "value": 402010.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1986-04-01",
+      "value": 1.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1986-07-01",
+      "value": 404912.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1986-07-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1986-10-01",
+      "value": 406404.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1986-10-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1987-01-01",
+      "value": 412043.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1987-01-01",
+      "value": 1.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1987-04-01",
+      "value": 419005.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1987-04-01",
+      "value": 1.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1987-07-01",
+      "value": 425873.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1987-07-01",
+      "value": 1.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1987-10-01",
+      "value": 431903.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1987-10-01",
+      "value": 1.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1988-01-01",
+      "value": 436089.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1988-01-01",
+      "value": 1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1988-04-01",
+      "value": 436367.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1988-04-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1988-07-01",
+      "value": 442777.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1988-07-01",
+      "value": 1.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1988-10-01",
+      "value": 450328.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1988-10-01",
+      "value": 1.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1989-01-01",
+      "value": 452752.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1989-01-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1989-04-01",
+      "value": 455833.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1989-04-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1989-07-01",
+      "value": 457089.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1989-07-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1989-10-01",
+      "value": 458521.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1989-10-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1990-01-01",
+      "value": 456480.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1990-01-01",
+      "value": -0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1990-04-01",
+      "value": 452305.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1990-04-01",
+      "value": -0.9,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1990-07-01",
+      "value": 444532.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1990-07-01",
+      "value": -1.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1990-10-01",
+      "value": 442134.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1990-10-01",
+      "value": -0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1991-01-01",
+      "value": 428956.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1991-01-01",
+      "value": -3.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1991-04-01",
+      "value": 432688.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1991-04-01",
+      "value": 0.9,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1991-07-01",
+      "value": 436708.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1991-07-01",
+      "value": 0.9,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1991-10-01",
+      "value": 436943.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1991-10-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1992-01-01",
+      "value": 438205.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1992-01-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1992-04-01",
+      "value": 437497.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1992-04-01",
+      "value": -0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1992-07-01",
+      "value": 436530.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1992-07-01",
+      "value": -0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1992-10-01",
+      "value": 446352.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1992-10-01",
+      "value": 2.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1993-01-01",
+      "value": 442370.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1993-01-01",
+      "value": -0.9,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1993-04-01",
+      "value": 443955.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1993-04-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1993-07-01",
+      "value": 447207.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1993-07-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1993-10-01",
+      "value": 450204.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1993-10-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1994-01-01",
+      "value": 460220.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1994-01-01",
+      "value": 2.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1994-04-01",
+      "value": 464818.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1994-04-01",
+      "value": 1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1994-07-01",
+      "value": 474035.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1994-07-01",
+      "value": 2.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1994-10-01",
+      "value": 481626.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1994-10-01",
+      "value": 1.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1995-01-01",
+      "value": 482181.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1995-01-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1995-04-01",
+      "value": 483181.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1995-04-01",
+      "value": 0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1995-07-01",
+      "value": 486362.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1995-07-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1995-10-01",
+      "value": 489717.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1995-10-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1996-01-01",
+      "value": 488765.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1996-01-01",
+      "value": -0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1996-04-01",
+      "value": 492054.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1996-04-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1996-07-01",
+      "value": 495358.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1996-07-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1996-10-01",
+      "value": 496916.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1996-10-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1997-01-01",
+      "value": 501755.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1997-01-01",
+      "value": 1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1997-04-01",
+      "value": 508632.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1997-04-01",
+      "value": 1.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1997-07-01",
+      "value": 524519.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1997-07-01",
+      "value": 3.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1997-10-01",
+      "value": 533657.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1997-10-01",
+      "value": 1.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1998-01-01",
+      "value": 539679.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1998-01-01",
+      "value": 1.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1998-04-01",
+      "value": 540106.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1998-04-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1998-07-01",
+      "value": 541137.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1998-07-01",
+      "value": 0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1998-10-01",
+      "value": 541683.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1998-10-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1999-01-01",
+      "value": 556192.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1999-01-01",
+      "value": 2.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1999-04-01",
+      "value": 570389.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1999-04-01",
+      "value": 2.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1999-07-01",
+      "value": 585766.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1999-07-01",
+      "value": 2.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "1999-10-01",
+      "value": 599910.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "1999-10-01",
+      "value": 2.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2000-01-01",
+      "value": 605362.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2000-01-01",
+      "value": 0.9,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2000-04-01",
+      "value": 613666.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2000-04-01",
+      "value": 1.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2000-07-01",
+      "value": 619579.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2000-07-01",
+      "value": 1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2000-10-01",
+      "value": 620063.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2000-10-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2001-01-01",
+      "value": 621173.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2001-01-01",
+      "value": 0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2001-04-01",
+      "value": 625846.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2001-04-01",
+      "value": 0.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2001-07-01",
+      "value": 624704.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2001-07-01",
+      "value": -0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2001-10-01",
+      "value": 631949.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2001-10-01",
+      "value": 1.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2002-01-01",
+      "value": 640488.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2002-01-01",
+      "value": 1.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2002-04-01",
+      "value": 642433.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2002-04-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2002-07-01",
+      "value": 652010.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2002-07-01",
+      "value": 1.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2002-10-01",
+      "value": 654207.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2002-10-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2003-01-01",
+      "value": 657790.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2003-01-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2003-04-01",
+      "value": 654653.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2003-04-01",
+      "value": -0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2003-07-01",
+      "value": 651622.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2003-07-01",
+      "value": -0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2003-10-01",
+      "value": 653747.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2003-10-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2004-01-01",
+      "value": 657763.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2004-01-01",
+      "value": 0.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2004-04-01",
+      "value": 670025.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2004-04-01",
+      "value": 1.9,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2004-07-01",
+      "value": 680312.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2004-07-01",
+      "value": 1.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2004-10-01",
+      "value": 683209.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2004-10-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2005-01-01",
+      "value": 686697.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2005-01-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2005-04-01",
+      "value": 692033.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2005-04-01",
+      "value": 0.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2005-07-01",
+      "value": 697022.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2005-07-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2005-10-01",
+      "value": 702034.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2005-10-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2006-01-01",
+      "value": 707874.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2006-01-01",
+      "value": 0.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2006-04-01",
+      "value": 708372.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2006-04-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2006-07-01",
+      "value": 705815.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2006-07-01",
+      "value": -0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2006-10-01",
+      "value": 707807.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2006-10-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2007-01-01",
+      "value": 711471.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2007-01-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2007-04-01",
+      "value": 713437.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2007-04-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2007-07-01",
+      "value": 713676.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2007-07-01",
+      "value": 0.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2007-10-01",
+      "value": 713434.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2007-10-01",
+      "value": 0.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2008-01-01",
+      "value": 715086.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2008-01-01",
+      "value": 0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2008-04-01",
+      "value": 718428.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2008-04-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2008-07-01",
+      "value": 716040.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2008-07-01",
+      "value": -0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2008-10-01",
+      "value": 702404.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2008-10-01",
+      "value": -1.9,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2009-01-01",
+      "value": 692013.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2009-01-01",
+      "value": -1.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2009-04-01",
+      "value": 684894.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2009-04-01",
+      "value": -1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2009-07-01",
+      "value": 686419.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2009-07-01",
+      "value": 0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2009-10-01",
+      "value": 700082.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2009-10-01",
+      "value": 2.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2010-01-01",
+      "value": 707685.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2010-01-01",
+      "value": 1.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2010-04-01",
+      "value": 709780.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2010-04-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2010-07-01",
+      "value": 713375.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2010-07-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2010-10-01",
+      "value": 714110.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2010-10-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2011-01-01",
+      "value": 722025.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2011-01-01",
+      "value": 1.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2011-04-01",
+      "value": 721201.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2011-04-01",
+      "value": -0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2011-07-01",
+      "value": 733175.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2011-07-01",
+      "value": 1.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2011-10-01",
+      "value": 737226.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2011-10-01",
+      "value": 0.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2012-01-01",
+      "value": 737654.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2012-01-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2012-04-01",
+      "value": 738039.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2012-04-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2012-07-01",
+      "value": 738139.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2012-07-01",
+      "value": 0.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2012-10-01",
+      "value": 738174.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2012-10-01",
+      "value": 0.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2013-01-01",
+      "value": 741418.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2013-01-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2013-04-01",
+      "value": 745697.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2013-04-01",
+      "value": 0.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2013-07-01",
+      "value": 750397.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2013-07-01",
+      "value": 0.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2013-10-01",
+      "value": 755610.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2013-10-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2014-01-01",
+      "value": 756934.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2014-01-01",
+      "value": 0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2014-04-01",
+      "value": 763296.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2014-04-01",
+      "value": 0.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2014-07-01",
+      "value": 771209.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2014-07-01",
+      "value": 1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2014-10-01",
+      "value": 776761.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2014-10-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2015-01-01",
+      "value": 778025.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2015-01-01",
+      "value": 0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2015-04-01",
+      "value": 781653.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2015-04-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2015-07-01",
+      "value": 788671.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2015-07-01",
+      "value": 0.9,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2015-10-01",
+      "value": 795114.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2015-10-01",
+      "value": 0.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2016-01-01",
+      "value": 799523.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2016-01-01",
+      "value": 0.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2016-04-01",
+      "value": 800093.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2016-04-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2016-07-01",
+      "value": 803352.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2016-07-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2016-10-01",
+      "value": 806492.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2016-10-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2017-01-01",
+      "value": 817041.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2017-01-01",
+      "value": 1.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2017-04-01",
+      "value": 823336.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2017-04-01",
+      "value": 0.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2017-07-01",
+      "value": 826775.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2017-07-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2017-10-01",
+      "value": 832762.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2017-10-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2018-01-01",
+      "value": 838607.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2018-01-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2018-04-01",
+      "value": 849510.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2018-04-01",
+      "value": 1.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2018-07-01",
+      "value": 857619.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2018-07-01",
+      "value": 1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2018-10-01",
+      "value": 862381.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2018-10-01",
+      "value": 0.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2019-01-01",
+      "value": 863199.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2019-01-01",
+      "value": 0.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2019-04-01",
+      "value": 869587.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2019-04-01",
+      "value": 0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2019-07-01",
+      "value": 873035.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2019-07-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2019-10-01",
+      "value": 873347.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2019-10-01",
+      "value": 0.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2020-01-01",
+      "value": 863535.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2020-01-01",
+      "value": -1.1,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2020-04-01",
+      "value": 761944.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2020-04-01",
+      "value": -11.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2020-07-01",
+      "value": 837982.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2020-07-01",
+      "value": 10.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2020-10-01",
+      "value": 857597.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2020-10-01",
+      "value": 2.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2021-01-01",
+      "value": 871619.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2021-01-01",
+      "value": 1.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2021-04-01",
+      "value": 867355.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2021-04-01",
+      "value": -0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2021-07-01",
+      "value": 883150.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2021-07-01",
+      "value": 1.8,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2021-10-01",
+      "value": 900484.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2021-10-01",
+      "value": 2.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2022-01-01",
+      "value": 909740.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2022-01-01",
+      "value": 1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2022-04-01",
+      "value": 920651.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2022-04-01",
+      "value": 1.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2022-07-01",
+      "value": 924611.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2022-07-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2022-10-01",
+      "value": 922797.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2022-10-01",
+      "value": -0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2023-01-01",
+      "value": 935213.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2023-01-01",
+      "value": 1.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2023-04-01",
+      "value": 940556.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2023-04-01",
+      "value": 0.6,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2023-07-01",
+      "value": 944384.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2023-07-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2023-10-01",
+      "value": 946035.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2023-10-01",
+      "value": 0.2,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2024-01-01",
+      "value": 950009.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2024-01-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2024-04-01",
+      "value": 954256.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2024-04-01",
+      "value": 0.4,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2024-07-01",
+      "value": 957262.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2024-07-01",
+      "value": 0.3,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2024-10-01",
+      "value": 966458.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2024-10-01",
+      "value": 1.0,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2025-01-01",
+      "value": 971226.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2025-01-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2025-04-01",
+      "value": 964502.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2025-04-01",
+      "value": -0.7,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp",
+      "province": "Ontario",
+      "period": "2025-07-01",
+      "value": 969002.0,
+      "unit": "$M",
+      "source": "Ontario Economic Accounts"
+    },
+    {
+      "indicator_name": "on_real_gdp_pct",
+      "province": "Ontario",
+      "period": "2025-07-01",
+      "value": 0.5,
+      "unit": "%",
+      "source": "Ontario Economic Accounts"
     }
   ],
   "statcan_latest": {
