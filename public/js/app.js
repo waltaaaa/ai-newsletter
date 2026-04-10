@@ -4905,7 +4905,9 @@ function _expRenderVcodeResults(){
   const pageRows=results.slice(startIdx,startIdx+EXP_PAGE_SIZE);
   let html='<div class="exp-vcode-table-wrap"><table class="exp-vcode-table"><thead><tr><th class="exp-col-vcode">V-Code</th><th class="exp-col-table">Table</th><th>Title</th><th class="exp-col-category">Category</th><th class="exp-col-link">Link</th></tr></thead><tbody>';
   pageRows.forEach(r=>{
-    const tableUrl=r.table&&r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':('https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+String(r.table||'').replace(/-/g,''));
+    const _pidRaw=String(r.table||'').replace(/-/g,'');
+    const _pid=_pidRaw.length===8?_pidRaw+'01':_pidRaw;
+    const tableUrl=r.table&&r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':('https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+_pid);
     const meta=_expEscapeHtml([r.freq,r.geo].filter(Boolean).join(' \u00b7 '));
     html+='<tr>';
     html+='<td><span class="exp-vcode-code">'+_expEscapeHtml(r.vcode||'\u2014')+'</span></td>';
