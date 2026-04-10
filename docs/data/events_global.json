@@ -1,0 +1,736 @@
+{
+  "_meta": {
+    "description": "Static bridge file listing scheduled 2026 release dates from US and European institutions. Merged into the Calendar tab at render time. Sourced from official release calendars: Federal Reserve (FOMC), OMB Principal Federal Economic Indicators schedule (BLS/BEA/Census/Fed), ECB Governing Council calendar, and Bank of England MPC dates page. No editorializing — factual reporting only. Pipeline follow-up: ingest these calendars in the Python pipeline so this file can be regenerated weekly.",
+    "sources": [
+      "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "https://statspolicy.gov/assets/fcsm/files/docs/OMB_pfei_schedule_release_dates_cy2026.pdf",
+      "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+    ],
+    "fetched": "2026-04-10",
+    "exported_at": "2026-04-10T14:14:55.238727+00:00",
+    "event_count": 90
+  },
+  "events": [
+    {
+      "date": "2026-04-29",
+      "institution": "Federal Reserve",
+      "event_name": "FOMC Rate Decision",
+      "description": "Federal Open Market Committee policy rate announcement for the US federal funds target range. Statement released at 2:00 PM ET, press conference follows at 2:30 PM ET. No Summary of Economic Projections at this meeting.",
+      "impact": "high",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+      "date": "2026-06-17",
+      "institution": "Federal Reserve",
+      "event_name": "FOMC Rate Decision + SEP",
+      "description": "Federal Open Market Committee policy rate announcement with Summary of Economic Projections (dot plot) and press conference. Participants submit updated projections for GDP, unemployment, inflation, and the federal funds rate.",
+      "impact": "high",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+      "date": "2026-07-29",
+      "institution": "Federal Reserve",
+      "event_name": "FOMC Rate Decision",
+      "description": "Federal Open Market Committee policy rate announcement for the US federal funds target range. Statement at 2:00 PM ET, press conference at 2:30 PM ET. No SEP at this meeting.",
+      "impact": "high",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+      "date": "2026-09-16",
+      "institution": "Federal Reserve",
+      "event_name": "FOMC Rate Decision + SEP",
+      "description": "Federal Open Market Committee policy rate announcement with Summary of Economic Projections. Covers updated growth, inflation, and rate-path projections for the balance of 2026 and beyond.",
+      "impact": "high",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+      "date": "2026-10-28",
+      "institution": "Federal Reserve",
+      "event_name": "FOMC Rate Decision",
+      "description": "Federal Open Market Committee policy rate announcement. No SEP at this meeting.",
+      "impact": "high",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+      "date": "2026-12-09",
+      "institution": "Federal Reserve",
+      "event_name": "FOMC Rate Decision + SEP",
+      "description": "Final FOMC meeting of 2026. Rate decision with Summary of Economic Projections, forward guidance, and press conference. Sets policy trajectory into 2027.",
+      "impact": "high",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+      "date": "2026-05-08",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Employment Situation — April 2026",
+      "description": "Monthly nonfarm payrolls, unemployment rate, labor force participation, and average hourly earnings for April 2026. Released at 8:30 AM ET.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "date": "2026-06-05",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Employment Situation — May 2026",
+      "description": "Monthly nonfarm payrolls, unemployment rate, and average hourly earnings for May 2026.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "date": "2026-07-02",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Employment Situation — June 2026",
+      "description": "Monthly nonfarm payrolls, unemployment rate, and average hourly earnings for June 2026. First Q3 labor market reading.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "date": "2026-08-07",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Employment Situation — July 2026",
+      "description": "Monthly nonfarm payrolls, unemployment rate, and average hourly earnings for July 2026.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "date": "2026-09-04",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Employment Situation — August 2026",
+      "description": "Monthly nonfarm payrolls, unemployment rate, and average hourly earnings for August 2026.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "date": "2026-10-02",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Employment Situation — September 2026",
+      "description": "Monthly nonfarm payrolls, unemployment rate, and average hourly earnings for September 2026. First Q4 labor market reading.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "date": "2026-11-06",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Employment Situation — October 2026",
+      "description": "Monthly nonfarm payrolls, unemployment rate, and average hourly earnings for October 2026.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "date": "2026-12-04",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Employment Situation — November 2026",
+      "description": "Monthly nonfarm payrolls, unemployment rate, and average hourly earnings for November 2026. Final full labor market reading of 2026.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "date": "2026-04-10",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Consumer Price Index — March 2026",
+      "description": "Headline and core CPI for March 2026. Released at 8:30 AM ET. Key input for the April 29 FOMC meeting.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-05-12",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Consumer Price Index — April 2026",
+      "description": "Headline and core CPI for April 2026. First Q2 inflation reading.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-06-10",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Consumer Price Index — May 2026",
+      "description": "Headline and core CPI for May 2026. Last CPI before the June 17 FOMC meeting.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-07-14",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Consumer Price Index — June 2026",
+      "description": "Headline and core CPI for June 2026. Q2 wrap-up inflation reading.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-08-12",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Consumer Price Index — July 2026",
+      "description": "Headline and core CPI for July 2026.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-09-11",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Consumer Price Index — August 2026",
+      "description": "Headline and core CPI for August 2026. Last CPI before the September 16 FOMC meeting.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-10-14",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Consumer Price Index — September 2026",
+      "description": "Headline and core CPI for September 2026. First Q4 inflation reading.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-11-10",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Consumer Price Index — October 2026",
+      "description": "Headline and core CPI for October 2026.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-12-10",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Consumer Price Index — November 2026",
+      "description": "Headline and core CPI for November 2026. Last CPI before the December 9 FOMC meeting (released day after the FOMC decision).",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "date": "2026-04-30",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. GDP — Q1 2026 Advance Estimate",
+      "description": "Advance estimate of real GDP growth for the first quarter of 2026. First official read on Q1 US economic output. Released at 8:30 AM ET.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-07-30",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. GDP — Q2 2026 Advance Estimate",
+      "description": "Advance estimate of real GDP growth for the second quarter of 2026.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-10-29",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. GDP — Q3 2026 Advance Estimate",
+      "description": "Advance estimate of real GDP growth for the third quarter of 2026.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-04-30",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — March 2026",
+      "description": "Monthly personal income, consumer spending, and the PCE price index (the Federal Reserve's preferred inflation gauge) for March 2026.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-05-28",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — April 2026",
+      "description": "Monthly personal income, consumer spending, and PCE price index for April 2026.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-06-25",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — May 2026",
+      "description": "Monthly personal income, consumer spending, and PCE price index for May 2026.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-07-30",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — June 2026",
+      "description": "Monthly personal income, consumer spending, and PCE price index for June 2026. Released same day as Q2 GDP advance.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-08-26",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — July 2026",
+      "description": "Monthly personal income, consumer spending, and PCE price index for July 2026.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-09-30",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — August 2026",
+      "description": "Monthly personal income, consumer spending, and PCE price index for August 2026.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-10-29",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — September 2026",
+      "description": "Monthly personal income, consumer spending, and PCE price index for September 2026. Released same day as Q3 GDP advance.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-11-25",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — October 2026",
+      "description": "Monthly personal income, consumer spending, and PCE price index for October 2026.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-12-23",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — November 2026",
+      "description": "Monthly personal income, consumer spending, and PCE price index for November 2026.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-05-05",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. International Trade in Goods and Services — March 2026",
+      "description": "Monthly goods and services trade balance for March 2026. Joint release with the Census Bureau.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-06-09",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. International Trade in Goods and Services — April 2026",
+      "description": "Monthly goods and services trade balance for April 2026.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-07-07",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. International Trade in Goods and Services — May 2026",
+      "description": "Monthly goods and services trade balance for May 2026.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-08-04",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. International Trade in Goods and Services — June 2026",
+      "description": "Monthly goods and services trade balance for June 2026.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-09-03",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. International Trade in Goods and Services — July 2026",
+      "description": "Monthly goods and services trade balance for July 2026.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-10-06",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. International Trade in Goods and Services — August 2026",
+      "description": "Monthly goods and services trade balance for August 2026.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-11-04",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. International Trade in Goods and Services — September 2026",
+      "description": "Monthly goods and services trade balance for September 2026.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-12-08",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. International Trade in Goods and Services — October 2026",
+      "description": "Monthly goods and services trade balance for October 2026.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "2026-04-17",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — March 2026",
+      "description": "Monthly new residential construction data — housing starts, building permits, and completions for March 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-05-19",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — April 2026",
+      "description": "Monthly housing starts, building permits, and completions for April 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-06-16",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — May 2026",
+      "description": "Monthly housing starts, building permits, and completions for May 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-07-17",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — June 2026",
+      "description": "Monthly housing starts, building permits, and completions for June 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-08-18",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — July 2026",
+      "description": "Monthly housing starts, building permits, and completions for July 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-09-17",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — August 2026",
+      "description": "Monthly housing starts, building permits, and completions for August 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-10-20",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — September 2026",
+      "description": "Monthly housing starts, building permits, and completions for September 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-11-18",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — October 2026",
+      "description": "Monthly housing starts, building permits, and completions for October 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-12-17",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — November 2026",
+      "description": "Monthly housing starts, building permits, and completions for November 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-04-16",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — March 2026",
+      "description": "Advance monthly retail and food services sales for March 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-05-14",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — April 2026",
+      "description": "Advance monthly retail and food services sales for April 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-06-17",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — May 2026",
+      "description": "Advance monthly retail and food services sales for May 2026. Released same day as the June FOMC decision.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-07-16",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — June 2026",
+      "description": "Advance monthly retail and food services sales for June 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-08-14",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — July 2026",
+      "description": "Advance monthly retail and food services sales for July 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-09-16",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — August 2026",
+      "description": "Advance monthly retail and food services sales for August 2026. Released same day as the September FOMC decision.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-10-15",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — September 2026",
+      "description": "Advance monthly retail and food services sales for September 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-11-17",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — October 2026",
+      "description": "Advance monthly retail and food services sales for October 2026.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-12-16",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — November 2026",
+      "description": "Advance monthly retail and food services sales for November 2026 — captures early holiday spending.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "2026-04-16",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — March 2026",
+      "description": "Monthly industrial output and capacity utilization for March 2026. Released at 9:15 AM ET.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "2026-05-15",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — April 2026",
+      "description": "Monthly industrial output and capacity utilization for April 2026.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "2026-06-15",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — May 2026",
+      "description": "Monthly industrial output and capacity utilization for May 2026.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "2026-07-17",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — June 2026",
+      "description": "Monthly industrial output and capacity utilization for June 2026.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "2026-08-18",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — July 2026",
+      "description": "Monthly industrial output and capacity utilization for July 2026.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "2026-09-18",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — August 2026",
+      "description": "Monthly industrial output and capacity utilization for August 2026.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "2026-10-16",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — September 2026",
+      "description": "Monthly industrial output and capacity utilization for September 2026.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "2026-11-17",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — October 2026",
+      "description": "Monthly industrial output and capacity utilization for October 2026.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "2026-12-16",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — November 2026",
+      "description": "Monthly industrial output and capacity utilization for November 2026.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "2026-04-30",
+      "institution": "European Central Bank",
+      "event_name": "ECB Governing Council Meeting",
+      "description": "ECB monetary policy decision. Main refinancing rate, deposit facility rate, and marginal lending facility rate announced at 14:15 CET. Press conference at 14:45 CET.",
+      "impact": "medium",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+    },
+    {
+      "date": "2026-06-11",
+      "institution": "European Central Bank",
+      "event_name": "ECB Governing Council Meeting + Projections",
+      "description": "ECB monetary policy decision with updated Eurosystem staff macroeconomic projections. Projections cover growth, inflation, and the policy path.",
+      "impact": "high",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+    },
+    {
+      "date": "2026-07-23",
+      "institution": "European Central Bank",
+      "event_name": "ECB Governing Council Meeting",
+      "description": "ECB monetary policy decision and press conference.",
+      "impact": "medium",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+    },
+    {
+      "date": "2026-09-10",
+      "institution": "European Central Bank",
+      "event_name": "ECB Governing Council Meeting + Projections",
+      "description": "ECB monetary policy decision with updated staff macroeconomic projections.",
+      "impact": "high",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+    },
+    {
+      "date": "2026-10-29",
+      "institution": "European Central Bank",
+      "event_name": "ECB Governing Council Meeting",
+      "description": "ECB monetary policy decision and press conference.",
+      "impact": "medium",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+    },
+    {
+      "date": "2026-12-17",
+      "institution": "European Central Bank",
+      "event_name": "ECB Governing Council Meeting + Projections",
+      "description": "Final ECB decision of 2026 with updated staff macroeconomic projections.",
+      "impact": "high",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+    },
+    {
+      "date": "2026-04-30",
+      "institution": "Bank of England",
+      "event_name": "BoE MPC Rate Decision + MPR",
+      "description": "Bank of England Monetary Policy Committee bank rate announcement at 12:00 UK time, accompanied by the quarterly Monetary Policy Report with updated growth and inflation projections.",
+      "impact": "high",
+      "source_url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+    },
+    {
+      "date": "2026-06-18",
+      "institution": "Bank of England",
+      "event_name": "BoE MPC Rate Decision",
+      "description": "Bank of England MPC bank rate decision and meeting minutes at 12:00 UK time.",
+      "impact": "medium",
+      "source_url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+    },
+    {
+      "date": "2026-07-30",
+      "institution": "Bank of England",
+      "event_name": "BoE MPC Rate Decision + MPR",
+      "description": "BoE MPC bank rate decision with the quarterly Monetary Policy Report.",
+      "impact": "high",
+      "source_url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+    },
+    {
+      "date": "2026-09-17",
+      "institution": "Bank of England",
+      "event_name": "BoE MPC Rate Decision",
+      "description": "BoE MPC bank rate decision and meeting minutes.",
+      "impact": "medium",
+      "source_url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+    },
+    {
+      "date": "2026-11-05",
+      "institution": "Bank of England",
+      "event_name": "BoE MPC Rate Decision + MPR",
+      "description": "BoE MPC bank rate decision with the quarterly Monetary Policy Report.",
+      "impact": "high",
+      "source_url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+    },
+    {
+      "date": "2026-12-17",
+      "institution": "Bank of England",
+      "event_name": "BoE MPC Rate Decision",
+      "description": "Final BoE MPC decision of 2026.",
+      "impact": "medium",
+      "source_url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+    },
+    {
+      "date": "2026-02-17",
+      "institution": "British Columbia Ministry of Finance",
+      "event_name": "BC Budget 2026-27",
+      "description": "Finance Minister Brenda Bailey tabled Budget 2026-27 on February 17, 2026 — projects a $13.3B deficit, includes tax increases and 15,000 public sector job reductions over three years.",
+      "impact": "high",
+      "source_url": "https://news.gov.bc.ca/releases/2026FIN0003-000158"
+    },
+    {
+      "date": "2026-02-23",
+      "institution": "Nova Scotia Department of Finance and Treasury Board",
+      "event_name": "Nova Scotia Budget 2026-27",
+      "description": "Finance Minister John Lohr tabled Budget 2026-27 \"Defending Nova Scotia\" on February 23, 2026. Forecasts a $1.2B deficit.",
+      "impact": "high",
+      "source_url": "https://novascotia.ca/budget/"
+    },
+    {
+      "date": "2026-02-26",
+      "institution": "Alberta Treasury Board and Finance",
+      "event_name": "Alberta Budget 2026-27",
+      "description": "Finance Minister Nate Horner tabled the $83.9B 2026-27 budget on February 26, 2026, projecting a $9.4B deficit with no return to balanced budgets in the fiscal plan.",
+      "impact": "high",
+      "source_url": "https://www.alberta.ca/budget"
+    },
+    {
+      "date": "2026-03-17",
+      "institution": "New Brunswick Department of Finance and Treasury Board",
+      "event_name": "New Brunswick Budget 2026-27",
+      "description": "Finance Minister René Legacy tabled Budget 2026-27 \"Putting New Brunswickers First\" on March 17, 2026.",
+      "impact": "medium",
+      "source_url": "https://www.gnb.ca/en/news/n-b.2026.03.budget-2026-27-putting-new-brunswickers-first.html"
+    },
+    {
+      "date": "2026-03-18",
+      "institution": "Quebec Ministry of Finance",
+      "event_name": "Quebec Budget 2026-27",
+      "description": "Finance Minister Eric Girard tabled his eighth and final budget under Premier Legault on March 18, 2026. Pre-election budget with modest measures and a lower deficit projection.",
+      "impact": "high",
+      "source_url": "https://www.budget.finances.gouv.qc.ca/"
+    },
+    {
+      "date": "2026-03-18",
+      "institution": "Saskatchewan Ministry of Finance",
+      "event_name": "Saskatchewan Budget 2026-27",
+      "description": "Finance Minister Jim Reiter tabled the 2026-27 \"Protecting Saskatchewan\" budget on March 18, 2026. Projects a $819M deficit with spending increases alongside public service protection commitments.",
+      "impact": "medium",
+      "source_url": "https://budget.saskatchewan.ca/"
+    },
+    {
+      "date": "2026-03-24",
+      "institution": "Manitoba Department of Finance",
+      "event_name": "Manitoba Budget 2026-27",
+      "description": "Finance Minister Adrien Sala tabled the 2026 budget on March 24, 2026. Includes tax relief and affordability measures including removal of PST on groceries.",
+      "impact": "medium",
+      "source_url": "https://www.gov.mb.ca/finance/budget/"
+    },
+    {
+      "date": "2026-03-26",
+      "institution": "Ontario Ministry of Finance",
+      "event_name": "Ontario Budget 2026-27",
+      "description": "Finance Minister Peter Bethlenfalvy tabled \"A Plan to Protect Ontario\" on March 26, 2026. Runs a deeper deficit and defers the return to balance. Presented as the most ambitious capital plan in Canadian history.",
+      "impact": "high",
+      "source_url": "https://budget.ontario.ca/2026/"
+    }
+  ]
+}
