@@ -2394,8 +2394,8 @@ let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='nati
 
 function renderIndicatorExplorer(){
   // Build selector
-  let selHtml='<div class="card fade-in"><div class="card-header">Indicator Explorer</div><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px">';
-  selHtml+='<select id="indExpSelect" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+  let selHtml='<div class="exp-card fade-in"><div class="exp-card-title">Indicator Explorer</div><div class="exp-card-sub">Chart any indicator with a configurable time window</div><div class="exp-control-row">';
+  selHtml+='<select id="indExpSelect" class="exp-select" onchange="onIndExpChange()">';
   INDICATOR_CATALOG.forEach(g=>{
     selHtml+='<optgroup label="'+g.group+'">';
     g.items.forEach(it=>{
@@ -2407,27 +2407,27 @@ function renderIndicatorExplorer(){
   // Province toggle (shown only for provincial indicators)
   const selItem=findIndItem(_indExpSel);
   if(selItem&&selItem.prov){
-    selHtml+='<select id="indExpProv" onchange="onIndExpChange()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+    selHtml+='<select id="indExpProv" class="exp-select" onchange="onIndExpChange()">';
     selHtml+='<option value="national"'+((_indExpProv==='national')?' selected':'')+'>National</option>';
     PROVS.forEach(p=>{selHtml+='<option value="'+p.code+'"'+(_indExpProv===p.code?' selected':'')+'>'+p.name+'</option>'});
     selHtml+='</select>';
   }
   // Time range buttons
-  selHtml+='<div style="display:flex;gap:4px">';
+  selHtml+='<div class="exp-range-group">';
   [3,12,36,60].forEach(m=>{
     const lbl=m===3?'3M':m===12?'1Y':m===36?'3Y':'5Y';
-    const active=_indExpRange===m?'background:#2563EB;color:#FFFFFF':'background:rgba(0,0,0,0.05);color:#475569';
-    selHtml+='<button onclick="_indExpRange='+m+';loadIndExpData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
+    const active=_indExpRange===m?' active':'';
+    selHtml+='<button class="exp-range-btn'+active+'" onclick="_indExpRange='+m+';loadIndExpData()">'+lbl+'</button>';
   });
   selHtml+='</div></div>';
   // Callout + chart
-  selHtml+='<div id="indExpCallout" style="margin-bottom:8px"></div>';
-  selHtml+='<div style="height:200px;position:relative"><canvas id="indExpCanvas"></canvas></div>';
+  selHtml+='<div id="indExpCallout"></div>';
+  selHtml+='<div class="exp-chart-wrap"><canvas id="indExpCanvas"></canvas></div>';
   // Source link
   if(selItem){
     const linkUrl=selItem.statcan?'https://www150.statcan.gc.ca/n1/en/type/data':selItem.url||'#';
     const linkLabel=selItem.statcan?'View on StatsCan \u2197':selItem.source+' \u2197';
-    selHtml+='<div style="margin-top:8px;text-align:right"><a href="'+linkUrl+'" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue)">'+linkLabel+'</a></div>';
+    selHtml+='<div class="exp-card-footlink"><a href="'+linkUrl+'" target="_blank" rel="noopener noreferrer">'+linkLabel+'</a></div>';
   }
   selHtml+='</div>';
   $('indicatorExplorer').innerHTML=selHtml;
@@ -2473,14 +2473,14 @@ async function loadIndExpData(){
     const latest=pts[pts.length-1];const prev=pts[pts.length-2];
     const diff=latest.value-prev.value;
     const arrow=diff>0?'\u25b2':diff<0?'\u25bc':'\u25cf';
-    const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
+    const cls=diff>0?'up':diff<0?'down':'flat';
     const allVals=allPts.map(p=>p.value);
     const mn=fmtNum(Math.min(...allVals));const mx=fmtNum(Math.max(...allVals));
-    callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:DM Sans,sans-serif">'+fmtNum(latest.value)+'</span><span class="'+cls+'" style="font-family:var(--font-mono);font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted)">5Y range: '+mn+' \u2013 '+mx+'</span><span style="font-size:var(--text-xs);color:var(--text-muted)">'+latest.date+'</span></div>';
+    callout.innerHTML='<div class="exp-callout"><span class="exp-callout-value">'+fmtNum(latest.value)+'</span><span class="exp-callout-chg '+cls+'">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span class="exp-callout-meta">5Y range: '+mn+' \u2013 '+mx+'</span><span class="exp-callout-meta">'+latest.date+'</span></div>';
   }else if(pts.length===1){
-    callout.innerHTML='<span style="font-size:1.5rem;font-weight:700;font-family:DM Sans,sans-serif">'+fmtNum(pts[0].value)+'</span>';
+    callout.innerHTML='<div class="exp-callout"><span class="exp-callout-value">'+fmtNum(pts[0].value)+'</span></div>';
   }else{
-    callout.innerHTML='<span style="color:var(--text-muted);font-size:var(--text-sm)">No data for this period.</span>';
+    callout.innerHTML='<div class="exp-callout"><span class="exp-callout-empty">No data for this period.</span></div>';
   }
 
   // Chart
@@ -3823,12 +3823,27 @@ window.exportProjects=function(){
 
 
 /* ====== CALENDAR TAB ====== */
-let _calMonth=null,_calYear=null,_calEvents=[];
+const CAL_PAGE_SIZE=10;
+let _calMonth=null,_calYear=null,_calEvents=[],_calFilter={impact:'',institution:'',scope:'upcoming',search:''},_calWired=false,_calPage=1;
 async function renderCalendar(){
   _calEvents=(D&&(D.watchlist||D.events))||[];
   if(!_calEvents.length){try{_calEvents=await fetchJSON('events.json')||[]}catch(_){_calEvents=[]}}
+  // Merge US + European institution releases from static bridge file
+  try{
+    const globalData=await fetchJSON('events_global.json');
+    if(globalData&&Array.isArray(globalData.events)){
+      const seen=new Set(_calEvents.map(e=>(e.date||'')+'|'+(e.event_name||e.event||e.name||'')));
+      globalData.events.forEach(e=>{
+        const key=(e.date||'')+'|'+(e.event_name||'');
+        if(!seen.has(key)){_calEvents.push(e);seen.add(key)}
+      });
+    }
+  }catch(_){}
   const now=new Date();
   _calMonth=now.getMonth();_calYear=now.getFullYear();
+  _calPopulateInstitutionFilter();
+  _calRenderHeroStats();
+  _calWireFilters();
   renderCalendarGrid();
   renderCalendarEvents();
 }
@@ -3842,6 +3857,39 @@ window._calToday=function(){
   const now=new Date();_calMonth=now.getMonth();_calYear=now.getFullYear();
   renderCalendarGrid();
 };
+function _calPopulateInstitutionFilter(){
+  const sel=$('calFilterInstitution');if(!sel)return;
+  const cur=sel.value;
+  const insts=[...new Set(_calEvents.map(e=>e.institution||e.source||'').filter(Boolean))].sort();
+  sel.innerHTML='<option value="">All Sources</option>'+insts.map(i=>'<option value="'+i.replace(/"/g,'&quot;')+'">'+san(i)+'</option>').join('');
+  if(cur&&insts.includes(cur))sel.value=cur;
+}
+function _calWireFilters(){
+  if(_calWired)return;_calWired=true;
+  ['calSearch','calFilterImpact','calFilterInstitution','calFilterScope'].forEach(id=>{
+    const el=$(id);if(!el)return;
+    const evt=(id==='calSearch')?'input':'change';
+    el.addEventListener(evt,()=>{
+      _calFilter.search=($('calSearch')||{}).value||'';
+      _calFilter.impact=($('calFilterImpact')||{}).value||'';
+      _calFilter.institution=($('calFilterInstitution')||{}).value||'';
+      _calFilter.scope=($('calFilterScope')||{}).value||'upcoming';
+      _calPage=1;
+      renderCalendarEvents();
+    });
+  });
+}
+window._calGoPage=function(n){_calPage=n;renderCalendarEvents();const el=$('calendarEvents');if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'start'})};
+function _calRenderHeroStats(){
+  const now=new Date();now.setHours(0,0,0,0);
+  const in7=new Date(now.getTime()+7*864e5);
+  const in14=new Date(now.getTime()+14*864e5);
+  const thisWeek=_calEvents.filter(e=>{const d=parseEvtDate(e.date);return d&&d>=now&&d<in7}).length;
+  const nextWeek=_calEvents.filter(e=>{const d=parseEvtDate(e.date);return d&&d>=in7&&d<in14}).length;
+  const setText=(id,val)=>{const el=$(id);if(el)el.textContent=String(val)};
+  setText('calStatThisWeek',thisWeek.toLocaleString('en-CA'));
+  setText('calStatNextWeek',nextWeek.toLocaleString('en-CA'));
+}
 function renderCalendarGrid(){
   const events=_calEvents;
   const now=new Date();
@@ -3907,71 +3955,93 @@ function renderCalendarGrid(){
   calHtml+='</div></div>';
   $('calendarGrid').innerHTML=calHtml;
 }
-function renderCalendarEvents(){
-  const events=_calEvents;
-  const now=new Date();
-  const year=now.getFullYear(),month=now.getMonth(),today=now.getDate();
-  const MONTHS_SHORT=_MONTHS_SHORT;
-
-  // This week events
+function _calFilterEvents(){
+  const now=new Date();now.setHours(0,0,0,0);
   const weekFromNow=new Date(now.getTime()+7*864e5);
-  const thisWeek=events.filter(e=>{
+  const monthEnd=new Date(now.getFullYear(),now.getMonth()+1,0,23,59,59);
+  const threeMonths=new Date(now.getTime()+90*864e5);
+  const q=(_calFilter.search||'').trim().toLowerCase();
+  const byImpact=(_calFilter.impact||'').toLowerCase();
+  const byInst=_calFilter.institution||'';
+  const scope=_calFilter.scope||'upcoming';
+  return _calEvents.filter(e=>{
+    const d=parseEvtDate(e.date);if(!d)return false;
+    if(d<now)return false;
+    if(scope==='this_week'&&d>weekFromNow)return false;
+    if(scope==='this_month'&&d>monthEnd)return false;
+    if(scope==='next_3m'&&d>threeMonths)return false;
+    if(byImpact&&(e.impact||'').toLowerCase()!==byImpact)return false;
+    if(byInst&&(e.institution||e.source||'')!==byInst)return false;
+    if(q){
+      const hay=((e.event_name||e.event||e.name||'')+' '+(e.description||'')+' '+(e.institution||e.source||'')).toLowerCase();
+      if(!hay.includes(q))return false;
+    }
+    return true;
+  }).sort((a,b)=>parseEvtDate(a.date)-parseEvtDate(b.date));
+}
+function renderCalendarEvents(){
+  const events=_calFilterEvents();
+  const total=events.length;
+  const totalPages=Math.max(1,Math.ceil(total/CAL_PAGE_SIZE));
+  if(_calPage>totalPages)_calPage=totalPages;
+  if(_calPage<1)_calPage=1;
+  const start=(_calPage-1)*CAL_PAGE_SIZE;
+  const pageEvents=events.slice(start,start+CAL_PAGE_SIZE);
+
+  const meta=$('calEventsMeta');
+  if(meta){
+    if(total===0)meta.textContent='0 events';
+    else if(totalPages===1)meta.textContent=total+(total===1?' event':' events');
+    else meta.textContent=total+' events \u00b7 page '+_calPage+' of '+totalPages;
+  }
+
+  const container=$('calendarEvents');if(!container)return;
+  if(!total){
+    container.innerHTML='<div class="cal-empty">No events match the current filters.</div>';
+    return;
+  }
+  let html='<div class="cal-events-table-wrap"><table class="cal-events-table"><thead><tr>';
+  html+='<th class="cal-col-date">Date</th>';
+  html+='<th class="cal-col-name">Event</th>';
+  html+='<th class="cal-col-inst">Source</th>';
+  html+='<th class="cal-col-impact">Impact</th>';
+  html+='<th class="cal-col-source">Link</th>';
+  html+='</tr></thead><tbody>';
+  pageEvents.forEach(e=>{
     const ed=parseEvtDate(e.date);
-    return ed&&ed>=new Date(year,month,today)&&ed<=weekFromNow;
+    const impact=(e.impact||'low').toLowerCase();
+    const impactLabel=impact.charAt(0).toUpperCase()+impact.slice(1);
+    html+='<tr>';
+    html+='<td class="cal-col-date">';
+    if(ed){
+      html+='<span class="cal-date-day">'+ed.toLocaleDateString('en-CA',{month:'short',day:'numeric'})+'</span>';
+      html+='<span class="cal-date-sub">'+ed.toLocaleDateString('en-CA',{weekday:'short'})+' \u00b7 '+ed.getFullYear()+'</span>';
+    }else{
+      html+='<span class="cal-date-day">'+san(e.date||'\u2014')+'</span>';
+    }
+    html+='</td>';
+    html+='<td class="cal-col-name">';
+    html+='<span class="cal-event-name">'+san(e.event_name||e.event||e.name||'Untitled')+'</span>';
+    if(e.description)html+='<span class="cal-event-desc">'+san(e.description)+'</span>';
+    html+='</td>';
+    html+='<td class="cal-col-inst">'+san(e.institution||e.source||'')+'</td>';
+    html+='<td class="cal-col-impact"><span class="impact-pill '+impact+'">'+impactLabel+'</span></td>';
+    html+='<td class="cal-col-source">'+srcLink(e.source_url||e.url,e.institution||e.source||'Source')+'</td>';
+    html+='</tr>';
   });
-  // Group by week_label if available
-  const byWeek={};thisWeek.forEach(e=>{const wl=e.week_label||'This Week';if(!byWeek[wl])byWeek[wl]=[];byWeek[wl].push(e)});
+  html+='</tbody></table></div>';
 
-  if(thisWeek.length){
-    let twHtml='<div class="events-section-wrap"><button class="events-toggle" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')">This Week ('+thisWeek.length+') <span class="chevron">\u25be</span></button><div class="events-collapsible">';
-    Object.keys(byWeek).forEach(wl=>{
-      twHtml+='<div class="events-week-card"><h3>'+wl+'</h3>';
-      byWeek[wl].forEach(e=>{
-        const impact=(e.impact||'low').toLowerCase();
-        const isHigh=impact==='high';
-        const ed=parseEvtDate(e.date);
-        twHtml+='<div class="event-row'+(isHigh?' event-high-accent':'')+'">';
-        if(ed){twHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
-        else{twHtml+='<div>'+(e.date||'-')+'</div>'}
-        twHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
-        if(e.description)twHtml+='<div style="font-size:var(--text-xs);color:#475569;margin-top:2px">'+e.description+'</div>';
-        twHtml+='</div>';
-        twHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
-        twHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
-        twHtml+='<div>'+srcLink(e.source_url||e.url,'')+'</div>';
-        twHtml+='</div>';
-      });
-      twHtml+='</div>';
-    });
-    twHtml+='</div></div>';
-    $('thisWeekEvents').innerHTML=twHtml;
+  if(totalPages>1){
+    const prevDisabled=_calPage<=1?'disabled':'';
+    const nextDisabled=_calPage>=totalPages?'disabled':'';
+    html+='<div class="cal-pagination">';
+    html+='<button onclick="_calGoPage('+(_calPage-1)+')" '+prevDisabled+'>\u2039 Prev</button>';
+    html+='<span class="cal-page-info">Page '+_calPage+' of '+totalPages+'</span>';
+    html+='<button onclick="_calGoPage('+(_calPage+1)+')" '+nextDisabled+'>Next \u203a</button>';
+    html+='</div>';
   }
 
-  // All events table
-  const sorted=[...events].sort((a,b)=>{const da=parseEvtDate(a.date),db=parseEvtDate(b.date);return (da||new Date(0))-(db||new Date(0))}).slice(0,25);
-  if(sorted.length){
-    let allHtml='<div class="events-section-wrap"><button class="events-toggle" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')">All Events ('+sorted.length+') <span class="chevron">\u25be</span></button><div class="events-collapsible">';
-    allHtml+='<div class="events-week-card">';
-    sorted.forEach(e=>{
-      const impact=(e.impact||'low').toLowerCase();
-      const isHigh=impact==='high';
-      const ed=parseEvtDate(e.date);
-      allHtml+='<div class="event-row'+(isHigh?' event-high-accent':'')+'">';
-      if(ed){allHtml+='<div><div class="event-date-day">'+ed.getDate()+'</div><div class="event-date-month">'+ed.toLocaleDateString('en-CA',{month:'short'})+'</div></div>'}
-      else{allHtml+='<div>'+(e.date||'-')+'</div>'}
-      allHtml+='<div><div class="event-name">'+(e.event_name||e.event||e.name||'')+'</div>';
-      if(e.description)allHtml+='<div style="font-size:var(--text-xs);color:#475569;margin-top:2px">'+e.description+'</div>';
-      allHtml+='</div>';
-      allHtml+='<div class="event-institution">'+(e.institution||e.source||'')+'</div>';
-      allHtml+='<div class="event-impact"><span class="impact-badge impact-'+impact+'">'+impact.charAt(0).toUpperCase()+impact.slice(1)+'</span></div>';
-      allHtml+='<div>'+srcLink(e.source_url||e.url,'')+'</div>';
-      allHtml+='</div>';
-    });
-    allHtml+='</div></div></div>';
-    $('allEventsTable').innerHTML=allHtml;
-  } else {
-    $('allEventsTable').innerHTML='<div class="empty-state"><div class="empty-state-text">No upcoming economic events.</div></div>';
-  }
+  container.innerHTML=html;
 }
 
 
@@ -4263,6 +4333,8 @@ const VCODE_INDEX=[
 /* Full StatCan table directory (loaded async from JSON) */
 let _fullTableDir=[];
 let _fullDirLoaded=false;
+let _expSearchPage=1;
+const EXP_PAGE_SIZE=10;
 const FREQ_MAP={M:'Monthly',Q:'Quarterly',A:'Annual',D:'Daily',W:'Weekly',E:'Every 2 months',S:'Semi-annual',O:'Occasional'};
 
 (async function loadTableDirectory(){
@@ -4277,7 +4349,7 @@ const FREQ_MAP={M:'Monthly',Q:'Quarterly',A:'Annual',D:'Daily',W:'Weekly',E:'Eve
       category:r.c,freq:FREQ_MAP[r.f]||r.f,geo:r.g,_dir:true
     }));
     _fullDirLoaded=true;
-    _renderExplorerStats();
+    if(typeof _expRenderHeroStats==='function')_expRenderHeroStats();
   }catch(e){/* silent — curated index still works */}
 })();
 
@@ -4379,14 +4451,34 @@ function searchVCodes(query){
   return curatedResults.concat(dirResults).sort((a,b)=>b.score-a.score).slice(0,25);
 }
 
-function _renderExplorerStats(){
-  const el=$('explorerStats');
-  if(!el)return;
-  const total=VCODE_INDEX.length+_fullTableDir.length;
-  const curated=VCODE_INDEX.length;
-  const dir=_fullTableDir.length;
-  const pill=(label,value,color)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-md);background:var(--bg-white);border:1px solid var(--border-light)"><span style="font-size:var(--text-xs);color:#556B7A">${label}</span><span style="font-family:var(--font-mono);font-size:var(--text-base);font-weight:700;color:${color}">${value.toLocaleString()}</span></div>`;
-  el.innerHTML=pill('Total Tables',total,'var(--accent-blue)')+pill('Curated',curated,'#10b981')+pill('Full Directory',dir,_fullDirLoaded?'#6366f1':'#919191')+(!_fullDirLoaded?'<span style="font-size:var(--text-xs);color:#556B7A;align-self:center">Loading directory\u2026</span>':'');
+/* Hero stats for the Data Explorer tab — Indicators · V-Codes · StatCan Tables · Updated.
+   Called on every renderExplorer() and once more when the async statcan_tables.json load
+   completes so the "StatCan Tables" count updates from 0 to the real value. */
+function _expRenderHeroStats(){
+  const indEl=$('expStatIndicators');
+  if(!indEl)return;
+  const setText=(id,val)=>{const el=$(id);if(el)el.textContent=String(val)};
+  const indCount=(_indJsonCache&&Array.isArray(_indJsonCache.indicators))?_indJsonCache.indicators.length:(Array.isArray(indicators)?indicators.length:0);
+  setText('expStatIndicators',indCount.toLocaleString('en-CA'));
+  setText('expStatVcodes',VCODE_INDEX.length.toLocaleString('en-CA'));
+  // StatCan Tables = the full directory count loaded from statcan_tables.json (curated tables
+  // are filtered out before storage, so add them back for the headline count)
+  const tablesTotal=_fullDirLoaded?(_fullTableDir.length+VCODE_INDEX.length):0;
+  setText('expStatTables',_fullDirLoaded?tablesTotal.toLocaleString('en-CA'):'…');
+  // Updated from statcan_latest.updatedAt if available
+  let upd='—';
+  const sc=_indJsonCache&&_indJsonCache.statcan_latest;
+  if(sc&&sc.updatedAt){
+    try{
+      const d=new Date(sc.updatedAt);
+      if(!isNaN(d)){
+        upd=d.toLocaleDateString('en-CA',{month:'short',day:'numeric'});
+      }else{
+        upd=sc.updatedAt;
+      }
+    }catch(e){upd=sc.updatedAt}
+  }
+  setText('expStatUpdated',upd);
 }
 
 function renderExplorer(){
@@ -4395,19 +4487,20 @@ function renderExplorer(){
   const resEl=$('explorerResults');
   if(!searchEl)return;
 
-  searchEl.innerHTML=`<div style="display:flex;gap:8px"><input type="text" id="vcodeSearch" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." style="flex:1;padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-light);background:var(--bg-white);color:#1a2744;font-size:var(--text-sm);font-family:var(--font-body)" onkeyup="if(event.key==='Enter')window._doVcodeSearch()"><button onclick="window._doVcodeSearch()" style="padding:10px 20px;border-radius:var(--radius-md);border:none;background:var(--accent-blue);color:#fff;font-size:var(--text-sm);cursor:pointer;font-weight:600">Search</button></div>`;
+  _expRenderHeroStats();
 
-  _renderExplorerStats();
+  searchEl.innerHTML='<div class="exp-search-row"><input type="text" id="vcodeSearch" class="exp-search-input" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." onkeyup="if(event.key===\'Enter\'){_expSearchPage=1;window._doVcodeSearch()}"><button class="exp-search-btn" onclick="_expSearchPage=1;window._doVcodeSearch()">Search</button></div>';
 
   const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Energy','Manufacturing','Agriculture','Infrastructure','Transportation','Health','Demographics','Tourism'];
-  catEl.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap">'+categories.map(c=>'<button onclick="window._doVcodeSearch(\''+c+'\')" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border-light);background:var(--bg-white);color:#2d3a52;font-size:var(--text-xs);cursor:pointer;font-weight:500">'+c+'</button>').join('')+'</div>';
+  catEl.innerHTML='<div class="exp-cat-row">'+categories.map(c=>'<button class="exp-cat-btn" onclick="_expSearchPage=1;window._doVcodeSearch(\''+c+'\')">'+c+'</button>').join('')+'</div>';
 
-  resEl.innerHTML='<div style="color:#556B7A;font-size:var(--text-sm);padding:20px 0">Enter a search term or click a category to find StatCan tables.</div>';
+  resEl.innerHTML='<div class="exp-empty">Enter a search term or click a category to find StatCan tables.</div>';
+  const metaEl=$('expSearchMeta');if(metaEl)metaEl.textContent='';
 
   // National indicator section: StatCan key economic indicators + explorer chart
   const cis=$('canadaIndicatorSection');
   if(cis){
-    cis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">Statistics Canada \u2014 Key Economic Indicators</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">Official economic indicators published by Statistics Canada (<a href="https://www150.statcan.gc.ca/n1/dai-quo/ssi/homepage/ind-econ-eng.htm" target="_blank" style="color:#2563EB">source</a>)</p><div id="canadaIndicatorDropdown"></div><section id="indicatorExplorer" style="margin-top:16px"></section>';
+    cis.innerHTML='<div class="exp-card"><div class="exp-card-title">Statistics Canada \u2014 Key Economic Indicators</div><div class="exp-card-sub">Official economic indicators published by Statistics Canada (<a href="https://www150.statcan.gc.ca/n1/dai-quo/ssi/homepage/ind-econ-eng.htm" target="_blank" rel="noopener noreferrer">source</a>)</div><div id="canadaIndicatorDropdown"></div><section id="indicatorExplorer"></section></div>';
     const dd=$('canadaIndicatorDropdown');
     if(dd){
       // Use StatCan feed indicators if available, otherwise fall back to raw national indicators
@@ -4470,8 +4563,8 @@ function renderExplorer(){
       const p=(ind.province||'').toLowerCase();
       return p===prov.code.toLowerCase()||p===prov.name.toLowerCase();
     });
-    pis.innerHTML='<h3 style="font-size:var(--text-lg);font-weight:700;color:#003153;margin-bottom:4px">'+prov.name+' Raw Indicators</h3><p style="font-size:var(--text-sm);color:#475569;margin-bottom:12px">All indicator records for '+prov.name+'</p>'+
-      renderIndicatorDropdown(provInds,prov.name+' Indicators ('+provInds.length+')','_prov');
+    pis.innerHTML='<div class="exp-card"><div class="exp-card-title">'+prov.name+' Raw Indicators</div><div class="exp-card-sub">All indicator records for '+prov.name+'</div>'+
+      renderIndicatorDropdown(provInds,prov.name+' Indicators ('+provInds.length+')','_prov')+'</div>';
   }
 }
 
@@ -4490,27 +4583,27 @@ function _renderProvExplorer(){
     {id:'housingStarts',label:'Housing Starts',unit:'units'}
   ];
 
-  let html='<div class="mkt-section" style="background:rgba(255,255,255,0.95);border-radius:var(--radius-md);padding:20px">';
-  html+='<h3 style="font-family:var(--font-heading);font-size:15px;font-weight:700;color:#003153;margin:0 0 4px">Provincial Indicator Explorer</h3>';
-  html+='<p style="font-size:var(--text-sm);color:#475569;margin:0 0 14px">Compare provincial indicators with interactive charts</p>';
+  let html='<div class="exp-card">';
+  html+='<div class="exp-card-title">Provincial Indicator Explorer</div>';
+  html+='<div class="exp-card-sub">Compare provincial indicators with interactive charts</div>';
 
   // Province selector + indicator selector + range buttons
-  html+='<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px">';
-  html+='<select id="provExpProvSel" onchange="_provExpProv=this.value;_provExpData={};_renderProvExplorer()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+  html+='<div class="exp-control-row">';
+  html+='<select id="provExpProvSel" class="exp-select" onchange="_provExpProv=this.value;_provExpData={};_renderProvExplorer()">';
   PROVS.forEach(p=>{html+='<option value="'+p.code+'"'+(p.code===_provExpProv?' selected':'')+'>'+p.name+'</option>'});
   html+='</select>';
-  html+='<select id="provExpIndSel" onchange="_provExpSel=this.value;_loadProvExpData()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+  html+='<select id="provExpIndSel" class="exp-select" onchange="_provExpSel=this.value;_loadProvExpData()">';
   provItems.forEach(it=>{html+='<option value="'+it.id+'"'+(it.id===_provExpSel?' selected':'')+'>'+it.label+'</option>'});
   html+='</select>';
-  html+='<div style="display:flex;gap:4px">';
+  html+='<div class="exp-range-group">';
   [3,12,36,60].forEach(m=>{
     const lbl=m===3?'3M':m===12?'1Y':m===36?'3Y':'5Y';
-    const active=_provExpRange===m?'background:#2563EB;color:#FFFFFF':'background:rgba(0,0,0,0.05);color:#475569';
-    html+='<button onclick="_provExpRange='+m+';_loadProvExpData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
+    const active=_provExpRange===m?' active':'';
+    html+='<button class="exp-range-btn'+active+'" onclick="_provExpRange='+m+';_loadProvExpData()">'+lbl+'</button>';
   });
   html+='</div></div>';
-  html+='<div id="provExpCallout" style="margin-bottom:8px"></div>';
-  html+='<div style="height:220px;position:relative"><canvas id="provExpCanvas"></canvas></div>';
+  html+='<div id="provExpCallout"></div>';
+  html+='<div class="exp-chart-wrap"><canvas id="provExpCanvas"></canvas></div>';
   html+='</div>';
   el.innerHTML=html;
   _loadProvExpData();
@@ -4539,12 +4632,12 @@ async function _loadProvExpData(){
       const latest=pts[pts.length-1];const prev=pts[pts.length-2];
       const diff=latest.value-prev.value;
       const arrow=diff>0?'\u25b2':diff<0?'\u25bc':'\u25cf';
-      const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
-      callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:DM Sans,sans-serif">'+fmtNum(latest.value)+'</span><span class="'+cls+'" style="font-family:var(--font-mono);font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span style="font-size:var(--text-xs);color:var(--text-muted)">'+latest.date+'</span></div>';
+      const cls=diff>0?'up':diff<0?'down':'flat';
+      callout.innerHTML='<div class="exp-callout"><span class="exp-callout-value">'+fmtNum(latest.value)+'</span><span class="exp-callout-chg '+cls+'">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span class="exp-callout-meta">'+latest.date+'</span></div>';
     }else if(pts.length===1){
-      callout.innerHTML='<span style="font-size:1.5rem;font-weight:700">'+fmtNum(pts[0].value)+'</span>';
+      callout.innerHTML='<div class="exp-callout"><span class="exp-callout-value">'+fmtNum(pts[0].value)+'</span></div>';
     }else{
-      callout.innerHTML='<span style="color:#64748B;font-size:var(--text-sm)">No data for '+_provExpProv+' / '+_provExpSel+' in this period.</span>';
+      callout.innerHTML='<div class="exp-callout"><span class="exp-callout-empty">No data for '+_provExpProv+' / '+_provExpSel+' in this period.</span></div>';
     }
   }
   // Chart
@@ -4576,24 +4669,24 @@ function _renderOeaSection(){
     {id:'on_gdp_goods_pct',label:'GDP Goods Q/Q %'}
   ];
 
-  let html='<div class="mkt-section" style="background:rgba(255,255,255,0.95);border-radius:var(--radius-md);padding:20px">';
-  html+='<h3 style="font-family:var(--font-heading);font-size:15px;font-weight:700;color:#003153;margin:0 0 4px">Ontario Economic Accounts (OEA)</h3>';
-  html+='<p style="font-size:var(--text-sm);color:#475569;margin:0 0 14px">Quarterly provincial accounts from <a href="https://data.ontario.ca/dataset/ontario-economic-accounts" target="_blank" style="color:#2563EB">Ontario Data Catalogue</a></p>';
-  html+='<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px">';
-  html+='<select id="oeaIndSel" onchange="_oeaSel=this.value;_loadOeaData()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+  let html='<div class="exp-card">';
+  html+='<div class="exp-card-title">Ontario Economic Accounts (OEA)</div>';
+  html+='<div class="exp-card-sub">Quarterly provincial accounts from <a href="https://data.ontario.ca/dataset/ontario-economic-accounts" target="_blank" rel="noopener noreferrer">Ontario Data Catalogue</a></div>';
+  html+='<div class="exp-control-row">';
+  html+='<select id="oeaIndSel" class="exp-select" onchange="_oeaSel=this.value;_loadOeaData()">';
   oeaItems.forEach(it=>{html+='<option value="'+it.id+'"'+(it.id===_oeaSel?' selected':'')+'>'+it.label+'</option>'});
   html+='</select>';
-  html+='<div style="display:flex;gap:4px">';
+  html+='<div class="exp-range-group">';
   [12,36,60].forEach(m=>{
     const lbl=m===12?'1Y':m===36?'3Y':'5Y';
-    const active=_oeaRange===m?'background:#2563EB;color:#FFFFFF':'background:rgba(0,0,0,0.05);color:#475569';
-    html+='<button onclick="_oeaRange='+m+';_loadOeaData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
+    const active=_oeaRange===m?' active':'';
+    html+='<button class="exp-range-btn'+active+'" onclick="_oeaRange='+m+';_loadOeaData()">'+lbl+'</button>';
   });
   html+='</div></div>';
   // Latest values table
-  html+='<div id="oeaLatestTable" style="margin-bottom:14px"></div>';
-  html+='<div id="oeaCallout" style="margin-bottom:8px"></div>';
-  html+='<div style="height:220px;position:relative"><canvas id="oeaCanvas"></canvas></div>';
+  html+='<div id="oeaLatestTable"></div>';
+  html+='<div id="oeaCallout"></div>';
+  html+='<div class="exp-chart-wrap"><canvas id="oeaCanvas"></canvas></div>';
   html+='</div>';
   el.innerHTML=html;
   _renderOeaLatestTable(oeaItems);
@@ -4608,12 +4701,12 @@ function _renderOeaLatestTable(oeaItems){
     return {label:it.label,value:ind?ind.value:'—',period:ind?(ind.refPer||ind.period||''):'',unit:it.id.includes('_pct')?'%':'$M'};
   }).filter(r=>r.value!=='—'&&r.value!=null);
   if(!rows.length){tbl.innerHTML='';return}
-  let html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">';
+  let html='<div class="exp-stat-grid">';
   rows.forEach(r=>{
-    html+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px">';
-    html+='<div style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">'+r.label+'</div>';
-    html+='<div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:#003153">'+fmtNum(parseFloat(r.value)||0)+' <small style="color:#64748B;font-size:11px">'+r.unit+'</small></div>';
-    if(r.period)html+='<div style="font-size:10px;color:#94A3B8">'+r.period+'</div>';
+    html+='<div class="exp-stat-card">';
+    html+='<div class="exp-stat-card-label">'+r.label+'</div>';
+    html+='<div class="exp-stat-card-value">'+fmtNum(parseFloat(r.value)||0)+' <small>'+r.unit+'</small></div>';
+    if(r.period)html+='<div class="exp-stat-card-period">'+r.period+'</div>';
     html+='</div>';
   });
   html+='</div>';
@@ -4639,9 +4732,9 @@ async function _loadOeaData(){
     if(pts.length>=2){
       const latest=pts[pts.length-1];const prev=pts[pts.length-2];
       const diff=latest.value-prev.value;const arrow=diff>0?'\u25b2':diff<0?'\u25bc':'\u25cf';
-      const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
-      callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:DM Sans,sans-serif">'+fmtNum(latest.value)+'</span><span class="'+cls+'" style="font-family:var(--font-mono);font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span style="font-size:var(--text-xs);color:#64748B">'+latest.date+'</span></div>';
-    }else{callout.innerHTML='<span style="color:#64748B;font-size:var(--text-sm)">No history available.</span>'}
+      const cls=diff>0?'up':diff<0?'down':'flat';
+      callout.innerHTML='<div class="exp-callout"><span class="exp-callout-value">'+fmtNum(latest.value)+'</span><span class="exp-callout-chg '+cls+'">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span class="exp-callout-meta">'+latest.date+'</span></div>';
+    }else{callout.innerHTML='<div class="exp-callout"><span class="exp-callout-empty">No history available.</span></div>'}
   }
   const canvas=$('oeaCanvas');if(!canvas)return;
   if(charts._oea)charts._oea.destroy();
@@ -4681,23 +4774,23 @@ function _renderIsqSection(){
     {id:'qc_bldg_permits_nonres',label:'Building Permits (Non-Res)'}
   ];
 
-  let html='<div class="mkt-section" style="background:rgba(255,255,255,0.95);border-radius:var(--radius-md);padding:20px">';
-  html+='<h3 style="font-family:var(--font-heading);font-size:15px;font-weight:700;color:#003153;margin:0 0 4px">Quebec Economic Accounts (ISQ)</h3>';
-  html+='<p style="font-size:var(--text-sm);color:#475569;margin:0 0 14px">Provincial accounts from <a href="https://statistique.quebec.ca/en/document/comptes-economiques-du-quebec-quaterly" target="_blank" style="color:#2563EB">Institut de la statistique du Qu\u00e9bec</a></p>';
-  html+='<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px">';
-  html+='<select id="isqIndSel" onchange="_isqSel=this.value;_loadIsqData()" style="padding:6px 10px;border-radius:6px;border:1px solid #c0c0c0;background:#f0f0f0;color:#1a2744;font-size:var(--text-sm)">';
+  let html='<div class="exp-card">';
+  html+='<div class="exp-card-title">Quebec Economic Accounts (ISQ)</div>';
+  html+='<div class="exp-card-sub">Provincial accounts from <a href="https://statistique.quebec.ca/en/document/comptes-economiques-du-quebec-quaterly" target="_blank" rel="noopener noreferrer">Institut de la statistique du Qu\u00e9bec</a></div>';
+  html+='<div class="exp-control-row">';
+  html+='<select id="isqIndSel" class="exp-select" onchange="_isqSel=this.value;_loadIsqData()">';
   isqItems.forEach(it=>{html+='<option value="'+it.id+'"'+(it.id===_isqSel?' selected':'')+'>'+it.label+'</option>'});
   html+='</select>';
-  html+='<div style="display:flex;gap:4px">';
+  html+='<div class="exp-range-group">';
   [12,36,60].forEach(m=>{
     const lbl=m===12?'1Y':m===36?'3Y':'5Y';
-    const active=_isqRange===m?'background:#2563EB;color:#FFFFFF':'background:rgba(0,0,0,0.05);color:#475569';
-    html+='<button onclick="_isqRange='+m+';_loadIsqData()" style="padding:4px 10px;border-radius:4px;border:none;cursor:pointer;font-size:var(--text-xs);'+active+'">'+lbl+'</button>';
+    const active=_isqRange===m?' active':'';
+    html+='<button class="exp-range-btn'+active+'" onclick="_isqRange='+m+';_loadIsqData()">'+lbl+'</button>';
   });
   html+='</div></div>';
-  html+='<div id="isqLatestTable" style="margin-bottom:14px"></div>';
-  html+='<div id="isqCallout" style="margin-bottom:8px"></div>';
-  html+='<div style="height:220px;position:relative"><canvas id="isqCanvas"></canvas></div>';
+  html+='<div id="isqLatestTable"></div>';
+  html+='<div id="isqCallout"></div>';
+  html+='<div class="exp-chart-wrap"><canvas id="isqCanvas"></canvas></div>';
   html+='</div>';
   el.innerHTML=html;
   _renderIsqLatestTable(isqItems);
@@ -4712,12 +4805,12 @@ function _renderIsqLatestTable(isqItems){
     return {label:it.label,value:ind?ind.value:'—',period:ind?(ind.refPer||ind.period||''):'',unit:isPct?'%':(it.id.includes('earnings')?'$':'$M')};
   }).filter(r=>r.value!=='—'&&r.value!=null);
   if(!rows.length){tbl.innerHTML='';return}
-  let html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">';
+  let html='<div class="exp-stat-grid">';
   rows.forEach(r=>{
-    html+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px">';
-    html+='<div style="font-size:10px;color:#64748B;text-transform:uppercase;letter-spacing:0.5px">'+r.label+'</div>';
-    html+='<div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:#003153">'+fmtNum(parseFloat(r.value)||0)+' <small style="color:#64748B;font-size:11px">'+r.unit+'</small></div>';
-    if(r.period)html+='<div style="font-size:10px;color:#94A3B8">'+r.period+'</div>';
+    html+='<div class="exp-stat-card">';
+    html+='<div class="exp-stat-card-label">'+r.label+'</div>';
+    html+='<div class="exp-stat-card-value">'+fmtNum(parseFloat(r.value)||0)+' <small>'+r.unit+'</small></div>';
+    if(r.period)html+='<div class="exp-stat-card-period">'+r.period+'</div>';
     html+='</div>';
   });
   html+='</div>';
@@ -4743,9 +4836,9 @@ async function _loadIsqData(){
     if(pts.length>=2){
       const latest=pts[pts.length-1];const prev=pts[pts.length-2];
       const diff=latest.value-prev.value;const arrow=diff>0?'\u25b2':diff<0?'\u25bc':'\u25cf';
-      const cls=diff>0?'change-up':diff<0?'change-down':'change-flat';
-      callout.innerHTML='<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font-size:1.5rem;font-weight:700;font-family:DM Sans,sans-serif">'+fmtNum(latest.value)+'</span><span class="'+cls+'" style="font-family:var(--font-mono);font-size:var(--text-sm)">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span style="font-size:var(--text-xs);color:#64748B">'+latest.date+'</span></div>';
-    }else{callout.innerHTML='<span style="color:#64748B;font-size:var(--text-sm)">No history available.</span>'}
+      const cls=diff>0?'up':diff<0?'down':'flat';
+      callout.innerHTML='<div class="exp-callout"><span class="exp-callout-value">'+fmtNum(latest.value)+'</span><span class="exp-callout-chg '+cls+'">'+arrow+' '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev</span><span class="exp-callout-meta">'+latest.date+'</span></div>';
+    }else{callout.innerHTML='<div class="exp-callout"><span class="exp-callout-empty">No history available.</span></div>'}
   }
   const canvas=$('isqCanvas');if(!canvas)return;
   if(charts._isq)charts._isq.destroy();
@@ -4753,22 +4846,96 @@ async function _loadIsqData(){
   charts._isq=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',borderWidth:2,pointRadius:pts.length>30?0:4,pointBackgroundColor:'#2563EB',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'DM Sans',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5},ticks:{font:{family:'DM Sans',size:10},color:'#636363',callback:v=>fmtNum(v)}}}}});
 }
 
+/* Full (unsliced) search that bypasses the 25-result cap in searchVCodes so pagination
+   can walk the complete match set. Returns results sorted by score desc. */
+function _expSearchAll(query){
+  if(!query||query.length<2)return[];
+  const qRaw=query.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+  const q=_expandQuery(qRaw);
+  const score=(v,boost)=>{
+    const text=(v.title+' '+v.keywords+' '+v.category+' '+v.geo).toLowerCase();
+    let s=0;
+    q.forEach(w=>{
+      if(text.includes(w))s+=1;
+      if(v.title.toLowerCase().includes(w))s+=2;
+      if(v.keywords&&v.keywords.includes(w))s+=1;
+    });
+    return s>0?s+boost:0;
+  };
+  const curatedResults=VCODE_INDEX.map(v=>({...v,score:score(v,5)})).filter(v=>v.score>0);
+  const dirResults=_fullTableDir.map(v=>({...v,score:score(v,0)})).filter(v=>v.score>0);
+  return curatedResults.concat(dirResults).sort((a,b)=>b.score-a.score);
+}
+
+/* Remembered query so pagination clicks can re-run the search against the current term */
+let _expLastQuery='';
+
+function _expEscapeHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 window._doVcodeSearch=function(cat){
   const q=cat||($('vcodeSearch')?$('vcodeSearch').value:'');
   if(!q)return;
   if(cat&&$('vcodeSearch'))$('vcodeSearch').value=cat;
-  const results=searchVCodes(q);
+  _expLastQuery=q;
+  _expRenderVcodeResults();
+};
+
+function _expRenderVcodeResults(){
   const resEl=$('explorerResults');
-  if(!results.length){
-    resEl.innerHTML='<div style="color:#556B7A;font-size:var(--text-sm);padding:20px 0">No tables found for "'+q+'". Try different keywords.</div>';
+  const metaEl=$('expSearchMeta');
+  if(!resEl)return;
+  const q=_expLastQuery;
+  if(!q){
+    resEl.innerHTML='<div class="exp-empty">Enter a search term or click a category to find StatCan tables.</div>';
+    if(metaEl)metaEl.textContent='';
     return;
   }
-  let html='<div style="font-size:var(--text-xs);color:#556B7A;margin-bottom:8px">Showing '+results.length+' of '+(VCODE_INDEX.length+_fullTableDir.length).toLocaleString()+' indexed tables</div>';
-  results.forEach(r=>{
-    const tableUrl=r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':`https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=${r.table.replace(/-/g,'')}`;
-    html+=`<div class="card" style="margin-bottom:8px;padding:14px 18px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span style="font-family:var(--font-mono);font-size:var(--text-xs);background:var(--bg-subtle);color:var(--text-secondary);padding:2px 6px;border-radius:3px">${r.vcode}</span> <span style="font-size:var(--text-xs);color:#556B7A;margin-left:4px">Table ${r.table}</span><div style="font-size:var(--text-sm);font-weight:600;margin-top:4px">${r.title}</div><div style="font-size:var(--text-xs);color:#556B7A;margin-top:2px">${r.freq} \u00b7 ${r.geo} \u00b7 ${r.category}</div></div><a href="${tableUrl}" target="_blank" rel="noopener noreferrer" style="font-size:var(--text-xs);color:var(--accent-blue);text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid var(--border-light);border-radius:4px">View on StatCan \u2197</a></div></div>`;
+  const results=_expSearchAll(q);
+  if(!results.length){
+    resEl.innerHTML='<div class="exp-empty">No tables found for "'+_expEscapeHtml(q)+'". Try different keywords.</div>';
+    if(metaEl)metaEl.textContent='0 results';
+    return;
+  }
+  const totalPages=Math.max(1,Math.ceil(results.length/EXP_PAGE_SIZE));
+  if(_expSearchPage<1)_expSearchPage=1;
+  if(_expSearchPage>totalPages)_expSearchPage=totalPages;
+  const startIdx=(_expSearchPage-1)*EXP_PAGE_SIZE;
+  const pageRows=results.slice(startIdx,startIdx+EXP_PAGE_SIZE);
+  let html='<div class="exp-vcode-table-wrap"><table class="exp-vcode-table"><thead><tr><th class="exp-col-vcode">V-Code</th><th class="exp-col-table">Table</th><th>Title</th><th class="exp-col-category">Category</th><th class="exp-col-link">Link</th></tr></thead><tbody>';
+  pageRows.forEach(r=>{
+    const tableUrl=r.table&&r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':('https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+String(r.table||'').replace(/-/g,''));
+    const meta=_expEscapeHtml([r.freq,r.geo].filter(Boolean).join(' \u00b7 '));
+    html+='<tr>';
+    html+='<td><span class="exp-vcode-code">'+_expEscapeHtml(r.vcode||'\u2014')+'</span></td>';
+    html+='<td><span class="exp-vcode-tbl">'+_expEscapeHtml(r.table||'')+'</span></td>';
+    html+='<td><span class="exp-vcode-title">'+_expEscapeHtml(r.title||'')+'</span>'+(meta?'<span class="exp-vcode-meta">'+meta+'</span>':'')+'</td>';
+    html+='<td><span class="exp-vcode-cat">'+_expEscapeHtml(r.category||'')+'</span></td>';
+    html+='<td class="exp-col-link"><a href="'+tableUrl+'" target="_blank" rel="noopener noreferrer" title="View on StatCan">\u2197</a></td>';
+    html+='</tr>';
   });
+  html+='</tbody></table></div>';
+  if(totalPages>1){
+    html+='<div class="exp-pagination">';
+    html+='<button onclick="window._expGoPage('+(_expSearchPage-1)+')"'+(_expSearchPage===1?' disabled':'')+'>\u2039 Prev</button>';
+    html+='<span class="exp-page-info">Page '+_expSearchPage+' of '+totalPages+'</span>';
+    html+='<button onclick="window._expGoPage('+(_expSearchPage+1)+')"'+(_expSearchPage===totalPages?' disabled':'')+'>Next \u203a</button>';
+    html+='</div>';
+  }
   resEl.innerHTML=html;
+  if(metaEl){
+    metaEl.textContent=totalPages>1
+      ?results.length.toLocaleString('en-CA')+' results \u00b7 page '+_expSearchPage+' of '+totalPages
+      :results.length.toLocaleString('en-CA')+' result'+(results.length===1?'':'s');
+  }
+}
+
+window._expGoPage=function(n){
+  _expSearchPage=n;
+  _expRenderVcodeResults();
+  const el=$('explorerResults');
+  if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'start'});
 };
 
 /* ====== PROVINCE COMPARISON VIEW ====== */

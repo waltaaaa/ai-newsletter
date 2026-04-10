@@ -58,14 +58,41 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 .fade-in{animation:fadeIn .3s ease both}
 .container{max-width:1600px;margin:0 auto;padding:0 40px}
 /* Header — Prussian blue */
-.site-header{background:#003153;border-bottom:none;padding:52px 56px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.site-header{background:#003153;border-bottom:none;padding:44px 56px;display:flex;align-items:center;justify-content:flex-start;gap:36px;position:relative;overflow:hidden}
 .site-header::before{content:'';position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1519832979-6fa011b87667?w=1600&q=80');background-size:cover;background-position:center 35%;opacity:0.35;z-index:0;pointer-events:none}
-.site-header::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(0,49,83,0.88) 0%,rgba(0,49,83,0.55) 50%,rgba(0,49,83,0.30) 100%);z-index:1;pointer-events:none}
+.site-header::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(0,49,83,0.92) 0%,rgba(0,49,83,0.65) 55%,rgba(0,49,83,0.40) 100%);z-index:1;pointer-events:none}
 .site-header>*{position:relative;z-index:2}
+.site-header-brand{display:flex;align-items:center;gap:36px;flex-shrink:0}
+.site-header-content{flex:1;min-width:0}
+.site-title-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .site-header h1{font-family:'DM Sans',sans-serif;font-size:36px;font-weight:700;letter-spacing:-0.5px;color:#ffffff;margin:0;text-shadow:0 2px 12px rgba(0,0,0,0.4)}
 .site-header .subtitle{color:rgba(255,255,255,0.75);font-size:12px;margin-bottom:6px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,0.3)}
 .site-header .tagline{color:rgba(255,255,255,0.80);font-size:16px;margin-top:8px;font-weight:400;letter-spacing:0.1px;text-shadow:0 1px 6px rgba(0,0,0,0.3)}
 .site-header .header-right{display:none}
+.site-logo-link{display:inline-block;line-height:0;transition:opacity 0.15s,transform 0.15s;border-radius:4px}
+.site-logo-link:hover{opacity:0.92;transform:translateY(-1px)}
+.site-logo-link:focus-visible{outline:2px solid rgba(255,255,255,0.8);outline-offset:4px}
+.site-logo{height:62px;width:auto;display:block;image-rendering:-webkit-optimize-contrast;filter:drop-shadow(0 2px 10px rgba(0,0,0,0.45))}
+.site-brand-divider{width:1px;align-self:stretch;background:linear-gradient(to bottom,rgba(255,255,255,0) 0%,rgba(255,255,255,0.32) 20%,rgba(255,255,255,0.32) 80%,rgba(255,255,255,0) 100%);margin:6px 0}
+.demo-badge{
+  display:inline-flex;
+  align-items:center;
+  background:rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.72);
+  font-family:'DM Sans',sans-serif;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:2.4px;
+  padding:3px 10px;
+  border-radius:3px;
+  border:1px solid rgba(255,255,255,0.28);
+  text-transform:uppercase;
+  line-height:1.6;
+  backdrop-filter:blur(2px);
+  vertical-align:middle;
+}
+@media(max-width:1199px){.site-logo{height:56px}.site-header{gap:28px;padding:36px 40px}.site-header-brand{gap:28px}}
+@media(max-width:899px){.site-header{padding:26px 24px;gap:18px;flex-wrap:wrap;justify-content:center;text-align:center}.site-header-brand{gap:0}.site-brand-divider{display:none}.site-header h1{font-size:26px}.site-logo{height:46px}.site-title-row{justify-content:center}.demo-badge{font-size:10px;padding:2px 8px;letter-spacing:2px}}
 /* Legacy hero — hidden, replaced by site-header */
 .hero{display:none}
 /* Nav — dark Prussian blue tab bar */
@@ -237,15 +264,17 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 .edit-form .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .edit-feedback{padding:6px 10px;border-radius:5px;font-size:var(--text-xs);margin-top:6px;display:none}
 /* Project table */
-.project-table-wrap{width:100%;max-width:100%;overflow-x:auto;border-radius:var(--radius-lg);background:var(--glass-bg);border:1px solid var(--glass-border);box-shadow:var(--shadow-sm);backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur))}
+.project-table-wrap{width:100%;max-width:100%;overflow:hidden;border-radius:8px;background:#ffffff;border:1px solid #d5dbe3;box-shadow:var(--shadow-sm)}
 .project-table{width:100%;border-collapse:collapse;font-size:var(--text-sm);color:#1a2744;table-layout:fixed}
-.project-table thead th{position:sticky;top:var(--nav-height,44px);background:rgba(245,247,250,0.98);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.3px;color:#475569;padding:12px 10px;text-align:left;border-bottom:2px solid rgba(0,0,0,0.08);cursor:pointer;user-select:none;z-index:10;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.project-table thead th:hover{color:#1a2744}
-.project-table tbody tr{border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;transition:background .1s;background:#ffffff}
+.project-table thead th{background:#003153;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.3px;color:#ffffff;padding:12px 10px 12px 18px;text-align:left;cursor:pointer;user-select:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-right:1px solid rgba(255,255,255,0.15)}
+.project-table thead th:last-child{border-right:none}
+.project-table thead th:hover{color:rgba(255,255,255,0.85)}
+.project-table tbody tr{border-bottom:1px solid #e8ecf0;cursor:pointer;transition:background .1s;background:#ffffff}
 .project-table tbody tr:nth-child(even){background:#f9fafb}
 .project-table tbody tr:hover{background:#e8eef4}
-.project-table td{padding:12px 10px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.project-table .col-value{width:90px}.project-table .col-name{width:22%}.project-table .col-province{width:50px}.project-table .col-proponent{width:12%}.project-table .col-updated{width:70px}.project-table .col-source{width:50px}
+.project-table td{padding:12px 10px 12px 18px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-right:1px solid #e8ecf0}
+.project-table td:last-child{border-right:none}
+.project-table .col-value{width:90px}.project-table .col-name{width:22%}.project-table .col-province{width:50px}.project-table .col-proponent{width:12%}.project-table .col-updated{width:70px}.project-table .col-source{width:75px}
 .col-value{font-family:var(--font-mono);font-weight:600;white-space:nowrap;color:#1a2744}
 .col-name{font-weight:600;color:#1a2744}.col-province{white-space:nowrap}
 .col-cma{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -572,21 +601,50 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 .tldr-toggle button:last-child{border-radius:0 4px 4px 0;border-left:none}
 .tldr-toggle button.active{background:#003153;color:#fff;border-color:#003153}
 .tldr-map-section{margin-top:16px;padding-top:16px;border-top:1px solid #e8ecf0}
-.tldr-ind-table{width:100%;border-collapse:collapse}
-.tldr-ind-table th{padding:10px 10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;color:#ffffff;background:#003153;border-bottom:2px solid #d5dbe3;text-align:left;white-space:nowrap}
-.tldr-ind-table th.r{text-align:right}
-.tldr-ind-table td{padding:10px 10px;border-bottom:1px solid #e8ecf0;font-size:14px}
+.tldr-ind-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.prov-compact-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.prov-compact-table th:nth-child(1){width:48%}
+.prov-compact-table th:nth-child(2){width:26%}
+.prov-compact-table th:nth-child(3){width:26%}
+.prov-compact-table th{padding:6px 8px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;color:#fff;background:#003153;text-align:left;white-space:nowrap}
+.prov-compact-table th:nth-child(n+2){text-align:right;padding-left:12px}
+.prov-compact-table td{padding:6px 8px;border-bottom:1px solid #e8ecf0;font-size:12px}
+.prov-compact-table td:first-child{font-weight:600;color:#1a1a1a;white-space:normal}
+.prov-compact-table td:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.prov-compact-table tr:last-child td{border-bottom:none}
+.tldr-ind-table th:nth-child(1){width:26%}
+.tldr-ind-table th:nth-child(2){width:12%}
+.tldr-ind-table th:nth-child(3){width:14%}
+.tldr-ind-table th:nth-child(4){width:22%}
+.tldr-ind-table th:nth-child(5){width:22%}
+.tldr-ind-table th{padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;color:#ffffff;background:#003153;border-bottom:2px solid #d5dbe3;text-align:left;white-space:nowrap}
+.tldr-ind-table th:nth-child(2){text-align:right;padding-right:6px}
+.tldr-ind-table th:nth-child(3){text-align:right;padding-right:14px}
+.tldr-ind-table td{padding:6px 10px;border-bottom:1px solid #e8ecf0;font-size:12px;text-align:right}
+.tldr-ind-table td:first-child{text-align:left;padding-right:16px}
+.tldr-ind-table td:nth-child(2){text-align:right;padding-left:0;padding-right:6px}
 .tldr-ind-table tr:last-child td{border-bottom:none}
-.tldr-ind-table .ind-t-name{color:#1a1a1a;font-weight:600;font-size:14px;white-space:normal}
+.tldr-ind-table .ind-t-name{color:#1a1a1a;font-weight:600;font-size:12px;white-space:normal}
 .tldr-freq-tag{display:inline-block;font-size:11px;font-weight:500;color:#7a8599;background:#f4f6f8;border:1px solid #e8ecf0;border-radius:3px;padding:1px 6px;margin-left:5px;vertical-align:middle;text-transform:uppercase;letter-spacing:0.2px}
-.tldr-ind-table .ind-t-val{font-weight:700;color:#1a1a1a;text-align:right;font-size:14px}
-.tldr-ind-table .ind-t-chg{font-weight:600;font-size:13px;text-align:right}
+.tldr-ind-table .ind-t-val{font-weight:700;color:#1a1a1a;text-align:right;font-size:12px;padding-right:14px}
+.tldr-ind-table .ind-t-unit{font-size:12px;color:#7a8599;white-space:nowrap;text-align:right;padding-right:6px}
+.tldr-mkt-group-label{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#7a8599;margin:16px 0 6px;padding-bottom:4px;border-bottom:1px solid #e8ecf0}
+.tldr-mkt-group-label:first-child{margin-top:0}
+.tldr-map-section{margin-bottom:20px}
+.tldr-map-section+.tldr-ind-table{margin-top:0}
+.ind-t-name-ctx{display:block;font-weight:400;font-size:11px;color:#7a8599;margin-top:2px}
+.tldr-ind-table .ind-t-chg{font-weight:600;font-size:12px;text-align:left;line-height:1.4;white-space:normal;padding:6px 10px 6px 16px}
+.tldr-ind-table th:nth-child(4){padding-left:16px}
+.ind-t-chg-ctx{font-weight:400;font-size:11px;color:#7a8599;display:inline;margin-left:4px}
 .tldr-ind-table .ind-t-chg.up{color:#0d7a3f}
 .tldr-ind-table .ind-t-chg.down{color:#c4320a}
 .tldr-ind-table .ind-t-chg.unch{color:#7a8599}
-.tldr-ind-table .ind-t-ref{font-size:13px;color:#7a8599}
+.tldr-ind-table .ind-t-ref{font-size:13px;color:#7a8599;text-align:right}
 .tldr-ind-table .ind-t-next{font-size:13px;color:#7a8599;text-align:right}
-.tldr-ind-table .ind-t-src{font-size:13px;color:#7a8599;text-align:right}
+.tldr-ind-table .ind-t-src{font-size:12px;color:#7a8599;text-align:left}
+.ind-src-link{color:#003153;text-decoration:none}
+.ind-src-link:hover{text-decoration:underline}
+.ind-src-fn{font-size:9px;font-weight:400;color:#003153;vertical-align:super;cursor:help;letter-spacing:0.2px}
 .tldr-section{padding:0 0 28px;margin-bottom:28px}
 .tldr-inner-card{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:16px 20px}
 .tldr-section-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #e8ecf0}
@@ -650,13 +708,25 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 @media(max-width:899px){.tldr-page{padding:20px 16px}.tldr-headline-band h2{font-size:22px}.tldr-ind-table td,.tldr-ind-table th{padding:4px}.tldr-projects-table td,.tldr-projects-table th{padding:6px 8px}}
 @media(max-width:599px){.tldr-page{padding:16px 12px}.tldr-headline-band h2{font-size:20px}.tldr-headline-meta{flex-wrap:wrap;gap:8px}.tldr-projects-table{font-size:11px}}
 /* ── Provinces Tab ── */
-#tab-provinces .prov-page{max-width:1600px;margin:0 auto;padding:32px 40px;display:flex;gap:32px}
-#tab-provinces .prov-sidebar{width:200px;flex-shrink:0;position:sticky;top:56px;align-self:flex-start;max-height:calc(100vh - 80px);overflow-y:auto}
-#tab-provinces .prov-sidebar-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#7a8599;padding:0 12px 10px;border-bottom:1px solid #e8ecf0;margin-bottom:6px}
+#tab-provinces{padding-top:0!important}
+#tab-provinces>#provincesPage{margin-top:0!important}
+#tab-provinces .prov-page{max-width:1200px;margin:0 auto;padding:0 40px 24px}
+#tab-provinces .prov-bar{position:static;background:#2d3748;margin:0 calc(-50vw + 50%) 24px;padding:0 calc(50vw - 50%);border-bottom:3px solid #1a202c}
+#tab-provinces .prov-bar-inner{display:flex;align-items:center;gap:6px;justify-content:center;padding:6px 0;flex-wrap:wrap}
+#tab-provinces .prov-bar-sep{width:1px;height:14px;background:rgba(255,255,255,0.2);margin:0 4px;flex-shrink:0}
 #tab-provinces .prov-radio{display:none}
-#tab-provinces .prov-label{display:block;padding:8px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#4a5568;border-radius:6px;transition:background 0.1s,color 0.1s;border-left:3px solid transparent;margin-bottom:1px}
-#tab-provinces .prov-label:hover{background:#e8eef4;color:#1a1a1a}
-#tab-provinces .prov-radio:checked+.prov-label{color:#003153;font-weight:600;background:#e8eef4;border-left-color:#003153}
+#tab-provinces .prov-pill{display:inline-block;padding:8px 10px 6px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,0.65);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color 0.15s,border-color 0.15s;white-space:nowrap;flex-shrink:0;letter-spacing:0.3px}
+#tab-provinces .prov-pill:hover{color:rgba(255,255,255,0.95)}
+#tab-provinces .prov-radio:checked+.prov-pill{color:#fff;font-weight:700;border-bottom-color:#fff}
+#tab-provinces .prov-pill-terr{color:rgba(255,255,255,0.45)}
+#tab-provinces .prov-enrich-detail{border:1px solid #e8ecf0;border-radius:8px;margin-bottom:8px;overflow:hidden}
+#tab-provinces .prov-enrich-detail summary{padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#1a1a1a;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;background:#f8f9fb}
+#tab-provinces .prov-enrich-detail summary::before{content:'\25B8';font-size:10px;color:#7a8599;transition:transform 0.15s}
+#tab-provinces .prov-enrich-detail[open] summary::before{transform:rotate(90deg)}
+#tab-provinces .prov-enrich-detail summary::-webkit-details-marker{display:none}
+#tab-provinces .prov-enrich-count{font-size:11px;font-weight:500;color:#7a8599;background:#e8ecf0;border-radius:10px;padding:1px 7px;margin-left:auto}
+#tab-provinces .prov-enrich-detail .indicator-panel{border:none;border-radius:0;margin:0}
+#tab-provinces .prov-enrich-detail .indicator-panel-header{display:none}
 #tab-provinces .prov-page-main{flex:1;min-width:0}
 #tab-provinces .province-header-card{background:#003153;border-radius:8px;padding:28px 32px;color:#fff;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end}
 #tab-provinces .province-header-card h2{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:700;margin-bottom:4px}
@@ -669,13 +739,13 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 #tab-provinces .section-header h3{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:700;color:#1a1a1a;flex:1;margin:0}
 #tab-provinces .section-header .section-meta{font-size:15px;color:#7a8599;white-space:nowrap}
 #tab-provinces .section-block{padding:0 0 28px;margin-bottom:28px}
-#tab-provinces .narrative{font-family:'DM Sans',sans-serif;font-size:19px;line-height:1.75;color:#1a1a1a}
+#tab-provinces .narrative,#tab-provinces .narrative p{font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:#1a1a1a}
 #tab-provinces .narrative p{margin-bottom:16px}
 #tab-provinces .narrative .lead-sentence{font-weight:600}
 #tab-provinces .narrative sup{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;color:#003153;cursor:pointer}
 #tab-provinces .callout{background:#e8eef4;border-left:3px solid #003153;border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0 20px;font-family:'DM Sans',sans-serif;font-size:16px;color:#4a5568;line-height:1.6}
 #tab-provinces .callout strong{color:#1a1a1a;font-weight:600}
-#tab-provinces .indicator-panel{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;overflow:hidden;margin-bottom:24px}
+#tab-provinces .indicator-panel{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;overflow:hidden;margin-bottom:24px;padding:8px 16px 16px}
 #tab-provinces .ind-table{width:100%;border-collapse:collapse;font-size:14px}
 #tab-provinces .ind-table thead th{background:#003153;color:#ffffff;padding:10px 12px;text-align:left;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
 #tab-provinces .ind-table thead th:nth-child(n+2){text-align:right}
@@ -744,7 +814,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 #tab-provinces .impact-high{background:#c4320a}
 #tab-provinces .impact-medium{background:#d97706}
 #tab-provinces .impact-low{background:#7a8599}
-@media(max-width:899px){#tab-provinces .prov-page{flex-direction:column;padding:20px 16px}#tab-provinces .prov-sidebar{width:100%;position:static;max-height:none;display:flex;flex-wrap:wrap;gap:4px}#tab-provinces .prov-sidebar-title{width:100%;padding:8px 0 4px;border-bottom:none}#tab-provinces .prov-label{display:inline-block;padding:6px 10px}#tab-provinces .two-col{grid-template-columns:1fr}#tab-provinces .province-header-card{flex-direction:column;align-items:flex-start;gap:16px}#tab-provinces .province-header-stats{text-align:left}}
+@media(max-width:899px){#tab-provinces .prov-page{flex-direction:column;padding:0 16px 20px}#tab-provinces .prov-sidebar{width:100%;position:static;max-height:none;display:flex;flex-wrap:wrap;gap:4px}#tab-provinces .prov-sidebar-title{width:100%;padding:8px 0 4px;border-bottom:none}#tab-provinces .prov-label{display:inline-block;padding:6px 10px}#tab-provinces .two-col{grid-template-columns:1fr}#tab-provinces .province-header-card{flex-direction:column;align-items:flex-start;gap:16px}#tab-provinces .province-header-stats{text-align:left}}
 /* ── National Tab Scoped Styles ── */
 #tab-national .country-tabs{display:flex;gap:0;border-bottom:1px solid #d5dbe3;margin-bottom:28px}
 #tab-national .country-tab{padding:10px 20px;font-size:13px;font-weight:500;color:#7a8599;border-bottom:2px solid transparent;cursor:pointer;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',-apple-system,sans-serif}
@@ -755,8 +825,8 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 #tab-national .section-header h3{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:700;color:#1a1a1a;flex:1;margin:0}
 #tab-national .section-header .section-meta{font-size:15px;color:#7a8599;white-space:nowrap}
 #tab-national .section-block{padding:0 0 28px;margin-bottom:28px}
-#tab-national .indicator-panel{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;overflow:hidden;margin-bottom:24px}
-#tab-national .indicator-panel-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #e8ecf0}
+#tab-national .indicator-panel{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;overflow:hidden;margin-bottom:24px;padding:8px 16px 16px}
+#tab-national .indicator-panel-header{display:flex;align-items:center;justify-content:space-between;padding:14px 4px;border-bottom:1px solid #e8ecf0}
 #tab-national .indicator-panel-title{font-size:14px;font-weight:600;color:#1a1a1a;display:flex;align-items:center;gap:8px}
 #tab-national .indicator-panel-title .flag{font-size:18px}
 #tab-national .dash-ind-table{width:100%;border-collapse:collapse;font-size:14px}
@@ -774,7 +844,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 #tab-national .chg-flat{color:#7a8599}
 #tab-national .ind-period{font-size:10px;color:#7a8599}
 #tab-national .ind-source{font-size:10px;color:#7a8599}
-#tab-national .dash-narrative{font-family:'DM Sans',sans-serif;font-size:19px;line-height:1.75;color:#1a1a1a}
+#tab-national .dash-narrative,#tab-national .dash-narrative p{font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:#1a1a1a}
 #tab-national .dash-narrative p{margin-bottom:16px}
 #tab-national .dash-narrative .lead{font-weight:600}
 #tab-national .dash-narrative sup{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;color:#003153;cursor:pointer}
@@ -826,18 +896,84 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 #tab-national .enrichment-metric .value{font-weight:600;color:#1a1a1a;font-variant-numeric:tabular-nums}
 #tab-national .subtab-panel{display:none}
 #tab-national .subtab-panel.active{display:block}
-@media(max-width:899px){#tab-national .two-col{grid-template-columns:1fr}#tab-national .dash-narrative{font-size:17px}#tab-national .dash-ind-table{font-size:13px}}
+@media(max-width:899px){#tab-national .two-col{grid-template-columns:1fr}#tab-national .dash-narrative{font-size:14px}#tab-national .dash-ind-table{font-size:13px}}
 @media(max-width:599px){#tab-national .country-tabs{overflow-x:auto}#tab-national .country-tab{padding:8px 14px;font-size:12px}#tab-national .dash-projects-table{font-size:11px}}
 /* ── Industries Tab ── */
-#tab-industries .ind-page{max-width:1600px;margin:0 auto;padding:32px 40px}
+#tab-industries{padding-top:0!important}
+#tab-industries>#industriesPage{margin-top:0!important}
+#tab-industries .ind-page{max-width:1200px;margin:0 auto;padding:0 40px 24px}
+#tab-industries .ind-bar{position:static;background:#2d3748;margin:0 calc(-50vw + 50%) 24px;padding:0 calc(50vw - 50%);border-bottom:3px solid #1a202c}
+#tab-industries .ind-bar-inner{display:flex;align-items:center;gap:6px;justify-content:center;padding:6px 0;flex-wrap:wrap}
+#tab-industries .ind-bar-sep{width:1px;height:14px;background:rgba(255,255,255,0.2);margin:0 4px;flex-shrink:0}
+#tab-industries .ind-radio{display:none}
+#tab-industries .ind-pill{display:inline-block;padding:8px 10px 6px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,0.65);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color 0.15s,border-color 0.15s;white-space:nowrap;flex-shrink:0;letter-spacing:0.3px}
+#tab-industries .ind-pill:hover{color:rgba(255,255,255,0.95)}
+#tab-industries .ind-radio:checked+.ind-pill{color:#fff;font-weight:700;border-bottom-color:#fff}
+#tab-industries .ind-pill-serv{color:rgba(255,255,255,0.55)}
+#tab-industries .ind-page-main{flex:1;min-width:0}
+#tab-industries .industry-header-card{background:#003153;border-radius:8px;padding:28px 32px;color:#fff;margin-bottom:28px;display:flex;flex-direction:column;align-items:stretch;gap:20px}
+#tab-industries .industry-header-card h2{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:700;margin-bottom:4px}
+#tab-industries .industry-sub{font-size:13px;color:rgba(255,255,255,0.65)}
+#tab-industries .industry-header-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+#tab-industries .industry-header-stats{display:flex;gap:32px;text-align:right}
+#tab-industries .industry-header-stats .stat-value{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+#tab-industries .industry-header-stats .stat-value.chg-up{color:#6ee7b7}
+#tab-industries .industry-header-stats .stat-value.chg-down{color:#fca5a5}
+#tab-industries .industry-header-stats .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:rgba(255,255,255,0.6)}
+#tab-industries .industry-subsector-strip{border-top:1px solid rgba(255,255,255,0.12);padding-top:16px}
+#tab-industries .industry-subsector-strip .ind-strip-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:rgba(255,255,255,0.6);margin-bottom:10px;font-weight:600}
+#tab-industries .industry-subsector-strip .ind-strip-chips{display:flex;flex-wrap:wrap;gap:10px}
+#tab-industries .ind-subsector-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);border-radius:999px;font-size:12px;color:#fff;line-height:1}
+#tab-industries .ind-subsector-chip .ind-chip-name{font-weight:600;letter-spacing:0.1px}
+#tab-industries .ind-subsector-chip .ind-chip-code{font-size:10px;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums}
+#tab-industries .ind-subsector-chip .ind-chip-chg{font-weight:600;font-variant-numeric:tabular-nums;padding-left:8px;margin-left:2px;border-left:1px solid rgba(255,255,255,0.16)}
+#tab-industries .ind-subsector-chip.chip-up{background:rgba(110,231,183,0.12);border-color:rgba(110,231,183,0.32)}
+#tab-industries .ind-subsector-chip.chip-up .ind-chip-chg{color:#6ee7b7}
+#tab-industries .ind-subsector-chip.chip-down{background:rgba(252,165,165,0.12);border-color:rgba(252,165,165,0.3)}
+#tab-industries .ind-subsector-chip.chip-down .ind-chip-chg{color:#fca5a5}
+#tab-industries .ind-subsector-chip.chip-flat .ind-chip-chg{color:rgba(255,255,255,0.42)}
 #tab-industries .section-header{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #e8ecf0;margin-bottom:20px}
 #tab-industries .section-header .accent-bar{width:4px;height:22px;background:#003153;border-radius:2px;flex-shrink:0}
 #tab-industries .section-header h3{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:700;color:#1a1a1a;flex:1;margin:0}
 #tab-industries .section-header .section-meta{font-size:15px;color:#7a8599;white-space:nowrap}
 #tab-industries .section-block{padding:0 0 28px;margin-bottom:28px}
-#tab-industries .narrative{font-family:'DM Sans',sans-serif;font-size:19px;line-height:1.75;color:#1a1a1a}
+#tab-industries .narrative,#tab-industries .narrative p{font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:#1a1a1a}
 #tab-industries .narrative p{margin-bottom:16px}
 #tab-industries .narrative .lead-sentence{font-weight:600}
+#tab-industries .narrative sup{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;color:#003153;cursor:pointer}
+#tab-industries .indicator-panel{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;overflow:hidden;margin-bottom:24px;padding:8px 16px 16px}
+#tab-industries .ind-table{width:100%;border-collapse:collapse;font-size:14px}
+#tab-industries .ind-table thead th{background:#003153;color:#ffffff;padding:10px 12px;text-align:left;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+#tab-industries .ind-table thead th:nth-child(n+2){text-align:right}
+#tab-industries .ind-table tbody td{padding:10px 12px;border-bottom:1px solid #e8ecf0;vertical-align:middle;font-size:14px}
+#tab-industries .ind-table tbody tr:last-child td{border-bottom:none}
+#tab-industries .ind-table tbody tr:hover{background:#e8eef4}
+#tab-industries .ind-table tbody td:nth-child(n+2){text-align:right}
+#tab-industries .ind-table .ind-name{font-weight:600;color:#1a1a1a;white-space:normal;font-size:14px}
+#tab-industries .ind-table .ind-val{font-weight:700;color:#1a1a1a;font-variant-numeric:tabular-nums;font-size:14px}
+#tab-industries .ind-freq{font-size:10px;font-weight:500;color:#7a8599}
+#tab-industries .ind-t-name-ctx{font-size:11px;font-weight:400;color:#7a8599;margin-top:2px}
+#tab-industries .ind-period{font-size:10px;color:#7a8599}
+#tab-industries .ind-src{font-size:10px;color:#7a8599}
+#tab-industries .ind-src-link{color:#003153;text-decoration:none;font-size:11px}
+#tab-industries .ind-src-link:hover{text-decoration:underline}
+#tab-industries .sources-section{margin-top:20px;padding-top:16px;border-top:1px solid #d5dbe3}
+#tab-industries .sources-section summary{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#7a8599;cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px}
+#tab-industries .sources-section summary::-webkit-details-marker{display:none}
+#tab-industries .sources-section summary::before{content:'\25B8';font-size:11px}
+#tab-industries .sources-section[open] summary::before{content:'\25BE'}
+#tab-industries .sources-section ol{margin-top:12px;padding-left:24px;font-size:12px;color:#7a8599;line-height:1.8}
+#tab-industries .sources-section ol a{color:#003153;text-decoration:none}
+#tab-industries .sources-section ol a:hover{text-decoration:underline}
+#tab-industries .projects-table{width:100%;border-collapse:collapse;font-size:14px}
+#tab-industries .projects-table thead th{background:#003153;color:#fff;padding:10px 12px;text-align:left;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+#tab-industries .projects-table tbody td{padding:10px 12px;border-bottom:1px solid #e8ecf0;vertical-align:middle}
+#tab-industries .projects-table tbody tr:hover{background:#e8eef4}
+#tab-industries .status-badge{display:inline-block;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:500;white-space:nowrap}
+#tab-industries .status-proposed{background:#fef3c7;color:#92400e}
+#tab-industries .status-pre{background:#dbeafe;color:#1e40af}
+#tab-industries .status-construction{background:#d1fae5;color:#065f46}
+#tab-industries .status-review{background:#ede9fe;color:#5b21b6}
 #tab-industries .callout{background:#e8eef4;border-left:3px solid #003153;border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0 20px;font-family:'DM Sans',sans-serif;font-size:16px;color:#4a5568;line-height:1.6}
 #tab-industries .callout strong{color:#1a1a1a;font-weight:600}
 #tab-industries .mover-card{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:22px 24px;margin-bottom:16px}
@@ -891,7 +1027,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 #tab-industries .sources span{font-weight:600;color:#4a5568}
 #tab-industries .sources a{color:#003153;text-decoration:none}
 #tab-industries .sources a:hover{text-decoration:underline}
-@media(max-width:899px){#tab-industries .ind-page{padding:24px}#tab-industries .mover-metrics{gap:16px}#tab-industries .narrative{font-size:17px}#tab-industries .sector-table{font-size:13px}}
+@media(max-width:899px){#tab-industries .ind-page{padding:0 16px 20px}#tab-industries .industry-header-card{flex-direction:column;align-items:flex-start}#tab-industries .industry-header-stats{gap:20px;text-align:left}#tab-industries .mover-metrics{gap:16px}#tab-industries .sector-table{font-size:13px}}
 /* ── Markets Tab ── */
 #tab-markets .mkt-page{max-width:1600px;margin:0 auto;padding:32px 40px}
 #tab-markets .section-header{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #e8ecf0;margin-bottom:20px}
@@ -918,6 +1054,17 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 #tab-markets .pill-change.up{color:#0d7a3f}
 #tab-markets .pill-change.down{color:#c4320a}
 #tab-markets .pill-change.flat{color:#7a8599}
+#tab-markets .pill-changes-row{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
+#tab-markets .pill-chg-item{display:flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums}
+#tab-markets .pill-chg-label{font-size:9px;font-weight:700;color:#7a8599;text-transform:uppercase;letter-spacing:0.4px;background:#eef1f5;padding:1px 4px;border-radius:3px;line-height:1.4}
+#tab-markets .series-pill.active .pill-chg-label{background:#dbe4ee}
+#tab-markets .pill-chg-val{font-size:12px;font-weight:600}
+#tab-markets .pill-chg-val.up{color:#0d7a3f}
+#tab-markets .pill-chg-val.down{color:#c4320a}
+#tab-markets .pill-chg-val.flat{color:#7a8599}
+#tab-markets .fx-pill .pill-changes-row{gap:5px;margin-top:3px;justify-content:center}
+#tab-markets .fx-pill .pill-chg-label{font-size:8px;padding:0 3px}
+#tab-markets .fx-pill .pill-chg-val{font-size:10px}
 #tab-markets .fx-series-row{display:flex;gap:4px;padding:10px 20px;overflow-x:auto;border-bottom:1px solid #e8ecf0}
 #tab-markets .fx-pill{flex:1;min-width:0;padding:6px 8px;border:1px solid #d5dbe3;border-radius:5px;cursor:pointer;transition:all 0.15s;background:#ffffff;text-align:center}
 #tab-markets .fx-pill:hover{background:#e8eef4}
@@ -988,6 +1135,174 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 #tab-markets .chg-flat{color:#7a8599}
 #tab-markets .spread-row{padding:8px 20px 14px;display:flex;align-items:center;gap:12px;border-top:1px solid #e8ecf0}
 @media(max-width:899px){#tab-markets .mkt-page{padding:24px}#tab-markets .series-row{gap:6px}#tab-markets .pill-value{font-size:16px}#tab-markets .stat-row{gap:16px}#tab-markets .narrative{font-size:17px}}
+#tab-projects .section-header{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #e8ecf0;margin-bottom:20px}
+#tab-projects .section-header .accent-bar{width:4px;height:22px;background:#003153;border-radius:2px;flex-shrink:0}
+#tab-projects .section-header h3{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:700;color:#1a1a1a;flex:1;margin:0}
+#tab-projects .section-header .section-meta{font-size:15px;color:#7a8599;white-space:nowrap}
+#tab-projects .section-block{padding:0 0 28px;margin-bottom:28px}
+#tab-projects .proj-hero-stats{background:#003153;border-radius:8px;color:#fff;margin:0 0 24px;display:flex;flex-direction:column;overflow:hidden}
+#tab-projects .proj-hero-stats .proj-hero-top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;padding:28px 32px 22px}
+#tab-projects .proj-hero-stats .proj-hero-title{flex-shrink:0}
+#tab-projects .proj-hero-stats .proj-hero-title h2{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:700;margin:0 0 4px;color:#fff}
+#tab-projects .proj-hero-stats .proj-hero-sub{font-size:14px;color:rgba(255,255,255,0.7)}
+#tab-projects .proj-hero-stats .proj-hero-stats-right{flex:1;display:flex;justify-content:space-around;align-items:flex-end;gap:16px;padding-left:48px;flex-wrap:wrap}
+#tab-projects .proj-hero-stats .stat-item{display:flex;flex-direction:column;gap:4px;text-align:right}
+#tab-projects .proj-hero-stats .stat-value{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;color:#fff}
+#tab-projects .proj-hero-stats .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:rgba(255,255,255,0.6)}
+#tab-projects .proj-hero-stats .filter-bar{padding:14px 32px;margin:0;border-top:1px solid rgba(255,255,255,0.15);align-items:center}
+#tab-projects .proj-hero-stats .filter-bar input,#tab-projects .proj-hero-stats .filter-bar select{border:1px solid rgba(255,255,255,0.25);background:#ffffff;color:#003153}
+#tab-projects .proj-hero-stats .filter-bar select{max-width:180px;text-overflow:ellipsis;overflow:hidden}
+#tab-projects .proj-hero-stats .filter-bar input::placeholder{color:#64748B}
+#tab-projects .proj-hero-stats .filter-bar .toggle-label{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.28);padding:7px 12px;border-radius:6px;gap:8px;color:#ffffff;font-weight:500}
+#tab-projects .proj-hero-stats .filter-bar .toggle-label .toggle-slider{background:rgba(255,255,255,0.35)}
+#tab-projects .proj-hero-stats .filter-bar .toggle-label input:checked+.toggle-slider{background:#ffffff}
+#tab-projects .proj-hero-stats .filter-bar .toggle-label input:checked+.toggle-slider::after{background:#003153}
+/* ── Calendar Tab ── */
+#tab-calendar .cal-hero-stats{background:#003153;border-radius:8px;color:#fff;margin:0 0 24px;display:flex;flex-direction:column;overflow:hidden}
+#tab-calendar .cal-hero-stats .cal-hero-top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;padding:28px 32px 22px}
+#tab-calendar .cal-hero-stats .cal-hero-title{flex-shrink:0}
+#tab-calendar .cal-hero-stats .cal-hero-title h2{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:700;margin:0 0 4px;color:#fff}
+#tab-calendar .cal-hero-stats .cal-hero-sub{font-size:14px;color:rgba(255,255,255,0.7)}
+#tab-calendar .cal-hero-stats .cal-hero-stats-right{flex:1;display:flex;justify-content:flex-end;align-items:flex-end;gap:24px;padding-left:48px;flex-wrap:wrap}
+#tab-calendar .cal-hero-stats .stat-item{display:flex;flex-direction:column;gap:4px;text-align:right}
+#tab-calendar .cal-hero-stats .stat-value{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;color:#fff}
+#tab-calendar .cal-hero-stats .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:rgba(255,255,255,0.6)}
+#tab-calendar .section-block .filter-bar{margin:0 0 16px;align-items:center}
+#tab-calendar .section-block .filter-bar select{max-width:200px;text-overflow:ellipsis;overflow:hidden}
+#tab-calendar .section-header{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #e8ecf0;margin-bottom:20px}
+#tab-calendar .section-header .accent-bar{width:4px;height:22px;background:#003153;border-radius:2px;flex-shrink:0}
+#tab-calendar .section-header h3{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:700;color:#1a1a1a;flex:1;margin:0}
+#tab-calendar .section-header .section-meta{font-size:15px;color:#7a8599;white-space:nowrap}
+#tab-calendar .section-block{padding:0 0 28px;margin-bottom:28px}
+#tab-calendar .calendar-wrap{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:18px 20px;box-shadow:var(--shadow-sm);backdrop-filter:none;-webkit-backdrop-filter:none;margin-bottom:0;overflow:visible}
+#tab-calendar .calendar-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+#tab-calendar .calendar-nav-title{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;color:#1a1a1a}
+#tab-calendar .calendar-nav-btns{display:flex;gap:6px}
+#tab-calendar .calendar-nav-btn{background:#ffffff;border:1px solid #d5dbe3;border-radius:6px;padding:6px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#003153;transition:all .15s}
+#tab-calendar .calendar-nav-btn:hover{background:#e8eef4;border-color:#003153}
+#tab-calendar .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0;background:#e8ecf0;border:1px solid #e8ecf0;overflow:visible}
+#tab-calendar .calendar-header-cell{padding:10px 8px;text-align:center;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;color:#ffffff;background:#003153;border:none}
+#tab-calendar .calendar-cell{background:#ffffff;padding:8px;min-height:78px;font-size:12px;color:#1a1a1a;position:relative;border-top:1px solid #e8ecf0;border-right:1px solid #e8ecf0}
+#tab-calendar .calendar-cell:nth-child(7n+7){border-right:none}
+#tab-calendar .calendar-cell:hover{background:#f5f8fc;z-index:100}
+#tab-calendar .calendar-cell.other-month{color:#94A3B8;background:#f8fafc}
+#tab-calendar .calendar-cell.today{background:#e8eef4;box-shadow:inset 0 0 0 2px #003153}
+#tab-calendar .calendar-cell.today .calendar-day-number{color:#003153;font-weight:800}
+#tab-calendar .calendar-day-number{font-family:'DM Sans',sans-serif;font-weight:600;margin-bottom:4px;color:#1a1a1a;font-size:12px}
+#tab-calendar .cal-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin:1px}
+#tab-calendar .cal-dot.high{background:#c4320a}
+#tab-calendar .cal-dot.medium{background:#d97706}
+#tab-calendar .cal-dot.low{background:#003153}
+#tab-calendar .cal-events-table-wrap{width:100%;overflow:hidden;border-radius:8px;background:#ffffff;border:1px solid #d5dbe3;box-shadow:var(--shadow-sm)}
+#tab-calendar .cal-events-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:var(--text-sm)}
+#tab-calendar .cal-events-table thead th{background:#003153;color:#ffffff;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;text-align:left;padding:12px 10px 12px 18px;border-right:1px solid rgba(255,255,255,0.15)}
+#tab-calendar .cal-events-table thead th:last-child{border-right:none}
+#tab-calendar .cal-events-table tbody td{padding:14px 10px 14px 18px;border-bottom:1px solid #e8ecf0;border-right:1px solid #e8ecf0;vertical-align:top;color:#1a1a1a;overflow:hidden}
+#tab-calendar .cal-events-table tbody td:last-child{border-right:none}
+#tab-calendar .cal-events-table tbody tr:nth-child(even) td{background:#f9fafb}
+#tab-calendar .cal-events-table tbody tr:hover td{background:#e8eef4}
+#tab-calendar .cal-events-table tbody tr:last-child td{border-bottom:none}
+#tab-calendar .cal-col-date{width:96px}
+#tab-calendar .cal-col-inst{width:180px}
+#tab-calendar .cal-col-impact{width:110px}
+#tab-calendar .cal-col-source{width:78px;text-align:center}
+#tab-calendar .cal-date-day{font-family:'DM Sans',sans-serif;font-weight:700;color:#1a1a1a;font-size:14px;display:block}
+#tab-calendar .cal-date-sub{display:block;color:#7a8599;font-size:10px;text-transform:uppercase;letter-spacing:0.3px;margin-top:2px}
+#tab-calendar .cal-event-name{font-family:'DM Sans',sans-serif;font-weight:600;color:#1a1a1a;font-size:13px;line-height:1.35;white-space:normal;display:block}
+#tab-calendar .cal-event-desc{display:block;color:#475569;font-size:11px;margin-top:4px;line-height:1.5;white-space:normal}
+#tab-calendar .cal-events-table .cal-col-inst{color:#475569;font-size:12px;white-space:normal}
+#tab-calendar .cal-events-table .impact-pill{display:inline-block;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;text-transform:uppercase;letter-spacing:0.3px}
+#tab-calendar .cal-events-table .impact-pill.high{background:#fbeae0;color:#c4320a}
+#tab-calendar .cal-events-table .impact-pill.medium{background:#fef3c7;color:#b45309}
+#tab-calendar .cal-events-table .impact-pill.low{background:#e8eef4;color:#003153}
+#tab-calendar .cal-events-table a{color:#003153;text-decoration:none;font-weight:600}
+#tab-calendar .cal-events-table a:hover{text-decoration:underline}
+#tab-calendar .cal-empty{padding:48px 24px;text-align:center;color:#7a8599;font-size:13px;background:#ffffff;border:1px solid #d5dbe3;border-radius:8px}
+#tab-calendar .cal-pagination{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;font-family:'DM Sans',sans-serif;font-size:13px;color:#475569}
+#tab-calendar .cal-pagination button{background:#ffffff;border:1px solid #d5dbe3;border-radius:6px;padding:7px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#003153;transition:all .15s}
+#tab-calendar .cal-pagination button:hover:not(:disabled){background:#e8eef4;border-color:#003153}
+#tab-calendar .cal-pagination button:disabled{opacity:0.4;cursor:not-allowed}
+#tab-calendar .cal-pagination .cal-page-info{font-family:'DM Sans',sans-serif;font-weight:600;color:#1a1a1a;min-width:120px;text-align:center}
+#tab-explorer .exp-hero-stats{background:#003153;border-radius:8px;color:#fff;margin:0 0 24px;display:flex;flex-direction:column;overflow:hidden}
+#tab-explorer .exp-hero-stats .exp-hero-top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;padding:28px 32px 22px}
+#tab-explorer .exp-hero-stats .exp-hero-title{flex-shrink:0}
+#tab-explorer .exp-hero-stats .exp-hero-title h2{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:700;margin:0 0 4px;color:#fff}
+#tab-explorer .exp-hero-stats .exp-hero-sub{font-size:14px;color:rgba(255,255,255,0.7)}
+#tab-explorer .exp-hero-stats .exp-hero-stats-right{flex:1;display:flex;justify-content:flex-end;align-items:flex-end;gap:24px;padding-left:48px;flex-wrap:wrap}
+#tab-explorer .exp-hero-stats .stat-item{display:flex;flex-direction:column;gap:4px;text-align:right}
+#tab-explorer .exp-hero-stats .stat-value{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;color:#fff}
+#tab-explorer .exp-hero-stats .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:rgba(255,255,255,0.6)}
+#tab-explorer .section-header{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #e8ecf0;margin-bottom:20px}
+#tab-explorer .section-header .accent-bar{width:4px;height:22px;background:#003153;border-radius:2px;flex-shrink:0}
+#tab-explorer .section-header h3{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:700;color:#1a1a1a;flex:1;margin:0}
+#tab-explorer .section-header .section-meta{font-size:15px;color:#7a8599;white-space:nowrap}
+#tab-explorer .section-block{padding:0 0 28px;margin-bottom:28px}
+#tab-explorer .exp-card{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:20px 22px;box-shadow:var(--shadow-sm)}
+#tab-explorer .exp-card-title{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:#003153;margin:0 0 4px}
+#tab-explorer .exp-card-sub{font-size:13px;color:#475569;margin:0 0 14px}
+#tab-explorer .exp-card-sub a{color:#003153;font-weight:600;text-decoration:none}
+#tab-explorer .exp-card-sub a:hover{text-decoration:underline}
+#tab-explorer .exp-card-footlink{text-align:right;margin-top:10px;font-size:12px}
+#tab-explorer .exp-card-footlink a{color:#003153;font-weight:600;text-decoration:none}
+#tab-explorer .exp-card-footlink a:hover{text-decoration:underline}
+#tab-explorer .exp-control-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+#tab-explorer .exp-select{font-family:'DM Sans',sans-serif;padding:7px 12px;border-radius:6px;border:1px solid #d5dbe3;background:#ffffff;color:#1a1a1a;font-size:13px;min-width:160px;cursor:pointer}
+#tab-explorer .exp-select:focus{outline:none;border-color:#003153;box-shadow:0 0 0 2px rgba(0,49,83,0.12)}
+#tab-explorer .exp-range-group{display:flex;gap:4px;align-items:center}
+#tab-explorer .exp-range-btn{font-family:'DM Sans',sans-serif;padding:6px 12px;border-radius:6px;border:1px solid #d5dbe3;background:#ffffff;color:#475569;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+#tab-explorer .exp-range-btn:hover{background:#e8eef4;border-color:#003153;color:#003153}
+#tab-explorer .exp-range-btn.active{background:#003153;border-color:#003153;color:#ffffff}
+#tab-explorer .exp-callout{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+#tab-explorer .exp-callout-value{font-family:'DM Sans',sans-serif;font-size:26px;font-weight:700;color:#1a1a1a;font-variant-numeric:tabular-nums}
+#tab-explorer .exp-callout-chg{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+#tab-explorer .exp-callout-chg.up{color:#0d7a3f}
+#tab-explorer .exp-callout-chg.down{color:#c4320a}
+#tab-explorer .exp-callout-chg.flat{color:#7a8599}
+#tab-explorer .exp-callout-meta{font-family:'DM Sans',sans-serif;font-size:12px;color:#7a8599}
+#tab-explorer .exp-callout-empty{color:#7a8599;font-size:13px}
+#tab-explorer .exp-chart-wrap{height:240px;position:relative;margin-top:4px}
+#tab-explorer .exp-stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+#tab-explorer .exp-stat-card{background:#ffffff;border:1px solid #e8ecf0;border-radius:6px;padding:10px 14px}
+#tab-explorer .exp-stat-card-label{font-family:'DM Sans',sans-serif;font-size:10px;color:#475569;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px}
+#tab-explorer .exp-stat-card-value{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:700;color:#003153;font-variant-numeric:tabular-nums}
+#tab-explorer .exp-stat-card-value small{font-size:11px;color:#7a8599;font-weight:500;margin-left:3px}
+#tab-explorer .exp-stat-card-period{font-family:'DM Sans',sans-serif;font-size:10px;color:#94a3b8;margin-top:3px}
+#tab-explorer .exp-search-row{display:flex;gap:10px;margin-bottom:16px}
+#tab-explorer .exp-search-input{flex:1;font-family:'DM Sans',sans-serif;padding:11px 16px;border-radius:8px;border:1px solid #d5dbe3;background:#ffffff;color:#1a1a1a;font-size:14px}
+#tab-explorer .exp-search-input:focus{outline:none;border-color:#003153;box-shadow:0 0 0 2px rgba(0,49,83,0.12)}
+#tab-explorer .exp-search-btn{font-family:'DM Sans',sans-serif;padding:11px 24px;border-radius:8px;border:none;background:#003153;color:#ffffff;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+#tab-explorer .exp-search-btn:hover{background:#0a4270}
+#tab-explorer .exp-cat-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+#tab-explorer .exp-cat-btn{font-family:'DM Sans',sans-serif;padding:7px 14px;border-radius:20px;border:1px solid #d5dbe3;background:#ffffff;color:#475569;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+#tab-explorer .exp-cat-btn:hover{background:#e8eef4;border-color:#003153;color:#003153}
+#tab-explorer .exp-empty{padding:40px 24px;text-align:center;color:#7a8599;font-size:13px;background:#ffffff;border:1px solid #d5dbe3;border-radius:8px}
+#tab-explorer .exp-vcode-table-wrap{width:100%;overflow:hidden;border-radius:8px;background:#ffffff;border:1px solid #d5dbe3;box-shadow:var(--shadow-sm)}
+#tab-explorer .exp-vcode-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
+#tab-explorer .exp-vcode-table thead th{background:#003153;color:#ffffff;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;padding:12px 10px 12px 18px;text-align:left;border-right:1px solid rgba(255,255,255,0.15)}
+#tab-explorer .exp-vcode-table thead th:last-child{border-right:none}
+#tab-explorer .exp-vcode-table .exp-col-vcode{width:110px}
+#tab-explorer .exp-vcode-table .exp-col-table{width:130px}
+#tab-explorer .exp-vcode-table .exp-col-category{width:180px}
+#tab-explorer .exp-vcode-table .exp-col-link{width:70px;text-align:center}
+#tab-explorer .exp-vcode-table tbody td.exp-col-link{text-align:center}
+#tab-explorer .exp-vcode-table tbody tr{background:#ffffff}
+#tab-explorer .exp-vcode-table tbody tr:nth-child(even){background:#f9fafb}
+#tab-explorer .exp-vcode-table tbody tr:hover{background:#e8eef4}
+#tab-explorer .exp-vcode-table tbody td{padding:13px 10px 13px 18px;border-bottom:1px solid #e8ecf0;border-right:1px solid #e8ecf0;vertical-align:top}
+#tab-explorer .exp-vcode-table tbody td:last-child{border-right:none}
+#tab-explorer .exp-vcode-table tbody tr:last-child td{border-bottom:none}
+#tab-explorer .exp-vcode-table .exp-vcode-code{font-family:'JetBrains Mono',Consolas,monospace;font-size:11px;background:#f1f5f9;color:#003153;padding:3px 7px;border-radius:3px;display:inline-block}
+#tab-explorer .exp-vcode-table .exp-vcode-title{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#1a1a1a;line-height:1.35;white-space:normal}
+#tab-explorer .exp-vcode-table .exp-vcode-meta{display:block;font-size:11px;color:#7a8599;margin-top:3px;white-space:normal}
+#tab-explorer .exp-vcode-table .exp-vcode-tbl{font-family:'JetBrains Mono',Consolas,monospace;font-size:11px;color:#475569}
+#tab-explorer .exp-vcode-table .exp-vcode-cat{display:inline-block;background:#e8eef4;color:#003153;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;padding:3px 8px;border-radius:3px;white-space:normal;line-height:1.4}
+#tab-explorer .exp-vcode-table a{color:#003153;text-decoration:none;font-weight:600}
+#tab-explorer .exp-vcode-table a:hover{text-decoration:underline}
+#tab-explorer .exp-pagination{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;font-family:'DM Sans',sans-serif;font-size:13px;color:#475569}
+#tab-explorer .exp-pagination button{background:#ffffff;border:1px solid #d5dbe3;border-radius:6px;padding:7px 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#003153;transition:all .15s}
+#tab-explorer .exp-pagination button:hover:not(:disabled){background:#e8eef4;border-color:#003153}
+#tab-explorer .exp-pagination button:disabled{opacity:0.4;cursor:not-allowed}
+#tab-explorer .exp-pagination .exp-page-info{font-family:'DM Sans',sans-serif;font-weight:600;color:#1a1a1a;min-width:120px;text-align:center}
 .newsletter-hero{background:linear-gradient(135deg,rgba(255,255,255,0.97),rgba(240,245,255,0.95));border:1px solid rgba(255,255,255,0.5);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:28px 32px;position:relative;overflow:hidden}
 .newsletter-hero::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:#003153}
 .newsletter-hero .hero-headline{font-family:var(--font-heading);font-size:var(--text-xl);font-weight:800;color:#0f1b33;line-height:1.25;margin-bottom:12px;letter-spacing:-0.02em}
@@ -1011,10 +1326,19 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 <body>
 <!-- Header — Prussian blue -->
 <header class="site-header">
-  <div>
-    <div class="subtitle">Canadian Macro Strategic Dashboard</div>
-    <h1>The Lagging Indicator</h1>
-    <div class="tagline">Capital projects, economic signals, and policy across every province &mdash; updated weekly.</div>
+  <div class="site-header-brand">
+    <a href="https://signal49.ca" target="_blank" rel="noopener" class="site-logo-link" aria-label="Signal49 Research">
+      <img src="assets/signal49_logo.png" alt="Signal49 Research" class="site-logo">
+    </a>
+    <div class="site-brand-divider" aria-hidden="true"></div>
+  </div>
+  <div class="site-header-content">
+    <div class="subtitle">Canadian Macro Reporting &amp; Analysis</div>
+    <div class="site-title-row">
+      <h1>The Lagging Indicator</h1>
+      <span class="demo-badge" aria-label="Demonstration version">Demo</span>
+    </div>
+    <div class="tagline">Capturing headline news across capital projects, commodity markets, and policy &mdash; every Monday.</div>
   </div>
 </header>
 <!-- Navigation -->
@@ -1030,7 +1354,6 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
       <li class="nav-tab" data-tab="projects" role="tab" aria-selected="false" aria-controls="tab-projects" tabindex="-1">Projects</li>
       <li class="nav-tab" data-tab="calendar" role="tab" aria-selected="false" aria-controls="tab-calendar" tabindex="-1">Calendar</li>
       <li class="nav-tab" data-tab="explorer" role="tab" aria-selected="false" aria-controls="tab-explorer" tabindex="-1">Data Explorer</li>
-      <li class="nav-tab" data-tab="methodology" role="tab" aria-selected="false" aria-controls="tab-methodology" tabindex="-1">Methodology</li>
     </ul>
     <div class="edition-dropdown" id="editionDropdown" style="position:relative;flex-shrink:0">
       <button id="editionBtn" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;font-size:14px;font-weight:500;color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.18);border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif">
@@ -1065,27 +1388,29 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
   </div>
   <!-- PROJECTS -->
   <div class="tab-panel" id="tab-projects" role="tabpanel" aria-labelledby="tab-projects-label">
-    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1200&q=80')">
-      <div class="section-banner-content">
-        <div class="section-banner-title">Capital Projects Tracker</div>
-        <div class="section-banner-sub">Major capital projects across Canada</div>
+    <div id="projSummaryStats" class="proj-hero-stats">
+      <div class="proj-hero-top">
+        <div class="proj-hero-title">
+          <h2>Capital Projects Tracker</h2>
+          <div class="proj-hero-sub">Major capital projects across Canada</div>
+        </div>
+        <div class="proj-hero-stats-right" id="projHeroStats"></div>
+      </div>
+      <div class="filter-bar" id="projectFilterBar">
+        <input type="text" id="projectSearch" placeholder="Search projects..." aria-label="Search projects">
+        <select id="filterProvince" aria-label="Filter by province"><option value="">All Provinces</option></select>
+        <select id="filterCma" aria-label="Filter by CMA"><option value="">All CMAs</option></select>
+        <select id="filterSector" aria-label="Filter by sector"><option value="">All Sectors</option></select>
+        <select id="filterStatus" aria-label="Filter by status"><option value="">All Statuses</option></select>
+        <select id="sortProjects" aria-label="Sort projects"><option value="value_desc">Value (High to Low)</option><option value="updated">Recently Updated</option><option value="name_asc">Name A-Z</option><option value="confidence">Confidence</option></select>
+        <label class="toggle-label" title="Show only projects with estimated value above provincial GDP threshold"><input type="checkbox" id="confirmedToggle" checked onchange="_confirmedOnly=this.checked;filterProjects()"><span class="toggle-slider"></span> Above Threshold</label>
+        <button onclick="exportProjects()" style="background:#ffffff;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:var(--text-sm);color:#003153;white-space:nowrap" title="Export filtered projects as CSV">Export CSV</button>
+        <button id="toggleMissedForm" onclick="document.getElementById('missedProjectForm').style.display=document.getElementById('missedProjectForm').style.display==='none'?'block':'none'" style="background:#ffffff;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:var(--text-sm);color:#003153;white-space:nowrap" title="Report a capital project we haven't tracked yet">+ Report Missing</button>
       </div>
     </div>
-    <div class="filter-bar" id="projectFilterBar">
-      <input type="text" id="projectSearch" placeholder="Search projects..." aria-label="Search projects">
-      <select id="filterProvince" aria-label="Filter by province"><option value="">All Provinces</option></select>
-      <select id="filterSector" aria-label="Filter by sector"><option value="">All Sectors</option></select>
-      <select id="filterStatus" aria-label="Filter by status"><option value="">All Statuses</option></select>
-      <select id="sortProjects" aria-label="Sort projects"><option value="value_desc">Value (High to Low)</option><option value="updated">Recently Updated</option><option value="name_asc">Name A-Z</option><option value="confidence">Confidence</option></select>
-      <label class="toggle-label" title="Show only projects with estimated value above provincial GDP threshold"><input type="checkbox" id="confirmedToggle" checked onchange="_confirmedOnly=this.checked;filterProjects()"><span class="toggle-slider"></span> Above Threshold</label>
-      <button onclick="exportProjects()" style="background:#ffffff;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:0.4rem 0.8rem;cursor:pointer;font-size:var(--text-xs);color:#003153;white-space:nowrap" title="Export filtered projects as CSV">Export CSV</button>
-    </div>
     <!-- Missing Project Submission Form -->
-    <div id="missedProjectSection" style="margin-top:0.5rem;margin-bottom:1rem">
-      <button id="toggleMissedForm" onclick="document.getElementById('missedProjectForm').style.display=document.getElementById('missedProjectForm').style.display==='none'?'block':'none'" style="background:#ffffff;border:1px solid rgba(0,0,0,0.12);border-radius:8px;padding:0.6rem 1rem;cursor:pointer;font-size:var(--text-sm);color:#003153;width:100%;text-align:left">
-        + Report a Missing Project
-      </button>
-      <div id="missedProjectForm" style="display:none;background:var(--surface-elevated);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:1.2rem;margin-top:-1px">
+    <div id="missedProjectSection" style="margin-bottom:1rem">
+      <div id="missedProjectForm" style="display:none;background:var(--surface-elevated);border:1px solid var(--border);border-radius:8px;padding:1.2rem;margin-top:8px">
         <p style="font-size:var(--text-xs);color:var(--text-secondary);margin-bottom:1rem">Know of a capital project our tracker missed? Submit it here. The system will add it, verify it, and learn from the miss to improve future discovery.</p>
         <div id="missedFormFeedback" style="display:none;padding:0.6rem 1rem;border-radius:6px;margin-bottom:1rem;font-size:var(--text-sm)"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
@@ -1104,153 +1429,97 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
         <button id="mpSubmitBtn" onclick="submitMissedProject()" style="margin-top:1rem;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:0.5rem 1.5rem;font-size:var(--text-sm);font-weight:500;cursor:pointer">Submit Missing Project</button>
       </div>
     </div>
-    <div id="projSummaryStats" class="proj-stats"></div>
-    <div id="projectResultsSummary" class="results-summary"></div>
-    <div id="projectTableContainer"></div>
-    <button id="loadMoreBtn" class="load-more-btn" style="display:none">Load more projects</button>
+    <div class="section-block">
+      <div id="projectResultsSummary" class="results-summary"></div>
+      <div id="projectTableContainer"></div>
+      <button id="loadMoreBtn" class="load-more-btn" style="display:none">Load more projects</button>
+    </div>
   </div>
   <!-- CALENDAR -->
   <div class="tab-panel" id="tab-calendar" role="tabpanel" aria-labelledby="tab-calendar-label">
-    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1519832979-6fa011b87667?w=1200&q=80')">
-      <div class="section-banner-content">
-        <div class="section-banner-title">Economic Calendar</div>
-        <div class="section-banner-sub">Economic events and watchlist</div>
+    <div class="cal-hero-stats" id="calHeroStats">
+      <div class="cal-hero-top">
+        <div class="cal-hero-title">
+          <h2>Economic Calendar</h2>
+          <div class="cal-hero-sub">Scheduled economic releases, policy decisions, and events</div>
+        </div>
+        <div class="cal-hero-stats-right" id="calHeroStatsRight">
+          <div class="stat-item"><div class="stat-value" id="calStatThisWeek">—</div><div class="stat-label">This Week</div></div>
+          <div class="stat-item"><div class="stat-value" id="calStatNextWeek">—</div><div class="stat-label">Next Week</div></div>
+        </div>
       </div>
     </div>
-    <div id="calendarGrid"></div>
-    <div id="thisWeekEvents"></div>
-    <div id="allEventsTable"></div>
+    <div class="section-block">
+      <div class="section-header"><div class="accent-bar"></div><h3>Month View</h3></div>
+      <div id="calendarGrid"></div>
+    </div>
+    <div class="section-block">
+      <div class="section-header"><div class="accent-bar"></div><h3>Scheduled Events</h3><span class="section-meta" id="calEventsMeta"></span></div>
+      <div class="filter-bar" id="calendarFilterBar">
+        <input type="text" id="calSearch" placeholder="Search events…">
+        <select id="calFilterImpact">
+          <option value="">All Impact</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <select id="calFilterInstitution">
+          <option value="">All Sources</option>
+        </select>
+        <select id="calFilterScope">
+          <option value="upcoming">All Upcoming</option>
+          <option value="this_week">This Week</option>
+          <option value="this_month">This Month</option>
+          <option value="next_3m">Next 3 Months</option>
+        </select>
+      </div>
+      <div id="calendarEvents"></div>
+    </div>
   </div>
   <!-- EXPLORER -->
   <div class="tab-panel" id="tab-explorer" role="tabpanel" aria-labelledby="tab-explorer-label">
-    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80')">
-      <div class="section-banner-content">
-        <div class="section-banner-title">Data Explorer</div>
-        <div class="section-banner-sub">Interactive indicators, provincial accounts &amp; StatCan table directory</div>
+    <div class="exp-hero-stats" id="expHeroStats">
+      <div class="exp-hero-top">
+        <div class="exp-hero-title">
+          <h2>Data Explorer</h2>
+          <div class="exp-hero-sub">Indicators, provincial accounts, StatCan table directory</div>
+        </div>
+        <div class="exp-hero-stats-right" id="expHeroStatsRight">
+          <div class="stat-item"><div class="stat-value" id="expStatIndicators">—</div><div class="stat-label">Indicators</div></div>
+          <div class="stat-item"><div class="stat-value" id="expStatVcodes">—</div><div class="stat-label">V-Codes</div></div>
+          <div class="stat-item"><div class="stat-value" id="expStatTables">—</div><div class="stat-label">StatCan Tables</div></div>
+          <div class="stat-item"><div class="stat-value" id="expStatUpdated">—</div><div class="stat-label">Updated</div></div>
+        </div>
       </div>
     </div>
-    <div id="canadaIndicatorSection" style="margin-bottom:24px">
-      <div id="canadaIndicatorDropdown"></div>
-      <section id="indicatorExplorer" style="margin-top:16px"></section>
-    </div>
-    <div id="provExpSection" style="margin-bottom:24px"></div>
-    <div id="oeaSection" style="margin-bottom:24px"></div>
-    <div id="isqSection" style="margin-bottom:24px"></div>
-    <div id="provIndicatorSection" style="margin-bottom:24px"></div>
-    <div id="explorerSearch" style="margin-bottom:16px"></div>
-    <div id="explorerStats" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap"></div>
-    <div id="explorerCategories" style="margin-bottom:16px"></div>
-    <div id="explorerResults"></div>
-  </div>
-  <!-- METHODOLOGY -->
-  <div class="tab-panel" id="tab-methodology" role="tabpanel" aria-labelledby="tab-methodology-label">
-    <div class="section-banner" style="--banner-img:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80')">
-      <div class="section-banner-content">
-        <div class="section-banner-title">Methodology</div>
-        <div class="section-banner-sub">Data sources, definitions, and quality standards</div>
+    <div class="section-block">
+      <div class="section-header"><span class="accent-bar"></span><h3>StatCan Key Economic Indicators</h3></div>
+      <div id="canadaIndicatorSection">
+        <div id="canadaIndicatorDropdown"></div>
+        <section id="indicatorExplorer"></section>
       </div>
     </div>
-    <div style="max-width:800px;margin:0 auto;padding:24px 0">
-      <div class="card" style="padding:24px;margin-bottom:20px">
-        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Data Sources</h3>
-        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">The Lagging Indicator aggregates data from a 14-tier discovery pipeline covering federal, provincial, and municipal sources across Canada, plus international economic data from four major economies.</p>
-        <table style="width:100%;border-collapse:collapse;font-size:var(--text-xs);margin-bottom:16px">
-          <thead><tr style="border-bottom:2px solid #e2e8f0"><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Tier</th><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Source</th><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Coverage</th></tr></thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">1</td><td style="padding:6px 8px">Federal IAAC Registry</td><td style="padding:6px 8px">Impact assessments, environmental reviews</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">2</td><td style="padding:6px 8px">Google News RSS</td><td style="padding:6px 8px">2,574 compound queries across sectors and regions</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">3</td><td style="padding:6px 8px">RSS Feeds</td><td style="padding:6px 8px">324+ feeds with 6-layer classification filter</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">4</td><td style="padding:6px 8px">Project Status Monitoring</td><td style="padding:6px 8px">Active project updates and status changes</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">5</td><td style="padding:6px 8px">Provincial EA Registries</td><td style="padding:6px 8px">13 provinces and territories</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">6</td><td style="padding:6px 8px">SEDAR+ Securities Filings</td><td style="padding:6px 8px">Capital project disclosures</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">7</td><td style="padding:6px 8px">Crown Corporation Capital Plans</td><td style="padding:6px 8px">25+ crown corporations</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">8</td><td style="padding:6px 8px">Canada Energy Regulator</td><td style="padding:6px 8px">Pipeline and energy project filings</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">9</td><td style="padding:6px 8px">StatCan Building Permits</td><td style="padding:6px 8px">Monthly permit anomaly signals</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">10</td><td style="padding:6px 8px">Lobbyist Registries</td><td style="padding:6px 8px">Capital project lobbying signals</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">11</td><td style="padding:6px 8px">Municipal Development Applications</td><td style="padding:6px 8px">15 census metropolitan areas</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">12</td><td style="padding:6px 8px">Google Alerts</td><td style="padding:6px 8px">~25 targeted RSS alerts</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">13</td><td style="padding:6px 8px">Industry Trade RSS</td><td style="padding:6px 8px">~15 sector-specific feeds</td></tr>
-            <tr><td style="padding:6px 8px">14</td><td style="padding:6px 8px">University &amp; Institutional Capital Plans</td><td style="padding:6px 8px">Post-secondary and institutional projects</td></tr>
-          </tbody>
-        </table>
-        <p style="font-size:var(--text-xs);color:#64748B">Additional sources: Procurement monitor (Open Canada, BuyAndSell, Ontario BPS, BC Bid), corporate newswires (GlobeNewswire, Canada Newswire, Cision), CanLII regulatory feeds (10 tribunals), and per-project Google News alerts.</p>
-      </div>
-      <div class="card" style="padding:24px;margin-bottom:20px">
-        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Update Frequency</h3>
-        <table style="width:100%;border-collapse:collapse;font-size:var(--text-sm)">
-          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744;width:40%">National Indicators</td><td style="padding:8px;color:#475569">Weekly, Monday 5:30 AM ET</td></tr>
-          <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:8px;font-weight:600;color:#1a2744">Provincial Indicators</td><td style="padding:8px;color:#475569">Weekly</td></tr>
-          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744">Project Discovery</td><td style="padding:8px;color:#475569">Continuous with weekly consolidation</td></tr>
-          <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:8px;font-weight:600;color:#1a2744">Financial Markets</td><td style="padding:8px;color:#475569">Weekly (Yahoo Finance)</td></tr>
-          <tr><td style="padding:8px;font-weight:600;color:#1a2744">Weekly Briefing</td><td style="padding:8px;color:#475569">Published Monday, covers prior 7 days</td></tr>
-        </table>
-      </div>
-      <div class="card" style="padding:24px;margin-bottom:20px">
-        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Indicator Definitions</h3>
-        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">Canadian indicators are sourced from Statistics Canada Web Data Service (WDS) API. All values are seasonally adjusted unless otherwise noted.</p>
-        <table style="width:100%;border-collapse:collapse;font-size:var(--text-xs)">
-          <thead><tr style="border-bottom:2px solid #e2e8f0"><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Indicator</th><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">StatCan Table</th><th style="text-align:left;padding:8px;color:#64748B;font-weight:600">Frequency</th></tr></thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">Unemployment Rate</td><td style="padding:6px 8px">14-10-0287</td><td style="padding:6px 8px">Monthly, SA</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">Employment by Industry</td><td style="padding:6px 8px">14-10-0022</td><td style="padding:6px 8px">Monthly, SA</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">CPI (All Items)</td><td style="padding:6px 8px">18-10-0004</td><td style="padding:6px 8px">Monthly</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">GDP by Industry</td><td style="padding:6px 8px">36-10-0434</td><td style="padding:6px 8px">Monthly</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">Housing Starts</td><td style="padding:6px 8px">34-10-0143</td><td style="padding:6px 8px">Monthly</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">Building Permits</td><td style="padding:6px 8px">34-10-0066</td><td style="padding:6px 8px">Monthly</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:6px 8px">Merchandise Exports</td><td style="padding:6px 8px">12-10-0129</td><td style="padding:6px 8px">Monthly</td></tr>
-            <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:6px 8px">Capital Expenditures</td><td style="padding:6px 8px">34-10-0035</td><td style="padding:6px 8px">Annual</td></tr>
-            <tr><td style="padding:6px 8px">New Housing Price Index</td><td style="padding:6px 8px">18-10-0205</td><td style="padding:6px 8px">Monthly</td></tr>
-          </tbody>
-        </table>
-        <p style="font-size:var(--text-xs);color:#64748B;margin-top:12px">International data: US (BLS, BEA, Federal Reserve), China (NBS, PBoC), EU (Eurostat, ECB), UK (ONS, Bank of England). Commodity prices: Yahoo Finance (yfinance).</p>
-      </div>
-      <div class="card" style="padding:24px;margin-bottom:20px">
-        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Project Confidence Scoring</h3>
-        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">Each tracked project receives a confidence score from 0.0 to 1.0 based on evidence quality:</p>
-        <table style="width:100%;border-collapse:collapse;font-size:var(--text-sm)">
-          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744;width:50%">Base score</td><td style="padding:8px;color:#475569">0.1</td></tr>
-          <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:8px;font-weight:600;color:#1a2744">Per evidence source</td><td style="padding:8px;color:#475569">+0.1 (max +0.3)</td></tr>
-          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744">Per government source</td><td style="padding:8px;color:#475569">+0.15 (max +0.3)</td></tr>
-          <tr style="border-bottom:1px solid #f1f5f9;background:#f9fafb"><td style="padding:8px;font-weight:600;color:#1a2744">Verified dollar value</td><td style="padding:8px;color:#475569">+0.1</td></tr>
-          <tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px;font-weight:600;color:#1a2744">Multi-tier discovery</td><td style="padding:8px;color:#475569">+0.05 to +0.1</td></tr>
-          <tr><td style="padding:8px;font-weight:600;color:#1a2744">Staleness decay</td><td style="padding:8px;color:#475569">-0.05 to -0.20 after 30+ days without re-confirmation</td></tr>
-        </table>
-      </div>
-      <div class="card" style="padding:24px;margin-bottom:20px">
-        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Editorial Policy</h3>
-        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">All content on The Lagging Indicator is factual reporting. The platform presents data, context, and connections between indicators and projects. It does not take positions, make recommendations, or express opinions.</p>
-        <ul style="font-size:var(--text-sm);color:#475569;line-height:1.8;padding-left:20px">
-          <li>Every factual claim cites a specific source</li>
-          <li>Indicator values reference the exact StatCan table or source API</li>
-          <li>Project data includes evidence URLs for independent verification</li>
-          <li>No language implying events are good, bad, promising, or worrying</li>
-          <li>Conditional language for projections ("if rates hold..." not "rates will...")</li>
-        </ul>
-      </div>
-      <div class="card" style="padding:24px;margin-bottom:20px">
-        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Data Validation</h3>
-        <p style="font-size:var(--text-sm);color:#475569;line-height:1.7;margin-bottom:12px">A 7-rule validation layer runs before every data export:</p>
-        <ol style="font-size:var(--text-sm);color:#475569;line-height:1.8;padding-left:20px">
-          <li><strong>Range check</strong> — values within plausible bounds for each indicator class</li>
-          <li><strong>Delta check</strong> — period-over-period changes within historical thresholds</li>
-          <li><strong>Null consistency</strong> — if value is null, change must also be null</li>
-          <li><strong>Period recency</strong> — reference period within expected freshness window</li>
-          <li><strong>Change verification</strong> — stored change independently recomputed from values</li>
-          <li><strong>Duplicate detection</strong> — flags identical values across unrelated indicators</li>
-          <li><strong>Unit verification</strong> — cross-checks stored units against expected units</li>
-        </ol>
-        <p style="font-size:var(--text-xs);color:#64748B;margin-top:8px">Indicators that fail validation are flagged as "under review" rather than displayed with incorrect values.</p>
-      </div>
-      <div class="card" style="padding:24px">
-        <h3 style="font-family:var(--font-heading);font-size:var(--text-lg);margin-bottom:12px;color:#1a2744">Known Limitations</h3>
-        <ul style="font-size:var(--text-sm);color:#475569;line-height:1.8;padding-left:20px">
-          <li>Productivity Growth data is sparse for some economies (US, China, EU)</li>
-          <li>Some commodity prices may show stale data when yfinance returns cached values</li>
-          <li>Project classification is under development — most projects currently tagged as Greenfield</li>
-          <li>Provincial GDP data uses annual figures (StatCan does not publish provincial quarterly GDP)</li>
-          <li>The construction price index (Table 18-10-0135) has been discontinued by Statistics Canada</li>
-        </ul>
-      </div>
+    <div class="section-block">
+      <div class="section-header"><span class="accent-bar"></span><h3>Provincial Indicator Explorer</h3></div>
+      <div id="provExpSection"></div>
+    </div>
+    <div class="section-block">
+      <div class="section-header"><span class="accent-bar"></span><h3>Ontario Economic Accounts</h3></div>
+      <div id="oeaSection"></div>
+    </div>
+    <div class="section-block">
+      <div class="section-header"><span class="accent-bar"></span><h3>Quebec Economic Accounts (ISQ)</h3></div>
+      <div id="isqSection"></div>
+    </div>
+    <div class="section-block">
+      <div class="section-header"><span class="accent-bar"></span><h3>Provincial Raw Indicators</h3></div>
+      <div id="provIndicatorSection"></div>
+    </div>
+    <div class="section-block">
+      <div class="section-header"><span class="accent-bar"></span><h3>StatCan Table Search</h3><span class="section-meta" id="expSearchMeta"></span></div>
+      <div id="explorerSearch"></div>
+      <div id="explorerCategories"></div>
+      <div id="explorerResults"></div>
     </div>
   </div>
 </main>
@@ -1280,6 +1549,6 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
     <p>Infrastructure Canada, NRCan, Ontario Builds, BC MPI, Alberta Major Projects, Quebec Infrastructure Plan, 300+ RSS feeds, Google News RSS, IAAC, SEDAR+, procurement monitors, and CanLII regulatory feeds.</p>
   </div>
 </div>
-<script src="./js/app.js"></script>
+<script src="./js/app.js?v=20260410a"></script>
 </body>
 </html>

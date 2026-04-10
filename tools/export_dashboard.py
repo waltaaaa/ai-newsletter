@@ -1157,4 +1157,407 @@ def export_iaac(conn, output_dir: str) -> str:
 
 
 def export_signals(conn, output_dir: str) -> str:
-    """Export combined sign
+    """Export combined signals summary (permits, lobby, jobs, procurement) to signals.json."""
+    from db import get_dashboard_state
+
+    # Gather latest signals from all sources
+    signals = {
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    # Job spikes (latest week)
+    try:
+        import sqlite3 as _sql
+        old_rf = conn.row_factory
+        conn.row_factory = _sql.Row
+        row = conn.execute(
+            "SELECT week_of, spikes FROM job_snapshots ORDER BY week_of DESC LIMIT 1"
+        ).fetchone()
+        conn.row_factory = old_rf
+        if row:
+            signals["job_spikes"] = {
+                "week_of": row["week_of"],
+                "spikes": _safe_json_loads(row["spikes"], []),
+            }
+    except Exception:
+        pass
+
+    # Procurement (latest week)
+    try:
+        old_rf = conn.row_factory
+        conn.row_factory = _sql.Row
+        row = conn.execute(
+            "SELECT week_of, data FROM procurement_snapshots ORDER BY week_of DESC LIMIT 1"
+        ).fetchone()
+        conn.row_factory = old_rf
+        if row:
+            signals["procurement"] = {
+                "week_of": row["week_of"],
+                "contracts": _safe_json_loads(row["data"], []),
+            }
+    except Exception:
+        pass
+
+    # IAAC summary
+    try:
+        total = conn.execute(
+            "SELECT COUNT(*) FROM projects WHERE discovery_source LIKE '%iaac%'"
+        ).fetchone()[0]
+        recent = conn.execute(
+            "SELECT COUNT(*) FROM projects WHERE discovery_source LIKE '%iaac%' AND lastSeen >= date('now', '-7 days')"
+        ).fetchone()[0]
+        signals["iaac"] = {"total_tracked": total, "seen_this_week": recent}
+    except Exception:
+        pass
+
+    out_path = os.path.join(output_dir, "signals.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(signals, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
+def export_events_global(conn, output_dir: str) -> str:
+    """Export events_global.json — scheduled 2026 economic release calendar covering
+    Fed FOMC, BLS, BEA, Census, Federal Reserve Board, ECB, BoE, and Canadian
+    provincial budgets.
+
+    Source of truth: ``config/events_global_schedule.json`` — a hand-curated
+    baseline with verified URLs from official release calendars (federalreserve.gov,
+    statspolicy.gov OMB PFEI schedule, ecb.europa.eu, bankofengland.co.uk, and
+    provincial finance ministries). This file is treated as editable pipeline
+    config, not generated output.
+
+    The ``conn`` parameter is unused today (everything comes from the config
+    file) but is accepted for signature compatibility with the other exporters.
+    Future work can extend this function to:
+      - Fetch live dates from the source calendars and merge with the baseline
+      - Add Whitehouse/Treasury events, IMF WEO/GEP, BoJ/PBoC/RBA/RBNZ decisions
+      - Pull Canadian provincial fall fiscal updates as they're announced
+    """
+    # config/ lives at project root, tools/ is one level down
+    here = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(here)
+    config_path = os.path.join(project_root, "config", "events_global_schedule.json")
+
+    if not os.path.exists(config_path):
+        logger.warning(
+            "events_global_schedule.json not found at %s — skipping events_global export",
+            config_path,
+        )
+        return ""
+
+    with open(config_path, encoding="utf-8") as f:
+        schedule = json.load(f)
+
+    if not isinstance(schedule, dict) or "events" not in schedule:
+        raise ValueError(
+            "config/events_global_schedule.json must be a dict with an 'events' array"
+        )
+
+    events = schedule.get("events", [])
+    if not isinstance(events, list):
+        raise ValueError(
+            "config/events_global_schedule.json 'events' must be a list"
+        )
+
+    # Refresh _meta on every export so downstream consumers see the latest timestamp
+    meta = schedule.get("_meta") or {}
+    meta["exported_at"] = datetime.now(timezone.utc).isoformat()
+    meta["event_count"] = len(events)
+    schedule["_meta"] = meta
+
+    out_path = os.path.join(output_dir, "events_global.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(schedule, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
+def export_statcan_tables(conn, output_dir: str) -> str:
+    """Export statcan_tables.json — the full StatCan table directory consumed by
+    the Data Explorer tab's V-Code search as a fallback index beyond the
+    hand-curated ``VCODE_INDEX`` in ``docs/js/app.js``.
+
+    Source of truth: ``config/statcan_table_registry.csv`` — a 4,908-row
+    registry of every StatCan table with columns
+    ``Table Name | Table ID | Product ID (raw) | CANSIM ID | Link | Frequency |
+    Coverage | Focus | Subject Codes | Survey Codes | Start Date | End Date |
+    Last Release | Status``.
+
+    Filters to ``Status == 'Current'`` (discards archived/discontinued tables)
+    and maps each row to the compact shape the frontend loader expects at
+    ``docs/js/app.js`` around line 5625::
+
+        {t, n, k, c, f, g}
+
+    where ``t`` = Table ID, ``n`` = Table Name, ``k`` = keyword blob,
+    ``c`` = category (Focus), ``f`` = Frequency, ``g`` = Coverage/geography.
+
+    The ``conn`` parameter is accepted for signature compatibility with the
+    other exporters but is unused today (everything comes from the CSV).
+    """
+    import csv as _csv
+
+    # config/ lives at project root, tools/ is one level down
+    here = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(here)
+    config_path = os.path.join(project_root, "config", "statcan_table_registry.csv")
+
+    if not os.path.exists(config_path):
+        logger.warning(
+            "statcan_table_registry.csv not found at %s — skipping statcan_tables export",
+            config_path,
+        )
+        return ""
+
+    # Normalize Coverage values: 'National (default)' and 'National' both render as 'Canada'
+    _GEO_NORMALIZE = {
+        "National (default)": "Canada",
+        "National": "Canada",
+    }
+
+    rows_out = []
+    with open(config_path, encoding="utf-8-sig", newline="") as f:
+        reader = _csv.DictReader(f)
+        for row in reader:
+            if (row.get("Status") or "").strip() != "Current":
+                continue
+
+            table_id = (row.get("Table ID") or "").strip()
+            name = (row.get("Table Name") or "").strip()
+            if not table_id or not name:
+                continue
+
+            focus = (row.get("Focus") or "").strip()
+            subject_codes = (row.get("Subject Codes") or "").strip()
+            coverage = (row.get("Coverage") or "").strip()
+            frequency = (row.get("Frequency") or "").strip()
+
+            # Keyword blob powers the scorer in searchVCodes(); lowercase so the
+            # substring match in _expandQuery() works without further normalization
+            keyword_blob = " ".join(
+                filter(None, [name.lower(), focus.lower(), subject_codes.lower()])
+            )
+
+            rows_out.append({
+                "t": table_id,
+                "n": name,
+                "k": keyword_blob,
+                "c": focus or "Unclassified",
+                "f": frequency or "Occasional",
+                "g": _GEO_NORMALIZE.get(coverage, coverage) or "Canada",
+            })
+
+    # Frontend loader in app.js:5625 does ``const raw=await resp.json();`` then
+    # ``raw.filter(r=>!curated.has(r.t))`` directly on the response, so we write
+    # a bare top-level array to keep the frontend change surface zero.
+    out_path = os.path.join(output_dir, "statcan_tables.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(rows_out, f, ensure_ascii=False, separators=(",", ":"))
+
+    logger.info(
+        "Exported %d StatCan tables to %s (source: %s)",
+        len(rows_out),
+        out_path,
+        os.path.relpath(config_path, project_root),
+    )
+    return out_path
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MAIN ENTRY POINT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def export_all(conn=None, output_dir: str = "docs/data") -> dict:
+    """Export all dashboard data to static JSON files.
+
+    Args:
+        conn: sqlite3.Connection from db.py. If None, creates one via init_db().
+        output_dir: Directory to write JSON files. Created if it does not exist.
+
+    Returns:
+        dict with keys: file_count, output_dir, files_written
+    """
+    from db import get_db, init_db
+    from pipeline_config import PROVINCES
+
+    _own_conn = False
+    if conn is None:
+        conn = init_db()
+        _own_conn = True
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    files_written = []
+
+    # Province files
+    for prov in PROVINCES:
+        path = export_province_projects(
+            conn,
+            prov["name"],
+            prov["threshold_val"],
+            output_dir,
+        )
+        files_written.append(os.path.basename(path))
+
+    # Briefings
+    latest_path, archive_path = export_briefings(conn, output_dir)
+    files_written.extend([
+        os.path.basename(latest_path),
+        os.path.basename(archive_path),
+    ])
+
+    # Indicators
+    path = export_indicators(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Trends
+    path = export_trends(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Events (Canadian pipeline-generated, 30-day window)
+    path = export_events(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Events Global (Fed/BLS/BEA/Census/ECB/BoE/provincial budgets — from config/)
+    try:
+        path = export_events_global(conn, output_dir)
+        if path:
+            files_written.append(os.path.basename(path))
+    except Exception as e:
+        logger.warning("Export %s failed: %s", "export_events_global", e)
+
+    # StatCan table directory (Data Explorer V-Code search fallback — from config/)
+    try:
+        path = export_statcan_tables(conn, output_dir)
+        if path:
+            files_written.append(os.path.basename(path))
+    except Exception as e:
+        logger.warning("Export %s failed: %s", "export_statcan_tables", e)
+
+    # Timeseries
+    path = export_timeseries(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # All projects (combined, no threshold)
+    path = export_all_projects(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Pipeline status (run info + cost data)
+    path = export_pipeline_status(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Policy developments
+    path = export_policy(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Canadian commodity indicators
+    path = export_commodities(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
+    # Signal data (jobs, procurement, IAAC)
+    for export_fn in (export_jobs, export_procurement, export_iaac, export_signals):
+        try:
+            path = export_fn(conn, output_dir)
+            files_written.append(os.path.basename(path))
+        except Exception as e:
+            logger.warning("Export %s failed: %s", export_fn.__name__, e)
+
+    # Manifest
+    manifest = {
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+        "province_count": len(PROVINCES),
+        "file_count": len(files_written),
+        "file_list": sorted(files_written),
+    }
+    manifest_path = os.path.join(output_dir, "manifest.json")
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
+    files_written.append("manifest.json")
+
+    print(f"[EXPORT] Wrote {len(files_written)} files to {output_dir}/")
+
+    if _own_conn:
+        conn.close()
+
+    return {
+        "file_count": len(files_written),
+        "output_dir": output_dir,
+        "files_written": files_written,
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# STANDALONE VALIDATION (run after export_all in __main__)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _validate_output(output_dir: str) -> bool:
+    """Load each JSON file and print a summary line per file."""
+    json_files = sorted(glob.glob(os.path.join(output_dir, "*.json")))
+    if not json_files:
+        print(f"[VALIDATE] No JSON files found in {output_dir}/")
+        return False
+
+    all_ok = True
+    print(f"\n[VALIDATE] Checking {len(json_files)} files in {output_dir}/")
+    print(f"{'File':<45} {'Size (KB)':>10} {'Entries':>10}")
+    print("-" * 70)
+
+    for fpath in json_files:
+        fname = os.path.basename(fpath)
+        size_kb = os.path.getsize(fpath) / 1024
+        try:
+            with open(fpath, encoding="utf-8") as f:
+                data = json.load(f)
+            if isinstance(data, list):
+                entry_count = len(data)
+            elif isinstance(data, dict):
+                entry_count = len(data)
+            else:
+                entry_count = 1
+            print(f"{fname:<45} {size_kb:>9.1f}K {entry_count:>10}")
+        except json.JSONDecodeError as e:
+            print(f"{fname:<45} INVALID JSON: {e}")
+            all_ok = False
+
+    print("-" * 70)
+    status = "PASSED" if all_ok else "FAILED"
+    print(f"[VALIDATE] {status} — all files valid JSON\n")
+    return all_ok
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CLI
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    )
+
+    parser = argparse.ArgumentParser(
+        description="Export CAN-MACRO dashboard data to static JSON files."
+    )
+    parser.add_argument(
+        "--out",
+        default="docs/data",
+        help="Output directory (default: docs/data)",
+    )
+    parser.add_argument(
+        "--db",
+        default=None,
+        help="Path to SQLite database (default: dashboard.db or DB_PATH env var)",
+    )
+    args = parser.parse_args()
+
+    from db import init_db
+
+    db_conn = init_db(args.db)
+    result = export_all(conn=db_conn, output_dir=args.out)
+    _validate_output(args.out)
+    db_conn.close()
+
+    sys.exit(0)
