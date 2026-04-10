@@ -470,7 +470,7 @@ function _srcLink(name){
   // StatCan table pattern: "StatCan XX-XX-XXXX" or "CMHC/StatCan XX-XX-XXXX"
   const scMatch=String(name).match(/(?:StatCan|Statistics Canada|CMHC\/StatCan)\s+(\d{2})-(\d{2})-(\d{4})/);
   if(scMatch){
-    const pid=scMatch[1]+scMatch[2]+scMatch[3];
+    const pid=scMatch[1]+scMatch[2]+scMatch[3]+'01';
     return'<a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+pid+'" target="_blank" rel="noopener" class="ind-src-link">'+san(name)+'</a>';
   }
   // Partial match for known prefixes
