@@ -51,17 +51,20 @@ def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate:
         if 'TSX' in idx.get('name', ''):
             _upsert('tsx_composite', 'pts', idx.get('value', '').replace(',', ''))
 
-    # Commodities
+    # Commodities — use canonical keys that match the yfinance backfill
+    # (idx_*/comm_* prefixed variants were stale duplicates of the same data
+    # under `wti`, `gold`, etc. — removed from the timeseries in 3.8.)
     COMM_ID_MAP = {
-        'Crude Oil (WTI)': 'comm_wti', 'Crude Oil (Brent)': 'comm_brent',
-        'Natural Gas': 'comm_natgas', 'Gold': 'comm_gold', 'Silver': 'comm_silver',
-        'Platinum': 'comm_platinum', 'Palladium': 'comm_palladium',
-        'Copper': 'comm_copper', 'Aluminum': 'comm_aluminum',
-        'Wheat': 'comm_wheat', 'Corn': 'comm_corn', 'Rice': 'comm_rice',
-        'Soybeans': 'comm_soybeans', 'Coffee': 'comm_coffee', 'Cocoa': 'comm_cocoa',
-        'Sugar #11': 'comm_sugar', 'Cotton': 'comm_cotton',
-        'Soybean Oil': 'comm_soyoil', 'Soybean Meal': 'comm_soymeal',
-        'Coal (Newcastle)': 'comm_coal', 'Propane': 'comm_propane',
+        'Crude Oil (WTI)': 'wti', 'Crude Oil (Brent)': 'brent',
+        'Natural Gas': 'natural_gas', 'Gold': 'gold', 'Silver': 'silver',
+        'Platinum': 'platinum', 'Palladium': 'palladium',
+        'Copper': 'copper', 'Aluminum': 'aluminum',
+        'Wheat': 'wheat', 'Corn': 'corn', 'Rice': 'rice',
+        'Soybeans': 'soybeans', 'Coffee': 'coffee', 'Cocoa': 'cocoa',
+        'Sugar #11': 'sugar', 'Cotton': 'cotton',
+        'Soybean Oil': 'soybean_oil', 'Soybean Meal': 'soybean_meal',
+        'Coal (Newcastle)': 'coal', 'Propane': 'propane',
+        'Lumber': 'lumber',
     }
     for cat in payload.get('commodities', []):
         for item in (cat.get('items', []) if isinstance(cat, dict) else []):
@@ -71,10 +74,12 @@ def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate:
                 _upsert(series_id, item.get('unit', ''),
                         item.get('val', '').replace('$', '').replace(',', ''))
 
-    # Other equity indices
+    # Other equity indices — canonical keys (sp500/djia/nasdaq/ftse100/dax/
+    # nikkei225). Hang Seng and Shanghai have no non-prefixed canonical in the
+    # backfill, so they keep their idx_ names.
     IDX_ID_MAP = {
-        'S&P 500': 'idx_sp500', 'Dow Jones': 'idx_djia', 'NASDAQ': 'idx_nasdaq',
-        'FTSE 100': 'idx_ftse', 'DAX': 'idx_dax', 'Nikkei 225': 'idx_nikkei',
+        'S&P 500': 'sp500', 'Dow Jones': 'djia', 'NASDAQ': 'nasdaq',
+        'FTSE 100': 'ftse100', 'DAX': 'dax', 'Nikkei 225': 'nikkei225',
         'Hang Seng': 'idx_hangseng', 'Shanghai': 'idx_shanghai',
     }
     for idx in financial_markets.get('indices', []):

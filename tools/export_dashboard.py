@@ -45,39 +45,20 @@ PROVINCE_SLUGS = [
     "nunavut",
 ]
 
-# Known timeseries series names (from update_dashboard.py append_to_timeseries)
+# Series names written into the SQLite `timeseries` table by
+# phases/finalize.py::append_to_timeseries. These are the canonical names
+# shared with indicator_history — no more comm_/idx_ prefixed duplicates.
+# Hang Seng and Shanghai remain idx_-prefixed because they have no canonical
+# entry in the yfinance backfill.
 _TIMESERIES_NAMES = [
     "boc_rate",
     "tsx_composite",
-    "comm_wti",
-    "comm_brent",
-    "comm_natgas",
-    "comm_gold",
-    "comm_silver",
-    "comm_platinum",
-    "comm_palladium",
-    "comm_copper",
-    "comm_aluminum",
-    "comm_wheat",
-    "comm_corn",
-    "comm_rice",
-    "comm_soybeans",
-    "comm_coffee",
-    "comm_cocoa",
-    "comm_sugar",
-    "comm_cotton",
-    "comm_soyoil",
-    "comm_soymeal",
-    "comm_coal",
-    "comm_propane",
-    "idx_sp500",
-    "idx_djia",
-    "idx_nasdaq",
-    "idx_ftse",
-    "idx_dax",
-    "idx_nikkei",
-    "idx_hangseng",
-    "idx_shanghai",
+    "sp500", "djia", "nasdaq", "ftse100", "dax", "nikkei225",
+    "idx_hangseng", "idx_shanghai",
+    "wti", "brent", "natural_gas", "gold", "silver", "platinum", "palladium",
+    "copper", "aluminum",
+    "wheat", "corn", "rice", "soybeans", "coffee", "cocoa", "sugar", "cotton",
+    "soybean_oil", "soybean_meal", "coal", "propane", "lumber",
 ]
 
 
