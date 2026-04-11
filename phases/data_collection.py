@@ -720,6 +720,27 @@ _PROV_PARTRATE_VIDS = {
     "British Columbia":          2064706,
 }
 
+# Territorial labour force — StatCan WDS vector IDs
+# Table 14-10-0292-01 (PID 14100292): three-month moving average, SA, 15+, both sexes
+# Table 14-10-0287 excludes territories, so territories live in a separate cube
+# with independent vector IDs. Kept as separate dicts so the provincial loops
+# above don't need to learn the "three territories, 3MMA" semantics.
+_TERR_UNEMP_VIDS = {
+    "Yukon":                 46438777,
+    "Northwest Territories": 46438879,
+    "Nunavut":               99443852,
+}
+_TERR_PARTRATE_VIDS = {
+    "Yukon":                 46438789,
+    "Northwest Territories": 46438891,
+    "Nunavut":               99443858,
+}
+_TERR_EMPRATE_VIDS = {
+    "Yukon":                 46438801,
+    "Northwest Territories": 46438903,
+    "Nunavut":               99443864,
+}
+
 
 def get_provincial_indicators() -> dict:
     """
@@ -732,8 +753,11 @@ def get_provincial_indicators() -> dict:
     result = {}
 
     # Batch 1: unemployment (10) + CPI (10) + employment rate (10) + participation rate (10) — n=14
+    # Plus territorial labour force from Table 14-10-0292 (9 vectors: 3 territories × 3 rates, 3MMA)
     all_vids = (list(_PROV_UNEMP_VIDS.values()) + list(_PROV_CPI_VIDS.values())
-                + list(_PROV_EMPRATE_VIDS.values()) + list(_PROV_PARTRATE_VIDS.values()))
+                + list(_PROV_EMPRATE_VIDS.values()) + list(_PROV_PARTRATE_VIDS.values())
+                + list(_TERR_UNEMP_VIDS.values()) + list(_TERR_PARTRATE_VIDS.values())
+                + list(_TERR_EMPRATE_VIDS.values()))
     data = _statcan_wds(all_vids, n=14)
 
     # Batch 2: provincial annual real GDP (10) — n=2 for current + prior year Y/Y
@@ -821,6 +845,37 @@ def get_provincial_indicators() -> dict:
                     result.setdefault(prov, {}).update(updates)
             except Exception as e:
                 print(f"  [WARN] Provincial participation rate ({prov}): {e}")
+
+    # Territorial labour force (YT / NT / NU) — 3-month moving average from
+    # Table 14-10-0292-01. Same downstream shape as provincial rows, different
+    # source table. CPI is not published monthly for the territories and is
+    # intentionally skipped; provincial StatCan housing-starts feed handles
+    # territorial starts via CMHC where available.
+    def _save_terr_rate(vids: dict, out_key: str, prev_key: str, sanity: tuple):
+        lo, hi = sanity
+        for prov, vid in vids.items():
+            obs = data.get(vid, [])
+            if not obs:
+                continue
+            try:
+                val = float(obs[-1]['value'])
+                if not (lo <= val <= hi):
+                    continue
+                updates = {
+                    out_key:            f"{val:.1f}%",
+                    f"{out_key}_src":   'StatCan',
+                    f"{out_key}_date":  obs[-1].get('refPer', ''),
+                }
+                if len(obs) >= 2:
+                    prev_val = float(obs[-2]['value'])
+                    if lo <= prev_val <= hi:
+                        updates[prev_key] = f"{prev_val:.1f}%"
+                result.setdefault(prov, {}).update(updates)
+            except Exception as e:
+                print(f"  [WARN] Territorial {out_key} ({prov}): {e}")
+    _save_terr_rate(_TERR_UNEMP_VIDS,    'unemployment',      'unemployment_prev',      (1.0, 30.0))
+    _save_terr_rate(_TERR_EMPRATE_VIDS,  'employmentRate',    'employmentRate_prev',    (30.0, 80.0))
+    _save_terr_rate(_TERR_PARTRATE_VIDS, 'participationRate', 'participationRate_prev', (40.0, 85.0))
 
     # Real GDP — annual Y/Y growth from chained-dollar levels (Table 36-10-0402-01)
     # n=2: obs[-1]=current year, obs[-2]=prior year — enough for one Y/Y growth rate
