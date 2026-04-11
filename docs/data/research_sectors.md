@@ -1,365 +1,329 @@
-# Sector & Industry Research — Week Ending March 31, 2026
-
-**Agent 1C — Sector/Industry Researcher**
-**Date:** 2026-03-31
-**Coverage:** All 20 NAICS industries (5 goods-producing, 15 services-producing)
-
----
-
-## Context: StatCan GDP by Industry — January 2026 (Released March 31, 2026)
-
-Statistics Canada released GDP by industry data for January 2026 today. Real GDP edged up 0.1% in January, following 0.2% growth in December. Goods-producing industries expanded 0.2% for the second consecutive month. Services-producing industries were essentially unchanged. Nine of 20 industrial sectors recorded growth in January.
-([StatCan Daily, March 31 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm))
-
-**Pipeline GDP data (December 2025, $M at basic prices, StatCan WDS):**
-
-| Industry | GDP ($M) |
-|----------|----------|
-| Agriculture, Forestry, Fishing & Hunting | 47,235 |
-| Mining, Quarrying, Oil & Gas | 119,621 |
-| Utilities | 47,715 |
-| Construction | 171,328 |
-| Manufacturing | 198,010 |
-| Wholesale Trade | 126,269 |
-| Retail Trade | 124,372 |
-| Transportation & Warehousing | 104,665 |
-| Information & Cultural Industries | 81,665 |
-| Finance & Insurance | 179,374 |
-| Real Estate & Rental | 309,928 |
-| Professional, Scientific & Technical | 168,596 |
-| Management of Companies | 641 |
-| Administrative & Support | 60,887 |
-| Educational Services | 123,701 |
-| Health Care & Social Assistance | 191,439 |
-| Arts, Entertainment & Recreation | 19,536 |
-| Accommodation & Food Services | 52,548 |
-| Other Services | 44,650 |
-| Public Administration | 168,378 |
+# Sector & Industry Research — Week of 2026-04-11
+Generated: 2026-04-11 (Agent 1C — Sector Researcher)
+Industries covered: All 20 NAICS (5 goods + 15 services)
+Search waves: Wave 4 (project sectors) + Wave 4b (NAICS GDP industries) + Wave 7 (mega projects)
 
 ---
 
-## GOODS-PRODUCING INDUSTRIES
+## 1. Data Quality Audit
+
+Primary input: `docs/data/industry_gdp.json` — StatCan GDP by industry, m/m and y/y changes, all 20 NAICS codes current.
+Project universe: 7,427 projects across all sectors. Project-level NAICS tagging is sparse (most projects tagged by descriptive `sector` label rather than by NAICS code), so sector coverage below combines NAICS GDP signal with project-sector aggregates.
+
+### Sector Project Coverage (aggregated from `projects_all.json`, 2026-04-11)
+
+| NAICS | Sector Name | Projects (project-sector) | Aggregate $ | GDP m/m | GDP y/y | Status |
+|-------|------------|---------------------------|-------------|---------|---------|--------|
+| 11 | Agriculture, Forestry, Fishing, Hunting | 17 agriculture + 13 forestry | ~$5.4B | -1.4% | +5.4% | OK |
+| 21 | Mining, Quarrying, Oil & Gas | 192 mining + 42 oil_gas | ~$269B | +1.2% | -0.1% | OK |
+| 22 | Utilities | 317 power_energy + 251 energy | ~$523B | +0.6% | -1.7% | OK |
+| 23 | Construction | 745 infrastructure + 578 water/wastewater + 350 transit | ~$255B | +1.1% | +2.8% | OK |
+| 31-33 | Manufacturing | 47 manufacturing | ~$67B | -1.4% | -4.6% | GAP (value) |
+| 41 | Wholesale Trade | — (not tracked in projects) | — | -1.2% | -1.7% | GDP only |
+| 44-45 | Retail Trade | — | — | +0.8% | +2.7% | GDP only |
+| 48-49 | Transportation & Warehousing | 154 ports/logistics + 82 transport | ~$42B | -0.7% | +1.6% | OK |
+| 51 | Information & Cultural | 19 telecom | ~$3B | +0.9% | +3.2% | OK |
+| 52 | Finance & Insurance | — | — | +0.5% | +3.2% | GDP only |
+| 53 | Real Estate, Rental, Leasing | 157 residential + 60 housing + 68 commercial_mixed | ~$74B | -0.2% | +1.2% | OK |
+| 54 | Professional, Scientific, Technical | — | — | -0.1% | -0.4% | GDP only |
+| 55 | Management of Companies | — | — | -4.1% | -21.9% | GDP only (collapse) |
+| 56 | Administrative & Waste Management | 13 environment | ~$2B | -0.1% | -0.2% | GDP only |
+| 61 | Educational Services | 151 education | ~$15B | +0.5% | -1.9% | OK |
+| 62 | Health Care & Social Assistance | 230 healthcare | ~$20.5B | +0.0% | +2.1% | OK |
+| 71 | Arts, Entertainment, Recreation | 147 tourism_culture | ~$22B | -0.1% | +2.2% | OK |
+| 72 | Accommodation & Food Services | — | — | +0.7% | +2.3% | GDP only |
+| 81 | Other Services | — | — | +0.2% | +0.3% | GDP only |
+| 91 | Public Administration | 191 government + 15 defence | ~$163B | -0.1% | +0.7% | OK |
+
+### Critical Gaps
+- From `data_gap_report.md`: weekly delta coverage 95%, monthly 91%, yearly 79%. Overall Data Freshness Grade: B.
+- Lumber price timeseries stale since 2023-05-12 (1,065 days old). Lumber data points below come from NRCan and trade coverage, not internal timeseries.
+- `jobs.json` and `procurement.json` are empty for week_of 2026-04-11 — no weekly hiring-spike or contract-award feed this cycle. Labour trends below are sourced from StatCan LFS March 2026 release.
+- `policy.json` has 3 items this week, all BC-specific (housing and softwood lumber statements).
+- NAICS 55 Management of Companies GDP is -21.9% y/y; no supporting project data.
 
 ---
 
-### 1. Agriculture, Forestry, Fishing & Hunting (NAICS 11)
+## 2. Sector Activity Summary (NAICS GDP, StatCan, Jan 2026 reference)
 
-**GDP:** $47,235M (Dec 2025). The sector declined in January 2026 according to StatCan's monthly GDP release, with decreases in agriculture, forestry, fishing and hunting partially offsetting gains in other goods-producing sectors.
+Gainers (y/y): NAICS 11 Agriculture +5.4%, NAICS 51 Info/Culture +3.2%, NAICS 52 Finance +3.2%, NAICS 23 Construction +2.8%, NAICS 44-45 Retail +2.7%, NAICS 72 Accommodation/Food +2.3%, NAICS 71 Arts/Rec +2.2%, NAICS 62 Healthcare +2.1%, NAICS 48-49 Transport +1.6%, NAICS 53 Real Estate +1.2%, NAICS 91 Public Admin +0.7%, NAICS 81 Other Services +0.3%.
 
-**Recent trend:** The sector declined 1.1% in November 2025, following a 0.6% decrease in October. Crop production (except cannabis) fell 1.3% in November. Forestry and logging declined 2.8% for the third consecutive month in November 2025.
-([StatCan Daily, January 30 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260130/dq260130a-eng.htm))
+Decliners (y/y): NAICS 55 Management -21.9%, NAICS 31-33 Manufacturing -4.6%, NAICS 61 Education -1.9%, NAICS 22 Utilities -1.7%, NAICS 41 Wholesale -1.7%, NAICS 54 Professional/Scientific -0.4%, NAICS 56 Admin/Waste -0.2%, NAICS 21 Mining & O&G -0.1%.
 
-**Potash/Fertilizer:** Canada exported approximately 22.9 million tonnes of potash in 2024, accounting for over 39% of global exports. The BHP Jansen potash project in Saskatchewan ($10.6B total investment, Stage 1 + Stage 2) is in full-scale construction with approximately 5,500 construction-phase jobs. First production from Jansen Stage 1 has been rescheduled to mid-CY2027, with Stage 2 expected in FY2029. Nutrien (NTR) closed the week at $104.62, up 50.6% year-over-year but down 1.0% week-over-week.
-([BHP Jansen Update, January 2026](https://www.miningweekly.com/article/jansen-potash-project-canada-update-2026-01-23); [NRCan Potash Facts](https://natural-resources.canada.ca/minerals-mining/mining-data-statistics-analysis/minerals-metals-facts/potash-facts))
-
-**Trade impact:** U.S. tariffs remain a factor for agricultural exports. Canada's retaliatory tariffs on U.S. goods continue under the ongoing trade dispute.
-([Canada.ca Tariff Response](https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html))
+Source: StatCan Table 36-10-0434, Gross domestic product by industry, January 2026 release — https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
 
 ---
 
-### 2. Mining, Quarrying, Oil & Gas Extraction (NAICS 21)
+## 3. Sector Spotlights (all 20 NAICS industries)
 
-**GDP:** $119,621M (Dec 2025). Mining, quarrying, and oil and gas extraction expanded 1.2% in January 2026, fully offsetting December's decline, led by increased activity in oil and gas extraction.
-([StatCan Daily, March 31 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm))
+### GOODS INDUSTRIES
 
-**Oil & Gas:** Canadian crude production capacity stands at approximately 5.76 million barrels per day. Alberta's GDP from mining, quarrying, and oil and gas extraction increased 3.9% in 2024, rising from $64.4B to $66.9B. TMX pipeline (operational since May 2024) nearly tripled capacity to Canada's Pacific Coast to 890,000 b/d. The WCS-WTI differential has narrowed from an average of US$15/bbl to US$9.95/bbl. WTI crude fell over 20% in recent months to approximately $55/bbl.
-([Asia Pacific Foundation](https://www.asiapacific.ca/publication/canadas-oil-exporting-future-trans-mountain-china-asia-and-beyond); [Oil Sands Magazine](https://www.oilsandsmagazine.com/market-insights/2025/12/11/pipeline-egress-outlook-to-2030-2026-edition))
+#### NAICS 11: Agriculture, Forestry, Fishing & Hunting
+- **GDP**: -1.4% m/m, +5.4% y/y — steepest monthly decline among all 20 industries, offset by strongest y/y growth. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Top story — softwood lumber**: U.S. Department of Commerce released preliminary results of the seventh administrative review of anti-dumping and countervailing duty orders on Canadian softwood lumber. BC Minister of Forests Ravi Parmar issued a response statement April 9, 2026. Source: https://news.gov.bc.ca/releases/2026FOR0011-000394
+- **Subsidy response**: Canadian federal and provincial governments have announced more than C$2.1 billion in softwood lumber support in the last seven months, including a $1.2 billion Softwood Lumber Guarantee Program via BDC ($700M August 2025 + $500M November 2025). Quebec added $60M in March 2026 for wood processing working capital. BC announced a Stumpage Payment Deferral Program effective January 1, 2026. Source: https://uslumbercoalition.org/press-release/canadas-new-softwood-lumber-subsidies-exceed-c2-billion-solely-to-prop-up-canadas-massive-and-harmful-excess-lumber-exports-u-s-lumber-coalition/
+- **Export exposure**: 66% of Canada's 2024 softwood lumber production was exported, ~90% to the U.S. Source: https://natural-resources.canada.ca/forest-forestry/forest-industry-trade/canada-s-softwood-lumber-industry
+- **Fertilizer input**: Nutrien (NTR) at $102.13, -2.8% week, -4.5% month, +56.5% year (commodities.json, week ending 2026-04-11). Potash is a key input for Canadian crop economics.
+- **Project activity**: 17 agriculture + 13 forestry records in `projects_all.json`. Forestry project value ~$4.7B.
 
-**LNG Canada:** The $40B LNG Canada facility in Kitimat, BC loaded its first cargo for export in June 2025. Phase 1 has capacity of 6.5 million tonnes per annum. Marine terminal construction continues, with in-water works scheduled to commence April 15, 2026. Phase 2 expansion remains under consideration.
-([LNG Canada](https://www.lngcanada.ca/what-we-do/construction/); [LNG Industry](https://www.lngindustry.com/liquefaction/30032026/lng-canada-to-commence-new-construction-work-at-marine-terminal/))
+#### NAICS 21: Mining, Quarrying & Oil/Gas Extraction
+- **GDP**: +1.2% m/m, -0.1% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Oil & gas drilling**: Canadian Association of Energy Contractors (CAOEC) projects an average 213 active drilling rigs in 2026 (up from 201 in 2025) with 5,709 wells forecast (+3%). WTI 2026 strip ~US$57/bbl; WCS differential ~US$12.80/bbl. Source: https://atbcm.atb.com/insights/canadian-upstream-2026-outlook/
+- **LNG Canada Phase 2**: TC Energy and LNG Canada signed commercial agreements in March 2026 to advance Coastal GasLink Phase 2. Capacity would expand from 2.1 Bcf/d to 5 Bcf/d via five new compressor stations. FID expected late 2026 or early 2027. LNG Canada Phase 1 completed 2025 at ~$40B; Phase 2 ~$33B. Federal Major Projects Office has included Phase 2. Source: https://www.tcenergy.com/newsroom/statements/2026/coastal-gaslink-phase-2-advances-step-forward-with-new-commercial-agreements/
+- **Critical minerals**: March 2026 federal announcement — up to $165.2M for 22 projects, unlocking $434M across eight provinces. First and Last Mile Fund provides $1.5B from 2026-2030. Critical Minerals Sovereign Fund $2B over five years. Source: https://www.canada.ca/en/natural-resources-canada/news/2026/03/backgrounder-government-of-canada-invests-to-unlock-canadas-critical-minerals-advantage.html
+- **Pipeline scale**: 2024-2034 — nearly 140 planned/proposed mining projects, combined value $117.1B; ~half are critical minerals, worth $72.4B. Source: https://resourceworld.com/canadian-mining-enters-2026-with-confidence-as-gold-copper-and-critical-minerals-redefine-the-sector/
+- **M&A**: Anglo-Teck merger of equals announced at ~US$57B — largest copper consolidation transaction in the sector. Source: https://www.torys.com/our-latest-thinking/publications/2026/02/key-trends-in-mining-2026
+- **Uranium**: Cameco (CCO) $160.73 (+2.7% week, +197.6% year). Uranium spot proxy (URA ETF) +4.2% week. Source: internal commodities.json, 2026-04-11.
+- **Project activity**: 192 mining + 42 oil_gas + 12 coal mines + 19 mineral mines + 8 natural gas processing plants in `projects_all.json`.
 
-**Uranium:** Cameco (CCO) closed at $147.75, down 14.1% month-over-month but up 149.9% year-over-year. Sprott Physical Uranium Trust at $27.55, up 3.5% week-over-week.
+#### NAICS 22: Utilities
+- **GDP**: +0.6% m/m, -1.7% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Nuclear refurbishment**: Darlington unit 4 reconnected to the grid March 2026, completing the C$12.8B refurbishment programme — C$150M under budget and four months ahead of schedule. Source: https://world-nuclear.org/information-library/country-profiles/countries-a-f/canada-nuclear-power
+- **SMR pipeline**: Ontario Power Generation's 300 MWe grid-scale SMR at Darlington targeted for 2028. New Brunswick has committed to 600 MWe of new nuclear as part of a 2035 net-zero electricity plan; first SMR targeted for 2030 at Point Lepreau. Source: https://smractionplan.ca/
+- **Grid load**: Canadian Electricity Association estimates power demand could rise ~40% by 2050 (baseline for grid-expansion projects tracked in projects_all.json).
+- **Generation mix**: Canada's grid is 81% hydro, nuclear, wind, and solar. Source: https://world-nuclear.org/information-library/country-profiles/countries-a-f/canada-nuclear-power
+- **Project activity**: 317 power_energy + 251 energy + 204 clean energy + 14 energy storage + 20 power plants in `projects_all.json` — combined ~$523B in aggregate project value.
 
-**Steel/Aluminum tariffs:** Section 232 steel and aluminum tariffs stand at 50% on Canadian exports to the U.S. Statistics Canada reported autoworker employment on the parts side at 64,828 as of December, down 9.5% year-over-year.
-([BNN Bloomberg, March 24 2026](https://www.bnnbloomberg.ca/tariffs/2026/03/24/tariff-hit-industries-struggling-as-trade-war-drags-into-second-year/))
+#### NAICS 23: Construction
+- **GDP**: +1.1% m/m, +2.8% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Housing starts**: February 2026 housing starts 250,900 SAAR units (+4.5% from January's 240,148 SAAR, below consensus 252,500). Source: https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables
+- **Industry outlook**: GlobalData projects Canadian construction output +2.2% in 2025, +2.6% in 2026; nonresidential starts projected -7.8% in 2026 as industrial (peaked 2024) and commercial (peaked 2025) normalize. Source: https://www.globenewswire.com/news-release/2026/02/25/3244764/28124/en/Canada-Construction-Industry-Report-2025-Output-to-Grow-by-2-6-in-2-6-in-2026-After-2-2-Growth-in-2025-Driven-by-PPI-in-Residential-and-Non-residential-Construction-and-Transport-I.html
+- **Steel input**: Steel (SLX ETF proxy) $98.57, +6.6% week, +6.0% month, +76.3% year (commodities.json, 2026-04-11). Largest weekly move of any construction input in the tracked basket.
+- **BC housing policy**: Minister of Housing Christine Boyle issued March 2026 housing highlights (April 10) and April 2026 rental report (April 9) affecting 114 BC projects in housing-eligible sectors. Sources: https://news.gov.bc.ca/releases/2026HMA0042-000398 and https://news.gov.bc.ca/releases/2026HMA0039-000390
+- **Project activity**: Infrastructure 745 / $253B, transit & rail 350, water & wastewater 578 — largest project count concentration in the database.
 
----
+#### NAICS 31-33: Manufacturing
+- **GDP**: -1.4% m/m, -4.6% y/y — largest y/y decline among goods-producing industries. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Auto strategy**: PM Carney launched new auto strategy February 5, 2026. $3B Strategic Response Fund (projects >$20M) plus up to $100M Regional Tariff Response Initiative (SME-scale). Source: https://www.pm.gc.ca/en/news/news-releases/2026/02/05/prime-minister-carney-launches-new-strategy-transform-canadas-auto
+- **Tariff impact**: After roughly one year of U.S. auto tariffs, Canadian auto production has fallen from ~3M vehicles in 2000 to ~1.3M in 2025. Source: https://www.wardsauto.com/news/usmca-canada-auto-sector-faces-challenges-2026-tariffs-evs/810028/
+- **Supply-chain shift**: February 2026 KPMG survey — 82% of Canadian manufacturers and suppliers adjusting supply chain strategies. Source: https://www.rbc.com/en/economics/canadian-analysis/featured-analysis/insights/tracking-the-impact-of-u-s-tariffs-on-five-targeted-canadian-industries/
+- **EV battery plants — status**: Volkswagen St. Thomas ($7B, PowerCo, construction began October 2025, operations 2027); Stellantis NextStar Windsor ($5B, expected online 2026, 2,500 jobs, 450,000 vehicles/year); Honda Alliston ($15B, four plants announced April 2024, postponed May citing "changing conditions"). Source: https://www.theglobeandmail.com/business/article-canada-ev-battery-plants-list-honda-stellantis/
+- **China EV tariff shift**: Canada to allow up to 49,000 Chinese-made EVs/year at MFN 6.1% rate rather than 100%. Source: https://www.cnbc.com/2026/02/13/canada-china-autos-evs.html
+- **Project activity**: 47 manufacturing records totaling ~$67B in `projects_all.json`.
 
-### 3. Utilities (NAICS 22)
+### SERVICES INDUSTRIES
 
-**GDP:** $47,715M (Dec 2025). Utilities contributed to gains in goods-producing industries in January 2026.
+#### NAICS 41: Wholesale Trade
+- **GDP**: -1.2% m/m, -1.7% y/y — both monthly and yearly decline. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Context**: Wholesale weakness aligns with manufacturing contraction (-4.6% y/y) and tariffed goods flows; wholesalers of intermediate industrial goods are exposed to the same U.S. trade friction tracked in the auto strategy above.
+- **Project activity**: Wholesale trade is not tracked as a project sector in `projects_all.json`. Signal is GDP-only.
 
-**Electricity demand projections:** The Canada Energy Regulator's Energy Future 2026 report projects end-use electricity demand increasing 44% from 2023 to 2050. Total annual interprovincial electricity flows are projected to more than double, from 55 TWh in 2023 to 137 TWh by 2050.
-([CER Energy Future 2026](https://www.cer-rec.gc.ca/en/data-analysis/canada-energy-future/2026/results/))
+#### NAICS 44-45: Retail Trade
+- **GDP**: +0.8% m/m, +2.7% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Retail sales**: StatCan advance estimate — retail sales +0.9% in February 2026 (53.4% response rate, subject to revision). January 2026 revised +1.1% to C$69.7B (down from initial 1.5% estimate). Y/y February retail turnover +1.5%. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260320/dq260320a-eng.htm
+- **Project activity**: Retail not tracked as a distinct project sector.
 
-**Generation mix:** Hydroelectricity accounts for approximately 60% of Canadian electric generation. Natural gas cogeneration represents 26% and wind 25% of installed capacity. Renewable generation is expanding across all projections.
-([CER Fact Sheet](https://www.cer-rec.gc.ca/en/about/news-room/news-releases/2026/2026-fact-sheet/current-scenario.html))
+#### NAICS 48-49: Transportation & Warehousing
+- **GDP**: -0.7% m/m, +1.6% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Market size**: Canada freight & logistics market — US$116.63B in 2026, projected CAGR 4.45% to US$145.05B by 2031. Source: https://www.mordorintelligence.com/industry-reports/canada-freight-logistics-market-study
+- **Modal split**: Road freight held 60.97% of tonnage in 2025. Rail investments include 5,900 new grain hopper cars and extended sidings.
+- **Port capacity**: Vancouver vessel wait times approaching four days during January–February export surge periods; multi-year (3-5 year) port on-dock rail and siding extension projects in capex plans. Source: https://www.mordorintelligence.com/industry-reports/canada-freight-logistics-market-study
+- **Major operators**: CN, CPKC, TFI International, Canada Post (Purolator), Cargojet.
+- **Project activity**: 154 ports/logistics + 82 transport_logistics + 26 transit + 10 transmission pipelines + 6 marine port facilities / projects.
 
-**SMR development:** Saskatchewan and Ontario continue to advance small modular reactor programs. The uranium spot proxy (URA ETF) stands at $46.86, down 17.0% month-over-month but up 114.2% year-over-year.
+#### NAICS 51: Information & Cultural Industries
+- **GDP**: +0.9% m/m, +3.2% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Sovereign AI data centres**: Federal government launched a call for proposals January 15, 2026 for sovereign large-scale AI data centres exceeding 100 MW. Source: https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres
+- **Microsoft expansion**: Invest Ontario announced April 8, 2026 — Microsoft AI infrastructure expansion with two new data centres in York Region (Markham and Vaughan) supporting 1,250 jobs. Source: https://yorklink.ca/2026/04/08/invest-ontario-welcomes-microsofts-ai-infrastructure-expansion-in-ontario-supporting-1250-jobs-two-new-data-centres-in-york-region/
+- **Bell AI Fabric**: Construction began at 1452 McGill Road for Bell Canada's Bell AI Fabric national AI infrastructure platform (April 9, 2026). Source: https://inside.tru.ca/2026/04/09/tru-community-trust-advances-data-centre-development
+- **CRTC broadcasting**: CRTC released action plan February 2026 on Canadian content and technology connectivity; Online Streaming Act (Bill C-11) implementation proceeding. Source: https://www.canada.ca/en/radio-television-telecommunications/news/2026/02/crtc-takes-action-to-connect-canadians-through-technology-and-culture.html
+- **Project activity**: 19 telecom records (~$2.9B).
 
----
+#### NAICS 52: Finance & Insurance
+- **GDP**: +0.5% m/m, +3.2% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Q1 2026 bank earnings**: RBC adjusted earnings CAD$5.9B (record), EPS $2.94 vs consensus $2.81. TD Canadian P&C net income $2,044M (+12% y/y). CIBC and National Bank also beat consensus; BMO and Scotiabank met consensus. Source: https://dbrs.morningstar.com/research/476102/large-canadian-banks-q1-2026-earnings-round-up-solid-results-with-manageable-pcl-as-uncertainty-lingers-and-risks-escalate
+- **LFS signal**: Finance, insurance, real estate, rental and leasing lost 11,000 jobs in March 2026 — first meaningful monthly decline since November 2023. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm
+- **Fitch view**: 2026 sector risks include geopolitics, trade tensions, and elevated consumer leverage.
+- **Project activity**: No direct project tracking.
 
-### 4. Construction (NAICS 23)
+#### NAICS 53: Real Estate & Rental/Leasing
+- **GDP**: -0.2% m/m, +1.2% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **CRE investment**: CBRE projects Canadian commercial real estate investment of $56B in 2026 — third-highest volume on record, +8% from estimated $47B in 2025. Source: https://www.cbre.ca/press-releases/canadian-commercial-real-estate-investment-could-rise-to-56-billion-dollars-in-2026
+- **Office**: CBRE forecasts Toronto vacancy falling to 13.4% (from 15.9%); 1.64M sq ft new supply. Source: https://www.cbre.ca/insights/articles/cbre-outlook-canadian-commercial-real-estate-investment-could-rise-to-56-billion-dollar-in-2026
+- **Industrial**: Forecast net absorption >20M sq ft in 2026; CUSMA review scheduled for July 2026 flagged as key sensitivity.
+- **Pension/REIT deployment**: ~$15B deployed in 2025 across residential, industrial, retail, healthcare REITs — ~1/3 of total investment market, largest share since 2021.
+- **BC housing completions**: Two new West Vancouver rental buildings completed, 51 residential/commercial-mixed BC projects affected. Source: https://news.gov.bc.ca/releases/2026HMA0028-000325
+- **Project activity**: 157 residential ($41.8B) + 60 housing + 68 commercial_mixed ($29.8B).
 
-**GDP:** $171,328M (Dec 2025). Construction was one of the key drivers of goods-producing industry growth in January 2026.
+#### NAICS 54: Professional, Scientific & Technical Services
+- **GDP**: -0.1% m/m, -0.4% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **LFS March 2026**: +12,000 jobs added in NAICS 54. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm
+- **Composition**: Legal, accounting, architecture/engineering, surveying/mapping, design, management/technical consulting, scientific R&D, advertising. Source: https://ised-isde.canada.ca/app/ixb/cis/summary-sommaire/54
+- **Aging workforce**: ~19% of NAICS 54 workforce over age 55. Source: https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-professional-services
+- **Project activity**: Not directly tracked; professional services flow into data centre/AI capex (see NAICS 51) and construction engineering inputs.
 
-**Building permits (January 2026):** Total value of building permits increased $607.0M (+4.8%) to $13.3B, led by the non-residential sector. A total of 21,400 multi-unit dwellings and 4,000 single-family dwellings were authorized.
-([StatCan Daily, March 12 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260312/dq260312c-eng.htm))
+#### NAICS 55: Management of Companies & Enterprises
+- **GDP**: -4.1% m/m, -21.9% y/y — largest y/y contraction of any NAICS industry in the dataset. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Composition**: Holding companies and head offices that manage subsidiaries. Source: https://www23.statcan.gc.ca/imdb/p3VD.pl?Function=getVD&TVD=1369825&CVD=1369826&CPV=55&CST=27012022&CLV=1&MLV=5
+- **Interpretation — flagged for analyst review**: -21.9% y/y is an outlier relative to the rest of the industry set and may reflect head-office restructuring or reclassification effects. No project-level signal available.
+- **Project activity**: Not tracked.
 
-**Building investment (January 2026):** Total investment in building construction decreased $448.3M (-1.9%) to $23.4B. Residential investment fell 3.0%, moderated by a 0.8% increase in non-residential investment. Year-over-year, investment grew 7.8%.
-([StatCan Daily, March 19 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260319/dq260319a-eng.htm))
+#### NAICS 56: Administrative & Waste Management Services
+- **GDP**: -0.1% m/m, -0.2% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **LFS signal**: Business, building and other support services (part of NAICS 56) lost 9,500 jobs in March 2026 (-1.4%). Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm
+- **Structure**: 52.1% of NAICS 56 establishments are micro (<5 employees), 44.9% small, 2.6% medium. Source: https://ised-isde.canada.ca/app/ixb/cis/businesses-entreprises/56
+- **Project activity**: 13 environment / remediation records (~$1.9B).
 
-**Housing starts (February 2026):** CMHC reported the six-month trend was virtually flat at 256,005 units. Monthly SAAR increased 4.5% to 250,900 units. Vancouver starts rose 60% year-over-year; Montreal up 18%; Toronto down 28%. CMHC expects heightened business uncertainty and construction costs to weigh on the rate and trend of starts.
-([CMHC Housing Starts February 2026](https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-february-2026))
+#### NAICS 61: Educational Services
+- **GDP**: +0.5% m/m, -1.9% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **International student cap**: IRCC 2026 cap set at 309,670 study permit application spaces — 7% below 2025 target of 437,000; 16% below 2024 target of 485,000. New international student admissions projected to fall from 305,900 to 155,000 (roughly -50%). Master's/doctoral students at public DLIs exempt from PAL/TAL as of January 1, 2026. Source: https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/2026-provincial-territorial-allocations-under-international-student-cap.html
+- **Capital**: BC allocation $3.3B postsecondary, +$600M y/y. McGill redevelopment (former Royal Victoria Hospital site) $870M. University of Victoria 510-bed residence — groundbreak May 2026, revised completion 2034 (from 2029).
+- **Project activity**: 151 education records (~$14.7B).
 
-**Federal investment:** Build Canada Homes program commits $13B over five years, targeting 4,000 homes on six federally owned sites. BC secured a federal partnership for accelerated housing construction.
-([Canada.ca, January 2026](https://www.canada.ca/en/housing-infrastructure-communities/news/2026/01/build-canada-homes-thousands-of-homes-in-the-pipeline.html); [BC Gov, February 2026](https://news.gov.bc.ca/releases/2026HMA0017-000165))
+#### NAICS 62: Health Care & Social Assistance
+- **GDP**: 0.0% m/m, +2.1% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **LFS signal**: Health care and social assistance +5,000 jobs in March 2026 (+0.2%); +94,000 y/y — the largest y/y growth among all industries. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm
+- **Ontario LTC**: 147 LTC projects / 23,977 beds completed, under construction, or approved as of March 31, 2025. Target 58,000 new/upgraded beds in two years; ~26,000 beds open, under construction, or approved as of February. Source: https://www.cbc.ca/news/canada/toronto/ontario-budget-healthcare-long-term-care-9.7143637
+- **Quebec hospitals**: 2026-27 budget allocates $2.3B for major hospital construction and expansion over 10 years. 38% of Quebec's 594 hospital buildings classified "poor" or "very poor" condition as of early 2026. Source: https://www.cbc.ca/news/canada/montreal/quebec-hospital-projects-doctors-staff-react-9.7138974
+- **Project activity**: 230 healthcare records (~$20.5B).
 
-**Steel input costs:** Steel ETF proxy (SLX) at $90.13, down 10.4% month-over-month but up 48.9% year-over-year.
+#### NAICS 71: Arts, Entertainment & Recreation
+- **GDP**: -0.1% m/m, +2.2% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **LFS signal**: Information, culture and recreation (combined LFS grouping covering parts of NAICS 51/71) +8,800 jobs in March 2026 (+1.0%). Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm
+- **Employment base**: 402,100 workers nationwide in 2024. Amusement/gambling/recreation 68%, performing arts/spectator sports 25%, heritage institutions 7%. Source: https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-arts
+- **FIFA World Cup 2026**: $150M upgrade to BMO Field ahead of June 2026 matches.
+- **Project activity**: 147 tourism_culture records (~$22.3B) including 2 ski resorts, 2 resort developments.
 
----
+#### NAICS 72: Accommodation & Food Services
+- **GDP**: +0.7% m/m, +2.3% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **LFS signal**: Accommodation and food services -10,000 jobs in March 2026 (-0.9%). Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm
+- **Employment base**: ~1.9M workers nationwide. 2024 vacancy rate 3.8% (~18,230 unfilled) vs 3.1% all-industry average. Source: https://www.workbc.ca/industry-profile/accommodation-and-food-services
+- **Tourism revenue**: Rose from $94B (2022) to $109.5B (2023). Source: https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-accommodation
 
-### 5. Manufacturing (NAICS 31-33)
+#### NAICS 81: Other Services (except Public Administration)
+- **GDP**: +0.2% m/m, +0.3% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **LFS signal**: Other services (personal, repair, religious, civic organizations) +15,000 jobs in March 2026 — largest single-industry monthly gain. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm
+- **Composition**: Motor vehicle / equipment repair, personal care, funeral, laundry, pet care, religious and civic organizations. Source: https://www23.statcan.gc.ca/imdb/p3VD.pl?Function=getVD&TVD=1369825&CVD=1369826&CPV=81&CST=27012022&CLV=1&MLV=5&D=1
 
-**GDP:** $198,010M (Dec 2025). Manufacturing contracted 1.4% in January 2026, offsetting some of the gains in other goods-producing sectors.
-([StatCan Daily, March 31 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm))
-
-**PMI:** The S&P Global Canada Manufacturing PMI rose to 51.0 in February 2026 (from 50.4 in January), marking the second consecutive month of expansion and a 13-month high. New orders grew for the first time in 13 months, driven by domestic demand. Export orders continued to decline, though at the slowest pace since October 2025. Approximately 24% of survey respondents expected output growth over the next 12 months, the highest level of optimism since December 2024.
-([S&P Global PMI](https://www.pmi.spglobal.com/Public/Home/PressRelease/582ef30d9b5d431dafa6ad7852a58835); [MRO Magazine, March 2 2026](https://www.mromagazine.com/2026/03/02/canadas-manufacturing-sector-improves-for-second-straight-month-sp-global/))
-
-**Auto sector:** Stellantis halted plans to build the Jeep Compass at its Brampton, Ontario plant, affecting approximately 3,000 direct jobs. GM permanently ended BrightDrop electric van production at Ingersoll, Ontario and scaled back Oshawa operations. Ottawa reduced GM's tariff-free import quota by 24.2% and Stellantis' by 50%. The federal government announced a $3B Strategic Response Fund and $100M Regional Tariff Response Initiative for automotive manufacturing. Canada's new automotive strategy was unveiled February 5, 2026.
-([Canada.ca Auto Strategy](https://www.canada.ca/en/innovation-science-economic-development/news/2026/02/prime-minister-carney-unveils-canadas-new-automotive-strategy-to-protect-jobs-and-position-our-country-as-a-global-leader-in-next-generation-vehicl.html); [BNN Bloomberg, March 31 2026](https://www.bnnbloomberg.ca/tariffs/2026/03/31/auto-sector-making-long-term-shifts-away-from-us-market/))
-
-**Tariff impact:** U.S. 50% Section 232 tariffs on steel and aluminum remain in effect. The 10% temporary import surcharge applies to most Canadian goods. Autoworker employment on the parts side stood at 64,828 as of December, down 9.5% year-over-year. The 2025-26 tariff cycle has reduced Canadian GDP by an estimated 1.5-2%.
-([The Fulcrum](https://thefulcrum.us/economy/u-s-canada-tariffs-2026); [Econofact](https://econofact.org/the-impact-of-the-trade-war-on-canada))
-
----
-
-## SERVICES-PRODUCING INDUSTRIES
-
----
-
-### 6. Wholesale Trade (NAICS 41)
-
-**GDP:** $126,269M (Dec 2025). Wholesale trade fell 1.2% in January 2026, largely offsetting December's increase.
-
-**January 2026:** Wholesale sales (excluding petroleum products and oilseed/grain) fell 0.6%. The decrease was led by lower sales in the motor vehicle and motor vehicle parts and accessories subsector.
-([StatCan Daily, February 25 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260225/dq260225g-eng.htm))
-
-**December 2025:** Wholesale sales volumes (excluding petroleum/oilseed/grain) rose 2.1%. Food, beverage and tobacco subsector sales increased 6.1% to $187.8B for full-year 2025. Motor vehicle wholesale sales rose 9.3% in December to $14.3B after a steep November decline.
-([StatCan Daily, February 17 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260217/dq260217b-eng.htm))
-
----
-
-### 7. Retail Trade (NAICS 44-45)
-
-**GDP:** $124,372M (Dec 2025). Retail trade expanded 0.8% in January 2026, with six of nine subsectors up, led by motor vehicle and parts dealers.
-([StatCan Daily, March 31 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm))
-
-**Sales data:** Retail sales increased 1.1% to $70.7B in January, with sales up in six of nine subsectors. February 2026 advance estimate showed a further 0.9% increase.
-([StatCan Daily, March 20 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260320/dq260320a-eng.htm))
-
-**Consumer spending patterns:** TD Economics data shows consumer spending softened early in 2026 before stabilizing in February, with three-month average growth at 0.8% (approximately 9.5% annualized). A split exists between income groups: Health & Beauty (+6.7%), Food (+2.6%), and Beverage (+2.7%) are leading recovery, while discretionary categories tied to housing are losing momentum. New vehicle sales are expected to fall in 2026 due to tariff-related supply chain disruptions.
-([TD Economics](https://economics.td.com/ca-retail-sales); [Retail Insider, March 2026](https://retail-insider.com/retail-insider/2026/03/consumer-sector-remains-resilient-but-increasingly-battle-worn-td/))
-
----
-
-### 8. Transportation & Warehousing (NAICS 48-49)
-
-**GDP:** $104,665M (Dec 2025). Transportation and warehousing declined in January 2026, with extreme weather conditions cited as a contributing factor.
-
-**Rail:** Rail handled 11% of Canada's total export value and approximately 50% of total export volume (tonnes) in 2024. Rail networks face capacity constraints and infrastructure gaps, including limited links to ports and airports.
-([Transport Canada Annual Report 2024](https://tc.canada.ca/sites/default/files/2025-06/transportation-canada-annual-report-2024.pdf))
-
-**Ports:** Canada has 17 port authority-managed ports. Port of Vancouver handled 23.5 million tonnes of cargo and 700,000 TEUs in 2024. Trade-enabling infrastructure investment is identified as a critical need. Warehousing capacity in Western Canada is expanding, tied to inland logistics hubs and e-commerce fulfillment.
-([EDC Article](https://www.edc.ca/en/article/trade-enabling-infrastructure-gaps.html))
-
-**Sector GDP contribution:** The sector directly contributed $96.5B (4.3% of GDP) in 2024, reflecting a 2.6% increase over the previous year. Employment is expected to see modest growth over 2024-2026.
-([Job Bank Transportation Profile](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-transportation))
-
----
-
-### 9. Information & Cultural Industries (NAICS 51)
-
-**GDP:** $81,665M (Dec 2025).
-
-**Employment:** Ontario's information and cultural sector employment declined 3.6% in 2024, with employment expected to remain subdued through 2025-2027 due to slower tech hiring, print publishing declines, and telecom automation.
-([Job Bank Ontario Profile](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-information-and-culture))
-
-**Telecom investment:** Capital expenditure in the wired and wireless telecommunications industry was estimated at $10.9B in 2024, approximately $262 per Canadian.
-([ISED Summary](https://ised-isde.canada.ca/app/ixb/cis/summary-sommaire/51))
-
-**Structural shift:** Small unincorporated firms make up an increasingly large share of cultural firms, consistent with the rise of independent content creators able to distribute work without traditional publishers.
-([StatCan Cultural Industries Study](https://www150.statcan.gc.ca/n1/pub/36-28-0001/2025004/article/00005-eng.htm))
-
----
-
-### 10. Finance & Insurance (NAICS 52)
-
-**GDP:** $179,374M (Dec 2025). Finance and insurance increased in January 2026, partially offsetting declines in other services sectors.
-
-**Market concentration:** Canada's Big Six banks hold approximately 93% of banking assets.
-([Competition Bureau, March 2026](https://www.canada.ca/en/competition-bureau/news/2026/03/moving-canadas-financial-sector-forward-for-consumers.html))
-
-**Regulatory developments:** OSFI is launching a pilot program in June 2026 to expedite approvals for bank licensing, targeting provincial institutions, fintechs, and crypto custodians. The Competition Bureau launched a market study on competition in SME financing, with submissions due February 27, 2026. The Consumer-Driven Banking Act is moving toward implementation of open banking.
-([OSFI Risk Outlook 2025-2026](https://www.osfi-bsif.gc.ca/en/about-osfi/reports-publications/osfis-annual-risk-outlook-fiscal-year-2025-2026); [Fasken Banking Outlook](https://www.fasken.com/en/knowledge/2025/12/banking-regulatory-year-in-review-and-2026-outlook))
-
-**Insurance:** Data portability in the insurance sector could save Canadians between $1.1B and $3.8B in annual costs. Over 40% of Canadians under 40 seek living benefits like cash withdrawals for life events, shifting product design.
-([Capgemini Insurance Trends 2026](https://www.capgemini.com/ca-en/insights/research-library/insurance-top-trends-2026/))
-
----
-
-### 11. Real Estate & Rental (NAICS 53)
-
-**GDP:** $309,928M (Dec 2025) — the largest single NAICS sector by GDP. Real estate activity was weighed down by extreme weather in January 2026.
-
-**Commercial real estate:** CBRE projects commercial real estate investment volume could reach approximately $56B in 2026, up from an estimated $47B in 2025. Institutional capital deployed nearly $15B in 2025, the largest share of acquisitions since 2021. Office cap rates have peaked and office sentiment has rebounded for the first time in six years. The industrial market is stabilizing as availability rates plateau.
-([CBRE Outlook](https://www.cbre.ca/insights/articles/cbre-outlook-canadian-commercial-real-estate-investment-could-rise-to-56-billion-dollar-in-2026); [JLL Outlook 2026](https://www.jll.com/en-ca/insights/market-outlook/canadian-commercial-real-estate-outlook))
-
-**Purpose-built rental:** 2025 was the first year where purpose-built rental units under construction exceeded condos or single-family homes. CMHC expects purpose-built rental supply to rise further, though 2026 is characterized as a transition year for multifamily as softer demand and new supply lift vacancy rates.
-([CMHC Housing Market Outlook](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/market-reports/housing-market/housing-market-outlook))
-
-**Economic headwinds:** 74% of commercial real estate survey respondents cited economic weakness as a major challenge; 64% cited market fundamentals; 51% pointed to uncertainty around property valuations.
-([PwC/ULI Canada Markets to Watch](https://www.pwc.com/us/en/industries/financial-services/asset-wealth-management/real-estate/emerging-trends-in-real-estate-pwc-uli/canada/canada-markets-to-watch.html))
+#### NAICS 91: Public Administration
+- **GDP**: -0.1% m/m, +0.7% y/y. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm
+- **Federal workforce plan**: Carney government plan targets elimination of ~40,000 public service jobs; Employment and Social Development Canada projected to have 15,629 fewer staff in 2029 vs last year. Source: https://www.cbc.ca/news/canada/ottawa/union-budget-carney-public-service-department-plans-9.7133612
+- **Budget**: "Canada Strong" 2025-2026 federal budget — C$280B spending over five years, delivered November 2025 by Finance Minister François-Philippe Champagne. Priorities: defence and capital investment. Source: https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending/government-expenditure-plan-main-estimates/2026-27-estimates.html
+- **Natural resources employment**: LFS — natural resources sector +10,000 jobs in March 2026. Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm
+- **Project activity**: 191 government (~$43.8B) + 15 defence (~$119.5B) records. Defence is the largest aggregate-value government project bucket in the database.
 
 ---
 
-### 12. Professional, Scientific & Technical Services (NAICS 54)
+## 4. Commodity Price Impact Analysis (from `commodities.json`, week ending 2026-04-11)
 
-**GDP:** $168,596M (Dec 2025). The sector posted its first GDP decline in months as of early 2026.
+### Energy
+- **Cameco (uranium)**: $160.73, +2.7% week, +2.5% month, +197.6% y/y. Affected sectors: NAICS 21, 22. Affected provinces: SK, ON.
+- **Uranium spot (URA ETF)**: $50.96, +4.2% week, -0.8% month, +135.7% y/y. Saskatchewan uranium mine expansion and SMR supply chain exposure.
+- **Sprott Physical Uranium Trust**: $27.72, -1.9% week, +2.5% month, +46.7% y/y.
+- **WTI 2026 strip**: ~US$57/bbl; **WCS differential**: ~US$12.80/bbl. Source: https://atbcm.atb.com/insights/canadian-upstream-2026-outlook/
 
-**Employment:** Job growth is expected at approximately 1.3% annually across Western Canada and Northern Territories by 2027. Saskatchewan PSTS employment is projected to grow at 2.7% annually, contributing 55% of the sector's 7,100 job openings forecast for 2022-2026.
-([Job Bank Western Region](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/western-region/sectoral-profile-technical-services); [Job Bank Saskatchewan](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/saskatchewan/sectoral-profile-professional-services))
+### Metals
+- **Steel (SLX ETF)**: $98.57, +6.6% week, +6.0% month, +76.3% y/y. Largest weekly move of the tracked commodity basket. Affected sectors: NAICS 23 (Construction), NAICS 48-49 (Transport infrastructure).
+- **Nickel (NIKL ETF)**: $28.40, 0.0% week (flat). Affected sectors: NAICS 21 (Mining). Affected provinces: ON, QC, NL, MB.
 
-**Tech labour market:** Technology sector hiring has slowed, with professional, scientific and technical services posting their first employment decline in months in early 2026. The degree of employment growth varies between subsectors, with each facing unique pressures.
-([Job Bank Ontario](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-professional-services))
+### Agriculture
+- **Nutrien (NTR)**: $102.13, -2.8% week, -4.5% month, +56.5% y/y. Affected sectors: NAICS 11, 21. Affected provinces: SK, AB.
 
----
-
-### 13. Management of Companies & Enterprises (NAICS 55)
-
-**GDP:** $641M (Dec 2025) — the smallest NAICS sector by GDP.
-
-**Classification changes:** Over 51,000 holding companies were recoded to new industries under NAICS 2022. Approximately 10,000 units were reclassified to Finance and Insurance; 35,000 were moved to unclassified status.
-([ISED Summary](https://ised-isde.canada.ca/app/ixb/cis/summary-sommaire/55))
-
-**Sector structure:** This sector comprises establishments engaged in holding securities of subsidiaries/affiliates for controlling interest purposes or administering/managing other establishments of the enterprise. All activities focus on serving economic units within the enterprise group.
-([StatCan NAICS 2022](https://www23.statcan.gc.ca/imdb/p3VD.pl?Function=getVD&TVD=1369825&CVD=1369826&CPV=55&CST=27012022&CLV=1&MLV=5))
+### Equities
+- **TSX infrastructure basket**: $56.38, +0.5% week, +2.5% month, +45.2% y/y. Affected sectors: NAICS 22, 48-49.
 
 ---
 
-### 14. Administrative & Support, Waste Management (NAICS 56)
+## 5. Major Project Announcements by Sector (this week)
 
-**GDP:** $60,887M (Dec 2025).
-
-**Sector composition:** Establishments provide administration, hiring/placement, document preparation, security, building cleaning, and packaging services. Waste management establishments handle collection, treatment, disposal, material recovery, site remediation, and septic tank servicing.
-([ISED Summary](https://ised-isde.canada.ca/app/ixb/cis/summary-sommaire/56))
-
-**Waste management outlook:** Increased emphasis on responsible environmental management from private sector, government, and international markets supports growth in remediation and waste management subsectors.
-([ECO Canada](https://eco.ca/career-profiles/waste-management-specialist/))
+- **LNG Canada / Coastal GasLink Phase 2** (NAICS 21/22/23): new commercial agreements executed end of March 2026; Phase 2 FID late 2026 / early 2027; ~$33B. https://www.tcenergy.com/newsroom/statements/2026/coastal-gaslink-phase-2-advances-step-forward-with-new-commercial-agreements/
+- **Microsoft York Region data centres** (NAICS 51/23): April 8, 2026 — two new data centres in Markham and Vaughan; 1,250 jobs. https://yorklink.ca/2026/04/08/invest-ontario-welcomes-microsofts-ai-infrastructure-expansion-in-ontario-supporting-1250-jobs-two-new-data-centres-in-york-region/
+- **Bell AI Fabric / TRU data centre** (NAICS 51/23): April 9, 2026 — construction begins on 1452 McGill Road data centre. https://inside.tru.ca/2026/04/09/tru-community-trust-advances-data-centre-development
+- **Critical minerals federal package** (NAICS 21): March 2026 — $165.2M for 22 projects, unlocking $434M across 8 provinces. https://www.canada.ca/en/natural-resources-canada/news/2026/03/backgrounder-government-of-canada-invests-to-unlock-canadas-critical-minerals-advantage.html
+- **BC West Vancouver rental completions** (NAICS 53): March 27, 2026; two new rental buildings completed. https://news.gov.bc.ca/releases/2026HMA0028-000325
 
 ---
 
-### 15. Educational Services (NAICS 61)
+## 6. Labour Market by Sector (Statistics Canada Labour Force Survey, March 2026)
 
-**GDP:** $123,701M (Dec 2025).
+Released April 10, 2026. Total +14,000 jobs; unemployment rate 6.7% (unchanged). Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm
 
-**International student cap:** Canada expects to issue up to 408,000 study permits in 2026, including 155,000 to newly arriving international students — a nearly 50% reduction from 305,900. New international student arrivals fell 61% in 2025 to 115,470.
-([IRCC November 2025](https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/2026-provincial-territorial-allocations-under-international-student-cap.html); [ICEF Monitor, March 2026](https://monitor.icef.com/2026/03/canada-government-audit-finds-impact-of-international-student-cap-far-greater-than-expected/))
+Gainers: Other services +15,000; Professional/scientific/technical (NAICS 54) +12,000; Natural resources +10,000; Information/culture/recreation +8,800; Health care and social assistance +5,000 (+94,000 y/y).
 
-**Institutional impact:** The University of the Fraser Valley laid off 45 faculty and staff due to a CA$20M deficit in the 2026/27 fiscal year. Provincial disparities are significant: study permit approvals for Manitoba, PEI, Nova Scotia, and New Brunswick decreased by at least 59%. Some colleges report enrollment declines exceeding 50%, resulting in staffing reductions, program suspensions, and campus closures.
-([ICEF Monitor, March 2026](https://monitor.icef.com/2026/03/canada-government-audit-finds-impact-of-international-student-cap-far-greater-than-expected/))
+Decliners: Finance, insurance, real estate, rental and leasing -11,000 (first significant monthly decline since November 2023); Accommodation and food services -10,000 (-0.9%); Business, building, and support services -9,500 (-1.4%).
 
-**K-12 trends:** K-12 enrollment remains relatively flat. Population growth and evolving economic conditions are contributing to increased demand for elementary and secondary education in Ontario.
-([Job Bank Ontario Educational Services](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-educational-services))
-
-**Education spending:** Canada's education spending as a share of GDP stood at 4.14% in 2022, down from 4.75% in 2021.
-([MacroTrends](https://www.macrotrends.net/countries/CAN/canada/education-spending))
+Secondary source — Indeed Hiring Lab commentary: https://www.hiringlab.org/en-ca/2026/04/10/march-2026-labour-force-survey-holding-steady/
 
 ---
 
-### 16. Health Care & Social Assistance (NAICS 62)
+## 7. Policy and Regulatory Impacts
 
-**GDP:** $191,439M (Dec 2025) — the second-largest NAICS sector after real estate.
-
-**Employment:** Health care and social assistance now accounts for 21.5% of all paid work in Canada, more than double the share of the second-largest sector (retail). Approximately 14% of Canadians work in this sector, up from 8% in the 1970s. The sector added 21,000 jobs in December alone and 85,000 over the past year.
-([Globe and Mail](https://www.theglobeandmail.com/business/article-health-care-job-creation-labour-market-aging-population/))
-
-**Ontario data:** Ontario's health care and social assistance sector employed 1,007,100 people in 2024 (12.4% of the provincial workforce), an increase of 26,000 (+2.7%) from 2023. The sector produced over $64.2B in GDP in Ontario in 2024, contributing 7.2% to provincial GDP. Output grew approximately $2.3B (3.7%) year-over-year.
-([Job Bank Ontario Healthcare](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-health-care))
-
-**Federal spending:** Employment and Social Development Canada's planned gross spending for 2026-27 is $218.76B with 30,945 planned FTEs.
-([Canada.ca ESDC 2026-27 Departmental Plan](https://www.canada.ca/en/employment-social-development/corporate/reports/departmental-plan/2026-2027.html))
+- **Softwood lumber** — U.S. DOC preliminary results, seventh administrative review: https://news.gov.bc.ca/releases/2026FOR0011-000394
+- **BC housing** — Minister statements March highlights and April 2026 rental report: https://news.gov.bc.ca/releases/2026HMA0042-000398 and https://news.gov.bc.ca/releases/2026HMA0039-000390
+- **Federal auto strategy** — PM Carney announcement February 5, 2026: https://www.pm.gc.ca/en/news/news-releases/2026/02/05/prime-minister-carney-launches-new-strategy-transform-canadas-auto
+- **Critical minerals** — NRCan March 2026 backgrounder: https://www.canada.ca/en/natural-resources-canada/news/2026/03/backgrounder-government-of-canada-invests-to-unlock-canadas-critical-minerals-advantage.html
+- **Sovereign AI data centres** — ISED January 15, 2026 call for proposals: https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres
+- **Federal workforce plan** — ~40,000 public service job eliminations under Carney budget plan: https://www.cbc.ca/news/canada/ottawa/union-budget-carney-public-service-department-plans-9.7133612
+- **International student cap 2026** — 309,670 application spaces; -7% from 2025: https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/2026-provincial-territorial-allocations-under-international-student-cap.html
+- **CRTC broadcasting framework** — February 2026 action plan: https://www.canada.ca/en/radio-television-telecommunications/news/2026/02/crtc-takes-action-to-connect-canadians-through-technology-and-culture.html
 
 ---
 
-### 17. Arts, Entertainment & Recreation (NAICS 71)
+## 8. Emerging Stories and Cross-Sector Trends
 
-**GDP:** $19,536M (Dec 2025) — the smallest services sector.
-
-**Employment:** Ontario expects moderate to slow employment growth in 2025-2027. Quebec projects negative job growth in 2024-2026, as consumer habits change and government funding does not keep pace with operating costs. Nearly 46.6% of sector employees in Ontario work part-time (versus 17.6% for all industries). Youth (age 15-24) make up 39.5% of the sector workforce.
-([Job Bank Ontario Arts](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-arts); [Job Bank Quebec Arts](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/quebec/sectoral-profile-arts))
-
-**Major events:** The $150M BMO Field upgrade in Toronto is underway ahead of the FIFA World Cup in June 2026.
-([Job Bank Ontario Arts](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-arts))
-
-**Headwinds:** Trade tensions with the U.S. are putting downward pressure on consumer confidence and discretionary spending. The Bank of Canada anticipates a period of slow growth in household incomes.
-([StatCan Workforce Insights](https://www150.statcan.gc.ca/n1/pub/11-621-m/11-621-m2024016-eng.htm))
+- **AI data centre capex cluster (NAICS 51 + 23 + 22)**: Microsoft York Region, Bell AI Fabric, and the federal sovereign AI data centre call for proposals coincide. Data centres connect to utilities (power demand), construction (build-out), and information services (operations).
+- **Critical minerals → manufacturing supply chain (NAICS 21 → 31-33)**: The $72.4B critical minerals pipeline (140 projects 2024-2034) connects to Ontario's Stellantis/VW/Honda EV battery cluster — though Honda's $15B Alliston investment was paused May 2025.
+- **LNG sequencing (NAICS 21 + 22 + 23 + 48-49)**: Coastal GasLink Phase 2 and LNG Canada Phase 2 are in commercial-agreement stage; FID late 2026 / early 2027 would cascade through pipeline construction, port handling, and natural gas processing.
+- **Softwood lumber support and forestry exposure (NAICS 11 + 31-33)**: >$2.1B in federal + provincial supports in seven months; 66% export dependence with ~90% of exports to U.S. BC, Quebec, and federal programs span BDC loan guarantees, stumpage deferral, and working capital.
+- **Public service contraction vs health care expansion (NAICS 91 vs 62)**: ~40,000 planned federal job reductions against +94,000 y/y health care employment growth — largest y/y sector gain in the labour force survey.
+- **NAICS 55 anomaly**: Management of companies -21.9% y/y — flagged for analyst review; no supporting project data.
 
 ---
 
-### 18. Accommodation & Food Services (NAICS 72)
+## 9. Coverage Gaps and Priorities
 
-**GDP:** $52,548M (Dec 2025).
-
-**Employment:** Moderate growth expected over 2024-2026, limited by consumer spending pressures and sustained labour shortages.
-([Job Bank Ontario Accommodation](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-accommodation))
-
-**Restaurant sector:** One-third of restaurant establishments were operating at a loss in 2023. The sector recorded 219 more insolvency filings (+43.8%) in 2023 than in 2022.
-([Restaurant Industry Trends Canada 2026](https://www.shopatstop.com/blogs/resources/restaurant-industry-trends-canada))
-
-**Labour challenges:** The sector continues to face worker shortages, with demanding physical work, unstable hours, and poor compensation pushing workers to other sectors. Over 50% of independent Canadian hospitality providers are expected to adopt Hardware-as-a-Service models for more efficient service delivery.
-([Restaurant Industry Trends Canada 2026](https://www.shopatstop.com/blogs/resources/restaurant-industry-trends-canada))
-
-**Consumer behaviour:** 60% of Canadian travelers prefer accommodations with sustainable certifications. Wellness-oriented menus featuring plant-based, gluten-free, and organic options are gaining traction.
-([Partsfe Canadian Hospitality Trends](https://partsfe.ca/blog/post/emerging-trends-in-canadian-hospitality))
+- **Lumber timeseries stale 1,065 days** (`data_gap_report.md`). Lumber price signal above sourced externally.
+- **NAICS 55 Management of Companies -21.9% y/y**: no supporting project coverage; classification reweighting plausible but unverified this cycle.
+- **Procurement and jobs feeds empty for week 2026-04-11**: no weekly contract awards or hiring spikes in `jobs.json` / `procurement.json`. Labour trends above rely on StatCan LFS.
+- **Wholesale (NAICS 41) and Management (NAICS 55) and NAICS 81**: GDP-only coverage; no project records in the database (expected for non-project-intensive industries).
+- **Provincial CPI / unemployment** stale at 2026-02-01 for 9 of 13 provinces (69 days old — outside 60-day window). Affects labour-market cross-reference precision.
 
 ---
 
-### 19. Other Services (except Public Administration) (NAICS 81)
+## 10. Master Source Registry
 
-**GDP:** $44,650M (Dec 2025).
-
-**Sector composition:** This sector includes motor vehicle repair and maintenance, personal care services, funeral services, laundry services, religious organizations, grant-making foundations, advocacy organizations, and professional/trade associations.
-([StatCan NAICS 2022](https://www23.statcan.gc.ca/imdb/p3VD.pl?CLV=1&CPV=81&CST=27012022&CVD=1369826&Function=getVD&MLV=5&TVD=1369825))
-
-**Quebec data:** Quebec's Other Services sector encompasses personal services, automotive repair, and civic/religious organizations. The sector faces pressures from changing consumer habits and competition from digital alternatives for personal and repair services.
-([Quebec.ca NAICS 81 Profile](https://www.quebec.ca/en/employment/learn-trade-occupation/exploring-sectors-activity/other-services-except-public-administration-naics-81))
-
----
-
-### 20. Public Administration (NAICS 91)
-
-**GDP:** $168,378M (Dec 2025).
-
-**Federal employment:** In January 2026, 4.597 million Canadians worked in the public sector (federal, provincial, local governments, Crown corporations, publicly funded institutions), representing 21.8% of total employment.
-([The Hub, February 20 2026](https://thehub.ca/2026/02/20/more-than-one-in-five-canadians-now-works-for-government-and-the-share-is-rising/))
-
-**Federal workforce reduction:** The government committed to returning the federal public service from close to 368,000 to a target of 330,000. Reductions of approximately 9,800 employees began in 2024-2025 under the Refocusing Government Spending initiative. The Comprehensive Expenditure Review will further decrease the public service by an estimated 16,000 FTEs over the next three years.
-([Canada.ca Workforce Reductions](https://www.canada.ca/en/government/publicservice/workforce/workforce-adjustment/workforce-reductions-federal-public-service.html))
-
-**Personnel costs:** Federal personnel costs are the largest component of operating spending at an estimated $71.1B in 2024-25. The PBO projects personnel spending will rise to $76.2B by 2029-30 without expenditure restraint.
-([PBO Personnel Expenses](https://www.pbo-dpb.ca/en/publications/RP-2526-008-S--projecting-federal-personnel-expenses--projection-depenses-federales-consacrees-personnel))
-
-**2026-27 estimates:** Main estimates for 2026-27 have been tabled. Department of Finance Canada's 2026-27 Departmental Plan has been released.
-([Canada.ca 2026-27 Estimates](https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending/government-expenditure-plan-main-estimates/2026-27-estimates.html))
-
----
-
-## Cross-Cutting Theme: U.S.-Canada Trade War
-
-The ongoing trade dispute affects multiple NAICS sectors simultaneously. Key facts:
-
-- U.S. Supreme Court struck down IEEPA tariffs on Canada and Mexico in February 2026, but the administration imposed a 10%, 150-day temporary import surcharge under Section 122 of the Trade Act of 1974.
-- Section 232 steel and aluminum tariffs stand at 50%.
-- Tariffs apply to copper products, lumber/timber products, and vehicles/auto parts.
-- Approximately 20% of Canadian GDP is reliant on U.S. exports.
-- The 2025-26 tariff cycle has reduced Canadian GDP by an estimated 1.5-2%.
-- Canadian households absorb an estimated $1,700-$2,000 in higher annual costs.
-- USMCA review is scheduled for July 2026.
-
-([Wikipedia Trade War Timeline](https://en.wikipedia.org/wiki/Timeline_of_the_2025%E2%80%932026_United_States_trade_war_with_Canada); [The Fulcrum](https://thefulcrum.us/economy/u-s-canada-tariffs-2026); [Canada.ca Tariff Response](https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html))
-
----
-
-*Research compiled 2026-03-31 by Agent 1C (Sector/Industry Researcher). All figures sourced from Statistics Canada, CMHC, CER, CBRE, S&P Global, Government of Canada, and industry publications as cited.*
+[1] https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm — Gross domestic product by industry, January 2026 — Statistics Canada — 2026-03-31
+[2] https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm — Labour Force Survey, March 2026 — Statistics Canada — 2026-04-10
+[3] https://www150.statcan.gc.ca/n1/daily-quotidien/260320/dq260320a-eng.htm — Retail trade, January 2026 — Statistics Canada — 2026-03-20
+[4] https://atbcm.atb.com/insights/canadian-upstream-2026-outlook/ — Canadian Upstream 2026 Outlook — ATB Capital Markets — 2026
+[5] https://www.tcenergy.com/newsroom/statements/2026/coastal-gaslink-phase-2-advances-step-forward-with-new-commercial-agreements/ — Coastal GasLink Phase 2 advances step forward — TC Energy — 2026-03
+[6] https://www.canada.ca/en/natural-resources-canada/news/2026/03/backgrounder-government-of-canada-invests-to-unlock-canadas-critical-minerals-advantage.html — Critical Minerals Backgrounder — NRCan — 2026-03
+[7] https://resourceworld.com/canadian-mining-enters-2026-with-confidence-as-gold-copper-and-critical-minerals-redefine-the-sector/ — Canadian Mining 2026 Outlook — Resource World Magazine — 2026
+[8] https://www.torys.com/our-latest-thinking/publications/2026/02/key-trends-in-mining-2026 — Key Trends in Mining 2026 — Torys LLP — 2026-02
+[9] https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables — Monthly Housing Starts — CMHC — 2026
+[10] https://www.globenewswire.com/news-release/2026/02/25/3244764/28124/en/Canada-Construction-Industry-Report-2025-Output-to-Grow-by-2-6-in-2-6-in-2026-After-2-2-Growth-in-2025-Driven-by-PPI-in-Residential-and-Non-residential-Construction-and-Transport-I.html — Canada Construction Industry Report 2025 — GlobalData / GlobeNewswire — 2026-02-25
+[11] https://www.pm.gc.ca/en/news/news-releases/2026/02/05/prime-minister-carney-launches-new-strategy-transform-canadas-auto — PM Carney launches auto strategy — PMO — 2026-02-05
+[12] https://www.wardsauto.com/news/usmca-canada-auto-sector-faces-challenges-2026-tariffs-evs/810028/ — Canada's auto sector challenges 2026 — WardsAuto — 2026
+[13] https://www.rbc.com/en/economics/canadian-analysis/featured-analysis/insights/tracking-the-impact-of-u-s-tariffs-on-five-targeted-canadian-industries/ — Tracking tariff impact on five Canadian industries — RBC Economics — 2026
+[14] https://www.theglobeandmail.com/business/article-canada-ev-battery-plants-list-honda-stellantis/ — Canada EV battery plants list — Globe and Mail — 2026
+[15] https://www.cnbc.com/2026/02/13/canada-china-autos-evs.html — Canada China EV tariff shift — CNBC — 2026-02-13
+[16] https://uslumbercoalition.org/press-release/canadas-new-softwood-lumber-subsidies-exceed-c2-billion-solely-to-prop-up-canadas-massive-and-harmful-excess-lumber-exports-u-s-lumber-coalition/ — Softwood lumber subsidies >$2.1B — U.S. Lumber Coalition — 2026-04
+[17] https://natural-resources.canada.ca/forest-forestry/forest-industry-trade/canada-s-softwood-lumber-industry — Canada's softwood lumber industry — NRCan — 2026
+[18] https://news.gov.bc.ca/releases/2026FOR0011-000394 — BC Minister statement on softwood lumber administrative review — BC Government News — 2026-04-09
+[19] https://news.gov.bc.ca/releases/2026HMA0042-000398 — BC housing March 2026 highlights — BC Government News — 2026-04-10
+[20] https://news.gov.bc.ca/releases/2026HMA0039-000390 — BC April 2026 rental report — BC Government News — 2026-04-09
+[21] https://news.gov.bc.ca/releases/2026HMA0028-000325 — West Vancouver rental completions — BC Government News — 2026-03-27
+[22] https://world-nuclear.org/information-library/country-profiles/countries-a-f/canada-nuclear-power — Nuclear Power in Canada — World Nuclear Association — 2026
+[23] https://smractionplan.ca/ — Canada SMR Action Plan — 2026
+[24] https://www.cbre.ca/press-releases/canadian-commercial-real-estate-investment-could-rise-to-56-billion-dollars-in-2026 — CRE Outlook — CBRE Canada — 2026
+[25] https://www.cbre.ca/insights/articles/cbre-outlook-canadian-commercial-real-estate-investment-could-rise-to-56-billion-dollar-in-2026 — CRE Outlook detail — CBRE Canada — 2026
+[26] https://dbrs.morningstar.com/research/476102/large-canadian-banks-q1-2026-earnings-round-up-solid-results-with-manageable-pcl-as-uncertainty-lingers-and-risks-escalate — Q1 2026 bank earnings round-up — DBRS Morningstar — 2026
+[27] https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres — Sovereign AI Data Centres — ISED — 2026-01-15
+[28] https://yorklink.ca/2026/04/08/invest-ontario-welcomes-microsofts-ai-infrastructure-expansion-in-ontario-supporting-1250-jobs-two-new-data-centres-in-york-region/ — Microsoft York Region data centres — York Link — 2026-04-08
+[29] https://inside.tru.ca/2026/04/09/tru-community-trust-advances-data-centre-development — TRU Community Trust data centre — TRU Newsroom — 2026-04-09
+[30] https://www.canada.ca/en/radio-television-telecommunications/news/2026/02/crtc-takes-action-to-connect-canadians-through-technology-and-culture.html — CRTC February 2026 action plan — Canada.ca — 2026-02
+[31] https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-professional-services — NAICS 54 Ontario sectoral profile — Job Bank — 2025-2026
+[32] https://ised-isde.canada.ca/app/ixb/cis/summary-sommaire/54 — NAICS 54 summary — ISED — 2026
+[33] https://www23.statcan.gc.ca/imdb/p3VD.pl?Function=getVD&TVD=1369825&CVD=1369826&CPV=55&CST=27012022&CLV=1&MLV=5 — NAICS 55 classification — Statistics Canada — 2026
+[34] https://ised-isde.canada.ca/app/ixb/cis/businesses-entreprises/56 — NAICS 56 business statistics — ISED — 2026
+[35] https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/2026-provincial-territorial-allocations-under-international-student-cap.html — 2026 international student cap — IRCC — 2026
+[36] https://www.cbc.ca/news/canada/toronto/ontario-budget-healthcare-long-term-care-9.7143637 — Ontario LTC bed progress — CBC News — 2026
+[37] https://www.cbc.ca/news/canada/montreal/quebec-hospital-projects-doctors-staff-react-9.7138974 — Quebec hospital budget — CBC News — 2026
+[38] https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-arts — NAICS 71 Ontario sectoral profile — Job Bank — 2024-2026
+[39] https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-accommodation — NAICS 72 Ontario sectoral profile — Job Bank — 2024-2026
+[40] https://www.workbc.ca/industry-profile/accommodation-and-food-services — NAICS 72 BC profile — WorkBC — 2026
+[41] https://www23.statcan.gc.ca/imdb/p3VD.pl?Function=getVD&TVD=1369825&CVD=1369826&CPV=81&CST=27012022&CLV=1&MLV=5&D=1 — NAICS 81 definitions — Statistics Canada — 2026
+[42] https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending/government-expenditure-plan-main-estimates/2026-27-estimates.html — 2026-27 Main Estimates — Treasury Board Secretariat — 2026
+[43] https://www.cbc.ca/news/canada/ottawa/union-budget-carney-public-service-department-plans-9.7133612 — Federal department plans / public service cuts — CBC News — 2026
+[44] https://www.mordorintelligence.com/industry-reports/canada-freight-logistics-market-study — Canada Freight & Logistics Market — Mordor Intelligence — 2026
+[45] https://www.hiringlab.org/en-ca/2026/04/10/march-2026-labour-force-survey-holding-steady/ — March 2026 LFS commentary — Indeed Hiring Lab — 2026-04-10

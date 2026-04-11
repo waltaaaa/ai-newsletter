@@ -1,230 +1,330 @@
 {
   "meta": {
-    "week_of": "2026-03-31",
-    "generated_at": "2026-03-31T16:00:00Z",
+    "week_of": "2026-04-11",
+    "generated_at": "2026-04-11T14:00:00Z",
     "agent": "tldr-analyst-macro",
     "data_quality": {
       "indicators_fresh": true,
-      "latest_period": "2026-03",
+      "latest_period": "2026-03 (March LFS)",
       "gaps": [
-        "Industry GDP M/M and Y/Y breakdowns by NAICS code not available in current indicators.json",
-        "Lumber price timeseries frozen since May 2023",
-        "Project values not populated in projects_all.json (total_value_billions reads 0.0)"
+        "March Canada CPI release scheduled Apr 20; dossier carries Feb 1.8% Y/Y",
+        "March Canada Housing Starts release scheduled Apr 17; dossier carries Feb 250,900 SAAR",
+        "Conference Board of Canada Consumer Confidence Index last published Feb 2026 (47.50); March reading not yet available",
+        "Provincial CPI and LFS data in indicators.json still anchored to 2026-02-01 pending Apr 10 LFS ingestion",
+        "PE CPI and unemployment persistently missing per data_gap_report.md",
+        "Lumber timeseries stale (1,065 days old, May 2023)"
       ],
       "anomalies": [
-        "WTI crude surged 50%+ in March due to Strait of Hormuz closure — largest monthly commodity move since 2008",
-        "Gold declined 14% in March despite geopolitical crisis — worst monthly performance since October 2008",
-        "Employment dropped 84,000 in February, reversing Q4 2025 gains"
+        "briefing_latest.json commodities table shows WTI=1079.5/bbl (weekly_pct 950.4) — decimal-shift ingest error; real WTI ~US$98/bbl Apr 10, US$102.18/bbl Mar 31",
+        "briefing_latest.json wheat/cotton/soybean weekly_pct values (+434%/+711%/+6885%) are unit-conversion artifacts",
+        "March Labour Force Survey released Apr 10 is not yet ingested into indicators.json (national and provincial unemployment still at Feb 1 period)",
+        "February merchandise trade deficit -$5.7B (widest since Aug 2025) replaces January -$4.2B as anchor trade print",
+        "events.json lists BoC rate decision Apr 16 and CPI release Apr 17 — both dates are incorrect; correct per BoC FAD calendar is Apr 29 (BoC) and Apr 20 (CPI)"
       ]
     }
   },
-
-  "headline": "Strait of Hormuz Crisis Drives WTI Above $100 as Canada Posts 0.1% GDP Growth and 84,000 Job Losses",
-
+  "headline": "BoC Holds at 2.25% as Canada Adds 14,000 Jobs in March and February Trade Deficit Widens to $5.7B on Record Imports",
   "key_indicators": [
-    {"label": "BOC RATE", "value": "2.25%", "change": "Held (7th consecutive meeting at this level after 7 cuts from 5.00%)", "period": "Mar 18, 2026"},
-    {"label": "REAL GDP", "value": "+0.1%", "change": "+0.1% M/M (2nd consecutive monthly gain)", "period": "Jan 2026"},
-    {"label": "CPI", "value": "+1.8%", "change": "-0.5pp from Jan (lowest since early 2021)", "period": "Feb 2026"},
-    {"label": "UNEMPLOYMENT", "value": "6.7%", "change": "+0.2pp from Jan", "period": "Feb 2026"},
-    {"label": "HOUSING STARTS", "value": "250,900", "change": "+4.5% M/M from 240,148", "period": "Feb 2026 SAAR"},
-    {"label": "WTI CRUDE", "value": "$102.88/bbl", "change": "+50%+ M/M (first settlement above $100 since Jul 2022)", "period": "Mar 30, 2026"},
-    {"label": "CAD/USD", "value": "0.7198", "change": "-1.85% M/M", "period": "Mar 30, 2026"},
-    {"label": "TSX", "value": "32,427", "change": "+1.54% on day; -6% in March; +28.2% YoY", "period": "Mar 31, 2026"}
+    {
+      "label": "BOC RATE",
+      "value": "2.25%",
+      "change": "0bp (held 7th straight meeting)",
+      "period": "Mar 18, 2026"
+    },
+    {
+      "label": "REAL GDP",
+      "value": "+0.1%",
+      "change": "2nd consecutive monthly increase",
+      "period": "Jan 2026 (advance Feb +0.2%)"
+    },
+    {
+      "label": "CPI",
+      "value": "+1.8%",
+      "change": "-0.5pp from +2.3%",
+      "period": "Feb 2026 Y/Y"
+    },
+    {
+      "label": "UNEMPLOYMENT",
+      "value": "6.7%",
+      "change": "0.0pp (held)",
+      "period": "Mar 2026"
+    },
+    {
+      "label": "EMPLOYMENT",
+      "value": "+14,000",
+      "change": "Reverses -84K in February",
+      "period": "Mar 2026"
+    },
+    {
+      "label": "WAGE GROWTH",
+      "value": "+4.7% Y/Y",
+      "change": "+0.8pp from +3.9%",
+      "period": "Mar 2026 (avg hourly, LFS)"
+    },
+    {
+      "label": "HOUSING STARTS",
+      "value": "250,900",
+      "change": "+4.5% M/M from 240,148",
+      "period": "Feb 2026 SAAR"
+    },
+    {
+      "label": "TRADE BALANCE",
+      "value": "-$5.7B",
+      "change": "Deficit widened $1.5B from -$4.2B",
+      "period": "Feb 2026"
+    },
+    {
+      "label": "WTI CRUDE",
+      "value": "~$98/bbl",
+      "change": "Down from $102.18 Mar 31",
+      "period": "Apr 10, 2026"
+    },
+    {
+      "label": "CAD/USD",
+      "value": "0.7200 (USD/CAD 1.3832)",
+      "change": "Flat week",
+      "period": "Apr 10, 2026"
+    },
+    {
+      "label": "TSX COMPOSITE",
+      "value": "33,696",
+      "change": "+5.51% week; +42.85% Y/Y",
+      "period": "Apr 10, 2026"
+    }
   ],
-
   "discovery_stats": {
-    "total_projects": 7372,
-    "new_this_week": 0,
-    "total_value_billions": 0.0,
+    "total_projects": 7427,
+    "new_this_week": 83,
+    "total_value_billions": 1366.9,
     "status_counts": {
-      "Under Review": 2591,
-      "Proposed": 2528,
-      "Under Construction": 1034,
-      "Approved": 549,
-      "Complete": 486,
-      "Cancelled": 153,
+      "Under Review": 2640,
+      "Proposed": 2536,
+      "Under Construction": 1031,
+      "Approved": 545,
+      "Complete": 490,
+      "Cancelled": 154,
       "On Hold": 31
     },
     "sector_counts": {
-      "infrastructure": 1671,
-      "power_energy": 785,
-      "transport_logistics": 600,
-      "mining": 364,
+      "oil_gas": 61,
+      "power_energy": 806,
+      "mining": 362,
+      "infrastructure": 2213,
+      "residential": 217,
+      "manufacturing": 48,
+      "transport_logistics": 90,
       "healthcare": 259,
-      "residential": 211,
-      "government": 193,
       "education": 157,
-      "tourism_culture": 147,
       "commercial_mixed": 68,
-      "oil_gas": 63,
-      "manufacturing": 49,
-      "telecom": 43,
-      "defence": 33,
-      "environment": 13,
+      "government": 225,
+      "tourism_culture": 150,
+      "telecom": 44,
+      "environment": 31,
       "forestry": 13,
       "indigenous": 8,
-      "agriculture": 4,
-      "other": 2691
+      "agriculture": 4
+    },
+    "sector_values_billions": {
+      "oil_gas": 100.2,
+      "power_energy": 507.7,
+      "mining": 159.5,
+      "infrastructure": 182.4,
+      "residential": 44.4,
+      "manufacturing": 67.4,
+      "transport_logistics": 35.7,
+      "healthcare": 20.5,
+      "education": 14.7,
+      "commercial_mixed": 29.8,
+      "government": 163.3,
+      "tourism_culture": 22.0,
+      "telecom": 3.0,
+      "environment": 1.9,
+      "forestry": 4.7,
+      "indigenous": 1.7,
+      "agriculture": 0.7
     }
   },
-
   "executive_summary_package": {
     "facts": [
       {
         "rank": 1,
-        "statement": "The Strait of Hormuz has been effectively closed since approximately March 2, disrupting approximately 20 million barrels per day of oil flows (~20% of global seaborne oil trade). WTI crude settled at $102.88/bbl on March 30 — the first settlement above $100 since July 2022. Brent surged approximately 55% in March to $112.78/bbl, a record monthly gain for the contract since inception in 1988.",
-        "value": "$102.88/bbl WTI; $112.78/bbl Brent",
-        "source_url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-yemen-houthis-israel-iran-war.html",
-        "source_title": "CNBC — Brent Record Monthly Surge, WTI Above $100",
+        "statement": "Bank of Canada held the policy interest rate at 2.25% on March 18, 2026, the seventh consecutive decision at this level. The Summary of Governing Council Deliberations published in April noted the US Supreme Court's Feb 20 ruling on IEEPA tariffs had 'no direct implications for sectoral tariffs on Canadian exports' and 'trade-related risks to Canada remained unchanged.' The next Fixed Announcement Date is April 29, 2026.",
+        "value": "2.25%",
+        "source_url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/",
+        "source_title": "Bank of Canada — Policy rate statement, March 18, 2026",
         "connections": [
-          "The database tracks 63 oil_gas projects and 785 power_energy projects across Canada",
-          "Dallas Fed estimated a one-quarter closure could raise WTI to $98/bbl average and reduce global GDP growth by an annualized 2.9 percentage points in Q2 2026",
-          "Alberta has 727 tracked projects that include upstream oil and gas operations"
+          "217 residential projects ($44.4B) in the database are sensitive to borrowing costs",
+          "2213 infrastructure projects ($182.4B) also rate-linked via project finance",
+          "GoC 2Y yield at 2.79% sits 54bp above the overnight rate, signaling the market prices rates on hold through mid-year"
         ]
       },
       {
         "rank": 2,
-        "statement": "Statistics Canada reported employment declined by 84,000 (-0.4%) in February 2026, reversing Q4 2025 gains. Full-time employment fell 108,000; private-sector employment dropped 73,000. The unemployment rate rose to 6.7%, up 0.2 percentage points from January. Participation rate declined 0.1pp to 64.9%.",
-        "value": "-84,000 jobs; 6.7% unemployment",
-        "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm",
-        "source_title": "Statistics Canada — Labour Force Survey, February 2026",
+        "statement": "Canada added 14,000 jobs in March 2026, partially reversing February's -84,000 decline. The unemployment rate held at 6.7%, the employment rate at 60.6%, and the participation rate at 64.9%. Average hourly wages grew 4.7% year-over-year, up from 3.9% in February — the fastest pace since October 2024. Year-over-year, 87,100 more Canadians were employed than in March 2025.",
+        "value": "+14,000 jobs; 6.7% unemployment; +4.7% Y/Y wages",
+        "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm",
+        "source_title": "Statistics Canada — Labour Force Survey, March 2026",
         "connections": [
-          "Services-producing industries lost 56,000 jobs (-0.3%); goods-producing industries lost 28,000 (-0.7%)",
-          "The database tracks 1,034 projects currently under construction that depend on labour market conditions",
-          "Wholesale and retail trade lost 18,000 jobs — the largest subsector decline"
+          "1031 projects currently Under Construction depend on labour market capacity",
+          "217 residential projects and 2213 infrastructure projects are the largest labour-intensive categories",
+          "Wage acceleration to 4.7% Y/Y runs 290bp above headline CPI at 1.8% Y/Y"
         ]
       },
       {
         "rank": 3,
-        "statement": "Real GDP rose 0.1% in January 2026, marking a second consecutive monthly increase. Mining, quarrying, and oil and gas extraction expanded 1.2%. Manufacturing contracted 1.4%. Advance estimate indicates 0.2% growth in February. Q4 2025 GDP contracted 0.2% annualized.",
-        "value": "+0.1% M/M (Jan 2026); -0.2% Q/Q annualized (Q4 2025)",
-        "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm",
-        "source_title": "Statistics Canada — GDP by Industry, January 2026",
+        "statement": "Canada's merchandise trade deficit widened to -$5.7B in February 2026, the largest since August 2025, as imports set an all-time record of $72.1B (+8.4% M/M). Exports rose to $66.3B (+6.4% M/M), highest since March 2025, with increases in 9 of 11 product sections. Motor vehicles and parts exports rebounded +24.2% after January's -21.2% drop; metal and non-metallic mineral imports rose +45.6% on gold shipments.",
+        "value": "-$5.7B deficit; $72.1B record imports; +24.2% motor vehicle exports",
+        "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260402/dq260402a-eng.htm",
+        "source_title": "Statistics Canada — Canadian international merchandise trade, February 2026",
         "connections": [
-          "Manufacturing contraction (-1.4%) affects 49 tracked manufacturing projects",
-          "Mining/oil/gas expansion (+1.2%) affects 364 mining and 63 oil_gas projects in the database",
-          "Full-year 2025 GDP growth was approximately 1.7%; IMF projects 1.6% for 2026"
+          "61 oil and gas projects ($100.2B) linked to energy export flows",
+          "48 manufacturing projects ($67.4B) tied to motor vehicle and parts trade",
+          "362 mining projects ($159.5B) linked to metals and minerals trade"
         ]
       },
       {
         "rank": 4,
-        "statement": "Headline CPI fell to 1.8% year-over-year in February 2026, down from 2.3% in January — the lowest reading since early 2021. Core measures converged: CPI-median at 2.3%, CPI-trim at 2.3%, CPI-common at 2.4%. Food inflation slowed to 5.3% from 7.3% in January.",
-        "value": "+1.8% YoY (Feb 2026)",
-        "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260316/dq260316a-eng.htm",
-        "source_title": "Statistics Canada — CPI February 2026",
+        "statement": "The Strait of Hormuz remained effectively closed through early April despite a US-Iran ceasefire announced around April 8. Shipping was reported 'at a standstill' with Iran charging tolls reported above US$1 million per vessel. The strait normally handles approximately 20% of global seaborne oil and gas flows. WTI traded near US$98/bbl on April 10 after closing at US$102.18/bbl on March 31; Brent traded in the US$98-105 range.",
+        "value": "WTI ~$98/bbl Apr 10; $102.18/bbl Mar 31",
+        "source_url": "https://www.aljazeera.com/economy/2026/4/10/shipping-in-strait-of-hormuz-at-a-trickle-despite-us-iran-ceasefire",
+        "source_title": "Al Jazeera — Shipping in Strait of Hormuz at a trickle despite US-Iran ceasefire",
         "connections": [
-          "CPI below the 2% target supports the BoC's decision to hold at 2.25%",
-          "The March CPI release is scheduled for April 15 — same day as the next BoC rate decision with full MPR",
-          "211 residential projects tracked in the database are sensitive to rate and inflation dynamics"
+          "61 oil and gas projects ($100.2B) in the database are directly linked to crude price conditions",
+          "806 power and energy projects ($507.7B) are linked to global energy pricing via LNG and offtake",
+          "BoC Governing Council flagged the energy shock as a source of near-term inflation pressure in its March deliberations"
         ]
       },
       {
         "rank": 5,
-        "statement": "The Bank of Canada held its overnight rate at 2.25% on March 18, citing weaker near-term growth from US tariffs. The Governing Council stated it would 'proceed carefully' given heightened uncertainty. Bond markets price ~86% probability of no change at the April 15 meeting.",
-        "value": "2.25%",
-        "source_url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/",
-        "source_title": "Bank of Canada — March 18 Rate Decision",
+        "statement": "Headline CPI ran at +1.8% Y/Y in February 2026, down from +2.3% in January — the lowest since early 2021. Core measures converged around the 2% target: CPI-median 2.3%, CPI-trim 2.3%, CPI-common 2.4%. Food inflation decelerated to 5.3% from 7.3%. The March CPI release is scheduled for April 20.",
+        "value": "+1.8% headline; 2.3% median; 2.3% trim; 2.4% common",
+        "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260316/dq260316a-eng.htm",
+        "source_title": "Statistics Canada — Consumer Price Index, February 2026",
         "connections": [
-          "Seven consecutive cuts from June 2024 peak of 5.00% brought the rate to current 2.25%",
-          "Next rate decision: April 15, 2026 with full Monetary Policy Report",
-          "Variable mortgage rates have declined in line with BoC cuts; fixed rates held firm due to elevated long-term bond yields"
+          "Headline CPI at 1.8% sits 45bp below BoC's 2.25% overnight rate, implying positive real policy rate",
+          "Core measures within BoC's 1-3% control range",
+          "Wage growth of 4.7% Y/Y runs 290bp above headline CPI"
         ]
       },
       {
         "rank": 6,
-        "statement": "Canada's merchandise trade deficit widened to $3.6 billion in January 2026, from $1.3 billion in December 2025. Motor vehicle and parts exports dropped 21.2% to $5.4 billion — the lowest since September 2021. Energy product exports partially offset, rising 4.1%.",
-        "value": "-$3.6B trade deficit (Jan 2026)",
-        "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260312/dq260312a-eng.htm",
-        "source_title": "Statistics Canada — International Merchandise Trade, January 2026",
+        "statement": "Canadian real GDP rose +0.1% in January 2026, a second consecutive monthly increase. Goods-producing industries +0.2%; mining, quarrying, oil and gas extraction +1.2% (oil and gas extraction +1.6%); construction +1.1% M/M; manufacturing -1.4% (steepest monthly decline in current cycle). The advance estimate for February is +0.2%. The February GDP release is scheduled for April 28.",
+        "value": "+0.1% M/M Jan; advance Feb +0.2%",
+        "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm",
+        "source_title": "Statistics Canada — Gross domestic product by industry, January 2026",
         "connections": [
-          "US tariffs on Canadian steel and aluminum exports remain in effect",
-          "Motor vehicle exports at lowest since Sep 2021 — affects 49 manufacturing projects and 600 transport_logistics projects",
-          "February trade data release scheduled for April 2 — first full month following Strait of Hormuz closure"
+          "48 manufacturing projects ($67.4B) linked to the -1.4% M/M manufacturing GDP print",
+          "61 oil and gas projects aligned with the +1.6% monthly oil and gas extraction increase",
+          "Construction GDP +1.1% M/M covers 2213 infrastructure projects ($182.4B)"
         ]
       }
     ]
   },
-
   "national_analysis_package": {
     "metrics": {
       "bocRate": "2.25%",
       "realGdp": "+0.1%",
       "cpi": "+1.8%",
       "unemployment": "6.7%",
-      "housingStarts": "250,900",
+      "employmentChange": "+14,000",
+      "employmentRate": "60.6%",
       "participation": "64.9%",
-      "employmentChange": "-84,000",
-      "tradeBalance": "-$3.6B",
+      "wageGrowthYoY": "+4.7%",
+      "housingStarts": "250,900",
+      "tradeBalance": "-$5.7B",
+      "exports": "$66.3B (+6.4% M/M)",
+      "imports": "$72.1B (+8.4% M/M, record)",
       "retailSales": "$70.7B (+1.1%)",
-      "avgHomePrice": "$663,828",
-      "consumerConfidence": "47.50",
-      "govtDeficit": "-$20.8B (Q4 2025)",
-      "payrollEmployment": "+45,600 (Jan 2026 SEPH)"
+      "consumerConfidence": "47.50 (Feb 2026; Mar reading pending)",
+      "wtiCrude": "~$98/bbl",
+      "cadUsd": "0.7200 (USD/CAD 1.3832)",
+      "tsxComposite": "33,696",
+      "sp500": "6,816.89",
+      "goc2y": "2.79%",
+      "goc5y": "3.04%",
+      "goc10y": "3.46%",
+      "goc30y": "3.89%"
     },
     "indicatorMeta": {
       "bocRate": {
         "prev": "2.25%",
         "change": "0bp (held)",
-        "period": "Mar 18, 2026",
+        "period": "Mar 18, 2026 FAD",
         "obsDate": "2026-03-18",
         "source": "Bank of Canada",
-        "context": "The Bank of Canada held steady at 2.25% for the seventh consecutive meeting at this level, following seven cuts from the June 2024 peak of 5.00%. The Governing Council cited weaker near-term growth from US tariffs."
+        "context": "Bank of Canada held the overnight rate at 2.25% for the seventh consecutive meeting. Governing Council deliberations cited the US Supreme Court IEEPA ruling as having no direct implications for sectoral tariffs on Canadian exports. Next FAD Apr 29, 2026."
       },
       "realGdp": {
-        "prev": "flat (Dec 2025)",
-        "change": "+0.1%",
+        "prev": "0.0% (Dec 2025)",
+        "change": "+0.1pp",
         "period": "Jan 2026",
         "obsDate": "2026-03-31",
         "source": "Statistics Canada",
-        "context": "Real GDP rose 0.1% in January 2026, a second consecutive monthly gain. Goods-producing industries expanded 0.2%; services were essentially unchanged. Advance estimate for February is +0.2%."
+        "context": "Real GDP rose 0.1% in January, second consecutive monthly increase. Goods-producing +0.2%; mining/oil & gas +1.2%; construction +1.1%; manufacturing -1.4%. Advance estimate for Feb is +0.2%."
       },
       "cpi": {
         "prev": "+2.3%",
         "change": "-0.5pp",
-        "period": "Feb 2026",
+        "period": "Feb 2026 Y/Y",
         "obsDate": "2026-03-16",
         "source": "Statistics Canada",
-        "context": "Headline CPI fell to 1.8% YoY in February, the lowest since early 2021. Core measures converged near 2.3-2.4%. Food inflation decelerated to 5.3% from 7.3%."
+        "context": "Headline CPI at +1.8% Y/Y, lowest since early 2021. Core measures: median 2.3%, trim 2.3%, common 2.4%. Food inflation decelerated from 7.3% to 5.3%. March CPI release scheduled Apr 20."
       },
       "unemployment": {
-        "prev": "6.5%",
-        "change": "+0.2pp",
-        "period": "Feb 2026",
-        "obsDate": "2026-03-13",
-        "source": "Statistics Canada",
-        "context": "Unemployment rose to 6.7% in February as employment declined by 84,000. Full-time employment fell 108,000; private sector lost 73,000."
+        "prev": "6.7%",
+        "change": "0.0pp (held)",
+        "period": "Mar 2026",
+        "obsDate": "2026-04-10",
+        "source": "Statistics Canada LFS",
+        "context": "Unemployment held at 6.7% in March. Employment rebounded +14,000 (+0.1% M/M), partially reversing February's -84,000 decline. Participation and employment rates held at 64.9% and 60.6%. Year-over-year +87,100 more employed persons."
+      },
+      "employmentChange": {
+        "prev": "-84,000",
+        "change": "+98,000 swing",
+        "period": "Mar 2026",
+        "obsDate": "2026-04-10",
+        "source": "Statistics Canada LFS",
+        "context": "Employment change of +14,000 in March reverses part of February's -84,000. March's monthly change was positive but below population growth."
+      },
+      "wageGrowthYoY": {
+        "prev": "+3.9%",
+        "change": "+0.8pp",
+        "period": "Mar 2026 Y/Y",
+        "obsDate": "2026-04-10",
+        "source": "Statistics Canada LFS",
+        "context": "Average hourly wages grew 4.7% Y/Y in March, fastest pace since October 2024, 290bp above headline CPI."
       },
       "housingStarts": {
         "prev": "240,148",
         "change": "+4.5% M/M",
         "period": "Feb 2026 SAAR",
-        "obsDate": "2026-03-15",
+        "obsDate": "2026-03-17",
         "source": "CMHC",
-        "context": "Housing starts at 250,900 SAAR in February, up 4.5% from January. The six-month trend declined 0.4% to 256,005 units."
+        "context": "Housing starts at 250,900 SAAR in February, up 4.5% from January. March release scheduled Apr 17."
       },
       "tradeBalance": {
-        "prev": "-$1.3B",
-        "change": "Deficit widened $2.3B",
-        "period": "Jan 2026",
-        "obsDate": "2026-03-12",
+        "prev": "-$4.2B",
+        "change": "Deficit widened $1.5B",
+        "period": "Feb 2026",
+        "obsDate": "2026-04-02",
         "source": "Statistics Canada",
-        "context": "Trade deficit widened to $3.6B from $1.3B. Exports fell 4.7% to $62.5B; imports declined 1.1% to $66.1B. Motor vehicle exports dropped 21.2%."
+        "context": "Merchandise trade deficit -$5.7B in February, widest since August 2025. Imports $72.1B set an all-time record. Exports $66.3B highest since March 2025. Motor vehicles +24.2%; metals/minerals imports +45.6% on gold shipments."
       },
       "retailSales": {
-        "prev": "$69.9B",
+        "prev": "$69.9B (+0.8%)",
         "change": "+1.1%",
         "period": "Jan 2026",
         "obsDate": "2026-03-20",
         "source": "Statistics Canada",
-        "context": "Retail sales rose 1.1% to $70.7B. Core retail (ex gasoline and motor vehicles) up 0.9%. Motor vehicle dealers led gains (+2.0%). Advance estimate for February: +0.9%."
+        "context": "Retail sales $70.7B in January (+1.1% M/M). Advance estimate for February +0.9%. Feb release scheduled Apr 24."
       },
       "consumerConfidence": {
         "prev": "49.30",
-        "change": "-1.80 points",
+        "change": "-1.80pt",
         "period": "Feb 2026",
-        "obsDate": "2026-03-01",
+        "obsDate": "2026-02-28",
         "source": "Conference Board of Canada",
-        "context": "Consumer confidence declined to 47.50 from 49.30 in January. Bloomberg/Nanos index showed a three-week slide into late March."
+        "context": "Index of Consumer Confidence 47.50 in February, latest available. March reading not yet released; Nanos Research reported three-week slide into late March."
       }
     },
     "indicatorSources": {
@@ -232,109 +332,318 @@
       "realGdp": "Statistics Canada",
       "cpi": "Statistics Canada",
       "unemployment": "Statistics Canada",
+      "employmentChange": "Statistics Canada",
+      "wageGrowthYoY": "Statistics Canada LFS",
       "housingStarts": "CMHC",
       "tradeBalance": "Statistics Canada",
       "retailSales": "Statistics Canada",
-      "consumerConfidence": "Conference Board of Canada",
-      "avgHomePrice": "CREA",
-      "participation": "Statistics Canada"
+      "consumerConfidence": "Conference Board of Canada"
     },
     "indicatorContextLines": {
-      "bocRate": "The Bank of Canada held steady at 2.25% on March 18, following seven consecutive cuts from the June 2024 peak of 5.00%, citing weaker near-term growth from US tariffs and stating it would 'proceed carefully' given heightened uncertainty.",
-      "realGdp": "Real GDP rose 0.1% in January 2026, a second consecutive monthly increase. Mining, quarrying, and oil/gas extraction expanded 1.2%; manufacturing contracted 1.4%. Advance information indicates 0.2% growth in February.",
-      "cpi": "Headline CPI fell to 1.8% YoY in February 2026 from 2.3% in January, the lowest since early 2021. All three core measures (median 2.3%, trim 2.3%, common 2.4%) are converging toward the BoC's 2% target.",
-      "unemployment": "The unemployment rate rose to 6.7% in February, up 0.2pp from January, as employment declined 84,000. Full-time employment fell 108,000 and private-sector employment dropped 73,000.",
-      "housingStarts": "Housing starts ran at 250,900 SAAR in February 2026, up 4.5% from 240,148 in January. The six-month trend declined 0.4% to 256,005 units. CMHC noted the trend remains 'relatively steady' despite monthly volatility.",
-      "tradeBalance": "The merchandise trade deficit widened to $3.6B in January from $1.3B in December. Motor vehicle and parts exports dropped 21.2% to $5.4B, the lowest since September 2021. Energy exports partially offset, rising 4.1%.",
-      "retailSales": "Retail sales rose 1.1% to $70.7B in January 2026. Motor vehicle and parts dealers led (+2.0%), and general merchandise retailers posted a fourth consecutive monthly increase (+3.0%). E-commerce sales rose 1.5% to $4.4B.",
-      "consumerConfidence": "Consumer confidence declined to 47.50 in February from 49.30 in January. The Bloomberg/Nanos index showed a three-week slide into late March. However, the proportion of Canadians expecting the economy to strengthen in six months rose from 17% to 26%."
+      "bocRate": "The Bank of Canada held the overnight rate at 2.25% on March 18, the seventh consecutive decision at this level. The next Fixed Announcement Date is April 29, 2026.",
+      "realGdp": "Real GDP rose 0.1% in January, a second consecutive monthly increase. Goods-producing industries expanded 0.2%; manufacturing contracted 1.4%. The StatCan advance estimate for February is +0.2%.",
+      "cpi": "Headline CPI fell to +1.8% Y/Y in February from +2.3% in January, the lowest reading since early 2021. Core measures (median, trim, common) clustered at 2.3–2.4%. Food inflation decelerated from 7.3% to 5.3%.",
+      "unemployment": "Unemployment held at 6.7% in March. Employment rebounded +14,000 after February's -84,000 decline, with participation and employment rates unchanged at 64.9% and 60.6%.",
+      "wageGrowthYoY": "Average hourly wages grew 4.7% Y/Y in March, the fastest pace since October 2024 and up from 3.9% in February.",
+      "housingStarts": "Housing starts at 250,900 SAAR in February, up 4.5% from January's 240,148. The March CMHC release is scheduled for April 17.",
+      "tradeBalance": "The merchandise trade deficit widened to -$5.7B in February — the largest since August 2025 — as imports reached a record $72.1B. Exports also rose to $66.3B, the highest since March 2025, led by motor vehicles and parts (+24.2%).",
+      "retailSales": "Retail sales totaled $70.7B in January (+1.1% M/M). The StatCan advance estimate for February is +0.9%.",
+      "consumerConfidence": "The Conference Board of Canada Index of Consumer Confidence was 47.50 in February, down from 49.30 in January. The March reading has not yet been published."
     },
     "industry_gdp": [
-      {"code": "11", "name": "Agriculture, Forestry, Fishing and Hunting", "mm": "N/A", "yy": "N/A", "projects": 4, "project_value": "N/A", "note": "NAICS 11 GDP data not available in current data set"},
-      {"code": "21", "name": "Mining, Quarrying, and Oil and Gas Extraction", "mm": "+1.2%", "yy": "N/A", "projects": 427, "project_value": "N/A", "note": "Mining/quarrying/O&G extraction expanded 1.2% in Jan 2026 per StatCan GDP release. Combines 364 mining + 63 oil_gas projects."},
-      {"code": "22", "name": "Utilities", "mm": "N/A", "yy": "N/A", "projects": 785, "project_value": "N/A", "note": "Utilities contributed to goods-producing expansion; sector-specific M/M not broken out separately in research"},
-      {"code": "23", "name": "Construction", "mm": "N/A", "yy": "N/A", "projects": 1671, "project_value": "N/A", "note": "Construction contributed to goods-producing expansion in Jan 2026 per StatCan"},
-      {"code": "31-33", "name": "Manufacturing", "mm": "-1.4%", "yy": "N/A", "projects": 49, "project_value": "N/A", "note": "Manufacturing contracted 1.4% in January due to weakness in both durable and non-durable goods"},
-      {"code": "41", "name": "Wholesale Trade", "mm": "N/A", "yy": "N/A", "projects": 0, "project_value": "N/A", "note": "Wholesale trade declined in January per StatCan; specific M/M figure not available"},
-      {"code": "44-45", "name": "Retail Trade", "mm": "+0.8%", "yy": "N/A", "projects": 68, "project_value": "N/A", "note": "Retail trade GDP rose 0.8% in January. Retail sales were $70.7B (+1.1%)."},
-      {"code": "48-49", "name": "Transportation and Warehousing", "mm": "N/A", "yy": "N/A", "projects": 600, "project_value": "N/A", "note": "Transportation and warehousing declined in January per StatCan"},
-      {"code": "51", "name": "Information and Cultural Industries", "mm": "N/A", "yy": "N/A", "projects": 43, "project_value": "N/A", "note": "No sector-specific GDP data available for current period"},
-      {"code": "52", "name": "Finance and Insurance", "mm": "N/A", "yy": "N/A", "projects": 0, "project_value": "N/A", "note": "Finance and insurance offset services declines in January per StatCan GDP release"},
-      {"code": "53", "name": "Real Estate and Rental and Leasing", "mm": "N/A", "yy": "N/A", "projects": 211, "project_value": "N/A", "note": "No sector-specific GDP data available. Avg home price $663,828 (+1.7% M/M) in Feb 2026."},
-      {"code": "54", "name": "Professional, Scientific and Technical Services", "mm": "N/A", "yy": "N/A", "projects": 0, "project_value": "N/A", "note": "No sector-specific GDP data available for current period"},
-      {"code": "55", "name": "Management of Companies and Enterprises", "mm": "N/A", "yy": "N/A", "projects": 0, "project_value": "N/A", "note": "No sector-specific GDP data available for current period"},
-      {"code": "56", "name": "Administrative and Support, Waste Management and Remediation Services", "mm": "N/A", "yy": "N/A", "projects": 13, "project_value": "N/A", "note": "No sector-specific GDP data available for current period"},
-      {"code": "61", "name": "Educational Services", "mm": "N/A", "yy": "N/A", "projects": 157, "project_value": "N/A", "note": "No sector-specific GDP data available for current period"},
-      {"code": "62", "name": "Health Care and Social Assistance", "mm": "N/A", "yy": "N/A", "projects": 259, "project_value": "N/A", "note": "No sector-specific GDP data available for current period"},
-      {"code": "71", "name": "Arts, Entertainment and Recreation", "mm": "N/A", "yy": "N/A", "projects": 147, "project_value": "N/A", "note": "No sector-specific GDP data available for current period"},
-      {"code": "72", "name": "Accommodation and Food Services", "mm": "N/A", "yy": "N/A", "projects": 0, "project_value": "N/A", "note": "No sector-specific GDP data available for current period"},
-      {"code": "81", "name": "Other Services (except Public Administration)", "mm": "N/A", "yy": "N/A", "projects": 0, "project_value": "N/A", "note": "Other services employment declined 14,000 in February"},
-      {"code": "91", "name": "Public Administration", "mm": "N/A", "yy": "N/A", "projects": 193, "project_value": "N/A", "note": "Government sector. Defence spending reached NATO 2% GDP benchmark at $63B in 2025-26."}
+      {
+        "code": "11",
+        "name": "Agriculture, Forestry, Fishing and Hunting",
+        "mm": "-1.4%",
+        "yy": "+5.4%",
+        "projects": 17,
+        "project_value": 5.4,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "21",
+        "name": "Mining, Quarrying, and Oil & Gas Extraction",
+        "mm": "+1.2%",
+        "yy": "-0.1%",
+        "projects": 423,
+        "project_value": 259.7,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "22",
+        "name": "Utilities",
+        "mm": "+0.6%",
+        "yy": "-1.7%",
+        "projects": 806,
+        "project_value": 507.7,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "23",
+        "name": "Construction",
+        "mm": "+1.1%",
+        "yy": "+2.8%",
+        "projects": 2430,
+        "project_value": 226.8,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "31-33",
+        "name": "Manufacturing",
+        "mm": "-1.4%",
+        "yy": "-4.6%",
+        "projects": 48,
+        "project_value": 67.4,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "41",
+        "name": "Wholesale Trade",
+        "mm": "-1.2%",
+        "yy": "-1.7%",
+        "projects": 0,
+        "project_value": 0,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "44-45",
+        "name": "Retail Trade",
+        "mm": "+0.8%",
+        "yy": "+2.7%",
+        "projects": 68,
+        "project_value": 29.8,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "48-49",
+        "name": "Transportation and Warehousing",
+        "mm": "-0.7%",
+        "yy": "+1.6%",
+        "projects": 90,
+        "project_value": 35.7,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "51",
+        "name": "Information and Cultural Industries",
+        "mm": "+0.9%",
+        "yy": "+3.2%",
+        "projects": 44,
+        "project_value": 3.0,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "52",
+        "name": "Finance and Insurance",
+        "mm": "+0.5%",
+        "yy": "+3.2%",
+        "projects": 0,
+        "project_value": 0,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "53",
+        "name": "Real Estate, Rental and Leasing",
+        "mm": "-0.2%",
+        "yy": "+1.2%",
+        "projects": 0,
+        "project_value": 0,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "54",
+        "name": "Professional, Scientific and Technical",
+        "mm": "-0.1%",
+        "yy": "-0.4%",
+        "projects": 0,
+        "project_value": 0,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "55",
+        "name": "Management of Companies and Enterprises",
+        "mm": "-4.1%",
+        "yy": "-21.9%",
+        "projects": 0,
+        "project_value": 0,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "56",
+        "name": "Administrative, Support, Waste & Remediation",
+        "mm": "-0.1%",
+        "yy": "-0.2%",
+        "projects": 31,
+        "project_value": 1.9,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "61",
+        "name": "Educational Services",
+        "mm": "+0.5%",
+        "yy": "-1.9%",
+        "projects": 157,
+        "project_value": 14.7,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "62",
+        "name": "Health Care and Social Assistance",
+        "mm": "+0.0%",
+        "yy": "+2.1%",
+        "projects": 259,
+        "project_value": 20.5,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "71",
+        "name": "Arts, Entertainment and Recreation",
+        "mm": "-0.1%",
+        "yy": "+2.2%",
+        "projects": 150,
+        "project_value": 22.0,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "72",
+        "name": "Accommodation and Food Services",
+        "mm": "+0.7%",
+        "yy": "+2.3%",
+        "projects": 0,
+        "project_value": 0,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "81",
+        "name": "Other Services (Except Public Administration)",
+        "mm": "+0.2%",
+        "yy": "+0.3%",
+        "projects": 0,
+        "project_value": 0,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      },
+      {
+        "code": "91",
+        "name": "Public Administration",
+        "mm": "-0.1%",
+        "yy": "+0.7%",
+        "projects": 225,
+        "project_value": 163.3,
+        "period": "Jan 2026",
+        "source": "Statistics Canada — Gross domestic product by industry"
+      }
     ],
     "cross_references": [
       {
-        "indicator": "wti_crude",
-        "direction": "up",
-        "magnitude": "+50%+ in March to $102.88/bbl",
-        "linked_projects": 63,
-        "linked_sectors": "oil_gas",
-        "linked_value": "N/A",
-        "interpretation": "WTI surpassing $100/bbl for the first time since July 2022 driven by Strait of Hormuz closure. The database tracks 63 oil_gas projects and 727 projects in Alberta."
+        "indicator": "boc_rate",
+        "direction": "flat",
+        "magnitude": "2.25% held 7th straight meeting",
+        "linked_projects": 2430,
+        "linked_sectors": "residential, infrastructure",
+        "linked_value": "$226.8B",
+        "interpretation": "The policy rate hold keeps borrowing costs stable for 217 residential and 2213 infrastructure projects ($226.8B combined) in the database. The GoC 2Y at 2.79% prices a mid-year continuation of the hold."
       },
       {
         "indicator": "manufacturing_gdp",
         "direction": "down",
-        "magnitude": "-1.4% M/M in January",
-        "linked_projects": 49,
+        "magnitude": "-1.4% M/M, -4.6% Y/Y (Jan 2026)",
+        "linked_projects": 48,
         "linked_sectors": "manufacturing",
-        "linked_value": "N/A",
-        "interpretation": "Manufacturing contraction due to weakness in durable and non-durable goods. Motor vehicle exports dropped 21.2%. US tariffs on steel and aluminum remain in effect. The database tracks 49 manufacturing projects."
+        "linked_value": "$67.4B",
+        "interpretation": "The -1.4% January manufacturing GDP print — the steepest monthly decline in the current cycle — maps onto 48 manufacturing projects ($67.4B) in the database. February merchandise trade data showed motor vehicles and parts exports rebounding +24.2%, which may reverse some of the weakness."
       },
       {
-        "indicator": "employment",
+        "indicator": "wti_crude",
         "direction": "down",
-        "magnitude": "-84,000 in February",
-        "linked_projects": 1034,
-        "linked_sectors": "all (under construction)",
-        "linked_value": "N/A",
-        "interpretation": "Employment decline was broad-based: services lost 56,000 and goods lost 28,000. 1,034 projects under construction depend on labour market conditions."
+        "magnitude": "-4.1% over 11 days ($102.18 → ~$98)",
+        "linked_projects": 61,
+        "linked_sectors": "oil_gas",
+        "linked_value": "$100.2B",
+        "interpretation": "WTI declined from $102.18/bbl (Mar 31) to ~$98/bbl (Apr 10) as Strait of Hormuz flows remain near zero. The database tracks 61 oil and gas projects ($100.2B) and 806 power and energy projects ($507.7B)."
+      },
+      {
+        "indicator": "trade_balance",
+        "direction": "down",
+        "magnitude": "-$5.7B (widened $1.5B from -$4.2B)",
+        "linked_projects": 561,
+        "linked_sectors": "oil_gas, manufacturing, mining, transport_logistics",
+        "linked_value": "$362.8B",
+        "interpretation": "February imports reached a record $72.1B. Metals and minerals imports rose +45.6% on gold shipments; motor vehicle and parts exports rebounded +24.2%. The widening deficit is linked to projects across oil & gas, manufacturing, mining, and transport/logistics in the database."
+      },
+      {
+        "indicator": "unemployment_rate",
+        "direction": "flat",
+        "magnitude": "6.7% held; +14K employment; +4.7% Y/Y wages",
+        "linked_projects": 1031,
+        "linked_sectors": "labour-intensive construction and services",
+        "linked_value": "",
+        "interpretation": "The 1031 projects Under Construction in the database depend on available labour. Wage growth of 4.7% Y/Y runs 290bp above headline CPI (1.8%), increasing real labour costs for those projects."
       },
       {
         "indicator": "housing_starts",
         "direction": "up",
-        "magnitude": "+4.5% M/M to 250,900 SAAR",
-        "linked_projects": 211,
+        "magnitude": "+4.5% M/M (240,148 → 250,900 SAAR)",
+        "linked_projects": 217,
         "linked_sectors": "residential",
-        "linked_value": "N/A",
-        "interpretation": "Housing starts rose despite labour market weakness. The $8.8B federal-Ontario housing deal targets 800,000+ potential housing starts. The database tracks 211 residential projects."
-      },
-      {
-        "indicator": "gold_price",
-        "direction": "down",
-        "magnitude": "-14% in March to ~$4,578/oz",
-        "linked_projects": 364,
-        "linked_sectors": "mining",
-        "linked_value": "N/A",
-        "interpretation": "Gold declined from a peak of $5,161/oz on March 3 to $4,578 by month-end, driven by margin liquidation and USD strength. The database tracks 364 mining projects."
+        "linked_value": "$44.4B",
+        "interpretation": "February housing starts at 250,900 SAAR, up 4.5% from January. The database tracks 217 residential projects ($44.4B). CMHC's March release is scheduled for April 17."
       }
     ]
   },
-
   "global_package": [
     {
       "region": "United States",
-      "emoji": "\ud83c\uddfa\ud83c\uddf8",
+      "emoji": "🇺🇸",
       "indicators": {
         "gdp": "+0.7%",
-        "cpi": "+2.7%",
+        "cpi": "+3.3%",
         "rate": "3.50-3.75%",
-        "unemployment": "4.4%"
+        "unemployment": "4.3%"
       },
       "indicatorMeta": {
-        "gdp": {"period": "Q4 2025", "obsDate": "2026-01-30", "change": "", "prev": ""},
-        "cpi": {"period": "Feb 2026", "obsDate": "2026-03-15", "change": "", "prev": ""},
-        "rate": {"period": "Mar 18, 2026", "obsDate": "2026-03-18", "change": "Held", "prev": "3.50-3.75%"},
-        "unemployment": {"period": "Latest", "obsDate": "2026-03-01", "change": "", "prev": ""}
+        "gdp": {
+          "period": "Q4 2025",
+          "obsDate": "2026-01-30",
+          "change": "",
+          "prev": ""
+        },
+        "cpi": {
+          "period": "Mar 2026",
+          "obsDate": "2026-04-10",
+          "change": "+0.6pp Y/Y; +0.9% M/M",
+          "prev": "+2.7% Y/Y Feb"
+        },
+        "rate": {
+          "period": "Mar 18, 2026 FOMC",
+          "obsDate": "2026-03-18",
+          "change": "Held",
+          "prev": "3.50-3.75%"
+        },
+        "unemployment": {
+          "period": "Mar 2026",
+          "obsDate": "2026-04-03",
+          "change": "-0.1pp",
+          "prev": "4.4%"
+        }
       },
       "indicatorSources": {
         "gdp": "US Bureau of Economic Analysis",
@@ -343,20 +652,26 @@
         "unemployment": "US Bureau of Labor Statistics"
       },
       "key_developments": [
-        "Federal Reserve held federal funds rate at 3.50-3.75% at March 18 meeting, following three 25bps cuts in late 2025, citing 'heightened uncertainty' from geopolitical risk and volatile energy prices",
-        "Equity markets in March dominated by Strait of Hormuz crisis — S&P 500 at ~6,496 on March 31, down approximately 9.4% from its January 2026 peak",
-        "US tariffs on Canadian steel and aluminum exports remain in effect; BoC attributes weaker Canadian near-term growth partly to these trade disruptions",
-        "Reports of potential US-Iran diplomatic talks on March 31 triggered a broad equity market rally (S&P +2.40%, Nasdaq +3.24%)"
+        "March CPI released April 10: headline +0.9% M/M / +3.3% Y/Y, highest annual since May 2024, driven by +10.9% energy (gasoline +21.2%). Services ex-energy +0.2% M/M / +3.0% Y/Y.",
+        "March nonfarm payrolls +178,000 (vs. consensus +59,000; February revised to -133,000). Unemployment fell to 4.3% from 4.4%, partly from labour-force exit. Average hourly earnings +3.5% Y/Y, slowest since May 2021.",
+        "Federal Reserve held target range at 3.50-3.75% on March 18. Next FOMC meeting April 28-29 (Powell's final FOMC as Chair; term ends May 2026).",
+        "S&P 500 closed April 10 at 6,816.89 (+3.6% week, best since November) after the prior week's ~9% drop (worst week since March 2020) triggered by the April 2 tariff announcement.",
+        "US Supreme Court voided IEEPA tariffs on February 20 (Learning Resources v. Trump). Trump replaced them with a 10% global import surcharge, with CUSMA-originating goods exempt. Section 232 tariffs on Canadian steel, aluminum, autos, and softwood lumber remain in force under separate statute."
       ],
-      "canada_impact": "US rate hold at 3.50-3.75% exceeds Canada's 2.25%, maintaining a 125-150bp spread that puts downward pressure on the Canadian dollar (CAD/USD 0.7198, -1.85% M/M). US tariffs on steel and aluminum directly affect Canadian manufacturing exports; motor vehicle exports dropped 21.2% to $5.4B in January. Strait of Hormuz crisis elevates energy export revenues but introduces supply chain cost pressures.",
+      "canada_impact": "The Fed-BoC policy rate spread of 125-150bp keeps CAD/USD near 0.7200. US March CPI reacceleration to 3.3% raises cross-border inflation transmission risk. Canadian motor vehicle and parts exports rebounded +24.2% in February following the January -21.2% drop, but Section 232 tariffs on steel, aluminum, autos, and softwood lumber remain in force despite the IEEPA ruling. Up to US$175B in IEEPA-era tariff refunds are projected (Penn Wharton).",
       "source_urls": [
-        "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a1.htm",
-        "https://tradingeconomics.com/united-states/stock-market"
+        "https://www.cnbc.com/2026/04/10/cpi-inflation-march-2026-breakdown.html",
+        "https://www.bls.gov/news.release/cpi.nr0.htm",
+        "https://www.bls.gov/news.release/empsit.nr0.htm",
+        "https://www.cnbc.com/2026/04/03/jobs-report-march-2026-.html",
+        "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm",
+        "https://www.supremecourt.gov/opinions/25pdf/24-1287_4gcj.pdf",
+        "https://budgetmodel.wharton.upenn.edu/issues/2026/2/20/supreme-court-tariff-ruling-ieepa-revenue-and-potential-refunds"
       ]
     },
     {
       "region": "European Union",
-      "emoji": "\ud83c\uddea\ud83c\uddfa",
+      "emoji": "🇪🇺",
       "indicators": {
         "gdp": "+0.2%",
         "cpi": "+1.9%",
@@ -364,32 +679,55 @@
         "unemployment": "5.9%"
       },
       "indicatorMeta": {
-        "gdp": {"period": "Q4 2025 Q/Q", "obsDate": "2026-02-14", "change": "", "prev": ""},
-        "cpi": {"period": "Q4 2025 HICP YoY", "obsDate": "2026-01-17", "change": "", "prev": ""},
-        "rate": {"period": "Mar 19, 2026", "obsDate": "2026-03-19", "change": "Held", "prev": "2.00%"},
-        "unemployment": {"period": "Latest", "obsDate": "2026-03-01", "change": "", "prev": ""}
+        "gdp": {
+          "period": "Q4 2025 Q/Q",
+          "obsDate": "2026-02-14",
+          "change": "",
+          "prev": ""
+        },
+        "cpi": {
+          "period": "Feb 2026 HICP",
+          "obsDate": "2026-03-15",
+          "change": "",
+          "prev": ""
+        },
+        "rate": {
+          "period": "Mar 19, 2026 GC",
+          "obsDate": "2026-03-19",
+          "change": "Held",
+          "prev": "2.00%"
+        },
+        "unemployment": {
+          "period": "Feb 2026",
+          "obsDate": "2026-04-02",
+          "change": "",
+          "prev": ""
+        }
       },
       "indicatorSources": {
         "gdp": "Eurostat",
-        "cpi": "ECB/Eurostat",
+        "cpi": "Eurostat / ECB",
         "rate": "European Central Bank",
         "unemployment": "Eurostat"
       },
       "key_developments": [
-        "ECB held deposit facility rate at 2.00% at March 19 meeting",
-        "Euro area HICP inflation at 1.9% YoY in Q4 2025 — below ECB's 2% target",
-        "GDP grew 0.2% Q/Q in Q4 2025; Germany recorded a second consecutive annual GDP contraction",
-        "EUR/USD at approximately 1.1460 on March 31 — euro strengthened against USD amid geopolitical uncertainty"
+        "ECB held all three key rates at the March 19 meeting: deposit facility 2.00%, main refinancing 2.15%, marginal lending 2.40%.",
+        "ECB March projections raised the headline inflation path: 2.6% average 2026, 2.0% 2027, 2.1% 2028 — upward revision on Middle East energy assumptions.",
+        "Euro area Q4 2025 GDP +0.2% Q/Q; HICP +1.9% Y/Y (below 2% target); unemployment 5.9%.",
+        "Germany recorded a second consecutive annual GDP contraction.",
+        "Next ECB Governing Council meeting April 30."
       ],
-      "canada_impact": "ECB rate at 2.00% vs BoC at 2.25% creates a narrow differential. Germany's continued contraction reduces demand for Canadian resource exports to Europe. CETA (Canada-EU trade agreement) trade flows affected by eurozone weakness. Euro strength against USD indirectly affects CAD competitiveness in European markets.",
+      "canada_impact": "ECB deposit rate (2.00%) sits 25bp below BoC overnight (2.25%). The euro strengthened toward 1.1460 EUR/USD at end-March. CETA governs Canada-EU trade; the German contraction dampens European demand for Canadian resource exports. The Strait of Hormuz closure has introduced energy and shipping cost pressures across the eurozone.",
       "source_urls": [
-        "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260205~001d26959b.en.html",
-        "https://ec.europa.eu/eurostat/web/euro-indicators"
+        "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260319~3057739775.en.html",
+        "https://www.centralbanking.com/central-banks/monetary-policy/monetary-policy-decisions/7975422/ecb-holds-rates-predicts-26-inflation-for-2026",
+        "https://ec.europa.eu/eurostat/web/euro-indicators",
+        "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
       ]
     },
     {
       "region": "United Kingdom",
-      "emoji": "\ud83c\uddec\ud83c\udde7",
+      "emoji": "🇬🇧",
       "indicators": {
         "gdp": "+0.1%",
         "cpi": "+2.8%",
@@ -397,10 +735,30 @@
         "unemployment": "5.2%"
       },
       "indicatorMeta": {
-        "gdp": {"period": "Q4 2025 Q/Q", "obsDate": "2026-02-13", "change": "", "prev": ""},
-        "cpi": {"period": "Feb 2026", "obsDate": "2026-03-19", "change": "", "prev": ""},
-        "rate": {"period": "Mar 18, 2026", "obsDate": "2026-03-18", "change": "Held", "prev": "3.75%"},
-        "unemployment": {"period": "Latest", "obsDate": "2026-03-01", "change": "", "prev": ""}
+        "gdp": {
+          "period": "Q4 2025 Q/Q",
+          "obsDate": "2026-02-13",
+          "change": "",
+          "prev": ""
+        },
+        "cpi": {
+          "period": "Feb 2026",
+          "obsDate": "2026-03-19",
+          "change": "",
+          "prev": ""
+        },
+        "rate": {
+          "period": "Mar 18, 2026 MPC",
+          "obsDate": "2026-03-18",
+          "change": "Held (unanimous)",
+          "prev": "3.75%"
+        },
+        "unemployment": {
+          "period": "Q4 2025",
+          "obsDate": "2026-02-11",
+          "change": "",
+          "prev": ""
+        }
       },
       "indicatorSources": {
         "gdp": "Office for National Statistics",
@@ -409,447 +767,1305 @@
         "unemployment": "Office for National Statistics"
       },
       "key_developments": [
-        "Bank of England held Bank Rate at 3.75% at March 18 meeting (unanimous vote)",
-        "UK CPI at 2.8% in February 2026 — above BoE 2% target",
-        "GDP grew 0.1% Q/Q in Q4 2025; weak growth trajectory continues",
-        "UK unemployment at 5.2%"
+        "BoE MPC held Bank Rate at 3.75% unanimously on March 18.",
+        "UK CPI +2.8% Y/Y in February (above 2% target); preliminary estimates suggest CPI running 3.0-3.5% over the next two quarters on higher energy prices.",
+        "Q4 2025 GDP +0.1% Q/Q; unemployment 5.2%.",
+        "Next MPC decision and Monetary Policy Report April 30. ~90% of polled respondents expect a hold at 3.75%; 5 expect a 25bp hike."
       ],
-      "canada_impact": "UK-Canada trade under CPTPP framework. BoE rate at 3.75% — 150bp above BoC — reflects persistent UK inflation. GBP movements affect pricing for Canadian resource and agri-food exports to the UK. Weak UK growth limits expansion of bilateral trade volumes.",
+      "canada_impact": "BoE-BoC policy rate spread of +150bp reflects persistent UK inflation versus Canada's declining trajectory (1.8% Y/Y). UK-Canada trade operates under CPTPP. The Strait of Hormuz closure elevates UK energy import costs (UK is a net energy importer).",
       "source_urls": [
         "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/march-2026",
+        "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
+        "https://hoa.org.uk/news/interest-rate-predictions-2/",
         "https://www.ons.gov.uk/economy/grossdomesticproductgdp/bulletins/gdpmonthlyestimateuk/latest"
       ]
     },
     {
       "region": "China / Asia",
-      "emoji": "\ud83c\udde8\ud83c\uddf3",
+      "emoji": "🇨🇳",
       "indicators": {
         "gdp": "+5.0%",
         "cpi": "+0.2%",
         "rate": "2.90%",
-        "unemployment": "4.6%",
-        "mfg_pmi": "50.4"
+        "unemployment": "4.6%"
       },
       "indicatorMeta": {
-        "gdp": {"period": "2025 annual", "obsDate": "2026-01-17", "change": "", "prev": "5.0% (2024)"},
-        "cpi": {"period": "Feb 2026", "obsDate": "2026-03-12", "change": "", "prev": ""},
-        "rate": {"period": "5-year LPR, current", "obsDate": "2026-03-20", "change": "0bp", "prev": "2.90%"},
-        "unemployment": {"period": "Latest", "obsDate": "2026-03-01", "change": "-0.1pp", "prev": ""},
-        "mfg_pmi": {"period": "Mar 2026", "obsDate": "2026-03-31", "change": "+1.4 from Feb", "prev": "49.0"}
+        "gdp": {
+          "period": "2025 full-year",
+          "obsDate": "2026-01-17",
+          "change": "",
+          "prev": ""
+        },
+        "cpi": {
+          "period": "Feb 2026",
+          "obsDate": "2026-03-09",
+          "change": "",
+          "prev": ""
+        },
+        "rate": {
+          "period": "5Y Loan Prime Rate",
+          "obsDate": "2026-03-20",
+          "change": "Held",
+          "prev": "2.90%"
+        },
+        "unemployment": {
+          "period": "Feb 2026",
+          "obsDate": "2026-03-15",
+          "change": "",
+          "prev": ""
+        }
       },
       "indicatorSources": {
         "gdp": "National Bureau of Statistics of China",
         "cpi": "National Bureau of Statistics of China",
         "rate": "People's Bank of China",
-        "unemployment": "National Bureau of Statistics of China",
-        "mfg_pmi": "National Bureau of Statistics of China"
+        "unemployment": "National Bureau of Statistics of China"
       },
       "key_developments": [
-        "Manufacturing PMI rose to 50.4 in March 2026, above the 50.0 expansion threshold after two months of contraction (49.3 in Jan, 49.0 in Feb)",
-        "Non-manufacturing PMI rose to 50.1 from 49.5; new export orders showed strength",
-        "Higher shipping costs and imported commodity costs from the Middle East conflict weighed on input prices",
-        "PBoC held 5-year LPR at 2.90%"
+        "NBS Manufacturing PMI: 50.4 in March (up from 49.0 in February and 49.3 in January) — first expansion after two months of contraction and strongest reading since March 2025. Production sub-index 51.4; new orders 51.6.",
+        "NBS Non-Manufacturing PMI: 50.1 (from 49.5).",
+        "Input and output price sub-indices at four-year highs on crude oil and non-ferrous metals.",
+        "People's Bank of China held the 5-year Loan Prime Rate at 2.90%.",
+        "China 2025 full-year GDP +5.0% (meets target).",
+        "Nikkei 225 at 28,546; USD/CNY 6.83 (flat week, -6.57% Y/Y)."
       ],
-      "canada_impact": "China is Canada's second-largest merchandise trading partner (~5% of exports). Manufacturing PMI returning to expansion after two months of contraction could increase demand for Canadian crude oil, canola, potash, wood products, and seafood. Strait of Hormuz crisis raises shipping costs for Canadian LNG and commodity exports routed to Asia. China controls ~60% of global rare earth mine production, affecting Canadian critical minerals projects.",
+      "canada_impact": "China is Canada's second-largest merchandise trading partner (~5% of merchandise exports). The return to manufacturing expansion supports demand for Canadian crude, canola, potash, wood products, and seafood. Higher shipping costs from Strait of Hormuz closure affect Canadian LNG and commodity routes to Asia. Steel prices rose 6.6% week on China PMI recovery (SLX +76.3% Y/Y); Nutrien/potash down 2.8% week.",
       "source_urls": [
         "https://www.cnbc.com/2026/03/31/china-pmi-data-march-factory-activity-.html",
-        "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis"
+        "http://english.scio.gov.cn/pressroom/2026-03/31/content_118411413.html",
+        "https://tradingeconomics.com/china/manufacturing-pmi"
       ]
     }
   ],
-
   "globalVectors": {
-    "us": "The Federal Reserve held at 3.50-3.75% on March 18, maintaining a 125-150bp spread above the BoC's 2.25%. US tariffs on Canadian steel and aluminum remain in effect, contributing to a 21.2% drop in motor vehicle exports. Potential US-Iran diplomatic talks reported March 31 triggered equity rallies.",
-    "china": "China's manufacturing PMI returned to expansion at 50.4 in March after two months of contraction. Higher shipping costs from the Strait of Hormuz closure weigh on input prices. Canada-China commodity trade flows in crude oil, canola, potash, and wood products remain active under the current bilateral framework.",
-    "eu": "The ECB held at 2.00% with HICP at 1.9%. Germany recorded a second consecutive annual GDP contraction. CETA trade flows with Canada are subject to eurozone demand conditions. The euro strengthened to 1.1460 against the USD.",
-    "uk": "The BoE held at 3.75% unanimously with CPI at 2.8%. UK GDP grew 0.1% Q/Q in Q4 2025. UK-Canada trade operates under the CPTPP framework; weak UK growth limits bilateral trade expansion."
+    "us": "US CPI reaccelerated to +3.3% Y/Y in March on energy (+10.9%). Nonfarm payrolls +178K, unemployment 4.3%. Fed held 3.50-3.75% with next FOMC Apr 29. Fed-BoC spread of 125-150bp keeps CAD weak at ~0.7200. Section 232 tariffs on Canadian steel, aluminum, autos, and softwood lumber remain in force despite the Feb 20 IEEPA ruling.",
+    "china": "China manufacturing PMI returned to expansion at 50.4 in March, the strongest reading since March 2025. 2025 full-year GDP +5.0% met target. The recovery supports Canadian crude, canola, potash, and wood product demand. Steel prices +6.6% on the week.",
+    "eu": "ECB held depo at 2.00% on March 19 and raised its 2026 HICP projection to 2.6% on Middle East energy assumptions. Euro area Q4 GDP +0.2% Q/Q; Germany posted a second consecutive annual contraction. Next GC meeting April 30.",
+    "uk": "BoE held Bank Rate at 3.75% unanimously on March 18. UK CPI +2.8% Y/Y in February and is projected to run 3.0-3.5% in the next two quarters on energy. Next MPC and MPR April 30."
   },
-
   "financial_markets_package": {
     "indices": [
-      {"label": "TSX Composite", "value": "32,427", "change": "+1.54% day; -6% in March; +28.2% YoY", "period": "Mar 31, 2026"},
-      {"label": "S&P 500", "value": "~6,496", "change": "+2.40% day; -9.4% from Jan peak", "period": "Mar 31, 2026"},
-      {"label": "DJIA", "value": "~46,117", "change": "+2.0% day", "period": "Mar 31, 2026"},
-      {"label": "Nasdaq Composite", "value": "~21,469", "change": "+3.24% day", "period": "Mar 31, 2026"}
+      {
+        "label": "S&P/TSX Composite",
+        "value": "33,696",
+        "change": "+5.51% week; +42.85% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "label": "S&P 500",
+        "value": "6,816.89",
+        "change": "+3.6% week (best since Nov); +24.92% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "label": "Dow Jones",
+        "value": "47,917",
+        "change": "+18.0% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "label": "NASDAQ",
+        "value": "13,791",
+        "change": "+22.32% Y/Y (pipeline stale vs. market)",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "label": "FTSE 100",
+        "value": "10,600",
+        "change": "+4.66% week; +33.95% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "label": "DAX",
+        "value": "22,563",
+        "change": "0.0% week; +7.67% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "label": "Nikkei 225",
+        "value": "28,546",
+        "change": "+55.58% Y/Y",
+        "period": "Apr 10, 2026"
+      }
     ],
     "fx": [
-      {"pair": "CAD/USD", "value": "0.7198", "change": "-1.85% M/M; +2.61% YoY", "period": "Mar 30, 2026"},
-      {"pair": "USD/CAD", "value": "1.3893", "change": "Loonie weakened past 1.38 to two-month low", "period": "Mar 30, 2026"},
-      {"pair": "EUR/USD", "value": "1.1460", "change": "Euro strengthened amid geopolitical uncertainty", "period": "Mar 31, 2026"}
+      {
+        "pair": "CAD/USD",
+        "value": "0.7200 (USD/CAD 1.3832)",
+        "change": "Flat week",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "pair": "EUR/USD",
+        "value": "1.0800-1.1460 range",
+        "change": "+2.65% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "pair": "USD/JPY",
+        "value": "159.24",
+        "change": "-0.29% week; +10.78% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "pair": "USD/CNY",
+        "value": "6.83",
+        "change": "Flat week; -6.57% Y/Y",
+        "period": "Apr 10, 2026"
+      }
     ],
     "commodities": [
-      {"name": "WTI Crude", "value": "$102.88/bbl", "change": "+50%+ M/M", "period": "Mar 30, 2026"},
-      {"name": "Brent Crude", "value": "$112.78/bbl", "change": "+55% M/M (record monthly gain since 1988)", "period": "Mar 30, 2026"},
-      {"name": "Natural Gas (Henry Hub)", "value": "~$3.05/MMBtu", "change": "EIA projects $3.80 average for 2026", "period": "Late Mar 2026"},
-      {"name": "Gold", "value": "~$4,578/oz", "change": "-14% M/M (worst since Oct 2008)", "period": "Mar 31, 2026"},
-      {"name": "Copper", "value": "~$5.90/lb", "change": "Range $5.25-$6.01 in March", "period": "Late Mar 2026"},
-      {"name": "Uranium (URA ETF)", "value": "$46.86", "change": "-2.8% W/W; -17.0% M/M", "period": "Latest"},
-      {"name": "Steel (SLX ETF)", "value": "$90.13", "change": "+1.2% W/W; -10.4% M/M", "period": "Latest"},
-      {"name": "Potash (Nutrien NTR)", "value": "$104.62", "change": "-1.0% W/W; +1.0% M/M", "period": "Latest"},
-      {"name": "Cameco (CCO.TO)", "value": "$147.75", "change": "-0.6% W/W; -14.1% M/M", "period": "Latest"}
+      {
+        "name": "WTI Crude",
+        "value": "~$98/bbl",
+        "change": "Down from $102.18 Mar 31",
+        "period": "Apr 10, 2026",
+        "note": "briefing_latest.json shows 1079.5/bbl — decimal-shift ingest error; real value ~$98"
+      },
+      {
+        "name": "Brent Crude",
+        "value": "$98-105/bbl range",
+        "change": "End-Mar peak $112.78",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "name": "Natural Gas",
+        "value": "$2.65-3.13/MMBtu range",
+        "change": "",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "name": "Coal (Newcastle)",
+        "value": "$96/t",
+        "change": "0.0% week; -6.8% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "name": "Gold",
+        "value": "~$4,743/oz",
+        "change": "YTD peak $5,589.38 Jan 28",
+        "period": "Apr 9, 2026"
+      },
+      {
+        "name": "Silver",
+        "value": "$76.32/oz",
+        "change": "+1.91% week; +137.83% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "name": "Copper",
+        "value": "$5.87/lb",
+        "change": "+3.9% week; +40.44% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "name": "Aluminum",
+        "value": "$3,430/t",
+        "change": "+2.04% week; +48.69% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "name": "Steel (SLX proxy)",
+        "value": "$98.57",
+        "change": "+6.6% week; +76.3% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "name": "Uranium (URA)",
+        "value": "$50.96",
+        "change": "+4.2% week; +135.7% Y/Y",
+        "period": "Apr 10, 2026"
+      },
+      {
+        "name": "Potash (Nutrien)",
+        "value": "$102.13",
+        "change": "-2.8% week; +56.5% Y/Y",
+        "period": "Apr 10, 2026"
+      }
     ],
     "yieldCurve": {
-      "current": [2.95, 3.01, 3.18, 3.36, 3.58, 3.94],
-      "lastYear": [2.62, 2.64, 2.81, 3.00, 3.22, 3.53],
-      "terms": ["2Y", "3Y", "5Y", "7Y", "10Y", "Long"]
+      "terms": [
+        "2Y",
+        "3Y",
+        "5Y",
+        "7Y",
+        "10Y",
+        "30Y"
+      ],
+      "current": [
+        2.79,
+        2.85,
+        3.04,
+        3.23,
+        3.46,
+        3.89
+      ],
+      "lastYear": [
+        3.07,
+        3.12,
+        3.2,
+        3.42,
+        3.6,
+        4.05
+      ]
     }
   },
-
   "consumer_pulse_package": {
     "themes": [
-      "Consumer confidence declined to 47.50 in February from 49.30 in January (Conference Board of Canada)",
-      "Bloomberg/Nanos index showed a three-week slide into late March, moving toward neutrality",
-      "Proportion of Canadians expecting the economy to strengthen in six months rose from 17% to 26% over four weeks",
-      "Retail sales rose 1.1% to $70.7B in January; core retail up 0.9%",
-      "Motor vehicle dealers led retail gains (+2.0%); general merchandise posted fourth consecutive monthly increase (+3.0%)",
-      "E-commerce sales rose 1.5% to $4.4B (6.2% of total retail trade)",
-      "Alberta recorded the largest provincial retail increase (+3.5%), led by motor vehicle sales",
-      "Rising energy costs and US trade friction cited as ongoing sources of consumer anxiety"
+      "Employment rebound of +14K in March reverses part of February's -84K decline; unemployment holds at 6.7%",
+      "Wage growth accelerates to +4.7% Y/Y in March, fastest pace since October 2024",
+      "Oil prices hovering near US$100 amid continuing Strait of Hormuz closure",
+      "February merchandise trade deficit widens to -$5.7B on record $72.1B imports and rebounding motor vehicle exports",
+      "Feb CPI at +1.8% Y/Y (lowest since early 2021); food inflation decelerates to 5.3% from 7.3%",
+      "US Supreme Court IEEPA ruling leaves Section 232 tariffs on Canadian steel, aluminum, autos, and softwood lumber in force",
+      "Housing starts at 250,900 SAAR (+4.5% M/M) amid ongoing affordability discussion",
+      "Federal budget date uncertain; provincial budgets ongoing"
     ],
     "word_cloud_topics": [
-      {"topic": "Strait of Hormuz crisis", "sentiment_score": -0.9, "frequency": 25},
-      {"topic": "Oil prices above $100", "sentiment_score": -0.6, "frequency": 22},
-      {"topic": "US tariffs", "sentiment_score": -0.8, "frequency": 20},
-      {"topic": "Job losses", "sentiment_score": -0.9, "frequency": 18},
-      {"topic": "Housing affordability", "sentiment_score": -0.7, "frequency": 16},
-      {"topic": "Energy costs", "sentiment_score": -0.7, "frequency": 15},
-      {"topic": "Inflation decline", "sentiment_score": 0.3, "frequency": 14},
-      {"topic": "Trade deficit", "sentiment_score": -0.5, "frequency": 13},
-      {"topic": "Mortgage rates", "sentiment_score": -0.4, "frequency": 12},
-      {"topic": "BoC rate hold", "sentiment_score": 0.1, "frequency": 12},
-      {"topic": "Gold price decline", "sentiment_score": -0.4, "frequency": 11},
-      {"topic": "Motor vehicle sales", "sentiment_score": 0.3, "frequency": 10},
-      {"topic": "Federal housing deal", "sentiment_score": 0.2, "frequency": 10},
-      {"topic": "Retail spending", "sentiment_score": 0.3, "frequency": 10},
-      {"topic": "Manufacturing contraction", "sentiment_score": -0.6, "frequency": 9},
-      {"topic": "GDP growth", "sentiment_score": 0.1, "frequency": 9},
-      {"topic": "Labour market weakness", "sentiment_score": -0.7, "frequency": 9},
-      {"topic": "Private sector layoffs", "sentiment_score": -0.8, "frequency": 8},
-      {"topic": "Consumer confidence decline", "sentiment_score": -0.6, "frequency": 8},
-      {"topic": "E-commerce growth", "sentiment_score": 0.3, "frequency": 7},
-      {"topic": "Geopolitical uncertainty", "sentiment_score": -0.8, "frequency": 7},
-      {"topic": "Participation rate decline", "sentiment_score": -0.4, "frequency": 7},
-      {"topic": "Housing starts increase", "sentiment_score": 0.2, "frequency": 7},
-      {"topic": "TSX year-over-year gains", "sentiment_score": 0.4, "frequency": 6},
-      {"topic": "China PMI recovery", "sentiment_score": 0.2, "frequency": 6},
-      {"topic": "Brent crude record surge", "sentiment_score": -0.5, "frequency": 6},
-      {"topic": "CAD depreciation", "sentiment_score": -0.4, "frequency": 6},
-      {"topic": "Food inflation deceleration", "sentiment_score": 0.3, "frequency": 6},
-      {"topic": "Federal budget spending", "sentiment_score": 0.0, "frequency": 5},
-      {"topic": "Core inflation convergence", "sentiment_score": 0.3, "frequency": 5},
-      {"topic": "Home price increases", "sentiment_score": -0.2, "frequency": 5},
-      {"topic": "Defence spending", "sentiment_score": 0.0, "frequency": 5},
-      {"topic": "Alberta retail strength", "sentiment_score": 0.3, "frequency": 5},
-      {"topic": "Natural gas prices", "sentiment_score": -0.2, "frequency": 5},
-      {"topic": "Copper elevated", "sentiment_score": 0.1, "frequency": 4},
-      {"topic": "Uranium decline", "sentiment_score": -0.4, "frequency": 4},
-      {"topic": "Steel prices down", "sentiment_score": -0.3, "frequency": 4},
-      {"topic": "Full-time job losses", "sentiment_score": -0.8, "frequency": 4},
-      {"topic": "Fed rate hold", "sentiment_score": 0.0, "frequency": 4},
-      {"topic": "Provincial budgets", "sentiment_score": 0.0, "frequency": 4},
-      {"topic": "LNG export demand", "sentiment_score": 0.2, "frequency": 3},
-      {"topic": "Potash stable", "sentiment_score": 0.1, "frequency": 3},
-      {"topic": "Ontario housing deal $8.8B", "sentiment_score": 0.2, "frequency": 3},
-      {"topic": "Advance GDP February", "sentiment_score": 0.2, "frequency": 3},
-      {"topic": "US-Iran diplomatic talks", "sentiment_score": 0.3, "frequency": 3}
+      {
+        "topic": "Strait of Hormuz crisis",
+        "sentiment_score": -0.9,
+        "frequency": 25
+      },
+      {
+        "topic": "Oil prices near $100",
+        "sentiment_score": -0.6,
+        "frequency": 22
+      },
+      {
+        "topic": "US tariffs",
+        "sentiment_score": -0.8,
+        "frequency": 20
+      },
+      {
+        "topic": "February job losses (-84K)",
+        "sentiment_score": -0.9,
+        "frequency": 18
+      },
+      {
+        "topic": "Housing affordability",
+        "sentiment_score": -0.7,
+        "frequency": 16
+      },
+      {
+        "topic": "Energy costs",
+        "sentiment_score": -0.7,
+        "frequency": 15
+      },
+      {
+        "topic": "Inflation decline to 1.8%",
+        "sentiment_score": 0.3,
+        "frequency": 14
+      },
+      {
+        "topic": "Trade deficit -$5.7B",
+        "sentiment_score": -0.5,
+        "frequency": 13
+      },
+      {
+        "topic": "Mortgage rates",
+        "sentiment_score": -0.4,
+        "frequency": 12
+      },
+      {
+        "topic": "BoC rate hold at 2.25%",
+        "sentiment_score": 0.1,
+        "frequency": 12
+      },
+      {
+        "topic": "Gold price decline from peak",
+        "sentiment_score": -0.4,
+        "frequency": 11
+      },
+      {
+        "topic": "Motor vehicle exports rebound",
+        "sentiment_score": 0.3,
+        "frequency": 10
+      },
+      {
+        "topic": "Federal housing deal",
+        "sentiment_score": 0.2,
+        "frequency": 10
+      },
+      {
+        "topic": "Retail spending",
+        "sentiment_score": 0.3,
+        "frequency": 10
+      },
+      {
+        "topic": "Manufacturing contraction -1.4%",
+        "sentiment_score": -0.6,
+        "frequency": 9
+      },
+      {
+        "topic": "GDP growth +0.1%",
+        "sentiment_score": 0.1,
+        "frequency": 9
+      },
+      {
+        "topic": "Labour market weakness",
+        "sentiment_score": -0.7,
+        "frequency": 9
+      },
+      {
+        "topic": "Private sector layoffs",
+        "sentiment_score": -0.8,
+        "frequency": 8
+      },
+      {
+        "topic": "Consumer confidence decline",
+        "sentiment_score": -0.6,
+        "frequency": 8
+      },
+      {
+        "topic": "E-commerce growth",
+        "sentiment_score": 0.3,
+        "frequency": 7
+      },
+      {
+        "topic": "Geopolitical uncertainty",
+        "sentiment_score": -0.8,
+        "frequency": 7
+      },
+      {
+        "topic": "Participation rate",
+        "sentiment_score": 0.0,
+        "frequency": 7
+      },
+      {
+        "topic": "Housing starts increase",
+        "sentiment_score": 0.2,
+        "frequency": 7
+      },
+      {
+        "topic": "TSX year-over-year gains",
+        "sentiment_score": 0.4,
+        "frequency": 6
+      },
+      {
+        "topic": "China PMI recovery",
+        "sentiment_score": 0.2,
+        "frequency": 6
+      },
+      {
+        "topic": "Brent crude record surge",
+        "sentiment_score": -0.5,
+        "frequency": 6
+      },
+      {
+        "topic": "CAD depreciation",
+        "sentiment_score": -0.4,
+        "frequency": 6
+      },
+      {
+        "topic": "Food inflation deceleration",
+        "sentiment_score": 0.3,
+        "frequency": 6
+      },
+      {
+        "topic": "March employment rebound (+14K)",
+        "sentiment_score": 0.2,
+        "frequency": 6
+      },
+      {
+        "topic": "Federal budget",
+        "sentiment_score": 0.0,
+        "frequency": 5
+      },
+      {
+        "topic": "Core inflation convergence",
+        "sentiment_score": 0.3,
+        "frequency": 5
+      },
+      {
+        "topic": "Home price increases",
+        "sentiment_score": -0.2,
+        "frequency": 5
+      },
+      {
+        "topic": "Defence spending",
+        "sentiment_score": 0.0,
+        "frequency": 5
+      },
+      {
+        "topic": "Alberta retail strength",
+        "sentiment_score": 0.3,
+        "frequency": 5
+      },
+      {
+        "topic": "Natural gas prices",
+        "sentiment_score": -0.2,
+        "frequency": 5
+      },
+      {
+        "topic": "Wage growth +4.7% Y/Y",
+        "sentiment_score": 0.3,
+        "frequency": 5
+      },
+      {
+        "topic": "Supreme Court IEEPA ruling",
+        "sentiment_score": 0.0,
+        "frequency": 5
+      },
+      {
+        "topic": "Trump 10% global surcharge",
+        "sentiment_score": -0.5,
+        "frequency": 5
+      },
+      {
+        "topic": "February trade deficit -$5.7B",
+        "sentiment_score": -0.4,
+        "frequency": 4
+      },
+      {
+        "topic": "US CPI +3.3% energy spike",
+        "sentiment_score": -0.3,
+        "frequency": 4
+      },
+      {
+        "topic": "Copper elevated",
+        "sentiment_score": 0.1,
+        "frequency": 4
+      },
+      {
+        "topic": "Uranium decline",
+        "sentiment_score": -0.4,
+        "frequency": 4
+      },
+      {
+        "topic": "Fed rate hold",
+        "sentiment_score": 0.0,
+        "frequency": 4
+      },
+      {
+        "topic": "Provincial budgets",
+        "sentiment_score": 0.0,
+        "frequency": 4
+      },
+      {
+        "topic": "LNG export demand",
+        "sentiment_score": 0.2,
+        "frequency": 3
+      },
+      {
+        "topic": "Potash stable",
+        "sentiment_score": 0.1,
+        "frequency": 3
+      },
+      {
+        "topic": "Gold imports record (Feb trade)",
+        "sentiment_score": 0.0,
+        "frequency": 3
+      },
+      {
+        "topic": "Advance GDP February (+0.2%)",
+        "sentiment_score": 0.2,
+        "frequency": 3
+      },
+      {
+        "topic": "US-Iran ceasefire",
+        "sentiment_score": 0.3,
+        "frequency": 3
+      },
+      {
+        "topic": "Ontario housing deal $8.8B",
+        "sentiment_score": 0.2,
+        "frequency": 3
+      }
     ]
   },
-
   "watchlist_package": [
     {
-      "date": "Apr 1",
+      "date": "Apr 13",
       "week_label": "This Week",
-      "institution": "Bank of Canada",
-      "event_name": "Summary of Deliberations — March 2026 Meeting",
-      "description": "Detailed account of the Governing Council's March 18 rate decision deliberations, including assessment of US tariff impacts and inflation outlook.",
-      "impact": "medium",
-      "source_url": "https://www.bankofcanada.ca/press/upcoming-events/"
-    },
-    {
-      "date": "Apr 2",
-      "week_label": "This Week",
-      "institution": "Statistics Canada",
-      "event_name": "International Merchandise Trade — February 2026",
-      "description": "Monthly export and import data. February is the first full month following the Strait of Hormuz closure initiation. Watch for shifts in energy and automotive trade volumes.",
-      "impact": "high",
-      "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260312/dq260312a-eng.htm"
-    },
-    {
-      "date": "Apr 3",
-      "week_label": "This Week",
-      "institution": "Statistics Canada",
-      "event_name": "Labour Force Survey — March 2026",
-      "description": "First Q2 labour market reading. February showed -84,000 employment change; March data will indicate whether the decline continued or reversed.",
-      "impact": "high",
-      "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm"
-    },
-    {
-      "date": "Apr 8",
-      "week_label": "Next Week",
       "institution": "Statistics Canada",
       "event_name": "Building Permits — February 2026",
-      "description": "Monthly permit values by province and sector; leading indicator for residential and non-residential construction pipeline. 1,671 infrastructure projects tracked in the database.",
+      "description": "Follow-up to January print of $13.3B (+4.8% M/M).",
       "impact": "medium",
-      "source_url": "https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm"
+      "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/cal2-eng.htm"
     },
     {
       "date": "Apr 15",
-      "week_label": "This Month",
+      "week_label": "This Week",
+      "institution": "Dept. of Finance Canada",
+      "event_name": "Federal Budget (estimated)",
+      "description": "Estimated release per events.json; provincial MB/NL/PE budgets also flagged same day.",
+      "impact": "high",
+      "source_url": "https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending.html"
+    },
+    {
+      "date": "Apr 15",
+      "week_label": "This Week",
+      "institution": "Statistics Canada",
+      "event_name": "Manufacturing Sales — February 2026",
+      "description": "Follow-up to January's -1.4% M/M manufacturing GDP print.",
+      "impact": "medium",
+      "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/cal2-eng.htm"
+    },
+    {
+      "date": "Apr 16",
+      "week_label": "This Week",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Advance Retail Sales — March 2026",
+      "description": "US consumer spending tracker.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "Apr 16",
+      "week_label": "This Week",
+      "institution": "Federal Reserve Board",
+      "event_name": "U.S. Industrial Production — March 2026",
+      "description": "US factory output, with Canadian manufacturing supply-chain linkage.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/current/"
+    },
+    {
+      "date": "Apr 17",
+      "week_label": "This Week",
+      "institution": "CMHC",
+      "event_name": "Housing Starts — March 2026",
+      "description": "Follow-up to February's 250,900 SAAR (+4.5% M/M).",
+      "impact": "medium",
+      "source_url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-february-2026"
+    },
+    {
+      "date": "Apr 17",
+      "week_label": "This Week",
+      "institution": "U.S. Census Bureau",
+      "event_name": "U.S. Housing Starts — March 2026",
+      "description": "US housing tracker.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/economic-indicators/calendar-listview.html"
+    },
+    {
+      "date": "Apr 20",
+      "week_label": "Next Week",
       "institution": "Statistics Canada",
       "event_name": "Consumer Price Index — March 2026",
-      "description": "Monthly CPI release. March is the final month affected by the GST/HST base-year effect. February headline CPI was 1.8%. Releases same day as BoC rate decision.",
+      "description": "Follow-up to February's +1.8% Y/Y headline and core measures (median 2.3%, trim 2.3%, common 2.4%). NOTE: events.json shows Apr 17 — correct date per StatCan calendar is Apr 20.",
       "impact": "high",
-      "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260316/dq260316a-eng.htm"
+      "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/cal2-eng.htm"
     },
     {
-      "date": "Apr 15",
-      "week_label": "This Month",
-      "institution": "Bank of Canada",
-      "event_name": "Policy Interest Rate Announcement + Monetary Policy Report",
-      "description": "Rate decision with full MPR. Bond markets price ~86% probability of hold at 2.25%, ~14% probability of 25bps hike. Most data-dense event in the near-term calendar.",
-      "impact": "high",
-      "source_url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
-    },
-    {
-      "date": "Apr 22",
-      "week_label": "This Month",
+      "date": "Apr 24",
+      "week_label": "Next Week",
       "institution": "Statistics Canada",
       "event_name": "Retail Trade — February 2026",
-      "description": "Monthly retail sales by province. January retail was $70.7B (+1.1%); advance estimate for February is +0.9%.",
+      "description": "Follow-up to January's $70.7B (+1.1%); advance estimate +0.9%.",
       "impact": "medium",
       "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260320/dq260320a-eng.htm"
     },
     {
       "date": "Apr 28",
-      "week_label": "This Month",
+      "week_label": "Week of Apr 27",
       "institution": "Statistics Canada",
       "event_name": "GDP by Industry — February 2026",
-      "description": "Monthly real GDP output by industry. January GDP was +0.1%; advance for February is +0.2%. Covers manufacturing, construction, and resource extraction.",
+      "description": "Follow-up to January +0.1% and the February advance estimate of +0.2%.",
       "impact": "high",
       "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm"
     },
     {
+      "date": "Apr 29",
+      "week_label": "Week of Apr 27",
+      "institution": "Bank of Canada",
+      "event_name": "BoC Rate Decision + Monetary Policy Report",
+      "description": "Next Fixed Announcement Date. NOTE: events.json incorrectly shows Apr 16; correct FAD is Apr 29. Market prices ~94% hold at 2.25%, ~6% probability of a 25bp cut.",
+      "impact": "high",
+      "source_url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
+    },
+    {
+      "date": "Apr 29",
+      "week_label": "Week of Apr 27",
+      "institution": "U.S. Federal Reserve",
+      "event_name": "FOMC Rate Decision",
+      "description": "Powell's final FOMC as Chair (term ends May 2026). Consensus hold at 3.50-3.75%.",
+      "impact": "high",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
       "date": "Apr 30",
-      "week_label": "This Month",
+      "week_label": "Week of Apr 27",
       "institution": "Parliament of Canada",
-      "event_name": "Budget Implementation Bill — Second Reading",
-      "description": "Parliamentary review of Budget 2026 implementation legislation. Infrastructure funding, housing accelerator, and defence provisions are in scope.",
+      "event_name": "Budget Implementation Bill — 2nd Reading",
+      "description": "Per prior watchlist and LEGISinfo.",
       "impact": "medium",
       "source_url": "https://www.parl.ca/legisinfo/en/bills"
     },
     {
+      "date": "Apr 30",
+      "week_label": "Week of Apr 27",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. GDP — Q1 2026 Advance Estimate",
+      "description": "US first-quarter output.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "Apr 30",
+      "week_label": "Week of Apr 27",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. Personal Income and Outlays — March 2026 (PCE)",
+      "description": "Federal Reserve's preferred inflation measure.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
+      "date": "Apr 30",
+      "week_label": "Week of Apr 27",
+      "institution": "European Central Bank",
+      "event_name": "ECB Governing Council Meeting",
+      "description": "Deposit rate expected held at 2.00%.",
+      "impact": "medium",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+    },
+    {
+      "date": "Apr 30",
+      "week_label": "Week of Apr 27",
+      "institution": "Bank of England",
+      "event_name": "BoE MPC Rate Decision + MPR",
+      "description": "Bank Rate expected held at 3.75% (~90% consensus).",
+      "impact": "high",
+      "source_url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+    },
+    {
+      "date": "May 5",
+      "week_label": "Week of May 4",
+      "institution": "Bureau of Economic Analysis",
+      "event_name": "U.S. International Trade in Goods and Services — March 2026",
+      "description": "US trade balance print.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/news/schedule"
+    },
+    {
       "date": "May 8",
-      "week_label": "Upcoming",
+      "week_label": "Week of May 4",
       "institution": "Statistics Canada",
       "event_name": "Labour Force Survey — April 2026",
-      "description": "April employment data; first Q2 labour market reading following federal budget measures. Provincial breakdowns across all 13 provinces.",
+      "description": "First April labour market reading.",
       "impact": "high",
-      "source_url": "https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm"
+      "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/cal2-eng.htm"
     },
     {
-      "date": "May 13",
-      "week_label": "Upcoming",
-      "institution": "Statistics Canada",
-      "event_name": "Consumer Price Index — April 2026",
-      "description": "Second monthly CPI reading of Q2. Monitors pass-through of tariff-related and energy cost pressures on goods categories. First post-base-effect CPI reading.",
+      "date": "May 8",
+      "week_label": "Week of May 4",
+      "institution": "Bureau of Labor Statistics",
+      "event_name": "U.S. Employment Situation — April 2026",
+      "description": "US April nonfarm payrolls and unemployment.",
       "impact": "high",
-      "source_url": "https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm"
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
     },
     {
-      "date": "May 20",
-      "week_label": "Upcoming",
+      "date": "May 10",
+      "week_label": "Week of May 4",
       "institution": "Statistics Canada",
-      "event_name": "Building Permits — March 2026",
-      "description": "March permit values complete the Q1 construction intentions picture for residential and non-residential sectors.",
+      "event_name": "Building Permits / Investment in Building Construction",
+      "description": "Per events.json.",
       "impact": "medium",
-      "source_url": "https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm"
-    },
-    {
-      "date": "May 27",
-      "week_label": "Upcoming",
-      "institution": "Statistics Canada",
-      "event_name": "GDP by Industry — March 2026",
-      "description": "Completes the Q1 2026 monthly GDP sequence. Final input before the Q1 expenditure-based GDP release.",
-      "impact": "high",
-      "source_url": "https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm"
-    },
-    {
-      "date": "Jun 3",
-      "week_label": "Upcoming",
-      "institution": "Bank of Canada",
-      "event_name": "Policy Interest Rate Announcement",
-      "description": "June rate decision. BoC will have full Q1 GDP, two Q2 CPI prints, and Q1 LFS data available for this deliberation.",
-      "impact": "high",
-      "source_url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
-    },
-    {
-      "date": "Jun 5",
-      "week_label": "Upcoming",
-      "institution": "Statistics Canada",
-      "event_name": "Labour Force Survey — May 2026",
-      "description": "May employment data with provincial breakdowns covering all 13 provinces.",
-      "impact": "high",
-      "source_url": "https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm"
-    },
-    {
-      "date": "Jun 17",
-      "week_label": "Upcoming",
-      "institution": "Statistics Canada",
-      "event_name": "Consumer Price Index — May 2026",
-      "description": "Third monthly CPI reading of Q2. Cumulative read on whether tariff and energy price effects are persisting.",
-      "impact": "medium",
-      "source_url": "https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm"
-    },
-    {
-      "date": "Jun 27",
-      "week_label": "Upcoming",
-      "institution": "Statistics Canada",
-      "event_name": "GDP by Industry — April 2026",
-      "description": "First monthly GDP reading for Q2 2026; early signal on whether economic momentum carried through the budget period.",
-      "impact": "medium",
-      "source_url": "https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm"
-    },
-    {
-      "date": "Jul 15",
-      "week_label": "Upcoming",
-      "institution": "Bank of Canada",
-      "event_name": "Policy Interest Rate Announcement + MPR",
-      "description": "July rate decision with updated Monetary Policy Report. Mid-year assessment of inflation trajectory and growth conditions.",
-      "impact": "high",
-      "source_url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
-    },
-    {
-      "date": "Sep 9",
-      "week_label": "Upcoming",
-      "institution": "Bank of Canada",
-      "event_name": "Policy Interest Rate Announcement",
-      "description": "September rate decision. BoC will have Q2 GDP expenditure accounts and two summer CPI prints available.",
-      "impact": "high",
-      "source_url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
-    },
-    {
-      "date": "Oct 28",
-      "week_label": "Upcoming",
-      "institution": "Bank of Canada",
-      "event_name": "Policy Interest Rate Announcement + MPR",
-      "description": "October rate decision with full Monetary Policy Report update. Q3 GDP data and CPI trajectory inform this deliberation.",
-      "impact": "high",
-      "source_url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
-    },
-    {
-      "date": "Dec 9",
-      "week_label": "Upcoming",
-      "institution": "Bank of Canada",
-      "event_name": "Policy Interest Rate Announcement",
-      "description": "Final BoC rate decision of 2026. Sets the policy rate heading into year-end and provides forward guidance for 2027.",
-      "impact": "high",
-      "source_url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
+      "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/cal2-eng.htm"
     }
   ],
-
   "charts": {
-    "yieldCurveCurrent": [2.95, 3.01, 3.18, 3.36, 3.58, 3.94],
-    "yieldCurveLastYear": [2.62, 2.64, 2.81, 3.00, 3.22, 3.53]
+    "yieldCurveCurrent": [
+      2.79,
+      2.85,
+      3.04,
+      3.23,
+      3.46,
+      3.89
+    ],
+    "yieldCurveLastYear": [
+      3.07,
+      3.12,
+      3.2,
+      3.42,
+      3.6,
+      4.05
+    ],
+    "yieldCurveTerms": [
+      "2Y",
+      "3Y",
+      "5Y",
+      "7Y",
+      "10Y",
+      "30Y"
+    ]
   },
-
   "infographic_directives": [
     {
-      "type": "bar",
-      "title": "Strait of Hormuz Impact: March Commodity Price Moves",
-      "subtitle": "WTI +50%, Brent +55%, Gold -14%, Uranium -17%, Steel -10.4%",
-      "data_source": "commodities",
-      "metric": "monthly_pct_change",
+      "type": "diverging_bar",
+      "title": "Industry GDP Divergence (Jan 2026)",
+      "subtitle": "Mining/oil & gas +1.2% M/M and construction +1.1% while manufacturing -1.4% and management of companies -4.1%",
+      "data_source": "indicators",
+      "metric": "industry_gdp_mm",
       "unit": "%",
       "filter": {},
-      "group_by": "commodity",
+      "group_by": "naics",
       "sort": "desc",
-      "insight": "The Strait of Hormuz closure since March 2 drove the largest crude oil monthly gains since 2008 — WTI to $102.88/bbl, Brent to $112.78/bbl. Gold fell 14% from margin liquidation. Steel and uranium proxies also declined 10-17% month-over-month."
+      "insight": "The -1.4% M/M manufacturing print is linked to 48 manufacturing projects ($67.4B); the +1.2% mining/oil-and-gas print covers 423 projects ($259.7B combined)."
+    },
+    {
+      "type": "bar",
+      "title": "Employment Change: February to March 2026",
+      "subtitle": "March +14,000 partially reverses February -84,000; unemployment held at 6.7%",
+      "data_source": "indicators",
+      "metric": "employmentChange",
+      "unit": "persons",
+      "filter": {},
+      "group_by": "month",
+      "sort": "asc",
+      "insight": "Net swing of +98,000 month-over-month in employment change. 1031 projects in the database are Under Construction and depend on labour availability; wage growth of 4.7% Y/Y runs 290bp above headline CPI."
     },
     {
       "type": "line",
-      "title": "BoC Rate vs. Canadian Dollar (12-Month Trend)",
-      "subtitle": "Policy rate at 2.25% while CAD/USD weakened to 0.7198 (-1.85% M/M)",
-      "data_source": "indicators",
-      "metric": "bocRate,cadUsd",
+      "title": "GoC Yield Curve — 2Y, 3Y, 5Y, 7Y, 10Y, 30Y",
+      "subtitle": "Full disinversion: 10Y-2Y spread +67bp; curve entirely upward-sloping",
+      "data_source": "boc",
+      "metric": "yield",
       "unit": "%",
       "filter": {},
-      "group_by": "time",
+      "group_by": "term",
       "sort": "asc",
-      "insight": "The BoC has held at 2.25% since cutting seven times from 5.00%. The US-Canada rate spread of 125-150bp continues to put downward pressure on the loonie, which weakened past 1.38 per USD to a two-month low in March."
-    },
-    {
-      "type": "diverging_bar",
-      "title": "January GDP by Major Sector: Goods vs. Services Split",
-      "subtitle": "Mining/O&G +1.2%, Retail +0.8%, Manufacturing -1.4%",
-      "data_source": "indicators",
-      "metric": "industry_gdp",
-      "unit": "%",
-      "filter": {},
-      "group_by": "sector",
-      "sort": "desc",
-      "insight": "Goods-producing industries expanded 0.2% for the second straight month in January, driven by mining (+1.2%) and construction. Manufacturing contracted 1.4%. Services were essentially unchanged — retail (+0.8%) and finance offset declines in wholesale and transportation."
+      "insight": "The 2Y at 2.79% sits 54bp above the BoC overnight rate of 2.25%, pricing a mid-year continuation of the rate hold. Curve has fully disinverted from the 2023 flat-to-inverted shape (FRED yield_curve_10y2y hit -0.82 in June 2023)."
     },
     {
       "type": "horizontal_bar",
-      "title": "Project Database by Status (7,372 Total Projects)",
-      "subtitle": "Under Review 2,591 | Proposed 2,528 | Under Construction 1,034 | Approved 549",
-      "data_source": "projects",
-      "metric": "status_count",
-      "unit": "projects",
+      "title": "Canada Merchandise Trade — February 2026",
+      "subtitle": "Exports $66.3B (+6.4%); imports $72.1B (+8.4%, record); deficit -$5.7B",
+      "data_source": "indicators",
+      "metric": "trade",
+      "unit": "$B",
       "filter": {},
-      "group_by": "status",
+      "group_by": "component",
       "sort": "desc",
-      "insight": "The database tracks 7,372 capital projects across Canada. 2,591 are under review, 2,528 proposed, 1,034 under construction, 549 approved, 486 complete, 153 cancelled, and 31 on hold. Infrastructure (1,671), power/energy (785), and transport/logistics (600) are the three largest sector categories."
+      "insight": "Motor vehicles and parts exports +24.2% reverse January's -21.2% drop, supporting 48 manufacturing projects. Metals and minerals imports +45.6% driven by gold shipments link to 362 mining projects ($159.5B)."
     }
   ],
-
   "sources_registry": [
-    {"id": 1, "title": "Bank of Canada — March 18, 2026 Rate Decision", "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/", "archive_url": ""},
-    {"id": 2, "title": "Bank of Canada — 2026 Schedule of Rate Announcements", "url": "https://www.bankofcanada.ca/2025/08/bank-canada-publishes-2026-schedule-policy-interest-rate-announcements-other-major-publications/", "archive_url": ""},
-    {"id": 3, "title": "Bank of Canada — Policy Interest Rate", "url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/", "archive_url": ""},
-    {"id": 4, "title": "Statistics Canada — GDP by Industry, January 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm", "archive_url": ""},
-    {"id": 5, "title": "BNN Bloomberg — GDP Grew 0.1% in January", "url": "https://www.bnnbloomberg.ca/business/2026/03/31/statistics-canada-says-real-gdp-grew-01-per-cent-in-january/", "archive_url": ""},
-    {"id": 6, "title": "Statistics Canada — GDP Income and Expenditure, Q3 2025", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/251128/dq251128a-eng.htm", "archive_url": ""},
-    {"id": 7, "title": "Bank of Canada — January 2026 MPR Projections", "url": "https://www.bankofcanada.ca/publications/mpr/mpr-2026-01-28/projections/", "archive_url": ""},
-    {"id": 8, "title": "Statistics Canada — CPI February 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260316/dq260316a-eng.htm", "archive_url": ""},
-    {"id": 9, "title": "CBC News — Inflation fell to 1.8% in February", "url": "https://www.cbc.ca/news/business/canada-annual-inflation-rate-february-2026-9.7130104", "archive_url": ""},
-    {"id": 10, "title": "TD Economics — Canadian CPI February 2026", "url": "https://economics.td.com/ca-cpi", "archive_url": ""},
-    {"id": 11, "title": "Bank of Canada — CPI", "url": "https://www.bankofcanada.ca/rates/price-indexes/cpi/", "archive_url": ""},
-    {"id": 12, "title": "Statistics Canada — Labour Force Survey, February 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm", "archive_url": ""},
-    {"id": 13, "title": "TD Economics — Canadian Employment, February 2026", "url": "https://economics.td.com/ca-employment", "archive_url": ""},
-    {"id": 14, "title": "Statistics Canada — Labour Force Survey, January 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260206/dq260206a-eng.htm", "archive_url": ""},
-    {"id": 15, "title": "CMHC — February Housing Starts", "url": "https://www.canadianmortgagetrends.com/2026/03/cmhc-reports-february-housing-starts-up-4-5-from-january/", "archive_url": ""},
-    {"id": 16, "title": "WOWA — Canadian Housing Market Report, March 2026", "url": "https://wowa.ca/reports/canada-housing-market", "archive_url": ""},
-    {"id": 17, "title": "CMHC — Housing Market Outlook 2026", "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/market-reports/housing-market/housing-market-outlook", "archive_url": ""},
-    {"id": 18, "title": "Statistics Canada — International Merchandise Trade, January 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260312/dq260312a-eng.htm", "archive_url": ""},
-    {"id": 19, "title": "TD Economics — Canadian Merchandise Trade, January 2026", "url": "https://economics.td.com/ca-merchandise-trade", "archive_url": ""},
-    {"id": 20, "title": "Trading Economics — Canada Stock Market (TSX)", "url": "https://tradingeconomics.com/canada/stock-market", "archive_url": ""},
-    {"id": 21, "title": "Trading Economics — US Stock Market", "url": "https://tradingeconomics.com/united-states/stock-market", "archive_url": ""},
-    {"id": 22, "title": "BNN Bloomberg — TSX March 27", "url": "https://www.bnnbloomberg.ca/business/2026/03/27/sptsx-composite-positive-late-morning-friday-us-markets-moving-lower/", "archive_url": ""},
-    {"id": 23, "title": "CNBC — Dow Surges 600 Points, March 22", "url": "https://www.cnbc.com/2026/03/22/stock-market-today-live-updates.html", "archive_url": ""},
-    {"id": 24, "title": "Trading Economics — Canadian Dollar", "url": "https://tradingeconomics.com/canada/currency", "archive_url": ""},
-    {"id": 25, "title": "Exchange Rates — EUR/USD 2026 History", "url": "https://www.exchangerates.org.uk/EUR-USD-spot-exchange-rates-history-2026.html", "archive_url": ""},
-    {"id": 26, "title": "Federal Reserve — H.10 Foreign Exchange Rates, March 30, 2026", "url": "https://www.federalreserve.gov/releases/h10/hist/dat00_eu.htm", "archive_url": ""},
-    {"id": 27, "title": "CNBC — Brent Record Monthly Surge, WTI Above $100", "url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-yemen-houthis-israel-iran-war.html", "archive_url": ""},
-    {"id": 28, "title": "EIA — Short-Term Energy Outlook", "url": "https://www.eia.gov/outlooks/steo/", "archive_url": ""},
-    {"id": 29, "title": "Fortune — Gold Price March 31, 2026", "url": "https://fortune.com/article/current-price-of-gold-03-31-2026/", "archive_url": ""},
-    {"id": 30, "title": "Trading Economics — Copper", "url": "https://tradingeconomics.com/commodity/copper", "archive_url": ""},
-    {"id": 31, "title": "Natural Gas Intelligence — Henry Hub, AECO", "url": "https://naturalgasintel.com/news/spot-prices-wrap-henry-hub-aeco-climb-as-rattled-global-market-calls-on-us-lng/", "archive_url": ""},
-    {"id": 32, "title": "Federal Reserve — March 18 Implementation Note", "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a1.htm", "archive_url": ""},
-    {"id": 33, "title": "ECB — March 19 Monetary Policy Decision", "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260205~001d26959b.en.html", "archive_url": ""},
-    {"id": 34, "title": "Bank of England — March 2026 MPC Summary", "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/march-2026", "archive_url": ""},
-    {"id": 35, "title": "CNBC — China PMI March 2026", "url": "https://www.cnbc.com/2026/03/31/china-pmi-data-march-factory-activity-.html", "archive_url": ""},
-    {"id": 36, "title": "Wikipedia — 2026 Strait of Hormuz Crisis", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis", "archive_url": ""},
-    {"id": 37, "title": "Dallas Fed — Strait of Hormuz Economic Impact", "url": "https://www.dallasfed.org/research/economics/2026/0320", "archive_url": ""},
-    {"id": 38, "title": "Trading Economics — Canada Consumer Confidence", "url": "https://tradingeconomics.com/canada/consumer-confidence", "archive_url": ""},
-    {"id": 39, "title": "Nanos Research — Consumer Confidence Weekly", "url": "https://nanos.co/consumer-confidence-slides-for-third-week-in-succession-bloomberg-nanos-research/", "archive_url": ""},
-    {"id": 40, "title": "Statistics Canada — Retail Trade, January 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260320/dq260320a-eng.htm", "archive_url": ""},
-    {"id": 41, "title": "BNN Bloomberg — Retail Sales Up 1.1%, January 2026", "url": "https://www.bnnbloomberg.ca/business/2026/03/20/statistics-canada-reports-january-retail-sales-up-11-per-cent-to-707b/", "archive_url": ""},
-    {"id": 42, "title": "Bank of Canada — Upcoming Events", "url": "https://www.bankofcanada.ca/press/upcoming-events/", "archive_url": ""},
-    {"id": 43, "title": "Statistics Canada — Release Calendar", "url": "https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm", "archive_url": ""},
-    {"id": 44, "title": "CMHC — Housing Starts Momentum to Slow", "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/cmhc-releases-housing-market-outlook-2026", "archive_url": ""},
-    {"id": 45, "title": "Statistics Canada — International Merchandise Trade, December 2025", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260219/dq260219a-eng.htm", "archive_url": ""},
-    {"id": 46, "title": "Eurostat — Euro Indicators", "url": "https://ec.europa.eu/eurostat/web/euro-indicators", "archive_url": ""},
-    {"id": 47, "title": "Office for National Statistics (UK) — GDP Monthly Estimate", "url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/bulletins/gdpmonthlyestimateuk/latest", "archive_url": ""}
+    {
+      "id": 1,
+      "title": "Bank of Canada — Policy rate statement, March 18, 2026",
+      "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/",
+      "archive_url": ""
+    },
+    {
+      "id": 2,
+      "title": "Bank of Canada — Summary of Governing Council deliberations, March 18, 2026",
+      "url": "https://www.bankofcanada.ca/2026/04/summary-governing-council-deliberations-fixed-announcement-date-of-march-18-2026/",
+      "archive_url": ""
+    },
+    {
+      "id": 3,
+      "title": "Bank of Canada — Selected bond yields",
+      "url": "https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/",
+      "archive_url": ""
+    },
+    {
+      "id": 4,
+      "title": "Bank of Canada — Policy interest rate calendar",
+      "url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/",
+      "archive_url": ""
+    },
+    {
+      "id": 5,
+      "title": "Statistics Canada — Labour Force Survey, March 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 6,
+      "title": "Statistics Canada — Gross domestic product by industry, January 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 7,
+      "title": "Statistics Canada — Canadian international merchandise trade, February 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260402/dq260402a-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 8,
+      "title": "Statistics Canada — Consumer Price Index, February 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260316/dq260316a-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 9,
+      "title": "Statistics Canada — Labour Force Survey, February 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 10,
+      "title": "Statistics Canada — Retail trade, January 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260320/dq260320a-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 11,
+      "title": "Statistics Canada — Building permits, January 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260312/dq260312c-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 12,
+      "title": "Statistics Canada — Release Schedule",
+      "url": "https://www150.statcan.gc.ca/n1/dai-quo/cal2-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 13,
+      "title": "CMHC — Housing Starts, February 2026",
+      "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-february-2026",
+      "archive_url": ""
+    },
+    {
+      "id": 14,
+      "title": "BNN Bloomberg — Canada adds 14,000 jobs in March",
+      "url": "https://www.bnnbloomberg.ca/business/economics/2026/04/10/canada-adds-14000-jobs-in-march-keeping-unemployment-rate-at-67/",
+      "archive_url": ""
+    },
+    {
+      "id": 15,
+      "title": "Indeed Hiring Lab — March 2026 LFS: Holding Steady",
+      "url": "https://www.hiringlab.org/en-ca/2026/04/10/march-2026-labour-force-survey-holding-steady/",
+      "archive_url": ""
+    },
+    {
+      "id": 16,
+      "title": "TD Economics — Canadian Employment (March 2026)",
+      "url": "https://economics.td.com/ca-employment",
+      "archive_url": ""
+    },
+    {
+      "id": 17,
+      "title": "BNN Bloomberg — February trade deficit surges on gold imports",
+      "url": "https://www.bnnbloomberg.ca/business/2026/04/02/canadas-february-trade-deficit-surges-to-a-six-month-high-on-gold-imports/",
+      "archive_url": ""
+    },
+    {
+      "id": 18,
+      "title": "RBC Economics — Canada's trade deficit widened in February",
+      "url": "https://www.rbc.com/en/economics/canadian-analysis/data-flashes/canadas-trade-deficit-widened-in-february-as-both-exports-and-imports-surged/",
+      "archive_url": ""
+    },
+    {
+      "id": 19,
+      "title": "Global Affairs Canada — Monthly trade report, February 2026",
+      "url": "https://international.canada.ca/en/global-affairs/corporate/reports/chief-economist/monthly/2026-02",
+      "archive_url": ""
+    },
+    {
+      "id": 20,
+      "title": "TD Economics — Canadian Merchandise Trade February 2026",
+      "url": "https://economics.td.com/ca-merchandise-trade",
+      "archive_url": ""
+    },
+    {
+      "id": 21,
+      "title": "CBC — Canada's economy saw slight growth in January",
+      "url": "https://www.cbc.ca/news/business/canada-gdp-january-2026-9.7148199",
+      "archive_url": ""
+    },
+    {
+      "id": 22,
+      "title": "TD Economics — Canadian Quarterly GDP (January 2026)",
+      "url": "https://economics.td.com/ca-real-gdp",
+      "archive_url": ""
+    },
+    {
+      "id": 23,
+      "title": "Trading Economics — S&P/TSX Composite index quote",
+      "url": "https://tradingeconomics.com/canada/stock-market",
+      "archive_url": ""
+    },
+    {
+      "id": 24,
+      "title": "Globe and Mail — TSX Composite Index",
+      "url": "https://www.theglobeandmail.com/investing/markets/indices/TXCX/",
+      "archive_url": ""
+    },
+    {
+      "id": 25,
+      "title": "CNBC — Stock market news for April 10, 2026",
+      "url": "https://www.cnbc.com/2026/04/09/stock-market-today-live-updates.html",
+      "archive_url": ""
+    },
+    {
+      "id": 26,
+      "title": "CNBC — March 2026 US CPI breakdown",
+      "url": "https://www.cnbc.com/2026/04/10/cpi-inflation-march-2026-breakdown.html",
+      "archive_url": ""
+    },
+    {
+      "id": 27,
+      "title": "US BLS — Consumer Price Index Summary",
+      "url": "https://www.bls.gov/news.release/cpi.nr0.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 28,
+      "title": "US BLS — Employment Situation Summary, March 2026",
+      "url": "https://www.bls.gov/news.release/empsit.nr0.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 29,
+      "title": "CNBC — March 2026 US Jobs Report",
+      "url": "https://www.cnbc.com/2026/04/03/jobs-report-march-2026-.html",
+      "archive_url": ""
+    },
+    {
+      "id": 30,
+      "title": "Federal Reserve — FOMC Statement, March 18, 2026",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 31,
+      "title": "Federal Reserve — FOMC Calendar",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 32,
+      "title": "ECB — Monetary Policy Decisions, March 19, 2026",
+      "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260319~3057739775.en.html",
+      "archive_url": ""
+    },
+    {
+      "id": 33,
+      "title": "Central Banking — ECB holds rates, predicts 2.6% inflation for 2026",
+      "url": "https://www.centralbanking.com/central-banks/monetary-policy/monetary-policy-decisions/7975422/ecb-holds-rates-predicts-26-inflation-for-2026",
+      "archive_url": ""
+    },
+    {
+      "id": 34,
+      "title": "Eurostat — Euro Indicators",
+      "url": "https://ec.europa.eu/eurostat/web/euro-indicators",
+      "archive_url": "",
+      "url_quality": "generic"
+    },
+    {
+      "id": 35,
+      "title": "ECB — Governing Council calendar",
+      "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "archive_url": ""
+    },
+    {
+      "id": 36,
+      "title": "Bank of England — March 2026 MPC Summary and Minutes",
+      "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/march-2026",
+      "archive_url": ""
+    },
+    {
+      "id": 37,
+      "title": "Bank of England — Upcoming MPC Dates",
+      "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
+      "archive_url": ""
+    },
+    {
+      "id": 38,
+      "title": "HomeOwners Alliance — Interest Rate Predictions",
+      "url": "https://hoa.org.uk/news/interest-rate-predictions-2/",
+      "archive_url": ""
+    },
+    {
+      "id": 39,
+      "title": "ONS — GDP Monthly Estimate UK",
+      "url": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/bulletins/gdpmonthlyestimateuk/latest",
+      "archive_url": ""
+    },
+    {
+      "id": 40,
+      "title": "CNBC — China PMI March 2026",
+      "url": "https://www.cnbc.com/2026/03/31/china-pmi-data-march-factory-activity-.html",
+      "archive_url": ""
+    },
+    {
+      "id": 41,
+      "title": "SCIO — China's manufacturing PMI improves to 50.4 in March",
+      "url": "http://english.scio.gov.cn/pressroom/2026-03/31/content_118411413.html",
+      "archive_url": ""
+    },
+    {
+      "id": 42,
+      "title": "Trading Economics — China NBS Manufacturing PMI",
+      "url": "https://tradingeconomics.com/china/manufacturing-pmi",
+      "archive_url": ""
+    },
+    {
+      "id": 43,
+      "title": "Al Jazeera — Shipping in Strait of Hormuz at a trickle despite US-Iran ceasefire",
+      "url": "https://www.aljazeera.com/economy/2026/4/10/shipping-in-strait-of-hormuz-at-a-trickle-despite-us-iran-ceasefire",
+      "archive_url": ""
+    },
+    {
+      "id": 44,
+      "title": "Bloomberg — Hormuz stays blocked for now",
+      "url": "https://www.bloomberg.com/news/articles/2026-04-08/hormuz-stays-blocked-for-now-as-hundreds-of-ships-seek-escape",
+      "archive_url": ""
+    },
+    {
+      "id": 45,
+      "title": "NBC News — Strait of Hormuz shipping standstill",
+      "url": "https://www.nbcnews.com/world/iran/strait-hormuz-shipping-traffic-effectively-standstill-iran-ceasefire-rcna267391",
+      "archive_url": ""
+    },
+    {
+      "id": 46,
+      "title": "UN News — Iran ceasefire raises hopes for reopening Strait",
+      "url": "https://news.un.org/en/story/2026/04/1167270",
+      "archive_url": ""
+    },
+    {
+      "id": 47,
+      "title": "Axios — Strait of Hormuz all but closed",
+      "url": "https://www.axios.com/2026/04/09/iran-us-strait-of-hormuz-khamenei",
+      "archive_url": ""
+    },
+    {
+      "id": 48,
+      "title": "Fortune — Current price of oil, April 9, 2026",
+      "url": "https://fortune.com/article/price-of-oil-04-09-2026/",
+      "archive_url": ""
+    },
+    {
+      "id": 49,
+      "title": "Fortune — Current price of gold, April 9, 2026",
+      "url": "https://fortune.com/article/current-price-of-gold-04-09-2026/",
+      "archive_url": ""
+    },
+    {
+      "id": 50,
+      "title": "US EIA — Crude oil prices Q1 2026",
+      "url": "https://www.eia.gov/todayinenergy/detail.php?id=67424",
+      "archive_url": ""
+    },
+    {
+      "id": 51,
+      "title": "Exchange-Rates.org — USD/CAD 2026 history",
+      "url": "https://www.exchange-rates.org/exchange-rate-history/usd-cad-2026",
+      "archive_url": ""
+    },
+    {
+      "id": 52,
+      "title": "Exchange Rates UK — EUR/USD 2026 history",
+      "url": "https://www.exchangerates.org.uk/EUR-USD-spot-exchange-rates-history-2026.html",
+      "archive_url": ""
+    },
+    {
+      "id": 53,
+      "title": "US Supreme Court — Learning Resources, Inc. v. Trump (IEEPA opinion)",
+      "url": "https://www.supremecourt.gov/opinions/25pdf/24-1287_4gcj.pdf",
+      "archive_url": ""
+    },
+    {
+      "id": 54,
+      "title": "Fasken — US Supreme Court Rejects IEEPA Tariffs",
+      "url": "https://www.fasken.com/en/knowledge/2026/02/us-supreme-court-rejects-ieepa-tariffs",
+      "archive_url": ""
+    },
+    {
+      "id": 55,
+      "title": "Norton Rose Fulbright — Practical impacts on Canadian exporters",
+      "url": "https://www.nortonrosefulbright.com/en/knowledge/publications/99029733/us-supreme-court-strikes-down-ieepa-tariffs-but-practical-impacts-for-canadian-exporters-limited",
+      "archive_url": ""
+    },
+    {
+      "id": 56,
+      "title": "Penn Wharton Budget Model — Supreme Court IEEPA revenue and refunds",
+      "url": "https://budgetmodel.wharton.upenn.edu/issues/2026/2/20/supreme-court-tariff-ruling-ieepa-revenue-and-potential-refunds",
+      "archive_url": ""
+    },
+    {
+      "id": 57,
+      "title": "Congressional Research Service — Supreme Court rules against IEEPA tariffs",
+      "url": "https://www.congress.gov/crs-product/LSB11398",
+      "archive_url": ""
+    },
+    {
+      "id": 58,
+      "title": "BC Government News — Softwood lumber administrative review",
+      "url": "https://news.gov.bc.ca/releases/2026FOR0011-000394",
+      "archive_url": ""
+    },
+    {
+      "id": 59,
+      "title": "BC Government News — March 2026 housing highlights",
+      "url": "https://news.gov.bc.ca/releases/2026HMA0042-000398",
+      "archive_url": ""
+    },
+    {
+      "id": 60,
+      "title": "BC Government News — BC Minister statement on March 2026 LFS",
+      "url": "https://news.gov.bc.ca/releases/2026JEG0025-000395",
+      "archive_url": ""
+    },
+    {
+      "id": 61,
+      "title": "US BEA — Release Schedule",
+      "url": "https://www.bea.gov/news/schedule",
+      "archive_url": ""
+    },
+    {
+      "id": 62,
+      "title": "US BLS — Employment Situation Schedule",
+      "url": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 63,
+      "title": "US BLS — CPI Schedule",
+      "url": "https://www.bls.gov/schedule/news_release/cpi.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 64,
+      "title": "US Census Bureau — Economic Indicators Calendar",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview.html",
+      "archive_url": ""
+    },
+    {
+      "id": 65,
+      "title": "Federal Reserve — Industrial Production G.17",
+      "url": "https://www.federalreserve.gov/releases/g17/current/",
+      "archive_url": ""
+    },
+    {
+      "id": 66,
+      "title": "Canada Treasury Board Secretariat — Planned Government Spending",
+      "url": "https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending.html",
+      "archive_url": "",
+      "url_quality": "generic"
+    },
+    {
+      "id": 67,
+      "title": "Parliament of Canada — LEGISinfo",
+      "url": "https://www.parl.ca/legisinfo/en/bills",
+      "archive_url": "",
+      "url_quality": "generic"
+    },
+    {
+      "id": 68,
+      "title": "Trading Economics — Canada Unemployment Rate",
+      "url": "https://tradingeconomics.com/canada/unemployment-rate",
+      "archive_url": ""
+    },
+    {
+      "id": 69,
+      "title": "Trading Economics — Canada Inflation Rate",
+      "url": "https://tradingeconomics.com/canada/inflation-cpi",
+      "archive_url": ""
+    },
+    {
+      "id": 70,
+      "title": "Trading Economics — Canada Balance of Trade",
+      "url": "https://tradingeconomics.com/canada/balance-of-trade",
+      "archive_url": ""
+    },
+    {
+      "id": 71,
+      "title": "Trading Economics — Crude Oil (WTI)",
+      "url": "https://tradingeconomics.com/commodity/crude-oil",
+      "archive_url": ""
+    },
+    {
+      "id": 72,
+      "title": "Trading Economics — Brent Crude Oil",
+      "url": "https://tradingeconomics.com/commodity/brent-crude-oil",
+      "archive_url": ""
+    },
+    {
+      "id": 73,
+      "title": "WOWA — Bank of Canada Interest Rate Historical Chart",
+      "url": "https://wowa.ca/bank-of-canada-interest-rate",
+      "archive_url": ""
+    },
+    {
+      "id": 74,
+      "title": "Ad-Hoc-News — S&P 500 holds steady April 10, 2026",
+      "url": "https://www.ad-hoc-news.de/boerse/news/ueberblick/s-and-p-500-holds-steady-amid-tariff-uncertainty-and-mixed-earnings/69119059",
+      "archive_url": ""
+    },
+    {
+      "id": 75,
+      "title": "CREA — Canadian Housing Market Stats",
+      "url": "https://www.crea.ca/housing-market-stats/canadian-housing-market-stats/",
+      "archive_url": ""
+    },
+    {
+      "id": 76,
+      "title": "CREA — Resale housing market forecast update",
+      "url": "https://www.crea.ca/media-hub/news/crea-downgrades-resale-housing-market-forecast-amid-tariff-uncertainty-and-economic-uncertainty/",
+      "archive_url": ""
+    },
+    {
+      "id": 77,
+      "title": "Bank of Canada — Daily exchange rates",
+      "url": "https://www.bankofcanada.ca/rates/exchange/",
+      "archive_url": ""
+    },
+    {
+      "id": 78,
+      "title": "RBC Royal Bank — Understanding BoC interest rate announcement",
+      "url": "https://www.rbcroyalbank.com/en-ca/my-money-matters/money-academy/economics-101/understanding-interest-rates/bank-of-canada-interest-rate-announcement/",
+      "archive_url": ""
+    },
+    {
+      "id": 79,
+      "title": "Morningstar Canada — BoC pauses rate cuts",
+      "url": "https://global.morningstar.com/en-ca/economy/bank-canada-pauses-rate-cuts-reinforcing-expectations-an-end-its-easing-cycle",
+      "archive_url": ""
+    },
+    {
+      "id": 80,
+      "title": "BNN Bloomberg — Market Outlook: Canada GDP rises 0.1% in January",
+      "url": "https://www.bnnbloomberg.ca/investing/market-outlook/2026/03/31/market-outlook-canada-gdp-rises-01-in-january-as-oil-boosts-growth/",
+      "archive_url": ""
+    },
+    {
+      "id": 81,
+      "title": "Skadden — Supreme Court Ends IEEPA Tariffs",
+      "url": "https://www.skadden.com/insights/publications/2026/02/the-supreme-court-ends-ieepa-tariffs",
+      "archive_url": ""
+    },
+    {
+      "id": 82,
+      "title": "Norton Rose Fulbright — Potential refunds: US Supreme Court IEEPA",
+      "url": "https://www.nortonrosefulbright.com/en/knowledge/publications/20f2de87/potential-refunds-us-supreme-court-overturns-ieepa-tariffs",
+      "archive_url": ""
+    },
+    {
+      "id": 83,
+      "title": "LiteFinance — Oil Price Forecast",
+      "url": "https://www.litefinance.org/blog/analysts-opinions/oil-price-prediction-forecast/daily-and-weekly/",
+      "archive_url": ""
+    },
+    {
+      "id": 84,
+      "title": "InvestingNews — Highest Gold Price 2026",
+      "url": "https://investingnews.com/daily/resource-investing/precious-metals-investing/gold-investing/highest-price-for-gold/",
+      "archive_url": ""
+    },
+    {
+      "id": 85,
+      "title": "Wikipedia — 2026 Strait of Hormuz crisis",
+      "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis",
+      "archive_url": ""
+    },
+    {
+      "id": 86,
+      "title": "Bloomberg — US CPI Report March 2026 key takeaways",
+      "url": "https://www.bloomberg.com/news/articles/2026-04-10/us-cpi-report-march-2026-key-takeaways-on-inflation-consumer-price-index",
+      "archive_url": ""
+    },
+    {
+      "id": 87,
+      "title": "Bloomberg — US adds 178,000 jobs, unemployment 4.3%",
+      "url": "https://www.bloomberg.com/news/articles/2026-04-03/us-adds-178-000-jobs-unemployment-rate-drops-to-4-3",
+      "archive_url": ""
+    }
   ]
 }

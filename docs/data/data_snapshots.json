@@ -81,5 +81,76 @@
         "Next BoC rate decision: April 29, 2026 (watchlist had April 16 - may need update)"
       ]
     }
+  },
+  {
+    "date": "2026-04-11",
+    "timestamp": "2026-04-11T04:29:18.765459Z",
+    "source": "websearch_refresh",
+    "national": {
+      "boc_rate": 2.25,
+      "real_gdp": 0.1,
+      "cpi_yoy": 1.8,
+      "unemployment": 6.7,
+      "employment_rate": 60.6,
+      "participation_rate": 64.9,
+      "housing_starts_saar": 238049,
+      "building_permits": null,
+      "wage_growth": null
+    },
+    "markets": {
+      "tsx": 33695.76,
+      "sp500": 6816.89,
+      "djia": 47917.0,
+      "nasdaq": 22902.89,
+      "ftse100": 10644.33,
+      "dax": 23805.32,
+      "nikkei225": 55895.0,
+      "cad_usd": 0.7229,
+      "eur_usd": 1.1706,
+      "usd_cny": null,
+      "usd_jpy": 185.13
+    },
+    "commodities": {
+      "wti": 95.5,
+      "brent": 96.66,
+      "natural_gas": 2.87,
+      "gold": 4749.0,
+      "silver": 75.54,
+      "copper": 5.7,
+      "aluminum": null,
+      "lumber": 490.0,
+      "potash": null,
+      "wheat": 500.0,
+      "iron_ore": 99.05
+    },
+    "yields": {
+      "goc_2y": 2.79,
+      "goc_5y": 3.08,
+      "goc_10y": 3.48,
+      "goc_long": null,
+      "spread_10y2y": 0.69
+    },
+    "provincial_unemployment": {
+      "NL": 9.5,
+      "PE": 7.3,
+      "NS": 6.6,
+      "NB": 7.0,
+      "QC": 5.4,
+      "ON": 7.6,
+      "MB": 5.6,
+      "SK": 5.0,
+      "AB": 6.5,
+      "BC": 6.7,
+      "YT": 4.7,
+      "NT": 5.0,
+      "NU": 8.7
+    },
+    "data_quality": {
+      "searches_run": 20,
+      "values_updated": 50,
+      "values_unchanged": 12,
+      "values_not_found": 5,
+      "coverage_pct": 89.0
+    }
   }
 ]
