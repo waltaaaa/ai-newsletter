@@ -518,7 +518,7 @@ def _validate_briefing_text(briefing: dict):
     patterns = [
         (_re.compile(r'\$\d+[BMK]\.\d+%'), 'dollar-fused-with-percent'),
         (_re.compile(r'\$\d+[A-Z]\.\d+%'), 'dollar-letter-percent'),
-        (_re.compile(r'(?<!\$[\d,]{1,6})\.\d+[BMK]\)'), 'orphaned-decimal-fragment'),
+        (_re.compile(r'(?<!\d)\.\d+[BMK]\)'), 'orphaned-decimal-fragment'),
         (_re.compile(r'(?<!\d)\.\d+\)(?!\d)'), 'truncated-parenthesis'),
     ]
 
