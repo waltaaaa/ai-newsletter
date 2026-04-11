@@ -615,21 +615,82 @@ def export_indicators(conn, output_dir: str) -> str:
     except Exception as e:
         logger.warning(f"Indicator validation skipped: {e}")
 
+    # Normalize province names to 2-letter codes (frontend uses codes)
+    _PROV_NORMALIZE = {
+        'Newfoundland and Labrador': 'NL', 'Newfoundland': 'NL',
+        'Prince Edward Island': 'PE', 'PEI': 'PE',
+        'Nova Scotia': 'NS', 'New Brunswick': 'NB',
+        'Quebec': 'QC', 'Ontario': 'ON',
+        'Manitoba': 'MB', 'Saskatchewan': 'SK',
+        'Alberta': 'AB', 'British Columbia': 'BC',
+        'Yukon': 'YT', 'Northwest Territories': 'NT', 'Nunavut': 'NU',
+        'National': 'national', 'national': 'national', 'global': 'national',
+    }
+    # Skip duplicate legacy names. Keeps one canonical key per series so the
+    # frontend never sees two entries for the same underlying data point.
+    # Canonical winners: cadusd (not cad_usd), tsx_composite (not tsx),
+    # sp500/djia/nasdaq/ftse100/dax/nikkei225 (not idx_*), employmentRate
+    # (not employment_rate), cpi+province (not cpi_national), unemployment+
+    # province (not unemployment_national / nat_unemployment). All _date and
+    # _prev slots are metadata, never indicators.
+    _SKIP_INDICATORS = {
+        # FX / commodity / equity index legacy aliases (Yahoo + FRED overlap)
+        'cad_usd', 'tsx', 'idx_sp500', 'idx_djia', 'idx_nasdaq',
+        'idx_ftse', 'idx_dax', 'idx_nikkei',
+        # Old national-suffix convention (superseded by indicator+province='National')
+        'cpi_national', 'unemployment_national',
+        'nat_employment_rate', 'nat_unemployment', 'nat_participation_rate',
+        # Old 2-letter-province convention for employment rate (use employmentRate)
+        'employment_rate',
+        # _date / _prev metadata leaked into indicator slot
+        'cpi_date', 'cpi_prev',
+        'unemployment_date', 'unemployment_prev',
+        'employmentRate_date', 'employmentRate_prev',
+        'participationRate_date', 'participationRate_prev',
+        'gdp_date', 'gdp_prev',
+        'housingStarts_date', 'housingStarts_prev',
+        # Raw-index historical data — kept in history table under cpi_index but
+        # not surfaced as a current indicator.
+        'cpi_index',
+    }
+
     indicators = get_latest_indicators(conn)
-    # Convert sqlite3.Row objects to plain dicts
+    # Convert sqlite3.Row objects to plain dicts. Apply _SKIP_INDICATORS and
+    # province normalization so (name, province) pairs are unique by the
+    # frontend's key scheme. When both a 'National' and 'national' row exist
+    # for the same indicator, keep whichever has validation_status='passed';
+    # otherwise take the first seen.
     indicators_list = []
+    seen_keys = {}  # (indicator_name, normalized_province) -> index in indicators_list
     for ind in indicators:
         if hasattr(ind, "keys"):
             row = dict(ind)
+            name = row.get("indicator_name", "")
+            if name in _SKIP_INDICATORS:
+                continue
             # Parse metadata JSON string if present
             if "metadata" in row and isinstance(row["metadata"], str):
                 row["metadata"] = _safe_json_loads(row["metadata"], {})
             # Flag indicators that failed validation
-            key = (row.get("indicator_name", ""), row.get("province", "National"))
-            if key in failed_indicators:
+            failed_key = (name, row.get("province", "National"))
+            if failed_key in failed_indicators:
                 row["validation_status"] = "under_review"
             else:
                 row["validation_status"] = "passed"
+            # Normalize province and dedupe on (name, normalized_province)
+            raw_prov = row.get("province", "National")
+            norm_prov = _PROV_NORMALIZE.get(raw_prov, raw_prov)
+            row["province"] = norm_prov
+            dedupe_key = (name, norm_prov)
+            if dedupe_key in seen_keys:
+                existing_idx = seen_keys[dedupe_key]
+                existing = indicators_list[existing_idx]
+                # Prefer passed over under_review
+                if (existing.get("validation_status") == "under_review"
+                        and row.get("validation_status") == "passed"):
+                    indicators_list[existing_idx] = row
+                continue
+            seen_keys[dedupe_key] = len(indicators_list)
             indicators_list.append(row)
         else:
             indicators_list.append(ind)
@@ -648,21 +709,6 @@ def export_indicators(conn, output_dir: str) -> str:
     """).fetchall()
     conn.row_factory = old_rf
 
-    # Normalize province names to 2-letter codes (frontend uses codes)
-    _PROV_NORMALIZE = {
-        'Newfoundland and Labrador': 'NL', 'Newfoundland': 'NL',
-        'Prince Edward Island': 'PE', 'PEI': 'PE',
-        'Nova Scotia': 'NS', 'New Brunswick': 'NB',
-        'Quebec': 'QC', 'Ontario': 'ON',
-        'Manitoba': 'MB', 'Saskatchewan': 'SK',
-        'Alberta': 'AB', 'British Columbia': 'BC',
-        'Yukon': 'YT', 'Northwest Territories': 'NT', 'Nunavut': 'NU',
-        'National': 'national', 'national': 'national', 'global': 'national',
-    }
-    # Skip duplicate legacy names (e.g. cpi_national, unemployment_national)
-    _SKIP_INDICATORS = {'cpi_national', 'unemployment_national', 'cpi_date', 'cpi_prev',
-                        'unemployment_date', 'unemployment_prev', 'gdp_date',
-                        'housingStarts_date', 'housingStarts_prev'}
     history_list = []
     for r in history_rows:
         row = dict(r)
