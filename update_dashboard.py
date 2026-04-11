@@ -81,6 +81,16 @@ except Exception as e:
     import sys
     sys.exit(1)
 
+# Idempotent dedup of weekly_briefings on startup — guards against future
+# INSERT-without-upsert drift and cleans any pre-existing duplicates.
+try:
+    from db import cleanup_duplicate_briefings
+    _removed = cleanup_duplicate_briefings(conn)
+    if _removed:
+        print(f"[DB] Removed {_removed} duplicate weekly_briefings row(s) on startup")
+except Exception as _e:
+    print(f"[WARN] weekly_briefings dedup skipped: {_e}")
+
 # Tavily credit tracking
 from tavily_search import set_tracking_db, can_use_tavily
 set_tracking_db(conn)

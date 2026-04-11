@@ -1201,32 +1201,125 @@ def get_latest_indicators(conn: sqlite3.Connection) -> list[dict]:
 # ══════════════════════════════════════════════════════════════════════════════
 
 def save_briefing(conn: sqlite3.Connection, briefing_dict: dict) -> int:
-    """Insert a weekly briefing. Returns the new row id.
+    """Upsert a weekly briefing by week_of. Returns the row id.
+
+    Application-level UPSERT (no schema change required). Avoids the
+    duplicate-row problem where two writers for the same week_of left stale
+    rows in the table. The row with the LATEST generated_at and a non-empty
+    headline is the authoritative one; earlier writes for the same week_of
+    are updated in place rather than producing new id rows.
+
+    Rules:
+    - If a row exists for week_of AND its generated_at is older than the
+      incoming record → UPDATE (replace headline/sections/word_count/generated_at).
+    - If a row exists AND is at least as recent AND the incoming headline is
+      empty → keep existing row (no-op, return existing id).
+    - If a row exists AND is older OR has an empty headline → UPDATE.
+    - Otherwise (no matching row) → INSERT.
 
     Args:
         conn: SQLite connection.
         briefing_dict: Briefing data dict with week_of, headline, sections, word_count.
 
     Returns:
-        Row id of the inserted briefing.
+        Row id of the upserted briefing.
     """
     now = _now_iso()
     sections = briefing_dict.get("sections", {})
     if not isinstance(sections, str):
         sections = json.dumps(sections, ensure_ascii=False)
 
+    week_of = briefing_dict.get("week_of", now[:10])
+    incoming_headline = briefing_dict.get("headline", "") or ""
+    incoming_generated_at = briefing_dict.get("generated_at", now) or now
+    incoming_word_count = briefing_dict.get("word_count", 0)
+
     with conn:
-        cur = conn.execute("""
-            INSERT INTO weekly_briefings (week_of, headline, sections, word_count, generated_at)
-            VALUES (?, ?, ?, ?, ?)
-        """, (
-            briefing_dict.get("week_of", now[:10]),
-            briefing_dict.get("headline", ""),
-            sections,
-            briefing_dict.get("word_count", 0),
-            briefing_dict.get("generated_at", now),
-        ))
-    return cur.lastrowid
+        existing = conn.execute(
+            "SELECT id, headline, generated_at FROM weekly_briefings "
+            "WHERE week_of = ? ORDER BY generated_at DESC, id DESC LIMIT 1",
+            (week_of,),
+        ).fetchone()
+
+        if existing is None:
+            cur = conn.execute(
+                """INSERT INTO weekly_briefings
+                   (week_of, headline, sections, word_count, generated_at)
+                   VALUES (?, ?, ?, ?, ?)""",
+                (week_of, incoming_headline, sections, incoming_word_count, incoming_generated_at),
+            )
+            return cur.lastrowid
+
+        # Row exists — decide update vs no-op
+        existing_id = existing["id"] if hasattr(existing, "__getitem__") else existing[0]
+        existing_headline = (existing["headline"] if hasattr(existing, "__getitem__") else existing[1]) or ""
+        existing_generated_at = (existing["generated_at"] if hasattr(existing, "__getitem__") else existing[2]) or ""
+
+        # Skip update when the incoming record has empty headline and existing is populated + newer/equal
+        if not incoming_headline and existing_headline and incoming_generated_at <= existing_generated_at:
+            return existing_id
+
+        # Update in place (always safe — replaces with the freshest non-empty data)
+        conn.execute(
+            """UPDATE weekly_briefings
+               SET headline = ?, sections = ?, word_count = ?, generated_at = ?
+               WHERE id = ?""",
+            (
+                incoming_headline or existing_headline,
+                sections,
+                incoming_word_count,
+                max(incoming_generated_at, existing_generated_at),
+                existing_id,
+            ),
+        )
+        return existing_id
+
+
+def cleanup_duplicate_briefings(conn: sqlite3.Connection) -> int:
+    """Remove duplicate weekly_briefings rows, keeping the authoritative row per week_of.
+
+    Authoritative row = latest generated_at with a non-empty headline (falls back
+    to latest generated_at if all rows have empty headlines, then to highest id).
+
+    Returns the number of rows deleted. Safe to run repeatedly — idempotent.
+    Called once at pipeline startup from the Phase 1 migrations block.
+    """
+    rows = conn.execute(
+        "SELECT id, week_of, headline, generated_at FROM weekly_briefings"
+    ).fetchall()
+    if not rows:
+        return 0
+
+    by_week: dict[str, list] = {}
+    for r in rows:
+        week_of = r["week_of"] if hasattr(r, "__getitem__") else r[1]
+        by_week.setdefault(week_of, []).append(r)
+
+    to_delete: list[int] = []
+    for week_of, group in by_week.items():
+        if len(group) <= 1:
+            continue
+        def _rank(r):
+            rid = r["id"] if hasattr(r, "__getitem__") else r[0]
+            head = (r["headline"] if hasattr(r, "__getitem__") else r[2]) or ""
+            gen = (r["generated_at"] if hasattr(r, "__getitem__") else r[3]) or ""
+            return (1 if head.strip() else 0, gen, rid)
+        group_sorted = sorted(group, key=_rank, reverse=True)
+        keeper = group_sorted[0]
+        keeper_id = keeper["id"] if hasattr(keeper, "__getitem__") else keeper[0]
+        for r in group_sorted[1:]:
+            rid = r["id"] if hasattr(r, "__getitem__") else r[0]
+            if rid != keeper_id:
+                to_delete.append(rid)
+
+    if to_delete:
+        with conn:
+            placeholders = ",".join("?" * len(to_delete))
+            conn.execute(
+                f"DELETE FROM weekly_briefings WHERE id IN ({placeholders})",
+                to_delete,
+            )
+    return len(to_delete)
 
 
 def get_latest_briefing(conn: sqlite3.Connection) -> dict | None:
