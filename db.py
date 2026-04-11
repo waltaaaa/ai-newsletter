@@ -1345,9 +1345,19 @@ def get_latest_briefing(conn: sqlite3.Connection) -> dict | None:
 
 
 def get_briefing_archive(conn: sqlite3.Connection, limit: int = 52) -> list[dict]:
-    """Return a list of past briefings (most recent first)."""
+    """Return a list of past briefings (most recent first).
+
+    Filters out rows with empty headlines or word_count=0 — those are stub
+    inserts from failed prior runs (legacy weekly_briefing.py path) that would
+    otherwise regress the exported briefing_archive.json with placeholder
+    entries. A real briefing always has a headline string and word_count > 0.
+    """
     rows = conn.execute(
-        "SELECT * FROM weekly_briefings ORDER BY week_of DESC, id DESC LIMIT ?", (limit,)
+        """SELECT * FROM weekly_briefings
+           WHERE headline IS NOT NULL AND TRIM(headline) != ''
+             AND COALESCE(word_count, 0) > 0
+           ORDER BY week_of DESC, id DESC LIMIT ?""",
+        (limit,),
     ).fetchall()
     result = []
     for row in rows:
