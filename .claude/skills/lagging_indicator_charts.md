@@ -1,6 +1,10 @@
 # The Lagging Indicator — Chart Library
 
-Design system: light theme, `border: 0.5px solid var(--color-border-tertiary)`, `border-radius: var(--border-radius-lg)`, Chart.js 4.4.1 from cdnjs. All charts use `#185FA5` (blue) as primary, `#1D9E75` (teal) as secondary, `#BA7517` (amber), `#D4537E` (pink), `#7F77DD` (purple). Grid lines `rgba(0,0,0,.04)`, tick color `#888780`, axis border `rgba(0,0,0,.08)`.
+Design system: light theme, `border: 1px solid #d5dbe3`, `border-radius: 16px`, `box-shadow: 0 2px 8px rgba(0,0,0,.06)`, Chart.js 4.4.1 from cdnjs. Primary color `#003153` (Prussian blue — matches `--accent-blue` in `docs/index.html`), secondary `#c4320a` (accent red), tertiary `#1D9E75` (teal), `#BA7517` (amber), `#7F77DD` (purple). Grid lines `rgba(0,49,83,.05)`, tick color `#7a8599`, axis border `#e8ecf0`. Font family: `DM Sans`. Text hierarchy: body `#1a1a1a`, muted `#4a5568`, tertiary `#7a8599`.
+
+**Layout variants:**
+- **Legacy (Option A)** — simple card with title + subtitle + canvas. Use for secondary charts, dense visualizations, and anywhere the chart *is* the content.
+- **Editorial (Option C)** — card with eyebrow category label + large title + KPI row above the chart + integrated context panel below. Use for high-priority charts where the reader should see the headline number without interpreting the visual. Trigger in chart specs by providing a non-empty `kpis` array (see `tldr-charts` SKILL.md for the schema).
 
 ---
 
@@ -16,7 +20,7 @@ Design system: light theme, `border: 0.5px solid var(--color-border-tertiary)`, 
   </div>
   <div style="display:flex;gap:16px;margin-bottom:1rem;flex-wrap:wrap;">
     <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);">
-      <span style="width:20px;height:2px;background:#185FA5;display:inline-block;border-radius:2px;"></span>Adj. value
+      <span style="width:20px;height:2px;background:#003153;display:inline-block;border-radius:2px;"></span>Adj. value
     </span>
     <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);">
       <span style="width:20px;height:2px;background:#B5D4F4;display:inline-block;border-radius:2px;border-top:2px dashed #B5D4F4;"></span>Gross announced
@@ -31,7 +35,7 @@ new Chart(document.getElementById('lineC'),{
   data:{
     labels:['Q1 25','Q2 25','Q3 25','Q4 25','Q1 26'],
     datasets:[
-      {label:'Adj. value',data:[618,641,672,689,703],borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,.07)',pointBackgroundColor:'#185FA5',pointRadius:4,tension:.35,fill:true,borderWidth:2},
+      {label:'Adj. value',data:[618,641,672,689,703],borderColor:'#003153',backgroundColor:'rgba(24,95,165,.07)',pointBackgroundColor:'#003153',pointRadius:4,tension:.35,fill:true,borderWidth:2},
       {label:'Gross',data:[980,1050,1110,1170,1200],borderColor:'#B5D4F4',borderDash:[4,3],pointBackgroundColor:'#B5D4F4',pointRadius:3,tension:.35,fill:false,borderWidth:1.5}
     ]
   },
@@ -76,7 +80,7 @@ data.forEach((d,i)=>{
   row.innerHTML=`
     <div style="width:130px;font-size:12px;color:var(--color-text-secondary);text-align:right;flex-shrink:0;">${d.label}</div>
     <div style="flex:1;background:var(--color-background-secondary);border-radius:3px;height:20px;overflow:hidden;">
-      <div style="width:${d.pct}%;height:100%;background:${i===0?'#185FA5':i<3?'#378ADD':'#85B7EB'};border-radius:3px;"></div>
+      <div style="width:${d.pct}%;height:100%;background:${i===0?'#003153':i<3?'#378ADD':'#85B7EB'};border-radius:3px;"></div>
     </div>
     <div style="width:48px;font-size:12px;font-weight:500;color:var(--color-text-primary);flex-shrink:0;">$${d.value}B</div>
   `;
@@ -98,7 +102,7 @@ data.forEach((d,i)=>{
     <div style="font-size:11px;color:var(--color-text-tertiary);">Bubble size = confidence-adj. value</div>
   </div>
   <div style="display:flex;gap:16px;margin-bottom:1rem;flex-wrap:wrap;">
-    <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);"><span style="width:10px;height:10px;border-radius:50%;background:#185FA5;display:inline-block;opacity:.7;"></span>Energy</span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);"><span style="width:10px;height:10px;border-radius:50%;background:#003153;display:inline-block;opacity:.7;"></span>Energy</span>
     <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);"><span style="width:10px;height:10px;border-radius:50%;background:#1D9E75;display:inline-block;opacity:.7;"></span>Infrastructure</span>
     <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);"><span style="width:10px;height:10px;border-radius:50%;background:#BA7517;display:inline-block;opacity:.7;"></span>Mining</span>
     <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);"><span style="width:10px;height:10px;border-radius:50%;background:#7F77DD;display:inline-block;opacity:.7;"></span>Cleantech</span>
@@ -140,7 +144,7 @@ new Chart(document.getElementById('bubC'),{
     <div style="font-size:11px;color:var(--color-text-tertiary);">Quarterly · 2024 Q1 – 2026 Q1</div>
   </div>
   <div style="display:flex;gap:16px;margin-bottom:1rem;flex-wrap:wrap;">
-    <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);"><span style="width:20px;height:2px;background:#185FA5;display:inline-block;border-radius:2px;"></span>Under construction</span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);"><span style="width:20px;height:2px;background:#003153;display:inline-block;border-radius:2px;"></span>Under construction</span>
     <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);"><span style="width:20px;height:2px;background:#1D9E75;display:inline-block;border-radius:2px;"></span>FID reached</span>
   </div>
   <div style="position:relative;width:100%;height:220px;"><canvas id="areaC"></canvas></div>
@@ -152,7 +156,7 @@ new Chart(document.getElementById('areaC'),{
   data:{
     labels:['Q1 24','Q2 24','Q3 24','Q4 24','Q1 25','Q2 25','Q3 25','Q4 25','Q1 26'],
     datasets:[
-      {label:'Under construction',data:[44,46,49,51,53,55,57,59,61],borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#185FA5',borderWidth:2},
+      {label:'Under construction',data:[44,46,49,51,53,55,57,59,61],borderColor:'#003153',backgroundColor:'rgba(24,95,165,.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#003153',borderWidth:2},
       {label:'FID reached',data:[38,39,41,40,42,43,45,43,44],borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#1D9E75',borderWidth:2}
     ]
   },
@@ -182,7 +186,7 @@ new Chart(document.getElementById('areaC'),{
 </div>
 <script>
 const sectors=[
-  {label:'Energy',pct:38,color:'#185FA5'},
+  {label:'Energy',pct:38,color:'#003153'},
   {label:'Infrastructure',pct:22,color:'#1D9E75'},
   {label:'Mining',pct:18,color:'#BA7517'},
   {label:'Real estate',pct:12,color:'#D4537E'},
@@ -218,7 +222,7 @@ const deltas=[
   {label:'New entries',value:'+$2.1B',c:'#E1F5EE',tc:'#0F6E56'},
   {label:'Upward rev.',value:'+$3.8B',c:'#E1F5EE',tc:'#0F6E56'},
   {label:'Deferrals',value:'-$3.7B',c:'#FCEBEB',tc:'#A32D2D'},
-  {label:'Net change',value:'+$14B',c:'#E6F1FB',tc:'#185FA5'},
+  {label:'Net change',value:'+$14B',c:'#E6F1FB',tc:'#003153'},
 ];
 const dc=document.getElementById('delta-cards');
 deltas.forEach(d=>{
@@ -241,7 +245,7 @@ deltas.forEach(d=>{
   <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:1rem;">Projects by sector and stage</div>
   <div style="position:relative;width:100%;height:180px;"><canvas id="groupC"></canvas></div>
   <div style="display:flex;gap:14px;margin-top:10px;">
-    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary);"><span style="width:9px;height:9px;border-radius:2px;background:#185FA5;display:inline-block;"></span>Construction</span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary);"><span style="width:9px;height:9px;border-radius:2px;background:#003153;display:inline-block;"></span>Construction</span>
     <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary);"><span style="width:9px;height:9px;border-radius:2px;background:#85B7EB;display:inline-block;"></span>FID reached</span>
     <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary);"><span style="width:9px;height:9px;border-radius:2px;background:#D3D1C7;display:inline-block;"></span>Planning</span>
   </div>
@@ -253,7 +257,7 @@ new Chart(document.getElementById('groupC'),{
   data:{
     labels:['Energy','Infrastructure','Mining','Real estate','Cleantech'],
     datasets:[
-      {label:'Construction',data:[18,14,12,9,4],backgroundColor:'#185FA5',borderWidth:0,borderRadius:3,barThickness:12},
+      {label:'Construction',data:[18,14,12,9,4],backgroundColor:'#003153',borderWidth:0,borderRadius:3,barThickness:12},
       {label:'FID reached',data:[12,8,10,7,4],backgroundColor:'#85B7EB',borderWidth:0,borderRadius:3,barThickness:12},
       {label:'Planning',data:[8,10,6,7,2],backgroundColor:'#D3D1C7',borderWidth:0,borderRadius:3,barThickness:12}
     ]
@@ -283,7 +287,7 @@ new Chart(document.getElementById('groupC'),{
 </div>
 <script>
 const rangeData=[
-  {label:'Energy',min:0.2,med:2.1,max:14.0,color:'#185FA5'},
+  {label:'Energy',min:0.2,med:2.1,max:14.0,color:'#003153'},
   {label:'Infrastructure',min:0.1,med:1.4,max:6.8,color:'#1D9E75'},
   {label:'Mining',min:0.3,med:1.8,max:9.1,color:'#BA7517'},
   {label:'Real estate',min:0.1,med:0.9,max:4.2,color:'#D4537E'},
@@ -324,7 +328,7 @@ rangeData.forEach(d=>{
     <div style="font-size:11px;color:var(--color-text-tertiary);">Quarterly · 2024 Q1 – 2026 Q1</div>
   </div>
   <div style="display:flex;gap:14px;margin-bottom:1rem;">
-    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary);"><span style="width:9px;height:9px;border-radius:2px;background:#185FA5;display:inline-block;"></span>Construction</span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary);"><span style="width:9px;height:9px;border-radius:2px;background:#003153;display:inline-block;"></span>Construction</span>
     <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary);"><span style="width:9px;height:9px;border-radius:2px;background:#1D9E75;display:inline-block;"></span>FID reached</span>
     <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary);"><span style="width:9px;height:9px;border-radius:2px;background:#B4B2A9;display:inline-block;"></span>Planning</span>
   </div>
@@ -337,7 +341,7 @@ new Chart(document.getElementById('stackareaC'),{
   data:{
     labels:['Q1 24','Q2 24','Q3 24','Q4 24','Q1 25','Q2 25','Q3 25','Q4 25','Q1 26'],
     datasets:[
-      {label:'Construction',data:[44,46,49,51,53,55,57,59,61],borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,.15)',fill:true,tension:.4,pointRadius:0,borderWidth:1.5},
+      {label:'Construction',data:[44,46,49,51,53,55,57,59,61],borderColor:'#003153',backgroundColor:'rgba(24,95,165,.15)',fill:true,tension:.4,pointRadius:0,borderWidth:1.5},
       {label:'FID reached',data:[38,39,41,40,42,43,45,43,44],borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,.15)',fill:true,tension:.4,pointRadius:0,borderWidth:1.5},
       {label:'Planning',data:[28,30,31,33,34,36,37,38,37],borderColor:'#B4B2A9',backgroundColor:'rgba(180,178,169,.15)',fill:true,tension:.4,pointRadius:0,borderWidth:1.5}
     ]
@@ -367,7 +371,7 @@ new Chart(document.getElementById('stackareaC'),{
 </div>
 <script>
 const projects=[
-  {label:'LNG Canada Ph.2',start:2022,end:2027,color:'#185FA5'},
+  {label:'LNG Canada Ph.2',start:2022,end:2027,color:'#003153'},
   {label:'Rideau Corridor',start:2025,end:2028,color:'#1D9E75'},
   {label:'NS Offshore Wind',start:2026,end:2031,color:'#BA7517'},
   {label:'Atikokan H2',start:2027,end:2030,color:'#7F77DD'},

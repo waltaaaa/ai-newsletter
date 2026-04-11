@@ -1,5 +1,6 @@
 ---
 name: tldr-writer-market-fx-yields
+context: fork
 description: >
   Agent 3H — Writes FX and yield curve narratives for the Markets tab. Produces CAD/USD
   narrative and full yield curve analysis across 7 tenors with year-ago comparison

@@ -102,17 +102,7 @@ Pre-filter step 2: Articles with snippets shorter than 80 chars are enhanced via
 ## Province GDP Thresholds
 ON $500M, QC $250M, AB $200M, BC $175M, SK $45M, MB $40M, NS $25M, NB $20M, NL $17M, PE $5M, YT/NT/NU $3M
 
-## Editorial Policy: REPORT, DO NOT EDITORIALIZE
-All generated content must be factual reporting, not opinion or analysis.
-- **DO:** "The BoC cut rates 25bps. The database contains 23 proposed residential projects ($4.2B) in rate-sensitive sectors."
-- **DO NOT:** "This rate cut is good news for housing and should accelerate approvals."
-- **DO:** "WTI fell 12% to $65. The database tracks 14 Alberta oil projects ($18B) with breakeven above $70."
-- **DO NOT:** "This oil price decline threatens Alberta's energy sector outlook."
-- State facts, present data, show connections between indicators and projects. Let readers draw their own conclusions.
-- No predictions, no recommendations, no characterizing events as good/bad/bullish/bearish.
-- Every claim must cite a source or reference specific data from the database.
-- This applies to: weekly briefing, Under the Microscope, market commentary, policy sections, pre-event sections.
-
+## Pipeline Invariants (non-negotiable)
 - **ADDITIVE ONLY for adaptive learning.** The system can add queries, keywords, feeds. It can NEVER remove existing ones.
 - **URL hard gate.** Every project MUST have at least one verifiable source URL. No URL = no database write.
 - **Evidence merge NEVER loses URLs.** During dedup, evidence arrays combine, never overwrite.
@@ -169,12 +159,6 @@ The briefing integrates data from: indicator history, project database, discover
 ## Briefing Export
 - PDF via reportlab, DOCX via python-docx
 - Download buttons on frontend: `/api/briefing-download?format=pdf` and `?format=docx`
-
-## Data Explorer (V-Code Search)
-- Local fuzzy search over curated index (~40+ V-codes, growing)
-- Gemini Flash fallback for queries the index can't match
-- StatsCan table URL: `https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid={table_no_dashes}`
-- Every result includes a "View on StatsCan" link
 
 ## Data Explorer (V-Code Search)
 - Local fuzzy search over curated index (120+ entries across 9 categories)
@@ -237,7 +221,8 @@ Monitors the federal Impact Assessment Registry for status transitions on projec
 - Do not use Gemini grounded search — it costs $35/1,000 queries. Use Google News RSS instead.
 - Do not pass `google_search` tool or `groundingConfig` to Gemini API — this enables grounding fees
 - Do not use Gemini Pro — removed. All reasoning goes through Claude Sonnet.
-- Do not use Perplexity, GDELT, or Haiku in the weekly pipeline
+- Do not use Perplexity or GDELT in the weekly pipeline
+- Haiku 4.5 is permitted ONLY for strictly mechanical agents with no editorial judgment, writing, or reasoning component (currently: `tldr-assembler` — pure JSON merge, source de-duplication, citation re-numbering, schema validation). Do not extend Haiku to writers, researchers, analysts, auditor, fixer, or any agent that produces prose or makes editorial/quality decisions. Those remain on Opus (writing) or Sonnet (extraction/reasoning) per the Model Stack section.
 - Do not remove keywords from RSS filter (additive only)
 - Do not skip dedup when writing to SQLite
 - Do not create projects without source URLs

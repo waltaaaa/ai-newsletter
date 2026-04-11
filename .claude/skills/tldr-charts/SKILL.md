@@ -1,18 +1,20 @@
 ---
 name: tldr-charts
+context: fork
 description: >
-  Generates two insight charts per province and for Canada (National tab) to visually support the
-  weekly briefing's major findings. Reads the completed briefing JSON and analyst dossier, selects
-  the best chart types from the 10-chart design library, populates them with real data from
-  timeseries.json and the project database, and writes the chart specs back into the briefing JSON.
-  Trigger on phrases like "generate charts", "create visuals", "run the chart agent", "add charts
-  to the briefing", "generate infographics", "chart agent", "tldr charts", or any request to add
-  data visualizations to the weekly briefing.
+  Generates insight charts for Canada (National tab), each province, and each of the 20 NAICS
+  industries to visually support the weekly briefing's major findings. Reads the completed
+  briefing JSON and analyst dossier, selects the best chart type from the chart vocabulary,
+  populates charts with real data from indicators.json history (primary, StatCan) and
+  timeseries.json (secondary, commodities/markets), and writes the chart specs back into the
+  briefing JSON. Trigger on phrases like "generate charts", "create visuals", "run the chart
+  agent", "add charts to the briefing", "generate infographics", "chart agent", "tldr charts",
+  or any request to add data visualizations to the weekly briefing.
 ---
 
 # TL;DR Charts — Agent 4
 
-You are the fourth agent in the pipeline that produces a weekly Canadian economic intelligence briefing for "The Lagging Indicator" dashboard. Your role is **The Chart Agent**: you read the completed briefing narrative (Agent 3 output), identify the two most important findings for Canada nationally and for each province, select the best chart type to visualize each finding, populate the chart with real data, and write the chart specifications into the briefing JSON.
+You are the fourth agent in the pipeline that produces a weekly Canadian economic intelligence briefing for "The Lagging Indicator" dashboard. Your role is **The Chart Agent**: you read the completed briefing narrative (Agent 3 output), identify the most important findings for Canada nationally, each province, and each of the 20 NAICS industries, select the best chart type to visualize each finding, populate the chart with real data, and write the chart specifications into the briefing JSON.
 
 Your output goes live. The chart specs you write are rendered directly by the frontend. Every data point must be real — never fabricate or estimate data.
 
@@ -26,11 +28,11 @@ Read these files in order:
 
 1. `docs/data/briefing_latest.json` — The completed briefing (your primary input)
 2. `docs/data/analyst_dossier.json` — The analyst's raw dossier (for deeper data context)
-3. `docs/data/timeseries.json` — Historical time-series data (102 keys, your chart data source)
-4. `.claude/skills/lagging_indicator_charts.md` — The 10-chart design library (your visual vocabulary)
+3. `docs/data/indicators.json` — **StatCan indicators + history** (primary data source for industries and structural economic series). Contains `indicators[]` (current values) and `history[]` (~44,700 rows, up to ~5 years per series). This is where the 20 `gdp_*` industry series, sector employment, building investment components, yield curve, and other StatCan-sourced time series live.
+4. `docs/data/timeseries.json` — Historical time-series data (117 keys — commodities, equity indices, FX, crypto, bond spreads). Secondary data source for market-driven series not in indicators.json.
+5. `.claude/skills/lagging_indicator_charts.md` — The chart design library (your visual vocabulary)
 
 Also consult:
-- `docs/data/indicators.json` — Current provincial/national indicators
 - `docs/data/pipeline_status.json` — Project pipeline status data (for pipeline-themed charts)
 - `docs/data/projects_all.json` — Full project database (for sector/province aggregations)
 
@@ -90,26 +92,150 @@ Add an `insightCharts` array (length 2) to EACH province object in `provinces[]`
 }
 ```
 
+### 3. Industry Charts (1 chart each)
+Add an `insightCharts` array (length 1) to EACH industry object in `goodsIndustries[]` and `servicesIndustries[]` (20 industries total: 5 goods + 15 services):
+
+```json
+{
+  "code": "11",
+  "name": "Agriculture",
+  "insightCharts": [
+    {
+      "chartType": "line",
+      "dataKeys": ["gdp_agriculture"],
+      "dataSource": "indicators",
+      "window": "24m",
+      "title": "Agriculture Real GDP — 24 Month Trajectory",
+      "subtitle": "StatCan 36-10-0434 · Chained 2017 dollars",
+      "yAxisLabel": "Index (2017=100)",
+      "reasoning": "Agriculture GDP posted a third consecutive monthly decline — chart contextualizes the drop against the full 24-month window",
+      "callout": "The trajectory line shows three consecutive monthly declines beginning November 2025, placing the January reading below the entire 2024 range. The 24-month low came after a five-month plateau at 2024 levels."
+    }
+  ]
+}
+```
+
+Multi-line example (when the week's story ties the sector to a complementary series):
+
+```json
+{
+  "code": "52",
+  "name": "Finance & Insurance",
+  "insightCharts": [
+    {
+      "chartType": "multi_line",
+      "dataKeys": ["goc_2y_yield", "goc_5y_yield", "goc_10y_yield"],
+      "dataSource": "indicators",
+      "window": "12m",
+      "title": "GoC Yield Curve — 2y / 5y / 10y",
+      "subtitle": "12-month trajectory · %",
+      "yAxisLabel": "Yield (%)",
+      "reasoning": "Finance sector performance tracks the yield curve shape — slope compression is the week's rate-environment story",
+      "callout": "The 2y line has converged toward the 10y over the window, compressing the curve. The narrowing spread visible between the top and bottom series is the backdrop for bank net-interest margin pressure."
+    }
+  ]
+}
+```
+
 ## Chart Specification Schema
 
 Each chart object in the `insightCharts` array follows this schema:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `chartType` | string | Yes | One of: `line`, `bar`, `diverging_bar` |
-| `dataKeys` | string[] | Yes | 1-2 keys from timeseries.json. These are the actual data series. |
-| `title` | string | Yes | Chart title — factual, specific, under 50 chars |
-| `subtitle` | string | Yes | Time range and unit — e.g. "12-month trend · %" |
-| `reasoning` | string | Yes | Why this chart was selected — ties to a specific finding in the narrative |
+| `chartType` | string | Yes | One of: `line`, `multi_line`, `bar`, `diverging_bar` |
+| `dataKeys` | string[] | Yes | 1-4 keys. For `line`/`bar`/`diverging_bar`: 1-2 keys. For `multi_line`: 2-4 keys. |
+| `dataSource` | string | Yes (industries) | `"indicators"` (from indicators.json history) or `"timeseries"` (from timeseries.json). Tells the renderer which file to resolve `dataKeys` against. National/province charts may omit this; they default to `"timeseries"` for backward compatibility. |
+| `window` | string | Yes (industries) | Time window — one of `"6m"`, `"12m"`, `"18m"`, `"24m"`. Max 24 months (2 years) of history. National/province charts may omit this; they default to 12 months. |
+| `title` | string | Yes | Chart title — factual, specific, under 60 chars |
+| `subtitle` | string | Yes | Time range and unit — e.g. "Jan 2024 – Jan 2026 · Index" |
+| `yAxisLabel` | string | No | Y-axis label — e.g. "Index (2017=100)", "USD/bbl", "%" |
+| `reasoning` | string | Yes | Internal: why this chart was selected. Ties to a specific finding in the narrative. |
+| `callout` | string | Yes (industries) | User-facing callout text rendered above the chart (2-3 sentences). Must REFERENCE the chart's visual content and INTRODUCE or REINFORCE insight — not copy the analysis narrative. |
 | `annotations` | array | No | Event markers: `{date: "YYYY-MM-DD", label: "Event name"}` |
+| **`eyebrow`** | string | **No** (Option C) | Short category label rendered above the title in uppercase with accent underline. 2-4 words max. Example: `"Energy Markets · Weekly"`, `"Labour Market"`, `"Housing"`. Presence is optional — omit for charts that don't benefit from category framing. |
+| **`kpis`** | array | **No (TRIGGER)** | Headline numbers promoted above the chart as a KPI row. **Presence of a non-empty `kpis` array is the trigger for the Option C (editorial) layout.** If omitted or empty, the chart renders in the legacy layout. Array of 1-3 objects, each with `{label, value, delta, trend}`. See schema below. |
+| **`context`** | string | **No** (Option C) | Integrated context sentence rendered inside the chart card, below the chart canvas. Carries the project cross-reference with conditional forward-looking framing. Plain text or limited HTML (`<strong>` allowed for key numbers). Replaces the need for external callout text when Option C is active. |
+
+### Option C (editorial) layout — when to use
+
+The Option C editorial layout is triggered by the presence of a non-empty `kpis` array. When active, the chart renders with:
+
+1. An **eyebrow category label** above the title (if `eyebrow` provided)
+2. A **prominent title and subtitle** (20px / 13px, stronger hierarchy than legacy)
+3. A **KPI row with 1-3 headline numbers** extracted from the chart's data — the reader sees the punchline immediately without having to interpret the line
+4. The **chart canvas** (Prussian blue `#003153` as the primary line color)
+5. An **integrated context panel** below the chart carrying the project cross-reference with conditional framing (if `context` provided)
+
+**When to use Option C:**
+
+- The chart has 1-2 headline numbers that represent the story (e.g., WTI price, unemployment rate, a spread)
+- The chart supports a cross-reference to the project database that should appear alongside the visual
+- You want stronger editorial hierarchy for a high-priority finding
+
+**When to use the legacy layout (omit `kpis`):**
+
+- The chart shows many values where no single number is "the headline" (e.g., a full yield curve snapshot, a 13-category diverging bar)
+- The chart is secondary context for the narrative, not the narrative itself
+- You don't have a clean cross-reference sentence to carry in `context`
+
+### KPI object schema
+
+```json
+{
+  "label": "WTI Crude",           // 1-3 words, uppercase in render
+  "value": "$112.41",             // The headline number with unit
+  "delta": "+18.1% MoM",          // Change annotation (optional)
+  "trend": "up"                   // "up" (green), "down" (red), or omit for neutral gray
+}
+```
+
+Rules for KPIs:
+
+- **Maximum 3 KPIs per chart.** More than 3 crowds the row and defeats the purpose.
+- **Values must match the chart data.** If the chart shows WTI trending to $112.41, the KPI value must be `$112.41` — not rounded, not approximated.
+- **Trend direction must match the delta sign.** If `delta` is positive, `trend` should be `"up"`. The frontend uses trend to color the delta badge.
+- **`delta` is optional but recommended.** Without it, the reader sees the current value but not the movement.
+- **`label` must be short** (1-3 words) — it's a small uppercase label above the large value.
+
+### Context string rules
+
+- **One sentence, factually framed**, carrying a project database cross-reference
+- **Must use conditional framing** if it includes any forward-looking statement ("If WTI holds above $100, X projects would...")
+- **`<strong>` HTML allowed** for key numbers inside the sentence (no other HTML)
+- **No editorial language** (same banned-word list as the Markets writers): no "worrying", "encouraging", "bullish", etc.
+- **50-100 words target**. Longer context belongs in the surrounding briefing prose, not in the chart card.
+
+### Full Option C example
+
+```json
+{
+  "chartType": "line",
+  "dataKeys": ["wti", "brent"],
+  "title": "WTI and Brent surge past $100",
+  "subtitle": "12-month trend · USD per barrel · Strait of Hormuz disruption",
+  "yAxisLabel": "USD/bbl",
+  "eyebrow": "Energy Markets · Weekly",
+  "kpis": [
+    {"label": "WTI Crude", "value": "$112.41", "delta": "+18.1% MoM", "trend": "up"},
+    {"label": "Brent Crude", "value": "$109.77", "delta": "+55% MoM", "trend": "up"}
+  ],
+  "context": "The database tracks <strong>63 oil and gas projects</strong> and <strong>727 Alberta projects</strong> with direct exposure to the price environment. If WTI holds above <strong>$100/bbl</strong>, projects with breakeven thresholds below that level would maintain netback margins through the quarter.",
+  "reasoning": "Strait of Hormuz closure is the week's dominant macro story affecting 63 oil_gas projects nationally",
+  "annotations": [
+    {"date": "2026-03-02", "label": "Strait of Hormuz closure"}
+  ]
+}
+```
 
 ### Available chartType Values
 
-The frontend currently renders three chart types from the `insightChart` spec:
+The frontend renders four chart types from the `insightChart` spec:
 
-- **`line`** — Time-series trends. Best for: rate movements, price trends, employment trends, GDP. Supports dual-axis when 2 dataKeys have different scales.
-- **`bar`** — Vertical bars for periodic data. Best for: monthly counts, quarterly comparisons, sector rankings.
-- **`diverging_bar`** — Bars colored green (positive) / red (negative). Best for: month-over-month changes, gains/losses, sentiment shifts.
+- **`line`** — Single time-series trend. Best for: rate movements, price trends, employment trends, GDP trajectory. 1 dataKey, raw units shown on y-axis.
+- **`multi_line`** — 2-4 time series overlaid on a normalized axis (all series rebased to 100 at the start of the window). Best for: comparing related series across time (e.g., GDP vs employment, BoC rate vs sector output, CAD/USD vs tourism GDP, yield curve tenors). Renders with a shared y-axis so trajectories can be compared visually.
+- **`bar`** — Vertical bars for periodic data or categorical comparisons. Best for: subsector rankings, latest-period comparisons, category breakdowns.
+- **`diverging_bar`** — Horizontal bars colored green (positive) / red (negative). Best for: month-over-month changes across categories, sector M/M comparisons, gains/losses.
 
 ### Available dataKeys (102 keys in timeseries.json)
 
@@ -151,6 +277,46 @@ The frontend currently renders three chart types from the `insightChart` spec:
 - `comm_wti`, `comm_brent`, `comm_natgas`, `comm_gold`, `comm_copper`, `comm_aluminum`, `comm_coal`, `comm_wheat`, `comm_corn`, `comm_soybeans`, `comm_soymeal`, `comm_soyoil`, `comm_sugar`, `comm_coffee`, `comm_cotton`, `comm_rice`, `comm_silver`, `comm_platinum`, `comm_palladium`, `comm_cocoa`
 
 Use the non-prefixed version (e.g., `wti` not `comm_wti`).
+
+### Available dataKeys (indicators.json history)
+
+When `dataSource: "indicators"`, the renderer reads `docs/data/indicators.json` — the `history[]` array — filters rows by `indicator_name` matching each dataKey, sorts by `period` ascending, and takes the last N months per the `window` field. These are StatCan / Bank of Canada authoritative series.
+
+**Industry GDP (StatCan Table 36-10-0434, monthly, ~57 months history):**
+- `gdp_agriculture` (NAICS 11), `gdp_mining_og` (21), `gdp_utilities` (22), `gdp_construction` (23), `gdp_manufacturing` (31-33)
+- `gdp_wholesale` (41), `gdp_retail` (44-45), `gdp_transportation` (48-49), `gdp_information` (51), `gdp_finance` (52)
+- `gdp_real_estate` (53), `gdp_professional` (54), `gdp_management` (55), `gdp_admin_waste` (56)
+- `gdp_education` (61), `gdp_healthcare` (62), `gdp_entertainment` (71), `gdp_accommodation` (72), `gdp_other_services` (81), `gdp_public_admin` (91)
+
+**Sector employment (StatCan LFS 14-10-0022, monthly, ~59 months):**
+- `construction_employment`, `manufacturing_employment`, `mining_og_employment`
+
+**Building investment components (StatCan 34-10-0175, quarterly):**
+- `residential_building_investment`, `commercial_building_investment`, `industrial_building_investment`, `institutional_building_investment`, `non_residential_building_investment`
+
+**Housing (StatCan 34-10-0143 + 18-10-0205, monthly):**
+- `housing_starts_total`, `housing_starts_single`, `housing_starts_multi`, `new_housing_price_index`
+
+**National labour (StatCan LFS 14-10-0287, monthly, ~26 months):**
+- `nat_unemployment`, `nat_employment_rate`, `nat_participation_rate`
+
+**National rates & yield curve (Bank of Canada, daily ~1,240 points):**
+- `boc_rate`, `goc_2y_yield`, `goc_3y_yield`, `goc_5y_yield`, `goc_7y_yield`, `goc_10y_yield`, `goc_long_yield`
+
+**Ontario extended (Ontario Economic Accounts, quarterly, ~36 quarters):**
+- `on_real_gdp`, `on_real_gdp_pct`, `on_real_capital_investment`, `on_real_consumption`, `on_real_household`, `on_exports`, `on_imports`, `on_gdp_goods`
+
+**Quebec extended (ISQ, quarterly, ~28 quarters):**
+- `qc_real_gdp`, `qc_nominal_gdp`, `qc_business_investment`, `qc_exports`, `qc_imports`, `qc_household_consumption`, `qc_gov_consumption`, `qc_compensation`, `qc_household_income`
+
+**Quebec monthly (17-19 months):**
+- `qc_manufacturing_sales`, `qc_retail_sales`, `qc_wholesale_sales`, `qc_housing_starts`, `qc_bldg_permits_res`, `qc_bldg_permits_nonres`, `qc_employment`, `qc_cpi`
+
+**Sector exports (StatCan 12-10-0011, monthly):**
+- `agri_exports`, `mineral_exports`, `forestry_exports`, `total_exports`, `total_imports`
+
+**Capex:**
+- `machinery_capex`, `construction_capex`, `total_capex`
 
 ## Chart Selection Logic
 
@@ -236,47 +402,112 @@ For these provinces, prefer their extended indicators over generic commodity dat
 | NT | Mining/Energy | gold, wti |
 | NU | Mining | gold, iron_ore |
 
+## Industry-Specific Guidance
+
+### Industry → Primary Data Key Map
+
+Every industry has at least one dedicated StatCan GDP series in `indicators.json` history. Use it as the baseline chart (`line` chartType, `dataSource: "indicators"`, `window: "24m"`). When the week's narrative explicitly ties the sector's trajectory to a complementary series (e.g., "mining GDP tracks WTI", "real estate softened with BoC at 2.25%", "retail held flat as CPI climbed"), upgrade to `multi_line` and add the complementary series.
+
+| NAICS | Industry | Primary dataKey | Complementary keys (for multi_line) |
+|-------|----------|-----------------|---------------------------|
+| 11 | Agriculture | `gdp_agriculture` | `wheat`, `corn`, `soybeans`, `agri_exports` |
+| 21 | Mining & Energy | `gdp_mining_og` | `wti`, `natural_gas`, `gold`, `copper`, `mining_og_employment`, `mineral_exports` |
+| 22 | Utilities | `gdp_utilities` | `natural_gas`, `coal` |
+| 23 | Construction | `gdp_construction` | `construction_employment`, `housing_starts_total`, `residential_building_investment`, `non_residential_building_investment`, `lumber` |
+| 31-33 | Manufacturing | `gdp_manufacturing` | `manufacturing_employment`, `qc_manufacturing_sales`, `cadusd` |
+| 41 | Wholesale | `gdp_wholesale` | `qc_wholesale_sales`, `total_exports` |
+| 44-45 | Retail | `gdp_retail` | `qc_retail_sales`, `cpi_national` |
+| 48-49 | Transportation | `gdp_transportation` | `wti`, `dry_bulk_shipping` |
+| 51 | Information/Cultural | `gdp_information` | `tsx_composite` |
+| 52 | Finance & Insurance | `gdp_finance` | `goc_2y_yield`, `goc_5y_yield`, `goc_10y_yield`, `boc_rate`, `yield_curve_10y2y` |
+| 53 | Real Estate | `gdp_real_estate` | `boc_rate`, `housing_starts_total`, `new_housing_price_index`, `residential_building_investment` |
+| 54 | Professional Services | `gdp_professional` | `tsx_composite`, `nat_employment_rate` |
+| 55 | Management | `gdp_management` | — |
+| 56 | Admin/Waste | `gdp_admin_waste` | `nat_unemployment` |
+| 61 | Education | `gdp_education` | — |
+| 62 | Health Care | `gdp_healthcare` | — |
+| 71 | Arts/Entertainment | `gdp_entertainment` | `cadusd` |
+| 72 | Accommodation & Food | `gdp_accommodation` | `cadusd` |
+| 81 | Other Services | `gdp_other_services` | — |
+| 91 | Public Admin | `gdp_public_admin` | `boc_rate`, `goc_10y_yield` |
+
+### Industry Chart Selection Procedure
+
+For each of the 20 industries:
+
+1. Read the industry `analysis` narrative (`goodsIndustries[]` / `servicesIndustries[]`).
+2. Identify the single most prominent finding — the M/M swing, the trend turn, the sector-specific context cited.
+3. Start with the primary dataKey and `line` chartType as the default.
+4. **Upgrade to `multi_line` ONLY if** the narrative explicitly ties the sector's trajectory to a complementary series. Don't add series decoratively.
+5. **Upgrade to `diverging_bar` or `bar` ONLY if** the story is about cross-subsector or cross-period comparison rather than a trend (rare for industries).
+6. Choose window: `24m` for monthly GDP series (default), `12m` for daily yields, `18m` for quarterly series.
+7. Write the `callout` field as 2-3 sentences that:
+   - Explicitly reference what is visible in the chart ("the trajectory line", "the crossover in early 2025", "the spread between the two lines", "the 24-month low")
+   - Add insight not already stated in the analysis narrative (different angle, longer-horizon framing, magnitude context)
+   - Use no editorializing language (per project editorial policy)
+8. Write the `reasoning` field as a terse internal justification (single sentence tying chart to narrative finding).
+
 ## Rules
 
-1. **NEVER fabricate data.** Every dataKey must exist in timeseries.json. If unsure, read the file and verify.
-2. **NEVER editorialize in titles or reasoning.** No "worrying trend", "positive sign", "encouraging data". State what happened.
-3. **The two charts per entity must show DIFFERENT things.** Don't chart CPI and then CPI again. Show two distinct facets of the story.
+1. **NEVER fabricate data.** Every dataKey must resolve in its declared `dataSource`. If `dataSource: "indicators"`, the key must exist in `indicators.json` history. If `dataSource: "timeseries"`, it must exist in `timeseries.json`. Verify before writing.
+2. **NEVER editorialize in titles, reasoning, or callout.** No "worrying", "encouraging", "positive", "welcome", "concerning". State what happened. Factual reporting only — let the reader draw conclusions.
+3. **Two charts per entity must show DIFFERENT things.** Don't chart CPI and then CPI again. Show two distinct facets of the story.
 4. **Primary chart should match the headline finding.** If the national headline is about GDP contraction, the first national chart should visualize that.
 5. **Reasoning must reference the narrative.** Don't just say "shows unemployment" — say "84,000 February job losses are the worst outside pandemic; this chart shows the 12-month deterioration."
-6. **Annotations should be sparse.** 0-2 per chart. Only for events explicitly mentioned in the narrative.
-7. **dataKeys max 2 per chart.** The frontend supports up to 2 series per chart with dual-axis. Don't specify 3+.
-8. **Prefer provincial data for province charts.** Use `AB_cpi` not just `cpi` when charting Alberta.
+6. **Callout must reference the chart itself, not just restate the data.** Phrases like "the spread between the two lines widened after Q3", "the 24-month low came after a five-month plateau", "the crossover in early 2025 marks when…". DO NOT copy sentences from the analysis narrative.
+7. **Annotations should be sparse.** 0-2 per chart. Only for events explicitly mentioned in the narrative.
+8. **dataKey count by chart type:** `line` 1 key; `multi_line` 2-4 keys; `bar` 1-2 keys; `diverging_bar` 1 key.
+9. **Window cap:** never exceed 24 months (2 years) of history. Shorter is fine if the story is about a recent turn.
+10. **Prefer provincial data for province charts.** Use `AB_cpi` not just `cpi` when charting Alberta.
+11. **Prefer `dataSource: "indicators"` for industries.** StatCan GDP by industry (indicators.json) is authoritative. Fall back to `"timeseries"` only for commodity/market complementary series.
 
 ## Execution Procedure
 
 1. Read `docs/data/briefing_latest.json`
-2. Read `docs/data/timeseries.json` (just the keys — you need to know what's available)
-3. Read `.claude/skills/lagging_indicator_charts.md` (for design reference — the frontend renders charts, but titles and type selection should follow this aesthetic)
-4. For **National (Canada)**:
+2. Read `docs/data/indicators.json` — scan `indicators[].indicator_name` for current values and `history[].indicator_name` + row counts for historical series availability
+3. Read `docs/data/timeseries.json` — scan keys
+4. Read `.claude/skills/lagging_indicator_charts.md` (for design reference)
+5. For **National (Canada)**:
    a. Read `national.analysis` and `executive_summary`
    b. Identify 2 major findings
-   c. Map to timeseries keys
+   c. Map each to either indicators.json or timeseries.json keys
    d. Write 2 chart specs
    e. Add `insightCharts` array at top level of JSON
-5. For **each province** in `provinces[]`:
+6. For **each province** in `provinces[]`:
    a. Read province `analysis`
    b. Identify 2 major findings
-   c. Map to available timeseries keys (check province-specific keys first)
+   c. Map to available keys (prefer provincial keys; fall back to commodities)
    d. Write 2 chart specs
    e. Add `insightCharts` array to the province object
-6. Write the updated JSON back to `docs/data/briefing_latest.json`
-7. Also update the dated copy if it exists (e.g., `docs/data/briefing_2026-03-30.json`)
-8. Verify: count that you've produced exactly 2 charts for National + 2 for each of the 13 provinces = 28 chart specs total
+7. For **each industry** in `goodsIndustries[]` and `servicesIndustries[]` (20 industries total):
+   a. Read industry `analysis` narrative
+   b. Identify the single most prominent finding
+   c. Start with primary dataKey from the Industry → Primary Data Key Map, `chartType: "line"`, `dataSource: "indicators"`, `window: "24m"`
+   d. Upgrade to `multi_line` only if the narrative ties the sector to a complementary series
+   e. Write chart spec — include `reasoning` (internal) AND `callout` (user-facing, references visible chart content, distinct from analysis narrative)
+   f. Add `insightCharts` array (length 1) to the industry object
+8. Write the updated JSON back to `docs/data/briefing_latest.json`
+9. Also update the dated copy if it exists (e.g., `docs/data/briefing_2026-03-30.json`)
+10. Verify counts:
+   - National: 2 charts
+   - Provinces: 2 × 13 = 26 charts
+   - Industries: 1 × 20 = 20 charts
+   - Total: 48 chart specs
 
 ## Quality Checks
 
 Before writing the final JSON, verify:
-- [ ] Every `dataKey` exists in timeseries.json
+- [ ] Every `dataKey` exists in its declared `dataSource` (indicators.json history or timeseries.json)
+- [ ] Every industry chart spec includes `dataSource` and `window` fields
 - [ ] No two charts in the same entity use the same dataKey combination
-- [ ] Every title is under 50 characters
+- [ ] Every title is under 60 characters
 - [ ] Every title is factual (no editorializing)
-- [ ] Every reasoning field references a specific finding from the narrative
-- [ ] Every province has exactly 2 charts
+- [ ] Every `reasoning` field references a specific finding from the narrative
+- [ ] Every industry `callout` field references visible chart content AND is distinct from the analysis narrative (no copy-paste)
 - [ ] National has exactly 2 charts
-- [ ] Chart types are appropriate (trends → line, changes → diverging_bar, comparisons → bar)
+- [ ] Every province has exactly 2 charts
+- [ ] Every industry (20 total) has exactly 1 chart
+- [ ] Chart types are appropriate (trend → line or multi_line; M/M change → diverging_bar; category comparison → bar)
+- [ ] `multi_line` charts have 2-4 dataKeys, not 1 (use `line` for single-series)
+- [ ] Window field is one of `6m`, `12m`, `18m`, `24m` — never more than 24 months
 - [ ] Annotations use real dates from events mentioned in the narrative

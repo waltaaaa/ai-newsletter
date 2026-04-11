@@ -1567,6 +1567,58 @@ function buildAgentInsightStrip(prefix,chartSpec,provData){
   const id=prefix+'AgentInsight';
   const title=chartSpec.title||'Weekly Insight';
   const subtitle=chartSpec.subtitle||'Agent-selected visualization';
+
+  // ── Option C (editorial) layout — triggered by presence of kpis array ──
+  // If the spec carries kpis, eyebrow, or context fields, render the richer
+  // editorial card with headline numbers above the chart and context below.
+  // Otherwise, fall through to the legacy Option A layout for backward compat.
+  const kpis=Array.isArray(chartSpec.kpis)?chartSpec.kpis:null;
+  const eyebrow=chartSpec.eyebrow||'';
+  const context=chartSpec.context||'';
+  const isOptionC=!!(kpis&&kpis.length);
+
+  if(isOptionC){
+    let html='<div class="tldr-callout-c" style="margin:20px 0;background:#fff;border:1px solid #d5dbe3;border-radius:16px;padding:28px 32px;box-shadow:0 2px 8px rgba(0,0,0,.06);background-image:linear-gradient(180deg,rgba(0,49,83,.025) 0%,transparent 60%)">';
+    // Eyebrow label (optional)
+    if(eyebrow){
+      html+='<div style="display:flex;align-items:center;gap:8px;font-family:DM Sans,sans-serif;font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:#003153;margin-bottom:10px">';
+      html+='<span style="display:inline-block;width:24px;height:2px;background:#003153"></span>';
+      html+=_escape(eyebrow);
+      html+='</div>';
+    }
+    // Title and subtitle
+    html+='<div style="font-family:DM Sans,sans-serif;font-size:20px;font-weight:700;color:#1a1a1a;letter-spacing:-.3px;line-height:1.25;margin-bottom:6px">'+_escape(title)+'</div>';
+    html+='<div style="font-family:DM Sans,sans-serif;font-size:13px;color:#7a8599;margin-bottom:8px">'+_escape(subtitle)+'</div>';
+    // KPI row
+    html+='<div style="display:flex;gap:24px;margin:16px 0 20px;padding:14px 0;border-top:1px solid #e8ecf0;border-bottom:1px solid #e8ecf0;flex-wrap:wrap">';
+    kpis.forEach(function(k){
+      const label=k.label||'';
+      const value=k.value||'';
+      const delta=k.delta||'';
+      const trend=(k.trend||'').toLowerCase();
+      const deltaBg=trend==='up'?'#ecfdf5':trend==='down'?'#fef2f2':'#f3f4f6';
+      const deltaColor=trend==='up'?'#0d7a3f':trend==='down'?'#c4320a':'#4a5568';
+      html+='<div style="flex:1;min-width:140px">';
+      html+='<div style="font-family:DM Sans,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:#7a8599;font-weight:600;margin-bottom:3px">'+_escape(label)+'</div>';
+      html+='<div style="font-family:DM Sans,sans-serif;font-size:22px;font-weight:700;color:#003153;letter-spacing:-.5px;line-height:1">'+_escape(value);
+      if(delta){
+        html+='<span style="display:inline-block;margin-left:8px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;background:'+deltaBg+';color:'+deltaColor+'">'+_escape(delta)+'</span>';
+      }
+      html+='</div></div>';
+    });
+    html+='</div>';
+    // Chart canvas
+    html+='<div style="height:240px;position:relative"><canvas id="'+id+'"></canvas></div>';
+    // Context panel
+    if(context){
+      html+='<div style="margin-top:14px;padding-top:14px;border-top:1px solid #e8ecf0;font-family:DM Sans,sans-serif;font-size:12px;color:#4a5568;line-height:1.55">'+context+'</div>';
+    }
+    html+='<div style="margin-top:10px;font-family:DM Sans,sans-serif;font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">Source: The Lagging Indicator</div>';
+    html+='</div>';
+    return html;
+  }
+
+  // ── Option A (legacy) layout — unchanged ──
   const calloutText=_buildProvCalloutText(chartSpec,provData||{},0);
   // Callout structure matching TL;DR pattern
   let html='<div class="tldr-callout" style="margin:20px 0">';
@@ -1578,6 +1630,12 @@ function buildAgentInsightStrip(prefix,chartSpec,provData){
   html+='<div class="tldr-callout-source">Source: The Lagging Indicator</div>';
   html+='</div></div>';
   return html;
+}
+
+// HTML escape helper for Option C injected values (kpis, eyebrow, title)
+function _escape(s){
+  if(s==null)return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 async function renderAgentInsightChart(prefix,chartSpec){
@@ -1592,7 +1650,11 @@ async function renderAgentInsightChart(prefix,chartSpec){
   const chartType=chartSpec.chartType||'line';
   const dataKeys=chartSpec.dataKeys;
   const annotations=chartSpec.annotations||[];
-  const lineColors=[_ic.accent,_ic.pos,'#F59E0B','#8B5CF6'];
+  // Option C editorial mode: use Prussian blue as primary line color to match dashboard theme
+  const isOptionC=!!(Array.isArray(chartSpec.kpis)&&chartSpec.kpis.length);
+  const lineColors=isOptionC
+    ?[_ic.prussian,'#c4320a','#BA7517','#1D9E75']  // Prussian primary, accent-red secondary
+    :[_ic.accent,_ic.pos,'#F59E0B','#8B5CF6'];     // Legacy palette
   const datasets=[];
   let allLabels=[];
 
@@ -1618,18 +1680,21 @@ async function renderAgentInsightChart(prefix,chartSpec){
         borderRadius:4,barPercentage:0.65
       });
     }else{
+      // Option C gives primary line a stronger fill and makes secondary lines dashed for visual distinction
+      const primaryFillAlpha=isOptionC?0.12:0.05;
       datasets.push({
         label:tsKey.replace(/_/g,' ').replace(/\b\w/g,x=>x.toUpperCase()),
         data:data,
         borderColor:c,
-        backgroundColor:isPrimary?_ic.hexAlpha(c,0.05):'transparent',
+        backgroundColor:isPrimary?_ic.hexAlpha(c,primaryFillAlpha):'transparent',
         borderWidth:isPrimary?2.5:2,
+        borderDash:(isOptionC&&!isPrimary)?[4,3]:[],
         pointRadius:data.map((_,i)=>i===data.length-1?5:0),
         pointBackgroundColor:c,
         pointBorderColor:_ic.white,
         pointBorderWidth:2,
         fill:isPrimary,
-        tension:0.35,
+        tension:isOptionC?0.4:0.35,
         yAxisID:isPrimary?'y':'y1'
       });
     }

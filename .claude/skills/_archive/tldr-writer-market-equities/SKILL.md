@@ -1,5 +1,6 @@
 ---
 name: tldr-writer-market-equities
+context: fork
 description: >
   Agent 3G — Writes per-index equity narratives for the Markets tab. Produces em dash
   narratives for TSX Composite, S&P 500, DJIA, and Nasdaq with weekly, monthly, and
