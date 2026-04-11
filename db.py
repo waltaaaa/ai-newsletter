@@ -1181,15 +1181,25 @@ def get_indicators(conn: sqlite3.Connection, category: str | None = None,
 
 
 def get_latest_indicators(conn: sqlite3.Connection) -> list[dict]:
-    """Return the most recent value for each indicator_name+province combination."""
+    """Return the most recent value for each indicator_name+province combination.
+
+    'Most recent' = latest `period` (reference date), with `rowid` as tiebreaker.
+    Picking by period (not by insertion order) is important because old backfill
+    runs can insert rows out-of-order; picking by MAX(rowid) would then shadow
+    the correct current weekly values with stale orphans.
+    """
     old_factory = conn.row_factory
     conn.row_factory = sqlite3.Row
     rows = conn.execute("""
-        SELECT * FROM indicator_history
-        WHERE rowid IN (
-            SELECT MAX(rowid) FROM indicator_history
-            GROUP BY indicator_name, province
+        SELECT * FROM (
+            SELECT ih.*,
+                   ROW_NUMBER() OVER (
+                       PARTITION BY indicator_name, province
+                       ORDER BY period DESC, rowid DESC
+                   ) AS _rn
+            FROM indicator_history ih
         )
+        WHERE _rn = 1
         ORDER BY indicator_name
     """).fetchall()
     conn.row_factory = old_factory

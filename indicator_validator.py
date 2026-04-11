@@ -155,14 +155,17 @@ INTERNATIONAL_RULES = {
 }
 
 # Commodity rules — yfinance as ground truth
+# Ranges are sized to absorb multi-year price swings; tighten only when you're
+# willing to re-audit them every time a commodity prints a fresh cycle high/low.
 COMMODITY_RULES = {
     "wti": {"range": (20.0, 150.0), "max_delta_pct": 25.0, "unit": "$/bbl"},
     "wti_crude": {"range": (20.0, 150.0), "max_delta_pct": 25.0, "unit": "$/bbl"},
-    "gold": {"range": (1800.0, 5500.0), "max_delta_pct": 10.0, "unit": "$/oz"},
-    "silver": {"range": (15.0, 80.0), "max_delta_pct": 15.0, "unit": "$/oz"},
-    "platinum": {"range": (500.0, 2000.0), "max_delta_pct": 15.0, "unit": "$/oz"},
-    "copper": {"range": (2.0, 6.0), "max_delta_pct": 15.0, "unit": "$/lb"},
-    "aluminum": {"range": (1500.0, 4000.0), "max_delta_pct": 15.0, "unit": "$/t"},
+    "brent": {"range": (20.0, 160.0), "max_delta_pct": 25.0, "unit": "$/bbl"},
+    "gold": {"range": (1200.0, 6000.0), "max_delta_pct": 15.0, "unit": "$/oz"},
+    "silver": {"range": (10.0, 120.0), "max_delta_pct": 20.0, "unit": "$/oz"},
+    "platinum": {"range": (500.0, 2500.0), "max_delta_pct": 20.0, "unit": "$/oz"},
+    "copper": {"range": (1.5, 8.0), "max_delta_pct": 20.0, "unit": "$/lb"},
+    "aluminum": {"range": (1200.0, 5000.0), "max_delta_pct": 20.0, "unit": "$/t"},
     "rice": {"range": (10.0, 2000.0), "max_delta_pct": 30.0, "unit": "¢/cwt"},
     "lumber": {"range": (200.0, 1800.0), "max_delta_pct": 30.0, "unit": "$/mbf"},
     "natural_gas": {"range": (1.0, 15.0), "max_delta_pct": 40.0, "unit": "$/MMBtu"},
@@ -185,22 +188,22 @@ EXTENDED_RULES = {
     "construction_vacancies": {"range": (10000, 200000), "max_delta_pct": 40.0, "unit": "count"},
     "mining_vacancies": {"range": (1000, 50000), "max_delta_pct": 40.0, "unit": "count"},
     "energy_exports": {"range": (5000.0, 25000.0), "max_delta_pct": 30.0, "unit": "$M"},
-    "mineral_exports": {"range": (1000.0, 10000.0), "max_delta_pct": 30.0, "unit": "$M"},
+    "mineral_exports": {"range": (50.0, 5000.0), "max_delta_pct": 30.0, "unit": "$M"},
     "forestry_exports": {"range": (500.0, 5000.0), "max_delta_pct": 30.0, "unit": "$M"},
     "agri_exports": {"range": (2000.0, 10000.0), "max_delta_pct": 30.0, "unit": "$M"},
-    # Investment (quarterly) — will be used when vectors are re-enabled
-    "residential_building_investment": {"range": (10000.0, 60000.0), "max_delta_pct": 20.0, "unit": "$M"},
-    "non_residential_building_investment": {"range": (5000.0, 30000.0), "max_delta_pct": 20.0, "unit": "$M"},
-    "industrial_building_investment": {"range": (1000.0, 10000.0), "max_delta_pct": 25.0, "unit": "$M"},
-    "commercial_building_investment": {"range": (2000.0, 15000.0), "max_delta_pct": 25.0, "unit": "$M"},
-    "institutional_building_investment": {"range": (1000.0, 10000.0), "max_delta_pct": 25.0, "unit": "$M"},
-    # Capital expenditures (annual)
-    "total_capex": {"range": (200000.0, 500000.0), "max_delta_pct": 20.0, "unit": "$M"},
-    "construction_capex": {"range": (100000.0, 300000.0), "max_delta_pct": 20.0, "unit": "$M"},
-    "machinery_capex": {"range": (50000.0, 200000.0), "max_delta_pct": 20.0, "unit": "$M"},
-    # Housing price index
-    "new_housing_price_index": {"range": (80.0, 200.0), "max_delta_pct": 10.0, "unit": "index"},
-    "construction_price_index_composite": {"range": (80.0, 250.0), "max_delta_pct": 10.0, "unit": "index"},
+    # Investment (quarterly) — StatCan publishes 60-90 days after reference quarter
+    "residential_building_investment": {"range": (10000.0, 60000.0), "max_delta_pct": 20.0, "unit": "$M", "frequency": "quarterly"},
+    "non_residential_building_investment": {"range": (5000.0, 30000.0), "max_delta_pct": 20.0, "unit": "$M", "frequency": "quarterly"},
+    "industrial_building_investment": {"range": (1000.0, 10000.0), "max_delta_pct": 25.0, "unit": "$M", "frequency": "quarterly"},
+    "commercial_building_investment": {"range": (2000.0, 15000.0), "max_delta_pct": 25.0, "unit": "$M", "frequency": "quarterly"},
+    "institutional_building_investment": {"range": (1000.0, 10000.0), "max_delta_pct": 25.0, "unit": "$M", "frequency": "quarterly"},
+    # Capital expenditures (annual, intentions survey — Q1 release for current year)
+    "total_capex": {"range": (200000.0, 500000.0), "max_delta_pct": 20.0, "unit": "$M", "frequency": "annual"},
+    "construction_capex": {"range": (100000.0, 300000.0), "max_delta_pct": 20.0, "unit": "$M", "frequency": "annual"},
+    "machinery_capex": {"range": (50000.0, 200000.0), "max_delta_pct": 20.0, "unit": "$M", "frequency": "annual"},
+    # Housing price index (monthly)
+    "new_housing_price_index": {"range": (80.0, 200.0), "max_delta_pct": 10.0, "unit": "index", "frequency": "monthly"},
+    "construction_price_index_composite": {"range": (80.0, 250.0), "max_delta_pct": 10.0, "unit": "index", "frequency": "quarterly"},
 }
 
 # Frequency → max staleness in days (before doubling for publication lag)
@@ -512,16 +515,21 @@ def validate_indicators(conn) -> list[ValidationResult]:
     old_rf = conn.row_factory
     conn.row_factory = _sql.Row
 
-    # Get latest value per (indicator_name, province) pair
+    # Get latest value per (indicator_name, province) pair.
+    # "Latest" = most recent `period`, tie-broken by rowid. MAX(id) alone would
+    # pick whichever row was INSERTED last, which lets an old backfill with an
+    # earlier reference period shadow the real current value.
     rows = conn.execute("""
-        SELECT ih.*
-        FROM indicator_history ih
-        INNER JOIN (
-            SELECT indicator_name, province, MAX(id) AS max_id
-            FROM indicator_history
-            GROUP BY indicator_name, province
-        ) latest ON ih.id = latest.max_id
-        ORDER BY ih.indicator_name
+        SELECT * FROM (
+            SELECT ih.*,
+                   ROW_NUMBER() OVER (
+                       PARTITION BY indicator_name, province
+                       ORDER BY period DESC, id DESC
+                   ) AS _rn
+            FROM indicator_history ih
+        )
+        WHERE _rn = 1
+        ORDER BY indicator_name
     """).fetchall()
 
     conn.row_factory = old_rf
