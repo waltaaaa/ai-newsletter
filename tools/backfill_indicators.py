@@ -123,31 +123,34 @@ def backfill_statcan(conn, years=5):
         'cpi_SK': '41690921',
         'cpi_AB': '41690922',
         'cpi_BC': '41690923',
-        # National employment & participation rates
-        'employment_rate_national': '2062809',
-        'participation_rate_national': '2062803',
-        # Provincial employment rate
-        'employment_rate_NL': '2062998',
-        'employment_rate_PE': '2063187',
-        'employment_rate_NS': '2063376',
-        'employment_rate_NB': '2063565',
-        'employment_rate_QC': '2063754',
-        'employment_rate_ON': '2063943',
-        'employment_rate_MB': '2064132',
-        'employment_rate_SK': '2064321',
-        'employment_rate_AB': '2064510',
-        'employment_rate_BC': '2064699',
-        # Provincial participation rate
-        'participation_rate_NL': '2062992',
-        'participation_rate_PE': '2063181',
-        'participation_rate_NS': '2063370',
-        'participation_rate_NB': '2063559',
-        'participation_rate_QC': '2063748',
-        'participation_rate_ON': '2063937',
-        'participation_rate_MB': '2064126',
-        'participation_rate_SK': '2064315',
-        'participation_rate_AB': '2064504',
-        'participation_rate_BC': '2064693',
+        # National employment & participation rates — must match phases/data_collection.py
+        # _EMPRATE_VECTOR / _PARTRATE_VECTOR. Old vectors (2062809/2062803) returned
+        # counts or terminated series and produced raw-index / zero values.
+        'employment_rate_national': '2062811',
+        'participation_rate_national': '2062807',
+        # Provincial rates — use unemployment vector + offset (part=+1, emp=+2)
+        # to match the runtime _PROV_PARTRATE_VIDS / _PROV_EMPRATE_VIDS tables.
+        'employment_rate_NL': '2063006',
+        'employment_rate_PE': '2063195',
+        'employment_rate_NS': '2063384',
+        'employment_rate_NB': '2063573',
+        'employment_rate_QC': '2063762',
+        'employment_rate_ON': '2063951',
+        'employment_rate_MB': '2064140',
+        'employment_rate_SK': '2064329',
+        'employment_rate_AB': '2064518',
+        'employment_rate_BC': '2064707',
+        # Provincial participation rate (unemployment vector + 1)
+        'participation_rate_NL': '2063005',
+        'participation_rate_PE': '2063194',
+        'participation_rate_NS': '2063383',
+        'participation_rate_NB': '2063572',
+        'participation_rate_QC': '2063761',
+        'participation_rate_ON': '2063950',
+        'participation_rate_MB': '2064139',
+        'participation_rate_SK': '2064328',
+        'participation_rate_AB': '2064517',
+        'participation_rate_BC': '2064706',
         # Quarterly real GDP
         'realGdp_national': '62305752',
         # GDP by industry (20 NAICS, monthly)
@@ -238,7 +241,12 @@ def backfill_statcan(conn, years=5):
             print(f"  [STATCAN] {indicator_name}: {len(obs_list)} observations")
 
             count = 0
-            for obs in obs_list:
+            # CPI vectors return raw index levels (e.g. 160.2). The runtime stores
+            # cpi as YoY% by convention, so backfill must compute YoY from 13-apart
+            # observations before writing — otherwise the raw index leaks into the
+            # YoY slot and fails validator PROVINCE_RULES[cpi] range check.
+            is_cpi = base_indicator == 'cpi'
+            for i, obs in enumerate(obs_list):
                 obs_date = obs['date'][:10] if obs['date'] else ''
                 val = obs['value']
                 if not obs_date or val == '' or val is None:
@@ -253,11 +261,27 @@ def backfill_statcan(conn, years=5):
                 if indicator_name == 'housingStarts_national' or indicator_name == 'building_permits':
                     unit = 'units'
 
+                if is_cpi:
+                    # Need 12 months of history to compute YoY
+                    if i < 12:
+                        continue
+                    try:
+                        latest = float(val)
+                        year_ago = float(obs_list[i - 12]['value'])
+                        if not year_ago:
+                            continue
+                        yoy = ((latest - year_ago) / year_ago) * 100
+                        write_val = f"+{yoy:.1f}%" if yoy >= 0 else f"{yoy:.1f}%"
+                    except (ValueError, TypeError, ZeroDivisionError):
+                        continue
+                else:
+                    write_val = str(val)
+
                 save_indicator(conn, {
                     'indicator': base_indicator,
                     'province': province,
                     'date': obs_date,
-                    'value': str(val),
+                    'value': write_val,
                     'unit': unit,
                     'source': 'Statistics Canada WDS',
                     'frequency': freq,
