@@ -1,13 +1,12 @@
 {
-  "exported_at": "2026-04-11T06:43:24.936835+00:00",
+  "exported_at": "2026-04-01T02:24:24.224447+00:00",
   "province_count": 13,
-  "file_count": 29,
+  "file_count": 27,
   "file_list": [
     "briefing_archive.json",
     "briefing_latest.json",
     "commodities.json",
     "events.json",
-    "events_global.json",
     "iaac.json",
     "indicators.json",
     "jobs.json",
@@ -29,7 +28,6 @@
     "projects_saskatchewan.json",
     "projects_yukon.json",
     "signals.json",
-    "statcan_tables.json",
     "timeseries.json",
     "trends.json"
   ]

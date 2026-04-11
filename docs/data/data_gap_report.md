@@ -1,147 +1,160 @@
-# Data Gap Report - 2026-04-11
+# Data Gap Report — 2026-03-31
 
-Agent 0.5 (tldr-data-gap) audit. Runs between Agent 0 (data refresh) and Phase 1 (research).
+## Critical Gaps (will affect briefing quality)
 
-## Coverage Summary
-- Provinces with core CPI+Unemployment: 9/13
-- Daily commodities current (<=14d): 10/15
-- Market commodities complete (13 required): 12/13
-- Yield curve tenors in briefing: 3/7
-- Yield curve detail: 3/7 current | 3/3 year-ago
-- Timeseries keys: 111 checked, 69 stale
-- Projects monitored (lastSeen <=30d): 7427/7427
-- Policy weeks / newest: 6 / 2026-04-11
-- Weekly delta coverage: 95%
-- Monthly delta coverage: 91%
-- Yearly delta coverage: 79%
-- Cross-tab consistency: PASS
+### 1. Ontario and Quebec briefing analyses are empty
+- **Ontario** analysis: "No province-specific articles or signals were available for Ontario this week." (85 chars)
+- **Quebec** analysis: "No province-specific articles or signals were available for Quebec this week." (84 chars)
+- These are the two largest provinces by GDP. The national briefing references $210B Ontario capital plan and $167B Quebec QIP, but the province tabs have no analysis. This is a data-to-briefing linkage failure, not a data gap.
 
-**Overall Data Freshness Grade: B**
-- A: all critical sources current
-- B: 1-3 critical gaps or heavy warning load
-- C: 4-7 critical gaps
-- D: 8+ critical gaps, significant data quality issues
+### 2. Four provinces/territories have ZERO indicators in indicators.json
+- **NT** (Northwest Territories): 0 indicator types
+- **NU** (Nunavut): 0 indicator types
+- **PE** (Prince Edward Island): 0 indicator types
+- **YT** (Yukon): 0 indicator types
+- StatCan publishes unemployment and CPI for all provinces. These should be populated.
+
+### 3. Trade data frozen at 2003
+- `total_exports`: latest = 2003-01-01
+- `total_imports`: latest = 2003-01-01
+- `agri_exports`: latest = 2003-01-01
+- `forestry_exports`: latest = 2003-01-01
+- `mineral_exports`: latest = 2003-01-01
+- These appear to be legacy placeholders. Either populate from StatCan Table 12-10-0129 or remove to avoid confusion.
+
+### 4. Lumber timeseries frozen since May 2023
+- `lumber`: latest data point = 2023-05-12 (1,054 days stale)
+- Lumber is a critical Canadian commodity affecting forestry exports and construction costs. The Yahoo Finance ticker may have changed or been delisted.
+
+### 5. Briefing metrics mostly empty
+- 9 of 15 briefing metrics are blank: `realGdp`, `nomGdp`, `outputGap`, `shelterCpi`, `participation`, `wageGrowth`, `currentAccount`, `employmentRate`, `participationRate`
+- These values exist in indicators.json (`employmentRate`, `participationRate`, `wageGrowth` all have 2026-02-01 or 2026-03-31 data) but are not flowing into the briefing metrics object.
+
+### 6. CAD/USD duplicate with divergent dates
+- `cad_usd`: latest = 2026-03-30 (current)
+- `cadusd`: latest = 2026-03-19 (12 days stale)
+- Two separate indicator keys track the same pair. The timeseries also has both. Consolidate to avoid confusion.
+
+### 7. Missing FX pairs in briefing
+- Financial markets section has only 1 FX pair (USD/JPY). Missing: CAD/USD, EUR/USD, USD/CNY
+- CAD/USD is the most important FX rate for a Canadian economic dashboard.
 
 ---
 
-## Critical Gaps
-- PE: missing CPI (PE_cpi)
-- PE: missing Unemployment Rate (PE_unemployment)
+## Warnings (may affect depth)
 
----
+### 8. Provincial indicators limited to CPI + unemployment for 8 provinces
+- AB, BC, MB, NB, NL, NS, SK each have only 2 indicator types (CPI, unemployment)
+- Missing across all 8: `gdp`, `housing_starts`, `employment_rate`, `participation_rate`
+- ON has 8 types (CPI, unemployment + 6 economic accounts)
+- QC has 15 types (best coverage of any province)
+- The pipeline's `statcan_extended.py` fetches provincial housing starts (34-10-0143) and employment (14-10-0022). These may not be propagating to the indicators.json export.
 
-## Warnings
-- ON CPI: period 2026-02-01 (69d old, limit 60d)
-- ON Unemployment Rate: period 2026-02-01 (69d old, limit 60d)
-- QC CPI: period 2026-02-01 (69d old, limit 60d)
-- QC Unemployment Rate: period 2026-02-01 (69d old, limit 60d)
-- AB CPI: period 2026-02-01 (69d old, limit 60d)
-- AB Unemployment Rate: period 2026-02-01 (69d old, limit 60d)
-- BC CPI: period 2026-02-01 (69d old, limit 60d)
-- BC Unemployment Rate: period 2026-02-01 (69d old, limit 60d)
-- SK CPI: period 2026-02-01 (69d old, limit 60d)
-- SK Unemployment Rate: period 2026-02-01 (69d old, limit 60d)
-- MB CPI: period 2026-02-01 (69d old, limit 60d)
-- MB Unemployment Rate: period 2026-02-01 (69d old, limit 60d)
-- NS CPI: period 2026-02-01 (69d old, limit 60d)
-- NS Unemployment Rate: period 2026-02-01 (69d old, limit 60d)
-- NB CPI: period 2026-02-01 (69d old, limit 60d)
-- NB Unemployment Rate: period 2026-02-01 (69d old, limit 60d)
-- NL CPI: period 2026-02-01 (69d old, limit 60d)
-- NL Unemployment Rate: period 2026-02-01 (69d old, limit 60d)
-- commodity lumber: last 2023-05-12 (1065d old)
-- commodity potash_nutrien: last 2026-03-18 (24d old)
-- commodity sprott_uranium: last 2026-03-18 (24d old)
-- commodity canola: no data in timeseries
-- commodity cameco_uranium: last 2026-03-18 (24d old)
-- timeseries comm_wti: 2026-03-31 (11d old, window 10d)
-- timeseries comm_brent: 2026-03-31 (11d old, window 10d)
-- timeseries comm_natgas: 2026-03-31 (11d old, window 10d)
-- timeseries comm_gold: 2026-03-31 (11d old, window 10d)
-- timeseries comm_silver: 2026-03-31 (11d old, window 10d)
-- timeseries comm_platinum: 2026-03-31 (11d old, window 10d)
-- timeseries comm_palladium: 2026-03-31 (11d old, window 10d)
-- timeseries comm_copper: 2026-03-31 (11d old, window 10d)
-- timeseries comm_aluminum: 2026-03-31 (11d old, window 10d)
-- timeseries comm_wheat: 2026-03-31 (11d old, window 10d)
-- timeseries comm_corn: 2026-03-31 (11d old, window 10d)
-- timeseries comm_rice: 2026-03-31 (11d old, window 10d)
-- timeseries comm_soybeans: 2026-03-31 (11d old, window 10d)
-- timeseries comm_coffee: 2026-03-31 (11d old, window 10d)
-- timeseries comm_cocoa: 2026-03-31 (11d old, window 10d)
-- timeseries comm_sugar: 2026-03-31 (11d old, window 10d)
-- timeseries comm_cotton: 2026-03-31 (11d old, window 10d)
-- timeseries comm_soyoil: 2026-03-31 (11d old, window 10d)
-- timeseries comm_soymeal: 2026-03-31 (11d old, window 10d)
-- timeseries comm_coal: 2026-03-31 (11d old, window 10d)
-- timeseries idx_nasdaq: 2026-03-25 (17d old, window 10d)
-- timeseries idx_dax: 2026-03-31 (11d old, window 10d)
-- timeseries idx_nikkei: 2026-03-15 (27d old, window 10d)
-- timeseries nasdaq: 2026-03-27 (15d old, window 10d)
-- timeseries dax: 2026-03-31 (11d old, window 10d)
-- timeseries nikkei225: 2026-03-24 (18d old, window 10d)
-- timeseries eurusd: 2026-03-25 (17d old, window 10d)
-- timeseries gold: 2026-03-31 (11d old, window 10d)
-- timeseries lumber: 2023-05-12 (1065d old, window 10d)
-- timeseries potash_nutrien: 2026-03-18 (24d old, window 10d)
-- timeseries cameco_uranium: 2026-03-18 (24d old, window 10d)
-- timeseries sprott_uranium: 2026-03-18 (24d old, window 10d)
-- timeseries AB_unemployment: 2026-02-01 (69d old, window 60d)
-- timeseries AB_cpi: 2026-02-01 (69d old, window 60d)
-- timeseries BC_unemployment: 2026-02-01 (69d old, window 60d)
-- timeseries BC_cpi: 2026-02-01 (69d old, window 60d)
-- timeseries MB_unemployment: 2026-02-01 (69d old, window 60d)
-- timeseries MB_cpi: 2026-02-01 (69d old, window 60d)
-- timeseries NB_unemployment: 2026-02-01 (69d old, window 60d)
-- timeseries NB_cpi: 2026-02-01 (69d old, window 60d)
-- timeseries NL_unemployment: 2026-02-01 (69d old, window 60d)
-- timeseries NL_cpi: 2026-02-01 (69d old, window 60d)
-- timeseries NS_unemployment: 2026-02-01 (69d old, window 60d)
-- timeseries NS_cpi: 2026-02-01 (69d old, window 60d)
-- timeseries ON_unemployment: 2026-02-01 (69d old, window 60d)
-- timeseries ON_cpi: 2026-02-01 (69d old, window 60d)
-- timeseries QC_unemployment: 2026-02-01 (69d old, window 60d)
-- timeseries QC_cpi: 2026-02-01 (69d old, window 60d)
-- timeseries SK_unemployment: 2026-02-01 (69d old, window 60d)
-- timeseries SK_cpi: 2026-02-01 (69d old, window 60d)
-- timeseries ON_on_exports: 2025-07-01 (284d old, window 30d)
-- timeseries ON_on_imports: 2025-07-01 (284d old, window 30d)
-- timeseries ON_on_real_capital_investment: 2025-07-01 (284d old, window 120d)
-- timeseries ON_on_gdp_goods: 2025-07-01 (284d old, window 120d)
-- timeseries ON_on_real_consumption: 2025-07-01 (284d old, window 30d)
-- timeseries ON_on_real_household: 2025-07-01 (284d old, window 30d)
-- timeseries QC_qc_exports: 2025-07-01 (284d old, window 30d)
-- ...and 23 additional warnings
+### 9. Nickel price data appears frozen
+- commodities.json shows nickel at 28.4 with 0.0% change across all periods (1w, 1m, 1y)
+- timeseries.json shows nickel at 17,173 USD/t with identical values for Feb-Mar 2026
+- The commodity ETF proxy (NIKL) may have stopped trading or the data source is returning stale values.
+
+### 10. Building permits indicator has ancient data
+- `building_permits`: latest period = 2007-04-01 in indicators.json
+- This appears to be a legacy stub. The pipeline should either populate this from StatCan Table 34-10-0066 or remove the key.
+
+### 11. Several commodity timeseries have duplicate entries
+- Nickel, lumber, and others show duplicate entries per date (same date, same value, different sources: FRED + Yahoo Finance). Not a data gap per se, but adds noise.
+
+### 12. ECB deposit rate stale
+- `ecb_deposit_rate`: latest = 2025-02-05 (419 days old)
+- ECB has made rate decisions since then. Affects EU section of the global analysis.
+
+### 13. US real GDP lagging
+- `us_real_gdp`: latest = 2025-10-01 (Q3 2025)
+- Q4 2025 data should be available by now (BEA releases ~3 months after quarter end).
+
+### 14. Ontario economic accounts stale (quarterly)
+- All 6 `on_*` indicators (exports, GDP goods, imports, capital investment, consumption, household) stuck at 2025-07-01 (Q2 2025)
+- Q3 2025 should be available. These are quarterly so 273 days stale is significant.
+
+### 15. Quebec quarterly indicators also stale
+- `qc_business_investment`, `qc_exports`, `qc_imports`, `qc_real_gdp`: all at 2025-07-01
+- `qc_intl_exports`, `qc_intl_imports`: at 2025-12-01 (acceptable for quarterly)
+
+### 16. Market index gaps
+- `idx_nikkei`: latest = 2026-03-15 (16 days stale)
+- `idx_djia`: latest = 2026-03-16 (15 days stale)
+- `idx_sp500`: latest = 2026-03-15 (16 days stale)
+- Note: The non-prefixed versions (`nikkei225`, `djia`, `sp500`) are more current. The `idx_*` prefix series may be a parallel data path that stopped updating.
+
+### 17. TSX equity proxies stale
+- `cameco_uranium`: latest = 2026-03-18 (13 days stale)
+- `potash_nutrien`: latest = 2026-03-18 (13 days stale)
+- `sprott_uranium`: latest = 2026-03-18 (13 days stale)
+- `tsx`: latest = 2026-03-18 (13 days, but `tsx_composite` is current at 2026-03-31)
+
+### 18. Consumer pulse and word cloud empty in briefing
+- `consumer_pulse`: empty string (0 chars)
+- `word_cloud_topics`: empty array
+- `indicatorContextLines`: empty dict
+- These are expected briefing sections that are not populated.
+
+### 19. Commodity data quality issues in briefing
+- Rice shows day change of -99.0% and YoY of -99.2% -- likely a data error or unit mismatch
+- Platinum value is "$6" which is clearly wrong (should be ~$900-1000/oz)
+- Soybean Meal value ($315.00) and Palladium ($68) appear to be cross-contaminated or using wrong units
+
+### 20. 2,122 projects stuck at lastSeen = 2026-03-15
+- All from `government_backfill` discovery source
+- These have not been re-seen in 16 days
+- Heaviest provinces: AB (520), QC (399), ON (349), BC (344)
+- Not yet at the 30-day staleness threshold but approaching it
+- Some have suspect values (e.g., "Beacon Langdon AI Hub" at $100B, "Paul First Nation" building at $40B) suggesting extraction errors in value parsing
+
+### 21. Briefing missing DJIA and Nasdaq from indices
+- Only 4 indices shown: TSX, S&P 500, FTSE 100, DAX
+- Missing: DJIA, Nasdaq, Nikkei 225 (all have data in indicators.json)
 
 ---
 
 ## Filled This Run
-None. Automation mode: this run reports gaps only; targeted WebSearch remediation was skipped to keep the audit deterministic and non-blocking.
+- (none — audit only, no data refresh)
 
 ---
 
-## Info Notes (expected limitations, low-impact)
-- YT: missing CPI (YT_cpi) - territory
-- YT: missing Unemployment Rate (YT_unemployment) - territory
-- NT: missing CPI (NT_cpi) - territory
-- NT: missing Unemployment Rate (NT_unemployment) - territory
-- NU: missing CPI (NU_cpi) - territory
-- NU: missing Unemployment Rate (NU_unemployment) - territory
+## Coverage Summary
+
+| Metric | Value |
+|--------|-------|
+| **Provinces with full indicator sets (6 core types)** | 0/13 |
+| **Provinces with any indicators** | 9/13 (missing: NT, NU, PE, YT) |
+| **Province indicator depth** | QC: 15 types, ON: 8, rest: 2 each |
+| **Commodity prices current (7d) in timeseries** | 67/111 keys |
+| **Timeseries keys stale 8-30d** | 6/111 |
+| **Timeseries keys stale 30+d** | 38/111 |
+| **Projects total** | 7,372 |
+| **Projects seen in last 7 days** | 5,208 (71%) |
+| **Projects seen 8-16 days ago** | 2,164 (29%) |
+| **Projects seen 30+ days ago** | 0 |
+| **Policy items this week** | 1 (BC housing — Mar 27) |
+| **Policy items last 14 days** | 1 (acceptable but thin) |
+| **Briefing metrics populated** | 5/15 (33%) |
+| **Briefing province analyses populated** | 11/13 (ON, QC empty) |
+| **Yield curve complete** | Yes (6 terms: 2Y through Long) |
+| **GoC yields current** | Yes (all 2026-03-31) |
+| **National macro indicators current** | Yes (GDP, CPI, unemployment, housing starts, BoC rate all current) |
+| **Commodity timeseries (non-duplicate keys)** | ~35 commodities tracked |
+| **Industries analyzed in briefing** | 20/20 (5 goods + 15 services) |
+| **Global regions analyzed** | 4/4 (US, China, EU, UK) |
 
 ---
 
-## Pipeline Stop Conditions (advisory)
-**Automation mode: pipeline will PROCEED regardless of stop conditions.**
+## Priority Actions
 
-No stop conditions triggered.
-
----
-
-## Technical Notes
-- Report generated: 2026-04-11T05:38:43.742228+00:00
-- Agent: tldr-data-gap (Phase 0.5)
-- Audit scope: 13 provinces, 15 tracked commodities, 111 timeseries keys, 7427 projects
-- Critical gaps: 2
-- Warnings: 103
-- Info notes: 6
-- Gaps filled: 0
+1. **Fix Ontario/Quebec briefing** — Research agents need province-specific signals for ON and QC. These provinces have $377B in combined capital announcements this week per the executive summary, yet their province tabs are empty.
+2. **Add indicators for NT, NU, PE, YT** — StatCan publishes CPI and unemployment for all provinces including territories.
+3. **Fix trade data** — Either connect to StatCan 12-10-0129 for current trade figures or remove the 2003-era stubs.
+4. **Fix lumber timeseries** — Find replacement ticker or data source for lumber prices.
+5. **Pipe existing indicators into briefing metrics** — `employmentRate`, `participationRate`, and `wageGrowth` all have data but are not appearing in the briefing metrics object.
+6. **Add CAD/USD to briefing FX section** — Data exists in indicators.json but is not in the financial markets display.
+7. **Investigate commodity data quality** — Rice, Platinum, Palladium, Soybean Meal values in the briefing appear incorrect.
+8. **Update ECB rate and US GDP** — Both are significantly stale.
+9. **Refresh Ontario quarterly economic accounts** — Q3 2025 data should be available.
+10. **Consolidate duplicate indicator keys** — `cad_usd`/`cadusd`, `idx_*`/non-prefixed indices, `tsx`/`tsx_composite`.

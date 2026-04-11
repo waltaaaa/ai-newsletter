@@ -3,68 +3,55 @@
     {
       "name": "TSX Composite",
       "symbol": "^GSPTSE",
-      "value": "33,696",
-      "weekly_pct": "+5.51%",
-      "ytd_pct": "+1.74%",
-      "yoy_pct": "+42.85%",
-      "high_52w": "34,541",
-      "low_52w": "23,588",
-      "commentary": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at <strong>33,696</strong>, up <strong>5.51%</strong> on the week</span> — materials and energy-linked names led as copper rose <strong>3.9%</strong> to <strong>$5.87/lb</strong> and silver added <strong>1.91%</strong> to <strong>$76.32/oz</strong><sup>23</sup>. The index is up <strong>42.85%</strong> year-over-year and trades <strong>2.4%</strong> below its 52-week high of <strong>34,541</strong><sup>24</sup>. The database tracks <strong>362 mining projects ($159.5B)</strong> and <strong>61 oil and gas projects ($100.2B)</strong> linked to these price moves<sup>24</sup>.</p>"
+      "value": "32,427",
+      "weekly_pct": "-6.0% MTD",
+      "ytd_pct": "+28.2% YoY",
+      "yoy_pct": "+28.2%",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "commentary": "<p><span class=\"lead-sentence\"><strong>The TSX Composite closed at 32,427 on March 31</strong>, gaining 1.54% on the day as reports of potential US-Iran negotiations drove energy and risk-sensitive sectors higher.<sup>1</sup></span> The index declined approximately 6% over the full month of March, reflecting elevated uncertainty from Middle East supply disruption and the February employment loss of 84,000 jobs.<sup>2</sup> Energy sub-indices posted the largest monthly gains within the TSX, consistent with WTI crude's advance above $100/bbl, while materials underperformed amid gold's 14% monthly decline. The database tracks 727 Alberta projects — the province most directly exposed to TSX energy sector performance — and 364 mining projects with direct materials sector linkage.<sup>3</sup></p>"
     },
     {
       "name": "S&P 500",
       "symbol": "^GSPC",
-      "value": "6,817",
-      "weekly_pct": "+7.46%",
-      "ytd_pct": "+0.61%",
-      "yoy_pct": "+24.92%",
-      "high_52w": "6,979",
-      "low_52w": "5,276",
-      "commentary": "<p><span class=\"lead-sentence\">The S&P 500 closed at <strong>6,817</strong>, up <strong>7.46%</strong> on the week</span> — the index is up <strong>24.92%</strong> year-over-year and sits <strong>2.3%</strong> below its 52-week high of <strong>6,979</strong><sup>25</sup>.</p>"
+      "value": "6,496",
+      "weekly_pct": "+2.40% day",
+      "ytd_pct": "-9.4% from Jan peak",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "commentary": "<p><span class=\"lead-sentence\"><strong>The S&P 500 closed at approximately 6,496 on March 31</strong>, rising 2.40% on the day, though the index remained approximately 9.4% below its January 2026 peak on a closing basis.<sup>4</sup></span> March was characterized by elevated volatility driven by Middle East geopolitical developments and the Strait of Hormuz supply disruption; the March 31 advance followed reports that the US government is considering diplomatic resolution to the Iranian standoff.<sup>5</sup></p>"
     },
     {
       "name": "DJIA",
       "symbol": "^DJI",
-      "value": "47,917",
-      "weekly_pct": "",
-      "ytd_pct": "+1.05%",
-      "yoy_pct": "+18.0%",
-      "high_52w": "50,188",
-      "low_52w": "39,187",
-      "commentary": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average closed at <strong>47,917</strong>, up <strong>1.05%</strong> on the month</span> — the index is up <strong>18.0%</strong> year-over-year and trades <strong>4.5%</strong> below its 52-week high of <strong>50,188</strong><sup>25</sup>.</p>"
+      "value": "46,117",
+      "weekly_pct": "+2.0% day",
+      "ytd_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "commentary": "<p><span class=\"lead-sentence\"><strong>The Dow Jones Industrial Average closed at approximately 46,117 on March 31</strong>, advancing approximately 2.0% on the day alongside the broader US market rally.<sup>6</sup></span> Blue-chip industrials with Canadian supply chain exposure — including steel and energy equipment names — tracked the energy sector's advance as WTI moved above $100/bbl.</p>"
     },
     {
       "name": "Nasdaq Composite",
       "symbol": "^IXIC",
-      "value": "13,791",
-      "weekly_pct": "",
-      "ytd_pct": "-7.78%",
-      "yoy_pct": "+22.32%",
-      "high_52w": "23,958",
-      "low_52w": "16,300",
-      "commentary": "<p><span class=\"lead-sentence\">The Nasdaq Composite printed at <strong>13,791</strong>, down <strong>7.78%</strong> on the month</span> — the index is up <strong>22.32%</strong> year-over-year<sup>74</sup>.</p>"
+      "value": "21,469",
+      "weekly_pct": "+3.24% day",
+      "ytd_pct": "N/A",
+      "yoy_pct": "N/A",
+      "high_52w": "N/A",
+      "low_52w": "N/A",
+      "commentary": "<p><span class=\"lead-sentence\"><strong>The Nasdaq Composite closed at approximately 21,469 on March 31</strong>, the largest percentage advance among major US indices at 3.24% on the day.<sup>7</sup></span> Technology-linked names outperformed on the expectation that diplomatic resolution of the Hormuz crisis would reduce input cost pressure on data centre and grid electrification projects; the database tracks 18 telecom and data infrastructure projects in Canada with US market linkages.</p>"
     }
   ],
   "sources": [
-    {
-      "id": 23,
-      "title": "Trading Economics — S&P/TSX Composite index quote",
-      "url": "https://tradingeconomics.com/canada/stock-market"
-    },
-    {
-      "id": 24,
-      "title": "Globe and Mail — TSX Composite Index",
-      "url": "https://www.theglobeandmail.com/investing/markets/indices/TXCX/"
-    },
-    {
-      "id": 25,
-      "title": "CNBC — Stock market news for April 10, 2026",
-      "url": "https://www.cnbc.com/2026/04/10/stock-market-today-live-updates.html"
-    },
-    {
-      "id": 74,
-      "title": "Ad-Hoc-News — S&P 500 holds steady April 10, 2026",
-      "url": "https://www.ad-hoc-news.de/boerse/marktberichte/"
-    }
+    {"id": 1, "title": "Trading Economics — Canada Stock Market (TSX)", "url": "https://tradingeconomics.com/canada/stock-market"},
+    {"id": 2, "title": "BNN Bloomberg — TSX March 27", "url": "https://www.bnnbloomberg.ca/business/2026/03/27/sptsx-composite-positive-late-morning-friday-us-markets-moving-lower/"},
+    {"id": 3, "title": "Signal Dispatch Project Database — Alberta Projects", "url": ""},
+    {"id": 4, "title": "Trading Economics — US Stock Market", "url": "https://tradingeconomics.com/united-states/stock-market"},
+    {"id": 5, "title": "Wikipedia — 2026 Strait of Hormuz Crisis", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis"},
+    {"id": 6, "title": "CNBC — Dow Surges 600 Points, March 22", "url": "https://www.cnbc.com/2026/03/22/stock-market-today-live-updates.html"},
+    {"id": 7, "title": "Trading Economics — US Stock Market", "url": "https://tradingeconomics.com/united-states/stock-market"}
   ]
 }

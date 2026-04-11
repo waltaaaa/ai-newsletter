@@ -2,13 +2,13 @@
   "indicators": {
     "uranium_spot": {
       "description": "Uranium spot price proxy (URA ETF)",
-      "current": 50.96,
-      "week_ago": 48.9,
-      "month_ago": 51.36,
-      "year_ago": 21.62,
-      "pct_1w": 4.2,
-      "pct_1m": -0.8,
-      "pct_1y": 135.7,
+      "current": 46.86,
+      "week_ago": 48.19,
+      "month_ago": 56.45,
+      "year_ago": 21.88,
+      "pct_1w": -2.8,
+      "pct_1m": -17.0,
+      "pct_1y": 114.2,
       "affected_sectors": [
         "Mining & O&G",
         "Utilities"
@@ -42,13 +42,13 @@
     },
     "steel": {
       "description": "Steel price proxy (SLX ETF)",
-      "current": 98.57,
-      "week_ago": 92.49,
-      "month_ago": 92.98,
-      "year_ago": 55.92,
-      "pct_1w": 6.6,
-      "pct_1m": 6.0,
-      "pct_1y": 76.3,
+      "current": 90.13,
+      "week_ago": 89.08,
+      "month_ago": 100.54,
+      "year_ago": 60.54,
+      "pct_1w": 1.2,
+      "pct_1m": -10.4,
+      "pct_1y": 48.9,
       "affected_sectors": [
         "Construction",
         "Transportation"
@@ -58,13 +58,13 @@
     },
     "tsx_infrastructure": {
       "description": "Canadian infrastructure companies basket",
-      "current": 56.38,
-      "week_ago": 56.09,
-      "month_ago": 54.98,
-      "year_ago": 38.84,
-      "pct_1w": 0.5,
-      "pct_1m": 2.5,
-      "pct_1y": 45.2,
+      "current": 55.2,
+      "week_ago": 54.97,
+      "month_ago": 57.1,
+      "year_ago": 42.55,
+      "pct_1w": 0.4,
+      "pct_1m": -3.3,
+      "pct_1y": 29.8,
       "affected_sectors": [
         "Utilities",
         "Transportation"
@@ -74,13 +74,13 @@
     },
     "potash_nutrien": {
       "description": "Nutrien Ltd (potash/fertilizer)",
-      "current": 102.13,
-      "week_ago": 105.12,
-      "month_ago": 106.93,
-      "year_ago": 65.27,
-      "pct_1w": -2.8,
-      "pct_1m": -4.5,
-      "pct_1y": 56.5,
+      "current": 104.62,
+      "week_ago": 105.72,
+      "month_ago": 103.55,
+      "year_ago": 69.48,
+      "pct_1w": -1.0,
+      "pct_1m": 1.0,
+      "pct_1y": 50.6,
       "affected_sectors": [
         "Mining & O&G",
         "Agriculture"
@@ -93,13 +93,13 @@
     },
     "cameco_uranium": {
       "description": "Cameco Corp (uranium mining)",
-      "current": 160.73,
-      "week_ago": 156.5,
-      "month_ago": 156.74,
-      "year_ago": 54.01,
-      "pct_1w": 2.7,
-      "pct_1m": 2.5,
-      "pct_1y": 197.6,
+      "current": 147.75,
+      "week_ago": 148.62,
+      "month_ago": 171.91,
+      "year_ago": 59.13,
+      "pct_1w": -0.6,
+      "pct_1m": -14.1,
+      "pct_1y": 149.9,
       "affected_sectors": [
         "Mining & O&G",
         "Utilities"
@@ -112,13 +112,13 @@
     },
     "sprott_uranium": {
       "description": "Sprott Physical Uranium Trust (spot price proxy)",
-      "current": 27.72,
-      "week_ago": 28.26,
-      "month_ago": 27.05,
-      "year_ago": 18.89,
-      "pct_1w": -1.9,
-      "pct_1m": 2.5,
-      "pct_1y": 46.7,
+      "current": 27.55,
+      "week_ago": 26.63,
+      "month_ago": 28.63,
+      "year_ago": 20.54,
+      "pct_1w": 3.5,
+      "pct_1m": -3.8,
+      "pct_1y": 34.1,
       "affected_sectors": [
         "Mining & O&G",
         "Utilities"
@@ -131,5 +131,5 @@
       "relevance": "Closest free proxy for uranium spot price. TSX-listed. Tracks physical uranium holdings."
     }
   },
-  "updated_at": "2026-04-11T05:31:29.185016"
+  "updated_at": "2026-03-31T15:38:16.692054"
 }

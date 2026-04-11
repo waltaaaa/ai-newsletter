@@ -1,131 +1,33 @@
 {
   "fx": {
+    "fx_commentary": "<p><span class=\"lead-sentence\"><strong>The Canadian dollar closed at 0.7198 USD/CAD on March 31</strong>, declining 1.85% month-over-month to a two-month low as geopolitical uncertainty drove safe-haven demand for the US dollar.<sup>1</sup></span> The USD/CAD rate moved to 1.3893, reflecting a widening differential between the Bank of Canada's overnight rate of 2.25% and the US Federal Reserve's target rate of 4.25-4.50% — a spread of approximately 200-225 basis points favoring the US dollar.<sup>2</sup><sup>3</sup> The euro strengthened to 1.1460 against the US dollar as European markets repriced geopolitical risk premiums; this EUR/USD level reflects a divergence between the ECB's rate path and US monetary policy expectations.<sup>4</sup> If the CAD/USD rate holds near 0.72, the database's 49 export-exposed manufacturing projects would face elevated input cost pressure from US dollar-denominated material costs, while energy exporters would see higher CAD-denominated revenues from US-dollar-priced crude.<sup>5</sup></p>",
     "pairs": [
-      {
-        "name": "CAD/USD",
-        "value": "0.7200",
-        "weekly_pct": "0.0%",
-        "mom_pct": "n/a",
-        "yoy_pct": "n/a"
-      },
-      {
-        "name": "USD/CAD",
-        "value": "1.3832",
-        "weekly_pct": "0.0%",
-        "mom_pct": "n/a",
-        "yoy_pct": "n/a"
-      },
-      {
-        "name": "EUR/USD",
-        "value": "1.1460",
-        "weekly_pct": "n/a",
-        "mom_pct": "n/a",
-        "yoy_pct": "+2.65%"
-      },
-      {
-        "name": "USD/JPY",
-        "value": "159.24",
-        "weekly_pct": "-0.29%",
-        "mom_pct": "n/a",
-        "yoy_pct": "+10.78%"
-      },
-      {
-        "name": "USD/CNY",
-        "value": "6.83",
-        "weekly_pct": "0.0%",
-        "mom_pct": "n/a",
-        "yoy_pct": "-6.57%"
-      }
-    ],
-    "boc_rate": "2.25%",
-    "fed_rate": "3.50-3.75%",
-    "rate_differential_bp": 125,
-    "fx_commentary": "<p><span class=\"lead-sentence\">The Canadian dollar traded at <strong>0.7200 CAD/USD</strong> (<strong>1.3832 USD/CAD</strong>), flat on the week</span> — the Bank of Canada overnight rate of <strong>2.25%</strong> sits <strong>125 basis points</strong> below the Federal Reserve's <strong>3.50-3.75%</strong> target<sup>1</sup>. EUR/USD traded at <strong>1.1460</strong>; USD/JPY at <strong>159.24</strong>, down <strong>0.29%</strong> on the week<sup>3</sup>. The database tracks trade-exposed manufacturing and resource projects<sup>6</sup>.</p>"
+      {"name": "CAD/USD", "value": "0.7198", "weekly_pct": "-1.85% M/M", "mom_pct": "-1.85%", "yoy_pct": ""},
+      {"name": "USD/CAD", "value": "1.3893", "weekly_pct": "", "mom_pct": "", "yoy_pct": ""},
+      {"name": "EUR/USD", "value": "1.1460", "weekly_pct": "", "mom_pct": "", "yoy_pct": ""}
+    ]
   },
   "yieldCurve": {
+    "yield_commentary": "<p><span class=\"lead-sentence\"><strong>The Government of Canada yield curve maintained a normal (upward-sloping) shape through the week of March 24-30</strong>, with the 2-year/10-year spread at 63 basis points — wider than the 60 basis point spread recorded a year ago.<sup>6</sup></span> The 2-year yield closed at 2.95%, up 33 basis points from 2.62% a year ago, while the 10-year yield closed at 3.58%, up 36 basis points from 3.22% a year ago, reflecting higher term premiums associated with elevated federal government debt issuance and geopolitical uncertainty.<sup>7</sup> The 30-year yield closed at 3.94%, up 41 basis points from 3.53% a year ago. If the current long-end yield environment persists, the database's 1,034 under-construction projects — which depend on long-term financing rates for project completion — would face funding costs at the higher end of their feasibility study assumptions.<sup>8</sup></p>",
     "tenors": [
-      {
-        "tenor": "3M",
-        "current": null,
-        "year_ago": null,
-        "change_bp": null,
-        "note": "Not available in this week's dossier_macro.json yieldCurve data (terms cover 2Y/3Y/5Y/7Y/10Y/30Y)."
-      },
-      {
-        "tenor": "1Y",
-        "current": null,
-        "year_ago": null,
-        "change_bp": null,
-        "note": "Not available in this week's dossier_macro.json yieldCurve data (terms cover 2Y/3Y/5Y/7Y/10Y/30Y)."
-      },
-      {
-        "tenor": "2Y",
-        "current": "2.79%",
-        "year_ago": "3.07%",
-        "change_bp": -28
-      },
-      {
-        "tenor": "5Y",
-        "current": "3.04%",
-        "year_ago": "3.20%",
-        "change_bp": -16
-      },
-      {
-        "tenor": "10Y",
-        "current": "3.46%",
-        "year_ago": "3.60%",
-        "change_bp": -14
-      },
-      {
-        "tenor": "20Y",
-        "current": null,
-        "year_ago": null,
-        "change_bp": null,
-        "note": "Not available in this week's dossier_macro.json yieldCurve data (terms cover 2Y/3Y/5Y/7Y/10Y/30Y)."
-      },
-      {
-        "tenor": "30Y",
-        "current": "3.89%",
-        "year_ago": "4.05%",
-        "change_bp": -16
-      }
+      {"term": "2Y", "yield": "2.95%", "year_ago": "2.62%", "change_bps": "+33", "highlight": true},
+      {"term": "3Y", "yield": "3.01%", "year_ago": "2.64%", "change_bps": "+37", "highlight": false},
+      {"term": "5Y", "yield": "3.18%", "year_ago": "2.81%", "change_bps": "+37", "highlight": false},
+      {"term": "7Y", "yield": "3.36%", "year_ago": "3.00%", "change_bps": "+36", "highlight": false},
+      {"term": "10Y", "yield": "3.58%", "year_ago": "3.22%", "change_bps": "+36", "highlight": true},
+      {"term": "30Y", "yield": "3.94%", "year_ago": "3.53%", "change_bps": "+41", "highlight": false}
     ],
-    "spread_2_10": "67bp",
-    "spread_2_10_prior_week": "n/a",
-    "curve_shape": "normal",
-    "boc_rate": "2.25%",
-    "yield_commentary": "<p><span class=\"lead-sentence\">The Government of Canada yield curve held a normal shape with the 2-10 year spread at <strong>67 basis points</strong></span> — the 2-year sits at <strong>2.79%</strong>, the 5-year at <strong>3.04%</strong>, the 10-year at <strong>3.46%</strong>, and the 30-year at <strong>3.89%</strong><sup>3</sup>. Year-over-year, the 2-year is down <strong>28 basis points</strong> from <strong>3.07%</strong>, the 10-year down <strong>14 basis points</strong> from <strong>3.60%</strong><sup>3</sup>. Bank of Canada data for the 3-month, 1-year, and 20-year tenors is not available in this week's dossier<sup>3</sup>. The database tracks rate-sensitive projects across infrastructure, residential, and energy segments<sup>6</sup>.</p>"
+    "spread_2_10": "+63bps",
+    "curve_shape": "normal"
   },
   "sources": [
-    {
-      "id": 1,
-      "title": "Bank of Canada — Policy rate statement, March 18, 2026",
-      "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/"
-    },
-    {
-      "id": 2,
-      "title": "Federal Reserve — FOMC statement, March 18, 2026",
-      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm"
-    },
-    {
-      "id": 3,
-      "title": "Bank of Canada — Selected bond yields",
-      "url": "https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/"
-    },
-    {
-      "id": 4,
-      "title": "Bank of Canada — Policy interest rate calendar",
-      "url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
-    },
-    {
-      "id": 5,
-      "title": "Yahoo Finance — FX pairs",
-      "url": "https://finance.yahoo.com/currencies/"
-    },
-    {
-      "id": 6,
-      "title": "The Lagging Indicator — internal project database",
-      "url": "https://walterlabs.github.io/canada-macro-dashboard/"
-    }
+    {"id": 1, "title": "Trading Economics — Canadian Dollar", "url": "https://tradingeconomics.com/canada/currency"},
+    {"id": 2, "title": "Bank of Canada — March 18, 2026 Rate Decision", "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18"},
+    {"id": 3, "title": "Federal Reserve — March 18 Implementation Note", "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a1.htm"},
+    {"id": 4, "title": "Exchange Rates — EUR/USD 2026 History", "url": "https://www.exchangerates.org.uk/EUR-USD-spot-exchange-rates-history-2026.html"},
+    {"id": 5, "title": "Signal Dispatch Project Database — Manufacturing Projects", "url": ""},
+    {"id": 6, "title": "Bank of Canada — Policy Interest Rate", "url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"},
+    {"id": 7, "title": "Federal Reserve — H.10 Foreign Exchange Rates, March 30, 2026", "url": "https://www.federalreserve.gov/releases/h10/hist/dat00_eu.htm"},
+    {"id": 8, "title": "Signal Dispatch Project Database — Under Construction", "url": ""}
   ]
 }

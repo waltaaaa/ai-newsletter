@@ -1,90 +1,6 @@
 {
   "weeks": [
     {
-      "week_of": "2026-04-11",
-      "summary": {
-        "total_items": 3,
-        "by_category": {
-          "housing": 2,
-          "infrastructure_funding": 2,
-          "trade_policy": 1
-        },
-        "by_province": {
-          "BC": 3
-        },
-        "by_level": {
-          "provincial": 3
-        },
-        "top_developments": [
-          {
-            "title": "Minister’s statement on March 2026 housing highlights",
-            "source_type": "policy_announcement",
-            "categories": [
-              "housing",
-              "infrastructure_funding"
-            ],
-            "affected_sectors": [
-              "transport_logistics",
-              "residential",
-              "telecom",
-              "infrastructure"
-            ],
-            "affected_projects_total": 114,
-            "affected_projects_value": 0,
-            "province": "BC",
-            "level": "provincial",
-            "summary": "Christine Boyle, Minister of Housing and Municipal Affairs, has released the following statement on government’s housing highlights for March 2026:",
-            "date": "Fri, 10 Apr 2026 11:30:00 -0700",
-            "source_description": "BC Government News",
-            "url": "https://news.gov.bc.ca/releases/2026HMA0042-000398"
-          },
-          {
-            "title": "Minister’s statement about administrative review results on Canadian softwood lumber duty",
-            "source_type": "policy_announcement",
-            "categories": [
-              "trade_policy"
-            ],
-            "affected_sectors": [
-              "oil_gas",
-              "forestry",
-              "manufacturing",
-              "agriculture"
-            ],
-            "affected_projects_total": 21,
-            "affected_projects_value": 0,
-            "province": "BC",
-            "level": "provincial",
-            "summary": "Ravi Parmar, Minister of Forests, has issued the following statement in response to the U.S. Department of Commerce’s release of preliminary results of the seventh administrative review of its anti-dumping and countervailing duty orders on Canadian softwood lumber:",
-            "date": "Thu, 09 Apr 2026 17:22:00 -0700",
-            "source_description": "BC Government News",
-            "url": "https://news.gov.bc.ca/releases/2026FOR0011-000394"
-          },
-          {
-            "title": "Minister’s statement on April 2026 rental report",
-            "source_type": "policy_announcement",
-            "categories": [
-              "housing",
-              "infrastructure_funding"
-            ],
-            "affected_sectors": [
-              "transport_logistics",
-              "residential",
-              "telecom",
-              "infrastructure"
-            ],
-            "affected_projects_total": 114,
-            "affected_projects_value": 0,
-            "province": "BC",
-            "level": "provincial",
-            "summary": "Christine Boyle, Minister of Housing and Municipal Affairs, has issued the following statement:",
-            "date": "Thu, 09 Apr 2026 13:23:00 -0700",
-            "source_description": "BC Government News",
-            "url": "https://news.gov.bc.ca/releases/2026HMA0039-000390"
-          }
-        ]
-      }
-    },
-    {
       "week_of": "2026-03-31",
       "summary": {
         "total_items": 1,
@@ -187,5 +103,5 @@
       }
     }
   ],
-  "last_updated": "2026-04-11T06:43:24.818205+00:00"
+  "last_updated": "2026-04-01T02:24:24.115300+00:00"
 }

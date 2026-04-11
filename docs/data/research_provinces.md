@@ -1,498 +1,288 @@
-# Provincial Research — Week Ending April 11, 2026
+# Provincial Research — Week Ending March 31, 2026
 
 **Agent 1B — Provincial Researcher**
-**Research date:** 2026-04-11
-**Briefing week_of:** 2026-04-11
-**Data vintage:** StatsCan Labour Force Survey March 2026 (released April 10, 2026); StatsCan CPI February 2026 (released March 18, 2026) — March CPI scheduled for April 20; CMHC Housing Starts February 2026 (released March 17, 2026).
-**Provinces covered:** All 13 provinces + 3 territories (16 total)
-**Search waves:** File ingestion (indicators.json, projects_all.json, events.json, policy.json, iaac.json, data_gap_report.md) + prior-week research_provinces.md continuity check.
+**Research date:** 2026-03-31
+**Data vintage:** StatsCan Labour Force Survey February 2026 (released March 13); CPI February 2026 (released March 16); CMHC Housing Starts February 2026 (released March 16). March 2026 LFS scheduled for April 10; March CPI scheduled for April 20.
 
 ---
 
-## 1. Data Quality Audit
+## Ontario
 
-### Provincial Indicator Coverage (core indicators: CPI, unemployment, housing starts, participation rate, employment rate)
-| Province | Core Indicators | Projects in DB | Latest Update | Status |
-|----------|-----------------|----------------|----------------|--------|
-| ON | 6 (CPI, UE, ER, PR, HS, GDP) + 6 ON-series | 661 | 2026-04-11 | OK |
-| QC | 6 + 11 QC-series (incl. manufacturing, retail, permits) | 502 | 2026-04-11 | OK |
-| AB | 6 | 739 | 2026-04-11 | OK |
-| BC | 6 | 658 | 2026-04-11 | OK |
-| SK | 6 | 221 | 2026-04-11 | OK |
-| MB | 6 | 2063 | 2026-04-11 | OK |
-| NS | 6 | 337 | 2026-04-11 | OK |
-| NB | 6 | 208 | 2026-04-11 | OK |
-| NL | 6 | 1560 | 2026-04-11 | OK |
-| PE | 6 (CPI, UE present after March 2026 LFS) | 98 | 2026-04-11 | OK |
-| YT | 2 (Unemployment, GDP — no CPI, territory limitation) | 125 | 2026-02-01 | PARTIAL |
-| NT | 2 (Unemployment, GDP — no CPI, territory limitation) | 188 | 2026-02-01 | PARTIAL |
-| NU | 2 (Unemployment, GDP — no CPI, territory limitation) | 57 | 2026-02-01 | PARTIAL |
+**Indicators (February 2026):**
+- Unemployment rate: 7.6% (+0.3pp from January). Source: [StatsCan LFS February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- CPI index: 173.0 (2002=100). National headline CPI decelerated to 1.8% y/y in February from 2.3% in January; Ontario HST provinces were more impacted by the base-year effect from the 2025 GST holiday. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260316/dq260316a-eng.htm)
+- Employment: Little changed in February after national employment declined 84,000. Ontario's unemployment rate rose 0.3pp. Source: StatsCan LFS
+- Housing starts (Toronto CMA): Down 28% year-over-year in February 2026 due to lower multi-unit and single-detached starts. Source: [CMHC February 2026](https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-february-2026)
 
-### Critical Gaps (per data_gap_report.md, 2026-04-11)
-- PE missing StatsCan CPI and Unemployment in the legacy prefixed keys (PE_cpi, PE_unemployment), but March 2026 LFS has delivered full Prince Edward Island unemployment (7.3%) and Feb CPI (+5.4% y/y) under the full-province-name key set. Report accordingly.
-- YT/NT/NU lack monthly CPI from StatCan consumer price survey (expected territory limitation — monthly LFS provides only unemployment; CPI is published territorially only as Whitehorse, Yellowknife, Iqaluit city indexes).
-- Provincial CPI and unemployment under prefixed keys (ON_cpi, ON_unemployment, etc.) show period 2026-02-01 (69 days old). The 2026-04-11 full-name dataset (e.g., "Ontario": unemployment +7.6%, cpi -1.1%) reflects March 2026 LFS release.
+**Budget 2026 (released March 26, 2026):**
+- Projected deficit: $13.8 billion for 2026-27, with spending of $244.2 billion against revenues of $231.9 billion. Source: [Ontario Budget 2026](https://budget.ontario.ca/2026/contents.html)
+- Ontario's real GDP grew 1.2% in 2025, exceeding the previously projected 0.8%. Source: [Globe and Mail](https://www.theglobeandmail.com/canada/article-ontario-budget-2026-138-billion-deficit-economy-trade-tariffs/)
+- Small business corporate income tax cut from 3.2% to 2.2%, estimated to provide $1.1 billion in relief to 375,000+ small businesses over three years. Source: [OCC Rapid Policy Update](https://occ.ca/rapidpolicy/2026-ontario-provincial-budget/)
+- $4 billion Protect Ontario Account Investment Fund targeting AI, defence, advanced manufacturing, and life sciences. Additional $600 million for Invest Ontario Fund. Source: Ontario Budget 2026
+- Temporary HST rebate for new homes estimated to provide $2.2 billion in joint tax relief and spur 8,000 housing starts. Source: [CP24](https://www.cp24.com/local/toronto/2026/03/26/ontario-reveals-2026-budget-heres-how-it-could-affect-your-pocketbook/)
 
----
-
-## 2. Provincial Spotlights (ALL 13 PROVINCES + 3 TERRITORIES)
-
-### Ontario
-
-**Top story:** The Eglinton Crosstown LRT opened February 2026, delivering 19 km of rapid transit with 10 km underground. Ontario's 2026 Budget released March 26, 2026, projected a $13.8 billion deficit for 2026-27 with $244.2 billion in planned spending. Source: [Ontario Budget 2026](https://budget.ontario.ca/2026/contents.html); [CP24 2026 Budget recap](https://www.cp24.com/local/toronto/2026/03/26/ontario-reveals-2026-budget-heres-how-it-could-affect-your-pocketbook/); [MNP Ontario 2026 Budget Highlights](https://www.mnp.ca/en/insights/directory/ontario-2026-budget-highlights); [Hicks Morley 2026 Ontario Budget](https://hicksmorley.com/2026/03/27/highlights-of-the-2026-ontario-budget/).
-
-**Key indicators (March 2026 LFS, released April 10):**
-- Unemployment rate: 7.6% (unchanged m/m). Source: [StatsCan Labour Force Survey, March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 59.6% (−0.1pp m/m). Participation rate: 64.6% (unchanged).
-- CPI: −1.1% y/y (February 2026), from −1.6% in January. Ontario is the only jurisdiction posting negative headline CPI; HST provinces bear the largest base-year impact from the 2025 GST holiday. Source: [StatsCan Consumer Price Index, February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Housing starts: 67,274 (Ontario, Feb 2026 SAAR) vs 65,757 previous. Source: [CMHC Housing Market Information Portal](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- Real GDP growth: +1.2% (2024, provincial accounts). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
-
-**Project activity:** 661 tracked projects. Top pipeline by value includes Highway 413 and Bradford Bypass ($31.00B, Under Construction), Ontario Line ($27.43B, Under Construction), GO Expansion ($26.08B, Under Construction), Adaptive Phased Management Deep Geological Repository ($26.00B, Proposed), and Bruce Nuclear Refurbishment ($13.00B, Under Construction). New IAAC Under Review entries this period: Canadian Armed Forces Training Area (CAFTA) Winona Range upgrades and the New Nuclear at Wesleyville Project (a prospective SMR/large reactor site east of Port Hope). Sources: [Canadian Impact Assessment Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA); Ontario Budget 2026 (chapter 1B).
-
-**Policy developments:** Ontario Budget 2026 capital plan covers $210 billion over 10 years, including $37 billion in 2026-27. Small-business corporate tax rate reduced from 3.2% to 2.2%. $4 billion Protect Ontario Account Investment Fund targets AI, defence, advanced manufacturing, and life sciences. A temporary HST rebate for new homes is costed at $2.2 billion in joint tax relief. Sources: [Ontario Budget 2026 chapter 1B](https://budget.ontario.ca/2026/chapter-1b-building.html); [OCC Rapid Policy 2026 Ontario Budget](https://occ.ca/rapidpolicy/2026-ontario-provincial-budget/).
-
-**Labour trends:** Ontario's 7.6% unemployment rate remains the highest of the big-four provinces (ON, QC, AB, BC). Toronto CMA unemployment hovered around 8.5% in the March 2026 LFS.
-
-**IAAC status:** 26 Ontario projects in federal assessment registry. Notable: CAFTA Winona Range Upgrades; New Nuclear at Wesleyville Project (Clean Energy). Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Procurement:** procurement.json recorded 0 contracts for the week_of 2026-04-11. Federal and provincial contract feeds produced no awards ≥$5M during the sample window.
+**Capital Projects:**
+- 10-year provincial capital plan totalling $210 billion, including $37 billion in 2026-27. Source: [Ontario Budget Chapter 1B](https://budget.ontario.ca/2026/chapter-1b-building.html)
+- Highway 413: Construction started on the 52-km 400-series highway. 2026 work focuses on Bovaird Drive and Highway 10 underpasses. Source: Ontario Budget
+- Highway 401 tunnel feasibility study: Fieldwork starting spring 2026 examining tunnelling options for congestion relief. Source: Ontario Budget
+- QEW Garden City Skyway Bridge Twinning: New bridge over Welland Canal, advance works commenced winter 2026. Source: Ontario Budget
+- Eglinton Crosstown LRT: Opened February 2026, delivering 19 km of rapid transit (10 km underground). Source: [Ontario Construction News](https://ontarioconstructionnews.com/toronto-launches-2026-budget-with-63-1b-capital-plan-focused-on-infrastructure-housing-and-transit)
+- $64 billion in health infrastructure over 10 years, supporting 50 hospital projects and 3,000 new beds. Source: Ontario Budget
 
 ---
 
-### Quebec
+## Quebec
 
-**Top story:** Quebec's 2026-27 Budget (released March 25, 2026) outlined an $8.6 billion deficit for 2026-27 and added $5 billion to the 10-year capital plan, bringing it to $167 billion. $1.7 billion was allocated over five years for economic transformation, including $480 million for critical and strategic minerals. Sources: [Quebec 2026-27 Budget Speech (PDF)](https://www.finances.gouv.qc.ca/Budget_and_update/budget/documents/Budget2627_BudgetSpeech.pdf); [KPMG 2026 Quebec Budget Highlights](https://kpmg.com/ca/en/insights/2026/03/highlights-of-the-2026-quebec-budget.html); [Quebec Gov press release](https://www.quebec.ca/en/news/actualites/detail/budget-2026-2027-press-release-no-3-of-3-more-than-17-billion-to-accelerate-quebecs-economic-transformation-69185).
+**Indicators (February 2026):**
+- Unemployment rate: 5.9% (+0.7pp from January). Source: [StatsCan LFS February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- CPI index: 94.4 (provincial basket). Source: StatsCan CPI
+- Employment: Declined 57,000 (-1.2%) in February. Source: StatsCan LFS
+- Quebec employment level: 4,612,400 (February 2026). Source: StatsCan
+- Housing starts (Montreal CMA): Up 18% year-over-year in February 2026, driven by higher multi-unit and single-detached starts. Source: [CMHC February 2026](https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-february-2026)
+- Building permits: Residential $25.87B, non-residential $10.27B (January 2026). Source: dashboard indicators.json
 
-**Key indicators (March 2026 LFS):**
-- Unemployment rate: 5.4% (−0.5pp from 5.9%). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 60.9% (+0.2pp). Participation: 64.4% (−0.1pp).
-- CPI: +0.6% y/y (Feb 2026), from +0.7% previous. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Provincial real GDP: $487,223M (2025 Q3). Manufacturing sales: $224,427.64M (Jan 2026). Retail sales: $190,191.25M (Jan 2026). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201); [Table 16-10-0048-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004801)
-- Housing starts: 53,461 (Feb 2026 SAAR) vs 51,982 previous. Building permits Jan 2026: residential $25.87B, non-residential $10.27B. Source: [CMHC](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- International exports Dec 2025: $89,038M; international imports Dec 2025: $99,921M. Source: [StatsCan Table 12-10-0176-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1210017601)
+**Budget 2026-27 (released March 18, 2026):**
+- Projected deficit: $8.6 billion for 2026-27, $5.7 billion for 2027-28, $1.5 billion for 2028-29. Source: [ConstructConnect](https://canada.constructconnect.com/dcn/news/government/2026/03/quebec-projects-8-6b-deficit-in-budget-that-focuses-on-funding-core-services)
+- GDP growth: 0.8% in 2025; projected 1.1% in 2026 under stable tariff assumptions. If the U.S. exits the North American free-trade agreement, GDP projected to contract 0.2% in 2026. Source: [KPMG](https://kpmg.com/ca/en/insights/2026/03/highlights-of-the-2026-quebec-budget.html)
+- Additional $5 billion over six years for infrastructure, bringing 10-year capital plan to $167 billion. Source: Quebec Budget
+- $1.7 billion over five years to accelerate economic transformation, including $480 million for critical/strategic minerals and cultural content. Source: [Quebec Government](https://www.quebec.ca/en/news/actualites/detail/budget-2026-2027-press-release-no-3-of-3-more-than-17-billion-to-accelerate-quebecs-economic-transformation-69185)
 
-**Project activity:** 502 tracked projects, $89.6B pipeline. Largest: Parc éolien zone Chamouchouane ($9.00B, Proposed), Quebec Transport Infrastructure Investment Plan 2026-2028 ($8.00B), Revised Montreal Metro Blue Line Extension ($4.89B, Under Construction), green hydrogen production plant ($4.00B, Under Review), Québec City Tramway TramCité ($3.76B, Under Construction). Sector mix: education (118), infrastructure (103), other (50). Source: projects_quebec.json (7-day ingestion window).
-
-**Policy developments:** Quebec GDP projections: 0.8% (2025), +1.1% (2026 baseline, stable-tariff scenario); −0.2% in 2026 if U.S. exits USMCA. Source: [KPMG 2026 Quebec Budget Highlights](https://kpmg.com/ca/en/insights/2026/03/highlights-of-the-2026-quebec-budget.html).
-
-**Labour trends:** Quebec posted the largest unemployment-rate decline of the big provinces in March (−0.5pp), bringing the rate to 5.4% — the lowest of the four largest provinces.
-
-**IAAC status:** 13 Quebec projects in registry. New Under Review: Leamy Creek Pathway Re-Naturalization (Gatineau); YUL Montreal-Trudeau Airport Weather Station installation (sector: ports & logistics); Closure of M Bridge and floating boardwalk at Wapizagonke (La Mauricie). Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Procurement:** No weekly contracts ≥$5M registered in procurement.json for the week_of 2026-04-11.
+**Capital Projects:**
+- REM (Reseau express metropolitain): A3 branch to West Island opening Q2 2026; A2 branch to Montreal-Trudeau International Airport opening 2027. 19 stations operational across 50 km on A1 and A4 branches. Source: [REM](https://rem.info/en)
+- Quebec City Tramway (TramCite): In March 2026, consortia Tram Alliance and Quebec Connexion Capitale selected as preferred bidders for two major contracts. Construction active on 5 km span between Universite Laval and Grand Theatre. Operations scheduled for 2033. Source: [CBC](https://www.cbc.ca/news/canada/montreal/tramway-construction-quebec-city-9.7062798)
 
 ---
 
-### Alberta
+## Alberta
 
-**Top story:** Alberta Budget 2026 (released February 27, 2026) implemented a new 8% income tax bracket on the first $60,000 of taxable income and projected a deficit for 2026-27 on weaker oil-royalty assumptions. The budget tabled a $28.3B capital plan over three years. Sources: [Alberta Budget Highlights](https://www.alberta.ca/budget-highlights); [Raymond James 2026 Alberta Budget Highlights](https://www.raymondjames.ca/commentary-and-insights/tax-planning/2026/03/02/2026-ab-budget-highlights); [Calgary Chamber 2026 Budget submission](https://calgarychamber.com/whats-new/submission-2026-alberta-budget-policy/).
+**Indicators (February 2026):**
+- Unemployment rate: 6.3% (February 2026). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- CPI index: 202.1 (2002=100). Source: StatsCan CPI
+- WTI forecast: US$60/bbl (Alberta government 2026 forecast), versus private market average of US$58. Source: [Globe and Mail](https://www.theglobeandmail.com/business/article-alberta-budget-2026-oil-prices-energy-forecast-deficit/)
 
-**Key indicators (March 2026 LFS):**
-- Unemployment rate: 6.5% (+0.2pp from 6.3%). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 64.4% (unchanged). Participation rate: 68.9% (+0.2pp, highest in Canada).
-- CPI: +3.4% y/y (Feb 2026), from +4.9% previous — largest provincial decline. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Housing starts: 48,438 (Feb 2026 SAAR) vs 48,896 previous. Source: [CMHC Housing Data](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- Real GDP growth: +2.7% (2024). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
+**Budget 2026 (released March 2026):**
+- Projected deficit: $9.4 billion in 2026-27, more than double the $4.1 billion shortfall estimated for 2025-26. Source: [Globe and Mail](https://www.theglobeandmail.com/canada/alberta/article-alberta-budget-2026-deficit-oil-prices-education-health-breakdown/)
+- Non-renewable resource revenue: $13.2 billion in 2026-27, down $8.8 billion from 2024-25 and $3.1 billion below previous forecast. Oil sands royalties estimated at $9.7 billion; conventional oil at $2.1 billion. Source: [RBC Economics](https://www.rbc.com/en/economics/canadian-analysis/provincial-and-fiscal-outlooks/provincial-budgets-and-economic-statements/alberta-budget-2026-lower-resource-royalties-take-a-heavy-toll/)
+- 3-year capital plan: $28.3 billion ($2.2 billion more than Budget 2025). Allocations: $7.1 billion municipal infrastructure, $4.9 billion health system capacity, $3.3 billion schools, $2.7 billion highways/bridges, $4.2 billion capital maintenance. Source: [Enterprise Canada](https://enterprisecanada.com/ab-budget-2026/)
 
-**Project activity:** 739 tracked projects, $349.6B pipeline (second-largest province pipeline behind BC). Top value: Alberta Budget 2026 Capital Plan ($28.30B, Proposed), Telus Infrastructure Upgrades province-wide 2023-2027 ($19.00B, Under Construction), Pathways Alliance Carbon Capture and Storage ($16.50B, Proposed), AOSP Jackpine ($12.00B, Approved). Sector mix concentrated in power/energy (124), government (146), and infrastructure (113). Source: projects_alberta.json.
-
-**Policy developments:** Alberta Budget 2026 committed to fixed-term mortgage-rule alignment and construction-labour capacity funding. Calgary Chamber submitted a pre-budget requesting increases to skilled-trades training allocations and industrial carbon pricing clarity. Source: [Calgary Chamber submission](https://calgarychamber.com/whats-new/submission-2026-alberta-budget-policy/).
-
-**Labour trends:** Alberta's participation rate (68.9%) remains the highest in Canada. The 0.2pp uptick in unemployment contrasts with prairie neighbours SK (−0.6pp) and MB (−0.1pp).
-
-**IAAC status:** 24 Alberta projects in registry — second only to Ontario. New Under Review: APEX Utilities Opasikoniwew Housing Authority Hoole Creek Road Subdivision Phase 2 Gasification; Tsuut'ina Bullhead Road Sewer Line; Mînî Thnî Lift Station. Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Procurement:** None ≥$5M in procurement.json for the week_of 2026-04-11.
+**Capital Projects:**
+- Trans Mountain pipeline: Operating at or near full capacity. First expansion project underway using drag reducing agents (DRA) to increase throughput 10% (~90,000 bbl/d). Full capacity expansion readied for 2027. Source: [CBC](https://www.cbc.ca/news/canada/calgary/bakx-tmx-trans-mountain-oil-pipeline-full-ceraweek-9.7142587)
+- Dow Fort Saskatchewan complex: $11.6 billion petrochemical facility, 2024-2029 construction timeline. Source: Alberta Major Projects
+- Alberta greenlighted $900 million borrowing authority for provincial oil and gas agency for potential new pipeline to northern BC coast. Source: [CBC](https://www.cbc.ca/news/canada/calgary/alberta-apmc-borrowing-authority-bc-pipeline-9.7063374)
 
 ---
 
-### British Columbia
+## British Columbia
 
-**Top story:** BC Minister of Forests Ravi Parmar issued a statement on April 9, 2026, responding to preliminary results of the U.S. Department of Commerce's seventh administrative review of anti-dumping and countervailing duty orders on Canadian softwood lumber. BC Minister of Housing Christine Boyle released statements April 10 on the March 2026 housing highlights and April 9 on the April 2026 rental report. Sources: [BC Government News Forests — 2026FOR0011-000394](https://news.gov.bc.ca/releases/2026FOR0011-000394); [BC Government News Housing — 2026HMA0042-000398](https://news.gov.bc.ca/releases/2026HMA0042-000398); [BC Government News Housing — 2026HMA0039-000390](https://news.gov.bc.ca/releases/2026HMA0039-000390).
+**Indicators (February 2026):**
+- Unemployment rate: 6.1% (unchanged from January). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- CPI index: 160.2 (2002=100). Source: StatsCan CPI
+- Employment: Declined 20,000 (-0.7%) in February. Source: StatsCan LFS
+- Housing starts (Vancouver CMA): Up 60% year-over-year in February 2026. Source: [CMHC](https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-february-2026)
+- GDP growth forecast: 1.3% in 2026, 1.8% in 2027. Source: [TD Economics](https://economics.td.com/british-columbia-budget)
 
-**Key indicators (March 2026 LFS):**
-- Unemployment rate: 6.7% (+0.6pp from 6.1% — largest provincial increase this month). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 60.1% (−0.4pp). Participation rate: 64.4% (unchanged).
-- CPI: +1.0% y/y (Feb 2026), from +1.3% previous. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Housing starts: 41,331 (Feb 2026 SAAR) vs 41,492 previous. Source: [CMHC Housing Data](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- Real GDP growth: +1.2% (2024). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
+**Budget 2026 (released February 2026):**
+- Projected deficit: $13.3 billion (largest in BC history), followed by $12.2 billion and $11.4 billion over the fiscal plan. Source: [BC Budget Highlights](https://www.bcbudget.gov.bc.ca/2026/highlights/)
+- Government spending increased $3.9 billion. Source: BC Budget
+- Housing strategy slowed: $1.4 billion reallocated from housing over three years; Community Housing Fund closed indefinitely. Source: [Storeys](https://storeys.com/bc-budget-2026-developers-reeling/)
+- New federal-provincial partnership: $170 million federal capital + up to $200 million provincial capital for 700+ supportive and transitional homes. Source: [BC Government](https://news.gov.bc.ca/releases/2026HMA0017-000165)
+- Nearly $38 billion in capital projects including 17 major hospitals, Broadway Subway, Surrey Langley Skytrain, 66 K-12 school projects, and 3,900 post-secondary student housing beds. Source: BC Budget
 
-**Project activity:** 658 tracked projects, $509.6B pipeline — largest in Canada. Top value: LNG Canada Phase 1 ($47.90B, Under Construction), LNG Canada Phase 2 ($25.00B, Proposed), Kitimat Clean Oil Refinery ($22.00B, Under Review), Peace River Site C Hydro-electric ($16.00B, Under Construction). Top sectors: power/energy (68), mining (56), other (65). Source: projects_british_columbia.json.
+**Capital Projects:**
+- LNG Canada Phase 2 (Kitimat): Proposed expansion doubling capacity from 14 Mt/y to 28 Mt/y. Coastal GasLink Phase 2 agreements advancing. Source: [Energy Mix](https://www.theenergymix.com/carney-announces-new-lng-mining-and-hydro-projects-in-56b-package/)
+- Ksi Lisims LNG: Canada's proposed second-largest LNG facility. Source: BC Major Projects
+- BC highest-ever nonresidential construction spending forecast in 2026. Source: [ConstructConnect](https://canada.constructconnect.com/dcn/news/economic/2026/03/canadas-construction-focus-on-british-columbia)
+- West Vancouver housing: Two new rental buildings opened under provincial housing policy. Source: [BC Government](https://news.gov.bc.ca/releases/2026HMA0028-000325)
 
-**Policy developments:** 3 BC policy announcements recorded this week (all housing- and forestry-related). Affected projects totals per policy.json: 114 for housing highlights; 21 for softwood lumber; 114 for rental report. Source: docs/data/policy.json (week_of 2026-04-11).
-
-**Labour trends:** BC recorded the largest month-over-month unemployment rise (+0.6pp) in March 2026 among all provinces.
-
-**IAAC status:** 11 BC projects in federal registry. New Under Review: Amrize Coquitlam Depots Maintenance Dredge; Gwa'sala-'Nakwaxda'xw Nations Tsulquate Subdivision; Shell Beach Erosion Control Project Portland Island. Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Procurement:** None ≥$5M in procurement.json for the week_of 2026-04-11.
-
----
-
-### Saskatchewan
-
-**Top story:** Saskatchewan Budget 2026-27 (released March 19, 2026) titled "Protecting Saskatchewan" tabled a $4.3 billion capital plan. The budget included targeted potash royalty stability and advanced manufacturing incentives. Sources: [Saskatchewan 2026-27 Budget announcement](https://www.saskatchewan.ca/government/news-and-media/2026/march/18/2026-27-budget-protecting-saskatchewan); [Raymond James 2026 Saskatchewan Budget Highlights](https://www.raymondjames.com/dotcom-canada/commentary-and-insights/2026/03/20/2026-sk-budget-highlights).
-
-**Key indicators (March 2026 LFS):**
-- Unemployment rate: 5.0% (−0.6pp from 5.6%, lowest in Canada). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 63.9% (+0.5pp). Participation: 67.2% (+0.1pp).
-- CPI: −0.7% y/y (Feb 2026), from +1.2% previous — flipped negative, largest swing in the country. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Housing starts: 5,486 (Feb 2026 SAAR) vs 5,327 previous. Source: [CMHC Housing Data](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- Real GDP growth: +3.4% (2024 — second-fastest provincial growth). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
-
-**Project activity:** 221 tracked projects, $38.3B pipeline. Top value: BHP Jansen Stage 1 ($7.50B, Under Construction), Jansen Stage 2 ($6.40B, Under Construction), Saskatchewan 2026-27 Capital Budget ($4.30B, Approved), FCL HDRD renewable diesel plant ($2.00B, Proposed), Bell Canada AI Data Centre RM of Sherwood ($1.70B, Proposed).
-
-**Policy developments:** Saskatchewan 2026-27 capital envelope covered infrastructure, health facilities, and schools. Source: [Saskatchewan Budget 2026-27](https://www.saskatchewan.ca/government/news-and-media/2026/march/18/2026-27-budget-protecting-saskatchewan).
-
-**Labour trends:** Saskatchewan's 5.0% unemployment is the lowest provincial rate in Canada for March 2026.
-
-**IAAC status:** 8 Saskatchewan projects in registry. New Under Review: Northern Lights Casino Expansion and Renovation; Kistaphinanihk Office Building; Deschambault Lake Road Resurfacing and Drainage Improvements. Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Procurement:** None ≥$5M in procurement.json for the week_of 2026-04-11.
+**Policy:**
+- BC housing policy announcement March 27: Opening more homes in West Vancouver, two new rental buildings. Source: policy.json (pipeline data)
 
 ---
 
-### Manitoba
+## Saskatchewan
 
-**Top story:** Manitoba Budget 2026 (announced March 2026) introduced a record $3.8 billion capital investment plan. Sources: [News release — Manitoba Budget 2026](https://news.gov.mb.ca/news/index.html?item=73197); [CCPA Manitoba Budget 2026](https://www.policyalternatives.ca/news-research/manitoba-budget-2026/); [Canadian Innovators — Sovereign Value-Added](https://www.canadianinnovators.org/content/manitoba-should-stay-the-course-on-sovereign-value-added-).
+**Indicators (February 2026):**
+- Unemployment rate: 5.6% (February 2026). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- CPI index: 162.0 (2002=100). Source: StatsCan CPI
+- Employment: Declined 5,500 (-0.9%) in February. Source: StatsCan LFS
 
-**Key indicators (March 2026 LFS):**
-- Unemployment rate: 5.6% (−0.1pp from 5.7%). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 63.4% (+0.9pp, largest monthly increase). Participation: 67.1% (+0.8pp).
-- CPI: +3.1% y/y (Feb 2026), from +3.4% previous. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Housing starts: 7,642 (Feb 2026 SAAR) vs 7,799 previous. Source: [CMHC Housing Data](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- Real GDP growth: +1.1% (2024). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
+**Budget 2026 (released March 19, 2026):**
+- Projected deficit: $819 million for 2026-27 (largest budgeted shortfall in 15 years outside COVID period), preceded by $1.2 billion for 2025-26. Source: [CBC](https://www.cbc.ca/news/canada/saskatchewan/budget-2026-27-deficit-health-care-education-oil-9.7133515)
+- Infrastructure: $1.8 billion in executive government infrastructure (schools, hospitals, long-term care, roads). $17.5 billion four-year infrastructure pipeline. Source: [KPMG](https://kpmg.com/ca/en/insights/2026/03/highlights-of-the-2026-saskatchewan-budget.html)
+- Potash royalties: $940.9 million projected, eclipsing oil sector earnings at $721 million. Source: [Prince Albert Herald](https://paherald.sk.ca/sask-budget-potash-royalties-expected-to-eclipse-oil-sector-earnings-in-coming-year/)
+- $3.5 million Targeted Mineral Exploration Incentive continued. Source: Saskatchewan Budget
 
-**Project activity:** 2,063 tracked projects (the largest project count of any province — the discovery pipeline's Manitoba signal-to-noise is heavily influenced by the federal Green and Inclusive Community Buildings RSS feed). $14.6B pipeline. Top value: Manitoba Budget 2026 Capital Plan ($3.80B), North End Water Pollution Control Centre upgrade ($3.20B, Under Construction), Portage Place Redevelopment Healthcare Centre ($0.65B, Under Construction), NEWPCC Biosolids Facilities ($0.50B, Approved), Lake Manitoba/Lake St. Martin Outlet Channels ($0.49B, Approved). Top sectors: Other (1,078), Water & Wastewater (456), Energy (152).
-
-**Policy developments:** CCPA analysis of Manitoba Budget 2026 noted capital commitments to housing, healthcare, and trades training. Source: [CCPA Manitoba Budget 2026](https://www.policyalternatives.ca/news-research/manitoba-budget-2026/).
-
-**Labour trends:** Manitoba posted the largest month-over-month gain in employment rate (+0.9pp to 63.4%) of any province in March 2026.
-
-**IAAC status:** 6 Manitoba projects in registry. New: Hnausa Wharf Replacement; 98 Manitoba Street Environmental Remediation; New Resort Development 116 TaWaPit Drive Wasagaming (status transitioned to Cancelled). Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Procurement:** None ≥$5M in procurement.json for the week_of 2026-04-11.
+**Capital Projects:**
+- BHP Jansen potash mine (Humboldt): $14 billion investment, production expected late 2026. Potential capacity of 8.5 Mt/y. Source: [Saskatchewan Government](https://www.saskatchewan.ca/government/news-and-media/2026/march/02/government-of-saskatchewan-promotes-mineral-sector-at-major-mining-conference)
+- K+S Bethune mine expansion: Up to $3 billion investment to double annual potash production from 2 Mt to 4 Mt. Source: [Invest in Canada](https://www.investcanada.ca/news/global-investment-critical-minerals-ks)
+- By end of 2026, Saskatchewan expected to have commercial production of six critical minerals: potash, uranium, helium, copper, zinc, lithium. Source: Saskatchewan Government
 
 ---
 
-### Nova Scotia
+## Manitoba
 
-**Top story:** Nova Scotia 2026-27 Budget (released March 2026). The fiscal plan maintained capital investment for healthcare and infrastructure. Sources: [Nova Scotia Budget 2026-27](https://novascotia.ca/budget/); [Scotiabank Nova Scotia Budget 2026-27 post](https://www.scotiabank.com/ca/en/about/economics/economics-publications/post.other-publications.fiscal); [Yahoo Finance — Highlights from Nova Scotia's 2026-27 budget](https://ca.finance.yahoo.com/news/highlights-nova-scotias-2026-27-202543812.html).
+**Indicators (February 2026):**
+- Unemployment rate: 5.7% (-0.6pp from January despite employment decline of 4,000). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- CPI index: 157.2 (2002=100). Source: StatsCan CPI
+- Employment: Declined 4,000 (-0.5%) in February but rose 1.8% (+12,900) year-over-year from January 2025 to January 2026. Source: StatsCan LFS
+- Nominal GDP growth: 4.4% in 2025, 3.6% forecast for 2026. Source: [Manitoba Bureau of Statistics](https://www.gov.mb.ca/mbs/publications/mbs701_forecast_survey_2026_01_15.pdf)
 
-**Key indicators (March 2026 LFS):**
-- Unemployment rate: 6.6% (−0.5pp from 7.1%). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 57.4% (+0.4pp). Participation rate: 61.4% (+0.1pp).
-- CPI: +1.5% y/y (Feb 2026), from +1.7% previous. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Housing starts: 7,146 (Feb 2026 SAAR) vs 7,252 previous. Source: [CMHC Housing Data](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- Real GDP growth: +2.7% (2024). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
-
-**Project activity:** 337 tracked projects, $18.6B pipeline. Top value: Bear Head Energy ammonia/hydrogen ($8.00B, Proposed), Nova Scotia Capital Plan 2026-27 ($3.50B, Proposed), CFB Halifax Dockyard & Stadacona Power and Service Infrastructure Upgrades ($1.20B, Proposed), 14 Wing Greenwood Hangar and Drone Infrastructure ($0.65B, Proposed), Boat Harbour Remediation ($0.37B, Approved). Top sectors: Other (123), Clean Energy (73), infrastructure (24).
-
-**IAAC status:** 3 Nova Scotia projects in registry. Under Review: Tufts Cove Generation Station Rock Revetment; Floating Wharf Replacement at Meteghan Small Craft Harbour; Deconstruction of New Glasgow Armoury NG1. Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Procurement:** None ≥$5M in procurement.json for the week_of 2026-04-11.
-
----
-
-### New Brunswick
-
-**Top story:** New Brunswick 2026-2027 Budget (tabled March 17, 2026). Sources: [Legislative Assembly NB Budget PDF](https://legnb.ca/content/house_business/61/2/tabled_documents/2026-03-17%20Budget%202026-2027%20%20F); [Baker Tilly tax update on NB 2026-2027 budget](https://www.bakertilly.ca/insights/tax-alert-nb-2026-2027-budget); [TD Economics — New Brunswick Budget](https://economics.td.com/new-brunswick-budget).
-
-**Key indicators (March 2026 LFS):**
-- Unemployment rate: 7.0% (unchanged). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 56.7% (+0.2pp). Participation: 60.9% (+0.2pp).
-- CPI: +1.2% y/y (Feb 2026), from +2.4% previous — half-reduction m/m. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Housing starts: 6,011 (Feb 2026 SAAR) vs 6,454 previous. Source: [CMHC Housing Data](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- Real GDP growth: +1.8% (2024). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
-
-**Project activity:** 208 tracked projects, $5.2B pipeline. Top value: Saint John Pulp Mill Upgrades ($1.10B, Under Review), Sisson Project tungsten/molybdenum ($0.58B, Approved), Twinning of Trans-Canada Highway Route 2 ($0.42B, Under Construction), Port Saint John West Side Terminals Modernization ($0.21B, Under Construction). New Brunswick Museum Construction Phase ($50M, Approved), Dieppe Boulevard Extension ($12M, Under Construction), Sydney Street Courthouse Theatre ($12M, Approved).
-
-**IAAC status:** 5 New Brunswick projects in registry. Under Review: Cap Saint Louis Wharf Repairs 2026; Maliseet Road and Principale Street Stormwater and Drainage Upgrades Madawaska; Graham Road Maintenance and New Culvert CFB Gagetown. Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Procurement:** None ≥$5M in procurement.json for the week_of 2026-04-11.
+**Budget 2026 (released March 24, 2026):**
+- Projected deficit: $498 million for 2026-27, down from $1.7 billion in 2025-26. Surplus of $8 million projected for 2027-28. Source: [CP24](https://www.cp24.com/news/canada/2026/03/24/manitoba-budget-removes-pst-on-groceries-reporting-498m-deficit-for-2026/)
+- PST removed from groceries. Source: Manitoba Budget 2026
+- Capital investments: $3.8 billion including Trans-Canada Highway twinning to Ontario, Deloraine-Winchester Airport upgrades, PTH 2 rebuilding, $4 million Carberry overpass design. Source: [Manitoba Government](https://news.gov.mb.ca/news/index.html?item=73198)
+- Health centres: Construction/expansion in Portage la Prairie, Neepawa, Brandon, Winkler/Morden, Thompson. Source: Manitoba Budget
+- Water infrastructure: $22 million Red-Seine-Rat East Water/Wastewater Treatment network, $22 million Pembina Valley Water Co-op, $4.4 million Morden-Winkler sewer line. Source: Manitoba Budget
+- Trade exposure: Nominal exports to U.S. down 18% in 2025 (energy, agricultural machinery, pharmaceuticals). Source: [National Bank](https://www.nbfwm.ca/content/dam/bnc/taux-analyses/analyse-eco/budget/manitoba-budget.pdf)
 
 ---
 
-### Newfoundland and Labrador
+## Nova Scotia
 
-**Top story:** Newfoundland and Labrador entered the Budget 2026 public consultation phase. Sources: [Government of NL Finance — Economics](https://www.gov.nl.ca/fin/economics/); [NLFED 2026 NLFL Provincial Budget Submission](https://nlfed.ca/2026-nlfl-provincial-budget-submission/); [NFLD Bulletin — Public Input Budget 2026](https://www.facebook.com/NFLDBulletin/posts/province-launches-public-input-for-budget-2026january-20).
+**Indicators (February 2026):**
+- Unemployment rate: 7.1% (+0.2pp from January). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- CPI index: 189.5 (2002=100). Source: StatsCan CPI
 
-**Key indicators (March 2026 LFS):**
-- Unemployment rate: 9.5% (+0.3pp from 9.2% — highest provincial rate in Canada). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 52.7% (unchanged). Participation rate: 58.3% (+0.2pp).
-- CPI: +1.8% y/y (Feb 2026), from +2.3% previous. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Housing starts: 1,223 (Feb 2026 SAAR) vs 1,194 previous. Source: [CMHC Housing Data](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- Real GDP growth: +2.4% (2024). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
+**Budget 2026-27 (released February 2026):**
+- Projected deficit: $1.24 billion for 2026-27, remaining above $1 billion through 2028-29. Source: [RBC Economics](https://www.rbc.com/en/economics/canadian-analysis/provincial-and-fiscal-outlooks/provincial-budgets-and-economic-statements/nova-scotia-budget-2026-departs-from-previous-deficit-reduction-plan/)
+- Debt-to-GDP ratio projected to breach 40% guardrail by 2027-28 and climb to 45.7% by 2029-30. Source: RBC Economics
+- Health spending: Up 6% to $6.7 billion. Source: [TD Economics](https://economics.td.com/nova-scotia-budget)
+- Public sector headcount reductions targeting $914.3 million in cumulative savings by 2029-30. Source: RBC Economics
 
-**Project activity:** 1,560 tracked projects (inflated by the same federal community-buildings feed affecting MB), $32.0B pipeline. Top value: Grassy Point LNG ($10.00B, Proposed), Bay du Nord Offshore Oil Project Benefits Agreement ($6.40B, Approved), Kamistiatusset (Kami) iron ore ($3.86B, Under Review), White Rose Expansion West ($3.80B, Under Construction), White Rose Expansion ($2.30B, Under Construction).
-
-**IAAC status:** 5 NL projects in registry. Under Review: Upgrade of existing softball field east of Base Gymnasium (CFB Goose Bay vicinity); New construction of Perimeter Fence and Site Improvements at former USAF Experimental Facility; Point Rousse Port Expansion Project. Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Labour trends:** NL's 9.5% unemployment is the highest of any province in March 2026.
-
-**Procurement:** None ≥$5M in procurement.json for the week_of 2026-04-11.
+**Capital Projects:**
+- Capital Plan 2026-27: $3.5 billion, the largest ever. Source: [Nova Scotia Government](https://news.novascotia.ca/en/2026/02/23/capital-plan-2026-27-released)
+- Healthcare: $1.5 billion for "More, Faster: Action for Health Build" plan; $1.2 billion for Halifax Infirmary expansion and Cape Breton Regional Municipality healthcare redevelopment; $873.8 million toward 5,700 new/replacement long-term care spaces by 2032. Source: [ReNew Canada](https://www.renewcanada.net/nova-scotias-capital-plan-2026-27-includes-1-5b-for-healthcare/)
+- Housing: New public housing in Kentville for approximately 100 people including seniors and families. Source: Nova Scotia Capital Plan
 
 ---
 
-### Prince Edward Island
+## New Brunswick
 
-**Top story:** PEI announced its 2026-27 Capital Budget — focus on schools, healthcare, and infrastructure under a five-year capital envelope. A Canada-PEI cooperation agreement was also signed. Sources: [Province of PEI — 2026-27 Capital Budget LinkedIn post](https://www.linkedin.com/posts/province-of-pei_pei-has-announced-its-capital-budget-for-activity-739); [govpe Facebook post on PEI Capital Budget 2026-27](https://www.facebook.com/govpe/posts/pei-has-announced-its-capital-budget-for-2026-27-outlining-a-fi); [Yahoo Finance — PEI and Canada sign co-operation agreement](https://finance.yahoo.com/economy/policy/articles/prince-edward-island-canada-sign-173100420.html).
+**Indicators (February 2026):**
+- Unemployment rate: 7.0% (+0.3pp from January). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- CPI index: 133.3 (2002=100). Source: StatsCan CPI
+- Real GDP: Estimated 1.3% growth in 2025, slowing to 1.0% in 2026, 1.1% in 2027. Source: [Scotiabank](https://www.scotiabank.com/ca/en/about/economics/economics-publications/post.other-publications.fiscal-policy.fiscal-pulse.provincial-budget-analyses-and-updates.new-brunswick-.new-brunswick--2026-27-budget--march-17-2026-.html)
 
-**Key indicators (March 2026 LFS):** PE is NOT a data gap in the March 2026 LFS release — the legacy `PE_cpi`/`PE_unemployment` prefixed keys are absent in indicators.json, but the full-name "Prince Edward Island" record is current.
-- Unemployment rate: 7.3% (+0.1pp from 7.2%). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm)
-- Employment rate: 61.6% (−0.2pp). Participation: 66.5% (−0.1pp).
-- CPI: +5.4% y/y (Feb 2026), from +7.3% previous — highest provincial inflation rate. Source: [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm)
-- Housing starts: 963 (Feb 2026 SAAR) vs 1,112 previous. Source: [CMHC Housing Data](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data)
-- Real GDP growth: +3.6% (2024 — fastest provincial growth). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
+**Budget 2026-27 (released March 17, 2026):**
+- Projected deficit: $1.33 billion for 2026-27. Source: [Enterprise Canada](https://enterprisecanada.com/nb-budget-2026/)
+- Net debt: Projected increase from $13.9 billion (FY26) to $19.7 billion (FY29), driving net debt burden from 27.9% to 36% of nominal GDP. Source: Scotiabank
+- Health spending: +$710 million year-over-year, including $170.4 million physician services agreement. Source: Scotiabank
+- Capital spending: Increasing from $1.2 billion to $1.5 billion, mainly driven by higher infrastructure and public housing. Total borrowing planned at $4.3 billion for FY27. Source: Scotiabank
 
-**Data-gap note:** data_gap_report.md lists "PE: missing CPI (PE_cpi); PE: missing Unemployment Rate (PE_unemployment)" — these reference the legacy prefixed keys. The March 2026 LFS has populated the full-province-name record, so PE indicator coverage is functionally complete for the briefing. No fabrication required.
-
-**Project activity:** 98 tracked projects, $2.9B pipeline. Top value: PEI 2026-27 Capital Budget Healthcare and Education Infrastructure ($0.49B, Proposed), PEI Capital Budget 2026-27 five-year plan ($0.49B, Proposed), PEI Mental Health Campus Completion ($0.13B, Under Construction), PEI Affordable Housing Construction 300+ Units ($0.10B, Proposed), Northumberland Strait Submarine Transmission System ($0.09B, Under Construction).
-
-**IAAC status:** 2 PEI projects in registry. Under Review: Wharf Reconstruction at Mink River Small Craft Harbour; Breakwater Construction at Tignish SCH. Source: [IAAC Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-**Procurement:** None ≥$5M in procurement.json for the week_of 2026-04-11.
-
----
-
-### Yukon
-
-**Top story:** Yukon's capital planning cycle continues under Budget 2026. No territorial policy announcements registered in policy.json or events.json for the week_of 2026-04-11.
-
-**Key indicators:**
-- Unemployment rate: 3.9% (Feb 2026 LFS, period 2026-02-01 — territorial LFS data is reported monthly with a lag). Source: [StatsCan Labour Force Survey — territories](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410029201)
-- Real GDP: −3.3% (2024 annual, StatsCan provincial accounts — GDP contraction driven by placer gold and mineral-extraction output). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
-- CPI: Territory-level CPI is not published monthly; Whitehorse city CPI series is a separate release. Gap flagged in data_gap_report.md as expected territory limitation.
-
-**Project activity:** 125 tracked projects, $47.4B pipeline (driven by Northern Defence and Infrastructure Investment $40.00B, Proposed). Top non-defence: Casino Mine ($3.62B, Proposed), Whitehorse Power Centres Project ($0.52B, Proposed), Kudz Ze Kayah zinc/copper ($0.49B, Under Review), Yukon Budget 2026 Capital Plan ($0.39B, Proposed).
-
-**IAAC status:** 0 Yukon projects in IAAC registry this week (Yukon's larger projects are assessed under the Yukon Environmental and Socio-economic Assessment Act rather than the federal Impact Assessment Act).
-
-**Policy developments:** No significant developments recorded in policy.json for the week.
-
-**Procurement:** None ≥$5M registered.
+**Energy Projects:**
+- Point Lepreau SMR: ARC-100 small modular reactor proposed at Point Lepreau site by NB Power and ARC Clean Technology. Provincial government stated in late 2025 it would no longer wait for first-of-a-kind reactor designs. Source: [CNSC](https://www.cnsc-ccsn.gc.ca/eng/reactors/new-reactor-power-plant-projects/new-reactor-power-plant-facilities/nbpower/)
+- NB Power review recommended building a second large nuclear plant adjacent to Point Lepreau. Source: [CBC](https://www.cbc.ca/news/canada/new-brunswick/nb-power-review-9.7147203)
+- Medical isotope production explored at Point Lepreau. Source: [CTV](https://www.ctvnews.ca/atlantic/new-brunswick/article/nb-power-to-explore-medical-isotope-production-at-point-lepreau/)
 
 ---
 
-### Northwest Territories
+## Newfoundland and Labrador
 
-**Top story:** NWT major capital focus remains on Mackenzie Valley Highway construction and Taltson Hydro Expansion. No territorial policy announcements registered this week in policy.json or events.json.
+**Indicators (February 2026):**
+- Unemployment rate: 9.2% (unchanged from January). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- CPI index: 166.4 (2002=100). Source: StatsCan CPI
+- Employment: Increased 2,100 (+0.8%) in February, one of only two provinces to record employment gains. Source: StatsCan LFS
 
-**Key indicators:**
-- Unemployment rate: 5.3% (Feb 2026 LFS, period 2026-02-01). Source: [StatsCan LFS — territories](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410029201)
-- Real GDP: −1.1% (2024 annual). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
-- CPI: Not published territorially on a monthly basis; Yellowknife city CPI is the closest proxy. Flagged as expected territory limitation.
+**Fiscal Position:**
+- Budget 2025-26 (tabled April 2025): Projected deficit of $372 million including $200 million contingency for trade-related pressures. Return to surplus anticipated in 2026-27. Source: [RBC Economics](https://thoughtleadership.rbc.com/newfoundland-and-labrador-budget-2025-balance-delayed-until-2026-27-amid-record-spending/)
+- Net debt: Projected $19.4 billion (44.7% of GDP). Source: RBC Economics
+- Expenditures: Up $536 million (+5.1%) to above $11 billion. Source: RBC Economics
 
-**Project activity:** 188 tracked projects, $44.2B pipeline (driven by Arctic Defence and Infrastructure Spending Package NWT $35.00B, Proposed). Top non-defence: Mackenzie Valley Highway Construction Start ($2.00B, Approved), Taltson Hydro Expansion ($2.00B, Approved), Taltson Hydroelectricity Expansion Phase 1 ($1.20B, Under Construction), Pine Point lead/zinc ($0.65B, Under Review). Top sectors: infrastructure (57), mining (27).
-
-**IAAC status:** 0 NWT projects in federal IAAC registry this week (NWT uses the Mackenzie Valley Resource Management Act process).
-
-**Policy developments:** No significant developments recorded in policy.json.
-
-**Procurement:** None ≥$5M registered.
-
----
-
-### Nunavut
-
-**Top story:** Nunavut major capital focus remains on mining (Baffinland Mary River rail and port expansion; Back River gold) and federal-territorial housing (Nunavut 750 Homes Initiative). No territorial policy announcements registered this week in policy.json or events.json.
-
-**Key indicators:**
-- Unemployment rate: 10.8% (Feb 2026 LFS, period 2026-02-01 — highest in Canada). Source: [StatsCan LFS — territories](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410029201)
-- Real GDP: +7.5% (2024 annual — fastest growth in Canada, driven by mining output). Source: [StatsCan Table 36-10-0222-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201)
-- CPI: Not published territorially on a monthly basis; Iqaluit city CPI is the closest proxy. Flagged as expected territory limitation.
-
-**Project activity:** 57 tracked projects, $38.9B pipeline (driven by Northern Defence and Infrastructure $32.00B, Proposed). Top non-defence: Baffinland Mary River Steensby Rail and Port Expansion ($3.00B, Approved), Back River Gold Project ($0.61B, Under Construction), Nunavut 750 Homes Initiative ($0.48B, Under Construction), Baker Lake Modular Housing 750-Home Program First Delivery ($0.48B, Under Construction). Top sectors: infrastructure (19), tourism/culture (6), environment (5). Discovered this week: Arctic Bay Water Treatment Plant Construction Phase ($49M, Proposed).
-
-**IAAC status:** 0 Nunavut projects in federal IAAC registry this week (Nunavut uses the Nunavut Impact Review Board process under the Nunavut Agreement).
-
-**Policy developments:** No significant developments recorded in policy.json.
-
-**Procurement:** None ≥$5M registered.
+**Capital Projects — Bay du Nord (March 3, 2026):**
+- Provincial government reached life-of-field agreements on benefits, royalties, and equity option with Equinor and BP for the Bay du Nord offshore oil project. Source: [Newfoundland Government](https://www.gov.nl.ca/releases/2026/exec/0303n05/)
+- Estimated $14 billion total investment. First oil expected 2031. Production capacity: 160,000-175,000 bbl/d. Source: [CBC](https://www.cbc.ca/news/canada/newfoundland-labrador/equinor-oil-agreement-nl-9.7112423)
+- Government revenue: Up to $6.4 billion in direct revenue from Phase 1. Over 31 million person-hours of work over 25 years. Source: NL Government
+- Offshore oil industry contributes approximately 20% of provincial GDP and 55% of total exports, sustaining approximately 20,000 jobs. Source: [Canada.ca](https://www.canada.ca/en/natural-resources-canada/news/2026/03/bay-du-nord-agreement-advances-responsible-energy-development-in-canada.html)
 
 ---
 
-### National (context for provincial comparisons)
+## Prince Edward Island
 
-**Top story:** StatsCan's March 2026 Labour Force Survey (released April 10, 2026) reported the national unemployment rate held at 6.7% while employment gains were concentrated in Quebec (−0.5pp unemployment), Saskatchewan (−0.6pp), and Nova Scotia (−0.5pp), partially offset by increases in British Columbia (+0.6pp) and Newfoundland and Labrador (+0.3pp). Source: [StatsCan Labour Force Survey March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm).
+**Indicators (February 2026):**
+- Unemployment rate: 7.2% (-0.4pp from January). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
+- Employment: Reached all-time high of 96,200 in February 2026. Source: [PEI Government](https://www.princeedwardisland.ca/sites/default/files/publications/pt_lfs_4.pdf)
+- Population: Increased 1.6% to 182,657 (through July 2025). Source: [PEI Government](https://www.princeedwardisland.ca/en/news/island-economy-well-positioned-to-meet-challenges-continue-supporting-islanders)
+- International exports: Up 12.8% through August 2025. Source: PEI Government
+- Tourism: Overnight stays up 4.5%, fixed-roof accommodations up 7.7% y/y through July 2025. Source: PEI Government
 
-**Key indicators (week_of 2026-04-11):**
-- National unemployment: 6.7% (March 2026, unchanged m/m).
-- National CPI: +1.8% y/y (February 2026).
-- National real GDP: +1.9% (2024 annual).
-- Bank of Canada overnight rate: 2.25% (target). Source: [Bank of Canada Key Interest Rate](https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/)
-- Next BoC decision: April 16, 2026.
-
----
-
-## 3. Policy Developments Summary
-
-### Budgets Referenced (already released, still relevant context)
-- **Ontario Budget 2026** (Mar 26). [budget.ontario.ca/2026/contents.html](https://budget.ontario.ca/2026/contents.html)
-- **Quebec Budget 2026-27** (Mar 25). [finances.gouv.qc.ca Budget Speech PDF](https://www.finances.gouv.qc.ca/Budget_and_update/budget/documents/Budget2627_BudgetSpeech.pdf)
-- **Alberta Budget 2026** (Feb 27). [alberta.ca/budget-highlights](https://www.alberta.ca/budget-highlights)
-- **Saskatchewan Budget 2026-27** (Mar 19). [saskatchewan.ca — 2026-27 Budget Protecting Saskatchewan](https://www.saskatchewan.ca/government/news-and-media/2026/march/18/2026-27-budget-protecting-saskatchewan)
-- **Manitoba Budget 2026** (Mar 2026). [news.gov.mb.ca — Budget 2026](https://news.gov.mb.ca/news/index.html?item=73197)
-- **New Brunswick Budget 2026-2027** (Mar 17). [legnb.ca Budget PDF](https://legnb.ca/content/house_business/61/2/tabled_documents/2026-03-17%20Budget%202026-2027%20%20F)
-- **Nova Scotia Budget 2026-27** (Mar 2026). [novascotia.ca/budget](https://novascotia.ca/budget/)
-- **PEI Capital Budget 2026-27** (Mar 2026). [Yahoo Finance PEI-Canada agreement](https://finance.yahoo.com/economy/policy/articles/prince-edward-island-canada-sign-173100420.html)
-- **Newfoundland Labrador Budget 2026** — under public consultation. [gov.nl.ca/fin/economics](https://www.gov.nl.ca/fin/economics/)
-
-### Legislation and Regulation Recorded This Week
-- **BC:** Minister's statement April 10, 2026 on March 2026 housing highlights — 114 affected residential/infrastructure/telecom/transport-logistics projects per policy.json linkage. Source: [news.gov.bc.ca 2026HMA0042-000398](https://news.gov.bc.ca/releases/2026HMA0042-000398).
-- **BC:** Minister of Forests statement April 9, 2026 on U.S. softwood lumber administrative review — 21 affected forestry/manufacturing/oil-gas/agriculture projects per linkage. Source: [news.gov.bc.ca 2026FOR0011-000394](https://news.gov.bc.ca/releases/2026FOR0011-000394).
-- **BC:** Minister's statement April 9, 2026 on April 2026 rental report — 114 affected projects per linkage. Source: [news.gov.bc.ca 2026HMA0039-000390](https://news.gov.bc.ca/releases/2026HMA0039-000390).
-
-No federal policy announcements recorded in policy.json for the week_of 2026-04-11. policy.json summary: 3 items, all BC-provincial-level.
+**Fiscal Position:**
+- Current forecast for 2025-26: Deficit of $367.4 million, a $183.4 million increase from the original budget due to agricultural insurance claims, healthcare delivery costs, social program funding, and educational resources. Source: PEI Government
+- Spring 2026 Legislature sitting began March 25, 2026. Premier Rob Lantz indicated budget cuts are anticipated. Source: [CBC](https://www.cbc.ca/news/canada/prince-edward-island/pei-speech-from-the-throne-9.7142281)
+- No 2026-27 budget tabled yet as of March 31. Pre-budget consultations are ongoing. Source: [PEI Government](https://www.princeedwardisland.ca/en/service/pre-budget-consultations-2026)
 
 ---
 
-## 4. Capital Projects by Province
+## Yukon
 
-### New IAAC Under Review Entries (registered 2026-04-11 or recent week)
-- **QC:** Leamy Creek Pathway Re-Naturalization; YUL Montreal-Trudeau Weather Station; Wapizagonke M Bridge closure and floating boardwalk.
-- **BC:** Amrize Coquitlam Depots Maintenance Dredge; Gwa'sala-'Nakwaxda'xw Tsulquate Subdivision; Shell Beach Erosion Control Portland Island.
-- **ON:** CAFTA Winona Range Upgrades; New Nuclear at Wesleyville; Madahòkì Farm Lodge Expansion.
-- **AB:** APEX Utilities Opasikoniwew Housing Authority — Hoole Creek Road Subdivision Phase 2 Gasification; Tsuut'ina Bullhead Road Sewer Line; Mînî Thnî Lift Station.
-- **SK:** Northern Lights Casino Expansion; Kistaphinanihk Office Building; Deschambault Lake Road Resurfacing.
-- **MB:** Hnausa Wharf Replacement; 98 Manitoba Street Environmental Remediation; New Resort 116 TaWaPit Drive Wasagaming (Cancelled).
-- **NS:** Tufts Cove Generation Station Rock Revetment; Meteghan Floating Wharf Replacement; New Glasgow Armoury Deconstruction.
-- **NB:** Cap Saint Louis Wharf Repairs 2026; Madawaska Maliseet Road Stormwater Upgrades; CFB Gagetown Graham Road Culvert.
-- **NL:** CFB Goose Bay Softball Field Upgrade; Former USAF Experimental Site Fence and Improvements; Point Rousse Port Expansion.
-- **PE:** Mink River Wharf Reconstruction; Tignish SCH Breakwater.
+**Indicators (January 2026, latest available):**
+- Unemployment rate: 3.6% (January 2026), the lowest in Canada. Source: [Yukon News](https://yukon-news.com/2026/02/11/yukon-unemployment-falls-to-3-6-in-january-highest-participation-in-canada/)
+- Labour force participation rate: 74.4%, highest in Canada (national average 65%). Source: Yukon News
+- GDP: Projected to decline 2.3% in 2025. Source: [Job Bank](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/northwest-territories/environmental-scan)
 
-Source: [Canadian Impact Assessment Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
-
-### Value Pipeline by Province (parsed_value, projects_all.json, 2026-04-11)
-| Province | Count | Total Value | Top Sector | Dominant Status |
-|----------|-------|-------------|-----------|-----------------|
-| BC | 658 | $509.6B | power_energy | Proposed 254 / Under Construction 153 |
-| AB | 739 | $349.6B | government | Proposed 388 / Under Construction 172 |
-| ON | 661 | $254.4B | infrastructure | Under Construction 234 / Proposed 152 |
-| QC | 502 | $89.6B | education | Approved 281 / Under Review 94 |
-| YT | 125 | $47.4B | defence | Under Construction 80 / Proposed 31 |
-| NT | 188 | $44.2B | infrastructure | Under Review 92 / Under Construction 57 |
-| NU | 57 | $38.9B | infrastructure | Under Construction 36 / Proposed 12 |
-| SK | 221 | $38.3B | Other | Proposed 90 / Under Review 85 |
-| NL | 1560 | $32.0B | Other | Proposed 1379 / Cancelled 126 |
-| NS | 337 | $18.6B | Other | Complete 235 / Proposed 41 |
-| MB | 2063 | $14.6B | Other | Under Review 1980 / Under Construction 42 |
-| NB | 208 | $5.2B | Other | Under Review 114 / Under Construction 46 |
-| PE | 98 | $2.9B | infrastructure | Under Construction 74 / Proposed 15 |
+**Budget 2026-27 (tabled March 19, 2026):**
+- Total budget: $2.46 billion ($2.07 billion operations and maintenance, $385 million capital). Source: [Yukon Government](https://yukon.ca/en/news/budget-2026-begins-road-fiscal-recovery)
+- Projected deficit: $81.8 million. Source: [CBC](https://www.cbc.ca/news/canada/north/yukon-party-government-budget-2026-27-9.7134152)
+- Economic outlook: Modest growth with strong metal prices and higher placer gold production. Source: Yukon Government
+- Construction sector expected to experience steady growth driven by housing initiatives. Source: Job Bank
 
 ---
 
-## 5. IAAC Monitoring
+## Northwest Territories
 
-Federal Impact Assessment Registry entries in the dashboard (iaac.json): 103 total (ON 26, AB 24, QC 13, BC 11, SK 8, MB 6, NL 5, NB 5, NS 3, PE 2, YT/NT/NU 0). All listed entries are currently in Under Review status except for one Manitoba resort file registered as Cancelled. No entries transitioned to Approved or Decision Statement in the week_of 2026-04-11 window. Source: [Canadian Impact Assessment Registry](https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA).
+**Indicators (February 2026):**
+- Unemployment rate: 5.3% (+0.3pp from January). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/mc-a001-eng.htm)
+- Employment: Decreased 3.4% (-800) between 2023-2024 to 22,900, mainly due to limited private sector investment and reduced diamond mine output. Source: [Job Bank](https://www.jobbank.gc.ca/trend-analysis/job-market-reports/northwest-territories/environmental-scan)
 
----
+**Budget 2026-27:**
+- Total spending: $2.724 billion ($2.397 billion departmental, $326 million other adjustments including infrastructure). No new taxes introduced. Source: [NWT Government](https://www.gov.nt.ca/en/newsroom/gnwt-releases-budget-2026-2027)
+- Mining Incentive Program updated: $500,000 lifetime funding cap conditionally removed for corporate projects; annual budget of $1.5 million maintained. Source: [NWT Government](https://www.gov.nt.ca/en/newsroom/mining-incentive-program-changes-announced-pdac-2026-strengthen-mining-exploration-nwt)
 
-## 6. Procurement Awards (≥$5M)
+**Diamond Mine Closures:**
+- Diavik scheduled to close 2026. Ekati closure 2029. Gahcho Kue closure 2030. All currently producing mines set to end production by 2030. Source: NWT Government
 
-procurement.json (docs/data/procurement.json): 0 contracts recorded for week_of 2026-04-11. Six prior-week rollups (2026-03-14 through 2026-04-11) also show empty arrays. Federal and provincial contract feeds (Open Canada, BuyAndSell, Ontario BPS, BC Bid) produced no matching awards at or above the $5M threshold during the sample window.
-
----
-
-## 7. Labour Market Stories
-
-### Provincial Unemployment — March 2026 LFS (released April 10, 2026)
-| Province | Mar 2026 | Feb 2026 | Change | Source |
-|----------|---------|---------|--------|--------|
-| NL | 9.5% | 9.2% | +0.3pp | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| ON | 7.6% | 7.6% | unchanged | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| PE | 7.3% | 7.2% | +0.1pp | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| NB | 7.0% | 7.0% | unchanged | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| BC | 6.7% | 6.1% | +0.6pp | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| NS | 6.6% | 7.1% | −0.5pp | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| AB | 6.5% | 6.3% | +0.2pp | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| MB | 5.6% | 5.7% | −0.1pp | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| QC | 5.4% | 5.9% | −0.5pp | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| SK | 5.0% | 5.6% | −0.6pp | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| **CA** | **6.7%** | **6.7%** | **unchanged** | [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| YT | 3.9% (Feb) | — | — | [StatsCan Table 14-10-0292-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410029201) |
-| NT | 5.3% (Feb) | — | — | [StatsCan Table 14-10-0292-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410029201) |
-| NU | 10.8% (Feb) | — | — | [StatsCan Table 14-10-0292-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410029201) |
-
-### Provincial CPI — February 2026 (latest monthly release)
-| Province | Feb 2026 y/y | Jan 2026 y/y | Change | Source |
-|----------|-------------|-------------|--------|--------|
-| PE | +5.4% | +7.3% | −1.9pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| AB | +3.4% | +4.9% | −1.5pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| MB | +3.1% | +3.4% | −0.3pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| NL | +1.8% | +2.3% | −0.5pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| NS | +1.5% | +1.7% | −0.2pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| NB | +1.2% | +2.4% | −1.2pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| BC | +1.0% | +1.3% | −0.3pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| QC | +0.6% | +0.7% | −0.1pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| SK | −0.7% | +1.2% | −1.9pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| ON | −1.1% | −1.6% | +0.5pp | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-| **CA** | **+1.8%** | **+2.3%** | **−0.5pp** | [StatsCan CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm) |
-
-### Hiring Spikes (job_monitor RSS via jobs.json)
-jobs.json recorded no spikes for the week_of 2026-04-11 (empty `spikes` array across the last six weekly rollups). No sector- or CMA-level hiring anomalies triggered.
-
-### Wage Trends
-No provincial wage series are tracked at sub-national level in the indicators feed beyond the LFS employment counts. National average hourly wage (StatsCan LFS, all employees) +3.6% y/y (March 2026). Source: [StatsCan LFS March 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm).
+**Federal Investment:**
+- PM Carney announced $35 billion+ Arctic defence and northern infrastructure plan on March 12, 2026. Includes $32 billion at Forward Operating Locations in Yellowknife, Inuvik, and Iqaluit. Source: [PM Canada](https://www.pm.gc.ca/en/news/news-releases/2026/03/12/prime-minister-carney-announces-ambitious-new-plan-defend-build-and)
+- Mackenzie Highway extension connecting Yellowknife to Inuvik. Source: PM announcement
+- Arctic Economic and Security Corridor: Large-scale infrastructure to support next-generation resource projects. Source: NWT Government
+- Western/northern critical minerals strategy under development with BC. Source: [BC Government](https://news.gov.bc.ca/releases/2026MCM0002-000070)
 
 ---
 
-## 8. Coverage Gaps and Priorities
+## Nunavut
 
-1. **Territorial CPI (YT/NT/NU):** Monthly CPI not published territorially. Whitehorse, Yellowknife, and Iqaluit city-level CPI are separate StatsCan releases. Closing this gap would require adding the three city series to the pipeline data_collection phase.
-2. **Provincial prefixed indicator keys stale:** `ON_cpi`, `ON_unemployment`, etc., still reference 2026-02-01 period while the full-province-name keys have updated to 2026-04-11 / 2026-03-01. Dashboard consumers should prefer the full-name records until the prefixed keys are refreshed.
-3. **procurement.json empty across six weeks:** 0 contracts recorded. Either the Open Canada / BuyAndSell / Ontario BPS / BC Bid feeds are returning no matches above the $5M threshold, or a pipeline ingestion issue is suppressing results. Worth verifying the procurement_monitor.py run log before next week.
-4. **jobs.json empty across six weeks:** same pattern — all weekly rollups empty. job_monitor.py ingestion likely warrants a health check.
-5. **Manitoba and NL project counts inflated:** MB at 2063 and NL at 1560 project counts are dominated by federal Green and Inclusive Community Buildings feed entries; median parsed_value is <$5M. Provincial projects above the GDP threshold ($40M MB, $17M NL) number far fewer.
-6. **Policy.json sparse outside BC:** All 3 policy items this week were BC-provincial. No federal, ON, QC, AB, or other provincial items registered. This is unusual given that most provinces tabled budgets in March; the pipeline policy_tracker.py cutoff may be lagging the budget-tabling dates.
+**Indicators (February 2026):**
+- Unemployment rate: 10.8% (-3.0pp from January). Source: [StatsCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/mc-a001-eng.htm)
+
+**Infrastructure and Mining:**
+- Federal Build Communities Strong Fund: $51 billion nationally over 10 years (from 2026) for water, wastewater, roads, bridges, hospitals, recreational centres, and climate adaptation. Northern share includes Nunavut allocations. Source: [Nunatsiaq](https://nunatsiaq.com/stories/article/federal-minister-gives-details-on-northern-share-of-new-community-fund/)
+- Housing target: 3,000 new units by 2030 with $2.6 billion investment. Source: Nunavut Government
+- Grays Bay Road and Port: 900 km road linking Canada's highway system at Yellowknife to proposed Grays Bay Port on Nunavut's Arctic coast near the Northwest Passage midpoint. Federal government plans development. Source: [PM announcement](https://www.pm.gc.ca/en/news/news-releases/2026/03/12/prime-minister-carney-announces-ambitious-new-plan-defend-build-and)
+- Mining: Territory retains sixth place among provinces/territories with $2.3 billion+ in gross mineral production (2022). Agnico Eagle operates as one of Nunavut's largest employers with 2,000+ positions. Source: [Mining News North](https://www.miningnewsnorth.com/story/2026/01/15/mining-explorers-2025/nation-and-mine-building-in-nunavut/9450.html)
+- Federal military hubs: Operational support hubs announced for Resolute, plus operational support nodes in Cambridge Bay and Rankin Inlet. Source: PM announcement
+- Iqaluit: Forward Operating Location receiving $32 billion combined military infrastructure investment (shared with Yellowknife and Inuvik). Source: [CTV](https://www.ctvnews.ca/politics/article/pm-carney-announces-35b-investment-in-arctic-defence-northern-infrastructure/)
 
 ---
 
-## 9. Master Source Registry
+## Cross-Provincial Summary Table
 
-[1] https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm — StatsCan Labour Force Survey, March 2026 — Statistics Canada — 2026-04-10
-[2] https://www150.statcan.gc.ca/n1/daily-quotidien/260318/dq260318a-eng.htm — StatsCan Consumer Price Index, February 2026 — Statistics Canada — 2026-03-18
-[3] https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610022201 — Table 36-10-0222-01 Provincial and Territorial Real GDP — Statistics Canada
-[4] https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004801 — Table 16-10-0048-01 Manufacturing Sales — Statistics Canada
-[5] https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1210017601 — Table 12-10-0176-01 International Trade in Goods — Statistics Canada
-[6] https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410029201 — Table 14-10-0292-01 Labour Force Characteristics, Territories — Statistics Canada
-[7] https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data — CMHC Housing Market Data (Feb 2026 starts) — CMHC
-[8] https://iaac-aeic.gc.ca/050/evaluations?culture=en-CA — Canadian Impact Assessment Registry — IAAC
-[9] https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/ — Key Interest Rate — Bank of Canada
-[10] https://budget.ontario.ca/2026/contents.html — Ontario 2026 Budget — Government of Ontario — 2026-03-26
-[11] https://budget.ontario.ca/2026/chapter-1b-building.html — Ontario 2026 Budget Chapter 1B Building — Government of Ontario
-[12] https://www.cp24.com/local/toronto/2026/03/26/ontario-reveals-2026-budget-heres-how-it-could-affect-your-pocketbook/ — Ontario Budget Summary — CP24 — 2026-03-26
-[13] https://www.mnp.ca/en/insights/directory/ontario-2026-budget-highlights — Ontario 2026 Budget Highlights — MNP — 2026-03
-[14] https://hicksmorley.com/2026/03/27/highlights-of-the-2026-ontario-budget/ — Highlights of the 2026 Ontario Budget — Hicks Morley — 2026-03-27
-[15] https://occ.ca/rapidpolicy/2026-ontario-provincial-budget/ — 2026 Ontario Provincial Budget Rapid Policy Update — OCC — 2026-03-26
-[16] https://www.finances.gouv.qc.ca/Budget_and_update/budget/documents/Budget2627_BudgetSpeech.pdf — Quebec 2026-27 Budget Speech — Ministère des Finances Québec — 2026-03-25
-[17] https://kpmg.com/ca/en/insights/2026/03/highlights-of-the-2026-quebec-budget.html — 2026 Quebec Budget Highlights — KPMG Canada — 2026-03
-[18] https://www.quebec.ca/en/news/actualites/detail/budget-2026-2027-press-release-no-3-of-3-more-than-17-billion-to-accelerate-quebecs-economic-transformation-69185 — Quebec Budget Press Release 3 of 3 — Gouvernement du Québec — 2026-03-25
-[19] https://www.alberta.ca/budget-highlights — Alberta Budget 2026 Highlights — Government of Alberta — 2026-02-27
-[20] https://www.raymondjames.ca/commentary-and-insights/tax-planning/2026/03/02/2026-ab-budget-highlights — 2026 Alberta Budget Highlights — Raymond James Canada — 2026-03-02
-[21] https://calgarychamber.com/whats-new/submission-2026-alberta-budget-policy/ — Submission: 2026 Alberta Budget — Calgary Chamber — 2026-01
-[22] https://news.gov.bc.ca/releases/2026HMA0042-000398 — Minister's Statement March 2026 Housing Highlights — BC Government News — 2026-04-10
-[23] https://news.gov.bc.ca/releases/2026FOR0011-000394 — Minister's Statement on Softwood Lumber Administrative Review — BC Government News — 2026-04-09
-[24] https://news.gov.bc.ca/releases/2026HMA0039-000390 — Minister's Statement April 2026 Rental Report — BC Government News — 2026-04-09
-[25] https://news.gov.bc.ca/releases/2026HMA0028-000325 — Opening More Homes in West Vancouver — BC Government News — 2026-03-27
-[26] https://www.saskatchewan.ca/government/news-and-media/2026/march/18/2026-27-budget-protecting-saskatchewan — Saskatchewan 2026-27 Budget Protecting Saskatchewan — Government of Saskatchewan — 2026-03-19
-[27] https://www.raymondjames.com/dotcom-canada/commentary-and-insights/2026/03/20/2026-sk-budget-highlights — 2026 Saskatchewan Budget Highlights — Raymond James — 2026-03-20
-[28] https://news.gov.mb.ca/news/index.html?item=73197 — Manitoba Government Announces Budget 2026 — Government of Manitoba — 2026-03
-[29] https://www.policyalternatives.ca/news-research/manitoba-budget-2026/ — Manitoba Budget 2026 — Canadian Centre for Policy Alternatives — 2026-03
-[30] https://www.canadianinnovators.org/content/manitoba-should-stay-the-course-on-sovereign-value-added- — Manitoba Should Stay the Course — Canadian Innovators — 2026-03
-[31] https://ca.finance.yahoo.com/news/highlights-nova-scotias-2026-27-202543812.html — Highlights from Nova Scotia's 2026-27 Budget — Yahoo Finance — 2026-03
-[32] https://novascotia.ca/budget/ — Budget 2026 to 2027 — Government of Nova Scotia
-[33] https://www.scotiabank.com/ca/en/about/economics/economics-publications/post.other-publications.fiscal — Nova Scotia 2026-27 Budget Post — Scotiabank Economics — 2026-03
-[34] https://legnb.ca/content/house_business/61/2/tabled_documents/2026-03-17%20Budget%202026-2027%20%20F — New Brunswick 2026-2027 Budget PDF — Legislative Assembly of New Brunswick — 2026-03-17
-[35] https://www.bakertilly.ca/insights/tax-alert-nb-2026-2027-budget — Key Tax Updates NB 2026-2027 Budget — Baker Tilly Canada — 2026-03-17
-[36] https://economics.td.com/new-brunswick-budget — 2026 New Brunswick Budget — TD Economics — 2026-03
-[37] https://www.gov.nl.ca/fin/economics/ — NL Department of Finance Economics — Government of Newfoundland and Labrador
-[38] https://nlfed.ca/2026-nlfl-provincial-budget-submission/ — 2026 NLFL Provincial Budget Submission — Newfoundland and Labrador Federation of Labour — 2026-01
-[39] https://www.facebook.com/NFLDBulletin/posts/province-launches-public-input-for-budget-2026january-20 — NL Province Launches Public Input for Budget 2026 — NFLD Bulletin — 2026-01-20
-[40] https://www.linkedin.com/posts/province-of-pei_pei-has-announced-its-capital-budget-for-activity-739 — PEI 2026-27 Capital Budget announcement — Province of PEI LinkedIn — 2026-03
-[41] https://www.facebook.com/govpe/posts/pei-has-announced-its-capital-budget-for-2026-27-outlining-a-fi — PEI Capital Budget 2026-27 Five-Year Plan — govpe Facebook — 2026-03
-[42] https://finance.yahoo.com/economy/policy/articles/prince-edward-island-canada-sign-173100420.html — PEI and Canada Sign Co-operation Agreement — Yahoo Finance — 2026-03
-[43] https://publications.gc.ca/collections/collection_2026/dec-ced/Iu90-1-15-2026-eng.pdf — Canada Economic Development for Quebec Regions 2026-27 Plan — Government of Canada
-[44] https://www.demersbeaulne.com/en/2026/03/18/quebecs-2026-2027-budget-what-you-need-to-know/ — Quebec 2026-2027 Budget What You Need to Know — Demers Beaulne — 2026-03-18
-[45] https://www.statcan.gc.ca/en/subjects-start/economic_accounts/canadian-economic-news/2026-march — Canadian Economic News March 2026 Edition — Statistics Canada — 2026-03
+| Province/Territory | Unemployment Rate (Feb 2026) | CPI Index | Budget Deficit (2026-27) | Key Capital Investment |
+|---|---|---|---|---|
+| Ontario | 7.6% | 173.0 | $13.8B | $210B 10-yr plan |
+| Quebec | 5.9% | 94.4 | $8.6B | $167B 10-yr plan |
+| Alberta | 6.3% | 202.1 | $9.4B | $28.3B 3-yr plan |
+| British Columbia | 6.1% | 160.2 | $13.3B | $38B capital projects |
+| Saskatchewan | 5.6% | 162.0 | $819M | $17.5B 4-yr plan |
+| Manitoba | 5.7% | 157.2 | $498M | $3.8B capital |
+| Nova Scotia | 7.1% | 189.5 | $1.24B | $3.5B capital plan |
+| New Brunswick | 7.0% | 133.3 | $1.33B | $1.5B capital |
+| Newfoundland & Labrador | 9.2% | 166.4 | $372M (2025-26) | Bay du Nord $14B |
+| Prince Edward Island | 7.2% | N/A | $367M (2025-26) | Pre-budget |
+| Yukon | 3.6% (Jan) | N/A | $81.8M | $385M capital |
+| Northwest Territories | 5.3% | N/A | TBD | $326M infrastructure |
+| Nunavut | 10.8% | N/A | TBD | 3,000 housing units |
+
+**National context:** Canada's unemployment rate rose to 6.7% in February 2026 (+0.2pp). Employment declined 84,000 (-0.4%). National headline CPI inflation decelerated to 1.8% y/y in February from 2.3% in January. The six-month trend in housing starts was 256,005 units (SAAR). Next LFS release: April 10, 2026. Next CPI release: April 20, 2026.
+
+---
+
+*Research compiled 2026-03-31 by Agent 1B (Provincial Researcher). All figures sourced from Statistics Canada, CMHC, provincial government releases, and financial institution analyses as cited above.*
