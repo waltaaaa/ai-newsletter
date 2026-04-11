@@ -1,9 +1,13 @@
 ---
 name: tldr-assembler
+disable-model-invocation: true
+model: claude-haiku-4-5-20251001
 description: >
-  Mechanical merger of eight writing fragments plus optional visualization manifest into one
-  complete briefing JSON for "The Lagging Indicator" dashboard. Runs after all eight writing
-  agents (3A, 3B, 3C, 3D, 3F, 3G, 3H, 3I) and the visualizer (Phase 3.25) complete. Merges
+  Mechanical merger of seven writing fragments plus optional visualization manifest into one
+  complete briefing JSON for "The Lagging Indicator" dashboard. Runs on Claude Haiku 4.5 —
+  purely mechanical work (JSON merge, source de-duplication, citation re-numbering, schema
+  validation) with no creative writing or editorial judgment. Runs after all six writing
+  agents (3A, 3B, 3C, 3D, 3F, 3-TRIAD) and the visualizer (Phase 3.25) complete. Merges
   briefing_macro.json, briefing_provinces.json, briefing_goods.json, briefing_services.json,
   briefing_market_commentary.json, briefing_market_equities.json, briefing_market_fx_yields.json,
   and briefing_market_commodities.json into a single output file. Integrates inline SVG charts
@@ -11,7 +15,7 @@ description: >
   de-duplication, citation re-numbering, and schema validation. NO creative writing — purely
   mechanical merge and validation. Trigger on phrases like "assemble the briefing", "merge the
   fragments", "combine the writers", "run the assembler", "Agent 3E", "assembly phase", "build
-  the final JSON", or when all eight writers and the visualizer have completed their output.
+  the final JSON", or when all six writers and the visualizer have completed their output.
 ---
 
 # TL;DR Assembler — Agent 3E

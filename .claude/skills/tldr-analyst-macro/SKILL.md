@@ -1,5 +1,6 @@
 ---
 name: tldr-analyst-macro
+context: fork
 description: >
   Produces macro-level analytical dossier for "The Lagging Indicator" dashboard.
   Synthesizes national economic research (Agent 1A) with hard pipeline data to build
@@ -290,7 +291,29 @@ Pull global data from research_macro.md and hard data. For each region, identify
 
 ### Step 8: Build Financial Markets Package (8 minutes)
 
-Carry forward structure from briefing_latest.json:
+Carry forward structure from briefing_latest.json, but the commodities array MUST be built from `docs/data/timeseries.json` — not from briefing_latest or commodities.json — so that the dossier is the single source of truth for every downstream Markets writer.
+
+**The commodities array must cover all 13 canonical commodities** used by the Markets tab. The Markets triad writer (Agent 3-TRIAD) depends on this; if you omit commodities, the writer cannot produce them honestly.
+
+#### Canonical commodity list (13) and the timeseries.json keys that feed them
+
+| # | Commodity name (use exactly) | `timeseries.json` key | Unit | Fallback if stale/missing |
+|---|---|---|---|---|
+| 1 | WTI Crude Oil | `wti` | US$/bbl | — (always available) |
+| 2 | Western Canadian Select | *(not in timeseries)* | US$/bbl | Compute as `WTI - wcs_differential` if `wcs_differential` is available in a data file; otherwise set `"price": "N/A"` with a `note` field explaining the dossier does not carry WCS data |
+| 3 | Brent Crude | `brent` | US$/bbl | — |
+| 4 | Natural Gas (Henry Hub) | `natural_gas` | US$/MMBtu | — |
+| 5 | Gold | `gold` | US$/oz | — |
+| 6 | Silver | `silver` | US$/oz | — |
+| 7 | Copper | `copper` | US$/lb | — |
+| 8 | Uranium | `sprott_uranium` (preferred) or `cameco_uranium` | US$/lb (Sprott) or CAD$ (Cameco proxy) | — |
+| 9 | Nickel | `nickel` | US$/t | **If latest date > 90 days old, mark `"price": "N/A"` with stale-data note.** Do not publish stale values as current. |
+| 10 | Wheat | `wheat` | US¢/bu | — |
+| 11 | Canola | `canola` | CAD$/t | **If latest date > 90 days old, mark `"price": "N/A"` with stale-data note.** |
+| 12 | Potash | `potash_nutrien` (proxy) | US$ (stock price) | — |
+| 13 | Lumber | `lumber` | US$/mfbm | — |
+
+#### Output shape
 
 ```json
 {
@@ -298,25 +321,49 @@ Carry forward structure from briefing_latest.json:
     "indices": [
       {"label": "TSX", "value": "22,456", "change": "+1.2%", "period": "Week"},
       {"label": "S&P 500", "value": "5,123", "change": "+0.8%", "period": "Week"},
-      {"label": "NASDAQ", "value": "16,234", "change": "+1.1%", "period": "Week"}
+      {"label": "NASDAQ", "value": "16,234", "change": "+1.1%", "period": "Week"},
+      {"label": "DJIA", "value": "48,186", "change": "+0.9%", "period": "Week"}
     ],
     "fx": [
-      {"pair": "CAD/USD", "value": "1.358", "change": "-0.8%", "period": "Week"},
-      {"pair": "CAD/EUR", "value": "1.482", "change": "+0.3%", "period": "Week"}
+      {"pair": "CAD/USD", "value": "0.7235", "change": "-0.8%", "period": "Week"},
+      {"pair": "USD/CAD", "value": "1.3822", "change": "+0.8%", "period": "Week"},
+      {"pair": "EUR/USD", "value": "1.1696", "change": "+0.4%", "period": "Week"}
     ],
     "commodities": [
-      {"name": "WTI Crude", "value": "$68.50/bbl", "change": "-2.1%", "period": "Week"},
-      {"name": "Natural Gas", "value": "$2.85/mmbtu", "change": "+1.5%", "period": "Week"}
+      {"name": "WTI Crude Oil", "value": "$98.53/bbl", "weekly_pct": "-1.59%", "mom_pct": "+18.07%", "yoy_pct": "+65.37%", "avg_1y": "$65.99/bbl", "high_52w": "$112.95/bbl", "low_52w": "$58.70/bbl", "source": "timeseries.json:wti"},
+      {"name": "Western Canadian Select", "value": "N/A", "note": "Dossier does not carry WCS pricing this week; Markets writer should report wcs_analysis as N/A.", "source": "unavailable"},
+      {"name": "Brent Crude", "value": "$96.52/bbl", "weekly_pct": "-0.99%", "mom_pct": "...", "source": "timeseries.json:brent"},
+      {"name": "Natural Gas (Henry Hub)", "value": "$2.67/MMBtu", "weekly_pct": "-5.21%", "source": "timeseries.json:natural_gas"},
+      {"name": "Gold", "value": "$4,782.60/oz", "weekly_pct": "+0.4%", "source": "timeseries.json:gold"},
+      {"name": "Silver", "value": "$75.46/oz", "weekly_pct": "+0.1%", "source": "timeseries.json:silver"},
+      {"name": "Copper", "value": "$5.75/lb", "weekly_pct": "-0.1%", "source": "timeseries.json:copper"},
+      {"name": "Uranium", "value": "$50.93/lb (Sprott proxy)", "weekly_pct": "+3.39%", "source": "timeseries.json:sprott_uranium"},
+      {"name": "Nickel", "value": "N/A", "note": "timeseries.json:nickel has not updated since 2015-07-01; mark stale. Do not publish.", "source": "unavailable"},
+      {"name": "Wheat", "value": "$573.50/bu", "weekly_pct": "...", "source": "timeseries.json:wheat"},
+      {"name": "Canola", "value": "N/A", "note": "timeseries.json:canola has not updated since 2001-02-01; mark stale. Do not publish.", "source": "unavailable"},
+      {"name": "Potash", "value": "$72.78 (Nutrien proxy)", "weekly_pct": "-2.39%", "source": "timeseries.json:potash_nutrien"},
+      {"name": "Lumber", "value": "$579.50/mfbm", "weekly_pct": "...", "source": "timeseries.json:lumber"}
     ],
     "yieldCurve": {
       "current": [2.97, 3.05, 3.10, 3.30, 3.48, 3.97],
       "lastYear": [2.37, 2.39, 2.52, 2.69, 2.89, 3.19]
-    }
+    },
+    "wcs_analysis": null
   }
 }
 ```
 
-Carry forward exactly from briefing_latest.json and commodities.json. Never fabricate or estimate financial data.
+#### Rules
+
+1. **Always produce all 13 commodity entries.** Missing commodities must appear in the array with `"price": "N/A"` and a `note` field — never silently omit them. The triad writer depends on finding the full 13 to mark N/A honestly in its output.
+2. **Every non-N/A entry must cite its `source`** (e.g., `"timeseries.json:wti"`) so downstream agents can trace the value back.
+3. **Stale data (> 90 days since last datapoint) must be marked N/A.** Do not publish 2015 nickel prices or 2001 canola prices as current. The timeseries.json key for those exists, but the data is stale — mark N/A with a clear note.
+4. **Compute week-over-week, month-over-month, and year-over-year changes from timeseries.json** directly — take the current value vs the value 7 / 30 / 365 days prior. If any comparison window has no data, mark that specific field N/A (not the whole entry).
+5. **52-week high/low, 1-year average** should be computed from the trailing 365 days of timeseries data for each commodity that has it.
+6. **Never fabricate.** Never interpolate between two points to fill a missing date. Never use general market knowledge to fill a missing commodity. Never carry forward last week's value as this week's.
+7. **WCS handling:** if no WCS feed is available, set the top-level `wcs_analysis` to `null` and include the WCS entry in commodities with `"price": "N/A"` and a note. The Markets writer will then correctly mark the WCS analysis block as unavailable instead of fabricating a discount.
+
+Other financial market fields (indices, fx, yieldCurve) can still carry forward from briefing_latest.json as today. Never fabricate or estimate financial data for those either.
 
 ### Step 9: Build Consumer Pulse Package (8 minutes)
 

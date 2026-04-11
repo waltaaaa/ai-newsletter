@@ -1,5 +1,6 @@
 ---
 name: tldr-writer-market-commodities
+context: fork
 description: >
   Agent 3I — Writes per-commodity em dash narratives for all 13 commodities plus a
   summary paragraph for the Markets tab (300-400 words total). Covers WTI, WCS, Brent,

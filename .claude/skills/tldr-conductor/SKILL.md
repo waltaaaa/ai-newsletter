@@ -33,7 +33,7 @@ Phase 1   → 1A + 1B + 1C parallel → Research (20 min)
             ↓
 Phase 2   → 2A + 2B + 2C parallel → Analysis (12 min)
             ↓
-Phase 3   → 3A-3D + 3F-3I parallel → Writing (20 min)
+Phase 3   → 3A-3D + 3F + 3-TRIAD parallel → Writing (20 min)
             ↓
 Phase 3.25 → Visualizer → Editorial Charts (5 min)
             ↓
@@ -167,21 +167,23 @@ Total: 40 minutes
 
 ---
 
-### Phase 3: Writing (8 parallel agents)
+### Phase 3: Writing (6 parallel agents)
 
 **Group 1 — Core:** `tldr-writer-macro` (3A)
 **Group 2 — Sectors:** `tldr-writer-provincial` (3B), `tldr-writer-goods` (3C), `tldr-writer-services` (3D)
-**Group 3 — Markets:** `tldr-writer-market-commentary` (3F), `tldr-writer-market-equities` (3G), `tldr-writer-market-fx-yields` (3H), `tldr-writer-market-commodities` (3I)
+**Group 3 — Markets:** `tldr-writer-market-commentary` (3F, solo) + `tldr-writer-markets-triad` (3-TRIAD, consolidated equities/FX-yields/commodities)
+
+> **Markets phase consolidation (2026-04):** Agents 3G (equities), 3H (FX/yields), and 3I (commodities) have been merged into a single `tldr-writer-markets-triad` dispatch. The merge preserves writing quality (validated against production baseline) while halving the Markets phase quota cost. Agent 3F (commentary) remains solo to protect the narrative-heaviest section from attention dilution. The three legacy writer skills are archived at `.claude/skills/_archive/` and are no longer dispatched by the Conductor.
 
 **Your job:**
-1. Dispatch all eight in parallel
-2. Wait for all eight to complete
+1. Dispatch all six in parallel (3A, 3B, 3C, 3D, 3F, 3-TRIAD)
+2. Wait for all six to complete
 3. Validate each:
 
    **3A (Macro JSON):**
    - Valid JSON
    - Contains: `headline`, `edition`, `executive_summary` (>200 words), `national.analysis` (>300 words), `consumer_pulse`, `watchlist`, `global` (4 regions), `sources` (each with specific URL)
-   - Does NOT contain: `financialMarkets`, `commodities`, `yieldCurve` (these are now handled by 3F–3I)
+   - Does NOT contain: `financialMarkets`, `commodities`, `yieldCurve` (these are now handled by Agent 3F and Agent 3-TRIAD)
    - Editorial spot-check: Read 2–3 sentences from `national.analysis`. Verify wire-service tone (factual, specific, no opinions). Flag any banned words.
 
    **3B (Provincial JSON):**
@@ -209,32 +211,38 @@ Total: 40 minutes
    - Cross-references project pipeline counts and dollar values
    - Editorial spot-check: Verify wire-service tone. Flag banned words.
 
-   **3G (Market Equities JSON):**
+   **3-TRIAD (Markets Triad — consolidated equities/FX-yields/commodities):**
+   Produces three output files in one dispatch. Validate each file:
+
+   *briefing_market_equities.json:*
    - Valid JSON
    - `equities` array with exactly 4 items (TSX Composite, S&P 500, DJIA, Nasdaq Composite)
    - Each has: `name`, `symbol`, `value`, `weekly_pct`, `ytd_pct`, `yoy_pct`, `high_52w`, `low_52w`, `commentary`
-   - Total commentary word count: 100–150 words
+   - Total commentary word count: 380–475 words (new target, +50% over legacy)
    - Each commentary has `<span class="lead-sentence">` em dash lead
-   - Editorial spot-check: Verify tone. Flag banned words.
 
-   **3H (FX & Yields JSON):**
+   *briefing_market_fx_yields.json:*
    - Valid JSON
-   - `fx.pairs` with ≥3 currency pairs, `fx.fx_commentary` (40–60 words)
-   - `yieldCurve.tenors` with exactly 7 tenors (3M, 1Y, 2Y, 5Y, 10Y, 20Y, 30Y)
-   - `yieldCurve.yield_commentary` (60–90 words)
+   - `fx.pairs` with ≥3 currency pairs, `fx.fx_commentary` (180–225 words)
+   - `yieldCurve.tenors` — tenor count matches dossier supply (6 or 7 tenors); do not require a fixed count if dossier is partial
+   - `yieldCurve.yield_commentary` (175–225 words)
    - `yieldCurve.spread_2_10` and `yieldCurve.curve_shape` present
-   - Total word count: 100–150 words
    - Both commentaries have em dash leads
-   - Editorial spot-check: Verify tone. Flag banned words.
 
-   **3I (Market Commodities JSON):**
+   *briefing_market_commodities.json:*
    - Valid JSON
-   - `commodities` array with exactly 13 items (all tracked commodities present)
-   - `commodity_commentary` (50–75 words) with em dash lead
-   - `wcs_analysis` present with discount calculation
-   - Total word count: 300–400 words
-   - WTI has `projects_above_breakeven` field
-   - WCS has `wcs_discount` field
+   - `commodities` array — 1 to 13 items (triad writer may mark missing commodities N/A per Rule 5 no-fabrication)
+   - `commodity_commentary` (170–210 words) with em dash lead
+   - `wcs_analysis` present (may be null or all-N/A if dossier did not carry WCS data)
+   - Per-commodity total word count: 980–1,210 if all 13 present; scales proportionally for partial coverage
+   - WTI `projects_above_breakeven` may be N/A if dossier did not carry breakeven thresholds
+
+   *Craft-rule spot-checks across all three triad files:*
+   - Causal drivers present for every major market move (search for `as the`, `driven by`, `reflecting`, `following`, `amid`, `after`)
+   - At least 9 historical benchmarks across the triad (`since [month year]`, `52-week high/low`, `highest/lowest in N`, `contract inception`)
+   - At least 2 conditional cross-references (`if [trigger]...would...`)
+   - Product voice: "The Signal Dispatch cross-reference engine" appears in each file
+   - No taxonomy key leakage in prose (no `oil_gas`, `power_energy`, `commercial_mixed`, `transport_logistics` — must be spelled out in natural English)
    - Editorial spot-check: Verify tone. Flag banned words.
 
 **Editorial Spot-Check Detail:**
@@ -412,7 +420,7 @@ if issues: print('\n'.join(issues[:5]))
      ✓ research_macro/provinces/sectors.md (Agents 1A/1B/1C)
      ✓ dossier_macro/provinces/industries.json (Agents 2A/2B/2C)
      ✓ briefing_macro/provinces/goods/services.json (Agents 3A/3B/3C/3D)
-     ✓ briefing_market_commentary/equities/fx_yields/commodities.json (Agents 3F/3G/3H/3I)
+     ✓ briefing_market_commentary.json (Agent 3F) + briefing_market_equities/fx_yields/commodities.json (Agent 3-TRIAD)
      ✓ briefing_visualizations.json (Visualizer 3.25)
      ✓ briefing_YYYY-MM-DD.json (Agent 3E + 4 + 6)
      ✓ audit_report.md (Agent 5)
@@ -662,10 +670,10 @@ Update immediately when phase status changes.
 | `research_macro/provinces/sectors.md` | Agents 1A/1B/1C | Analysts 2A/2B/2C, Auditor |
 | `dossier_macro/provinces/industries.json` | Agents 2A/2B/2C | Writers 3A/3B/3C/3D, Fixer |
 | `briefing_macro/provinces/goods/services.json` | Agents 3A/3B/3C/3D | Assembler 3E |
-| `briefing_market_commentary.json` | Agent 3F | Assembler 3E |
-| `briefing_market_equities.json` | Agent 3G | Assembler 3E |
-| `briefing_market_fx_yields.json` | Agent 3H | Assembler 3E |
-| `briefing_market_commodities.json` | Agent 3I | Assembler 3E |
+| `briefing_market_commentary.json` | Agent 3F (`tldr-writer-market-commentary`) | Assembler 3E |
+| `briefing_market_equities.json` | Agent 3-TRIAD (`tldr-writer-markets-triad`) | Assembler 3E |
+| `briefing_market_fx_yields.json` | Agent 3-TRIAD (`tldr-writer-markets-triad`) | Assembler 3E |
+| `briefing_market_commodities.json` | Agent 3-TRIAD (`tldr-writer-markets-triad`) | Assembler 3E |
 | `briefing_visualizations.json` | Visualizer (3.25) | Assembler 3E |
 | `monitor/*.json` | P0 monitors | P1 Summarizer, P2 script |
 
@@ -709,11 +717,11 @@ User: yes
   ✓ All three completed. Dossiers valid.
   Proposed headline: "BoC Hold Amid Labour Softening"
 
-> Phase 3: Dispatching Agents 3A, 3B, 3C, 3D, 3F, 3G, 3H, 3I (parallel)...
+> Phase 3: Dispatching Agents 3A, 3B, 3C, 3D, 3F, 3-TRIAD (parallel)...
   ✓ All eight completed. Editorial spot-check passed.
   Group 1 (Core): 3A macro — 1800 words
   Group 2 (Sectors): 3B provinces, 3C goods, 3D services — 3400 words
-  Group 3 (Markets): 3F commentary 175w, 3G equities 130w, 3H FX/yields 125w, 3I commodities 350w
+  Group 3 (Markets): 3F commentary 265w, 3-TRIAD equities 426w + FX/yields 401w + commodities 1,290w
 
 > Phase 3.25: Dispatching Visualizer...
   ✓ Complete. 3 editorial charts generated (WTI breakeven, ON/QC permits, yield curve shift).
