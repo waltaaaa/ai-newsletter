@@ -255,7 +255,10 @@ class NIMClient:
                      model: str = NIM_RERANK_MODEL, top_n: int = 5) -> list[dict]:
         """Rerank passages by relevance to query.
 
-        Returns list of {"index": int, "logit": float, "text": str} sorted by relevance.
+        Returns list of {"index": int, "logit": float, "text": str} sorted by relevance,
+        sliced to the first `top_n` items. The NVIDIA NIM Rerank API schema no longer
+        accepts `top_n` in the request body (2026 change — `extra_forbidden` 400 error)
+        so we send the full passage set and slice the ranking client-side.
         """
         if not NVIDIA_API_KEY:
             raise RuntimeError("NVIDIA_API_KEY not set")
@@ -272,7 +275,6 @@ class NIMClient:
             "model": model,
             "query": {"text": query},
             "passages": passage_objects,
-            "top_n": min(top_n, len(passages)),
         }
 
         rerank_url = f"{NIM_RERANK_BASE_URL}/{NIM_RERANK_URL_MODEL}/reranking"
@@ -284,7 +286,9 @@ class NIMClient:
             idx = item.get("index", 0)
             if idx < len(passages):
                 item["text"] = passages[idx]
-        return rankings
+
+        # Client-side top_n slicing (API response is already sorted by logit desc)
+        return rankings[:top_n]
 
     # ── Sync wrappers ──
 

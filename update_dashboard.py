@@ -136,10 +136,14 @@ def update_dashboard(deep_sweep: bool = False):
     ]
 
     # Per-phase timeout limits (seconds). Generous defaults.
+    # Phase 3 raised from 1200s → 2400s to give rehash headroom with 7k+ projects.
+    # Long-term fix is to move rehash to a background async worker (tracked as
+    # follow-up work in HANDOFF_REPAIR_20260411.md); this timeout bump is the
+    # short-term bullet-proofing so runs don't soft-time-out mid-REHASH.
     PHASE_TIMEOUTS = {
         "Phase 1: Data Collection": 600,
         "Phase 2: Discovery": 1200,
-        "Phase 3: Filtering": 1200,
+        "Phase 3: Filtering": 2400,
         "Phase 4: Signals": 600,
         "Phase 5: Conductor": 7200,
         "Phase 6: Finalize": 300,

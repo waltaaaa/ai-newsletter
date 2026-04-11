@@ -216,6 +216,23 @@ async def filter_rehashes(articles, existing_projects, max_concurrent=10):
     if not GEMINI_API_KEY or not articles or not existing_projects:
         return articles
 
+    # Short-circuit when the N×M workload exceeds the budget.
+    # With 2,430 articles × 7,353 projects = ~18M substring comparisons plus
+    # potentially thousands of LLM calls, Phase 3 soft-times-out at the
+    # REHASH step. When the product crosses REHASH_NM_CAP we skip rehash
+    # entirely and keep all articles. This is safer than partial results:
+    # downstream dedup still runs via the semantic + MinHash passes, so we
+    # lose the final name-substring rehash check but gain a reliable run.
+    # Long-term fix: move rehash to a background async worker.
+    REHASH_NM_CAP = 10_000_000  # 10 million comparisons
+    workload = len(articles) * len(existing_projects)
+    if workload > REHASH_NM_CAP:
+        print(f"  [REHASH] SKIPPED — workload {len(articles)} articles × "
+              f"{len(existing_projects)} projects = {workload:,} > "
+              f"{REHASH_NM_CAP:,} cap. Retaining all {len(articles)} articles. "
+              f"Upstream MinHash + semantic dedup already applied.")
+        return articles
+
     # Build project summaries for matching — only keep projects with
     # names long enough to be meaningful (>5 chars)
     project_summaries = {}

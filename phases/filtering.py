@@ -294,48 +294,62 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
 
     all_projects: list = []
     failed_articles: list = []
+    # Canada (federal) often has far more items than any single province because it
+    # collects every federal feed. A single large batch overflows the claude -p stdin
+    # budget and exits 1 → API fallback → $0 balance error. Chunk any batch with
+    # >BATCH_ITEM_CAP items into sub-batches. Applies to every province for safety,
+    # but in practice only Canada hits the cap.
+    BATCH_ITEM_CAP = 20
     for province, items in sorted(by_province.items()):
-        text = rss_monitor.format_for_context(items, max_items=20)
-        if not text.strip():
-            continue
-        projects = _parse_projects_with_sonnet(
-            f"Government news releases from {province}:\n\n{text}",
-            province if province != 'Canada' else 'Canada',
-            f"RSS/{province[:15]}",
-            anthropic_client=anthropic_client,
-            claude_model=claude_model,
-            cost_state=cost_state,
-        )
-        if projects:
-            # Inject RSS article URLs as evidence (model often can't extract them)
-            rss_urls = [{"url": i.get('url') or i.get('link') or '',
-                         "name": i.get('source_name', ''),
-                         "date": (i.get('published') or '')[:10],
-                         "source_type": "rss_government" if i.get('source_level') != 'media' else "rss_news"}
-                        for i in items if (i.get('url') or i.get('link'))]
-            for p in projects:
-                p.setdefault('_evidence', [])
-                existing = {e.get('url') for e in p['_evidence']}
-                # Add all RSS URLs from this province group as evidence
-                for ru in rss_urls:
-                    if ru['url'] not in existing:
-                        p['_evidence'].append(ru)
-                        existing.add(ru['url'])
-                # Also set source_url if missing
-                if not p.get('source_url') and rss_urls:
-                    p['source_url'] = rss_urls[0]['url']
-            print(f"    {province}: {len(projects)} projects from RSS")
-        else:
-            # Sonnet found no projects — collect articles for Pro recovery
-            for item in items:
-                failed_articles.append({
-                    "title": item.get("title", ""),
-                    "summary": item.get("summary", ""),
-                    "url": item.get("url") or item.get("link", ""),
-                    "source_name": item.get("source_name", ""),
-                    "province": province,
-                })
-        all_projects.extend(projects)
+        # Split items into chunks of at most BATCH_ITEM_CAP
+        chunks = [items[i:i + BATCH_ITEM_CAP] for i in range(0, len(items), BATCH_ITEM_CAP)] or [[]]
+        chunk_count = len(chunks)
+        province_projects: list = []
+        for chunk_idx, chunk in enumerate(chunks):
+            if not chunk:
+                continue
+            text = rss_monitor.format_for_context(chunk, max_items=BATCH_ITEM_CAP)
+            if not text.strip():
+                continue
+            label_suffix = f" [{chunk_idx+1}/{chunk_count}]" if chunk_count > 1 else ""
+            projects = _parse_projects_with_sonnet(
+                f"Government news releases from {province}{label_suffix}:\n\n{text}",
+                province if province != 'Canada' else 'Canada',
+                f"RSS/{province[:15]}{label_suffix}",
+                anthropic_client=anthropic_client,
+                claude_model=claude_model,
+                cost_state=cost_state,
+            )
+            if projects:
+                # Inject RSS article URLs as evidence (model often can't extract them)
+                rss_urls = [{"url": i.get('url') or i.get('link') or '',
+                             "name": i.get('source_name', ''),
+                             "date": (i.get('published') or '')[:10],
+                             "source_type": "rss_government" if i.get('source_level') != 'media' else "rss_news"}
+                            for i in chunk if (i.get('url') or i.get('link'))]
+                for p in projects:
+                    p.setdefault('_evidence', [])
+                    existing = {e.get('url') for e in p['_evidence']}
+                    for ru in rss_urls:
+                        if ru['url'] not in existing:
+                            p['_evidence'].append(ru)
+                            existing.add(ru['url'])
+                    if not p.get('source_url') and rss_urls:
+                        p['source_url'] = rss_urls[0]['url']
+                province_projects.extend(projects)
+            else:
+                # Sonnet found no projects — collect articles for Pro recovery
+                for item in chunk:
+                    failed_articles.append({
+                        "title": item.get("title", ""),
+                        "summary": item.get("summary", ""),
+                        "url": item.get("url") or item.get("link", ""),
+                        "source_name": item.get("source_name", ""),
+                        "province": province,
+                    })
+        if province_projects:
+            print(f"    {province}: {len(province_projects)} projects from RSS ({chunk_count} chunk{'s' if chunk_count != 1 else ''})")
+        all_projects.extend(province_projects)
 
     print(f"  [RSS PROJECTS] {len(all_projects)} extracted, "
           f"{len(failed_articles)} articles queued for Pro recovery")
