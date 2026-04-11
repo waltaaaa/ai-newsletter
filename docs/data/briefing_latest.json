@@ -279,7 +279,9 @@
         "gdp": "$24,066B (Q3 2025 level)",
         "cpi_index": "327.46 (Feb 2026)",
         "fed_funds": "3.64%",
-        "unemployment": "4.4%"
+        "unemployment": "4.4%",
+        "cpi": "327.46 (Feb 2026)",
+        "rate": "3.64%"
       },
       "analysis": "<p>The US Federal Reserve federal funds rate stood at <strong>3.64%</strong><sup>197</sup> in the February 2026 print, <strong>139 basis points</strong> above the Bank of Canada overnight rate of <strong>2.25%</strong>.<sup>73</sup> US unemployment ran at <strong>4.4%</strong><sup>196</sup> in February, while the US CPI index registered <strong>327.46</strong> for the same period.<sup>196</sup> US real GDP carried at <strong>$24,066B</strong> for Q3 2025; the BEA Q4 2025 release was pending at the time of refresh.<sup>195</sup> CAD/USD settled at <strong>0.7235</strong><sup>187</sup> on April 9, 2026, up <strong>0.70%</strong> on the week and <strong>+2.03%</strong> year-over-year. The 139-basis-point rate differential between the Federal Reserve and the Bank of Canada is one factor in the cross-border yield gap captured in this week's data.</p><p>US benchmark equities closed sharply higher on April 9, 2026: the S&amp;P 500 at <strong>6,824.66</strong>, up <strong>3.68%</strong> on the day and <strong>+25.06%</strong> year-over-year; the Dow Jones Industrial Average at <strong>48,185.80</strong>, up <strong>3.61%</strong> on the day and <strong>+18.66%</strong> year-over-year; and the NASDAQ Composite at <strong>22,822.42</strong>, up <strong>4.31%</strong> on the day and <strong>+33.27%</strong> year-over-year.<sup>186</sup> The S&amp;P/TSX Composite tracked at <strong>+41.10%</strong> year-over-year, above all three US benchmarks on a 12-month basis.<sup>185</sup> Statistics Canada's January merchandise trade release recorded total Canadian exports of <strong>$62.5B</strong> against imports of <strong>$66.1B</strong>, with motor vehicle exports down <strong>21.2%</strong> month-over-month — a category dominated by the Canada-US cross-border supply chain.</p>",
       "sources": [
@@ -318,7 +320,8 @@
           "title": "Federal Reserve — Open Market Operations",
           "url": "https://www.federalreserve.gov/monetarypolicy/openmarket.htm"
         }
-      ]
+      ],
+      "indicatorMeta": {}
     },
     {
       "region": "China",
@@ -327,7 +330,11 @@
         "usd_cny": "6.8287",
         "iron_ore": "$107.83/t",
         "copper": "$5.75/lb",
-        "aluminum": "$3,369.50/t"
+        "aluminum": "$3,369.50/t",
+        "gdp": "",
+        "cpi": "",
+        "rate": "",
+        "unemployment": ""
       },
       "analysis": "<p>USD/CNY stood at <strong>6.8287</strong><sup>177</sup> on April 8, 2026, down <strong>1.0%</strong> month-over-month and <strong>7.0%</strong> year-over-year, indicating yuan appreciation against the US dollar over the trailing 12 months. China-linked commodity benchmarks recorded mixed prints on the week. Iron ore settled at <strong>$107.83/t</strong><sup>192</sup>, up <strong>0.30%</strong> week-over-week and <strong>+8.64%</strong> year-over-year. Copper closed at <strong>US$5.75/lb</strong><sup>190</sup>, up <strong>3.32%</strong> on the week and <strong>+37.65%</strong> year-over-year. Aluminum registered <strong>$3,369.50/t</strong>, down <strong>1.22%</strong> on the week and up <strong>55.55%</strong> year-over-year.</p><p>The project database tracks <strong>367 mining projects ($159.5B)</strong> with exposure to China commodity demand across iron ore, copper, aluminum and potash, plus 61 oil and gas projects ($100.2B). Nutrien (the potash proxy) closed at <strong>$72.78</strong><sup>14</sup>, down <strong>3.56%</strong> on the week and up <strong>50.34%</strong> year-over-year. The Sprott Physical Uranium Trust proxy registered <strong>$50.93/share</strong><sup>191</sup>, up <strong>4.15%</strong> on the week and <strong>+130.24%</strong> year-over-year, on a 52-week range of $21.59 to $61.81. Canadian commodity mining sector GDP (NAICS 21) rose <strong>1.2%</strong> month-over-month against a <strong>-0.1%</strong> year-over-year base in the latest StatCan industry print.<sup>180</sup></p>",
       "sources": [
@@ -361,7 +368,8 @@
           "title": "FRED — Iron Ore Price",
           "url": "https://fred.stlouisfed.org/series/PIORECRUSDM"
         }
-      ]
+      ],
+      "indicatorMeta": {}
     },
     {
       "region": "European Union",
@@ -370,7 +378,11 @@
         "hicp": "+1.9% YoY (Dec 2025)",
         "ecb_deposit_rate": "2.75% (stale, Feb 2025 capture)",
         "dax": "24,080.63",
-        "eur_usd": "1.1696"
+        "eur_usd": "1.1696",
+        "cpi": "+1.9% YoY (Dec 2025)",
+        "rate": "2.75% (stale, Feb 2025 capture)",
+        "gdp": "",
+        "unemployment": ""
       },
       "analysis": "<p>Eurozone HICP ran at <strong>+1.9%</strong><sup>199</sup> year-over-year in the December 2025 print, the latest captured in the data set. The European Central Bank deposit rate stood at <strong>2.75%</strong><sup>198</sup> in the February 2025 capture, flagged in the dossier as stale relative to subsequent ECB decisions. The DAX closed at <strong>24,080.63</strong><sup>201</sup> on April 8, 2026, up <strong>3.36%</strong> on the day, <strong>+2.87%</strong> month-over-month, and <strong>+18.74%</strong> year-over-year.<sup>201</sup> EUR/USD traded at <strong>1.1696</strong> on April 9, up <strong>1.34%</strong> on the week, <strong>+0.68%</strong> month-over-month, and <strong>+6.79%</strong> year-over-year.</p><p>The euro's <strong>+6.79%</strong> 12-month appreciation against the US dollar carries implications for cross-border pricing of Canadian exports to the European Union. The DAX <strong>+18.74%</strong> 12-month gain tracks below the S&amp;P/TSX Composite's <strong>+41.10%</strong> year-over-year advance and the S&amp;P 500's <strong>+25.06%</strong>. Statistics Canada's January merchandise trade release recorded total Canadian exports of <strong>$62.5B</strong> against imports of <strong>$66.1B</strong>, generating a <strong>$3.6B</strong> trade deficit, with exports down <strong>4.7%</strong> month-over-month and imports down <strong>1.1%</strong>. Eurozone HICP at <strong>+1.9%</strong> year-over-year tracks slightly above the Canadian headline CPI print of <strong>+1.8%</strong> for March 2026.<sup>178</sup></p>",
       "sources": [
@@ -394,7 +406,8 @@
           "title": "Yahoo Finance — DAX (^GDAXI)",
           "url": "https://finance.yahoo.com/quote/%5EGDAXI/"
         }
-      ]
+      ],
+      "indicatorMeta": {}
     },
     {
       "region": "United Kingdom",
@@ -403,7 +416,11 @@
         "ftse_100": "10,608.90",
         "ftse_yoy": "+34.11%",
         "ftse_mom": "+3.51%",
-        "gbp_usd": "1.3432"
+        "gbp_usd": "1.3432",
+        "gdp": "",
+        "cpi": "",
+        "rate": "",
+        "unemployment": ""
       },
       "analysis": "<p>The FTSE 100 closed at <strong>10,608.90</strong><sup>200</sup> on April 8, 2026, up <strong>2.36%</strong> on the day, <strong>+3.51%</strong> month-over-month, and <strong>+34.11%</strong> year-over-year, the second-largest 12-month equity gain among the captured benchmarks after the Nikkei 225 at <strong>+70.57%</strong>.<sup>202</sup> GBP/USD traded at <strong>1.3432</strong> on April 9, 2026, up <strong>1.5%</strong> on the week, <strong>+0.1%</strong> month-over-month, and <strong>+4.7%</strong> year-over-year. The GBP/USD value was carried from the prior briefing because the timeseries.json file did not include an fx_gbpusd entry this week.</p><p>The Bank of England policy rate and UK CPI series were not present in the on-disk data set this week. The FTSE 100 <strong>+34.11%</strong> 12-month gain tracks below the S&amp;P/TSX Composite's <strong>+41.10%</strong> year-over-year advance and above the S&amp;P 500's <strong>+25.06%</strong> over the same period. The pound's <strong>+4.7%</strong> 12-month advance against the US dollar carries implications for cross-border pricing of Canadian exports to the United Kingdom. Brent crude — the dominant North Sea benchmark — settled at <strong>US$96.52/bbl</strong><sup>184</sup> on April 9, 2026, down <strong>11.47%</strong> week-over-week and up <strong>47.40%</strong> year-over-year, on a 52-week range of $58.92 to $118.35 and a one-year average of $69.87. The pipeline tracks 61 oil and gas projects ($100.2B).</p>",
       "sources": [
@@ -422,13 +439,15 @@
           "title": "Yahoo Finance — Nikkei 225 (^N225)",
           "url": "https://finance.yahoo.com/quote/%5EN225/"
         }
-      ]
+      ],
+      "indicatorMeta": {}
     }
   ],
   "globalVectors": {
     "us": "S&P 500 +25.06% YoY, Dow +18.66% YoY, NASDAQ +33.27% YoY (April 9, 2026 close). Federal funds rate at 3.64% (Feb 2026 print) sits 139 basis points above the Bank of Canada overnight rate of 2.25%; CAD/USD at 0.7235.",
     "china": "USD/CNY 6.8287 (April 8, 2026), down 7.0% year-over-year on yuan appreciation. Iron ore $107.83/t (+8.64% YoY), copper $5.75/lb (+37.65% YoY), aluminum +55.55% YoY. The pipeline tracks 367 mining projects ($159.5B) with exposure to China commodity demand.",
-    "eu": "DAX 24,080.63 (April 8, 2026), +18.74% YoY. EUR/USD 1.1696, +6.79% YoY. Eurozone HICP +1.9% YoY (December 2025 print); ECB deposit rate captured at 2.75% but the data refresh is dated February 2025."
+    "eu": "DAX 24,080.63 (April 8, 2026), +18.74% YoY. EUR/USD 1.1696, +6.79% YoY. Eurozone HICP +1.9% YoY (December 2025 print); ECB deposit rate captured at 2.75% but the data refresh is dated February 2025.",
+    "uk": ""
   },
   "provinces": [
     {
@@ -657,7 +676,9 @@
         "participationRate": "Statistics Canada",
         "employmentRate": "Statistics Canada"
       },
-      "insightCharts": []
+      "insightCharts": [],
+      "marketContext": "<p>Ontario's unemployment rate held at <strong>7.6%</strong> in the February Labour Force Survey, <strong>+0.3 percentage points</strong> from the prior month and the highest provincial print in Central Canada<sup>73</sup>. The participation rate rose <strong>+0.2 percentage points</strong> to <strong>64.6%</strong> while the employment rate held flat at <strong>59.7%</strong>, below the national 60.6% figure<sup>73</sup>. The provincial CPI series printed at <strong>-1.1%</strong> year-over-year, the lowest provincial CPI reading in the country<sup>177</sup>. Housing starts came in at <strong>67,274</strong> units (CMHC seasonally adjusted annualized), up from <strong>65,757</strong> the prior month<sup>178</sup>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Quebec",
@@ -879,7 +900,9 @@
         "participationRate": "Statistics Canada",
         "employmentRate": "Statistics Canada"
       },
-      "insightCharts": []
+      "insightCharts": [],
+      "marketContext": "<p>Quebec's unemployment rate printed at <strong>5.9%</strong> in the February Labour Force Survey, <strong>+0.7 percentage points</strong> from the prior 5.2% reading; the participation rate fell <strong>-0.3 percentage points</strong> to <strong>64.5%</strong> and the employment rate fell <strong>-0.8 percentage points</strong> to <strong>60.7%</strong><sup>73</sup>. The provincial CPI series printed at <strong>+0.6%</strong> year-over-year, below the national signal<sup>177</sup>. Housing starts came in at <strong>53,461</strong> units in the latest CMHC release, up from <strong>51,982</strong> the prior month<sup>178</sup>. Quebec carries the richest provincial indicator library after the national rollup, with Institut de la statistique du Québec series running parallel to StatCan prints<sup>177</sup>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Alberta",
@@ -1117,7 +1140,9 @@
           "subtitle": "12-month trend - USD/bbl",
           "reasoning": "Alberta's power/energy sector holds 124 projects ($137.3B), the largest sector by value; WTI trajectory is the baseline commodity context for the provincial pipeline."
         }
-      ]
+      ],
+      "marketContext": "<p>Alberta's unemployment rate printed at <strong>6.3%</strong> in the February Labour Force Survey, <strong>-0.1 percentage points</strong> from January, while the participation rate fell <strong>-0.3 percentage points</strong> to <strong>68.7%</strong> and the employment rate fell <strong>-0.1 percentage points</strong> to <strong>64.4%</strong><sup>73</sup>. Alberta's participation rate remains the highest in the country, consistent with sustained resource-sector labour demand. The provincial CPI series printed at <strong>+3.4%</strong> year-over-year, the highest provincial CPI reading in Canada<sup>177</sup>. Housing starts came in at <strong>48,438</strong> units in the latest CMHC release, down from <strong>48,896</strong> the prior month<sup>178</sup>. Provincial GDP printed at <strong>+2.7%</strong>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "British Columbia",
@@ -1361,7 +1386,9 @@
           "subtitle": "12-month trend - USD/1000 bf",
           "reasoning": "The BC Minister of Forests issued an April 9 statement on US softwood lumber duty review preliminary results, linked to 21 BC forestry and manufacturing projects."
         }
-      ]
+      ],
+      "marketContext": "<p>British Columbia's unemployment rate held at <strong>6.1%</strong> in the February Labour Force Survey, <strong>flat</strong> from January, while the participation rate fell <strong>-0.4 percentage points</strong> to <strong>64.4%</strong> and the employment rate fell <strong>-0.4 percentage points</strong> to <strong>60.5%</strong><sup>73</sup>. The provincial CPI series printed at <strong>+1.0%</strong> year-over-year, below the national signal<sup>177</sup>. Housing starts came in at <strong>41,331</strong> units in the latest CMHC release, down marginally from <strong>41,492</strong> the prior month<sup>178</sup>. Provincial GDP printed at <strong>+1.2%</strong>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Saskatchewan",
@@ -1583,7 +1610,9 @@
         "participationRate": "Statistics Canada",
         "employmentRate": "Statistics Canada"
       },
-      "insightCharts": []
+      "insightCharts": [],
+      "marketContext": "<p>Saskatchewan's unemployment rate printed at <strong>5.6%</strong> in the February Labour Force Survey, <strong>+0.3 percentage points</strong> from the prior 5.3% reading; the participation rate fell <strong>-0.5 percentage points</strong> to <strong>67.1%</strong> and the employment rate fell <strong>-0.6 percentage points</strong> to <strong>63.4%</strong><sup>73</sup>. Saskatchewan's unemployment rate sits among the lowest provincial prints in Canada, tied with Quebec's ISQ reading. The provincial CPI series printed at <strong>-0.7%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+3.4%</strong>. Housing starts came in at <strong>5,486</strong> units in the latest CMHC release, up from <strong>5,327</strong> the prior month<sup>178</sup>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Manitoba",
@@ -1815,7 +1844,9 @@
           "subtitle": "12-month trend - USD/bushel",
           "reasoning": "Manitoba's dominant agricultural sector makes wheat the primary commodity context; the budget's $3.8B capital plan sits alongside agricultural export conditions."
         }
-      ]
+      ],
+      "marketContext": "<p>Manitoba's unemployment rate printed at <strong>5.7%</strong> in the February Labour Force Survey, <strong>-0.6 percentage points</strong> from the prior 6.3% reading; the participation rate fell <strong>-0.8 percentage points</strong> to <strong>66.3%</strong> and the employment rate fell <strong>-0.4 percentage points</strong> to <strong>62.5%</strong><sup>73</sup>. Manitoba's employment rate remains above the national 60.6% figure. The provincial CPI series printed at <strong>+3.1%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+1.1%</strong>. Housing starts came in at <strong>7,642</strong> units in the latest CMHC release, down from <strong>7,799</strong> the prior month<sup>178</sup>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Nova Scotia",
@@ -2047,7 +2078,9 @@
           "subtitle": "12-month trend - USD/MMBtu",
           "reasoning": "Nova Scotia's power/energy sector is the largest by value at $8.9B, led by Bear Head Energy ammonia/hydrogen ($8.0B) - natural gas is the relevant commodity context."
         }
-      ]
+      ],
+      "marketContext": "<p>Nova Scotia's unemployment rate printed at <strong>7.1%</strong> in the February Labour Force Survey, <strong>+0.2 percentage points</strong> from the prior 6.9% reading; the participation rate fell <strong>-0.1 percentage points</strong> to <strong>61.3%</strong> and the employment rate fell <strong>-0.1 percentage points</strong> to <strong>57.0%</strong> — the lowest employment rate among the ten provinces<sup>73</sup>. The provincial CPI series printed at <strong>+1.5%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+2.7%</strong>. Housing starts came in at <strong>7,146</strong> units in the latest CMHC release, down from <strong>7,252</strong> the prior month<sup>178</sup>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "New Brunswick",
@@ -2279,7 +2312,9 @@
           "subtitle": "12-month trend - USD/1000 bf",
           "reasoning": "New Brunswick's project pipeline is led by Saint John Pulp Mill Upgrades ($1.1B); lumber price is the primary commodity context for the province's forestry sector."
         }
-      ]
+      ],
+      "marketContext": "<p>New Brunswick's unemployment rate printed at <strong>7.0%</strong> in the February Labour Force Survey, <strong>+0.3 percentage points</strong> from the prior 6.7% reading; the participation rate rose <strong>+0.1 percentage points</strong> to <strong>60.7%</strong> and the employment rate held at <strong>56.5%</strong> — the lowest provincial employment rate in the country<sup>73</sup>. The provincial CPI series printed at <strong>+1.2%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+1.8%</strong>. Housing starts came in at <strong>6,011</strong> units in the latest CMHC release, down from <strong>6,454</strong> the prior month<sup>178</sup>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Newfoundland and Labrador",
@@ -2511,7 +2546,9 @@
           "subtitle": "12-month trend - USD/ton",
           "reasoning": "NL's pipeline is led by Grassy Point LNG ($10.0B) and Kamistiatusset (Kami) iron ore ($3.86B); iron ore is a direct commodity context for provincial mining projects."
         }
-      ]
+      ],
+      "marketContext": "<p>Newfoundland and Labrador's unemployment rate held at <strong>9.2%</strong> in the February Labour Force Survey, <strong>flat</strong> from January and the highest provincial print in the country<sup>73</sup>. The participation rate rose <strong>+0.5 percentage points</strong> to <strong>58.1%</strong> and the employment rate rose <strong>+0.4 percentage points</strong> to <strong>52.7%</strong> — still the lowest provincial employment rate in Canada<sup>73</sup>. The provincial CPI series printed at <strong>+1.8%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+2.4%</strong>. Housing starts came in at <strong>1,223</strong> units in the latest CMHC release, up from <strong>1,194</strong> the prior month<sup>178</sup>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Prince Edward Island",
@@ -2733,7 +2770,9 @@
         "participationRate": "Statistics Canada",
         "employmentRate": "Statistics Canada"
       },
-      "insightCharts": []
+      "insightCharts": [],
+      "marketContext": "<p>Prince Edward Island's unemployment rate printed at <strong>7.2%</strong> in the February Labour Force Survey, <strong>-0.4 percentage points</strong> from the prior 7.6% reading; the participation rate rose <strong>+0.1 percentage points</strong> to <strong>66.6%</strong> and the employment rate rose <strong>+0.3 percentage points</strong> to <strong>61.8%</strong><sup>73</sup>. The provincial CPI series printed at <strong>+5.4%</strong> year-over-year — the highest provincial CPI reading in Canada<sup>177</sup> — and provincial GDP printed at <strong>+3.6%</strong>. Housing starts came in at <strong>963</strong> units in the latest CMHC release, down from <strong>1,112</strong> the prior month<sup>178</sup>.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Yukon",
@@ -2973,7 +3012,9 @@
           "subtitle": "12-month trend - USD/lb",
           "reasoning": "Yukon's Kudz Ze Kayah zinc/copper project ($489M, Under Review) links the pipeline to copper market conditions."
         }
-      ]
+      ],
+      "marketContext": "<p>Yukon's unemployment rate printed at <strong>3.9%</strong> in the February Labour Force Survey — the lowest in Canada — with the participation rate at <strong>75.1%</strong> and the employment rate at <strong>72.1%</strong>, both the highest territorial or provincial prints in the country<sup>73</sup>. Yukon GDP printed at <strong>-3.3%</strong> on the 2024 annual print from StatCan Table 36-10-0402<sup>177</sup>. CPI and housing starts are not available at the territorial level — StatCan and CMHC do not publish those series for Yukon, NWT, or Nunavut.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Northwest Territories",
@@ -3213,7 +3254,9 @@
           "subtitle": "12-month trend - USD/ton",
           "reasoning": "The Pine Point lead/zinc project ($653M, Under Review) is a key non-defence pipeline entry; zinc price is the relevant commodity context."
         }
-      ]
+      ],
+      "marketContext": "<p>Northwest Territories' unemployment rate printed at <strong>5.3%</strong> in the February Labour Force Survey, with the participation rate at <strong>69.2%</strong> (above the national 65.4% figure) and the employment rate at <strong>65.0%</strong><sup>73</sup>. NWT GDP printed at <strong>-1.1%</strong> on the 2024 annual print from StatCan Table 36-10-0402<sup>177</sup>. CPI and housing starts are not available at the territorial level — StatCan and CMHC do not publish those series for NWT.</p>",
+      "tradeExposure": ""
     },
     {
       "name": "Nunavut",
@@ -3453,7 +3496,9 @@
           "subtitle": "12-month trend - USD/ton",
           "reasoning": "Baffinland Mary River Steensby Rail and Port Expansion ($3.0B, Approved) is the top non-defence entry; iron ore is the direct commodity context for Nunavut's largest pipeline project."
         }
-      ]
+      ],
+      "marketContext": "<p>Nunavut's unemployment rate printed at <strong>10.8%</strong> in the February Labour Force Survey — the highest in Canada — with the participation rate at <strong>61.7%</strong> and the employment rate at <strong>54.2%</strong><sup>73</sup>. Nunavut GDP printed at <strong>+7.5%</strong> on the 2024 annual print from StatCan Table 36-10-0402<sup>177</sup>. CPI and housing starts are not available at the territorial level — StatCan and CMHC do not publish those series for Nunavut.</p>",
+      "tradeExposure": ""
     }
   ],
   "goodsIndustries": [
@@ -4029,15 +4074,18 @@
       "subsectors": [
         {
           "code": "411",
-          "name": "Farm Product Wholesalers"
+          "name": "Farm Product Wholesalers",
+          "mm": ""
         },
         {
           "code": "415",
-          "name": "Motor Vehicle & Parts Wholesalers"
+          "name": "Motor Vehicle & Parts Wholesalers",
+          "mm": ""
         },
         {
           "code": "418",
-          "name": "Miscellaneous Wholesalers"
+          "name": "Miscellaneous Wholesalers",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4108,15 +4156,18 @@
       "subsectors": [
         {
           "code": "441",
-          "name": "Motor Vehicle & Parts Dealers"
+          "name": "Motor Vehicle & Parts Dealers",
+          "mm": ""
         },
         {
           "code": "445",
-          "name": "Food & Beverage Stores"
+          "name": "Food & Beverage Stores",
+          "mm": ""
         },
         {
           "code": "452",
-          "name": "General Merchandise Stores"
+          "name": "General Merchandise Stores",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4188,15 +4239,18 @@
       "subsectors": [
         {
           "code": "482",
-          "name": "Rail Transportation"
+          "name": "Rail Transportation",
+          "mm": ""
         },
         {
           "code": "484",
-          "name": "Truck Transportation"
+          "name": "Truck Transportation",
+          "mm": ""
         },
         {
           "code": "488",
-          "name": "Support Activities for Transportation"
+          "name": "Support Activities for Transportation",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4268,15 +4322,18 @@
       "subsectors": [
         {
           "code": "511",
-          "name": "Publishing Industries"
+          "name": "Publishing Industries",
+          "mm": ""
         },
         {
           "code": "517",
-          "name": "Telecommunications"
+          "name": "Telecommunications",
+          "mm": ""
         },
         {
           "code": "518",
-          "name": "Data Processing & Hosting"
+          "name": "Data Processing & Hosting",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4347,15 +4404,18 @@
       "subsectors": [
         {
           "code": "521",
-          "name": "Monetary Authorities — Central Bank"
+          "name": "Monetary Authorities — Central Bank",
+          "mm": ""
         },
         {
           "code": "522",
-          "name": "Credit Intermediation & Related"
+          "name": "Credit Intermediation & Related",
+          "mm": ""
         },
         {
           "code": "524",
-          "name": "Insurance Carriers"
+          "name": "Insurance Carriers",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4427,15 +4487,18 @@
       "subsectors": [
         {
           "code": "531",
-          "name": "Real Estate"
+          "name": "Real Estate",
+          "mm": ""
         },
         {
           "code": "532",
-          "name": "Rental & Leasing Services"
+          "name": "Rental & Leasing Services",
+          "mm": ""
         },
         {
           "code": "533",
-          "name": "Lessors of Non-Financial Intangible Assets"
+          "name": "Lessors of Non-Financial Intangible Assets",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4496,15 +4559,18 @@
       "subsectors": [
         {
           "code": "541",
-          "name": "Professional, Scientific & Technical Services"
+          "name": "Professional, Scientific & Technical Services",
+          "mm": ""
         },
         {
           "code": "5413",
-          "name": "Architectural, Engineering & Related"
+          "name": "Architectural, Engineering & Related",
+          "mm": ""
         },
         {
           "code": "5417",
-          "name": "Scientific Research & Development"
+          "name": "Scientific Research & Development",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4571,7 +4637,8 @@
       "subsectors": [
         {
           "code": "5511",
-          "name": "Management of Companies & Enterprises"
+          "name": "Management of Companies & Enterprises",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4633,15 +4700,18 @@
       "subsectors": [
         {
           "code": "561",
-          "name": "Administrative & Support Services"
+          "name": "Administrative & Support Services",
+          "mm": ""
         },
         {
           "code": "5621",
-          "name": "Waste Collection"
+          "name": "Waste Collection",
+          "mm": ""
         },
         {
           "code": "5629",
-          "name": "Remediation & Other Waste Management Services"
+          "name": "Remediation & Other Waste Management Services",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4707,15 +4777,18 @@
       "subsectors": [
         {
           "code": "611",
-          "name": "Educational Services"
+          "name": "Educational Services",
+          "mm": ""
         },
         {
           "code": "6111",
-          "name": "Elementary & Secondary Schools"
+          "name": "Elementary & Secondary Schools",
+          "mm": ""
         },
         {
           "code": "6113",
-          "name": "Universities"
+          "name": "Universities",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4781,15 +4854,18 @@
       "subsectors": [
         {
           "code": "621",
-          "name": "Ambulatory Health Care Services"
+          "name": "Ambulatory Health Care Services",
+          "mm": ""
         },
         {
           "code": "622",
-          "name": "Hospitals"
+          "name": "Hospitals",
+          "mm": ""
         },
         {
           "code": "623",
-          "name": "Nursing & Residential Care Facilities"
+          "name": "Nursing & Residential Care Facilities",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4850,15 +4926,18 @@
       "subsectors": [
         {
           "code": "711",
-          "name": "Performing Arts, Spectator Sports"
+          "name": "Performing Arts, Spectator Sports",
+          "mm": ""
         },
         {
           "code": "712",
-          "name": "Heritage Institutions"
+          "name": "Heritage Institutions",
+          "mm": ""
         },
         {
           "code": "713",
-          "name": "Amusement, Gambling & Recreation"
+          "name": "Amusement, Gambling & Recreation",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -4924,11 +5003,13 @@
       "subsectors": [
         {
           "code": "721",
-          "name": "Accommodation Services"
+          "name": "Accommodation Services",
+          "mm": ""
         },
         {
           "code": "722",
-          "name": "Food Services & Drinking Places"
+          "name": "Food Services & Drinking Places",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -5000,15 +5081,18 @@
       "subsectors": [
         {
           "code": "811",
-          "name": "Repair & Maintenance"
+          "name": "Repair & Maintenance",
+          "mm": ""
         },
         {
           "code": "812",
-          "name": "Personal & Laundry Services"
+          "name": "Personal & Laundry Services",
+          "mm": ""
         },
         {
           "code": "813",
-          "name": "Religious, Grantmaking, Civic Organizations"
+          "name": "Religious, Grantmaking, Civic Organizations",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -5080,15 +5164,18 @@
       "subsectors": [
         {
           "code": "911",
-          "name": "Federal Government Public Administration"
+          "name": "Federal Government Public Administration",
+          "mm": ""
         },
         {
           "code": "912",
-          "name": "Provincial & Territorial Public Administration"
+          "name": "Provincial & Territorial Public Administration",
+          "mm": ""
         },
         {
           "code": "913",
-          "name": "Local, Municipal & Regional Public Administration"
+          "name": "Local, Municipal & Regional Public Administration",
+          "mm": ""
         }
       ],
       "indicatorSrc": "StatCan",
@@ -5251,7 +5338,8 @@
         "commentary": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at 33,477.71 on April 9, 2026, advancing 1.12% week-over-week and 41.10% year-over-year</span> — the highest year-over-year reading among the four North American benchmarks tracked this week<sup>185</sup>. The index sits 3.1% below its 52-week high of 34,541.30 set on March 2, 2026, and 45.5% above its 52-week low of 23,014.90 recorded on April 10, 2025<sup>185</sup>. The weekly move developed as the latest Statistics Canada monthly GDP release showed mining, quarrying, and oil and gas extraction up 1.2% month-over-month against construction up 1.1% month-over-month, even as the headline monthly GDP print contracted 0.6%<sup>180</sup>. The Signal Dispatch cross-reference engine links the benchmark advance to 428 projects tracked in mining, quarrying, and oil and gas extraction at a combined C$259.7 billion, plus 1,687 infrastructure projects tracked at C$179.0 billion and 802 utilities projects tracked at C$507.7 billion<sup>204</sup>. If the index holds above the 33,000 level amid the Bank of Canada overnight rate held at 2.25% for a seventh consecutive meeting, the 211 residential projects tracked at C$44.4 billion would continue to carry financing exposure tied to the 2Y Government of Canada yield of 2.95%<sup>177</sup>.",
         "change": "+1.12%",
         "day": "+1.12%",
-        "yy": "+41.10%"
+        "yy": "+41.10%",
+        "mm": "+0.62%"
       },
       {
         "name": "S&P 500",
@@ -5265,7 +5353,8 @@
         "commentary": "<p><span class=\"lead-sentence\">The S&P 500 closed at 6,824.66 on April 9, 2026, advancing 3.68% on the week and 25.06% year-over-year</span><sup>186</sup>. The advance developed as the federal funds rate sat at 3.64% per the February 2026 Federal Reserve print, a differential of 139 basis points above the Bank of Canada overnight rate of 2.25%<sup>197</sup>. The benchmark sits 2.2% below its 52-week high of 6,978.60 set on January 27, 2026, and 32.3% above its 52-week low of 5,158.20 recorded on April 21, 2025 — the first weekly close above 6,800 since the late-January 2026 peak<sup>186</sup>.</p>",
         "change": "+3.68%",
         "day": "+3.68%",
-        "yy": "+25.06%"
+        "yy": "+25.06%",
+        "mm": "+0.64%"
       },
       {
         "name": "DJIA",
@@ -5279,7 +5368,8 @@
         "commentary": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average closed at 48,185.80 on April 9, 2026, advancing 3.61% on the week and 18.66% year-over-year</span><sup>205</sup>. The move developed as industrial and healthcare components repriced amid the February 2026 US unemployment reading of 4.4% and the federal funds rate print of 3.64%<sup>197</sup>. The 30-stock benchmark sits 4.0% below its 52-week high of 50,188.14 set on February 10, 2026, and 26.2% above its 52-week low of 38,170.41 recorded on April 21, 2025<sup>205</sup>.</p>",
         "change": "+3.61%",
         "day": "+3.61%",
-        "yy": "+18.66%"
+        "yy": "+18.66%",
+        "mm": "+1.00%"
       },
       {
         "name": "Nasdaq Composite",
@@ -5293,7 +5383,8 @@
         "commentary": "<p><span class=\"lead-sentence\">The Nasdaq Composite closed at 22,822.42 on April 9, 2026, advancing 4.31% on the week and 33.27% year-over-year</span><sup>206</sup>. The advance led the four North American benchmarks on the week, reflecting weekly repricing across technology components following the February 2026 federal funds rate print of 3.64%<sup>197</sup>. The index sits 4.7% below its 52-week high of 23,958.47 set on October 29, 2025, and 43.8% above its 52-week low of 15,870.90 recorded on April 21, 2025<sup>206</sup>.</p>",
         "change": "+4.31%",
         "day": "+4.31%",
-        "yy": "+33.27%"
+        "yy": "+33.27%",
+        "mm": "+0.55%"
       }
     ],
     "fx": [
