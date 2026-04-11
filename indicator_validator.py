@@ -206,12 +206,16 @@ EXTENDED_RULES = {
     "construction_price_index_composite": {"range": (80.0, 250.0), "max_delta_pct": 10.0, "unit": "index", "frequency": "quarterly"},
 }
 
-# Frequency → max staleness in days (before doubling for publication lag)
+# Frequency → max staleness in days (before doubling for publication lag).
+# These are wall-clock tolerances from the row's reference period: StatCan
+# usually publishes monthly series 60-90 days after the reference month and
+# quarterly series 80-120 days after the reference quarter, so "stale" is the
+# 2x-publication-lag threshold below.
 FREQUENCY_STALENESS = {
-    "daily": 14,      # commodities/markets: weekends + holidays
+    "daily": 14,       # commodities/markets: weekends + holidays
     "weekly": 21,
-    "monthly": 60,
-    "quarterly": 180,
+    "monthly": 75,     # → 150-day cutoff after the *2 publication-lag buffer
+    "quarterly": 240,  # → 480-day cutoff for slow Capex / Investment tables
     "annual": 400,
     "scheduled": 120,  # BoC rate decisions, ~8 per year
 }

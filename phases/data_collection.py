@@ -1465,14 +1465,39 @@ def _archive_market_data_to_history(conn, financial_markets: dict, commodity_dat
     today_str = date.today().isoformat()
     count = 0
 
+    # Plausibility bounds per indicator. These are looser than the validator's
+    # RANGE rules because they're a poison filter, not a validation — the goal
+    # is to catch yfinance batch-download column scrambles (e.g., wti=1079.5,
+    # platinum=67, soybean_oil=4761.9) before they land in indicator_history
+    # and get picked as "latest" by the exporter. Any value outside these
+    # bounds is almost certainly a yfinance DataFrame column swap.
+    _POISON_BOUNDS = {
+        'wti':          (10.0, 200.0),   'brent':        (10.0, 220.0),
+        'natural_gas':  (0.5, 20.0),     'coal':         (20.0, 500.0),
+        'gold':         (800.0, 8000.0), 'silver':       (5.0, 150.0),
+        'platinum':     (300.0, 3000.0), 'palladium':    (200.0, 4000.0),
+        'copper':       (1.0, 10.0),     'aluminum':     (800.0, 6000.0),
+        'wheat':        (200.0, 1500.0), 'corn':         (150.0, 1200.0),
+        'rice':         (5.0, 50.0),     'soybeans':     (500.0, 2500.0),
+        'coffee':       (50.0, 600.0),   'cocoa':        (500.0, 15000.0),
+        'sugar':        (5.0, 50.0),     'cotton':       (40.0, 250.0),
+        'soybean_oil':  (10.0, 120.0),   'soybean_meal': (150.0, 700.0),
+        'lumber':       (100.0, 2500.0), 'propane':      (0.2, 5.0),
+        'canola':       (400.0, 1500.0),
+    }
+
     def _save(name, value_str, unit='', source='Yahoo Finance'):
         nonlocal count
         if not value_str:
             return
         try:
             val = str(value_str).replace('$', '').replace(',', '').replace('%', '').strip()
-            float(val)  # validate it's numeric
+            fnum = float(val)
         except (ValueError, TypeError):
+            return
+        bounds = _POISON_BOUNDS.get(name)
+        if bounds and not (bounds[0] <= fnum <= bounds[1]):
+            print(f"  [POISON-FILTER] Skipping {name}={fnum} (outside {bounds})")
             return
         save_indicator(conn, {
             'indicator': name,
