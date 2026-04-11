@@ -663,18 +663,68 @@
           "dataKeys": [
             "ON_unemployment"
           ],
-          "title": "Ontario Unemployment Held at 7.6%",
-          "subtitle": "12-month trend - %",
-          "reasoning": "Ontario's 7.6% rate is the highest among the four largest provinces and links to 136 projects ($9.59B) in employment-sensitive sectors."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Ontario unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "7.6%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "59.7%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "64.6%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Ontario unemployment at <strong>7.6%</strong> in February 2026, with the participation rate at <strong>64.6%</strong> and the employment rate at <strong>59.7%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Ontario's 7.6% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
             "ON_cpi"
           ],
-          "title": "Ontario CPI at -1.1% Year-Over-Year",
-          "subtitle": "12-month trend - Y/Y %",
-          "reasoning": "Ontario posted the only negative headline CPI reading of any province, attributed to the HST base-year effect from the 2025 federal GST holiday."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Ontario CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "-1.1%",
+              "delta": "March 2026",
+              "trend": "down"
+            },
+            {
+              "label": "GDP",
+              "value": "+1.2%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "67,274",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "Ontario's headline CPI printed at <strong>-1.1%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "Ontario CPI at -1.1% sits inside the bottom of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -902,20 +952,70 @@
         {
           "chartType": "line",
           "dataKeys": [
-            "QC_qc_unemployment_rate"
+            "QC_unemployment"
           ],
-          "title": "Quebec Unemployment Falls to 5.4%",
-          "subtitle": "12-month trend - %",
-          "reasoning": "Quebec recorded the largest monthly unemployment decline (-0.5pp) among the big four provinces, reaching the lowest big-province reading at 5.4%."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Quebec unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "5.9%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "60.7%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "64.5%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Quebec unemployment at <strong>5.9%</strong> in February 2026, with the participation rate at <strong>64.5%</strong> and the employment rate at <strong>60.7%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Quebec's 5.9% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "QC_qc_housing_starts"
+            "QC_cpi"
           ],
-          "title": "Quebec Housing Starts Rise 2.8% M/M",
-          "subtitle": "12-month trend - units (SAAR)",
-          "reasoning": "Quebec housing starts rose 2.8% M/M to 53,461 units SAAR in February, complementing the provincial labour-market story."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Quebec CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "+0.6%",
+              "delta": "March 2026",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "+1.3%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "53,461",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "Quebec's headline CPI printed at <strong>+0.6%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "Quebec CPI at +0.6% sits inside the bottom of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -1149,20 +1249,70 @@
         {
           "chartType": "line",
           "dataKeys": [
-            "wti"
+            "AB_unemployment"
           ],
-          "title": "WTI Crude - 12 Month Trajectory",
-          "subtitle": "12-month trend - USD/bbl",
-          "reasoning": "Alberta's power/energy sector holds 124 projects ($137.3B), the largest sector by value; WTI trajectory is the baseline commodity context for the provincial pipeline."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Alberta unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "6.3%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "64.4%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "68.7%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Alberta unemployment at <strong>6.3%</strong> in February 2026, with the participation rate at <strong>68.7%</strong> and the employment rate at <strong>64.4%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Alberta's 6.3% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
             "AB_cpi"
           ],
-          "title": "Alberta CPI Decelerates to 3.4% Y/Y",
-          "subtitle": "12-month trend - Y/Y %",
-          "reasoning": "Alberta posted the largest monthly CPI deceleration among provinces (-1.5pp), dropping from 4.9% to 3.4% Y/Y in February."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Alberta CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "+3.4%",
+              "delta": "March 2026",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "+2.7%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "48,438",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "Alberta's headline CPI printed at <strong>+3.4%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "Alberta CPI at +3.4% sits inside the top of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -1404,18 +1554,68 @@
           "dataKeys": [
             "BC_unemployment"
           ],
-          "title": "BC Unemployment Rises 0.6pp to 6.7%",
-          "subtitle": "12-month trend - %",
-          "reasoning": "BC posted the largest monthly unemployment increase of any province in March 2026, rising 0.6pp from 6.1% to 6.7%."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "British Columbia unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "6.1%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "60.5%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "64.4%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed British Columbia unemployment at <strong>6.1%</strong> in February 2026, with the participation rate at <strong>64.4%</strong> and the employment rate at <strong>60.5%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "British Columbia's 6.1% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "lumber"
+            "BC_cpi"
           ],
-          "title": "Lumber Prices - 12 Month Trajectory",
-          "subtitle": "12-month trend - USD/1000 bf",
-          "reasoning": "The BC Minister of Forests issued an April 9 statement on US softwood lumber duty review preliminary results, linked to 21 BC forestry and manufacturing projects."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "British Columbia CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "+1.0%",
+              "delta": "March 2026",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "+1.2%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "41,331",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "British Columbia's headline CPI printed at <strong>+1.0%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "British Columbia CPI at +1.0% sits inside the bottom of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -1645,18 +1845,68 @@
           "dataKeys": [
             "SK_unemployment"
           ],
-          "title": "Saskatchewan Unemployment Falls to 5.0%",
-          "subtitle": "12-month trend - %",
-          "reasoning": "Saskatchewan's 5.0% rate is the lowest provincial rate in Canada for March 2026, down 0.6pp month-over-month."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Saskatchewan unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "5.6%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "63.4%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "67.1%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Saskatchewan unemployment at <strong>5.6%</strong> in February 2026, with the participation rate at <strong>67.1%</strong> and the employment rate at <strong>63.4%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Saskatchewan's 5.6% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "potash_nutrien"
+            "SK_cpi"
           ],
-          "title": "Potash Price Trend - Nutrien",
-          "subtitle": "12-month trend - USD",
-          "reasoning": "Saskatchewan mining holds 13 projects ($20.1B), led by BHP Jansen Stage 1 and Stage 2 - potash price is the primary commodity context for the province."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Saskatchewan CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "-0.7%",
+              "delta": "March 2026",
+              "trend": "down"
+            },
+            {
+              "label": "GDP",
+              "value": "+3.4%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "5,486",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "Saskatchewan's headline CPI printed at <strong>-0.7%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "Saskatchewan CPI at -0.7% sits inside the bottom of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -1886,18 +2136,68 @@
           "dataKeys": [
             "MB_unemployment"
           ],
-          "title": "Manitoba Unemployment Eases to 5.6%",
-          "subtitle": "12-month trend - %",
-          "reasoning": "Manitoba's employment rate rose 0.9pp to 63.4% - the largest monthly gain of any province - while unemployment eased 0.1pp to 5.6%."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Manitoba unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "5.7%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "62.5%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "66.3%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Manitoba unemployment at <strong>5.7%</strong> in February 2026, with the participation rate at <strong>66.3%</strong> and the employment rate at <strong>62.5%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Manitoba's 5.7% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "wheat"
+            "MB_cpi"
           ],
-          "title": "Wheat Price - 12 Month Trajectory",
-          "subtitle": "12-month trend - USD/bushel",
-          "reasoning": "Manitoba's dominant agricultural sector makes wheat the primary commodity context; the budget's $3.8B capital plan sits alongside agricultural export conditions."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Manitoba CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "+3.1%",
+              "delta": "March 2026",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "+1.1%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "7,642",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "Manitoba's headline CPI printed at <strong>+3.1%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "Manitoba CPI at +3.1% sits inside the top of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -2127,18 +2427,68 @@
           "dataKeys": [
             "NS_unemployment"
           ],
-          "title": "Nova Scotia Unemployment Falls to 6.6%",
-          "subtitle": "12-month trend - %",
-          "reasoning": "Nova Scotia's rate fell 0.5pp in March 2026; employment rate rose 0.4pp to 57.4% and participation edged up 0.1pp to 61.4%."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Nova Scotia unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "7.1%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "57.0%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "61.3%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Nova Scotia unemployment at <strong>7.1%</strong> in February 2026, with the participation rate at <strong>61.3%</strong> and the employment rate at <strong>57.0%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Nova Scotia's 7.1% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "natural_gas"
+            "NS_cpi"
           ],
-          "title": "Natural Gas Price - 12 Month Trajectory",
-          "subtitle": "12-month trend - USD/MMBtu",
-          "reasoning": "Nova Scotia's power/energy sector is the largest by value at $8.9B, led by Bear Head Energy ammonia/hydrogen ($8.0B) - natural gas is the relevant commodity context."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Nova Scotia CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "+1.5%",
+              "delta": "March 2026",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "+2.7%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "7,146",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "Nova Scotia's headline CPI printed at <strong>+1.5%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "Nova Scotia CPI at +1.5% sits inside the bottom of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -2366,20 +2716,70 @@
         {
           "chartType": "line",
           "dataKeys": [
-            "NB_cpi"
+            "NB_unemployment"
           ],
-          "title": "New Brunswick CPI Decelerates to 1.2%",
-          "subtitle": "12-month trend - Y/Y %",
-          "reasoning": "New Brunswick headline CPI decelerated 1.2pp from 2.4% in January to 1.2% in February 2026."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "New Brunswick unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "7.0%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "56.5%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "60.7%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed New Brunswick unemployment at <strong>7.0%</strong> in February 2026, with the participation rate at <strong>60.7%</strong> and the employment rate at <strong>56.5%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "New Brunswick's 7.0% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "lumber"
+            "NB_cpi"
           ],
-          "title": "Lumber Price - Forestry Context",
-          "subtitle": "12-month trend - USD/1000 bf",
-          "reasoning": "New Brunswick's project pipeline is led by Saint John Pulp Mill Upgrades ($1.1B); lumber price is the primary commodity context for the province's forestry sector."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "New Brunswick CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "+1.2%",
+              "delta": "March 2026",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "+1.8%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "6,011",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "New Brunswick's headline CPI printed at <strong>+1.2%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "New Brunswick CPI at +1.2% sits inside the bottom of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -2609,18 +3009,68 @@
           "dataKeys": [
             "NL_unemployment"
           ],
-          "title": "NL Unemployment Rises to 9.5%",
-          "subtitle": "12-month trend - %",
-          "reasoning": "NL's 9.5% rate is the highest provincial rate in Canada for March 2026, up 0.3pp month-over-month."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Newfoundland and Labrador unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "9.2%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "52.7%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "58.1%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Newfoundland and Labrador unemployment at <strong>9.2%</strong> in February 2026, with the participation rate at <strong>58.1%</strong> and the employment rate at <strong>52.7%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Newfoundland and Labrador's 9.2% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "iron_ore"
+            "NL_cpi"
           ],
-          "title": "Iron Ore Price - 12 Month Trajectory",
-          "subtitle": "12-month trend - USD/ton",
-          "reasoning": "NL's pipeline is led by Grassy Point LNG ($10.0B) and Kamistiatusset (Kami) iron ore ($3.86B); iron ore is a direct commodity context for provincial mining projects."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Newfoundland and Labrador CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "+1.8%",
+              "delta": "March 2026",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "+2.4%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "1,223",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "Newfoundland and Labrador's headline CPI printed at <strong>+1.8%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "Newfoundland and Labrador CPI at +1.8% sits inside the bottom of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -2848,20 +3298,70 @@
         {
           "chartType": "line",
           "dataKeys": [
-            "AB_cpi"
+            "PE_unemployment"
           ],
-          "title": "Provincial CPI - AB Reference",
-          "subtitle": "12-month trend - Y/Y %",
-          "reasoning": "PE headline CPI decelerated 1.9pp to 5.4% Y/Y - the highest provincial inflation rate. PE-specific CPI series is not present in timeseries; AB CPI is the closest structural reference."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Prince Edward Island unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "7.2%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "61.8%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "66.6%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Prince Edward Island unemployment at <strong>7.2%</strong> in February 2026, with the participation rate at <strong>66.6%</strong> and the employment rate at <strong>61.8%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Prince Edward Island's 7.2% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "ON_cpi"
+            "PE_cpi"
           ],
-          "title": "Provincial CPI - ON Reference",
-          "subtitle": "12-month trend - Y/Y %",
-          "reasoning": "PE provincial CPI vector not in timeseries; Ontario CPI at -1.1% provides the national low-end reference against PE's high-end 5.4% reading."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Prince Edward Island CPI — year-over-year",
+          "subtitle": "Monthly · Statistics Canada Table 18-10-0004 · % Y/Y",
+          "yAxisLabel": "CPI Y/Y (%)",
+          "eyebrow": "Prices",
+          "kpis": [
+            {
+              "label": "CPI Y/Y",
+              "value": "+5.4%",
+              "delta": "March 2026",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "+3.6%",
+              "delta": "Latest print",
+              "trend": "up"
+            },
+            {
+              "label": "Housing Starts",
+              "value": "963.0",
+              "delta": "SAAR",
+              "trend": null
+            }
+          ],
+          "context": "Prince Edward Island's headline CPI printed at <strong>+5.4%</strong> in March 2026 against a national headline of <strong>+1.8%</strong>. Provincial dispersion spans <strong>6.5 percentage points</strong> from PE (+5.4%) to ON (-1.1%).",
+          "reasoning": "Prince Edward Island CPI at +5.4% sits inside the top of the 6.5-point provincial dispersion cited in the briefing."
         }
       ]
     },
@@ -3088,20 +3588,64 @@
         {
           "chartType": "line",
           "dataKeys": [
-            "gold"
+            "YT_unemployment"
           ],
-          "title": "Gold Price - 12 Month Trajectory",
-          "subtitle": "12-month trend - USD/oz",
-          "reasoning": "Yukon's 2024 real GDP contracted 3.3%, driven by declines in placer gold output; gold price is the primary commodity context for the territory."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Yukon unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "3.9%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "72.1%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "75.1%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Yukon unemployment at <strong>3.9%</strong> in February 2026, with the participation rate at <strong>75.1%</strong> and the employment rate at <strong>72.1%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Yukon's 3.9% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "copper"
+            "gold"
           ],
-          "title": "Copper Price - 12 Month Trajectory",
-          "subtitle": "12-month trend - USD/lb",
-          "reasoning": "Yukon's Kudz Ze Kayah zinc/copper project ($489M, Under Review) links the pipeline to copper market conditions."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Gold — 12-month trend",
+          "subtitle": "Daily · USD/oz",
+          "yAxisLabel": "USD/oz",
+          "eyebrow": "Commodity Backdrop",
+          "kpis": [
+            {
+              "label": "Gold",
+              "value": "$4572.00",
+              "delta": "+49.4% YoY",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "-3.3%",
+              "delta": "2024 annual",
+              "trend": "down"
+            }
+          ],
+          "context": "Yukon relies on resource extraction with limited monthly indicator coverage from Statistics Canada. Gold sits at <strong>$4572.00</strong> as of 2026-03-30, providing the dominant external price signal for the territory's economic activity.",
+          "reasoning": "Territorial CPI data is unavailable for Yukon; the dominant commodity (Gold) provides the strongest external price signal cited in the analysis."
         }
       ]
     },
@@ -3328,20 +3872,64 @@
         {
           "chartType": "line",
           "dataKeys": [
-            "gold"
+            "NT_unemployment"
           ],
-          "title": "Gold Price - 12 Month Trajectory",
-          "subtitle": "12-month trend - USD/oz",
-          "reasoning": "NWT's 2024 real GDP contracted 1.1%; gold remains the primary commodity context for the territory's mining sector."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Northwest Territories unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "5.3%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "65.0%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "69.2%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Northwest Territories unemployment at <strong>5.3%</strong> in February 2026, with the participation rate at <strong>69.2%</strong> and the employment rate at <strong>65.0%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Northwest Territories's 5.3% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "zinc"
+            "gold"
           ],
-          "title": "Zinc Price - Pine Point Context",
-          "subtitle": "12-month trend - USD/ton",
-          "reasoning": "The Pine Point lead/zinc project ($653M, Under Review) is a key non-defence pipeline entry; zinc price is the relevant commodity context."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Gold — 12-month trend",
+          "subtitle": "Daily · USD/oz",
+          "yAxisLabel": "USD/oz",
+          "eyebrow": "Commodity Backdrop",
+          "kpis": [
+            {
+              "label": "Gold",
+              "value": "$4572.00",
+              "delta": "+49.4% YoY",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "-1.1%",
+              "delta": "2024 annual",
+              "trend": "down"
+            }
+          ],
+          "context": "Northwest Territories relies on resource extraction with limited monthly indicator coverage from Statistics Canada. Gold sits at <strong>$4572.00</strong> as of 2026-03-30, providing the dominant external price signal for the territory's economic activity.",
+          "reasoning": "Territorial CPI data is unavailable for Northwest Territories; the dominant commodity (Gold) provides the strongest external price signal cited in the analysis."
         }
       ]
     },
@@ -3568,20 +4156,64 @@
         {
           "chartType": "line",
           "dataKeys": [
-            "gold"
+            "NU_unemployment"
           ],
-          "title": "Gold Price - Back River Context",
-          "subtitle": "12-month trend - USD/oz",
-          "reasoning": "Nunavut's 2024 real GDP expanded 7.5% - the fastest in Canada - driven by mining output; the Back River Gold Project ($610M) links directly to gold prices."
+          "dataSource": "timeseries",
+          "window": "24m",
+          "title": "Nunavut unemployment — 24-month trajectory",
+          "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+          "yAxisLabel": "Unemployment rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "10.8%",
+              "delta": "Feb 2026 LFS",
+              "trend": null
+            },
+            {
+              "label": "Emp Rate",
+              "value": "54.2%",
+              "delta": "Feb 2026",
+              "trend": null
+            },
+            {
+              "label": "Participation",
+              "value": "61.7%",
+              "delta": "Feb 2026",
+              "trend": null
+            }
+          ],
+          "context": "The Labour Force Survey placed Nunavut unemployment at <strong>10.8%</strong> in February 2026, with the participation rate at <strong>61.7%</strong> and the employment rate at <strong>54.2%</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> nationally between Saskatchewan (5.0%) and Newfoundland and Labrador (9.5%).",
+          "reasoning": "Nunavut's 10.8% unemployment rate is the headline labour datapoint cited in the province analysis; the 24-month line contextualizes it against the post-2024 range."
         },
         {
           "chartType": "line",
           "dataKeys": [
-            "iron_ore"
+            "gold"
           ],
-          "title": "Iron Ore Price - Mary River Context",
-          "subtitle": "12-month trend - USD/ton",
-          "reasoning": "Baffinland Mary River Steensby Rail and Port Expansion ($3.0B, Approved) is the top non-defence entry; iron ore is the direct commodity context for Nunavut's largest pipeline project."
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Gold — 12-month trend",
+          "subtitle": "Daily · USD/oz",
+          "yAxisLabel": "USD/oz",
+          "eyebrow": "Commodity Backdrop",
+          "kpis": [
+            {
+              "label": "Gold",
+              "value": "$4572.00",
+              "delta": "+49.4% YoY",
+              "trend": "up"
+            },
+            {
+              "label": "GDP",
+              "value": "+7.5%",
+              "delta": "2024 annual",
+              "trend": "up"
+            }
+          ],
+          "context": "Nunavut relies on resource extraction with limited monthly indicator coverage from Statistics Canada. Gold sits at <strong>$4572.00</strong> as of 2026-03-30, providing the dominant external price signal for the territory's economic activity.",
+          "reasoning": "Territorial CPI data is unavailable for Nunavut; the dominant commodity (Gold) provides the strongest external price signal cited in the analysis."
         }
       ]
     }
@@ -3694,6 +4326,42 @@
           "delta": "$5.47B aggregate value",
           "source": "projects_all.json:sector=agriculture|forestry"
         }
+      ],
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_agriculture"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Agriculture, forestry, fishing & hunting real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-1.4%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+5.4%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Ag Employment",
+              "value": "218,600",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places agriculture, forestry, fishing & hunting GDP at <strong>-1.4%</strong> month-over-month and <strong>+5.4%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Agriculture, forestry, fishing & hunting GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -1.4% month-over-month and +5.4% year-over-year — the +5.4% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Agriculture, forestry, fishing & hunting posted -1.4% M/M and +5.4% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
       ]
     },
     {
@@ -3804,6 +4472,42 @@
           "delta": "$268.74B aggregate value",
           "source": "projects_all.json:sector=mining|oil_gas"
         }
+      ],
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_mining_og"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Mining, quarrying & oil and gas extraction real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+1.2%",
+              "delta": "Jan 2026 print",
+              "trend": "up"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "-0.1%",
+              "delta": "vs Jan 2025",
+              "trend": "down"
+            },
+            {
+              "label": "WTI",
+              "value": "$102.77/bbl",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places mining, quarrying & oil and gas extraction GDP at <strong>+1.2%</strong> month-over-month and <strong>-0.1%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Mining, quarrying & oil and gas extraction GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +1.2% month-over-month and -0.1% year-over-year — the -0.1% year-over-year reading places the latest month below the equivalent point one year ago.",
+          "reasoning": "Mining, quarrying & oil and gas extraction posted +1.2% M/M and -0.1% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
       ]
     },
     {
@@ -3902,6 +4606,42 @@
           "value": "824",
           "delta": "$522.89B aggregate value",
           "source": "projects_all.json:sector=power_energy"
+        }
+      ],
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_utilities"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Utilities real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+0.6%",
+              "delta": "Jan 2026 print",
+              "trend": "up"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "-1.7%",
+              "delta": "vs Jan 2025",
+              "trend": "down"
+            },
+            {
+              "label": "TSX Infra",
+              "value": "$55.20",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places utilities GDP at <strong>+0.6%</strong> month-over-month and <strong>-1.7%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Utilities GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +0.6% month-over-month and -1.7% year-over-year — the -1.7% year-over-year reading places the latest month below the equivalent point one year ago.",
+          "reasoning": "Utilities posted +0.6% M/M and -1.7% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
         }
       ]
     },
@@ -4019,6 +4759,42 @@
           "delta": "$258.36B aggregate value",
           "source": "projects_all.json:sector=infrastructure"
         }
+      ],
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_construction"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Construction real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+1.1%",
+              "delta": "Jan 2026 print",
+              "trend": "up"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+2.8%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Housing SAAR",
+              "value": "250,900",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places construction GDP at <strong>+1.1%</strong> month-over-month and <strong>+2.8%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Construction GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +1.1% month-over-month and +2.8% year-over-year — the +2.8% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Construction posted +1.1% M/M and +2.8% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
       ]
     },
     {
@@ -4123,6 +4899,42 @@
           "delta": "$67.39B aggregate value",
           "source": "projects_all.json:sector=manufacturing"
         }
+      ],
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_manufacturing"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Manufacturing real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-1.4%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "-4.6%",
+              "delta": "vs Jan 2025",
+              "trend": "down"
+            },
+            {
+              "label": "Mfg Sales",
+              "value": "$68,666M",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places manufacturing GDP at <strong>-1.4%</strong> month-over-month and <strong>-4.6%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Manufacturing GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -1.4% month-over-month and -4.6% year-over-year — the -4.6% year-over-year reading places the latest month below the equivalent point one year ago.",
+          "reasoning": "Manufacturing posted -1.4% M/M and -4.6% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
       ]
     }
   ],
@@ -4204,7 +5016,43 @@
         }
       ],
       "trend": "-1.7%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_wholesale"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Wholesale trade real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-1.2%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "-1.7%",
+              "delta": "vs Jan 2025",
+              "trend": "down"
+            },
+            {
+              "label": "Declared Pipeline Valu",
+              "value": "$0.0B",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places wholesale trade GDP at <strong>-1.2%</strong> month-over-month and <strong>-1.7%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Wholesale trade GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -1.2% month-over-month and -1.7% year-over-year — the -1.7% year-over-year reading places the latest month below the equivalent point one year ago.",
+          "reasoning": "Wholesale trade posted -1.2% M/M and -1.7% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "44-45",
@@ -4284,7 +5132,43 @@
         }
       ],
       "trend": "+2.7%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_retail"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Retail trade real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+0.8%",
+              "delta": "Jan 2026 print",
+              "trend": "up"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+2.7%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Declared Pipeline Valu",
+              "value": "$0.0B",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places retail trade GDP at <strong>+0.8%</strong> month-over-month and <strong>+2.7%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Retail trade GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +0.8% month-over-month and +2.7% year-over-year — the +2.7% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Retail trade posted +0.8% M/M and +2.7% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "48-49",
@@ -4369,7 +5253,43 @@
         }
       ],
       "trend": "+1.6%",
-      "projectCount": 601
+      "projectCount": 601,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_transportation"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Transportation & warehousing real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-0.7%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+1.6%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "WTI",
+              "value": "$102.77/bbl",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places transportation & warehousing GDP at <strong>-0.7%</strong> month-over-month and <strong>+1.6%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Transportation & warehousing GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -0.7% month-over-month and +1.6% year-over-year — the +1.6% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Transportation & warehousing posted -0.7% M/M and +1.6% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "51",
@@ -4443,7 +5363,43 @@
         }
       ],
       "trend": "+3.2%",
-      "projectCount": 43
+      "projectCount": 43,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_information"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Information & cultural industries real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+0.9%",
+              "delta": "Jan 2026 print",
+              "trend": "up"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+3.2%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "AI Data Centre Pipelin",
+              "value": "43 projects",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places information & cultural industries GDP at <strong>+0.9%</strong> month-over-month and <strong>+3.2%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Information & cultural industries GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +0.9% month-over-month and +3.2% year-over-year — the +3.2% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Information & cultural industries posted +0.9% M/M and +3.2% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "52",
@@ -4523,7 +5479,43 @@
         }
       ],
       "trend": "+3.2%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_finance"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Finance & insurance real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+0.5%",
+              "delta": "Jan 2026 print",
+              "trend": "up"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+3.2%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Declared Pipeline Valu",
+              "value": "$0.0B",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places finance & insurance GDP at <strong>+0.5%</strong> month-over-month and <strong>+3.2%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Finance & insurance GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +0.5% month-over-month and +3.2% year-over-year — the +3.2% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Finance & insurance posted +0.5% M/M and +3.2% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "53",
@@ -4602,7 +5594,43 @@
         }
       ],
       "trend": "+1.2%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_real_estate"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Real estate & rental/leasing real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-0.2%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+1.2%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Residential Subset Cou",
+              "value": "157",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places real estate & rental/leasing GDP at <strong>-0.2%</strong> month-over-month and <strong>+1.2%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Real estate & rental/leasing GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -0.2% month-over-month and +1.2% year-over-year — the +1.2% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Real estate & rental/leasing posted -0.2% M/M and +1.2% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "54",
@@ -4672,7 +5700,43 @@
         }
       ],
       "trend": "-0.4%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_professional"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Professional, scientific & technical real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-0.1%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "-0.4%",
+              "delta": "vs Jan 2025",
+              "trend": "down"
+            },
+            {
+              "label": "Declared Pipeline Valu",
+              "value": "$0.0B",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places professional, scientific & technical GDP at <strong>-0.1%</strong> month-over-month and <strong>-0.4%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Professional, scientific & technical GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -0.1% month-over-month and -0.4% year-over-year — the -0.4% year-over-year reading places the latest month below the equivalent point one year ago.",
+          "reasoning": "Professional, scientific & technical posted -0.1% M/M and -0.4% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "55",
@@ -4739,7 +5803,43 @@
         }
       ],
       "trend": "-21.9%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_management"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Management of companies real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-4.1%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "-21.9%",
+              "delta": "vs Jan 2025",
+              "trend": "down"
+            },
+            {
+              "label": "Declared Pipeline Valu",
+              "value": "$0.0B",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places management of companies GDP at <strong>-4.1%</strong> month-over-month and <strong>-21.9%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Management of companies GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -4.1% month-over-month and -21.9% year-over-year — the -21.9% year-over-year reading places the latest month below the equivalent point one year ago.",
+          "reasoning": "Management of companies posted -4.1% M/M and -21.9% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "56",
@@ -4808,7 +5908,43 @@
         }
       ],
       "trend": "-0.2%",
-      "projectCount": 17
+      "projectCount": 17,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_admin_waste"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Administrative & waste management real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-0.1%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "-0.2%",
+              "delta": "vs Jan 2025",
+              "trend": "down"
+            },
+            {
+              "label": "Remediation Projects",
+              "value": "17",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places administrative & waste management GDP at <strong>-0.1%</strong> month-over-month and <strong>-0.2%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Administrative & waste management GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -0.1% month-over-month and -0.2% year-over-year — the -0.2% year-over-year reading places the latest month below the equivalent point one year ago.",
+          "reasoning": "Administrative & waste management posted -0.1% M/M and -0.2% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "61",
@@ -4882,7 +6018,43 @@
         }
       ],
       "trend": "-1.9%",
-      "projectCount": 157
+      "projectCount": 157,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_education"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Educational services real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+0.5%",
+              "delta": "Jan 2026 print",
+              "trend": "up"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "-1.9%",
+              "delta": "vs Jan 2025",
+              "trend": "down"
+            },
+            {
+              "label": "School Capital Pipelin",
+              "value": "157",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places educational services GDP at <strong>+0.5%</strong> month-over-month and <strong>-1.9%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Educational services GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +0.5% month-over-month and -1.9% year-over-year — the -1.9% year-over-year reading places the latest month below the equivalent point one year ago.",
+          "reasoning": "Educational services posted +0.5% M/M and -1.9% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "62",
@@ -4956,7 +6128,43 @@
         }
       ],
       "trend": "+2.1%",
-      "projectCount": 258
+      "projectCount": 258,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_healthcare"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Health care & social assistance real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+0.0%",
+              "delta": "Jan 2026 print",
+              "trend": null
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+2.1%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Hospital Pipeline",
+              "value": "258",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places health care & social assistance GDP at <strong>+0.0%</strong> month-over-month and <strong>+2.1%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Health care & social assistance GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +0.0% month-over-month and +2.1% year-over-year — the +2.1% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Health care & social assistance posted +0.0% M/M and +2.1% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "71",
@@ -5025,7 +6233,43 @@
         }
       ],
       "trend": "+2.2%",
-      "projectCount": 150
+      "projectCount": 150,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_entertainment"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Arts, entertainment & recreation real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-0.1%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+2.2%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Tourism/Culture Pipeli",
+              "value": "150",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places arts, entertainment & recreation GDP at <strong>-0.1%</strong> month-over-month and <strong>+2.2%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Arts, entertainment & recreation GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -0.1% month-over-month and +2.2% year-over-year — the +2.2% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Arts, entertainment & recreation posted -0.1% M/M and +2.2% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "72",
@@ -5096,7 +6340,43 @@
         }
       ],
       "trend": "+2.3%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_accommodation"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Accommodation & food services real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+0.7%",
+              "delta": "Jan 2026 print",
+              "trend": "up"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+2.3%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Declared Pipeline Valu",
+              "value": "$0.0B",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places accommodation & food services GDP at <strong>+0.7%</strong> month-over-month and <strong>+2.3%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Accommodation & food services GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +0.7% month-over-month and +2.3% year-over-year — the +2.3% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Accommodation & food services posted +0.7% M/M and +2.3% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "81",
@@ -5176,7 +6456,43 @@
         }
       ],
       "trend": "+0.3%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_other_services"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Other services real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "+0.2%",
+              "delta": "Jan 2026 print",
+              "trend": "up"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+0.3%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Declared Pipeline Valu",
+              "value": "$0.0B",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places other services GDP at <strong>+0.2%</strong> month-over-month and <strong>+0.3%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Other services GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is +0.2% month-over-month and +0.3% year-over-year — the +0.3% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Other services posted +0.2% M/M and +0.3% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     },
     {
       "code": "91",
@@ -5255,7 +6571,43 @@
         }
       ],
       "trend": "+0.7%",
-      "projectCount": 231
+      "projectCount": 231,
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "gdp_public_admin"
+          ],
+          "dataSource": "indicators",
+          "window": "24m",
+          "title": "Public administration real GDP — 24-month trajectory",
+          "subtitle": "Monthly · StatCan Table 36-10-0434 · Chained 2017 dollars",
+          "yAxisLabel": "Index (2017=100)",
+          "eyebrow": "Industry GDP",
+          "kpis": [
+            {
+              "label": "GDP M/M",
+              "value": "-0.1%",
+              "delta": "Jan 2026 print",
+              "trend": "down"
+            },
+            {
+              "label": "GDP Y/Y",
+              "value": "+0.7%",
+              "delta": "vs Jan 2025",
+              "trend": "up"
+            },
+            {
+              "label": "Defence/Government Pip",
+              "value": "231",
+              "trend": null
+            }
+          ],
+          "context": "Statistics Canada Table 36-10-0434 places public administration GDP at <strong>-0.1%</strong> month-over-month and <strong>+0.7%</strong> year-over-year for the January 2026 print. The 24-month window covers the post-2024 trajectory.",
+          "callout": "The Public administration GDP line shows the latest 24-month trajectory from Statistics Canada Table 36-10-0434. The most recent print is -0.1% month-over-month and +0.7% year-over-year — the +0.7% year-over-year reading places the latest month above the equivalent point one year ago.",
+          "reasoning": "Public administration posted -0.1% M/M and +0.7% Y/Y in the January GDP-by-industry release; the 24-month trajectory contextualizes that print against the post-2024 baseline cited in the analysis."
+        }
+      ]
     }
   ],
   "industry_executive_summary": "<p><span class=\"lead-sentence\">Canadian industry GDP for January 2026 recorded mixed sector-level movement across the 20 NAICS industries</span> — five goods-producing industries and fifteen services industries reported by Statistics Canada<sup>174</sup>. Among goods producers, <strong>Construction (NAICS 23)</strong> posted <strong>+1.1%</strong> month-over-month and <strong>+2.8%</strong> year-over-year, and <strong>Mining, Quarrying & Oil and Gas Extraction (21)</strong> rose <strong>+1.2%</strong> M/M with <strong>-0.1%</strong> Y/Y. <strong>Utilities (22)</strong> printed <strong>+0.6%</strong> M/M and <strong>-1.7%</strong> Y/Y. <strong>Manufacturing (31-33)</strong> contracted <strong>-1.4%</strong> M/M and <strong>-4.6%</strong> Y/Y, and <strong>Agriculture, Forestry, Fishing & Hunting (11)</strong> recorded <strong>-1.4%</strong> M/M with <strong>+5.4%</strong> Y/Y<sup>174</sup>.</p><p><span class=\"lead-sentence\">Services output was led by Information & Cultural Industries and Retail Trade</span> — <strong>Information & Cultural Industries (51)</strong> posted <strong>+0.9%</strong> M/M and <strong>+3.2%</strong> Y/Y, <strong>Retail Trade (44-45)</strong> <strong>+0.8%</strong> M/M and <strong>+2.7%</strong> Y/Y, <strong>Accommodation & Food Services (72)</strong> <strong>+0.7%</strong> M/M and <strong>+2.3%</strong> Y/Y, <strong>Finance & Insurance (52)</strong> <strong>+0.5%</strong> M/M and <strong>+3.2%</strong> Y/Y, and <strong>Educational Services (61)</strong> <strong>+0.5%</strong> M/M with <strong>-1.9%</strong> Y/Y. <strong>Health Care & Social Assistance (62)</strong> was flat M/M at <strong>+0.0%</strong> and <strong>+2.1%</strong> Y/Y, and <strong>Other Services (81)</strong> added <strong>+0.2%</strong> M/M and <strong>+0.3%</strong> Y/Y. Declines were recorded in <strong>Wholesale Trade (41)</strong> at <strong>-1.2%</strong> M/M and <strong>-1.7%</strong> Y/Y, <strong>Transportation & Warehousing (48-49)</strong> at <strong>-0.7%</strong> M/M and <strong>+1.6%</strong> Y/Y, <strong>Real Estate & Rental/Leasing (53)</strong> at <strong>-0.2%</strong> M/M and <strong>+1.2%</strong> Y/Y, <strong>Arts, Entertainment & Recreation (71)</strong> at <strong>-0.1%</strong> M/M and <strong>+2.2%</strong> Y/Y, <strong>Professional, Scientific & Technical Services (54)</strong> at <strong>-0.1%</strong> M/M and <strong>-0.4%</strong> Y/Y, <strong>Administrative & Waste Management (56)</strong> at <strong>-0.1%</strong> M/M and <strong>-0.2%</strong> Y/Y, <strong>Public Administration (91)</strong> at <strong>-0.1%</strong> M/M and <strong>+0.7%</strong> Y/Y, and <strong>Management of Companies & Enterprises (55)</strong> at <strong>-4.1%</strong> M/M and <strong>-21.9%</strong> Y/Y<sup>174</sup>.</p>",
@@ -7232,16 +8584,42 @@
   ],
   "insightCharts": [
     {
-      "chartType": "line",
+      "chartType": "multi_line",
       "dataKeys": [
-        "boc_rate"
+        "brent",
+        "cadusd"
       ],
-      "title": "BoC Rate Held at 2.25% - Seventh Consecutive Hold",
-      "subtitle": "12-month trend - %",
-      "reasoning": "BoC held at 2.25% on March 18 for the seventh consecutive decision - the week's primary monetary policy story.",
+      "dataSource": "timeseries",
+      "window": "12m",
+      "title": "Brent crude and CAD/USD — 12-month trajectory",
+      "subtitle": "Daily · USD per barrel and FX rate · 12-month window",
+      "yAxisLabel": "Index (window start = 100)",
+      "eyebrow": "Macro Backdrop",
+      "kpis": [
+        {
+          "label": "Brent Crude",
+          "value": "$95.20/bbl",
+          "delta": "+48.3% YoY",
+          "trend": "up"
+        },
+        {
+          "label": "CAD/USD",
+          "value": "0.7200",
+          "delta": "+2.9% YoY",
+          "trend": "up"
+        },
+        {
+          "label": "BoC Rate",
+          "value": "2.25%",
+          "delta": "Held 7th time",
+          "trend": null
+        }
+      ],
+      "context": "The database tracks <strong>727 Alberta projects</strong>, <strong>63 oil and gas projects</strong> nationally, and <strong>52 manufacturing projects ($67.4B)</strong> with direct exposure to the energy and currency backdrop. The Bank of Canada overnight rate held at <strong>2.25%</strong> for the seventh consecutive decision on March 5, 2026.",
+      "reasoning": "Brent at $95.20 (+48.3% YoY in the data) combined with CAD/USD at 0.7200 frames the export and project-economics backdrop for the week, while BoC holding at 2.25% completes the macro picture cited in the executive summary.",
       "annotations": [
         {
-          "date": "2026-03-18",
+          "date": "2026-03-05",
           "label": "BoC holds 2.25%"
         }
       ]
@@ -7249,11 +8627,36 @@
     {
       "chartType": "line",
       "dataKeys": [
-        "yield_curve_10y2y"
+        "unemployment"
       ],
-      "title": "GoC 10y-2y Yield Curve Spread",
-      "subtitle": "12-month trend - bps",
-      "reasoning": "GoC 2-year traded at 2.79%, 54 basis points above the BoC overnight rate - curve shape contextualizes the rate hold narrative."
+      "dataSource": "indicators",
+      "window": "24m",
+      "title": "National unemployment — 24-month trajectory",
+      "subtitle": "Monthly · Statistics Canada Labour Force Survey · %",
+      "yAxisLabel": "Unemployment rate (%)",
+      "eyebrow": "Labour Market",
+      "kpis": [
+        {
+          "label": "Unemployment",
+          "value": "6.7%",
+          "delta": "Feb LFS · 84K jobs lost",
+          "trend": "down"
+        },
+        {
+          "label": "Wage Growth",
+          "value": "+3.9%",
+          "delta": "Y/Y SEPH",
+          "trend": "up"
+        },
+        {
+          "label": "Participation",
+          "value": "64.9%",
+          "delta": "Feb 2026",
+          "trend": null
+        }
+      ],
+      "context": "Statistics Canada recorded a <strong>84,000</strong> employment decline in February, with full-time employment down <strong>108,000</strong> and part-time up <strong>24,000</strong>. Provincial unemployment dispersion spans <strong>4.5 percentage points</strong> from Saskatchewan at 5.0% to Newfoundland and Labrador at 9.5%. Manufacturing employment stands at <strong>249,600</strong> against <strong>52 manufacturing projects ($67.4B)</strong> in the database.",
+      "reasoning": "84,000 February job losses paired with the headline 6.7% unemployment rate is the secondary macro story behind the GDP contraction; the 24-month trajectory contextualizes the move against the post-2024 range."
     }
   ],
   "sources": [
