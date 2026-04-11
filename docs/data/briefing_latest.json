@@ -676,7 +676,42 @@
         "participationRate": "Statistics Canada",
         "employmentRate": "Statistics Canada"
       },
-      "insightCharts": [],
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "boc_rate"
+          ],
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Ontario labour and economy — Q1 2026 snapshot",
+          "subtitle": "Statistics Canada Labour Force Survey · Consumer Price Index",
+          "yAxisLabel": "BoC policy rate (%)",
+          "eyebrow": "Provincial Economy",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "7.6%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "-1.1%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+1.2%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Ontario</strong> labour and price snapshot: unemployment <strong>7.6%</strong>, CPI <strong>-1.1%</strong>. Chart shows the 12-month BoC policy rate trajectory as the macro backdrop for Ontario's economy.",
+          "reasoning": "Ontario snapshot — labour + CPI KPIs against the macro rate backdrop"
+        }
+      ],
       "marketContext": "<p>Ontario's unemployment rate held at <strong>7.6%</strong> in the February Labour Force Survey, <strong>+0.3 percentage points</strong> from the prior month and the highest provincial print in Central Canada<sup>73</sup>. The participation rate rose <strong>+0.2 percentage points</strong> to <strong>64.6%</strong> while the employment rate held flat at <strong>59.7%</strong>, below the national 60.6% figure<sup>73</sup>. The provincial CPI series printed at <strong>-1.1%</strong> year-over-year, the lowest provincial CPI reading in the country<sup>177</sup>. Housing starts came in at <strong>67,274</strong> units (CMHC seasonally adjusted annualized), up from <strong>65,757</strong> the prior month<sup>178</sup>.</p>",
       "tradeExposure": ""
     },
@@ -900,7 +935,42 @@
         "participationRate": "Statistics Canada",
         "employmentRate": "Statistics Canada"
       },
-      "insightCharts": [],
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "boc_rate"
+          ],
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Quebec labour and economy — Q1 2026 snapshot",
+          "subtitle": "Statistics Canada Labour Force Survey · Consumer Price Index",
+          "yAxisLabel": "BoC policy rate (%)",
+          "eyebrow": "Provincial Labour",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "5.9%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "+0.6%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+1.3%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Quebec</strong> labour and price snapshot: unemployment <strong>5.9%</strong>, CPI <strong>+0.6%</strong>. Chart shows the 12-month BoC policy rate trajectory as the macro backdrop for Quebec's economy.",
+          "reasoning": "Quebec snapshot — labour + CPI KPIs against the macro rate backdrop"
+        }
+      ],
       "marketContext": "<p>Quebec's unemployment rate printed at <strong>5.9%</strong> in the February Labour Force Survey, <strong>+0.7 percentage points</strong> from the prior 5.2% reading; the participation rate fell <strong>-0.3 percentage points</strong> to <strong>64.5%</strong> and the employment rate fell <strong>-0.8 percentage points</strong> to <strong>60.7%</strong><sup>73</sup>. The provincial CPI series printed at <strong>+0.6%</strong> year-over-year, below the national signal<sup>177</sup>. Housing starts came in at <strong>53,461</strong> units in the latest CMHC release, up from <strong>51,982</strong> the prior month<sup>178</sup>. Quebec carries the richest provincial indicator library after the national rollup, with Institut de la statistique du Québec series running parallel to StatCan prints<sup>177</sup>.</p>",
       "tradeExposure": ""
     },
@@ -1134,11 +1204,35 @@
         {
           "chartType": "line",
           "dataKeys": [
-            "wti"
+            "brent"
           ],
-          "title": "WTI Crude - 12 Month Trajectory",
+          "title": "Brent Crude - 12 Month Trajectory",
           "subtitle": "12-month trend - USD/bbl",
-          "reasoning": "Alberta's power/energy sector holds 124 projects ($137.3B), the largest sector by value; WTI trajectory is the baseline commodity context for the provincial pipeline."
+          "reasoning": "Alberta's power/energy sector holds 124 projects ($137.3B), the largest sector by value; WTI trajectory is the baseline commodity context for the provincial pipeline.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Energy Markets",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "6.3%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "+3.4%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+2.7%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Alberta</strong> labour market snapshot — unemployment <strong>6.3%</strong>, CPI <strong>+3.4%</strong>. Chart shows the 12m trajectory of Brent — the commodity most tied to Alberta's project pipeline."
         }
       ],
       "marketContext": "<p>Alberta's unemployment rate printed at <strong>6.3%</strong> in the February Labour Force Survey, <strong>-0.1 percentage points</strong> from January, while the participation rate fell <strong>-0.3 percentage points</strong> to <strong>68.7%</strong> and the employment rate fell <strong>-0.1 percentage points</strong> to <strong>64.4%</strong><sup>73</sup>. Alberta's participation rate remains the highest in the country, consistent with sustained resource-sector labour demand. The provincial CPI series printed at <strong>+3.4%</strong> year-over-year, the highest provincial CPI reading in Canada<sup>177</sup>. Housing starts came in at <strong>48,438</strong> units in the latest CMHC release, down from <strong>48,896</strong> the prior month<sup>178</sup>. Provincial GDP printed at <strong>+2.7%</strong>.</p>",
@@ -1384,7 +1478,31 @@
           ],
           "title": "Lumber Prices - 12 Month Trajectory",
           "subtitle": "12-month trend - USD/1000 bf",
-          "reasoning": "The BC Minister of Forests issued an April 9 statement on US softwood lumber duty review preliminary results, linked to 21 BC forestry and manufacturing projects."
+          "reasoning": "The BC Minister of Forests issued an April 9 statement on US softwood lumber duty review preliminary results, linked to 21 BC forestry and manufacturing projects.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Forestry & Resources",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "6.1%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "+1.0%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+1.2%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>British Columbia</strong> labour market snapshot — unemployment <strong>6.1%</strong>, CPI <strong>+1.0%</strong>. Chart shows the 12m trajectory of Lumber — the commodity most tied to British Columbia's project pipeline."
         }
       ],
       "marketContext": "<p>British Columbia's unemployment rate held at <strong>6.1%</strong> in the February Labour Force Survey, <strong>flat</strong> from January, while the participation rate fell <strong>-0.4 percentage points</strong> to <strong>64.4%</strong> and the employment rate fell <strong>-0.4 percentage points</strong> to <strong>60.5%</strong><sup>73</sup>. The provincial CPI series printed at <strong>+1.0%</strong> year-over-year, below the national signal<sup>177</sup>. Housing starts came in at <strong>41,331</strong> units in the latest CMHC release, down marginally from <strong>41,492</strong> the prior month<sup>178</sup>. Provincial GDP printed at <strong>+1.2%</strong>.</p>",
@@ -1610,7 +1728,42 @@
         "participationRate": "Statistics Canada",
         "employmentRate": "Statistics Canada"
       },
-      "insightCharts": [],
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "boc_rate"
+          ],
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Saskatchewan labour and economy — Q1 2026 snapshot",
+          "subtitle": "Statistics Canada Labour Force Survey · Consumer Price Index",
+          "yAxisLabel": "BoC policy rate (%)",
+          "eyebrow": "Agriculture",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "5.6%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "-0.7%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+3.4%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Saskatchewan</strong> labour and price snapshot: unemployment <strong>5.6%</strong>, CPI <strong>-0.7%</strong>. Chart shows the 12-month BoC policy rate trajectory as the macro backdrop for Saskatchewan's economy.",
+          "reasoning": "Saskatchewan snapshot — labour + CPI KPIs against the macro rate backdrop"
+        }
+      ],
       "marketContext": "<p>Saskatchewan's unemployment rate printed at <strong>5.6%</strong> in the February Labour Force Survey, <strong>+0.3 percentage points</strong> from the prior 5.3% reading; the participation rate fell <strong>-0.5 percentage points</strong> to <strong>67.1%</strong> and the employment rate fell <strong>-0.6 percentage points</strong> to <strong>63.4%</strong><sup>73</sup>. Saskatchewan's unemployment rate sits among the lowest provincial prints in Canada, tied with Quebec's ISQ reading. The provincial CPI series printed at <strong>-0.7%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+3.4%</strong>. Housing starts came in at <strong>5,486</strong> units in the latest CMHC release, up from <strong>5,327</strong> the prior month<sup>178</sup>.</p>",
       "tradeExposure": ""
     },
@@ -1842,7 +1995,31 @@
           ],
           "title": "Wheat Price - 12 Month Trajectory",
           "subtitle": "12-month trend - USD/bushel",
-          "reasoning": "Manitoba's dominant agricultural sector makes wheat the primary commodity context; the budget's $3.8B capital plan sits alongside agricultural export conditions."
+          "reasoning": "Manitoba's dominant agricultural sector makes wheat the primary commodity context; the budget's $3.8B capital plan sits alongside agricultural export conditions.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Agriculture",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "5.7%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "+3.1%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+1.1%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Manitoba</strong> labour market snapshot — unemployment <strong>5.7%</strong>, CPI <strong>+3.1%</strong>. Chart shows the 12m trajectory of Wheat — the commodity most tied to Manitoba's project pipeline."
         }
       ],
       "marketContext": "<p>Manitoba's unemployment rate printed at <strong>5.7%</strong> in the February Labour Force Survey, <strong>-0.6 percentage points</strong> from the prior 6.3% reading; the participation rate fell <strong>-0.8 percentage points</strong> to <strong>66.3%</strong> and the employment rate fell <strong>-0.4 percentage points</strong> to <strong>62.5%</strong><sup>73</sup>. Manitoba's employment rate remains above the national 60.6% figure. The provincial CPI series printed at <strong>+3.1%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+1.1%</strong>. Housing starts came in at <strong>7,642</strong> units in the latest CMHC release, down from <strong>7,799</strong> the prior month<sup>178</sup>.</p>",
@@ -2076,7 +2253,31 @@
           ],
           "title": "Natural Gas Price - 12 Month Trajectory",
           "subtitle": "12-month trend - USD/MMBtu",
-          "reasoning": "Nova Scotia's power/energy sector is the largest by value at $8.9B, led by Bear Head Energy ammonia/hydrogen ($8.0B) - natural gas is the relevant commodity context."
+          "reasoning": "Nova Scotia's power/energy sector is the largest by value at $8.9B, led by Bear Head Energy ammonia/hydrogen ($8.0B) - natural gas is the relevant commodity context.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Energy Markets",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "7.1%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "+1.5%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+2.7%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Nova Scotia</strong> labour market snapshot — unemployment <strong>7.1%</strong>, CPI <strong>+1.5%</strong>. Chart shows the 12m trajectory of Natural Gas — the commodity most tied to Nova Scotia's project pipeline."
         }
       ],
       "marketContext": "<p>Nova Scotia's unemployment rate printed at <strong>7.1%</strong> in the February Labour Force Survey, <strong>+0.2 percentage points</strong> from the prior 6.9% reading; the participation rate fell <strong>-0.1 percentage points</strong> to <strong>61.3%</strong> and the employment rate fell <strong>-0.1 percentage points</strong> to <strong>57.0%</strong> — the lowest employment rate among the ten provinces<sup>73</sup>. The provincial CPI series printed at <strong>+1.5%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+2.7%</strong>. Housing starts came in at <strong>7,146</strong> units in the latest CMHC release, down from <strong>7,252</strong> the prior month<sup>178</sup>.</p>",
@@ -2310,7 +2511,31 @@
           ],
           "title": "Lumber Price - Forestry Context",
           "subtitle": "12-month trend - USD/1000 bf",
-          "reasoning": "New Brunswick's project pipeline is led by Saint John Pulp Mill Upgrades ($1.1B); lumber price is the primary commodity context for the province's forestry sector."
+          "reasoning": "New Brunswick's project pipeline is led by Saint John Pulp Mill Upgrades ($1.1B); lumber price is the primary commodity context for the province's forestry sector.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Forestry & Resources",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "7.0%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "+1.2%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+1.8%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>New Brunswick</strong> labour market snapshot — unemployment <strong>7.0%</strong>, CPI <strong>+1.2%</strong>. Chart shows the 12m trajectory of Lumber — the commodity most tied to New Brunswick's project pipeline."
         }
       ],
       "marketContext": "<p>New Brunswick's unemployment rate printed at <strong>7.0%</strong> in the February Labour Force Survey, <strong>+0.3 percentage points</strong> from the prior 6.7% reading; the participation rate rose <strong>+0.1 percentage points</strong> to <strong>60.7%</strong> and the employment rate held at <strong>56.5%</strong> — the lowest provincial employment rate in the country<sup>73</sup>. The provincial CPI series printed at <strong>+1.2%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+1.8%</strong>. Housing starts came in at <strong>6,011</strong> units in the latest CMHC release, down from <strong>6,454</strong> the prior month<sup>178</sup>.</p>",
@@ -2544,7 +2769,31 @@
           ],
           "title": "Iron Ore Price - 12 Month Trajectory",
           "subtitle": "12-month trend - USD/ton",
-          "reasoning": "NL's pipeline is led by Grassy Point LNG ($10.0B) and Kamistiatusset (Kami) iron ore ($3.86B); iron ore is a direct commodity context for provincial mining projects."
+          "reasoning": "NL's pipeline is led by Grassy Point LNG ($10.0B) and Kamistiatusset (Kami) iron ore ($3.86B); iron ore is a direct commodity context for provincial mining projects.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Mining & Metals",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "9.2%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "+1.8%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+2.4%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Newfoundland and Labrador</strong> labour market snapshot — unemployment <strong>9.2%</strong>, CPI <strong>+1.8%</strong>. Chart shows the 12m trajectory of Iron Ore — the commodity most tied to Newfoundland and Labrador's project pipeline."
         }
       ],
       "marketContext": "<p>Newfoundland and Labrador's unemployment rate held at <strong>9.2%</strong> in the February Labour Force Survey, <strong>flat</strong> from January and the highest provincial print in the country<sup>73</sup>. The participation rate rose <strong>+0.5 percentage points</strong> to <strong>58.1%</strong> and the employment rate rose <strong>+0.4 percentage points</strong> to <strong>52.7%</strong> — still the lowest provincial employment rate in Canada<sup>73</sup>. The provincial CPI series printed at <strong>+1.8%</strong> year-over-year<sup>177</sup>, and provincial GDP printed at <strong>+2.4%</strong>. Housing starts came in at <strong>1,223</strong> units in the latest CMHC release, up from <strong>1,194</strong> the prior month<sup>178</sup>.</p>",
@@ -2770,7 +3019,42 @@
         "participationRate": "Statistics Canada",
         "employmentRate": "Statistics Canada"
       },
-      "insightCharts": [],
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "dataKeys": [
+            "boc_rate"
+          ],
+          "dataSource": "timeseries",
+          "window": "12m",
+          "title": "Prince Edward Island labour and economy — Q1 2026 snapshot",
+          "subtitle": "Statistics Canada Labour Force Survey · Consumer Price Index",
+          "yAxisLabel": "BoC policy rate (%)",
+          "eyebrow": "Provincial Economy",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "7.2%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "+5.4%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+3.6%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Prince Edward Island</strong> labour and price snapshot: unemployment <strong>7.2%</strong>, CPI <strong>+5.4%</strong>. Chart shows the 12-month BoC policy rate trajectory as the macro backdrop for Prince Edward Island's economy.",
+          "reasoning": "Prince Edward Island snapshot — labour + CPI KPIs against the macro rate backdrop"
+        }
+      ],
       "marketContext": "<p>Prince Edward Island's unemployment rate printed at <strong>7.2%</strong> in the February Labour Force Survey, <strong>-0.4 percentage points</strong> from the prior 7.6% reading; the participation rate rose <strong>+0.1 percentage points</strong> to <strong>66.6%</strong> and the employment rate rose <strong>+0.3 percentage points</strong> to <strong>61.8%</strong><sup>73</sup>. The provincial CPI series printed at <strong>+5.4%</strong> year-over-year — the highest provincial CPI reading in Canada<sup>177</sup> — and provincial GDP printed at <strong>+3.6%</strong>. Housing starts came in at <strong>963</strong> units in the latest CMHC release, down from <strong>1,112</strong> the prior month<sup>178</sup>.</p>",
       "tradeExposure": ""
     },
@@ -3001,7 +3285,31 @@
           ],
           "title": "Gold Price - 12 Month Trajectory",
           "subtitle": "12-month trend - USD/oz",
-          "reasoning": "Yukon's 2024 real GDP contracted 3.3%, driven by declines in placer gold output; gold price is the primary commodity context for the territory."
+          "reasoning": "Yukon's 2024 real GDP contracted 3.3%, driven by declines in placer gold output; gold price is the primary commodity context for the territory.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Mining & Metals",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "3.9%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "N/A",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "-3.3%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Yukon</strong> labour market snapshot — unemployment <strong>3.9%</strong>, CPI <strong>N/A</strong>. Chart shows the 12m trajectory of Gold — the commodity most tied to Yukon's project pipeline."
         },
         {
           "chartType": "line",
@@ -3010,7 +3318,31 @@
           ],
           "title": "Copper Price - 12 Month Trajectory",
           "subtitle": "12-month trend - USD/lb",
-          "reasoning": "Yukon's Kudz Ze Kayah zinc/copper project ($489M, Under Review) links the pipeline to copper market conditions."
+          "reasoning": "Yukon's Kudz Ze Kayah zinc/copper project ($489M, Under Review) links the pipeline to copper market conditions.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Mining & Metals",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "3.9%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "N/A",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "-3.3%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Yukon</strong> labour market snapshot — unemployment <strong>3.9%</strong>, CPI <strong>N/A</strong>. Chart shows the 12m trajectory of Copper — the commodity most tied to Yukon's project pipeline."
         }
       ],
       "marketContext": "<p>Yukon's unemployment rate printed at <strong>3.9%</strong> in the February Labour Force Survey — the lowest in Canada — with the participation rate at <strong>75.1%</strong> and the employment rate at <strong>72.1%</strong>, both the highest territorial or provincial prints in the country<sup>73</sup>. Yukon GDP printed at <strong>-3.3%</strong> on the 2024 annual print from StatCan Table 36-10-0402<sup>177</sup>. CPI and housing starts are not available at the territorial level — StatCan and CMHC do not publish those series for Yukon, NWT, or Nunavut.</p>",
@@ -3243,7 +3575,31 @@
           ],
           "title": "Gold Price - 12 Month Trajectory",
           "subtitle": "12-month trend - USD/oz",
-          "reasoning": "NWT's 2024 real GDP contracted 1.1%; gold remains the primary commodity context for the territory's mining sector."
+          "reasoning": "NWT's 2024 real GDP contracted 1.1%; gold remains the primary commodity context for the territory's mining sector.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Mining & Metals",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "5.3%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "N/A",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "-1.1%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Northwest Territories</strong> labour market snapshot — unemployment <strong>5.3%</strong>, CPI <strong>N/A</strong>. Chart shows the 12m trajectory of Gold — the commodity most tied to Northwest Territories's project pipeline."
         },
         {
           "chartType": "line",
@@ -3252,7 +3608,31 @@
           ],
           "title": "Zinc Price - Pine Point Context",
           "subtitle": "12-month trend - USD/ton",
-          "reasoning": "The Pine Point lead/zinc project ($653M, Under Review) is a key non-defence pipeline entry; zinc price is the relevant commodity context."
+          "reasoning": "The Pine Point lead/zinc project ($653M, Under Review) is a key non-defence pipeline entry; zinc price is the relevant commodity context.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Mining & Metals",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "5.3%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "N/A",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "-1.1%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Northwest Territories</strong> labour market snapshot — unemployment <strong>5.3%</strong>, CPI <strong>N/A</strong>. Chart shows the 12m trajectory of Zinc — the commodity most tied to Northwest Territories's project pipeline."
         }
       ],
       "marketContext": "<p>Northwest Territories' unemployment rate printed at <strong>5.3%</strong> in the February Labour Force Survey, with the participation rate at <strong>69.2%</strong> (above the national 65.4% figure) and the employment rate at <strong>65.0%</strong><sup>73</sup>. NWT GDP printed at <strong>-1.1%</strong> on the 2024 annual print from StatCan Table 36-10-0402<sup>177</sup>. CPI and housing starts are not available at the territorial level — StatCan and CMHC do not publish those series for NWT.</p>",
@@ -3485,7 +3865,31 @@
           ],
           "title": "Gold Price - Back River Context",
           "subtitle": "12-month trend - USD/oz",
-          "reasoning": "Nunavut's 2024 real GDP expanded 7.5% - the fastest in Canada - driven by mining output; the Back River Gold Project ($610M) links directly to gold prices."
+          "reasoning": "Nunavut's 2024 real GDP expanded 7.5% - the fastest in Canada - driven by mining output; the Back River Gold Project ($610M) links directly to gold prices.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Mining & Metals",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "10.8%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "N/A",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+7.5%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Nunavut</strong> labour market snapshot — unemployment <strong>10.8%</strong>, CPI <strong>N/A</strong>. Chart shows the 12m trajectory of Gold — the commodity most tied to Nunavut's project pipeline."
         },
         {
           "chartType": "line",
@@ -3494,7 +3898,31 @@
           ],
           "title": "Iron Ore Price - Mary River Context",
           "subtitle": "12-month trend - USD/ton",
-          "reasoning": "Baffinland Mary River Steensby Rail and Port Expansion ($3.0B, Approved) is the top non-defence entry; iron ore is the direct commodity context for Nunavut's largest pipeline project."
+          "reasoning": "Baffinland Mary River Steensby Rail and Port Expansion ($3.0B, Approved) is the top non-defence entry; iron ore is the direct commodity context for Nunavut's largest pipeline project.",
+          "dataSource": "timeseries",
+          "window": "12m",
+          "eyebrow": "Mining & Metals",
+          "kpis": [
+            {
+              "label": "Unemployment",
+              "value": "10.8%",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "CPI",
+              "value": "N/A",
+              "delta": "",
+              "trend": ""
+            },
+            {
+              "label": "GDP",
+              "value": "+7.5%",
+              "delta": "",
+              "trend": ""
+            }
+          ],
+          "context": "<strong>Nunavut</strong> labour market snapshot — unemployment <strong>10.8%</strong>, CPI <strong>N/A</strong>. Chart shows the 12m trajectory of Iron Ore — the commodity most tied to Nunavut's project pipeline."
         }
       ],
       "marketContext": "<p>Nunavut's unemployment rate printed at <strong>10.8%</strong> in the February Labour Force Survey — the highest in Canada — with the participation rate at <strong>61.7%</strong> and the employment rate at <strong>54.2%</strong><sup>73</sup>. Nunavut GDP printed at <strong>+7.5%</strong> on the 2024 annual print from StatCan Table 36-10-0402<sup>177</sup>. CPI and housing starts are not available at the territorial level — StatCan and CMHC do not publish those series for Nunavut.</p>",
@@ -7301,7 +7729,31 @@
           "date": "2026-03-18",
           "label": "BoC holds 2.25%"
         }
-      ]
+      ],
+      "dataSource": "timeseries",
+      "window": "12m",
+      "eyebrow": "Policy Rate",
+      "kpis": [
+        {
+          "label": "BoC Rate",
+          "value": "2.25%",
+          "delta": "Held 7th time",
+          "trend": ""
+        },
+        {
+          "label": "Prior Peak",
+          "value": "5.00%",
+          "delta": "Jun 2023",
+          "trend": "down"
+        },
+        {
+          "label": "Fed Funds",
+          "value": "4.25%",
+          "delta": "Differential -200 bps",
+          "trend": ""
+        }
+      ],
+      "context": "The Bank of Canada held the overnight rate at <strong>2.25%</strong> on April 9, 2026 — the seventh consecutive decision without a change. The policy rate sits <strong>275 basis points</strong> below the June 2023 peak of 5.00%."
     },
     {
       "chartType": "line",
@@ -7310,7 +7762,31 @@
       ],
       "title": "GoC 10y-2y Yield Curve Spread",
       "subtitle": "12-month trend - bps",
-      "reasoning": "GoC 2-year traded at 2.79%, 54 basis points above the BoC overnight rate - curve shape contextualizes the rate hold narrative."
+      "reasoning": "GoC 2-year traded at 2.79%, 54 basis points above the BoC overnight rate - curve shape contextualizes the rate hold narrative.",
+      "dataSource": "timeseries",
+      "window": "12m",
+      "eyebrow": "Yield Curve",
+      "kpis": [
+        {
+          "label": "2Y Yield",
+          "value": "2.95%",
+          "delta": "Prior year 2.62%",
+          "trend": ""
+        },
+        {
+          "label": "10Y Yield",
+          "value": "3.58%",
+          "delta": "Prior year 3.22%",
+          "trend": ""
+        },
+        {
+          "label": "Curve Shape",
+          "value": "Normal",
+          "delta": "Not inverted",
+          "trend": "up"
+        }
+      ],
+      "context": "The Government of Canada 10y-2y yield spread chart tracks the 12-month trajectory of the long-short differential — a leading indicator for rate-sensitive sectors."
     }
   ],
   "sources": [
