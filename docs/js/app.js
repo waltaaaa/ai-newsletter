@@ -1567,8 +1567,38 @@ function buildAgentInsightStrip(prefix,chartSpec,provData){
   const id=prefix+'AgentInsight';
   const title=chartSpec.title||'Weekly Insight';
   const subtitle=chartSpec.subtitle||'Agent-selected visualization';
+  const kpis=Array.isArray(chartSpec.kpis)?chartSpec.kpis:[];
+  // Option C editorial layout — triggered by presence of non-empty kpis array.
+  // Renders eyebrow label, KPI tile row, Prussian blue chart, integrated context panel.
+  if(kpis.length){
+    const eyebrow=chartSpec.eyebrow||'';
+    const context=chartSpec.context||'';
+    let oc='<div class="optc-card" style="margin:24px 0;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">';
+    if(eyebrow){oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#003153;margin-bottom:8px;border-bottom:2px solid #003153;display:inline-block;padding-bottom:2px">'+san(eyebrow)+'</div>';}
+    oc+='<div style="font-family:DM Sans,sans-serif;font-size:20px;font-weight:700;color:#1a2744;line-height:1.3;margin-bottom:4px">'+san(title)+'</div>';
+    oc+='<div style="font-family:DM Sans,sans-serif;font-size:13px;color:#64748B;margin-bottom:18px">'+san(subtitle)+'</div>';
+    oc+='<div style="display:flex;gap:32px;margin-bottom:20px;padding:16px 0;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;flex-wrap:wrap">';
+    kpis.slice(0,3).forEach(function(k){
+      var tr=(k.trend||'').toLowerCase();
+      var trendColor=tr==='up'?'#0d7a3f':tr==='down'?'#c4320a':'#64748B';
+      oc+='<div style="flex:1;min-width:120px">';
+      oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#64748B;margin-bottom:6px">'+san(k.label||'')+'</div>';
+      oc+='<div style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:700;color:#1a2744;line-height:1.1">'+san(k.value||'')+'</div>';
+      if(k.delta){oc+='<div style="font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;color:'+trendColor+';margin-top:4px">'+san(k.delta)+'</div>';}
+      oc+='</div>';
+    });
+    oc+='</div>';
+    oc+='<div style="height:260px;position:relative;margin-bottom:16px"><canvas id="'+id+'"></canvas></div>';
+    if(context){
+      var safeCtx=String(context).replace(/<(?!\/?strong\b)[^>]+>/gi,'');
+      oc+='<div style="font-family:DM Sans,sans-serif;font-size:14px;line-height:1.6;color:#2d3a52;padding:14px 16px;background:#f8fafc;border-left:3px solid #003153;border-radius:0 4px 4px 0">'+safeCtx+'</div>';
+    }
+    oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;color:#94A3B8;margin-top:12px;text-align:right">Source: The Lagging Indicator</div>';
+    oc+='</div>';
+    return oc;
+  }
+  // Legacy callout layout (unchanged) — used when chartSpec has no kpis array
   const calloutText=_buildProvCalloutText(chartSpec,provData||{},0);
-  // Callout structure matching TL;DR pattern
   let html='<div class="tldr-callout" style="margin:20px 0">';
   html+='<div style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+calloutText+'</div>';
   html+='<div class="tldr-callout-chart">';
@@ -1588,20 +1618,42 @@ async function renderAgentInsightChart(prefix,chartSpec){
   const key='_agentInsight_'+canvasId;
   if(charts[key]){charts[key].destroy();delete charts[key]}
 
-  const allTs=await fetchJSON('timeseries.json').catch(()=>({}));
+  // Data source routing: chartSpec.dataSource === "indicators" pulls from
+  // indicators.json history grouped by indicator_name; otherwise timeseries.json.
+  const dataSource=chartSpec.dataSource||'timeseries';
+  let allTs={};
+  if(dataSource==='indicators'){
+    const ind=await fetchJSON('indicators.json').catch(()=>({}));
+    const hist=(ind&&ind.history)||[];
+    for(let hi=0;hi<hist.length;hi++){
+      const row=hist[hi];if(!row)continue;
+      const iname=row.indicator_name;if(!iname)continue;
+      const v=parseFloat(row.value);
+      if(isNaN(v)||!row.period)continue;
+      if(!allTs[iname])allTs[iname]=[];
+      allTs[iname].push({date:row.period,value:v});
+    }
+    for(const k in allTs)allTs[k].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  }else{
+    allTs=await fetchJSON('timeseries.json').catch(()=>({}));
+  }
   const chartType=chartSpec.chartType||'line';
   const dataKeys=chartSpec.dataKeys;
   const annotations=chartSpec.annotations||[];
-  const lineColors=[_ic.accent,_ic.pos,'#F59E0B','#8B5CF6'];
+  // Option C charts use Prussian blue as the primary line color
+  const _isOptC=Array.isArray(chartSpec.kpis)&&chartSpec.kpis.length>0;
+  const lineColors=_isOptC?['#003153','#7c3aed','#c4320a','#0d7a3f']:[_ic.accent,_ic.pos,'#F59E0B','#8B5CF6'];
   const datasets=[];
   let allLabels=[];
+  // Window parameter: "6m" / "12m" / "18m" / "24m" — default 12
+  const _winMonths=parseInt(String(chartSpec.window||'12m').replace(/[^0-9]/g,''),10)||12;
 
   dataKeys.forEach((tsKey,idx)=>{
     let raw=allTs[tsKey];
     if(!raw||!raw.length)return;
     const series=Array.isArray(raw)?raw:raw.series||[];
     if(!series.length)return;
-    const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
+    const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-_winMonths);
     const filtered=series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
     if(!filtered.length)return;
     const labels=filtered.map(p=>fmtDate(p.date));
