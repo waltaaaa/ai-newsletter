@@ -157,27 +157,32 @@ Each chart object in the `insightCharts` array follows this schema:
 | **`kpis`** | array | **No (TRIGGER)** | Headline numbers promoted above the chart as a KPI row. **Presence of a non-empty `kpis` array is the trigger for the Option C (editorial) layout.** If omitted or empty, the chart renders in the legacy layout. Array of 1-3 objects, each with `{label, value, delta, trend}`. See schema below. |
 | **`context`** | string | **No** (Option C) | Integrated context sentence rendered inside the chart card, below the chart canvas. Carries the project cross-reference with conditional forward-looking framing. Plain text or limited HTML (`<strong>` allowed for key numbers). Replaces the need for external callout text when Option C is active. |
 
-### Option C (editorial) layout — when to use
+### Option C (editorial) layout — the DEFAULT
 
-The Option C editorial layout is triggered by the presence of a non-empty `kpis` array. When active, the chart renders with:
+**Option C is the default chart layout for every top-level and provincial chart.** Legacy is the narrow exception (see below). The Option C editorial layout is triggered by the presence of a non-empty `kpis` array. When active, the chart renders with:
 
-1. An **eyebrow category label** above the title (if `eyebrow` provided)
+1. An **eyebrow category label** above the title (`eyebrow` provided)
 2. A **prominent title and subtitle** (20px / 13px, stronger hierarchy than legacy)
 3. A **KPI row with 1-3 headline numbers** extracted from the chart's data — the reader sees the punchline immediately without having to interpret the line
 4. The **chart canvas** (Prussian blue `#003153` as the primary line color)
-5. An **integrated context panel** below the chart carrying the project cross-reference with conditional framing (if `context` provided)
+5. An **integrated context panel** below the chart carrying the project cross-reference with conditional framing (`context` provided)
 
-**When to use Option C:**
+**Always produce Option C for:**
 
-- The chart has 1-2 headline numbers that represent the story (e.g., WTI price, unemployment rate, a spread)
-- The chart supports a cross-reference to the project database that should appear alongside the visual
-- You want stronger editorial hierarchy for a high-priority finding
+- Every **top-level (National tab)** chart — both of the 2 National charts must use Option C
+- Every **province-primary** chart — the first/headline chart on each province's tab (13 charts)
+- Any chart where a single headline number represents the story (WTI price, unemployment rate, a spread, headline GDP print)
+- Any chart that carries a natural cross-reference to the project database
 
-**When to use the legacy layout (omit `kpis`):**
+**The ONLY exceptions (use legacy, omit `kpis`):**
 
-- The chart shows many values where no single number is "the headline" (e.g., a full yield curve snapshot, a 13-category diverging bar)
-- The chart is secondary context for the narrative, not the narrative itself
-- You don't have a clean cross-reference sentence to carry in `context`
+- **Full yield curve snapshots** — multi-tenor line charts where no single number is "the headline"
+- **Diverging bar charts with >8 categories** — e.g., per-province comparisons where all values matter equally
+- **Multi-series stacked-area charts** — no clean KPI to hoist
+
+**Required ratio for a clean run:** at least **80% of all charts in a briefing must be Option C**. If the auditor sees a briefing with <80% Option C share across the 28-chart set (2 national + 26 provincial), the run is flagged as a regression. For the 2 National charts specifically, 100% Option C is required — both must carry kpis, eyebrow, and context.
+
+**When in doubt: default to Option C.** The editorial card treats the chart as the story's punchline rather than a footnote. Legacy should feel like a conscious choice for a specific reason, not the lazy path.
 
 ### KPI object schema
 

@@ -154,17 +154,24 @@ def update_dashboard(deep_sweep: bool = False):
         print(f"  {phase_name}")
         print(f"{'='*60}")
 
-        # Check phase cache for crash recovery
+        # Check phase cache for crash recovery.
+        # Phase 6 Finalize is INTENTIONALLY non-cacheable — its job is to publish
+        # whatever `final_payload` Phase 5 produced this run. Caching it caused
+        # a critical bug where a fresh conductor briefing was orphaned because
+        # a morning run had already cached Phase 6 with the previous payload.
         cache_key = f"{cache_prefix}_{phase_name.replace(' ', '_')}"
-        try:
-            from db import get_dashboard_state
-            cached = get_dashboard_state(conn, cache_key)
-            if cached and isinstance(cached, dict) and cached.get("_completed"):
-                print(f"  [CACHE HIT] Skipping — completed earlier today")
-                context.update({k: v for k, v in cached.items() if not k.startswith("_")})
-                continue
-        except Exception:
-            pass
+        if phase_name == "Phase 6: Finalize":
+            cached = None
+        else:
+            try:
+                from db import get_dashboard_state
+                cached = get_dashboard_state(conn, cache_key)
+                if cached and isinstance(cached, dict) and cached.get("_completed"):
+                    print(f"  [CACHE HIT] Skipping — completed earlier today")
+                    context.update({k: v for k, v in cached.items() if not k.startswith("_")})
+                    continue
+            except Exception:
+                pass
 
         timeout = PHASE_TIMEOUTS.get(phase_name, 300)
         try:
@@ -195,15 +202,17 @@ def update_dashboard(deep_sweep: bool = False):
                 # Merge phase outputs into shared context
                 if result:
                     context.update(result)
-                    # Cache phase results for crash recovery
-                    try:
-                        from db import save_dashboard_state
-                        cache_data = {k: v for k, v in result.items()
-                                      if isinstance(v, (str, int, float, bool, list, dict, type(None)))}
-                        cache_data["_completed"] = True
-                        save_dashboard_state(conn, cache_key, cache_data)
-                    except Exception:
-                        pass  # caching is best-effort
+                    # Cache phase results for crash recovery.
+                    # Skip Phase 6 — it's non-cacheable by design (see cache-check above).
+                    if phase_name != "Phase 6: Finalize":
+                        try:
+                            from db import save_dashboard_state
+                            cache_data = {k: v for k, v in result.items()
+                                          if isinstance(v, (str, int, float, bool, list, dict, type(None)))}
+                            cache_data["_completed"] = True
+                            save_dashboard_state(conn, cache_key, cache_data)
+                        except Exception:
+                            pass  # caching is best-effort
 
         except Exception as e:
             import traceback

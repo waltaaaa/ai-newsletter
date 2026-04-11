@@ -325,10 +325,14 @@ Carry forward structure from briefing_latest.json, but the commodities array MUS
       {"label": "DJIA", "value": "48,186", "change": "+0.9%", "period": "Week"}
     ],
     "fx": [
-      {"pair": "CAD/USD", "value": "0.7235", "change": "-0.8%", "period": "Week"},
-      {"pair": "USD/CAD", "value": "1.3822", "change": "+0.8%", "period": "Week"},
-      {"pair": "EUR/USD", "value": "1.1696", "change": "+0.4%", "period": "Week"}
+      {"pair": "CAD/USD", "value": "0.7235", "change": "-0.8%", "period": "Week", "source": "timeseries.json:cadusd"},
+      {"pair": "USD/CAD", "value": "1.3822", "change": "+0.8%", "period": "Week", "source": "derived:1/cadusd"},
+      {"pair": "EUR/USD", "value": "1.1696", "change": "+0.4%", "period": "Week", "source": "timeseries.json:eurusd"},
+      {"pair": "GBP/USD", "value": "1.2845", "change": "+0.2%", "period": "Week", "source": "timeseries.json:fx_gbpusd"},
+      {"pair": "USD/JPY", "value": "159.79", "change": "+1.1%", "period": "Week", "source": "timeseries.json:usdjpy"},
+      {"pair": "USD/CNY", "value": "7.23", "change": "+0.1%", "period": "Week", "source": "timeseries.json:usdcny"}
     ],
+    "_fx_required_pairs_note": "MUST emit all 6 pairs above — CAD/USD, USD/CAD, EUR/USD, GBP/USD, USD/JPY, USD/CNY. These are the majors the writer triad and the frontend render. If any source series is stale (>7 days) or missing, include the pair with value 'N/A' and a `note` field explaining why — DO NOT drop the pair. The Markets writer expects all 6 to assemble a complete FX section.",
     "commodities": [
       {"name": "WTI Crude Oil", "value": "$98.53/bbl", "weekly_pct": "-1.59%", "mom_pct": "+18.07%", "yoy_pct": "+65.37%", "avg_1y": "$65.99/bbl", "high_52w": "$112.95/bbl", "low_52w": "$58.70/bbl", "source": "timeseries.json:wti"},
       {"name": "Western Canadian Select", "value": "N/A", "note": "Dossier does not carry WCS pricing this week; Markets writer should report wcs_analysis as N/A.", "source": "unavailable"},

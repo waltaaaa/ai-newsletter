@@ -272,6 +272,14 @@ Each industry package structure:
   ],
   "indicatorSrc": "StatCan",
   "isNegative": true,
+  "indicators": [
+    {"label": "Sector GDP (M/M)", "value": "-1.5%", "delta": "-0.8pp vs prior", "source": "indicators.json:industry_gdp.21"},
+    {"label": "Sector GDP (Y/Y)", "value": "-3.2%", "delta": "accelerating decline", "source": "indicators.json:industry_gdp.21"},
+    {"label": "WTI Crude", "value": "$68.50/bbl", "delta": "-5.1% M/M", "source": "commodities.json:wti"},
+    {"label": "Copper", "value": "$4.15/lb", "delta": "+2.5% M/M", "source": "commodities.json:copper"},
+    {"label": "Sector Employment", "value": "142,300", "delta": "-1.2% M/M", "source": "indicators.json:employment_by_industry.21"},
+    {"label": "Active Projects", "value": "167", "delta": "+3 this week", "source": "projects_all.json:sector=mining_energy"}
+  ],
   "cross_references": [
     {
       "indicator": "wti_crude",
@@ -312,6 +320,7 @@ Each industry package structure:
 - `subsectors`: 3 subsectors with codes and names
 - `indicatorSrc`: "StatCan"
 - `isNegative`: true if yy is negative
+- `indicators`: **REQUIRED array, 4–8 items** — per-industry headline indicators rendered as cards on the industry tab. Each item is `{label, value, delta, source}`. MUST include: (1) Sector GDP M/M, (2) Sector GDP Y/Y. SHOULD include 2–4 sector-relevant commodity prices, employment counts, trade flows, CPI subindices, or policy-linked metrics. Pull from `indicators.json`, `commodities.json`, `timeseries.json`, or `projects_all.json`. Values are strings formatted with unit (e.g., `"$68.50/bbl"`, `"-1.5%"`, `"167"`). Never fabricate — mark missing data as `"N/A"` with a `note` field. The `source` field must trace back to a real file path (e.g., `"indicators.json:industry_gdp.21"`) so the auditor can verify. Frontend reads `industry.indicators[key]` and renders zero cards if missing — this field is blocking for the Industries tab.
 - `cross_references`: Connect commodities/indicators to projects (use real counts from Step 2)
 - `trend_analysis`: Narrative analysis of sector momentum and outlook
 
@@ -397,6 +406,7 @@ Verify before writing the dossier:
    - policy_items: at least 1 if relevant
    - news_stories: 2-3 headlines
    - subsectors: 3 items
+   - **indicators: 4–8 items (REQUIRED — blocks Industries tab if missing)**
    - cross_references: 1+ item
    - trend_analysis: direction, momentum, comparison, outlook
    - isNegative: boolean based on yy value
@@ -490,7 +500,7 @@ Valid JSON with:
 1. `meta` object with industries_count (20)
 2. `goodsIndustries` array with exactly 5 items
 3. `servicesIndustries` array with exactly 15 items
-4. Each industry has: code, name, mm, yy, key_facts (≥2), projects_count, projects_value, subsectors (3 items), indicatorSrc, isNegative, cross_references (≥1), trend_analysis
+4. Each industry has: code, name, mm, yy, key_facts (≥2), projects_count, projects_value, subsectors (3 items), indicatorSrc, isNegative, **indicators (4–8 items, REQUIRED)**, cross_references (≥1), trend_analysis
 5. All mm/yy values from hard data (no rounding)
 6. All project counts/values from projects_all.json (no estimates)
 7. All commodity linkages accurate and supported by real data

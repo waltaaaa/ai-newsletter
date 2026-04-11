@@ -347,9 +347,15 @@ For each of the 15 services industries, assemble:
     {"code": "524", "name": "Insurance", "mm": "+0.2%"},
     {"code": "526", "name": "Pension & Investment Funds", "mm": "+0.8%"}
   ],
-  "indicatorSrc": "StatCan"
+  "indicatorSrc": "StatCan",
+  "indicators": [
+    {"label": "Sector GDP (M/M)", "value": "+0.4%", "delta": "+0.2pp vs prior", "source": "indicators.json:industry_gdp.52"},
+    {"label": "BoC Overnight Rate", "value": "2.25%", "delta": "unchanged", "source": "indicators.json:boc_rate"}
+  ]
 }
 ```
+
+**`indicators` field — REQUIRED pass-through from dossier.** The analyst dossier (`dossier_industries.json`) now produces a per-industry `indicators` array of 4–8 items with `{label, value, delta, source}`. **Copy this array verbatim from the dossier into your output.** Do not modify, reorder, or drop items. Do not fabricate indicators if the dossier is missing the field — instead emit an empty array `[]` and log a warning so the auditor catches the upstream gap. The frontend renders industry indicator cards from this field; if it's missing the Industries tab shows zero indicators per industry (a blocking defect).
 
 **ALL 15 SERVICES INDUSTRIES MUST BE PRESENT:**
 - 41: Wholesale Trade
@@ -445,6 +451,17 @@ def word_count(html):
 for ind in data.get('servicesIndustries', []):
     wc = word_count(ind.get('analysis', ''))
     print(f"{ind['name']}: {wc} words (target: 80-150)")
+
+# ── INDICATORS PASS-THROUGH CHECK ──
+# The `indicators` array must be present and non-empty for each industry.
+# It is pass-through from the analyst dossier — if missing here, either the
+# analyst didn't populate it or the writer dropped it during assembly.
+for ind in data.get('servicesIndustries', []):
+    inds = ind.get('indicators', [])
+    if not inds:
+        print(f"FAIL — MISSING INDICATORS: {ind.get('name','?')} has no indicators array (dossier drop or writer omission)")
+    elif len(inds) < 2:
+        print(f"WARN — THIN INDICATORS: {ind.get('name','?')} has only {len(inds)} indicators (target 4-8)")
 
 # ── JSON VALIDITY ──
 try:

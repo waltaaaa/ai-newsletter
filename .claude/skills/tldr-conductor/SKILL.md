@@ -322,7 +322,7 @@ If not found and tone is good: Proceed.
 **Agent:** `tldr-charts`
 
 **Your job:**
-1. Dispatch the agent (sequential, after Assembly)
+1. Dispatch the agent (sequential, after Assembly) with explicit instruction: **"Produce Option C editorial layout for every chart by default. Legacy layout is only permitted for full yield curves, >8-category diverging bars, and stacked-area multi-series snapshots. Both National charts must be Option C (100%). Provincial charts must be ≥80% Option C across the 26-chart set."**
 2. Wait for completion
 3. Validate:
    - Briefing JSON updated (check timestamp)
@@ -330,6 +330,7 @@ If not found and tone is good: Proceed.
    - Each province object has `insightCharts` array = 2 items
    - Total charts = 28 (2 national + 2 × 13 provinces)
    - All `dataKeys` exist in `timeseries.json`
+   - **Option C ratio:** both national charts have non-empty `kpis` arrays; ≥21/26 provincial charts have non-empty `kpis` arrays (≥80%)
 
 **Quick Python validation:**
 ```python
@@ -352,6 +353,16 @@ for p in b.get('provinces', []):
 
 print(f'Issues: {len(issues)}')
 if issues: print('\n'.join(issues[:5]))
+
+# Option C ratio check (Tier 1.7 — editorial layout default)
+nat_optc = sum(1 for c in b.get('insightCharts', []) if c.get('kpis'))
+prov_charts = [c for p in b.get('provinces', []) for c in p.get('insightCharts', [])]
+prov_optc = sum(1 for c in prov_charts if c.get('kpis'))
+print(f'Option C: National {nat_optc}/2, Provincial {prov_optc}/{len(prov_charts)}')
+if nat_optc < 2:
+    print(f'FAIL — National charts must both be Option C, got {nat_optc}/2')
+if prov_charts and prov_optc / len(prov_charts) < 0.8:
+    print(f'FAIL — Provincial Option C ratio {prov_optc/len(prov_charts):.0%} < 80% required')
 ```
 
 **On failure:**

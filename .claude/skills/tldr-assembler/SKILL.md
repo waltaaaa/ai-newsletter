@@ -158,6 +158,15 @@ if market_equities:
 if market_fx_yields:
     if 'fx' not in market_fx_yields:
         errors.append(f"briefing_market_fx_yields.json missing 'fx' object")
+    else:
+        _fx_pairs = market_fx_yields.get('fx', {}).get('pairs', [])
+        if len(_fx_pairs) < 6:
+            errors.append(f"briefing_market_fx_yields.json: expected >= 6 fx pairs (CAD/USD, USD/CAD, EUR/USD, GBP/USD, USD/JPY, USD/CNY), got {len(_fx_pairs)}")
+        _required_pair_names = {"CAD/USD", "USD/CAD", "EUR/USD", "GBP/USD", "USD/JPY", "USD/CNY"}
+        _got_pair_names = {p.get('name', '') for p in _fx_pairs}
+        _missing = _required_pair_names - _got_pair_names
+        if _missing:
+            errors.append(f"briefing_market_fx_yields.json: missing required fx pairs {sorted(_missing)}")
     if 'yieldCurve' not in market_fx_yields:
         errors.append(f"briefing_market_fx_yields.json missing 'yieldCurve' object")
     elif len(market_fx_yields.get('yieldCurve', {}).get('tenors', [])) != 7:
@@ -435,9 +444,14 @@ output = {
     'industry_executive_summary': goods.get('industry_executive_summary', '') or services.get('industry_executive_summary', ''),
 
     # Financial markets (from dedicated market agents 3F–3I)
+    # Note: fx fragment is a dict with {pairs, boc_rate, fed_rate, rate_differential_bp, fx_commentary}.
+    # Spread exposes boc_rate/fed_rate/etc. at top level (frontend reads fm.boc_rate), then
+    # we assign 'fx' explicitly as the pairs list (frontend reads fm.fx.length).
+    # The market_equities fragment uses key 'equities' internally but frontend reads fm.indices.
     'financialMarkets': {
         **market_fx_yields.get('fx', {}),
-        'equities': market_equities.get('equities', []),
+        'fx': market_fx_yields.get('fx', {}).get('pairs', []),
+        'indices': market_equities.get('equities', []),
         'summary': market_commentary.get('market_commentary', ''),
         'callout': market_commentary.get('market_commentary_callout', {}),
     },

@@ -204,15 +204,21 @@ Output file: `docs/data/briefing_market_fx_yields.json`
   "fx": {
     "pairs": [
       {"name": "CAD/USD", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
-      {"name": "USD/CAD", ...},
-      {"name": "EUR/USD", ...},
-      {"name": "GBP/USD", ...}
+      {"name": "USD/CAD", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
+      {"name": "EUR/USD", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
+      {"name": "GBP/USD", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
+      {"name": "USD/JPY", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
+      {"name": "USD/CNY", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."}
     ],
     "boc_rate": "...",
     "fed_rate": "...",
     "rate_differential_bp": 200,
     "fx_commentary": "<FX HTML>"
   },
+  // REQUIRED: pairs array MUST contain all 6 pairs above in this order.
+  // If a pair has no dossier data, emit it with value="N/A" and a note="source stale or missing"
+  // field on that pair object — DO NOT drop the pair entry. The assembler validates pair count.
+  // weekly_pct, mom_pct, yoy_pct fields are REQUIRED on every pair (use "N/A" if unavailable).
   "yieldCurve": {
     "tenors": [
       // Include ONLY the tenors present in the dossier.
