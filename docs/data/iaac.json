@@ -1,320 +1,15 @@
 [
   {
-    "name": "Maliseet Road and Principale Street - Stormwater and Drainage Upgrades - Madawaska Maliseet First Nation",
-    "status": "Under Review",
-    "province": "NB",
-    "sector": "Infrastructure",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Lawyers-Ranch Project",
-    "status": "Under Review",
-    "province": "BC",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "On Hold",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      },
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "Status changed from On Hold to Under Review"
-      }
-    ]
-  },
-  {
-    "name": "Modification and Expansion of Waste Disposal Site in Natuashish, NL",
-    "status": "Under Review",
-    "province": "NL",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
     "name": "Improving the reliability of Obedjiwan's stand-alone power grid by adding the equipment and infrastructure needed to integrate renewable energy from the future forest biomass power plant.",
     "status": "Under Review",
     "province": "QC",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Lucky Man Cree Nation Access Road Design and Construction",
-    "status": "Under Review",
-    "province": "SK",
-    "sector": "Infrastructure",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "OS-7270 Authorization to Construct and Operate a Surface Lease for an access road and a multiwell oil pad, with a temporary log deck",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Energy",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "OS-7269 Authorization to Construct and Operate a Surface Lease for an access road and a multiwell oil pad, with a temporary log deck",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Energy",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "427 Cougar Street Triplex Housing Development",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Housing",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Enoch Cree Nation ATCO PMR Maskekoshihk Phases 7-9",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Whitefish Lake First Nation #128",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Bath Institution - New 96 Bed Living Unit",
-    "status": "Under Review",
-    "province": "ON",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Localized Asphalt Repairs at 4200 Labelle Street, Ottawa",
-    "status": "Under Review",
-    "province": "ON",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Tufts Cove Generation Station Rock Revetment Project",
-    "status": "Under Review",
-    "province": "NS",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Graham Road Maintenance and New Culvert – CFB Gagetown",
-    "status": "Under Review",
-    "province": "NB",
-    "sector": "Infrastructure",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Recapitalize Gagetown Range and Training Area: Main Service Roads Upgrades, 5th Canadian Division Support Base (CDSB) Gagetown, Oromocto, NB",
-    "status": "Under Review",
-    "province": "NB",
-    "sector": "Infrastructure",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Springpole Gold Project",
-    "status": "Under Review",
-    "province": "ON",
-    "sector": "Mining",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Town of Banff 25DP116 109 & 111 Muskrat St. Apartment Housing",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Housing",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Cold Lake First Nation English Bay Gas Station Project",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Energy",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Recapitalization of 5 Single Detached Residential Housing Units at Canadian Forces Base (CFB) Esquimalt - Belmont Park",
-    "status": "Under Review",
-    "province": "BC",
-    "sector": "Housing",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Black Creek Sanitary Trunk Sewer - Phase 1",
-    "status": "Under Review",
-    "province": "ON",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Canadian Armed Forces Training Area (CAFTA) Winona Range and Training Area Upgrades",
-    "status": "Under Review",
-    "province": "ON",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-03-31",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -325,11 +20,281 @@
     "province": "ON",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Lucky Man Cree Nation Access Road Design and Construction",
+    "status": "Under Review",
+    "province": "SK",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "OS-7270 Authorization to Construct and Operate a Surface Lease for an access road and a multiwell oil pad, with a temporary log deck",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Energy",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "OS-7269 Authorization to Construct and Operate a Surface Lease for an access road and a multiwell oil pad, with a temporary log deck",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Energy",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "427 Cougar Street Triplex Housing Development",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Housing",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Enoch Cree Nation ATCO PMR Maskekoshihk Phases 7-9",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Whitefish Lake First Nation #128",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Pulteney Point Tower Install",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Bath Institution - New 96 Bed Living Unit",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Localized Asphalt Repairs at 4200 Labelle Street, Ottawa",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Tufts Cove Generation Station Rock Revetment Project",
+    "status": "Under Review",
+    "province": "NS",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Riprap and repairs at the Tourist Wharf and the Saint-Siméon Ferry Wharf",
+    "status": "Under Review",
+    "province": "QC",
+    "sector": "Ports & Logistics",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Graham Road Maintenance and New Culvert – CFB Gagetown",
+    "status": "Under Review",
+    "province": "NB",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Recapitalize Gagetown Range and Training Area: Main Service Roads Upgrades, 5th Canadian Division Support Base (CDSB) Gagetown, Oromocto, NB",
+    "status": "Under Review",
+    "province": "NB",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Removal of Antennas 602 and 603, Newport Corner Naval Radio Station - CFB Halifax",
+    "status": "Under Review",
+    "province": "NS",
+    "sector": "Ports & Logistics",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Maliseet Road and Principale Street - Stormwater and Drainage Upgrades - Madawaska Maliseet First Nation",
+    "status": "Under Review",
+    "province": "NB",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Floating Dock Construction and Installation at Codroy SCH, NL",
+    "status": "Under Review",
+    "province": "NL",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Breakwater Construction at Tignish SCH, PEI",
+    "status": "Under Review",
+    "province": "PE",
+    "sector": "Water & Wastewater",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "DND Relocated Infrastructure Project at the 4th Canadian Division Training Center (4 CDTC) in Meaford, Ontario",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Defence",
+    "value": "—",
+    "lastSeen": "2026-03-30",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -340,11 +305,11 @@
     "province": "SK",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -355,11 +320,11 @@
     "province": "ON",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -370,11 +335,11 @@
     "province": "ON",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -385,11 +350,11 @@
     "province": "ON",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -400,11 +365,11 @@
     "province": "AB",
     "sector": "Energy",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -415,11 +380,11 @@
     "province": "ON",
     "sector": "Clean Energy",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -430,11 +395,11 @@
     "province": "ON",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -445,11 +410,11 @@
     "province": "SK",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -460,11 +425,11 @@
     "province": "QC",
     "sector": "Ports & Logistics",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -475,11 +440,11 @@
     "province": "NB",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -490,11 +455,11 @@
     "province": "QC",
     "sector": "Energy",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -505,11 +470,11 @@
     "province": "AB",
     "sector": "Ports & Logistics",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "On Hold",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -520,11 +485,11 @@
     "province": "ON",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -535,11 +500,11 @@
     "province": "BC",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -550,11 +515,11 @@
     "province": "BC",
     "sector": "Defence",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -565,11 +530,11 @@
     "province": "ON",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -580,11 +545,11 @@
     "province": "AB",
     "sector": "Energy",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -595,11 +560,11 @@
     "province": "AB",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -610,11 +575,11 @@
     "province": "QC",
     "sector": "Mining",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -625,11 +590,11 @@
     "province": "BC",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
@@ -640,236 +605,71 @@
     "province": "MB",
     "sector": "Other",
     "value": "—",
-    "lastSeen": "2026-03-31",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-31",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
   },
   {
-    "name": "Floating Dock Construction and Installation at Codroy SCH, NL",
-    "status": "Under Review",
-    "province": "NL",
-    "sector": "Other",
-    "value": "C$200M",
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Breakwater Construction at Tignish SCH, PEI",
-    "status": "Under Review",
-    "province": "PE",
-    "sector": "Water & Wastewater",
-    "value": "C$65M",
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "DND Relocated Infrastructure Project at the 4th Canadian Division Training Center (4 CDTC) in Meaford, Ontario",
-    "status": "Under Review",
-    "province": "ON",
-    "sector": "Defence",
-    "value": null,
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Multi-Use Industrial Facility",
+    "name": "Allison Bay Subdivision Earthworks",
     "status": "Under Review",
     "province": "AB",
     "sector": "Other",
-    "value": "C$5.0B",
-    "lastSeen": "2026-03-25",
+    "value": "—",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-25",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
   },
   {
-    "name": "Floating Wharf Replacement at Meteghan Small Craft Harbour, Nova Scotia",
-    "status": "Under Review",
-    "province": "NS",
-    "sector": "Ports & Logistics",
-    "value": "C$1.2B",
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Rockcliffe Control Station Relocation Project",
+    "name": "NAV CAN camera mast",
     "status": "Under Review",
     "province": "ON",
     "sector": "Other",
-    "value": "Not disclosed",
-    "lastSeen": "2026-03-25",
+    "value": "—",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-25",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
   },
   {
-    "name": "Attikamek Trail Bridges - Decking and Railing Replacement",
+    "name": "Fish Habitat, Ojibway Shores, Detroit River, Windsor, ON",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Transit & Rail",
-    "value": "Not disclosed",
-    "lastSeen": "2026-03-25",
+    "sector": "Clean Energy",
+    "value": "—",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-25",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
   },
   {
-    "name": "Paddling Sites Upgrades Phase II",
+    "name": "Deep Geological Repository (DGR) for Canada's Used Nuclear Fuel Project",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
-    "value": "C$219M",
-    "lastSeen": "2026-03-25",
+    "sector": "Clean Energy",
+    "value": "—",
+    "lastSeen": "2026-03-30",
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Tla-o-qui-aht – Child and Family Services Centre",
-    "status": "Under Review",
-    "province": "BC",
-    "sector": "Other",
-    "value": "Not disclosed",
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Ermineskin Drainage Improvements (Culvert Replacement - Small Boy Road, Buffalo Avenue, 3 Mile Road) Project",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Mining",
-    "value": null,
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Demolition of CFHA housing – Shannon, QC",
-    "status": "Under Review",
-    "province": "QC",
-    "sector": "Housing",
-    "value": "C$3.7B",
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Deconstruction of New Glasgow Armoury, Building NG1",
-    "status": "Under Review",
-    "province": "NS",
-    "sector": "Other",
-    "value": "C$2.0B",
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Address Deficiencies in the 25 kV Medium Voltage Electrical Installation - Macoun Centre",
-    "status": "Under Review",
-    "province": "QC",
-    "sector": "Other",
-    "value": null,
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Pursuit Miette Mountain Cabins Redevelopment",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Other",
-    "value": "C$200M",
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Ojibways of Onigaming First Nation - Mikinaak Community Youth Cultural Centre Development",
-    "status": "Under Review",
-    "province": "ON",
-    "sector": "Other",
-    "value": "C$500M",
-    "lastSeen": "2026-03-25",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-03-25",
+        "date": "2026-03-30",
         "note": "First tracked"
       }
     ]
