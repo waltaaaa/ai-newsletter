@@ -1,0 +1,85 @@
+[
+  {
+    "date": "2026-03-30",
+    "timestamp": "2026-03-30T13:24:12.235832Z",
+    "source": "websearch_refresh",
+    "national": {
+      "boc_rate": 2.25,
+      "real_gdp_q4_2025": -0.6,
+      "real_gdp_annual_2025": 1.7,
+      "cpi_yoy": 1.8,
+      "unemployment": 6.7,
+      "employment_rate": 60.6,
+      "participation_rate": 64.9,
+      "housing_starts_saar": 250900,
+      "building_permits_jan": 13.3,
+      "wage_growth": 3.9
+    },
+    "markets": {
+      "tsx": 31961,
+      "sp500": 6369,
+      "djia": 45167,
+      "nasdaq": 20948,
+      "ftse100": 9967,
+      "dax": 22327,
+      "nikkei225": 53373,
+      "cad_usd": 0.7194,
+      "eur_usd": 1.1504,
+      "usd_cny": 6.91,
+      "usd_jpy": 160.27
+    },
+    "commodities": {
+      "wti": 99.64,
+      "brent": 112.57,
+      "natural_gas": 3.05,
+      "gold": 4461,
+      "silver": 68.44,
+      "copper": 12043,
+      "aluminum": 3547,
+      "lumber": 531.5,
+      "potash": 350,
+      "uranium": 86.95,
+      "wheat": 6.07,
+      "corn": 4.69,
+      "soybeans": 11.55,
+      "iron_ore": 100.84
+    },
+    "yields": {
+      "goc_2y": 2.97,
+      "goc_5y": 3.21,
+      "goc_10y": 3.48,
+      "goc_long": 3.97,
+      "spread_10y2y": 0.51
+    },
+    "provincial_unemployment": {
+      "ON": 7.6,
+      "QC": 5.9,
+      "AB": 6.3,
+      "BC": 6.1,
+      "SK": 5.6,
+      "MB": 5.7,
+      "NS": 7.1,
+      "NB": 7.0,
+      "NL": 9.2,
+      "PE": 7.2,
+      "YT": 3.9,
+      "NT": 5.3,
+      "NU": 13.8
+    },
+    "data_quality": {
+      "searches_run": 28,
+      "values_updated": 14,
+      "values_unchanged": 17,
+      "values_not_found": 2,
+      "coverage_pct": 93.5,
+      "notes": [
+        "Nunavut unemployment 13.8% retained from prior snapshot (no update found for Feb 2026)",
+        "Potash price $350/t retained (price surged Mar 2026 per CNBC but no specific value confirmed)",
+        "Aluminum unit corrected from 'lb' to 't' in briefing_latest.json commodities",
+        "GoC 5Y yield updated 3.10% → 3.21% (March 27, 2026)",
+        "Wage growth updated +4.2% → +3.9% (Feb 2026 LFS)",
+        "Next BoC rate decision: April 29, 2026 (watchlist had April 16 - may need update)"
+      ]
+    }
+  }
+]
