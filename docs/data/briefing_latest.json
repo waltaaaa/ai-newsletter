@@ -17,7 +17,7 @@
         "yy": "",
         "weekly_pct": null,
         "mom_pct": 0.0,
-        "yoy_pct": 37.96,
+        "yoy_pct": 36.35,
         "high_52w": 34541.3,
         "low_52w": 23866.5,
         "direction": "flat"
@@ -465,21 +465,21 @@
       "term": "2Y",
       "yield": "2.98",
       "yield_year_ago": 2.98,
-      "bp_change_yoy": 30.0,
+      "bp_change_yoy": 40.0,
       "direction": "flat"
     },
     {
       "term": "5Y",
       "yield": "3.19",
       "yield_year_ago": 3.19,
-      "bp_change_yoy": 32.0,
+      "bp_change_yoy": 45.0,
       "direction": "flat"
     },
     {
       "term": "10Y",
       "yield": "3.57",
       "yield_year_ago": 3.6,
-      "bp_change_yoy": 31.0,
+      "bp_change_yoy": 45.0,
       "direction": "flat"
     }
   ],
