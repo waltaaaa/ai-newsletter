@@ -2126,7 +2126,7 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "under_review"
     },
     {
       "id": 10868,
@@ -2867,7 +2867,7 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "under_review"
     },
     {
       "id": 14463,
@@ -7570,14 +7570,6 @@
     {
       "indicator_name": "copper",
       "province": "national",
-      "period": "2021-04-13",
-      "value": 4.04,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "copper",
-      "province": "national",
       "period": "2021-04-20",
       "value": 4.22,
       "unit": "USD",
@@ -9540,14 +9532,6 @@
       "province": "national",
       "period": "2026-03-03",
       "value": 5.77,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "copper",
-      "province": "national",
-      "period": "2021-04-13",
-      "value": 4.04,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -25186,14 +25170,6 @@
     {
       "indicator_name": "goc_10y_yield",
       "province": "national",
-      "period": "2021-04-13",
-      "value": 1.5,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
       "period": "2021-04-14",
       "value": 1.53,
       "unit": "%",
@@ -34966,14 +34942,6 @@
       "value": 3.57,
       "unit": "%",
       "source": "Bank of Canada"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-13",
-      "value": 0.24,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "goc_2y_yield",
@@ -44782,14 +44750,6 @@
       "value": 3.03,
       "unit": "%",
       "source": "Bank of Canada"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-13",
-      "value": 0.94,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "goc_5y_yield",
@@ -54634,14 +54594,6 @@
     {
       "indicator_name": "gold",
       "province": "national",
-      "period": "2021-04-13",
-      "value": 1746.2,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "gold",
-      "province": "national",
       "period": "2021-04-20",
       "value": 1777.3,
       "unit": "USD",
@@ -56604,14 +56556,6 @@
       "province": "national",
       "period": "2026-03-04",
       "value": 5120.2,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "gold",
-      "province": "national",
-      "period": "2021-04-13",
-      "value": 1746.2,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -59546,14 +59490,6 @@
     {
       "indicator_name": "lumber",
       "province": "national",
-      "period": "2021-04-13",
-      "value": 1180.7,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "lumber",
-      "province": "national",
       "period": "2021-04-20",
       "value": 1278.7,
       "unit": "USD",
@@ -60388,14 +60324,6 @@
       "province": "national",
       "period": "2023-05-12",
       "value": 339.0,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "lumber",
-      "province": "national",
-      "period": "2021-04-13",
-      "value": 1180.7,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -61685,14 +61613,6 @@
       "period": "2026-03-30",
       "value": 20948.0,
       "unit": "pts",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "natural_gas",
-      "province": "national",
-      "period": "2021-04-13",
-      "value": 2.62,
-      "unit": "USD",
       "source": "Yahoo Finance"
     },
     {
@@ -63660,14 +63580,6 @@
       "province": "national",
       "period": "2026-03-03",
       "value": 3.05,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "natural_gas",
-      "province": "national",
-      "period": "2021-04-13",
-      "value": 2.62,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -68382,14 +68294,6 @@
       "value": 558507.0,
       "unit": "$M",
       "source": "Ontario Economic Accounts"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-13",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "overnight_rate",
@@ -90946,14 +90850,6 @@
     {
       "indicator_name": "tsx_composite",
       "province": "national",
-      "period": "2021-04-13",
-      "value": 19203.7,
-      "unit": "CAD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "tsx_composite",
-      "province": "national",
       "period": "2021-04-19",
       "value": 19204.4,
       "unit": "CAD",
@@ -102114,14 +102010,6 @@
     {
       "indicator_name": "wti",
       "province": "national",
-      "period": "2021-04-13",
-      "value": 60.18,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "wti",
-      "province": "national",
       "period": "2021-04-20",
       "value": 62.44,
       "unit": "USD",
@@ -104509,14 +104397,6 @@
       "period": "2026-03-15",
       "value": 98.71,
       "unit": "bbl",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "wti_oil",
-      "province": "national",
-      "period": "2021-04-13",
-      "value": 60.18,
-      "unit": "USD",
       "source": "Yahoo Finance"
     },
     {
@@ -107417,7 +107297,7 @@
     ]
   },
   "validation": {
-    "failed_count": 5,
+    "failed_count": 8,
     "failed_indicators": [
       {
         "indicator": "aluminum",
@@ -107432,7 +107312,19 @@
         "province": "national"
       },
       {
+        "indicator": "natural_gas",
+        "province": "national"
+      },
+      {
+        "indicator": "platinum",
+        "province": "national"
+      },
+      {
         "indicator": "silver",
+        "province": "national"
+      },
+      {
+        "indicator": "soybean_oil",
         "province": "national"
       },
       {
