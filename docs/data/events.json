@@ -1,15 +1,5 @@
 [
   {
-    "date": "2026-04-14",
-    "name": "Housing: Opening more homes in West Vancouver",
-    "source": "BC Government News",
-    "type": "policy",
-    "significance": "medium",
-    "province": "BC",
-    "url": "https://news.gov.bc.ca/releases/2026HMA0028-000325",
-    "relevance": "Two new rental buildings expand housing options for workers, families with middle incomes"
-  },
-  {
     "date": "2026-04-15",
     "name": "MB Provincial Budget (est.)",
     "source": "MB Finance Ministry",
@@ -44,6 +34,16 @@
     "significance": "medium",
     "province": "national",
     "relevance": "Expected April 2026. Date not yet confirmed."
+  },
+  {
+    "date": "2026-04-15",
+    "name": "Housing: Opening more homes in West Vancouver",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026HMA0028-000325",
+    "relevance": "Two new rental buildings expand housing options for workers, families with middle incomes"
   },
   {
     "date": "2026-04-16",

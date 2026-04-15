@@ -19,7 +19,7 @@
         "mom_pct": 0.0,
         "yoy_pct": 36.35,
         "high_52w": 34541.3,
-        "low_52w": 23866.5,
+        "low_52w": 24008.9,
         "direction": "flat"
       },
       {
@@ -75,7 +75,7 @@
         "mom_pct": -2.0,
         "yoy_pct": 23.62,
         "high_52w": 10846.7,
-        "low_52w": 8134.3,
+        "low_52w": 8403.2,
         "direction": "flat"
       },
       {
@@ -89,7 +89,7 @@
         "mom_pct": -4.55,
         "yoy_pct": 6.8,
         "high_52w": 25352.39,
-        "low_52w": 20954.83,
+        "low_52w": 21961.97,
         "direction": "flat"
       },
       {
@@ -188,7 +188,7 @@
           "day": "",
           "weekly_pct": null,
           "mom_pct": 0.0,
-          "yoy_pct": -6.31,
+          "yoy_pct": -4.0,
           "high_52w": 6.8,
           "low_52w": 2.7,
           "direction": "flat"
@@ -234,7 +234,7 @@
           "mom_pct": 0.0,
           "yoy_pct": 153.47,
           "high_52w": 114.04,
-          "low_52w": 32.09,
+          "low_52w": 32.87,
           "direction": "flat"
         },
         {
@@ -247,7 +247,7 @@
           "mom_pct": 0.0,
           "yoy_pct": 113.79,
           "high_52w": 2597.4,
-          "low_52w": 948.6,
+          "low_52w": 953.4,
           "direction": "flat"
         },
         {
@@ -276,7 +276,7 @@
           "day": "",
           "weekly_pct": null,
           "mom_pct": -3.55,
-          "yoy_pct": 19.96,
+          "yoy_pct": 18.42,
           "high_52w": 6.18,
           "low_52w": 4.33,
           "direction": "flat"
@@ -321,7 +321,7 @@
           "weekly_pct": null,
           "mom_pct": 0.0,
           "yoy_pct": -4.07,
-          "high_52w": 485.0,
+          "high_52w": 475.75,
           "low_52w": 382.75,
           "direction": "flat"
         },
@@ -465,21 +465,21 @@
       "term": "2Y",
       "yield": "2.98",
       "yield_year_ago": 2.98,
-      "bp_change_yoy": 40.0,
+      "bp_change_yoy": 45.0,
       "direction": "flat"
     },
     {
       "term": "5Y",
       "yield": "3.19",
       "yield_year_ago": 3.19,
-      "bp_change_yoy": 45.0,
+      "bp_change_yoy": 47.0,
       "direction": "flat"
     },
     {
       "term": "10Y",
       "yield": "3.57",
       "yield_year_ago": 3.6,
-      "bp_change_yoy": 45.0,
+      "bp_change_yoy": 46.0,
       "direction": "flat"
     }
   ],
