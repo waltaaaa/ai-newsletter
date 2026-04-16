@@ -1255,20 +1255,20 @@
       "validation_status": "passed"
     },
     {
-      "id": 10865,
+      "id": 16214,
       "indicator_name": "gold",
       "category": "",
       "province": "national",
-      "value": 5120.2,
-      "period": "2026-03-04",
+      "value": 4572.0,
+      "period": "2026-03-30",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-10T00:52:01Z",
-      "unit": "USD",
-      "frequency": "weekly",
+      "fetched_at": "2026-03-30T11:48:00Z",
+      "unit": "troy oz",
+      "frequency": "daily",
       "description": "",
-      "backfilled": 1,
+      "backfilled": 0,
       "metadata": {},
       "_rn": 1,
       "validation_status": "passed"
@@ -3323,7 +3323,7 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "under_review"
     }
   ],
   "history": [
@@ -25170,14 +25170,6 @@
     {
       "indicator_name": "goc_10y_yield",
       "province": "national",
-      "period": "2021-04-15",
-      "value": 1.45,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
       "period": "2021-04-16",
       "value": 1.53,
       "unit": "%",
@@ -34934,14 +34926,6 @@
       "value": 3.57,
       "unit": "%",
       "source": "Bank of Canada"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-15",
-      "value": 0.24,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "goc_2y_yield",
@@ -44734,14 +44718,6 @@
       "value": 3.03,
       "unit": "%",
       "source": "Bank of Canada"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-15",
-      "value": 0.9,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "goc_5y_yield",
@@ -68270,14 +68246,6 @@
       "value": 558507.0,
       "unit": "$M",
       "source": "Ontario Economic Accounts"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-15",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "overnight_rate",
@@ -107257,7 +107225,7 @@
     ]
   },
   "validation": {
-    "failed_count": 10,
+    "failed_count": 12,
     "failed_indicators": [
       {
         "indicator": "aluminum",
@@ -107265,6 +107233,10 @@
       },
       {
         "indicator": "copper",
+        "province": "global"
+      },
+      {
+        "indicator": "gold",
         "province": "global"
       },
       {
@@ -107298,6 +107270,10 @@
       {
         "indicator": "wti",
         "province": "national"
+      },
+      {
+        "indicator": "wti_oil",
+        "province": "global"
       }
     ]
   }

@@ -162,7 +162,7 @@
           "day": "",
           "weekly_pct": null,
           "mom_pct": 0.0,
-          "yoy_pct": 60.43,
+          "yoy_pct": 52.61,
           "high_52w": 98.71,
           "low_52w": 55.99,
           "direction": "flat"
@@ -219,7 +219,7 @@
           "day": "",
           "weekly_pct": null,
           "mom_pct": -9.68,
-          "yoy_pct": 42.66,
+          "yoy_pct": 38.18,
           "high_52w": 5318.4,
           "low_52w": 3182.0,
           "direction": "flat"
@@ -465,21 +465,21 @@
       "term": "2Y",
       "yield": "2.98",
       "yield_year_ago": 2.98,
-      "bp_change_yoy": 45.0,
+      "bp_change_yoy": 46.0,
       "direction": "flat"
     },
     {
       "term": "5Y",
       "yield": "3.19",
       "yield_year_ago": 3.19,
-      "bp_change_yoy": 47.0,
+      "bp_change_yoy": 49.0,
       "direction": "flat"
     },
     {
       "term": "10Y",
       "yield": "3.57",
       "yield_year_ago": 3.6,
-      "bp_change_yoy": 46.0,
+      "bp_change_yoy": 49.0,
       "direction": "flat"
     }
   ],
