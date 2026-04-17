@@ -472,14 +472,14 @@
       "term": "5Y",
       "yield": "3.19",
       "yield_year_ago": 3.19,
-      "bp_change_yoy": 49.0,
+      "bp_change_yoy": 46.0,
       "direction": "flat"
     },
     {
       "term": "10Y",
       "yield": "3.57",
       "yield_year_ago": 3.6,
-      "bp_change_yoy": 49.0,
+      "bp_change_yoy": 44.0,
       "direction": "flat"
     }
   ],
