@@ -1,58 +1,6 @@
 [
   {
-    "date": "2026-04-17",
-    "name": "Consumer Price Index",
-    "source": "Statistics Canada",
-    "type": "data_release",
-    "frequency": "monthly",
-    "significance": "high",
-    "province": "national",
-    "provinces_affected": [
-      "AB",
-      "BC",
-      "MB",
-      "NB",
-      "NL",
-      "NS",
-      "NT",
-      "NU",
-      "ON",
-      "PE",
-      "QC",
-      "SK",
-      "YT"
-    ],
-    "indicator": "cpi_total",
-    "relevance": "Inflation reading. Directly influences BoC rate path and project financing costs."
-  },
-  {
-    "date": "2026-04-17",
-    "name": "Housing Starts (CMHC)",
-    "source": "Statistics Canada",
-    "type": "data_release",
-    "frequency": "monthly",
-    "significance": "medium",
-    "province": "national",
-    "provinces_affected": [
-      "AB",
-      "BC",
-      "MB",
-      "NB",
-      "NL",
-      "NS",
-      "NT",
-      "NU",
-      "ON",
-      "PE",
-      "QC",
-      "SK",
-      "YT"
-    ],
-    "indicator": "housing_starts",
-    "relevance": "Current residential construction activity level."
-  },
-  {
-    "date": "2026-04-17",
+    "date": "2026-04-18",
     "name": "Housing: Opening more homes in West Vancouver",
     "source": "BC Government News",
     "type": "policy",
@@ -164,5 +112,57 @@
     ],
     "indicator": "investment_nonresidential",
     "relevance": "Directly measures capital spending on non-residential construction."
+  },
+  {
+    "date": "2026-05-17",
+    "name": "Consumer Price Index",
+    "source": "Statistics Canada",
+    "type": "data_release",
+    "frequency": "monthly",
+    "significance": "high",
+    "province": "national",
+    "provinces_affected": [
+      "AB",
+      "BC",
+      "MB",
+      "NB",
+      "NL",
+      "NS",
+      "NT",
+      "NU",
+      "ON",
+      "PE",
+      "QC",
+      "SK",
+      "YT"
+    ],
+    "indicator": "cpi_total",
+    "relevance": "Inflation reading. Directly influences BoC rate path and project financing costs."
+  },
+  {
+    "date": "2026-05-17",
+    "name": "Housing Starts (CMHC)",
+    "source": "Statistics Canada",
+    "type": "data_release",
+    "frequency": "monthly",
+    "significance": "medium",
+    "province": "national",
+    "provinces_affected": [
+      "AB",
+      "BC",
+      "MB",
+      "NB",
+      "NL",
+      "NS",
+      "NT",
+      "NU",
+      "ON",
+      "PE",
+      "QC",
+      "SK",
+      "YT"
+    ],
+    "indicator": "housing_starts",
+    "relevance": "Current residential construction activity level."
   }
 ]
