@@ -1,279 +1,198 @@
 {
+  "week_of": "2026-04-11",
   "goodsIndustries": [
     {
       "code": "11",
-      "name": "Agriculture",
-      "mm": "declined",
-      "yy": "N/A",
-      "analysis": "<p>Agriculture, forestry, fishing and hunting sector GDP stood at <strong>$47.2B</strong> in December 2025 and declined in January 2026, with decreases in both crop production and forestry.<sup>1</sup> Crop production (except cannabis) fell <strong>1.3%</strong> in November 2025, while forestry and logging declined <strong>2.8%</strong> for the third consecutive month.<sup>1</sup> Nutrien (NTR) closed at <strong>$104.62</strong>, up <strong>50.6%</strong> year-over-year but down <strong>1.0%</strong> week-over-week, reflecting sustained potash demand alongside near-term price softness.<sup>2</sup> Canada exported <strong>22.9 million tonnes</strong> of potash in 2024, accounting for over <strong>39%</strong> of global exports.<sup>3</sup></p><p>The project database tracks <strong>17 agricultural projects ($5.47B)</strong>, anchored by the BHP Jansen potash project in Saskatchewan (<strong>$10.6B</strong> total for Stage 1 and Stage 2), which is in full-scale construction with <strong>5,500</strong> construction-phase jobs and first production rescheduled to mid-CY2027.<sup>3</sup> U.S.-Canada tariff disputes remain a factor for agricultural exports, with Canada's retaliatory tariffs on U.S. goods continuing under the ongoing trade dispute.<sup>4</sup> If trade disputes persist, agricultural export volumes face continued exposure to policy-driven disruption.</p>",
+      "name": "Agriculture, Forestry, Fishing & Hunting",
+      "mm": "-1.4%",
+      "yy": "+5.4%",
+      "analysis": "<p>Agriculture, forestry, fishing and hunting sector GDP printed <strong>-1.4%</strong> month-over-month and <strong>+5.4%</strong> year-over-year in the January 2026 StatCan GDP-by-industry release, the strongest year-over-year reading among the 20 NAICS industry buckets.<sup>1</sup> The U.S. Commerce Department's preliminary seventh administrative review set Canadian softwood lumber duties at approximately <strong>25%</strong>, down from the prior <strong>35%</strong>, with the final rate expected in August.<sup>2</sup> Agriculture and Agri-Food Canada's Principal Field Crops Outlook projects 2026 canola acreage at <strong>21.8M acres</strong> (+1.0%) and total wheat area at <strong>26.7M acres</strong> (-1.1%); Manitoba canola area is projected +4.7% to 3.2M acres.<sup>3</sup> China is expected to lower its canola seed tariff to approximately <strong>15%</strong> from March 1, 2026.<sup>4</sup></p><p>The Nutrien share-price proxy used for Saskatchewan and Alberta potash economics closed at <strong>$104.62</strong>, down <strong>1.0%</strong> week-over-week but up <strong>50.6%</strong> year-over-year.<sup>5</sup> The project database tracks <strong>17 agriculture and forestry projects totalling $5.47B declared</strong>, with the largest entries including a Quebec biofuel facility ($1.2B, Under Construction), the Saint John pulp mill upgrades in New Brunswick ($1.1B, Under Review), and the Hinton Pulp Mill Expansion in Alberta ($584M, Proposed).<sup>6</sup> The BC Forests Minister statement on the softwood duty review is linked in policy.json to <strong>21 projects</strong> spanning forestry, manufacturing, agriculture and oil and gas, with <strong>12 forestry projects carrying $4.73B in parsed value</strong>.<sup>7</sup> If the final August softwood duty lands near the preliminary 25% and the Chinese canola tariff proceeds at 15%, the 21 linked projects and $4.73B in tracked forestry capital would carry updated input-cost and market-access assumptions.</p>",
       "industrySources": [
-        {
-          "id": 1,
-          "title": "Statistics Canada — GDP by Industry, January 2026",
-          "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
-        },
-        {
-          "id": 2,
-          "title": "Nutrien Ltd (NTR) — Yahoo Finance",
-          "url": "https://finance.yahoo.com/quote/NTR/"
-        },
-        {
-          "id": 3,
-          "title": "BHP Jansen Potash Project — Saskatchewan",
-          "url": "https://www.bhp.com/what-we-do/global-locations/jansen-potash"
-        },
-        {
-          "id": 4,
-          "title": "Government of Canada — Response to U.S. Tariffs",
-          "url": "https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html"
-        }
+        {"id": 1, "title": "Statistics Canada \u2014 GDP by Industry, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "BC Government News \u2014 Softwood Lumber Duty Review", "url": "https://news.gov.bc.ca/releases/2026FOR0011-000394"},
+        {"id": 3, "title": "Agriculture and Agri-Food Canada \u2014 Principal Field Crops Outlook (Feb 2026)", "url": "https://agriculture.canada.ca/en/sector/crops/reports-statistics/canada-outlook-principal-field-crops-2026-02-18"},
+        {"id": 4, "title": "RealAgriculture \u2014 China canola tariff", "url": "https://www.realagriculture.com/"},
+        {"id": 5, "title": "Nutrien Ltd (NTR) \u2014 Commodities Feed", "url": "https://www.nutrien.com"},
+        {"id": 6, "title": "Canadian Macro Strategic Dashboard \u2014 Project Database (NAICS 11)", "url": "https://walter-aydin.github.io/can-macro-dashboard/#projects"},
+        {"id": 7, "title": "BC Policy Tracker \u2014 Softwood Duty Response (policy.json)", "url": "https://news.gov.bc.ca/releases/2026FOR0011-000394"}
       ],
-      "isNegative": true,
+      "isNegative": false,
+      "trend": "down",
+      "projectCount": 17,
+      "projectValue": "$5.47B",
+      "top_stories": [
+        "US appears to lower softwood lumber tariffs \u2014 CBC News, April 9, 2026",
+        "Acreage 2026 \u2014 canola and corn gain ground, wheat takes a breather \u2014 RealAgriculture, March 2026",
+        "GDP by industry January 2026 \u2014 StatCan, March 31, 2026"
+      ],
       "subsectors": [
-        {
-          "code": "111",
-          "name": "Crop Production",
-          "mm": "-1.3%"
-        },
-        {
-          "code": "113",
-          "name": "Forestry & Logging",
-          "mm": "-2.8%"
-        },
-        {
-          "code": "114",
-          "name": "Fishing, Hunting & Trapping",
-          "mm": "N/A"
-        }
+        {"code": "111", "name": "Crop Production", "mm": "N/A"},
+        {"code": "113", "name": "Forestry and Logging", "mm": "N/A"},
+        {"code": "114", "name": "Fishing, Hunting and Trapping", "mm": "N/A"}
       ],
-      "indicatorSrc": "StatCan"
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-1.4%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_11"},
+        {"label": "Sector GDP (Y/Y)", "value": "+5.4%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_11"},
+        {"label": "Ag Employment", "value": "218,600", "delta": "Feb 2026", "source": "indicators.json:ag_employment"},
+        {"label": "Agri-food Exports", "value": "$3,285M", "delta": "Feb 2026", "source": "indicators.json:ag_exports_current"},
+        {"label": "Potash (Nutrien)", "value": "$104.62", "delta": "-1.0% W/W, +50.6% Y/Y", "source": "commodities.json:potash_nutrien"},
+        {"label": "Active Projects", "value": "17", "delta": "$5.47B aggregate value", "source": "projects_all.json:sector=agriculture|forestry"}
+      ]
     },
     {
       "code": "21",
-      "name": "Mining & Energy",
+      "name": "Mining, Quarrying & Oil/Gas Extraction",
       "mm": "+1.2%",
-      "yy": "N/A",
-      "analysis": "<p>Mining, quarrying, and oil and gas extraction sector GDP expanded <strong>1.2%</strong> in January 2026, fully offsetting December's decline, led by increased oil and gas extraction activity.<sup>1</sup> Sector GDP stood at <strong>$119.6B</strong> in December 2025.<sup>1</sup> WTI crude fell over <strong>20%</strong> in recent months to approximately <strong>US$55/bbl</strong>, while the WCS-WTI differential narrowed from <strong>US$15/bbl</strong> to <strong>US$9.95/bbl</strong>.<sup>2</sup> The project database tracks <strong>418 mining and energy projects ($275.87B)</strong>, the largest pipeline by value of any goods sector.<sup>3</sup> If WTI remains near <strong>US$55/bbl</strong>, oil sands projects with breakeven costs above that level face margin compression.</p><p>LNG Canada (<strong>$40B</strong>) in Kitimat loaded its first cargo in June 2025, with Phase 1 capacity at <strong>6.5 million tonnes per annum</strong> and marine terminal in-water works scheduled for April 15, 2026.<sup>4</sup> Cameco (CCO) traded at <strong>$147.75</strong>, down <strong>14.1%</strong> month-over-month but up <strong>149.9%</strong> year-over-year, while the URA ETF (uranium proxy) stood at <strong>$46.86</strong>, down <strong>17.0%</strong> month-over-month but up <strong>114.2%</strong> year-over-year.<sup>5</sup> U.S. Section 232 tariffs on Canadian steel and aluminum stand at <strong>50%</strong>, affecting downstream metal processing and pipeline fabrication across the sector.<sup>6</sup></p>",
+      "yy": "-0.1%",
+      "analysis": "<p>Mining, quarrying and oil and gas extraction sector GDP printed <strong>+1.2%</strong> month-over-month and <strong>-0.1%</strong> year-over-year in the January 2026 StatCan GDP-by-industry release.<sup>1</sup> WTI crude closed at <strong>$102.77/bbl</strong> for the March 31, 2026 reference date, while Cameco Corp, the listed uranium equity proxy, closed at <strong>$147.75</strong>, down <strong>0.6%</strong> week-over-week and up <strong>149.9%</strong> year-over-year.<sup>2,3</sup> The Sprott Physical Uranium Trust closed at <strong>$27.55</strong>, up <strong>3.5%</strong> week-over-week and <strong>34.1%</strong> year-over-year.<sup>3</sup></p><p>At PDAC 2026, the federal Minister of Energy and Natural Resources announced <strong>$3.6B</strong> in new programs, with up to <strong>$165.2M</strong> for 22 projects across eight provinces unlocking <strong>$434M</strong> in capital, plus a First and Last Mile Fund backed by <strong>$1.5B</strong>.<sup>4</sup> Canada secured <strong>30 new critical minerals partnerships</strong> unlocking <strong>$12.1B</strong> in mining project capital.<sup>4</sup> Industry forecasts call for <strong>5,709 wells</strong> drilled in 2026 (+3% year-over-year), with Canadian Natural Resources planning <strong>448 new wells</strong> under a +3% production plan.<sup>5</sup> The project database tracks <strong>421 mining and oil and gas projects totalling $268.74B declared</strong>, and mining and O&G employment stood at <strong>343,600</strong> in January 2026.<sup>6</sup> If the $3.6B federal program and $1.5B First and Last Mile Fund proceed on the announced schedule, the 22 PDAC-identified projects and the 30-partnership pipeline would carry specific dollar commitments tied to the 421 tracked sector projects.</p>",
       "industrySources": [
-        {
-          "id": 1,
-          "title": "Statistics Canada — GDP by Industry, January 2026",
-          "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
-        },
-        {
-          "id": 2,
-          "title": "WTI Crude & WCS Differential — Market Data",
-          "url": "https://www.eia.gov/petroleum/data.php"
-        },
-        {
-          "id": 3,
-          "title": "Canadian Energy Projects Database — Pipeline Tracker",
-          "url": "https://www.cer-rec.gc.ca/en/data-analysis/facilities-we-regulate/"
-        },
-        {
-          "id": 4,
-          "title": "LNG Canada — Project Status",
-          "url": "https://www.lngcanada.ca/"
-        },
-        {
-          "id": 5,
-          "title": "Cameco (CCO) & URA ETF — Yahoo Finance",
-          "url": "https://finance.yahoo.com/quote/CCO.TO/"
-        },
-        {
-          "id": 6,
-          "title": "BNN Bloomberg — Tariff-Hit Industries, March 2026",
-          "url": "https://www.bnnbloomberg.ca/tariffs/2026/03/24/tariff-hit-industries-struggling-as-trade-war-drags-into-second-year/"
-        }
+        {"id": 1, "title": "Statistics Canada \u2014 GDP by Industry, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "WTI Crude Oil Front-Month \u2014 indicators.json", "url": "https://www.eia.gov/dnav/pet/pet_pri_spt_s1_d.htm"},
+        {"id": 3, "title": "Cameco Corp (CCJ) and Sprott Physical Uranium Trust (U.UN) \u2014 Commodities Feed", "url": "https://www.cameco.com"},
+        {"id": 4, "title": "Natural Resources Canada \u2014 Critical Minerals Partnerships (March 2026)", "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html"},
+        {"id": 5, "title": "Industrial Info \u2014 Canadian Natural Resources 2026 Growth Plan", "url": "https://www.industrialinfo.com/news/article/canadian-natural-resources-outlines-plan-to-grow-oil-and-gas-production-drilling--350680"},
+        {"id": 6, "title": "Canadian Macro Strategic Dashboard \u2014 Project Database (NAICS 21)", "url": "https://walter-aydin.github.io/can-macro-dashboard/#projects"}
       ],
       "isNegative": false,
-      "subsectors": [
-        {
-          "code": "211",
-          "name": "Oil & Gas Extraction",
-          "mm": "+1.2%"
-        },
-        {
-          "code": "212",
-          "name": "Mining (except Oil & Gas)",
-          "mm": "N/A"
-        },
-        {
-          "code": "213",
-          "name": "Support Activities for Mining & Oil & Gas",
-          "mm": "N/A"
-        }
+      "trend": "up",
+      "projectCount": 421,
+      "projectValue": "$268.74B",
+      "top_stories": [
+        "Canada expecting upstream drilling increase in 2026 \u2014 Industrial Info",
+        "Canadian Natural Resources outlines 2026 growth plan \u2014 Industrial Info",
+        "Government of Canada invests to unlock critical minerals advantage \u2014 NRCan, March 2026"
       ],
-      "indicatorSrc": "StatCan"
+      "subsectors": [
+        {"code": "211", "name": "Oil and Gas Extraction", "mm": "N/A"},
+        {"code": "212", "name": "Mining (except Oil and Gas)", "mm": "N/A"},
+        {"code": "213", "name": "Support Activities for Mining, Quarrying, Oil and Gas", "mm": "N/A"}
+      ],
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+1.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_21"},
+        {"label": "Sector GDP (Y/Y)", "value": "-0.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_21"},
+        {"label": "WTI Crude", "value": "$102.77/bbl", "delta": "Mar 31 2026", "source": "indicators.json:comm_wti"},
+        {"label": "Cameco", "value": "$147.75", "delta": "-0.6% W/W, +149.9% Y/Y", "source": "commodities.json:cameco_uranium"},
+        {"label": "Sprott Uranium Trust", "value": "$27.55", "delta": "+3.5% W/W, +34.1% Y/Y", "source": "commodities.json:sprott_uranium"},
+        {"label": "Mining & O&G Employment", "value": "343,600", "delta": "Jan 2026", "source": "indicators.json:mining_og_employment"},
+        {"label": "Active Projects", "value": "421", "delta": "$268.74B aggregate value", "source": "projects_all.json:sector=mining|oil_gas"}
+      ]
     },
     {
       "code": "22",
       "name": "Utilities",
-      "mm": "increased",
-      "yy": "N/A",
-      "analysis": "<p>Utilities sector GDP stood at <strong>$47.7B</strong> in December 2025 and contributed to gains in goods-producing industries in January 2026.<sup>1</sup> The Canada Energy Regulator's Energy Future 2026 report projects end-use electricity demand increasing <strong>44%</strong> from 2023 to 2050, with interprovincial electricity flows projected to more than double from <strong>55 TWh</strong> (2023) to <strong>137 TWh</strong> by 2050.<sup>2</sup> Hydroelectricity accounts for approximately <strong>60%</strong> of Canadian electric generation, with natural gas cogeneration at <strong>26%</strong> and wind at <strong>25%</strong> of installed capacity indicating ongoing generation mix diversification.<sup>2</sup></p><p>The project database tracks <strong>1,407 utilities projects ($587.61B)</strong>, the largest pipeline by both count and value across all goods sectors.<sup>3</sup> Saskatchewan and Ontario continue to advance small modular reactor (SMR) programs; the URA ETF (uranium proxy) at <strong>$46.86</strong> is down <strong>17.0%</strong> month-over-month but up <strong>114.2%</strong> year-over-year, while Sprott Physical Uranium Trust at <strong>$27.55</strong> rose <strong>3.5%</strong> week-over-week.<sup>4</sup> The TSX infrastructure basket traded at <strong>$55.20</strong>, down <strong>3.3%</strong> month-over-month but up <strong>29.8%</strong> year-over-year.<sup>5</sup> If electricity demand growth follows CER projections, transmission and generation infrastructure investment across the tracked pipeline would represent a corresponding scale of capital deployment.</p>",
+      "mm": "+0.6%",
+      "yy": "-1.7%",
+      "analysis": "<p>Utilities sector GDP printed <strong>+0.6%</strong> month-over-month and <strong>-1.7%</strong> year-over-year in the January 2026 StatCan GDP-by-industry release.<sup>1</sup> Ontario Power Generation reconnected Darlington Unit 4 to the grid in March 2026, completing a <strong>C$12.8B</strong> refurbishment <strong>C$150M</strong> under budget and <strong>four months</strong> ahead of schedule.<sup>2</sup> Ontario is advancing the first of four Small Modular Reactors at Darlington, announced as a global first in commercial SMR deployment; OPG and Port Hope signed a Wesleyville agreement envisaging up to <strong>10 GWe</strong> in February 2026.<sup>2</sup> Alberta's expert panel to the Minister of Affordability and Utilities was due to deliver its final report on integrating nuclear by March 31, 2026.<sup>2</sup></p><p>The TSX Infrastructure basket traded at <strong>$55.20</strong>, up <strong>0.4%</strong> week-over-week and <strong>29.8%</strong> year-over-year, while the URA uranium spot ETF printed <strong>$46.86</strong>, down <strong>2.8%</strong> week-over-week but up <strong>114.2%</strong> year-over-year.<sup>3</sup> Utilities employment stood at <strong>176,300</strong> in February 2026.<sup>4</sup> The project database tracks <strong>824 utilities and power-energy projects totalling $522.89B declared</strong>, the largest bucket in the database by aggregate capital value.<sup>5</sup> If the four-SMR Darlington program and the Wesleyville 10 GWe concept advance on the announced timelines, the 824 tracked utilities projects would reflect sequential status advances through 2026 and 2027, and the uranium price complex (+114.2% year-over-year on URA) would flow through SMR fuel supply economics.</p>",
       "industrySources": [
-        {
-          "id": 1,
-          "title": "Statistics Canada — GDP by Industry, January 2026",
-          "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
-        },
-        {
-          "id": 2,
-          "title": "Canada Energy Regulator — Energy Future 2026",
-          "url": "https://www.cer-rec.gc.ca/en/data-analysis/canada-energy-future/2026/results/"
-        },
-        {
-          "id": 3,
-          "title": "Canadian Capital Projects Database — Utilities Sector",
-          "url": "https://www.cer-rec.gc.ca/en/data-analysis/facilities-we-regulate/"
-        },
-        {
-          "id": 4,
-          "title": "URA ETF & Sprott Physical Uranium Trust — Yahoo Finance",
-          "url": "https://finance.yahoo.com/quote/URA/"
-        },
-        {
-          "id": 5,
-          "title": "TSX Infrastructure Basket — Market Data",
-          "url": "https://finance.yahoo.com/quote/ZUQ.TO/"
-        }
+        {"id": 1, "title": "Statistics Canada \u2014 GDP by Industry, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "World Nuclear Association \u2014 Canada Nuclear Power", "url": "https://world-nuclear.org/information-library/country-profiles/countries-a-f/canada-nuclear-power"},
+        {"id": 3, "title": "TSX Infrastructure Basket and URA Uranium Spot ETF \u2014 Commodities Feed", "url": "https://etfdb.com/etf/URA/"},
+        {"id": 4, "title": "Statistics Canada \u2014 Labour Force Survey", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002301"},
+        {"id": 5, "title": "Canadian Macro Strategic Dashboard \u2014 Project Database (NAICS 22)", "url": "https://walter-aydin.github.io/can-macro-dashboard/#projects"}
       ],
-      "isNegative": false,
+      "isNegative": true,
+      "trend": "flat",
+      "projectCount": 824,
+      "projectValue": "$522.89B",
+      "top_stories": [
+        "Darlington Unit 4 returns to grid under budget \u2014 World Nuclear Association, March 2026",
+        "OPG and Port Hope sign Wesleyville nuclear agreement \u2014 World Nuclear Association, February 2026",
+        "Alberta expert panel due to deliver nuclear integration report \u2014 World Nuclear Association"
+      ],
       "subsectors": [
-        {
-          "code": "2211",
-          "name": "Electric Power Generation, Transmission & Distribution",
-          "mm": "N/A"
-        },
-        {
-          "code": "2212",
-          "name": "Natural Gas Distribution",
-          "mm": "N/A"
-        },
-        {
-          "code": "2213",
-          "name": "Water, Sewage & Other Systems",
-          "mm": "N/A"
-        }
+        {"code": "221", "name": "Electric Power Generation, Transmission and Distribution", "mm": "N/A"},
+        {"code": "2212", "name": "Natural Gas Distribution", "mm": "N/A"},
+        {"code": "2213", "name": "Water, Sewage and Other Systems", "mm": "N/A"}
       ],
-      "indicatorSrc": "StatCan"
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.6%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_22"},
+        {"label": "Sector GDP (Y/Y)", "value": "-1.7%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_22"},
+        {"label": "TSX Infrastructure Basket", "value": "$55.20", "delta": "+0.4% W/W, +29.8% Y/Y", "source": "commodities.json:tsx_infrastructure"},
+        {"label": "Uranium Spot (URA ETF)", "value": "$46.86", "delta": "-2.8% W/W, +114.2% Y/Y", "source": "commodities.json:uranium_spot"},
+        {"label": "Utilities Employment", "value": "176,300", "delta": "Feb 2026", "source": "indicators.json:utilities_employment"},
+        {"label": "Active Projects", "value": "824", "delta": "$522.89B aggregate value", "source": "projects_all.json:sector=power_energy"}
+      ]
     },
     {
       "code": "23",
       "name": "Construction",
-      "mm": "increased",
-      "yy": "+7.8% (building investment)",
-      "analysis": "<p>Construction sector GDP stood at <strong>$171.3B</strong> in December 2025 and was a key driver of goods-producing growth in January 2026.<sup>1</sup> Building permits rose <strong>$607.0M (+4.8%)</strong> to <strong>$13.3B</strong> in January 2026, with <strong>21,400</strong> multi-unit and <strong>4,000</strong> single-family dwellings authorized.<sup>2</sup> Building investment decreased <strong>$448.3M (-1.9%)</strong> to <strong>$23.4B</strong> in January 2026, though it remained up <strong>7.8%</strong> year-over-year.<sup>2</sup> Steel prices (SLX proxy) at <strong>$90.13</strong> fell <strong>10.4%</strong> month-over-month, reducing input cost pressure for structural steel-intensive projects, while remaining up <strong>48.9%</strong> year-over-year.<sup>3</sup></p><p>CMHC's housing starts six-month trend held at <strong>256,005 units</strong>, with the monthly SAAR increasing <strong>4.5%</strong> to <strong>250,900 units</strong> in February 2026.<sup>4</sup> Vancouver starts rose <strong>60%</strong> year-over-year while Toronto starts fell <strong>28%</strong>.<sup>4</sup> The project database tracks <strong>1,320 construction projects ($512.91B)</strong>.<sup>5</sup> The federal Build Canada Homes program commits <strong>$13B</strong> over five years, targeting <strong>4,000 homes</strong> on six federally owned sites, while BC secured a federal partnership for accelerated housing construction.<sup>6</sup> If the Build Canada Homes program proceeds on schedule, additional housing project activity would follow in the tracked pipeline.</p>",
+      "mm": "+1.1%",
+      "yy": "+2.8%",
+      "analysis": "<p>Construction sector GDP printed <strong>+1.1%</strong> month-over-month and <strong>+2.8%</strong> year-over-year in the January 2026 StatCan GDP-by-industry release, the only goods sector with a positive year-over-year reading outside agriculture.<sup>1</sup> Prime Minister Carney launched the Build Communities Strong Fund on April 7, 2026, committing <strong>$51B</strong> federal over eight years (approximately <strong>$12B/year</strong>), with the Embleton Community Centre and Park in Brampton named as the first project; provincial matching is projected at approximately <strong>$17B</strong>, and the federal GDP lift estimate is <strong>$95B</strong> over the decade.<sup>2</sup> CMHC reported February 2026 housing starts at <strong>15,886 units</strong> (vs 14,420 in February 2025), with the seasonally adjusted annual rate reaching <strong>250,900</strong>, up <strong>4.5%</strong> from 240,148 in January; 2025 total starts were <strong>259,028</strong>, up <strong>5.6%</strong> versus 2024.<sup>3</sup></p><p>Residential building permits totalled <strong>$7,968M</strong> and non-residential permits <strong>$5,378M</strong> in January 2026, and construction employment stood at <strong>1,986,800</strong>.<sup>4</sup> The SLX steel ETF proxy closed at <strong>$90.13</strong>, up <strong>1.2%</strong> week-over-week and <strong>48.9%</strong> year-over-year, a direct input cost for infrastructure and building construction.<sup>5</sup> The project database tracks <strong>2,196 construction-category projects totalling $258.36B declared</strong>; the 211 residential and real-estate projects tracked at <strong>$44.42B</strong> align with the 250,900 SAAR housing starts print.<sup>6</sup> If the $51B Build Communities Strong Fund flows on the announced cadence and provinces commit the projected $17B match, the 2,196 tracked construction projects would carry updated funding attribution through the eight-year program window.</p>",
       "industrySources": [
-        {
-          "id": 1,
-          "title": "Statistics Canada — GDP by Industry, January 2026",
-          "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
-        },
-        {
-          "id": 2,
-          "title": "Statistics Canada — Building Permits & Investment, January 2026",
-          "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410017501"
-        },
-        {
-          "id": 3,
-          "title": "SLX Steel ETF — Yahoo Finance",
-          "url": "https://finance.yahoo.com/quote/SLX/"
-        },
-        {
-          "id": 4,
-          "title": "CMHC — Housing Starts, February 2026",
-          "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/housing-starts"
-        },
-        {
-          "id": 5,
-          "title": "Canadian Capital Projects Database — Construction Sector",
-          "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301"
-        },
-        {
-          "id": 6,
-          "title": "Government of Canada — Build Canada Homes Program",
-          "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/01/build-canada-homes-thousands-of-homes-in-the-pipeline.html"
-        }
+        {"id": 1, "title": "Statistics Canada \u2014 GDP by Industry, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Prime Minister's Office \u2014 Build Communities Strong Fund (April 7, 2026)", "url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and"},
+        {"id": 3, "title": "CMHC \u2014 Housing Starts February 2026", "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-february-2026"},
+        {"id": 4, "title": "Statistics Canada \u2014 Building Permits and Labour Force Survey", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410006601"},
+        {"id": 5, "title": "VanEck Steel ETF (SLX) \u2014 Commodities Feed", "url": "https://etfdb.com/etf/SLX/"},
+        {"id": 6, "title": "Canadian Macro Strategic Dashboard \u2014 Project Database (NAICS 23)", "url": "https://walter-aydin.github.io/can-macro-dashboard/#projects"}
       ],
       "isNegative": false,
-      "subsectors": [
-        {
-          "code": "236",
-          "name": "Construction of Buildings",
-          "mm": "N/A"
-        },
-        {
-          "code": "237",
-          "name": "Heavy & Civil Engineering Construction",
-          "mm": "N/A"
-        },
-        {
-          "code": "238",
-          "name": "Specialty Trade Contractors",
-          "mm": "N/A"
-        }
+      "trend": "up",
+      "projectCount": 2196,
+      "projectValue": "$258.36B",
+      "top_stories": [
+        "Prime Minister Carney launches Build Communities Strong Fund \u2014 PMO, April 7, 2026",
+        "CMHC reports February housing starts up 4.5% from January \u2014 CMT, March 2026",
+        "CMHC says housing starts totalled 259,028 in 2025, up 5.6% from 2024 \u2014 Daily Commercial News, January 2026"
       ],
-      "indicatorSrc": "StatCan"
+      "subsectors": [
+        {"code": "236", "name": "Construction of Buildings", "mm": "N/A"},
+        {"code": "237", "name": "Heavy and Civil Engineering Construction", "mm": "N/A"},
+        {"code": "238", "name": "Specialty Trade Contractors", "mm": "N/A"}
+      ],
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+1.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_23"},
+        {"label": "Sector GDP (Y/Y)", "value": "+2.8%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_23"},
+        {"label": "Housing Starts (SAAR)", "value": "250,900", "delta": "Feb 2026, +4.5% M/M", "source": "indicators.json:housing_starts"},
+        {"label": "Non-res Building Permits", "value": "$5,378M", "delta": "Jan 2026", "source": "indicators.json:bldg_permits_nonres_national"},
+        {"label": "Res Building Permits", "value": "$7,968M", "delta": "Jan 2026", "source": "indicators.json:bldg_permits_res_national"},
+        {"label": "Steel (SLX)", "value": "$90.13", "delta": "+1.2% W/W, +48.9% Y/Y", "source": "commodities.json:steel"},
+        {"label": "Construction Employment", "value": "1,986,800", "delta": "Jan 2026", "source": "indicators.json:construction_employment"},
+        {"label": "Active Projects", "value": "2,196", "delta": "$258.36B aggregate value", "source": "projects_all.json:sector=infrastructure"}
+      ]
     },
     {
       "code": "31-33",
       "name": "Manufacturing",
       "mm": "-1.4%",
-      "yy": "N/A",
-      "analysis": "<p>Manufacturing sector GDP stood at <strong>$198.0B</strong> in December 2025 and contracted <strong>1.4%</strong> in January 2026.<sup>1</sup> The S&P Global Canada Manufacturing PMI rose to <strong>51.0</strong> in February 2026 from 50.4 in January, a <strong>13-month high</strong>, with new orders growing for the first time in 13 months.<sup>2</sup> However, export orders continued to decline, though at the slowest pace since October 2025, and <strong>24%</strong> of PMI respondents expected output growth, the highest share since December 2024.<sup>2</sup> Steel input costs (SLX proxy) at <strong>$90.13</strong> fell <strong>10.4%</strong> month-over-month, while U.S. Section 232 tariffs on Canadian steel and aluminum remain at <strong>50%</strong>.<sup>3</sup></p><p>Stellantis halted Jeep Compass production plans at Brampton, affecting <strong>3,000</strong> direct jobs, while GM ended BrightDrop production at Ingersoll and scaled back Oshawa operations.<sup>4</sup> The federal government announced a <strong>$3B</strong> Strategic Response Fund and <strong>$100M</strong> Regional Tariff Response Initiative for automotive manufacturing, with Ottawa reducing GM's tariff-free import quota by <strong>24.2%</strong> and Stellantis' by <strong>50%</strong>.<sup>5</sup> The project database tracks <strong>54 manufacturing projects ($67.39B)</strong>.<sup>6</sup> If the Strategic Response Fund and Regional Tariff Response Initiative deploy as planned, automotive manufacturing would partially offset tariff-related disruption. The USMCA review is scheduled for July 2026.</p>",
+      "yy": "-4.6%",
+      "analysis": "<p>Manufacturing sector GDP printed <strong>-1.4%</strong> month-over-month and <strong>-4.6%</strong> year-over-year in the January 2026 StatCan GDP-by-industry release, the steepest year-over-year decline among goods industries.<sup>1</sup> Manufacturing sales reached <strong>$68.7B</strong> in January 2026, a <strong>-3.0%</strong> month-over-month change per StatCan Table 16-10-0048; inventories reached <strong>$120.6B</strong> (+0.9% month-over-month), the inventory-to-sales ratio stood at <strong>1.76</strong>, and unfilled orders were <strong>$114.8B</strong> (+0.2% month-over-month).<sup>2</sup> StatCan cited transportation equipment and machinery as the largest drag on January manufacturing sales.<sup>2</sup></p><p>Ford's Bécancour cathode plant is expected to begin production in 2026 with up to <strong>45,000 tonnes CAM/yr</strong>, and the GM/POSCO Future M Ultium CAM plant is approximately <strong>two-thirds complete</strong>; the Northvolt and Umicore Kingston projects are on hold, and the Quebec government has committed <strong>$270M</strong> to the Northvolt project whose status is uncertain.<sup>3,4</sup> The SLX steel ETF proxy closed at <strong>$90.13</strong>, up <strong>1.2%</strong> week-over-week and <strong>48.9%</strong> year-over-year, a direct input cost for primary metals and transportation equipment subsectors.<sup>5</sup> The project database tracks <strong>52 manufacturing-tagged projects totalling $67.39B declared</strong>, a thin bucket relative to sector weight; coverage of the battery and EV chemicals pipeline is partial.<sup>6</sup> If Ford's Bécancour cathode plant commissions on schedule in 2026 and the GM/POSCO Ultium CAM plant reaches production in early 2026, the battery-chemicals subsector of the 52 tracked manufacturing projects would carry updated status attribution.</p>",
       "industrySources": [
-        {
-          "id": 1,
-          "title": "Statistics Canada — GDP by Industry, January 2026",
-          "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
-        },
-        {
-          "id": 2,
-          "title": "S&P Global — Canada Manufacturing PMI, February 2026",
-          "url": "https://www.pmi.spglobal.com/Public/Release/PressReleases"
-        },
-        {
-          "id": 3,
-          "title": "SLX Steel ETF & Section 232 Tariff Impact",
-          "url": "https://www.bnnbloomberg.ca/tariffs/2026/03/24/tariff-hit-industries-struggling-as-trade-war-drags-into-second-year/"
-        },
-        {
-          "id": 4,
-          "title": "Stellantis Brampton & GM Ingersoll — Production Changes",
-          "url": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/02/prime-minister-carney-unveils-canadas-new-automotive-strategy-to-protect-jobs-and-position-our-country-as-a-global-leader-in-next-generation-vehicl.html"
-        },
-        {
-          "id": 5,
-          "title": "Government of Canada — Canada Automotive Strategy, February 2026",
-          "url": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/02/prime-minister-carney-unveils-canadas-new-automotive-strategy-to-protect-jobs-and-position-our-country-as-a-global-leader-in-next-generation-vehicl.html"
-        },
-        {
-          "id": 6,
-          "title": "Canadian Capital Projects Database — Manufacturing Sector",
-          "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
-        }
+        {"id": 1, "title": "Statistics Canada \u2014 GDP by Industry, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Statistics Canada \u2014 Monthly Survey of Manufacturing, Table 16-10-0048", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004801"},
+        {"id": 3, "title": "Globe and Mail \u2014 Canada EV Battery Plants List (2026)", "url": "https://www.theglobeandmail.com/"},
+        {"id": 4, "title": "CBC News \u2014 EV Investment Challenges in Canada", "url": "https://www.cbc.ca/news/canada/ev-investments-canada-facts-1.7533719"},
+        {"id": 5, "title": "VanEck Steel ETF (SLX) \u2014 Commodities Feed", "url": "https://etfdb.com/etf/SLX/"},
+        {"id": 6, "title": "Canadian Macro Strategic Dashboard \u2014 Project Database (NAICS 31-33)", "url": "https://walter-aydin.github.io/can-macro-dashboard/#projects"}
       ],
       "isNegative": true,
-      "subsectors": [
-        {
-          "code": "311",
-          "name": "Food Manufacturing",
-          "mm": "N/A"
-        },
-        {
-          "code": "336",
-          "name": "Transportation Equipment Manufacturing",
-          "mm": "N/A"
-        },
-        {
-          "code": "325",
-          "name": "Chemical Manufacturing",
-          "mm": "N/A"
-        }
+      "trend": "down",
+      "projectCount": 52,
+      "projectValue": "$67.39B",
+      "top_stories": [
+        "Manufacturing sales $68.7B in January 2026, -3.0% M/M \u2014 StatCan Table 16-10-0048",
+        "Canada EV battery plants list \u2014 Globe and Mail, 2026",
+        "EV investment challenges in Canada \u2014 CBC News, 2026"
       ],
-      "indicatorSrc": "StatCan"
+      "subsectors": [
+        {"code": "311", "name": "Food Manufacturing", "mm": "N/A"},
+        {"code": "336", "name": "Transportation Equipment Manufacturing", "mm": "N/A"},
+        {"code": "331", "name": "Primary Metal Manufacturing", "mm": "N/A"}
+      ],
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-1.4%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_31-33"},
+        {"label": "Sector GDP (Y/Y)", "value": "-4.6%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_31-33"},
+        {"label": "Manufacturing Sales", "value": "$68,666M", "delta": "Jan 2026, -3.0% M/M", "source": "indicators.json:manufacturing_sales_national"},
+        {"label": "Steel (SLX)", "value": "$90.13", "delta": "+1.2% W/W, +48.9% Y/Y", "source": "commodities.json:steel"},
+        {"label": "Nickel (NIKL)", "value": "$28.40", "delta": "flat (data gap)", "source": "commodities.json:nickel"},
+        {"label": "Active Projects", "value": "52", "delta": "$67.39B aggregate value", "source": "projects_all.json:sector=manufacturing"}
+      ]
     }
   ]
 }

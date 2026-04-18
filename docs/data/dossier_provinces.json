@@ -1,316 +1,445 @@
 {
   "meta": {
-    "week_of": "2026-03-30",
-    "generated_at": "2026-03-31T19:58:28Z",
+    "week_of": "2026-04-11",
+    "generated_at": "2026-04-11T17:36:57.215859+00:00",
     "agent": "tldr-analyst-provincial",
     "provinces_count": 13,
     "data_quality": {
       "indicators_fresh": true,
       "gaps": [
-        "No pipeline indicator data for Prince Edward Island",
-        "No pipeline indicator data for Yukon",
-        "No pipeline indicator data for Northwest Territories",
-        "No pipeline indicator data for Nunavut"
+        "YT/NT/NU CPI: not available at territorial level (StatCan structural gap)",
+        "YT/NT/NU housing starts: not available (CMHC structural gap)",
+        "YT/NT/NU GDP: 2024 annual print only (StatCan Table 36-10-0402)",
+        "policy.json: only BC filed items for week 2026-04-11; ON Budget 2026 and QC QIP not yet captured in policy_tracker feed"
       ],
-      "anomalies": []
+      "anomalies": [
+        "MB project count (2,058) inflated by ~1,978 Under Review items from MB Environmental Licensing registry — average value low",
+        "NL project count (1,549) dominated by historical Proposed entries (~1,339)"
+      ]
     }
   },
   "provinces": [
     {
+      "code": "ON",
       "name": "Ontario",
       "indicators": {
         "gdp": "+1.2%",
         "unemployment": "7.6%",
-        "cpi": "173.0",
-        "housingStarts": "Down 28% YoY (Toronto CMA)",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "cpi": "-1.1%",
+        "housingStarts": "67,274",
+        "participationRate": "64.6%",
+        "employmentRate": "59.7%",
+        "buildingPermits": "2690772.0"
       },
       "indicatorMeta": {
-        "unemployment": {
-          "prev": "7.3%",
-          "change": "+0.3pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
-        },
-        "cpi": {
-          "prev": "172.0",
-          "change": "+1.0",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
-        },
         "gdp": {
           "prev": "",
           "change": "",
-          "period": "2025",
-          "obsDate": "2026-03-26"
+          "period": "2026-03-31",
+          "obsDate": "2024.0",
+          "source": "StatCan"
+        },
+        "unemployment": {
+          "prev": "7.3%",
+          "change": "+0.3pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "cpi": {
+          "prev": "-1.6%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
         },
         "housingStarts": {
-          "prev": "",
-          "change": "-28% YoY",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
+          "prev": "65,757",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "64.4%",
+          "change": "+0.2pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "59.7%",
+          "change": "+0.0pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
-        "gdp": "Statistics Canada",
-        "unemployment": "Statistics Canada",
-        "cpi": "Statistics Canada",
+        "gdp": "StatCan",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
         "housingStarts": "CMHC",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 647,
+        "pipeline_value_billions": 254.4,
+        "top_sectors": [
+          {
+            "sector": "infrastructure",
+            "count": 198
+          },
+          {
+            "sector": "healthcare",
+            "count": 134
+          },
+          {
+            "sector": "Transit & Rail",
+            "count": 128
+          }
+        ],
+        "status_breakdown": {
+          "Under Construction": 234,
+          "Complete": 136,
+          "Under Review": 30,
+          "Proposed": 153,
+          "Approved": 94
+        }
       },
       "story_threads": [
-        "Ontario Budget 2026 announced a $210 billion 10-year capital plan, the largest in provincial history, with $37 billion allocated for 2026-27. The database tracks 652 Ontario projects.",
-        "Ontario unemployment rose to 7.6% (+0.3pp) in February 2026. The database tracks 150 projects in employment-sensitive sectors (healthcare, education, manufacturing, government).",
-        "Temporary HST rebate for new homes estimated to provide $2.2 billion in joint tax relief and 8,000 housing starts. The database contains 220 rate-sensitive projects in Ontario.",
-        "Highway 413 construction is underway and the 401 tunnel feasibility study begins spring 2026. Ontario's infrastructure project count stands at 205."
+        "Ontario Budget 2026 (tabled March 26 by Finance Minister Peter Bethlenfalvy) raised the ten-year capital plan to over $210 billion, with $37 billion for 2026-27 and approximately $64 billion over ten years for health infrastructure including ~50 hospital projects and ~3,000 new beds; the project database tracks 647 Ontario projects valued at $254.4B with infrastructure as the largest sector.",
+        "Ontario unemployment held at 7.6% (StatCan LFS, Feb 2026), the highest provincial print in Central Canada, while the employment rate of 59.7% trails the national 60.6%; 328 Ontario projects are currently in active execution phases.",
+        "Ontario CPI at -1.1% (latest indicator print) sits below the national CPI signal; the province's 67,274 housing starts (CMHC, latest) intersect with the database's residential and infrastructure pipeline.",
+        "The Adaptive Phased Management Deep Geological Repository ($26.0B, Proposed, Nuclear Waste Management Organization) remains in the federal Impact Assessment Registry, alongside Ontario Line ($27.4B, Under Construction) and GO Expansion ($26.1B, Under Construction) as the province's largest active capital files."
       ],
       "cross_references": [
         {
           "indicator": "unemployment",
-          "direction": "up",
-          "magnitude": "+0.3pp",
-          "linked_projects": 150,
-          "linked_value": "",
-          "interpretation": "Unemployment rose 0.3pp to 7.6% in February; 150 Ontario projects in employment-sensitive sectors (healthcare, education, manufacturing, government)"
+          "value": "7.6%",
+          "direction": "flat-high",
+          "magnitude": "+0.3pp prior month",
+          "linked_projects": 328,
+          "linked_value_billions": 254.4,
+          "interpretation": "Ontario unemployment at 7.6% intersects with 234 Under Construction and 94 Approved projects in the database."
         },
         {
-          "indicator": "housing_starts",
-          "direction": "down",
-          "magnitude": "-28% YoY",
-          "linked_projects": 220,
-          "linked_value": "",
-          "interpretation": "Toronto CMA housing starts declined 28% year-over-year; 220 rate-sensitive projects in the Ontario pipeline"
+          "indicator": "capital_plan",
+          "value": "$210B/10yr",
+          "direction": "expanded",
+          "magnitude": "$37B for 2026-27",
+          "linked_projects": 647,
+          "linked_value_billions": 254.4,
+          "interpretation": "Ontario Budget 2026 ten-year capital plan ($210B) sits alongside 647 tracked provincial projects totalling $254.4B across infrastructure, healthcare, and transit categories."
         }
       ],
-      "policy_items": [],
-      "watchlistItems": [],
+      "policy_items": [
+        {
+          "title": "Ontario Budget 2026",
+          "description": "Ten-year capital plan raised to >$210B; $37B for 2026-27; ~$64B over 10yr for health infrastructure including ~50 hospital projects and ~3,000 new beds; $300M added to Community Sport and Recreation Infrastructure Fund.",
+          "category": "fiscal_policy",
+          "sector": "infrastructure",
+          "affected_projects": 647,
+          "level": "provincial",
+          "date": "2026-03-26",
+          "source_url": "https://budget.ontario.ca/2026/highlights.html"
+        }
+      ],
+      "watchlistItems": [
+        {
+          "date": "Apr 16",
+          "institution": "Bank of Canada",
+          "event_name": "Rate decision",
+          "description": "Bank of Canada rate decision; rate-sensitive Ontario residential and infrastructure projects monitored.",
+          "impact": "high",
+          "source_url": "https://www.bankofcanada.ca/"
+        }
+      ],
       "key_facts": [
-        "Ontario Budget 2026 projects a $13.8 billion deficit for 2026-27, with spending of $244.2 billion against revenues of $231.9 billion.",
-        "The $4 billion Protect Ontario Account Investment Fund targets AI, defence, advanced manufacturing, and life sciences.",
-        "Eglinton Crosstown LRT opened February 2026, delivering 19 km of rapid transit (10 km underground).",
-        "Small business corporate income tax cut from 3.2% to 2.2%, estimated to provide $1.1 billion in relief to 375,000+ small businesses over three years."
+        "Ontario tracks 647 projects valued at $254.4B, the third-largest provincial pipeline by total value.",
+        "Ontario Budget 2026 (March 26) raised the ten-year capital plan to >$210B with $37B for 2026-27 and ~$64B over ten years for health infrastructure.",
+        "Ontario unemployment 7.6% (Feb 2026 LFS), highest in Central Canada; employment rate 59.7%, below national 60.6%.",
+        "Top sectors: infrastructure (198), healthcare (134), and transit/rail."
       ],
       "projects": [
         {
-          "name": "Laydown and Logistics areas",
-          "description": "",
-          "sector": "Ports & Logistics",
-          "value": "$244.0B",
-          "status": "Under Review",
-          "completionDate": "",
-          "cma": "",
-          "tags": [],
-          "sources": [
-            {
-              "title": "IAAC Registry",
-              "url": "https://iaac-aeic.gc.ca/050/evaluations/proj/90304"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.supplychain247.com/article/logistics-disruptions-cost-tech-sector-16b-dp-world-2025"
-            }
-          ]
-        },
-        {
-          "name": "Ontario 2026 Budget — 10-Year Capital Plan",
-          "description": "Ontario released its 2026 budget with a $210B 10-year capital plan, the largest in provincial history, including $37B allocated for 2026-27. Covers highways ($31B), transit ($63B), and health infrastr",
-          "sector": "infrastructure",
-          "value": "$210.0B",
-          "status": "Proposed",
-          "completionDate": "",
-          "cma": "",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://budget.ontario.ca/2026/chapter-1b-building.html"
-            }
-          ]
-        },
-        {
-          "name": "Ontario Budget — Health Infrastructure (50+ Hospital Projects)",
-          "description": "Ontario 2026 budget allocates approximately $64B over the next decade in health infrastructure, including ~$50B in capital grants supporting over 50 hospital projects and delivering approximately 3,00",
-          "sector": "healthcare",
-          "value": "$64.0B",
-          "status": "Proposed",
-          "completionDate": "",
-          "cma": "",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://www.ossga.com/publications/news/ontario_releases_2026_budget_a_plan_to_protect_ontario/"
-            }
-          ]
-        },
-        {
-          "name": "Ontario Budget — Transit Expansion (Ontario Line, Yonge North, Scarborough SSE, Hamilton LRT)",
-          "description": "Ontario 2026 budget committed $63B over 10 years for transit, including Ontario Line, Yonge North Subway Extension, Scarborough Subway Extension, Finch West LRT, Eglinton Crosstown West Extension, Ham",
-          "sector": "transport_logistics",
-          "value": "$63.0B",
-          "status": "Under Construction",
-          "completionDate": "",
-          "cma": "",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://www.cp24.com/local/toronto/2026/03/26/here-is-how-ontarios-2026-budget-will-impact-toronto/"
-            }
-          ]
-        },
-        {
           "name": "Ontario Budget — Highway 413 and Bradford Bypass",
-          "description": "Ontario 2026 budget confirmed $31B over 10 years in highway investments, with work underway on Highway 413, Bradford Bypass, Highway 7 expansion (Kitchener-Guelph), Garden City Skyway twinning, and Hi",
+          "description": "Ontario 2026 budget confirmed $31B over 10 years in highway investments, with work underway on Highway 413, Bradford Bypass, Highway 7 expansion (Kitchener-Guelph), Garden City Skyway twinning, and Highway 401 upgrades.",
           "sector": "infrastructure",
-          "value": "$31.0B",
+          "value": "$31.00B",
+          "value_raw": 31000000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "infrastructure"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Ontario Budget — Highway 413 and Bradford Bypass",
               "url": "https://mcmillan.ca/uncategorized/built-to-move-ontario-accelerates-infrastructure-delivery-in-the-2026-budget/"
+            }
+          ]
+        },
+        {
+          "name": "Ontario Line",
+          "description": "Ontario Line",
+          "sector": "infrastructure",
+          "value": "$27.43B",
+          "value_raw": 27427000000.0,
+          "status": "Under Construction",
+          "completionDate": "",
+          "cma": "Toronto",
+          "proponent": "Transportation",
+          "tags": [
+            "greenfield",
+            "infrastructure"
+          ],
+          "sources": [
+            {
+              "title": "Ontario Line",
+              "url": "https://www.ontario.ca/page/ontario-builds"
+            }
+          ]
+        },
+        {
+          "name": "GO Expansion",
+          "description": "GO Expansion",
+          "sector": "infrastructure",
+          "value": "$26.08B",
+          "value_raw": 26080000000.0,
+          "status": "Under Construction",
+          "completionDate": "",
+          "cma": "Toronto",
+          "proponent": "Transportation",
+          "tags": [
+            "expansion",
+            "infrastructure"
+          ],
+          "sources": [
+            {
+              "title": "GO Expansion",
+              "url": "https://www.ontario.ca/page/ontario-builds"
+            }
+          ]
+        },
+        {
+          "name": "Adaptive Phased Management Deep Geological Repository",
+          "description": "Type: Other. Clean technology project.",
+          "sector": "power_energy",
+          "value": "$26.00B",
+          "value_raw": 26000000000.0,
+          "status": "Proposed",
+          "completionDate": "",
+          "cma": "Ontario",
+          "proponent": "Nuclear Waste Management Organization",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
+          "sources": [
+            {
+              "title": "Adaptive Phased Management Deep Geological Repository",
+              "url": "https://natural-resources.canada.ca"
+            }
+          ]
+        },
+        {
+          "name": "Bruce Nuclear Refurbishment",
+          "description": "Type: Electricity. Clean technology project.",
+          "sector": "power_energy",
+          "value": "$13.00B",
+          "value_raw": 13000000000.0,
+          "status": "Under Construction",
+          "completionDate": "",
+          "cma": "Tiverton",
+          "proponent": "Bruce Power",
+          "tags": [
+            "major_renovation",
+            "power_energy"
+          ],
+          "sources": [
+            {
+              "title": "Bruce Nuclear Refurbishment",
+              "url": "https://natural-resources.canada.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "Ontario Budget 2026 released with $210 billion 10-year capital plan",
-        "Ontario unemployment rate rose to 7.6% in February 2026",
-        "Eglinton Crosstown LRT opened in February 2026",
-        "Ontario HST rebate for new homes to spur 8,000 housing starts",
-        "Highway 413 construction underway; 401 tunnel feasibility study begins"
+        "Ontario Budget 2026 tabled with $210B/10yr capital plan and $37B for 2026-27",
+        "Adaptive Phased Management Deep Geological Repository remains in federal Impact Assessment Registry as Proposed",
+        "Ontario unemployment held at 7.6% in February 2026 LFS print",
+        "$300M added to Ontario Community Sport and Recreation Infrastructure Fund"
       ]
     },
     {
+      "code": "QC",
       "name": "Quebec",
       "indicators": {
-        "gdp": "+0.8%",
+        "gdp": "+1.3%",
         "unemployment": "5.9%",
-        "cpi": "94.4",
-        "housingStarts": "Up 18% YoY (Montreal CMA)",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": "Res $25.9B, Non-res $10.3B"
+        "cpi": "+0.6%",
+        "housingStarts": "53,461",
+        "participationRate": "64.5%",
+        "employmentRate": "60.7%",
+        "buildingPermits": "2155557.0"
       },
       "indicatorMeta": {
-        "unemployment": {
-          "prev": "5.2%",
-          "change": "+0.7pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
-        },
-        "cpi": {
-          "prev": "94.2",
-          "change": "+0.2",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
-        },
         "gdp": {
           "prev": "",
           "change": "",
-          "period": "2025",
-          "obsDate": "2026-03-18"
+          "period": "2026-03-31",
+          "obsDate": "",
+          "source": "StatCan"
+        },
+        "unemployment": {
+          "prev": "5.2%",
+          "change": "+0.7pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "cpi": {
+          "prev": "+0.7%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
         },
         "housingStarts": {
-          "prev": "",
-          "change": "+18% YoY",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
+          "prev": "51,982",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "64.8%",
+          "change": "-0.3pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "61.5%",
+          "change": "-0.8pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
         "gdp": "Statistics Canada",
-        "unemployment": "Statistics Canada",
-        "cpi": "Statistics Canada",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
         "housingStarts": "CMHC",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": "Statistics Canada"
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 490,
+        "pipeline_value_billions": 89.3,
+        "top_sectors": [
+          {
+            "sector": "education",
+            "count": 118
+          },
+          {
+            "sector": "infrastructure",
+            "count": 103
+          },
+          {
+            "sector": "healthcare",
+            "count": 49
+          }
+        ],
+        "status_breakdown": {
+          "Under Construction": 39,
+          "Under Review": 86,
+          "Proposed": 83,
+          "Approved": 281,
+          "Complete": 1
+        }
       },
       "story_threads": [
-        "Quebec Budget 2026-27 projects an $8.6 billion deficit and adds $5 billion over six years to infrastructure, bringing the 10-year capital plan to $167 billion. The database tracks 493 Quebec projects.",
-        "Quebec employment declined 57,000 (-1.2%) in February; unemployment rose to 5.9% (+0.7pp). The database tracks 212 projects in employment-sensitive sectors in Quebec.",
-        "Montreal CMA housing starts rose 18% year-over-year in February 2026. The database contains 132 rate-sensitive Quebec projects.",
-        "REM A3 branch to West Island opening Q2 2026. Quebec City Tramway construction active on 5 km span with operations scheduled for 2033."
+        "Québec Infrastructure Plan 2026-2036 (tabled March 18) totals $167B over ten years with $12.6B in new funding for health, education, higher education, and public transit; the database tracks 490 Quebec projects valued at $89.3B.",
+        "Quebec Bill 5 creates a fast-track regulatory pathway for 'priority national-scale projects' assessed on prosperity, autonomy, Indigenous consultation, energy-transition targets, and short-term implementability.",
+        "Quebec unemployment at 5.4% (national LFS print) and 5.2% (ISQ provincial print) sits among the lowest in Canada; CPI +0.6%; the province carries the richest indicator library after the national rollup.",
+        "Anchor projects include Parc éolien zone Chamouchouane ($9.0B, Proposed, Hydro-Québec/MRC Domaine du Roy), Montreal Metro Blue Line Extension ($4.89B, Under Construction, STM), and TES Canada green hydrogen facility ($4.0B, Under Review)."
       ],
       "cross_references": [
         {
-          "indicator": "unemployment",
-          "direction": "up",
-          "magnitude": "+0.7pp",
-          "linked_projects": 212,
-          "linked_value": "",
-          "interpretation": "Quebec unemployment rose 0.7pp to 5.9% in February; 212 projects in employment-sensitive sectors"
+          "indicator": "capital_plan",
+          "value": "$167B/10yr",
+          "direction": "announced",
+          "magnitude": "$12.6B new health/education/transit",
+          "linked_projects": 490,
+          "linked_value_billions": 89.3,
+          "interpretation": "QIP 2026-2036 sits alongside 490 Quebec projects totalling $89.3B; education (118) and infrastructure (103) are the largest project categories."
         },
         {
-          "indicator": "housing_starts",
-          "direction": "up",
-          "magnitude": "+18% YoY",
-          "linked_projects": 132,
-          "linked_value": "",
-          "interpretation": "Montreal CMA housing starts rose 18% year-over-year; 132 rate-sensitive projects in the pipeline"
+          "indicator": "unemployment",
+          "value": "5.4%",
+          "direction": "low",
+          "magnitude": "tied lowest with SK",
+          "linked_projects": 39,
+          "linked_value_billions": 89.3,
+          "interpretation": "Quebec unemployment at 5.4% (national LFS) and 5.2% (ISQ) intersects with 39 Under Construction and 281 Approved projects."
         }
       ],
-      "policy_items": [],
+      "policy_items": [
+        {
+          "title": "Quebec Infrastructure Plan 2026-2036",
+          "description": "$167B ten-year plan with $12.6B in new funding for health and social services, education, higher education, and public transit.",
+          "category": "fiscal_policy",
+          "sector": "infrastructure",
+          "affected_projects": 490,
+          "level": "provincial",
+          "date": "2026-03-18",
+          "source_url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/secretariat-du-conseil-du-tresor/publications-adm/budgets/2025-2026/en/6-Quebec_Infrastructure_Plan.pdf"
+        },
+        {
+          "title": "Quebec Bill 5 — fast-track for priority national-scale projects",
+          "description": "Legislative pathway accelerating regulatory review of 'priority national-scale projects' on criteria including prosperity, autonomy, Indigenous consultation, energy transition, and short-term implementability.",
+          "category": "infrastructure_funding",
+          "sector": "infrastructure",
+          "affected_projects": 490,
+          "level": "provincial",
+          "date": "2026-03",
+          "source_url": "https://www.blakes.com/insights/quebec-s-bill-5-fast-tracking-priority-national-scale-projects/"
+        }
+      ],
       "watchlistItems": [],
       "key_facts": [
-        "Quebec Budget 2026-27 projects an $8.6 billion deficit for 2026-27, declining to $1.5 billion by 2028-29.",
-        "$1.7 billion over five years allocated for economic transformation, including $480 million for critical/strategic minerals.",
-        "Employment declined 57,000 (-1.2%) in February 2026, the largest provincial decline.",
-        "Building permits: Residential $25.87 billion, non-residential $10.27 billion (January 2026)."
+        "Quebec tracks 490 projects valued at $89.3B; education (118), infrastructure (103), and healthcare are the top sectors.",
+        "QIP 2026-2036 (March 18) totals $167B over ten years with $12.6B new for health/education/transit.",
+        "Quebec Bill 5 fast-tracks priority national-scale projects through accelerated regulatory review.",
+        "Quebec unemployment 5.4% (national LFS) / 5.2% (ISQ); CPI +0.6%; richest provincial indicator library."
       ],
       "projects": [
-        {
-          "name": "Quebec Budget 2026-2027 — Infrastructure Acceleration",
-          "description": "Quebec's 2026-2027 budget projects an $8.6B deficit within a $170.8B budget. It includes an additional $5B over six years for infrastructure spending and $2B+ for health care, education, public transi",
-          "sector": "government",
-          "value": "$170.8B",
-          "status": "Approved",
-          "completionDate": "",
-          "cma": "",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://www.quebec.ca/en/news/actualites/detail/budget-2026-2027-press-release-no-1-of-3-a-responsible-budget-with-targeted-measures-for-quebecers-69186"
-            }
-          ]
-        },
-        {
-          "name": "Quebec Infrastructure Plan 2026-2036 (QIP)",
-          "description": "Quebec announced a $167 billion ten-year infrastructure plan with $105.8B for asset maintenance (71% of total), $3.6B for hospitals, $1.2B for public transit, and $631M for higher education. An additi",
-          "sector": "government",
-          "value": "$167.0B",
-          "status": "Proposed",
-          "completionDate": "",
-          "cma": "",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://www.newswire.ca/news-releases/quebec-infrastructure-plan-2026-2036-quebec-is-prioritizing-the-maintenance-of-its-infrastructure-873486115.html"
-            }
-          ]
-        },
         {
           "name": "Parc éolien zone Chamouchouane",
           "description": "Type: Electricity. Clean technology project.",
           "sector": "power_energy",
-          "value": "$9.0B",
+          "value": "$9.00B",
+          "value_raw": 9000000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "La Doré",
-          "tags": [],
+          "proponent": "Hydro-Québec-MRC Domaine du Roy - Première Nation des Pekuakamiulnuatsh et Atikamekw de Wemotaci",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Parc éolien zone Chamouchouane",
               "url": "https://natural-resources.canada.ca"
             }
           ]
@@ -319,14 +448,19 @@
           "name": "Quebec Transport Infrastructure Investment Plan 2026-2028",
           "description": "The Quebec government announced $8 billion in road, maritime, rail and airport infrastructure investments across the province for 2026-2028, with 77% dedicated to asset maintenance.",
           "sector": "infrastructure",
-          "value": "$8.0B",
+          "value": "$8.00B",
+          "value_raw": 8000000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "infrastructure"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Quebec Transport Infrastructure Investment Plan 2026-2028",
               "url": "https://www.quebec.ca/nouvelles/actualites/details/investissements-routiers-maritimes-ferroviaires-et-aeroportuaires-2026-2028-des-investissements-majeurs-de-8-g-dans-nos-infrastructures-de-transport-au-quebec-69435"
             }
           ]
@@ -335,349 +469,548 @@
           "name": "Revised Montreal Metro Blue Line Extension Project",
           "description": "Public Transit project in Montréal. Recipient: Société de transport de Montréal (STM).",
           "sector": "infrastructure",
-          "value": "$4.9B",
+          "value": "$4.89B",
+          "value_raw": 4890743548.0,
           "status": "Under Construction",
           "completionDate": "2031-05-31",
           "cma": "Montréal",
-          "tags": [],
+          "proponent": "Société de transport de Montréal (STM)",
+          "tags": [
+            "expansion",
+            "infrastructure"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Revised Montreal Metro Blue Line Extension Project",
+              "url": "https://www.infrastructure.gc.ca"
+            }
+          ]
+        },
+        {
+          "name": "Usine de production d'hydrogène vert pour usage énergétique",
+          "description": "Type: Other. Clean technology project.",
+          "sector": "power_energy",
+          "value": "$4.00B",
+          "value_raw": 4000000000.0,
+          "status": "Under Review",
+          "completionDate": "",
+          "cma": "Shawinnigan",
+          "proponent": "TES Canada",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
+          "sources": [
+            {
+              "title": "Usine de production d'hydrogène vert pour usage énergétique",
+              "url": "https://natural-resources.canada.ca"
+            }
+          ]
+        },
+        {
+          "name": "Québec City Tramway Project (TramCité)",
+          "description": "Public Transit project in Québec. Recipient: Réseau de transport de la Capitale (RTC).",
+          "sector": "infrastructure",
+          "value": "$3.76B",
+          "value_raw": 3762806548.38,
+          "status": "Under Construction",
+          "completionDate": "2033-09-15",
+          "cma": "Québec",
+          "proponent": "Réseau de transport de la Capitale (RTC)",
+          "tags": [
+            "greenfield",
+            "infrastructure"
+          ],
+          "sources": [
+            {
+              "title": "Québec City Tramway Project (TramCité)",
               "url": "https://www.infrastructure.gc.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "Quebec Budget 2026-27 projects $8.6 billion deficit",
-        "Quebec employment declined 57,000 in February 2026",
-        "Montreal CMA housing starts rose 18% year-over-year",
-        "REM A3 branch to West Island opening Q2 2026",
-        "Quebec City Tramway construction active with 2033 operations target"
+        "Quebec Infrastructure Plan 2026-2036 tabled at $167B over ten years",
+        "Quebec Bill 5 fast-tracks priority national-scale infrastructure projects",
+        "TES Canada green hydrogen plant remains Under Review in federal IAAC registry",
+        "Parc éolien Chamouchouane ($9B Proposed) and Blue Line Extension ($4.89B Under Construction) are top capital files"
       ]
     },
     {
+      "code": "AB",
       "name": "Alberta",
       "indicators": {
-        "gdp": "",
+        "gdp": "+2.7%",
         "unemployment": "6.3%",
-        "cpi": "202.1",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "cpi": "+3.4%",
+        "housingStarts": "48,438",
+        "participationRate": "68.7%",
+        "employmentRate": "64.4%",
+        "buildingPermits": "1127124.0"
       },
       "indicatorMeta": {
+        "gdp": {
+          "prev": "",
+          "change": "",
+          "period": "2026-03-31",
+          "obsDate": "",
+          "source": "StatCan"
+        },
         "unemployment": {
           "prev": "6.4%",
           "change": "-0.1pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         },
         "cpi": {
-          "prev": "201.7",
-          "change": "+0.4",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
+          "prev": "+4.9%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
+        },
+        "housingStarts": {
+          "prev": "48,896",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "69.0%",
+          "change": "-0.3pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "64.5%",
+          "change": "-0.1pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
-        "gdp": "",
-        "unemployment": "Statistics Canada",
-        "cpi": "Statistics Canada",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "gdp": "StatCan",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
+        "housingStarts": "CMHC",
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 724,
+        "pipeline_value_billions": 349.6,
+        "top_sectors": [
+          {
+            "sector": "government",
+            "count": 146
+          },
+          {
+            "sector": "power_energy",
+            "count": 124
+          },
+          {
+            "sector": "infrastructure",
+            "count": 113
+          }
+        ],
+        "status_breakdown": {
+          "Under Review": 63,
+          "Under Construction": 172,
+          "Proposed": 384,
+          "Approved": 20,
+          "On Hold": 1,
+          "Complete": 83,
+          "Cancelled": 1
+        }
       },
       "story_threads": [
-        "Alberta Budget 2026 projects a $9.4 billion deficit, more than double 2025-26. Non-renewable resource revenue down $8.8 billion from 2024-25. The database tracks 727 Alberta projects.",
-        "Trans Mountain pipeline operating at or near full capacity; first expansion using DRA to increase throughput 10%. The database tracks 209 energy-sector projects in Alberta.",
-        "Dow Fort Saskatchewan $11.6 billion petrochemical complex under construction (2024-2029). Alberta's manufacturing pipeline includes 243 employment-sensitive projects.",
-        "Alberta greenlighted $900 million borrowing authority for a potential new pipeline to northern BC coast."
+        "Federal-Alberta-Pathways Alliance tri-lateral MOU target date was April 1 2026 for a multi-phased framework on the proposed $16.5B carbon capture and storage trunkline in northern Alberta; the Pathways Alliance rebranded to the 'Oil Sands Alliance' in February 2026; the database tracks the Pathways CCS Hub Phase 1 ($16.50B, Proposed) within Alberta's 724-project, $349.6B pipeline.",
+        "Alberta CPI at +3.4% (latest indicator print) sits among the highest provincial CPI prints in Canada; participation rate 68.9% remains the highest in the country, consistent with resource-sector labour demand.",
+        "Alberta has 384 Proposed and 172 Under Construction projects across 724 total filings; top sectors include government (146), power & energy (124), and infrastructure (113).",
+        "Anchor projects include the Telus Infrastructure Upgrades 2023-2027 ($19.0B, Under Construction), Pathways Alliance CCS Hub Phase 1 ($16.5B, Proposed), and AOSP Jackpine ($12.0B, Approved, Canadian Natural Resources Limited)."
       ],
       "cross_references": [
         {
-          "indicator": "unemployment",
-          "direction": "down",
-          "magnitude": "-0.1pp",
-          "linked_projects": 243,
-          "linked_value": "",
-          "interpretation": "Alberta unemployment edged down 0.1pp to 6.3%; 243 employment-sensitive projects in the pipeline"
+          "indicator": "cpi",
+          "value": "+3.4%",
+          "direction": "high",
+          "magnitude": "highest provincial print",
+          "linked_projects": 724,
+          "linked_value_billions": 349.6,
+          "interpretation": "Alberta CPI at +3.4% intersects with 724 provincial projects totalling $349.6B; resource-sector labour demand (participation 68.9%) sits with the province's energy and infrastructure pipeline."
         },
         {
-          "indicator": "oil_revenue",
-          "direction": "down",
-          "magnitude": "-$8.8B from 2024-25",
-          "linked_projects": 209,
-          "linked_value": "",
-          "interpretation": "Non-renewable resource revenue projected at $13.2 billion in 2026-27, down $8.8 billion from 2024-25; 209 energy-sector projects tracked"
+          "indicator": "unemployment",
+          "value": "6.5%",
+          "direction": "mid",
+          "magnitude": "below national 6.7%",
+          "linked_projects": 172,
+          "linked_value_billions": 349.6,
+          "interpretation": "Alberta unemployment at 6.5% sits with 172 Under Construction projects across the province's energy, infrastructure, and government sectors."
         }
       ],
-      "policy_items": [],
-      "watchlistItems": [],
+      "policy_items": [
+        {
+          "title": "Federal-Alberta-Pathways Alliance MOU framework",
+          "description": "Tri-lateral framework for $16.5B CCS trunkline; carbon price alignment and CCS financing; April 1 2026 target date for multi-phased framework.",
+          "category": "energy_transition",
+          "sector": "oil_gas",
+          "affected_projects": 724,
+          "level": "federal-provincial",
+          "date": "2026-04-01",
+          "source_url": "https://worldoil.com/news/2026/2/14/canada-backs-carbon-capture-buildout-to-secure-oil-sands-future-energy-minister-says/"
+        }
+      ],
+      "watchlistItems": [
+        {
+          "date": "Apr 16",
+          "institution": "Bank of Canada",
+          "event_name": "Rate decision",
+          "description": "Bank of Canada rate decision; energy sector capex sensitivity.",
+          "impact": "medium",
+          "source_url": "https://www.bankofcanada.ca/"
+        }
+      ],
       "key_facts": [
-        "Alberta Budget 2026 projects a $9.4 billion deficit for 2026-27. Oil sands royalties estimated at $9.7 billion; conventional oil at $2.1 billion.",
-        "3-year capital plan: $28.3 billion ($2.2 billion more than Budget 2025). Includes $7.1 billion municipal infrastructure, $4.9 billion health.",
-        "WTI forecast by Alberta government: US$60/bbl versus private market average of US$58.",
-        "Dow Fort Saskatchewan complex: $11.6 billion petrochemical facility under construction (2024-2029)."
+        "Alberta tracks 724 projects valued at $349.6B, the second-largest provincial pipeline after BC.",
+        "Federal-Alberta-Pathways Alliance MOU targeted April 1 2026 for $16.5B CCS trunkline framework.",
+        "Alberta CPI +3.4% (highest provincial); participation rate 68.9% (highest in Canada); GDP +2.7%.",
+        "Top sectors: government (146), power & energy (124), infrastructure (113)."
       ],
       "projects": [
         {
-          "name": "Beacon Langdon Artificial Intelligence Hub",
-          "description": "Other Industrial.",
-          "sector": "manufacturing",
-          "value": "$100.0B",
-          "status": "Proposed",
-          "completionDate": "",
-          "cma": "Rocky View County",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://majorprojects.alberta.ca"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.facebook.com/whatsgoodcalgary/posts/beacon-an-ai-data-centre-startup-is-setting-its-sights-on-alberta-as-it-aims-to-/558785843949291/"
-            }
-          ]
-        },
-        {
-          "name": "Beacon Saunders Lake Artificial Intelligence Hub",
-          "description": "Other Industrial.",
-          "sector": "manufacturing",
-          "value": "$100.0B",
-          "status": "Proposed",
-          "completionDate": "",
-          "cma": "Leduc County",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://majorprojects.alberta.ca"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.datacentermap.com/canada/edmonton/beacon-saunders-lake-ai-hub/"
-            }
-          ]
-        },
-        {
-          "name": "Fortis Buford 538S DER Solar (Creekside Solar Project)",
-          "description": "",
-          "sector": "power_energy",
-          "value": "$53.0B",
-          "status": "Proposed",
-          "completionDate": "2026-01-01",
-          "cma": "Leduc County",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://majorprojects.alberta.ca"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.fortisinc.com/docs/default-source/investor-presentations/november-2025-marketing-presentation---final---copy.pdf?sfvrsn=2116babe_1"
-            }
-          ]
-        },
-        {
-          "name": "Calgary Court of Appeal",
-          "description": "Other Institutional.",
+          "name": "Alberta Budget 2026 Capital Plan",
+          "description": "Alberta's 2026 Capital Plan allocates $28.3 billion over three years ($2.2B more than Budget 2025), including $4.9B for healthcare, $7.1B for municipal infrastructure, $3.3B for schools, $2.7B for highways/bridges, $1.1B for housing, and $0.8B for post-secondary institutions. Provincial capital spen",
           "sector": "government",
-          "value": "$49.0B",
+          "value": "$28.30B",
+          "value_raw": 28300000000.0,
           "status": "Proposed",
-          "completionDate": "2029-01-01",
-          "cma": "Calgary",
-          "tags": [],
+          "completionDate": "",
+          "cma": "",
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "government"
+          ],
           "sources": [
             {
-              "title": "Source",
-              "url": "https://majorprojects.alberta.ca"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.ctvnews.ca/calgary/article/calgary-lands-billions-in-alberta-budget-2026-while-property-taxes-climb/"
+              "title": "Alberta Budget 2026 Capital Plan",
+              "url": "https://www.alberta.ca/capital-plan"
             }
           ]
         },
         {
-          "name": "Highway 49 Repaving (North of Valleyview)",
-          "description": "",
-          "sector": "infrastructure",
-          "value": "$49.0B",
+          "name": "Telus Infrastructure Upgrades (Province wide 2023-2027)",
+          "description": "Telus Infrastructure Upgrades (Province wide 2023-2027)",
+          "sector": "manufacturing",
+          "value": "$19.00B",
+          "value_raw": 19000000000.0,
           "status": "Under Construction",
-          "completionDate": "2029-01-01",
-          "cma": "Greenview No. 16",
-          "tags": [],
+          "completionDate": "2027-01-01",
+          "cma": "Edmonton",
+          "proponent": "Telus",
+          "tags": [
+            "major_renovation",
+            "manufacturing"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Telus Infrastructure Upgrades (Province wide 2023-2027)",
               "url": "https://majorprojects.alberta.ca"
-            },
+            }
+          ]
+        },
+        {
+          "name": "Pathways Alliance Carbon Capture and Storage Project",
+          "description": "Pathways Alliance proposes a $16.5-billion carbon capture project in Alberta facing calls for federal environmental review.",
+          "sector": "Energy",
+          "value": "$16.50B",
+          "value_raw": 16500000000.0,
+          "status": "Proposed",
+          "completionDate": "",
+          "cma": "Edmonton",
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "Energy"
+          ],
+          "sources": [
             {
-              "title": "Source",
-              "url": "https://majorprojects.alberta.ca/details/Highway-49-Repaving-North-of-Valleyview/11334"
+              "title": "Pathways Alliance Carbon Capture and Storage Project",
+              "url": "https://newsroom.calgary.ca/commission-holds-march-regular-meeting-2026/"
+            }
+          ]
+        },
+        {
+          "name": "Pathways Alliance Carbon Capture Storage Hub (Phase 1)",
+          "description": "Components: Phase 1. Type: Other. Clean technology project.",
+          "sector": "power_energy",
+          "value": "$16.50B",
+          "value_raw": 16500000000.0,
+          "status": "Proposed",
+          "completionDate": "",
+          "cma": "Improvement District No. 349|Wood Buffalo|Lac la Biche County|Improvement District No. 24 Wood Buffalo|Bonnyville No. 87",
+          "proponent": "The Pathways Alliance",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
+          "sources": [
+            {
+              "title": "Pathways Alliance Carbon Capture Storage Hub (Phase 1)",
+              "url": "https://natural-resources.canada.ca"
+            }
+          ]
+        },
+        {
+          "name": "AOSP Jackpine",
+          "description": "Components: Phase 1B and Phase 2. Type: Oil and gas.",
+          "sector": "power_energy",
+          "value": "$12.00B",
+          "value_raw": 12000000000.0,
+          "status": "Approved",
+          "completionDate": "",
+          "cma": "Fort McMurray",
+          "proponent": "Canadian Natural Resources Limited",
+          "tags": [
+            "expansion",
+            "power_energy"
+          ],
+          "sources": [
+            {
+              "title": "AOSP Jackpine",
+              "url": "https://natural-resources.canada.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "Alberta Budget 2026 projects $9.4 billion deficit",
-        "Trans Mountain pipeline operating near capacity with 10% expansion",
-        "Dow Fort Saskatchewan $11.6B petrochemical complex under construction",
-        "Alberta authorizes $900M borrowing for potential northern BC pipeline",
-        "WTI forecast set at US$60/bbl in Alberta budget"
+        "Federal-Alberta-Pathways Alliance MOU April 1 target date for $16.5B CCS trunkline",
+        "Pathways Alliance rebranded to 'Oil Sands Alliance' (February 2026)",
+        "First Nations and rural landowners filed request for additional CCS corridor review",
+        "Pathways Alliance CO2 Storage Hub remains in IAAC Registry planning phase (89090)"
       ]
     },
     {
+      "code": "BC",
       "name": "British Columbia",
       "indicators": {
-        "gdp": "+1.3%",
+        "gdp": "+1.2%",
         "unemployment": "6.1%",
-        "cpi": "160.2",
-        "housingStarts": "Up 60% YoY (Vancouver CMA)",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "cpi": "+1.0%",
+        "housingStarts": "41,331",
+        "participationRate": "64.4%",
+        "employmentRate": "60.5%",
+        "buildingPermits": "1121933.0"
       },
       "indicatorMeta": {
-        "unemployment": {
-          "prev": "6.1%",
-          "change": "+0.0pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
-        },
-        "cpi": {
-          "prev": "159.8",
-          "change": "+0.4",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
-        },
         "gdp": {
           "prev": "",
           "change": "",
-          "period": "2026 forecast",
-          "obsDate": "2026-02-18"
+          "period": "2026-03-31",
+          "obsDate": "",
+          "source": "StatCan"
+        },
+        "unemployment": {
+          "prev": "6.1%",
+          "change": "+0.0pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "cpi": {
+          "prev": "+1.3%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
         },
         "housingStarts": {
-          "prev": "",
-          "change": "+60% YoY",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
+          "prev": "41,492",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "64.8%",
+          "change": "-0.4pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "60.9%",
+          "change": "-0.4pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
-        "gdp": "Statistics Canada",
-        "unemployment": "Statistics Canada",
-        "cpi": "Statistics Canada",
+        "gdp": "StatCan",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
         "housingStarts": "CMHC",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 648,
+        "pipeline_value_billions": 509.6,
+        "top_sectors": [
+          {
+            "sector": "power_energy",
+            "count": 68
+          },
+          {
+            "sector": "Other",
+            "count": 60
+          },
+          {
+            "sector": "mining",
+            "count": 56
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 42,
+          "Under Review": 120,
+          "Under Construction": 153,
+          "Cancelled": 25,
+          "Complete": 28,
+          "Proposed": 251,
+          "On Hold": 29
+        }
       },
       "story_threads": [
-        "BC Budget 2026 projects a $13.3 billion deficit (largest in BC history), with nearly $38 billion in capital projects. The database tracks 660 BC projects.",
-        "Vancouver CMA housing starts rose 60% year-over-year in February 2026. However, $1.4 billion was reallocated from housing over three years and the Community Housing Fund closed indefinitely. 138 rate-sensitive projects in BC.",
-        "LNG Canada Phase 2 proposed to double capacity from 14 Mt/y to 28 Mt/y. BC tracks 158 energy-sector projects in the database.",
-        "BC records highest-ever forecast nonresidential construction spending in 2026."
+        "BC filed three policy items this week — a March housing highlights statement, a reaction to the U.S. Department of Commerce preliminary softwood lumber duty determination, and an April rental report statement — all under Ministers Boyle (Housing) and Parmar (Forests); the U.S. preliminary duty came in just under 25%, below the current ~35% combined rate.",
+        "BC carries the largest provincial pipeline in Canada at $509.6B across 648 projects; LNG Canada Phase 1 ($47.9B, Under Construction), LNG Canada Facility ($40.0B, Complete), and LNG Canada Phase 2 ($25.0B, Proposed — no FID) are the anchor files.",
+        "BC unemployment at 6.7% (in line with national); housing starts 41,331; CPI +1.0%; participation rate 64.4%; project status mix is 251 Proposed, 153 Under Construction, 120 Under Review.",
+        "Top sectors: power & energy (68), mining (56), residential (0); Woodfibre LNG at Squamish has marine pile works underway under BC Energy Regulator oversight."
       ],
       "cross_references": [
         {
-          "indicator": "unemployment",
-          "direction": "flat",
-          "magnitude": "unchanged at 6.1%",
-          "linked_projects": 126,
-          "linked_value": "",
-          "interpretation": "BC unemployment held at 6.1% despite employment declining 20,000; 126 employment-sensitive projects tracked"
+          "indicator": "softwood_lumber_duty",
+          "value": "~25% preliminary",
+          "direction": "down from ~35% combined",
+          "magnitude": "preliminary determination",
+          "linked_projects": 0,
+          "linked_value_billions": 509.6,
+          "interpretation": "U.S. softwood lumber preliminary duty (~25%) intersects with BC forestry and manufacturing projects; the BC Forests Ministry called the U.S. process broken."
         },
         {
-          "indicator": "housing_starts",
-          "direction": "up",
-          "magnitude": "+60% YoY",
-          "linked_projects": 138,
-          "linked_value": "",
-          "interpretation": "Vancouver CMA housing starts surged 60% year-over-year; 138 rate-sensitive projects in BC pipeline"
+          "indicator": "unemployment",
+          "value": "6.7%",
+          "direction": "flat",
+          "magnitude": "in line with national",
+          "linked_projects": 153,
+          "linked_value_billions": 509.6,
+          "interpretation": "BC unemployment at 6.7% sits with 153 Under Construction projects across the province's energy, mining, and residential pipeline."
         }
       ],
       "policy_items": [
         {
           "title": "Opening more homes in West Vancouver",
           "description": "Two new rental buildings expand housing options for workers, families with middle incomes",
+          "category": "housing",
           "sector": "residential",
           "affected_projects": 51,
+          "level": "provincial",
+          "date": "Fri, 27 Mar 2026 11:15:00 -0700",
           "source_url": "https://news.gov.bc.ca/releases/2026HMA0028-000325"
         },
         {
           "title": "Opening more homes in West Vancouver",
           "description": "Two new rental buildings expand housing options for workers, families with middle incomes",
+          "category": "housing",
           "sector": "residential",
           "affected_projects": 51,
+          "level": "provincial",
+          "date": "Fri, 27 Mar 2026 11:15:00 -0700",
           "source_url": "https://news.gov.bc.ca/releases/2026HMA0028-000325"
+        },
+        {
+          "title": "BC Minister statement on March 2026 housing highlights",
+          "description": "BC Housing Ministry statement on March housing highlights and rental report.",
+          "category": "housing",
+          "sector": "residential",
+          "affected_projects": 0,
+          "level": "provincial",
+          "date": "2026-04-10",
+          "source_url": "https://news.gov.bc.ca/releases/2026HMA0042-000398"
+        },
+        {
+          "title": "BC Minister statement on softwood lumber administrative review",
+          "description": "BC Forests Ministry response to U.S. Department of Commerce preliminary softwood lumber duty determination.",
+          "category": "trade_policy",
+          "sector": "forestry",
+          "affected_projects": 0,
+          "level": "provincial",
+          "date": "2026-04-09",
+          "source_url": "https://news.gov.bc.ca/releases/2026FOR0011-000394"
         }
       ],
-      "watchlistItems": [],
+      "watchlistItems": [
+        {
+          "date": "Apr 16",
+          "institution": "Bank of Canada",
+          "event_name": "Rate decision",
+          "description": "BC residential and LNG capex monitored.",
+          "impact": "high",
+          "source_url": "https://www.bankofcanada.ca/"
+        }
+      ],
       "key_facts": [
-        "BC Budget 2026 projects a $13.3 billion deficit, followed by $12.2 billion and $11.4 billion over the fiscal plan.",
-        "Housing strategy slowed: $1.4 billion reallocated from housing; Community Housing Fund closed indefinitely.",
-        "Nearly $38 billion in capital projects including 17 major hospitals, Broadway Subway, and Surrey Langley Skytrain.",
-        "BC GDP growth forecast at 1.3% in 2026, 1.8% in 2027 (TD Economics)."
+        "BC tracks 648 projects valued at $509.6B — the largest provincial pipeline in Canada.",
+        "BC filed 3 policy items this week (housing x2, softwood lumber x1) — only province with policy.json entries for week 2026-04-11.",
+        "U.S. softwood lumber preliminary duty ~25%, below current ~35% combined rate; BC wood manufacturers called the process broken.",
+        "Top sectors: power & energy (68), mining (56), residential (0); LNG Canada anchors the pipeline."
       ],
       "projects": [
         {
           "name": "LNG Canada Phase 1",
           "description": "Components: Phase 1 under construction; phase 2 in planning, so not included in this line. Type: Oil and gas.",
           "sector": "power_energy",
-          "value": "$47.9B",
+          "value": "$47.90B",
+          "value_raw": 47900000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "Kitimat",
-          "tags": [],
+          "proponent": "LNG Canada (Shell Canada Limited, PETRONAS, Korea Gas Corporation (KOGAS), Mitsubishi Corporation, and PetroChina Company Limited) ",
+          "tags": [
+            "expansion",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "LNG Canada Phase 1",
               "url": "https://natural-resources.canada.ca"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.reuters.com/business/energy/shell-led-lng-canada-project-starts-production-2024-02-13/"
-            }
-          ]
-        },
-        {
-          "name": "Tla-o-qui-aht – Child and Family Services Centre",
-          "description": "",
-          "sector": "Other",
-          "value": "$47.8B",
-          "status": "Under Review",
-          "completionDate": "",
-          "cma": "",
-          "tags": [],
-          "sources": [
-            {
-              "title": "IAAC Registry",
-              "url": "https://iaac-aeic.gc.ca/050/evaluations/proj/90233"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.facebook.com/lisabeare/posts/bc-budget-2026-reaffirms-our-commitment-to-children-and-families-across-british-/1306967094573525/"
             }
           ]
         },
         {
           "name": "LNG Canada Facility",
-          "description": "LNG terminal facility located on the former Methanex facility site. The project will include a gas liquification plant, storage tanks, a marine terminal and a rail yard. Water treatment facility and f",
+          "description": "LNG terminal facility located on the former Methanex facility site. The project will include a gas liquification plant, storage tanks, a marine terminal and a rail yard. Water treatment facility and flare stacks will be constructed on the site. JGC Corp and Flour Corp have been awarded the engineeri",
           "sector": "oil_gas",
-          "value": "$40.0B",
+          "value": "$40.00B",
+          "value_raw": 40000000000.0,
           "status": "Complete",
           "completionDate": "2025-04-01",
           "cma": "Kitimat",
-          "tags": [],
+          "proponent": "Shell Canada Energy, Petronas, PetroChina, Mitsubishi Corp., and Kogas Canada LNG",
+          "tags": [
+            "greenfield",
+            "oil_gas"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "LNG Canada Facility",
               "url": "https://www2.gov.bc.ca"
             }
           ]
@@ -686,145 +1019,215 @@
           "name": "LNG Canada Phase 2",
           "description": "Components: Kitimat. Type: Oil and gas.",
           "sector": "power_energy",
-          "value": "$25.0B",
+          "value": "$25.00B",
+          "value_raw": 25000000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "Kitimat",
-          "tags": [],
+          "proponent": "LNG Canada (Shell Canada Limited, PETRONAS, Korea Gas Corporation (KOGAS), Mitsubishi Corporation, and PetroChina Company Limited) ",
+          "tags": [
+            "expansion",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "LNG Canada Phase 2",
               "url": "https://natural-resources.canada.ca"
             }
           ]
         },
         {
           "name": "Kitimat Clean Oil Refinery",
-          "description": "Proposed refinery located 13 km north of Kitimat will process an estimated 400,000 barrels/day of Alberta oil sands bitumen refined to produce diesel, gasoline, and aviation fuel. The refined products",
+          "description": "Proposed refinery located 13 km north of Kitimat will process an estimated 400,000 barrels/day of Alberta oil sands bitumen refined to produce diesel, gasoline, and aviation fuel. The refined products will be stored and delivered via 23 km of 18\" fuel delivery pipeline to a proposed marine terminal ",
           "sector": "power_energy",
-          "value": "$22.0B",
+          "value": "$22.00B",
+          "value_raw": 22000000000.0,
           "status": "Under Review",
           "completionDate": "",
           "cma": "Kitimat",
-          "tags": [],
+          "proponent": "Kitimat Clean Ltd.",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Kitimat Clean Oil Refinery",
               "url": "https://natural-resources.canada.ca"
-            },
+            }
+          ]
+        },
+        {
+          "name": "Peace River Site C Hydro-electric project",
+          "description": "Type: Electricity. Clean technology project.",
+          "sector": "power_energy",
+          "value": "$16.00B",
+          "value_raw": 16000000000.0,
+          "status": "Under Construction",
+          "completionDate": "",
+          "cma": "Fort St. John",
+          "proponent": "BC Hydro",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
+          "sources": [
             {
-              "title": "Source",
-              "url": "https://iaac-aeic.gc.ca/050/evaluations/document/80009"
+              "title": "Peace River Site C Hydro-electric project",
+              "url": "https://natural-resources.canada.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "BC Budget 2026 projects $13.3 billion deficit, largest in provincial history",
-        "Vancouver CMA housing starts up 60% year-over-year",
-        "LNG Canada Phase 2 proposed to double Kitimat capacity",
-        "BC housing strategy slowed with $1.4B reallocation",
-        "BC sets record nonresidential construction spending forecast"
+        "BC issued statements on March housing highlights and April rental report",
+        "U.S. softwood lumber preliminary duty determined at ~25%",
+        "BC wood manufacturers characterized U.S. softwood process as broken",
+        "Woodfibre LNG marine pile works underway at Squamish under BCER oversight"
       ]
     },
     {
+      "code": "SK",
       "name": "Saskatchewan",
       "indicators": {
-        "gdp": "",
+        "gdp": "+3.4%",
         "unemployment": "5.6%",
-        "cpi": "130.0",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "cpi": "-0.7%",
+        "housingStarts": "5,486",
+        "participationRate": "67.1%",
+        "employmentRate": "63.4%",
+        "buildingPermits": "154443.0"
       },
       "indicatorMeta": {
+        "gdp": {
+          "prev": "",
+          "change": "",
+          "period": "2026-03-31",
+          "obsDate": "",
+          "source": "StatCan"
+        },
         "unemployment": {
           "prev": "5.3%",
           "change": "+0.3pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         },
         "cpi": {
-          "prev": "129.6",
-          "change": "+0.4",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
+          "prev": "+1.2%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
+        },
+        "housingStarts": {
+          "prev": "5,327",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "67.6%",
+          "change": "-0.5pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "64.0%",
+          "change": "-0.6pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
-        "gdp": "",
-        "unemployment": "Statistics Canada",
-        "cpi": "Statistics Canada",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "gdp": "StatCan",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
+        "housingStarts": "CMHC",
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 213,
+        "pipeline_value_billions": 38.3,
+        "top_sectors": [
+          {
+            "sector": "Other",
+            "count": 92
+          },
+          {
+            "sector": "Water & Wastewater",
+            "count": 37
+          },
+          {
+            "sector": "infrastructure",
+            "count": 18
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 10,
+          "Under Review": 78,
+          "Proposed": 90,
+          "Under Construction": 34,
+          "Complete": 1
+        }
       },
       "story_threads": [
-        "Saskatchewan Budget 2026 projects an $819 million deficit with $1.8 billion in infrastructure. The database tracks 213 Saskatchewan projects.",
-        "BHP Jansen potash mine ($14 billion investment) expected to begin production late 2026. K+S Bethune expansion ($3 billion) to double output. Saskatchewan tracks 34 energy-sector and mining projects.",
-        "Potash royalties of $940.9 million projected to eclipse oil sector earnings at $721 million, signaling a shift in Saskatchewan's resource revenue base."
+        "BHP's Jansen potash mine is now 75% complete; Stage 1 first production has slipped to 2027 (one-year delay) and Stage 2 to 2031 (two-year delay); Stage 1 capex is up ~30% from original plan and total BHP capital in Jansen is ~C$14B; Jansen Stage 1 ($7.5B, Under Construction) and Stage 2 ($6.4B, Under Construction) anchor SK's 213-project, $38.3B pipeline.",
+        "Nutrien remains the largest Saskatchewan producer at 20 Mt/yr across six mines; the FCL HDRD Plant ($2.0B, Proposed, Federated Co-operatives Limited) is the third-largest tracked Saskatchewan capital file.",
+        "Saskatchewan unemployment at 5.0% is tied with Quebec's ISQ print as the lowest in Canada; CPI -0.7% (latest indicator print); GDP +3.4%; the province has 78 Under Review and 34 Under Construction projects.",
+        "No SK items in policy.json this week; the Jansen schedule slip is the dominant project-level event."
       ],
       "cross_references": [
         {
           "indicator": "unemployment",
-          "direction": "up",
-          "magnitude": "+0.3pp",
-          "linked_projects": 7,
-          "linked_value": "",
-          "interpretation": "Saskatchewan unemployment rose 0.3pp to 5.6% despite employment declining 5,500; 7 employment-sensitive projects tracked"
+          "value": "5.0%",
+          "direction": "low",
+          "magnitude": "tied lowest in Canada",
+          "linked_projects": 34,
+          "linked_value_billions": 38.3,
+          "interpretation": "SK unemployment at 5.0% (tied lowest with QC ISQ print) sits with 34 Under Construction projects, including Jansen Stage 1 and 2."
         },
         {
-          "indicator": "potash_royalties",
-          "direction": "up",
-          "magnitude": "$940.9M projected",
-          "linked_projects": 34,
-          "linked_value": "",
-          "interpretation": "Potash royalties projected at $940.9 million, exceeding oil sector at $721 million; 34 energy and mining projects in the pipeline"
+          "indicator": "jansen_schedule_slip",
+          "value": "+1yr Stage 1, +2yr Stage 2",
+          "direction": "delayed",
+          "magnitude": "~30% capex increase Stage 1",
+          "linked_projects": 2,
+          "linked_value_billions": 13.9,
+          "interpretation": "BHP Jansen Stage 1 and Stage 2 ($13.9B combined) timelines slipped this week; Stage 1 first production now 2027, Stage 2 now 2031."
         }
       ],
       "policy_items": [],
       "watchlistItems": [],
       "key_facts": [
-        "Saskatchewan Budget 2026 projects an $819 million deficit, the largest budgeted shortfall in 15 years outside COVID period.",
-        "BHP Jansen potash mine: $14 billion investment, production expected late 2026, potential capacity of 8.5 Mt/y.",
-        "K+S Bethune mine expansion: Up to $3 billion to double potash production from 2 Mt to 4 Mt.",
-        "By end of 2026, Saskatchewan expected to have commercial production of six critical minerals: potash, uranium, helium, copper, zinc, lithium."
+        "Saskatchewan tracks 213 projects valued at $38.3B; mining and infrastructure are the top sectors.",
+        "BHP Jansen 75% complete; Stage 1 slipped to 2027, Stage 2 slipped to 2031; Stage 1 capex up ~30%; total BHP capital in Jansen ~C$14B.",
+        "Saskatchewan unemployment 5.0% (tied lowest in Canada with QC ISQ print); CPI -0.7%; GDP +3.4%.",
+        "Anchor projects: Jansen Stage 1 ($7.5B), Jansen Stage 2 ($6.4B), Saskatchewan 2026-27 Capital Budget ($4.3B), FCL HDRD Plant ($2.0B)."
       ],
       "projects": [
-        {
-          "name": "Regina Central Library Renewal Project",
-          "description": "City of Regina explores funding options to keep the Central Library renewal project alive amid borrowing limit constraints.",
-          "sector": "Other",
-          "value": "$8.8B",
-          "status": "Proposed",
-          "completionDate": "",
-          "cma": "Regina",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://www.saskatchewan.ca/government/news-and-media/2026/march/24/new-high-school-course-supports-students-interested-in-health-care-careers"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.saskatchewan.ca/government/news-and-media/2026/march/23/amendments-to-the-income-tax-act-will-double-first-responders-tax-credit-and-extend-chemical-fertili"
-            }
-          ]
-        },
         {
           "name": "Jansen Stage 1",
           "description": "Mining group: Non-metals.",
           "sector": "mining",
-          "value": "$7.5B",
+          "value": "$7.50B",
+          "value_raw": 7500000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "Jansen",
-          "tags": [],
+          "proponent": "BHP",
+          "tags": [
+            "greenfield",
+            "mining"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Jansen Stage 1",
               "url": "https://natural-resources.canada.ca"
             }
           ]
@@ -833,35 +1236,41 @@
           "name": "Jansen Stage 2",
           "description": "Mining group: Non-metals.",
           "sector": "mining",
-          "value": "$6.4B",
+          "value": "$6.40B",
+          "value_raw": 6400000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "Jansen",
-          "tags": [],
+          "proponent": "BHP",
+          "tags": [
+            "greenfield",
+            "mining"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Jansen Stage 2",
               "url": "https://natural-resources.canada.ca"
             }
           ]
         },
         {
           "name": "Saskatchewan 2026-27 Capital Budget",
-          "description": "The provincial budget includes $4.3 billion in total capital investment — $1.8B in core government projects and $2.5B through Crown corporations — one of the largest capital budgets in Saskatchewan hi",
+          "description": "The provincial budget includes $4.3 billion in total capital investment — $1.8B in core government projects and $2.5B through Crown corporations — one of the largest capital budgets in Saskatchewan history.",
           "sector": "Other",
-          "value": "$4.3B",
+          "value": "$4.30B",
+          "value_raw": 4300000000.0,
           "status": "Approved",
           "completionDate": "2027",
           "cma": "Regina",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "Other"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Saskatchewan 2026-27 Capital Budget",
               "url": "https://www.saskatchewan.ca/government/news-and-media/2026/march/24/new-high-school-course-supports-students-interested-in-health-care-careers"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.saskatchewan.ca/government/news-and-media/2026/march/23/amendments-to-the-income-tax-act-will-double-first-responders-tax-credit-and-extend-chemical-fertili"
             }
           ]
         },
@@ -869,147 +1278,246 @@
           "name": "FCL HDRD Plant",
           "description": "Type: Oil and gas. Clean technology project.",
           "sector": "power_energy",
-          "value": "$2.0B",
+          "value": "$2.00B",
+          "value_raw": 2000000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "Regina",
-          "tags": [],
+          "proponent": "Federated Co-operatives Limited",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "FCL HDRD Plant",
               "url": "https://natural-resources.canada.ca"
+            }
+          ]
+        },
+        {
+          "name": "Bell Canada AI Data Centre — RM of Sherwood",
+          "description": "Bell Canada announced a 300 MW purpose-built AI data centre in the Rural Municipality of Sherwood near Regina, described as the largest data centre development in Canada. Construction expected to begin spring 2026 with first stage operational in H1 2027.",
+          "sector": "telecom",
+          "value": "$1.70B",
+          "value_raw": 1700000000.0,
+          "status": "Proposed",
+          "completionDate": "",
+          "cma": "",
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "telecom"
+          ],
+          "sources": [
+            {
+              "title": "Bell Canada AI Data Centre — RM of Sherwood",
+              "url": "https://www.bce.ca/news-and-media/newsroom?article=bell-ai-fabric-expands-national-network-with-300-mw-data-centre-in-saskatchewan"
             }
           ]
         }
       ],
       "news_stories": [
-        "Saskatchewan Budget 2026 projects $819 million deficit",
-        "BHP Jansen potash mine approaching production start",
-        "K+S Bethune expansion to double potash output",
-        "Potash royalties projected to eclipse oil sector earnings",
-        "Saskatchewan to produce six critical minerals commercially by end of 2026"
+        "BHP Jansen potash mine Stage 1 first production slipped to 2027",
+        "BHP Jansen Stage 2 timeline slipped to 2031",
+        "Jansen Stage 1 capex up ~30% from original plan",
+        "Nutrien remains largest Saskatchewan potash producer at 20 Mt/yr"
       ]
     },
     {
+      "code": "MB",
       "name": "Manitoba",
       "indicators": {
-        "gdp": "+4.4%",
+        "gdp": "+1.1%",
         "unemployment": "5.7%",
-        "cpi": "157.2",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "cpi": "+3.1%",
+        "housingStarts": "7,642",
+        "participationRate": "66.3%",
+        "employmentRate": "62.5%",
+        "buildingPermits": "231452.0"
       },
       "indicatorMeta": {
-        "unemployment": {
-          "prev": "6.3%",
-          "change": "-0.6pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
-        },
-        "cpi": {
-          "prev": "157.0",
-          "change": "+0.2",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
-        },
         "gdp": {
           "prev": "",
           "change": "",
-          "period": "2025 nominal",
-          "obsDate": "2026-01-15"
+          "period": "2026-03-31",
+          "obsDate": "",
+          "source": "StatCan"
+        },
+        "unemployment": {
+          "prev": "6.3%",
+          "change": "-0.6pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "cpi": {
+          "prev": "+3.4%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
+        },
+        "housingStarts": {
+          "prev": "7,799",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "67.1%",
+          "change": "-0.8pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "62.9%",
+          "change": "-0.4pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
-        "gdp": "Statistics Canada",
-        "unemployment": "Statistics Canada",
-        "cpi": "Statistics Canada",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "gdp": "StatCan",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
+        "housingStarts": "CMHC",
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 2058,
+        "pipeline_value_billions": 14.6,
+        "top_sectors": [
+          {
+            "sector": "Other",
+            "count": 1076
+          },
+          {
+            "sector": "Water & Wastewater",
+            "count": 456
+          },
+          {
+            "sector": "Energy",
+            "count": 152
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 9,
+          "Under Review": 1976,
+          "Proposed": 31,
+          "Under Construction": 42
+        }
       },
       "story_threads": [
-        "Manitoba Budget 2026 reports a $498 million deficit with a record $3.8 billion capital investment plan. The database tracks 2,058 Manitoba projects.",
-        "PST removed from groceries effective 2026. Nominal exports to U.S. down 18% in 2025 (energy, agricultural machinery, pharmaceuticals).",
-        "Infrastructure highlights: Trans-Canada Highway twinning to Ontario, health centre construction in 5 communities, $22 million water infrastructure investments. Manitoba tracks 616 infrastructure projects."
+        "Manitoba Budget 2026, tabled March 24 by the Kinew government, projects a $1.7B deficit in 2025-26 falling to $498M in 2026-27 and an $8M surplus in 2027-28; strategic infrastructure spending set at $3.7B for the fiscal year (~$4.3B/yr average over five years); the database tracks the Manitoba Budget 2026 line item ($3.8B Proposed, government) within the province's 2058-project, $14.6B pipeline.",
+        "Manitoba Hydro receives $1.17B in capital investment under the budget; Hydro itself is forecasting a $502M net loss (a $722M swing from prior $220M net income projection) attributed to water conditions.",
+        "Manitoba unemployment 5.6%; CPI +3.1% (latest indicator print); employment rate 63.4% above national 60.6%; participation 67.1%.",
+        "The province's project count is dominated by 1976 Under Review filings from the Manitoba Environmental Licensing registry; anchor capital projects include the North End Water Pollution Control Centre Upgrade ($3.2B, Under Construction) and the NEWPCC Biosolids facility ($500M, Approved)."
       ],
       "cross_references": [
         {
-          "indicator": "unemployment",
-          "direction": "down",
-          "magnitude": "-0.6pp",
-          "linked_projects": 6,
-          "linked_value": "",
-          "interpretation": "Manitoba unemployment fell 0.6pp to 5.7% despite employment declining 4,000; 6 employment-sensitive projects tracked"
+          "indicator": "budget_capital_plan",
+          "value": "$3.7B/yr",
+          "direction": "announced",
+          "magnitude": "~$4.3B avg over 5 years",
+          "linked_projects": 2058,
+          "linked_value_billions": 14.6,
+          "interpretation": "Manitoba Budget 2026 strategic infrastructure spending ($3.7B FY) sits alongside 2058 tracked Manitoba projects including the $1.17B Manitoba Hydro capital allocation."
         },
         {
-          "indicator": "trade_exposure",
-          "direction": "down",
-          "magnitude": "-18% nominal exports to U.S.",
-          "linked_projects": 270,
-          "linked_value": "",
-          "interpretation": "Nominal exports to U.S. down 18% in 2025; 270 energy-sector projects in Manitoba pipeline"
+          "indicator": "cpi",
+          "value": "+3.1%",
+          "direction": "high",
+          "magnitude": "above national",
+          "linked_projects": 2058,
+          "linked_value_billions": 14.6,
+          "interpretation": "Manitoba CPI at +3.1% sits with the province's water/wastewater project flow (0 infrastructure projects)."
         }
       ],
-      "policy_items": [],
+      "policy_items": [
+        {
+          "title": "Manitoba Budget 2026",
+          "description": "$1.7B deficit in 2025-26 falling to $498M in 2026-27; $3.7B strategic infrastructure spending; $1.17B Manitoba Hydro capital allocation.",
+          "category": "fiscal_policy",
+          "sector": "infrastructure",
+          "affected_projects": 2058,
+          "level": "provincial",
+          "date": "2026-03-24",
+          "source_url": "https://www.gov.mb.ca/asset_library/en/budget2026/budget2026.pdf"
+        }
+      ],
       "watchlistItems": [],
       "key_facts": [
-        "Manitoba Budget 2026 projects a $498 million deficit, down from $1.7 billion in 2025-26. Surplus of $8 million projected for 2027-28.",
-        "Record $3.8 billion capital investment plan including Trans-Canada Highway twinning.",
-        "Nominal GDP growth: 4.4% in 2025, 3.6% forecast for 2026 (Manitoba Bureau of Statistics).",
-        "Employment rose 1.8% (+12,900) year-over-year from January 2025 to January 2026."
+        "Manitoba tracks 2058 projects valued at $14.6B; project count inflated by 1976 Under Review Environmental Licensing filings.",
+        "Manitoba Budget 2026 (March 24) projects $1.7B deficit falling to $498M in 2026-27; $3.7B FY infrastructure; $1.17B Hydro capital.",
+        "Manitoba Hydro forecasts $502M net loss (a $722M swing) attributed to water conditions.",
+        "Manitoba unemployment 5.6%; CPI +3.1%; employment rate 63.4% above national; GDP +1.1%."
       ],
       "projects": [
         {
           "name": "Manitoba Budget 2026 — Record $3.8B Capital Investment Plan",
-          "description": "Manitoba tabled Budget 2026 on March 25 with a record $3.8 billion in capital investment for roads, hospitals, schools, and community infrastructure. Five-year capital plan averages $4.3 billion annua",
+          "description": "Manitoba tabled Budget 2026 on March 25 with a record $3.8 billion in capital investment for roads, hospitals, schools, and community infrastructure. Five-year capital plan averages $4.3 billion annually, up from the previous $3.3 billion annual plan.",
           "sector": "government",
-          "value": "$3.8B",
+          "value": "$3.80B",
+          "value_raw": 3800000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "government"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Manitoba Budget 2026 — Record $3.8B Capital Investment Plan",
               "url": "https://news.gov.mb.ca/news/index.html?item=73198"
-            },
-            {
-              "title": "Source",
-              "url": "https://news.gov.mb.ca/news/index.html?item=61608"
             }
           ]
         },
         {
           "name": "North End Water Pollution Control Centre (NEWPCC) Upgrade — UV Milestone",
-          "description": "Winnipeg's $3.2 billion NEWPCC upgrade reached a milestone on March 18 with UV disinfection treatment restored after being shut off for upgrade work. The new UV system reduces electricity use by appro",
+          "description": "Winnipeg's $3.2 billion NEWPCC upgrade reached a milestone on March 18 with UV disinfection treatment restored after being shut off for upgrade work. The new UV system reduces electricity use by approximately 75%. Full UV facility upgrades expected complete fall 2026.",
           "sector": "infrastructure",
-          "value": "$3.2B",
+          "value": "$3.20B",
+          "value_raw": 3200000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "infrastructure"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "North End Water Pollution Control Centre (NEWPCC) Upgrade — UV Milestone",
               "url": "https://canada.constructconnect.com/joc/news/infrastructure/2026/03/winnipegs-north-end-water-pollution-control-centre-hits-milestone-in-3-2b-upgrade"
             }
           ]
         },
         {
           "name": "Portage Place Redevelopment — Healthcare Centre of Excellence",
-          "description": "True North Real Estate Development reports the $650 million Portage Place redevelopment is on schedule. Demolition of the atrium is continuing, and construction on the 300,000 sq ft, 12-storey Healthc",
+          "description": "True North Real Estate Development reports the $650 million Portage Place redevelopment is on schedule. Demolition of the atrium is continuing, and construction on the 300,000 sq ft, 12-storey Healthcare Centre of Excellence is progressing. Completion target is 2028.",
           "sector": "commercial_mixed",
           "value": "$650M",
+          "value_raw": 650000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "commercial_mixed"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Portage Place Redevelopment — Healthcare Centre of Excellence",
               "url": "https://www.cbc.ca/news/canada/manitoba/portage-place-construction-9.7063848"
             }
           ]
@@ -1019,13 +1527,18 @@
           "description": "Wastewater project in Winnipeg. Recipient: Winnipeg, City of.",
           "sector": "infrastructure",
           "value": "$502M",
+          "value_raw": 502182000.0,
           "status": "Approved",
           "completionDate": "2030-12-11",
           "cma": "Winnipeg",
-          "tags": [],
+          "proponent": "Winnipeg, City of",
+          "tags": [
+            "major_renovation",
+            "infrastructure"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "North End Sewage Treatment Plant (NEWPCC) Upgrades: Biosolids Facilities",
               "url": "https://www.infrastructure.gc.ca"
             }
           ]
@@ -1035,157 +1548,205 @@
           "description": "Disaster Mitigation project in Grahamdale. Recipient: Manitoba, Province of.",
           "sector": "infrastructure",
           "value": "$495M",
+          "value_raw": 495000000.0,
           "status": "Approved",
           "completionDate": "2026-03-31",
           "cma": "Grahamdale",
-          "tags": [],
+          "proponent": "Manitoba, Province of",
+          "tags": [
+            "greenfield",
+            "infrastructure"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Lake Manitoba/Lake St. Martin Outlet Channels Project",
               "url": "https://www.infrastructure.gc.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "Manitoba Budget 2026 projects $498 million deficit with $3.8B capital plan",
-        "PST removed from groceries in Manitoba",
-        "Manitoba exports to U.S. down 18% in 2025",
-        "North End Water Pollution Control Centre reaches $3.2B milestone",
-        "Trans-Canada Highway twinning to Ontario announced"
+        "Manitoba Budget 2026 tabled with $3.7B FY strategic infrastructure spending",
+        "Manitoba Hydro forecasts $502M net loss attributed to water conditions",
+        "$1.17B Manitoba Hydro capital allocation in Budget 2026",
+        "North End Water Pollution Control Centre Upgrade ($3.2B Under Construction) is the largest tracked Manitoba capital project"
       ]
     },
     {
+      "code": "NS",
       "name": "Nova Scotia",
       "indicators": {
-        "gdp": "",
+        "gdp": "+2.7%",
         "unemployment": "7.1%",
-        "cpi": "189.5",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "cpi": "+1.5%",
+        "housingStarts": "7,146",
+        "participationRate": "61.3%",
+        "employmentRate": "57.0%",
+        "buildingPermits": "242875.0"
       },
       "indicatorMeta": {
+        "gdp": {
+          "prev": "",
+          "change": "",
+          "period": "2026-03-31",
+          "obsDate": "",
+          "source": "StatCan"
+        },
         "unemployment": {
           "prev": "6.9%",
           "change": "+0.2pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         },
         "cpi": {
-          "prev": "189.6",
-          "change": "-0.1",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
+          "prev": "+1.7%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
+        },
+        "housingStarts": {
+          "prev": "7,252",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "61.4%",
+          "change": "-0.1pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "57.1%",
+          "change": "-0.1pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
-        "gdp": "",
-        "unemployment": "Statistics Canada",
-        "cpi": "Statistics Canada",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "gdp": "StatCan",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
+        "housingStarts": "CMHC",
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 335,
+        "pipeline_value_billions": 18.6,
+        "top_sectors": [
+          {
+            "sector": "Other",
+            "count": 123
+          },
+          {
+            "sector": "Clean Energy",
+            "count": 72
+          },
+          {
+            "sector": "infrastructure",
+            "count": 24
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 15,
+          "Under Review": 14,
+          "Proposed": 41,
+          "Complete": 233,
+          "Under Construction": 32
+        }
       },
       "story_threads": [
-        "Nova Scotia Capital Plan 2026-27 is the largest ever at $3.5 billion, with $1.5 billion for healthcare including Halifax Infirmary expansion. The database tracks 339 Nova Scotia projects.",
-        "Nova Scotia Budget 2026-27 projects a $1.24 billion deficit, with debt-to-GDP projected to breach 40% by 2027-28. Health spending up 6% to $6.7 billion.",
-        "Public sector headcount reductions target $914.3 million in cumulative savings by 2029-30. Nova Scotia tracks 119 energy-sector projects."
+        "Nova Scotia's offshore wind framework approached legislative passage this spring; the regulator issued a Call for Information and Prequalification (open to mid-January 2026) to seed a competitive bidding round; Hydro-Québec filed a Request for Information on potential offshore wind development off Nova Scotia; the database tracks 335 NS projects valued at $18.6B.",
+        "Anchor capital files include Bear Head Energy ($8.0B, Proposed, Bear Head Energy), Nova Scotia Capital Plan 2026-27 ($3.5B, Proposed, government), and CFB Halifax Dockyard infrastructure ($1.2B, Proposed, defence).",
+        "Nova Scotia employment rate 57.4% is the lowest among the 10 provinces; participation 61.4% sits just above NB and NL; unemployment 6.6%; CPI +1.5%; GDP +2.7%.",
+        "Project status mix: 233 Complete, 32 Under Construction, 15 Approved, 41 Proposed."
       ],
       "cross_references": [
         {
-          "indicator": "unemployment",
-          "direction": "up",
-          "magnitude": "+0.2pp",
-          "linked_projects": 8,
-          "linked_value": "",
-          "interpretation": "Nova Scotia unemployment rose 0.2pp to 7.1%; 8 employment-sensitive projects tracked"
+          "indicator": "employment_rate",
+          "value": "57.4%",
+          "direction": "low",
+          "magnitude": "lowest among 10 provinces",
+          "linked_projects": 335,
+          "linked_value_billions": 18.6,
+          "interpretation": "NS employment rate at 57.4% (lowest among 10 provinces) intersects with 335 provincial projects across clean energy (0), infrastructure, and defence categories."
         },
         {
-          "indicator": "health_spending",
-          "direction": "up",
-          "magnitude": "+6%",
-          "linked_projects": 48,
-          "linked_value": "",
-          "interpretation": "Health spending rose 6% to $6.7 billion; 48 infrastructure projects in the pipeline"
+          "indicator": "offshore_wind_framework",
+          "value": "pre-legislative",
+          "direction": "advancing",
+          "magnitude": "CFI/PQ open to mid-Jan 2026",
+          "linked_projects": 0,
+          "linked_value_billions": 18.6,
+          "interpretation": "Offshore wind framework pre-qualification round seeds future competitive bidding; Hydro-Québec RFI signals cross-provincial interest."
         }
       ],
-      "policy_items": [],
+      "policy_items": [
+        {
+          "title": "Nova Scotia offshore wind framework",
+          "description": "Pre-legislative framework approaching passage; Call for Information and Prequalification open to mid-January 2026; Hydro-Québec filed RFI on potential offshore wind development.",
+          "category": "energy_transition",
+          "sector": "power_energy",
+          "affected_projects": 0,
+          "level": "provincial-federal",
+          "date": "2026-Q1",
+          "source_url": "https://www.cbc.ca/news/canada/nova-scotia/offshore-wind-projects-9.7135261"
+        }
+      ],
       "watchlistItems": [],
       "key_facts": [
-        "Nova Scotia Capital Plan 2026-27 is the largest ever at $3.5 billion.",
-        "$1.5 billion for healthcare in the 'More, Faster: Action for Health Build' plan; $1.2 billion for Halifax Infirmary and Cape Breton Regional redevelopment.",
-        "Budget deficit of $1.24 billion; debt-to-GDP ratio projected to breach 40% guardrail by 2027-28.",
-        "$873.8 million toward 5,700 new/replacement long-term care spaces by 2032."
+        "Nova Scotia tracks 335 projects valued at $18.6B.",
+        "Offshore wind framework pre-legislative; CFI/PQ round open through mid-January 2026; Hydro-Québec filed RFI on NS offshore wind.",
+        "Bear Head Energy ($8.0B Proposed) is the largest tracked Nova Scotia capital file.",
+        "NS employment rate 57.4% (lowest among 10 provinces); unemployment 6.6%; GDP +2.7%; CPI +1.5%."
       ],
       "projects": [
-        {
-          "name": "Wind West — Hydro-Québec Grid Interconnection Study",
-          "description": "Hydro-Québec issued a formal request for information from energy developers to assess feasibility of connecting its grid with Nova Scotia's proposed Wind West offshore wind project, which targets 5 GW",
-          "sector": "power_energy",
-          "value": "$60.0B",
-          "status": "Proposed",
-          "completionDate": "",
-          "cma": "",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://www.cbc.ca/news/canada/nova-scotia/hydro-quebec-seeking-input-on-linking-its-grid-with-proposed-nova-scotia-wind-farms-9.7141642"
-            }
-          ]
-        },
         {
           "name": "Bear Head Energy",
           "description": "Type: Oil and gas.",
           "sector": "power_energy",
-          "value": "$8.0B",
+          "value": "$8.00B",
+          "value_raw": 8000000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "Richmond County",
-          "tags": [],
+          "proponent": "Bear Head Energy",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Bear Head Energy",
               "url": "https://natural-resources.canada.ca"
             }
           ]
         },
         {
           "name": "Nova Scotia Capital Plan 2026-27",
-          "description": "Nova Scotia released its largest-ever capital plan at $3.5 billion, including $1.5 billion for the 'More, Faster: Action for Health Build' plan and nearly $900 million for long-term care facilities ac",
+          "description": "Nova Scotia released its largest-ever capital plan at $3.5 billion, including $1.5 billion for the 'More, Faster: Action for Health Build' plan and nearly $900 million for long-term care facilities across the province.",
           "sector": "government",
-          "value": "$3.5B",
+          "value": "$3.50B",
+          "value_raw": 3500000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "government"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Nova Scotia Capital Plan 2026-27",
               "url": "https://news.novascotia.ca/en/2026/02/23/capital-plan-2026-27-released"
-            }
-          ]
-        },
-        {
-          "name": "Deconstruction of New Glasgow Armoury, Building NG1",
-          "description": "",
-          "sector": "Other",
-          "value": "$2.0B",
-          "status": "Under Review",
-          "completionDate": "",
-          "cma": "",
-          "tags": [],
-          "sources": [
-            {
-              "title": "IAAC Registry",
-              "url": "https://iaac-aeic.gc.ca/050/evaluations/proj/89953"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.facebook.com/KimMasland/posts/a-significant-and-welcome-2-billion-investment-in-nova-scotias-defence-infrastru/1429511985666355/"
             }
           ]
         },
@@ -1193,131 +1754,214 @@
           "name": "CFB Halifax Dockyard and Stadacona Power and Service Infrastructure Upgrade",
           "description": "Federal government announced $1.2 billion to upgrade power and service infrastructure at CFB Halifax Dockyard and Stadacona as part of a $2 billion Nova Scotia defence spending package.",
           "sector": "defence",
-          "value": "$1.2B",
+          "value": "$1.20B",
+          "value_raw": 1200000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "defence"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "CFB Halifax Dockyard and Stadacona Power and Service Infrastructure Upgrade",
               "url": "https://www.cbc.ca/news/canada/nova-scotia/carney-announces-2b-in-defence-spending-for-nova-scotia-9.7143638"
+            }
+          ]
+        },
+        {
+          "name": "14 Wing Greenwood Hangar and Drone Infrastructure",
+          "description": "Federal government committed $648 million for new hangar and drone infrastructure at 14 Wing Greenwood in Nova Scotia as part of the national defence investment package.",
+          "sector": "defence",
+          "value": "$648M",
+          "value_raw": 648000000.0,
+          "status": "Proposed",
+          "completionDate": "",
+          "cma": "",
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "defence"
+          ],
+          "sources": [
+            {
+              "title": "14 Wing Greenwood Hangar and Drone Infrastructure",
+              "url": "https://www.cbc.ca/news/canada/nova-scotia/carney-announces-2b-in-defence-spending-for-nova-scotia-9.7143638"
+            }
+          ]
+        },
+        {
+          "name": "Boat Harbour Remediation Project",
+          "description": "Brownfield Remediation And Redevelopment project in Pictou. Recipient: Nova Scotia, Province of.",
+          "sector": "environment",
+          "value": "$367M",
+          "value_raw": 367000000.0,
+          "status": "Approved",
+          "completionDate": "2033-10-31",
+          "cma": "Pictou",
+          "proponent": "Nova Scotia, Province of",
+          "tags": [
+            "redevelopment",
+            "environment"
+          ],
+          "sources": [
+            {
+              "title": "Boat Harbour Remediation Project",
+              "url": "https://www.infrastructure.gc.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "Nova Scotia releases largest-ever $3.5B capital plan",
-        "Nova Scotia Budget 2026-27 projects $1.24 billion deficit",
-        "Halifax Infirmary expansion and Cape Breton healthcare redevelopment funded",
-        "Public sector headcount reductions target $914.3M in savings",
-        "New public housing in Kentville for approximately 100 people"
+        "Nova Scotia offshore wind framework approaches legislative passage",
+        "Hydro-Québec filed Request for Information on NS offshore wind development",
+        "Offshore wind Call for Information and Prequalification open to mid-January 2026",
+        "Bear Head Energy ($8.0B Proposed) anchors NS pipeline"
       ]
     },
     {
+      "code": "NB",
       "name": "New Brunswick",
       "indicators": {
-        "gdp": "+1.3%",
+        "gdp": "+1.8%",
         "unemployment": "7.0%",
-        "cpi": "133.3",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "cpi": "+1.2%",
+        "housingStarts": "6,011",
+        "participationRate": "60.7%",
+        "employmentRate": "56.5%",
+        "buildingPermits": "131904.0"
       },
       "indicatorMeta": {
-        "unemployment": {
-          "prev": "6.7%",
-          "change": "+0.3pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
-        },
-        "cpi": {
-          "prev": "134.1",
-          "change": "-0.8",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
-        },
         "gdp": {
           "prev": "",
           "change": "",
-          "period": "2025 est.",
-          "obsDate": "2026-03-17"
+          "period": "2026-03-31",
+          "obsDate": "",
+          "source": "StatCan"
+        },
+        "unemployment": {
+          "prev": "6.7%",
+          "change": "+0.3pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "cpi": {
+          "prev": "+2.4%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
+        },
+        "housingStarts": {
+          "prev": "6,454",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "60.6%",
+          "change": "+0.1pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "56.5%",
+          "change": "+0.0pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
-        "gdp": "Statistics Canada",
-        "unemployment": "Statistics Canada",
-        "cpi": "Statistics Canada",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "gdp": "StatCan",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
+        "housingStarts": "CMHC",
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 204,
+        "pipeline_value_billions": 5.2,
+        "top_sectors": [
+          {
+            "sector": "Other",
+            "count": 106
+          },
+          {
+            "sector": "infrastructure",
+            "count": 29
+          },
+          {
+            "sector": "tourism_culture",
+            "count": 12
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 11,
+          "Under Construction": 46,
+          "Under Review": 114,
+          "Proposed": 33
+        }
       },
       "story_threads": [
-        "New Brunswick Budget 2026-27 projects a $1.33 billion deficit with capital spending rising from $1.2 billion to $1.5 billion. The database tracks 204 NB projects.",
-        "Point Lepreau SMR and potential second nuclear plant represent a major energy shift for New Brunswick. NB Power review recommended building a second large nuclear plant adjacent to Point Lepreau. 16 energy projects tracked.",
-        "Net debt projected to rise from $13.9 billion to $19.7 billion by FY29. Real GDP growth slowing from 1.3% in 2025 to 1.0% in 2026."
+        "Northcliff Resources received US$20.7M from the U.S. Department of Defense and a conditional C$8.2M from Ottawa to advance the Sisson tungsten project north of Fredericton; the federal Natural Resources Minister stated intent to accelerate the Sisson timeline; the database tracks Sisson Project ($580M, Approved, Northcliff Resources/HDI Mining/Todd Corp) within NB's 204-project, $5.2B pipeline.",
+        "J.D. Irving's $1.1B NextGen pulp mill upgrade in Saint John (new recovery boiler, ~doubling pulp drying capacity) remains the largest capital project in NB and is in Under Review status awaiting EIA completion.",
+        "NB employment rate 56.7% is the lowest provincial print in Canada; unemployment 7.0%; CPI +1.2%; GDP +1.8%; participation 60.9%.",
+        "Critical-minerals positioning continues federally; the US DoD Northcliff award is the most material procurement event for NB this week."
       ],
       "cross_references": [
         {
-          "indicator": "unemployment",
-          "direction": "up",
-          "magnitude": "+0.3pp",
-          "linked_projects": 3,
-          "linked_value": "",
-          "interpretation": "New Brunswick unemployment rose 0.3pp to 7.0%; 3 employment-sensitive projects tracked"
+          "indicator": "sisson_award",
+          "value": "US$20.7M + C$8.2M conditional",
+          "direction": "advancing",
+          "magnitude": "critical minerals",
+          "linked_projects": 1,
+          "linked_value_billions": 0.58,
+          "interpretation": "US DoD and conditional Canada awards advance Sisson tungsten project ($580M, Approved); federal NRCan minister stated intent to accelerate timeline."
         },
         {
-          "indicator": "capital_spending",
-          "direction": "up",
-          "magnitude": "+$300M (to $1.5B)",
-          "linked_projects": 45,
-          "linked_value": "",
-          "interpretation": "Capital spending increased from $1.2 billion to $1.5 billion; 45 infrastructure projects in the pipeline"
+          "indicator": "employment_rate",
+          "value": "56.7%",
+          "direction": "low",
+          "magnitude": "lowest provincial print",
+          "linked_projects": 204,
+          "linked_value_billions": 5.2,
+          "interpretation": "NB employment rate at 56.7% (lowest provincial print) intersects with 204 provincial projects across forestry, mining, and infrastructure categories."
         }
       ],
       "policy_items": [],
       "watchlistItems": [],
       "key_facts": [
-        "New Brunswick Budget 2026-27 projects a $1.33 billion deficit. Health spending rose $710 million year-over-year.",
-        "Point Lepreau SMR (ARC-100) proposed by NB Power and ARC Clean Technology. NB Power review recommended a second large nuclear plant.",
-        "Real GDP growth estimated at 1.3% in 2025, slowing to 1.0% in 2026 (Scotiabank).",
-        "Medical isotope production explored at Point Lepreau."
+        "New Brunswick tracks 204 projects valued at $5.2B.",
+        "Northcliff received US$20.7M (DoD) plus conditional C$8.2M (Canada) for Sisson tungsten critical minerals project.",
+        "J.D. Irving NextGen pulp mill upgrade ($1.1B Under Review) is the largest tracked NB capital project.",
+        "NB employment rate 56.7% (lowest provincial print); unemployment 7.0%; CPI +1.2%; GDP +1.8%."
       ],
       "projects": [
-        {
-          "name": "ProEnergy Canada Tantramar Power Plant",
-          "description": "ProEnergy Canada proposes to build a new power generation facility in the Tantramar region of New Brunswick.",
-          "sector": "Energy",
-          "value": "$3.5B",
-          "status": "Proposed",
-          "completionDate": "",
-          "cma": "Moncton",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://www.acadienouvelle.com/actualites/2026/03/24/proenergy-se-tourne-vers-un-prestigieux-club-prive-pour-seduire-le-milieu-des-affaires-de-moncton/"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.acadienouvelle.com/actualites/2026/03/24/edmundston-sentend-avec-ses-policiers/"
-            }
-          ]
-        },
         {
           "name": "Saint John Pulp Mill Upgrades",
           "description": "NRCan Forest project in Saint John.",
           "sector": "forestry",
-          "value": "$1.1B",
+          "value": "$1.10B",
+          "value_raw": 1100000000.0,
           "status": "Under Review",
           "completionDate": "",
           "cma": "Saint John",
-          "tags": [],
+          "proponent": "J.D. Irving",
+          "tags": [
+            "major_renovation",
+            "forestry"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Saint John Pulp Mill Upgrades",
               "url": "https://natural-resources.canada.ca"
             }
           ]
@@ -1327,13 +1971,18 @@
           "description": "Mining group: Metals.",
           "sector": "mining",
           "value": "$579M",
+          "value_raw": 579000000.0,
           "status": "Approved",
           "completionDate": "",
           "cma": "Fredericton",
-          "tags": [],
+          "proponent": "Northcliff Resources (HDI Mining)",
+          "tags": [
+            "greenfield",
+            "mining"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Sisson Project",
               "url": "https://natural-resources.canada.ca"
             }
           ]
@@ -1343,13 +1992,18 @@
           "description": "Highways and Roads project in Aroostook; Canterbury; Florenceville-Bristol; Grand Falls; Meductic; Perth-Andover; St. Stephen; Woodstock; Woodstock 23. Recipient: New Brunswick, Province of.",
           "sector": "infrastructure",
           "value": "$420M",
+          "value_raw": 420000000.0,
           "status": "Under Construction",
           "completionDate": "2009-03-31",
           "cma": "Aroostook; Canterbury; Florenceville-Bristol; Grand Falls; Meductic; Perth-Andover; St. Stephen; Woodstock; Woodstock 23",
-          "tags": [],
+          "proponent": "New Brunswick, Province of",
+          "tags": [
+            "greenfield",
+            "infrastructure"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Twinning of Trans-Canada Highway (Route 2)",
               "url": "https://www.infrastructure.gc.ca"
             }
           ]
@@ -1359,120 +2013,235 @@
           "description": "Marine project in Saint John. Recipient: Saint John Port Authority.",
           "sector": "transport_logistics",
           "value": "$205M",
+          "value_raw": 205079796.34,
           "status": "Under Construction",
           "completionDate": "2023-03-31",
           "cma": "Saint John",
-          "tags": [],
+          "proponent": "Saint John Port Authority",
+          "tags": [
+            "major_renovation",
+            "transport_logistics"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Port Saint John West Side Terminals Modernization Project",
               "url": "https://www.infrastructure.gc.ca"
+            }
+          ]
+        },
+        {
+          "name": "Smart Grid Investments Phase",
+          "description": "Type: Electricity. Clean technology project.",
+          "sector": "power_energy",
+          "value": "$147M",
+          "value_raw": 147000000.0,
+          "status": "Under Construction",
+          "completionDate": "",
+          "cma": "Various locations across NB  (St. John)",
+          "proponent": "NB Power and Partners",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
+          "sources": [
+            {
+              "title": "Smart Grid Investments Phase",
+              "url": "https://natural-resources.canada.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "New Brunswick Budget 2026-27 projects $1.33 billion deficit",
-        "NB Power review recommends second large nuclear plant at Point Lepreau",
-        "Point Lepreau SMR proposal advances with ARC Clean Technology",
-        "Medical isotope production explored at Point Lepreau",
-        "Capital spending rising from $1.2B to $1.5B in NB"
+        "US DoD awards Northcliff US$20.7M for Sisson tungsten critical minerals project",
+        "Conditional C$8.2M from Canada to Northcliff for Sisson",
+        "Federal NRCan minister stated intent to accelerate Sisson timeline",
+        "J.D. Irving NextGen pulp mill upgrade ($1.1B) remains in EIA review"
       ]
     },
     {
+      "code": "NL",
       "name": "Newfoundland and Labrador",
       "indicators": {
-        "gdp": "",
+        "gdp": "+2.4%",
         "unemployment": "9.2%",
-        "cpi": "166.4",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "cpi": "+1.8%",
+        "housingStarts": "1,223",
+        "participationRate": "58.1%",
+        "employmentRate": "52.7%",
+        "buildingPermits": "74108.0"
       },
       "indicatorMeta": {
+        "gdp": {
+          "prev": "",
+          "change": "",
+          "period": "2026-03-31",
+          "obsDate": "",
+          "source": "StatCan"
+        },
         "unemployment": {
           "prev": "9.2%",
           "change": "+0.0pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         },
         "cpi": {
-          "prev": "166.2",
-          "change": "+0.2",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-16"
+          "prev": "+2.3%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
+        },
+        "housingStarts": {
+          "prev": "1,194",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "57.6%",
+          "change": "+0.5pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "52.3%",
+          "change": "+0.4pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
-        "gdp": "",
-        "unemployment": "Statistics Canada",
-        "cpi": "Statistics Canada",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "gdp": "StatCan",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
+        "housingStarts": "CMHC",
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 1549,
+        "pipeline_value_billions": 32.0,
+        "top_sectors": [
+          {
+            "sector": "Other",
+            "count": 892
+          },
+          {
+            "sector": "Infrastructure",
+            "count": 169
+          },
+          {
+            "sector": "Transit & Rail",
+            "count": 159
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 13,
+          "Proposed": 1373,
+          "Under Review": 6,
+          "Cancelled": 126,
+          "Under Construction": 31
+        }
       },
       "story_threads": [
-        "Bay du Nord offshore oil project ($14 billion estimated investment) reached life-of-field agreements on benefits, royalties, and equity with Equinor and BP. First oil expected 2031. The database tracks 1,549 NL projects.",
-        "Offshore oil contributes approximately 20% of provincial GDP and 55% of total exports, sustaining approximately 20,000 jobs. The database tracks 144 energy-sector projects in Newfoundland and Labrador.",
-        "Employment increased 2,100 (+0.8%) in February 2026, one of only two provinces to record employment gains."
+        "Cenovus targets spring 2026 startup for West White Rose, budgeting $450M-$500M for 2026 offshore expenditures; the project is expected to add 20,000-25,000 bbl/d of production on first oil, ramping toward 80,000 bbl/d gross at full build with 250 permanent positions; the database tracks White Rose West ($3.8B, Under Construction) within NL's 1549-project, $32.0B pipeline.",
+        "The Province of Newfoundland and Labrador earmarked $90M over three years for offshore exploration incentives; StatCan reports NL oil production up 69.2% in February 2026 vs prior month.",
+        "NL holds the highest provincial unemployment rate in Canada at 9.5%; the lowest provincial employment rate at 52.7%; participation 58.3%; CPI +1.8%; GDP +2.4%.",
+        "Anchor capital projects include Grassy Point LNG ($10.0B, Proposed, LNG Newfoundland and Labrador), Bay du Nord Benefits Agreement ($6.4B, Approved), Kami Iron Ore ($3.86B, Under Review, Champion Iron), and White Rose West ($3.8B, Under Construction)."
       ],
       "cross_references": [
         {
-          "indicator": "unemployment",
-          "direction": "flat",
-          "magnitude": "unchanged at 9.2%",
-          "linked_projects": 30,
-          "linked_value": "",
-          "interpretation": "NL unemployment unchanged at 9.2% despite employment gaining 2,100; 30 employment-sensitive projects tracked"
+          "indicator": "oil_production",
+          "value": "+69.2%",
+          "direction": "up",
+          "magnitude": "February 2026 vs prior",
+          "linked_projects": 0,
+          "linked_value_billions": 32.0,
+          "interpretation": "NL oil production up 69.2% in February 2026 (StatCan); Cenovus West White Rose targets spring 2026 startup adding 20,000-25,000 bbl/d on first oil."
         },
         {
-          "indicator": "offshore_oil",
-          "direction": "forward",
-          "magnitude": "Bay du Nord agreements signed",
-          "linked_projects": 144,
-          "linked_value": "",
-          "interpretation": "Bay du Nord agreements represent $14 billion investment; 144 energy-sector projects tracked in NL"
+          "indicator": "unemployment",
+          "value": "9.5%",
+          "direction": "highest",
+          "magnitude": "highest provincial print",
+          "linked_projects": 1549,
+          "linked_value_billions": 32.0,
+          "interpretation": "NL unemployment 9.5% (highest provincial print) intersects with 1549 tracked projects, of which 1373 are Proposed and 31 Under Construction."
         }
       ],
-      "policy_items": [],
+      "policy_items": [
+        {
+          "title": "NL offshore exploration incentives",
+          "description": "$90M over three years earmarked for offshore exploration incentives.",
+          "category": "resource_development",
+          "sector": "oil_gas",
+          "affected_projects": 0,
+          "level": "provincial",
+          "date": "2026-03",
+          "source_url": "https://www.gov.nl.ca/fin/economics/eb-oil/"
+        },
+        {
+          "title": "Bay du Nord Advancement Agreement",
+          "description": "Agreement to Advance Bay du Nord Project (NL Executive Council).",
+          "category": "resource_development",
+          "sector": "oil_gas",
+          "affected_projects": 1,
+          "level": "provincial-federal",
+          "date": "2026-03-03",
+          "source_url": "https://www.gov.nl.ca/releases/2026/exec/0303n05/"
+        }
+      ],
       "watchlistItems": [],
       "key_facts": [
-        "Bay du Nord offshore oil project: $14 billion estimated investment. First oil expected 2031. Production capacity: 160,000-175,000 bbl/d.",
-        "Government revenue from Bay du Nord: Up to $6.4 billion in direct revenue from Phase 1. Over 31 million person-hours of work over 25 years.",
-        "Net debt projected at $19.4 billion (44.7% of GDP).",
-        "Employment increased 2,100 (+0.8%) in February 2026, one of only two provinces to gain jobs."
+        "Newfoundland and Labrador tracks 1549 projects valued at $32.0B.",
+        "Cenovus targets spring 2026 startup for West White Rose with $450M-$500M 2026 capex; first oil adds 20,000-25,000 bbl/d.",
+        "NL oil production up 69.2% in February 2026 (StatCan).",
+        "NL unemployment 9.5% (highest provincial); employment rate 52.7% (lowest provincial); participation 58.3%."
       ],
       "projects": [
         {
           "name": "Grassy Point LNG",
           "description": "Type: Oil and gas.",
           "sector": "power_energy",
-          "value": "$10.0B",
+          "value": "$10.00B",
+          "value_raw": 10000000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "Grassy Point",
-          "tags": [],
+          "proponent": "LNG Newfoundland and Labrador",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Grassy Point LNG",
               "url": "https://natural-resources.canada.ca"
             }
           ]
         },
         {
           "name": "Bay du Nord Offshore Oil Project — Benefits Agreement",
-          "description": "Provincial government reached life-of-field benefits, royalties, and equity option agreement with Equinor and BP for the Bay du Nord deepwater oil project in the Flemish Pass Basin. The agreement incl",
+          "description": "Provincial government reached life-of-field benefits, royalties, and equity option agreement with Equinor and BP for the Bay du Nord deepwater oil project in the Flemish Pass Basin. The agreement includes $200M in fabrication funds and targets for apprentice employment (10% construction, 15% onshore",
           "sector": "oil_gas",
-          "value": "$6.4B",
+          "value": "$6.40B",
+          "value_raw": 6400000000.0,
           "status": "Approved",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "oil_gas"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Bay du Nord Offshore Oil Project — Benefits Agreement",
               "url": "https://www.gov.nl.ca/releases/2026/exec/0303n05/"
             }
           ]
@@ -1481,14 +2250,19 @@
           "name": "Kamistiatusset (Kami)",
           "description": "Mining group: Metals.",
           "sector": "mining",
-          "value": "$3.9B",
+          "value": "$3.86B",
+          "value_raw": 3864000000.0,
           "status": "Under Review",
           "completionDate": "",
           "cma": "Labrador West",
-          "tags": [],
+          "proponent": "Champion Iron Limited",
+          "tags": [
+            "greenfield",
+            "mining"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Kamistiatusset (Kami)",
               "url": "https://natural-resources.canada.ca"
             }
           ]
@@ -1497,14 +2271,19 @@
           "name": "White Rose Expansion - White Rose West",
           "description": "Components: West. Type: Oil and gas.",
           "sector": "power_energy",
-          "value": "$3.8B",
+          "value": "$3.80B",
+          "value_raw": 3800000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "Offshore Newfoundland",
-          "tags": [],
+          "proponent": "Husky Energy Inc., Suncor, Nalcor Energy",
+          "tags": [
+            "expansion",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "White Rose Expansion - White Rose West",
               "url": "https://natural-resources.canada.ca"
             }
           ]
@@ -1513,99 +2292,183 @@
           "name": "White Rose Expansion",
           "description": "Components: North and South. Type: Oil and gas.",
           "sector": "power_energy",
-          "value": "$2.3B",
+          "value": "$2.30B",
+          "value_raw": 2300000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "Offshore Newfoundland",
-          "tags": [],
+          "proponent": "Husky Energy Inc.",
+          "tags": [
+            "expansion",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "White Rose Expansion",
               "url": "https://natural-resources.canada.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "Bay du Nord offshore oil project agreements signed with Equinor and BP",
-        "NL employment rose 2,100 in February, one of two provinces to gain jobs",
-        "Offshore oil contributes 20% of NL GDP and 55% of exports",
-        "NL Budget 2025-26 projected $372 million deficit",
-        "Bay du Nord to deliver $6.4 billion in direct government revenue"
+        "Cenovus targets spring 2026 startup for West White Rose offshore project",
+        "NL oil production up 69.2% in February 2026 (StatCan)",
+        "NL earmarks $90M over three years for offshore exploration incentives",
+        "Bay du Nord advancement agreement signed (March 3 2026)"
       ]
     },
     {
+      "code": "PE",
       "name": "Prince Edward Island",
       "indicators": {
-        "gdp": "",
+        "gdp": "+3.6%",
         "unemployment": "7.2%",
-        "cpi": "",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "cpi": "+5.4%",
+        "housingStarts": "963.0",
+        "participationRate": "66.6%",
+        "employmentRate": "61.8%",
+        "buildingPermits": "24095.0"
       },
       "indicatorMeta": {
+        "gdp": {
+          "prev": "",
+          "change": "",
+          "period": "2026-03-31",
+          "obsDate": "",
+          "source": "StatCan"
+        },
         "unemployment": {
           "prev": "7.6%",
           "change": "-0.4pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "cpi": {
+          "prev": "+7.3%",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan"
+        },
+        "housingStarts": {
+          "prev": "1,112",
+          "change": "",
+          "period": "February 2026",
+          "obsDate": "February 2026",
+          "source": "CMHC"
+        },
+        "participationRate": {
+          "prev": "66.5%",
+          "change": "+0.1pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
+        },
+        "employmentRate": {
+          "prev": "61.5%",
+          "change": "+0.3pp",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "StatCan 14-10-0287"
         }
       },
       "indicatorSources": {
-        "gdp": "",
-        "unemployment": "Statistics Canada",
-        "cpi": "",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
-        "buildingPermits": ""
+        "gdp": "StatCan",
+        "unemployment": "StatCan 14-10-0287",
+        "cpi": "StatCan",
+        "housingStarts": "CMHC",
+        "participationRate": "StatCan 14-10-0287",
+        "employmentRate": "StatCan 14-10-0287",
+        "buildingPermits": "StatCan 34-10-0292"
+      },
+      "project_summary": {
+        "count": 96,
+        "pipeline_value_billions": 2.9,
+        "top_sectors": [
+          {
+            "sector": "infrastructure",
+            "count": 39
+          },
+          {
+            "sector": "tourism_culture",
+            "count": 16
+          },
+          {
+            "sector": "power_energy",
+            "count": 13
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 5,
+          "Proposed": 14,
+          "Under Construction": 74,
+          "Under Review": 3
+        }
       },
       "story_threads": [
-        "PEI employment reached an all-time high of 96,200 in February 2026 with unemployment falling to 7.2% (-0.4pp). The database tracks 96 PEI projects.",
-        "Current 2025-26 forecast deficit of $367.4 million, a $183.4 million increase from original budget. Spring 2026 legislature opened March 25 with anticipated budget cuts.",
-        "Population increased 1.6% to 182,657. International exports up 12.8%. Tourism overnight stays up 4.5%."
+        "PEI's 2026-2027 Operating Budget remains in pre-budget consultation; the province reported population +1.6% to 182,657 (through July 2025), employment +1.2% (through October 2025), international exports +12.8% (through August 2025); the database tracks 96 PEI projects valued at $2.9B.",
+        "The Smart Renewables and Electrification Pathways Program has approved >$21.7M across three PEI projects; PEI launched a $10M cleantech R&D fund and three tax-free development zones; the Eastern Kings Wind Farm Expansion (+29.4 MW, seven turbines) remains in commissioning.",
+        "PEI CPI +5.4% is the highest provincial CPI print in Canada; GDP +3.6%; unemployment 7.3%; employment rate 61.6%; participation 66.5%; PEI wind share of provincial generation was 98.2% in 2023 (highest in Canada).",
+        "Anchor capital files: Northumberland Strait Submarine Transmission System ($90M, Under Construction, Province of PE), PEIEC Wind Farm #5 ($80M, Under Construction, PEI Energy Corporation), and the PEI 2026-27 Capital Budget infrastructure line items."
       ],
       "cross_references": [
         {
-          "indicator": "unemployment",
-          "direction": "down",
-          "magnitude": "-0.4pp",
-          "linked_projects": 20,
-          "linked_value": "",
-          "interpretation": "PEI unemployment fell 0.4pp to 7.2%; employment reached all-time high of 96,200; 20 employment-sensitive projects tracked"
+          "indicator": "cpi",
+          "value": "+5.4%",
+          "direction": "high",
+          "magnitude": "highest provincial print",
+          "linked_projects": 96,
+          "linked_value_billions": 2.9,
+          "interpretation": "PEI CPI at +5.4% (highest provincial print in Canada) intersects with 96 provincial projects across infrastructure (39), tourism/culture (16), and power & energy (13)."
         },
         {
-          "indicator": "population_growth",
-          "direction": "up",
-          "magnitude": "+1.6%",
-          "linked_projects": 43,
-          "linked_value": "",
-          "interpretation": "Population grew 1.6% to 182,657; 43 rate-sensitive projects in PEI pipeline"
+          "indicator": "srep_funding",
+          "value": ">$21.7M",
+          "direction": "awarded",
+          "magnitude": "3 projects",
+          "linked_projects": 13,
+          "linked_value_billions": 2.9,
+          "interpretation": "SREPs program has approved >$21.7M across three PEI projects; supports the province's renewable energy build-out (98.2% wind share in 2023)."
         }
       ],
-      "policy_items": [],
+      "policy_items": [
+        {
+          "title": "PEI 2026-27 pre-budget consultations",
+          "description": "Pre-budget consultations open through spring; SREPs funding approvals and cleantech R&D fund announcements continue.",
+          "category": "fiscal_policy",
+          "sector": "government",
+          "affected_projects": 96,
+          "level": "provincial",
+          "date": "2026-Q1",
+          "source_url": "https://www.princeedwardisland.ca/en/service/pre-budget-consultations-2026"
+        }
+      ],
       "watchlistItems": [],
       "key_facts": [
-        "PEI employment reached an all-time high of 96,200 in February 2026.",
-        "Current 2025-26 forecast deficit widened to $367.4 million (+$183.4 million from original budget).",
-        "Population increased 1.6% to 182,657 (through July 2025); international exports up 12.8%.",
-        "No 2026-27 budget tabled yet as of March 31. Pre-budget consultations ongoing."
+        "Prince Edward Island tracks 96 projects valued at $2.9B.",
+        "PEI CPI +5.4% — highest provincial CPI print in Canada; GDP +3.6%.",
+        "SREPs program approved >$21.7M across three PEI projects; PEI wind share of generation 98.2% in 2023 (highest in Canada).",
+        "PEI population +1.6% to 182,657 (through July 2025); employment +1.2% (through October 2025); international exports +12.8% (through August 2025)."
       ],
       "projects": [
         {
           "name": "PEI 2026-27 Capital Budget — Healthcare and Education Infrastructure",
-          "description": "PEI's 2026-27 capital budget allocates $486.5 million for the fiscal year and $1.6 billion over five years, including $538 million for healthcare infrastructure, $65.4 million for three new elementary",
+          "description": "PEI's 2026-27 capital budget allocates $486.5 million for the fiscal year and $1.6 billion over five years, including $538 million for healthcare infrastructure, $65.4 million for three new elementary schools (East Royalty, West Royalty, Georgetown), $14.5 million for Parkside Elementary replacement",
           "sector": "government",
           "value": "$486M",
+          "value_raw": 486500000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "government"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "PEI 2026-27 Capital Budget — Healthcare and Education Infrastructure",
               "url": "https://www.cbc.ca/news/canada/prince-edward-island/pei-capital-budget-2026-27-9.6966441"
             }
           ]
@@ -1615,13 +2478,18 @@
           "description": "PEI announced its 2026-27 capital budget at $486.5M for the year and $1.6B over five years, prioritizing healthcare infrastructure ($538M over 5 years), education, housing, and transportation.",
           "sector": "government",
           "value": "$486M",
+          "value_raw": 486500000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "government"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "PEI Capital Budget 2026-27 ($1.6B Five-Year Plan)",
               "url": "https://www.cbc.ca/news/canada/prince-edward-island/pei-capital-budget-2026-27-9.6966441"
             }
           ]
@@ -1631,13 +2499,18 @@
           "description": "The PEI capital budget allocates $131M to complete the ongoing Mental Health Campus project, with completion targeted for 2027-28. Part of $538M in healthcare infrastructure over five years.",
           "sector": "healthcare",
           "value": "$131M",
+          "value_raw": 131000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "healthcare"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "PEI Mental Health Campus Completion",
               "url": "https://www.ctvnews.ca/atlantic/prince-edward-island/article/pei-to-spend-16b-on-new-hospital-schools-in-next-five-years/"
             }
           ]
@@ -1647,13 +2520,18 @@
           "description": "PEI capital budget includes $100M over five years to build more than 300 new affordable housing units, plus $28M for upgrades and repairs to existing public housing stock.",
           "sector": "residential",
           "value": "$100M",
+          "value_raw": 100000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "residential"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "PEI Affordable Housing Construction (300+ Units)",
               "url": "https://www.cbc.ca/news/canada/prince-edward-island/pei-capital-budget-2026-27-9.6966441"
             }
           ]
@@ -1663,103 +2541,178 @@
           "description": "Green Energy project in Borden-Carleton. Recipient: Prince Edward Island, Province of.",
           "sector": "power_energy",
           "value": "$92M",
+          "value_raw": 91751639.54,
           "status": "Under Construction",
           "completionDate": "2017-06-30",
           "cma": "Borden-Carleton",
-          "tags": [],
+          "proponent": "Prince Edward Island, Province of",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Northumberland Strait Submarine Transmission System",
               "url": "https://www.infrastructure.gc.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "PEI employment reaches all-time high of 96,200",
-        "PEI deficit widens to $367.4 million for 2025-26",
-        "Spring legislature sitting began March 25, budget cuts anticipated",
-        "PEI population grows 1.6% to 182,657",
-        "PEI international exports up 12.8%"
+        "PEI 2026-27 pre-budget consultations open",
+        "SREPs program approves >$21.7M across three PEI projects",
+        "Eastern Kings Wind Farm Expansion (+29.4 MW) in commissioning",
+        "PEI CPI +5.4% — highest provincial print in Canada"
       ]
     },
     {
+      "code": "YT",
       "name": "Yukon",
       "indicators": {
-        "gdp": "-2.3%",
-        "unemployment": "3.6%",
-        "cpi": "",
-        "housingStarts": "",
-        "participationRate": "74.4%",
-        "employmentRate": "",
+        "gdp": "-3.3%",
+        "unemployment": "3.9%",
+        "cpi": "N/A",
+        "housingStarts": "N/A",
+        "participationRate": "75.1%",
+        "employmentRate": "72.1%",
         "buildingPermits": ""
       },
       "indicatorMeta": {
         "gdp": {
           "prev": "",
           "change": "",
-          "period": "2025 projected",
-          "obsDate": ""
+          "period": "2024-01-01",
+          "obsDate": "2024 annual",
+          "source": "Statistics Canada",
+          "note": "Annual print, StatCan Table 36-10-0402"
+        },
+        "unemployment": {
+          "prev": "",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "Statistics Canada"
+        },
+        "cpi": {
+          "prev": "",
+          "change": "",
+          "period": "",
+          "obsDate": "",
+          "source": "",
+          "note": "Not available — StatCan/CMHC do not publish at territorial level"
+        },
+        "housingStarts": {
+          "prev": "",
+          "change": "",
+          "period": "",
+          "obsDate": "",
+          "source": "",
+          "note": "Not available — CMHC does not publish at territorial level"
+        },
+        "participationRate": {
+          "prev": "",
+          "change": "",
+          "period": "2026-04-11",
+          "obsDate": "2026-04-11",
+          "source": "StatCan LFS territorial",
+          "note": "From research_provinces.md (not in indicators.json)"
+        },
+        "employmentRate": {
+          "prev": "",
+          "change": "",
+          "period": "2026-04-11",
+          "obsDate": "2026-04-11",
+          "source": "StatCan LFS territorial",
+          "note": "From research_provinces.md (not in indicators.json)"
         }
       },
       "indicatorSources": {
-        "gdp": "Statistics Canada",
-        "unemployment": "Statistics Canada",
-        "cpi": "",
-        "housingStarts": "",
-        "participationRate": "Statistics Canada",
-        "employmentRate": "",
+        "gdp": "Statistics Canada Table 36-10-0402 (2024 annual)",
+        "unemployment": "Statistics Canada LFS territorial",
+        "cpi": "NOT AVAILABLE — territorial gap",
+        "housingStarts": "NOT AVAILABLE — territorial gap",
+        "participationRate": "Statistics Canada LFS territorial",
+        "employmentRate": "Statistics Canada LFS territorial",
         "buildingPermits": ""
       },
+      "project_summary": {
+        "count": 125,
+        "pipeline_value_billions": 47.4,
+        "top_sectors": [
+          {
+            "sector": "infrastructure",
+            "count": 56
+          },
+          {
+            "sector": "tourism_culture",
+            "count": 14
+          },
+          {
+            "sector": "Other",
+            "count": 11
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 11,
+          "Under Construction": 80,
+          "On Hold": 1,
+          "Proposed": 31,
+          "Under Review": 2
+        }
+      },
       "story_threads": [
-        "Yukon Budget 2026-27 totals $2.46 billion with an $81.8 million deficit. Capital budget of $385 million. The database tracks 125 Yukon projects.",
-        "Yukon unemployment at 3.6% (January 2026), the lowest in Canada. Labour force participation rate at 74.4%, the highest in Canada.",
-        "Northern Defence and Infrastructure Investment ($40 billion) includes Yukon forward operating locations. Casino Mine ($3.6 billion) remains in proposal stage."
+        "The credit agreement between the Government of Yukon and PricewaterhouseCoopers (court-appointed receiver of Victoria Gold) for the Eagle Gold Mine receivership was extended to April 1 2026; the database tracks 125 Yukon projects valued at $47.4B.",
+        "YESAB panel-review member selection for Western Copper and Gold's Casino Mine ($3.62B copper/gold/moly/silver open pit, 300 km NW of Whitehorse) was expected to be completed by April 2026 at the earliest; Western Copper and Gold raised $29M to advance permitting.",
+        "Yukon unemployment 3.9% (lowest in Canada) and participation 75.1% are the strongest labour market prints in the country; GDP -3.3% (2024 annual print, StatCan Table 36-10-0402); CPI and housing starts not available at territorial level.",
+        "Anchor capital files: Northern Defence and Infrastructure Investment ($40.0B, Proposed — federal envelope attributed to YT), Casino Mine ($3.62B, Proposed, Western Copper and Gold), and Kudz Ze Kayah ($490M, Under Review, BMC Minerals)."
       ],
       "cross_references": [
         {
           "indicator": "unemployment",
-          "direction": "down",
-          "magnitude": "3.6% (lowest in Canada)",
-          "linked_projects": 15,
-          "linked_value": "",
-          "interpretation": "Yukon unemployment at 3.6%, lowest in Canada; 15 employment-sensitive projects tracked"
+          "value": "3.9%",
+          "direction": "lowest",
+          "magnitude": "lowest in Canada",
+          "linked_projects": 125,
+          "linked_value_billions": 47.4,
+          "interpretation": "Yukon unemployment 3.9% and participation 75.1% are the strongest labour market prints in Canada; the territory tracks 125 projects valued at $47.4B."
         },
         {
-          "indicator": "defence_investment",
-          "direction": "up",
-          "magnitude": "$40B northern package",
-          "linked_projects": 60,
-          "linked_value": "",
-          "interpretation": "Federal $35 billion+ Arctic defence and infrastructure plan includes Yukon; 60 rate-sensitive projects"
+          "indicator": "casino_mine_panel_review",
+          "value": "YESAB panel review",
+          "direction": "advancing",
+          "magnitude": "first YT panel review",
+          "linked_projects": 1,
+          "linked_value_billions": 3.62,
+          "interpretation": "Casino Mine ($3.62B) is in YESAB Panel Review (highest territorial assessment), coordinating with the federal registry."
         }
       ],
       "policy_items": [],
       "watchlistItems": [],
       "key_facts": [
-        "Yukon Budget 2026-27: $2.46 billion total, $385 million capital, $81.8 million projected deficit.",
-        "Unemployment rate of 3.6% (January 2026), the lowest in Canada. Participation rate of 74.4%, highest in Canada.",
-        "GDP projected to decline 2.3% in 2025 before modest recovery with strong metal prices.",
-        "Casino Mine ($3.6 billion) remains in proposal stage."
+        "Yukon tracks 125 projects valued at $47.4B.",
+        "Eagle Gold Mine receivership credit agreement extended to April 1 2026.",
+        "Casino Mine YESAB Panel Review member selection expected by April 2026; Western Copper and Gold raised $29M for permitting.",
+        "Yukon unemployment 3.9% (lowest in Canada); participation 75.1% (highest in Canada). CPI and housing starts not available at territorial level."
       ],
       "projects": [
         {
           "name": "Northern Defence and Infrastructure Investment",
           "description": "PM Carney announces $40B for Northern defence, military upgrades, roads, and hydro-power expansion.",
           "sector": "defence",
-          "value": "$40.0B",
+          "value": "$40.00B",
+          "value_raw": 40000000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "Whitehorse",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "defence"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Northern Defence and Infrastructure Investment",
               "url": "https://yukon-news.com/2026/03/15/yukonomist-a-vote-and-a-share-of-the-benefits-of-resource-development/"
-            },
-            {
-              "title": "Source",
-              "url": "https://yukon-news.com/2026/03/13/ottawa-announces-14-3m-for-yukon-arts-heritage-and-indigenous-languages/"
             }
           ]
         },
@@ -1767,50 +2720,40 @@
           "name": "Casino Mine",
           "description": "Mining group: Metals.",
           "sector": "mining",
-          "value": "$3.6B",
+          "value": "$3.62B",
+          "value_raw": 3617000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "150 km northwest of Carmacks and 300 km northwest from Whitehorse",
-          "tags": [],
+          "proponent": "Western Copper and Gold Corporation",
+          "tags": [
+            "greenfield",
+            "mining"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Casino Mine",
               "url": "https://natural-resources.canada.ca"
             }
           ]
         },
         {
-          "name": "Yukon Energy Grid Reliability Initiatives",
-          "description": "Yukon government announces initiatives to improve and enhance energy grid reliability.",
-          "sector": "Energy",
-          "value": "$1.0B",
-          "status": "Proposed",
-          "completionDate": "",
-          "cma": "Whitehorse",
-          "tags": [],
-          "sources": [
-            {
-              "title": "Source",
-              "url": "https://yukon-news.com/2026/03/24/the-yukon-government-will-be-announcing-initiatives-to-improve-the-reliability-of-our-energy-grid/"
-            },
-            {
-              "title": "Source",
-              "url": "https://yukon-news.com/2026/03/23/new-caribou-exhibit-enchants-yukon-arts-centre/"
-            }
-          ]
-        },
-        {
           "name": "Whitehorse Power Centres Project",
-          "description": "Yukon Energy plans to build two new thermal power centres in Whitehorse offering up to 150 megawatts through LNG and diesel, with the south centre targeted for winter 2027 and the north centre for win",
+          "description": "Yukon Energy plans to build two new thermal power centres in Whitehorse offering up to 150 megawatts through LNG and diesel, with the south centre targeted for winter 2027 and the north centre for winter 2030. The project is the largest component of Yukon's $1B federal infrastructure request.",
           "sector": "power_energy",
           "value": "$520M",
+          "value_raw": 520000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Whitehorse Power Centres Project",
               "url": "https://www.bnnbloomberg.ca/business/politics/2026/03/26/small-population-big-infrastructure-needs-northern-canada-facing-power-struggles/"
             }
           ]
@@ -1820,134 +2763,251 @@
           "description": "Mining group: Metals.",
           "sector": "mining",
           "value": "$489M",
+          "value_raw": 488507000.0,
           "status": "Under Review",
           "completionDate": "",
           "cma": "115 km southeast of Ross River",
-          "tags": [],
+          "proponent": "BMC Minerals Ltd.",
+          "tags": [
+            "greenfield",
+            "mining"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Kudz Ze Kayah",
               "url": "https://natural-resources.canada.ca"
+            }
+          ]
+        },
+        {
+          "name": "Yukon Budget 2026 Capital Plan",
+          "description": "Yukon tabled Budget 2026 totaling $2.46B with $385M in capital spending, including investments in energy grid reliability, healthcare, housing, education, and public safety. The budget forecasts an $81.8M deficit to support critical infrastructure investments.",
+          "sector": "government",
+          "value": "$385M",
+          "value_raw": 385000000.0,
+          "status": "Proposed",
+          "completionDate": "",
+          "cma": "",
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "government"
+          ],
+          "sources": [
+            {
+              "title": "Yukon Budget 2026 Capital Plan",
+              "url": "https://yukon.ca/en/news/budget-2026-begins-road-fiscal-recovery"
             }
           ]
         }
       ],
       "news_stories": [
-        "Yukon Budget 2026-27 projects $81.8 million deficit",
-        "Yukon unemployment falls to 3.6%, lowest in Canada",
-        "Northern defence and infrastructure investment includes Yukon locations",
-        "Casino Mine project ($3.6B) in proposal stage",
-        "Yukon participation rate at 74.4%, highest in Canada"
+        "Eagle Gold Mine receivership credit agreement extended to April 1 2026",
+        "Casino Mine YESAB panel review member selection expected by April 2026",
+        "Western Copper and Gold raises $29M to advance Casino permitting",
+        "Yukon unemployment 3.9% — lowest in Canada"
       ]
     },
     {
+      "code": "NT",
       "name": "Northwest Territories",
       "indicators": {
-        "gdp": "",
+        "gdp": "-1.1%",
         "unemployment": "5.3%",
-        "cpi": "",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
+        "cpi": "N/A",
+        "housingStarts": "N/A",
+        "participationRate": "69.2%",
+        "employmentRate": "65.0%",
         "buildingPermits": ""
       },
       "indicatorMeta": {
+        "gdp": {
+          "prev": "",
+          "change": "",
+          "period": "2024-01-01",
+          "obsDate": "2024 annual",
+          "source": "Statistics Canada",
+          "note": "Annual print, StatCan Table 36-10-0402"
+        },
         "unemployment": {
-          "prev": "5.0%",
-          "change": "+0.3pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
+          "prev": "",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "Statistics Canada"
+        },
+        "cpi": {
+          "prev": "",
+          "change": "",
+          "period": "",
+          "obsDate": "",
+          "source": "",
+          "note": "Not available — StatCan does not publish at territorial level"
+        },
+        "housingStarts": {
+          "prev": "",
+          "change": "",
+          "period": "",
+          "obsDate": "",
+          "source": "",
+          "note": "Not available — CMHC does not publish at territorial level"
+        },
+        "participationRate": {
+          "prev": "",
+          "change": "",
+          "period": "2026-04-11",
+          "obsDate": "2026-04-11",
+          "source": "StatCan LFS territorial",
+          "note": "From research_provinces.md"
+        },
+        "employmentRate": {
+          "prev": "",
+          "change": "",
+          "period": "2026-04-11",
+          "obsDate": "2026-04-11",
+          "source": "StatCan LFS territorial",
+          "note": "From research_provinces.md"
         }
       },
       "indicatorSources": {
-        "gdp": "",
-        "unemployment": "Statistics Canada",
-        "cpi": "",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
+        "gdp": "Statistics Canada Table 36-10-0402 (2024 annual)",
+        "unemployment": "Statistics Canada LFS territorial",
+        "cpi": "NOT AVAILABLE — territorial gap",
+        "housingStarts": "NOT AVAILABLE — territorial gap",
+        "participationRate": "Statistics Canada LFS territorial",
+        "employmentRate": "Statistics Canada LFS territorial",
         "buildingPermits": ""
       },
+      "project_summary": {
+        "count": 188,
+        "pipeline_value_billions": 44.2,
+        "top_sectors": [
+          {
+            "sector": "infrastructure",
+            "count": 57
+          },
+          {
+            "sector": "Other",
+            "count": 51
+          },
+          {
+            "sector": "Mining",
+            "count": 27
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 25,
+          "Under Construction": 57,
+          "Proposed": 11,
+          "Under Review": 92,
+          "Complete": 3
+        }
+      },
       "story_threads": [
-        "NWT Budget 2026-27 totals $2.724 billion with no new taxes. Mining Incentive Program updated with $500K lifetime cap conditionally removed. The database tracks 188 NWT projects.",
-        "All three diamond mines (Diavik 2026, Ekati 2029, Gahcho Kue 2030) scheduled to close by 2030. NWT tracks 52 energy-sector projects as the territory transitions.",
-        "PM Carney announced $35 billion+ Arctic defence and northern infrastructure plan including $32 billion at Forward Operating Locations in Yellowknife and Inuvik, plus Mackenzie Highway extension."
+        "In March 2026 Prime Minister Mark Carney referred the Taltson Hydro Expansion — 60 MW addition doubling NWT hydro capacity with a 270 km transmission line from the Taltson dam (56 km NE of the AB-NWT border) to the Yellowknife system — to the federal Major Projects Office; current timeline: EA in 2026, FID and construction start 2029, first power 2033; the database tracks Taltson Hydroelectricity Expansion Phase 1 ($1.20B, Under Construction, NTPC) within NWT's 188-project, $44.2B pipeline.",
+        "Three NWT priority projects advanced to the Major Projects Office; NWT government released an updated assessment citing vast gold, diamond, lithium, cobalt, copper and zinc reserves at the 2026 national mining convention; federal support announced for Ekati Diamond Mine continuity.",
+        "NWT unemployment 6.1%; participation 69.2% (above national); employment rate 65.0%; GDP -1.1% (2024 annual print). CPI and housing starts not available at territorial level.",
+        "Anchor capital files: Arctic Defence and Infrastructure Spending Package ($35.0B, Proposed — federal envelope), Taltson Hydro Expansion ($2.0B, Approved), Mackenzie Valley Highway ($2.0B, Approved), and Pine Point ($650M, Under Review, Osisko Metals/Appian)."
       ],
       "cross_references": [
         {
-          "indicator": "unemployment",
-          "direction": "up",
-          "magnitude": "+0.3pp",
-          "linked_projects": 4,
-          "linked_value": "",
-          "interpretation": "NWT unemployment rose 0.3pp to 5.3%; employment decreased 3.4% between 2023-2024; 4 employment-sensitive projects tracked"
+          "indicator": "taltson_referral",
+          "value": "Major Projects Office",
+          "direction": "advancing",
+          "magnitude": "60 MW + 270 km transmission",
+          "linked_projects": 1,
+          "linked_value_billions": 2.0,
+          "interpretation": "Taltson Hydro Expansion (60 MW + 270 km transmission, doubling NWT hydro capacity) referred to federal Major Projects Office; EA in 2026, first power 2033."
         },
         {
-          "indicator": "diamond_mine_closures",
-          "direction": "forward",
-          "magnitude": "All 3 mines closing by 2030",
-          "linked_projects": 52,
-          "linked_value": "",
-          "interpretation": "Diavik closing 2026, Ekati 2029, Gahcho Kue 2030; 52 energy-sector projects as territory transitions"
+          "indicator": "three_priority_projects",
+          "value": "3 advanced",
+          "direction": "advancing",
+          "magnitude": "NWT priority list",
+          "linked_projects": 3,
+          "linked_value_billions": 44.2,
+          "interpretation": "Three NWT priority projects advanced to the Major Projects Office for expedited federal review."
         }
       ],
-      "policy_items": [],
+      "policy_items": [
+        {
+          "title": "Taltson Hydro Expansion referred to federal Major Projects Office",
+          "description": "Prime Minister Mark Carney referred Taltson Hydro Expansion to the federal Major Projects Office; 60 MW + 270 km transmission; EA in 2026, FID/construction 2029, first power 2033.",
+          "category": "energy_transition",
+          "sector": "power_energy",
+          "affected_projects": 1,
+          "level": "federal-territorial",
+          "date": "2026-03",
+          "source_url": "https://www.gov.nt.ca/newsroom/taltson-hydro-expansion"
+        }
+      ],
       "watchlistItems": [],
       "key_facts": [
-        "NWT Budget 2026-27: $2.724 billion total spending. No new taxes introduced.",
-        "All three producing diamond mines scheduled to close by 2030 (Diavik 2026, Ekati 2029, Gahcho Kue 2030).",
-        "PM Carney announced $35 billion+ Arctic defence and infrastructure plan including Mackenzie Highway extension to Inuvik.",
-        "Mining Incentive Program: $500K lifetime cap conditionally removed for corporate projects; $1.5 million annual budget maintained."
+        "Northwest Territories tracks 188 projects valued at $44.2B.",
+        "Taltson Hydro Expansion referred to federal Major Projects Office (March 2026); EA 2026, first power 2033.",
+        "Three NWT priority projects advanced to Major Projects Office; federal support announced for Ekati Diamond Mine continuity.",
+        "NWT unemployment 6.1%; participation 69.2% (above national); GDP -1.1% (2024 annual). CPI and housing starts not available at territorial level."
       ],
       "projects": [
         {
           "name": "Arctic Defence and Infrastructure Spending Package (NWT)",
           "description": "Prime Minister Carney announces $35 billion in Arctic defence and infrastructure spending including NWT major projects.",
           "sector": "defence",
-          "value": "$35.0B",
+          "value": "$35.00B",
+          "value_raw": 35000000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "Yellowknife",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "defence"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Arctic Defence and Infrastructure Spending Package (NWT)",
               "url": "https://cabinradio.ca/283344/news/south-slave/taltson-hydro-plant-back-online-once-more-after-corrosion-repair/"
-            },
-            {
-              "title": "Source",
-              "url": "https://cabinradio.ca/283198/news/politics/indigenous-nwt-leaders-celebrate-historic-highway-announcement/"
             }
           ]
         },
         {
           "name": "Mackenzie Valley Highway — Construction Start",
-          "description": "PM Carney announced construction on the 800+ km Mackenzie Valley Highway (Phase 1: Wrigley to Norman Wells, Phase 2: to Inuvik) will begin summer 2026. Revised cost estimate exceeds $2 billion. Projec",
+          "description": "PM Carney announced construction on the 800+ km Mackenzie Valley Highway (Phase 1: Wrigley to Norman Wells, Phase 2: to Inuvik) will begin summer 2026. Revised cost estimate exceeds $2 billion. Project referred to the federal Major Projects Office on March 12.",
           "sector": "infrastructure",
-          "value": "$2.0B",
+          "value": "$2.00B",
+          "value_raw": 2000000000.0,
           "status": "Approved",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "infrastructure"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Mackenzie Valley Highway — Construction Start",
               "url": "https://www.cbc.ca/news/canada/north/construction-mackenzie-valley-highway-start-this-summer-carney-says-9.7126535"
             }
           ]
         },
         {
           "name": "Taltson Hydro Expansion",
-          "description": "The proposed 60 MW expansion would double the NWT's hydro capacity and deliver clean power to 11 communities serving approximately 70% of NWT residents. Referred to the federal Major Projects Office o",
+          "description": "The proposed 60 MW expansion would double the NWT's hydro capacity and deliver clean power to 11 communities serving approximately 70% of NWT residents. Referred to the federal Major Projects Office on March 12 as part of Carney's $32 billion northern infrastructure package. Projected cost exceeds $",
           "sector": "power_energy",
-          "value": "$2.0B",
+          "value": "$2.00B",
+          "value_raw": 2000000000.0,
           "status": "Approved",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Taltson Hydro Expansion",
               "url": "https://www.inf.gov.nt.ca/en/projects/taltson-hydro-expansion"
             }
           ]
@@ -1956,14 +3016,19 @@
           "name": "Taltson Hydroelectricity Expansion Project (Phase 1)",
           "description": "Components: 1, 2 and 3. Type: Electricity. Clean technology project.",
           "sector": "power_energy",
-          "value": "$1.2B",
+          "value": "$1.20B",
+          "value_raw": 1200000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "Multiple locations",
-          "tags": [],
+          "proponent": "NTPC",
+          "tags": [
+            "expansion",
+            "power_energy"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Taltson Hydroelectricity Expansion Project (Phase 1)",
               "url": "https://natural-resources.canada.ca"
             }
           ]
@@ -1973,119 +3038,198 @@
           "description": "Mining group: Metals.",
           "sector": "mining",
           "value": "$653M",
+          "value_raw": 653300000.0,
           "status": "Under Review",
           "completionDate": "",
           "cma": "East of Hay River, South of Yellowknife",
-          "tags": [],
+          "proponent": "Osisko Metals Inc/Appian ",
+          "tags": [
+            "greenfield",
+            "mining"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Pine Point",
               "url": "https://natural-resources.canada.ca"
             }
           ]
         }
       ],
       "news_stories": [
-        "NWT Budget 2026-27 released at $2.724 billion",
-        "All three diamond mines to close by 2030",
-        "PM Carney announces $35B+ Arctic defence and infrastructure plan",
-        "Mackenzie Highway extension to connect Yellowknife to Inuvik",
-        "Mining Incentive Program updated for corporate projects"
+        "Taltson Hydro Expansion referred to federal Major Projects Office",
+        "Three NWT priority projects advanced to Major Projects Office",
+        "Federal support announced for Ekati Diamond Mine continuity",
+        "NWT government cites vast critical mineral reserves at 2026 national mining convention"
       ]
     },
     {
+      "code": "NU",
       "name": "Nunavut",
       "indicators": {
-        "gdp": "",
+        "gdp": "+7.5%",
         "unemployment": "10.8%",
-        "cpi": "",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
+        "cpi": "N/A",
+        "housingStarts": "N/A",
+        "participationRate": "61.7%",
+        "employmentRate": "54.2%",
         "buildingPermits": ""
       },
       "indicatorMeta": {
+        "gdp": {
+          "prev": "",
+          "change": "",
+          "period": "2024-01-01",
+          "obsDate": "2024 annual",
+          "source": "Statistics Canada",
+          "note": "Annual print, StatCan Table 36-10-0402"
+        },
         "unemployment": {
-          "prev": "13.8%",
-          "change": "-3.0pp",
-          "period": "Feb 2026",
-          "obsDate": "2026-03-13"
+          "prev": "",
+          "change": "",
+          "period": "2026-02-01",
+          "obsDate": "2026-02-01",
+          "source": "Statistics Canada"
+        },
+        "cpi": {
+          "prev": "",
+          "change": "",
+          "period": "",
+          "obsDate": "",
+          "source": "",
+          "note": "Not available — StatCan does not publish at territorial level"
+        },
+        "housingStarts": {
+          "prev": "",
+          "change": "",
+          "period": "",
+          "obsDate": "",
+          "source": "",
+          "note": "Not available — CMHC does not publish at territorial level"
+        },
+        "participationRate": {
+          "prev": "",
+          "change": "",
+          "period": "2026-04-11",
+          "obsDate": "2026-04-11",
+          "source": "StatCan LFS territorial",
+          "note": "From research_provinces.md"
+        },
+        "employmentRate": {
+          "prev": "",
+          "change": "",
+          "period": "2026-04-11",
+          "obsDate": "2026-04-11",
+          "source": "StatCan LFS territorial",
+          "note": "From research_provinces.md"
         }
       },
       "indicatorSources": {
-        "gdp": "",
-        "unemployment": "Statistics Canada",
-        "cpi": "",
-        "housingStarts": "",
-        "participationRate": "",
-        "employmentRate": "",
+        "gdp": "Statistics Canada Table 36-10-0402 (2024 annual)",
+        "unemployment": "Statistics Canada LFS territorial",
+        "cpi": "NOT AVAILABLE — territorial gap",
+        "housingStarts": "NOT AVAILABLE — territorial gap",
+        "participationRate": "Statistics Canada LFS territorial",
+        "employmentRate": "Statistics Canada LFS territorial",
         "buildingPermits": ""
       },
+      "project_summary": {
+        "count": 57,
+        "pipeline_value_billions": 38.9,
+        "top_sectors": [
+          {
+            "sector": "infrastructure",
+            "count": 19
+          },
+          {
+            "sector": "tourism_culture",
+            "count": 6
+          },
+          {
+            "sector": "environment",
+            "count": 5
+          }
+        ],
+        "status_breakdown": {
+          "Approved": 8,
+          "Proposed": 12,
+          "Complete": 1,
+          "Under Construction": 36
+        }
+      },
       "story_threads": [
-        "Nunavut unemployment fell 3.0pp to 10.8% in February 2026. Federal Build Communities Strong Fund ($51 billion national) includes Nunavut allocations. The database tracks 57 Nunavut projects.",
-        "Housing target of 3,000 new units by 2030 with $2.6 billion investment. Grays Bay Road and Port (900 km) would link Nunavut to Canada's highway system.",
-        "Federal military hubs announced for Resolute, Cambridge Bay, and Rankin Inlet. Iqaluit Forward Operating Location receiving major infrastructure investment."
+        "Baffinland Iron Mines reported completion of Inuit consultations and issuance of key regulatory authorizations for the Steensby Inlet railway/port expansion of Mary River (subject to financing and construction agreements, construction to begin in 2026); the database tracks Baffinland Mary River Steensby Rail and Port Expansion ($3.0B, Approved) within Nunavut's 57-project, $38.9B pipeline.",
+        "Nunavut hunters filed a request for reassessment ahead of construction; B2Gold poured first gold at the Goose Mine, Back River Gold Project (Kitikmeot region).",
+        "Nunavut unemployment 12.1% remains the highest in the country (territorial); employment rate 54.2%; participation 61.7%; GDP +7.5% (2024 annual print). CPI and housing starts not available at territorial level.",
+        "Anchor capital files: Northern Defence and Infrastructure — Nunavut Military Bases ($32.0B, Proposed — federal envelope), Baffinland Mary River Steensby ($3.0B, Approved), Back River Gold ($610M, Under Construction, B2Gold), and Iqaluit Water Infrastructure ($210M, Under Construction)."
       ],
       "cross_references": [
         {
           "indicator": "unemployment",
-          "direction": "down",
-          "magnitude": "-3.0pp",
-          "linked_projects": 10,
-          "linked_value": "",
-          "interpretation": "Nunavut unemployment fell 3.0pp to 10.8%; 10 employment-sensitive projects tracked"
+          "value": "12.1%",
+          "direction": "highest",
+          "magnitude": "highest in Canada",
+          "linked_projects": 57,
+          "linked_value_billions": 38.9,
+          "interpretation": "Nunavut unemployment at 12.1% (highest in Canada) intersects with 57 territorial projects valued at $38.9B."
         },
         {
-          "indicator": "defence_investment",
-          "direction": "up",
-          "magnitude": "$32B combined with YK/Inuvik",
-          "linked_projects": 27,
-          "linked_value": "",
-          "interpretation": "Federal $32 billion military infrastructure investment shared across Yellowknife, Inuvik, and Iqaluit; 27 rate-sensitive projects in Nunavut"
+          "indicator": "mary_river_steensby",
+          "value": "Authorizations issued",
+          "direction": "advancing",
+          "magnitude": "subject to financing",
+          "linked_projects": 1,
+          "linked_value_billions": 3.0,
+          "interpretation": "Baffinland Mary River Steensby Inlet expansion ($3.0B Approved) cleared regulatory authorizations; construction to begin in 2026 subject to finance and construction agreements."
         }
       ],
       "policy_items": [],
       "watchlistItems": [],
       "key_facts": [
-        "Nunavut unemployment fell 3.0pp to 10.8% in February 2026.",
-        "Housing target: 3,000 new units by 2030 with $2.6 billion investment.",
-        "Grays Bay Road and Port: 900 km road linking Yellowknife to proposed port on Nunavut's Arctic coast.",
-        "Agnico Eagle operates as one of Nunavut's largest employers with 2,000+ positions. Gross mineral production $2.3 billion+ (2022)."
+        "Nunavut tracks 57 projects valued at $38.9B.",
+        "Baffinland Mary River Steensby Inlet expansion cleared Inuit consultations and key regulatory authorizations.",
+        "B2Gold poured first gold at Goose Mine, Back River Gold Project (Kitikmeot region).",
+        "Nunavut unemployment 12.1% (highest in Canada, territorial); employment rate 54.2%; GDP +7.5% (2024 annual). CPI and housing starts not available at territorial level."
       ],
       "projects": [
         {
           "name": "Northern Defence and Infrastructure — Nunavut Military Bases",
-          "description": "Prime Minister Carney announced $32B for northern defence and infrastructure, including new forward operating locations in Iqaluit and Northern Operation Support Nodes in Cambridge Bay and Rankin Inle",
+          "description": "Prime Minister Carney announced $32B for northern defence and infrastructure, including new forward operating locations in Iqaluit and Northern Operation Support Nodes in Cambridge Bay and Rankin Inlet. Facilities include upgraded airfields, hangars, ammunition compounds, fuel facilities, and housin",
           "sector": "defence",
-          "value": "$32.0B",
+          "value": "$32.00B",
+          "value_raw": 32000000000.0,
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "defence"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Northern Defence and Infrastructure — Nunavut Military Bases",
               "url": "https://canada.constructconnect.com/dcn/news/infrastructure/2026/03/carney-announces-32b-for-northern-defence-and-infrastructure-projects"
             }
           ]
         },
         {
           "name": "Baffinland Mary River Steensby Rail and Port Expansion",
-          "description": "Baffinland Iron Mines completed Inuit consultation for the Steensby Component of the Mary River project, clearing the final requirement to advance into construction. The expansion includes a railway a",
+          "description": "Baffinland Iron Mines completed Inuit consultation for the Steensby Component of the Mary River project, clearing the final requirement to advance into construction. The expansion includes a railway and deepwater port at Steensby Inlet, increasing production from 4.2 to 22 million tonnes per annum. ",
           "sector": "mining",
-          "value": "$3.0B",
+          "value": "$3.00B",
+          "value_raw": 3000000000.0,
           "status": "Approved",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "mining"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Baffinland Mary River Steensby Rail and Port Expansion",
               "url": "https://www.baffinland.com/media-centre/news-releases/baffinland-moves-forward-with-steensby-component-of-the-mary-river-project--cleared-to-begin-construction"
-            },
-            {
-              "title": "Source",
-              "url": "https://www.nirb.ca/project/124230/document/124230-20220527-NIRB-Final-Hearing-Report-for-the-Baffinland-Iron-Mines-Corporation%E2%80%99s-Mary-River-Phase-2-Development-Proposal-EN.pdf"
             }
           ]
         },
@@ -2094,56 +3238,70 @@
           "description": "Mining group: Metals.",
           "sector": "mining",
           "value": "$610M",
+          "value_raw": 610000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "Western Nunavut (Kitikmeot region); 110 km southwest of Bathurst Inlet",
-          "tags": [],
+          "proponent": "B2Gold Corp.",
+          "tags": [
+            "greenfield",
+            "mining"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Back River Gold Project",
               "url": "https://natural-resources.canada.ca"
             }
           ]
         },
         {
           "name": "Nunavut 750 Homes Initiative",
-          "description": "The Government of Canada ($250M), Government of Nunavut ($230M), and Nunavut Tunngavik Incorporated signed an Agreement in Principle to deliver up to 750 homes across the territory. Baker Lake has rec",
+          "description": "The Government of Canada ($250M), Government of Nunavut ($230M), and Nunavut Tunngavik Incorporated signed an Agreement in Principle to deliver up to 750 homes across the territory. Baker Lake has received 10 of the 750 homes. Up to 30% will use modular/off-site construction methods.",
           "sector": "residential",
           "value": "$480M",
+          "value_raw": 480000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "residential"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Nunavut 750 Homes Initiative",
               "url": "https://nunavutnews.com/2026/03/16/baker-lake-has-received-10-of-the-750-homes-under-deal-with-federal-government/"
             }
           ]
         },
         {
           "name": "Baker Lake Modular Housing — 750-Home Program First Delivery",
-          "description": "Baker Lake received 10 modular homes built by Ottawa manufacturer Caivan, the first units delivered under the Government of Canada/Nunavut/NTI agreement to build up to 750 homes territory-wide. Build ",
+          "description": "Baker Lake received 10 modular homes built by Ottawa manufacturer Caivan, the first units delivered under the Government of Canada/Nunavut/NTI agreement to build up to 750 homes territory-wide. Build Canada Homes providing up to $250M and Nunavut contributing up to $230M.",
           "sector": "residential",
           "value": "$480M",
+          "value_raw": 480000000.0,
           "status": "Under Construction",
           "completionDate": "",
           "cma": "",
-          "tags": [],
+          "proponent": "",
+          "tags": [
+            "greenfield",
+            "residential"
+          ],
           "sources": [
             {
-              "title": "Source",
+              "title": "Baker Lake Modular Housing — 750-Home Program First Delivery",
               "url": "https://nunavutnews.com/2026/03/16/baker-lake-has-received-10-of-the-750-homes-under-deal-with-federal-government/"
             }
           ]
         }
       ],
       "news_stories": [
-        "Nunavut unemployment drops 3.0pp to 10.8%",
-        "Federal Build Communities Strong Fund includes Nunavut allocations",
-        "Grays Bay Road and Port to link Nunavut to highway system",
-        "Federal military hubs announced for Resolute, Cambridge Bay, Rankin Inlet",
-        "Nunavut housing target: 3,000 units by 2030 with $2.6B investment"
+        "Baffinland completes Inuit consultations on Steensby Inlet expansion",
+        "B2Gold pours first gold at Goose Mine, Back River Gold Project",
+        "Nunavut hunters file request for reassessment on Steensby Inlet expansion",
+        "Iqaluit Water Infrastructure ($210M Under Construction) is the largest tracked municipal water project in Nunavut"
       ]
     }
   ]

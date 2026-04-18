@@ -76,10 +76,112 @@
         "Nunavut unemployment 13.8% retained from prior snapshot (no update found for Feb 2026)",
         "Potash price $350/t retained (price surged Mar 2026 per CNBC but no specific value confirmed)",
         "Aluminum unit corrected from 'lb' to 't' in briefing_latest.json commodities",
-        "GoC 5Y yield updated 3.10% → 3.21% (March 27, 2026)",
-        "Wage growth updated +4.2% → +3.9% (Feb 2026 LFS)",
+        "GoC 5Y yield updated 3.10% \u2192 3.21% (March 27, 2026)",
+        "Wage growth updated +4.2% \u2192 +3.9% (Feb 2026 LFS)",
         "Next BoC rate decision: April 29, 2026 (watchlist had April 16 - may need update)"
       ]
+    }
+  },
+  {
+    "date": "2026-04-13",
+    "timestamp": "2026-04-13T12:00:00Z",
+    "source": "websearch_refresh_agent0",
+    "national": {
+      "boc_rate": 2.25,
+      "gdp_monthly_jan": 0.1,
+      "gdp_monthly_feb_flash": 0.2,
+      "cpi_yoy_feb": 1.8,
+      "unemployment": 6.7,
+      "employment_rate": 60.6,
+      "participation_rate": 64.9,
+      "housing_starts_saar_feb": 250900,
+      "wage_growth_yoy": 4.7
+    },
+    "markets": {
+      "tsx": 33695.76,
+      "sp500": 6816.89,
+      "djia": 47916.57,
+      "nasdaq": 22902.9,
+      "ftse100": 10600.53,
+      "dax": 23803.95,
+      "nikkei225": 56924,
+      "cad_usd": 0.7241,
+      "eur_usd": 1.1706,
+      "usd_cny": 6.9,
+      "usd_jpy": 159.13
+    },
+    "commodities": {
+      "wti": 95.5,
+      "brent": 96.0,
+      "natural_gas": 2.795,
+      "gold": 4600,
+      "silver": 60.0,
+      "copper": 5.8,
+      "aluminum": 3511.25,
+      "nickel": 17241,
+      "lumber": 575.5,
+      "potash": 502.5,
+      "wheat": 5.0,
+      "corn": 4.15,
+      "soybeans": 10.3,
+      "iron_ore": 106.63
+    },
+    "yields": {
+      "goc_2y": 2.97,
+      "goc_5y": 3.1,
+      "goc_10y": 3.47,
+      "ust_2y": 3.81,
+      "ust_10y": 4.31
+    },
+    "provincial": {
+      "ON": {
+        "unemployment": 7.6,
+        "change": 0.0
+      },
+      "QC": {
+        "unemployment": 5.4,
+        "change": -0.5
+      },
+      "AB": {
+        "unemployment": 6.5,
+        "change": 0.2
+      },
+      "BC": {
+        "unemployment": 6.7,
+        "change": 0.6
+      },
+      "SK": {
+        "unemployment": 5.0,
+        "change": -0.6
+      },
+      "MB": {
+        "unemployment": 5.6,
+        "change": -0.1
+      },
+      "NS": {
+        "unemployment": 6.6,
+        "change": -0.5
+      },
+      "NB": {
+        "unemployment": 7.0,
+        "change": 0.0
+      },
+      "NL": {
+        "unemployment": 9.5,
+        "change": 0.3
+      },
+      "PE": {
+        "unemployment": 7.3,
+        "change": 0.1
+      },
+      "YT": {
+        "unemployment": 3.9,
+        "change": 0.0
+      },
+      "NT": {
+        "unemployment": 6.1,
+        "change": 0.8
+      }
     }
   }
 ]

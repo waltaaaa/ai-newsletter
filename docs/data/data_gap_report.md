@@ -1,160 +1,130 @@
-# Data Gap Report — 2026-03-31
+---
+generated: 2026-04-18
+generator: Claude Code parity audit (manual application of tldr-data-gap protocol)
+purpose: Catalog data freshness & structural gaps in The Lagging Indicator pipeline output
+supersedes: 2026-03-31 report
+---
 
-## Critical Gaps (will affect briefing quality)
+# Data Gap Report — 2026-04-18
 
-### 1. Ontario and Quebec briefing analyses are empty
-- **Ontario** analysis: "No province-specific articles or signals were available for Ontario this week." (85 chars)
-- **Quebec** analysis: "No province-specific articles or signals were available for Quebec this week." (84 chars)
-- These are the two largest provinces by GDP. The national briefing references $210B Ontario capital plan and $167B Quebec QIP, but the province tabs have no analysis. This is a data-to-briefing linkage failure, not a data gap.
+## Overall grade: C  →  projected A- after next successful pipeline run
 
-### 2. Four provinces/territories have ZERO indicators in indicators.json
-- **NT** (Northwest Territories): 0 indicator types
-- **NU** (Nunavut): 0 indicator types
-- **PE** (Prince Edward Island): 0 indicator types
-- **YT** (Yukon): 0 indicator types
-- StatCan publishes unemployment and CPI for all provinces. These should be populated.
+Most freshness gaps trace to a single root cause: no successful end-to-end pipeline run has completed since 2026-04-11 (Phase 5 Conductor crashed on nested `claude -p`). The underlying data sources are healthy. One pipeline rerun resolves most freshness issues.
 
-### 3. Trade data frozen at 2003
-- `total_exports`: latest = 2003-01-01
-- `total_imports`: latest = 2003-01-01
-- `agri_exports`: latest = 2003-01-01
-- `forestry_exports`: latest = 2003-01-01
-- `mineral_exports`: latest = 2003-01-01
-- These appear to be legacy placeholders. Either populate from StatCan Table 12-10-0129 or remove to avoid confusion.
-
-### 4. Lumber timeseries frozen since May 2023
-- `lumber`: latest data point = 2023-05-12 (1,054 days stale)
-- Lumber is a critical Canadian commodity affecting forestry exports and construction costs. The Yahoo Finance ticker may have changed or been delisted.
-
-### 5. Briefing metrics mostly empty
-- 9 of 15 briefing metrics are blank: `realGdp`, `nomGdp`, `outputGap`, `shelterCpi`, `participation`, `wageGrowth`, `currentAccount`, `employmentRate`, `participationRate`
-- These values exist in indicators.json (`employmentRate`, `participationRate`, `wageGrowth` all have 2026-02-01 or 2026-03-31 data) but are not flowing into the briefing metrics object.
-
-### 6. CAD/USD duplicate with divergent dates
-- `cad_usd`: latest = 2026-03-30 (current)
-- `cadusd`: latest = 2026-03-19 (12 days stale)
-- Two separate indicator keys track the same pair. The timeseries also has both. Consolidate to avoid confusion.
-
-### 7. Missing FX pairs in briefing
-- Financial markets section has only 1 FX pair (USD/JPY). Missing: CAD/USD, EUR/USD, USD/CNY
-- CAD/USD is the most important FX rate for a Canadian economic dashboard.
+Frontend parity with demo is verified: `https://waltaaaa.github.io/ai-newsletter/` serves `app.js?v=20260412212116` (commit `437a280`).
 
 ---
 
-## Warnings (may affect depth)
+## Critical (will impact briefing quality)
 
-### 8. Provincial indicators limited to CPI + unemployment for 8 provinces
-- AB, BC, MB, NB, NL, NS, SK each have only 2 indicator types (CPI, unemployment)
-- Missing across all 8: `gdp`, `housing_starts`, `employment_rate`, `participation_rate`
-- ON has 8 types (CPI, unemployment + 6 economic accounts)
-- QC has 15 types (best coverage of any province)
-- The pipeline's `statcan_extended.py` fetches provincial housing starts (34-10-0143) and employment (14-10-0022). These may not be propagating to the indicators.json export.
+1. **Market data stale 19–34 days across all core daily series**
+   Root cause: pipeline hasn't run. Commodities (WTI, brent, natural_gas, gold, silver, copper, aluminum, platinum, lumber, soybean_oil) latest 2026-03-15 or 2026-03-30. Indices (TSX, S&P 500, DJIA, Nasdaq) same range. FX (CAD/USD, EUR/USD, USD/CNY, USD/JPY) same range.
+   → Self-heals on pipeline rerun.
 
-### 9. Nickel price data appears frozen
-- commodities.json shows nickel at 28.4 with 0.0% change across all periods (1w, 1m, 1y)
-- timeseries.json shows nickel at 17,173 USD/t with identical values for Feb-Mar 2026
-- The commodity ETF proxy (NIKL) may have stopped trading or the data source is returning stale values.
+2. **Policy feed empty (`policy.json` items: 0)**
+   Root cause: pipeline hasn't run. LEGISinfo, Canada Gazette, and 17 ministry feeds haven't been fetched since stub period.
+   → Self-heals on pipeline rerun.
 
-### 10. Building permits indicator has ancient data
-- `building_permits`: latest period = 2007-04-01 in indicators.json
-- This appears to be a legacy stub. The pipeline should either populate this from StatCan Table 34-10-0066 or remove the key.
+3. **12 validator failures — mostly phantom**
+   - 5 phantom failures (copper/global, gold/global, lumber/global, natural_gas/global, wti_oil/global): zero rows in history with province='global'. Validator receives stale input keys.
+   - 1 genuine staleness: lumber/national last 2023-05-12 (Yahoo Finance feed broken).
+   - 6 in-range values (aluminum, natural_gas, platinum, silver, soybean_oil, wti/national) currently within validator bounds — failures from a prior period's delta check.
+   → Self-heals on pipeline rerun, except lumber (needs feed repair).
 
-### 11. Several commodity timeseries have duplicate entries
-- Nickel, lumber, and others show duplicate entries per date (same date, same value, different sources: FRED + Yahoo Finance). Not a data gap per se, but adds noise.
+4. **National employment/participation rates returning N/A**
+   Root cause: v2062811 returned employment count, not rate. v2062803 terminated.
+   → **FIXED in commit `045558e` (2026-04-18).** Now uses v2062817 (emp rate, 60.6%) and v2062816 (part rate, 64.9%). Verified against StatCan WDS. Will produce values on next pipeline run.
 
-### 12. ECB deposit rate stale
-- `ecb_deposit_rate`: latest = 2025-02-05 (419 days old)
-- ECB has made rate decisions since then. Affects EU section of the global analysis.
+## Warnings (reduce depth but don't break briefing)
 
-### 13. US real GDP lagging
-- `us_real_gdp`: latest = 2025-10-01 (Q3 2025)
-- Q4 2025 data should be available by now (BEA releases ~3 months after quarter end).
+5. **briefing.yieldCurve has 3 tenors (2Y, 5Y, 10Y)**
+   Only short-core / long-core available. Missing: 3M, 6M, 1Y, 30Y. Data exists in `indicators.json` history as `goc_3y_yield`, `goc_7y_yield`, `goc_long_yield` — could be harvested into yieldCurve but requires export-layer change.
+   → Matches demo (not a parity regression). Structural, deferred.
 
-### 14. Ontario economic accounts stale (quarterly)
-- All 6 `on_*` indicators (exports, GDP goods, imports, capital investment, consumption, household) stuck at 2025-07-01 (Q2 2025)
-- Q3 2025 should be available. These are quarterly so 273 days stale is significant.
+6. **Provincial indicator matrix: data exists but under inconsistent keys**
+   Coverage check expected `('ON', 'employment_rate')` etc. Actual storage:
+   - QC uses `qc_employment_rate`, `qc_housing_starts`, `qc_participation_rate`, `qc_unemployment_rate` (province-prefixed in indicator_name)
+   - Other provinces use `participationRate` (camelCase, no prefix, with `province=ON/AB/...`)
+   Mixed convention makes province-level cross-references fragile. Not missing data, just heterogeneous schema.
+   → Tech debt, not a freshness gap.
 
-### 15. Quebec quarterly indicators also stale
-- `qc_business_investment`, `qc_exports`, `qc_imports`, `qc_real_gdp`: all at 2025-07-01
-- `qc_intl_exports`, `qc_intl_imports`: at 2025-12-01 (acceptable for quarterly)
+## Structural gaps (matches demo — NOT parity regressions)
 
-### 16. Market index gaps
-- `idx_nikkei`: latest = 2026-03-15 (16 days stale)
-- `idx_djia`: latest = 2026-03-16 (15 days stale)
-- `idx_sp500`: latest = 2026-03-15 (16 days stale)
-- Note: The non-prefixed versions (`nikkei225`, `djia`, `sp500`) are more current. The `idx_*` prefix series may be a parallel data path that stopped updating.
+These exist in both live and demo. Not blocking the port but worth tracking for future work.
 
-### 17. TSX equity proxies stale
-- `cameco_uranium`: latest = 2026-03-18 (13 days stale)
-- `potash_nutrien`: latest = 2026-03-18 (13 days stale)
-- `sprott_uranium`: latest = 2026-03-18 (13 days stale)
-- `tsx`: latest = 2026-03-18 (13 days, but `tsx_composite` is current at 2026-03-31)
+7. **`timeseries.json` scope (35 keys)**
+   Contains only commodities (21), indices (7), FX (4), crypto (2), BoC rate (1). **No yield curve tenors, no Canadian-specific commodities (uranium, nickel, canola, potash, iron_ore), no economic indicators (CPI, unemployment, employment_rate).**
+   Frontend renders yields from `briefing.yieldCurve` and commodities not in timeseries.json from `briefing.commodities` snapshot. Works, but no history-chart fallback available for these items in Data Explorer.
 
-### 18. Consumer pulse and word cloud empty in briefing
-- `consumer_pulse`: empty string (0 chars)
-- `word_cloud_topics`: empty array
-- `indicatorContextLines`: empty dict
-- These are expected briefing sections that are not populated.
+8. **StatCan Daily feed items (71) have no history**
+   `gov_sources.py` scrapes StatCan Daily release and captures `productId` but not `vectorId`. Selecting one of these items in the Data Explorer renders empty chart. Documented as Change #21 caveat. Proper fix requires productId→vectorId mapping layer (`getCubeMetadata` or curated map).
 
-### 19. Commodity data quality issues in briefing
-- Rice shows day change of -99.0% and YoY of -99.2% -- likely a data error or unit mismatch
-- Platinum value is "$6" which is clearly wrong (should be ~$900-1000/oz)
-- Soybean Meal value ($315.00) and Palladium ($68) appear to be cross-contaminated or using wrong units
+9. **6,615 projects, 2,207 with `lastSeen` 30–60 days old**
+   Zero projects at 60+ days. All have evidence URLs (URL hard gate intact — prior audit's "empty evidenceLinks" claim was a false alarm; field is `evidence` not `evidenceLinks`).
+   → Expected. Alert tracker should continue to age these.
 
-### 20. 2,122 projects stuck at lastSeen = 2026-03-15
-- All from `government_backfill` discovery source
-- These have not been re-seen in 16 days
-- Heaviest provinces: AB (520), QC (399), ON (349), BC (344)
-- Not yet at the 30-day staleness threshold but approaching it
-- Some have suspect values (e.g., "Beacon Langdon AI Hub" at $100B, "Paul First Nation" building at $40B) suggesting extraction errors in value parsing
+## Commodities present/missing check (13 required by Markets tab)
 
-### 21. Briefing missing DJIA and Nasdaq from indices
-- Only 4 indices shown: TSX, S&P 500, FTSE 100, DAX
-- Missing: DJIA, Nasdaq, Nikkei 225 (all have data in indicators.json)
+| Commodity | timeseries.json | Status |
+|---|---|---|
+| WTI | ✓ (stale) | Covered, needs refresh |
+| Brent | ✓ (stale) | Covered, needs refresh |
+| Natural gas | ✓ (stale) | Covered, needs refresh |
+| Gold | ✓ (stale) | Covered, needs refresh |
+| Silver | ✓ (stale) | Covered, needs refresh |
+| Copper | ✓ (stale) | Covered, needs refresh |
+| Aluminum | ✓ (stale) | Covered, needs refresh |
+| Lumber | ✓ (stale) | Covered, 2023 data — feed broken |
+| Uranium (sprott/cameco) | ✗ | Missing from timeseries — render from briefing only |
+| Nickel | ✗ | Missing from timeseries |
+| Canola | ✗ | Missing from timeseries |
+| Potash (nutrien) | ✗ | Missing from timeseries |
+| Iron ore | ✗ | Missing from timeseries |
+
+## Yield curve tenor check (7 required for full curve)
+
+| Tenor | briefing.yieldCurve | indicators.json history | timeseries.json |
+|---|---|---|---|
+| 3M | ✗ | ✗ | ✗ |
+| 6M | ✗ | ✗ | ✗ |
+| 1Y | ✗ | ✗ | ✗ |
+| 2Y | ✓ | ✓ | ✗ |
+| 3Y | ✗ | ✓ (goc_3y_yield) | ✗ |
+| 5Y | ✓ | ✓ | ✗ |
+| 7Y | ✗ | ✓ (goc_7y_yield) | ✗ |
+| 10Y | ✓ | ✓ | ✗ |
+| 30Y | ✗ | ✗ (goc_long_yield exists, semantics unclear) | ✗ |
+
+Core 2Y/5Y/10Y available — meets skill minimum. Full-curve narrative limited.
+
+## Recommendations
+
+### For the next pipeline run (will resolve items 1–4)
+
+```bash
+cd "/c/Users/walte/OneDrive/Desktop/AI newsletter"
+# From a standalone shell — NOT nested claude -p
+python update_dashboard.py 2>&1 | tee pipeline_20260418.log
+```
+
+### For researchers (Agent 1A/1B/1C)
+
+1. **Markets tab narrative:** Be cautious with the 5 commodities (uranium, nickel, canola, potash, iron_ore) not in timeseries — rely on briefing snapshot, no chart history available.
+2. **Yield curve narrative:** Can reference short-core (2Y), mid-core (5Y), long-core (10Y). If 3Y/7Y are useful, harvest from `indicators.json` history.
+3. **Policy angle:** Currently no policy items. Do a scan-based WebSearch if policy-driven project stories are central to the edition.
+4. **Provincial deep-dive caution:** Mixed schema between QC (province-prefixed keys) and other provinces (camelCase keys with separate province field) — verify values appear where you expect when cross-referencing.
+
+### Structural work (deferred, not blocking parity)
+
+- Populate `timeseries.json` with yield-curve tenors and Canadian commodities for full Data Explorer chart support.
+- Add productId→vectorId mapping for StatCan Daily feed items (71 indicators gain history).
+- Repair lumber feed (Yahoo Finance source broken since 2023-05-12).
+- Harmonize provincial indicator key schema.
 
 ---
 
-## Filled This Run
-- (none — audit only, no data refresh)
+**Port + vector fix commits on origin/main:**
+- `437a280` — Demo → live frontend port
+- `045558e` — National emp/part rate vectors (v2062811→v2062817, v2062803→v2062816)
 
----
-
-## Coverage Summary
-
-| Metric | Value |
-|--------|-------|
-| **Provinces with full indicator sets (6 core types)** | 0/13 |
-| **Provinces with any indicators** | 9/13 (missing: NT, NU, PE, YT) |
-| **Province indicator depth** | QC: 15 types, ON: 8, rest: 2 each |
-| **Commodity prices current (7d) in timeseries** | 67/111 keys |
-| **Timeseries keys stale 8-30d** | 6/111 |
-| **Timeseries keys stale 30+d** | 38/111 |
-| **Projects total** | 7,372 |
-| **Projects seen in last 7 days** | 5,208 (71%) |
-| **Projects seen 8-16 days ago** | 2,164 (29%) |
-| **Projects seen 30+ days ago** | 0 |
-| **Policy items this week** | 1 (BC housing — Mar 27) |
-| **Policy items last 14 days** | 1 (acceptable but thin) |
-| **Briefing metrics populated** | 5/15 (33%) |
-| **Briefing province analyses populated** | 11/13 (ON, QC empty) |
-| **Yield curve complete** | Yes (6 terms: 2Y through Long) |
-| **GoC yields current** | Yes (all 2026-03-31) |
-| **National macro indicators current** | Yes (GDP, CPI, unemployment, housing starts, BoC rate all current) |
-| **Commodity timeseries (non-duplicate keys)** | ~35 commodities tracked |
-| **Industries analyzed in briefing** | 20/20 (5 goods + 15 services) |
-| **Global regions analyzed** | 4/4 (US, China, EU, UK) |
-
----
-
-## Priority Actions
-
-1. **Fix Ontario/Quebec briefing** — Research agents need province-specific signals for ON and QC. These provinces have $377B in combined capital announcements this week per the executive summary, yet their province tabs are empty.
-2. **Add indicators for NT, NU, PE, YT** — StatCan publishes CPI and unemployment for all provinces including territories.
-3. **Fix trade data** — Either connect to StatCan 12-10-0129 for current trade figures or remove the 2003-era stubs.
-4. **Fix lumber timeseries** — Find replacement ticker or data source for lumber prices.
-5. **Pipe existing indicators into briefing metrics** — `employmentRate`, `participationRate`, and `wageGrowth` all have data but are not appearing in the briefing metrics object.
-6. **Add CAD/USD to briefing FX section** — Data exists in indicators.json but is not in the financial markets display.
-7. **Investigate commodity data quality** — Rice, Platinum, Palladium, Soybean Meal values in the briefing appear incorrect.
-8. **Update ECB rate and US GDP** — Both are significantly stale.
-9. **Refresh Ontario quarterly economic accounts** — Q3 2025 data should be available.
-10. **Consolidate duplicate indicator keys** — `cad_usd`/`cadusd`, `idx_*`/non-prefixed indices, `tsx`/`tsx_composite`.
+**Safety tag:** `backup-pre-port-2026-04-18` (rollback point on origin).

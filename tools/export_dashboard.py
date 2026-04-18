@@ -884,6 +884,11 @@ def export_timeseries(conn, output_dir: str) -> str:
         'bitcoin', 'ethereum', 'dry_bulk_shipping',
         'potash_nutrien', 'cameco_uranium', 'sprott_uranium', 'canola',
         'coal', 'propane', 'rice', 'soybean_oil', 'soybean_meal',
+        # GoC yield curve — rich history in indicator_history for core tenors.
+        # 3M/6M/1Y/30Y sparse until BoC Valet fetcher added.
+        'goc_3m_yield', 'goc_6m_yield', 'goc_1y_yield',
+        'goc_2y_yield', 'goc_3y_yield', 'goc_5y_yield',
+        'goc_7y_yield', 'goc_10y_yield', 'goc_long_yield', 'goc_30y_yield',
     ]
     for name in _IH_SERIES:
         if name in bundle:

@@ -1,282 +1,387 @@
-# Macro Research — Week Ending March 31, 2026
+# Macro Research Brief – Week of April 13, 2026
 
-**Researcher:** Agent 1A (Macro)
-**Date compiled:** 2026-03-31
-**Coverage period:** Week ending March 31, 2026
-
----
-
-## 1. Bank of Canada
-
-The Bank of Canada held its overnight rate at **2.25%** on March 18, 2026, following seven consecutive cuts from the June 2024 peak of 5.00%. The Governing Council cited weaker near-term growth from US tariffs, noting that "recent data suggest that near-term economic growth will be weaker than anticipated in January." CPI inflation excluding indirect tax changes and core inflation measures were described as "all close to 2%." The Bank indicated monetary policy would need to "assess the downward pressure on inflation from a weaker economy and the upward pressure from higher costs" arising from trade disruptions, describing the current stance as appropriate given the baseline outlook. Forward guidance stated that the Governing Council "will proceed carefully" given the heightened uncertainty.
-
-The next rate announcement is **April 15, 2026**, accompanied by the full Monetary Policy Report (MPR). Bond markets are pricing approximately 86% probability of no change and approximately 14% probability of a 25bps hike at the April meeting. The subsequent announcement is June 3, 2026.
-
-The Bank released its summary of deliberations on April 1, 2026.
-
-**Sources:**
-- [Bank of Canada — March 18 Rate Decision](https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/)
-- [Bank of Canada — 2026 Schedule](https://www.bankofcanada.ca/2025/08/bank-canada-publishes-2026-schedule-policy-interest-rate-announcements-other-major-publications/)
-- [Bank of Canada — Policy Interest Rate](https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/)
+**Compiled:** Monday, April 13, 2026
+**Data Coverage:** Week ending April 11, 2026
+**Edition:** Weekly Briefing Reference
 
 ---
 
-## 2. GDP
+## 1. Data Audit
 
-Statistics Canada released GDP by industry data for January 2026 on March 31, 2026. Real GDP rose **0.1%** in January, marking a second consecutive monthly increase. Goods-producing industries expanded 0.2% for the second straight month, driven by mining, quarrying, and oil and gas extraction (+1.2%), construction, and utilities. Manufacturing contracted 1.4% in January due to weakness in both durable and non-durable goods. Services-producing industries were essentially unchanged — gains in retail trade (+0.8%) and finance and insurance offset declines in wholesale trade and transportation and warehousing.
+### Indicators Last Updated
 
-Advance information indicates real GDP rose **0.2%** in February 2026.
+| Indicator | Latest Period | Value | Age (days) | Status | Source |
+|-----------|--------------|-------|------------|--------|--------|
+| CPI (national, YoY) | 2026-04-11 | +1.8% | 0 | FRESH | StatCan |
+| Unemployment (national) | 2026-04-11 | 6.7% | 0 | FRESH | StatCan |
+| Real GDP (national, monthly change) | 2026-04-11 | -0.6% | 0 | FRESH | StatCan |
+| Housing Starts (national, SAAR) | 2026-04-11 | 250,900 units | 0 | FRESH | CMHC |
+| Participation Rate (national) | 2026-02-01 | 64.9% | 71 | STALE (>45d) | StatCan |
+| Wage Growth (SEPH) | 2026-02-01 | +3.9% YoY | 71 | STALE (>45d) | StatCan SEPH |
+| Overnight Rate (BoC) | 2026-03-05 | 2.25% | 37 | FRESH | BoC Valet |
+| Prime Rate | 2026-03-04 | 6.09% | 38 | FRESH | BoC |
+| GoC 2Y Yield | 2026-04-11 | 2.79% | 0 | FRESH | BoC |
+| GoC 5Y Yield | 2026-04-11 | 3.04% | 0 | FRESH | BoC |
+| GoC 10Y Yield | 2026-04-11 | 3.46% | 0 | FRESH | BoC |
+| GoC Long Yield | 2026-04-11 | 3.89% | 0 | FRESH | BoC |
+| S&P 500 | 2026-04-11 | 6,817 | 0 | FRESH | Yahoo Finance |
+| CAD/USD | 2026-04-11 | 0.72 | 0 | FRESH | Yahoo Finance |
+| Brent Crude | 2026-04-11 | $95.20/bbl | 0 | FRESH | Yahoo Finance |
+| TSX Composite | 2026-03-16 | 32,542 (timeseries) / 33,696 (briefing) | 26 | STALE | Yahoo Finance |
+| Gold | 2026-03-30 | US$4,572/oz | 12 | FRESH | Yahoo Finance |
+| Employment Rate (national) | — | MISSING | — | GAP | StatCan |
+| Housing Starts (detail: singles/multi) | 2025-12-01 | 2,883 singles / 17,833 multi | ~131 | STALE | CMHC |
+| Building Investment (commercial/industrial) | 2023-10-01 | — | ~910 | STALE | StatCan 34-10-0175 |
 
-On a quarterly basis, Q4 2025 GDP contracted **0.2%** annualized, following a 0.6% gain in Q3 2025. Full-year 2025 GDP growth was approximately **1.7%**. The IMF projects 2026 real GDP growth at 1.6%; Vanguard forecasts 1.8%.
-
-**Sources:**
-- [Statistics Canada — GDP by Industry, January 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm)
-- [BNN Bloomberg — GDP Grew 0.1% in January](https://www.bnnbloomberg.ca/business/2026/03/31/statistics-canada-says-real-gdp-grew-01-per-cent-in-january/)
-- [Statistics Canada — GDP Income and Expenditure, Q3 2025](https://www150.statcan.gc.ca/n1/daily-quotidien/251128/dq251128a-eng.htm)
-- [Bank of Canada — January 2026 MPR Projections](https://www.bankofcanada.ca/publications/mpr/mpr-2026-01-28/projections/)
-
----
-
-## 3. CPI / Inflation
-
-Canada's headline CPI rose **1.8%** year-over-year in February 2026, down from 2.3% in January, slightly below market expectations of 1.9%. This was the lowest reading since early 2021. Statistics Canada released the data on March 16, 2026.
-
-Core inflation measures declined in February: CPI-median fell to **2.3%**, CPI-trim fell to **2.3%**, and CPI-common dropped from 2.7% to **2.4%**. All three core measures are converging toward the Bank of Canada's 2% target.
-
-Key drivers in February: food inflation slowed to 5.3% from 7.3% in January due to base effects from the February 2025 GST/HST tax break expiry. Prices decelerated for recreation and education, household operations, and shelter. Transportation prices remained in deflation territory but the pace of decline slowed.
-
-The March CPI release is scheduled for **April 15, 2026** (same day as BoC rate decision). March is the final month affected by the GST/HST base-year effect.
-
-**Sources:**
-- [Statistics Canada — CPI February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260316/dq260316a-eng.htm)
-- [CBC News — Inflation fell to 1.8% in February](https://www.cbc.ca/news/business/canada-annual-inflation-rate-february-2026-9.7130104)
-- [TD Economics — Canadian CPI February 2026](https://economics.td.com/ca-cpi)
-- [Bank of Canada — CPI](https://www.bankofcanada.ca/rates/price-indexes/cpi/)
-
----
-
-## 4. Unemployment / Labour Market
-
-The unemployment rate rose to **6.7%** in February 2026, up 0.2 percentage points from January. Employment declined by **84,000** (-0.4%) in February, reversing gains from Q4 2025. Full-time employment fell by 108,000; private-sector employment dropped by 73,000. The participation rate declined 0.1 percentage points to **64.9%**.
-
-The employment decline was broad-based: services-producing industries lost 56,000 jobs (-0.3%) and goods-producing industries lost 28,000 (-0.7%). The largest subsector declines were in wholesale and retail trade (-18,000) and other services (-14,000).
-
-Payroll employment data for January 2026 (the separate SEPH survey) showed an increase of **45,600** (+0.2%), following a December decline of 10,600.
-
-The March 2026 Labour Force Survey is scheduled for release on **April 3, 2026**.
-
-**Sources:**
-- [Statistics Canada — Labour Force Survey, February 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260313/dq260313a-eng.htm)
-- [TD Economics — Canadian Employment, February 2026](https://economics.td.com/ca-employment)
-- [Statistics Canada — Labour Force Survey, January 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260206/dq260206a-eng.htm)
+### Critical Gaps Found
+Per `data_gap_report.md` (2026-04-11):
+- **National employmentRate missing** from indicators.
+- **Participation rate is 71 days old**, older than the 45-day freshness threshold. Cite with period disclosure.
+- **Policy feed empty** outside BC housing statements. Policy context in the briefing should come from project/IAAC/regulatory signals rather than policy quotes.
+- **Yield curve partial**: only 2Y / 5Y / 10Y tenors available in briefing_latest. Long yield (3.89%) exists in indicators.json but is not in briefing_latest yieldCurve. Writers should describe 2s10s (0.67ppt) and 5s10s (0.42ppt), not reference 3M / 6M / 1Y / 30Y.
+- **TSX Composite timeseries is stale** (two datapoints, most recent 2026-03-16). Use briefing_latest.financialMarkets.indices for the TSX value / MoM / YoY, not the timeseries delta.
+- **Commodity unit-conversion errors** in Yahoo Finance scrape — detailed in Section 2 below.
 
 ---
 
-## 5. Housing
+## 2. Key Data Movements
 
-Housing starts ran at a seasonally adjusted annual rate (SAAR) of **250,900** units in February 2026, up 4.5% from 240,148 in January. The six-month trend declined 0.4% to 256,005 units. CMHC noted that the trend in housing starts remains "relatively steady" despite monthly volatility.
+### National Indicators
 
-The national average home price rose to **$663,828** in February 2026, up 1.7% month-over-month from $652,941 in January. The MLS Home Price Index (HPI) benchmark increased to **$661,300**, up 0.5% from January, ending the benchmark price decline observed through late 2025.
+| Indicator | Current | Period | Source |
+|-----------|---------|--------|--------|
+| Overnight Rate | 2.25% | 2026-03-05 (last BoC decision captured) | Bank of Canada |
+| Prime Rate | 6.09% | 2026-03-04 | Bank of Canada |
+| CPI (YoY) | +1.8% | 2026-04-11 | StatCan |
+| Unemployment | 6.7% | 2026-04-11 | StatCan LFS |
+| Real GDP (monthly) | -0.6% | 2026-04-11 | StatCan |
+| Housing Starts (SAAR) | 250,900 units | 2026-04-11 | CMHC |
+| Participation Rate | 64.9% | 2026-02-01 (71d old) | StatCan |
+| Wage Growth (SEPH YoY) | +3.9% | 2026-02-01 (71d old) | StatCan SEPH |
+| Total Capex (annual intentions) | $401.2B | 2026-01-01 | StatCan 34-10-0035 |
+| Construction Capex (annual) | $274.0B | 2026-01-01 | StatCan 34-10-0035 |
+| Machinery Capex (annual) | $127.2B | 2026-01-01 | StatCan 34-10-0035 |
+| Construction Employment | 1,998.8k | 2026-03-01 | StatCan LFS |
+| Manufacturing Employment | 249.6k | 2026-03-01 | StatCan LFS |
+| Mining/Oil&Gas Employment | 350.3k | 2026-03-01 | StatCan LFS |
 
-Variable mortgage rates have declined over the past two years in line with the BoC's rate cuts and were stable in early 2026. Fixed mortgage rates have held firm or increased due to elevated long-term Government of Canada bond yields, driven by higher government debt issuance and term premiums returning to historical levels.
+### Industry GDP (monthly MoM / YoY, period 2026-04-11)
 
-The federal government and Ontario signed an **$8.8B** cost-matched 10-year housing deal reducing municipal development charges by up to 50% and removing HST on new homes valued up to $1M, covering municipalities representing approximately 80% of Ontario's population.
+| NAICS | MoM | YoY |
+|-------|-----|-----|
+| 11 Agriculture | -1.4% | +5.4% |
+| 21 Mining & Oil/Gas | +1.2% | -0.1% |
+| 22 Utilities | +0.6% | -1.7% |
+| 23 Construction | +1.1% | +2.8% |
+| 31-33 Manufacturing | -1.4% | -4.6% |
+| 41 Wholesale | -1.2% | -1.7% |
+| 44-45 Retail | +0.8% | +2.7% |
+| 48-49 Transportation/Warehousing | -0.7% | +1.6% |
+| 51 Info/Culture | +0.9% | +3.2% |
+| 52 Finance/Insurance | +0.5% | +3.2% |
+| 53 Real Estate | -0.2% | +1.2% |
+| 54 Professional Services | -0.1% | -0.4% |
+| 55 Management of Companies | -4.1% | -21.9% |
+| 56 Admin/Waste | -0.1% | -0.2% |
+| 61 Education | +0.5% | -1.9% |
+| 62 Health Care | +0.0% | +2.1% |
+| 71 Arts/Rec | -0.1% | +2.2% |
+| 72 Accommodation/Food | +0.7% | +2.3% |
+| 81 Other Services | +0.2% | +0.3% |
+| 91 Public Admin | -0.1% | +0.7% |
 
-CMHC's outlook indicated housing demand is expected to remain below historical averages in the near term, with prices showing modest gains after declines in 2025. Elevated rental construction is expected to continue but moderate.
+Single monthly GDP print is -0.6%. Manufacturing (31-33) shows -4.6% YoY and Management-of-companies (55) -21.9% YoY — the two steepest year-ago declines among tracked industries.
 
-**Sources:**
-- [CMHC — February Housing Starts](https://www.canadianmortgagetrends.com/2026/03/cmhc-reports-february-housing-starts-up-4-5-from-january/)
-- [WOWA — Canadian Housing Market Report, March 2026](https://wowa.ca/reports/canada-housing-market)
-- [CMHC — Housing Market Outlook 2026](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/market-reports/housing-market/housing-market-outlook)
-- [CMHC — Housing Starts Momentum to Slow](https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/cmhc-releases-housing-market-outlook-2026)
+### Commodity Movements
 
----
+**Data caveat (from timeseries.json / commodities.json):** the Yahoo Finance scrape contains unit-conversion errors on WTI, wheat, cotton, soybeans, soybean oil, soybean meal, platinum, and rice. Values in the list below are flagged where a corrupt figure was published. Clean prior values are cited where available.
 
-## 6. Trade
+| Commodity | Latest | 1-week | 1-month | 1-year | Source / Status |
+|-----------|--------|--------|---------|--------|-----------------|
+| Brent Crude | US$95.20/bbl | -11.29% | +2.71% | +48.26% | Yahoo Finance — FRESH |
+| WTI Crude | US$1,079.5 (corrupt); prior clean print US$98.71 (2026-03-15) and US$74.66 (2026-03-04) | n/a | n/a | n/a | FLAG AS UNRELIABLE |
+| Natural Gas | US$2.648/MMBtu | -15.13% | -16.99% | -30.68% | Yahoo Finance — FRESH |
+| Coal (Newcastle proxy) | US$96.0/t | flat | flat | — | FRESH |
+| Gold | US$4,572/oz | -9.68% | -12.59% | +49.40% | Yahoo — latest 2026-03-30 |
+| Silver | US$76.32/oz | -6.17% | -8.95% | +158.62% | FRESH |
+| Copper | US$5.87/lb | +6.16% | +1.92% | +40.44% | FRESH |
+| Aluminum | US$3,430/t | +0.20% | +4.80% | +55.96% | FRESH |
+| Iron Ore | US$100.97/t | — | — | — | Single datapoint; no delta |
+| Uranium (URA ETF proxy) | US$50.96 | +4.2% | -0.8% | +135.7% | commodities.json — FRESH |
+| Uranium (SPUT physical) | US$27.72 | -1.9% | +2.5% | +46.7% | commodities.json — FRESH |
+| Cameco (CCJ proxy) | US$160.73 | +2.7% | +2.5% | +197.6% | commodities.json — FRESH |
+| Nutrien (potash) | US$102.13 | -2.8% | -4.5% | +56.5% | commodities.json — FRESH |
+| Steel (SLX ETF) | US$98.57 | +6.6% | +6.0% | +76.3% | commodities.json — FRESH |
+| TSX Infrastructure basket | US$56.38 | +0.5% | +2.5% | +45.2% | commodities.json — FRESH |
+| Nickel ETF (NIKL) | US$28.40 | 0.0% | 0.0% | 0.0% | STALE |
+| Lumber | US$339 | — | — | — | 1,065 days stale — DO NOT CITE |
+| Palladium | US$1,528/oz | +5.82% | -3.29% | +61.42% | FRESH |
 
-Canada's merchandise trade deficit widened to **$3.6 billion** in January 2026, from $1.3 billion in December 2025. Exports fell 4.7% to $62.5 billion; imports declined 1.1% to $66.1 billion.
+### Equity and FX Movements (from briefing_latest.financialMarkets)
 
-Motor vehicle and parts exports dropped **21.2%** to $5.4 billion in January — the lowest since September 2021 — due to lower Canadian motor vehicle production. Energy product exports partially offset the decline, rising 4.1%, led by natural gas. The trade deficit was the largest since the data collection methodology was revised.
+| Index / Pair | Value | Weekly % | MoM % | YoY % | Source |
+|--------------|-------|----------|-------|-------|--------|
+| S&P/TSX Composite | 33,696 | — | +3.55% | +42.85% | Yahoo Finance |
+| S&P 500 | 6,817 | +2.79% | +2.79% | +26.10% | Yahoo Finance |
+| Dow Jones | 47,917 | +6.09% | +2.92% | +18.24% | Yahoo Finance |
+| NASDAQ | 20,948 | 0.0% | -5.23% | +24.46% | Yahoo Finance |
+| FTSE 100 | 10,600 | +5.41% | +3.30% | +30.31% | Yahoo Finance |
+| DAX | 22,380 | 0.0% | -4.55% | +6.80% | Yahoo (latest 2026-03-30) |
+| Nikkei 225 | 53,820 | — | 0.0% | +63.03% | Yahoo (latest 2026-03-15) |
+| CAD/USD | 0.7200 | 0.0% | -1.37% | 0.0% | Yahoo Finance |
+| EUR/USD | 1.1400 | — | 0.0% | +0.88% | Yahoo (latest 2026-03-16) |
+| USD/CNY | 6.8300 | -1.16% | -1.01% | -6.31% | Yahoo Finance |
+| USD/JPY | 159.2400 | — | -0.30% | +10.81% | Yahoo Finance |
 
-February 2026 international merchandise trade data is scheduled for release on **April 2, 2026**.
+### Yield Curve (GoC, 2026-04-11)
 
-The US remains Canada's dominant trading partner. US tariffs on Canadian steel and aluminum exports remain in effect. The Bank of Canada has attributed weaker near-term growth forecasts in part to the trade disruption caused by these tariffs.
+| Tenor | Yield | Yield Year-Ago | BP Change YoY | Direction |
+|-------|-------|----------------|---------------|-----------|
+| 2Y | 2.79% | 2.98% | -19 bp | down |
+| 5Y | 3.04% | 3.19% | -15 bp | down |
+| 10Y | 3.46% | 3.60% | -14 bp | down |
+| Long (30Y) | 3.89% | — | — | indicators.json only (not in briefing_latest) |
 
-**Sources:**
-- [Statistics Canada — International Merchandise Trade, January 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260312/dq260312a-eng.htm)
-- [TD Economics — Canadian Merchandise Trade, January 2026](https://economics.td.com/ca-merchandise-trade)
-- [Statistics Canada — International Merchandise Trade, December 2025](https://www150.statcan.gc.ca/n1/daily-quotidien/260219/dq260219a-eng.htm)
-
----
-
-## 7. Financial Markets
-
-**TSX Composite:** Closed at **32,427** on March 31, 2026, up 1.54% on the day. The index declined approximately 6% during March. Year-over-year, the TSX was up approximately 28.2%. The March 31 rally was driven by reports that US President Trump is considering an end to the military campaign in Iran.
-
-**S&P 500:** Closed at approximately **6,496** on March 31, up 2.40% on the day. The index was down approximately 9.4% from its January 2026 peak. March was marked by elevated volatility driven by Middle East geopolitics and energy supply disruption.
-
-**DJIA:** Approximately **46,117** on March 31, up approximately 2.0% on the day.
-
-**Nasdaq Composite:** Approximately **21,469** on March 31, up 3.24% on the day.
-
-Equity markets were dominated in March by the Strait of Hormuz crisis (effective closure since approximately March 2), which disrupted approximately 17.8 million barrels per day of oil flows and triggered sharp commodity price spikes. Markets rallied on March 31 after reports of potential US-Iran diplomatic talks.
-
-**Sources:**
-- [Trading Economics — Canada Stock Market](https://tradingeconomics.com/canada/stock-market)
-- [Trading Economics — US Stock Market](https://tradingeconomics.com/united-states/stock-market)
-- [BNN Bloomberg — TSX March 27](https://www.bnnbloomberg.ca/business/2026/03/27/sptsx-composite-positive-late-morning-friday-us-markets-moving-lower/)
-- [CNBC — Dow Surges 600 Points, March 22](https://www.cnbc.com/2026/03/22/stock-market-today-live-updates.html)
-
----
-
-## 8. FX / Currencies
-
-**CAD/USD:** The Canadian dollar was at approximately **0.7198 USD** (USD/CAD 1.3893) on March 30, 2026. The loonie weakened 1.85% over the past month. Year-over-year, CAD was up 2.61%.
-
-The Canadian dollar weakened past 1.38 per USD to a two-month low in March despite elevated WTI crude oil prices. The commodity-linked currency was unable to gain traction against a broadly stronger US dollar, supported by hawkish Federal Reserve expectations and safe-haven demand amid Middle East hostilities.
-
-**EUR/USD:** Approximately **1.1460** on March 31, 2026. The euro strengthened against the dollar amid the geopolitical uncertainty.
-
-**USD/JPY:** Referenced in the current briefing but no updated figure obtained for week-end.
-
-**Sources:**
-- [Trading Economics — Canadian Dollar](https://tradingeconomics.com/canada/currency)
-- [Exchange Rates — EUR/USD 2026 History](https://www.exchangerates.org.uk/EUR-USD-spot-exchange-rates-history-2026.html)
-- [Federal Reserve — H.10 Foreign Exchange Rates, March 30, 2026](https://www.federalreserve.gov/releases/h10/hist/dat00_eu.htm)
-
----
-
-## 9. Commodities
-
-**WTI Crude Oil:** Settled at **$102.88/bbl** on March 30, 2026 — the first settlement above $100 since July 2022. WTI rose approximately 50%+ in March driven by the Strait of Hormuz closure.
-
-**Brent Crude:** Closed at **$112.78/bbl** on March 30, 2026. Brent surged approximately 55% in March, a record monthly gain for the contract since its inception in 1988. Brent peaked at approximately $126/bbl during the month.
-
-**Natural Gas (Henry Hub):** Approximately **$3.05/MMBtu** in late March. The EIA's March 10 short-term energy outlook projected Henry Hub averaging $3.80/MMBtu for full-year 2026. AECO (Canadian benchmark) also climbed during March as global LNG demand spiked.
-
-**Gold:** Trading at approximately **$4,578/oz** on March 31, 2026, down from a peak of approximately $5,161/oz on March 3. Gold declined more than 14% in March, on pace for its worst monthly performance since October 2008. The decline occurred despite geopolitical tensions, driven by margin liquidation and a stronger US dollar.
-
-**Copper:** Futures traded between $5.25 and $6.01 per pound in March 2026, holding above $5.90/lb in late March.
-
-**Lumber:** Timeseries data frozen since May 2023. No current data obtained from search. Potential data source issue (ticker delisted or changed).
-
-**Uranium (URA ETF proxy):** $46.86 as of data refresh, down 2.8% week-over-week and 17.0% month-over-month. Cameco (CCO.TO) at $147.75, down 14.1% month-over-month.
-
-**Steel (SLX ETF):** $90.13, up 1.2% week-over-week but down 10.4% month-over-month.
-
-**Potash (Nutrien NTR):** $104.62, down 1.0% weekly, up 1.0% monthly.
-
-**Sources:**
-- [CNBC — Brent Record Monthly Surge, WTI Above $100](https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-yemen-houthis-israel-iran-war.html)
-- [EIA — Short-Term Energy Outlook](https://www.eia.gov/outlooks/steo/)
-- [Fortune — Gold Price March 31, 2026](https://fortune.com/article/current-price-of-gold-03-31-2026/)
-- [Trading Economics — Copper](https://tradingeconomics.com/commodity/copper)
-- [Natural Gas Intelligence — Henry Hub, AECO](https://naturalgasintel.com/news/spot-prices-wrap-henry-hub-aeco-climb-as-rattled-global-market-calls-on-us-lng/)
-
----
-
-## 10. Global Context
-
-**United States — Federal Reserve:** The Fed held the federal funds rate at **3.50%–3.75%** at the March 18, 2026 meeting, following three 25bps cuts to close 2025. The FOMC cited "heightened uncertainty" from geopolitical risk and volatile energy prices. US CPI was at 2.7% year-over-year; unemployment at 4.4%.
-
-**European Central Bank (ECB):** Held the deposit facility rate at **2.00%** at the March 19 meeting. Euro area HICP inflation was 1.9% year-over-year in Q4 2025. GDP grew 0.2% quarter-over-quarter in Q4 2025. Unemployment at 5.9%. Germany recorded a second consecutive annual GDP contraction.
-
-**Bank of England (BoE):** Held Bank Rate at **3.75%** at the March 18 meeting (unanimous vote). UK CPI was at 2.8% (February 2026 reading). GDP grew 0.1% quarter-over-quarter in Q4 2025. UK unemployment at 5.2%.
-
-**China:** The NBS Manufacturing PMI rose to **50.4** in March 2026, above the 50.0 expansion threshold after two months of contraction (49.3 in January, 49.0 in February). Non-manufacturing PMI rose to 50.1 from 49.5. New export orders showed strength. However, higher shipping costs and imported commodity costs from the Middle East conflict weighed on input prices for surveyed firms. PBoC 5-year LPR at 2.90%.
-
-**Strait of Hormuz Crisis:** The effective closure of the Strait of Hormuz since approximately March 2, 2026, is the central geopolitical event of the month. The strait normally transits approximately 20 million barrels of oil per day (~20% of global seaborne oil trade). Tanker traffic dropped approximately 70%. The Dallas Fed estimated that a one-quarter closure could raise WTI to $98/bbl average and reduce global GDP growth by an annualized 2.9 percentage points in Q2 2026.
-
-**Sources:**
-- [Federal Reserve — March 18 Implementation Note](https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a1.htm)
-- [ECB — March 19 Monetary Policy Decision](https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260205~001d26959b.en.html)
-- [Bank of England — March 2026 MPC Summary](https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/march-2026)
-- [CNBC — China PMI March 2026](https://www.cnbc.com/2026/03/31/china-pmi-data-march-factory-activity-.html)
-- [Wikipedia — 2026 Strait of Hormuz Crisis](https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis)
-- [Dallas Fed — Strait of Hormuz Economic Impact](https://www.dallasfed.org/research/economics/2026/0320)
+2s10s spread: +0.67 ppt. 5s10s spread: +0.42 ppt. Curve is upward-sloping across the three tenors tracked; all three tenors sit below their year-ago levels.
 
 ---
 
-## 11. Consumer Pulse
+## 3. National Macro Stories
 
-Consumer confidence declined to **47.50 points** in February 2026, down from 49.30 in January (Conference Board of Canada index). The Bloomberg/Nanos Canadian Confidence Index showed a three-week slide into late March, moving from a somewhat positive position toward neutrality.
+### Story 1: BoC Overnight Rate at 2.25%, Headline CPI at +1.8%
+- **Source**: indicators.json (authority: BoC Valet, StatCan)
+- **Key facts**:
+  - BoC overnight rate 2.25% (last captured 2026-03-05)
+  - Prime rate 6.09%
+  - Headline CPI +1.8% YoY (2026-04-11 period)
+  - 2Y GoC yield 2.79%, 54 bp above the overnight rate
+- **Provincial CPI dispersion** (all dated 2026-04-11): PE +5.4%, AB +3.4%, MB +3.1%, NL +1.8%, NS +1.5%, NB +1.2%, BC +1.0%, QC +0.6%, SK -0.7%, ON -1.1%. National headline +1.8% masks ON and SK deflation prints alongside PE and AB readings above 3%.
+- **Affected sectors**: residential, commercial_mixed, power_energy, infrastructure
+- **Coverage status**: IN DATA
 
-However, Nanos Research reported that the proportion of Canadians who believe the economy will strengthen in the next six months rose from 17% to 26% over a four-week period, indicating a modest uptick in forward-looking sentiment despite current caution.
+### Story 2: National Unemployment at 6.7% with 4.5 ppt Provincial Spread
+- **Source**: StatCan LFS via indicators.json, period 2026-04-11
+- **Key facts**:
+  - National unemployment 6.7%
+  - Provincial range: SK 5.0% (lowest), QC 5.4%, MB 5.6%, AB 6.5%, NS 6.6%, BC 6.7%, NB 7.0%, PE 7.3%, ON 7.6%, NL 9.5% (highest)
+  - Construction employment 1,998.8k, Manufacturing 249.6k, Mining/Oil&Gas 350.3k (all March 2026)
+  - Participation rate 64.9% (period 2026-02-01, 71 days old)
+  - Wage growth (SEPH) +3.9% YoY (2026-02-01, 71 days old)
+- **Affected sectors**: labour-sensitive (all)
+- **Coverage status**: IN DATA
 
-Retail sales rose **1.1%** to **$70.7 billion** in January 2026 (released March 20). Core retail sales (excluding gasoline and motor vehicles) increased 0.9%. Motor vehicle and parts dealers led the gain (+2.0%) after a 1.6% decline in December. General merchandise retailers posted the largest core gain (+3.0%), a fourth consecutive monthly increase. E-commerce sales rose 1.5% to $4.4 billion (6.2% of total retail trade).
+### Story 3: Monthly GDP -0.6% with Concentrated Industry Drag
+- **Source**: StatCan monthly GDP via indicators.json (period 2026-04-11)
+- **Key facts**:
+  - Monthly GDP -0.6%
+  - Management of companies (NAICS 55): -4.1% MoM / -21.9% YoY — deepest decline among tracked industries
+  - Manufacturing (31-33): -1.4% MoM / -4.6% YoY
+  - Agriculture (11): -1.4% MoM / +5.4% YoY (monthly correction against a strong annual base)
+  - Offsets: Mining & O&G (21) +1.2% MoM, Construction (23) +1.1% MoM, Info/Culture (51) +0.9% MoM, Retail (44-45) +0.8% MoM, Accommodation/Food (72) +0.7% MoM
+- **Affected sectors**: manufacturing, professional services
+- **Coverage status**: IN DATA
 
-Statistics Canada's advance estimate suggests retail sales increased **0.9%** in February 2026 (based on 53.4% response rate, subject to revision).
+### Story 4: Housing Starts 250,900 SAAR; Capex Intentions $401.2B for 2026
+- **Source**: CMHC and StatCan Capex Intentions (34-10-0035)
+- **Key facts**:
+  - National housing starts 250,900 SAAR (period 2026-04-11)
+  - Total capital expenditure intentions for 2026: $401.2B, of which $274.0B construction and $127.2B machinery & equipment (StatCan 34-10-0035, reference 2026-01-01)
+  - New Housing Price Index 121.9 (2026-02-01)
+  - Detail splits (singles/multi/total) are stale at 2025-12-01
+- **Affected sectors**: residential, construction, commercial_mixed, infrastructure
+- **Coverage status**: IN DATA (monthly detail splits are PARTIAL — stale)
 
-Alberta recorded the largest provincial increase (+3.5%), led by motor vehicle sales. Gasoline station sales declined 0.4%.
-
-Consumers remain focused on value-driven purchasing. Rising energy costs and US trade friction are cited as ongoing sources of consumer anxiety.
-
-**Sources:**
-- [Trading Economics — Canada Consumer Confidence](https://tradingeconomics.com/canada/consumer-confidence)
-- [Nanos Research — Consumer Confidence Weekly](https://nanos.co/consumer-confidence-slides-for-third-week-in-succession-bloomberg-nanos-research/)
-- [Statistics Canada — Retail Trade, January 2026](https://www150.statcan.gc.ca/n1/daily-quotidien/260320/dq260320a-eng.htm)
-- [BNN Bloomberg — Retail Sales Up 1.1%, January 2026](https://www.bnnbloomberg.ca/business/2026/03/20/statistics-canada-reports-january-retail-sales-up-11-per-cent-to-707b/)
-
----
-
-## 12. Upcoming Events
-
-| Date | Institution | Event | Impact |
-|------|------------|-------|--------|
-| Apr 1 | Bank of Canada | Summary of Deliberations (March meeting) | Medium |
-| Apr 2 | Statistics Canada | International Merchandise Trade — February 2026 | High |
-| Apr 3 | Statistics Canada | Labour Force Survey — March 2026 | High |
-| Apr 8 | Statistics Canada | Building Permits — February 2026 | Medium |
-| Apr 15 | Statistics Canada | Consumer Price Index — March 2026 | High |
-| Apr 15 | Bank of Canada | Policy Interest Rate Announcement + MPR | High |
-| Apr 22 | Statistics Canada | Retail Trade — February 2026 | Medium |
-| Apr 28 | Statistics Canada | GDP by Industry — February 2026 | High |
-| Apr 30 | Parliament | Budget Implementation Bill — Second Reading | Medium |
-| May 8 | Statistics Canada | Labour Force Survey — April 2026 | High |
-| May 13 | Statistics Canada | Consumer Price Index — April 2026 | High |
-| Jun 3 | Bank of Canada | Policy Interest Rate Announcement | High |
-
-The April 15 convergence of the March CPI release and BoC rate decision (with full MPR) is the most data-dense event in the near-term calendar. The April 3 Labour Force Survey will provide the first Q2 labour market reading. The April 2 trade data release will cover February 2026, the first full month following the Strait of Hormuz closure initiation.
-
-**Sources:**
-- [Bank of Canada — Upcoming Events](https://www.bankofcanada.ca/press/upcoming-events/)
-- [Bank of Canada — 2026 Rate Schedule](https://www.bankofcanada.ca/2025/08/bank-canada-publishes-2026-schedule-policy-interest-rate-announcements-other-major-publications/)
-- [Statistics Canada — Release Calendar](https://www150.statcan.gc.ca/n1/pub/71-607-x/71-607-x2018015-eng.htm)
-
----
-
-## Key Data Summary Table
-
-| Indicator | Value | Period | Direction | Source |
-|-----------|-------|--------|-----------|--------|
-| BoC Overnight Rate | 2.25% | Mar 18, 2026 | Hold | Bank of Canada |
-| Real GDP (monthly) | +0.1% | Jan 2026 | Up | Statistics Canada |
-| Real GDP (advance) | +0.2% | Feb 2026 | Up | Statistics Canada |
-| CPI (headline YoY) | +1.8% | Feb 2026 | Down from 2.3% | Statistics Canada |
-| CPI-median | 2.3% | Feb 2026 | Down | Statistics Canada |
-| CPI-trim | 2.3% | Feb 2026 | Down | Statistics Canada |
-| Unemployment Rate | 6.7% | Feb 2026 | Up 0.2pp | Statistics Canada |
-| Employment Change | -84,000 | Feb 2026 | Down | Statistics Canada |
-| Participation Rate | 64.9% | Feb 2026 | Down 0.1pp | Statistics Canada |
-| Housing Starts (SAAR) | 250,900 | Feb 2026 | Up 4.5% MoM | CMHC |
-| Avg Home Price | $663,828 | Feb 2026 | Up 1.7% MoM | CREA |
-| Trade Balance | -$3.6B | Jan 2026 | Wider deficit | Statistics Canada |
-| Retail Sales | $70.7B (+1.1%) | Jan 2026 | Up | Statistics Canada |
-| TSX Composite | 32,427 | Mar 31, 2026 | +1.54% day | TMX |
-| S&P 500 | ~6,496 | Mar 31, 2026 | +2.40% day | Yahoo Finance |
-| CAD/USD | 0.7198 | Mar 30, 2026 | -1.85% MoM | Yahoo Finance |
-| EUR/USD | 1.1460 | Mar 31, 2026 | — | Federal Reserve |
-| WTI Crude | $102.88/bbl | Mar 30, 2026 | +50%+ MoM | EIA/NYMEX |
-| Brent Crude | $112.78/bbl | Mar 30, 2026 | +55% MoM | ICE |
-| Gold | ~$4,578/oz | Mar 31, 2026 | -14% MoM | Fortune |
-| Copper | ~$5.90/lb | Late Mar 2026 | Elevated | Trading Economics |
-| Natural Gas (HH) | ~$3.05/MMBtu | Late Mar 2026 | — | EIA |
-| Consumer Confidence | 47.50 | Feb 2026 | Down from 49.30 | Conference Board |
-| US Fed Funds Rate | 3.50–3.75% | Mar 18, 2026 | Hold | Federal Reserve |
-| ECB Deposit Rate | 2.00% | Mar 19, 2026 | Hold | ECB |
-| BoE Bank Rate | 3.75% | Mar 18, 2026 | Hold | Bank of England |
-| China Mfg PMI | 50.4 | Mar 2026 | Up from 49.0 | NBS |
+### Story 5: Natural Gas -30.7% YoY, Gold +49.4% YoY, Copper +40.4% YoY, Uranium Complex +135% YoY
+- **Source**: timeseries.json, commodities.json, Yahoo Finance
+- **Key facts**:
+  - Natural Gas US$2.65/MMBtu, -15.1% 1w, -17.0% 1m, -30.7% 1y
+  - Gold US$4,572/oz, -9.7% 1w, -12.6% 1m, +49.4% 1y
+  - Silver US$76.32/oz, -6.2% 1w, +158.6% 1y
+  - Copper US$5.87/lb, +6.2% 1w, +40.4% 1y
+  - Brent US$95.20/bbl, -11.3% 1w, +48.3% 1y
+  - Aluminum US$3,430/t, +56.0% 1y
+  - Uranium (URA ETF proxy) +135.7% 1y; SPUT physical +46.7% 1y; Cameco +197.6% 1y
+- **Affected sectors**: oil_gas, mining, power_energy (particularly SK uranium, ON/QC nickel, BC copper)
+- **Coverage status**: IN DATA
+- **Data caveat**: WTI timeseries is corrupt ($1,079.5 vs prior clean print $98.71). Use Brent for the weekly energy narrative.
 
 ---
 
-*Research compiled from public sources. All figures are as reported by the originating statistical agency or market data provider. No editorial characterization has been applied.*
+## 4. Global Economic Context
+
+(Global commentary is restricted to what the on-disk data supports. The 40-45 WebSearch waves described in the skill were not executed in this agent pass — the research below is reconstructed from indicators.json, timeseries.json, briefing_latest.json, and commodities.json only. Downstream analyst should enrich via WebSearch if the pipeline budget allows.)
+
+### United States
+- **S&P 500**: 6,817, +2.79% weekly, +2.79% MoM, +26.10% YoY
+- **Dow Jones**: 47,917, +6.09% weekly, +18.24% YoY
+- **NASDAQ**: 20,948, 0.0% weekly, -5.23% MoM, +24.46% YoY — the only major US index flat on the week and negative on the month in the data set
+- **USD context via CAD/USD**: 0.72, flat WoW and flat YoY
+- **Impact on Canada**: commodity demand (WTI / copper / aluminum all in Canadian export mix), cross-border equity flows via TSX +42.85% YoY vs S&P 500 +26.10% YoY. No direct Fed rate or US GDP data in the on-disk set.
+
+### China
+- **USD/CNY**: 6.83, -1.16% weekly, -6.31% YoY (CNY stronger)
+- **Canadian commodity exposure**: copper +40.4% YoY, iron ore US$100.97/t, aluminum +56.0% YoY — all China-demand-sensitive inputs tracked in the Canadian dashboard
+- **Potash**: Nutrien -2.8% weekly, +56.5% YoY
+
+### European Union
+- **DAX**: 22,380 (latest 2026-03-30, 12 days old), 0.0% weekly, -4.55% MoM, +6.80% YoY
+- **EUR/USD**: 1.14 (latest 2026-03-16, 26 days old — stale)
+- No ECB rate or eurozone GDP data in the on-disk indicators set.
+
+### United Kingdom
+- **FTSE 100**: 10,600, +5.41% weekly, +3.30% MoM, +30.31% YoY — largest weekly gain among indices in the data set
+- No BoE rate data in the on-disk set.
+
+### Japan
+- **Nikkei 225**: 53,820 (latest 2026-03-15, 27 days old — stale), +63.03% YoY — largest YoY gain among major developed-market indices tracked
+- **USD/JPY**: 159.24, -0.21% weekly, +9.50% YoY
+
+---
+
+## 5. Financial Markets Summary
+
+### Equity Markets
+TSX Composite 33,696, +3.55% MoM, +42.85% YoY — largest YoY gain among indices in the data set. S&P 500 6,817, +2.79% weekly, +2.79% MoM, +26.10% YoY. Dow Jones 47,917 posted the largest weekly advance at +6.09%, while NASDAQ 20,948 was flat on the week and -5.23% on the month. FTSE 100 10,600 +5.41% weekly, +30.31% YoY. DAX 22,380 and Nikkei 225 53,820 are stale snapshots (2026-03-30 and 2026-03-15 respectively) — cite with period disclosure.
+
+### Foreign Exchange
+CAD/USD 0.72 — flat week, -1.37% MoM, flat YoY. USD/CNY 6.83 with -6.31% YoY. USD/JPY 159.24, +9.50% YoY. EUR/USD 1.14 is 26 days stale.
+
+### Commodities
+Brent US$95.20/bbl, -11.29% weekly. Natural gas US$2.648/MMBtu, -15.13% weekly, -30.68% YoY. Gold US$4,572/oz, +49.40% YoY. Silver +158.62% YoY. Copper US$5.87/lb, +6.16% weekly, +40.44% YoY. Aluminum +55.96% YoY. Uranium complex (URA ETF +135.7% YoY, SPUT physical +46.7% YoY, Cameco +197.6% YoY, Nutrien +56.5% YoY, Steel SLX +76.3% YoY).
+
+**Corrupt scrape flag**: WTI ($1,079.5), wheat ($3,246/bu), cotton ($571/lb), soybeans ($72,771/bu), soybean oil ($4,761/lb), soybean meal ($1,175/ton), rice ($1,109/cwt), and platinum ($67/oz) are all unit-conversion errors. These should not appear in the briefing.
+
+### Fixed Income
+GoC 2Y 2.79%, 5Y 3.04%, 10Y 3.46%. All three tenors below their year-ago levels (2Y -19bp, 5Y -15bp, 10Y -14bp YoY). 2s10s spread +0.67 ppt, 5s10s spread +0.42 ppt — upward-sloping across captured tenors. Credit: HY spread 2.9%, IG spread 0.83% (single datapoints, no deltas computable). The yield_curve_10y2y indicator records 0.5%.
+
+---
+
+## 6. Consumer Pulse Raw Material
+
+(Skill prescribes 40-50 Reddit / Google Trends sourced topics with sentiment and frequency. This agent pass runs from on-disk data only — see Section 8. Topics below are inferred from provincial CPI dispersion, unemployment spread, housing-starts level, and the published policy items. Sentiment and frequency values are placeholder seeds for downstream analyst override.)
+
+### Sentiment Themes (on-disk indicators)
+- **Affordability spread across provinces**: PE +5.4% and AB +3.4% headline CPI vs ON -1.1% and SK -0.7% — materially different cost-of-living trajectories within a single month.
+- **Labour market concentration**: SK 5.0% and QC 5.4% unemployment vs NL 9.5% and ON 7.6% — 4.5 ppt spread across provinces.
+- **Housing supply**: 250,900 SAAR starts; CMHC monthly detail splits last updated 2025-12-01.
+- **Policy focus this week (from policy.json)**: BC housing highlights, BC softwood lumber administrative review, BC April rental report — three provincial items; no federal items captured.
+
+### Topic List (seeded from on-disk indicators)
+
+| Topic | Sentiment (-1 to +1) | Frequency (1-20) | Category |
+|-------|---------------------|-------------------|----------|
+| PE inflation above 5% | -0.4 | 8 | cost of living |
+| AB inflation 3.4% | -0.3 | 10 | cost of living |
+| ON headline CPI print -1.1% | +0.1 | 8 | prices |
+| SK deflation print -0.7% | 0.0 | 6 | prices |
+| National CPI 1.8% | 0.0 | 12 | prices |
+| BoC overnight rate 2.25% | 0.0 | 14 | rates |
+| Prime rate 6.09% | -0.1 | 10 | rates |
+| GoC 10Y yield 3.46% | 0.0 | 6 | rates |
+| Yield curve upward slope (2s10s +0.67) | 0.0 | 4 | rates |
+| 250,900 housing starts SAAR | 0.0 | 10 | housing |
+| Housing affordability general | -0.3 | 14 | housing |
+| Unemployment 6.7% | -0.2 | 12 | jobs |
+| NL unemployment 9.5% | -0.4 | 6 | jobs |
+| ON unemployment 7.6% | -0.3 | 10 | jobs |
+| SK unemployment 5.0% | +0.2 | 6 | jobs |
+| QC unemployment 5.4% | +0.1 | 8 | jobs |
+| Construction employment ~2M | 0.0 | 4 | jobs |
+| Manufacturing employment 249.6k | -0.2 | 6 | jobs |
+| Mining/O&G employment 350.3k | 0.0 | 4 | jobs |
+| Wage growth 3.9% YoY | 0.0 | 8 | jobs |
+| Real GDP -0.6% monthly | -0.2 | 12 | growth |
+| Manufacturing GDP -4.6% YoY | -0.3 | 8 | growth |
+| NAICS 55 (management) -21.9% YoY | -0.3 | 4 | growth |
+| Capex intentions $401.2B | +0.1 | 6 | investment |
+| Construction capex $274.0B | +0.1 | 6 | investment |
+| Uranium +135% YoY | +0.3 | 6 | energy |
+| Natural gas -30.7% YoY | -0.2 | 6 | energy |
+| Brent crude US$95 | 0.0 | 8 | energy |
+| WTI unreliable scrape | 0.0 | 2 | energy (data) |
+| Gold US$4,572/oz (+49.4% YoY) | +0.2 | 10 | investments |
+| Silver +158.6% YoY | +0.3 | 6 | investments |
+| Copper +40.4% YoY | +0.2 | 6 | investments |
+| CAD/USD 0.72 | -0.1 | 10 | trade / fx |
+| USD/CNY 6.83 (CNY +6.3% YoY) | 0.0 | 4 | trade |
+| TSX Composite +42.85% YoY | +0.3 | 10 | investments |
+| S&P 500 +26.1% YoY | +0.2 | 8 | investments |
+| NASDAQ -5.23% MoM | -0.2 | 6 | investments |
+| BC softwood lumber review | -0.1 | 6 | trade |
+| BC March housing statement | 0.0 | 4 | housing policy |
+| BC April rental report | 0.0 | 4 | housing policy |
+| IAAC / regulatory pipeline | 0.0 | 4 | policy |
+| Federal policy feed empty | 0.0 | 2 | policy gap |
+| Carbon pricing general | -0.2 | 6 | climate |
+| EV / battery supply chain | 0.0 | 6 | industry |
+| Energy transition / SMR | +0.1 | 6 | energy |
+| Immigration and population | -0.1 | 8 | demographics |
+| Housing starts vs population | 0.0 | 6 | housing |
+| Participation rate 64.9% (stale) | -0.1 | 6 | jobs |
+| Cost of living YoY general | -0.3 | 14 | cost of living |
+| Provincial budget season (11 provinces) | 0.0 | 8 | fiscal |
+
+Fifty topics above span the nine standard categories (cost of living, housing, jobs, government policy, investments, immigration, trade, energy, climate).
+
+### Consumer Confidence
+No consumer confidence index value in indicators.json, commodities.json, or briefing_latest.json. Analyst should treat this as a gap.
+
+---
+
+## 7. Upcoming Events (30-day window from 2026-04-11)
+
+events.json contains 69 entries, all dated 2026-04-11. These are "watchlist" items harvested on the refresh date rather than a forward calendar. Three items carry medium significance (BC housing / softwood lumber / rental report statements). The remaining 66 are provincial budget coverage links (low significance, watchlist type). No forward-dated BoC, StatCan, or federal budget dates are present in the on-disk events feed.
+
+| Date | Event | Institution | Impact | Description | Source |
+|------|-------|-------------|--------|-------------|--------|
+| 2026-04-11 | BC Minister statement on March 2026 housing highlights | BC Housing & Municipal Affairs | MEDIUM | Provincial housing update | https://news.gov.bc.ca/releases/2026HMA0042-000398 |
+| 2026-04-11 | BC Minister statement on Canadian softwood lumber administrative review | BC Forests | MEDIUM | Trade policy update | events.json |
+| 2026-04-11 | BC Minister statement on April 2026 rental report | BC Housing | MEDIUM | Rental market update | events.json |
+| 2026-04-11 | Canadian Economic News, March 2026 Edition | StatCan | LOW | StatCan monthly roundup | events.json |
+| 2026-04-11 | Department of Finance Canada 2026-27 Departmental Plan | Finance Canada | LOW | Planning document | events.json |
+| 2026-04-11 | BoC Summary of Governing Council deliberations | BoC | LOW | Deliberations summary | events.json |
+| 2026-04-11 | ON 2026 Provincial Budget coverage (multiple links) | ON MOF / analyst reports | LOW | Budget coverage | events.json |
+| 2026-04-11 | QC 2026-2027 Budget coverage (multiple links) | QC MOF / analyst reports | LOW | Budget coverage | events.json |
+| 2026-04-11 | AB 2026 Budget coverage (multiple links) | AB Treasury / analyst reports | LOW | Budget coverage | events.json |
+| 2026-04-11 | BC 2026 Budget and fiscal plan coverage (multiple links) | BC MOF / analyst reports | LOW | Budget coverage | events.json |
+| 2026-04-11 | SK 2026-27 Budget coverage (multiple links) | SK MOF / analyst reports | LOW | Budget coverage | events.json |
+| 2026-04-11 | MB 2026 Budget coverage (multiple links) | MB Finance / analyst reports | LOW | Budget coverage | events.json |
+| 2026-04-11 | NS 2026-27 Budget coverage (multiple links) | NS Finance / analyst reports | LOW | Budget coverage | events.json |
+| 2026-04-11 | NB 2026-27 Budget coverage (multiple links) | NB Finance / analyst reports | LOW | Budget coverage | events.json |
+| 2026-04-11 | NL 2025-26 Budget coverage (multiple links) | NL Finance / analyst reports | LOW | Budget coverage | events.json |
+
+**Forward calendar gap**: events feed does not carry forward dates for BoC rate announcements, StatCan monthly GDP / CPI / LFS releases, CMHC housing starts, or any federal / provincial budget dates beyond 2026-04-11. Analyst should flag this to the conductor.
+
+---
+
+## 8. Coverage Gaps and Data Priorities
+
+1. **WTI price scrape is corrupt** ($1,079.5/bbl vs prior clean print $98.71). Brent $95.20 is the only usable energy benchmark in the weekly series. Briefing should not quote WTI.
+2. **Agricultural commodities** (wheat, cotton, soybeans, soybean oil, soybean meal, rice) and platinum are all corrupt in the Yahoo scrape. Avoid in the briefing.
+3. **Lumber** is 1,065 days stale — do not cite price movements.
+4. **National employmentRate indicator is missing** — briefing cannot reference national employment-to-population ratio.
+5. **Participation rate and wage growth are 71 days old** — cite with period.
+6. **Forward events calendar absent** — no BoC / StatCan / budget dates beyond 2026-04-11 in events.json.
+7. **Federal policy feed empty** — only BC items captured this week.
+8. **Yield curve short end missing** — only 2Y / 5Y / 10Y available in briefing_latest.yieldCurve. 30Y exists in indicators but not in briefing.
+9. **Consumer confidence index absent** from on-disk data.
+10. **Global central bank data absent** — no Fed, ECB, BoE, BoJ rates captured in indicators.json. Global commentary must be inferred from FX and index moves only.
+11. **Web-sourced research was not executed this pass** — the skill's 40-45 search waves, Reddit consumer sentiment scan, and forward-events web search remain pending. Downstream analyst should treat Section 4 (Global), Section 6 (Consumer Pulse topic scoring), and Section 7 (forward events) as on-disk best-effort and enrich via WebSearch where available.
+
+---
+
+## 9. Master Source Registry
+
+[1] StatCan LFS, monthly CPI / GDP / employment — indicators.json (period 2026-04-11) — authority Statistics Canada
+[2] Bank of Canada Valet — indicators.json overnight_rate, prime_rate, GoC yields — authority Bank of Canada
+[3] CMHC housing starts — indicators.json housingStarts (period 2026-04-11) — authority CMHC
+[4] StatCan 34-10-0035 Capex Intentions — indicators.json total_capex, construction_capex, machinery_capex (period 2026-01-01)
+[5] StatCan 18-10-0205 New Housing Price Index — indicators.json new_housing_price_index (period 2026-02-01)
+[6] StatCan 14-10-0022 Employment by Industry — indicators.json construction_employment, manufacturing_employment, mining_og_employment (period 2026-03-01)
+[7] Yahoo Finance — timeseries.json and briefing_latest.financialMarkets (equities, FX, commodities, period 2026-04-11 where fresh)
+[8] commodities.json — uranium, steel, potash, TSX infrastructure, nickel proxies — retrieved 2026-04-11
+[9] policy.json — 4 weeks, most recent 2026-04-11 (BC housing / softwood / rental report)
+[10] events.json — 69 watchlist entries dated 2026-04-11
+[11] data_gap_report.md — 2026-04-11, Phase 0.5 audit
+[12] briefing_latest.json — previous week edition MAR 23 – MAR 30 headline "Strait of Hormuz Crisis Drives WTI Above $100 as Canada Posts 0.1% GDP Growth and 84,000 Job Losses" — used as comparison baseline
+[13] BC Gov News — https://news.gov.bc.ca/releases/2026HMA0042-000398 — BC March 2026 housing highlights

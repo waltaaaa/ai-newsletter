@@ -1,1004 +1,1259 @@
 {
   "meta": {
-    "week_of": "2026-03-31",
-    "generated_at": "2026-03-31T16:00:00Z",
+    "week_of": "2026-04-11",
+    "generated_at": "2026-04-11T00:00:00Z",
     "agent": "tldr-analyst-industry",
     "industries_count": 20,
     "data_quality": {
       "indicators_fresh": true,
       "gaps": [
-        "No month-over-month or year-over-year GDP change data available in pipeline; mm/yy derived from StatCan Daily narrative (January 2026 release)",
-        "No projects mapped to NAICS 41, 44-45, 52, 54, 55, 72, 81 — pipeline sector codes do not cover these industries",
-        "2,623 projects categorized as 'Other' could not be mapped to specific NAICS codes"
+        "Lumber timeseries stale (last update 2021-03-08) — no lumber narrative for NAICS 11/31-33",
+        "Canola and wheat prices absent from dashboard timeseries",
+        "Wholesale sales series not in indicators.json — using StatCan flash estimate only",
+        "NAICS 41, 52, 54, 55, 81 have zero direct project tags — services-only coverage",
+        "Only single period available for industry_gdp_mm/yy (no prior-period comparison)"
       ],
       "anomalies": [
-        "Industry GDP values are December 2025 levels ($M); January 2026 directional changes from StatCan Daily narrative only"
+        "manufacturing_employment indicator at 247.3k appears to reflect a narrow sub-component, not total sector employment",
+        "NAICS 55 Management YoY GDP change -21.9% reflects small dollar base ($641M), volatility flag",
+        "forestry_exports (4,413 $M) and mineral_exports (100 $M) indicators stale (2003 period)"
       ]
     }
   },
-
   "goodsIndustries": [
     {
       "code": "11",
       "name": "Agriculture, Forestry, Fishing & Hunting",
-      "mm": "declined",
-      "yy": "n/a",
+      "mm": "-1.4%",
+      "yy": "+5.4%",
       "key_facts": [
-        "Sector GDP stood at $47,235M in December 2025; sector declined in January 2026 per StatCan, with decreases in crop production and forestry",
-        "Crop production (except cannabis) fell 1.3% in November 2025; forestry and logging declined 2.8% for the third consecutive month",
-        "BHP Jansen potash project in Saskatchewan ($10.6B total, Stage 1 + Stage 2) in full-scale construction with 5,500 construction-phase jobs; first production rescheduled to mid-CY2027",
-        "Canada exported 22.9 million tonnes of potash in 2024, accounting for over 39% of global exports"
+        "StatCan reports agriculture, forestry, fishing and hunting GDP declined 1.4% month-over-month while running +5.4% year-over-year (StatCan GDP by industry release, March 31, 2026).",
+        "U.S. Commerce Department's preliminary seventh administrative review set Canadian softwood lumber duties at roughly 25%, down from the prior ~35%, with the final rate expected in August (BC Government News, April 9, 2026).",
+        "Agriculture and Agri-Food Canada projects 2026 canola acreage at 21.8M acres (+1.0%), Manitoba +4.7% to 3.2M acres, total wheat area -1.1% to 26.7M acres (AAFC Principal Field Crops Outlook, February 18, 2026).",
+        "China is expected to lower its canola seed tariff to approximately 15% from March 1, 2026 (RealAgriculture, March 2026)."
       ],
       "projects_count": 17,
       "projects_value": "5.47B",
       "policy_items": [
         {
-          "title": "U.S.-Canada Tariff Dispute — Agricultural Exports",
-          "description": "U.S. tariffs remain a factor for Canadian agricultural exports. Canada's retaliatory tariffs on U.S. goods continue under the ongoing trade dispute.",
-          "affected_projects": 17,
-          "source_url": "https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html"
+          "title": "BC Forests Minister statement on U.S. softwood lumber duty review",
+          "description": "21 projects across forestry, manufacturing, agriculture and oil_gas linked to the BC softwood-duty response in policy.json.",
+          "affected_projects": 21,
+          "source_url": "https://news.gov.bc.ca/releases/2026FOR0011-000394"
+        },
+        {
+          "title": "Canada Principal Field Crops Outlook (AAFC, Feb 2026)",
+          "description": "Canola acreage projected +1.0% to 21.8M acres; wheat -1.1% to 26.7M acres.",
+          "affected_projects": 0,
+          "source_url": "https://agriculture.canada.ca/en/sector/crops/reports-statistics/canada-outlook-principal-field-crops-2026-02-18"
         }
       ],
       "news_stories": [
-        "BHP Jansen potash project ($10.6B) in full-scale construction; first production rescheduled to mid-CY2027",
-        "Crop production and forestry declined in November 2025, continuing multi-month contraction",
-        "Nutrien (NTR) closed at $104.62, up 50.6% year-over-year but down 1.0% week-over-week"
+        "US appears to lower softwood lumber tariffs — CBC News, April 9, 2026",
+        "Acreage 2026 — canola and corn gain ground, wheat takes a breather — RealAgriculture, March 2026",
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
         {"code": "111", "name": "Crop Production"},
-        {"code": "113", "name": "Forestry & Logging"},
-        {"code": "114", "name": "Fishing, Hunting & Trapping"}
+        {"code": "113", "name": "Forestry and Logging"},
+        {"code": "114", "name": "Fishing, Hunting and Trapping"}
       ],
       "indicatorSrc": "StatCan",
-      "isNegative": true,
+      "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-1.4%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_11"},
+        {"label": "Sector GDP (Y/Y)", "value": "+5.4%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_11"},
+        {"label": "Ag Employment", "value": "218,600", "delta": "Feb 2026", "source": "indicators.json:ag_employment"},
+        {"label": "Agri-food Exports", "value": "$3,285M", "delta": "Feb 2026", "source": "indicators.json:ag_exports_current"},
+        {"label": "Potash (Nutrien)", "value": "$104.62", "delta": "-1.0% W/W, +50.6% Y/Y", "source": "commodities.json:potash_nutrien"},
+        {"label": "Active Projects", "value": "17", "delta": "$5.47B aggregate value", "source": "projects_all.json:sector=agriculture|forestry"}
+      ],
       "cross_references": [
         {
+          "indicator": "softwood_duty",
+          "direction": "down",
+          "magnitude": "~25% vs prior ~35%",
+          "linked_projects": 21,
+          "linked_value": "4.73B",
+          "interpretation": "21 projects linked to the BC softwood-duty response in policy.json span forestry, manufacturing, agriculture and oil_gas; 12 forestry projects in the database carry $4.73B in parsed value.",
+          "source_url": "https://news.gov.bc.ca/releases/2026FOR0011-000394"
+        },
+        {
           "indicator": "potash_nutrien",
-          "direction": "up",
-          "magnitude": "$104.62 (up 50.6% YoY, down 1.0% WoW)",
+          "direction": "down",
+          "magnitude": "$104.62 (-1.0% W/W)",
           "linked_projects": 17,
           "linked_value": "5.47B",
-          "interpretation": "Nutrien share price up 50.6% year-over-year. BHP Jansen ($10.6B) remains the largest single agriculture-linked project under construction in the pipeline."
+          "interpretation": "Nutrien share price is tracked as a Saskatchewan fiscal proxy in commodities.json; the week-over-week decline follows a +50.6% year-over-year gain.",
+          "source_url": "https://www.nutrien.com"
         }
       ],
       "trend_analysis": {
         "direction": "down",
-        "momentum": "Sector declined in January 2026, following a 1.1% decline in November and 0.6% decrease in October 2025",
-        "comparison": "Forestry and logging declined 2.8% for the third consecutive month in November 2025. Crop production (except cannabis) fell 1.3% in November.",
-        "outlook": "If trade disputes persist, agricultural export volumes may face continued pressure. Potash production expansion (BHP Jansen Stage 1, mid-CY2027) represents the sector's largest capital commitment."
+        "momentum": "Sector GDP -1.4% M/M in January 2026 while running +5.4% Y/Y (StatCan, March 31, 2026).",
+        "comparison": "StatCan flagged agriculture/forestry as a month-over-month drag partially offset by gains in manufacturing and construction.",
+        "outlook": "If the U.S. softwood duty final rate in August lands near the preliminary 25% and China proceeds with the ~15% canola tariff, the 21 projects linked to the BC softwood-duty policy item and the $4.73B in tracked forestry capex would carry updated input-cost and market-access assumptions."
       }
     },
     {
       "code": "21",
-      "name": "Mining, Quarrying, Oil & Gas Extraction",
+      "name": "Mining, Quarrying & Oil/Gas Extraction",
       "mm": "+1.2%",
-      "yy": "n/a",
+      "yy": "-0.1%",
       "key_facts": [
-        "Sector GDP stood at $119,621M in December 2025; sector expanded 1.2% in January 2026, fully offsetting December's decline",
-        "WTI crude fell over 20% in recent months to approximately $55/bbl; WCS-WTI differential narrowed from US$15/bbl to US$9.95/bbl",
-        "LNG Canada ($40B) in Kitimat loaded its first cargo in June 2025; Phase 1 capacity 6.5 million tonnes per annum; marine terminal in-water works scheduled April 15, 2026",
-        "Cameco (CCO) at $147.75, down 14.1% month-over-month but up 149.9% year-over-year"
+        "Sector GDP +1.2% month-over-month and -0.1% year-over-year per StatCan GDP by industry (March 31, 2026).",
+        "At PDAC 2026, the federal Minister of Energy and Natural Resources announced over $3.6B in new programs — up to $165.2M for 22 projects across eight provinces, unlocking $434M in capital, plus a First and Last Mile Fund backed by $1.5B (NRCan, March 2026).",
+        "Canada secured 30 new critical minerals partnerships unlocking $12.1B in mining project capital (NRCan, March 2026).",
+        "Industry forecast for 2026 is 5,709 wells drilled (+3% YoY), with Canadian Natural Resources planning 448 new wells under a +3% production plan (Industrial Info, 2026)."
       ],
-      "projects_count": 418,
-      "projects_value": "275.87B",
+      "projects_count": 421,
+      "projects_value": "268.74B",
       "policy_items": [
         {
-          "title": "Section 232 Steel & Aluminum Tariffs at 50%",
-          "description": "U.S. Section 232 tariffs on Canadian steel and aluminum stand at 50%. Autoworker employment on the parts side at 64,828 as of December, down 9.5% year-over-year.",
-          "affected_projects": 418,
-          "source_url": "https://www.bnnbloomberg.ca/tariffs/2026/03/24/tariff-hit-industries-struggling-as-trade-war-drags-into-second-year/"
+          "title": "Federal Critical Minerals Strategy — $3.6B and FLMF $1.5B",
+          "description": "22 critical-minerals projects unlocked under $165.2M in program funding; $434M in project capital leveraged; 30 new international partnerships unlock $12.1B in mining capital.",
+          "affected_projects": 421,
+          "source_url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html"
         }
       ],
       "news_stories": [
-        "LNG Canada ($40B) loaded first cargo June 2025; marine terminal in-water works commence April 15, 2026",
-        "WTI crude fell over 20% to ~$55/bbl; TMX pipeline nearly tripled Pacific Coast capacity to 890,000 b/d",
-        "Sprott Physical Uranium Trust at $27.55, up 3.5% week-over-week"
+        "Canada expecting upstream drilling increase in 2026 — Industrial Info",
+        "Canadian Natural Resources outlines 2026 growth plan — Industrial Info",
+        "Government of Canada invests to unlock critical minerals advantage — NRCan, March 2026"
       ],
       "subsectors": [
-        {"code": "211", "name": "Oil & Gas Extraction"},
-        {"code": "212", "name": "Mining (except Oil & Gas)"},
-        {"code": "213", "name": "Support Activities for Mining, Oil & Gas"}
+        {"code": "211", "name": "Oil and Gas Extraction"},
+        {"code": "212", "name": "Mining (except Oil and Gas)"},
+        {"code": "213", "name": "Support Activities for Mining, Quarrying, Oil and Gas"}
       ],
       "indicatorSrc": "StatCan",
-      "isNegative": false,
+      "isNegative": true,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+1.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_21"},
+        {"label": "Sector GDP (Y/Y)", "value": "-0.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_21"},
+        {"label": "WTI Crude", "value": "$102.77/bbl", "delta": "Mar 31 2026", "source": "indicators.json:comm_wti"},
+        {"label": "Cameco", "value": "$147.75", "delta": "-0.6% W/W, +149.9% Y/Y", "source": "commodities.json:cameco_uranium"},
+        {"label": "Sprott Uranium Trust", "value": "$27.55", "delta": "+3.5% W/W, +34.1% Y/Y", "source": "commodities.json:sprott_uranium"},
+        {"label": "Mining & O&G Employment", "value": "343,600", "delta": "Jan 2026", "source": "indicators.json:mining_og_employment"},
+        {"label": "Active Projects", "value": "421", "delta": "$268.74B aggregate value", "source": "projects_all.json:sector=mining|oil_gas|Mining|Mineral Mines|Coal Mines|Transmission Pipelines|Natural Gas Processing Plants"}
+      ],
       "cross_references": [
         {
-          "indicator": "uranium_spot",
-          "direction": "down",
-          "magnitude": "$46.86 URA ETF (down 17.0% MoM, up 114.2% YoY)",
-          "linked_projects": 418,
-          "linked_value": "275.87B",
-          "interpretation": "Uranium proxy URA ETF down 17.0% month-over-month. Cameco (CCO) at $147.75, down 14.1% MoM. Saskatchewan and Ontario uranium mining and SMR projects are within this sector."
+          "indicator": "critical_minerals_program",
+          "direction": "up",
+          "magnitude": "$3.6B + $1.5B FLMF",
+          "linked_projects": 421,
+          "linked_value": "268.74B",
+          "interpretation": "NRCan identified 22 critical-minerals projects across eight provinces as direct program recipients; the $12.1B partnerships pipeline connects to the 421 tracked mining and oil/gas projects worth $268.74B.",
+          "source_url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html"
         },
         {
-          "indicator": "sprott_uranium",
+          "indicator": "uranium_cameco",
           "direction": "up",
-          "magnitude": "$27.55 (up 3.5% WoW, down 3.8% MoM)",
-          "linked_projects": 418,
-          "linked_value": "275.87B",
-          "interpretation": "Sprott Physical Uranium Trust rose 3.5% week-over-week, partially offsetting the broader monthly decline in uranium-related equities."
+          "magnitude": "$147.75 (+149.9% Y/Y)",
+          "linked_projects": 421,
+          "linked_value": "268.74B",
+          "interpretation": "Cameco's year-over-year gain of 149.9% links to SK uranium mine expansions and SMR supply-chain projects in ON and NB tracked in the database.",
+          "source_url": "https://www.cameco.com"
         },
         {
-          "indicator": "potash_nutrien",
+          "indicator": "wti_crude",
           "direction": "up",
-          "magnitude": "$104.62 (up 50.6% YoY)",
-          "linked_projects": 418,
-          "linked_value": "275.87B",
-          "interpretation": "Nutrien share price up 50.6% year-over-year, reflecting potash demand. BHP Jansen ($10.6B) is the sector's largest single construction project."
+          "magnitude": "$102.77/bbl",
+          "linked_projects": 421,
+          "linked_value": "268.74B",
+          "interpretation": "Producer proposals for oil sands total 4.1M bpd of new capacity per Industrial Info; CNRL plans 448 new wells in 2026 under a +3% production plan.",
+          "source_url": "https://www.industrialinfo.com/news/article/canadian-natural-resources-outlines-plan-to-grow-oil-and-gas-production-drilling--350680"
         }
       ],
       "trend_analysis": {
         "direction": "up",
-        "momentum": "Sector GDP expanded 1.2% in January 2026, fully offsetting December's decline; led by increased oil and gas extraction activity",
-        "comparison": "Alberta's GDP from mining, quarrying, and oil and gas increased 3.9% in 2024, from $64.4B to $66.9B. January 2026 rebound follows a December decline.",
-        "outlook": "If WTI remains near $55/bbl, oil sands projects with breakeven costs above that level face margin compression. LNG Canada Phase 2 expansion remains under consideration. Marine terminal construction continues with in-water works scheduled April 15, 2026."
+        "momentum": "M/M GDP +1.2% in January 2026 alongside WTI at $102.77 and Cameco +149.9% Y/Y.",
+        "comparison": "Year-over-year GDP flat at -0.1%, but monthly print and commodity complex both firmed into Q1 2026.",
+        "outlook": "If the federal $3.6B critical-minerals program and $1.5B First and Last Mile Fund proceed on the announced schedule, the 22 PDAC-identified projects and the 30 partnership pipeline would carry specific dollar commitments tied to the 421 tracked sector projects."
       }
     },
     {
       "code": "22",
       "name": "Utilities",
-      "mm": "increased",
-      "yy": "n/a",
+      "mm": "+0.6%",
+      "yy": "-1.7%",
       "key_facts": [
-        "Sector GDP stood at $47,715M in December 2025; utilities contributed to gains in goods-producing industries in January 2026",
-        "CER Energy Future 2026 projects end-use electricity demand increasing 44% from 2023 to 2050",
-        "Interprovincial electricity flows projected to more than double, from 55 TWh (2023) to 137 TWh by 2050",
-        "Hydroelectricity accounts for approximately 60% of Canadian electric generation"
+        "Sector GDP +0.6% M/M and -1.7% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "Ontario Power Generation reconnected Darlington Unit 4 to the grid in March 2026, completing a C$12.8B refurbishment C$150M under budget and four months ahead of schedule (World Nuclear Association).",
+        "Ontario is moving forward with the first of four Small Modular Reactors at Darlington — announced as a global first in commercial SMR deployment; OPG and Port Hope signed a Wesleyville agreement envisaging up to 10 GWe (February 2026).",
+        "Alberta's expert panel to the Minister of Affordability and Utilities was due to deliver its final report on integrating nuclear by March 31, 2026."
       ],
-      "projects_count": 1407,
-      "projects_value": "587.61B",
+      "projects_count": 824,
+      "projects_value": "522.89B",
       "policy_items": [
         {
-          "title": "SMR Development Programs — Saskatchewan and Ontario",
-          "description": "Saskatchewan and Ontario continue to advance small modular reactor programs. URA ETF at $46.86, down 17.0% month-over-month but up 114.2% year-over-year.",
-          "affected_projects": 1407,
-          "source_url": "https://www.cer-rec.gc.ca/en/data-analysis/canada-energy-future/2026/results/"
+          "title": "Ontario SMR program at Darlington and Wesleyville",
+          "description": "OPG-Port Hope Wesleyville MOU envisages up to 10 GWe; Darlington Unit 4 refurbishment complete at $12.8B.",
+          "affected_projects": 824,
+          "source_url": "https://world-nuclear.org/information-library/country-profiles/countries-a-f/canada-nuclear-power"
         }
       ],
       "news_stories": [
-        "CER Energy Future 2026: electricity demand projected to increase 44% from 2023 to 2050",
-        "Interprovincial electricity flows projected to double from 55 TWh to 137 TWh by 2050",
-        "Saskatchewan and Ontario advance small modular reactor programs"
+        "Darlington Unit 4 returns to grid under budget — World Nuclear Association, March 2026",
+        "OPG and Port Hope sign Wesleyville nuclear agreement — World Nuclear Association, February 2026",
+        "Alberta expert panel due to deliver nuclear integration report — World Nuclear Association"
       ],
       "subsectors": [
-        {"code": "2211", "name": "Electric Power Generation, Transmission & Distribution"},
+        {"code": "221", "name": "Electric Power Generation, Transmission and Distribution"},
         {"code": "2212", "name": "Natural Gas Distribution"},
-        {"code": "2213", "name": "Water, Sewage & Other Systems"}
+        {"code": "2213", "name": "Water, Sewage and Other Systems"}
       ],
       "indicatorSrc": "StatCan",
-      "isNegative": false,
+      "isNegative": true,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.6%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_22"},
+        {"label": "Sector GDP (Y/Y)", "value": "-1.7%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_22"},
+        {"label": "TSX Infrastructure Basket", "value": "$55.20", "delta": "+0.4% W/W, +29.8% Y/Y", "source": "commodities.json:tsx_infrastructure"},
+        {"label": "Uranium Spot (URA ETF)", "value": "$46.86", "delta": "-2.8% W/W, +114.2% Y/Y", "source": "commodities.json:uranium_spot"},
+        {"label": "Utilities Employment", "value": "176,300", "delta": "Feb 2026", "source": "indicators.json:utilities_employment"},
+        {"label": "Active Projects", "value": "824", "delta": "$522.89B aggregate value", "source": "projects_all.json:sector=power_energy|Energy|Clean Energy|Power Plants|Energy Storage Facilities|Dams"}
+      ],
       "cross_references": [
         {
-          "indicator": "uranium_spot",
-          "direction": "down",
-          "magnitude": "$46.86 URA ETF (down 17.0% MoM, up 114.2% YoY)",
-          "linked_projects": 1407,
-          "linked_value": "587.61B",
-          "interpretation": "Uranium proxy affects SMR project economics in Saskatchewan and Ontario. URA ETF down 17.0% month-over-month but up 114.2% year-over-year."
+          "indicator": "darlington_unit4",
+          "direction": "up",
+          "magnitude": "C$12.8B refurbishment completed",
+          "linked_projects": 824,
+          "linked_value": "522.89B",
+          "interpretation": "OPG completed Darlington Unit 4 at C$150M under budget and four months ahead of schedule; the database tracks 824 utilities/power-energy projects worth $522.89B.",
+          "source_url": "https://world-nuclear.org/information-library/country-profiles/countries-a-f/canada-nuclear-power"
         },
         {
-          "indicator": "tsx_infrastructure",
-          "direction": "down",
-          "magnitude": "$55.20 (down 3.3% MoM, up 29.8% YoY)",
-          "linked_projects": 1407,
-          "linked_value": "587.61B",
-          "interpretation": "Canadian infrastructure basket down 3.3% month-over-month. Market valuation of utilities and infrastructure companies signals investment appetite."
+          "indicator": "uranium_spot",
+          "direction": "up",
+          "magnitude": "URA $46.86 (+114.2% Y/Y)",
+          "linked_projects": 824,
+          "linked_value": "522.89B",
+          "interpretation": "Uranium spot proxy +114.2% Y/Y connects to SMR fuel supply and the Darlington/Wesleyville rollout cited in research_sectors.md.",
+          "source_url": "https://world-nuclear.org/information-library/country-profiles/countries-a-f/canada-nuclear-power"
         }
       ],
       "trend_analysis": {
-        "direction": "up",
-        "momentum": "Utilities contributed to January 2026 goods-producing GDP gains; the sector includes 1,407 tracked projects in the pipeline",
-        "comparison": "CER projects electricity demand rising 44% over 2023-2050. Natural gas cogeneration at 26% and wind at 25% of installed capacity indicate ongoing generation mix diversification.",
-        "outlook": "If electricity demand growth follows CER projections, transmission and generation infrastructure investment may accelerate. SMR programs in Saskatchewan and Ontario represent longer-term capacity additions."
+        "direction": "flat",
+        "momentum": "M/M GDP +0.6% alongside a -1.7% Y/Y print — the largest tracked sector by capital value ($522.89B).",
+        "comparison": "Sector remains the largest in the project database by dollar value; SMR rollout, grid capacity and Wesleyville MOU dominate the near-term pipeline.",
+        "outlook": "If Ontario's four-SMR Darlington program and the Wesleyville 10 GWe concept advance on the announced timelines, the tracked 824 utilities projects would reflect sequential status advances through 2026 and 2027."
       }
     },
     {
       "code": "23",
       "name": "Construction",
-      "mm": "increased",
-      "yy": "+7.8% (building investment)",
+      "mm": "+1.1%",
+      "yy": "+2.8%",
       "key_facts": [
-        "Sector GDP stood at $171,328M in December 2025; construction was a key driver of goods-producing growth in January 2026",
-        "Building permits rose $607.0M (+4.8%) to $13.3B in January 2026; 21,400 multi-unit and 4,000 single-family dwellings authorized",
-        "Building investment decreased $448.3M (-1.9%) to $23.4B in January 2026, though up 7.8% year-over-year",
-        "CMHC housing starts six-month trend at 256,005 units; monthly SAAR increased 4.5% to 250,900 units in February 2026"
+        "Sector GDP +1.1% M/M and +2.8% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "Prime Minister Carney launched the Build Communities Strong Fund on April 7, 2026 — $51B over eight years (approximately $12B/year), with the Embleton Community Centre and Park in Brampton named as the first project (PMO, April 7, 2026).",
+        "CMHC reports February 2026 housing starts at 15,886 units (vs 14,420 in February 2025); SAAR all-areas reached 250,900 in February, up 4.5% from 240,148 in January (CMHC, March 2026).",
+        "2025 total housing starts: 259,028 nationally, +5.6% vs 2024 (Daily Commercial News, January 2026)."
       ],
-      "projects_count": 1320,
-      "projects_value": "512.91B",
+      "projects_count": 2196,
+      "projects_value": "258.36B",
       "policy_items": [
         {
-          "title": "Build Canada Homes Program",
-          "description": "Federal program commits $13B over five years, targeting 4,000 homes on six federally owned sites.",
-          "affected_projects": 1320,
-          "source_url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/01/build-canada-homes-thousands-of-homes-in-the-pipeline.html"
-        },
-        {
-          "title": "BC Federal Housing Partnership",
-          "description": "BC secured a federal partnership for accelerated housing construction.",
-          "affected_projects": 51,
-          "source_url": "https://news.gov.bc.ca/releases/2026HMA0017-000165"
-        },
-        {
-          "title": "West Vancouver Housing Policy",
-          "description": "Two new rental buildings expand housing options for workers and families with middle incomes.",
-          "affected_projects": 51,
-          "source_url": "https://news.gov.bc.ca/releases/2026HMA0028-000325"
+          "title": "Build Communities Strong Fund launched",
+          "description": "$51B federal over 8 years (~$12B/year) matched by ~$17B from provinces plus municipal/territorial/private capital. Federal projects GDP lift estimated at $95B over the decade.",
+          "affected_projects": 2196,
+          "source_url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and"
         }
       ],
       "news_stories": [
-        "Building permits rose 4.8% to $13.3B in January 2026, led by non-residential sector",
-        "CMHC: housing starts six-month trend flat at 256,005; Vancouver starts up 60% YoY, Toronto down 28%",
-        "Building investment up 7.8% year-over-year despite 1.9% monthly decline in January 2026"
+        "Prime Minister Carney launches Build Communities Strong Fund — PMO, April 7, 2026",
+        "CMHC reports February housing starts up 4.5% from January — CMT, March 2026",
+        "CMHC says housing starts totalled 259,028 in 2025, up 5.6% from 2024 — Daily Commercial News, January 2026"
       ],
       "subsectors": [
         {"code": "236", "name": "Construction of Buildings"},
-        {"code": "237", "name": "Heavy & Civil Engineering Construction"},
+        {"code": "237", "name": "Heavy and Civil Engineering Construction"},
         {"code": "238", "name": "Specialty Trade Contractors"}
       ],
       "indicatorSrc": "StatCan",
       "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+1.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_23"},
+        {"label": "Sector GDP (Y/Y)", "value": "+2.8%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_23"},
+        {"label": "Housing Starts (SAAR)", "value": "250,900", "delta": "Feb 2026, +4.5% M/M", "source": "indicators.json:housing_starts"},
+        {"label": "Non-res Building Permits", "value": "$5,378M", "delta": "Jan 2026", "source": "indicators.json:bldg_permits_nonres_national"},
+        {"label": "Res Building Permits", "value": "$7,968M", "delta": "Jan 2026", "source": "indicators.json:bldg_permits_res_national"},
+        {"label": "Steel (SLX)", "value": "$90.13", "delta": "+1.2% W/W, +48.9% Y/Y", "source": "commodities.json:steel"},
+        {"label": "Construction Employment", "value": "1,986,800", "delta": "Jan 2026", "source": "indicators.json:construction_employment"},
+        {"label": "Active Projects", "value": "2,196", "delta": "$258.36B aggregate value", "source": "projects_all.json:sector=infrastructure|Water & Wastewater|Transit & Rail|Ports & Logistics"}
+      ],
       "cross_references": [
         {
-          "indicator": "steel",
-          "direction": "down",
-          "magnitude": "$90.13 SLX ETF (down 10.4% MoM, up 48.9% YoY)",
-          "linked_projects": 1320,
-          "linked_value": "512.91B",
-          "interpretation": "Steel prices (SLX proxy) down 10.4% month-over-month. Steel is a major input cost for building and infrastructure construction across 1,320 tracked projects."
+          "indicator": "build_communities_strong_fund",
+          "direction": "up",
+          "magnitude": "$51B federal over 8 years",
+          "linked_projects": 2196,
+          "linked_value": "258.36B",
+          "interpretation": "The fund targets hospitals, recreation centres, universities, colleges, bridges, water, and transit — all tracked within the 2,196 construction-category projects totalling $258.36B in parsed value.",
+          "source_url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and"
+        },
+        {
+          "indicator": "steel_slx",
+          "direction": "up",
+          "magnitude": "$90.13 (+1.2% W/W, +48.9% Y/Y)",
+          "linked_projects": 2196,
+          "linked_value": "258.36B",
+          "interpretation": "Steel input costs carry through to the 2,196 tracked construction projects; commodities.json notes steel is a major input cost for infrastructure and building construction.",
+          "source_url": "https://etfdb.com/etf/SLX/"
+        },
+        {
+          "indicator": "housing_starts_saar",
+          "direction": "up",
+          "magnitude": "250,900 SAAR (+4.5% M/M)",
+          "linked_projects": 211,
+          "linked_value": "44.42B",
+          "interpretation": "SAAR housing starts at 250,900 in February 2026 connect to the 211 residential/real-estate projects tracked at $44.42B in parsed value.",
+          "source_url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-february-2026"
         }
       ],
       "trend_analysis": {
         "direction": "up",
-        "momentum": "Construction drove January 2026 goods-producing growth. Building permits up 4.8%, building investment up 7.8% YoY.",
-        "comparison": "CMHC housing starts trend flat at 256,005 units. Vancouver starts up 60% YoY while Toronto down 28%. Residential investment fell 3.0% in January, moderated by 0.8% non-residential increase.",
-        "outlook": "If Build Canada Homes ($13B over 5 years) proceeds on schedule, additional housing project activity may follow. CMHC cites heightened business uncertainty and construction costs as factors in the starts outlook."
+        "momentum": "M/M GDP +1.1% and Y/Y +2.8% alongside the Build Communities Strong Fund launch on April 7, 2026.",
+        "comparison": "February housing starts up 4.5% M/M; 2025 total +5.6% vs 2024.",
+        "outlook": "If the $51B Build Communities Strong Fund flows on the announced cadence and provinces commit the projected $17B match, the 2,196 tracked construction projects would carry updated funding attribution through the eight-year program window."
       }
     },
     {
       "code": "31-33",
       "name": "Manufacturing",
       "mm": "-1.4%",
-      "yy": "n/a",
+      "yy": "-4.6%",
       "key_facts": [
-        "Sector GDP stood at $198,010M in December 2025; manufacturing contracted 1.4% in January 2026",
-        "S&P Global Canada Manufacturing PMI rose to 51.0 in February 2026 (from 50.4 in January), a 13-month high; new orders grew for the first time in 13 months",
-        "Stellantis halted Jeep Compass plans at Brampton, affecting 3,000 direct jobs; GM ended BrightDrop production at Ingersoll and scaled back Oshawa",
-        "Federal government announced $3B Strategic Response Fund and $100M Regional Tariff Response Initiative for automotive manufacturing"
+        "Sector GDP -1.4% M/M and -4.6% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "Manufacturing sales were $68.7B in January 2026, a -3.0% month-over-month change per StatCan Table 16-10-0048 (TradingEconomics / StatCan).",
+        "Inventories reached $120.6B (+0.9% M/M); inventory-to-sales ratio 1.76; unfilled orders $114.8B (+0.2% M/M).",
+        "Ford's Bécancour cathode plant expected to begin production in 2026 (up to 45,000 tonnes CAM/yr); GM/POSCO Future M Ultium CAM plant approximately two-thirds complete (Globe and Mail)."
       ],
-      "projects_count": 54,
+      "projects_count": 52,
       "projects_value": "67.39B",
       "policy_items": [
         {
-          "title": "Canada Automotive Strategy",
-          "description": "Federal government unveiled new automotive strategy February 5, 2026. Includes $3B Strategic Response Fund and $100M Regional Tariff Response Initiative. Ottawa reduced GM's tariff-free import quota by 24.2% and Stellantis' by 50%.",
-          "affected_projects": 54,
-          "source_url": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/02/prime-minister-carney-unveils-canadas-new-automotive-strategy-to-protect-jobs-and-position-our-country-as-a-global-leader-in-next-generation-vehicl.html"
-        },
-        {
-          "title": "Section 232 Steel & Aluminum Tariffs — 50%",
-          "description": "U.S. 50% Section 232 tariffs on steel and aluminum remain in effect. The 10% temporary import surcharge applies to most Canadian goods. The 2025-26 tariff cycle has reduced Canadian GDP by an estimated 1.5-2%.",
-          "affected_projects": 54,
-          "source_url": "https://thefulcrum.us/economy/u-s-canada-tariffs-2026"
+          "title": "EV battery pipeline setbacks",
+          "description": "Northvolt and Umicore Kingston projects on hold; Quebec government has committed $270M to Northvolt project whose status is uncertain (CBC News).",
+          "affected_projects": 52,
+          "source_url": "https://www.cbc.ca/news/canada/ev-investments-canada-facts-1.7533719"
         }
       ],
       "news_stories": [
-        "Manufacturing GDP contracted 1.4% in January 2026, though PMI rose to 51.0 (13-month high) in February",
-        "Stellantis halted Brampton Jeep Compass plans (3,000 jobs); GM ended Ingersoll BrightDrop production",
-        "Auto sector making long-term shifts away from U.S. market amid ongoing tariff dispute"
+        "Manufacturing sales $68.7B in January 2026, -3.0% M/M — StatCan Table 16-10-0048",
+        "Canada EV battery plants list — Globe and Mail, 2026",
+        "EV investment challenges in Canada — CBC News, 2026"
       ],
       "subsectors": [
         {"code": "311", "name": "Food Manufacturing"},
         {"code": "336", "name": "Transportation Equipment Manufacturing"},
-        {"code": "325", "name": "Chemical Manufacturing"}
+        {"code": "331", "name": "Primary Metal Manufacturing"}
       ],
       "indicatorSrc": "StatCan",
       "isNegative": true,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-1.4%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_31-33"},
+        {"label": "Sector GDP (Y/Y)", "value": "-4.6%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_31-33"},
+        {"label": "Manufacturing Sales", "value": "$68,666M", "delta": "Jan 2026, -3.0% M/M", "source": "indicators.json:manufacturing_sales_national"},
+        {"label": "Steel (SLX)", "value": "$90.13", "delta": "+1.2% W/W, +48.9% Y/Y", "source": "commodities.json:steel"},
+        {"label": "Nickel (NIKL)", "value": "$28.40", "delta": "flat (data gap)", "source": "commodities.json:nickel"},
+        {"label": "Active Projects", "value": "52", "delta": "$67.39B aggregate value", "source": "projects_all.json:sector=manufacturing|Non-metallic Mineral Products Industries"}
+      ],
       "cross_references": [
         {
-          "indicator": "steel",
+          "indicator": "manufacturing_sales",
           "direction": "down",
-          "magnitude": "$90.13 SLX ETF (down 10.4% MoM, up 48.9% YoY)",
-          "linked_projects": 54,
+          "magnitude": "$68.7B (-3.0% M/M)",
+          "linked_projects": 52,
           "linked_value": "67.39B",
-          "interpretation": "Steel input costs down 10.4% month-over-month. Section 232 tariffs at 50% on Canadian steel and aluminum exports to the U.S. remain in effect, affecting 54 tracked manufacturing projects."
+          "interpretation": "StatCan cited transportation equipment and machinery as the largest drag on January manufacturing sales; the database tracks 52 manufacturing projects worth $67.39B in parsed value.",
+          "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004801"
+        },
+        {
+          "indicator": "steel_slx",
+          "direction": "up",
+          "magnitude": "$90.13 (+48.9% Y/Y)",
+          "linked_projects": 52,
+          "linked_value": "67.39B",
+          "interpretation": "Steel input costs tracked in commodities.json flow to the 52 tracked manufacturing projects ($67.39B).",
+          "source_url": "https://etfdb.com/etf/SLX/"
         }
       ],
       "trend_analysis": {
-        "direction": "mixed",
-        "momentum": "GDP contracted 1.4% in January 2026, but PMI rose to 51.0 in February (13-month high) with new orders growing for the first time in 13 months",
-        "comparison": "Export orders continued to decline, though at the slowest pace since October 2025. 24% of PMI respondents expected output growth, the highest since December 2024.",
-        "outlook": "If the $3B Strategic Response Fund and $100M Regional Tariff Response Initiative deploy as planned, automotive manufacturing may partially offset tariff-related disruption. USMCA review is scheduled for July 2026."
+        "direction": "down",
+        "momentum": "M/M GDP -1.4% and Y/Y -4.6%, alongside manufacturing sales -3.0% M/M in January 2026.",
+        "comparison": "Sector undercovered in project database — 52 tagged projects vs sector weight; battery/EV pipeline captured only partially.",
+        "outlook": "If Ford's Bécancour cathode plant commissions on schedule in 2026 and GM/POSCO's Ultium CAM plant reaches production in early 2026, the battery-chemicals subsector of the 52 tracked manufacturing projects would carry updated status attribution."
       }
     }
   ],
-
   "servicesIndustries": [
     {
       "code": "41",
       "name": "Wholesale Trade",
       "mm": "-1.2%",
-      "yy": "n/a",
+      "yy": "-1.7%",
       "key_facts": [
-        "Sector GDP stood at $126,269M in December 2025; wholesale trade fell 1.2% in January 2026, largely offsetting December's increase",
-        "Wholesale sales (ex petroleum/oilseed/grain) fell 0.6% in January, led by lower motor vehicle and parts subsector sales",
-        "Food, beverage and tobacco subsector sales increased 6.1% to $187.8B for full-year 2025"
+        "Sector GDP -1.2% M/M and -1.7% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "StatCan flash estimate indicates wholesale trade most likely rose 2.3% in February 2026 from January, driven by higher motor vehicle and parts subsector sales (weighted response rate 72.0%).",
+        "The database has no direct wholesale-trade project tag; coverage relies on the GDP-by-industry indicator series and StatCan flash releases."
       ],
       "projects_count": 0,
-      "projects_value": "0",
+      "projects_value": "0.00B",
       "policy_items": [],
       "news_stories": [
-        "Wholesale sales fell 0.6% in January 2026, led by motor vehicle and parts subsector declines",
-        "December 2025 wholesale sales volumes rose 2.1%; motor vehicle wholesale sales up 9.3% to $14.3B"
+        "Canada February wholesale trade most likely +2.3% — StatCan flash estimate (MarketScreener)",
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
         {"code": "411", "name": "Farm Product Merchant Wholesalers"},
-        {"code": "415", "name": "Motor Vehicle & Parts Merchant Wholesalers"},
-        {"code": "413", "name": "Food, Beverage & Tobacco Merchant Wholesalers"}
+        {"code": "415", "name": "Motor Vehicle and Parts Merchant Wholesalers"},
+        {"code": "417", "name": "Machinery, Equipment and Supplies Merchant Wholesalers"}
       ],
       "indicatorSrc": "StatCan",
       "isNegative": true,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-1.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_41"},
+        {"label": "Sector GDP (Y/Y)", "value": "-1.7%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_41"},
+        {"label": "Wholesale Flash Estimate", "value": "+2.3%", "delta": "Feb 2026 preliminary", "source": "research_sectors.md:wholesale_flash"},
+        {"label": "Wholesale Employment", "value": "716,400", "delta": "Feb 2026", "source": "indicators.json:wholesale_employment"},
+        {"label": "Active Projects", "value": "0", "delta": "no direct wholesale project tag", "source": "projects_all.json"}
+      ],
       "cross_references": [
         {
-          "indicator": "wholesale_sales",
-          "direction": "down",
-          "magnitude": "-0.6% in January 2026 (ex petroleum/oilseed/grain)",
+          "indicator": "wholesale_flash",
+          "direction": "up",
+          "magnitude": "+2.3% Feb 2026 (flash)",
           "linked_projects": 0,
           "linked_value": "0",
-          "interpretation": "Wholesale trade GDP fell 1.2% in January, with the motor vehicle and parts subsector leading the decline. No capital projects in the pipeline are directly mapped to wholesale trade."
+          "interpretation": "StatCan flash estimate cites motor vehicle and parts as the main contributor; no direct wholesale project tag exists in the database — coverage relies on indicator series only.",
+          "source_url": "https://www.marketscreener.com/news/canada-february-wholesale-trade-most-likely-up-2-3-statscan-flash-estimate-ce7e51dbde8cf123"
         }
       ],
       "trend_analysis": {
         "direction": "down",
-        "momentum": "GDP fell 1.2% in January 2026, largely offsetting December's increase. Wholesale sales (ex petroleum/oilseed/grain) fell 0.6%.",
-        "comparison": "December 2025 volumes rose 2.1% with a 9.3% surge in motor vehicle sales. January reversed that gain.",
-        "outlook": "If tariff-related supply chain disruptions in motor vehicles persist, wholesale volumes may remain under pressure. Food/beverage/tobacco subsector ($187.8B in 2025) continues as the stable anchor."
+        "momentum": "M/M GDP -1.2% and Y/Y -1.7% for January 2026, with February flash estimate at +2.3%.",
+        "comparison": "The January GDP print (-1.2% M/M) and the February flash (+2.3%) suggest a potential reversal if confirmed in the final February release.",
+        "outlook": "If the February wholesale trade final print matches the flash estimate of +2.3%, the January M/M GDP decline may be followed by a rebound. Motor vehicle and parts subsector remains the primary driver."
       }
     },
     {
       "code": "44-45",
       "name": "Retail Trade",
       "mm": "+0.8%",
-      "yy": "n/a",
+      "yy": "+2.7%",
       "key_facts": [
-        "Sector GDP stood at $124,372M in December 2025; retail trade expanded 0.8% in January 2026, with six of nine subsectors up",
-        "Retail sales increased 1.1% to $70.7B in January 2026; February 2026 advance estimate showed a further 0.9% increase",
-        "Three-month average spending growth at 0.8% (~9.5% annualized); Health & Beauty (+6.7%), Food (+2.6%), Beverage (+2.7%) leading"
-      ],
-      "projects_count": 0,
-      "projects_value": "0",
-      "policy_items": [],
-      "news_stories": [
-        "Retail sales rose 1.1% to $70.7B in January 2026; advance estimate for February +0.9%",
-        "Consumer spending split: health/beauty (+6.7%), food (+2.6%) leading; discretionary categories tied to housing losing momentum",
-        "New vehicle sales expected to fall in 2026 due to tariff-related supply chain disruptions"
-      ],
-      "subsectors": [
-        {"code": "441", "name": "Motor Vehicle & Parts Dealers"},
-        {"code": "445", "name": "Food & Beverage Retailers"},
-        {"code": "452", "name": "General Merchandise Retailers"}
-      ],
-      "indicatorSrc": "StatCan",
-      "isNegative": false,
-      "cross_references": [
-        {
-          "indicator": "retail_sales",
-          "direction": "up",
-          "magnitude": "+1.1% to $70.7B in January 2026; advance Feb estimate +0.9%",
-          "linked_projects": 0,
-          "linked_value": "0",
-          "interpretation": "Retail trade GDP expanded 0.8% in January, led by motor vehicle and parts dealers. Consumer spending data shows a split between essential categories growing and discretionary categories softening."
-        }
-      ],
-      "trend_analysis": {
-        "direction": "up",
-        "momentum": "GDP expanded 0.8% in January 2026. Retail sales up 1.1% with six of nine subsectors growing.",
-        "comparison": "Three-month average consumer spending growth at 0.8% (annualized ~9.5%). Health & Beauty, Food, and Beverage are leading; discretionary housing-related categories are softening.",
-        "outlook": "If tariff-related price increases materialize in consumer goods, spending patterns may shift further toward essentials. New vehicle sales face specific downward pressure from supply chain disruptions."
-      }
-    },
-    {
-      "code": "48-49",
-      "name": "Transportation & Warehousing",
-      "mm": "declined",
-      "yy": "n/a",
-      "key_facts": [
-        "Sector GDP stood at $104,665M in December 2025; transportation and warehousing declined in January 2026, with extreme weather cited as a factor",
-        "Rail handled 11% of Canada's total export value and 50% of total export volume (tonnes) in 2024",
-        "Port of Vancouver handled 23.5 million tonnes of cargo and 700,000 TEUs in 2024",
-        "Sector directly contributed $96.5B (4.3% of GDP) in 2024, a 2.6% increase over the previous year"
-      ],
-      "projects_count": 605,
-      "projects_value": "107.92B",
-      "policy_items": [
-        {
-          "title": "Trade-Enabling Infrastructure Gaps",
-          "description": "Rail networks face capacity constraints and limited links to ports and airports. Trade-enabling infrastructure investment identified as a critical need by EDC.",
-          "affected_projects": 605,
-          "source_url": "https://www.edc.ca/en/article/trade-enabling-infrastructure-gaps.html"
-        }
-      ],
-      "news_stories": [
-        "Transportation GDP declined in January 2026, partly attributed to extreme weather conditions",
-        "Rail handled 50% of Canada's total export volume in 2024; capacity constraints and infrastructure gaps persist",
-        "Warehousing capacity in Western Canada expanding, tied to inland logistics hubs and e-commerce fulfillment"
-      ],
-      "subsectors": [
-        {"code": "482", "name": "Rail Transportation"},
-        {"code": "484", "name": "Truck Transportation"},
-        {"code": "493", "name": "Warehousing & Storage"}
-      ],
-      "indicatorSrc": "StatCan",
-      "isNegative": true,
-      "cross_references": [
-        {
-          "indicator": "tsx_infrastructure",
-          "direction": "down",
-          "magnitude": "$55.20 (down 3.3% MoM, up 29.8% YoY)",
-          "linked_projects": 605,
-          "linked_value": "107.92B",
-          "interpretation": "Canadian infrastructure basket down 3.3% month-over-month. The pipeline tracks 605 transportation and logistics projects valued at $107.92B, including port, rail, and transit infrastructure."
-        },
-        {
-          "indicator": "steel",
-          "direction": "down",
-          "magnitude": "$90.13 SLX ETF (down 10.4% MoM, up 48.9% YoY)",
-          "linked_projects": 605,
-          "linked_value": "107.92B",
-          "interpretation": "Steel is a key input cost for rail and port infrastructure. SLX down 10.4% month-over-month, which may ease input costs for transportation infrastructure projects."
-        }
-      ],
-      "trend_analysis": {
-        "direction": "down",
-        "momentum": "GDP declined in January 2026, following a 2.6% year-over-year increase in 2024 sector GDP contribution ($96.5B). Extreme weather was a contributing factor.",
-        "comparison": "Sector contributed 4.3% of GDP in 2024. Rail handled 50% of total Canadian export tonnage. Port of Vancouver processed 23.5M tonnes and 700K TEUs.",
-        "outlook": "If trade-enabling infrastructure investment addresses the identified gaps in rail-to-port links, sector capacity may expand. 605 tracked projects ($107.92B) span transit, rail, ports, and logistics."
-      }
-    },
-    {
-      "code": "51",
-      "name": "Information & Cultural Industries",
-      "mm": "n/a",
-      "yy": "n/a",
-      "key_facts": [
-        "Sector GDP stood at $81,665M in December 2025",
-        "Ontario's information and cultural sector employment declined 3.6% in 2024; expected to remain subdued through 2025-2027",
-        "Telecom capital expenditure estimated at $10.9B in 2024, approximately $262 per Canadian"
-      ],
-      "projects_count": 43,
-      "projects_value": "2.99B",
-      "policy_items": [],
-      "news_stories": [
-        "Ontario information/cultural sector employment declined 3.6% in 2024; subdued outlook through 2027",
-        "Telecom industry capex estimated at $10.9B in 2024 (~$262 per Canadian)",
-        "Structural shift: small unincorporated firms make up an increasingly large share of cultural firms"
-      ],
-      "subsectors": [
-        {"code": "517", "name": "Telecommunications"},
-        {"code": "511", "name": "Publishing Industries"},
-        {"code": "512", "name": "Motion Picture & Sound Recording"}
-      ],
-      "indicatorSrc": "StatCan",
-      "isNegative": false,
-      "cross_references": [
-        {
-          "indicator": "telecom_capex",
-          "direction": "flat",
-          "magnitude": "$10.9B estimated capex in 2024",
-          "linked_projects": 43,
-          "linked_value": "2.99B",
-          "interpretation": "Telecom industry capital expenditure at $10.9B in 2024. The pipeline tracks 43 projects ($2.99B) in information and cultural industries, spanning telecommunications, technology, and media."
-        }
-      ],
-      "trend_analysis": {
-        "direction": "flat",
-        "momentum": "No January 2026 directional change reported by StatCan for this sector specifically. Ontario employment declined 3.6% in 2024.",
-        "comparison": "Employment expected to remain subdued through 2025-2027 due to slower tech hiring, print publishing declines, and telecom automation.",
-        "outlook": "If independent content creation continues to grow, small unincorporated firms may offset employment declines in traditional publishing and media. Telecom capex ($10.9B) represents the sector's largest capital allocation."
-      }
-    },
-    {
-      "code": "52",
-      "name": "Finance & Insurance",
-      "mm": "increased",
-      "yy": "n/a",
-      "key_facts": [
-        "Sector GDP stood at $179,374M in December 2025; finance and insurance increased in January 2026, partially offsetting declines in other services sectors",
-        "Canada's Big Six banks hold approximately 93% of banking assets",
-        "OSFI launching pilot in June 2026 to expedite approvals for bank licensing, targeting fintechs, provincial institutions, and crypto custodians"
-      ],
-      "projects_count": 0,
-      "projects_value": "0",
-      "policy_items": [
-        {
-          "title": "OSFI Bank Licensing Pilot",
-          "description": "OSFI is launching a pilot program in June 2026 to expedite approvals for bank licensing, targeting provincial institutions, fintechs, and crypto custodians.",
-          "affected_projects": 0,
-          "source_url": "https://www.osfi-bsif.gc.ca/en/about-osfi/reports-publications/osfis-annual-risk-outlook-fiscal-year-2025-2026"
-        },
-        {
-          "title": "Competition Bureau SME Financing Study",
-          "description": "Competition Bureau launched a market study on competition in SME financing, with submissions due February 27, 2026. Consumer-Driven Banking Act moving toward open banking implementation.",
-          "affected_projects": 0,
-          "source_url": "https://www.canada.ca/en/competition-bureau/news/2026/03/moving-canadas-financial-sector-forward-for-consumers.html"
-        }
-      ],
-      "news_stories": [
-        "Big Six banks hold 93% of banking assets; Competition Bureau studying SME financing competition",
-        "OSFI launching bank licensing pilot in June 2026 targeting fintechs, provincial institutions, crypto custodians",
-        "Data portability in insurance could save Canadians $1.1B-$3.8B annually"
-      ],
-      "subsectors": [
-        {"code": "522", "name": "Credit Intermediation & Related Activities"},
-        {"code": "524", "name": "Insurance Carriers & Related Activities"},
-        {"code": "523", "name": "Securities, Commodity Contracts, Financial Investment"}
-      ],
-      "indicatorSrc": "StatCan",
-      "isNegative": false,
-      "cross_references": [
-        {
-          "indicator": "bank_concentration",
-          "direction": "flat",
-          "magnitude": "93% of banking assets held by Big Six",
-          "linked_projects": 0,
-          "linked_value": "0",
-          "interpretation": "Finance & Insurance GDP at $179,374M is the fourth-largest NAICS sector. OSFI pilot and Consumer-Driven Banking Act may alter market structure. No capital projects directly mapped to this sector in the pipeline."
-        }
-      ],
-      "trend_analysis": {
-        "direction": "up",
-        "momentum": "Finance and insurance GDP increased in January 2026, partially offsetting declines in other services sectors.",
-        "comparison": "Over 40% of Canadians under 40 seek living benefits like cash withdrawals for life events, shifting insurance product design.",
-        "outlook": "If the OSFI bank licensing pilot (June 2026) and Consumer-Driven Banking Act implementation proceed, new entrants may enter the market. Data portability in insurance is estimated to save $1.1B-$3.8B annually."
-      }
-    },
-    {
-      "code": "53",
-      "name": "Real Estate & Rental & Leasing",
-      "mm": "declined",
-      "yy": "n/a",
-      "key_facts": [
-        "Sector GDP stood at $309,928M in December 2025 — the largest single NAICS sector by GDP",
-        "CBRE projects commercial real estate investment volume reaching ~$56B in 2026, up from ~$47B in 2025",
-        "2025 was the first year where purpose-built rental units under construction exceeded condos or single-family homes",
-        "74% of commercial real estate survey respondents cited economic weakness as a major challenge"
+        "Sector GDP +0.8% M/M and +2.7% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "StatCan advance estimate indicates retail sales rose 0.9% in February 2026 based on responses from 53.4% of companies surveyed; final data release scheduled April 24, 2026.",
+        "Retail sales national figure was $70,709M in January 2026 (StatCan Table 20-10-0008)."
       ],
       "projects_count": 68,
       "projects_value": "29.84B",
       "policy_items": [],
       "news_stories": [
-        "CBRE: commercial real estate investment could reach $56B in 2026 (up from $47B in 2025)",
-        "Purpose-built rental construction exceeded condos and single-family homes for the first time in 2025",
-        "Office cap rates have peaked; office sentiment rebounded for the first time in six years"
+        "Retail sales +0.9% in February 2026 — StatCan advance estimate, March 20, 2026",
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
-        {"code": "531", "name": "Real Estate"},
-        {"code": "532", "name": "Rental & Leasing Services"},
-        {"code": "533", "name": "Lessors of Non-Financial Intangible Assets"}
+        {"code": "441", "name": "Motor Vehicle and Parts Dealers"},
+        {"code": "445", "name": "Food and Beverage Stores"},
+        {"code": "452", "name": "General Merchandise Stores"}
       ],
       "indicatorSrc": "StatCan",
-      "isNegative": true,
+      "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.8%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_44-45"},
+        {"label": "Sector GDP (Y/Y)", "value": "+2.7%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_44-45"},
+        {"label": "Retail Sales", "value": "$70,709M", "delta": "Jan 2026", "source": "indicators.json:retail_sales_national"},
+        {"label": "Retail Employment", "value": "2,205,600", "delta": "Feb 2026", "source": "indicators.json:retail_employment"},
+        {"label": "CPI National", "value": "165.9", "delta": "Feb 2026 index", "source": "indicators.json:cpi_national"},
+        {"label": "Active Projects (commercial_mixed)", "value": "68", "delta": "$29.84B aggregate value", "source": "projects_all.json:sector=commercial_mixed"}
+      ],
       "cross_references": [
         {
-          "indicator": "cre_investment",
+          "indicator": "retail_sales_advance",
           "direction": "up",
-          "magnitude": "Projected $56B in 2026 (from $47B in 2025)",
+          "magnitude": "+0.9% Feb 2026 advance",
           "linked_projects": 68,
           "linked_value": "29.84B",
-          "interpretation": "Institutional capital deployed nearly $15B in 2025, the largest share of acquisitions since 2021. The pipeline tracks 68 commercial/mixed-use projects valued at $29.84B."
+          "interpretation": "The 68 commercial_mixed projects ($29.84B) capture retail-anchored mixed-use developments linked to the February advance estimate.",
+          "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260320/dq260320a-eng.htm"
         }
       ],
       "trend_analysis": {
-        "direction": "mixed",
-        "momentum": "GDP declined in January 2026 (extreme weather cited). However, CBRE projects investment volume rising from $47B to $56B in 2026.",
-        "comparison": "Office cap rates have peaked and sentiment has rebounded for the first time in six years. Industrial market availability rates are plateauing.",
-        "outlook": "If commercial investment volume reaches the projected $56B in 2026, the sector may see recovery from recent weakness. 2026 is characterized by CMHC as a transition year for multifamily as new supply lifts vacancy rates."
+        "direction": "up",
+        "momentum": "M/M GDP +0.8% and Y/Y +2.7%; February advance estimate at +0.9%.",
+        "comparison": "Both January and February prints indicate sequential growth in the retail complex.",
+        "outlook": "If the April 24 final February release confirms the +0.9% advance estimate, the 68 retail-anchored commercial-mixed projects would carry updated demand context."
+      }
+    },
+    {
+      "code": "48-49",
+      "name": "Transportation & Warehousing",
+      "mm": "-0.7%",
+      "yy": "+1.6%",
+      "key_facts": [
+        "Sector GDP -0.7% M/M and +1.6% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "The federal government budgeted $3.6B for the new Trade Diversification Corridors Fund, including proposed projects such as the Saint John Trade Corridor to upgrade road/rail logistics to port (Freyt World).",
+        "Canada port/DP World completed a $178M modernization (FreightWaves)."
+      ],
+      "projects_count": 82,
+      "projects_value": "41.46B",
+      "policy_items": [
+        {
+          "title": "Trade Diversification Corridors Fund — $3.6B",
+          "description": "Federal fund to upgrade road/rail/port logistics; Saint John Trade Corridor named as a proposed project.",
+          "affected_projects": 82,
+          "source_url": "https://www.freytworld.com/news/top-3-canadian-freight-forwarding-trends-for-2026/"
+        }
+      ],
+      "news_stories": [
+        "Canada port / DP World complete $178M modernization — FreightWaves, 2026",
+        "Top 3 Canadian freight forwarding trends for 2026 — Freyt World, 2026"
+      ],
+      "subsectors": [
+        {"code": "481", "name": "Air Transportation"},
+        {"code": "482", "name": "Rail Transportation"},
+        {"code": "493", "name": "Warehousing and Storage"}
+      ],
+      "indicatorSrc": "StatCan",
+      "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-0.7%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_48-49"},
+        {"label": "Sector GDP (Y/Y)", "value": "+1.6%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_48-49"},
+        {"label": "Transportation Employment", "value": "1,094,000", "delta": "Feb 2026", "source": "indicators.json:transportation_employment"},
+        {"label": "TSX Infrastructure Basket", "value": "$55.20", "delta": "+0.4% W/W, +29.8% Y/Y", "source": "commodities.json:tsx_infrastructure"},
+        {"label": "WTI Crude", "value": "$102.77/bbl", "delta": "Mar 31 2026", "source": "indicators.json:comm_wti"},
+        {"label": "Active Projects", "value": "82", "delta": "$41.46B aggregate value", "source": "projects_all.json:sector=transport_logistics"}
+      ],
+      "cross_references": [
+        {
+          "indicator": "trade_diversification_corridors_fund",
+          "direction": "up",
+          "magnitude": "$3.6B federal",
+          "linked_projects": 82,
+          "linked_value": "41.46B",
+          "interpretation": "The fund targets the same road/rail/port assets tracked in the 82 transport_logistics projects totalling $41.46B; research notes 265 Transit & Rail and 116 Ports & Logistics projects captured under the construction category that overlap.",
+          "source_url": "https://www.freytworld.com/news/top-3-canadian-freight-forwarding-trends-for-2026/"
+        }
+      ],
+      "trend_analysis": {
+        "direction": "flat",
+        "momentum": "M/M GDP -0.7% but Y/Y +1.6%; federal $3.6B Trade Diversification Corridors Fund in play.",
+        "comparison": "Monthly pullback contrasts with the Y/Y positive print, suggesting a soft patch within a positive trend.",
+        "outlook": "If the Saint John Trade Corridor and other Trade Diversification projects enter construction during 2026, the 82 tracked transport_logistics projects would receive updated status attribution."
+      }
+    },
+    {
+      "code": "51",
+      "name": "Information & Cultural Industries",
+      "mm": "+0.9%",
+      "yy": "+3.2%",
+      "key_facts": [
+        "Sector GDP +0.9% M/M and +3.2% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "Canada data centre market size in 2026 estimated at USD 13.06B (from USD 11.46B in 2025); eStruxture's Calgary build-out valued at CAD 750M delivering 90 MW dedicated to generative-AI and cloud workloads (Mordor Intelligence).",
+        "Canadian telecoms invested $64.4B cumulatively over five years; Canadian Telecommunications Association projects $6B in 5G scaling by 2026 (CRTC)."
+      ],
+      "projects_count": 44,
+      "projects_value": "2.99B",
+      "policy_items": [],
+      "news_stories": [
+        "Canada data centre market report — Mordor Intelligence, 2026",
+        "Canadian Telecommunications Market Report 2026 — CRTC"
+      ],
+      "subsectors": [
+        {"code": "517", "name": "Telecommunications"},
+        {"code": "518", "name": "Data Processing, Hosting and Related Services"},
+        {"code": "512", "name": "Motion Picture and Sound Recording Industries"}
+      ],
+      "indicatorSrc": "StatCan",
+      "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.9%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_51"},
+        {"label": "Sector GDP (Y/Y)", "value": "+3.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_51"},
+        {"label": "Information Employment", "value": "845,700", "delta": "Feb 2026", "source": "indicators.json:information_employment"},
+        {"label": "Canada Data Centre Market", "value": "USD 13.06B", "delta": "+13.9% vs 2025", "source": "research_sectors.md:mordor_data_centre"},
+        {"label": "Active Projects (telecom)", "value": "44", "delta": "$2.99B aggregate value", "source": "projects_all.json:sector=telecom|Telecommunications|Technology"}
+      ],
+      "cross_references": [
+        {
+          "indicator": "data_centre_market",
+          "direction": "up",
+          "magnitude": "USD 13.06B (from USD 11.46B)",
+          "linked_projects": 44,
+          "linked_value": "2.99B",
+          "interpretation": "eStruxture's Calgary 90 MW build-out valued at CAD 750M is one of the largest single data-centre commitments; the 44 telecom/technology-tagged projects ($2.99B) undercount sector capex relative to Mordor Intelligence figures.",
+          "source_url": "https://www.mordorintelligence.com/industry-reports/canada-data-center-market"
+        }
+      ],
+      "trend_analysis": {
+        "direction": "up",
+        "momentum": "M/M GDP +0.9% and Y/Y +3.2% — among the faster-growing services industries.",
+        "comparison": "Sector growth is supported by data-centre build-out and 5G telecom capex.",
+        "outlook": "If eStruxture Calgary proceeds as announced and the projected $6B 5G scale-up materialises, the 44 tracked telecom/technology projects may expand as discovery captures data-centre pipeline currently under-represented."
+      }
+    },
+    {
+      "code": "52",
+      "name": "Finance & Insurance",
+      "mm": "+0.5%",
+      "yy": "+3.2%",
+      "key_facts": [
+        "Sector GDP +0.5% M/M and +3.2% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "OSFI crypto-asset disclosure requirements for banks became effective for fiscal Q1 2026 reporting; OSFI deferred Basel III capital floor increases (announced Feb 12, 2025).",
+        "OSFI's February 2026 benchmarking technical note indicated Canadian SIBs well-capitalized with surpluses above supervisory expectations."
+      ],
+      "projects_count": 0,
+      "projects_value": "0.00B",
+      "policy_items": [
+        {
+          "title": "OSFI crypto-asset disclosures effective Q1 2026",
+          "description": "OSFI Basel III capital floor increase deferred; crypto-asset disclosure requirements for banks effective for fiscal Q1 2026 reporting.",
+          "affected_projects": 0,
+          "source_url": "https://www.osfi-bsif.gc.ca/en/about-osfi/reports-publications/osfis-annual-risk-outlook-fiscal-year-2025-2026"
+        }
+      ],
+      "news_stories": [
+        "OSFI Annual Risk Outlook 2025-26 — OSFI",
+        "Benchmarking Canadian Bank Capital Ratios to International Peers — OSFI, February 2026"
+      ],
+      "subsectors": [
+        {"code": "522", "name": "Credit Intermediation and Related Activities"},
+        {"code": "524", "name": "Insurance Carriers and Related Activities"},
+        {"code": "526", "name": "Funds and Other Financial Vehicles"}
+      ],
+      "indicatorSrc": "StatCan",
+      "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.5%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_52"},
+        {"label": "Sector GDP (Y/Y)", "value": "+3.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_52"},
+        {"label": "Finance Employment", "value": "1,062,900", "delta": "Feb 2026", "source": "indicators.json:finance_employment"},
+        {"label": "Finance GDP (Chained $M)", "value": "$179,374M", "delta": "Dec 2025", "source": "indicators.json:gdp_finance"},
+        {"label": "Active Projects", "value": "0", "delta": "no direct finance project tag", "source": "projects_all.json"}
+      ],
+      "cross_references": [
+        {
+          "indicator": "osfi_regulation",
+          "direction": "flat",
+          "magnitude": "Basel III floor deferred; crypto disclosure live Q1 2026",
+          "linked_projects": 0,
+          "linked_value": "0",
+          "interpretation": "Finance sector carries no direct project tag in the database; OSFI's Q1 2026 technical note described Canadian SIBs as well-capitalized with surpluses above supervisory expectations.",
+          "source_url": "https://www.osfi-bsif.gc.ca/en/about-osfi/reports-publications/benchmarking-canadian-bank-capital-ratios-international-peers-technical-note-february-2026"
+        }
+      ],
+      "trend_analysis": {
+        "direction": "up",
+        "momentum": "M/M GDP +0.5% and Y/Y +3.2% — finance/insurance among the steadier growing services industries.",
+        "comparison": "StatCan December 2025 chained GDP for finance totalled $179.4B, the second-largest services category after real estate.",
+        "outlook": "If the Bank of Canada's April 16 rate decision shifts the yield curve, rate-sensitive lending and mortgage origination could update the narrative linking finance to the 211 real-estate projects tracked elsewhere."
+      }
+    },
+    {
+      "code": "53",
+      "name": "Real Estate & Rental/Leasing",
+      "mm": "-0.2%",
+      "yy": "+1.2%",
+      "key_facts": [
+        "Sector GDP -0.2% M/M and +1.2% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "CBRE outlook projects Canadian commercial real estate investment to rise to approximately $56B in 2026 (third-highest on record), property sales up over 8% (CBRE Canada).",
+        "Toronto office vacancy forecast to drop to 13.4% from 15.9%; lender intentions to increase office-loan budgets surged — first rebound in six years (Storeys).",
+        "BC Housing Minister Boyle released March 2026 housing highlights (Apr 10) and April 2026 rental report (Apr 9); 106 BC projects flagged as affected in policy.json."
+      ],
+      "projects_count": 211,
+      "projects_value": "44.42B",
+      "policy_items": [
+        {
+          "title": "BC March 2026 housing highlights + April 2026 rental report",
+          "description": "106 BC residential/transport/infrastructure/telecom projects linked via policy.json across both releases.",
+          "affected_projects": 106,
+          "source_url": "https://news.gov.bc.ca/releases/2026HMA0042-000398"
+        },
+        {
+          "title": "BC April 2026 rental report",
+          "description": "106 projects linked (April 9, 2026).",
+          "affected_projects": 106,
+          "source_url": "https://news.gov.bc.ca/releases/2026HMA0039-000390"
+        }
+      ],
+      "news_stories": [
+        "Canadian commercial real estate investment could rise to $56B in 2026 — CBRE Canada",
+        "Lender office-loan budgets rebound — Storeys, 2026",
+        "Opening more homes in West Vancouver — BC Government News (via policy.json)"
+      ],
+      "subsectors": [
+        {"code": "531", "name": "Real Estate"},
+        {"code": "532", "name": "Rental and Leasing Services"},
+        {"code": "533", "name": "Lessors of Non-Financial Intangible Assets"}
+      ],
+      "indicatorSrc": "StatCan",
+      "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-0.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_53"},
+        {"label": "Sector GDP (Y/Y)", "value": "+1.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_53"},
+        {"label": "Real Estate Employment", "value": "411,000", "delta": "Feb 2026", "source": "indicators.json:real_estate_employment"},
+        {"label": "Housing Starts (SAAR)", "value": "250,900", "delta": "Feb 2026, +4.5% M/M", "source": "indicators.json:housing_starts"},
+        {"label": "Res Building Permits", "value": "$7,968M", "delta": "Jan 2026", "source": "indicators.json:bldg_permits_res_national"},
+        {"label": "Active Projects (residential)", "value": "211", "delta": "$44.42B aggregate value", "source": "projects_all.json:sector=residential|Housing"}
+      ],
+      "cross_references": [
+        {
+          "indicator": "bc_housing_policy",
+          "direction": "up",
+          "magnitude": "106 BC projects affected",
+          "linked_projects": 106,
+          "linked_value": "0",
+          "interpretation": "BC Ministry of Housing released two reports this week; policy.json flags 106 BC projects (residential/transport/infrastructure/telecom) as affected.",
+          "source_url": "https://news.gov.bc.ca/releases/2026HMA0042-000398"
+        },
+        {
+          "indicator": "cbre_commercial_outlook",
+          "direction": "up",
+          "magnitude": "~$56B projected 2026 investment",
+          "linked_projects": 211,
+          "linked_value": "44.42B",
+          "interpretation": "CBRE projects third-highest Canadian commercial real estate investment on record for 2026; the 211 residential/housing projects tracked at $44.42B provide direct pipeline exposure.",
+          "source_url": "https://www.cbre.ca/press-releases/canadian-commercial-real-estate-investment-could-rise-to-56-billion-dollars-in-2026"
+        }
+      ],
+      "trend_analysis": {
+        "direction": "flat",
+        "momentum": "M/M GDP -0.2% but Y/Y +1.2%; February housing starts SAAR +4.5% M/M.",
+        "comparison": "The tracked 211 projects worth $44.42B exceed the commercial_mixed tag's $29.84B retail-anchored pipeline.",
+        "outlook": "If CBRE's $56B 2026 projection materialises and BC's housing reports translate to permit approvals, the 211 tracked residential projects would carry updated permit/status information."
       }
     },
     {
       "code": "54",
       "name": "Professional, Scientific & Technical Services",
-      "mm": "declined",
-      "yy": "n/a",
+      "mm": "-0.1%",
+      "yy": "-0.4%",
       "key_facts": [
-        "Sector GDP stood at $168,596M in December 2025; the sector posted its first GDP decline in months as of early 2026",
-        "Job growth expected at approximately 1.3% annually across Western Canada and Northern Territories by 2027",
-        "Saskatchewan PSTS employment projected to grow at 2.7% annually, contributing 55% of the sector's 7,100 job openings forecast for 2022-2026"
+        "Sector GDP -0.1% M/M and -0.4% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "Professional, scientific and technical services added +12,000 jobs in March 2026 (Robert Half / StatCan Labour Force Survey).",
+        "Sector grew 4.1% in 2023 vs overall Canadian economy +1.6% (ISED).",
+        "Western Canada employs more than 615,000 in NAICS 54 with approximately 19% of the workforce over age 55 (Job Bank)."
       ],
       "projects_count": 0,
-      "projects_value": "0",
+      "projects_value": "0.00B",
       "policy_items": [],
       "news_stories": [
-        "Professional, scientific & technical services posted first GDP decline in months in early 2026",
-        "Technology sector hiring slowed; employment growth varies between subsectors",
-        "Saskatchewan PSTS employment projected to grow 2.7% annually through 2026"
+        "March Labour Force Survey — Robert Half, April 2026",
+        "NAICS 54 GDP — ISED, 2026",
+        "Western Canada Technical Services Sectoral Profile — Job Bank, 2025"
       ],
       "subsectors": [
-        {"code": "541", "name": "Professional, Scientific & Technical Services"},
-        {"code": "5415", "name": "Computer Systems Design & Related Services"},
-        {"code": "5411", "name": "Legal Services"}
+        {"code": "541", "name": "Professional, Scientific and Technical Services"},
+        {"code": "5411", "name": "Legal Services"},
+        {"code": "5415", "name": "Computer Systems Design and Related Services"}
       ],
       "indicatorSrc": "StatCan",
       "isNegative": true,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-0.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_54"},
+        {"label": "Sector GDP (Y/Y)", "value": "-0.4%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_54"},
+        {"label": "Professional Employment", "value": "1,969,300", "delta": "Feb 2026", "source": "indicators.json:professional_employment"},
+        {"label": "Professional GDP (Chained $M)", "value": "$168,596M", "delta": "Dec 2025", "source": "indicators.json:gdp_professional"},
+        {"label": "Jobs Added (LFS March)", "value": "+12,000", "delta": "Mar 2026", "source": "research_sectors.md:lfs_march"},
+        {"label": "Active Projects", "value": "0", "delta": "no direct NAICS 54 project tag", "source": "projects_all.json"}
+      ],
       "cross_references": [
         {
-          "indicator": "psts_employment",
-          "direction": "down",
-          "magnitude": "First employment decline in months as of early 2026",
+          "indicator": "lfs_professional_services",
+          "direction": "up",
+          "magnitude": "+12,000 jobs in March 2026",
           "linked_projects": 0,
           "linked_value": "0",
-          "interpretation": "Professional services GDP at $168,596M is the sixth-largest NAICS sector. Technology sector hiring slowdown is the primary drag. No capital projects directly mapped to this sector."
+          "interpretation": "LFS March 2026 shows professional, scientific and technical services added 12,000 jobs. Sector has no direct capital-project footprint in the database.",
+          "source_url": "https://www.roberthalf.com/ca/en/insights/research/march-labour-force-survey"
         }
       ],
       "trend_analysis": {
-        "direction": "down",
-        "momentum": "Sector posted its first GDP decline in months as of early 2026. Technology sector hiring has slowed.",
-        "comparison": "Western Canada and Northern Territories expect 1.3% annual job growth by 2027. Saskatchewan projects 2.7% annual employment growth in PSTS.",
-        "outlook": "If technology hiring continues to slow, overall sector growth may remain subdued. Regional variation is significant — Saskatchewan at 2.7% versus slower growth in Ontario."
+        "direction": "flat",
+        "momentum": "M/M GDP -0.1% and Y/Y -0.4% despite +12,000 jobs in March 2026.",
+        "comparison": "StatCan GDP print lags the LFS employment signal; workforce aging (19% >55 in Western Canada) presents a medium-term retirement pipeline pressure.",
+        "outlook": "If hiring momentum continues as implied by the March LFS print, subsequent GDP readings may reflect the lagged growth; no capital project database exposure to track."
       }
     },
     {
       "code": "55",
       "name": "Management of Companies & Enterprises",
-      "mm": "n/a",
-      "yy": "n/a",
+      "mm": "-4.1%",
+      "yy": "-21.9%",
       "key_facts": [
-        "Sector GDP stood at $641M in December 2025 — the smallest NAICS sector by GDP",
-        "Over 51,000 holding companies were recoded under NAICS 2022; approximately 10,000 reclassified to Finance & Insurance, 35,000 to unclassified",
-        "Sector comprises establishments holding securities of subsidiaries for controlling interest or administering other establishments within the enterprise group"
+        "Sector GDP -4.1% M/M and -21.9% Y/Y per StatCan GDP by industry (March 31, 2026) — the steepest decline across all 20 NAICS industries tracked in this release.",
+        "The sector is monitored via Statistics Canada monthly GDP by industry (table 36-10-0434-01); StatCan chained December 2025 value for management of companies was $641M.",
+        "No material April 2026 sector-level announcements surfaced in this week's sector research pass."
       ],
       "projects_count": 0,
-      "projects_value": "0",
+      "projects_value": "0.00B",
       "policy_items": [],
       "news_stories": [
-        "NAICS 2022 reclassification recoded over 51,000 holding companies; 10,000 moved to Finance & Insurance",
-        "Sector GDP at $641M is the smallest of all 20 NAICS industries"
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
-        {"code": "551", "name": "Management of Companies & Enterprises"},
-        {"code": "5511", "name": "Management of Companies & Enterprises (detail)"},
-        {"code": "55111", "name": "Offices of Bank Holding Companies"}
+        {"code": "551", "name": "Management of Companies and Enterprises"},
+        {"code": "5511", "name": "Management of Companies and Enterprises (Head Offices)"}
       ],
       "indicatorSrc": "StatCan",
-      "isNegative": false,
+      "isNegative": true,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-4.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_55"},
+        {"label": "Sector GDP (Y/Y)", "value": "-21.9%", "delta": "Jan 2026 print — small dollar base volatility", "source": "indicators.json:industry_gdp_yy_55"},
+        {"label": "Management GDP (Chained $M)", "value": "$641M", "delta": "Dec 2025", "source": "indicators.json:gdp_management"},
+        {"label": "Management Employment", "value": "652,800", "delta": "Feb 2026", "source": "indicators.json:management_employment"},
+        {"label": "Active Projects", "value": "0", "delta": "no direct NAICS 55 project tag", "source": "projects_all.json"}
+      ],
       "cross_references": [
         {
-          "indicator": "naics_reclassification",
-          "direction": "flat",
-          "magnitude": "51,000 holding companies recoded under NAICS 2022",
+          "indicator": "management_gdp",
+          "direction": "down",
+          "magnitude": "-21.9% Y/Y on $641M base",
           "linked_projects": 0,
           "linked_value": "0",
-          "interpretation": "The NAICS 2022 reclassification significantly altered this sector's composition. GDP at $641M makes it the smallest NAICS sector. No capital projects mapped directly."
+          "interpretation": "StatCan December 2025 chained GDP for management of companies was $641M — a narrow dollar base that produces high percentage volatility. No capital project footprint exists for the sector.",
+          "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm"
         }
       ],
       "trend_analysis": {
-        "direction": "flat",
-        "momentum": "No January 2026 change reported. Sector GDP at $641M is structurally small.",
-        "comparison": "NAICS 2022 reclassification moved 10,000 units to Finance & Insurance and 35,000 to unclassified, substantially reducing the sector's measured size.",
-        "outlook": "Sector size and structure are dominated by holding company classifications. NAICS 2022 reclassification makes period-over-period comparisons unreliable."
+        "direction": "down",
+        "momentum": "M/M GDP -4.1% and Y/Y -21.9% — largest decline in the 20-industry set.",
+        "comparison": "The small dollar base ($641M in December 2025) produces percentage volatility that should be interpreted cautiously.",
+        "outlook": "If head-office activity stabilizes in subsequent StatCan releases, the narrow dollar base may continue to generate large percentage swings without material economic impact on the broader project database."
       }
     },
     {
       "code": "56",
-      "name": "Administrative & Support, Waste Management & Remediation",
-      "mm": "n/a",
-      "yy": "n/a",
+      "name": "Administrative & Waste Management Services",
+      "mm": "-0.1%",
+      "yy": "-0.2%",
       "key_facts": [
-        "Sector GDP stood at $60,887M in December 2025",
-        "Sector includes administration, hiring/placement, security, building cleaning, packaging, waste collection, treatment, disposal, material recovery, and remediation",
-        "Increased emphasis on responsible environmental management supports growth in remediation and waste management subsectors"
+        "Sector GDP -0.1% M/M and -0.2% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "12 environment-tagged projects ($1.91B parsed) plus waste management sub-categories (solid waste, hazardous waste, shoreline modification, groundwater extraction) add ~15 projects across the IAAC taxonomy.",
+        "Ontario's Build Communities Strong Fund and the Nova Scotia 'one project, one review' agreement (announced March 27, 2026) touch environmental assessment processes."
       ],
-      "projects_count": 17,
+      "projects_count": 26,
       "projects_value": "1.91B",
-      "policy_items": [],
+      "policy_items": [
+        {
+          "title": "Canada-Nova Scotia one-project, one-review agreement",
+          "description": "Agreement to streamline federal-provincial environmental review for major projects, signed March 27, 2026.",
+          "affected_projects": 26,
+          "source_url": "https://www.pm.gc.ca/en/news/news-releases/2026/03/27/canada-and-nova-scotia-sign-new-agreement-get-major-projects-built"
+        }
+      ],
       "news_stories": [
-        "Waste management and remediation subsector supported by growing environmental management emphasis",
-        "Sector GDP at $60,887M covers a diverse range of administrative support and environmental services"
+        "Canada and Nova Scotia sign new agreement to get major projects built — PMO, March 27, 2026",
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
-        {"code": "561", "name": "Administrative & Support Services"},
-        {"code": "562", "name": "Waste Management & Remediation Services"},
-        {"code": "5621", "name": "Waste Collection"}
+        {"code": "561", "name": "Administrative and Support Services"},
+        {"code": "562", "name": "Waste Management and Remediation Services"}
       ],
       "indicatorSrc": "StatCan",
-      "isNegative": false,
+      "isNegative": true,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-0.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_56"},
+        {"label": "Sector GDP (Y/Y)", "value": "-0.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_56"},
+        {"label": "Admin & Waste Employment", "value": "652,800", "delta": "Feb 2026", "source": "indicators.json:admin_waste_employment"},
+        {"label": "Admin/Waste GDP (Chained $M)", "value": "$60,887M", "delta": "Dec 2025", "source": "indicators.json:gdp_admin_waste"},
+        {"label": "Active Projects (environment)", "value": "26", "delta": "$1.91B aggregate value", "source": "projects_all.json:sector=environment|Waste Management"}
+      ],
       "cross_references": [
         {
-          "indicator": "environment_projects",
-          "direction": "flat",
-          "magnitude": "17 projects valued at $1.91B in the pipeline",
-          "linked_projects": 17,
+          "indicator": "one_project_one_review",
+          "direction": "up",
+          "magnitude": "Canada-NS environmental review agreement",
+          "linked_projects": 26,
           "linked_value": "1.91B",
-          "interpretation": "Pipeline tracks 17 environment/waste management projects totaling $1.91B. Remediation and waste management are the capital-intensive subsectors within this industry."
+          "interpretation": "The agreement aims to streamline federal-provincial environmental review; the 26 environment/waste-tagged projects tracked at $1.91B carry direct regulatory exposure.",
+          "source_url": "https://www.pm.gc.ca/en/news/news-releases/2026/03/27/canada-and-nova-scotia-sign-new-agreement-get-major-projects-built"
         }
       ],
       "trend_analysis": {
         "direction": "flat",
-        "momentum": "No January 2026 directional change reported by StatCan for this sector specifically.",
-        "comparison": "Sector GDP at $60,887M. Private sector and government emphasis on environmental management supports waste management and remediation subsectors.",
-        "outlook": "If environmental regulatory requirements continue to expand, remediation and waste management investment may increase. The 17 tracked projects ($1.91B) span hazardous waste, solid waste, and site remediation."
+        "momentum": "M/M GDP -0.1% and Y/Y -0.2% — essentially flat.",
+        "comparison": "December 2025 chained GDP $60.9B indicates a material services sector despite narrow project coverage.",
+        "outlook": "If the Canada-Nova Scotia one-project-one-review framework extends to other provinces, the 26 tracked environment/waste projects and related IAAC-taxonomy assets may carry updated review timelines."
       }
     },
     {
       "code": "61",
       "name": "Educational Services",
-      "mm": "n/a",
-      "yy": "n/a",
+      "mm": "+0.5%",
+      "yy": "-1.9%",
       "key_facts": [
-        "Sector GDP stood at $123,701M in December 2025",
-        "Canada expects to issue up to 408,000 study permits in 2026, including 155,000 to newly arriving students — a nearly 50% reduction from 305,900",
-        "New international student arrivals fell 61% in 2025 to 115,470",
-        "University of the Fraser Valley laid off 45 faculty/staff due to a CA$20M deficit in 2026/27"
+        "Sector GDP +0.5% M/M and -1.9% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "BCIT trades and technology complex (~$220M, funded by BC Province, BCIT, federal Green Construction through Wood, and private donors) under construction across multiple pavilions; fourth building set to start summer 2026 (BC Government News).",
+        "Ontario Indigenous Institutes Facilities Renewal Program committed $2.0M in 2025-26 and $2.0M in 2026-27 under a five-year $8.5M allocation (Ontario Ministry of Colleges, Universities, Research Excellence and Security)."
       ],
-      "projects_count": 157,
-      "projects_value": "14.71B",
+      "projects_count": 163,
+      "projects_value": "15.02B",
       "policy_items": [
         {
-          "title": "International Student Cap",
-          "description": "Canada's international student cap limits newly arriving international students to 155,000 in 2026, down from 305,900. Study permit approvals for MB, PEI, NS, and NB decreased by at least 59%. Some colleges report enrollment declines exceeding 50%.",
-          "affected_projects": 157,
-          "source_url": "https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/2026-provincial-territorial-allocations-under-international-student-cap.html"
+          "title": "BCIT Trades and Technology Complex (~$220M)",
+          "description": "BC Province, BCIT, federal Green Construction through Wood, and private donor funding for multi-pavilion complex; fourth building starts summer 2026.",
+          "affected_projects": 163,
+          "source_url": "https://news.gov.bc.ca/releases/2026INF0004-000118"
         }
       ],
       "news_stories": [
-        "International student arrivals fell 61% in 2025 to 115,470; cap limits 2026 new arrivals to 155,000",
-        "University of the Fraser Valley: 45 layoffs from CA$20M deficit; some colleges see 50%+ enrollment declines",
-        "Provincial disparities: MB, PEI, NS, NB study permit approvals down at least 59%"
+        "BCIT Trades Complex progresses — BC Government News, 2026",
+        "Ontario MCU departmental plan 2025-2026 — Ontario",
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
-        {"code": "6111", "name": "Elementary & Secondary Schools"},
-        {"code": "6112", "name": "Community Colleges & CEGEPs"},
-        {"code": "6113", "name": "Universities"}
+        {"code": "611", "name": "Educational Services"},
+        {"code": "6113", "name": "Universities"},
+        {"code": "6115", "name": "Technical and Trade Schools"}
       ],
       "indicatorSrc": "StatCan",
-      "isNegative": false,
+      "isNegative": true,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.5%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_61"},
+        {"label": "Sector GDP (Y/Y)", "value": "-1.9%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_61"},
+        {"label": "Education Employment", "value": "1,660,800", "delta": "Feb 2026", "source": "indicators.json:education_employment"},
+        {"label": "Education GDP (Chained $M)", "value": "$123,701M", "delta": "Dec 2025", "source": "indicators.json:gdp_education"},
+        {"label": "Active Projects", "value": "163", "delta": "$15.02B aggregate value", "source": "projects_all.json:sector=education|Education"}
+      ],
       "cross_references": [
         {
-          "indicator": "international_student_cap",
-          "direction": "down",
-          "magnitude": "155,000 new arrivals cap (down from 305,900)",
-          "linked_projects": 157,
-          "linked_value": "14.71B",
-          "interpretation": "The international student cap represents a 49% reduction in new arrivals. The pipeline tracks 157 education-sector projects valued at $14.71B, including campus construction and expansion. Institutions in MB, PEI, NS, and NB face the steepest enrollment declines."
+          "indicator": "bcit_trades_complex",
+          "direction": "up",
+          "magnitude": "~$220M multi-pavilion",
+          "linked_projects": 163,
+          "linked_value": "15.02B",
+          "interpretation": "BCIT's Robert Bosa Carpentry Pavilion, Marine and Mass Timber Pavilion, and Campus Services Centre are under construction; fourth building due summer 2026. The project is one of 163 education-tagged projects tracked at $15.02B.",
+          "source_url": "https://news.gov.bc.ca/releases/2026INF0004-000118"
         }
       ],
       "trend_analysis": {
-        "direction": "down",
-        "momentum": "International student arrivals fell 61% in 2025. Institutions report enrollment declines exceeding 50%, staffing reductions, program suspensions, and campus closures.",
-        "comparison": "Canada's education spending as a share of GDP stood at 4.14% in 2022, down from 4.75% in 2021. K-12 enrollment remains relatively flat.",
-        "outlook": "If international student enrollment continues below pre-cap levels, post-secondary institutions may face further budget pressure. The 157 tracked education projects ($14.71B) may see scope adjustments at institutions with significant enrollment shortfalls."
+        "direction": "flat",
+        "momentum": "M/M GDP +0.5% with a -1.9% Y/Y print — modest monthly gain within a year-over-year decline.",
+        "comparison": "Sector carries 163 projects totalling $15.02B — a steady pipeline supported by provincial capital funding.",
+        "outlook": "If BCIT's fourth pavilion starts summer 2026 on schedule and Ontario's Indigenous Institutes renewal program proceeds, sector project status may advance for tracked post-secondary capital."
       }
     },
     {
       "code": "62",
-      "name": "Health Care & Social Assistance",
-      "mm": "n/a",
-      "yy": "n/a",
+      "name": "Healthcare & Social Assistance",
+      "mm": "+0.0%",
+      "yy": "+2.1%",
       "key_facts": [
-        "Sector GDP stood at $191,439M in December 2025 — the second-largest NAICS sector after real estate",
-        "Health care and social assistance accounts for 21.5% of all paid work in Canada; approximately 14% of Canadians work in the sector (up from 8% in the 1970s)",
-        "Sector added 21,000 jobs in December alone and 85,000 over the past year",
-        "Ontario sector employed 1,007,100 people in 2024 (12.4% of provincial workforce), producing $64.2B in GDP"
+        "Sector GDP +0.0% M/M and +2.1% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "Quw'utsun Valley Hospital (Cowichan, BC) is 75% complete, 204 beds (+56 vs existing), slated to be BC's first fully electric hospital (~80% GHG reduction); construction completion 2026, patient opening spring 2027 (CHEK News).",
+        "Over $6.4B in BC hospital construction starting in 2025-2026 across 30 hospital projects/health facilities, 11 long-term care centres, and four cancer centres (Daily Commercial News, February 2025)."
       ],
-      "projects_count": 259,
-      "projects_value": "84.55B",
+      "projects_count": 258,
+      "projects_value": "20.55B",
       "policy_items": [
         {
-          "title": "ESDC Planned Spending 2026-27",
-          "description": "Employment and Social Development Canada's planned gross spending for 2026-27 is $218.76B with 30,945 planned FTEs.",
-          "affected_projects": 259,
-          "source_url": "https://www.canada.ca/en/employment-social-development/corporate/reports/departmental-plan/2026-2027.html"
+          "title": "BC hospital construction program ($6.4B+)",
+          "description": "30 hospital projects/health facilities, 11 long-term care centres, and four cancer centres starting in 2025-2026 across five health regions.",
+          "affected_projects": 258,
+          "source_url": "https://canada.constructconnect.com/joc/news/infrastructure/2025/02/more-than-6-4b-in-b-c-hospital-construction-starting-in-2025"
         }
       ],
       "news_stories": [
-        "Healthcare accounts for 21.5% of all paid work in Canada; sector added 85,000 jobs over the past year",
-        "Ontario healthcare produced $64.2B in GDP in 2024, up $2.3B (3.7%) year-over-year",
-        "ESDC planned gross spending for 2026-27 is $218.76B"
+        "New Cowichan hospital 75% complete — CHEK News, 2026",
+        "More than $6.4B in BC hospital construction starting in 2025 — Daily Commercial News, February 2025",
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
         {"code": "621", "name": "Ambulatory Health Care Services"},
         {"code": "622", "name": "Hospitals"},
-        {"code": "623", "name": "Nursing & Residential Care Facilities"}
+        {"code": "623", "name": "Nursing and Residential Care Facilities"}
       ],
       "indicatorSrc": "StatCan",
       "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.0%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_62"},
+        {"label": "Sector GDP (Y/Y)", "value": "+2.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_62"},
+        {"label": "Healthcare Employment", "value": "2,966,600", "delta": "Feb 2026", "source": "indicators.json:healthcare_employment"},
+        {"label": "Healthcare GDP (Chained $M)", "value": "$191,439M", "delta": "Dec 2025", "source": "indicators.json:gdp_healthcare"},
+        {"label": "Active Projects", "value": "258", "delta": "$20.55B aggregate value", "source": "projects_all.json:sector=healthcare|Healthcare"}
+      ],
       "cross_references": [
         {
-          "indicator": "healthcare_employment",
+          "indicator": "bc_hospital_program",
           "direction": "up",
-          "magnitude": "+85,000 jobs over past year; 21.5% of all paid work",
-          "linked_projects": 259,
-          "linked_value": "84.55B",
-          "interpretation": "Healthcare employment growth (+85,000 over past year) is the strongest of any sector. The pipeline tracks 259 healthcare projects valued at $84.55B. Ontario alone produced $64.2B in sector GDP in 2024."
+          "magnitude": "$6.4B+ BC hospital starts",
+          "linked_projects": 258,
+          "linked_value": "20.55B",
+          "interpretation": "BC's 30 hospital projects plus 11 long-term care centres and four cancer centres represent a material share of the 258 healthcare projects tracked at $20.55B nationally.",
+          "source_url": "https://canada.constructconnect.com/joc/news/infrastructure/2025/02/more-than-6-4b-in-b-c-hospital-construction-starting-in-2025"
+        },
+        {
+          "indicator": "quwutsun_valley_hospital",
+          "direction": "up",
+          "magnitude": "75% complete, 204 beds",
+          "linked_projects": 1,
+          "linked_value": "0",
+          "interpretation": "The Quw'utsun Valley Hospital is slated to be BC's first fully electric hospital (~80% GHG reduction); construction completion 2026, patient opening spring 2027.",
+          "source_url": "https://cheknews.ca/new-cowichan-hospital-75-complete-receives-indigenous-name-1289009/"
         }
       ],
       "trend_analysis": {
         "direction": "up",
-        "momentum": "Sector added 21,000 jobs in December alone and 85,000 over the past year. Now accounts for 21.5% of all paid work, more than double the second-largest sector (retail).",
-        "comparison": "Ontario employment grew 2.7% (+26,000) in 2024 to 1,007,100. Ontario sector GDP grew 3.7% to $64.2B.",
-        "outlook": "If the aging population trend continues, healthcare's share of employment and GDP may rise further. ESDC planned spending of $218.76B for 2026-27 provides the fiscal framework. 259 projects ($84.55B) in the pipeline include hospital construction, long-term care, and facility expansion."
+        "momentum": "M/M GDP flat but Y/Y +2.1% with BC's $6.4B hospital program flowing into 2026.",
+        "comparison": "Healthcare chained GDP of $191.4B in December 2025 is the second-largest services category (behind real estate).",
+        "outlook": "If the BC hospital program proceeds as announced and Prince George University Hospital phase-two $1.58B tower starts construction in fall 2026, the 258 tracked healthcare projects would receive updated milestone data."
       }
     },
     {
       "code": "71",
       "name": "Arts, Entertainment & Recreation",
-      "mm": "n/a",
-      "yy": "n/a",
+      "mm": "-0.1%",
+      "yy": "+2.2%",
       "key_facts": [
-        "Sector GDP stood at $19,536M in December 2025 — the smallest services-producing NAICS sector",
-        "Ontario expects moderate to slow employment growth in 2025-2027; Quebec projects negative job growth in 2024-2026",
-        "$150M BMO Field upgrade in Toronto underway ahead of FIFA World Cup in June 2026",
-        "46.6% of Ontario sector employees work part-time (vs. 17.6% for all industries); youth (15-24) make up 39.5% of workforce"
+        "Sector GDP -0.1% M/M and +2.2% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "Calgary Scotia Place — $926M arena project in Victoria Park — steel structure rising; 9,000 metric tonnes rebar, 5,000 km electrical wiring, 308,000 cubic metres of excavated earth; will replace Scotiabank Saddledome in 2027 (Global News).",
+        "Ontario 2026 budget added $300M to the Community Sport & Recreation Infrastructure Fund, bringing it to $500M total (CLAD Global)."
       ],
-      "projects_count": 150,
+      "projects_count": 153,
       "projects_value": "22.26B",
-      "policy_items": [],
+      "policy_items": [
+        {
+          "title": "Ontario Community Sport & Recreation Infrastructure Fund",
+          "description": "+$300M top-up in 2026 budget; total fund now $500M.",
+          "affected_projects": 153,
+          "source_url": "https://www.cladglobal.com/CLADnews/architecture-design/Calgary-indoor-arena-and-entertainment-district-gets-go-ahead/342720"
+        }
+      ],
       "news_stories": [
-        "$150M BMO Field upgrade underway in Toronto ahead of FIFA World Cup (June 2026)",
-        "Quebec projects negative arts/entertainment job growth in 2024-2026",
-        "Trade tensions putting downward pressure on consumer confidence and discretionary spending"
+        "Calgary new event centre on time and on budget — Global News, 2026",
+        "Calgary indoor arena and entertainment district gets go-ahead — CLAD Global, 2026",
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
-        {"code": "711", "name": "Performing Arts, Spectator Sports & Related"},
+        {"code": "711", "name": "Performing Arts, Spectator Sports and Related Industries"},
         {"code": "712", "name": "Heritage Institutions"},
-        {"code": "713", "name": "Amusement, Gambling & Recreation Industries"}
+        {"code": "713", "name": "Amusement, Gambling and Recreation Industries"}
       ],
       "indicatorSrc": "StatCan",
       "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-0.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_71"},
+        {"label": "Sector GDP (Y/Y)", "value": "+2.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_71"},
+        {"label": "Entertainment Employment", "value": "845,700", "delta": "Feb 2026", "source": "indicators.json:entertainment_employment"},
+        {"label": "Entertainment GDP (Chained $M)", "value": "$19,536M", "delta": "Dec 2025", "source": "indicators.json:gdp_entertainment"},
+        {"label": "Active Projects (tourism_culture)", "value": "153", "delta": "$22.26B aggregate value", "source": "projects_all.json:sector=tourism_culture"}
+      ],
       "cross_references": [
         {
-          "indicator": "consumer_discretionary",
-          "direction": "down",
-          "magnitude": "Bank of Canada anticipates slow growth in household incomes",
-          "linked_projects": 150,
+          "indicator": "calgary_scotia_place",
+          "direction": "up",
+          "magnitude": "$926M arena project",
+          "linked_projects": 1,
+          "linked_value": "0.93",
+          "interpretation": "Calgary Scotia Place will replace Scotiabank Saddledome in 2027; steel structure rising with 9,000 tonnes rebar. One of 153 tourism/culture projects tracked at $22.26B.",
+          "source_url": "https://globalnews.ca/news/11588444/calgary-new-event-centre-on-time-budget-2026/"
+        },
+        {
+          "indicator": "ontario_rec_fund",
+          "direction": "up",
+          "magnitude": "+$300M, $500M total",
+          "linked_projects": 153,
           "linked_value": "22.26B",
-          "interpretation": "Arts and entertainment depends on discretionary spending. 150 tracked projects ($22.26B) include resort developments, cultural facilities, and sports venues. The $150M BMO Field upgrade is linked to the June 2026 FIFA World Cup."
+          "interpretation": "Ontario's Community Sport & Recreation Infrastructure Fund top-up supports the tracked tourism/culture pipeline.",
+          "source_url": "https://www.cladglobal.com/CLADnews/architecture-design/Calgary-indoor-arena-and-entertainment-district-gets-go-ahead/342720"
         }
       ],
       "trend_analysis": {
-        "direction": "mixed",
-        "momentum": "Ontario expects moderate to slow growth; Quebec projects negative job growth through 2026. $150M BMO Field upgrade is the near-term anchor project.",
-        "comparison": "46.6% part-time employment rate is nearly triple the all-industry average (17.6%). Youth (15-24) make up 39.5% of the workforce.",
-        "outlook": "If consumer confidence remains pressured by trade tensions and slow household income growth, discretionary spending on entertainment may be constrained. FIFA World Cup (June 2026) provides a one-time activity surge for the sector."
+        "direction": "up",
+        "momentum": "M/M GDP -0.1% but Y/Y +2.2% with material capital project activity (Calgary Scotia Place + Ontario $500M rec fund).",
+        "comparison": "December 2025 chained GDP $19.5B alongside 153 tracked projects worth $22.26B.",
+        "outlook": "If Calgary Scotia Place delivers to its 2027 opening target and Ontario's $500M Community Sport & Recreation Infrastructure Fund flows through 2026-27, the 153 tracked tourism/culture projects would carry updated milestone data."
       }
     },
     {
       "code": "72",
       "name": "Accommodation & Food Services",
-      "mm": "n/a",
-      "yy": "n/a",
+      "mm": "+0.7%",
+      "yy": "+2.3%",
       "key_facts": [
-        "Sector GDP stood at $52,548M in December 2025",
-        "One-third of restaurant establishments were operating at a loss in 2023; insolvency filings up 219 (+43.8%) year-over-year",
-        "60% of Canadian travelers prefer accommodations with sustainable certifications",
-        "Over 50% of independent hospitality providers expected to adopt Hardware-as-a-Service models"
+        "Sector GDP +0.7% M/M and +2.3% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "Mordor Intelligence values the Canada hospitality market at USD 20.29B in 2025, growing to USD 21.34B in 2026, projected USD 27.46B by 2031 (CAGR 5.18%).",
+        "FIFA 2026 is mobilizing more than USD 1B in hotel-related infrastructure; Vancouver needs 20,000 incremental rooms for peak demand (Mordor Intelligence).",
+        "Sector vacancy rate 3.8% in 2024 with approximately 18,230 unfilled positions (Job Bank Ontario sectoral profile)."
       ],
-      "projects_count": 0,
-      "projects_value": "0",
+      "projects_count": 3,
+      "projects_value": "0.00B",
       "policy_items": [],
       "news_stories": [
-        "One-third of restaurants operating at a loss in 2023; insolvency filings up 43.8% year-over-year",
-        "Sector faces persistent labour shortages; workers leaving for other sectors due to unstable hours and compensation",
-        "60% of Canadian travelers prefer sustainable-certified accommodations"
+        "Canada hospitality market report — Mordor Intelligence, 2026",
+        "NAICS 72 Ontario sectoral profile — Job Bank, 2024-2026",
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
-        {"code": "721", "name": "Accommodation"},
-        {"code": "722", "name": "Food Services & Drinking Places"},
-        {"code": "7211", "name": "Traveller Accommodation"}
+        {"code": "721", "name": "Accommodation Services"},
+        {"code": "722", "name": "Food Services and Drinking Places"}
       ],
       "indicatorSrc": "StatCan",
       "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.7%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_72"},
+        {"label": "Sector GDP (Y/Y)", "value": "+2.3%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_72"},
+        {"label": "Accommodation & Food Employment", "value": "1,128,500", "delta": "Feb 2026", "source": "indicators.json:accommodation_food_employment"},
+        {"label": "Accommodation GDP (Chained $M)", "value": "$52,548M", "delta": "Dec 2025", "source": "indicators.json:gdp_accommodation"},
+        {"label": "Canada Hospitality Market", "value": "USD 21.34B", "delta": "2026 vs USD 20.29B 2025", "source": "research_sectors.md:mordor_hospitality"},
+        {"label": "Active Projects", "value": "3", "delta": "$0.00B parsed value (narrow tag coverage)", "source": "projects_all.json:sector=Resort Developments|Ski Resorts"}
+      ],
       "cross_references": [
         {
-          "indicator": "restaurant_insolvency",
+          "indicator": "fifa_2026_hotel_infra",
           "direction": "up",
-          "magnitude": "+219 insolvency filings (+43.8%) in 2023 vs 2022",
-          "linked_projects": 0,
+          "magnitude": "USD 1B+ hotel infrastructure mobilization",
+          "linked_projects": 3,
           "linked_value": "0",
-          "interpretation": "One-third of restaurant establishments were operating at a loss. Sector GDP at $52,548M faces pressure from labour shortages and consumer spending constraints. No capital projects directly mapped to this sector."
+          "interpretation": "FIFA 2026 is mobilising more than USD 1B in hotel infrastructure; Vancouver needs 20,000 incremental rooms for peak demand. The project database under-represents the accommodation pipeline (3 tagged projects).",
+          "source_url": "https://www.mordorintelligence.com/industry-reports/hospitality-industry-in-canada"
         }
       ],
       "trend_analysis": {
-        "direction": "flat",
-        "momentum": "Moderate employment growth expected over 2024-2026, limited by consumer spending pressures and labour shortages.",
-        "comparison": "Restaurant insolvency filings rose 43.8% in 2023. Sector faces structural labour challenges as workers move to other industries.",
-        "outlook": "If labour shortages persist and consumer spending remains constrained, the sector may continue to see elevated insolvency rates. Sustainable certifications and wellness-oriented menus represent adaptation strategies."
+        "direction": "up",
+        "momentum": "M/M GDP +0.7% and Y/Y +2.3%; market projected to reach USD 27.46B by 2031.",
+        "comparison": "Project database tag coverage (3 direct tags) sits well below sector economic weight; most hotel pipeline is captured in commercial_mixed.",
+        "outlook": "If FIFA 2026 hotel-infrastructure commitments flow as announced and Vancouver's 20,000-room requirement advances, the commercial_mixed project set would carry updated accommodation attribution."
       }
     },
     {
       "code": "81",
       "name": "Other Services (except Public Administration)",
-      "mm": "n/a",
-      "yy": "n/a",
+      "mm": "+0.2%",
+      "yy": "+0.3%",
       "key_facts": [
-        "Sector GDP stood at $44,650M in December 2025",
-        "Sector includes motor vehicle repair, personal care, funeral services, laundry, religious organizations, advocacy, and professional associations",
-        "Quebec's sector faces pressures from changing consumer habits and competition from digital alternatives"
+        "Sector GDP +0.2% M/M and +0.3% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "The database has no direct project coverage for NAICS 81 — repair, personal, and civic services are captured only via GDP-by-industry indicators.",
+        "No significant sector-level developments surfaced in this week's research pass."
       ],
       "projects_count": 0,
-      "projects_value": "0",
+      "projects_value": "0.00B",
       "policy_items": [],
       "news_stories": [
-        "Quebec Other Services sector faces pressure from changing consumer habits and digital alternatives",
-        "Sector GDP at $44,650M covers a diverse range of personal, repair, and civic/religious services"
+        "GDP by industry January 2026 — StatCan, March 31, 2026"
       ],
       "subsectors": [
-        {"code": "811", "name": "Repair & Maintenance"},
-        {"code": "812", "name": "Personal & Laundry Services"},
-        {"code": "813", "name": "Religious, Grant-making, Civic & Professional Organizations"}
+        {"code": "811", "name": "Repair and Maintenance"},
+        {"code": "812", "name": "Personal and Laundry Services"},
+        {"code": "813", "name": "Religious, Grantmaking, Civic, Professional and Similar Organizations"}
       ],
       "indicatorSrc": "StatCan",
       "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.2%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_81"},
+        {"label": "Sector GDP (Y/Y)", "value": "+0.3%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_81"},
+        {"label": "Other Services Employment", "value": "770,700", "delta": "Feb 2026", "source": "indicators.json:other_services_employment"},
+        {"label": "Other Services GDP (Chained $M)", "value": "$44,650M", "delta": "Dec 2025", "source": "indicators.json:gdp_other_services"},
+        {"label": "Active Projects", "value": "0", "delta": "no direct NAICS 81 project tag", "source": "projects_all.json"}
+      ],
       "cross_references": [
         {
-          "indicator": "consumer_habits",
-          "direction": "shifting",
-          "magnitude": "Digital alternatives competing with traditional personal and repair services",
+          "indicator": "other_services_gdp",
+          "direction": "up",
+          "magnitude": "+0.3% Y/Y on $44.65B base",
           "linked_projects": 0,
           "linked_value": "0",
-          "interpretation": "Sector GDP at $44,650M. Changing consumer habits and digital alternatives are creating competitive pressure, particularly in Quebec's personal and repair services. No capital projects directly mapped."
+          "interpretation": "Sector carries no capital project footprint; tracked solely via StatCan GDP by industry. December 2025 chained GDP was $44.65B.",
+          "source_url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm"
         }
       ],
       "trend_analysis": {
         "direction": "flat",
-        "momentum": "No January 2026 directional change reported by StatCan for this sector specifically.",
-        "comparison": "Sector faces structural pressures from digital alternatives in personal and repair services. Composition is diverse, spanning motor vehicle repair, personal care, and civic organizations.",
-        "outlook": "If digital disruption of personal services accelerates, traditional establishments may face further competitive pressure. The sector's diversity makes aggregate trends difficult to characterize."
+        "momentum": "M/M GDP +0.2% and Y/Y +0.3% — essentially flat.",
+        "comparison": "Sector activity is monitored only via StatCan monthly GDP by industry; no project database exposure.",
+        "outlook": "If subsequent StatCan releases maintain the current ~+0.3% Y/Y trajectory, the sector remains a minor but stable component of the services aggregate."
       }
     },
     {
       "code": "91",
       "name": "Public Administration",
-      "mm": "n/a",
-      "yy": "n/a",
+      "mm": "-0.1%",
+      "yy": "+0.7%",
       "key_facts": [
-        "Sector GDP stood at $168,378M in December 2025",
-        "4.597 million Canadians worked in the public sector in January 2026, representing 21.8% of total employment",
-        "Federal public service reduction target: from 368,000 to 330,000; 9,800 reductions began in 2024-2025 under Refocusing Government Spending",
-        "Federal personnel costs estimated at $71.1B in 2024-25; PBO projects $76.2B by 2029-30 without restraint"
+        "Sector GDP -0.1% M/M and +0.7% Y/Y per StatCan GDP by industry (March 31, 2026).",
+        "Prime Minister Carney launched the Build Communities Strong Fund on April 7, 2026 — $51B over 8 years (~$12B/year), matched by ~$17B from provinces plus municipal/territorial/private capital; federal projects GDP lift estimated at $95B over the decade (PMO).",
+        "Carney referred new Arctic/Northern projects to the Major Projects Office, a combined potential investment of more than $126B (Canada.ca).",
+        "Canada achieved the 2% GDP defence spending benchmark by March 31, 2026 — Budget 2025 committed $81.1B multi-year, $32B NORAD Arctic modernization plan (DND)."
       ],
-      "projects_count": 234,
-      "projects_value": "565.85B",
+      "projects_count": 235,
+      "projects_value": "169.49B",
       "policy_items": [
         {
-          "title": "Federal Workforce Reduction & Expenditure Review",
-          "description": "Government committed to reducing federal public service from 368,000 to 330,000. Comprehensive Expenditure Review to further decrease by an estimated 16,000 FTEs over three years.",
-          "affected_projects": 234,
-          "source_url": "https://www.canada.ca/en/government/publicservice/workforce/workforce-adjustment/workforce-reductions-federal-public-service.html"
+          "title": "Build Communities Strong Fund launched",
+          "description": "$51B federal over 8 years matched by ~$17B from provinces plus municipal/territorial/private capital. Federal projects GDP lift estimated at $95B over the decade.",
+          "affected_projects": 235,
+          "source_url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and"
         },
         {
-          "title": "2026-27 Main Estimates Tabled",
-          "description": "Main estimates for 2026-27 have been tabled. Department of Finance Canada's 2026-27 Departmental Plan released.",
-          "affected_projects": 234,
-          "source_url": "https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending/government-expenditure-plan-main-estimates/2026-27-estimates.html"
+          "title": "Major Projects Office Arctic/Northern referral",
+          "description": "Carney referred new Arctic/Northern projects with combined potential investment over $126B.",
+          "affected_projects": 235,
+          "source_url": "https://www.canada.ca/en/privy-council/major-projects-office.html"
+        },
+        {
+          "title": "Canada achieves 2% GDP defence spending benchmark",
+          "description": "Budget 2025 committed $81.1B multi-year; $32B NORAD Arctic modernization plan.",
+          "affected_projects": 235,
+          "source_url": "https://www.canada.ca/en/department-national-defence/news/2026/03/canada-achieves-the-2-of-gross-domestic-product-defence-spending-benchmark.html"
         }
       ],
       "news_stories": [
-        "21.8% of Canadians now work in the public sector (4.597 million in January 2026)",
-        "Federal public service reduction from 368,000 to target of 330,000; Comprehensive Expenditure Review to cut 16,000 more FTEs",
-        "Federal personnel costs at $71.1B in 2024-25; PBO projects $76.2B by 2029-30 without restraint"
+        "PM Carney launches Build Communities Strong Fund — PMO, April 7, 2026",
+        "Major Projects Office — Canada.ca, 2026",
+        "Canada achieves 2% GDP defence spending benchmark — DND, March 2026"
       ],
       "subsectors": [
         {"code": "911", "name": "Federal Government Public Administration"},
-        {"code": "912", "name": "Provincial & Territorial Government Administration"},
-        {"code": "913", "name": "Local, Municipal & Regional Government Administration"}
+        {"code": "912", "name": "Provincial and Territorial Public Administration"},
+        {"code": "913", "name": "Local, Municipal and Regional Public Administration"}
       ],
       "indicatorSrc": "StatCan",
       "isNegative": false,
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-0.1%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_mm_91"},
+        {"label": "Sector GDP (Y/Y)", "value": "+0.7%", "delta": "Jan 2026 print", "source": "indicators.json:industry_gdp_yy_91"},
+        {"label": "Public Admin Employment", "value": "1,241,000", "delta": "Feb 2026", "source": "indicators.json:public_admin_employment"},
+        {"label": "Public Admin GDP (Chained $M)", "value": "$168,378M", "delta": "Dec 2025", "source": "indicators.json:gdp_public_admin"},
+        {"label": "Build Communities Strong Fund", "value": "$51B / 8 yrs", "delta": "Launched Apr 7 2026", "source": "research_sectors.md:bcsf"},
+        {"label": "Active Projects (government+defence)", "value": "235", "delta": "$169.49B aggregate value", "source": "projects_all.json:sector=government|defence|Defence|indigenous"}
+      ],
       "cross_references": [
         {
-          "indicator": "federal_personnel_costs",
+          "indicator": "build_communities_strong_fund",
           "direction": "up",
-          "magnitude": "$71.1B in 2024-25; PBO projects $76.2B by 2029-30",
-          "linked_projects": 234,
-          "linked_value": "565.85B",
-          "interpretation": "Public administration is the fifth-largest NAICS sector by GDP ($168,378M). 234 tracked projects ($565.85B) include defence, government infrastructure, and indigenous projects. Federal workforce reductions (~38,000 FTEs targeted) are underway."
+          "magnitude": "$51B federal over 8 years",
+          "linked_projects": 235,
+          "linked_value": "169.49B",
+          "interpretation": "The fund targets hospitals, recreation centres, universities, colleges, bridges, water, and transit — assets routed through public administration and tracked in the 235 government/defence/indigenous projects worth $169.49B.",
+          "source_url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and"
+        },
+        {
+          "indicator": "major_projects_office_arctic",
+          "direction": "up",
+          "magnitude": "$126B+ combined potential",
+          "linked_projects": 235,
+          "linked_value": "169.49B",
+          "interpretation": "Arctic/Northern referral to the Major Projects Office links to the $32B NORAD Arctic modernization plan and the defence-tagged pipeline tracked in the database.",
+          "source_url": "https://www.canada.ca/en/privy-council/major-projects-office.html"
+        },
+        {
+          "indicator": "defence_2pct_gdp",
+          "direction": "up",
+          "magnitude": "2% GDP benchmark met Mar 31 2026",
+          "linked_projects": 235,
+          "linked_value": "169.49B",
+          "interpretation": "Budget 2025 committed $81.1B multi-year for defence; the 2% GDP benchmark was achieved by March 31, 2026.",
+          "source_url": "https://www.canada.ca/en/department-national-defence/news/2026/03/canada-achieves-the-2-of-gross-domestic-product-defence-spending-benchmark.html"
         }
       ],
       "trend_analysis": {
-        "direction": "mixed",
-        "momentum": "21.8% of total employment is now public sector. Federal workforce reduction targets 38,000 FTEs (from 368,000 to 330,000) while personnel costs continue rising.",
-        "comparison": "Personnel costs are the largest federal operating expense at $71.1B. PBO projects $76.2B by 2029-30 absent restraint. 2026-27 Main Estimates have been tabled.",
-        "outlook": "If the Comprehensive Expenditure Review proceeds as planned, approximately 16,000 additional FTEs may be reduced over three years. Provincial and municipal public administration may offset federal reductions. USMCA review (July 2026) may generate additional government activity."
+        "direction": "up",
+        "momentum": "M/M GDP -0.1% but Y/Y +0.7% with three active federal fiscal commitments (BCSF $51B, MPO Arctic $126B, defence 2% benchmark).",
+        "comparison": "December 2025 chained GDP $168.4B alongside 235 tracked government/defence projects worth $169.49B.",
+        "outlook": "If the Build Communities Strong Fund, Major Projects Office Arctic referral, and defence 2% GDP commitments flow on the announced cadences, the 235 tracked public-administration projects would carry updated funding attribution through the balance of 2026."
       }
     }
   ]

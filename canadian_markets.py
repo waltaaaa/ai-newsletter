@@ -34,11 +34,27 @@ CANADIAN_COMMODITY_INDICATORS = {
         "tickers": ["URA"],
     },
     "nickel": {
-        "description": "Nickel price proxy (NIKL ETF)",
+        "description": "Nickel price proxy",
         "relevance": "Affects Ontario and Quebec nickel mine projects and EV battery supply chain.",
         "affected_sectors": ["Mining & O&G"],
         "affected_provinces": ["ON", "QC", "NL", "MB"],
-        "tickers": ["JJN"],  # iPath nickel ETN
+        # 2026-04-18: JJN (iPath nickel ETN) delisted. FM.TO (First Quantum
+        # Minerals) is a Canadian nickel+copper producer — cleanest free proxy.
+        "tickers": ["FM.TO"],
+    },
+    "canola": {
+        "description": "Canola/oilseed price proxy (Bunge Global)",
+        "relevance": "Canola is Saskatchewan and Alberta's dominant oilseed crop. Bunge is a global oilseed processor — no free canola futures on Yahoo.",
+        "affected_sectors": ["Agriculture"],
+        "affected_provinces": ["SK", "AB", "MB"],
+        "tickers": ["BG"],
+    },
+    "iron_ore": {
+        "description": "Iron ore price proxy (Vale SA)",
+        "relevance": "Vale is the world's largest iron ore producer. Affects steel input costs for infrastructure and manufacturing projects.",
+        "affected_sectors": ["Mining & O&G", "Construction"],
+        "affected_provinces": ["QC", "NL"],
+        "tickers": ["VALE"],
     },
     "steel": {
         "description": "Steel price proxy (SLX ETF)",
@@ -51,7 +67,9 @@ CANADIAN_COMMODITY_INDICATORS = {
         "relevance": "Key input for residential construction. BC forestry sector bellwether.",
         "affected_sectors": ["Construction", "Real Estate"],
         "affected_provinces": ["BC", "QC", "ON"],
-        "tickers": ["LBS=F"],
+        # 2026-04-18: LBS=F (mini contract) delisted on Yahoo Finance; LBR=F
+        # (physical/classic lumber) is the working ticker.
+        "tickers": ["LBR=F"],
     },
     "tsx_infrastructure": {
         "description": "Canadian infrastructure companies basket",
@@ -253,7 +271,7 @@ def fetch_and_store_commodities(conn=None, db=None):
                 'uranium_spot':       ('comm_uranium',    '$', 'yfinance (URA ETF)'),
                 'nickel':             ('comm_nickel',     '$', 'yfinance (JJN ETN)'),
                 'steel':              ('comm_steel',      '$', 'yfinance (SLX ETF)'),
-                'lumber':             ('comm_lumber',     '$/mbf', 'yfinance (LBS=F)'),
+                'lumber':             ('comm_lumber',     '$/mbf', 'yfinance (LBR=F)'),
                 'wcs_discount':       ('comm_wcs_discount', '$/bbl', 'yfinance (WCS-WTI)'),
                 'tsx_infrastructure': ('comm_tsx_infra',  '$', 'yfinance (basket avg)'),
             }

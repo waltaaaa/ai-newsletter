@@ -315,7 +315,7 @@ def backfill_yahoo(conn, years=5):
         # Existing
         'wti': 'CL=F',
         'gold': 'GC=F',
-        'lumber': 'LBS=F',
+        'lumber': 'LBR=F',  # 2026-04-18: LBS=F delisted, LBR=F working
         'tsx_composite': '^GSPTSE',
         'tsx': '^GSPTSE',
         'cadusd': 'CADUSD=X',

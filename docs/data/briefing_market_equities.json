@@ -3,55 +3,56 @@
     {
       "name": "TSX Composite",
       "symbol": "^GSPTSE",
-      "value": "32,427",
-      "weekly_pct": "-6.0% MTD",
-      "ytd_pct": "+28.2% YoY",
-      "yoy_pct": "+28.2%",
-      "high_52w": "N/A",
-      "low_52w": "N/A",
-      "commentary": "<p><span class=\"lead-sentence\"><strong>The TSX Composite closed at 32,427 on March 31</strong>, gaining 1.54% on the day as reports of potential US-Iran negotiations drove energy and risk-sensitive sectors higher.<sup>1</sup></span> The index declined approximately 6% over the full month of March, reflecting elevated uncertainty from Middle East supply disruption and the February employment loss of 84,000 jobs.<sup>2</sup> Energy sub-indices posted the largest monthly gains within the TSX, consistent with WTI crude's advance above $100/bbl, while materials underperformed amid gold's 14% monthly decline. The database tracks 727 Alberta projects — the province most directly exposed to TSX energy sector performance — and 364 mining projects with direct materials sector linkage.<sup>3</sup></p>"
+      "value": "33,477.71",
+      "weekly_pct": "+1.12%",
+      "ytd_pct": "+0.62%",
+      "yoy_pct": "+41.10%",
+      "high_52w": "34,541.30",
+      "low_52w": "23,014.90",
+      "commentary": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at 33,477.71 on April 9, 2026, advancing 1.12% week-over-week and 41.10% year-over-year</span> — the highest year-over-year reading among the four North American benchmarks tracked this week<sup>1</sup>. The index sits 3.1% below its 52-week high of 34,541.30 set on March 2, 2026, and 45.5% above its 52-week low of 23,014.90 recorded on April 10, 2025<sup>1</sup>. The weekly move developed as the latest Statistics Canada monthly GDP release showed mining, quarrying, and oil and gas extraction up 1.2% month-over-month against construction up 1.1% month-over-month, even as the headline monthly GDP print contracted 0.6%<sup>2</sup>. The Signal Dispatch cross-reference engine links the benchmark advance to 428 projects tracked in mining, quarrying, and oil and gas extraction at a combined C$259.7 billion, plus 1,687 infrastructure projects tracked at C$179.0 billion and 802 utilities projects tracked at C$507.7 billion<sup>3</sup>. If the index holds above the 33,000 level amid the Bank of Canada overnight rate held at 2.25% for a seventh consecutive meeting, the 211 residential projects tracked at C$44.4 billion would continue to carry financing exposure tied to the 2Y Government of Canada yield of 2.95%<sup>4</sup>."
     },
     {
       "name": "S&P 500",
       "symbol": "^GSPC",
-      "value": "6,496",
-      "weekly_pct": "+2.40% day",
-      "ytd_pct": "-9.4% from Jan peak",
-      "yoy_pct": "N/A",
-      "high_52w": "N/A",
-      "low_52w": "N/A",
-      "commentary": "<p><span class=\"lead-sentence\"><strong>The S&P 500 closed at approximately 6,496 on March 31</strong>, rising 2.40% on the day, though the index remained approximately 9.4% below its January 2026 peak on a closing basis.<sup>4</sup></span> March was characterized by elevated volatility driven by Middle East geopolitical developments and the Strait of Hormuz supply disruption; the March 31 advance followed reports that the US government is considering diplomatic resolution to the Iranian standoff.<sup>5</sup></p>"
+      "value": "6,824.66",
+      "weekly_pct": "+3.68%",
+      "ytd_pct": "+0.64%",
+      "yoy_pct": "+25.06%",
+      "high_52w": "6,978.60",
+      "low_52w": "5,158.20",
+      "commentary": "<p><span class=\"lead-sentence\">The S&P 500 closed at 6,824.66 on April 9, 2026, advancing 3.68% on the week and 25.06% year-over-year</span><sup>5</sup>. The advance developed as the federal funds rate sat at 3.64% per the February 2026 Federal Reserve print, a differential of 139 basis points above the Bank of Canada overnight rate of 2.25%<sup>6</sup>. The benchmark sits 2.2% below its 52-week high of 6,978.60 set on January 27, 2026, and 32.3% above its 52-week low of 5,158.20 recorded on April 21, 2025 — the first weekly close above 6,800 since the late-January 2026 peak<sup>5</sup>.</p>"
     },
     {
       "name": "DJIA",
       "symbol": "^DJI",
-      "value": "46,117",
-      "weekly_pct": "+2.0% day",
-      "ytd_pct": "N/A",
-      "yoy_pct": "N/A",
-      "high_52w": "N/A",
-      "low_52w": "N/A",
-      "commentary": "<p><span class=\"lead-sentence\"><strong>The Dow Jones Industrial Average closed at approximately 46,117 on March 31</strong>, advancing approximately 2.0% on the day alongside the broader US market rally.<sup>6</sup></span> Blue-chip industrials with Canadian supply chain exposure — including steel and energy equipment names — tracked the energy sector's advance as WTI moved above $100/bbl.</p>"
+      "value": "48,185.80",
+      "weekly_pct": "+3.61%",
+      "ytd_pct": "+1.00%",
+      "yoy_pct": "+18.66%",
+      "high_52w": "50,188.14",
+      "low_52w": "38,170.41",
+      "commentary": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average closed at 48,185.80 on April 9, 2026, advancing 3.61% on the week and 18.66% year-over-year</span><sup>7</sup>. The move developed as industrial and healthcare components repriced amid the February 2026 US unemployment reading of 4.4% and the federal funds rate print of 3.64%<sup>6</sup>. The 30-stock benchmark sits 4.0% below its 52-week high of 50,188.14 set on February 10, 2026, and 26.2% above its 52-week low of 38,170.41 recorded on April 21, 2025<sup>7</sup>.</p>"
     },
     {
       "name": "Nasdaq Composite",
       "symbol": "^IXIC",
-      "value": "21,469",
-      "weekly_pct": "+3.24% day",
-      "ytd_pct": "N/A",
-      "yoy_pct": "N/A",
-      "high_52w": "N/A",
-      "low_52w": "N/A",
-      "commentary": "<p><span class=\"lead-sentence\"><strong>The Nasdaq Composite closed at approximately 21,469 on March 31</strong>, the largest percentage advance among major US indices at 3.24% on the day.<sup>7</sup></span> Technology-linked names outperformed on the expectation that diplomatic resolution of the Hormuz crisis would reduce input cost pressure on data centre and grid electrification projects; the database tracks 18 telecom and data infrastructure projects in Canada with US market linkages.</p>"
+      "value": "22,822.42",
+      "weekly_pct": "+4.31%",
+      "ytd_pct": "+0.55%",
+      "yoy_pct": "+33.27%",
+      "high_52w": "23,958.47",
+      "low_52w": "15,870.90",
+      "commentary": "<p><span class=\"lead-sentence\">The Nasdaq Composite closed at 22,822.42 on April 9, 2026, advancing 4.31% on the week and 33.27% year-over-year</span><sup>8</sup>. The advance led the four North American benchmarks on the week, reflecting weekly repricing across technology components following the February 2026 federal funds rate print of 3.64%<sup>6</sup>. The index sits 4.7% below its 52-week high of 23,958.47 set on October 29, 2025, and 43.8% above its 52-week low of 15,870.90 recorded on April 21, 2025<sup>8</sup>.</p>"
     }
   ],
   "sources": [
-    {"id": 1, "title": "Trading Economics — Canada Stock Market (TSX)", "url": "https://tradingeconomics.com/canada/stock-market"},
-    {"id": 2, "title": "BNN Bloomberg — TSX March 27", "url": "https://www.bnnbloomberg.ca/business/2026/03/27/sptsx-composite-positive-late-morning-friday-us-markets-moving-lower/"},
-    {"id": 3, "title": "Signal Dispatch Project Database — Alberta Projects", "url": ""},
-    {"id": 4, "title": "Trading Economics — US Stock Market", "url": "https://tradingeconomics.com/united-states/stock-market"},
-    {"id": 5, "title": "Wikipedia — 2026 Strait of Hormuz Crisis", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis"},
-    {"id": 6, "title": "CNBC — Dow Surges 600 Points, March 22", "url": "https://www.cnbc.com/2026/03/22/stock-market-today-live-updates.html"},
-    {"id": 7, "title": "Trading Economics — US Stock Market", "url": "https://tradingeconomics.com/united-states/stock-market"}
+    {"id": 1, "title": "Yahoo Finance — S&P/TSX Composite (^GSPTSE)", "url": "https://finance.yahoo.com/quote/%5EGSPTSE/", "archive_url": ""},
+    {"id": 2, "title": "Statistics Canada — Gross domestic product by industry, monthly (Table 36-10-0434-02)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402", "archive_url": ""},
+    {"id": 3, "title": "The Lagging Indicator — Signal Dispatch project database (cross-reference engine)", "url": "https://walterlazzarino.github.io/canada-economic-dashboard/", "archive_url": ""},
+    {"id": 4, "title": "Bank of Canada — Valet API (overnight rate, prime rate, GoC yields)", "url": "https://www.bankofcanada.ca/valet/docs", "archive_url": ""},
+    {"id": 5, "title": "Yahoo Finance — S&P 500 (^GSPC)", "url": "https://finance.yahoo.com/quote/%5EGSPC/", "archive_url": ""},
+    {"id": 6, "title": "Federal Reserve — Open Market Operations", "url": "https://www.federalreserve.gov/monetarypolicy/openmarket.htm", "archive_url": ""},
+    {"id": 7, "title": "Yahoo Finance — Dow Jones Industrial Average (^DJI)", "url": "https://finance.yahoo.com/quote/%5EDJI/", "archive_url": ""},
+    {"id": 8, "title": "Yahoo Finance — Nasdaq Composite (^IXIC)", "url": "https://finance.yahoo.com/quote/%5EIXIC/", "archive_url": ""}
   ]
 }

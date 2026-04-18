@@ -2156,7 +2156,7 @@
       "period": "2025-12-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "$M",
       "frequency": "monthly",
@@ -2175,7 +2175,7 @@
       "period": "2025-12-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "$M",
       "frequency": "monthly",
@@ -2194,7 +2194,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "$M",
       "frequency": "quarterly",
@@ -2213,7 +2213,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "%",
       "frequency": "quarterly",
@@ -2232,7 +2232,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "$M",
       "frequency": "quarterly",
@@ -2251,7 +2251,7 @@
       "period": "2026-01-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "index",
       "frequency": "monthly",
@@ -2270,7 +2270,7 @@
       "period": "2026-01-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "K",
       "frequency": "monthly",
@@ -2289,7 +2289,7 @@
       "period": "2026-01-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "K",
       "frequency": "monthly",
@@ -2308,7 +2308,7 @@
       "period": "2026-01-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "K",
       "frequency": "monthly",
@@ -2327,7 +2327,7 @@
       "period": "2026-01-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2346,7 +2346,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "$M",
       "frequency": "quarterly",
@@ -2365,7 +2365,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "%",
       "frequency": "quarterly",
@@ -2384,7 +2384,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "$M",
       "frequency": "quarterly",
@@ -2403,7 +2403,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "%",
       "frequency": "quarterly",
@@ -2422,7 +2422,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "$M",
       "frequency": "quarterly",
@@ -2441,7 +2441,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "%",
       "frequency": "quarterly",
@@ -2460,7 +2460,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "$M",
       "frequency": "quarterly",
@@ -2479,7 +2479,7 @@
       "period": "2026-01-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "units",
       "frequency": "monthly",
@@ -2498,7 +2498,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "$M",
       "frequency": "quarterly",
@@ -2517,7 +2517,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "%",
       "frequency": "quarterly",
@@ -2536,7 +2536,7 @@
       "period": "2025-11-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:58Z",
       "unit": "$M",
       "frequency": "monthly",
@@ -2555,7 +2555,7 @@
       "period": "2025-11-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:58Z",
       "unit": "$M",
       "frequency": "monthly",
@@ -2574,7 +2574,7 @@
       "period": "2026-01-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "K",
       "frequency": "monthly",
@@ -2593,7 +2593,7 @@
       "period": "2025-12-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "$M",
       "frequency": "monthly",
@@ -2612,7 +2612,7 @@
       "period": "2025-11-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:58Z",
       "unit": "$M",
       "frequency": "monthly",
@@ -2631,7 +2631,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "$M",
       "frequency": "quarterly",
@@ -2650,7 +2650,7 @@
       "period": "2026-01-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2669,7 +2669,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "$M",
       "frequency": "quarterly",
@@ -2688,7 +2688,7 @@
       "period": "2025-07-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:55Z",
       "unit": "%",
       "frequency": "quarterly",
@@ -2707,7 +2707,7 @@
       "period": "2025-12-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "$M",
       "frequency": "monthly",
@@ -2726,7 +2726,7 @@
       "period": "2026-01-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "%",
       "frequency": "monthly",
@@ -2745,7 +2745,7 @@
       "period": "2025-12-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "$",
       "frequency": "monthly",
@@ -2764,7 +2764,7 @@
       "period": "2025-12-01",
       "previous_value": null,
       "change": null,
-      "source": "Institut de la statistique du Québec",
+      "source": "Institut de la statistique du Qu\u00e9bec",
       "fetched_at": "2026-03-10T00:51:59Z",
       "unit": "$M",
       "frequency": "monthly",
@@ -85885,7 +85885,7 @@
       "period": "2025-05-01",
       "value": 9678.47,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_nonres",
@@ -85893,7 +85893,7 @@
       "period": "2025-06-01",
       "value": 8695.5,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_nonres",
@@ -85901,7 +85901,7 @@
       "period": "2025-07-01",
       "value": 8628.76,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_nonres",
@@ -85909,7 +85909,7 @@
       "period": "2025-08-01",
       "value": 10155.65,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_nonres",
@@ -85917,7 +85917,7 @@
       "period": "2025-09-01",
       "value": 9656.48,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_nonres",
@@ -85925,7 +85925,7 @@
       "period": "2025-10-01",
       "value": 9550.97,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_nonres",
@@ -85933,7 +85933,7 @@
       "period": "2025-11-01",
       "value": 7117.66,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_nonres",
@@ -85941,7 +85941,7 @@
       "period": "2025-12-01",
       "value": 7427.48,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_res",
@@ -85949,7 +85949,7 @@
       "period": "2025-05-01",
       "value": 20166.61,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_res",
@@ -85957,7 +85957,7 @@
       "period": "2025-06-01",
       "value": 18973.21,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_res",
@@ -85965,7 +85965,7 @@
       "period": "2025-07-01",
       "value": 16561.34,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_res",
@@ -85973,7 +85973,7 @@
       "period": "2025-08-01",
       "value": 18931.46,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_res",
@@ -85981,7 +85981,7 @@
       "period": "2025-09-01",
       "value": 21821.56,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_res",
@@ -85989,7 +85989,7 @@
       "period": "2025-10-01",
       "value": 23078.02,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_res",
@@ -85997,7 +85997,7 @@
       "period": "2025-11-01",
       "value": 18792.22,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_bldg_permits_res",
@@ -86005,7 +86005,7 @@
       "period": "2025-12-01",
       "value": 20518.58,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86013,7 +86013,7 @@
       "period": "2022-04-01",
       "value": 20576.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86021,7 +86021,7 @@
       "period": "2022-07-01",
       "value": 20453.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86029,7 +86029,7 @@
       "period": "2022-10-01",
       "value": 20913.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86037,7 +86037,7 @@
       "period": "2023-01-01",
       "value": 22138.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86045,7 +86045,7 @@
       "period": "2023-04-01",
       "value": 22477.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86053,7 +86053,7 @@
       "period": "2023-07-01",
       "value": 22617.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86061,7 +86061,7 @@
       "period": "2023-10-01",
       "value": 22536.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86069,7 +86069,7 @@
       "period": "2024-01-01",
       "value": 22219.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86077,7 +86077,7 @@
       "period": "2024-04-01",
       "value": 22278.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86085,7 +86085,7 @@
       "period": "2024-07-01",
       "value": 22179.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86093,7 +86093,7 @@
       "period": "2024-10-01",
       "value": 22164.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86101,7 +86101,7 @@
       "period": "2025-01-01",
       "value": 21836.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86109,7 +86109,7 @@
       "period": "2025-04-01",
       "value": 22386.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment",
@@ -86117,7 +86117,7 @@
       "period": "2025-07-01",
       "value": 22709.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86125,7 +86125,7 @@
       "period": "2022-04-01",
       "value": 0.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86133,7 +86133,7 @@
       "period": "2022-07-01",
       "value": -2.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86141,7 +86141,7 @@
       "period": "2022-10-01",
       "value": -5.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86149,7 +86149,7 @@
       "period": "2023-01-01",
       "value": -0.7,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86157,7 +86157,7 @@
       "period": "2023-04-01",
       "value": -0.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86165,7 +86165,7 @@
       "period": "2023-07-01",
       "value": 2.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86173,7 +86173,7 @@
       "period": "2023-10-01",
       "value": -0.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86181,7 +86181,7 @@
       "period": "2024-01-01",
       "value": 1.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86189,7 +86189,7 @@
       "period": "2024-04-01",
       "value": 2.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86197,7 +86197,7 @@
       "period": "2024-07-01",
       "value": 2.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86205,7 +86205,7 @@
       "period": "2024-10-01",
       "value": 3.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86213,7 +86213,7 @@
       "period": "2025-01-01",
       "value": 1.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86221,7 +86221,7 @@
       "period": "2025-04-01",
       "value": -1.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_business_investment_pct",
@@ -86229,7 +86229,7 @@
       "period": "2025-07-01",
       "value": 0.1,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86237,7 +86237,7 @@
       "period": "2022-04-01",
       "value": 297427.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86245,7 +86245,7 @@
       "period": "2022-07-01",
       "value": 298910.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86253,7 +86253,7 @@
       "period": "2022-10-01",
       "value": 304117.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86261,7 +86261,7 @@
       "period": "2023-01-01",
       "value": 307816.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86269,7 +86269,7 @@
       "period": "2023-04-01",
       "value": 313768.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86277,7 +86277,7 @@
       "period": "2023-07-01",
       "value": 317687.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86285,7 +86285,7 @@
       "period": "2023-10-01",
       "value": 317697.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86293,7 +86293,7 @@
       "period": "2024-01-01",
       "value": 324785.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86301,7 +86301,7 @@
       "period": "2024-04-01",
       "value": 327526.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86309,7 +86309,7 @@
       "period": "2024-07-01",
       "value": 336779.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86317,7 +86317,7 @@
       "period": "2024-10-01",
       "value": 340846.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86325,7 +86325,7 @@
       "period": "2025-01-01",
       "value": 343988.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86333,7 +86333,7 @@
       "period": "2025-04-01",
       "value": 341540.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_compensation",
@@ -86341,7 +86341,7 @@
       "period": "2025-07-01",
       "value": 346592.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_cpi",
@@ -86349,7 +86349,7 @@
       "period": "2025-05-01",
       "value": 160.9,
       "unit": "index",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_cpi",
@@ -86357,7 +86357,7 @@
       "period": "2025-06-01",
       "value": 161.0,
       "unit": "index",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_cpi",
@@ -86365,7 +86365,7 @@
       "period": "2025-07-01",
       "value": 161.6,
       "unit": "index",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_cpi",
@@ -86373,7 +86373,7 @@
       "period": "2025-08-01",
       "value": 161.9,
       "unit": "index",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_cpi",
@@ -86381,7 +86381,7 @@
       "period": "2025-09-01",
       "value": 162.6,
       "unit": "index",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_cpi",
@@ -86389,7 +86389,7 @@
       "period": "2025-10-01",
       "value": 162.9,
       "unit": "index",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_cpi",
@@ -86397,7 +86397,7 @@
       "period": "2025-11-01",
       "value": 162.6,
       "unit": "index",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_cpi",
@@ -86405,7 +86405,7 @@
       "period": "2025-12-01",
       "value": 162.6,
       "unit": "index",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_cpi",
@@ -86413,7 +86413,7 @@
       "period": "2026-01-01",
       "value": 162.3,
       "unit": "index",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment",
@@ -86421,7 +86421,7 @@
       "period": "2025-05-01",
       "value": 4629.3,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment",
@@ -86429,7 +86429,7 @@
       "period": "2025-06-01",
       "value": 4649.8,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment",
@@ -86437,7 +86437,7 @@
       "period": "2025-07-01",
       "value": 4635.0,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment",
@@ -86445,7 +86445,7 @@
       "period": "2025-08-01",
       "value": 4642.8,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment",
@@ -86453,7 +86453,7 @@
       "period": "2025-09-01",
       "value": 4633.9,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment",
@@ -86461,7 +86461,7 @@
       "period": "2025-10-01",
       "value": 4652.3,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment",
@@ -86469,7 +86469,7 @@
       "period": "2025-11-01",
       "value": 4651.7,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment",
@@ -86477,7 +86477,7 @@
       "period": "2025-12-01",
       "value": 4666.0,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment",
@@ -86485,7 +86485,7 @@
       "period": "2026-01-01",
       "value": 4669.7,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_ft",
@@ -86493,7 +86493,7 @@
       "period": "2025-05-01",
       "value": 3797.4,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_ft",
@@ -86501,7 +86501,7 @@
       "period": "2025-06-01",
       "value": 3781.9,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_ft",
@@ -86509,7 +86509,7 @@
       "period": "2025-07-01",
       "value": 3783.4,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_ft",
@@ -86517,7 +86517,7 @@
       "period": "2025-08-01",
       "value": 3768.4,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_ft",
@@ -86525,7 +86525,7 @@
       "period": "2025-09-01",
       "value": 3788.3,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_ft",
@@ -86533,7 +86533,7 @@
       "period": "2025-10-01",
       "value": 3781.7,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_ft",
@@ -86541,7 +86541,7 @@
       "period": "2025-11-01",
       "value": 3749.6,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_ft",
@@ -86549,7 +86549,7 @@
       "period": "2025-12-01",
       "value": 3765.9,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_ft",
@@ -86557,7 +86557,7 @@
       "period": "2026-01-01",
       "value": 3752.8,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_pt",
@@ -86565,7 +86565,7 @@
       "period": "2025-05-01",
       "value": 831.9,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_pt",
@@ -86573,7 +86573,7 @@
       "period": "2025-06-01",
       "value": 867.9,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_pt",
@@ -86581,7 +86581,7 @@
       "period": "2025-07-01",
       "value": 851.5,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_pt",
@@ -86589,7 +86589,7 @@
       "period": "2025-08-01",
       "value": 874.4,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_pt",
@@ -86597,7 +86597,7 @@
       "period": "2025-09-01",
       "value": 845.6,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_pt",
@@ -86605,7 +86605,7 @@
       "period": "2025-10-01",
       "value": 870.5,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_pt",
@@ -86613,7 +86613,7 @@
       "period": "2025-11-01",
       "value": 902.1,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_pt",
@@ -86621,7 +86621,7 @@
       "period": "2025-12-01",
       "value": 900.0,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_pt",
@@ -86629,7 +86629,7 @@
       "period": "2026-01-01",
       "value": 916.8,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_rate",
@@ -86637,7 +86637,7 @@
       "period": "2025-05-01",
       "value": 61.1,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_rate",
@@ -86645,7 +86645,7 @@
       "period": "2025-06-01",
       "value": 61.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_rate",
@@ -86653,7 +86653,7 @@
       "period": "2025-07-01",
       "value": 61.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_rate",
@@ -86661,7 +86661,7 @@
       "period": "2025-08-01",
       "value": 61.1,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_rate",
@@ -86669,7 +86669,7 @@
       "period": "2025-09-01",
       "value": 61.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_rate",
@@ -86677,7 +86677,7 @@
       "period": "2025-10-01",
       "value": 61.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_rate",
@@ -86685,7 +86685,7 @@
       "period": "2025-11-01",
       "value": 61.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_rate",
@@ -86693,7 +86693,7 @@
       "period": "2025-12-01",
       "value": 61.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_employment_rate",
@@ -86701,7 +86701,7 @@
       "period": "2026-01-01",
       "value": 61.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86709,7 +86709,7 @@
       "period": "2022-04-01",
       "value": 206455.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86717,7 +86717,7 @@
       "period": "2022-07-01",
       "value": 202285.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86725,7 +86725,7 @@
       "period": "2022-10-01",
       "value": 204736.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86733,7 +86733,7 @@
       "period": "2023-01-01",
       "value": 206394.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86741,7 +86741,7 @@
       "period": "2023-04-01",
       "value": 212314.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86749,7 +86749,7 @@
       "period": "2023-07-01",
       "value": 211790.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86757,7 +86757,7 @@
       "period": "2023-10-01",
       "value": 214699.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86765,7 +86765,7 @@
       "period": "2024-01-01",
       "value": 211751.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86773,7 +86773,7 @@
       "period": "2024-04-01",
       "value": 212942.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86781,7 +86781,7 @@
       "period": "2024-07-01",
       "value": 213866.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86789,7 +86789,7 @@
       "period": "2024-10-01",
       "value": 211126.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86797,7 +86797,7 @@
       "period": "2025-01-01",
       "value": 215442.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86805,7 +86805,7 @@
       "period": "2025-04-01",
       "value": 205805.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports",
@@ -86813,7 +86813,7 @@
       "period": "2025-07-01",
       "value": 205730.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86821,7 +86821,7 @@
       "period": "2022-04-01",
       "value": 3.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86829,7 +86829,7 @@
       "period": "2022-07-01",
       "value": -2.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86837,7 +86837,7 @@
       "period": "2022-10-01",
       "value": 1.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86845,7 +86845,7 @@
       "period": "2023-01-01",
       "value": 0.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86853,7 +86853,7 @@
       "period": "2023-04-01",
       "value": 2.9,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86861,7 +86861,7 @@
       "period": "2023-07-01",
       "value": -0.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86869,7 +86869,7 @@
       "period": "2023-10-01",
       "value": 1.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86877,7 +86877,7 @@
       "period": "2024-01-01",
       "value": -1.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86885,7 +86885,7 @@
       "period": "2024-04-01",
       "value": 0.6,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86893,7 +86893,7 @@
       "period": "2024-07-01",
       "value": 0.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86901,7 +86901,7 @@
       "period": "2024-10-01",
       "value": -1.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86909,7 +86909,7 @@
       "period": "2025-01-01",
       "value": 2.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86917,7 +86917,7 @@
       "period": "2025-04-01",
       "value": -4.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_exports_pct",
@@ -86925,7 +86925,7 @@
       "period": "2025-07-01",
       "value": 0.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -86933,7 +86933,7 @@
       "period": "2022-04-01",
       "value": 79186.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -86941,7 +86941,7 @@
       "period": "2022-07-01",
       "value": 77317.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -86949,7 +86949,7 @@
       "period": "2022-10-01",
       "value": 72860.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -86957,7 +86957,7 @@
       "period": "2023-01-01",
       "value": 72341.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -86965,7 +86965,7 @@
       "period": "2023-04-01",
       "value": 71796.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -86973,7 +86973,7 @@
       "period": "2023-07-01",
       "value": 73444.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -86981,7 +86981,7 @@
       "period": "2023-10-01",
       "value": 73131.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -86989,7 +86989,7 @@
       "period": "2024-01-01",
       "value": 74180.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -86997,7 +86997,7 @@
       "period": "2024-04-01",
       "value": 75790.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -87005,7 +87005,7 @@
       "period": "2024-07-01",
       "value": 77667.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -87013,7 +87013,7 @@
       "period": "2024-10-01",
       "value": 79971.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -87021,7 +87021,7 @@
       "period": "2025-01-01",
       "value": 81009.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -87029,7 +87029,7 @@
       "period": "2025-04-01",
       "value": 79768.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption",
@@ -87037,7 +87037,7 @@
       "period": "2025-07-01",
       "value": 79841.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87045,7 +87045,7 @@
       "period": "2022-04-01",
       "value": -1.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87053,7 +87053,7 @@
       "period": "2022-07-01",
       "value": 0.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87061,7 +87061,7 @@
       "period": "2022-10-01",
       "value": 1.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87069,7 +87069,7 @@
       "period": "2023-01-01",
       "value": -1.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87077,7 +87077,7 @@
       "period": "2023-04-01",
       "value": 0.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87085,7 +87085,7 @@
       "period": "2023-07-01",
       "value": 0.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87093,7 +87093,7 @@
       "period": "2023-10-01",
       "value": -1.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87101,7 +87101,7 @@
       "period": "2024-01-01",
       "value": 1.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87109,7 +87109,7 @@
       "period": "2024-04-01",
       "value": 1.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87117,7 +87117,7 @@
       "period": "2024-07-01",
       "value": 1.9,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87125,7 +87125,7 @@
       "period": "2024-10-01",
       "value": 0.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87133,7 +87133,7 @@
       "period": "2025-01-01",
       "value": -0.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87141,7 +87141,7 @@
       "period": "2025-04-01",
       "value": 0.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_gov_consumption_pct",
@@ -87149,7 +87149,7 @@
       "period": "2025-07-01",
       "value": -0.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87157,7 +87157,7 @@
       "period": "2022-04-01",
       "value": 270609.44,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87165,7 +87165,7 @@
       "period": "2022-07-01",
       "value": 275161.75,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87173,7 +87173,7 @@
       "period": "2022-10-01",
       "value": 276534.06,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87181,7 +87181,7 @@
       "period": "2023-01-01",
       "value": 277011.06,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87189,7 +87189,7 @@
       "period": "2023-04-01",
       "value": 275288.7,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87197,7 +87197,7 @@
       "period": "2023-07-01",
       "value": 278163.54,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87205,7 +87205,7 @@
       "period": "2023-10-01",
       "value": 277688.7,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87213,7 +87213,7 @@
       "period": "2024-01-01",
       "value": 279507.29,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87221,7 +87221,7 @@
       "period": "2024-04-01",
       "value": 280590.58,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87229,7 +87229,7 @@
       "period": "2024-07-01",
       "value": 285867.35,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87237,7 +87237,7 @@
       "period": "2024-10-01",
       "value": 290106.77,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87245,7 +87245,7 @@
       "period": "2025-01-01",
       "value": 286561.13,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87253,7 +87253,7 @@
       "period": "2025-04-01",
       "value": 288433.01,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption",
@@ -87261,7 +87261,7 @@
       "period": "2025-07-01",
       "value": 287441.23,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87269,7 +87269,7 @@
       "period": "2022-04-01",
       "value": 2.1,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87277,7 +87277,7 @@
       "period": "2022-07-01",
       "value": 1.7,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87285,7 +87285,7 @@
       "period": "2022-10-01",
       "value": 0.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87293,7 +87293,7 @@
       "period": "2023-01-01",
       "value": 0.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87301,7 +87301,7 @@
       "period": "2023-04-01",
       "value": -0.6,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87309,7 +87309,7 @@
       "period": "2023-07-01",
       "value": 1.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87317,7 +87317,7 @@
       "period": "2023-10-01",
       "value": -0.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87325,7 +87325,7 @@
       "period": "2024-01-01",
       "value": 0.7,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87333,7 +87333,7 @@
       "period": "2024-04-01",
       "value": 0.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87341,7 +87341,7 @@
       "period": "2024-07-01",
       "value": 1.9,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87349,7 +87349,7 @@
       "period": "2024-10-01",
       "value": 1.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87357,7 +87357,7 @@
       "period": "2025-01-01",
       "value": -1.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87365,7 +87365,7 @@
       "period": "2025-04-01",
       "value": 0.7,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_consumption_pct",
@@ -87373,7 +87373,7 @@
       "period": "2025-07-01",
       "value": -0.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87381,7 +87381,7 @@
       "period": "2022-04-01",
       "value": 311978.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87389,7 +87389,7 @@
       "period": "2022-07-01",
       "value": 303792.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87397,7 +87397,7 @@
       "period": "2022-10-01",
       "value": 328336.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87405,7 +87405,7 @@
       "period": "2023-01-01",
       "value": 316665.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87413,7 +87413,7 @@
       "period": "2023-04-01",
       "value": 320424.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87421,7 +87421,7 @@
       "period": "2023-07-01",
       "value": 327996.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87429,7 +87429,7 @@
       "period": "2023-10-01",
       "value": 328035.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87437,7 +87437,7 @@
       "period": "2024-01-01",
       "value": 338999.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87445,7 +87445,7 @@
       "period": "2024-04-01",
       "value": 340391.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87453,7 +87453,7 @@
       "period": "2024-07-01",
       "value": 348656.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87461,7 +87461,7 @@
       "period": "2024-10-01",
       "value": 354594.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87469,7 +87469,7 @@
       "period": "2025-01-01",
       "value": 355777.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87477,7 +87477,7 @@
       "period": "2025-04-01",
       "value": 353811.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_household_income",
@@ -87485,7 +87485,7 @@
       "period": "2025-07-01",
       "value": 361482.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_housing_starts",
@@ -87493,7 +87493,7 @@
       "period": "2025-05-01",
       "value": 63398.0,
       "unit": "units",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_housing_starts",
@@ -87501,7 +87501,7 @@
       "period": "2025-06-01",
       "value": 59222.0,
       "unit": "units",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_housing_starts",
@@ -87509,7 +87509,7 @@
       "period": "2025-07-01",
       "value": 62337.0,
       "unit": "units",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_housing_starts",
@@ -87517,7 +87517,7 @@
       "period": "2025-08-01",
       "value": 56018.0,
       "unit": "units",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_housing_starts",
@@ -87525,7 +87525,7 @@
       "period": "2025-09-01",
       "value": 60741.0,
       "unit": "units",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_housing_starts",
@@ -87533,7 +87533,7 @@
       "period": "2025-10-01",
       "value": 58250.0,
       "unit": "units",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_housing_starts",
@@ -87541,7 +87541,7 @@
       "period": "2025-11-01",
       "value": 58788.0,
       "unit": "units",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_housing_starts",
@@ -87549,7 +87549,7 @@
       "period": "2025-12-01",
       "value": 62459.0,
       "unit": "units",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_housing_starts",
@@ -87557,7 +87557,7 @@
       "period": "2026-01-01",
       "value": 47719.0,
       "unit": "units",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87565,7 +87565,7 @@
       "period": "2022-04-01",
       "value": 235251.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87573,7 +87573,7 @@
       "period": "2022-07-01",
       "value": 236787.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87581,7 +87581,7 @@
       "period": "2022-10-01",
       "value": 231371.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87589,7 +87589,7 @@
       "period": "2023-01-01",
       "value": 227922.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87597,7 +87597,7 @@
       "period": "2023-04-01",
       "value": 231109.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87605,7 +87605,7 @@
       "period": "2023-07-01",
       "value": 235761.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87613,7 +87613,7 @@
       "period": "2023-10-01",
       "value": 235975.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87621,7 +87621,7 @@
       "period": "2024-01-01",
       "value": 231528.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87629,7 +87629,7 @@
       "period": "2024-04-01",
       "value": 235820.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87637,7 +87637,7 @@
       "period": "2024-07-01",
       "value": 241896.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87645,7 +87645,7 @@
       "period": "2024-10-01",
       "value": 238272.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87653,7 +87653,7 @@
       "period": "2025-01-01",
       "value": 241533.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87661,7 +87661,7 @@
       "period": "2025-04-01",
       "value": 242032.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports",
@@ -87669,7 +87669,7 @@
       "period": "2025-07-01",
       "value": 238501.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87677,7 +87677,7 @@
       "period": "2022-04-01",
       "value": 6.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87685,7 +87685,7 @@
       "period": "2022-07-01",
       "value": 0.7,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87693,7 +87693,7 @@
       "period": "2022-10-01",
       "value": -2.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87701,7 +87701,7 @@
       "period": "2023-01-01",
       "value": -1.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87709,7 +87709,7 @@
       "period": "2023-04-01",
       "value": 1.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87717,7 +87717,7 @@
       "period": "2023-07-01",
       "value": 2.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87725,7 +87725,7 @@
       "period": "2023-10-01",
       "value": 0.1,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87733,7 +87733,7 @@
       "period": "2024-01-01",
       "value": -1.9,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87741,7 +87741,7 @@
       "period": "2024-04-01",
       "value": 1.9,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87749,7 +87749,7 @@
       "period": "2024-07-01",
       "value": 2.6,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87757,7 +87757,7 @@
       "period": "2024-10-01",
       "value": -1.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87765,7 +87765,7 @@
       "period": "2025-01-01",
       "value": 1.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87773,7 +87773,7 @@
       "period": "2025-04-01",
       "value": 0.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_imports_pct",
@@ -87781,7 +87781,7 @@
       "period": "2025-07-01",
       "value": -1.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_exports",
@@ -87789,7 +87789,7 @@
       "period": "2025-05-01",
       "value": 85033.29,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_exports",
@@ -87797,7 +87797,7 @@
       "period": "2025-06-01",
       "value": 87996.89,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_exports",
@@ -87805,7 +87805,7 @@
       "period": "2025-07-01",
       "value": 82081.68,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_exports",
@@ -87813,7 +87813,7 @@
       "period": "2025-08-01",
       "value": 83363.52,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_exports",
@@ -87821,7 +87821,7 @@
       "period": "2025-09-01",
       "value": 87648.02,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_exports",
@@ -87829,7 +87829,7 @@
       "period": "2025-10-01",
       "value": 83330.83,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_exports",
@@ -87837,7 +87837,7 @@
       "period": "2025-11-01",
       "value": 86176.15,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_imports",
@@ -87845,7 +87845,7 @@
       "period": "2025-05-01",
       "value": 108076.16,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_imports",
@@ -87853,7 +87853,7 @@
       "period": "2025-06-01",
       "value": 113705.44,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_imports",
@@ -87861,7 +87861,7 @@
       "period": "2025-07-01",
       "value": 112238.28,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_imports",
@@ -87869,7 +87869,7 @@
       "period": "2025-08-01",
       "value": 102943.58,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_imports",
@@ -87877,7 +87877,7 @@
       "period": "2025-09-01",
       "value": 104000.02,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_imports",
@@ -87885,7 +87885,7 @@
       "period": "2025-10-01",
       "value": 103276.21,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_intl_imports",
@@ -87893,7 +87893,7 @@
       "period": "2025-11-01",
       "value": 108665.64,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_labour_force",
@@ -87901,7 +87901,7 @@
       "period": "2025-05-01",
       "value": 4916.8,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_labour_force",
@@ -87909,7 +87909,7 @@
       "period": "2025-06-01",
       "value": 4956.5,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_labour_force",
@@ -87917,7 +87917,7 @@
       "period": "2025-07-01",
       "value": 4903.8,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_labour_force",
@@ -87925,7 +87925,7 @@
       "period": "2025-08-01",
       "value": 4936.2,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_labour_force",
@@ -87933,7 +87933,7 @@
       "period": "2025-09-01",
       "value": 4911.7,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_labour_force",
@@ -87941,7 +87941,7 @@
       "period": "2025-10-01",
       "value": 4912.4,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_labour_force",
@@ -87949,7 +87949,7 @@
       "period": "2025-11-01",
       "value": 4902.6,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_labour_force",
@@ -87957,7 +87957,7 @@
       "period": "2025-12-01",
       "value": 4926.8,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_labour_force",
@@ -87965,7 +87965,7 @@
       "period": "2026-01-01",
       "value": 4923.8,
       "unit": "K",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_manufacturing_sales",
@@ -87973,7 +87973,7 @@
       "period": "2025-05-01",
       "value": 205501.57,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_manufacturing_sales",
@@ -87981,7 +87981,7 @@
       "period": "2025-06-01",
       "value": 215333.46,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_manufacturing_sales",
@@ -87989,7 +87989,7 @@
       "period": "2025-07-01",
       "value": 221881.85,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_manufacturing_sales",
@@ -87997,7 +87997,7 @@
       "period": "2025-08-01",
       "value": 217974.98,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_manufacturing_sales",
@@ -88005,7 +88005,7 @@
       "period": "2025-09-01",
       "value": 225123.94,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_manufacturing_sales",
@@ -88013,7 +88013,7 @@
       "period": "2025-10-01",
       "value": 221356.74,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_manufacturing_sales",
@@ -88021,7 +88021,7 @@
       "period": "2025-11-01",
       "value": 222860.12,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_manufacturing_sales",
@@ -88029,7 +88029,7 @@
       "period": "2025-12-01",
       "value": 221796.11,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_monthly_gdp",
@@ -88037,7 +88037,7 @@
       "period": "2025-05-01",
       "value": 449071.2,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_monthly_gdp",
@@ -88045,7 +88045,7 @@
       "period": "2025-06-01",
       "value": 448008.5,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_monthly_gdp",
@@ -88053,7 +88053,7 @@
       "period": "2025-07-01",
       "value": 449366.4,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_monthly_gdp",
@@ -88061,7 +88061,7 @@
       "period": "2025-08-01",
       "value": 449327.1,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_monthly_gdp",
@@ -88069,7 +88069,7 @@
       "period": "2025-09-01",
       "value": 450339.6,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_monthly_gdp",
@@ -88077,7 +88077,7 @@
       "period": "2025-10-01",
       "value": 449179.8,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_monthly_gdp",
@@ -88085,7 +88085,7 @@
       "period": "2025-11-01",
       "value": 448030.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88093,7 +88093,7 @@
       "period": "2022-04-01",
       "value": 557639.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88101,7 +88101,7 @@
       "period": "2022-07-01",
       "value": 555659.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88109,7 +88109,7 @@
       "period": "2022-10-01",
       "value": 566436.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88117,7 +88117,7 @@
       "period": "2023-01-01",
       "value": 571959.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88125,7 +88125,7 @@
       "period": "2023-04-01",
       "value": 578099.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88133,7 +88133,7 @@
       "period": "2023-07-01",
       "value": 589648.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88141,7 +88141,7 @@
       "period": "2023-10-01",
       "value": 590274.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88149,7 +88149,7 @@
       "period": "2024-01-01",
       "value": 601470.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88157,7 +88157,7 @@
       "period": "2024-04-01",
       "value": 609208.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88165,7 +88165,7 @@
       "period": "2024-07-01",
       "value": 623403.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88173,7 +88173,7 @@
       "period": "2024-10-01",
       "value": 633003.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88181,7 +88181,7 @@
       "period": "2025-01-01",
       "value": 638659.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88189,7 +88189,7 @@
       "period": "2025-04-01",
       "value": 638647.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_nominal_gdp",
@@ -88197,7 +88197,7 @@
       "period": "2025-07-01",
       "value": 646250.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_participation_rate",
@@ -88205,7 +88205,7 @@
       "period": "2025-05-01",
       "value": 64.9,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_participation_rate",
@@ -88213,7 +88213,7 @@
       "period": "2025-06-01",
       "value": 65.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_participation_rate",
@@ -88221,7 +88221,7 @@
       "period": "2025-07-01",
       "value": 64.6,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_participation_rate",
@@ -88229,7 +88229,7 @@
       "period": "2025-08-01",
       "value": 64.9,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_participation_rate",
@@ -88237,7 +88237,7 @@
       "period": "2025-09-01",
       "value": 64.6,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_participation_rate",
@@ -88245,7 +88245,7 @@
       "period": "2025-10-01",
       "value": 64.6,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_participation_rate",
@@ -88253,7 +88253,7 @@
       "period": "2025-11-01",
       "value": 64.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_participation_rate",
@@ -88261,7 +88261,7 @@
       "period": "2025-12-01",
       "value": 64.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_participation_rate",
@@ -88269,7 +88269,7 @@
       "period": "2026-01-01",
       "value": 64.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88277,7 +88277,7 @@
       "period": "2022-04-01",
       "value": 473107.44,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88285,7 +88285,7 @@
       "period": "2022-07-01",
       "value": 472946.75,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88293,7 +88293,7 @@
       "period": "2022-10-01",
       "value": 475001.06,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88301,7 +88301,7 @@
       "period": "2023-01-01",
       "value": 477239.06,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88309,7 +88309,7 @@
       "period": "2023-04-01",
       "value": 476372.7,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88317,7 +88317,7 @@
       "period": "2023-07-01",
       "value": 475361.54,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88325,7 +88325,7 @@
       "period": "2023-10-01",
       "value": 474790.7,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88333,7 +88333,7 @@
       "period": "2024-01-01",
       "value": 479522.29,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88341,7 +88341,7 @@
       "period": "2024-04-01",
       "value": 482133.58,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88349,7 +88349,7 @@
       "period": "2024-07-01",
       "value": 486045.35,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88357,7 +88357,7 @@
       "period": "2024-10-01",
       "value": 488554.77,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88365,7 +88365,7 @@
       "period": "2025-01-01",
       "value": 489691.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88373,7 +88373,7 @@
       "period": "2025-04-01",
       "value": 486043.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp",
@@ -88381,7 +88381,7 @@
       "period": "2025-07-01",
       "value": 487223.0,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88389,7 +88389,7 @@
       "period": "2022-04-01",
       "value": 0.9,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88397,7 +88397,7 @@
       "period": "2022-07-01",
       "value": 0.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88405,7 +88405,7 @@
       "period": "2022-10-01",
       "value": 0.4,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88413,7 +88413,7 @@
       "period": "2023-01-01",
       "value": 0.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88421,7 +88421,7 @@
       "period": "2023-04-01",
       "value": -0.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88429,7 +88429,7 @@
       "period": "2023-07-01",
       "value": -0.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88437,7 +88437,7 @@
       "period": "2023-10-01",
       "value": -0.1,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88445,7 +88445,7 @@
       "period": "2024-01-01",
       "value": 1.0,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88453,7 +88453,7 @@
       "period": "2024-04-01",
       "value": 0.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88461,7 +88461,7 @@
       "period": "2024-07-01",
       "value": 0.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88469,7 +88469,7 @@
       "period": "2024-10-01",
       "value": 0.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88477,7 +88477,7 @@
       "period": "2025-01-01",
       "value": 0.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88485,7 +88485,7 @@
       "period": "2025-04-01",
       "value": -0.7,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_real_gdp_pct",
@@ -88493,7 +88493,7 @@
       "period": "2025-07-01",
       "value": 0.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_retail_sales",
@@ -88501,7 +88501,7 @@
       "period": "2025-05-01",
       "value": 185926.88,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_retail_sales",
@@ -88509,7 +88509,7 @@
       "period": "2025-06-01",
       "value": 186279.79,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_retail_sales",
@@ -88517,7 +88517,7 @@
       "period": "2025-07-01",
       "value": 186845.29,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_retail_sales",
@@ -88525,7 +88525,7 @@
       "period": "2025-08-01",
       "value": 190472.89,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_retail_sales",
@@ -88533,7 +88533,7 @@
       "period": "2025-09-01",
       "value": 189226.06,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_retail_sales",
@@ -88541,7 +88541,7 @@
       "period": "2025-10-01",
       "value": 187847.64,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_retail_sales",
@@ -88549,7 +88549,7 @@
       "period": "2025-11-01",
       "value": 188658.26,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_retail_sales",
@@ -88557,7 +88557,7 @@
       "period": "2025-12-01",
       "value": 189733.08,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_unemployment_rate",
@@ -88565,7 +88565,7 @@
       "period": "2025-05-01",
       "value": 5.8,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_unemployment_rate",
@@ -88573,7 +88573,7 @@
       "period": "2025-06-01",
       "value": 6.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_unemployment_rate",
@@ -88581,7 +88581,7 @@
       "period": "2025-07-01",
       "value": 5.5,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_unemployment_rate",
@@ -88589,7 +88589,7 @@
       "period": "2025-08-01",
       "value": 5.9,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_unemployment_rate",
@@ -88597,7 +88597,7 @@
       "period": "2025-09-01",
       "value": 5.7,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_unemployment_rate",
@@ -88605,7 +88605,7 @@
       "period": "2025-10-01",
       "value": 5.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_unemployment_rate",
@@ -88613,7 +88613,7 @@
       "period": "2025-11-01",
       "value": 5.1,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_unemployment_rate",
@@ -88621,7 +88621,7 @@
       "period": "2025-12-01",
       "value": 5.3,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_unemployment_rate",
@@ -88629,7 +88629,7 @@
       "period": "2026-01-01",
       "value": 5.2,
       "unit": "%",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_weekly_earnings",
@@ -88637,7 +88637,7 @@
       "period": "2025-05-01",
       "value": 1249.0,
       "unit": "$",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_weekly_earnings",
@@ -88645,7 +88645,7 @@
       "period": "2025-06-01",
       "value": 1256.7,
       "unit": "$",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_weekly_earnings",
@@ -88653,7 +88653,7 @@
       "period": "2025-07-01",
       "value": 1256.88,
       "unit": "$",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_weekly_earnings",
@@ -88661,7 +88661,7 @@
       "period": "2025-08-01",
       "value": 1272.93,
       "unit": "$",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_weekly_earnings",
@@ -88669,7 +88669,7 @@
       "period": "2025-09-01",
       "value": 1271.51,
       "unit": "$",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_weekly_earnings",
@@ -88677,7 +88677,7 @@
       "period": "2025-10-01",
       "value": 1257.28,
       "unit": "$",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_weekly_earnings",
@@ -88685,7 +88685,7 @@
       "period": "2025-11-01",
       "value": 1264.93,
       "unit": "$",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_weekly_earnings",
@@ -88693,7 +88693,7 @@
       "period": "2025-12-01",
       "value": 1272.7,
       "unit": "$",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_wholesale_sales",
@@ -88701,7 +88701,7 @@
       "period": "2025-05-01",
       "value": 201589.52,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_wholesale_sales",
@@ -88709,7 +88709,7 @@
       "period": "2025-06-01",
       "value": 210650.93,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_wholesale_sales",
@@ -88717,7 +88717,7 @@
       "period": "2025-07-01",
       "value": 212047.36,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_wholesale_sales",
@@ -88725,7 +88725,7 @@
       "period": "2025-08-01",
       "value": 208797.06,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_wholesale_sales",
@@ -88733,7 +88733,7 @@
       "period": "2025-09-01",
       "value": 208818.61,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_wholesale_sales",
@@ -88741,7 +88741,7 @@
       "period": "2025-10-01",
       "value": 200718.23,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_wholesale_sales",
@@ -88749,7 +88749,7 @@
       "period": "2025-11-01",
       "value": 205459.9,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "qc_wholesale_sales",
@@ -88757,7 +88757,7 @@
       "period": "2025-12-01",
       "value": 208287.91,
       "unit": "$M",
-      "source": "Institut de la statistique du Québec"
+      "source": "Institut de la statistique du Qu\u00e9bec"
     },
     {
       "indicator_name": "realGdp",
@@ -106294,7 +106294,7 @@
         "dailyTitle": "Monthly Survey of Manufacturing"
       },
       {
-        "name": "Canada’s net international investment position",
+        "name": "Canada\u2019s net international investment position",
         "value": "$1,801.1 billion",
         "change": "",
         "arrow": 0,

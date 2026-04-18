@@ -1,0 +1,620 @@
+{
+  "generated": "2026-04-18",
+  "note": "Maps StatCan Daily release items (productId + coord) to WDS vectorId. Use first-member-of-every-dim heuristic. \"verified\" = latest WDS value matched statcan_latest snapshot within 2%.",
+  "mapping": {
+    "Industrial capacity use": {
+      "pid": 16100109,
+      "coord": "1.1.0.0.0.0.0.0.0.0",
+      "vectorId": 4331081,
+      "verified": true,
+      "snap_val": 78.5,
+      "wds_val": 78.5,
+      "diff_pct": 0.0
+    },
+    "Manufacturing sales": {
+      "pid": 16100047,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 800025,
+      "verified": false,
+      "snap_val": 68.7,
+      "wds_val": 65641466.0,
+      "diff_pct": 95547885.44
+    },
+    "Canada’s net international investment position": {
+      "pid": 36100485,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 61916452,
+      "verified": false,
+      "snap_val": 1801.1,
+      "wds_val": 11402593.0,
+      "diff_pct": 632990.5
+    },
+    "Employment level": {
+      "pid": 14100287,
+      "coord": "1.1.1.1.1.1.0.0.0.0",
+      "vectorId": 2062809,
+      "verified": false,
+      "snap_val": 21037000.0,
+      "wds_val": 34746.7,
+      "diff_pct": 99.83
+    },
+    "Inventories": {
+      "pid": 16100047,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 800025,
+      "verified": false,
+      "snap_val": 120.6,
+      "wds_val": 65641466.0,
+      "diff_pct": 54428976.29
+    },
+    "Unemployment rate": {
+      "pid": 14100287,
+      "coord": "1.1.1.1.1.1.0.0.0.0",
+      "vectorId": 2062809,
+      "verified": false,
+      "snap_val": 6.7,
+      "wds_val": 34746.7,
+      "diff_pct": 518507.46
+    },
+    "Inventory-to-sales ratio": {
+      "pid": 16100047,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 800025,
+      "verified": false,
+      "snap_val": 1.76,
+      "wds_val": 65641466.0,
+      "diff_pct": 3729628650.0
+    },
+    "Unfilled orders": {
+      "pid": 16100047,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 800025,
+      "verified": false,
+      "snap_val": 114.8,
+      "wds_val": 65641466.0,
+      "diff_pct": 57178877.35
+    },
+    "Wholesale sales (excluding petroleum, petroleum products, and other hydrocarbons and excluding oilseed and grain)": {
+      "pid": 20100074,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 52367636,
+      "verified": false,
+      "snap_val": 85.2,
+      "wds_val": 107073504.0,
+      "diff_pct": 125673026.76
+    },
+    "Imports of goods": {
+      "pid": 12100011,
+      "coord": "1.1.1.1.1.0.0.0.0.0",
+      "vectorId": 87008752,
+      "verified": false,
+      "snap_val": 66.1,
+      "wds_val": 63620.3,
+      "diff_pct": 96148.56
+    },
+    "Building permits": {
+      "pid": 34100292,
+      "coord": "1.1.1.1.1.0.0.0.0.0",
+      "vectorId": 1675115467,
+      "verified": false,
+      "snap_val": 13.3,
+      "wds_val": 10340877.0,
+      "diff_pct": 77750854.89
+    },
+    "Exports of goods": {
+      "pid": 12100011,
+      "coord": "1.1.1.1.1.0.0.0.0.0",
+      "vectorId": 87008752,
+      "verified": false,
+      "snap_val": 62.5,
+      "wds_val": 63620.3,
+      "diff_pct": 101692.48
+    },
+    "Goods trade balance": {
+      "pid": 12100011,
+      "coord": "1.1.1.1.1.0.0.0.0.0",
+      "vectorId": 87008752,
+      "verified": false,
+      "snap_val": -3.6,
+      "wds_val": 63620.3,
+      "diff_pct": 1767330.56
+    },
+    "Wheat area": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 26.7,
+      "wds_val": 6440800.0,
+      "diff_pct": 24122746.44
+    },
+    "Canola area": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 21.8,
+      "wds_val": 6440800.0,
+      "diff_pct": 29544854.13
+    },
+    "Soybean area": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 5.9,
+      "wds_val": 6440800.0,
+      "diff_pct": 109166001.69
+    },
+    "Corn for grain area": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 3.8,
+      "wds_val": 6440800.0,
+      "diff_pct": 169494636.84
+    },
+    "Quarterly labour productivity": {
+      "pid": 36100206,
+      "coord": "1.1.2.0.0.0.0.0.0.0",
+      "vectorId": 1409154,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Real GDP by expenditure": {
+      "pid": 36100104,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 62305723,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Real GDP by industry": {
+      "pid": 36100434,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 65201210,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Household saving rate": {
+      "pid": 36100112,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 62305952,
+      "verified": false,
+      "snap_val": 4.4,
+      "wds_val": 1631524.0,
+      "diff_pct": 37079990.91
+    },
+    "Household disposable income": {
+      "pid": 36100112,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 62305952,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Terms of trade": {
+      "pid": 36100105,
+      "coord": "1.1.0.0.0.0.0.0.0.0",
+      "vectorId": 61992650,
+      "verified": false,
+      "snap_val": 105.520171,
+      "wds_val": 116.9,
+      "diff_pct": 10.78
+    },
+    "Current account balance": {
+      "pid": 36100018,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 61915244,
+      "verified": false,
+      "snap_val": -0.7,
+      "wds_val": 332275.0,
+      "diff_pct": 47467957.14
+    },
+    "Average weekly earnings": {
+      "pid": 14100223,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 79310773,
+      "verified": false,
+      "snap_val": 1316.18,
+      "wds_val": 18343379.0,
+      "diff_pct": 1393583.16
+    },
+    "Canadian corporations' operating profit, seasonally adjusted": {
+      "pid": 33100226,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 1146004129,
+      "verified": false,
+      "snap_val": 205.6,
+      "wds_val": 1583799.0,
+      "diff_pct": 770230.25
+    },
+    "Capital expenditures: Non-residential construction": {
+      "pid": 34100035,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 95923552,
+      "verified": false,
+      "snap_val": 274021.0,
+      "wds_val": 401203.0,
+      "diff_pct": 46.41
+    },
+    "Capital expenditures: Machinery and equipment": {
+      "pid": 34100035,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 95923552,
+      "verified": false,
+      "snap_val": 127182.0,
+      "wds_val": 401203.0,
+      "diff_pct": 215.46
+    },
+    "Non-residential capital expenditures": {
+      "pid": 34100035,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 95923552,
+      "verified": true,
+      "snap_val": 401203.0,
+      "wds_val": 401203.0,
+      "diff_pct": 0.0
+    },
+    "Non-resident visitors entering Canada (seasonally adjusted data)": {
+      "pid": 24100054,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 1296948810,
+      "verified": false,
+      "snap_val": 2527957.0,
+      "wds_val": 6742457.0,
+      "diff_pct": 166.72
+    },
+    "Canadian residents returning to Canada from abroad (seasonally adjusted data)": {
+      "pid": 24100054,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 1296948810,
+      "verified": false,
+      "snap_val": 3662204.0,
+      "wds_val": 6742457.0,
+      "diff_pct": 84.11
+    },
+    "Non-resident visitors entering Canada (unadjusted data)": {
+      "pid": 24100053,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 1296956465,
+      "verified": false,
+      "snap_val": 2069120.0,
+      "wds_val": 5694588.0,
+      "diff_pct": 175.22
+    },
+    "Canadian residents returning to Canada from abroad (unadjusted data)": {
+      "pid": 24100053,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 1296956465,
+      "verified": false,
+      "snap_val": 3457147.0,
+      "wds_val": 5694588.0,
+      "diff_pct": 64.72
+    },
+    "Industrial Product Price Index": {
+      "pid": 18100265,
+      "coord": "1.1.0.0.0.0.0.0.0.0",
+      "vectorId": 1230995983,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Retail sales": {
+      "pid": 20100056,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 1446859481,
+      "verified": false,
+      "snap_val": 70.0,
+      "wds_val": 60929063.0,
+      "diff_pct": 87041418.57
+    },
+    "Industrial Product Price Index, excluding energy and petroleum products": {
+      "pid": 18100265,
+      "coord": "1.1.0.0.0.0.0.0.0.0",
+      "vectorId": 1230995983,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Raw Materials Price Index": {
+      "pid": 18100268,
+      "coord": "1.1.0.0.0.0.0.0.0.0",
+      "vectorId": 1230998135,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Raw Materials Price Index, excluding crude energy products": {
+      "pid": 18100268,
+      "coord": "1.1.0.0.0.0.0.0.0.0",
+      "vectorId": 1230998135,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Regular Employment Insurance beneficiaries": {
+      "pid": 14100011,
+      "coord": "1.2.1.1.0.0.0.0.0.0",
+      "vectorId": 64549350,
+      "verified": false,
+      "snap_val": 569110.0,
+      "wds_val": 554830.0,
+      "diff_pct": 2.51
+    },
+    "Regular Employment Insurance beneficiaries (year-over-year change)": {
+      "pid": 14100011,
+      "coord": "1.2.1.1.0.0.0.0.0.0",
+      "vectorId": 64549350,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Total investment in building construction": {
+      "pid": 34100293,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 1705315924,
+      "verified": false,
+      "snap_val": 23.7,
+      "wds_val": 22103296832.0,
+      "diff_pct": 93262855731.22
+    },
+    "Consumer Price Index": {
+      "pid": 18100004,
+      "coord": "2.2.0.0.0.0.0.0.0.0",
+      "vectorId": 41690973,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Foreign investment in Canadian securities": {
+      "pid": 36100028,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 61915649,
+      "verified": false,
+      "snap_val": -5.6,
+      "wds_val": 6174.0,
+      "diff_pct": 110350.0
+    },
+    "Canadian investment in foreign securities": {
+      "pid": 36100028,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 61915649,
+      "verified": false,
+      "snap_val": 13.1,
+      "wds_val": 6174.0,
+      "diff_pct": 47029.77
+    },
+    "Food purchased from stores": {
+      "pid": 18100004,
+      "coord": "2.2.0.0.0.0.0.0.0.0",
+      "vectorId": 41690973,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Shelter": {
+      "pid": 18100004,
+      "coord": "2.2.0.0.0.0.0.0.0.0",
+      "vectorId": 41690973,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Transportation": {
+      "pid": 18100004,
+      "coord": "2.2.0.0.0.0.0.0.0.0",
+      "vectorId": 41690973,
+      "verified": false,
+      "reason": "null_value"
+    },
+    "Wheat stocks": {
+      "pid": 32100007,
+      "coord": "1.1.4.0.0.0.0.0.0.0",
+      "vectorId": 73866306,
+      "verified": false,
+      "snap_val": 27.5,
+      "wds_val": 5685.0,
+      "diff_pct": 20572.73
+    },
+    "Canola stocks": {
+      "pid": 32100007,
+      "coord": "1.1.4.0.0.0.0.0.0.0",
+      "vectorId": 73866306,
+      "verified": false,
+      "snap_val": 15.6,
+      "wds_val": 5685.0,
+      "diff_pct": 36342.31
+    },
+    "Tourism spending in Canada": {
+      "pid": 36100230,
+      "coord": "1.1.1.1.1.0.0.0.0.0",
+      "vectorId": 81389,
+      "verified": false,
+      "snap_val": 26.7,
+      "wds_val": 27902.0,
+      "diff_pct": 104401.87
+    },
+    "Domestic tourism spending": {
+      "pid": 36100230,
+      "coord": "1.1.1.1.1.0.0.0.0.0",
+      "vectorId": 81389,
+      "verified": false,
+      "snap_val": 20.8,
+      "wds_val": 27902.0,
+      "diff_pct": 134044.23
+    },
+    "Tourism spending by non-residents": {
+      "pid": 36100230,
+      "coord": "1.1.1.1.1.0.0.0.0.0",
+      "vectorId": 81389,
+      "verified": false,
+      "snap_val": 6.0,
+      "wds_val": 27902.0,
+      "diff_pct": 464933.33
+    },
+    "Tourism share of gross domestic product": {
+      "pid": 36100235,
+      "coord": "1.1.0.0.0.0.0.0.0.0",
+      "vectorId": 65198952,
+      "verified": false,
+      "snap_val": 1.7,
+      "wds_val": 1.74,
+      "diff_pct": 2.35
+    },
+    "Jobs generated by tourism": {
+      "pid": 36100232,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 81673,
+      "verified": false,
+      "snap_val": 715400.0,
+      "wds_val": 701.7,
+      "diff_pct": 99.9
+    },
+    "National net worth": {
+      "pid": 36100580,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 62693604,
+      "verified": false,
+      "snap_val": 19.4,
+      "wds_val": 74530831.0,
+      "diff_pct": 384179441.24
+    },
+    "Debt service ratio": {
+      "pid": 11100065,
+      "coord": "1.1.1.0.0.0.0.0.0.0",
+      "vectorId": 1001696792,
+      "verified": false,
+      "snap_val": 14.64,
+      "wds_val": 2783776.0,
+      "diff_pct": 19014763.39
+    },
+    "Household credit market debt - financial flow (seasonally adjusted)": {
+      "pid": 38100238,
+      "coord": "1.11.0.0.0.0.0.0.0.0",
+      "vectorId": 1038036698,
+      "verified": false,
+      "snap_val": 33.5,
+      "wds_val": 177.18,
+      "diff_pct": 428.9
+    },
+    "Household net worth": {
+      "pid": 36100580,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 62693604,
+      "verified": false,
+      "snap_val": 18.4,
+      "wds_val": 74530831.0,
+      "diff_pct": 405058764.13
+    },
+    "Wheat production": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 40.0,
+      "wds_val": 6440800.0,
+      "diff_pct": 16101900.0
+    },
+    "Canola production": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 21.8,
+      "wds_val": 6440800.0,
+      "diff_pct": 29544854.13
+    },
+    "Soybeans production": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 6.8,
+      "wds_val": 6440800.0,
+      "diff_pct": 94717547.06
+    },
+    "Corn for grain production": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 14.9,
+      "wds_val": 6440800.0,
+      "diff_pct": 43226745.64
+    },
+    "Realized net farm income": {
+      "pid": 32100052,
+      "coord": "1.10.0.0.0.0.0.0.0.0",
+      "vectorId": 8622,
+      "verified": false,
+      "snap_val": 9.4,
+      "wds_val": 98074988.0,
+      "diff_pct": 1043350836.17
+    },
+    "Farm cash receipts": {
+      "pid": 32100045,
+      "coord": "1.1.0.0.0.0.0.0.0.0",
+      "vectorId": 169702,
+      "verified": false,
+      "snap_val": 98.1,
+      "wds_val": 101398925.0,
+      "diff_pct": 103362718.55
+    },
+    "Farm operating expenses": {
+      "pid": 32100049,
+      "coord": "1.1.0.0.0.0.0.0.0.0",
+      "vectorId": 170954,
+      "verified": false,
+      "snap_val": 78.5,
+      "wds_val": 88793600.0,
+      "diff_pct": 113112766.24
+    },
+    "Total net farm income": {
+      "pid": 32100052,
+      "coord": "1.10.0.0.0.0.0.0.0.0",
+      "vectorId": 8622,
+      "verified": false,
+      "snap_val": 9.2,
+      "wds_val": 98074988.0,
+      "diff_pct": 1066032378.26
+    },
+    "Total wheat production": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 36.6,
+      "wds_val": 6440800.0,
+      "diff_pct": 17597714.21
+    },
+    "Total canola production": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 20.0,
+      "wds_val": 6440800.0,
+      "diff_pct": 32203900.0
+    },
+    "Total soybeans production": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 7.1,
+      "wds_val": 6440800.0,
+      "diff_pct": 90715392.96
+    },
+    "Total corn for grain production": {
+      "pid": 32100359,
+      "coord": "1.1.6.0.0.0.0.0.0.0",
+      "vectorId": 46457,
+      "verified": false,
+      "snap_val": 15.5,
+      "wds_val": 6440800.0,
+      "diff_pct": 41553448.39
+    },
+    "Investment in non-residential building construction": {
+      "pid": 34100011,
+      "coord": "1.1.1.1.0.0.0.0.0.0",
+      "vectorId": 5976057,
+      "verified": false,
+      "snap_val": 14.4,
+      "wds_val": 14613424.0,
+      "diff_pct": 101482011.11
+    }
+  },
+  "failures": []
+}

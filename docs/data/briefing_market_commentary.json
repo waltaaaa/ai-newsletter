@@ -1,21 +1,90 @@
 {
-  "market_commentary": "<p><span class=\"lead-sentence\"><strong>WTI crude settled at US$102.88/bbl on March 31</strong> — its first weekly close above $100 since July 2022 — as the Strait of Hormuz closure, in effect since approximately March 2, continued to disrupt an estimated 20 million barrels per day of seaborne oil flows.<sup>1</sup></span> Brent crude rose to US$112.78/bbl, recording its largest monthly percentage gain since contract inception in 1988.<sup>2</sup> The TSX Composite closed the week at <strong>32,427</strong>, gaining <strong>1.54%</strong> on March 31, though the index declined approximately 6% over the full month of March.<sup>3</sup> Gold fell to approximately <strong>US$4,578/oz</strong>, its steepest monthly decline since October 2008, while the Bank of Canada held its overnight rate at <strong>2.25%</strong> following seven consecutive cuts from the June 2024 peak of 5.00%.<sup>4</sup><sup>5</sup></p><p><span class=\"lead-sentence\"><strong>The Signal Dispatch cross-reference engine links 63 oil and gas projects to the current WTI price environment</strong>, with 727 Alberta projects in the database carrying direct commodity exposure to crude price movements.<sup>6</sup></span> If WTI holds above $100/bbl, the database's oil and gas projects — concentrated in Alberta oil sands and Saskatchewan heavy oil — would maintain price levels above the breakeven thresholds reported in public project filings. The 364 mining projects in the database carry exposure to gold's 14% monthly price decline; the database recorded a peak price of US$5,161/oz on March 3 before the month-end closing of US$4,578.<sup>7</sup> The Government of Canada yield curve maintained a normal shape with the 2-year/10-year spread at 63 basis points, placing the 1,034 under-construction projects in the database within a broadly stable long-term financing rate environment.<sup>8</sup></p>",
+  "market_commentary": "<p><span class=\"lead-sentence\">Canadian and global equity benchmarks advanced in the week ending April 9</span> &mdash; the S&amp;P/TSX Composite closed at <strong>33,478</strong> (<strong>+1.12%</strong> W/W, <strong>+41.10%</strong> Y/Y)<sup>11</sup>, while the S&amp;P 500 added <strong>+3.68%</strong> to <strong>6,825</strong><sup>12</sup> and the Nikkei 225 gained <strong>+4.78%</strong> to <strong>56,308</strong><sup>30</sup>. The Canadian dollar firmed <strong>+0.70%</strong> to <strong>0.7235 CAD/USD</strong><sup>13</sup>, and the Bank of Canada held its policy rate at <strong>2.25%</strong> for a seventh meeting<sup>1</sup>. The database tracks <strong>5,644 active and proposed projects</strong> valued at <strong>$864.6 billion</strong><sup>5</sup>.</p><p><span class=\"lead-sentence\">Commodity moves split the pipeline along energy and metals lines</span> &mdash; Brent crude fell <strong>-11.47%</strong> on the week to <strong>US$96.52/bbl</strong>, still <strong>+47.40%</strong> Y/Y<sup>10</sup>, against <strong>28 oil and gas projects ($50.6B)</strong> and <strong>207 power and energy projects ($328.1B)</strong><sup>5</sup>. Gold settled at <strong>US$4,783/oz</strong> (<strong>+2.82%</strong>)<sup>15</sup>, copper at <strong>US$5.75/lb</strong> (<strong>+3.32%</strong>)<sup>16</sup>, and the Sprott uranium proxy at <strong>US$50.93</strong> (<strong>+4.15%</strong>)<sup>17</sup>, referenced by <strong>265 mining projects totalling $117.8B</strong><sup>5</sup>. The 2s10s Government of Canada spread held at <strong>+63 bp</strong> with the 10-year at <strong>3.58%</strong><sup>2</sup>, against <strong>657 rate-sensitive residential, commercial, and infrastructure projects ($76.4B)</strong><sup>5</sup>.</p>",
   "market_commentary_callout": {
     "title": "Pipeline Cross-Reference",
     "items": [
-      {"label": "Oil & gas projects (WTI-linked)", "value": "63 projects", "amount": "AB/SK focus"},
-      {"label": "Mining projects (gold-linked)", "value": "364 projects", "amount": "-14% M/M"},
-      {"label": "Projects under construction", "value": "1,034 projects", "amount": "2Y/10Y +63bps"}
+      {
+        "label": "Rate-sensitive projects (residential, commercial, infrastructure)",
+        "value": "657 projects",
+        "amount": "$76.4B"
+      },
+      {
+        "label": "Mining (metals, uranium, potash)",
+        "value": "265 projects",
+        "amount": "$117.8B"
+      },
+      {
+        "label": "Power & energy",
+        "value": "207 projects",
+        "amount": "$328.1B"
+      },
+      {
+        "label": "Oil & gas",
+        "value": "28 projects",
+        "amount": "$50.6B"
+      },
+      {
+        "label": "Total active & proposed",
+        "value": "5,644 projects",
+        "amount": "$864.6B"
+      }
     ]
   },
   "sources": [
-    {"id": 1, "title": "CNBC — Brent Record Monthly Surge, WTI Above $100", "url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-year-in-review.html"},
-    {"id": 2, "title": "CNBC — Brent Record Monthly Surge, WTI Above $100", "url": "https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-year-in-review.html"},
-    {"id": 3, "title": "BNN Bloomberg — TSX March 27", "url": "https://www.bnnbloomberg.ca/business/2026/03/27/sptsx-composite-positive-late-morning-friday-us-markets-moving-lower/"},
-    {"id": 4, "title": "Fortune — Gold Price March 31, 2026", "url": "https://fortune.com/article/current-price-of-gold-03-31-2026"},
-    {"id": 5, "title": "Bank of Canada — March 18, 2026 Rate Decision", "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18"},
-    {"id": 6, "title": "Signal Dispatch Project Database — Oil & Gas Projects", "url": ""},
-    {"id": 7, "title": "Signal Dispatch Project Database — Mining Projects", "url": ""},
-    {"id": 8, "title": "Signal Dispatch Project Database — Under Construction", "url": ""}
+    {
+      "id": 1,
+      "title": "Bank of Canada — Key interest rate",
+      "url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
+    },
+    {
+      "id": 2,
+      "title": "Bank of Canada — Valet API (Government of Canada bond yields)",
+      "url": "https://www.bankofcanada.ca/valet/docs"
+    },
+    {
+      "id": 5,
+      "title": "The Lagging Indicator — project database (projects_all.json)",
+      "url": "https://walterjbaker.github.io/can-macro-dashboard/data/projects_all.json"
+    },
+    {
+      "id": 10,
+      "title": "Yahoo Finance — Brent Crude Oil futures (BZ=F)",
+      "url": "https://finance.yahoo.com/quote/BZ%3DF/"
+    },
+    {
+      "id": 11,
+      "title": "Yahoo Finance — S&P/TSX Composite (^GSPTSE)",
+      "url": "https://finance.yahoo.com/quote/%5EGSPTSE/"
+    },
+    {
+      "id": 12,
+      "title": "Yahoo Finance — S&P 500 (^GSPC)",
+      "url": "https://finance.yahoo.com/quote/%5EGSPC/"
+    },
+    {
+      "id": 13,
+      "title": "Yahoo Finance — CAD/USD (CAD=X)",
+      "url": "https://finance.yahoo.com/quote/CAD%3DX/"
+    },
+    {
+      "id": 15,
+      "title": "Yahoo Finance — Gold futures (GC=F)",
+      "url": "https://finance.yahoo.com/quote/GC%3DF/"
+    },
+    {
+      "id": 16,
+      "title": "Yahoo Finance — Copper futures (HG=F)",
+      "url": "https://finance.yahoo.com/quote/HG%3DF/"
+    },
+    {
+      "id": 17,
+      "title": "Yahoo Finance — Sprott Physical Uranium Trust (U.UN.TO proxy)",
+      "url": "https://finance.yahoo.com/quote/U-UN.TO/"
+    },
+    {
+      "id": 30,
+      "title": "Yahoo Finance — Nikkei 225 (^N225)",
+      "url": "https://finance.yahoo.com/quote/%5EN225/"
+    }
   ]
 }
