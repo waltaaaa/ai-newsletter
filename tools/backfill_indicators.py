@@ -124,10 +124,11 @@ def backfill_statcan(conn, years=5):
         'cpi_AB': '41690922',
         'cpi_BC': '41690923',
         # National employment & participation rates — must match phases/data_collection.py
-        # _EMPRATE_VECTOR / _PARTRATE_VECTOR. Old vectors (2062809/2062803) returned
-        # counts or terminated series and produced raw-index / zero values.
-        'employment_rate_national': '2062811',
-        'participation_rate_national': '2062807',
+        # _EMPRATE_VECTOR / _PARTRATE_VECTOR. Verified 2026-04-18: v2062817 returns
+        # rate (~60.6%), v2062816 returns participation rate (~64.9%). Previous
+        # values (2062811/2062807) returned counts or failed (terminated).
+        'employment_rate_national': '2062817',
+        'participation_rate_national': '2062816',
         # Provincial rates — use unemployment vector + offset (part=+1, emp=+2)
         # to match the runtime _PROV_PARTRATE_VIDS / _PROV_EMPRATE_VIDS tables.
         'employment_rate_NL': '2063006',
