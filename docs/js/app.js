@@ -664,7 +664,7 @@ function _tldrBuildBriefing(){
   var c1Text=(stats.total_projects)?'<strong>Cross-reference:</strong> The database tracks '+(stats.total_projects||0).toLocaleString()+' active projects valued at '+(D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B')+' across Canada.'+(stats.new_this_week?' '+stats.new_this_week+' new projects discovered this week.':''):'';
   if(ic.length>=1){
     var ch=ic[0];
-    c1Text=(ch.reasoning?san(ch.reasoning):c1Text);
+    c1Text=((ch.callout||ch.reasoning)?san(ch.callout||ch.reasoning):c1Text);
     callouts.push({text:c1Text,chart:ch});
   }else if(c1Text){
     callouts.push({text:c1Text,chart:null});
@@ -673,7 +673,7 @@ function _tldrBuildBriefing(){
   // Second callout: second insight chart
   if(ic.length>=2){
     var ch2=ic[1];
-    callouts.push({text:ch2.reasoning?san(ch2.reasoning):'',chart:ch2});
+    callouts.push({text:(ch2.callout||ch2.reasoning)?san(ch2.callout||ch2.reasoning):'',chart:ch2});
   }
 
   // Intersperse callouts between paragraphs
@@ -712,15 +712,17 @@ function _tldrBuildBriefing(){
   </div>`;
 }
 
-/* Build a callout box with optional inline SVG chart (Economist-style header lives inside the SVG) */
+/* Build a callout box with optional inline SVG chart.
+   When a chart is present, the TL;DR callout reuses _calloutChrome so the layout is:
+   red rule → kicker → title → subtitle → co.text → chart body → source line.
+   When there is no chart (text-only callout), preserve the legacy .tldr-callout box. */
 function _tldrCalloutHtml(co,idx){
+  if(co.chart){
+    var _srcHint='Source: The Lagging Indicator';
+    return '<div class="tldr-callout-chart-host" id="tldrCalloutChart_'+idx+'" data-callout-idx="'+idx+'" data-callout-text="'+encodeURIComponent(co.text||'')+'"><div id="tldrCalloutSvg_'+idx+'"><div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div></div>';
+  }
   var h='<div class="tldr-callout">';
   if(co.text)h+=co.text;
-  if(co.chart){
-    h+='<div class="tldr-callout-chart" id="tldrCalloutChart_'+idx+'">';
-    h+='<div class="tldr-callout-svg" id="tldrCalloutSvg_'+idx+'"><div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div>';
-    h+='</div>';
-  }
   h+='</div>';
   return h;
 }
@@ -731,8 +733,9 @@ async function _tldrRenderCalloutCharts(){
   var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
   for(var idx=0;idx<ic.length&&idx<2;idx++){
     var ch=ic[idx];var keys=ch.dataKeys||[];
+    var host=document.getElementById('tldrCalloutChart_'+idx);
     var el=document.getElementById('tldrCalloutSvg_'+idx);
-    if(!el||!keys.length)continue;
+    if(!host||!el||!keys.length)continue;
     // Load all timeseries for this chart
     var allSeries=[];
     for(var ki=0;ki<keys.length;ki++){
@@ -757,8 +760,12 @@ async function _tldrRenderCalloutCharts(){
       else if(/\bcpi\b|\bgdp\b|\bunemploy|\bhousing_starts\b|\bemployment\b|\bparticipation\b/.test(ks))src='Source: Statistics Canada';
       else src='Source: The Lagging Indicator';
     }
-    // Build Economist-style SVG with header + source inside the canvas
-    el.innerHTML=_svgCalloutChart(allSeries,ch.annotations||[],ch.title||'',ch.subtitle||'',ch.chartType||'line',src,{kicker:ch.eyebrow||''});
+    // Build plot-area-only SVG; chrome (red rule, title, subtitle, source) lives in _calloutChrome.
+    var svg=_svgCalloutChart(allSeries,ch.annotations||[],ch.title||'',ch.subtitle||'',ch.chartType||'line',src,{kicker:ch.eyebrow||'',headerMode:'external'});
+    var coText=host.getAttribute('data-callout-text');
+    try{coText=coText?decodeURIComponent(coText):''}catch(e){coText=''}
+    var innerHtml=(coText?'<div style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+coText+'</div>':'')+svg;
+    host.innerHTML=_calloutChrome({kicker:ch.eyebrow||'',title:ch.title||'',subtitle:ch.subtitle||'',source:src,innerHtml:innerHtml});
   }
 }
 
@@ -771,8 +778,9 @@ function _svgCalloutChart(seriesArr,annotations,title,subtitle,chartType,source,
   var isMulti=(chartType==='multi_line');
   var isDiv=(chartType==='diverging_bar');
 
-  var W=1100,H=360,PAD_X=0,PAD_TOP=14,PAD_BOT=32;
-  var pL=PAD_X,pR=48,pT=96,pB=82;
+  var _extHdrDim=(opts&&opts.headerMode==='external');
+  var W=1100,H=_extHdrDim?240:360,PAD_X=0,PAD_TOP=14,PAD_BOT=_extHdrDim?8:32;
+  var pL=PAD_X,pR=48,pT=_extHdrDim?12:96,pB=_extHdrDim?32:82;
   var pW=W-pL-pR,pH=H-pT-pB;
   var BRAND='#003153',INK='#0f172a',MUTED='#4a5568',FAINT='#94a3b8',EVENT='#E3120B',GRID='#d9d4c7',POS='#0d7a3f',NEG='#c4320a';
   var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -904,15 +912,19 @@ function _svgCalloutChart(seriesArr,annotations,title,subtitle,chartType,source,
   svg+='</defs>';
 
   // Signal49 / Economist-style: red rule + optional uppercase kicker + Inter bold title + Inter italic deck
-  svg+='<rect x="'+PAD_X+'" y="'+PAD_TOP+'" width="48" height="4" fill="#E3120B"/>';
-  var _ck=(opts&&opts.kicker)||'';
-  var _ttlY=PAD_TOP+34;
-  if(_ck){
-    svg+='<text x="'+PAD_X+'" y="'+(PAD_TOP+22)+'" font-size="10" font-weight="700" fill="'+INK+'" letter-spacing="1.4">'+esc(_ck.toUpperCase())+'</text>';
-    _ttlY=PAD_TOP+46;
+  // Skipped when opts.headerMode==='external' so a wrapping chrome can own the header.
+  var _extHdr=(opts&&opts.headerMode==='external');
+  if(!_extHdr){
+    svg+='<rect x="'+PAD_X+'" y="'+PAD_TOP+'" width="48" height="4" fill="#E3120B"/>';
+    var _ck=(opts&&opts.kicker)||'';
+    var _ttlY=PAD_TOP+34;
+    if(_ck){
+      svg+='<text x="'+PAD_X+'" y="'+(PAD_TOP+22)+'" font-size="10" font-weight="700" fill="'+INK+'" letter-spacing="1.4">'+esc(_ck.toUpperCase())+'</text>';
+      _ttlY=PAD_TOP+46;
+    }
+    svg+='<text x="'+PAD_X+'" y="'+_ttlY+'" font-size="22" font-weight="700" fill="'+INK+'" letter-spacing="-0.3" font-family="Inter,sans-serif">'+esc(title||'')+'</text>';
+    if(subtitle)svg+='<text x="'+PAD_X+'" y="'+(_ttlY+22)+'" font-size="13" font-weight="500" font-style="italic" fill="'+MUTED+'" font-family="Inter,sans-serif">'+esc(subtitle)+'</text>';
   }
-  svg+='<text x="'+PAD_X+'" y="'+_ttlY+'" font-size="22" font-weight="700" fill="'+INK+'" letter-spacing="-0.3" font-family="Inter,sans-serif">'+esc(title||'')+'</text>';
-  if(subtitle)svg+='<text x="'+PAD_X+'" y="'+(_ttlY+22)+'" font-size="13" font-weight="500" font-style="italic" fill="'+MUTED+'" font-family="Inter,sans-serif">'+esc(subtitle)+'</text>';
 
   // Horizontal gridlines + right-side y-axis labels
   for(var g=0;g<=4;g++){
@@ -985,9 +997,11 @@ function _svgCalloutChart(seriesArr,annotations,title,subtitle,chartType,source,
     });
   }
 
-  // Source line (italicized, Economist-style)
-  var srcText=source||'Source: The Lagging Indicator';
-  svg+='<text x="'+PAD_X+'" y="'+(H-PAD_BOT-2)+'" font-size="10" font-weight="500" font-style="italic" fill="'+MUTED+'">'+esc(srcText)+'</text>';
+  // Source line (italicized, Economist-style) — skipped when external chrome owns it.
+  if(!_extHdr){
+    var srcText=source||'Source: The Lagging Indicator';
+    svg+='<text x="'+PAD_X+'" y="'+(H-PAD_BOT-2)+'" font-size="10" font-weight="500" font-style="italic" fill="'+MUTED+'">'+esc(srcText)+'</text>';
+  }
 
   svg+='</svg>';return svg;
 }
@@ -1728,6 +1742,27 @@ function _buildProvCalloutText(chartSpec,provData,chartIdx){
   return enriched||reasoning||(chartSpec.title||'');
 }
 
+// Shared TL;DR-style callout chrome — red rule, uppercase kicker, Inter bold title,
+// italic subtitle, italic source line. Wraps arbitrary innerHtml (chart + KPI tiles,
+// context panel, etc.). Kept visually identical to _svgCalloutChart (docs/js/app.js:765).
+function _calloutChrome(o){
+  o=o||{};
+  var k=o.kicker||'';
+  var t=o.title||'';
+  var s=o.subtitle||'';
+  var src=o.source||'Source: The Lagging Indicator';
+  var inner=o.innerHtml||'';
+  var h='<div class="tldr-callout-wrap" style="margin:24px 0;background:#FBF6EE;border:1px solid #e8dfcc;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04);font-family:Inter,sans-serif">';
+  h+='<div style="width:48px;height:4px;background:#E3120B;margin-bottom:14px"></div>';
+  if(k)h+='<div style="font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:#0f172a;margin-bottom:10px">'+san(String(k))+'</div>';
+  if(t)h+='<div style="font-size:22px;font-weight:700;letter-spacing:-0.3px;color:#0f172a;line-height:1.2;margin-bottom:6px;font-family:Inter,sans-serif">'+san(String(t))+'</div>';
+  if(s)h+='<div style="font-size:13px;font-weight:500;font-style:italic;color:#4a5568;line-height:1.4;margin-bottom:18px;font-family:Inter,sans-serif">'+san(String(s))+'</div>';
+  h+=inner;
+  h+='<div style="font-size:10px;font-weight:500;font-style:italic;color:#4a5568;margin-top:14px;font-family:Inter,sans-serif">'+String(src)+'</div>';
+  h+='</div>';
+  return h;
+}
+
 function buildAgentInsightStrip(prefix,chartSpec,provData){
   if(!chartSpec||!chartSpec.dataKeys||!chartSpec.dataKeys.length)return '';
   const id=prefix+'AgentInsight';
@@ -1735,45 +1770,35 @@ function buildAgentInsightStrip(prefix,chartSpec,provData){
   const subtitle=chartSpec.subtitle||'Agent-selected visualization';
   const kpis=Array.isArray(chartSpec.kpis)?chartSpec.kpis:[];
   // Option C editorial layout — triggered by presence of non-empty kpis array.
-  // Renders eyebrow label, KPI tile row, Prussian blue chart, integrated context panel.
+  // Renders KPI tile row, Prussian blue chart, integrated context panel. Wrapped in
+  // _calloutChrome so header/footer match the TL;DR callout visually.
   if(kpis.length){
     const eyebrow=chartSpec.eyebrow||'';
-    const context=chartSpec.context||'';
-    let oc='<div class="optc-card" style="margin:24px 0;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">';
-    if(eyebrow){oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#003153;margin-bottom:8px;border-bottom:2px solid #003153;display:inline-block;padding-bottom:2px">'+san(eyebrow)+'</div>';}
-    oc+='<div style="font-family:DM Sans,sans-serif;font-size:20px;font-weight:700;color:#1a2744;line-height:1.3;margin-bottom:4px">'+san(title)+'</div>';
-    oc+='<div style="font-family:DM Sans,sans-serif;font-size:13px;color:#64748B;margin-bottom:18px">'+san(subtitle)+'</div>';
-    oc+='<div style="display:flex;gap:32px;margin-bottom:20px;padding:16px 0;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;flex-wrap:wrap">';
+    const context=chartSpec.callout||chartSpec.context||'';
+    let inner='';
+    if(context){
+      var safeCtx=String(context).replace(/<(?!\/?strong\b)[^>]+>/gi,'');
+      inner+='<div style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+safeCtx+'</div>';
+    }
+    inner+='<div style="display:flex;gap:28px;margin-bottom:20px;padding:16px 0;border-top:1px solid #e8dfcc;border-bottom:1px solid #e8dfcc;flex-wrap:wrap;justify-content:flex-start">';
     kpis.slice(0,3).forEach(function(k){
       var tr=(k.trend||'').toLowerCase();
       var trendColor=tr==='up'?'#0d7a3f':tr==='down'?'#c4320a':'#64748B';
-      oc+='<div style="flex:1;min-width:120px">';
-      oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#64748B;margin-bottom:6px">'+san(k.label||'')+'</div>';
-      oc+='<div style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:700;color:#1a2744;line-height:1.1">'+san(k.value||'')+'</div>';
-      if(k.delta){oc+='<div style="font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;color:'+trendColor+';margin-top:4px">'+san(k.delta)+'</div>';}
-      oc+='</div>';
+      inner+='<div style="flex:0 0 auto;min-width:auto">';
+      inner+='<div style="font-family:Inter,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#64748B;margin-bottom:6px">'+san(k.label||'')+'</div>';
+      inner+='<div style="font-family:Inter,sans-serif;font-size:26px;font-weight:700;color:#0f172a;line-height:1.1">'+san(k.value||'')+'</div>';
+      if(k.delta){inner+='<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:'+trendColor+';margin-top:4px">'+san(k.delta)+'</div>';}
+      inner+='</div>';
     });
-    oc+='</div>';
-    oc+='<div style="height:260px;position:relative;margin-bottom:16px"><canvas id="'+id+'"></canvas></div>';
-    if(context){
-      var safeCtx=String(context).replace(/<(?!\/?strong\b)[^>]+>/gi,'');
-      oc+='<div style="font-family:DM Sans,sans-serif;font-size:14px;line-height:1.6;color:#2d3a52;padding:14px 16px;background:#f8fafc;border-left:3px solid #003153;border-radius:0 4px 4px 0">'+safeCtx+'</div>';
-    }
-    oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;color:#94A3B8;margin-top:12px;text-align:right">Source: The Lagging Indicator</div>';
-    oc+='</div>';
-    return oc;
+    inner+='</div>';
+    inner+='<div style="height:260px;position:relative"><canvas id="'+id+'"></canvas></div>';
+    return _calloutChrome({kicker:eyebrow,title:title,subtitle:subtitle,source:'Source: The Lagging Indicator',innerHtml:inner});
   }
-  // Legacy callout layout (unchanged) — used when chartSpec has no kpis array
+  // Legacy callout layout — calloutText above the chart canvas. Same chrome as TL;DR.
   const calloutText=_buildProvCalloutText(chartSpec,provData||{},0);
-  let html='<div class="tldr-callout" style="margin:20px 0">';
-  html+='<div style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+calloutText+'</div>';
-  html+='<div class="tldr-callout-chart">';
-  html+='<div class="tldr-callout-chart-title" id="'+prefix+'AgentInsightTitle">'+title+'</div>';
-  html+='<div id="'+prefix+'AgentInsightSub" style="font-family:DM Sans,sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+subtitle+'</div>';
-  html+='<div style="height:280px;position:relative;padding:12px 16px;background:#fff;border-radius:6px"><canvas id="'+id+'"></canvas></div>';
-  html+='<div class="tldr-callout-source">Source: The Lagging Indicator</div>';
-  html+='</div></div>';
-  return html;
+  let inner='<div style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+calloutText+'</div>';
+  inner+='<div style="height:280px;position:relative"><canvas id="'+id+'"></canvas></div>';
+  return _calloutChrome({kicker:chartSpec.eyebrow||'',title:title,subtitle:subtitle,source:'Source: The Lagging Indicator',innerHtml:inner});
 }
 
 async function renderAgentInsightChart(prefix,chartSpec){
@@ -1884,16 +1909,23 @@ async function renderAgentInsightChart(prefix,chartSpec){
   const hasAnnotation=Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation');
   const annotationCfg=hasAnnotation&&Object.keys(evtAnnotations).length?{annotation:{annotations:{...evtAnnotations}}}:{};
 
-  // Scales
-  const scales=isBarType?{
-    x:{border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{maxTicksLimit:10,font:{family:_ic.font,size:9},color:_ic.prussian,maxRotation:45,minRotation:0}},
-    y:{border:{display:true,color:_ic.prussian,width:1},grid:{color:_ic.gridSoft,lineWidth:0.5},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,callback:v=>fmtNum(v)}}
-  }:{
-    x:{border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.prussian,padding:10}},
-    y:{position:'left',border:{display:true,color:_ic.prussian,width:1},grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:v=>fmtNum(v)}}
+  // Scales — TL;DR callout parity: horizontal-only grid in #d9d4c7, 1.2px #0f172a chart floor,
+  // right-side y labels (unless dual-axis), 11px/400 Inter in #4a5568.
+  const scales={
+    x:{
+      border:{display:true,color:'#0f172a',width:1.2},
+      grid:{display:false},
+      ticks:{maxTicksLimit:isBarType?10:8,font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,maxRotation:isBarType?45:0,minRotation:0}
+    },
+    y:{
+      position:needDualAxis?'left':'right',
+      border:{display:false},
+      grid:{color:'#d9d4c7',lineWidth:1,drawTicks:false},
+      ticks:{font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,callback:v=>fmtNum(v)}
+    }
   };
   if(needDualAxis){
-    scales.y1={position:'right',border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:v=>fmtNum(v)}};
+    scales.y1={position:'right',border:{display:false},grid:{display:false},ticks:{font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,callback:v=>fmtNum(v)}};
   }
 
   // Endpoint label plugin (line charts only)
@@ -1906,12 +1938,12 @@ async function renderAgentInsightChart(prefix,chartSpec){
     });
   }};
 
-  // Legend
+  // Legend — TL;DR callout parity: top-start, Inter 11/500 #0f172a. Hidden when single series.
   const legendCfg=needDualAxis?{
     display:true,position:'top',align:'start',
-    labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:_ic.font,size:11,weight:'500'},color:_ic.prussian,usePointStyle:false,
+    labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:'Inter',size:11,weight:'500'},color:'#0f172a',usePointStyle:false,
       generateLabels:function(chart){return chart.data.datasets.map(function(ds,i){const axis=i===0?'left axis':'right axis';return{text:ds.label+' ('+axis+')',fillColor:ds.borderColor||ds.backgroundColor,strokeColor:ds.borderColor||ds.backgroundColor,lineWidth:2,hidden:false,datasetIndex:i}})}}
-  }:isBarType&&datasets.length>1?{display:true,position:'top',labels:{boxWidth:10,padding:8,font:{family:_ic.font,size:10},color:_ic.heading}}:{display:false};
+  }:datasets.length>1?{display:true,position:'top',align:'start',labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:'Inter',size:11,weight:'500'},color:'#0f172a'}}:{display:false};
 
   const cType=isBarType?'bar':'line';
   const plugins=[].concat(endpointPlugin?[endpointPlugin]:[]);
@@ -1922,11 +1954,11 @@ async function renderAgentInsightChart(prefix,chartSpec){
     plugins:plugins,
     options:{
       responsive:true,maintainAspectRatio:false,
-      layout:{padding:{top:10,right:needDualAxis?50:20,bottom:6,left:10}},
+      layout:{padding:{top:8,right:48,bottom:8,left:0}},
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:legendCfg,
-        tooltip:{backgroundColor:'rgba(0,49,83,0.92)',titleColor:'#fff',titleFont:{family:_ic.font,size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:_ic.font,size:11},padding:12,cornerRadius:4,borderColor:'rgba(0,49,83,0.15)',borderWidth:1,displayColors:needDualAxis||datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}},
+        tooltip:{backgroundColor:'rgba(15,23,42,0.95)',titleColor:'#fff',titleFont:{family:'Inter',size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:'Inter',size:11,weight:'400'},padding:12,cornerRadius:4,displayColors:needDualAxis||datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}},
         ...annotationCfg
       },
       scales:scales
@@ -1942,7 +1974,7 @@ function buildInsightStrip(prefix,themes,provCode){
   const sub=tsEntries.length?tsEntries.map(s=>s.label).join(', ')+' \u2014 12-month trend':'From this week\u2019s analysis';
   // Build callout structure matching TL;DR pattern: text component on top, chart below
   let html='<div class="tldr-callout" style="margin:20px 0">';
-  html+='<div id="'+prefix+'InsightCalloutText" style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+t.label+'</div>';
+  html+='<div id="'+prefix+'InsightCalloutText" style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+t.label+'</div>';
   html+='<div class="tldr-callout-chart">';
   html+='<div class="tldr-callout-chart-title" id="'+prefix+'InsightTitle">'+t.label+'</div>';
   html+='<div id="'+prefix+'InsightSub" style="font-family:DM Sans,sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+sub+'</div>';
@@ -2532,7 +2564,8 @@ async function _renderCanadaSubtab(){
   var html='';
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>National Analysis</h3></div>';
   if(natContent){html+=_natNarrative(natContent,allSources)}else{html+='<div class="dash-narrative"><p style="color:#7a8599">National analysis available after next pipeline run.</p></div>'}
-  html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">Unemployment Rate \u2014 12-Month Trend</div><div class="insight-chart-subtitle">Seasonally adjusted</div><div class="chart-wrap"><canvas id="natChartCaUnemployment"></canvas></div><div class="chart-source">Source: Statistics Canada, Table 14-10-0287</div></div>';
+  var _caCallout=(D&&D.national&&D.national.chart_callout)||'';
+  html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">Unemployment Rate \u2014 12-Month Trend</div><div class="insight-chart-subtitle">Seasonally adjusted</div>'+(_caCallout?'<div class="insight-chart-callout">'+san(_caCallout)+'</div>':'')+'<div class="chart-wrap"><canvas id="natChartCaUnemployment"></canvas></div><div class="chart-source">Source: Statistics Canada, Table 14-10-0287</div></div>';
   html+=_natSourcesSection(allSources);
   html+='</div>';
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Policy Developments</h3><span class="section-meta" id="natPolicyMeta"></span></div><div id="natPolicyNarrative"></div><div id="natPolicyAccordion"></div></div>';
@@ -2691,7 +2724,7 @@ async function _renderGlobalSubtab(key){
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>'+countryInfo.label+' Analysis</h3></div>';
   if(analysis){html+=_natNarrative(analysis,gData.sources||[])}else{html+='<div class="dash-narrative"><p style="color:#7a8599">Analysis available after next pipeline run.</p></div>'}
   var chartCfg=GLOBAL_CHART_CFG[key];
-  if(chartCfg){var chartId='natChart_'+key;html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">'+chartCfg.title+'</div><div class="insight-chart-subtitle">'+chartCfg.subtitle+'</div><div class="chart-wrap"><canvas id="'+chartId+'"></canvas></div><div class="chart-source">Source: '+chartCfg.source+'</div></div>'}
+  if(chartCfg){var chartId='natChart_'+key;var _gco=(gData&&gData.chart_callout)||chartCfg.callout||'';html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">'+chartCfg.title+'</div><div class="insight-chart-subtitle">'+chartCfg.subtitle+'</div>'+(_gco?'<div class="insight-chart-callout">'+san(_gco)+'</div>':'')+'<div class="chart-wrap"><canvas id="'+chartId+'"></canvas></div><div class="chart-source">Source: '+chartCfg.source+'</div></div>'}
   html+=_natSourcesSection(gData.sources||[]);
   html+='</div>';
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Key Indicators</h3><span class="section-meta">'+indRows.filter(function(r){return hasVal(r.value)}).length+' indicators</span></div>';
@@ -4277,16 +4310,11 @@ function buildIndInsightStrip(spec){
   var sourceLbl='Statistics Canada';
   var sourceUrl='https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401';
   if(spec.dataSource==='timeseries'){sourceLbl='Market data';sourceUrl=''}
-  var h='<div class="tldr-callout" style="margin:20px 0">';
-  h+='<div style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+san(callout)+'</div>';
-  h+='<div class="tldr-callout-chart">';
-  h+='<div class="tldr-callout-chart-title">'+san(title)+'</div>';
-  h+='<div style="font-family:DM Sans,sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+san(subtitle)+'</div>';
-  h+='<div style="height:320px;position:relative;padding:12px 16px;background:#fff;border-radius:6px"><canvas id="indInsightChart"></canvas></div>';
-  var srcHtml=sourceUrl?'<a href="'+san(sourceUrl)+'" target="_blank" rel="noopener noreferrer" class="ind-src-link">'+san(sourceLbl)+'</a>':san(sourceLbl);
-  h+='<div class="tldr-callout-source">Source: '+srcHtml+'</div>';
-  h+='</div></div>';
-  return h;
+  var inner='';
+  if(callout)inner+='<div style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+san(callout)+'</div>';
+  inner+='<div style="height:320px;position:relative"><canvas id="indInsightChart"></canvas></div>';
+  var srcHtml=sourceUrl?'Source: <a href="'+san(sourceUrl)+'" target="_blank" rel="noopener noreferrer" class="ind-src-link">'+san(sourceLbl)+'</a>':'Source: '+san(sourceLbl);
+  return _calloutChrome({kicker:spec.eyebrow||'',title:title,subtitle:subtitle,source:srcHtml,innerHtml:inner});
 }
 
 // Renders the industry insight chart — supports line / multi_line / bar / diverging_bar
@@ -4406,26 +4434,27 @@ async function renderIndInsightChart(spec){
     data:{labels:labels,datasets:datasets},
     options:{
       responsive:true,maintainAspectRatio:false,
-      layout:{padding:{top:8,right:18,bottom:6,left:10}},
+      layout:{padding:{top:8,right:48,bottom:8,left:0}},
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:(isMulti||datasets.length>1)?{display:true,position:'top',align:'start',labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:_ic.font,size:11,weight:'500'},color:_ic.prussian}}:{display:false},
-        tooltip:{backgroundColor:'rgba(0,49,83,0.92)',titleColor:'#fff',titleFont:{family:_ic.font,size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:_ic.font,size:11},padding:12,cornerRadius:4,displayColors:datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:function(ctx){var v=ctx.raw;if(v==null)return ctx.dataset.label+': —';return ctx.dataset.label+': '+(typeof v==='number'?(isMulti?v.toFixed(1):fmtNum(v)):v)}}}
+        legend:(isMulti||datasets.length>1)?{display:true,position:'top',align:'start',labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:'Inter',size:11,weight:'500'},color:'#0f172a'}}:{display:false},
+        tooltip:{backgroundColor:'rgba(15,23,42,0.95)',titleColor:'#fff',titleFont:{family:'Inter',size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:'Inter',size:11,weight:'400'},padding:12,cornerRadius:4,displayColors:datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:function(ctx){var v=ctx.raw;if(v==null)return ctx.dataset.label+': —';return ctx.dataset.label+': '+(typeof v==='number'?(isMulti?v.toFixed(1):fmtNum(v)):v)}}}
       },
       scales:{
-        x:{border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.prussian,padding:10,autoSkip:true}},
+        x:{border:{display:true,color:'#0f172a',width:1.2},grid:{display:false},ticks:{maxTicksLimit:isBar?10:8,font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,autoSkip:true,maxRotation:isBar?45:0,minRotation:0}},
         y:{
+          position:'right',
           beginAtZero:false,
           grace:'8%',
-          border:{display:true,color:_ic.prussian,width:1},
-          grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},
-          ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:function(v){
+          border:{display:false},
+          grid:{color:'#d9d4c7',lineWidth:1,drawTicks:false},
+          ticks:{font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,callback:function(v){
             if(isMulti)return v.toFixed(0);
             if(typeof v!=='number')return v;
             if(Math.abs(v)>=1000)return v.toLocaleString('en-CA',{maximumFractionDigits:0});
             return v.toLocaleString('en-CA',{maximumFractionDigits:2});
           }},
-          title:yTitleTxt?{display:true,text:yTitleTxt,font:{family:_ic.font,size:10,weight:'500'},color:_ic.muted,padding:{bottom:8}}:{display:false}
+          title:yTitleTxt?{display:true,text:yTitleTxt,font:{family:'Inter',size:10,weight:'500'},color:'#4a5568',padding:{bottom:8}}:{display:false}
         }
       }
     }
