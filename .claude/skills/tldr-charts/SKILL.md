@@ -65,6 +65,7 @@ Add an `insightCharts` array (length 2) at the top level of the briefing JSON:
       "title": "BoC Rate vs. Ontario CPI",
       "subtitle": "12-month trend · %",
       "reasoning": "Rate hold at 2.25% while CPI jumped 0.8pp — monetary policy divergence is the week's macro story",
+      "callout": "BoC held at 2.25% while Ontario CPI climbed to 3.1%. The 85bp gap is the widest of the 12-month window and frames 23 tracked Ontario housing projects with mortgage-rate sensitivity.",
       "annotations": [
         {"date": "2026-03-18", "label": "BoC holds 2.25%"}
       ]
@@ -74,7 +75,8 @@ Add an `insightCharts` array (length 2) at the top level of the briefing JSON:
       "dataKeys": ["unemployment"],
       "title": "National Unemployment Rate",
       "subtitle": "Monthly · %",
-      "reasoning": "84,000 job losses in February — worst outside pandemic — is the secondary macro story"
+      "reasoning": "84,000 job losses in February — worst outside pandemic — is the secondary macro story",
+      "callout": "February recorded 84,000 net job losses, the steepest monthly drop outside the pandemic. The database tracks 47 construction projects at the pre-construction stage that depend on labour-market conditions improving."
     }
   ]
 }
@@ -150,6 +152,58 @@ Multi-line example (when the week's story ties the sector to a complementary ser
 }
 ```
 
+### 4. National Canada & Global Chart Callouts (sub-tab chart wrappers)
+
+The National tab renders additional callout charts OUTSIDE the `insightCharts` array: the hard-coded Canada unemployment 12-month chart and one chart per global sub-tab (US, China, EU, UK). Each of these wrappers MUST carry a `chart_callout` string on the briefing JSON — same quality contract, same enforcement.
+
+**Canada unemployment callout** — written to `national.chart_callout`:
+
+```json
+{
+  "national": {
+    "analysis": "...",
+    "sources": [...],
+    "chart_callout": "National unemployment held at 6.9% in February after 84,000 job losses — the steepest monthly drop outside the pandemic. The database tracks 47 tracked construction projects at pre-construction stage dependent on labour availability."
+  }
+}
+```
+
+**Global per-country callouts** — written to `global[i].chart_callout` on each of the 4 region objects (`region: "United States" | "China" | "European Union" | "United Kingdom"`):
+
+```json
+{
+  "global": [
+    {
+      "region": "United States",
+      "analysis": "...",
+      "chart_callout": "US 10Y Treasury held at 4.6% through the week, 85bp above the Canadian 10Y. The pipeline tracks 14 Ontario housing projects with bond-rate sensitivity flagged in their financing assumptions."
+    },
+    {
+      "region": "China",
+      "analysis": "...",
+      "chart_callout": "China's PPI printed -2.1% YoY, the 17th consecutive month of factory-gate deflation. The pipeline tracks $1.8B of manufacturing investment in BC and Ontario with direct China input-cost exposure."
+    },
+    {
+      "region": "European Union",
+      "analysis": "...",
+      "chart_callout": "ECB held the deposit rate at 3.25% — 100bp above the BoC. The database tracks 9 tracked Quebec aerospace projects totalling $2.4B with euro-denominated component sourcing."
+    },
+    {
+      "region": "United Kingdom",
+      "analysis": "...",
+      "chart_callout": "UK CPI reprinted at 2.3%, 20bp above the BoE target. The pipeline tracks 6 tracked Alberta energy-export projects with sterling revenue streams totalling $900M."
+    }
+  ]
+}
+```
+
+**Requirements — ENFORCED BY VALIDATOR:**
+
+- `national.chart_callout` MUST exist and MUST satisfy the 5 Callout Quality Contract rules above.
+- On EVERY element of `global[]` that has a non-empty `analysis`, `chart_callout` MUST also exist and satisfy the 5 rules.
+- Same length bounds (60–240), same data-citation, cross-reference, banned-words, and fail-loud rules.
+- If the agent cannot produce a qualifying callout for any of these, it MUST raise an explicit error naming the section (`national` or `global[<region>]`) and the missing rule. NEVER emit empty or placeholder.
+
 ## Chart Specification Schema
 
 Each chart object in the `insightCharts` array follows this schema:
@@ -163,12 +217,65 @@ Each chart object in the `insightCharts` array follows this schema:
 | `title` | string | Yes | Chart title — factual, specific, under 60 chars |
 | `subtitle` | string | Yes | Time range and unit — e.g. "Jan 2024 – Jan 2026 · Index" |
 | `yAxisLabel` | string | No | Y-axis label — e.g. "Index (2017=100)", "USD/bbl", "%" |
-| `reasoning` | string | Yes | Internal: why this chart was selected. Ties to a specific finding in the narrative. |
-| `callout` | string | Yes (industries) | User-facing callout text rendered above the chart (2-3 sentences). Must REFERENCE the chart's visual content and INTRODUCE or REINFORCE insight — not copy the analysis narrative. |
+| `reasoning` | string | Yes | Internal: why this chart was selected. Ties to a specific finding in the narrative. Kept for backward compatibility; frontend prefers `callout`. |
+| `callout` | string | **Yes (ALL TIERS)** | User-facing callout text rendered above the chart. **60–240 characters**, single substantive paragraph. MUST cite ≥1 specific number or data point visible on the chart, MUST reference ≥1 pipeline-tracked artifact (project count, sector count, policy item, indicator threshold), MUST use zero banned editorial words (see Quality Contract below). No predictions; conditional forward clause allowed ("If [X], [N] tracked items would…"). Raise a loud error rather than emit empty or placeholder. |
 | `annotations` | array | No | Event markers: `{date: "YYYY-MM-DD", label: "Event name"}` |
 | **`eyebrow`** | string | **No** (Option C) | Short category label rendered above the title in uppercase with accent underline. 2-4 words max. Example: `"Energy Markets · Weekly"`, `"Labour Market"`, `"Housing"`. Presence is optional — omit for charts that don't benefit from category framing. |
 | **`kpis`** | array | **No (TRIGGER)** | Headline numbers promoted above the chart as a KPI row. **Presence of a non-empty `kpis` array is the trigger for the Option C (editorial) layout.** If omitted or empty, the chart renders in the legacy layout. Array of 1-3 objects, each with `{label, value, delta, trend}`. See schema below. |
 | **`context`** | string | **No** (Option C) | Integrated context sentence rendered inside the chart card, below the chart canvas. Carries the project cross-reference with conditional forward-looking framing. Plain text or limited HTML (`<strong>` allowed for key numbers). Replaces the need for external callout text when Option C is active. |
+
+### Callout Quality Contract — ENFORCED BY VALIDATOR
+
+Every `callout` field at every tier (national top-level, per-province, per-industry) MUST satisfy all five rules. The validator fails the build on any violation.
+
+1. **Length**: 60 ≤ chars ≤ 240. Single substantive sentence or at most a sentence + conditional clause. Not a paragraph.
+2. **Data citation**: MUST include ≥1 specific number/value/date visible on the chart (e.g., "$68.20", "4.6%", "84,000 jobs", "a four-month low"). Rough characterisations like "recently" or "moderately higher" do not satisfy this rule.
+3. **Cross-reference**: MUST reference ≥1 pipeline-tracked artifact — project count ("23 tracked Ontario housing projects"), sector count, policy item, indicator threshold, or dollar value from the database. This is the cross-ref backbone of the publication.
+4. **Banned editorial words** (case-insensitive, word-boundary — validator hard-fails on any match): `welcome`, `concerning`, `worrying`, `promising`, `encouraging`, `unfortunately`, `hopefully`, `bullish`, `bearish`. No predictions. Conditional framing ("If [X], [N] tracked items would [observable outcome]") IS allowed.
+5. **Fail-loud**: If the agent cannot satisfy rules 1–4 for any given chart, it MUST raise an explicit error naming the chart's `dataKeys` and the missing rule. NEVER emit an empty, placeholder, or rule-violating callout to pass the count gate.
+
+**GOOD callout examples:**
+
+```
+"WTI fell to $68.20, a four-month low and 34% below the March peak. The database tracks 63 oil_gas projects with breakeven costs above $65, totalling $8.2B in pipeline value."
+```
+→ 221 chars · cites 3 numbers · cross-ref to 63 projects + $8.2B · zero banned words. PASS.
+
+```
+"US 10Y Treasury yield held at 4.6% through the week. If the spread above Canada's 10Y persists, 14 tracked Ontario housing projects with bond-rate sensitivity would face tighter financing conditions."
+```
+→ 213 chars · cites yield + spread · cross-ref to 14 projects · conditional forward clause, no prediction. PASS.
+
+**BAD callout examples (and which rule they violate):**
+
+```
+"Rates moved lower this week, which is encouraging for housing."
+```
+→ 60 chars · FAIL rule 2 (no specific number) · FAIL rule 3 (no project count) · FAIL rule 4 (banned word "encouraging").
+
+```
+"Analysis available after next pipeline run."
+```
+→ 45 chars · FAIL rule 1 (too short) · FAIL rule 2 · FAIL rule 3 · FAIL rule 5 (placeholder text).
+
+```
+"The bond market is bullish. Yields dropped 15bp on strong auction results, pointing to further declines ahead."
+```
+→ FAIL rule 3 (no cross-ref) · FAIL rule 4 (banned word "bullish") · FAIL rule 4 (prediction "further declines ahead").
+
+### Self-check before emit
+
+Before writing each chart spec to the output, the agent MUST verify for EVERY chart's `callout`:
+
+- [ ] Character count between 60 and 240 (inclusive)
+- [ ] At least one concrete number or data point quoted
+- [ ] At least one pipeline-tracked artifact referenced
+- [ ] No banned editorial word present (search the 9-word list above)
+- [ ] No absolute prediction verb ("will", "expects to", "bound to", "set to")
+- [ ] Conditional forward clause, if present, uses the "If [X], [N] items would [observable]" pattern
+- [ ] Source of every cited number is either the chart's own dataKeys or the pipeline's cross-reference engine — no fabrication
+
+If any box is unchecked for any chart, the agent MUST raise a loud error and halt rather than emit partial output.
 
 ### Option C (editorial) layout — the DEFAULT
 
