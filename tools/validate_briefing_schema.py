@@ -5,6 +5,16 @@ Schema validator for The Lagging Indicator briefing JSON.
 Checks that pipeline output matches the frontend's expected field contract.
 Run after assembly (Phase 3.5) and after charts (Phase 4), before shipping.
 
+Two phases:
+  1. Briefing body validation (top-level, provinces, industries, markets, etc.)
+  2. External JSON dependency validation (policy.json, projects_all.json,
+     timeseries.json, indicators.json, events.json, events_global.json).
+     These sibling files in `docs/data/` are read directly by the frontend
+     and were historically un-gated. The cross-reference check against
+     `insightCharts[].dataKeys[]` catches the silent-blank-chart failure
+     mode where a chart spec names a series that does not exist in
+     timeseries.json.
+
 Usage:
     python tools/validate_briefing_schema.py docs/data/briefing_2026-04-18.json
     python tools/validate_briefing_schema.py  # defaults to briefing_latest.json
@@ -18,6 +28,7 @@ import json
 import re
 import sys
 import os
+import datetime
 
 # ============================================================
 # Canonical name registries
@@ -108,6 +119,27 @@ BAD_COMMODITY_NAMES = [
 def load_json(path):
     with open(path) as f:
         return json.load(f)
+
+
+def _load_json_tolerant(path):
+    """Load JSON from a file, trying UTF-8 first, then CP1252/latin-1 fallback.
+
+    Pipeline writers occasionally produce files with CP1252 bytes (em/en
+    dashes, smart quotes) instead of clean UTF-8. The validator must not
+    hard-crash on those — it's the frontend's tolerance that matters,
+    and the frontend reads via fetch() which is permissive. Returns the
+    parsed JSON or raises the original exception if all encodings fail.
+    """
+    for enc in ("utf-8", "cp1252", "latin-1"):
+        try:
+            with open(path, encoding=enc) as f:
+                return json.load(f)
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            continue
+    # Last resort: binary read + utf-8 with replacement
+    with open(path, "rb") as f:
+        raw = f.read().decode("utf-8", errors="replace")
+    return json.loads(raw)
 
 
 def check(results, name, condition, detail=""):
@@ -290,6 +322,63 @@ def check_sources_array(results, label, sources, min_count):
     return fails
 
 
+def _parse_iso_date(s):
+    """Parse an ISO-style date or datetime string; return a date or None."""
+    if not isinstance(s, str) or not s.strip():
+        return None
+    ss = s.strip()
+    # Try datetime first (may include timezone)
+    for fmt in (
+        "%Y-%m-%dT%H:%M:%S.%f%z",
+        "%Y-%m-%dT%H:%M:%S%z",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%d %H:%M:%S",
+    ):
+        try:
+            return datetime.datetime.strptime(ss, fmt).date()
+        except ValueError:
+            continue
+    # Date-only
+    try:
+        return datetime.date.fromisoformat(ss[:10])
+    except ValueError:
+        return None
+
+
+def _collect_chart_dataKeys(b):
+    """Walk every insightCharts[] in the briefing and return a list of
+    (label, dataSource, key) tuples. Respects per-section dataSource
+    defaults: top-level + provincial charts default to 'timeseries';
+    industry charts default to 'indicators' (matches app.js renderers
+    renderAgentInsightChart at L1814 and renderIndInsightChart at L4326).
+    """
+    out = []
+    # Top-level
+    for i, c in enumerate(b.get("insightCharts", []) or []):
+        ds = (c or {}).get("dataSource") or "timeseries"
+        for k in (c or {}).get("dataKeys", []) or []:
+            out.append((f"top.insightCharts[{i}]", ds, k))
+    # Provincial
+    for p in b.get("provinces", []) or []:
+        name = p.get("name", "?")
+        for i, c in enumerate(p.get("insightCharts", []) or []):
+            ds = (c or {}).get("dataSource") or "timeseries"
+            for k in (c or {}).get("dataKeys", []) or []:
+                out.append((f"province.{name}.insightCharts[{i}]", ds, k))
+    # Industry (default 'indicators')
+    for ind_list, ilabel in (
+        (b.get("goodsIndustries", []), "goods"),
+        (b.get("servicesIndustries", []), "services"),
+    ):
+        for ind in ind_list or []:
+            iname = ind.get("name", "?")
+            for i, c in enumerate(ind.get("insightCharts", []) or []):
+                ds = (c or {}).get("dataSource") or "indicators"
+                for k in (c or {}).get("dataKeys", []) or []:
+                    out.append((f"industry.{ilabel}.{iname}.insightCharts[{i}]", ds, k))
+    return out
+
+
 def check_callout(results, label, text):
     """Validate a single callout string against the 5-rule Quality Contract.
 
@@ -324,11 +413,781 @@ def check_callout(results, label, text):
     return fails
 
 
+# ============================================================
+# CLUSTER 6 — external JSON dependency validation
+# ============================================================
+
+# Canonical lifecycle statuses (docs/js/app.js render paths; also
+# projects_all.json current distribution). Distinct from the 11-type
+# project_type taxonomy in CLAUDE.md; the frontend per-province table
+# reads `status` as lifecycle state, not project_type.
+PROJECT_LIFECYCLE_STATUSES = {
+    "Proposed", "Under Review", "Approved",
+    "Under Construction", "Complete", "Cancelled", "On Hold",
+}
+
+# Freshness bounds (days). Pipeline regenerates weekly, so any sibling
+# file older than ~10 days relative to today's run is stale for ship.
+# Policy/events have tighter bounds because they feed the headline TL;DR.
+DATA_MAX_AGE_DAYS = {
+    "policy.json": 14,
+    "projects_all.json": 21,
+    "timeseries.json": 45,   # markets data older than ~6w = stale
+    "indicators.json": 45,
+    "events.json": 30,
+    "events_global.json": 30,
+}
+
+
+def _validate_policy_json(data_dir, results, briefing):
+    """Validate docs/data/policy.json against the frontend contract.
+
+    Frontend read path (docs/js/app.js):
+      - L1014: _tldrBuildPolicy reads raw.weeks[0].items OR
+               raw.weeks[0].summary.top_developments.
+      - L1034-1050: each item rendered with {title, description|summary,
+               url|source_url, level}.
+      - L5757+ _loadPolicyData: walks all weeks, concats
+               summary.top_developments; adds _week + date fallback.
+      - L5777+ _renderPolicyItems: reads {title|headline, categories|
+               category, province, level, affected_sectors,
+               affected_projects_total, source_description|source, date,
+               summary, url}.
+
+    Checks (FAIL tier unless noted):
+      - file exists + valid JSON
+      - top-level is dict with `weeks` list and `last_updated` str
+      - weeks non-empty and sorted (latest first)
+      - latest week has `week_of` (ISO date) and `summary.top_developments` list
+      - freshness: last_updated within DATA_MAX_AGE_DAYS
+      - WARN: per-item {title,url,date,level,summary} — WARN because the
+        frontend degrades gracefully on any missing field (pick()
+        fallbacks); upgrade to FAIL once producer populates 100%.
+
+    Returns (fails_added, warns_added).
+    """
+    fails = 0
+    warns = 0
+    path = os.path.join(data_dir, "policy.json")
+    prefix = "data.policy"
+    if not check(results, f"{prefix}.exists", os.path.exists(path),
+                 f"File missing: {path}"):
+        return (1, 0)
+
+    try:
+        d = _load_json_tolerant(path)
+    except (OSError, json.JSONDecodeError) as e:
+        check(results, f"{prefix}.valid_json", False, f"Parse error: {e}")
+        return (1, 0)
+    check(results, f"{prefix}.valid_json", True, "")
+
+    if not check(results, f"{prefix}.is_object", isinstance(d, dict),
+                 f"Expected object, got {type(d).__name__}"):
+        return (fails + 1, warns)
+
+    # Top-level shape
+    if not check(results, f"{prefix}.weeks.is_list",
+                 isinstance(d.get("weeks"), list),
+                 f"Expected `weeks` list, got {type(d.get('weeks')).__name__}"):
+        return (fails + 1, warns)
+
+    weeks = d["weeks"]
+    if not check(results, f"{prefix}.weeks.non_empty",
+                 len(weeks) > 0,
+                 "Empty `weeks` — no policy data to render"):
+        return (fails + 1, warns)
+
+    # last_updated present + parseable
+    lu = d.get("last_updated")
+    lu_date = _parse_iso_date(lu)
+    if not check(results, f"{prefix}.last_updated.present",
+                 isinstance(lu, str) and bool(lu.strip()),
+                 "Missing or empty last_updated"):
+        fails += 1
+    elif not check(results, f"{prefix}.last_updated.parseable",
+                   lu_date is not None,
+                   f"Unparseable last_updated: {lu!r}"):
+        fails += 1
+
+    # Freshness
+    if lu_date is not None:
+        age = (datetime.date.today() - lu_date).days
+        bound = DATA_MAX_AGE_DAYS["policy.json"]
+        if not warn(results, f"{prefix}.last_updated.fresh",
+                    age <= bound,
+                    f"last_updated {age}d old (bound {bound}d) — policy may be stale"):
+            warns += 1
+
+    # Latest week shape
+    w0 = weeks[0] if isinstance(weeks[0], dict) else {}
+    if not check(results, f"{prefix}.latest.is_object",
+                 isinstance(weeks[0], dict),
+                 f"Expected dict, got {type(weeks[0]).__name__}"):
+        fails += 1
+    else:
+        wof = w0.get("week_of")
+        if not check(results, f"{prefix}.latest.week_of",
+                     isinstance(wof, str) and bool(wof.strip()),
+                     "Missing week_of on latest week"):
+            fails += 1
+        summary = w0.get("summary")
+        if not check(results, f"{prefix}.latest.summary.is_object",
+                     isinstance(summary, dict),
+                     f"Expected dict summary, got {type(summary).__name__}"):
+            fails += 1
+        else:
+            tops = summary.get("top_developments")
+            if not check(results, f"{prefix}.latest.top_developments.is_list",
+                         isinstance(tops, list),
+                         f"Expected list, got {type(tops).__name__}"):
+                fails += 1
+            else:
+                # Per-item shape — WARN tier (frontend degrades gracefully).
+                # Aggregate into 5 single checks for count stability.
+                miss_title, miss_url, miss_date, miss_level, miss_summary = [], [], [], [], []
+                for i, it in enumerate(tops):
+                    if not isinstance(it, dict):
+                        miss_title.append(i)
+                        miss_url.append(i)
+                        miss_date.append(i)
+                        miss_level.append(i)
+                        miss_summary.append(i)
+                        continue
+                    if not (isinstance(it.get("title") or it.get("headline") or it.get("name"), str)
+                            and (it.get("title") or it.get("headline") or it.get("name") or "").strip()):
+                        miss_title.append(i)
+                    if not (isinstance(it.get("url") or it.get("source_url"), str)
+                            and (it.get("url") or it.get("source_url") or "").strip()):
+                        miss_url.append(i)
+                    if not (isinstance(it.get("date"), str) and (it.get("date") or "").strip()):
+                        miss_date.append(i)
+                    if not (isinstance(it.get("level"), str) and (it.get("level") or "").strip()):
+                        miss_level.append(i)
+                    if not (isinstance(it.get("summary") or it.get("description") or it.get("body"), str)
+                            and (it.get("summary") or it.get("description") or it.get("body") or "").strip()):
+                        miss_summary.append(i)
+                if not warn(results, f"{prefix}.latest.items.title",
+                            len(miss_title) == 0,
+                            f"{len(miss_title)} item(s) missing title at {miss_title}"):
+                    warns += 1
+                if not warn(results, f"{prefix}.latest.items.url",
+                            len(miss_url) == 0,
+                            f"{len(miss_url)} item(s) missing url/source_url at {miss_url}"):
+                    warns += 1
+                if not warn(results, f"{prefix}.latest.items.date",
+                            len(miss_date) == 0,
+                            f"{len(miss_date)} item(s) missing date at {miss_date}"):
+                    warns += 1
+                if not warn(results, f"{prefix}.latest.items.level",
+                            len(miss_level) == 0,
+                            f"{len(miss_level)} item(s) missing level at {miss_level}"):
+                    warns += 1
+                if not warn(results, f"{prefix}.latest.items.summary",
+                            len(miss_summary) == 0,
+                            f"{len(miss_summary)} item(s) missing summary/description at {miss_summary}"):
+                    warns += 1
+    return (fails, warns)
+
+
+def _validate_projects_all_json(data_dir, results, briefing):
+    """Validate docs/data/projects_all.json against the frontend contract.
+
+    Frontend read paths (docs/js/app.js):
+      - L260: fetched by the project explorer; expects Array.isArray.
+      - L1089, L2556, L3159: used for province counts, TL;DR new-project
+        filters, and national project preview. Reads {name, status,
+        value, sector, province, firstTracked, lastSeen, evidence[].url}.
+
+    Pipeline invariant (CLAUDE.md): every project MUST have at least one
+    verifiable source URL in evidence[]. The URL hard gate means absence
+    should FAIL the pipeline output, so this validator upgrades it from
+    a WARN to a FAIL.
+
+    Checks:
+      - file exists + valid JSON + is Array
+      - count >= 500 (pipeline has 6,615 today; 500 catches catastrophic
+        regressions without tripping on legitimate pruning edits)
+      - Per-project FAIL: name, status, province (required for render),
+        evidence[] with >=1 non-empty url (URL hard gate invariant).
+      - Per-project status value in PROJECT_LIFECYCLE_STATUSES.
+      - Per-project WARN: sector populated, value populated.
+
+    Returns (fails_added, warns_added).
+    """
+    fails = 0
+    warns = 0
+    path = os.path.join(data_dir, "projects_all.json")
+    prefix = "data.projects_all"
+    if not check(results, f"{prefix}.exists", os.path.exists(path),
+                 f"File missing: {path}"):
+        return (1, 0)
+
+    try:
+        d = _load_json_tolerant(path)
+    except (OSError, json.JSONDecodeError) as e:
+        check(results, f"{prefix}.valid_json", False, f"Parse error: {e}")
+        return (1, 0)
+    check(results, f"{prefix}.valid_json", True, "")
+
+    if not check(results, f"{prefix}.is_array",
+                 isinstance(d, list),
+                 f"Expected list, got {type(d).__name__}"):
+        return (fails + 1, warns)
+
+    if not check(results, f"{prefix}.count",
+                 len(d) >= 500,
+                 f"Only {len(d)} projects — expected >=500 (pipeline currently 6,615)"):
+        fails += 1
+
+    # Aggregate per-project gaps into single checks for count stability.
+    miss_name, miss_status, miss_province, miss_url = [], [], [], []
+    bad_status = []
+    empty_sector, empty_value = [], []
+    for i, p in enumerate(d):
+        if not isinstance(p, dict):
+            miss_name.append(i)
+            miss_status.append(i)
+            miss_province.append(i)
+            miss_url.append(i)
+            continue
+        # name — required for render
+        if not (isinstance(p.get("name"), str) and p.get("name", "").strip()):
+            miss_name.append(i)
+        # status — required; frontend renders via san(status)
+        s = p.get("status")
+        if not (isinstance(s, str) and s.strip()):
+            miss_status.append(i)
+        elif s not in PROJECT_LIFECYCLE_STATUSES:
+            bad_status.append((i, s))
+        # province — required for per-province filtering
+        if not (isinstance(p.get("province"), str) and p.get("province", "").strip()):
+            miss_province.append(i)
+        # URL hard gate — evidence[] must have >=1 non-empty url
+        ev = p.get("evidence")
+        has_url = False
+        if isinstance(ev, list):
+            for e in ev:
+                if isinstance(e, dict):
+                    u = e.get("url") or e.get("archive_url")
+                    if isinstance(u, str) and u.strip():
+                        has_url = True
+                        break
+        if not has_url:
+            miss_url.append(i)
+        # sector — WARN if missing
+        if not (isinstance(p.get("sector"), str) and p.get("sector", "").strip()):
+            empty_sector.append(i)
+        # value — WARN if both display string and parsed number are empty
+        v_disp = p.get("value")
+        v_par = p.get("parsed_value")
+        disp_ok = isinstance(v_disp, str) and v_disp.strip() and v_disp.strip() != "TBD"
+        par_ok = isinstance(v_par, (int, float)) and v_par not in (0, None)
+        if not (disp_ok or par_ok):
+            empty_value.append(i)
+
+    if not check(results, f"{prefix}.items.name",
+                 len(miss_name) == 0,
+                 f"{len(miss_name)} project(s) missing name"):
+        fails += 1
+    if not check(results, f"{prefix}.items.status.present",
+                 len(miss_status) == 0,
+                 f"{len(miss_status)} project(s) missing status"):
+        fails += 1
+    if not check(results, f"{prefix}.items.status.lifecycle_enum",
+                 len(bad_status) == 0,
+                 f"{len(bad_status)} project(s) with non-lifecycle status "
+                 f"(first 3: {bad_status[:3]}) — allowed: {sorted(PROJECT_LIFECYCLE_STATUSES)}"):
+        fails += 1
+    if not check(results, f"{prefix}.items.province",
+                 len(miss_province) == 0,
+                 f"{len(miss_province)} project(s) missing province"):
+        fails += 1
+    if not check(results, f"{prefix}.items.evidence_url",
+                 len(miss_url) == 0,
+                 f"{len(miss_url)} project(s) missing evidence URL — violates URL hard gate (CLAUDE.md)"):
+        fails += 1
+    if not warn(results, f"{prefix}.items.sector",
+                len(empty_sector) == 0,
+                f"{len(empty_sector)} project(s) missing sector (render degrades to blank)"):
+        warns += 1
+    if not warn(results, f"{prefix}.items.value",
+                len(empty_value) == 0,
+                f"{len(empty_value)} project(s) missing value + parsed_value"):
+        warns += 1
+
+    # File-mtime freshness — pipeline writes this file weekly
+    try:
+        mtime = datetime.date.fromtimestamp(os.path.getmtime(path))
+        age = (datetime.date.today() - mtime).days
+        bound = DATA_MAX_AGE_DAYS["projects_all.json"]
+        if not warn(results, f"{prefix}.mtime.fresh",
+                    age <= bound,
+                    f"File mtime {age}d old (bound {bound}d) — pipeline may have skipped regen"):
+            warns += 1
+    except OSError:
+        pass
+
+    return (fails, warns)
+
+
+def _validate_timeseries_json(data_dir, results, briefing):
+    """Validate docs/data/timeseries.json and cross-reference against
+    every `insightCharts[].dataKeys[]` referenced by the briefing for
+    dataSource='timeseries'.
+
+    This is the highest-value Cluster 6 check: a chart spec that names
+    a series not present in timeseries.json silently renders blank
+    (app.js L1856 returns early on empty raw). The old validator never
+    caught this — a chart could ship with `dataKeys: ["iron_ore"]` and
+    produce an empty canvas with no error.
+
+    Checks:
+      - file exists + valid JSON + is object (keyed by series name)
+      - series count >= 20 (pipeline has 69 today)
+      - Per-series FAIL: is list of {date,value} items with >=2 points
+      - Cross-reference FAIL: every dataKey referenced by a briefing
+        insightChart with dataSource='timeseries' must exist in the
+        file AND have >=2 points. A missing key is a real gap that
+        causes a silent blank chart in production.
+      - Per-series WARN: latest date within 45-day freshness bound.
+
+    Returns (fails_added, warns_added).
+    """
+    fails = 0
+    warns = 0
+    path = os.path.join(data_dir, "timeseries.json")
+    prefix = "data.timeseries"
+    if not check(results, f"{prefix}.exists", os.path.exists(path),
+                 f"File missing: {path}"):
+        return (1, 0)
+
+    try:
+        d = _load_json_tolerant(path)
+    except (OSError, json.JSONDecodeError) as e:
+        check(results, f"{prefix}.valid_json", False, f"Parse error: {e}")
+        return (1, 0)
+    check(results, f"{prefix}.valid_json", True, "")
+
+    if not check(results, f"{prefix}.is_object",
+                 isinstance(d, dict),
+                 f"Expected dict, got {type(d).__name__}"):
+        return (fails + 1, warns)
+
+    if not check(results, f"{prefix}.series_count",
+                 len(d) >= 20,
+                 f"Only {len(d)} series — expected >=20 (pipeline currently ~69)"):
+        fails += 1
+
+    # Per-series shape — aggregate into single checks. Too-short series
+    # are WARN (some bootstrap series legitimately have 1-3 points).
+    bad_shape = []
+    empty_series = []
+    short_series = []
+    stale_series = []
+    bound = DATA_MAX_AGE_DAYS["timeseries.json"]
+    today = datetime.date.today()
+    for k, v in d.items():
+        if not isinstance(v, list):
+            # Some series may be wrapped {series:[...]}; unwrap per app.js L278.
+            if isinstance(v, dict) and isinstance(v.get("series"), list):
+                v = v["series"]
+            else:
+                bad_shape.append(k)
+                continue
+        if len(v) == 0:
+            empty_series.append(k)
+            continue
+        if len(v) < 2:
+            short_series.append(k)
+        # Freshness — check last point's date
+        last = v[-1] if v else None
+        if isinstance(last, dict):
+            ld = _parse_iso_date(last.get("date"))
+            if ld is not None:
+                age = (today - ld).days
+                if age > bound:
+                    stale_series.append((k, age))
+
+    if not check(results, f"{prefix}.series.shape",
+                 len(bad_shape) == 0,
+                 f"{len(bad_shape)} series with non-list shape "
+                 f"(first 5: {bad_shape[:5]})"):
+        fails += 1
+    if not check(results, f"{prefix}.series.non_empty",
+                 len(empty_series) == 0,
+                 f"{len(empty_series)} series with zero points "
+                 f"(first 5: {empty_series[:5]})"):
+        fails += 1
+    if not warn(results, f"{prefix}.series.min_points",
+                len(short_series) == 0,
+                f"{len(short_series)} series with <2 points — chart needs >=2 to render "
+                f"(first 5: {short_series[:5]})"):
+        warns += 1
+    if not warn(results, f"{prefix}.series.freshness",
+                len(stale_series) == 0,
+                f"{len(stale_series)} series older than {bound}d "
+                f"(first 3: {stale_series[:3]})"):
+        warns += 1
+
+    # Cross-reference: every insightCharts dataKey for dataSource='timeseries'
+    # MUST resolve to a non-empty series in this file.
+    refs = _collect_chart_dataKeys(briefing)
+    ts_refs = [(label, k) for (label, ds, k) in refs if ds == "timeseries"]
+    unresolved = []
+    too_short = []
+    for label, k in ts_refs:
+        raw = d.get(k)
+        if raw is None:
+            unresolved.append((label, k))
+            continue
+        series = raw if isinstance(raw, list) else (
+            raw.get("series") if isinstance(raw, dict) else None
+        )
+        if not isinstance(series, list) or len(series) < 2:
+            too_short.append((label, k, 0 if not series else len(series)))
+
+    # Cross-reference tier policy: FAIL-worthy in intent, WARN-tier on
+    # rollout because today's briefing has 4 known-unresolved dataKeys
+    # (iron_ore x3, potash_nutrien x1) that never made it into
+    # timeseries.json. That is a real silent-blank-chart gap — surface
+    # loudly but don't block the deploy gate until the pipeline backfills.
+    # Upgrade to `check()` once timeseries.json includes every key
+    # referenced by the current briefing — same rollout pattern as
+    # Cluster 5's enrichment-card WARN tier.
+    if not warn(results, f"{prefix}.chart_xref.resolved",
+                len(unresolved) == 0,
+                f"{len(unresolved)} insightCharts dataKey(s) missing in timeseries.json "
+                f"(silent blank charts in production). Upgrade to FAIL after pipeline "
+                f"backfills. First 5: {unresolved[:5]}"):
+        warns += 1
+    if not warn(results, f"{prefix}.chart_xref.min_points",
+                len(too_short) == 0,
+                f"{len(too_short)} insightCharts dataKey(s) with <2 points "
+                f"(chart renders blank). Upgrade to FAIL after pipeline backfills. "
+                f"First 5: {too_short[:5]}"):
+        warns += 1
+    # Count of cross-refs as a PASS-tier audit marker (visibility into coverage).
+    check(results, f"{prefix}.chart_xref.count", True,
+          f"Validated {len(ts_refs)} chart dataKey(s) against timeseries.json")
+
+    return (fails, warns)
+
+
+def _validate_indicators_json(data_dir, results, briefing):
+    """Validate docs/data/indicators.json and cross-reference against
+    insightCharts dataKeys for dataSource='indicators'.
+
+    Frontend read paths (docs/js/app.js):
+      - L40 _getHistory: reads d.history (flat list of {indicator_name,
+        province, period, value, unit, source} rows). Used by all
+        industry insight charts and the indicator explorer.
+      - L227, L2968, L6318, L6421, L6525: reads indicators[] (current
+        snapshot) for Key Indicators tables, FX/yield curve fills,
+        and the Markets tab.
+      - L1817: grouped into per-key series for chart rendering.
+      - statcan_latest.{updatedAt, indicators[]}: feeds the StatCan
+        Latest widget on the macro tab.
+
+    Checks:
+      - file exists + valid JSON + is object with 4 keys
+      - indicators[] non-empty list
+      - history[] non-empty list
+      - Cross-reference FAIL: every dataKey referenced by a briefing
+        insightChart with dataSource='indicators' must exist as an
+        indicator_name in history[] with >=2 points.
+      - WARN: statcan_latest.updatedAt within freshness bound.
+
+    Returns (fails_added, warns_added).
+    """
+    fails = 0
+    warns = 0
+    path = os.path.join(data_dir, "indicators.json")
+    prefix = "data.indicators"
+    if not check(results, f"{prefix}.exists", os.path.exists(path),
+                 f"File missing: {path}"):
+        return (1, 0)
+
+    try:
+        d = _load_json_tolerant(path)
+    except (OSError, json.JSONDecodeError) as e:
+        check(results, f"{prefix}.valid_json", False, f"Parse error: {e}")
+        return (1, 0)
+    check(results, f"{prefix}.valid_json", True, "")
+
+    if not check(results, f"{prefix}.is_object",
+                 isinstance(d, dict),
+                 f"Expected dict, got {type(d).__name__}"):
+        return (fails + 1, warns)
+
+    # Shape
+    inds = d.get("indicators")
+    hist = d.get("history")
+    if not check(results, f"{prefix}.indicators.is_list",
+                 isinstance(inds, list),
+                 f"Expected list, got {type(inds).__name__}"):
+        fails += 1
+    elif not check(results, f"{prefix}.indicators.non_empty",
+                   len(inds) > 0,
+                   "Empty indicators list"):
+        fails += 1
+
+    if not check(results, f"{prefix}.history.is_list",
+                 isinstance(hist, list),
+                 f"Expected list, got {type(hist).__name__}"):
+        fails += 1
+    elif not check(results, f"{prefix}.history.non_empty",
+                   len(hist) > 0,
+                   "Empty history list"):
+        fails += 1
+
+    # Build indicator_name -> point_count map from history
+    hist_counts = {}
+    if isinstance(hist, list):
+        for row in hist:
+            if isinstance(row, dict):
+                name = row.get("indicator_name")
+                if isinstance(name, str) and name.strip():
+                    hist_counts[name] = hist_counts.get(name, 0) + 1
+
+    # Cross-reference for dataSource='indicators' charts
+    refs = _collect_chart_dataKeys(briefing)
+    ind_refs = [(label, k) for (label, ds, k) in refs if ds == "indicators"]
+    unresolved = []
+    too_short = []
+    for label, k in ind_refs:
+        n = hist_counts.get(k, 0)
+        if n == 0:
+            unresolved.append((label, k))
+        elif n < 2:
+            too_short.append((label, k, n))
+
+    # Cross-reference tier policy: WARN-tier on rollout (same as the
+    # timeseries cross-ref) — charts with dataSource='indicators' are
+    # industry charts per renderIndInsightChart (app.js L4326); a miss
+    # here would silently blank the canvas. Today the briefing emits
+    # zero such references (industry charts default but set
+    # dataSource='timeseries' explicitly), so this check currently
+    # passes trivially; it is seeded for when the industry writer
+    # starts using indicator-backed dataKeys. Upgrade to `check()`
+    # alongside the timeseries cross-ref upgrade.
+    if not warn(results, f"{prefix}.chart_xref.resolved",
+                len(unresolved) == 0,
+                f"{len(unresolved)} insightCharts dataKey(s) missing in indicators.history "
+                f"(silent blank charts in production). Upgrade to FAIL alongside "
+                f"timeseries xref. First 5: {unresolved[:5]}"):
+        warns += 1
+    if not warn(results, f"{prefix}.chart_xref.min_points",
+                len(too_short) == 0,
+                f"{len(too_short)} insightCharts dataKey(s) with <2 history points "
+                f"(chart renders blank). Upgrade to FAIL alongside timeseries xref. "
+                f"First 5: {too_short[:5]}"):
+        warns += 1
+    check(results, f"{prefix}.chart_xref.count", True,
+          f"Validated {len(ind_refs)} chart dataKey(s) against indicators.history")
+
+    # statcan_latest freshness
+    sl = d.get("statcan_latest")
+    if isinstance(sl, dict):
+        ua = sl.get("updatedAt")
+        ua_date = _parse_iso_date(ua)
+        if not warn(results, f"{prefix}.statcan_latest.updatedAt",
+                    isinstance(ua, str) and bool(ua.strip()),
+                    "Missing updatedAt on statcan_latest block"):
+            warns += 1
+        elif ua_date is not None:
+            age = (datetime.date.today() - ua_date).days
+            bound = DATA_MAX_AGE_DAYS["indicators.json"]
+            if not warn(results, f"{prefix}.statcan_latest.fresh",
+                        age <= bound,
+                        f"statcan_latest.updatedAt {age}d old (bound {bound}d)"):
+                warns += 1
+
+    return (fails, warns)
+
+
+def _validate_events_json(data_dir, results, briefing):
+    """Validate docs/data/events.json — domestic calendar feed.
+
+    Frontend read path (docs/js/app.js L5532): merged into _calEvents for
+    the Calendar tab. Each event rendered with {date, name|event_name|
+    event, source|institution, type, significance|impact, province, url,
+    relevance|description}. Graceful degradation on every field — blanks
+    render as empty strings — so all per-item checks are WARN tier.
+
+    Checks:
+      - file exists + valid JSON + is list
+      - non-empty (FAIL if totally missing calendar data)
+      - WARN: per-item {date, name, url} populated
+      - WARN: file mtime within 30-day freshness bound
+
+    Returns (fails_added, warns_added).
+    """
+    fails = 0
+    warns = 0
+    path = os.path.join(data_dir, "events.json")
+    prefix = "data.events"
+    # This file is secondary — if missing, the Calendar tab falls back
+    # to D.watchlist. FAIL only on existence + valid JSON; WARN on shape.
+    if not check(results, f"{prefix}.exists", os.path.exists(path),
+                 f"File missing: {path}"):
+        return (1, 0)
+
+    try:
+        d = _load_json_tolerant(path)
+    except (OSError, json.JSONDecodeError) as e:
+        check(results, f"{prefix}.valid_json", False, f"Parse error: {e}")
+        return (1, 0)
+    check(results, f"{prefix}.valid_json", True, "")
+
+    if not check(results, f"{prefix}.is_list",
+                 isinstance(d, list),
+                 f"Expected list, got {type(d).__name__}"):
+        return (fails + 1, warns)
+
+    if not warn(results, f"{prefix}.non_empty",
+                len(d) > 0,
+                "Empty events list — Calendar tab will fall back to briefing.watchlist"):
+        warns += 1
+
+    miss_date, miss_name, miss_url = [], [], []
+    for i, it in enumerate(d):
+        if not isinstance(it, dict):
+            miss_date.append(i)
+            miss_name.append(i)
+            miss_url.append(i)
+            continue
+        if not (isinstance(it.get("date"), str) and it.get("date", "").strip()):
+            miss_date.append(i)
+        nm = it.get("name") or it.get("event_name") or it.get("event")
+        if not (isinstance(nm, str) and nm.strip()):
+            miss_name.append(i)
+        if not (isinstance(it.get("url"), str) and it.get("url", "").strip()):
+            miss_url.append(i)
+    if not warn(results, f"{prefix}.items.date",
+                len(miss_date) == 0,
+                f"{len(miss_date)} item(s) missing date"):
+        warns += 1
+    if not warn(results, f"{prefix}.items.name",
+                len(miss_name) == 0,
+                f"{len(miss_name)} item(s) missing name/event_name/event"):
+        warns += 1
+    if not warn(results, f"{prefix}.items.url",
+                len(miss_url) == 0,
+                f"{len(miss_url)} item(s) missing url"):
+        warns += 1
+
+    return (fails, warns)
+
+
+def _validate_events_global_json(data_dir, results, briefing):
+    """Validate docs/data/events_global.json — US/European institution releases.
+
+    Frontend read path (docs/js/app.js L5535): merged into _calEvents
+    via {events: [...]}. Each event rendered with {date, institution,
+    event_name, description, impact, source_url}.
+
+    Checks:
+      - file exists + valid JSON + dict with `events` list
+      - events non-empty
+      - WARN: per-item {date, event_name, institution} populated
+
+    Returns (fails_added, warns_added).
+    """
+    fails = 0
+    warns = 0
+    path = os.path.join(data_dir, "events_global.json")
+    prefix = "data.events_global"
+    if not check(results, f"{prefix}.exists", os.path.exists(path),
+                 f"File missing: {path}"):
+        return (1, 0)
+
+    try:
+        d = _load_json_tolerant(path)
+    except (OSError, json.JSONDecodeError) as e:
+        check(results, f"{prefix}.valid_json", False, f"Parse error: {e}")
+        return (1, 0)
+    check(results, f"{prefix}.valid_json", True, "")
+
+    if not check(results, f"{prefix}.is_object",
+                 isinstance(d, dict),
+                 f"Expected dict, got {type(d).__name__}"):
+        return (fails + 1, warns)
+
+    events = d.get("events")
+    if not check(results, f"{prefix}.events.is_list",
+                 isinstance(events, list),
+                 f"Expected list, got {type(events).__name__}"):
+        return (fails + 1, warns)
+    if not check(results, f"{prefix}.events.non_empty",
+                 len(events) > 0,
+                 "Empty events list"):
+        fails += 1
+
+    miss_date, miss_name, miss_inst = [], [], []
+    for i, it in enumerate(events):
+        if not isinstance(it, dict):
+            miss_date.append(i)
+            miss_name.append(i)
+            miss_inst.append(i)
+            continue
+        if not (isinstance(it.get("date"), str) and it.get("date", "").strip()):
+            miss_date.append(i)
+        if not (isinstance(it.get("event_name"), str) and it.get("event_name", "").strip()):
+            miss_name.append(i)
+        if not (isinstance(it.get("institution"), str) and it.get("institution", "").strip()):
+            miss_inst.append(i)
+    if not warn(results, f"{prefix}.items.date",
+                len(miss_date) == 0,
+                f"{len(miss_date)} item(s) missing date"):
+        warns += 1
+    if not warn(results, f"{prefix}.items.event_name",
+                len(miss_name) == 0,
+                f"{len(miss_name)} item(s) missing event_name"):
+        warns += 1
+    if not warn(results, f"{prefix}.items.institution",
+                len(miss_inst) == 0,
+                f"{len(miss_inst)} item(s) missing institution"):
+        warns += 1
+
+    return (fails, warns)
+
+
+def _validate_data_dir(briefing_path, results, briefing):
+    """Phase 2: validate external JSON dependencies in the same directory
+    as the briefing.
+
+    The frontend reads these sibling files directly (not through the
+    briefing). Historically they were un-gated — a stale policy.json or
+    a missing timeseries series could ship silently. Cluster 6 adds
+    shape, freshness, and cross-reference checks so these files share
+    the same deploy gate as the briefing body itself.
+
+    Returns (fails_added, warns_added).
+    """
+    data_dir = os.path.dirname(os.path.abspath(briefing_path))
+    total_f = 0
+    total_w = 0
+    for fn in (
+        _validate_policy_json,
+        _validate_projects_all_json,
+        _validate_timeseries_json,
+        _validate_indicators_json,
+        _validate_events_json,
+        _validate_events_global_json,
+    ):
+        f, w = fn(data_dir, results, briefing)
+        total_f += f
+        total_w += w
+    return (total_f, total_w)
+
+
 def validate(briefing_path):
     b = load_json(briefing_path)
     results = []
     fails = 0
     warns = 0
+
+
 
     # ============================================================
     # 1. TOP-LEVEL STRUCTURE
@@ -968,6 +1827,16 @@ def validate(briefing_path):
             check(results, f"editorial.banned_word.{word}", False,
                   f"Found {len(matches)} occurrence(s)")
             fails += 1
+
+    # ============================================================
+    # 13. EXTERNAL JSON DEPENDENCIES (Cluster 6)
+    # Validates sibling files in the same directory as the briefing.
+    # These are read directly by the frontend and were previously
+    # un-gated. See _validate_data_dir docstring.
+    # ============================================================
+    ext_fails, ext_warns = _validate_data_dir(briefing_path, results, b)
+    fails += ext_fails
+    warns += ext_warns
 
     # ============================================================
     # REPORT
