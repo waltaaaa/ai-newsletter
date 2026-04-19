@@ -103,6 +103,48 @@ def warn(results, name, condition, detail=""):
     return condition
 
 
+# Callout quality subset — validator hard-fails on any match (enforces editorial policy
+# at the chart level, where casual editorializing is most likely to slip in).
+CALLOUT_BANNED_WORDS = [
+    "welcome", "concerning", "worrying", "promising", "encouraging",
+    "unfortunately", "hopefully", "bullish", "bearish",
+]
+
+
+def check_callout(results, label, text):
+    """Validate a single callout string against the 5-rule Quality Contract.
+
+    Returns the number of FAILs added (0 = all checks passed).
+    """
+    fails = 0
+    if text is None or not isinstance(text, str) or not text.strip():
+        check(results, f"callout.{label}.present", False, "Missing or empty")
+        return 1
+    n = len(text)
+    if not check(results, f"callout.{label}.length",
+                 60 <= n <= 240,
+                 f"Length {n} not in [60, 240]"):
+        fails += 1
+    if not check(results, f"callout.{label}.cites_number",
+                 bool(re.search(r"[-+]?\d", text)),
+                 "No numeric data point cited"):
+        fails += 1
+    crossref_patterns = [
+        r"\btracked\b", r"\btracks\b", r"\bpipeline\b", r"\bdatabase\b",
+        r"\b\d+\s+projects?\b", r"\$\s*[\d.,]+\s*[BM]\b",
+    ]
+    if not check(results, f"callout.{label}.cross_reference",
+                 any(re.search(p, text, re.IGNORECASE) for p in crossref_patterns),
+                 "No pipeline-tracked artifact referenced"):
+        fails += 1
+    for word in CALLOUT_BANNED_WORDS:
+        if re.search(r"\b" + re.escape(word) + r"\b", text, re.IGNORECASE):
+            check(results, f"callout.{label}.banned_word.{word}", False,
+                  f"Contains banned editorial word: {word}")
+            fails += 1
+    return fails
+
+
 def validate(briefing_path):
     b = load_json(briefing_path)
     results = []
@@ -280,6 +322,45 @@ def validate(briefing_path):
                          ind.get("analysis") not in (None, ""),
                          f"Missing analysis"):
                 warns += 1
+
+    # ============================================================
+    # 10.5 CALLOUT QUALITY CONTRACT
+    # Every callout at every tier MUST satisfy 5 rules:
+    # length 60-240, cite >=1 number, reference pipeline artifact,
+    # no banned editorial words, no empty/placeholder.
+    # See .claude/skills/tldr-charts/SKILL.md for the full contract.
+    # ============================================================
+    # Top-level insightCharts
+    for i, ch in enumerate(b.get("insightCharts", []) or []):
+        cb = ch.get("callout") or ch.get("reasoning")  # legacy fallback during migration
+        fails += check_callout(results, f"top.insightCharts[{i}]", cb)
+
+    # Per-province insightCharts
+    for p in b.get("provinces", []) or []:
+        name = p.get("name", "?")
+        for i, ch in enumerate(p.get("insightCharts", []) or []):
+            cb = ch.get("callout") or ch.get("context") or ch.get("reasoning")
+            fails += check_callout(results, f"province.{name}.insightCharts[{i}]", cb)
+
+    # Per-industry insightCharts
+    for ind_list, label in [(b.get("goodsIndustries", []), "goods"),
+                             (b.get("servicesIndustries", []), "services")]:
+        for ind in ind_list or []:
+            iname = ind.get("name", "?")
+            for i, ch in enumerate(ind.get("insightCharts", []) or []):
+                cb = ch.get("callout") or ch.get("reasoning")
+                fails += check_callout(results, f"industry.{label}.{iname}.insightCharts[{i}]", cb)
+
+    # National Canada chart callout
+    nat = b.get("national") or {}
+    fails += check_callout(results, "national.chart_callout", nat.get("chart_callout"))
+
+    # Per-region global chart callouts (only when region has analysis)
+    for g in b.get("global", []) or []:
+        region = g.get("region", "?")
+        if g.get("analysis"):
+            fails += check_callout(results, f"global.{region}.chart_callout",
+                                   g.get("chart_callout"))
 
     # ============================================================
     # 11. TOP-LEVEL ALIASES
