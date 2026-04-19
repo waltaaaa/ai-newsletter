@@ -572,6 +572,63 @@ def validate(briefing_path):
                 warns += 1
 
     # ============================================================
+    # 10.1 INDUSTRY HERO FIELDS (Cluster 4)
+    # Frontend `_renderIndContent` (app.js L4464-4680) reads, per
+    # selected industry, the hero-row metrics that drive the industry
+    # header card and the movement-arrow CSS class:
+    #   industry.mm          (L4479, GDP M/M string — display only)
+    #   industry.yy          (L4480, GDP Y/Y string — display only)
+    #   industry.isNegative  (L4481, boolean — drives up/down class)
+    #   industry.industrySources (L4487, citation list powering the
+    #                             footnote linker + sources strip).
+    # Missing `mm`/`yy` leaves the hero card stats blank with em-dashes;
+    # missing `isNegative` silently mis-renders direction arrows;
+    # missing/empty `industrySources` breaks the footnote linker and
+    # hides the sources `<details>` block entirely. All 20 industries
+    # (5 goods + 15 services) must populate these four fields. The
+    # sources-array shape reuses Cluster 3's helper — same {url,title}
+    # contract as national.sources and global[i].sources.
+    #
+    # Per the audit TSV, these are `fix_layer=schema` rows flagged
+    # validator-missing (rows 180-184 for goods, 206-207 for services
+    # plus the shared isNegative + industrySources contract).
+    # ============================================================
+    for ind_list, ilabel in [(b.get("goodsIndustries", []), "goods"),
+                              (b.get("servicesIndustries", []), "services")]:
+        for ind in ind_list or []:
+            iname = ind.get("name", "?")
+            plabel = f"industry.{ilabel}.{iname}"
+            # mm — required non-empty string (frontend renders raw via san())
+            mm_val = ind.get("mm")
+            mm_ok = isinstance(mm_val, str) and bool(mm_val.strip())
+            if not check(results, f"{plabel}.mm",
+                          mm_ok,
+                          f"Missing or non-string mm (got {type(mm_val).__name__}: {mm_val!r}) — hero M/M stat renders as em-dash"):
+                fails += 1
+            # yy — required non-empty string
+            yy_val = ind.get("yy")
+            yy_ok = isinstance(yy_val, str) and bool(yy_val.strip())
+            if not check(results, f"{plabel}.yy",
+                          yy_ok,
+                          f"Missing or non-string yy (got {type(yy_val).__name__}: {yy_val!r}) — hero Y/Y stat renders as em-dash"):
+                fails += 1
+            # isNegative — required boolean (!s.isNegative is truthy for
+            # null/undefined, which silently mis-renders up-arrow on a
+            # declining industry).
+            isn_val = ind.get("isNegative")
+            if not check(results, f"{plabel}.isNegative",
+                          isinstance(isn_val, bool),
+                          f"Missing or non-boolean isNegative (got {type(isn_val).__name__}: {isn_val!r}) — direction arrow mis-renders"):
+                fails += 1
+            # industrySources — required non-empty array of {url,title}
+            # items. Reuses Cluster 3's check_sources_array helper: same
+            # shape contract as national.sources / global[i].sources.
+            fails += check_sources_array(
+                results, f"{plabel}.industrySources",
+                ind.get("industrySources"), 1,
+            )
+
+    # ============================================================
     # 10.5 CALLOUT QUALITY CONTRACT
     # Every callout at every tier MUST satisfy 5 rules:
     # length 60-240, cite >=1 number, reference pipeline artifact,
