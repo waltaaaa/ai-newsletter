@@ -110,7 +110,23 @@
     "brent": "$90.38/bbl (Apr 17)",
     "cadUsd": "0.7305",
     "tsx": "~34,052",
-    "capex_intentions_2026": "$401.2B"
+    "capex_intentions_2026": "$401.2B",
+    "bocRate_chg": "0bp (held)",
+    "realGdp_chg": "-0.8pp Q/Q",
+    "cpi_chg": "-0.5pp",
+    "unemployment_chg": "0.0pp",
+    "housingStarts_chg": "-6.0% M/M",
+    "tradeBalance_chg": "Deficit widened $1.5B",
+    "retailSales_chg": "+1.1%",
+    "consumerConfidence_chg": "-0.57 points",
+    "buildingPermits_chg": "-8.4%",
+    "manufacturingSales_chg": "+3.6%",
+    "wageGrowth_chg": "+0.8pp",
+    "building_permits": "$12.1B",
+    "housing_starts": "235,852",
+    "trade_balance": "-$5.7B",
+    "employment_change": "+14,000",
+    "boc_rate": "2.25%"
   },
   "indicatorMeta": {
     "bocRate": {
@@ -200,6 +216,30 @@
       "obsDate": "2026-04-10",
       "source": "Statistics Canada LFS",
       "context": "Average hourly wages $37.73, up 4.7% YoY, fastest since Oct 2024. Workers 55+: 5.2%; 15-24: 1.8%."
+    },
+    "cadUsd": {
+      "source": "Bank of Canada",
+      "period": "April 2026",
+      "change": "",
+      "prev": ""
+    },
+    "tsx": {
+      "source": "TMX",
+      "period": "April 2026",
+      "change": "",
+      "prev": ""
+    },
+    "employmentChange": {
+      "source": "StatCan LFS",
+      "period": "March 2026",
+      "change": "+14,000 (partial recovery)",
+      "prev": "-84,000"
+    },
+    "participation": {
+      "source": "StatCan LFS",
+      "period": "March 2026",
+      "change": "+0.1pp",
+      "prev": "64.8%"
     }
   },
   "indicatorSources": {
@@ -315,7 +355,8 @@
         "cpi": "327.46 (index, Feb 2026)",
         "rate": "3.50-3.75%",
         "unemployment": "4.4%",
-        "sp500": "7,022.95 (Apr 13)"
+        "sp500": "7,022.95 (Apr 13)",
+        "tradeBalance": "N/A"
       },
       "analysis": "<p>The US Federal Reserve held the federal funds target range at <strong>3.50-3.75%</strong><sup>103</sup> on March 18, maintaining a <strong>125-150 basis point</strong> gap above the Bank of Canada overnight rate of <strong>2.25%</strong>.<sup>61</sup> The FOMC continues to signal one rate cut in 2026 and one in 2027.<sup>103</sup> US unemployment stood at <strong>4.4%</strong> in the February print.<sup>103</sup> CAD/USD strengthened to <strong>0.7305</strong> on April 17, up <strong>1.5%</strong> over the two-week period, driven in part by broader US dollar depreciation as the DXY index moved toward <strong>98.05</strong>.<sup>44</sup></p><p>US equity benchmarks posted record closes in the second week of the coverage window. The S&amp;P 500 reached <strong>7,022.95</strong> on April 13, within <strong>2.32%</strong> of its January 27 all-time high, after recording its best week since November.<sup>94</sup><sup>59</sup> The S&amp;P 500 and Nasdaq both posted fresh record closes on April 14.<sup>94</sup> The US Supreme Court struck down several IEEPA emergency tariffs during the period, and the administration announced a temporary <strong>10%</strong> global tariff largely exempting CUSMA-compliant goods.<sup>16</sup> Section 232 tariffs were restructured on April 6 with a <strong>50%</strong> rate on core metal imports including aluminum, steel, and copper — directly affecting Canadian metal exporters.<sup>16</sup> Canada responded on April 15 with a six-month pause on tariffs for US-origin manufacturing inputs.<sup>16</sup></p>",
       "sources": [
@@ -354,17 +395,39 @@
         "rate": {
           "period": "Mar 18, 2026 decision",
           "obsDate": "2026-03-18",
-          "source": "Federal Reserve"
+          "source": "Federal Reserve",
+          "change": "",
+          "prev": ""
         },
         "unemployment": {
           "period": "Feb 2026",
           "obsDate": "2026-03-01",
-          "source": "US Bureau of Labor Statistics"
+          "source": "US Bureau of Labor Statistics",
+          "change": "",
+          "prev": ""
         },
         "sp500": {
           "period": "Apr 13, 2026",
           "obsDate": "2026-04-13",
           "source": "CNBC"
+        },
+        "gdp": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
+        },
+        "cpi": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
+        },
+        "tradeBalance": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
         }
       }
     },
@@ -374,7 +437,11 @@
       "indicators": {
         "gdp": "+5.0% YoY (Q1 2026)",
         "industrial_production": "+6.1% YoY",
-        "usd_cny": "6.8287"
+        "usd_cny": "6.8287",
+        "cpi": "N/A",
+        "rate": "N/A",
+        "unemployment": "N/A",
+        "tradeBalance": "N/A"
       },
       "analysis": "<p>China's Q1 2026 GDP grew <strong>5.0%</strong> year-over-year, beating the <strong>4.8%</strong> consensus and accelerating from <strong>4.5%</strong> in Q4 2025, according to the National Bureau of Statistics.<sup>95</sup> Industrial production rose <strong>6.1%</strong> year-over-year, with high-tech manufacturing up <strong>12.5%</strong> and equipment manufacturing up <strong>8.9%</strong>.<sup>95</sup> Exports grew <strong>2.5%</strong> year-over-year in March (USD terms), down sharply from <strong>+21.8%</strong> in the January-February combined period, while imports surged <strong>27.8%</strong> in March, the strongest since November 2021.<sup>93</sup> Factory-gate prices turned positive for the first time in more than three years on soaring commodity prices.<sup>95</sup></p><p>China's import surge supports demand for Canadian commodity exports across iron ore, copper, potash, and energy products. The pipeline tracks <strong>367 mining projects ($159.5B)</strong> and <strong>63 oil and gas projects ($100.2B)</strong> with exposure to Chinese commodity demand.<sup>95</sup> USD/CNY stood at <strong>6.8287</strong> on April 8, down <strong>1.0%</strong> month-over-month and <strong>7.0%</strong> year-over-year, reflecting yuan appreciation against the US dollar.<sup>44</sup> The factory-gate price reversal to positive territory indicates sustained commodity price support for Canadian resource exporters, at a time when WTI has retraced <strong>34%</strong> from its April 2 peak on the Strait of Hormuz reopening.<sup>97</sup></p>",
       "sources": [
@@ -403,12 +470,38 @@
         "gdp": {
           "period": "Q1 2026",
           "obsDate": "2026-04-16",
-          "source": "National Bureau of Statistics of China"
+          "source": "National Bureau of Statistics of China",
+          "change": "",
+          "prev": ""
         },
         "usd_cny": {
           "period": "Apr 8, 2026",
           "obsDate": "2026-04-08",
           "source": "BoC Valet"
+        },
+        "cpi": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
+        },
+        "rate": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
+        },
+        "unemployment": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
+        },
+        "tradeBalance": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
         }
       }
     },
@@ -419,7 +512,10 @@
         "cpi": "+1.9% YoY (Dec 2025 HICP)",
         "rate": "2.15% (main refinancing); 2.0% (deposit)",
         "eur_usd": "1.1696",
-        "dax": "24,080.63"
+        "dax": "24,080.63",
+        "gdp": "N/A",
+        "unemployment": "N/A",
+        "tradeBalance": "N/A"
       },
       "analysis": "<p>The European Central Bank main refinancing rate stood at <strong>2.15%</strong> with the deposit facility at <strong>2.0%</strong>.<sup>55</sup> A hold is expected at the April 29-30 meeting, with markets pricing a hike in June to <strong>2.5%</strong> or above.<sup>96</sup> The ECB raised its 2026 inflation forecast to <strong>2.6%</strong> from the prior projection, citing higher energy prices from the Middle East conflict, and warned of a \"layer cake of shocks\" from geopolitical developments.<sup>96</sup> Eurozone HICP ran at <strong>+1.9%</strong> year-over-year in the December 2025 print, the latest captured in the data set.<sup>55</sup></p><p>EUR/USD traded at <strong>1.1696</strong> on April 9, up <strong>1.34%</strong> on the week and <strong>+6.79%</strong> year-over-year.<sup>55</sup> The euro's appreciation against the US dollar affects cross-border pricing of Canadian exports to the EU. If the ECB hikes to <strong>2.5%</strong> or above in June, the narrowing rate differential with the Bank of Canada at <strong>2.25%</strong> could influence capital flows and the EUR/CAD cross.<sup>96</sup> The DAX closed at <strong>24,080.63</strong>, reflecting European equity market strength during the period.<sup>55</sup></p>",
       "sources": [
@@ -438,12 +534,34 @@
         "cpi": {
           "period": "Dec 2025",
           "obsDate": "2025-12-01",
-          "source": "Eurostat"
+          "source": "Eurostat",
+          "change": "",
+          "prev": ""
         },
         "rate": {
           "period": "Current",
           "obsDate": "2026-04-01",
-          "source": "European Central Bank"
+          "source": "European Central Bank",
+          "change": "",
+          "prev": ""
+        },
+        "gdp": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
+        },
+        "unemployment": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
+        },
+        "tradeBalance": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
         }
       }
     },
@@ -454,7 +572,10 @@
         "cpi": "3.0%",
         "rate": "3.75%",
         "ftse_100": "10,608.90",
-        "gbp_usd": "1.3432"
+        "gbp_usd": "1.3432",
+        "gdp": "N/A",
+        "unemployment": "N/A",
+        "tradeBalance": "N/A"
       },
       "analysis": "<p>The Bank of England base rate stood at <strong>3.75%</strong>, <strong>150 basis points</strong> above the Bank of Canada overnight rate of <strong>2.25%</strong>.<sup>64</sup> The next BoE decision is April 30; <strong>90%</strong> of Reuters-surveyed economists expect a hold, while 5 expect a <strong>25 basis point</strong> hike.<sup>22</sup> UK CPI at <strong>3.0%</strong> exceeds the <strong>2%</strong> target and contrasts with Canada's <strong>1.8%</strong>, reflecting divergent inflation dynamics driven in part by the UK's greater exposure to European energy markets and domestic services inflation.<sup>64</sup> Pre-Iran-war expectations of two 2026 rate cuts have been abandoned; markets are split between a hold and a hike.<sup>22</sup></p><p>GBP/USD traded at <strong>1.3432</strong>, up <strong>1.5%</strong> week-over-week and <strong>+4.7%</strong> year-over-year, affecting pricing of Canadian exports to the UK.<sup>64</sup> The FTSE 100 closed at <strong>10,608.90</strong>, up <strong>34.11%</strong> year-over-year, outperforming the DAX's <strong>+18.74%</strong> gain over the same period.<sup>64</sup> Brent crude — the dominant North Sea benchmark — settled at <strong>US$90.38/bbl</strong> on April 17, following the Strait of Hormuz reopening, down from a peak above <strong>US$118/bbl</strong> earlier in the period.<sup>47</sup> The <strong>150 basis point</strong> rate gap between the BoE and the BoC mirrors the Fed-BoC differential, reinforcing CAD cross-rate pressures.</p>",
       "sources": [
@@ -478,12 +599,34 @@
         "rate": {
           "period": "Current",
           "obsDate": "2026-04-01",
-          "source": "Bank of England"
+          "source": "Bank of England",
+          "change": "",
+          "prev": ""
         },
         "cpi": {
           "period": "Latest",
           "obsDate": "2026-04-01",
-          "source": "ONS"
+          "source": "ONS",
+          "change": "",
+          "prev": ""
+        },
+        "gdp": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
+        },
+        "unemployment": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
+        },
+        "tradeBalance": {
+          "change": "",
+          "prev": "",
+          "period": "",
+          "source": ""
         }
       }
     }
@@ -553,6 +696,13 @@
           "period": "February 2026",
           "obsDate": "2026-02-01",
           "source": "StatCan 14-10-0287"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Ontario's unemployment rate held at <strong>7.6%</strong> in the March Labour Force Survey<sup>148</sup>, unchanged from February, as Q4 2025 employment gains of <strong>+58,900 (+0.7%)</strong> absorbed into a stable base after two preceding weak quarters. The Ontario Economic Accounts for Q4 2025, released April 10, recorded real household consumption up <strong>+0.6%</strong> quarter-over-quarter, government expenditure up <strong>+0.6%</strong>, and capital investment flat at <strong>0.0%</strong>, while goods-producing GDP contracted <strong>-1.5%</strong>.<sup>159</sup> The Financial Accountability Office estimates full-year 2025 Ontario real GDP at <strong>1.3%</strong>, down from <strong>1.6%</strong> in 2024.<sup>156</sup> The employment rate held flat at <strong>59.7%</strong> while the participation rate carried at <strong>64.6%</strong>, <strong>0.2 percentage points</strong> above the prior observation.<sup>148</sup> Ontario's year-over-year CPI reading of <strong>-1.8%</strong> is the lowest provincial print in Canada and widened <strong>0.7 percentage points</strong> below the prior reading of <strong>-1.1%</strong>, standing <strong>3.6 percentage points</strong> below the national <strong>+1.8%</strong> figure.<sup>119</sup></p><p>Finance Minister Peter Bethlenfalvy tabled the Ontario Budget 2026 on March 26, raising the ten-year capital plan to <strong>$210 billion</strong> (up <strong>$9 billion</strong> from the prior framework), with <strong>$37 billion</strong> allocated for 2026-27 and approximately <strong>$64 billion</strong> over ten years for health infrastructure including roughly <strong>50 hospital projects</strong> and <strong>3,000 new beds</strong>.<sup>119</sup> Infrastructure spending for 2025-28 increased <strong>$13.6 billion</strong> from the Fall Economic Statement. The budget confirmed <strong>$31 billion</strong> over ten years for highway investment, with construction underway on Highway 413 (52 km, supporting <strong>6,000 jobs per year</strong>), the Bradford Bypass, and Highway 7 expansion between Kitchener and Guelph.<sup>74</sup> The Ring of Fire all-season road construction is now targeted for June 2026, with roads opening November 2030 — five years ahead of the prior timeline.<sup>84</sup></p><p>The official OEA Q4 print recorded Ontario exports at <strong>$638.7 billion</strong> (annualized, chained 2017$), up <strong>+4.3%</strong> quarter-over-quarter, while imports rose <strong>+1.2%</strong> to <strong>$610.1 billion</strong>.<sup>159</sup> Full-year 2025 goods exports to the United States fell <strong>4.0%</strong>, while exports to the rest of the world rose <strong>17.0%</strong>, reflecting trade diversification as the effective tariff rate on Ontario exports exceeds <strong>6%</strong>.<sup>156</sup> Housing starts rose <strong>2.3%</strong> to <strong>67,274</strong> units (SAAR) in March, up from <strong>65,757</strong> the prior month.<sup>155</sup> Building permits stood at <strong>$2,690.8 million</strong> in the latest StatCan print.<sup>134</sup> The project database tracks the Ontario Line (<strong>$27.4B</strong>, Under Construction), GO Expansion (<strong>$26.1B</strong>, Under Construction), the Deep Geological Repository (<strong>$26.0B</strong>, Proposed), and the Bruce Nuclear Refurbishment (<strong>$13.0B</strong>, Under Construction) as the province's largest active capital files.<sup>155</sup></p>",
@@ -883,7 +1033,10 @@
           "insight": "The Canadian dollar strengthened 1.5% to 0.7305 on broad USD weakness while the merchandise trade deficit widened to $5.7B, the largest since August 2025.",
           "source": "Bank of Canada, Statistics Canada"
         }
-      ]
+      ],
+      "marketContext": "Ontario's unemployment rate held at 7.6% in the March Labour Force Survey148, unchanged from February, as Q4 2025 employment gains of +58,900 (+0.7%) absorbed into a stable base after two preceding weak quarters.",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Quebec",
@@ -938,6 +1091,13 @@
           "period": "March 2026",
           "obsDate": "2026-04-10",
           "source": "ISQ / StatCan LFS"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Quebec's unemployment rate fell <strong>0.5 percentage points</strong> to <strong>5.4%</strong> in March<sup>148</sup>, though the decline reflects fewer active job seekers rather than net hiring — employment was little changed after a <strong>-57,000</strong> loss in February. The participation rate edged down <strong>0.1 percentage points</strong> to <strong>64.4%</strong>, while the employment rate rose <strong>0.2 percentage points</strong> to <strong>60.9%</strong>.<sup>148</sup> Quebec City CMA posted unemployment of <strong>2.6%</strong>, the lowest metropolitan reading in Canada.<sup>148</sup> The Institut de la statistique du Québec recorded Q4 2025 real GDP at <strong>-0.1%</strong> quarter-over-quarter, with the 2026 GDP forecast at <strong>1.1%</strong>.<sup>156</sup></p><p>The Quebec Budget 2026-2027, tabled during week one of this edition window, committed <strong>$167 billion</strong> in the ten-year Quebec Infrastructure Plan (QIP) over 2026-2036, of which <strong>71%</strong> (<strong>$105.8 billion</strong>) is designated for asset maintenance.<sup>119</sup> The QIP allocates <strong>$35.7 billion</strong> for roads, <strong>$24.7 billion</strong> for health, <strong>$23.5 billion</strong> for education, <strong>$12.8 billion</strong> for transit, and <strong>$8.9 billion</strong> for IT infrastructure.<sup>119</sup> An additional <strong>$1.7 billion</strong> is earmarked for economic transformation initiatives. The province also announced an <strong>$8 billion</strong> Transport Plan for 2026-2028 covering road, maritime, rail, and airport infrastructure, with <strong>77%</strong> directed toward asset maintenance.<sup>119</sup></p><p>Manufacturing GDP in U.S.-trade-reliant industries contracted approximately <strong>4%</strong> between December 2024 and November 2025<sup>74</sup>, as the effective tariff rate on Quebec exports to the United States exceeds <strong>6%</strong>. CPI ran at <strong>+0.6%</strong> year-over-year in February, down <strong>0.1 percentage points</strong> from the prior reading.<sup>84</sup> Housing starts rose <strong>2.8%</strong> to <strong>53,461</strong> units (SAAR).<sup>155</sup> The project database tracks the Parc éolien Chamouchouane wind farm (<strong>$9.0B</strong>, Proposed), the Montreal Metro Blue Line Extension (<strong>$4.9B</strong>, Under Construction, completion 2031), the TES Canada Hydrogen facility in Shawinigan (<strong>$4.0B</strong>, Under Review), and the Quebec City Tramway (<strong>$3.8B</strong>, Under Construction, completion 2033).<sup>134</sup> The Timiskaming Dam-Bridge environmental assessment decision deadline was extended on March 9.<sup>155</sup></p>",
@@ -1256,7 +1416,10 @@
           "insight": "Iron ore climbed 10.8% in April to $17.78 as China's Q1 GDP beat consensus at 5.0%, supporting demand for Quebec's C�te-Nord mining operations.",
           "source": "Yahoo Finance, NBS China"
         }
-      ]
+      ],
+      "marketContext": "Quebec's unemployment rate fell 0.5 percentage points to 5.4% in March148, though the decline reflects fewer active job seekers rather than net hiring — employment was little changed after a -57,000 loss in February.",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Alberta",
@@ -1311,6 +1474,13 @@
           "period": "February 2026",
           "obsDate": "2026-02-01",
           "source": "StatCan 14-10-0287"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Alberta's unemployment rate rose <strong>0.2 percentage points</strong> to <strong>6.5%</strong> in March<sup>148</sup>, edging up despite approximately <strong>85,000</strong> jobs added over the prior year. ATB Financial upgraded the 2026 GDP forecast to <strong>2.7%</strong> (from <strong>2.1%</strong>) based on a WTI assumption of <strong>US$75/bbl</strong>, while the provincial budget baseline uses <strong>1.8%</strong>.<sup>156</sup> The participation rate slipped <strong>0.3 percentage points</strong> to <strong>68.7%</strong>, and the employment rate edged down <strong>0.1 percentage points</strong> to <strong>64.4%</strong>.<sup>148</sup> ATB forecasts job creation of <strong>3.1%</strong> for 2026.<sup>156</sup></p><p>The Alberta Budget 2026, tabled in week one of this edition window, projects a <strong>$9.4 billion</strong> deficit as oilsands royalties dropped <strong>$7.5 billion</strong> from 2024-25 levels.<sup>119</sup> Non-renewable resource cash revenue stands at <strong>$13.2 billion</strong>, down <strong>$8.8 billion</strong> from the prior fiscal year.<sup>119</sup> The budget includes a <strong>$28.3 billion</strong> provincial capital plan. The Trans Mountain Expansion (TMX) pipeline scaled crude oil shipments to Asia to over <strong>$9 billion</strong> in 2025, supporting diversification of Alberta's export markets away from the United States.<sup>119</sup> Geopolitical disruptions, including tensions around Iran and the Strait of Hormuz, have been cited in oil price revision analyses.<sup>119</sup></p><p>Alberta CPI accelerated to <strong>+4.8%</strong> year-over-year in February, up <strong>1.4 percentage points</strong> from the prior print, the second-highest provincial reading after PEI.<sup>74</sup> Housing starts slipped <strong>0.9%</strong> to <strong>48,438</strong> units (SAAR).<sup>84</sup> Building permits stood at <strong>$1,127.1 million</strong>.<sup>155</sup> The Pathways Alliance carbon capture and storage project (<strong>$16.5B</strong>, Proposed) and AOSP Jackpine oil sands development (<strong>$12.0B</strong>, Approved) are the province's largest proposed and approved energy files, while Telus infrastructure investment (<strong>$19.0B</strong>, Under Construction, through 2027) represents the largest non-energy capital commitment.<sup>134</sup></p>",
@@ -1661,7 +1831,10 @@
           "insight": "Natural gas at $3.12/MMBtu after spiking to $6.80 in January reflects seasonal normalization, with LNG Canada Phase 1 construction continuing in Kitimat.",
           "source": "Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "Alberta's unemployment rate rose 0.2 percentage points to 6.5% in March148, edging up despite approximately 85,000 jobs added over the prior year.",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "British Columbia",
@@ -1716,6 +1889,13 @@
           "period": "February 2026",
           "obsDate": "2026-02-01",
           "source": "StatCan 14-10-0287"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>British Columbia shed <strong>19,000</strong> jobs (<strong>-0.7%</strong>) in March following a <strong>-20,000</strong> loss in February — two consecutive months of employment declines totalling <strong>39,000</strong> positions.<sup>148</sup> Unemployment rose <strong>0.6 percentage points</strong> to <strong>6.7%</strong>, the highest reading since February 2016 outside of the pandemic period, and now matches the national rate.<sup>148</sup> Job losses concentrated in retail and wholesale (approximately <strong>10,000</strong>), finance and real estate, and professional and technical services. Manufacturing (<strong>+3,700</strong>) and construction (<strong>+2,800</strong>) recorded gains.<sup>148</sup> The participation rate fell <strong>0.4 percentage points</strong> to <strong>64.4%</strong> and the employment rate declined <strong>0.4 percentage points</strong> to <strong>60.5%</strong>.<sup>156</sup></p><p>The province's rental market continued to soften. Apartment asking rents fell <strong>4.8%</strong> year-over-year in March, with purpose-built rents down <strong>12.2%</strong> from the August 2023 peak.<sup>119</sup> Housing starts edged down <strong>0.4%</strong> to <strong>41,331</strong> units (SAAR).<sup>119</sup> CPI ran at <strong>+1.3%</strong> year-over-year in February, up <strong>0.3 percentage points</strong> from the prior reading but still below the national average.<sup>74</sup> Building permits stood at <strong>$1,121.9 million</strong>.<sup>84</sup></p><p>In week two of this edition window, British Columbia expanded employment services on April 16, announcing new training projects to address the labour market deterioration.<sup>155</sup> LNG Canada Phase 1 (<strong>$47.9B</strong>, Under Construction) in Kitimat remains the province's largest active project, with the proposed Phase 2 (<strong>$25.0B</strong>) awaiting a final investment decision. The Site C hydroelectric dam (<strong>$16.0B</strong>, Under Construction) on the Peace River and the Kitimat Clean Oil Refinery (<strong>$22.0B</strong>, Under Review) round out the province's mega-project pipeline.<sup>134</sup> Sub-trend GDP growth is expected through 2026.<sup>155</sup></p>",
@@ -2016,7 +2196,10 @@
           "insight": "Gold at $4,572/oz (+73% YoY) underpins BC's gold mining operations as Artemis Gold's Blackwater mine continues construction and Brucejack produces.",
           "source": "Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "British Columbia shed 19,000 jobs (-0.7%) in March following a -20,000 loss in February — two consecutive months of employment declines totalling 39,000 positions.148 Unemployment rose 0.6 percentage points to 6.7%, the highest reading since February 2016 outside of the pandemic period, and now ma",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Saskatchewan",
@@ -2071,6 +2254,13 @@
           "period": "February 2026",
           "obsDate": "2026-02-01",
           "source": "StatCan 14-10-0287"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Saskatchewan posted the lowest unemployment rate in the country at <strong>5.0%</strong> in March, down <strong>0.6 percentage points</strong> from February, as employment rose <strong>5,800</strong> (<strong>+0.9%</strong>) — the strongest provincial employment growth rate nationally.<sup>148</sup> Full-time employment added <strong>15,000</strong> positions year-over-year.<sup>148</sup> CPI swung to <strong>+1.0%</strong> year-over-year in February from <strong>-0.7%</strong> the prior month, a reversal of <strong>1.7 percentage points</strong>.<sup>156</sup> Housing starts rose <strong>3.0%</strong> to <strong>5,486</strong> units (SAAR).<sup>119</sup></p><p>BHP's Jansen Stage 1 potash mine (<strong>$7.5B</strong>, Under Construction) is on track to begin production in late 2026, with capacity of approximately <strong>8.5 million tonnes per annum</strong> and <strong>3,500</strong> construction jobs and <strong>900</strong> permanent positions.<sup>119</sup> Jansen Stage 2 (<strong>$6.4B</strong>, Under Construction) is proceeding in parallel. January mineral sales totalled <strong>$1.2 billion</strong> (<strong>+0.1%</strong> year-over-year), though potash sales fell <strong>6.5%</strong>, uranium declined <strong>16.3%</strong>, and salt dropped <strong>57.3%</strong> in the same period.<sup>74</sup></p><p>The Saskatchewan capital budget for 2026-27 totals <strong>$4.3 billion</strong>.<sup>84</sup> The proposed Federated Co-operatives (FCL) hydrogenation-derived renewable diesel plant (<strong>$2.0B</strong>) and Bell AI Data Centre (<strong>$1.7B</strong>, RM of Sherwood) represent diversification plays beyond the province's traditional potash and uranium resource base.<sup>155</sup> Building permits stood at <strong>$154.4 million</strong>.<sup>134</sup></p>",
@@ -2382,7 +2572,10 @@
           "insight": "Wheat climbed 18% since January to 601.75c/bu as Hormuz disruption affected grain shipping, directly impacting Saskatchewan's agricultural economy.",
           "source": "CBOT, Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "Saskatchewan posted the lowest unemployment rate in the country at 5.0% in March, down 0.6 percentage points from February, as employment rose 5,800 (+0.9%) — the strongest provincial employment growth rate nationally.148 Full-time employment added 15,000 positions year-over-year.148 CPI swung to ",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Manitoba",
@@ -2437,6 +2630,13 @@
           "period": "February 2026",
           "obsDate": "2026-02-01",
           "source": "StatCan 14-10-0287"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Manitoba employment surged <strong>11,000</strong> (<strong>+1.5%</strong>) in March — the strongest gain nationally — rebounding from February declines.<sup>148</sup> Unemployment edged down <strong>0.1 percentage points</strong> to <strong>5.6%</strong>.<sup>148</sup> The participation rate carried at <strong>66.3%</strong>, down <strong>0.8 percentage points</strong> from the prior observation, while the employment rate stood at <strong>62.5%</strong>.<sup>156</sup> CPI rose <strong>0.3 percentage points</strong> to <strong>+3.4%</strong> year-over-year in February, the third-highest provincial reading nationally.<sup>119</sup></p><p>Canada and Manitoba signed a new assessment agreement on April 14 (week two of this edition window), implementing the \"one project, one review\" framework to streamline major project approvals.<sup>119</sup> Manitoba Budget 2026 includes a record <strong>$3.8 billion</strong> capital investment, <strong>40%</strong> more apprenticeship positions, and the Port of Churchill Plus program at <strong>$262.5 million</strong> over five years with a <strong>$10 million</strong> Catalyst Fund.<sup>74</sup> Manitoba's exports to the United States fell <strong>18%</strong> year-over-year, concentrated in energy, agricultural machinery, and pharmaceuticals — among the worst trade-exposure readings nationally.<sup>84</sup></p><p>The NEWPCC wastewater treatment upgrade (<strong>$3.2B</strong>, Under Construction) in Winnipeg is the province's largest active infrastructure project. Portage Place redevelopment (<strong>$650M</strong>, Under Construction) is creating a healthcare centre of excellence in downtown Winnipeg. The Lake Manitoba and Lake St. Martin outlet channels (<strong>$495M</strong>, Approved) address flood mitigation.<sup>155</sup> Housing starts fell <strong>2.0%</strong> to <strong>7,642</strong> units (SAAR) and building permits stood at <strong>$231.5 million</strong>.<sup>134</sup><sup>155</sup></p>",
@@ -2755,7 +2955,10 @@
           "insight": "Soybeans held near 1,049c/bu, providing diversified crop revenue for Manitoba producers alongside the 18% wheat rally.",
           "source": "CBOT, Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "Manitoba employment surged 11,000 (+1.5%) in March — the strongest gain nationally — rebounding from February declines.148 Unemployment edged down 0.1 percentage points to 5.6%.148 The participation rate carried at 66.3%, down 0.8 percentage points from the prior observation, while the employmen",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Nova Scotia",
@@ -2810,6 +3013,13 @@
           "period": "February 2026",
           "obsDate": "2026-02-01",
           "source": "StatCan 14-10-0287"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Nova Scotia's unemployment rate fell <strong>0.5 percentage points</strong> to <strong>6.6%</strong> in March, with employment rising <strong>3,900</strong> (<strong>+0.7%</strong>).<sup>148</sup> Halifax CMA unemployment stood at <strong>6.1%</strong>, up <strong>0.2 percentage points</strong>.<sup>148</sup> Halifax GDP grew <strong>2.3%</strong> in 2025, with a forecast of <strong>1.5%</strong> for 2026.<sup>156</sup> The participation rate carried at <strong>61.3%</strong> and the employment rate at <strong>57.0%</strong>.<sup>119</sup> CPI rose <strong>0.2 percentage points</strong> to <strong>+1.7%</strong> year-over-year in February.<sup>119</sup></p><p>The Nova Scotia Legislature concluded its session on April 9 (week two of this edition window), passing Budget 2026-27 and the Powering the Economy Act, which establishes a regulatory framework for offshore wind, geothermal, hydrogen, and carbon storage.<sup>74</sup> Offshore wind bid requirements include a <strong>$250,000</strong> refundable deposit, <strong>$750,000</strong> non-refundable fee, and <strong>$7,000 per MW per year</strong>.<sup>74</sup> Canada and Nova Scotia signed a new assessment agreement on March 27 implementing the \"one project, one review\" framework.<sup>84</sup> The province allocated <strong>$300 million</strong> for <strong>1,430</strong> homes including <strong>930</strong> units at Shannon Park, and <strong>$873.8 million</strong> for <strong>5,700</strong> long-term care spaces by 2032.<sup>74</sup></p><p>Housing starts totalled <strong>7,146</strong> units (SAAR) in March, down <strong>1.5%</strong> from the prior month, following a 2025 provincial record of <strong>9,760</strong> units.<sup>155</sup> The province introduced a First Time Homebuyers Pilot enabling <strong>2%</strong> down payments via provincial credit unions.<sup>74</sup> Bear Head Energy (<strong>$8.0B</strong>, Proposed) is the province's largest energy project, while the NS Capital Plan 2026-27 (<strong>$3.5B</strong>) includes health and housing commitments. CFB Halifax Upgrade (<strong>$1.2B</strong>) and 14 Wing Greenwood Hangar (<strong>$648M</strong>) reflect federal defence investment in the province.<sup>134</sup> Building permits stood at <strong>$242.9 million</strong>.<sup>155</sup></p>",
@@ -3128,7 +3338,10 @@
           "insight": "Natural gas at $3.12/MMBtu after a January spike provides the price backdrop against which Nova Scotia's 5 GW offshore wind ambition competes.",
           "source": "Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "Nova Scotia's unemployment rate fell 0.5 percentage points to 6.6% in March, with employment rising 3,900 (+0.7%).148 Halifax CMA unemployment stood at 6.1%, up 0.2 percentage points.148 Halifax GDP grew 2.3% in 2025, with a forecast of 1.5% for 2026.156 The participation rate carried at 61.3% and t",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "New Brunswick",
@@ -3183,6 +3396,13 @@
           "period": "February 2026",
           "obsDate": "2026-02-01",
           "source": "StatCan 14-10-0287"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>New Brunswick's unemployment held steady at <strong>7.0%</strong> in March, unchanged from February, with employment little changed over the period.<sup>148</sup> The participation rate edged up <strong>0.1 percentage points</strong> to <strong>60.7%</strong> and the employment rate held at <strong>56.5%</strong>.<sup>156</sup> CPI accelerated <strong>1.2 percentage points</strong> to <strong>+2.4%</strong> year-over-year in February.<sup>119</sup> GDP forecast for 2026-27 averages <strong>1.3%</strong>.<sup>119</sup></p><p>NB Power filed two applications with the Energy and Utilities Board during week one, covering reliability improvements and revenue stabilization, as a governance review proceeded through March 31.<sup>74</sup> The utility plans to add <strong>1,400 MW</strong> of new wind capacity by 2035, a fivefold increase from the current <strong>355 MW</strong>, with four Indigenous-partnered power purchase agreements signed.<sup>74</sup> NB Power's generation mix is <strong>44%</strong> renewable and <strong>80%</strong> non-emitting. Immigration allocations rose to <strong>4,250</strong> nominations, up <strong>1,500</strong>, with <strong>$54.3 million</strong> allocated over three years via Opportunities NB.<sup>84</sup></p><p>Housing starts fell <strong>6.9%</strong> to <strong>6,011</strong> units (SAAR) and building permits stood at <strong>$131.9 million</strong>.<sup>155</sup><sup>134</sup> Eleven SREP-funded projects totalling <strong>$112 million</strong> are underway in the province.<sup>74</sup> The Saint John Pulp Mill upgrade (<strong>$1.1B</strong>, Under Review) is the province's largest proposed manufacturing file. Route 2 Trans-Canada Highway twinning (<strong>$420M</strong>) and Port Saint John terminal modernization (<strong>$205M</strong>) are under construction.<sup>155</sup> Premier Holt is scheduled to meet Prime Minister Carney on April 20-21 to discuss defence and energy priorities.<sup>84</sup></p>",
@@ -3501,7 +3721,10 @@
           "insight": "WTI's collapse to $83.85 from $128 affects refining margins at Irving Oil's 320,000 bpd Saint John refinery, NB's largest industrial operation.",
           "source": "Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "New Brunswick's unemployment held steady at 7.0% in March, unchanged from February, with employment little changed over the period.148 The participation rate edged up 0.1 percentage points to 60.7% and the employment rate held at 56.5%.156 CPI accelerated 1.2 percentage points to +2.4% year-over-yea",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Newfoundland and Labrador",
@@ -3556,6 +3779,13 @@
           "period": "February 2026",
           "obsDate": "2026-02-01",
           "source": "StatCan 14-10-0287"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Newfoundland and Labrador's unemployment rate rose <strong>0.3 percentage points</strong> to <strong>9.5%</strong> in March — the highest provincial reading in Canada — despite ongoing offshore project ramp-ups.<sup>148</sup> The offshore petroleum sector accounts for approximately <strong>20%</strong> of provincial GDP and <strong>55%</strong> of exports.<sup>156</sup> The participation rate carried at <strong>58.1%</strong>, up <strong>0.5 percentage points</strong> from the prior observation, and the employment rate at <strong>52.7%</strong>, up <strong>0.4 percentage points</strong>.<sup>119</sup> CPI rose <strong>0.5 percentage points</strong> to <strong>+2.3%</strong> year-over-year in February.<sup>119</sup></p><p>The Province reached a benefits agreement with Equinor and BP on the Bay du Nord deepwater oil project during week one — the first standalone offshore development since Hebron. The agreement covers <strong>3 million</strong> fabrication hours, <strong>31 million</strong> person-hours over 25 years, and up to <strong>$6.4 billion</strong> in Phase 1 revenue, including royalties, local benefits, and an equity option.<sup>74</sup> West White Rose topsides and concrete gravity structure installation and drilling are underway, extending the White Rose field's production life.<sup>84</sup> The Point Rousse Port received an IAAC early decision on February 18 confirming no further assessment is required.<sup>155</sup></p><p>Offshore employment totalled <strong>20,500</strong> jobs (<strong>8.4%</strong> of the provincial workforce) in 2024, with wages ranging from <strong>$80,000</strong> to over <strong>$150,000</strong>.<sup>156</sup> Housing starts edged up <strong>2.4%</strong> to <strong>1,223</strong> units (SAAR) and building permits stood at <strong>$74.1 million</strong>.<sup>134</sup><sup>155</sup> The Grassy Point LNG facility (<strong>$10.0B</strong>, Proposed), Bay du Nord (<strong>$6.4B</strong>, Approved), and Kami mining project (<strong>$3.86B</strong>, Under Review) compose the province's deepest project pipeline, with tariff exposure below <strong>1%</strong> given the offshore orientation of NL exports.<sup>156</sup></p>",
@@ -3881,7 +4111,10 @@
           "insight": "Iron ore at $17.78 (+10.8% in April) supports Labrador's mining complex as China's Q1 GDP beat expectations at 5.0%.",
           "source": "Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "Newfoundland and Labrador's unemployment rate rose 0.3 percentage points to 9.5% in March — the highest provincial reading in Canada — despite ongoing offshore project ramp-ups.148 The offshore petroleum sector accounts for approximately 20% of provincial GDP and 55% of exports.156 The participa",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Prince Edward Island",
@@ -3936,6 +4169,13 @@
           "period": "February 2026",
           "obsDate": "2026-02-01",
           "source": "StatCan 14-10-0287"
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Prince Edward Island's CPI reached <strong>+7.3%</strong> year-over-year in February — the highest provincial reading in Canada, <strong>5.5 percentage points</strong> above the national <strong>+1.8%</strong> figure — accelerating <strong>1.9 percentage points</strong> from the prior <strong>+5.4%</strong>.<sup>148</sup> At the same time, the province posted the fastest average weekly earnings growth nationally at <strong>5.5%</strong> (through November 2025), with average weekly earnings reaching <strong>$1,126.63</strong>.<sup>156</sup> Unemployment edged up <strong>0.1 percentage points</strong> to <strong>7.3%</strong> in March.<sup>119</sup></p><p>Employment reached an all-time high of <strong>95,500</strong> in January 2026, up <strong>1,500</strong> year-over-year.<sup>156</sup> The participation rate stood at <strong>66.6%</strong> (<strong>+0.1pp</strong>) and the employment rate at <strong>61.8%</strong> (<strong>+0.3pp</strong>).<sup>119</sup> Canada and PEI signed an assessment agreement in March 2026 implementing the \"one project, one review\" framework for major project approvals.<sup>74</sup></p><p>Housing starts fell <strong>13.4%</strong> to <strong>963</strong> units (SAAR) and building permits stood at <strong>$24.1 million</strong>.<sup>84</sup><sup>155</sup> The PEI capital budget for 2026-27 totals <strong>$486 million</strong>, part of a five-year <strong>$1.6 billion</strong> plan covering healthcare and education.<sup>156</sup> The PEI Mental Health Campus (<strong>$131M</strong>, Under Construction) in Charlottetown, Affordable Housing development (<strong>$100M</strong>, <strong>300+</strong> units, Proposed), and Northumberland Strait Cable (<strong>$92M</strong>, Under Construction) are the province's tracked projects.<sup>134</sup></p>",
@@ -4235,7 +4475,10 @@
           "insight": "WTI's collapse from $128 to $83.85 may provide relief for PEI's record CPI of 7.3%, driven partly by energy cost pass-through to the island province.",
           "source": "Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "Prince Edward Island's CPI reached +7.3% year-over-year in February — the highest provincial reading in Canada, 5.5 percentage points above the national +1.8% figure — accelerating 1.9 percentage points from the prior +5.4%.148 At the same time, the province posted the fastest average weekly ear",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Yukon",
@@ -4290,6 +4533,13 @@
           "period": "",
           "obsDate": "",
           "source": ""
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Yukon's unemployment held at <strong>3.9%</strong> in March, unchanged from February and the lowest territorial rate.<sup>148</sup> The 2024 annual GDP contracted <strong>3.3%</strong>.<sup>156</sup> CPI, housing starts, and participation rate are not published at the territorial level. Mineral spending in the territory totalled <strong>$313 million</strong> in 2025, of which <strong>$241.7 million</strong> was exploration expenditure.<sup>119</sup></p><p>The federal and territorial governments approved the Kudz Ze Kayah copper-lead-zinc mine on April 15 (week two of this edition window), despite opposition from the Kaska Nation.<sup>119</sup> BMC Minerals plans to mine <strong>2 million tonnes per year</strong> over <strong>10 years</strong>, which would make it Canada's largest zinc producer. The territory tightened mining approval timelines and launched an online bonding calculator and live project tracking system during the two-week window.<sup>74</sup> The Yukon-BC Grid Connect is in early planning stages, with the North Canol corridor tied to both the Macmillan Pass and Mactung mineral deposits.<sup>119</sup></p><p>The Casino Mine (<strong>$3.62B</strong>, Proposed) — a copper-gold-molybdenum project — is the territory's largest proposed mining development. Whitehorse Power Centres (<strong>$520M</strong>, Proposed) and the Yukon Capital Plan (<strong>$385M</strong>) round out the active project pipeline. Federal Northern Defence spending (<strong>$40.0B</strong>, Proposed) would include Yukon-based components if advanced.<sup>84</sup></p>",
@@ -4589,7 +4839,10 @@
           "insight": "Copper at $5.53/lb (+43% YoY) strengthens the case for BMC Minerals' Kudz Ze Kayah mine, approved April 15 to process 2M tonnes/year over 10 years.",
           "source": "LME, Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "Yukon's unemployment held at 3.9% in March, unchanged from February and the lowest territorial rate.148 The 2024 annual GDP contracted 3.3%.156 CPI, housing starts, and participation rate are not published at the territorial level.",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Northwest Territories",
@@ -4644,6 +4897,13 @@
           "period": "",
           "obsDate": "",
           "source": ""
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>The Northwest Territories recorded the largest unemployment increase nationally in March, surging <strong>0.8 percentage points</strong> to <strong>6.1%</strong> from <strong>5.3%</strong> in February.<sup>148</sup> The spike reflects the ongoing wind-down of the territory's diamond mining sector. The Diavik diamond mine completed final production after <strong>23 years</strong> and <strong>150 million</strong> carats, marking the closure of one of three mines that at peak employed over <strong>1,500</strong> NWT residents and generated approximately <strong>20%</strong> of territorial GDP.<sup>156</sup></p><p>The diamond industry has channelled over <strong>$30 billion</strong> into the Canadian economy over 25 years, of which <strong>$20 billion</strong> flowed through the NWT.<sup>156</sup> Two diamond mines remain operational: Gahcho Kue (De Beers, producing until 2031) and Ekati (projected operations to 2040).<sup>156</sup> The Tlicho Government, Yellowknives Dene First Nation, and GNWT signed a partnership agreement to support workers and communities through the structural transition.<sup>119</sup> Territorial leaders are pivoting to critical minerals — a strategy requiring more but smaller mines than the diamond model.<sup>156</sup></p><p>The 2024 annual GDP contracted <strong>1.1%</strong>.<sup>119</sup> CPI and housing starts are not published at the territorial level. The Mackenzie Valley Highway (<strong>$2.0B</strong>, Approved) and Taltson Hydro Expansion (<strong>$2.0B</strong>, Approved) are the territory's largest approved infrastructure projects. The Pine Point lead-zinc mine (<strong>$653M</strong>, Under Review) represents the critical minerals pivot in practice. Federal Arctic Defence spending (<strong>$35.0B</strong>, Proposed) would include NWT components.<sup>74</sup></p>",
@@ -4937,7 +5197,10 @@
           "insight": "WTI at $83.85 after the Hormuz collapse affects NWT's energy corridor economics as the territory navigates a GDP contraction of 1.1% in 2024.",
           "source": "Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "The Northwest Territories recorded the largest unemployment increase nationally in March, surging 0.8 percentage points to 6.1% from 5.3% in February.148 The spike reflects the ongoing wind-down of the territory's diamond mining sector.",
+      "watchlistItems": [],
+      "tradeExposure": ""
     },
     {
       "name": "Nunavut",
@@ -4992,6 +5255,13 @@
           "period": "",
           "obsDate": "",
           "source": ""
+        },
+        "buildingPermits": {
+          "source": "StatCan 34-10-0292",
+          "period": "February 2026",
+          "change": "",
+          "prev": "",
+          "obsDate": "2026-03-15"
         }
       },
       "analysis": "<p>Nunavut's unemployment rate stands at approximately <strong>13.8%</strong> (three-month average through January 2026) — the highest rate in Canada — reflecting structural barriers to employment in remote communities despite active mining operations.<sup>148</sup> The March rate is not separately enumerated for Nunavut. The 2024 annual GDP grew <strong>7.5%</strong>, the strongest rate among all provinces and territories.<sup>156</sup> CPI and housing starts are not published at the territorial level.</p><p>The territory hosts three gold mines producing over <strong>1.2 million ounces per year</strong>, alongside world-class iron ore deposits and a growing critical minerals pipeline.<sup>119</sup> Baffinland concluded Inuit consultation on the Steensby Component during this edition window, with rail-and-port construction planned for 2026.<sup>119</sup> The Baffinland Steensby Expansion (<strong>$3.0B</strong>, Approved) would create the territory's first railway. B2Gold's Goose Mine installed a CleanDesign hybrid energy system, reducing diesel consumption by approximately <strong>4,000 litres per day</strong>.<sup>119</sup></p><p>The Grays Bay Port and Road project proposes a <strong>900-km</strong> road connecting the Arctic coast to southern infrastructure, part of a broader federal commitment of over <strong>$40 billion</strong> for northern infrastructure and critical minerals development.<sup>74</sup> The 750 Homes Initiative (<strong>$480M</strong>, Under Construction) addresses acute housing need in the territory's communities. Back River Gold (<strong>$610M</strong>, Under Construction) and federal Northern Defence spending (<strong>$32.0B</strong>, Proposed) round out the project pipeline. Nunavut land-use plan negotiations continue amid increased mining interest.<sup>84</sup></p>",
@@ -5292,7 +5562,10 @@
           "insight": "Iron ore at $17.78 (+10.8% in April) supports Nunavut's Baffinland Mary River operations and critical minerals development pipeline.",
           "source": "Yahoo Finance"
         }
-      ]
+      ],
+      "marketContext": "Nunavut's unemployment rate stands at approximately 13.8% (three-month average through January 2026) — the highest rate in Canada — reflecting structural barriers to employment in remote communities despite active mining operations.148 The March rate is not separately enumerated for Nunavut.",
+      "watchlistItems": [],
+      "tradeExposure": ""
     }
   ],
   "goodsIndustries": [
@@ -7383,7 +7656,7 @@
         "change": "+3.9%"
       },
       {
-        "name": "DJIA",
+        "name": "Dow Jones",
         "symbol": "^DJI",
         "value": "48,185.80",
         "weekly_pct": "+3.61%",
@@ -7398,7 +7671,7 @@
         "change": "+3.61%"
       },
       {
-        "name": "Nasdaq Composite",
+        "name": "NASDAQ",
         "symbol": "^IXIC",
         "value": "22,822.42",
         "weekly_pct": "+4.31%",
@@ -7454,7 +7727,7 @@
   },
   "commodities": [
     {
-      "name": "WTI Crude Oil",
+      "name": "Crude Oil (WTI)",
       "symbol": "CL=F",
       "category": "Energy",
       "price": "US$83.85/bbl",
@@ -7469,7 +7742,8 @@
       "day": "-11.4%",
       "mm": "N/A",
       "yy": "+50%",
-      "context": "<p><strong>WTI Crude Oil:</strong> <strong>US$83.85/bbl</strong> (<strong>-11.4%</strong> on the April 17 session) &mdash; WTI recorded the most volatile two-week period in recent oil market history, ranging from US$80.56 to US$117.63 between March 18 and April 18 as the Strait of Hormuz crisis disrupted 20% of global oil supplies<sup>50</sup><sup>14</sup>. The IEA characterized the closure as the largest supply disruption on record<sup>110</sup>. WTI peaked near US$128/bbl on April 2 before the temporary ceasefire agreed April 8 and the full Strait reopening announced April 17 sent the contract collapsing approximately 34% from that peak to US$83.85<sup>97</sup>. The 12-month average sits at US$98.15/bbl, leaving the current level 14.6% below its trailing-year average<sup>50</sup>. If WTI holds below the ninety-dollar threshold, the database's <strong>63 oil and gas projects ($100.2B)</strong> would face compressed producer netbacks, with the WCS differential having widened to US$16.25/bbl below WTI on April 13<sup>2</sup>. The 52-week range runs from US$58.70/bbl to US$117.63/bbl<sup>50</sup>.</p>"
+      "context": "<p><strong>WTI Crude Oil:</strong> <strong>US$83.85/bbl</strong> (<strong>-11.4%</strong> on the April 17 session) &mdash; WTI recorded the most volatile two-week period in recent oil market history, ranging from US$80.56 to US$117.63 between March 18 and April 18 as the Strait of Hormuz crisis disrupted 20% of global oil supplies<sup>50</sup><sup>14</sup>. The IEA characterized the closure as the largest supply disruption on record<sup>110</sup>. WTI peaked near US$128/bbl on April 2 before the temporary ceasefire agreed April 8 and the full Strait reopening announced April 17 sent the contract collapsing approximately 34% from that peak to US$83.85<sup>97</sup>. The 12-month average sits at US$98.15/bbl, leaving the current level 14.6% below its trailing-year average<sup>50</sup>. If WTI holds below the ninety-dollar threshold, the database's <strong>63 oil and gas projects ($100.2B)</strong> would face compressed producer netbacks, with the WCS differential having widened to US$16.25/bbl below WTI on April 13<sup>2</sup>. The 52-week range runs from US$58.70/bbl to US$117.63/bbl<sup>50</sup>.</p>",
+      "unit": "bbl"
     },
     {
       "name": "Western Canadian Select",
@@ -7486,10 +7760,11 @@
       "day": "N/A",
       "mm": "N/A",
       "yy": "N/A",
-      "context": "<p><strong>Western Canadian Select:</strong> <strong>~US$86.75/bbl</strong> (estimated, Apr 13) &mdash; the WCS discount widened to <strong>US$16.25/bbl</strong> below WTI on April 13, up from US$15.55 on April 11, reflecting pipeline capacity constraints and heavier sour crude pricing amid the Strait of Hormuz disruption<sup>2</sup>. With the April 17 WTI collapse to US$83.85, the implied WCS level dropped to approximately US$67.60, the lowest estimated heavy crude price since late 2024<sup>2</sup><sup>97</sup>. The widening differential affects netbacks for heavy crude producers across the 63 oil and gas projects ($100.2B) in the database<sup>2</sup>.</p>"
+      "context": "<p><strong>Western Canadian Select:</strong> <strong>~US$86.75/bbl</strong> (estimated, Apr 13) &mdash; the WCS discount widened to <strong>US$16.25/bbl</strong> below WTI on April 13, up from US$15.55 on April 11, reflecting pipeline capacity constraints and heavier sour crude pricing amid the Strait of Hormuz disruption<sup>2</sup>. With the April 17 WTI collapse to US$83.85, the implied WCS level dropped to approximately US$67.60, the lowest estimated heavy crude price since late 2024<sup>2</sup><sup>97</sup>. The widening differential affects netbacks for heavy crude producers across the 63 oil and gas projects ($100.2B) in the database<sup>2</sup>.</p>",
+      "unit": "bbl"
     },
     {
-      "name": "Brent Crude",
+      "name": "Crude Oil (Brent)",
       "symbol": "BZ=F",
       "category": "Energy",
       "price": "US$90.38/bbl",
@@ -7504,10 +7779,11 @@
       "day": "-9.0%",
       "mm": "N/A",
       "yy": "+47%",
-      "context": "<p><strong>Brent Crude:</strong> <strong>US$90.38/bbl</strong> (<strong>-9.0%</strong> on the April 17 session) &mdash; Brent dropped sharply on the Strait of Hormuz reopening, falling from its 52-week high of US$118.35 set during the crisis peak<sup>47</sup><sup>97</sup>. The contract remains <strong>47%</strong> above its year-ago level and 29.3% above its 12-month average of US$69.87<sup>47</sup>.</p>"
+      "context": "<p><strong>Brent Crude:</strong> <strong>US$90.38/bbl</strong> (<strong>-9.0%</strong> on the April 17 session) &mdash; Brent dropped sharply on the Strait of Hormuz reopening, falling from its 52-week high of US$118.35 set during the crisis peak<sup>47</sup><sup>97</sup>. The contract remains <strong>47%</strong> above its year-ago level and 29.3% above its 12-month average of US$69.87<sup>47</sup>.</p>",
+      "unit": "bbl"
     },
     {
-      "name": "Natural Gas (Henry Hub)",
+      "name": "Natural Gas",
       "symbol": "NG=F",
       "category": "Energy",
       "price": "US$2.67/MMBtu",
@@ -7522,7 +7798,8 @@
       "day": "-4.57%",
       "mm": "-11.52%",
       "yy": "-29.98%",
-      "context": "<p><strong>Natural Gas (Henry Hub):</strong> <strong>US$2.67/MMBtu</strong> (<strong>-4.57%</strong> week-over-week) &mdash; Henry Hub fell to its lowest level since November 2024, driven by an EIA storage build of 59 Bcf for the week of April 10, exceeding forecasts, and continued mild shoulder-season demand<sup>52</sup>. The contract sits <strong>29.98%</strong> below its year-ago level and at the floor of its 52-week range of US$2.67 to US$7.46/MMBtu<sup>52</sup>. The 12-month average is US$3.50/MMBtu, leaving the current level 23.7% below its trailing-year average. If Henry Hub holds near current levels, the <strong>785 power and energy projects</strong> in the database tracking gas-fired generation and LNG export feedstock would carry input costs at the bottom of the observed range over the past year<sup>52</sup>.</p>"
+      "context": "<p><strong>Natural Gas (Henry Hub):</strong> <strong>US$2.67/MMBtu</strong> (<strong>-4.57%</strong> week-over-week) &mdash; Henry Hub fell to its lowest level since November 2024, driven by an EIA storage build of 59 Bcf for the week of April 10, exceeding forecasts, and continued mild shoulder-season demand<sup>52</sup>. The contract sits <strong>29.98%</strong> below its year-ago level and at the floor of its 52-week range of US$2.67 to US$7.46/MMBtu<sup>52</sup>. The 12-month average is US$3.50/MMBtu, leaving the current level 23.7% below its trailing-year average. If Henry Hub holds near current levels, the <strong>785 power and energy projects</strong> in the database tracking gas-fired generation and LNG export feedstock would carry input costs at the bottom of the observed range over the past year<sup>52</sup>.</p>",
+      "unit": "MMBtu"
     },
     {
       "name": "Gold",
@@ -7539,7 +7816,8 @@
       "day": "+2.82%",
       "mm": "N/A",
       "yy": "+50%",
-      "context": "<p><strong>Gold:</strong> <strong>US$4,728/oz</strong> (<strong>+2.82%</strong> week-over-week) &mdash; gold advanced on safe-haven demand driven by the Strait of Hormuz crisis and broad US dollar depreciation, trading between US$4,656 (April 7) and US$4,816 (April 16)<sup>18</sup>. The intra-period high of US$4,816 on April 16 marked a new 52-week peak, with the metal up approximately 50% year-over-year<sup>18</sup>. The Lagging Indicator cross-reference engine links the gold move to <strong>364 mining projects ($159.5B)</strong> in the database, where gold-linked operations carry direct revenue exposure to spot pricing<sup>18</sup>.</p>"
+      "context": "<p><strong>Gold:</strong> <strong>US$4,728/oz</strong> (<strong>+2.82%</strong> week-over-week) &mdash; gold advanced on safe-haven demand driven by the Strait of Hormuz crisis and broad US dollar depreciation, trading between US$4,656 (April 7) and US$4,816 (April 16)<sup>18</sup>. The intra-period high of US$4,816 on April 16 marked a new 52-week peak, with the metal up approximately 50% year-over-year<sup>18</sup>. The Lagging Indicator cross-reference engine links the gold move to <strong>364 mining projects ($159.5B)</strong> in the database, where gold-linked operations carry direct revenue exposure to spot pricing<sup>18</sup>.</p>",
+      "unit": "oz"
     },
     {
       "name": "Silver",
@@ -7557,7 +7835,8 @@
       "day": "+3.74%",
       "mm": "-15.30%",
       "yy": "+148.84%",
-      "context": "<p><strong>Silver:</strong> <strong>US$78&ndash;80/oz range</strong> (<strong>+3.74%</strong> week-over-week) &mdash; silver tracked gold higher on safe-haven and industrial demand, climbing above US$80/oz on April 16<sup>19</sup>. The metal sits <strong>148.84%</strong> above its year-ago level, the largest percentage year-over-year gain among the 13 commodities tracked, with the 52-week range running from US$30.32/oz to US$115.08/oz<sup>19</sup>.</p>"
+      "context": "<p><strong>Silver:</strong> <strong>US$78&ndash;80/oz range</strong> (<strong>+3.74%</strong> week-over-week) &mdash; silver tracked gold higher on safe-haven and industrial demand, climbing above US$80/oz on April 16<sup>19</sup>. The metal sits <strong>148.84%</strong> above its year-ago level, the largest percentage year-over-year gain among the 13 commodities tracked, with the 52-week range running from US$30.32/oz to US$115.08/oz<sup>19</sup>.</p>",
+      "unit": "oz"
     },
     {
       "name": "Copper",
@@ -7574,7 +7853,8 @@
       "day": "+3.32%",
       "mm": "+4.91%",
       "yy": "+30%",
-      "context": "<p><strong>Copper:</strong> <strong>US$6.07/lb</strong> (<strong>+3.32%</strong> week-over-week) &mdash; COMEX copper advanced on a combination of AI data-center power demand, US-Iran diplomacy optimism, and China's Q1 GDP beat of 5.0% with industrial production up 6.1% year-over-year<sup>49</sup><sup>95</sup>. The contract is up approximately <strong>30%</strong> year-over-year and 4.91% month-over-month, the highest reading since the March 30 indicators print of US$5.53/lb<sup>49</sup>. The cross-reference engine links copper to <strong>785 power and energy projects</strong> in the database, where the metal carries through to grid build-out and electrification cost lines<sup>49</sup>.</p>"
+      "context": "<p><strong>Copper:</strong> <strong>US$6.07/lb</strong> (<strong>+3.32%</strong> week-over-week) &mdash; COMEX copper advanced on a combination of AI data-center power demand, US-Iran diplomacy optimism, and China's Q1 GDP beat of 5.0% with industrial production up 6.1% year-over-year<sup>49</sup><sup>95</sup>. The contract is up approximately <strong>30%</strong> year-over-year and 4.91% month-over-month, the highest reading since the March 30 indicators print of US$5.53/lb<sup>49</sup>. The cross-reference engine links copper to <strong>785 power and energy projects</strong> in the database, where the metal carries through to grid build-out and electrification cost lines<sup>49</sup>.</p>",
+      "unit": "lb"
     },
     {
       "name": "Lumber",
@@ -7591,7 +7871,8 @@
       "day": "+1.0%",
       "mm": "N/A",
       "yy": "N/A",
-      "context": "<p><strong>Lumber:</strong> <strong>US$490/Mbf</strong> (W-SPF 2x4, <strong>+1.0%</strong> week-over-week) &mdash; NRCan reported the benchmark at US$490/Mbf for the week of April 3, up US$5 on the week, as spring building season demand offset the drag from housing starts falling 6.0% month-over-month to 235,852 SAAR in March<sup>27</sup><sup>88</sup>. The database tracks <strong>13 forestry projects</strong> and <strong>211 residential projects ($44.4B)</strong> with exposure to lumber as a construction input<sup>27</sup>.</p>"
+      "context": "<p><strong>Lumber:</strong> <strong>US$490/Mbf</strong> (W-SPF 2x4, <strong>+1.0%</strong> week-over-week) &mdash; NRCan reported the benchmark at US$490/Mbf for the week of April 3, up US$5 on the week, as spring building season demand offset the drag from housing starts falling 6.0% month-over-month to 235,852 SAAR in March<sup>27</sup><sup>88</sup>. The database tracks <strong>13 forestry projects</strong> and <strong>211 residential projects ($44.4B)</strong> with exposure to lumber as a construction input<sup>27</sup>.</p>",
+      "unit": "Mbf"
     },
     {
       "name": "Wheat",
@@ -7608,7 +7889,8 @@
       "day": "+4.7%",
       "mm": "+10.7%",
       "yy": "+10.4%",
-      "context": "<p><strong>Wheat:</strong> <strong>US$601.75/bu</strong> (<strong>+4.7%</strong> week-over-week) &mdash; CBOT wheat advanced on global supply concerns linked to the Middle East disruption and Black Sea transport risk, up <strong>10.7%</strong> month-over-month and <strong>10.4%</strong> year-over-year<sup>135</sup>. The advance from the March 10 level of US$545.25/bu represents a 10.4% gain over five weeks<sup>135</sup>.</p>"
+      "context": "<p><strong>Wheat:</strong> <strong>US$601.75/bu</strong> (<strong>+4.7%</strong> week-over-week) &mdash; CBOT wheat advanced on global supply concerns linked to the Middle East disruption and Black Sea transport risk, up <strong>10.7%</strong> month-over-month and <strong>10.4%</strong> year-over-year<sup>135</sup>. The advance from the March 10 level of US$545.25/bu represents a 10.4% gain over five weeks<sup>135</sup>.</p>",
+      "unit": "bu"
     },
     {
       "name": "Uranium",
@@ -7625,7 +7907,8 @@
       "day": "N/A",
       "mm": "-0.23%",
       "yy": "+32.67%",
-      "context": "<p><strong>Uranium:</strong> <strong>US$86.30/lb</strong> (<strong>-0.23%</strong> month-over-month) &mdash; spot uranium held near the US$86 level on April 16, up <strong>32.67%</strong> year-over-year, reflecting sustained utility contracting demand and geopolitical supply-route concerns through the Strait of Hormuz period<sup>54</sup>. Saskatchewan-based producers Cameco (McArthur River, Cigar Lake) anchor the North American uranium production base tracked in the database's mining project count<sup>54</sup>.</p>"
+      "context": "<p><strong>Uranium:</strong> <strong>US$86.30/lb</strong> (<strong>-0.23%</strong> month-over-month) &mdash; spot uranium held near the US$86 level on April 16, up <strong>32.67%</strong> year-over-year, reflecting sustained utility contracting demand and geopolitical supply-route concerns through the Strait of Hormuz period<sup>54</sup>. Saskatchewan-based producers Cameco (McArthur River, Cigar Lake) anchor the North American uranium production base tracked in the database's mining project count<sup>54</sup>.</p>",
+      "unit": "lb"
     },
     {
       "name": "Nickel",
@@ -7642,7 +7925,8 @@
       "day": "N/A",
       "mm": "+4.81%",
       "yy": "+14.23%",
-      "context": "<p><strong>Nickel:</strong> <strong>US$17,985/tonne</strong> (<strong>+4.81%</strong> month-over-month) &mdash; LME nickel advanced on battery supply-chain restocking and China's industrial production gain of 6.1% year-over-year in Q1, up <strong>14.23%</strong> year-over-year<sup>53</sup><sup>95</sup>. The metal carries exposure to Canadian battery-metals supply-chain projects in Ontario and Quebec<sup>53</sup>.</p>"
+      "context": "<p><strong>Nickel:</strong> <strong>US$17,985/tonne</strong> (<strong>+4.81%</strong> month-over-month) &mdash; LME nickel advanced on battery supply-chain restocking and China's industrial production gain of 6.1% year-over-year in Q1, up <strong>14.23%</strong> year-over-year<sup>53</sup><sup>95</sup>. The metal carries exposure to Canadian battery-metals supply-chain projects in Ontario and Quebec<sup>53</sup>.</p>",
+      "unit": "tonne"
     },
     {
       "name": "Canola",
@@ -7659,10 +7943,11 @@
       "day": "N/A",
       "mm": "N/A",
       "yy": "N/A",
-      "context": "<p><strong>Canola:</strong> <strong>CAD$726.60/tonne</strong> (May futures, April 7) &mdash; ICE canola futures held near the CAD$727 level, supported by Middle East energy disruptions lifting vegetable oil markets and tightening canola crush margins<sup>135</sup>. Prairie oilseed producers carried through to the database's <strong>4 agriculture projects</strong> tracked in the pipeline<sup>135</sup>.</p>"
+      "context": "<p><strong>Canola:</strong> <strong>CAD$726.60/tonne</strong> (May futures, April 7) &mdash; ICE canola futures held near the CAD$727 level, supported by Middle East energy disruptions lifting vegetable oil markets and tightening canola crush margins<sup>135</sup>. Prairie oilseed producers carried through to the database's <strong>4 agriculture projects</strong> tracked in the pipeline<sup>135</sup>.</p>",
+      "unit": "tonne"
     },
     {
-      "name": "Potash (Nutrien proxy)",
+      "name": "Potash (Nutrien)",
       "symbol": "NTR.TO",
       "category": "Agriculture",
       "price": "CAD$70.19/share",
@@ -7677,7 +7962,8 @@
       "day": "-3.56%",
       "mm": "-4.35%",
       "yy": "+50.34%",
-      "context": "<p><strong>Potash (Nutrien proxy):</strong> <strong>CAD$70.19/share</strong> (<strong>-3.56%</strong> week-over-week) &mdash; Nutrien declined as fertilizer-linked names rotated lower amid the broader risk-off period, falling <strong>4.35%</strong> month-over-month but remaining <strong>50.34%</strong> above its year-ago level<sup>50</sup>. The 52-week range runs from CAD$48.32 to CAD$83.94, with the 12-month average at CAD$61.79<sup>50</sup>. Saskatchewan potash operations under Nutrien and Mosaic anchor the database's fertilizer-linked mining exposure<sup>50</sup>.</p>"
+      "context": "<p><strong>Potash (Nutrien proxy):</strong> <strong>CAD$70.19/share</strong> (<strong>-3.56%</strong> week-over-week) &mdash; Nutrien declined as fertilizer-linked names rotated lower amid the broader risk-off period, falling <strong>4.35%</strong> month-over-month but remaining <strong>50.34%</strong> above its year-ago level<sup>50</sup>. The 52-week range runs from CAD$48.32 to CAD$83.94, with the 12-month average at CAD$61.79<sup>50</sup>. Saskatchewan potash operations under Nutrien and Mosaic anchor the database's fertilizer-linked mining exposure<sup>50</sup>.</p>",
+      "unit": "share"
     }
   ],
   "commodity_commentary": "<p><span class=\"lead-sentence\">The two-week commodity tape was dominated by the Strait of Hormuz crisis and its resolution &mdash; </span>WTI crude swung from US$80.56 to a peak near US$128/bbl before collapsing to US$83.85 on the April 17 reopening, while Brent followed a parallel path from its 52-week high of US$118.35 down to US$90.38<sup>50</sup><sup>47</sup><sup>97</sup>. Precious metals advanced on safe-haven flows, with gold reaching US$4,816/oz on April 16 &mdash; a new intra-period high &mdash; and silver climbing above US$80/oz<sup>18</sup><sup>19</sup>. Base metals tracked China's Q1 GDP beat of 5.0% and March import surge of +27.8%, with copper gaining 3.32% to US$6.07/lb and nickel rising 4.81% month-over-month to US$17,985/tonne<sup>49</sup><sup>53</sup><sup>95</sup>. Henry Hub natural gas fell to US$2.67/MMBtu, a 17-month low, on elevated storage and mild demand<sup>52</sup>. Agriculture was mixed: wheat advanced 4.7% on global supply concerns while the Nutrien potash proxy declined 3.56%<sup>135</sup>. The Lagging Indicator cross-reference engine links the period's commodity moves to <strong>364 mining projects ($159.5B)</strong> and <strong>63 oil and gas projects ($100.2B)</strong> tracked in the database, plus <strong>785 power and energy projects</strong> with input-cost exposure to energy prices<sup>50</sup><sup>18</sup>.</p>",
