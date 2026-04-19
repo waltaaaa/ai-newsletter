@@ -5421,7 +5421,8 @@
           "delta": "$5.47B aggregate value",
           "source": "projects_all.json:sector=agriculture|forestry"
         }
-      ]
+      ],
+      "insightCharts": []
     },
     {
       "code": "21",
@@ -5565,7 +5566,8 @@
           "delta": "$268.74B aggregate value",
           "source": "projects_all.json:sector=mining|oil_gas"
         }
-      ]
+      ],
+      "insightCharts": []
     },
     {
       "code": "22",
@@ -5681,7 +5683,8 @@
           "delta": "$522.89B aggregate value",
           "source": "projects_all.json:sector=power_energy"
         }
-      ]
+      ],
+      "insightCharts": []
     },
     {
       "code": "23",
@@ -5809,7 +5812,8 @@
           "delta": "2026 forecast; residential -5% YoY (5th straight decline)",
           "source": "constructconnect.com:2026-outlook"
         }
-      ]
+      ],
+      "insightCharts": []
     },
     {
       "code": "31-33",
@@ -5931,7 +5935,8 @@
           "delta": "$67.39B aggregate value",
           "source": "projects_all.json:sector=manufacturing"
         }
-      ]
+      ],
+      "insightCharts": []
     }
   ],
   "servicesIndustries": [
@@ -6017,7 +6022,8 @@
         }
       ],
       "trend": "-1.7%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": []
     },
     {
       "code": "44-45",
@@ -6097,7 +6103,8 @@
         }
       ],
       "trend": "+2.7%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": []
     },
     {
       "code": "48-49",
@@ -6187,7 +6194,8 @@
         }
       ],
       "trend": "+1.6%",
-      "projectCount": 601
+      "projectCount": 601,
+      "insightCharts": []
     },
     {
       "code": "51",
@@ -6282,7 +6290,8 @@
         }
       ],
       "trend": "+3.2%",
-      "projectCount": 43
+      "projectCount": 43,
+      "insightCharts": []
     },
     {
       "code": "52",
@@ -6371,7 +6380,8 @@
         }
       ],
       "trend": "+3.2%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": []
     },
     {
       "code": "53",
@@ -6461,7 +6471,8 @@
         }
       ],
       "trend": "+1.2%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": []
     },
     {
       "code": "54",
@@ -6539,7 +6550,8 @@
         }
       ],
       "trend": "-0.4%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": []
     },
     {
       "code": "55",
@@ -6596,7 +6608,8 @@
         }
       ],
       "trend": "-21.9%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": []
     },
     {
       "code": "56",
@@ -6685,7 +6698,8 @@
         }
       ],
       "trend": "-0.2%",
-      "projectCount": 17
+      "projectCount": 17,
+      "insightCharts": []
     },
     {
       "code": "61",
@@ -6769,7 +6783,8 @@
         }
       ],
       "trend": "-1.9%",
-      "projectCount": 157
+      "projectCount": 157,
+      "insightCharts": []
     },
     {
       "code": "62",
@@ -6865,7 +6880,8 @@
         }
       ],
       "trend": "+2.1%",
-      "projectCount": 258
+      "projectCount": 258,
+      "insightCharts": []
     },
     {
       "code": "71",
@@ -6955,7 +6971,8 @@
         }
       ],
       "trend": "+2.2%",
-      "projectCount": 150
+      "projectCount": 150,
+      "insightCharts": []
     },
     {
       "code": "72",
@@ -7035,7 +7052,8 @@
         }
       ],
       "trend": "+2.3%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": []
     },
     {
       "code": "81",
@@ -7120,7 +7138,8 @@
         }
       ],
       "trend": "+0.3%",
-      "projectCount": 0
+      "projectCount": 0,
+      "insightCharts": []
     },
     {
       "code": "91",
@@ -7216,7 +7235,8 @@
         }
       ],
       "trend": "+0.7%",
-      "projectCount": 231
+      "projectCount": 231,
+      "insightCharts": []
     }
   ],
   "industry_executive_summary": "<p>Canada's goods-producing industries recorded a mixed January 2026 GDP print, with mining and oil/gas extraction gaining <strong>+1.2%</strong> month-over-month and construction rising <strong>+1.1%</strong>, while manufacturing contracted <strong>-1.4%</strong> month-over-month and <strong>-4.6%</strong> year-over-year, the steepest annual decline among goods sectors. Agriculture posted the strongest annual reading across all 20 industries at <strong>+5.4%</strong> year-over-year, though month-over-month output fell <strong>-1.4%</strong> amid China's <strong>75.8%</strong> duty on Canadian canola seed.</p><p>The oil price whipsaw dominated the mining and energy landscape: Brent crude dropped from approximately <strong>US$107/bbl</strong> to <strong>US$90.38/bbl</strong> over the two-week window, while WTI collapsed over <strong>34%</strong> from its April 2 peak to <strong>US$83.85/bbl</strong> following the Strait of Hormuz ceasefire. The project database tracks <strong>63 oil and gas projects ($100.2B)</strong> and <strong>367 mining projects ($159.5B)</strong> with direct commodity price exposure. Construction GDP growth was supported by the <strong>$51B</strong> Build Communities Strong Fund, launched April 7, with heavy and civil engineering recording <strong>+5.8%</strong> year-over-year, though housing starts fell <strong>6.0%</strong> month-over-month to <strong>235,852 SAAR</strong>.</p><p>Manufacturing sales rebounded <strong>3.6%</strong> to <strong>$71.2B</strong> in February, led by transportation equipment at <strong>+18.8%</strong>, while unfilled orders reached a record <strong>$117.6B</strong>. The restructured U.S. Section 232 tariffs, effective April 6, imposed <strong>50%</strong> duties on steel, aluminum, and copper articles. On the services side, the Canadian Sovereign AI Compute Strategy committed up to <strong>$700M</strong> for compute capacity and <strong>$1B</strong> for public supercomputing, generating cross-sector demand across NAICS 23 and NAICS 51. Management of companies (NAICS 55) recorded the deepest annual contraction at <strong>-21.9%</strong> year-over-year, while finance and insurance and information/cultural industries tied for the strongest services reading at <strong>+3.2%</strong> year-over-year.</p>",
@@ -7275,42 +7295,60 @@
         "value": "0.7305",
         "weekly_pct": "+1.5%",
         "mom_pct": "+1.5%",
-        "yoy_pct": "+3.1%"
+        "yoy_pct": "+3.1%",
+        "day": "+1.5%",
+        "mm": "+1.5%",
+        "yy": "+3.1%"
       },
       {
         "name": "USD/CAD",
         "value": "1.3688",
         "weekly_pct": "-1.5%",
         "mom_pct": "-1.5%",
-        "yoy_pct": "-3.1%"
+        "yoy_pct": "-3.1%",
+        "day": "-1.5%",
+        "mm": "-1.5%",
+        "yy": "-3.1%"
       },
       {
         "name": "EUR/USD",
         "value": "1.1696",
         "weekly_pct": "+1.34%",
         "mom_pct": "+0.68%",
-        "yoy_pct": "+6.79%"
+        "yoy_pct": "+6.79%",
+        "day": "+1.34%",
+        "mm": "+0.68%",
+        "yy": "+6.79%"
       },
       {
         "name": "GBP/USD",
         "value": "1.3432",
         "weekly_pct": "+1.5%",
         "mom_pct": "+0.1%",
-        "yoy_pct": "+4.7%"
+        "yoy_pct": "+4.7%",
+        "day": "+1.5%",
+        "mm": "+0.1%",
+        "yy": "+4.7%"
       },
       {
         "name": "USD/JPY",
         "value": "159.09",
         "weekly_pct": "-0.25%",
         "mom_pct": "+0.79%",
-        "yoy_pct": "+7.93%"
+        "yoy_pct": "+7.93%",
+        "day": "-0.25%",
+        "mm": "+0.79%",
+        "yy": "+7.93%"
       },
       {
         "name": "USD/CNY",
         "value": "6.8287",
         "weekly_pct": "-0.61%",
         "mom_pct": "-1.0%",
-        "yoy_pct": "-7.0%"
+        "yoy_pct": "-7.0%",
+        "day": "-0.61%",
+        "mm": "-1.0%",
+        "yy": "-7.0%"
       }
     ],
     "indices": [
@@ -7323,7 +7361,11 @@
         "yoy_pct": "+41%",
         "high_52w": "34,541",
         "low_52w": "23,588",
-        "commentary": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at <strong>34,052</strong>, up <strong>1.7%</strong> over the two-week period ending April 16</span> &mdash; the index extended its 12-month advance to <strong>41%</strong> as energy and materials names repriced around the Strait of Hormuz crisis and its resolution<sup>46</sup>. During the first week, the benchmark gained ground as WTI spiked above US$110/bbl on supply-disruption fears; the second week saw partial reversal after the ceasefire and Strait reopening on April 17 sent crude from its peak near US$128/bbl to US$83.85<sup>97</sup>. The index sits <strong>1.4%</strong> below its 52-week high of <strong>34,541</strong> set in early March 2026 and <strong>44.3%</strong> above its 52-week low of <strong>23,588</strong> recorded in April 2025<sup>46</sup>. Sub-index performance diverged: materials advanced on gold reaching US$4,816/oz on April 16 and copper climbing to US$6.07/lb, while financials held steady amid the seventh consecutive Bank of Canada hold<sup>18</sup><sup>49</sup><sup>61</sup>. The Lagging Indicator cross-reference engine links the benchmark to <strong>364 mining projects ($159.5B)</strong> and <strong>63 oil and gas projects ($100.2B)</strong> in the database<sup>46</sup>. If the TSX holds above 34,000 amid the current BoC rate, the <strong>211 residential projects</strong> valued at $44 billion tracked in the pipeline would continue to carry financing exposure tied to the 2-year Government of Canada yield<sup>42</sup>.</p>"
+        "commentary": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at <strong>34,052</strong>, up <strong>1.7%</strong> over the two-week period ending April 16</span> &mdash; the index extended its 12-month advance to <strong>41%</strong> as energy and materials names repriced around the Strait of Hormuz crisis and its resolution<sup>46</sup>. During the first week, the benchmark gained ground as WTI spiked above US$110/bbl on supply-disruption fears; the second week saw partial reversal after the ceasefire and Strait reopening on April 17 sent crude from its peak near US$128/bbl to US$83.85<sup>97</sup>. The index sits <strong>1.4%</strong> below its 52-week high of <strong>34,541</strong> set in early March 2026 and <strong>44.3%</strong> above its 52-week low of <strong>23,588</strong> recorded in April 2025<sup>46</sup>. Sub-index performance diverged: materials advanced on gold reaching US$4,816/oz on April 16 and copper climbing to US$6.07/lb, while financials held steady amid the seventh consecutive Bank of Canada hold<sup>18</sup><sup>49</sup><sup>61</sup>. The Lagging Indicator cross-reference engine links the benchmark to <strong>364 mining projects ($159.5B)</strong> and <strong>63 oil and gas projects ($100.2B)</strong> in the database<sup>46</sup>. If the TSX holds above 34,000 amid the current BoC rate, the <strong>211 residential projects</strong> valued at $44 billion tracked in the pipeline would continue to carry financing exposure tied to the 2-year Government of Canada yield<sup>42</sup>.</p>",
+        "day": "+1.7%",
+        "mm": "+2.8%",
+        "yy": "+41%",
+        "change": "+1.7%"
       },
       {
         "name": "S&P 500",
@@ -7334,7 +7376,11 @@
         "yoy_pct": "+25.06%",
         "high_52w": "7,023",
         "low_52w": "5,158",
-        "commentary": "<p><span class=\"lead-sentence\">The S&P 500 closed at <strong>7,022.95</strong> on April 13, posting its best weekly gain since November at <strong>+3.9%</strong></span> &mdash; the advance developed as the ceasefire framework eased geopolitical risk premia and the Federal Reserve held at <strong>3.50&ndash;3.75%</strong>, maintaining a <strong>125&ndash;150 basis point</strong> gap above the Bank of Canada overnight rate<sup>94</sup><sup>103</sup>. Both the S&P 500 and Nasdaq posted fresh record closes on April 14<sup>94</sup>. The index is up <strong>25.06%</strong> year-over-year and sits <strong>36.2%</strong> above its 52-week low of <strong>5,158</strong> recorded on April 21, 2025 &mdash; the first weekly close above 7,000 since late January 2026<sup>59</sup>.</p>"
+        "commentary": "<p><span class=\"lead-sentence\">The S&P 500 closed at <strong>7,022.95</strong> on April 13, posting its best weekly gain since November at <strong>+3.9%</strong></span> &mdash; the advance developed as the ceasefire framework eased geopolitical risk premia and the Federal Reserve held at <strong>3.50&ndash;3.75%</strong>, maintaining a <strong>125&ndash;150 basis point</strong> gap above the Bank of Canada overnight rate<sup>94</sup><sup>103</sup>. Both the S&P 500 and Nasdaq posted fresh record closes on April 14<sup>94</sup>. The index is up <strong>25.06%</strong> year-over-year and sits <strong>36.2%</strong> above its 52-week low of <strong>5,158</strong> recorded on April 21, 2025 &mdash; the first weekly close above 7,000 since late January 2026<sup>59</sup>.</p>",
+        "day": "+3.9%",
+        "mm": "+2.3%",
+        "yy": "+25.06%",
+        "change": "+3.9%"
       },
       {
         "name": "DJIA",
@@ -7345,7 +7391,11 @@
         "yoy_pct": "+18.66%",
         "high_52w": "50,188",
         "low_52w": "38,170",
-        "commentary": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average surged <strong>3.61%</strong> on April 9 to close at <strong>48,185.80</strong></span> &mdash; the single-session move reflected broad repricing across industrial and healthcare components as the ceasefire framework reduced the geopolitical premium embedded in energy costs<sup>94</sup>. The 30-stock benchmark is up <strong>18.66%</strong> year-over-year and trades <strong>4.0%</strong> below its 52-week high of <strong>50,188</strong> set on February 10, 2026, and <strong>26.2%</strong> above its 52-week low of <strong>38,170</strong> from April 2025<sup>94</sup>. The Federal Reserve signaled one rate cut in 2026 and one in 2027 at its March 18 meeting, reinforcing the wider rate differential with the BoC<sup>103</sup>. The daily gain was the largest single-session percentage advance since November 2024<sup>94</sup>.</p>"
+        "commentary": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average surged <strong>3.61%</strong> on April 9 to close at <strong>48,185.80</strong></span> &mdash; the single-session move reflected broad repricing across industrial and healthcare components as the ceasefire framework reduced the geopolitical premium embedded in energy costs<sup>94</sup>. The 30-stock benchmark is up <strong>18.66%</strong> year-over-year and trades <strong>4.0%</strong> below its 52-week high of <strong>50,188</strong> set on February 10, 2026, and <strong>26.2%</strong> above its 52-week low of <strong>38,170</strong> from April 2025<sup>94</sup>. The Federal Reserve signaled one rate cut in 2026 and one in 2027 at its March 18 meeting, reinforcing the wider rate differential with the BoC<sup>103</sup>. The daily gain was the largest single-session percentage advance since November 2024<sup>94</sup>.</p>",
+        "day": "+3.61%",
+        "mm": "+1.0%",
+        "yy": "+18.66%",
+        "change": "+3.61%"
       },
       {
         "name": "Nasdaq Composite",
@@ -7356,7 +7406,11 @@
         "yoy_pct": "+33.27%",
         "high_52w": "23,958",
         "low_52w": "15,871",
-        "commentary": "<p><span class=\"lead-sentence\">The Nasdaq Composite gained <strong>4.31%</strong> on April 9 to <strong>22,822.42</strong>, then posted a fresh record close on April 14</span> &mdash; technology names led the advance as falling crude prices eased input-cost pressure across the sector following the Strait of Hormuz ceasefire framework<sup>94</sup>. The index is up <strong>33.27%</strong> year-over-year, the widest 12-month gain among the four North American benchmarks tracked, and sits <strong>4.7%</strong> below its 52-week high of <strong>23,958</strong> set in late October 2025<sup>94</sup>.</p>"
+        "commentary": "<p><span class=\"lead-sentence\">The Nasdaq Composite gained <strong>4.31%</strong> on April 9 to <strong>22,822.42</strong>, then posted a fresh record close on April 14</span> &mdash; technology names led the advance as falling crude prices eased input-cost pressure across the sector following the Strait of Hormuz ceasefire framework<sup>94</sup>. The index is up <strong>33.27%</strong> year-over-year, the widest 12-month gain among the four North American benchmarks tracked, and sits <strong>4.7%</strong> below its 52-week high of <strong>23,958</strong> set in late October 2025<sup>94</sup>.</p>",
+        "day": "+4.31%",
+        "mm": "+0.55%",
+        "yy": "+33.27%",
+        "change": "+4.31%"
       }
     ],
     "summary": "<p><span class=\"lead-sentence\">The Strait of Hormuz crisis and ceasefire dominated the two-week period ending April 13, whipsawing commodity prices while equities advanced</span> &mdash; WTI crude collapsed <strong>34%</strong> from a peak near <strong>US$128/bbl</strong> (Apr 2) to <strong>US$83.85</strong> after the strait reopened Apr 17<sup>97</sup>, while Brent dropped <strong>9.0%</strong> in a single session to <strong>US$90.38</strong><sup>47</sup>. The S&amp;P/TSX Composite rose <strong>1.7%</strong> to <strong>~34,052</strong> (<strong>+41%</strong> Y/Y)<sup>46</sup>, and the S&amp;P 500 posted a record close at <strong>7,022.95</strong><sup>94</sup>. The Canadian dollar strengthened <strong>1.5%</strong> to <strong>0.7305 CAD/USD</strong><sup>44</sup> as the DXY fell toward <strong>98</strong>, and the Bank of Canada held at <strong>2.25%</strong> for a seventh consecutive meeting<sup>61</sup>. The project database tracks <strong>7,344 projects</strong> valued at <strong>$1.37 trillion</strong>.</p><p><span class=\"lead-sentence\">The oil price reversal split the pipeline’s commodity exposure in two directions</span> &mdash; <strong>63 oil and gas projects ($100.2B)</strong> carry direct WTI exposure, with the WCS differential widening to <strong>$16.25/bbl</strong> below WTI on Apr 13<sup>2</sup>. On the metals side, gold reached <strong>US$4,728/oz</strong> (<strong>+2.82%</strong>)<sup>18</sup> and copper climbed to <strong>US$6.07/lb</strong> (<strong>+3.32%</strong>)<sup>49</sup>, referenced by <strong>364 mining projects totalling $159.5B</strong>. The 10-year Government of Canada bond yield stood at <strong>3.47%</strong><sup>45</sup> with the 2-year at <strong>2.80%</strong><sup>42</sup>, a <strong>67-basis-point</strong> spread, against <strong>211 residential ($44.4B)</strong> and <strong>1,671 infrastructure projects ($179.0B)</strong> carrying financing cost exposure to rate movements.</p>",
@@ -7389,7 +7443,14 @@
           "amount": "$1.37T"
         }
       ]
-    }
+    },
+    "yieldNarrative": "<p><span class=\"lead-sentence\">The Government of Canada yield curve maintained its normal upward-sloping shape with the 2-year to 10-year spread widening to <strong>67 basis points</strong>, up from <strong>63 basis points</strong> in the prior edition</span> &mdash; the widening developed as the 2-year yield fell <strong>15 basis points</strong> to <strong>2.80%</strong> while the 10-year declined <strong>11 basis points</strong> to <strong>3.47%</strong>, reflecting a flight-to-quality bid during the Strait of Hormuz crisis and subsequent position unwinding<sup>42</sup><sup>45</sup>. The 2-year sits <strong>55 basis points</strong> above the BoC policy rate of <strong>2.25%</strong>, held for a seventh consecutive meeting on March 18, with market pricing at 96.5% probability of a hold on April 29<sup>61</sup><sup>62</sup>. Year-over-year, the 2-year has risen <strong>23 basis points</strong> from 2.57%, the 10-year has risen <strong>41 basis points</strong> from 3.06%, and the 30-year has risen <strong>64 basis points</strong> from 3.30% &mdash; the 30-year's year-over-year move is the steepest across the six tenors in the Bank of Canada data<sup>42</sup><sup>45</sup>. The 5-year to 10-year spread sits at <strong>29 basis points</strong> and the 10-year to 30-year spread at <strong>47 basis points</strong><sup>45</sup>. If yields hold near current levels amid the continued BoC hold, the <strong>785 power and energy projects</strong> and <strong>1,671 infrastructure projects</strong> valued at $179 billion in the database would face financing costs anchored at the long end of the curve, while the <strong>211 residential projects</strong> valued at $44 billion would retain exposure to the two-year benchmark<sup>42</sup><sup>45</sup>.</p>",
+    "yieldCurve": {
+      "spread_2_10": "67bp",
+      "curve_shape": "normal"
+    },
+    "commodityNarrative": "<p><span class=\"lead-sentence\">The two-week commodity tape was dominated by the Strait of Hormuz crisis and its resolution &mdash; </span>WTI crude swung from US$80.56 to a peak near US$128/bbl before collapsing to US$83.85 on the April 17 reopening, while Brent followed a parallel path from its 52-week high of US$118.35 down to US$90.38<sup>50</sup><sup>47</sup><sup>97</sup>. Precious metals advanced on safe-haven flows, with gold reaching US$4,816/oz on April 16 &mdash; a new intra-period high &mdash; and silver climbing above US$80/oz<sup>18</sup><sup>19</sup>. Base metals tracked China's Q1 GDP beat of 5.0% and March import surge of +27.8%, with copper gaining 3.32% to US$6.07/lb and nickel rising 4.81% month-over-month to US$17,985/tonne<sup>49</sup><sup>53</sup><sup>95</sup>. Henry Hub natural gas fell to US$2.67/MMBtu, a 17-month low, on elevated storage and mild demand<sup>52</sup>. Agriculture was mixed: wheat advanced 4.7% on global supply concerns while the Nutrien potash proxy declined 3.56%<sup>135</sup>. The Lagging Indicator cross-reference engine links the period's commodity moves to <strong>364 mining projects ($159.5B)</strong> and <strong>63 oil and gas projects ($100.2B)</strong> tracked in the database, plus <strong>785 power and energy projects</strong> with input-cost exposure to energy prices<sup>50</sup><sup>18</sup>.</p>",
+    "fxNarrative": "<p><span class=\"lead-sentence\">The Canadian dollar firmed to <strong>0.7305 CAD/USD</strong> (USD/CAD 1.3688), up <strong>1.5%</strong> over the two-week period</span> &mdash; the loonie strengthened from approximately 0.72 at the end of March as broader US dollar depreciation sent the DXY toward 98, the lowest level for the dollar index since March 2025<sup>44</sup>. The advance developed against a <strong>125&ndash;150 basis point</strong> rate differential between the Federal Reserve at 3.50&ndash;3.75% and the Bank of Canada at 2.25%, a gap persisting since the BoC's seventh consecutive hold on March 18<sup>61</sup><sup>103</sup>. The BoC Summary of Deliberations published April 1 noted near-term growth weaker than the January projection; the next decision on April 29 will include the Monetary Policy Report<sup>63</sup>. The euro gained <strong>1.34%</strong> to <strong>1.1696 EUR/USD</strong>, up <strong>6.79%</strong> year-over-year, as the ECB held at 2.15% and markets priced a possible June hike on energy-driven inflation<sup>55</sup><sup>96</sup>. Sterling advanced <strong>1.5%</strong> to <strong>1.3432 GBP/USD</strong>, up <strong>4.7%</strong> year-over-year, reflecting the Bank of England base rate at 3.75%<sup>64</sup>. If the CAD holds near current levels amid the rate differential, the database's <strong>600 transport and logistics projects</strong> and <strong>49 manufacturing projects</strong> valued at over $67 billion with cross-border trade exposure would carry more favourable USD translation on imported inputs<sup>147</sup>.</p>"
   },
   "commodities": [
     {
@@ -7403,7 +7464,12 @@
       "high_52w": "US$117.63/bbl",
       "low_52w": "US$58.70/bbl",
       "avg_1y": "US$98.15/bbl",
-      "commentary": "<p><strong>WTI Crude Oil:</strong> <strong>US$83.85/bbl</strong> (<strong>-11.4%</strong> on the April 17 session) &mdash; WTI recorded the most volatile two-week period in recent oil market history, ranging from US$80.56 to US$117.63 between March 18 and April 18 as the Strait of Hormuz crisis disrupted 20% of global oil supplies<sup>50</sup><sup>14</sup>. The IEA characterized the closure as the largest supply disruption on record<sup>110</sup>. WTI peaked near US$128/bbl on April 2 before the temporary ceasefire agreed April 8 and the full Strait reopening announced April 17 sent the contract collapsing approximately 34% from that peak to US$83.85<sup>97</sup>. The 12-month average sits at US$98.15/bbl, leaving the current level 14.6% below its trailing-year average<sup>50</sup>. If WTI holds below the ninety-dollar threshold, the database's <strong>63 oil and gas projects ($100.2B)</strong> would face compressed producer netbacks, with the WCS differential having widened to US$16.25/bbl below WTI on April 13<sup>2</sup>. The 52-week range runs from US$58.70/bbl to US$117.63/bbl<sup>50</sup>.</p>"
+      "commentary": "<p><strong>WTI Crude Oil:</strong> <strong>US$83.85/bbl</strong> (<strong>-11.4%</strong> on the April 17 session) &mdash; WTI recorded the most volatile two-week period in recent oil market history, ranging from US$80.56 to US$117.63 between March 18 and April 18 as the Strait of Hormuz crisis disrupted 20% of global oil supplies<sup>50</sup><sup>14</sup>. The IEA characterized the closure as the largest supply disruption on record<sup>110</sup>. WTI peaked near US$128/bbl on April 2 before the temporary ceasefire agreed April 8 and the full Strait reopening announced April 17 sent the contract collapsing approximately 34% from that peak to US$83.85<sup>97</sup>. The 12-month average sits at US$98.15/bbl, leaving the current level 14.6% below its trailing-year average<sup>50</sup>. If WTI holds below the ninety-dollar threshold, the database's <strong>63 oil and gas projects ($100.2B)</strong> would face compressed producer netbacks, with the WCS differential having widened to US$16.25/bbl below WTI on April 13<sup>2</sup>. The 52-week range runs from US$58.70/bbl to US$117.63/bbl<sup>50</sup>.</p>",
+      "val": "US$83.85/bbl",
+      "day": "-11.4%",
+      "mm": "N/A",
+      "yy": "+50%",
+      "context": "<p><strong>WTI Crude Oil:</strong> <strong>US$83.85/bbl</strong> (<strong>-11.4%</strong> on the April 17 session) &mdash; WTI recorded the most volatile two-week period in recent oil market history, ranging from US$80.56 to US$117.63 between March 18 and April 18 as the Strait of Hormuz crisis disrupted 20% of global oil supplies<sup>50</sup><sup>14</sup>. The IEA characterized the closure as the largest supply disruption on record<sup>110</sup>. WTI peaked near US$128/bbl on April 2 before the temporary ceasefire agreed April 8 and the full Strait reopening announced April 17 sent the contract collapsing approximately 34% from that peak to US$83.85<sup>97</sup>. The 12-month average sits at US$98.15/bbl, leaving the current level 14.6% below its trailing-year average<sup>50</sup>. If WTI holds below the ninety-dollar threshold, the database's <strong>63 oil and gas projects ($100.2B)</strong> would face compressed producer netbacks, with the WCS differential having widened to US$16.25/bbl below WTI on April 13<sup>2</sup>. The 52-week range runs from US$58.70/bbl to US$117.63/bbl<sup>50</sup>.</p>"
     },
     {
       "name": "Western Canadian Select",
@@ -7415,7 +7481,12 @@
       "yoy_pct": "N/A",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "commentary": "<p><strong>Western Canadian Select:</strong> <strong>~US$86.75/bbl</strong> (estimated, Apr 13) &mdash; the WCS discount widened to <strong>US$16.25/bbl</strong> below WTI on April 13, up from US$15.55 on April 11, reflecting pipeline capacity constraints and heavier sour crude pricing amid the Strait of Hormuz disruption<sup>2</sup>. With the April 17 WTI collapse to US$83.85, the implied WCS level dropped to approximately US$67.60, the lowest estimated heavy crude price since late 2024<sup>2</sup><sup>97</sup>. The widening differential affects netbacks for heavy crude producers across the 63 oil and gas projects ($100.2B) in the database<sup>2</sup>.</p>"
+      "commentary": "<p><strong>Western Canadian Select:</strong> <strong>~US$86.75/bbl</strong> (estimated, Apr 13) &mdash; the WCS discount widened to <strong>US$16.25/bbl</strong> below WTI on April 13, up from US$15.55 on April 11, reflecting pipeline capacity constraints and heavier sour crude pricing amid the Strait of Hormuz disruption<sup>2</sup>. With the April 17 WTI collapse to US$83.85, the implied WCS level dropped to approximately US$67.60, the lowest estimated heavy crude price since late 2024<sup>2</sup><sup>97</sup>. The widening differential affects netbacks for heavy crude producers across the 63 oil and gas projects ($100.2B) in the database<sup>2</sup>.</p>",
+      "val": "~US$86.75/bbl",
+      "day": "N/A",
+      "mm": "N/A",
+      "yy": "N/A",
+      "context": "<p><strong>Western Canadian Select:</strong> <strong>~US$86.75/bbl</strong> (estimated, Apr 13) &mdash; the WCS discount widened to <strong>US$16.25/bbl</strong> below WTI on April 13, up from US$15.55 on April 11, reflecting pipeline capacity constraints and heavier sour crude pricing amid the Strait of Hormuz disruption<sup>2</sup>. With the April 17 WTI collapse to US$83.85, the implied WCS level dropped to approximately US$67.60, the lowest estimated heavy crude price since late 2024<sup>2</sup><sup>97</sup>. The widening differential affects netbacks for heavy crude producers across the 63 oil and gas projects ($100.2B) in the database<sup>2</sup>.</p>"
     },
     {
       "name": "Brent Crude",
@@ -7428,7 +7499,12 @@
       "high_52w": "US$118.35/bbl",
       "low_52w": "US$58.92/bbl",
       "avg_1y": "US$69.87/bbl",
-      "commentary": "<p><strong>Brent Crude:</strong> <strong>US$90.38/bbl</strong> (<strong>-9.0%</strong> on the April 17 session) &mdash; Brent dropped sharply on the Strait of Hormuz reopening, falling from its 52-week high of US$118.35 set during the crisis peak<sup>47</sup><sup>97</sup>. The contract remains <strong>47%</strong> above its year-ago level and 29.3% above its 12-month average of US$69.87<sup>47</sup>.</p>"
+      "commentary": "<p><strong>Brent Crude:</strong> <strong>US$90.38/bbl</strong> (<strong>-9.0%</strong> on the April 17 session) &mdash; Brent dropped sharply on the Strait of Hormuz reopening, falling from its 52-week high of US$118.35 set during the crisis peak<sup>47</sup><sup>97</sup>. The contract remains <strong>47%</strong> above its year-ago level and 29.3% above its 12-month average of US$69.87<sup>47</sup>.</p>",
+      "val": "US$90.38/bbl",
+      "day": "-9.0%",
+      "mm": "N/A",
+      "yy": "+47%",
+      "context": "<p><strong>Brent Crude:</strong> <strong>US$90.38/bbl</strong> (<strong>-9.0%</strong> on the April 17 session) &mdash; Brent dropped sharply on the Strait of Hormuz reopening, falling from its 52-week high of US$118.35 set during the crisis peak<sup>47</sup><sup>97</sup>. The contract remains <strong>47%</strong> above its year-ago level and 29.3% above its 12-month average of US$69.87<sup>47</sup>.</p>"
     },
     {
       "name": "Natural Gas (Henry Hub)",
@@ -7441,7 +7517,12 @@
       "high_52w": "US$7.46/MMBtu",
       "low_52w": "US$2.67/MMBtu",
       "avg_1y": "US$3.50/MMBtu",
-      "commentary": "<p><strong>Natural Gas (Henry Hub):</strong> <strong>US$2.67/MMBtu</strong> (<strong>-4.57%</strong> week-over-week) &mdash; Henry Hub fell to its lowest level since November 2024, driven by an EIA storage build of 59 Bcf for the week of April 10, exceeding forecasts, and continued mild shoulder-season demand<sup>52</sup>. The contract sits <strong>29.98%</strong> below its year-ago level and at the floor of its 52-week range of US$2.67 to US$7.46/MMBtu<sup>52</sup>. The 12-month average is US$3.50/MMBtu, leaving the current level 23.7% below its trailing-year average. If Henry Hub holds near current levels, the <strong>785 power and energy projects</strong> in the database tracking gas-fired generation and LNG export feedstock would carry input costs at the bottom of the observed range over the past year<sup>52</sup>.</p>"
+      "commentary": "<p><strong>Natural Gas (Henry Hub):</strong> <strong>US$2.67/MMBtu</strong> (<strong>-4.57%</strong> week-over-week) &mdash; Henry Hub fell to its lowest level since November 2024, driven by an EIA storage build of 59 Bcf for the week of April 10, exceeding forecasts, and continued mild shoulder-season demand<sup>52</sup>. The contract sits <strong>29.98%</strong> below its year-ago level and at the floor of its 52-week range of US$2.67 to US$7.46/MMBtu<sup>52</sup>. The 12-month average is US$3.50/MMBtu, leaving the current level 23.7% below its trailing-year average. If Henry Hub holds near current levels, the <strong>785 power and energy projects</strong> in the database tracking gas-fired generation and LNG export feedstock would carry input costs at the bottom of the observed range over the past year<sup>52</sup>.</p>",
+      "val": "US$2.67/MMBtu",
+      "day": "-4.57%",
+      "mm": "-11.52%",
+      "yy": "-29.98%",
+      "context": "<p><strong>Natural Gas (Henry Hub):</strong> <strong>US$2.67/MMBtu</strong> (<strong>-4.57%</strong> week-over-week) &mdash; Henry Hub fell to its lowest level since November 2024, driven by an EIA storage build of 59 Bcf for the week of April 10, exceeding forecasts, and continued mild shoulder-season demand<sup>52</sup>. The contract sits <strong>29.98%</strong> below its year-ago level and at the floor of its 52-week range of US$2.67 to US$7.46/MMBtu<sup>52</sup>. The 12-month average is US$3.50/MMBtu, leaving the current level 23.7% below its trailing-year average. If Henry Hub holds near current levels, the <strong>785 power and energy projects</strong> in the database tracking gas-fired generation and LNG export feedstock would carry input costs at the bottom of the observed range over the past year<sup>52</sup>.</p>"
     },
     {
       "name": "Gold",
@@ -7453,7 +7534,12 @@
       "yoy_pct": "+50%",
       "high_52w": "US$4,816/oz",
       "low_52w": "N/A",
-      "commentary": "<p><strong>Gold:</strong> <strong>US$4,728/oz</strong> (<strong>+2.82%</strong> week-over-week) &mdash; gold advanced on safe-haven demand driven by the Strait of Hormuz crisis and broad US dollar depreciation, trading between US$4,656 (April 7) and US$4,816 (April 16)<sup>18</sup>. The intra-period high of US$4,816 on April 16 marked a new 52-week peak, with the metal up approximately 50% year-over-year<sup>18</sup>. The Lagging Indicator cross-reference engine links the gold move to <strong>364 mining projects ($159.5B)</strong> in the database, where gold-linked operations carry direct revenue exposure to spot pricing<sup>18</sup>.</p>"
+      "commentary": "<p><strong>Gold:</strong> <strong>US$4,728/oz</strong> (<strong>+2.82%</strong> week-over-week) &mdash; gold advanced on safe-haven demand driven by the Strait of Hormuz crisis and broad US dollar depreciation, trading between US$4,656 (April 7) and US$4,816 (April 16)<sup>18</sup>. The intra-period high of US$4,816 on April 16 marked a new 52-week peak, with the metal up approximately 50% year-over-year<sup>18</sup>. The Lagging Indicator cross-reference engine links the gold move to <strong>364 mining projects ($159.5B)</strong> in the database, where gold-linked operations carry direct revenue exposure to spot pricing<sup>18</sup>.</p>",
+      "val": "US$4,728/oz",
+      "day": "+2.82%",
+      "mm": "N/A",
+      "yy": "+50%",
+      "context": "<p><strong>Gold:</strong> <strong>US$4,728/oz</strong> (<strong>+2.82%</strong> week-over-week) &mdash; gold advanced on safe-haven demand driven by the Strait of Hormuz crisis and broad US dollar depreciation, trading between US$4,656 (April 7) and US$4,816 (April 16)<sup>18</sup>. The intra-period high of US$4,816 on April 16 marked a new 52-week peak, with the metal up approximately 50% year-over-year<sup>18</sup>. The Lagging Indicator cross-reference engine links the gold move to <strong>364 mining projects ($159.5B)</strong> in the database, where gold-linked operations carry direct revenue exposure to spot pricing<sup>18</sup>.</p>"
     },
     {
       "name": "Silver",
@@ -7466,7 +7552,12 @@
       "high_52w": "US$115.08/oz",
       "low_52w": "US$30.32/oz",
       "avg_1y": "US$53.45/oz",
-      "commentary": "<p><strong>Silver:</strong> <strong>US$78&ndash;80/oz range</strong> (<strong>+3.74%</strong> week-over-week) &mdash; silver tracked gold higher on safe-haven and industrial demand, climbing above US$80/oz on April 16<sup>19</sup>. The metal sits <strong>148.84%</strong> above its year-ago level, the largest percentage year-over-year gain among the 13 commodities tracked, with the 52-week range running from US$30.32/oz to US$115.08/oz<sup>19</sup>.</p>"
+      "commentary": "<p><strong>Silver:</strong> <strong>US$78&ndash;80/oz range</strong> (<strong>+3.74%</strong> week-over-week) &mdash; silver tracked gold higher on safe-haven and industrial demand, climbing above US$80/oz on April 16<sup>19</sup>. The metal sits <strong>148.84%</strong> above its year-ago level, the largest percentage year-over-year gain among the 13 commodities tracked, with the 52-week range running from US$30.32/oz to US$115.08/oz<sup>19</sup>.</p>",
+      "val": "US$78-80/oz",
+      "day": "+3.74%",
+      "mm": "-15.30%",
+      "yy": "+148.84%",
+      "context": "<p><strong>Silver:</strong> <strong>US$78&ndash;80/oz range</strong> (<strong>+3.74%</strong> week-over-week) &mdash; silver tracked gold higher on safe-haven and industrial demand, climbing above US$80/oz on April 16<sup>19</sup>. The metal sits <strong>148.84%</strong> above its year-ago level, the largest percentage year-over-year gain among the 13 commodities tracked, with the 52-week range running from US$30.32/oz to US$115.08/oz<sup>19</sup>.</p>"
     },
     {
       "name": "Copper",
@@ -7478,7 +7569,12 @@
       "yoy_pct": "+30%",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "commentary": "<p><strong>Copper:</strong> <strong>US$6.07/lb</strong> (<strong>+3.32%</strong> week-over-week) &mdash; COMEX copper advanced on a combination of AI data-center power demand, US-Iran diplomacy optimism, and China's Q1 GDP beat of 5.0% with industrial production up 6.1% year-over-year<sup>49</sup><sup>95</sup>. The contract is up approximately <strong>30%</strong> year-over-year and 4.91% month-over-month, the highest reading since the March 30 indicators print of US$5.53/lb<sup>49</sup>. The cross-reference engine links copper to <strong>785 power and energy projects</strong> in the database, where the metal carries through to grid build-out and electrification cost lines<sup>49</sup>.</p>"
+      "commentary": "<p><strong>Copper:</strong> <strong>US$6.07/lb</strong> (<strong>+3.32%</strong> week-over-week) &mdash; COMEX copper advanced on a combination of AI data-center power demand, US-Iran diplomacy optimism, and China's Q1 GDP beat of 5.0% with industrial production up 6.1% year-over-year<sup>49</sup><sup>95</sup>. The contract is up approximately <strong>30%</strong> year-over-year and 4.91% month-over-month, the highest reading since the March 30 indicators print of US$5.53/lb<sup>49</sup>. The cross-reference engine links copper to <strong>785 power and energy projects</strong> in the database, where the metal carries through to grid build-out and electrification cost lines<sup>49</sup>.</p>",
+      "val": "US$6.07/lb",
+      "day": "+3.32%",
+      "mm": "+4.91%",
+      "yy": "+30%",
+      "context": "<p><strong>Copper:</strong> <strong>US$6.07/lb</strong> (<strong>+3.32%</strong> week-over-week) &mdash; COMEX copper advanced on a combination of AI data-center power demand, US-Iran diplomacy optimism, and China's Q1 GDP beat of 5.0% with industrial production up 6.1% year-over-year<sup>49</sup><sup>95</sup>. The contract is up approximately <strong>30%</strong> year-over-year and 4.91% month-over-month, the highest reading since the March 30 indicators print of US$5.53/lb<sup>49</sup>. The cross-reference engine links copper to <strong>785 power and energy projects</strong> in the database, where the metal carries through to grid build-out and electrification cost lines<sup>49</sup>.</p>"
     },
     {
       "name": "Lumber",
@@ -7490,7 +7586,12 @@
       "yoy_pct": "N/A",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "commentary": "<p><strong>Lumber:</strong> <strong>US$490/Mbf</strong> (W-SPF 2x4, <strong>+1.0%</strong> week-over-week) &mdash; NRCan reported the benchmark at US$490/Mbf for the week of April 3, up US$5 on the week, as spring building season demand offset the drag from housing starts falling 6.0% month-over-month to 235,852 SAAR in March<sup>27</sup><sup>88</sup>. The database tracks <strong>13 forestry projects</strong> and <strong>211 residential projects ($44.4B)</strong> with exposure to lumber as a construction input<sup>27</sup>.</p>"
+      "commentary": "<p><strong>Lumber:</strong> <strong>US$490/Mbf</strong> (W-SPF 2x4, <strong>+1.0%</strong> week-over-week) &mdash; NRCan reported the benchmark at US$490/Mbf for the week of April 3, up US$5 on the week, as spring building season demand offset the drag from housing starts falling 6.0% month-over-month to 235,852 SAAR in March<sup>27</sup><sup>88</sup>. The database tracks <strong>13 forestry projects</strong> and <strong>211 residential projects ($44.4B)</strong> with exposure to lumber as a construction input<sup>27</sup>.</p>",
+      "val": "US$490/Mbf",
+      "day": "+1.0%",
+      "mm": "N/A",
+      "yy": "N/A",
+      "context": "<p><strong>Lumber:</strong> <strong>US$490/Mbf</strong> (W-SPF 2x4, <strong>+1.0%</strong> week-over-week) &mdash; NRCan reported the benchmark at US$490/Mbf for the week of April 3, up US$5 on the week, as spring building season demand offset the drag from housing starts falling 6.0% month-over-month to 235,852 SAAR in March<sup>27</sup><sup>88</sup>. The database tracks <strong>13 forestry projects</strong> and <strong>211 residential projects ($44.4B)</strong> with exposure to lumber as a construction input<sup>27</sup>.</p>"
     },
     {
       "name": "Wheat",
@@ -7502,7 +7603,12 @@
       "yoy_pct": "+10.4%",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "commentary": "<p><strong>Wheat:</strong> <strong>US$601.75/bu</strong> (<strong>+4.7%</strong> week-over-week) &mdash; CBOT wheat advanced on global supply concerns linked to the Middle East disruption and Black Sea transport risk, up <strong>10.7%</strong> month-over-month and <strong>10.4%</strong> year-over-year<sup>135</sup>. The advance from the March 10 level of US$545.25/bu represents a 10.4% gain over five weeks<sup>135</sup>.</p>"
+      "commentary": "<p><strong>Wheat:</strong> <strong>US$601.75/bu</strong> (<strong>+4.7%</strong> week-over-week) &mdash; CBOT wheat advanced on global supply concerns linked to the Middle East disruption and Black Sea transport risk, up <strong>10.7%</strong> month-over-month and <strong>10.4%</strong> year-over-year<sup>135</sup>. The advance from the March 10 level of US$545.25/bu represents a 10.4% gain over five weeks<sup>135</sup>.</p>",
+      "val": "US$601.75/bu",
+      "day": "+4.7%",
+      "mm": "+10.7%",
+      "yy": "+10.4%",
+      "context": "<p><strong>Wheat:</strong> <strong>US$601.75/bu</strong> (<strong>+4.7%</strong> week-over-week) &mdash; CBOT wheat advanced on global supply concerns linked to the Middle East disruption and Black Sea transport risk, up <strong>10.7%</strong> month-over-month and <strong>10.4%</strong> year-over-year<sup>135</sup>. The advance from the March 10 level of US$545.25/bu represents a 10.4% gain over five weeks<sup>135</sup>.</p>"
     },
     {
       "name": "Uranium",
@@ -7514,7 +7620,12 @@
       "yoy_pct": "+32.67%",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "commentary": "<p><strong>Uranium:</strong> <strong>US$86.30/lb</strong> (<strong>-0.23%</strong> month-over-month) &mdash; spot uranium held near the US$86 level on April 16, up <strong>32.67%</strong> year-over-year, reflecting sustained utility contracting demand and geopolitical supply-route concerns through the Strait of Hormuz period<sup>54</sup>. Saskatchewan-based producers Cameco (McArthur River, Cigar Lake) anchor the North American uranium production base tracked in the database's mining project count<sup>54</sup>.</p>"
+      "commentary": "<p><strong>Uranium:</strong> <strong>US$86.30/lb</strong> (<strong>-0.23%</strong> month-over-month) &mdash; spot uranium held near the US$86 level on April 16, up <strong>32.67%</strong> year-over-year, reflecting sustained utility contracting demand and geopolitical supply-route concerns through the Strait of Hormuz period<sup>54</sup>. Saskatchewan-based producers Cameco (McArthur River, Cigar Lake) anchor the North American uranium production base tracked in the database's mining project count<sup>54</sup>.</p>",
+      "val": "US$86.30/lb",
+      "day": "N/A",
+      "mm": "-0.23%",
+      "yy": "+32.67%",
+      "context": "<p><strong>Uranium:</strong> <strong>US$86.30/lb</strong> (<strong>-0.23%</strong> month-over-month) &mdash; spot uranium held near the US$86 level on April 16, up <strong>32.67%</strong> year-over-year, reflecting sustained utility contracting demand and geopolitical supply-route concerns through the Strait of Hormuz period<sup>54</sup>. Saskatchewan-based producers Cameco (McArthur River, Cigar Lake) anchor the North American uranium production base tracked in the database's mining project count<sup>54</sup>.</p>"
     },
     {
       "name": "Nickel",
@@ -7526,7 +7637,12 @@
       "yoy_pct": "+14.23%",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "commentary": "<p><strong>Nickel:</strong> <strong>US$17,985/tonne</strong> (<strong>+4.81%</strong> month-over-month) &mdash; LME nickel advanced on battery supply-chain restocking and China's industrial production gain of 6.1% year-over-year in Q1, up <strong>14.23%</strong> year-over-year<sup>53</sup><sup>95</sup>. The metal carries exposure to Canadian battery-metals supply-chain projects in Ontario and Quebec<sup>53</sup>.</p>"
+      "commentary": "<p><strong>Nickel:</strong> <strong>US$17,985/tonne</strong> (<strong>+4.81%</strong> month-over-month) &mdash; LME nickel advanced on battery supply-chain restocking and China's industrial production gain of 6.1% year-over-year in Q1, up <strong>14.23%</strong> year-over-year<sup>53</sup><sup>95</sup>. The metal carries exposure to Canadian battery-metals supply-chain projects in Ontario and Quebec<sup>53</sup>.</p>",
+      "val": "US$17,985/tonne",
+      "day": "N/A",
+      "mm": "+4.81%",
+      "yy": "+14.23%",
+      "context": "<p><strong>Nickel:</strong> <strong>US$17,985/tonne</strong> (<strong>+4.81%</strong> month-over-month) &mdash; LME nickel advanced on battery supply-chain restocking and China's industrial production gain of 6.1% year-over-year in Q1, up <strong>14.23%</strong> year-over-year<sup>53</sup><sup>95</sup>. The metal carries exposure to Canadian battery-metals supply-chain projects in Ontario and Quebec<sup>53</sup>.</p>"
     },
     {
       "name": "Canola",
@@ -7538,7 +7654,12 @@
       "yoy_pct": "N/A",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "commentary": "<p><strong>Canola:</strong> <strong>CAD$726.60/tonne</strong> (May futures, April 7) &mdash; ICE canola futures held near the CAD$727 level, supported by Middle East energy disruptions lifting vegetable oil markets and tightening canola crush margins<sup>135</sup>. Prairie oilseed producers carried through to the database's <strong>4 agriculture projects</strong> tracked in the pipeline<sup>135</sup>.</p>"
+      "commentary": "<p><strong>Canola:</strong> <strong>CAD$726.60/tonne</strong> (May futures, April 7) &mdash; ICE canola futures held near the CAD$727 level, supported by Middle East energy disruptions lifting vegetable oil markets and tightening canola crush margins<sup>135</sup>. Prairie oilseed producers carried through to the database's <strong>4 agriculture projects</strong> tracked in the pipeline<sup>135</sup>.</p>",
+      "val": "CAD$726.60/tonne",
+      "day": "N/A",
+      "mm": "N/A",
+      "yy": "N/A",
+      "context": "<p><strong>Canola:</strong> <strong>CAD$726.60/tonne</strong> (May futures, April 7) &mdash; ICE canola futures held near the CAD$727 level, supported by Middle East energy disruptions lifting vegetable oil markets and tightening canola crush margins<sup>135</sup>. Prairie oilseed producers carried through to the database's <strong>4 agriculture projects</strong> tracked in the pipeline<sup>135</sup>.</p>"
     },
     {
       "name": "Potash (Nutrien proxy)",
@@ -7551,7 +7672,12 @@
       "high_52w": "CAD$83.94/share",
       "low_52w": "CAD$48.32/share",
       "avg_1y": "CAD$61.79/share",
-      "commentary": "<p><strong>Potash (Nutrien proxy):</strong> <strong>CAD$70.19/share</strong> (<strong>-3.56%</strong> week-over-week) &mdash; Nutrien declined as fertilizer-linked names rotated lower amid the broader risk-off period, falling <strong>4.35%</strong> month-over-month but remaining <strong>50.34%</strong> above its year-ago level<sup>50</sup>. The 52-week range runs from CAD$48.32 to CAD$83.94, with the 12-month average at CAD$61.79<sup>50</sup>. Saskatchewan potash operations under Nutrien and Mosaic anchor the database's fertilizer-linked mining exposure<sup>50</sup>.</p>"
+      "commentary": "<p><strong>Potash (Nutrien proxy):</strong> <strong>CAD$70.19/share</strong> (<strong>-3.56%</strong> week-over-week) &mdash; Nutrien declined as fertilizer-linked names rotated lower amid the broader risk-off period, falling <strong>4.35%</strong> month-over-month but remaining <strong>50.34%</strong> above its year-ago level<sup>50</sup>. The 52-week range runs from CAD$48.32 to CAD$83.94, with the 12-month average at CAD$61.79<sup>50</sup>. Saskatchewan potash operations under Nutrien and Mosaic anchor the database's fertilizer-linked mining exposure<sup>50</sup>.</p>",
+      "val": "CAD$70.19/share",
+      "day": "-3.56%",
+      "mm": "-4.35%",
+      "yy": "+50.34%",
+      "context": "<p><strong>Potash (Nutrien proxy):</strong> <strong>CAD$70.19/share</strong> (<strong>-3.56%</strong> week-over-week) &mdash; Nutrien declined as fertilizer-linked names rotated lower amid the broader risk-off period, falling <strong>4.35%</strong> month-over-month but remaining <strong>50.34%</strong> above its year-ago level<sup>50</sup>. The 52-week range runs from CAD$48.32 to CAD$83.94, with the 12-month average at CAD$61.79<sup>50</sup>. Saskatchewan potash operations under Nutrien and Mosaic anchor the database's fertilizer-linked mining exposure<sup>50</sup>.</p>"
     }
   ],
   "commodity_commentary": "<p><span class=\"lead-sentence\">The two-week commodity tape was dominated by the Strait of Hormuz crisis and its resolution &mdash; </span>WTI crude swung from US$80.56 to a peak near US$128/bbl before collapsing to US$83.85 on the April 17 reopening, while Brent followed a parallel path from its 52-week high of US$118.35 down to US$90.38<sup>50</sup><sup>47</sup><sup>97</sup>. Precious metals advanced on safe-haven flows, with gold reaching US$4,816/oz on April 16 &mdash; a new intra-period high &mdash; and silver climbing above US$80/oz<sup>18</sup><sup>19</sup>. Base metals tracked China's Q1 GDP beat of 5.0% and March import surge of +27.8%, with copper gaining 3.32% to US$6.07/lb and nickel rising 4.81% month-over-month to US$17,985/tonne<sup>49</sup><sup>53</sup><sup>95</sup>. Henry Hub natural gas fell to US$2.67/MMBtu, a 17-month low, on elevated storage and mild demand<sup>52</sup>. Agriculture was mixed: wheat advanced 4.7% on global supply concerns while the Nutrien potash proxy declined 3.56%<sup>135</sup>. The Lagging Indicator cross-reference engine links the period's commodity moves to <strong>364 mining projects ($159.5B)</strong> and <strong>63 oil and gas projects ($100.2B)</strong> tracked in the database, plus <strong>785 power and energy projects</strong> with input-cost exposure to energy prices<sup>50</sup><sup>18</sup>.</p>",
@@ -7565,51 +7691,44 @@
     "narrative": "The WCS discount widened to US$16.25/bbl below WTI on April 13, up from US$15.55 on April 11. With the Strait of Hormuz reopening on April 17 sending WTI to US$83.85, the implied WCS level dropped to approximately US$67.60 (US$83.85 minus US$16.25), which if sustained would compress netbacks for heavy crude producers and place additional pressure on the 63 oil and gas projects ($100.2B) tracked in the database.",
     "source_id": 41
   },
-  "yieldCurve": {
-    "tenors": [
-      {
-        "tenor": "2Y",
-        "current": "2.80%",
-        "year_ago": "2.57%",
-        "change_bp": 23
-      },
-      {
-        "tenor": "3Y",
-        "current": "3.01%",
-        "year_ago": "2.57%",
-        "change_bp": 44
-      },
-      {
-        "tenor": "5Y",
-        "current": "3.18%",
-        "year_ago": "2.72%",
-        "change_bp": 46
-      },
-      {
-        "tenor": "7Y",
-        "current": "3.36%",
-        "year_ago": "2.88%",
-        "change_bp": 48
-      },
-      {
-        "tenor": "10Y",
-        "current": "3.47%",
-        "year_ago": "3.06%",
-        "change_bp": 41
-      },
-      {
-        "tenor": "30Y",
-        "current": "3.94%",
-        "year_ago": "3.30%",
-        "change_bp": 64
-      }
-    ],
-    "spread_2_10": "67bp",
-    "spread_2_10_prior_week": "63bp",
-    "curve_shape": "normal",
-    "boc_rate": "2.25%",
-    "yield_commentary": "<p><span class=\"lead-sentence\">The Government of Canada yield curve maintained its normal upward-sloping shape with the 2-year to 10-year spread widening to <strong>67 basis points</strong>, up from <strong>63 basis points</strong> in the prior edition</span> &mdash; the widening developed as the 2-year yield fell <strong>15 basis points</strong> to <strong>2.80%</strong> while the 10-year declined <strong>11 basis points</strong> to <strong>3.47%</strong>, reflecting a flight-to-quality bid during the Strait of Hormuz crisis and subsequent position unwinding<sup>42</sup><sup>45</sup>. The 2-year sits <strong>55 basis points</strong> above the BoC policy rate of <strong>2.25%</strong>, held for a seventh consecutive meeting on March 18, with market pricing at 96.5% probability of a hold on April 29<sup>61</sup><sup>62</sup>. Year-over-year, the 2-year has risen <strong>23 basis points</strong> from 2.57%, the 10-year has risen <strong>41 basis points</strong> from 3.06%, and the 30-year has risen <strong>64 basis points</strong> from 3.30% &mdash; the 30-year's year-over-year move is the steepest across the six tenors in the Bank of Canada data<sup>42</sup><sup>45</sup>. The 5-year to 10-year spread sits at <strong>29 basis points</strong> and the 10-year to 30-year spread at <strong>47 basis points</strong><sup>45</sup>. If yields hold near current levels amid the continued BoC hold, the <strong>785 power and energy projects</strong> and <strong>1,671 infrastructure projects</strong> valued at $179 billion in the database would face financing costs anchored at the long end of the curve, while the <strong>211 residential projects</strong> valued at $44 billion would retain exposure to the two-year benchmark<sup>42</sup><sup>45</sup>.</p>"
-  },
+  "yieldCurve": [
+    {
+      "term": "2Y",
+      "yield": "2.80%",
+      "prevYield": "2.57%",
+      "highlight": false
+    },
+    {
+      "term": "3Y",
+      "yield": "3.01%",
+      "prevYield": "2.57%",
+      "highlight": false
+    },
+    {
+      "term": "5Y",
+      "yield": "3.18%",
+      "prevYield": "2.72%",
+      "highlight": false
+    },
+    {
+      "term": "7Y",
+      "yield": "3.36%",
+      "prevYield": "2.88%",
+      "highlight": false
+    },
+    {
+      "term": "10Y",
+      "yield": "3.47%",
+      "prevYield": "3.06%",
+      "highlight": false
+    },
+    {
+      "term": "30Y",
+      "yield": "3.94%",
+      "prevYield": "3.30%",
+      "highlight": false
+    }
+  ],
   "consumer_pulse": "<p>The Bloomberg-Nanos Consumer Confidence Index declined to <strong>46.93</strong> in the week ended April 3, an 11-month low, down from <strong>47.50</strong> in the prior period.<sup>43</sup> The expectations sub-index lost nearly <strong>10 points</strong> over four weeks, a deterioration linked to the Iran war entering its sixth week, elevated energy prices from the Strait of Hormuz disruption, and rising inflation concerns.<sup>43</sup> Gasoline prices — driven by WTI swinging between <strong>$80.56</strong> and <strong>$117.63</strong> over the two-week coverage window — were the dominant cost-of-living concern in consumer sentiment tracking.<sup>50</sup></p><p>Headline CPI at <strong>+1.8%</strong> year-over-year remains within the Bank of Canada's target band, but component dispersion is wide: food CPI ran at <strong>+5.3%</strong>, shelter CPI at <strong>+1.5%</strong>, and energy CPI at <strong>-14.2%</strong> — a figure that predates the oil price surge and is expected to shift materially in the March CPI release on April 20.<sup>145</sup><sup>154</sup> Provincial CPI ranges from PE at <strong>+7.3%</strong> to ON at <strong>-1.8%</strong>, a <strong>9.1 percentage-point</strong> spread.<sup>145</sup> Average hourly wages at <strong>$37.73</strong> (<strong>+4.7%</strong> year-over-year) outpaced headline CPI by <strong>2.9 percentage points</strong>, though workers aged 15-24 recorded only <strong>+1.8%</strong> wage growth, trailing inflation in food-heavy consumption baskets.<sup>148</sup></p><p>Retail sales rose <strong>1.1%</strong> to <strong>$70.7B</strong> in January, with the advance February estimate at <strong>+0.9%</strong>.<sup>143</sup> Housing affordability remained a persistent theme: the MLS HPI fell for a 16th consecutive month, national average home price stood at <strong>$673,084</strong> (<strong>-0.8%</strong> year-over-year), and CREA downgraded its sales forecast citing the oil shock while maintaining a <strong>+1.5%</strong> annual price gain projection to <strong>$688,955</strong>.<sup>39</sup><sup>67</sup> National inventory reached <strong>5 months</strong> of supply.<sup>67</sup></p>",
   "word_cloud_topics": [
     {
@@ -8120,9 +8239,9 @@
       "agriculture": 4
     }
   },
-  "project_count": null,
-  "new_projects": null,
-  "pipeline_value": null,
+  "project_count": 7344,
+  "new_projects": 0,
+  "pipeline_value": "$1366.6B",
   "_all_verified_sources": [
     {
       "id": 1,
@@ -10116,5 +10235,7 @@
     "orphaned_citations": 0,
     "orphaned_ids": [],
     "audit_timestamp": "2026-04-19T02:45:00Z"
-  }
+  },
+  "bocRate": "2.25%",
+  "marketCommentary": "<p><span class=\"lead-sentence\">The Strait of Hormuz crisis and ceasefire dominated the two-week period ending April 13, whipsawing commodity prices while equities advanced</span> &mdash; WTI crude collapsed <strong>34%</strong> from a peak near <strong>US$128/bbl</strong> (Apr 2) to <strong>US$83.85</strong> after the strait reopened Apr 17<sup>97</sup>, while Brent dropped <strong>9.0%</strong> in a single session to <strong>US$90.38</strong><sup>47</sup>. The S&amp;P/TSX Composite rose <strong>1.7%</strong> to <strong>~34,052</strong> (<strong>+41%</strong> Y/Y)<sup>46</sup>, and the S&amp;P 500 posted a record close at <strong>7,022.95</strong><sup>94</sup>. The Canadian dollar strengthened <strong>1.5%</strong> to <strong>0.7305 CAD/USD</strong><sup>44</sup> as the DXY fell toward <strong>98</strong>, and the Bank of Canada held at <strong>2.25%</strong> for a seventh consecutive meeting<sup>61</sup>. The project database tracks <strong>7,344 projects</strong> valued at <strong>$1.37 trillion</strong>.</p><p><span class=\"lead-sentence\">The oil price reversal split the pipeline’s commodity exposure in two directions</span> &mdash; <strong>63 oil and gas projects ($100.2B)</strong> carry direct WTI exposure, with the WCS differential widening to <strong>$16.25/bbl</strong> below WTI on Apr 13<sup>2</sup>. On the metals side, gold reached <strong>US$4,728/oz</strong> (<strong>+2.82%</strong>)<sup>18</sup> and copper climbed to <strong>US$6.07/lb</strong> (<strong>+3.32%</strong>)<sup>49</sup>, referenced by <strong>364 mining projects totalling $159.5B</strong>. The 10-year Government of Canada bond yield stood at <strong>3.47%</strong><sup>45</sup> with the 2-year at <strong>2.80%</strong><sup>42</sup>, a <strong>67-basis-point</strong> spread, against <strong>211 residential ($44.4B)</strong> and <strong>1,671 infrastructure projects ($179.0B)</strong> carrying financing cost exposure to rate movements.</p>"
 }
