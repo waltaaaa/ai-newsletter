@@ -550,3 +550,92 @@ Ready for merging by Agent 3E (Assembler).
 | Sector Highlights | 100 | 80 | 150 |
 | Labour DeepDive | 100 | 80 | 150 |
 | Consumer Pulse | 100 | 80 | 150 |
+| Market Context | 40 | 25 | 80 |
+
+---
+
+## Output Contract (validator-enforced)
+
+The validator `tools/validate_briefing_schema.py` hard-fails the weekly ship if any of the following contracts breaks on ANY of the 13 regions (10 provinces + 3 territories). Emit a loud error rather than a placeholder or an empty string.
+
+### Required on every region (FAIL if missing/empty)
+
+| Field | Type | Contract |
+|---|---|---|
+| `name` | string | Canonical name (Ontario, Quebec, Alberta, British Columbia, Saskatchewan, Manitoba, Nova Scotia, New Brunswick, Newfoundland and Labrador, Prince Edward Island, Yukon, Northwest Territories, Nunavut) |
+| `analysis` | HTML string | >=500 chars, no banned editorial words, `<sup>N</sup>` citations resolve |
+| `sectorHighlights` | HTML string | >=200 chars, no banned editorial words |
+| `labourDeepDive` | HTML string | >=200 chars, no banned editorial words |
+| `consumerPulse` | HTML string | >=200 chars, no banned editorial words |
+| `marketContext` | string | >=100 chars (2-3 sentence project-pipeline/market-exposure summary), no banned editorial words |
+| `indicators.gdp` | string | Non-empty |
+| `indicators.unemployment` | string | Non-empty |
+| `indicators.cpi` | string | Non-empty |
+| `indicators.housingStarts` | string | Non-empty |
+| `indicatorMeta.{gdp,unemployment,cpi,housingStarts,participationRate,employmentRate,buildingPermits}` | object | Each key present (sub-keys `prev`, `change`, `period` are WARN-tier today — upgrade to FAIL after B.4 regen) |
+| `sources` | array of `{id, title, url}` | >=3 items, every item has non-empty `title` AND (`url` OR `archive_url`) |
+| `watchlistItems` | array | >=2 items, every item has non-empty `date` AND (`event` OR `event_name` OR `name`) AND `description` |
+| `projects` | array | >=3 items, every item has non-empty `name` AND `status` (`value` is WARN-tier — some legitimate TBD) |
+
+### WARN-tier today (populate when possible, will become FAIL after B.4 producer regen)
+
+| Field | Producer gap |
+|---|---|
+| `indicators.{employmentRate,participationRate,buildingPermits}` | Currently empty string on the 3 territories (YT, NT, NU). Populate when data exists. |
+| `indicators.wageGrowth` | Not currently emitted. Add when available. |
+| `indicatorMeta[key].{prev,change,period}` | Populate all three sub-keys on every indicator × every region. Today the `buildingPermits` row and all 3 territories have empty strings here. |
+| `tradeExposure` | Currently empty on every region. Populate with a factual 1-2 sentence summary of the province's trade exposure (top export destinations, commodity vs. manufactured split) so the word-cloud renderer has source text. |
+
+### Banned editorial words (case-insensitive, FAIL)
+
+should, must, hopefully, unfortunately, worrying, promising, encouraging, welcome, bullish, bearish, concerning, headwind, tailwind, thrilled, feared, hoped
+
+### Self-check before save
+
+```python
+REQUIRED_NARR = [
+    ("analysis", 500),
+    ("sectorHighlights", 200),
+    ("labourDeepDive", 200),
+    ("consumerPulse", 200),
+    ("marketContext", 100),
+]
+REQUIRED_IND = ["gdp", "unemployment", "cpi", "housingStarts"]
+REQUIRED_META_KEYS = ["gdp", "unemployment", "cpi", "housingStarts",
+                     "participationRate", "employmentRate", "buildingPermits"]
+PROV_NAMES = {"Ontario","Quebec","Alberta","British Columbia","Saskatchewan",
+              "Manitoba","Nova Scotia","New Brunswick","Newfoundland and Labrador",
+              "Prince Edward Island","Yukon","Northwest Territories","Nunavut"}
+
+assert len(data["provinces"]) == 13
+for p in data["provinces"]:
+    assert p["name"] in PROV_NAMES, f"Non-canonical name: {p['name']}"
+    for attr, min_len in REQUIRED_NARR:
+        v = p.get(attr) or ""
+        assert isinstance(v, str) and len(v) >= min_len, f"{p['name']}.{attr} below {min_len}: {len(v)}"
+    inds = p.get("indicators", {}) or {}
+    for k in REQUIRED_IND:
+        v = inds.get(k)
+        assert isinstance(v, str) and v.strip(), f"{p['name']}.indicators.{k} empty"
+    metas = p.get("indicatorMeta", {}) or {}
+    for k in REQUIRED_META_KEYS:
+        assert isinstance(metas.get(k), dict), f"{p['name']}.indicatorMeta.{k} missing"
+    srcs = p.get("sources") or []
+    assert len(srcs) >= 3, f"{p['name']}.sources < 3: {len(srcs)}"
+    for s in srcs:
+        assert (s.get("url") or s.get("archive_url")) and s.get("title"), \
+            f"{p['name']}.sources item missing url/title"
+    wl = p.get("watchlistItems") or []
+    assert len(wl) >= 2, f"{p['name']}.watchlistItems < 2: {len(wl)}"
+    for it in wl:
+        ev = it.get("event_name") or it.get("event") or it.get("name")
+        assert it.get("date") and ev and it.get("description"), \
+            f"{p['name']}.watchlistItems item missing date/event/description"
+    pjs = p.get("projects") or []
+    assert len(pjs) >= 3, f"{p['name']}.projects < 3: {len(pjs)}"
+    for it in pjs:
+        assert it.get("name") and it.get("status"), \
+            f"{p['name']}.projects item missing name/status"
+```
+
+Raise a loud error on any assertion failure; do NOT emit an empty-string or placeholder to satisfy shape.

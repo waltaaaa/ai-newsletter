@@ -547,3 +547,39 @@ Valid JSON with:
 6. No missing URLs (flag as "MISSING" if necessary)
 7. No editorializing language
 8. Valid JSON syntax
+
+---
+
+## Output Contract for Downstream Schema (validator-enforced)
+
+`tldr-writer-provincial` (Agent 3B) consumes your dossier and emits province objects that must pass `tools/validate_briefing_schema.py`. Your dossier is the primary source of truth for the structured fields the writer passes through unchanged. Any gap here forces the writer to either guess or emit a validator-failing placeholder.
+
+### Required shape per province (hard requirements)
+
+- `name` — canonical string: Ontario, Quebec, Alberta, British Columbia, Saskatchewan, Manitoba, Nova Scotia, New Brunswick, Newfoundland and Labrador (NOT "Newfoundland & Labrador"), Prince Edward Island, Yukon, Northwest Territories, Nunavut.
+- `indicators` — object with all 7 keys: `gdp`, `unemployment`, `cpi`, `housingStarts`, `participationRate`, `employmentRate`, `buildingPermits`. The first 4 MUST be non-empty strings on every region (FAIL if blank). The last 3 MAY be empty on territories today but MUST be populated when the hard data exists (WARN-tier, upgrade planned after B.4).
+- `indicatorMeta` — object with all 7 indicator keys. Each value is an object containing `prev` (prior-period string), `change` (period-over-period delta string), `period` (observation period label, e.g. "Feb 2026" or "Q4 2025"), `obsDate` (YYYY-MM-DD), `source` (attribution string). The 3 sub-keys `prev`, `change`, `period` are WARN-tier today and FAIL-tier after B.4 regen — populate every time hard data is available.
+- `sources` — array of `{id, title, url}` (or `{id, title, archive_url}`), min 3 items per region. Every item MUST have a non-empty `title` AND one of `url` / `archive_url`. Never emit a stub `{}` to pad length.
+- `watchlistItems` — array, min 2 items per region. Each item MUST have non-empty `date`, `event_name` (or the writer-side alias `event`), and `description`. `impact` SHOULD be one of `high` / `medium` / `low`.
+- `projects` — array, min 3 items per region. Each item MUST have non-empty `name` and `status`. `value` SHOULD be populated (WARN if missing — only acceptable when a project is genuinely "value TBD").
+- `marketContext` — non-empty string (min 100 chars), 2-3 factual sentences connecting the province's project pipeline to market exposure. The writer passes this through to the frontend `Project Pipeline` section preface.
+
+### Required downstream narrative-input fields
+
+The writer expects these structured inputs in your dossier to compose the narrative fields (analysis, sectorHighlights, labourDeepDive, consumerPulse). Keep them factual, specific, and tied to hard data:
+
+- `story_threads` — array, 2-4 items. Each a factual sentence linking an indicator movement to a project count and value.
+- `cross_references` — array, 1+ items. Each an object: `{indicator, direction, magnitude, linked_projects, linked_value, interpretation}`.
+- `key_facts` — array, 2-4 factual bullet statements from research synthesis.
+- `news_stories` — array, 3-5 top news headlines.
+- `tradeExposure` (new, WARN-tier today) — non-empty string, 1-2 factual sentences covering top export destinations and commodity vs. manufactured split. Currently empty on every region; populate when the research brief carries trade data so the word-cloud renderer has source text.
+
+### Validator upgrade path
+
+The validator currently WARNs on the sub-key and territory gaps above. After the B.4 producer regen, these will escalate to FAIL:
+- `indicators.{employmentRate, participationRate, buildingPermits}` — non-empty on all 13 regions
+- `indicators.wageGrowth` — emit when StatCan 14-10-0063 carries a provincial value
+- `indicatorMeta[key].{prev, change, period}` — non-empty on every indicator × every region
+- `tradeExposure` — non-empty string on every region
+
+Emit a loud error rather than a placeholder or empty string.

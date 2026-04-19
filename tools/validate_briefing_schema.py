@@ -543,17 +543,243 @@ def validate(briefing_path):
                 warns += 1
 
     # ============================================================
-    # 9. PROVINCE COMPLETENESS
+    # 9. PROVINCE COMPLETENESS (Cluster 2 — provincial contract)
+    # Frontend `_renderProvContent` (app.js L3177-3665) reads, per province:
+    #   .analysis              (L3369, Provincial Analysis section HTML)
+    #   .consumerPulse         (L3370, appended to analysis block)
+    #   .sectorHighlights      (L3371, Sector Signals section)
+    #   .labourDeepDive        (L3512, Labour Market Detail section)
+    #   .marketContext         (L3529, Project Pipeline narrative preface, first 400 chars)
+    #   .tradeExposure         (L1701, word-cloud text; currently empty on all 13 — WARN-only)
+    #   .indicators.{gdp,unemployment,cpi,housingStarts,participationRate,
+    #                employmentRate,buildingPermits,wageGrowth}
+    #                          (L3188 + L3195 nameMap, renders into Key Indicators
+    #                          table; missing/empty leaves the row em-dashed)
+    #   .indicatorMeta[key].{prev,change,period}
+    #                          (L3210-3229, powers pchg() period-over-period
+    #                          computation; absence silently falls back to
+    #                          computeChange() from indicator_history)
+    #   .sources[].{url,title,archive_url}
+    #                          (L3395-3402, <details>Sources (N)</details>
+    #                          + linkFootnotes footnote linker on all narrative
+    #                          fields)
+    #   .watchlistItems[].{date,event|event_name,description,impact}
+    #                          (L3558-3579, Upcoming Events section)
+    #   .projects[].{name,status,value,sector}
+    #                          (L3536-3550, per-province project preview table)
+    #   .insightCharts[]       (L3586-3611, per-province insight charts — sub-schema
+    #                          checked in 10.5 via _check_chart_spec_shape and
+    #                          check_callout; this block only guards array presence)
+    #
+    # FAIL gates are set to pass on the current ship-clean edition across all
+    # 13 regions. WARN gates surface producer gaps that empty-render today and
+    # will be upgraded to FAIL after the B.4 producer regen:
+    #   - indicators.{employmentRate, participationRate, buildingPermits}
+    #     empty on the 3 territories (YT, NT, NU)
+    #   - indicators.wageGrowth absent on all 13 (producer gap)
+    #   - indicatorMeta[key].{prev,change,period} empty on 28/91, 28/91, 12/91
+    #     pairs (territories + buildingPermits sub-row)
+    #   - tradeExposure empty on all 13 (producer gap)
     # ============================================================
-    for p in b.get("provinces", []):
+    # Indicator key policy: 4 keys must be non-empty on all 13 regions (FAIL).
+    # 3 keys are present-but-empty on the 3 territories today (WARN-only until
+    # B.4). 1 key is a pure producer gap (wageGrowth) — WARN-only.
+    PROV_IND_FAIL_KEYS = ("gdp", "unemployment", "cpi", "housingStarts")
+    PROV_IND_WARN_KEYS = ("employmentRate", "participationRate", "buildingPermits")
+    PROV_IND_GAP_KEYS = ("wageGrowth",)  # pure producer gap, not yet emitted
+    PROV_META_KEYS = (
+        "gdp", "unemployment", "cpi", "housingStarts",
+        "participationRate", "employmentRate", "buildingPermits",
+    )
+
+    # Narrative field contract: (attr, min_len) pairs. Min-lengths are tuned
+    # to the current writer output floors (checked across all 13 regions):
+    # analysis >=1578, sectorHighlights >=359, labourDeepDive >=357,
+    # consumerPulse >=347, marketContext >=146. Floors sit well below the
+    # minimums so the writer has room to shrink a section in a slow week
+    # without tripping FAIL, but above any plausible placeholder string.
+    PROV_NARRATIVE_FIELDS = (
+        ("analysis", 500),
+        ("sectorHighlights", 200),
+        ("labourDeepDive", 200),
+        ("consumerPulse", 200),
+        ("marketContext", 100),
+    )
+
+    for p in b.get("provinces", []) or []:
         name = p.get("name", "?")
-        for field in ["analysis", "indicators", "indicatorMeta", "sources",
-                       "insightCharts", "marketContext"]:
-            val = p.get(field)
-            if not warn(results, f"province.{name}.{field}",
-                         val is not None and val != "" and val != [],
-                         f"Missing or empty"):
+        plabel = f"province.{name}"
+
+        # 9a. Narrative fields — present + min length + no banned words.
+        # Reuses Cluster 3's check_analysis_prose (3 sub-checks per field).
+        for attr, min_len in PROV_NARRATIVE_FIELDS:
+            fails += check_analysis_prose(
+                results, f"{plabel}.{attr}",
+                p.get(attr), min_len,
+            )
+
+        # 9b. tradeExposure — producer gap (empty on all 13 today). Tracks
+        # the word-cloud input on app.js L1701. Upgrade to FAIL after B.4
+        # regen surfaces a populated value on every region.
+        te = p.get("tradeExposure")
+        te_ok = isinstance(te, str) and bool(te.strip())
+        if not warn(results, f"{plabel}.tradeExposure",
+                    te_ok,
+                    "Empty string today on all 13 regions — upgrade to FAIL after B.4 producer regen"):
+            warns += 1
+
+        # 9c. Indicators object — hard-fail keys required on every region.
+        inds = p.get("indicators", {}) or {}
+        if not check(results, f"{plabel}.indicators.is_object",
+                     isinstance(p.get("indicators"), dict),
+                     f"Expected dict, got {type(p.get('indicators')).__name__}"):
+            fails += 1
+        for key in PROV_IND_FAIL_KEYS:
+            val = inds.get(key)
+            key_ok = isinstance(val, str) and bool(val.strip())
+            if not check(results, f"{plabel}.indicators.{key}",
+                         key_ok,
+                         f"Missing or empty indicator (got {val!r}) — Key Indicators row em-dashes"):
+                fails += 1
+        # WARN-tier indicators (empty on 3 territories today).
+        for key in PROV_IND_WARN_KEYS:
+            val = inds.get(key)
+            key_ok = isinstance(val, str) and bool(val.strip())
+            if not warn(results, f"{plabel}.indicators.{key}",
+                        key_ok,
+                        f"Empty on territories — upgrade to FAIL after B.4 producer regen"):
                 warns += 1
+        # Pure producer gaps (not yet emitted).
+        for key in PROV_IND_GAP_KEYS:
+            val = inds.get(key)
+            key_ok = isinstance(val, str) and bool(val.strip())
+            if not warn(results, f"{plabel}.indicators.{key}",
+                        key_ok,
+                        f"Not currently emitted by producer — upgrade to FAIL after B.4 regen"):
+                warns += 1
+
+        # 9d. indicatorMeta — object presence + key presence (FAIL).
+        # Per-sub-key non-empty (prev/change/period) is WARN-only today
+        # because 28/91, 28/91, 12/91 pairs are empty strings on the
+        # current edition (mostly territories + buildingPermits).
+        metas = p.get("indicatorMeta", {}) or {}
+        if not check(results, f"{plabel}.indicatorMeta.is_object",
+                     isinstance(p.get("indicatorMeta"), dict),
+                     f"Expected dict, got {type(p.get('indicatorMeta')).__name__}"):
+            fails += 1
+        for key in PROV_META_KEYS:
+            mobj = metas.get(key)
+            key_present = isinstance(mobj, dict)
+            if not check(results, f"{plabel}.indicatorMeta.{key}.present",
+                         key_present,
+                         f"Missing indicatorMeta[{key}] entry"):
+                fails += 1
+                continue
+            for sub in ("prev", "change", "period"):
+                v = mobj.get(sub)
+                sub_ok = isinstance(v, str) and bool(v.strip())
+                if not warn(results, f"{plabel}.indicatorMeta.{key}.{sub}",
+                            sub_ok,
+                            f"Empty {sub} — upgrade to FAIL after B.4 producer regen"):
+                    warns += 1
+
+        # 9e. Sources — min 3 items + per-item {url,title} shape.
+        # Reuses Cluster 3's check_sources_array helper.
+        fails += check_sources_array(
+            results, f"{plabel}.sources",
+            p.get("sources"), 3,
+        )
+
+        # 9f. watchlistItems — array, >=2 items, per-item shape.
+        # Frontend reads e.date, e.event_name||e.event||e.name, e.description,
+        # e.impact. Current edition populates all four on 13/13; min count is
+        # 2 (territories). Hard-fail on shape violations.
+        wl = p.get("watchlistItems")
+        if not check(results, f"{plabel}.watchlistItems.is_array",
+                     isinstance(wl, list),
+                     f"Expected list, got {type(wl).__name__}"):
+            fails += 1
+        else:
+            if not check(results, f"{plabel}.watchlistItems.min_count",
+                         len(wl) >= 2,
+                         f"Expected >=2 items, got {len(wl)}"):
+                fails += 1
+            missing_date, missing_event, missing_desc = [], [], []
+            for i, it in enumerate(wl or []):
+                if not isinstance(it, dict):
+                    missing_date.append(i)
+                    missing_event.append(i)
+                    missing_desc.append(i)
+                    continue
+                if not (isinstance(it.get("date"), str) and it.get("date").strip()):
+                    missing_date.append(i)
+                ev = it.get("event_name") or it.get("event") or it.get("name")
+                if not (isinstance(ev, str) and ev.strip()):
+                    missing_event.append(i)
+                if not (isinstance(it.get("description"), str) and it.get("description").strip()):
+                    missing_desc.append(i)
+            if not check(results, f"{plabel}.watchlistItems.items.date",
+                         len(missing_date) == 0,
+                         f"{len(missing_date)} item(s) missing date at index {missing_date}"):
+                fails += 1
+            if not check(results, f"{plabel}.watchlistItems.items.event",
+                         len(missing_event) == 0,
+                         f"{len(missing_event)} item(s) missing event/event_name/name at index {missing_event}"):
+                fails += 1
+            if not check(results, f"{plabel}.watchlistItems.items.description",
+                         len(missing_desc) == 0,
+                         f"{len(missing_desc)} item(s) missing description at index {missing_desc}"):
+                fails += 1
+
+        # 9g. projects — array, >=3 items, per-item shape.
+        # Frontend renders each row with name/sector/value/status. Ship-clean
+        # minimum across 13 regions is 4 projects; min_count 3 gives headroom.
+        pjs = p.get("projects")
+        if not check(results, f"{plabel}.projects.is_array",
+                     isinstance(pjs, list),
+                     f"Expected list, got {type(pjs).__name__}"):
+            fails += 1
+        else:
+            if not check(results, f"{plabel}.projects.min_count",
+                         len(pjs) >= 3,
+                         f"Expected >=3 items, got {len(pjs)}"):
+                fails += 1
+            missing_name, missing_status = [], []
+            empty_value = []
+            for i, it in enumerate(pjs or []):
+                if not isinstance(it, dict):
+                    missing_name.append(i)
+                    missing_status.append(i)
+                    empty_value.append(i)
+                    continue
+                if not (isinstance(it.get("name"), str) and it.get("name").strip()):
+                    missing_name.append(i)
+                if not (isinstance(it.get("status"), str) and it.get("status").strip()):
+                    missing_status.append(i)
+                v = it.get("value")
+                if not (isinstance(v, str) and v.strip()):
+                    empty_value.append(i)
+            if not check(results, f"{plabel}.projects.items.name",
+                         len(missing_name) == 0,
+                         f"{len(missing_name)} item(s) missing name at index {missing_name}"):
+                fails += 1
+            if not check(results, f"{plabel}.projects.items.status",
+                         len(missing_status) == 0,
+                         f"{len(missing_status)} item(s) missing status at index {missing_status}"):
+                fails += 1
+            # value is sometimes empty on a legitimate "value TBD" project; WARN.
+            if not warn(results, f"{plabel}.projects.items.value",
+                        len(empty_value) == 0,
+                        f"{len(empty_value)} item(s) missing value at index {empty_value}"):
+                warns += 1
+
+        # 9h. insightCharts — warn when array is missing/empty. Sub-schema
+        # shape + callout quality is enforced in block 10.5 via
+        # _check_chart_spec_shape + check_callout.
+        if not warn(results, f"{plabel}.insightCharts",
+                    p.get("insightCharts") not in (None, []),
+                    "Missing or empty — per-province insight charts drive the visualization strip"):
+            warns += 1
 
     # ============================================================
     # 10. INDUSTRY COMPLETENESS
