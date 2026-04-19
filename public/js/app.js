@@ -189,6 +189,8 @@ async function loadNewsletter(editionId){
     }else{
       D=await fetchJSON('briefing_latest.json');
     }
+    // Sync currentEdition with the actual loaded briefing so the dropdown highlights correctly
+    if(D&&D.week_of)currentEdition=D.week_of;
   }
   catch(e){console.error('Newsletter load:',e)}
 }
