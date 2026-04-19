@@ -432,10 +432,46 @@ PROJECT_LIFECYCLE_STATUSES = {
 DATA_MAX_AGE_DAYS = {
     "policy.json": 14,
     "projects_all.json": 21,
-    "timeseries.json": 45,   # markets data older than ~6w = stale
+    "timeseries.json": 45,   # markets data older than ~6w = stale (DEFAULT only)
     "indicators.json": 45,
     "events.json": 30,
     "events_global.json": 30,
+}
+
+# Frequency-aware overrides for timeseries.json freshness. StatCan quarterly
+# provincial GDP components publish with a ~2-3 month lag, so the flat 45d
+# bound produced false-positive WARNs every week. These overrides reflect
+# actual release cadence + publication lag for each series family.
+#
+# QUARTERLY provincial accounts (T36-10-* family, quarterly provincial GDP):
+#   typical release lag = 90-120d. Allow up to 220d.
+# MONTHLY provincial series (LFS/retail/manufacturing/permits/housing):
+#   monthly cadence + 60-90d lag. Allow up to 120d.
+#
+# When no override matches, fall back to DATA_MAX_AGE_DAYS["timeseries.json"].
+TIMESERIES_FRESHNESS_OVERRIDES = {
+    # Ontario Economic Accounts (quarterly, ~4mo lag)
+    "ON_on_exports": 220,
+    "ON_on_imports": 220,
+    "ON_on_gdp_goods": 220,
+    "ON_on_real_capital_investment": 220,
+    "ON_on_real_consumption": 220,
+    "ON_on_real_household": 220,
+    # Quebec provincial accounts (quarterly, ~4mo lag)
+    "QC_qc_real_gdp": 220,
+    "QC_qc_business_investment": 220,
+    "QC_qc_exports": 220,
+    "QC_qc_imports": 220,
+    # Quebec monthly (retail/trade/permits/housing/LFS, 45-90d lag)
+    "QC_qc_intl_exports": 120,
+    "QC_qc_intl_imports": 120,
+    "QC_qc_retail_sales": 120,
+    "QC_qc_manufacturing_sales": 120,
+    "QC_qc_housing_starts": 120,
+    "QC_qc_bldg_permits_res": 120,
+    "QC_qc_bldg_permits_nonres": 120,
+    "QC_qc_employment": 90,
+    "QC_qc_unemployment_rate": 90,
 }
 
 
@@ -784,7 +820,7 @@ def _validate_timeseries_json(data_dir, results, briefing):
     empty_series = []
     short_series = []
     stale_series = []
-    bound = DATA_MAX_AGE_DAYS["timeseries.json"]
+    default_bound = DATA_MAX_AGE_DAYS["timeseries.json"]
     today = datetime.date.today()
     for k, v in d.items():
         if not isinstance(v, list):
@@ -799,14 +835,19 @@ def _validate_timeseries_json(data_dir, results, briefing):
             continue
         if len(v) < 2:
             short_series.append(k)
-        # Freshness — check last point's date
-        last = v[-1] if v else None
-        if isinstance(last, dict):
-            ld = _parse_iso_date(last.get("date"))
-            if ld is not None:
-                age = (today - ld).days
-                if age > bound:
-                    stale_series.append((k, age))
+        # Freshness — check MAX date across all points (some legacy series
+        # were stored descending; taking v[-1] alone gave false positives).
+        # Apply frequency-aware bound when the series has a known cadence
+        # override (quarterly/monthly provincial data with publication lag).
+        dates = [_parse_iso_date(p.get("date")) for p in v if isinstance(p, dict)]
+        dates = [dd for dd in dates if dd is not None]
+        if not dates:
+            continue
+        latest = max(dates)
+        age = (today - latest).days
+        bound = TIMESERIES_FRESHNESS_OVERRIDES.get(k, default_bound)
+        if age > bound:
+            stale_series.append((k, age, bound))
 
     if not check(results, f"{prefix}.series.shape",
                  len(bad_shape) == 0,
@@ -825,8 +866,10 @@ def _validate_timeseries_json(data_dir, results, briefing):
         warns += 1
     if not warn(results, f"{prefix}.series.freshness",
                 len(stale_series) == 0,
-                f"{len(stale_series)} series older than {bound}d "
-                f"(first 3: {stale_series[:3]})"):
+                f"{len(stale_series)} series exceed their freshness bound "
+                f"(default {default_bound}d; frequency-aware overrides in "
+                f"TIMESERIES_FRESHNESS_OVERRIDES). First 3: "
+                f"{stale_series[:3]}"):
         warns += 1
 
     # Cross-reference: every insightCharts dataKey for dataSource='timeseries'
@@ -846,26 +889,23 @@ def _validate_timeseries_json(data_dir, results, briefing):
         if not isinstance(series, list) or len(series) < 2:
             too_short.append((label, k, 0 if not series else len(series)))
 
-    # Cross-reference tier policy: FAIL-worthy in intent, WARN-tier on
-    # rollout because today's briefing has 4 known-unresolved dataKeys
-    # (iron_ore x3, potash_nutrien x1) that never made it into
-    # timeseries.json. That is a real silent-blank-chart gap — surface
-    # loudly but don't block the deploy gate until the pipeline backfills.
-    # Upgrade to `check()` once timeseries.json includes every key
-    # referenced by the current briefing — same rollout pattern as
-    # Cluster 5's enrichment-card WARN tier.
-    if not warn(results, f"{prefix}.chart_xref.resolved",
-                len(unresolved) == 0,
-                f"{len(unresolved)} insightCharts dataKey(s) missing in timeseries.json "
-                f"(silent blank charts in production). Upgrade to FAIL after pipeline "
-                f"backfills. First 5: {unresolved[:5]}"):
-        warns += 1
-    if not warn(results, f"{prefix}.chart_xref.min_points",
-                len(too_short) == 0,
-                f"{len(too_short)} insightCharts dataKey(s) with <2 points "
-                f"(chart renders blank). Upgrade to FAIL after pipeline backfills. "
-                f"First 5: {too_short[:5]}"):
-        warns += 1
+    # Cross-reference tier policy: FAIL-tier as of 2026-04-19. The
+    # previous WARN tier existed because iron_ore x3 and potash_nutrien x1
+    # were known-unresolved; tools/refresh_timeseries_commodity.py now
+    # backfills both via free data sources (VALE / NTR.TO equity proxies
+    # on yfinance). An unresolved dataKey is a silent-blank-chart in
+    # production and MUST block deploy.
+    if not check(results, f"{prefix}.chart_xref.resolved",
+                 len(unresolved) == 0,
+                 f"{len(unresolved)} insightCharts dataKey(s) missing in "
+                 f"timeseries.json (silent blank chart in production). "
+                 f"First 5: {unresolved[:5]}"):
+        fails += 1
+    if not check(results, f"{prefix}.chart_xref.min_points",
+                 len(too_short) == 0,
+                 f"{len(too_short)} insightCharts dataKey(s) with <2 points "
+                 f"(chart renders blank). First 5: {too_short[:5]}"):
+        fails += 1
     # Count of cross-refs as a PASS-tier audit marker (visibility into coverage).
     check(results, f"{prefix}.chart_xref.count", True,
           f"Validated {len(ts_refs)} chart dataKey(s) against timeseries.json")
@@ -961,27 +1001,27 @@ def _validate_indicators_json(data_dir, results, briefing):
         elif n < 2:
             too_short.append((label, k, n))
 
-    # Cross-reference tier policy: WARN-tier on rollout (same as the
-    # timeseries cross-ref) — charts with dataSource='indicators' are
-    # industry charts per renderIndInsightChart (app.js L4326); a miss
-    # here would silently blank the canvas. Today the briefing emits
+    # Cross-reference tier: FAIL-tier (upgraded 2026-04-19 alongside the
+    # timeseries.chart_xref upgrade). Industry charts with
+    # dataSource='indicators' (renderIndInsightChart, app.js L4326)
+    # silently blank the canvas on an unresolved dataKey — same silent-
+    # failure mode as the timeseries cross-ref. Today the briefing emits
     # zero such references (industry charts default but set
-    # dataSource='timeseries' explicitly), so this check currently
-    # passes trivially; it is seeded for when the industry writer
-    # starts using indicator-backed dataKeys. Upgrade to `check()`
-    # alongside the timeseries cross-ref upgrade.
-    if not warn(results, f"{prefix}.chart_xref.resolved",
-                len(unresolved) == 0,
-                f"{len(unresolved)} insightCharts dataKey(s) missing in indicators.history "
-                f"(silent blank charts in production). Upgrade to FAIL alongside "
-                f"timeseries xref. First 5: {unresolved[:5]}"):
-        warns += 1
-    if not warn(results, f"{prefix}.chart_xref.min_points",
-                len(too_short) == 0,
-                f"{len(too_short)} insightCharts dataKey(s) with <2 history points "
-                f"(chart renders blank). Upgrade to FAIL alongside timeseries xref. "
-                f"First 5: {too_short[:5]}"):
-        warns += 1
+    # dataSource='timeseries' explicitly), so this check passes trivially;
+    # it is seeded to block the moment the industry writer starts using
+    # indicator-backed dataKeys.
+    if not check(results, f"{prefix}.chart_xref.resolved",
+                 len(unresolved) == 0,
+                 f"{len(unresolved)} insightCharts dataKey(s) missing in "
+                 f"indicators.history (silent blank chart in production). "
+                 f"First 5: {unresolved[:5]}"):
+        fails += 1
+    if not check(results, f"{prefix}.chart_xref.min_points",
+                 len(too_short) == 0,
+                 f"{len(too_short)} insightCharts dataKey(s) with <2 "
+                 f"history points (chart renders blank). First 5: "
+                 f"{too_short[:5]}"):
+        fails += 1
     check(results, f"{prefix}.chart_xref.count", True,
           f"Validated {len(ind_refs)} chart dataKey(s) against indicators.history")
 
@@ -1071,10 +1111,15 @@ def _validate_events_json(data_dir, results, briefing):
                 len(miss_name) == 0,
                 f"{len(miss_name)} item(s) missing name/event_name/event"):
         warns += 1
-    if not warn(results, f"{prefix}.items.url",
-                len(miss_url) == 0,
-                f"{len(miss_url)} item(s) missing url"):
-        warns += 1
+    # Upgraded WARN -> FAIL 2026-04-19: event_calendar.py STATCAN_RECURRING
+    # + BOC + PROVINCIAL_BUDGET_URLS now stamp url on every synthesized
+    # event, and pipeline-sourced events already carry source urls. A
+    # blank url is a producer bug — the Calendar tab renders events as
+    # bare text with no click-through. Block deploy on regression.
+    if not check(results, f"{prefix}.items.url",
+                 len(miss_url) == 0,
+                 f"{len(miss_url)} item(s) missing url"):
+        fails += 1
 
     return (fails, warns)
 
