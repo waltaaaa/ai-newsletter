@@ -72,6 +72,25 @@ YIELD_FIELDS = ["term", "yield", "prevYield"]
 # Global indicator keys frontend hardcodes
 GLOBAL_INDICATOR_KEYS = ["gdp", "cpi", "rate", "unemployment", "tradeBalance"]
 
+# Canonical global region names (app.js REGION_MAP in _renderGlobalSubtab)
+CANONICAL_GLOBAL_REGIONS = {
+    "United States", "China", "China / Asia", "European Union", "United Kingdom",
+}
+
+# Minimum analysis length thresholds. National is a multi-paragraph deep-dive;
+# per-region global is a shorter 2-3 paragraph section. These floors catch
+# "analysis will be available after next pipeline run" placeholders and
+# accidental truncation. Tuned to the current writer's observed output:
+# national ~4.8k chars, per-region global 1.2k-1.6k chars.
+NATIONAL_ANALYSIS_MIN_LEN = 500
+GLOBAL_ANALYSIS_MIN_LEN = 400
+
+# Minimum sources count. National section cites many data points; per-region
+# global is narrower. Frontend renders `<details>Sources (N)</details>` from
+# the array, so an empty array means no citations at all.
+NATIONAL_SOURCES_MIN_COUNT = 3
+GLOBAL_SOURCES_MIN_COUNT = 1
+
 # Banned editorial words
 BANNED_WORDS = [
     "should", "must", "hopefully", "unfortunately", "worrying", "promising",
@@ -179,6 +198,96 @@ def _check_chart_spec_shape(results, chart, label):
         warn(results, f"chart.{label}.subtitle", True, "")
 
     return (fails, warns)
+
+
+def check_analysis_prose(results, label, text, min_len):
+    """Validate a long-form analysis narrative string.
+
+    Frontend reads `national.analysis` via `_natNarrative` and
+    `global[i].analysis` via the same helper (app.js L2483-2487,
+    L2725). Both render raw text — an empty or placeholder string
+    leaves a blank section. The main BANNED_WORDS sweep runs over
+    the full JSON blob at validator exit; this per-field check
+    adds precise location info when editorial prose leaks in.
+
+    Returns the number of FAILs added (0 = all checks passed).
+    Aggregates banned-word hits into a single FAIL for count stability.
+    """
+    fails = 0
+    # 1. Present + non-empty string
+    present_ok = isinstance(text, str) and bool(text.strip())
+    if not check(results, f"{label}.present", present_ok,
+                 "Missing or empty analysis string"):
+        fails += 1
+        # Short-circuit: remaining checks are meaningless on empty text.
+        return fails
+    # 2. Minimum length
+    n = len(text)
+    if not check(results, f"{label}.length",
+                 n >= min_len,
+                 f"Length {n} below floor {min_len} — likely a placeholder or truncated output"):
+        fails += 1
+    # 3. Banned editorial words — aggregate single check (editorial policy)
+    hits = []
+    for word in BANNED_WORDS:
+        if re.search(r"\b" + re.escape(word) + r"\b", text, re.IGNORECASE):
+            hits.append(word)
+    if not check(results, f"{label}.banned_words",
+                 len(hits) == 0,
+                 f"Contains banned editorial words: {', '.join(hits)}"):
+        fails += 1
+    return fails
+
+
+def check_sources_array(results, label, sources, min_count):
+    """Validate a sources array for shape + per-item required fields.
+
+    Frontend `_natSourcesSection` (app.js L2471-2482) reads `s.url`
+    or `s.archive_url` for the link and `s.title` for the display
+    text. An item missing both url fields renders as text-only with
+    no way for the reader to verify. An item missing title falls
+    back to the literal string 'Source'. Both degrade citation
+    credibility, so both are required.
+
+    Returns the number of FAILs added (0 = all checks passed).
+    Aggregates per-item gaps into 2 single checks (url + title) for
+    count stability.
+    """
+    fails = 0
+    # 1. Is array
+    if not isinstance(sources, list):
+        check(results, f"{label}.is_array", False,
+              f"Expected list, got {type(sources).__name__}")
+        return 1
+    check(results, f"{label}.is_array", True, "")
+    # 2. Minimum count
+    if not check(results, f"{label}.min_count",
+                 len(sources) >= min_count,
+                 f"Expected >={min_count}, got {len(sources)}"):
+        fails += 1
+    # 3. Every item has non-empty url (or archive_url fallback per frontend)
+    missing_url = []
+    missing_title = []
+    for i, s in enumerate(sources):
+        if not isinstance(s, dict):
+            missing_url.append(i)
+            missing_title.append(i)
+            continue
+        url = s.get("url") or s.get("archive_url")
+        if not (isinstance(url, str) and url.strip()):
+            missing_url.append(i)
+        title = s.get("title")
+        if not (isinstance(title, str) and title.strip()):
+            missing_title.append(i)
+    if not check(results, f"{label}.items.url",
+                 len(missing_url) == 0,
+                 f"{len(missing_url)} item(s) missing url/archive_url at index {missing_url}"):
+        fails += 1
+    if not check(results, f"{label}.items.title",
+                 len(missing_title) == 0,
+                 f"{len(missing_title)} item(s) missing title at index {missing_title}"):
+        fails += 1
+    return fails
 
 
 def check_callout(results, label, text):
@@ -325,20 +434,89 @@ def validate(briefing_path):
                 warns += 1
 
     # ============================================================
-    # 7. GLOBAL INDICATORS
+    # 7. GLOBAL INDICATORS + ANALYSIS + SOURCES (per-region)
+    # Frontend `_renderGlobalSubtab` (app.js L2705-2735) reads, per region:
+    #   region, analysis, sources[].{url,title}, indicators.{5 keys},
+    #   indicatorMeta[key].change, indicatorMeta[key].period (optional),
+    #   indicatorMeta[key].nextRelease (optional), chart_callout (checked in 10.5).
+    # This block guards every required read; chart_callout is handled in
+    # section 10.5 (callout quality contract) and stays there.
     # ============================================================
     for g in b.get("global", []):
         region = g.get("region", "?")
-        inds = g.get("indicators", {})
-        meta = g.get("indicatorMeta", {})
+        # 7a. region — required non-empty string, canonical name
+        region_present = isinstance(region, str) and bool(region.strip()) and region != "?"
+        if not check(results, f"global[{region}].region.present",
+                      region_present,
+                      "Missing or empty region string"):
+            fails += 1
+        if not check(results, f"global[{region}].region.canonical",
+                      region in CANONICAL_GLOBAL_REGIONS,
+                      f"Region '{region}' not in canonical list {sorted(CANONICAL_GLOBAL_REGIONS)}"):
+            fails += 1
+
+        # 7b. analysis — required non-empty prose, min length, no banned words
+        fails += check_analysis_prose(
+            results, f"global[{region}].analysis",
+            g.get("analysis"), GLOBAL_ANALYSIS_MIN_LEN,
+        )
+
+        # 7c. sources — required non-empty array of {url,title} items
+        fails += check_sources_array(
+            results, f"global[{region}].sources",
+            g.get("sources"), GLOBAL_SOURCES_MIN_COUNT,
+        )
+
+        # 7d. indicators — 5 required keys, each a non-empty string.
+        # "N/A" is a legitimate absence signal (frontend `hasVal` filters it);
+        # an empty string or null is not.
+        inds = g.get("indicators", {}) or {}
+        meta = g.get("indicatorMeta", {}) or {}
         for key in GLOBAL_INDICATOR_KEYS:
+            val = inds.get(key)
+            key_ok = key in inds and isinstance(val, str) and bool(val.strip())
             if not check(results, f"global.{region}.indicators.{key}",
-                          key in inds, f"Missing standard indicator key"):
+                          key_ok,
+                          f"Missing or non-string indicator: {val!r}"):
                 fails += 1
-            if not warn(results, f"global.{region}.indicatorMeta.{key}",
-                         key in meta and "change" in meta.get(key, {}),
-                         f"Missing indicatorMeta with change field"):
+            # indicatorMeta[key].change — frontend displays movement from
+            # this field; absence leaves the change column blank. Producer
+            # (tldr-analyst-macro) currently emits empty strings for every
+            # global region × indicator pair — a real gap that causes every
+            # global KPI movement column to render blank. Kept as WARN here
+            # so Cluster 3 surfaces the gap in validator output without
+            # immediately blocking deploys. Upgrade to `check()` (FAIL)
+            # once the analyst is updated to populate this field. The
+            # existing WARN at L338 of the pre-Cluster-3 validator only
+            # tested key presence; this tightens to non-empty string.
+            has_change = (
+                key in meta
+                and isinstance(meta.get(key), dict)
+                and isinstance(meta[key].get("change"), str)
+                and bool(meta[key].get("change", "").strip())
+            )
+            if not warn(results, f"global.{region}.indicatorMeta.{key}.change",
+                         has_change,
+                         f"Missing or empty indicatorMeta[{key}].change — movement signal will render blank"):
                 warns += 1
+
+    # ============================================================
+    # 7.5 NATIONAL ANALYSIS + SOURCES
+    # Frontend `_renderCanadaSubtab` (app.js L2561-2569) reads
+    # `national.analysis` (main narrative), `national.sources` (citations
+    # passed into `_natNarrative` footnote linking + sources `<details>`),
+    # and `national.chart_callout` (handled in 10.5). The fallback
+    # `D.national_analysis` is legacy — contract-ize the canonical path.
+    # ============================================================
+    nat = b.get("national") or {}
+    fails += check_analysis_prose(
+        results, "national.analysis",
+        nat.get("analysis"), NATIONAL_ANALYSIS_MIN_LEN,
+    )
+    fails += check_sources_array(
+        results, "national.sources",
+        nat.get("sources"), NATIONAL_SOURCES_MIN_COUNT,
+    )
 
     # ============================================================
     # 8. METRICS _CHG KEYS
