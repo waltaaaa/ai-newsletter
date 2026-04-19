@@ -126,7 +126,11 @@
     "housing_starts": "235,852",
     "trade_balance": "-$5.7B",
     "employment_change": "+14,000",
-    "boc_rate": "2.25%"
+    "boc_rate": "2.25%",
+    "cadUsd_chg": "",
+    "tsx_chg": "",
+    "employmentChange_chg": "+14,000 (partial recovery)",
+    "participation_chg": "+0.1pp"
   },
   "indicatorMeta": {
     "bocRate": {
