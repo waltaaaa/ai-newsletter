@@ -55,6 +55,28 @@ jobs:
           LOCAL_MODEL_PATH: models/qwen2.5-3b-instruct-q4_k_m.gguf
         run: python update_dashboard.py --indicators-only
 
+      # Validator-as-deploy-gate (Phase B.5). Blocks the workflow on any
+      # schema FAIL so the daily run cannot clobber required fields.
+      # Exit codes: 0 = PASS, 2 = WARN (known producer-regen gaps, pass),
+      # 1 = FAIL (any other non-zero → fail the job).
+      # No override flag. No silent ship.
+      - name: Validate briefing schema (deploy gate)
+        run: |
+          set +e
+          python tools/validate_briefing_schema.py docs/data/briefing_latest.json
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "Validator PASS"
+            exit 0
+          elif [ "$rc" -eq 2 ]; then
+            echo "Validator WARN (0 FAIL) — proceeding to deploy"
+            exit 0
+          else
+            echo "Validator FAIL — rc=$rc — blocking deploy"
+            exit 1
+          fi
+
       - name: Deploy static assets to docs/
         run: python tools/deploy_to_github.py
 

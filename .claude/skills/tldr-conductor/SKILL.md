@@ -540,6 +540,25 @@ if prov_charts and prov_optc / len(prov_charts) < 0.8:
 
 ---
 
+### GATE PRE-DEPLOY: Schema Validation (Python tool) — HARD FAIL, NO OVERRIDE
+
+**Tool:** `tools/validate_briefing_schema.py`
+
+**Your job:**
+1. Immediately before the Deploy step, and *after* Phase 6 (Fix) has run if it was needed, run the validator one last time against the candidate briefing that is about to be promoted to `briefing_latest.json`:
+   ```
+   python tools/validate_briefing_schema.py docs/data/briefing_YYYY-MM-DD.json
+   ```
+2. Exit codes: `0 = PASS`, `1 = FAIL`, `2 = WARN`. This gate is **non-negotiable**:
+   - Exit 0: proceed to Deploy.
+   - Exit 2 (WARN only, 0 FAIL): proceed to Deploy. WARN-tier issues are the known B.4 producer-regen gaps and data freshness flags.
+   - Exit 1 (any FAIL): **ABORT the deploy.** Do NOT run `cp briefing_YYYY-MM-DD.json briefing_latest.json`, do NOT run `archive_briefing.py`, do NOT commit, do NOT push. Report the failure list to the user and re-enter Phase 6 (Fixer) or manual spot-fix.
+3. There is **no override flag**, no "proceed anyway" option, and no silent ship path. The validator is the last-line gate between the pipeline and production.
+
+**Why this gate exists:** GATE 3.5 and GATE 4 catch assembler/charts regressions mid-pipeline. But Phase 5 (Auditor) and Phase 6 (Fixer) both mutate the briefing JSON after those gates, and manual spot-fixes may be applied between Phase 6 and Deploy. This final re-validation ensures that whatever is about to be promoted to `briefing_latest.json` still honors the schema contract. Without it, a well-intentioned Fixer patch or manual edit can silently reintroduce the exact 42-gap class the zero-gap hardening (Phase B) was built to prevent. See `HANDOFF_NEXT_SESSION.md` Phase B.5 and the Pipeline Invariants line in `CLAUDE.md`.
+
+---
+
 ### Deploy
 
 **Your job:**

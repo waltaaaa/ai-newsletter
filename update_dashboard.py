@@ -439,6 +439,67 @@ def audit_all_citations():
         print(f"  Report saved to {audit_file}")
 
 
+def _run_post_export_validator_gate():
+    """Post-export validator gate — HARD FAIL on schema FAIL.
+
+    Runs `tools/validate_briefing_schema.py` against `docs/data/briefing_latest.json`
+    immediately after the daily or weekly pipeline exports. Exit codes:
+        0 = PASS  → return, proceed to deploy
+        2 = WARN  → return, proceed to deploy (known B.4 producer-regen gaps)
+        1 = FAIL  → print the validator output and `sys.exit(1)` so the
+                    GitHub Actions workflow fails loudly. This is the
+                    regression guard that catches a daily or weekly export
+                    that silently clobbered required fields. See CLAUDE.md
+                    "Validator is a deploy gate" invariant and
+                    HANDOFF_NEXT_SESSION.md Phase B.5.
+
+    No override flag. No silent ship. If the briefing file is missing the
+    gate also fails — the daily export is supposed to have written it.
+    """
+    import subprocess
+    import sys as _sys
+
+    briefing_path = os.path.join(
+        os.path.dirname(__file__), "docs", "data", "briefing_latest.json"
+    )
+    if not os.path.exists(briefing_path):
+        print(f"\n[VALIDATOR GATE] FAIL — briefing_latest.json missing at {briefing_path}")
+        _sys.exit(1)
+
+    validator_path = os.path.join(
+        os.path.dirname(__file__), "tools", "validate_briefing_schema.py"
+    )
+    print("\n[VALIDATOR GATE] Re-validating briefing_latest.json post-export...")
+    proc = subprocess.run(
+        [_sys.executable, validator_path, briefing_path],
+        capture_output=True,
+        text=True,
+    )
+    # Always echo the validator's own report for CI log visibility.
+    if proc.stdout:
+        print(proc.stdout)
+    if proc.stderr:
+        print(proc.stderr)
+
+    rc = proc.returncode
+    if rc == 0:
+        print("[VALIDATOR GATE] PASS — briefing_latest.json is schema-clean.")
+        return
+    if rc == 2:
+        print(
+            "[VALIDATOR GATE] WARN — briefing_latest.json has non-critical "
+            "warnings (known producer-regen gaps). Proceeding to deploy."
+        )
+        return
+    # rc == 1 (FAIL) or any other non-zero — abort the run.
+    print(
+        f"\n[VALIDATOR GATE] FAIL — validator returned exit code {rc}. "
+        "The daily/weekly run must not clobber required fields. "
+        "Deploy blocked. Fix the briefing and re-run."
+    )
+    _sys.exit(1)
+
+
 def _audit_section_urls(payload, section_key, failures, _vurl, _qr):
     """Helper: check source URLs in a payload section."""
     data = payload.get(section_key)
@@ -583,5 +644,14 @@ if __name__ == "__main__":
             print(f"[ERROR] Daily indicators failed: {e}")
             daily_log.log_error("daily_indicators", e, recovered=False)
             daily_log.finalize("error")
+
+        # Post-daily-run validator gate — see HANDOFF_NEXT_SESSION.md Phase B.5.
+        # Fails the workflow (sys.exit 1) if the daily export clobbered a
+        # required briefing_latest.json field. WARN-tier does not block.
+        _run_post_export_validator_gate()
     else:
         update_dashboard(deep_sweep=args.deep_sweep)
+        # Post-weekly-run validator gate — same guarantee as daily. If Phase 6
+        # (Finalize) wrote a briefing_latest.json that fails the schema
+        # contract, the workflow fails before the Deploy/commit step runs.
+        _run_post_export_validator_gate()
