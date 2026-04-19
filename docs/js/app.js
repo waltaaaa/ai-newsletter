@@ -388,8 +388,6 @@ async function renderTLDR(){
 
   // Key Indicators table
   const kiHtml=_tldrBuildIndicatorTable();
-  // Markets table
-  const mkHtml=_tldrBuildMarketsTable();
   // Briefing narrative
   const briefingHtml=_tldrBuildBriefing();
   // Policy section
@@ -411,13 +409,8 @@ async function renderTLDR(){
       <div class="tldr-glance-body">
         <div class="tldr-toggle-row">
           <span class="tldr-glance-label">Canada \u2014 National</span>
-          <div class="tldr-toggle" id="tldrGlanceToggle">
-            <button class="active" data-view="indicators">Key Indicators</button>
-            <button data-view="markets">Markets</button>
-          </div>
         </div>
         <div id="tldrIndicatorsView">${weeklyDataHtml}${kiHtml}</div>
-        <div id="tldrMarketsView" style="display:none">${mkHtml}</div>
       </div>
     </details>
 
@@ -425,15 +418,6 @@ async function renderTLDR(){
     ${policyHtml}
     ${projectsHtml}`;
 
-  // Wire up toggle
-  const tog=$('tldrGlanceToggle');
-  if(tog){tog.querySelectorAll('button').forEach(btn=>{btn.addEventListener('click',()=>{
-    tog.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const v=btn.dataset.view;
-    $('tldrIndicatorsView').style.display=v==='indicators'?'':'none';
-    $('tldrMarketsView').style.display=v==='markets'?'':'none';
-  })})}
   // Render callout charts async
   setTimeout(function(){_tldrRenderCalloutCharts()},100);
 }
@@ -728,24 +712,13 @@ function _tldrBuildBriefing(){
   </div>`;
 }
 
-/* Build a callout box with optional inline SVG chart */
+/* Build a callout box with optional inline SVG chart (Economist-style header lives inside the SVG) */
 function _tldrCalloutHtml(co,idx){
   var h='<div class="tldr-callout">';
   if(co.text)h+=co.text;
   if(co.chart){
-    var ch=co.chart;
-    var keys=ch.dataKeys||[];
     h+='<div class="tldr-callout-chart" id="tldrCalloutChart_'+idx+'">';
-    h+='<div class="tldr-callout-chart-title">'+(ch.title||'')+(ch.subtitle?' \u00B7 '+ch.subtitle:'')+'</div>';
-    // Legend
-    var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
-    if(keys.length>1){
-      h+='<div class="tldr-chart-legend">';
-      keys.forEach(function(k,i){h+='<span class="tldr-chart-legend-item"><span class="tldr-chart-legend-dot" style="background:'+colors[i%colors.length]+'"></span>'+k+'</span>'});
-      h+='</div>';
-    }
-    // Chart placeholder — filled async after render
-    h+='<div class="tldr-callout-svg" id="tldrCalloutSvg_'+idx+'"><div style="height:120px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div>';
+    h+='<div class="tldr-callout-svg" id="tldrCalloutSvg_'+idx+'"><div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div>';
     h+='</div>';
   }
   h+='</div>';
@@ -768,62 +741,253 @@ async function _tldrRenderCalloutCharts(){
       var raw=ts&&(ts.series||ts);
       if(Array.isArray(raw)&&raw.length)allSeries.push({key:keys[ki],data:raw,color:colors[ki%colors.length]});
     }
-    if(!allSeries.length){el.innerHTML='<div style="height:120px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
+    if(!allSeries.length){el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
     // Filter to last 12 months
     var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
     allSeries.forEach(function(s){s.data=s.data.filter(function(p){return new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)})});
-    // Build multi-line SVG
-    el.innerHTML=_svgCalloutChart(allSeries,ch.annotations||[]);
+    // Derive source attribution from data keys if the chart spec does not carry one
+    var src=ch.source;
+    if(!src){
+      var ks=keys.map(function(k){return String(k).toLowerCase()}).join(',');
+      if(/\bwti\b|\bbrent\b|\bwcs\b/.test(ks))src='Source: EIA, ICE \u00b7 daily spot close';
+      else if(/\bgold\b|\bsilver\b|\bcopper\b|\bnickel\b|\bzinc\b|\blithium\b/.test(ks))src='Source: LBMA, LME';
+      else if(/\bnatural_gas\b|\bpropane\b|\blng\b/.test(ks))src='Source: EIA, NYMEX';
+      else if(/\bwheat\b|\bcanola\b|\bsoybean\b|\bcorn\b|\bpotash\b/.test(ks))src='Source: CBOT, ICE Futures';
+      else if(/\bboc_rate\b|\bgoc_\w+_yield\b/.test(ks))src='Source: Bank of Canada';
+      else if(/\bcpi\b|\bgdp\b|\bunemploy|\bhousing_starts\b|\bemployment\b|\bparticipation\b/.test(ks))src='Source: Statistics Canada';
+      else src='Source: The Lagging Indicator';
+    }
+    // Build Economist-style SVG with header + source inside the canvas
+    el.innerHTML=_svgCalloutChart(allSeries,ch.annotations||[],ch.title||'',ch.subtitle||'',ch.chartType||'line',src,{kicker:ch.eyebrow||''});
   }
 }
 
-function _svgCalloutChart(seriesArr,annotations){
-  var W=700,H=120,pL=45,pR=10,pT=10,pB=18;
-  // Compute global min/max across all series
-  var allVals=[];seriesArr.forEach(function(s){s.data.forEach(function(p){allVals.push(p.value)})});
-  if(!allVals.length)return '';
-  var mn=Math.min.apply(null,allVals),mx=Math.max.apply(null,allVals),rng=mx-mn;
-  if(rng===0)rng=Math.abs(mn)*0.1||1;
-  mn-=rng*0.08;mx+=rng*0.08;rng=mx-mn;
+function _svgCalloutChart(seriesArr,annotations,title,subtitle,chartType,source,opts){
+  // Economist-style chart with Prussian blue theme.
+  // Types: 'line' (area under curve), 'multi_line' (rebased to 100), 'bar', 'diverging_bar' (auto MoM for level series).
+  if(!seriesArr||!seriesArr.length)return '';
+  chartType=chartType||'line';
+  var isBar=(chartType==='bar'||chartType==='diverging_bar');
+  var isMulti=(chartType==='multi_line');
+  var isDiv=(chartType==='diverging_bar');
+
+  var W=1100,H=360,PAD_X=0,PAD_TOP=14,PAD_BOT=32;
+  var pL=PAD_X,pR=48,pT=96,pB=82;
   var pW=W-pL-pR,pH=H-pT-pB;
-  function xPos(date,dates){var i=dates.indexOf(date);return pL+(i/(dates.length-1))*pW}
-  function yPos(v){return pT+(1-(v-mn)/rng)*pH}
+  var BRAND='#003153',INK='#0f172a',MUTED='#4a5568',FAINT='#94a3b8',EVENT='#E3120B',GRID='#d9d4c7',POS='#0d7a3f',NEG='#c4320a';
+  var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;">';
-  // Grid
-  for(var g=0;g<4;g++){var gy=pT+(g/3)*pH;var gv=mx-(g/3)*rng;svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="#e4e2dd" stroke-width="0.5"/>';svg+='<text x="'+(pL-4)+'" y="'+(gy+3)+'" text-anchor="end" fill="#aaa" font-size="7" font-family="DM Sans">'+_svgFmtVal(gv)+'</text>';}
-  // X-axis labels
-  var refDates=seriesArr[0].data;
-  var xLabels=Math.min(4,refDates.length);
-  for(var xi=0;xi<xLabels;xi++){var di=Math.round(xi/(xLabels-1)*(refDates.length-1));var dx=pL+(di/(refDates.length-1))*pW;svg+='<text x="'+dx+'" y="'+(H-3)+'" text-anchor="middle" fill="#aaa" font-size="7" font-family="DM Sans">'+_svgFmtDate(refDates[di].date)+'</text>';}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function fmtVal(v){return _svgFmtVal(v).replace(/\.00$/,'')}
+  function fmtDate(iso){var d=new Date(iso);return MONTHS[d.getUTCMonth()]+' '+d.getUTCDate()+' '+d.getUTCFullYear()}
 
-  // Draw each series
-  seriesArr.forEach(function(s){
-    if(!s.data.length)return;
-    var pts=s.data.map(function(p,i){return{x:pL+(i/(s.data.length-1))*pW,y:yPos(p.value)}});
-    var poly=pts.map(function(p){return p.x+','+p.y}).join(' ');
-    // Area fill for first series only
-    if(s===seriesArr[0]){
-      var fid='tldrCF_'+(++_svgUid);
-      svg+='<defs><linearGradient id="'+fid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+s.color+'" stop-opacity="0.08"/><stop offset="100%" stop-color="'+s.color+'" stop-opacity="0"/></linearGradient></defs>';
-      var lp=pts[pts.length-1],fp=pts[0],bot=pT+pH;
-      svg+='<polygon fill="url(#'+fid+')" points="'+poly+' '+lp.x+','+bot+' '+fp.x+','+bot+'"/>';
+  // Clone input (avoid mutating caller).
+  var prepared=seriesArr.map(function(s){return{key:s.key,data:s.data.slice(),color:s.color}});
+
+  // diverging_bar: if a series looks like a level (same sign, tight range), convert to MoM deltas so the "change" story is visible.
+  if(isDiv){
+    prepared.forEach(function(s){
+      var vals=s.data.map(function(p){return p.value}).filter(function(v){return v!=null});
+      if(vals.length<3)return;
+      var vmn=Math.min.apply(null,vals),vmx=Math.max.apply(null,vals);
+      var sameSign=(vmn>=0)||(vmx<=0);
+      var mag=Math.max(Math.abs(vmn),Math.abs(vmx));
+      var rangeRatio=mag===0?0:(vmx-vmn)/mag;
+      if(sameSign&&rangeRatio<0.6){
+        var deltas=[];
+        for(var i=1;i<s.data.length;i++){
+          if(s.data[i].value==null||s.data[i-1].value==null)continue;
+          deltas.push({date:s.data[i].date,value:s.data[i].value-s.data[i-1].value});
+        }
+        s.data=deltas;
+      }
+    });
+  }
+
+  // multi_line: rebase each series to 100 at first non-null point
+  if(isMulti){
+    prepared.forEach(function(s){
+      var base=null;
+      for(var i=0;i<s.data.length;i++){if(s.data[i].value!=null&&s.data[i].value!==0){base=s.data[i].value;break}}
+      if(base==null||base===0)return;
+      s.data=s.data.map(function(p){return{date:p.date,value:p.value==null?null:(p.value/base)*100}});
+    });
+  }
+
+  // Align all series to shortest common length
+  var n=Math.min.apply(null,prepared.map(function(s){return s.data.length}));
+  if(!n||n<2)return '';
+  var slices=prepared.map(function(s){return s.data.slice(-n)});
+  var primary=slices[0];
+
+  // y-range
+  var allVals=[];
+  slices.forEach(function(sl){sl.forEach(function(p){if(p.value!=null)allVals.push(p.value)})});
+  if(!allVals.length)return '';
+  var mn=Math.min.apply(null,allVals),mx=Math.max.apply(null,allVals);
+  if(isDiv){var absMx=Math.max(Math.abs(mn),Math.abs(mx))||1;mn=-absMx;mx=absMx}
+  var rng=mx-mn;if(rng===0)rng=Math.abs(mn)*0.1||1;
+  if(isBar){mx+=rng*0.14;rng=mx-mn;if(!isDiv){mn-=rng*0.04;rng=mx-mn}}
+  else{
+    // Add ~one gridline-step of headroom below the data minimum so the lines don't hug the floor.
+    var dataMin=mn;
+    if(dataMin>0){mn=Math.max(0,dataMin-rng*0.25)}
+    else if(dataMin<0){mn-=rng*0.25}
+    mx+=rng*0.14;rng=mx-mn;
+  }
+
+  function xp(i,L){return pL+(i/Math.max(L-1,1))*pW}
+  function yp(v){return pT+(1-(v-mn)/rng)*pH}
+  var base_y=pT+pH;
+  var zero_y=isDiv?yp(0):base_y;
+
+  // Smooth path (Catmull-Rom → Cubic Bezier, tension 0.5)
+  function smoothPath(pts){
+    if(pts.length<2)return '';
+    if(pts.length===2)return 'M'+pts[0][0].toFixed(1)+','+pts[0][1].toFixed(1)+' L'+pts[1][0].toFixed(1)+','+pts[1][1].toFixed(1);
+    var d='M'+pts[0][0].toFixed(1)+','+pts[0][1].toFixed(1);
+    for(var i=0;i<pts.length-1;i++){
+      var p0=i>0?pts[i-1]:pts[i];
+      var p1=pts[i],p2=pts[i+1];
+      var p3=i+2<pts.length?pts[i+2]:pts[i+1];
+      var cp1x=p1[0]+(p2[0]-p0[0])/6,cp1y=p1[1]+(p2[1]-p0[1])/6;
+      var cp2x=p2[0]-(p3[0]-p1[0])/6,cp2y=p2[1]-(p3[1]-p1[1])/6;
+      d+=' C'+cp1x.toFixed(1)+','+cp1y.toFixed(1)+' '+cp2x.toFixed(1)+','+cp2y.toFixed(1)+' '+p2[0].toFixed(1)+','+p2[1].toFixed(1);
     }
-    svg+='<polyline fill="none" stroke="'+s.color+'" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" points="'+poly+'"/>';
-    var last=pts[pts.length-1];
-    svg+='<circle cx="'+last.x+'" cy="'+last.y+'" r="2.5" fill="'+s.color+'"/>';
-  });
+    return d;
+  }
+  function areaPath(pts,baselineY){
+    if(pts.length<2)return '';
+    return smoothPath(pts)+' L'+pts[pts.length-1][0].toFixed(1)+','+baselineY.toFixed(1)+' L'+pts[0][0].toFixed(1)+','+baselineY.toFixed(1)+' Z';
+  }
 
-  // Annotations (vertical markers)
-  annotations.forEach(function(a){
-    if(!a.date)return;
-    // Find x position from first series dates
-    var rd=seriesArr[0].data;
-    var closest=0,minDiff=Infinity;
-    rd.forEach(function(p,i){var diff=Math.abs(new Date(p.date)-new Date(a.date));if(diff<minDiff){minDiff=diff;closest=i}});
-    var ax=pL+(closest/(rd.length-1))*pW;
-    svg+='<line x1="'+ax+'" y1="'+pT+'" x2="'+ax+'" y2="'+(pT+pH)+'" stroke="#7a8599" stroke-width="0.5" stroke-dasharray="3,2"/>';
-  });
+  // Screen points per series (null values map to baseline y — bars skip them separately)
+  var seriesPts=slices.map(function(slice){return slice.map(function(p,i){return[xp(i,slice.length),yp(p.value==null?mn:p.value)]})});
+
+  // First annotation → flag above plot, dashed drop-line to data point (line/multi_line only)
+  var event_x=null,event_y=null,evLabel='',evDate=null;
+  if(!isBar&&annotations&&annotations.length&&annotations[0].date){
+    var tEv=new Date(annotations[0].date).getTime();
+    var bestI=0,bestD=Infinity;
+    for(var ii=0;ii<primary.length;ii++){
+      var dd=Math.abs(new Date(primary[ii].date).getTime()-tEv);
+      if(dd<bestD){bestD=dd;bestI=ii}
+    }
+    event_x=xp(bestI,primary.length);
+    event_y=seriesPts[0][bestI][1];
+    evLabel=annotations[0].label||'';
+    evDate=annotations[0].date;
+  }
+
+  // ---- SVG start ----
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:\'Inter\',-apple-system,sans-serif;overflow:visible" role="img" aria-label="'+esc(title||'Chart')+'">';
+
+  // Defs — arrow marker + per-series area gradients (line mode only)
+  svg+='<defs>';
+  svg+='<marker id="le_arrow_event_'+(++_svgUid)+'" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="'+EVENT+'"/></marker>';
+  if(!isBar){
+    var gradPrimaryId='area_primary_'+_svgUid;
+    var gradSecondaryId='area_secondary_'+_svgUid;
+    var primaryColor=prepared[0].color||BRAND;
+    svg+='<linearGradient id="'+gradPrimaryId+'" x1="0" y1="0" x2="0" y2="1">';
+    svg+='<stop offset="0%" stop-color="'+primaryColor+'" stop-opacity="0.22"/>';
+    svg+='<stop offset="100%" stop-color="'+primaryColor+'" stop-opacity="0"/>';
+    svg+='</linearGradient>';
+    if(prepared.length>=2){
+      var secondaryColor=prepared[1].color||BRAND;
+      svg+='<linearGradient id="'+gradSecondaryId+'" x1="0" y1="0" x2="0" y2="1">';
+      svg+='<stop offset="0%" stop-color="'+secondaryColor+'" stop-opacity="0.16"/>';
+      svg+='<stop offset="100%" stop-color="'+secondaryColor+'" stop-opacity="0"/>';
+      svg+='</linearGradient>';
+    }
+  }
+  svg+='</defs>';
+
+  // Signal49 / Economist-style: red rule + optional uppercase kicker + Inter bold title + Inter italic deck
+  svg+='<rect x="'+PAD_X+'" y="'+PAD_TOP+'" width="48" height="4" fill="#E3120B"/>';
+  var _ck=(opts&&opts.kicker)||'';
+  var _ttlY=PAD_TOP+34;
+  if(_ck){
+    svg+='<text x="'+PAD_X+'" y="'+(PAD_TOP+22)+'" font-size="10" font-weight="700" fill="'+INK+'" letter-spacing="1.4">'+esc(_ck.toUpperCase())+'</text>';
+    _ttlY=PAD_TOP+46;
+  }
+  svg+='<text x="'+PAD_X+'" y="'+_ttlY+'" font-size="22" font-weight="700" fill="'+INK+'" letter-spacing="-0.3" font-family="Inter,sans-serif">'+esc(title||'')+'</text>';
+  if(subtitle)svg+='<text x="'+PAD_X+'" y="'+(_ttlY+22)+'" font-size="13" font-weight="500" font-style="italic" fill="'+MUTED+'" font-family="Inter,sans-serif">'+esc(subtitle)+'</text>';
+
+  // Horizontal gridlines + right-side y-axis labels
+  for(var g=0;g<=4;g++){
+    var gy=pT+(g/4)*pH;
+    var gv=mx-(g/4)*rng;
+    svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="'+GRID+'" stroke-width="1"/>';
+    svg+='<text x="'+(W-pR+8)+'" y="'+(gy+4)+'" text-anchor="start" font-size="11" font-weight="400" fill="'+MUTED+'" style="font-variant-numeric:tabular-nums">'+fmtVal(gv)+'</text>';
+  }
+
+  // Bold chart floor
+  svg+='<line x1="'+pL+'" y1="'+base_y+'" x2="'+(W-pR)+'" y2="'+base_y+'" stroke="'+INK+'" stroke-width="1.2"/>';
+
+  // Zero line for diverging_bar (overlays gridlines)
+  if(isDiv&&zero_y>pT&&zero_y<base_y){
+    svg+='<line x1="'+pL+'" y1="'+zero_y.toFixed(1)+'" x2="'+(W-pR)+'" y2="'+zero_y.toFixed(1)+'" stroke="'+INK+'" stroke-width="1.4"/>';
+  }
+
+  // X-axis labels
+  var NT=6;if(primary.length<NT)NT=Math.max(2,primary.length);
+  for(var xi=0;xi<NT;xi++){
+    var di=Math.round((xi/(NT-1))*(primary.length-1));
+    var dx=xp(di,primary.length);
+    var dObj=new Date(primary[di].date);
+    var lbl=MONTHS[dObj.getUTCMonth()];
+    if(xi===0||dObj.getUTCMonth()===0)lbl=MONTHS[dObj.getUTCMonth()]+'\u2009'+dObj.getUTCFullYear();
+    var xAnc=xi===0?'start':(xi===NT-1?'end':'middle');
+    svg+='<text x="'+dx+'" y="'+(base_y+22)+'" text-anchor="'+xAnc+'" font-size="11" font-weight="400" fill="'+MUTED+'">'+lbl+'</text>';
+  }
+
+  // Annotation flag (line mode only) — flag text sits above plot, dashed line drops from flag to data point
+  if(event_x!==null){
+    var flagY=pT-8;
+    var flagAnchor='middle',flagX=event_x;
+    if(event_x<pL+pW*0.22){flagAnchor='start';flagX=event_x+4}
+    else if(event_x>pL+pW*0.78){flagAnchor='end';flagX=event_x-4}
+    svg+='<text x="'+flagX+'" y="'+flagY+'" text-anchor="'+flagAnchor+'" font-size="11" font-weight="600" fill="'+EVENT+'">'+esc(evLabel)+' \u00b7 '+fmtDate(evDate)+'</text>';
+    svg+='<line x1="'+event_x+'" y1="'+(pT-3)+'" x2="'+event_x+'" y2="'+event_y.toFixed(1)+'" stroke="'+EVENT+'" stroke-width="1" stroke-dasharray="2,3" opacity="0.85"/>';
+    svg+='<circle cx="'+event_x+'" cy="'+event_y.toFixed(1)+'" r="3" fill="'+EVENT+'"/>';
+  }
+
+  // ---- Data rendering ----
+  if(isBar){
+    var sp=seriesPts[0],slice=slices[0];
+    var barColor=prepared[0].color||BRAND;
+    var barW=sp.length>1?Math.max(2,(sp[1][0]-sp[0][0])*0.7):20;
+    for(var bi=0;bi<sp.length;bi++){
+      var v=slice[bi].value;if(v==null)continue;
+      var y0=isDiv?zero_y:base_y;
+      var y1=sp[bi][1];
+      var top=Math.min(y0,y1),h=Math.abs(y1-y0);
+      var fill=isDiv?(v>=0?POS:NEG):barColor;
+      svg+='<rect x="'+(sp[bi][0]-barW/2).toFixed(1)+'" y="'+top.toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+Math.max(h,0.5).toFixed(1)+'" fill="'+fill+'" rx="1"/>';
+    }
+  }else{
+    // Filled area under each series — secondary first (back), primary on top
+    if(seriesPts.length>=2){svg+='<path d="'+areaPath(seriesPts[1],base_y)+'" fill="url(#area_secondary_'+_svgUid+')"/>'}
+    svg+='<path d="'+areaPath(seriesPts[0],base_y)+'" fill="url(#area_primary_'+_svgUid+')"/>';
+    var drawOrder=seriesPts.length>1?[1,0]:[0];
+    drawOrder.forEach(function(sIdx){
+      var pts=seriesPts[sIdx];
+      var color=prepared[sIdx].color||BRAND;
+      var sw=sIdx===0?3:2.4;
+      svg+='<path d="'+smoothPath(pts)+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linejoin="round" stroke-linecap="round"/>';
+    });
+    seriesPts.forEach(function(pts,sIdx){
+      var last=pts[pts.length-1];
+      var color=prepared[sIdx].color||BRAND;
+      var r=sIdx===0?4.5:4;
+      svg+='<circle cx="'+last[0]+'" cy="'+last[1]+'" r="'+r+'" fill="'+color+'"/>';
+    });
+  }
+
+  // Source line (italicized, Economist-style)
+  var srcText=source||'Source: The Lagging Indicator';
+  svg+='<text x="'+PAD_X+'" y="'+(H-PAD_BOT-2)+'" font-size="10" font-weight="500" font-style="italic" fill="'+MUTED+'">'+esc(srcText)+'</text>';
 
   svg+='</svg>';return svg;
 }
