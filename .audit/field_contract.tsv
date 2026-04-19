@@ -1,0 +1,284 @@
+tab	render_function	line	field_path	expected_type	expected_non_empty	current_producer_skill	current_producer_line	validator_check	status	fix_layer	fix_note
+tldr	renderTLDR	368	executive_summary	string	yes	tldr-writer-macro	418	top_level.executive_summary:L158	ok	none	no action — field present and validated
+tldr	renderTLDR	374	headline	string	yes	tldr-analyst-macro	618	top_level.headline:L158	ok	none	no action — field present and validated
+tldr	renderTLDR	385	week_of	string	yes	tldr-analyst-macro	ASSEMBLER	top_level.week_of:L158	ok	none	no action — field present and validated
+tldr	_tldrBuildIndicatorTable	468	key_indicators	array<object>	yes	tldr-analyst-macro	155	MISSING	validator-missing	schema	add length+type check to validator
+tldr	_tldrBuildIndicatorTable	468	key_indicators[i].label	string	yes	tldr-analyst-macro	155	MISSING	validator-missing	schema	add length+type check to validator
+tldr	_tldrBuildIndicatorTable	468	key_indicators[i].value	string	yes	tldr-analyst-macro	155	MISSING	validator-missing	schema	add length+type check to validator
+tldr	_tldrBuildIndicatorTable	490	key_indicators[i].change	string	no	tldr-analyst-macro	155	MISSING	validator-missing	schema	add length+type check to validator
+tldr	_tldrBuildIndicatorTable	491	key_indicators[i].changeContext	string	no	tldr-analyst-macro	-	MISSING	frontend-fallback-only	defer	optional indicator sub-field; keep fallback
+tldr	_tldrBuildIndicatorTable	498	key_indicators[i].period	string	no	tldr-analyst-macro	155	MISSING	frontend-fallback-only	defer	optional indicator sub-field; keep fallback
+tldr	_tldrBuildIndicatorTable	469	indicatorMeta	object	yes	tldr-analyst-macro	200	top_level.indicatorMeta:L158	ok	none	no action — field present and validated
+tldr	_tldrBuildIndicatorTable	488	indicatorMeta[key].change	string	yes	tldr-analyst-macro	272	MISSING	validator-missing	schema	add length+type check to validator
+tldr	_tldrBuildIndicatorTable	498	indicatorMeta[key].period	string	yes	tldr-analyst-macro	272	MISSING	validator-missing	schema	add length+type check to validator
+tldr	_tldrBuildIndicatorTable	497	indicatorMeta[key].source	string	yes	tldr-analyst-macro	272	MISSING	validator-missing	schema	add length+type check to validator
+tldr	_tldrBuildIndicatorTable	497	indicatorSources	object	no	tldr-analyst-macro	218	MISSING	frontend-fallback-only	defer	optional enrichment; keep fallback
+tldr	_tldrBuildMarketsTable	555	commodities	array<object>	yes	tldr-writer-markets-triad	304	count.commodities:L182	ok	none	no action — field present and validated
+tldr	_tldrBuildMarketsTable	583	commodities[i].name	string	yes	tldr-writer-markets-triad	304	commodity.{name}.name:L213	ok	none	no action — field present and validated
+tldr	_tldrBuildMarketsTable	583	commodities[i].val	string	yes	tldr-writer-markets-triad	52	commodity.{name}.val:L213	ok	none	no action — field present and validated
+tldr	_tldrBuildMarketsTable	583	commodities[i].mm	string	no	tldr-writer-markets-triad	52	commodity.{name}.mm:L213	ok	none	no action — field present and validated
+tldr	_tldrBuildMarketsTable	583	commodities[i].day	string	no	tldr-writer-markets-triad	52	commodity.{name}.day:L213	ok	none	no action — field present and validated
+tldr	_tldrBuildMarketsTable	583	commodities[i].source	string	no	UNKNOWN	-	MISSING	frontend-fallback-only	defer	intentional optional — keep as graceful fallback
+tldr	_tldrBuildWeeklyDataTable	616	discovery_stats	object	yes	PIPELINE	-	MISSING	validator-missing	pipeline	pipeline emits; add validator count+type check
+tldr	_tldrBuildWeeklyDataTable	616	discovery_stats.total_projects	number	yes	PIPELINE	-	MISSING	validator-missing	pipeline	pipeline emits; add validator count+type check
+tldr	_tldrBuildWeeklyDataTable	664	discovery_stats.total_value_billions	number	no	PIPELINE	-	MISSING	validator-missing	pipeline	pipeline emits; add validator count+type check
+tldr	_tldrBuildWeeklyDataTable	664	discovery_stats.new_this_week	number	no	PIPELINE	-	MISSING	validator-missing	pipeline	pipeline emits; add validator count+type check
+tldr	_tldrBuildBriefing	647	executive_summary	string	yes	tldr-writer-macro	418	top_level.executive_summary:L158	ok	none	no action — field present and validated
+tldr	_tldrBuildBriefing	648	sources	array<object>	yes	tldr-assembler	274	top_level.sources:L158,count.sources:L186	ok	none	no action — field present and validated
+tldr	_tldrBuildBriefing	698	sources[i].url	string	yes	tldr-assembler	274	MISSING	validator-missing	schema	add per-source URL required check to validator
+tldr	_tldrBuildBriefing	700	sources[i].title	string	no	tldr-assembler	274	MISSING	frontend-fallback-only	defer	optional source metadata; keep fallback
+tldr	_tldrBuildBriefing	659	insightCharts	array<object>	yes	tldr-charts	57	top_level.insightCharts:L158,count.insightCharts:L175	ok	none	no action — field present and validated
+tldr	_tldrBuildBriefing	666	insightCharts[i].callout	string	yes	tldr-charts	68	callout.top.insightCharts[i]:L334	ok	none	no action — field present and validated
+tldr	_tldrBuildBriefing	667	insightCharts[i].reasoning	string	no	tldr-charts	220	MISSING	frontend-fallback-only	defer	optional chart enrichment; keep fallback
+tldr	_tldrRenderCalloutCharts	735	insightCharts[i].dataKeys	array<string>	yes	tldr-charts	64	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+tldr	_tldrRenderCalloutCharts	752	insightCharts[i].source	string	no	tldr-charts	-	MISSING	frontend-fallback-only	defer	optional chart enrichment; keep fallback
+tldr	_tldrRenderCalloutCharts	764	insightCharts[i].title	string	yes	tldr-charts	217	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+tldr	_tldrRenderCalloutCharts	764	insightCharts[i].subtitle	string	yes	tldr-charts	218	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+tldr	_tldrRenderCalloutCharts	764	insightCharts[i].chartType	string	yes	tldr-charts	213	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+tldr	_tldrRenderCalloutCharts	764	insightCharts[i].annotations	array	no	tldr-charts	-	MISSING	frontend-fallback-only	defer	optional chart enrichment; keep fallback
+tldr	_tldrRenderCalloutCharts	764	insightCharts[i].eyebrow	string	no	tldr-charts	223	MISSING	frontend-fallback-only	defer	optional chart enrichment; keep fallback
+tldr	_tldrBuildPolicy	1014	policy.json:weeks[0].items	array<object>	tolerant	PIPELINE	-	MISSING	validator-missing	pipeline	policy_tracker freshness + schema x-check
+tldr	_tldrBuildPolicy	1018	policy.json:weeks[0].items[i].title	string	yes	PIPELINE	-	MISSING	validator-missing	pipeline	policy_tracker freshness + schema x-check
+tldr	_tldrBuildPolicy	1036	policy.json:weeks[0].items[i].description	string	no	PIPELINE	-	MISSING	validator-missing	pipeline	policy_tracker freshness + schema x-check
+tldr	_tldrBuildPolicy	1037	policy.json:weeks[0].items[i].url	string	no	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	policy_tracker freshness + schema x-check
+tldr	_tldrBuildPolicy	1038	policy.json:weeks[0].items[i].level	string	no	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	policy_tracker freshness + schema x-check
+tldr	_tldrBuildPolicy	1019	policy.json:weeks[0].summary.narrative	string	no	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	policy_tracker freshness + schema x-check
+tldr	_tldrBuildProjects	1072	new_projects	number	no	tldr-assembler	-	MISSING	validator-missing	schema	add new_projects number check to validator
+tldr	_tldrBuildProjects	1073	project_count	number	yes	tldr-assembler	-	top_level_alias.project_count:L368	validator-missing	schema	already aliased; confirm validator coverage
+tldr	_tldrBuildProjects	1089	projects_all.json:[]	array<object>	yes	PIPELINE	-	MISSING	validator-missing	pipeline	deploy exporter freshness + schema x-check
+tldr	renderTLDRWordCloud	1487	word_cloud_topics	array<object>	no	tldr-analyst-macro	417	MISSING	frontend-fallback-only	defer	intentional optional — keep as graceful fallback
+tldr	renderTLDRWordCloud	1496	word_cloud_topics[i].topic	string	no	tldr-analyst-macro	417	MISSING	frontend-fallback-only	defer	intentional optional — keep as graceful fallback
+tldr	renderTLDRWordCloud	1496	word_cloud_topics[i].frequency	number	no	tldr-analyst-macro	417	MISSING	frontend-fallback-only	defer	intentional optional — keep as graceful fallback
+national-canada	_renderCanadaSubtab	2527	national	object	yes	tldr-writer-macro	418	top_level.national:L158	ok	none	no action — field present and validated
+national-canada	_renderCanadaSubtab	2561	national.analysis	string	yes	tldr-writer-macro	418	province.{name}.analysis:L302	validator-missing	schema	add national analysis/sources check to validator
+national-canada	_renderCanadaSubtab	2562	national.sources	array<object>	yes	tldr-writer-macro	418	MISSING	validator-missing	schema	add national analysis/sources check to validator
+national-canada	_renderCanadaSubtab	2567	national.chart_callout	string	yes	tldr-charts	159	callout.national.chart_callout:L356	ok	none	no action — field present and validated
+national-canada	_renderCanadaSubtab	2528	metrics	object	yes	tldr-analyst-macro	192	top_level.metrics:L158	ok	none	no action — field present and validated
+national-canada	_renderCanadaSubtab	2546	metrics.bocRate	string	yes	tldr-analyst-macro	193	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderCanadaSubtab	2547	metrics.realGdp	string	yes	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderCanadaSubtab	2548	metrics.cpi	string	yes	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderCanadaSubtab	2549	metrics.unemployment	string	yes	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderCanadaSubtab	2550	metrics.employmentChange	string	no	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderCanadaSubtab	2551	metrics.participation	string	no	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderCanadaSubtab	2552	metrics.housingStarts	string	yes	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderCanadaSubtab	2553	metrics.buildingPermits	string	no	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderCanadaSubtab	2538	indicatorMeta.bocRate	object	yes	tldr-analyst-macro	200	metrics.bocRate_chg:L278	ok	none	no action — field present and validated
+national-canada	_renderCanadaSubtab	2538	indicatorMeta.realGdp	object	yes	tldr-analyst-macro	200	metrics.realGdp_chg:L278	ok	none	no action — field present and validated
+national-canada	_renderCanadaSubtab	2538	indicatorMeta.cpi	object	yes	tldr-analyst-macro	200	metrics.cpi_chg:L278	ok	none	no action — field present and validated
+national-canada	_renderCanadaSubtab	2538	indicatorMeta.unemployment	object	yes	tldr-analyst-macro	200	metrics.unemployment_chg:L278	ok	none	no action — field present and validated
+national-canada	_renderCanadaSubtab	2538	indicatorMeta.housingStarts	object	yes	tldr-analyst-macro	200	metrics.housingStarts_chg:L278	ok	none	no action — field present and validated
+national-canada	_renderCanadaSubtab	2538	indicatorMeta.tradeBalance	object	yes	tldr-analyst-macro	200	metrics.tradeBalance_chg:L278	ok	none	no action — field present and validated
+national-canada	_renderCanadaSubtab	2538	indicatorMeta.buildingPermits	object	no	tldr-analyst-macro	200	MISSING	frontend-fallback-only	defer	optional indicator meta sub-field; keep fallback
+national-canada	_initCanadaInsightChart	2488	timeseries.json:unemployment_rate	array<object>	yes	PIPELINE	-	MISSING	validator-missing	pipeline	timeseries build freshness + schema x-check
+national-canada	_renderCanadaSubtab	2556	projects_all.json	array<object>	yes	PIPELINE	-	MISSING	validator-missing	pipeline	deploy exporter freshness + schema x-check
+national-canada	_renderCanadaSubtab	2558	discovery_stats	object	yes	PIPELINE	-	MISSING	validator-missing	pipeline	pipeline emits; add validator count+type check
+national-canada	_renderNatEnrichmentCards	2660	metrics.employmentChange	string	no	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderNatEnrichmentCards	2662	metrics.fulltime_change	string	no	tldr-analyst-macro	192	metrics.fulltime_change:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (currently populated)
+national-canada	_renderNatEnrichmentCards	2663	metrics.parttime_change	string	no	tldr-analyst-macro	192	metrics.parttime_change:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (currently populated)
+national-canada	_renderNatEnrichmentCards	2664	metrics.private_sector_change	string	no	tldr-analyst-macro	192	metrics.private_sector_change:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (gap — analyst not emitting)
+national-canada	_renderNatEnrichmentCards	2665	metrics.public_sector_change	string	no	tldr-analyst-macro	192	metrics.public_sector_change:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (gap — analyst not emitting)
+national-canada	_renderNatEnrichmentCards	2668	metrics.cpi	string	yes	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderNatEnrichmentCards	2669	metrics.core_cpi_median	string	no	tldr-analyst-macro	192	metrics.core_cpi_median:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (currently populated)
+national-canada	_renderNatEnrichmentCards	2670	metrics.shelter_cpi	string	no	tldr-analyst-macro	192	metrics.shelter_cpi:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (currently populated)
+national-canada	_renderNatEnrichmentCards	2671	metrics.food_cpi	string	no	tldr-analyst-macro	192	metrics.food_cpi:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (currently populated)
+national-canada	_renderNatEnrichmentCards	2672	metrics.energy_cpi	string	no	tldr-analyst-macro	192	metrics.energy_cpi:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (currently populated)
+national-canada	_renderNatEnrichmentCards	2676	metrics.building_permits	string	yes	tldr-analyst-macro	-	metrics.building_permits_alias:L291	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderNatEnrichmentCards	2677	metrics.residential_permits	string	no	tldr-analyst-macro	192	metrics.residential_permits:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (gap — analyst not emitting)
+national-canada	_renderNatEnrichmentCards	2678	metrics.nonresidential_permits	string	no	tldr-analyst-macro	192	metrics.nonresidential_permits:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (gap — analyst not emitting)
+national-canada	_renderNatEnrichmentCards	2681	metrics.merchandise_exports	string	no	tldr-analyst-macro	192	metrics.merchandise_exports:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (currently populated)
+national-canada	_renderNatEnrichmentCards	2682	metrics.merchandise_imports	string	no	tldr-analyst-macro	192	metrics.merchandise_imports:L567	validator-warn	skill	B.3 Cluster 5 — producer identified; WARN on empty (currently populated)
+national-canada	_renderNatEnrichmentCards	2683	metrics.tradeBalance	string	yes	tldr-analyst-macro	192	MISSING	validator-missing	schema	add metrics sub-key check to validator
+national-canada	_renderNatEnrichmentCards	2689	jobs.json:spikes	array<object>	no	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	job_monitor output freshness check
+national-canada	_renderNatEnrichmentCards	2697	procurement.json:awards	array<object>	no	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	procurement_monitor freshness check
+national-canada	renderInteractiveMap	1203	key_indicators	array<object>	no	tldr-analyst-macro	155	MISSING	validator-missing	schema	add length+type check to validator
+national-canada	renderInteractiveMap	1205	indicatorMeta	object	yes	tldr-analyst-macro	200	top_level.indicatorMeta:L158	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2705	global	array<object>	yes	tldr-writer-macro	430	top_level.global:L158,count.global:L175	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2712	global[i].region	string	yes	tldr-writer-macro	-	MISSING	validator-missing	schema	add global[i].region required check to validator
+national-us	_renderGlobalSubtab	2713	global[i].analysis	string	yes	tldr-writer-macro	430	MISSING	validator-missing	schema	add global[i] analysis/sources check to validator
+national-us	_renderGlobalSubtab	2713	global[i].indicators	object	yes	tldr-analyst-macro	-	global.{region}.indicators.{key}:L263	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2713	global[i].indicators.gdp	string	yes	tldr-analyst-macro	-	global.{region}.indicators.gdp:L264	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2713	global[i].indicators.cpi	string	yes	tldr-analyst-macro	-	global.{region}.indicators.cpi:L264	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2713	global[i].indicators.rate	string	yes	tldr-analyst-macro	-	global.{region}.indicators.rate:L264	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2713	global[i].indicators.unemployment	string	yes	tldr-analyst-macro	-	global.{region}.indicators.unemployment:L264	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2713	global[i].indicators.tradeBalance	string	yes	tldr-analyst-macro	-	global.{region}.indicators.tradeBalance:L264	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2713	global[i].indicatorMeta	object	yes	tldr-analyst-macro	-	global.{region}.indicatorMeta.{key}:L268	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2719	global[i].indicatorMeta[key].period	string	no	tldr-analyst-macro	-	MISSING	frontend-fallback-only	defer	optional indicator meta sub-field; keep fallback
+national-us	_renderGlobalSubtab	2720	global[i].indicatorMeta[key].change	string	yes	tldr-analyst-macro	-	global.{region}.indicatorMeta.{key}:L268	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2721	global[i].indicatorMeta[key].nextRelease	string	no	tldr-analyst-macro	-	MISSING	frontend-fallback-only	defer	optional indicator meta sub-field; keep fallback
+national-us	_renderGlobalSubtab	2727	global[i].chart_callout	string	yes	tldr-charts	179	callout.global.{region}.chart_callout:L362	ok	none	no action — field present and validated
+national-us	_renderGlobalSubtab	2725	global[i].sources	array<object>	yes	tldr-writer-macro	430	MISSING	validator-missing	schema	add global[i] analysis/sources check to validator
+national-us	_initGlobalInsightChart	2507	timeseries.json:sp500	array<object>	yes	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	timeseries build freshness + schema x-check
+national-china	_renderGlobalSubtab	2705	global[i:china].analysis	string	yes	tldr-writer-macro	430	MISSING	validator-missing	schema	add global[i] analysis/sources check to validator
+national-china	_renderGlobalSubtab	2713	global[i:china].indicators.gdp	string	yes	tldr-analyst-macro	-	global.China.indicators.gdp:L264	ok	none	no action — field present and validated
+national-china	_renderGlobalSubtab	2713	global[i:china].indicators.cpi	string	yes	tldr-analyst-macro	-	global.China.indicators.cpi:L264	ok	none	no action — field present and validated
+national-china	_renderGlobalSubtab	2713	global[i:china].indicators.rate	string	yes	tldr-analyst-macro	-	global.China.indicators.rate:L264	ok	none	no action — field present and validated
+national-china	_renderGlobalSubtab	2713	global[i:china].indicators.unemployment	string	yes	tldr-analyst-macro	-	global.China.indicators.unemployment:L264	ok	none	no action — field present and validated
+national-china	_renderGlobalSubtab	2713	global[i:china].indicators.tradeBalance	string	yes	tldr-analyst-macro	-	global.China.indicators.tradeBalance:L264	ok	none	no action — field present and validated
+national-china	_renderGlobalSubtab	2727	global[i:china].chart_callout	string	yes	tldr-charts	184	callout.global.China.chart_callout:L362	ok	none	no action — field present and validated
+national-china	_renderGlobalSubtab	2725	global[i:china].sources	array<object>	yes	tldr-writer-macro	430	MISSING	validator-missing	schema	add global[i] analysis/sources check to validator
+national-china	_initGlobalInsightChart	2507	timeseries.json:china_pmi	array<object>	yes	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	timeseries build freshness + schema x-check
+national-eu	_renderGlobalSubtab	2705	global[i:eu].analysis	string	yes	tldr-writer-macro	430	MISSING	validator-missing	schema	add global[i] analysis/sources check to validator
+national-eu	_renderGlobalSubtab	2713	global[i:eu].indicators.gdp	string	yes	tldr-analyst-macro	-	global.European Union.indicators.gdp:L264	ok	none	no action — field present and validated
+national-eu	_renderGlobalSubtab	2713	global[i:eu].indicators.cpi	string	yes	tldr-analyst-macro	-	global.European Union.indicators.cpi:L264	ok	none	no action — field present and validated
+national-eu	_renderGlobalSubtab	2713	global[i:eu].indicators.rate	string	yes	tldr-analyst-macro	-	global.European Union.indicators.rate:L264	ok	none	no action — field present and validated
+national-eu	_renderGlobalSubtab	2713	global[i:eu].indicators.unemployment	string	yes	tldr-analyst-macro	-	global.European Union.indicators.unemployment:L264	ok	none	no action — field present and validated
+national-eu	_renderGlobalSubtab	2713	global[i:eu].indicators.tradeBalance	string	yes	tldr-analyst-macro	-	global.European Union.indicators.tradeBalance:L264	ok	none	no action — field present and validated
+national-eu	_renderGlobalSubtab	2727	global[i:eu].chart_callout	string	yes	tldr-charts	189	callout.global.European Union.chart_callout:L362	ok	none	no action — field present and validated
+national-eu	_renderGlobalSubtab	2725	global[i:eu].sources	array<object>	yes	tldr-writer-macro	430	MISSING	validator-missing	schema	add global[i] analysis/sources check to validator
+national-eu	_initGlobalInsightChart	2507	timeseries.json:eurusd	array<object>	yes	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	timeseries build freshness + schema x-check
+national-uk	_renderGlobalSubtab	2705	global[i:uk].analysis	string	yes	tldr-writer-macro	430	MISSING	validator-missing	schema	add global[i] analysis/sources check to validator
+national-uk	_renderGlobalSubtab	2713	global[i:uk].indicators.gdp	string	yes	tldr-analyst-macro	-	global.United Kingdom.indicators.gdp:L264	ok	none	no action — field present and validated
+national-uk	_renderGlobalSubtab	2713	global[i:uk].indicators.cpi	string	yes	tldr-analyst-macro	-	global.United Kingdom.indicators.cpi:L264	ok	none	no action — field present and validated
+national-uk	_renderGlobalSubtab	2713	global[i:uk].indicators.rate	string	yes	tldr-analyst-macro	-	global.United Kingdom.indicators.rate:L264	ok	none	no action — field present and validated
+national-uk	_renderGlobalSubtab	2713	global[i:uk].indicators.unemployment	string	yes	tldr-analyst-macro	-	global.United Kingdom.indicators.unemployment:L264	ok	none	no action — field present and validated
+national-uk	_renderGlobalSubtab	2713	global[i:uk].indicators.tradeBalance	string	yes	tldr-analyst-macro	-	global.United Kingdom.indicators.tradeBalance:L264	ok	none	no action — field present and validated
+national-uk	_renderGlobalSubtab	2727	global[i:uk].chart_callout	string	yes	tldr-charts	194	callout.global.United Kingdom.chart_callout:L362	ok	none	no action — field present and validated
+national-uk	_renderGlobalSubtab	2725	global[i:uk].sources	array<object>	yes	tldr-writer-macro	430	MISSING	validator-missing	schema	add global[i] analysis/sources check to validator
+national-uk	_initGlobalInsightChart	2507	timeseries.json:ftse100	array<object>	yes	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	timeseries build freshness + schema x-check
+provinces	_renderProvContent	3186	provinces	array<object>	yes	tldr-writer-provincial	420	top_level.provinces:L158,count.provinces:L175	ok	none	no action — field present and validated
+provinces	_renderProvContent	3187	provinces[i].name	string	yes	tldr-writer-provincial	-	MISSING	validator-missing	schema	add province name required check to validator
+provinces	_renderProvContent	3188	provinces[i].indicators	object	yes	tldr-writer-provincial	342	province.{name}.indicators:L302	ok	none	no action — field present and validated
+provinces	_renderProvContent	3189	provinces[i].indicatorMeta	object	yes	tldr-writer-provincial	351	province.{name}.indicatorMeta:L302	ok	none	no action — field present and validated
+provinces	_renderProvContent	3191	provinces[i].sources	array<object>	yes	tldr-writer-provincial	371	province.{name}.sources:L302	ok	none	no action — field present and validated
+provinces	_renderProvContent	3369	provinces[i].analysis	string	yes	tldr-writer-provincial	370	province.{name}.analysis:L302	ok	none	no action — field present and validated
+provinces	_renderProvContent	3370	provinces[i].consumerPulse	string	no	tldr-writer-provincial	380	MISSING	frontend-fallback-only	skill	promote to required in tldr-writer-provincial
+provinces	_renderProvContent	3371	provinces[i].sectorHighlights	string	no	tldr-writer-provincial	378	MISSING	frontend-fallback-only	skill	promote to required in tldr-writer-provincial
+provinces	_renderProvContent	3512	provinces[i].labourDeepDive	string	no	tldr-writer-provincial	379	MISSING	frontend-fallback-only	skill	promote to required in tldr-writer-provincial
+provinces	_renderProvContent	3529	provinces[i].marketContext	string	no	tldr-writer-provincial	-	province.{name}.marketContext:L302	frontend-fallback-only	skill	promote to required in tldr-writer-provincial
+provinces	_renderProvContent	1701	provinces[i].tradeExposure	string	no	tldr-writer-provincial	-	MISSING	frontend-fallback-only	skill	promote to required in tldr-writer-provincial
+provinces	_renderProvContent	3558	provinces[i].watchlistItems	array<object>	no	tldr-writer-provincial	-	MISSING	frontend-fallback-only	skill	promote to required in tldr-writer-provincial
+provinces	_renderProvContent	3586	provinces[i].insightCharts	array<object>	yes	tldr-charts	91	province.{name}.insightCharts:L302	ok	none	no action — field present and validated
+provinces	_renderProvContent	3595	provinces[i].insightCharts[j].callout	string	yes	tldr-charts	105	callout.province.{name}.insightCharts[j]:L343	ok	none	no action — field present and validated
+provinces	_renderProvContent	3595	provinces[i].insightCharts[j].dataKeys	array<string>	yes	tldr-charts	94	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+provinces	_renderProvContent	3595	provinces[i].insightCharts[j].chartType	string	yes	tldr-charts	93	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+provinces	_renderProvContent	3595	provinces[i].insightCharts[j].title	string	yes	tldr-charts	95	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+provinces	_renderProvContent	3595	provinces[i].insightCharts[j].subtitle	string	yes	tldr-charts	96	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+provinces	_renderProvContent	1776	provinces[i].insightCharts[j].eyebrow	string	no	tldr-charts	223	MISSING	frontend-fallback-only	defer	optional chart enrichment; keep fallback
+provinces	_renderProvContent	1771	provinces[i].insightCharts[j].kpis	array<object>	no	tldr-charts	224	MISSING	frontend-fallback-only	defer	optional chart enrichment; keep fallback
+provinces	_renderProvContent	1777	provinces[i].insightCharts[j].context	string	no	tldr-charts	225	MISSING	frontend-fallback-only	defer	optional chart enrichment; keep fallback
+provinces	_renderProvContent	1692	provinces[i].insightCharts[j].reasoning	string	no	tldr-charts	220	MISSING	frontend-fallback-only	defer	optional chart enrichment; keep fallback
+provinces	_renderProvContent	3237	provinces[i].projects	array<object>	no	tldr-writer-provincial	376	MISSING	validator-missing	schema	add province projects sub-schema check to validator
+provinces	_renderProvContent	3237	provinces[i].projects[j].name	string	yes	tldr-writer-provincial	376	MISSING	validator-missing	schema	add province projects sub-schema check to validator
+provinces	_renderProvContent	3237	provinces[i].projects[j].value	string	no	tldr-writer-provincial	376	MISSING	frontend-fallback-only	defer	optional project metadata; keep fallback
+provinces	_renderProvContent	3237	provinces[i].projects[j].status	string	no	tldr-writer-provincial	376	MISSING	frontend-fallback-only	defer	optional project metadata; keep fallback
+provinces	_renderProvContent	3237	provinces[i].projects[j].sector	string	no	tldr-writer-provincial	376	MISSING	frontend-fallback-only	defer	optional project metadata; keep fallback
+provinces	_renderProvContent	3211	provinces[i].indicatorMeta[key].prev	string	no	tldr-writer-provincial	351	MISSING	frontend-fallback-only	skill	promote to required in tldr-writer-provincial
+provinces	_renderProvContent	3211	provinces[i].indicatorMeta[key].period	string	no	tldr-writer-provincial	351	MISSING	frontend-fallback-only	skill	promote to required in tldr-writer-provincial
+provinces	_renderProvContent	3228	provinces[i].indicatorMeta[key].change	string	no	tldr-writer-provincial	351	MISSING	frontend-fallback-only	skill	promote to required in tldr-writer-provincial
+provinces	_renderProvContent	3275	provinces[i].indicators.gdp	string	no	tldr-writer-provincial	342	MISSING	frontend-fallback-only	skill	promote to required across all 13 provinces
+provinces	_renderProvContent	3275	provinces[i].indicators.unemployment	string	yes	tldr-writer-provincial	342	MISSING	validator-missing	schema	add province indicators sub-key check to validator
+provinces	_renderProvContent	3275	provinces[i].indicators.cpi	string	yes	tldr-writer-provincial	342	MISSING	validator-missing	schema	add province indicators sub-key check to validator
+provinces	_renderProvContent	3275	provinces[i].indicators.employmentRate	string	no	tldr-writer-provincial	342	MISSING	frontend-fallback-only	skill	promote to required across all 13 provinces
+provinces	_renderProvContent	3275	provinces[i].indicators.participationRate	string	no	tldr-writer-provincial	342	MISSING	frontend-fallback-only	skill	promote to required across all 13 provinces
+provinces	_renderProvContent	3275	provinces[i].indicators.housingStarts	string	no	tldr-writer-provincial	342	MISSING	frontend-fallback-only	skill	promote to required across all 13 provinces
+provinces	_renderProvContent	3275	provinces[i].indicators.buildingPermits	string	no	tldr-writer-provincial	342	MISSING	frontend-fallback-only	skill	promote to required across all 13 provinces
+provinces	_renderProvContent	3275	provinces[i].indicators.wageGrowth	string	no	tldr-writer-provincial	342	MISSING	frontend-fallback-only	skill	promote to required across all 13 provinces
+industries	_renderIndContent	4469	goodsIndustries	array<object>	yes	tldr-writer-goods	340	top_level.goodsIndustries:L158,count.goodsIndustries:L175	ok	none	no action — field present and validated
+industries	_renderIndContent	4469	servicesIndustries	array<object>	yes	tldr-writer-services	-	top_level.servicesIndustries:L158,count.servicesIndustries:L175	ok	none	no action — field present and validated
+industries	_renderIndContent	4478	goodsIndustries[i].name	string	yes	tldr-writer-goods	-	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4478	goodsIndustries[i].code	string	yes	tldr-writer-goods	-	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4479	goodsIndustries[i].mm	string	yes	tldr-writer-goods	303	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4480	goodsIndustries[i].yy	string	yes	tldr-writer-goods	304	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4481	goodsIndustries[i].isNegative	boolean	yes	tldr-writer-goods	311	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4581	goodsIndustries[i].analysis	string	yes	tldr-writer-goods	305	industry.goods.{name}.analysis:L322	ok	none	no action — field present and validated
+industries	_renderIndContent	4487	goodsIndustries[i].industrySources	array<object>	yes	tldr-writer-goods	306	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4486	goodsIndustries[i].subsectors	array<object>	no	tldr-writer-goods	312	MISSING	frontend-fallback-only	skill	promote subsectors to required in tldr-writer-goods
+industries	_renderIndContent	4550	goodsIndustries[i].subsectors[j].name	string	yes	tldr-writer-goods	313	MISSING	frontend-fallback-only	skill	promote subsectors to required in tldr-writer-goods
+industries	_renderIndContent	4550	goodsIndustries[i].subsectors[j].code	string	yes	tldr-writer-goods	313	MISSING	frontend-fallback-only	skill	promote subsectors to required in tldr-writer-goods
+industries	_renderIndContent	4551	goodsIndustries[i].subsectors[j].mm	string	no	tldr-writer-goods	313	MISSING	frontend-fallback-only	skill	promote subsectors to required in tldr-writer-goods
+industries	_renderIndContent	4671	goodsIndustries[i].insightCharts	array<object>	yes	tldr-charts	117	industry.goods.{name}.insightCharts:L317	ok	none	no action — field present and validated
+industries	_renderIndContent	4671	goodsIndustries[i].insightCharts[0].callout	string	yes	tldr-charts	127	callout.industry.goods.{name}.insightCharts[0]:L351	ok	none	no action — field present and validated
+industries	_renderIndContent	4671	goodsIndustries[i].insightCharts[0].dataKeys	array<string>	yes	tldr-charts	120	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+industries	_renderIndContent	4671	goodsIndustries[i].insightCharts[0].dataSource	string	yes	tldr-charts	121	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+industries	_renderIndContent	4671	goodsIndustries[i].insightCharts[0].chartType	string	yes	tldr-charts	119	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+industries	_renderIndContent	4671	goodsIndustries[i].insightCharts[0].title	string	yes	tldr-charts	123	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+industries	_renderIndContent	4671	goodsIndustries[i].insightCharts[0].subtitle	string	yes	tldr-charts	124	MISSING	validator-missing	schema	add insightCharts sub-schema check to validator
+industries	_renderIndContent	4671	goodsIndustries[i].insightCharts[0].window	string	no	tldr-charts	534	MISSING	frontend-fallback-only	defer	optional chart enrichment; keep fallback
+industries	_renderIndContent	4500	projects_all.json:[i].naics_code	string	no	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	deploy exporter freshness + schema x-check
+industries	_renderIndContent	4696	goodsIndustries[i].gdp	string	no	tldr-writer-goods	-	MISSING	frontend-fallback-only	defer	pipeline-enriched optional; keep fallback
+industries	_renderIndContent	4698	goodsIndustries[i].projectCount	number	no	tldr-writer-goods	-	MISSING	frontend-fallback-only	defer	pipeline-enriched optional; keep fallback
+industries	_renderIndContent	4699	goodsIndustries[i].pipelineValue	string	no	tldr-writer-goods	-	MISSING	frontend-fallback-only	defer	pipeline-enriched optional; keep fallback
+industries	_renderIndContent	4724	goodsIndustries[i].statusChanges	number	no	UNKNOWN	-	MISSING	frontend-fallback-only	defer	pipeline-enriched optional; keep fallback
+industries	_renderIndContent	4724	goodsIndustries[i].newThisWeek	number	no	UNKNOWN	-	MISSING	frontend-fallback-only	defer	pipeline-enriched optional; keep fallback
+industries	_renderIndContent	4701	goodsIndustries[i].indicatorSrc	string	no	tldr-writer-goods	-	MISSING	frontend-fallback-only	defer	pipeline-enriched optional; keep fallback
+industries	_renderIndContent	4469	servicesIndustries[i].name	string	yes	tldr-writer-services	-	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4469	servicesIndustries[i].code	string	yes	tldr-writer-services	-	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4479	servicesIndustries[i].mm	string	yes	tldr-writer-services	-	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4480	servicesIndustries[i].yy	string	yes	tldr-writer-services	-	MISSING	validator-missing	schema	add industry hero field check to validator
+industries	_renderIndContent	4581	servicesIndustries[i].analysis	string	yes	tldr-writer-services	-	industry.services.{name}.analysis:L322	ok	none	no action — field present and validated
+industries	_renderIndContent	4671	servicesIndustries[i].insightCharts	array<object>	yes	tldr-charts	117	industry.services.{name}.insightCharts:L317	ok	none	no action — field present and validated
+industries	_renderIndContent	4671	servicesIndustries[i].insightCharts[0].callout	string	yes	tldr-charts	127	callout.industry.services.{name}.insightCharts[0]:L351	ok	none	no action — field present and validated
+markets	renderMarkets	4971	financialMarkets	object	yes	tldr-writer-markets-triad	161	top_level.financialMarkets:L158	ok	none	no action — field present and validated
+markets	_buildMktCommentary	4992	marketCommentary	string	yes	tldr-writer-market-commentary	195	top_level_alias.marketCommentary:L368	ok	none	no action — field present and validated
+markets	_buildMktCommentary	4992	financialMarkets.summary	string	no	tldr-writer-markets-triad	-	MISSING	frontend-fallback-only	defer	optional market narrative; keep fallback
+markets	_buildMktCommentary	4997	financialMarkets.callout	object	no	tldr-writer-market-commentary	196	MISSING	validator-missing	schema	add financialMarkets.callout object check
+markets	_buildMktCommentary	4997	marketCommentaryCallout	object	no	tldr-writer-market-commentary	196	MISSING	frontend-fallback-only	defer	optional market narrative; keep fallback
+markets	_buildMktCommentary	5000	financialMarkets.callout.title	string	no	tldr-writer-market-commentary	197	MISSING	frontend-fallback-only	defer	optional callout sub-field; keep fallback
+markets	_buildMktCommentary	5002	financialMarkets.callout.items	array<object>	no	tldr-writer-market-commentary	198	MISSING	frontend-fallback-only	defer	optional callout sub-field; keep fallback
+markets	_buildMktEquities	5016	financialMarkets.indices	array<object>	yes	tldr-writer-markets-triad	161	equities.count:L230	ok	none	no action — field present and validated
+markets	_buildMktEquities	5029	financialMarkets.indices[i].name	string	yes	tldr-writer-markets-triad	176	equity.{name}.name:L237	ok	none	no action — field present and validated
+markets	_buildMktEquities	5031	financialMarkets.indices[i].value	string	yes	tldr-writer-markets-triad	-	equity.{name}.value:L237	ok	none	no action — field present and validated
+markets	_buildMktEquities	5033	financialMarkets.indices[i].change	string	no	tldr-writer-markets-triad	-	MISSING	frontend-fallback-only	defer	optional index field; keep fallback
+markets	_buildMktEquities	5034	financialMarkets.indices[i].mm	string	no	tldr-writer-markets-triad	176	equity.{name}.mm:L237	ok	none	no action — field present and validated
+markets	_buildMktEquities	5035	financialMarkets.indices[i].yy	string	no	tldr-writer-markets-triad	176	equity.{name}.yy:L237	ok	none	no action — field present and validated
+markets	_buildMktEquities	5046	financialMarkets.indices[i].commentary	string	no	tldr-writer-markets-triad	176	MISSING	frontend-fallback-only	defer	optional index field; keep fallback
+markets	_buildMktFx	5055	financialMarkets.fx	array<object>	yes	tldr-writer-markets-triad	206	MISSING	validator-missing	schema	add fx array count+type check to validator
+markets	_buildMktFx	5070	financialMarkets.fx[i].name	string	yes	tldr-writer-markets-triad	206	fx.{name}.name:L252	ok	none	no action — field present and validated
+markets	_buildMktFx	5071	financialMarkets.fx[i].value	string	yes	tldr-writer-markets-triad	206	fx.{name}.value:L252	ok	none	no action — field present and validated
+markets	_buildMktFx	5073	financialMarkets.fx[i].mm	string	no	tldr-writer-markets-triad	206	fx.{name}.mm:L252	ok	none	no action — field present and validated
+markets	_buildMktFx	5074	financialMarkets.fx[i].yy	string	no	tldr-writer-markets-triad	206	fx.{name}.yy:L252	ok	none	no action — field present and validated
+markets	_buildMktFx	5078	financialMarkets.bocRate	string	no	tldr-analyst-macro	193	MISSING	frontend-fallback-only	defer	aliased by top-level bocRate; keep fallback
+markets	_buildMktFx	5078	bocRate	string	yes	tldr-analyst-macro	193	top_level_alias.bocRate:L368	ok	none	no action — field present and validated
+markets	_buildMktYields	5095	yieldCurve	array<object>	yes	tldr-writer-markets-triad	224	top_level.yieldCurve:L158,yieldCurve.is_list:L194	ok	none	no action — field present and validated
+markets	_buildMktYields	5103	yieldCurve[i].term	string	yes	tldr-writer-markets-triad	224	yieldCurve[0].term:L199	ok	none	no action — field present and validated
+markets	_buildMktYields	5105	yieldCurve[i].yield	string	yes	tldr-writer-markets-triad	224	yieldCurve[0].yield:L199	ok	none	no action — field present and validated
+markets	_buildMktYields	5109	yieldCurve[i].prevYield	string	no	tldr-writer-markets-triad	224	yieldCurve[0].prevYield:L199	ok	none	no action — field present and validated
+markets	_buildMktYields	5121	yieldCurveLastYear	array<number>	no	tldr-analyst-macro	500	yieldCurveLastYear:L203	frontend-fallback-only	defer	optional chart overlay; keep fallback
+markets	_buildMktYields	5123	financialMarkets.yieldNarrative	string	no	tldr-writer-markets-triad	238	MISSING	frontend-fallback-only	defer	optional market narrative; keep fallback
+markets	_buildMktCommodities	5129	commodities	array<object>	yes	tldr-writer-markets-triad	304	top_level.commodities:L158,count.commodities:L182	ok	none	no action — field present and validated
+markets	_buildMktCommodities	5135	commodities[i].name	string	yes	tldr-writer-markets-triad	304	commodity.{name}.name:L213	ok	none	no action — field present and validated
+markets	_buildMktCommodities	5135	commodities[i].val	string	yes	tldr-writer-markets-triad	52	commodity.{name}.val:L213	ok	none	no action — field present and validated
+markets	_buildMktCommodities	5135	commodities[i].day	string	no	tldr-writer-markets-triad	52	commodity.{name}.day:L213	ok	none	no action — field present and validated
+markets	_buildMktCommodities	5135	commodities[i].mm	string	no	tldr-writer-markets-triad	52	commodity.{name}.mm:L213	ok	none	no action — field present and validated
+markets	_buildMktCommodities	5135	commodities[i].yy	string	no	tldr-writer-markets-triad	52	commodity.{name}.yy:L213	ok	none	no action — field present and validated
+markets	_buildMktCommodities	5135	commodities[i].unit	string	no	tldr-writer-markets-triad	52	commodity.{name}.unit:L213	ok	none	no action — field present and validated
+markets	_buildMktCommodities	5135	commodities[i].category	string	no	tldr-writer-markets-triad	52	commodity.{name}.category:L213	ok	none	no action — field present and validated
+markets	_buildMktCommodities	5135	commodities[i].context	string	no	tldr-writer-markets-triad	52	commodity.{name}.context:L213	ok	none	no action — field present and validated
+markets	_buildMktCommodities	5148	commodityCommentary	string	no	tldr-writer-markets-triad	303	MISSING	validator-missing	schema	add commodity commentary length check
+markets	_buildMktCommodities	5148	commodity_commentary	string	no	tldr-writer-markets-triad	303	MISSING	validator-missing	schema	add commodity commentary length check
+markets	_buildMktCommodities	5148	financialMarkets.commodityNarrative	string	no	tldr-writer-markets-triad	-	MISSING	frontend-fallback-only	defer	optional market narrative; keep fallback
+markets	_buildMktCommodities	5151	wcs_analysis	object	no	tldr-writer-markets-triad	313	MISSING	validator-missing	schema	add wcs_analysis object presence check
+markets	_buildMktCommodities	5156	wcs_analysis.narrative	string	no	tldr-writer-markets-triad	-	MISSING	frontend-fallback-only	defer	optional when wcs_analysis absent; keep fallback
+markets	_buildMktCommodities	5156	wcs_analysis.current_discount	string	no	tldr-writer-markets-triad	-	MISSING	frontend-fallback-only	defer	optional when wcs_analysis absent; keep fallback
+markets	_buildMktCommodities	5157	wcs_analysis.prior_discount	string	no	tldr-writer-markets-triad	-	MISSING	frontend-fallback-only	defer	optional when wcs_analysis absent; keep fallback
+markets	_buildMktCommodities	5158	wcs_analysis.direction	string	no	tldr-writer-markets-triad	-	MISSING	frontend-fallback-only	defer	optional when wcs_analysis absent; keep fallback
+markets	_buildMktCommodities	5159	wcs_analysis.estimated_wcs_price	string	no	tldr-writer-markets-triad	-	MISSING	frontend-fallback-only	defer	optional when wcs_analysis absent; keep fallback
+markets	_buildMktCommodities	5152	wcsAnalysis	string	no	tldr-writer-markets-triad	-	MISSING	dead-field	skill	stop emitting — wcs_analysis object supersedes
+shared	_tldrBuildBriefing	648	sources	array<object>	yes	tldr-assembler	274	top_level.sources:L158,count.sources:L186	ok	none	no action — field present and validated
+shared	_tldrBuildBriefing	699	sources[i].url	string	yes	tldr-assembler	274	MISSING	validator-missing	schema	add per-source URL required check to validator
+shared	_tldrBuildBriefing	700	sources[i].title	string	no	tldr-assembler	274	MISSING	frontend-fallback-only	defer	optional source metadata; keep fallback
+shared	_tldrBuildBriefing	699	sources[i].archive_url	string	no	tldr-assembler	-	MISSING	frontend-fallback-only	defer	optional source metadata; keep fallback
+shared	_tldrBuildProjects	1076	week_of	string	yes	tldr-analyst-macro	-	top_level.week_of:L158	ok	none	no action — field present and validated
+shared	renderTLDR	385	week_of	string	yes	tldr-analyst-macro	-	top_level.week_of:L158	ok	none	no action — field present and validated
+shared	renderTLDR	-	edition	string	yes	tldr-analyst-macro	-	top_level.edition:L158	ok	none	no action — field present and validated
+shared	renderTLDR	-	id	number	yes	tldr-assembler	-	top_level.id:L158	ok	none	no action — field present and validated
+shared	renderTLDR	-	generated_at	string	no	tldr-assembler	-	MISSING	frontend-fallback-only	defer	optional timestamp; keep fallback
+shared	renderTLDR	-	updated_at	string	no	tldr-assembler	-	MISSING	frontend-fallback-only	defer	optional timestamp; keep fallback
+shared	_tldrBuildWeeklyDataTable	616	discovery_stats	object	yes	PIPELINE	-	MISSING	validator-missing	pipeline	pipeline emits; add validator count+type check
+shared	_tldrBuildProjects	1073	project_count	number	yes	tldr-assembler	-	top_level_alias.project_count:L368	ok	none	no action — field present and validated
+shared	_tldrBuildProjects	1072	new_projects	number	no	tldr-assembler	-	MISSING	validator-missing	schema	add new_projects number check to validator
+shared	_tldrBuildProjects	664	pipeline_value	string	yes	tldr-assembler	-	top_level_alias.pipeline_value:L368	ok	none	no action — field present and validated
+shared	renderTLDR	-	unsplash_image_url	string	no	PIPELINE	-	MISSING	dead-field	defer	dead-field — needs user review before removing
+shared	renderTLDR	-	infographic_directives	array<object>	no	tldr-analyst-macro	513	MISSING	dead-field	defer	dead-field — needs user review before removing
+shared	renderTLDR	-	_all_verified_sources	array	no	tldr-assembler	-	MISSING	dead-field	defer	dead-field — needs user review before removing
+shared	renderTLDR	-	citation_audit	object	no	tldr-assembler	-	MISSING	dead-field	defer	dead-field — needs user review before removing
+shared	renderTLDRWordCloud	1487	word_cloud_topics	array<object>	no	tldr-analyst-macro	417	MISSING	frontend-fallback-only	defer	intentional optional — keep as graceful fallback
+shared	renderTLDR	-	consumer_pulse	string	no	tldr-writer-macro	428	top_level.consumer_pulse:L158	frontend-fallback-only	defer	intentional optional — keep as graceful fallback
+shared	renderTLDR	-	watchlist	array<object>	no	tldr-writer-macro	471	top_level.watchlist:L158	frontend-fallback-only	defer	intentional optional — keep as graceful fallback
+shared	_renderNatPolicySection	2610	policy.json	object	yes	PIPELINE	-	MISSING	validator-missing	pipeline	policy_tracker freshness + schema x-check
+shared	_renderCanadaSubtab	2556	projects_all.json	array<object>	yes	PIPELINE	-	MISSING	validator-missing	pipeline	deploy exporter freshness + schema x-check
+shared	_tldrRenderCalloutCharts	742	timeseries.json	object	yes	PIPELINE	-	MISSING	validator-missing	pipeline	timeseries build freshness + schema x-check
+shared	loadIndicators	225	indicators.json	object	yes	PIPELINE	-	MISSING	validator-missing	pipeline	indicators build freshness + schema x-check
+shared	_renderNatEnrichmentCards	2637	commodities.json	object	yes	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	commodities build freshness + schema x-check
+shared	_renderNatEnrichmentCards	2689	jobs.json	object	no	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	job_monitor output freshness check
+shared	_renderNatEnrichmentCards	2697	procurement.json	object	no	PIPELINE	-	MISSING	frontend-fallback-only	pipeline	procurement_monitor freshness check

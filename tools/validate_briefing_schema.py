@@ -543,6 +543,49 @@ def validate(briefing_path):
                 warns += 1
 
     # ============================================================
+    # 8.5 ENRICHMENT-CARD METRICS (Cluster 5 — UNKNOWN-owner diagnosis)
+    # Frontend `_renderNatEnrichmentCards` (app.js L2660-2683) reads 12
+    # supplementary enrichment metrics into four cards: Labour Market
+    # (fulltime_change, parttime_change, private_sector_change,
+    # public_sector_change), Consumer Pulse (core_cpi_median, shelter_cpi,
+    # food_cpi, energy_cpi), Housing & Construction (residential_permits,
+    # nonresidential_permits), and Trade & Commodities (merchandise_exports,
+    # merchandise_imports).
+    #
+    # Producer identified (field_contract.tsv B.3 Cluster 5 diagnosis):
+    #   tldr-analyst-macro emits to dossier_macro.national_analysis_package.
+    #   metrics.* (SKILL.md Step 6, L192); tldr-writer-macro passes through
+    #   to briefing_macro.metrics.* (SKILL.md L474); tldr-assembler merges
+    #   to top-level metrics.* via `macro.get('metrics', {})` (SKILL.md L426).
+    #
+    # WARN-tier (not FAIL): the current edition has 8 of 12 populated and
+    # 4 empty (private_sector_change, public_sector_change, residential_
+    # permits, nonresidential_permits). The frontend's `pick()` helper
+    # degrades gracefully to em-dash on missing keys. Upgrade to FAIL
+    # once the analyst populates the 4 gaps from StatCan source tables.
+    # ============================================================
+    ENRICHMENT_METRICS = (
+        # Labour Market card
+        "fulltime_change", "parttime_change",
+        "private_sector_change", "public_sector_change",
+        # Consumer Pulse card
+        "core_cpi_median", "shelter_cpi", "food_cpi", "energy_cpi",
+        # Housing & Construction card
+        "residential_permits", "nonresidential_permits",
+        # Trade & Commodities card
+        "merchandise_exports", "merchandise_imports",
+    )
+    for key in ENRICHMENT_METRICS:
+        val = m.get(key)
+        present = isinstance(val, str) and bool(val.strip())
+        if not warn(results, f"metrics.{key}",
+                     present,
+                     f"Enrichment card metric missing/empty — producer tldr-analyst-macro "
+                     f"(dossier_macro.national_analysis_package.metrics.{key}); "
+                     f"renders em-dash fallback in _renderNatEnrichmentCards"):
+            warns += 1
+
+    # ============================================================
     # 9. PROVINCE COMPLETENESS (Cluster 2 — provincial contract)
     # Frontend `_renderProvContent` (app.js L3177-3665) reads, per province:
     #   .analysis              (L3369, Provincial Analysis section HTML)

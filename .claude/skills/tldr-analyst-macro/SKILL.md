@@ -195,7 +195,33 @@ Structure the macro-level analytical data:
       "cpi": "+2.1%",
       "unemployment": "6.2%",
       "housingStarts": "245,000",
-      "... [carry all from briefing_latest.json] ..."
+      "... [carry all from briefing_latest.json] ...",
+
+      // Enrichment-card metrics (Cluster 5 contract — frontend reads these
+      // via `_renderNatEnrichmentCards`). Required across 4 cards:
+      //   Labour Market: fulltime_change, parttime_change,
+      //     private_sector_change, public_sector_change
+      //   Consumer Pulse: core_cpi_median, shelter_cpi, food_cpi, energy_cpi
+      //   Housing & Construction: residential_permits, nonresidential_permits
+      //   Trade & Commodities: merchandise_exports, merchandise_imports
+      // Source: StatCan Labour Force Survey (14-10-0287 detail), CPI
+      // (18-10-0004 components), Building Permits (34-10-0066 residential
+      // split), Merchandise Trade (12-10-0011). Carry forward from
+      // briefing_latest.json if the current week's data is unchanged.
+      // Use short strings formatted as in briefing ("+1.5%", "$66.3B",
+      // "little changed (Mar)"). Validator warns on missing/empty.
+      "fulltime_change": "little changed (Mar)",
+      "parttime_change": "little changed (Mar)",
+      "private_sector_change": "+0.2% (Mar)",
+      "public_sector_change": "+0.1% (Mar)",
+      "core_cpi_median": "2.3%",
+      "shelter_cpi": "+1.5%",
+      "food_cpi": "5.3%",
+      "energy_cpi": "-14.2%",
+      "residential_permits": "$8.2B (Feb)",
+      "nonresidential_permits": "$5.1B (Feb)",
+      "merchandise_exports": "$66.3B",
+      "merchandise_imports": "$72.1B (record)"
     },
     "indicatorMeta": {
       "unemployment": {
