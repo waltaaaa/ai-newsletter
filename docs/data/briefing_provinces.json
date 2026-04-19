@@ -686,7 +686,7 @@
           "name": "Trans Mountain Expansion (TMX)",
           "description": "Completed pipeline expansion from Alberta to Burnaby, BC. Scaled crude oil shipments to Asia to over $9B in 2025, diversifying Alberta's export markets.",
           "sector": "oil_gas",
-          "value": "",
+          "value": "Not disclosed",
           "status": "Complete",
           "completionDate": "",
           "cma": "",
@@ -699,7 +699,8 @@
               "title": "TMX",
               "url": "https://boereport.com/2026/03/26/albertas-economy-remains-resilient-amid-geopolitical-turmoil/"
             }
-          ]
+          ],
+          "value_status": "undisclosed"
         }
       ],
       "sectorHighlights": "<p><strong>Oil &amp; Gas:</strong> The Alberta Budget projects a <strong>$9.4 billion</strong> deficit driven by an <strong>$7.5 billion</strong> drop in oilsands royalties. TMX scaled Asia-bound crude shipments to over <strong>$9 billion</strong> in 2025. The Pathways Alliance CCS (<strong>$16.5B</strong>) and AOSP Jackpine (<strong>$12.0B</strong>) remain the province's largest proposed and approved energy files.<sup>3</sup><sup>4</sup></p><p><strong>Telecom &amp; Capital:</strong> Telus infrastructure investment (<strong>$19.0B</strong>, 2023-2027) is the largest non-energy capital commitment under construction. The <strong>$28.3 billion</strong> provincial capital plan covers broad public infrastructure needs.<sup>3</sup></p>",
@@ -1807,7 +1808,7 @@
           "name": "NB Power Wind (1,400 MW)",
           "description": "Fivefold expansion of wind generation capacity from 355 MW to 1,755 MW by 2035. Includes four Indigenous-partnered power purchase agreements.",
           "sector": "power_energy",
-          "value": "",
+          "value": "Not disclosed",
           "status": "Approved",
           "completionDate": "2035",
           "cma": "",
@@ -1820,7 +1821,8 @@
               "title": "NB Wind",
               "url": "https://www.nbpower.com/en/about-us/news-media-centre/news/2026/nb-power-files-two-applications-with-the-eub-focused-on-improving-reliability-and-stabilizing-revenue/"
             }
-          ]
+          ],
+          "value_status": "undisclosed"
         },
         {
           "name": "Sisson Project",
@@ -2768,7 +2770,7 @@
           "name": "Gahcho Kue",
           "description": "De Beers diamond mine with operations projected to continue until 2031. One of two remaining operational diamond mines in the NWT.",
           "sector": "mining",
-          "value": "",
+          "value": "Not disclosed",
           "status": "Under Construction",
           "completionDate": "2031",
           "cma": "",
@@ -2780,7 +2782,8 @@
               "title": "Gahcho Kue",
               "url": "https://www.bnnbloomberg.ca/tariffs/2026/01/01/northwest-territories-facing-a-hard-as-diamonds-reality-as-pivotal-industry-wanes/"
             }
-          ]
+          ],
+          "value_status": "undisclosed"
         }
       ],
       "sectorHighlights": "<p><strong>Diamond Transition:</strong> Diavik completed final production after <strong>23 years</strong> and <strong>150 million</strong> carats. Two mines remain: Gahcho Kue (2031) and Ekati (2040). The diamond industry generated <strong>$30 billion</strong> for the Canadian economy and <strong>$20 billion</strong> for the NWT over 25 years.<sup>2</sup></p><p><strong>Critical Minerals &amp; Infrastructure:</strong> Pine Point lead-zinc mine (<strong>$653M</strong>) is under review. The Mackenzie Valley Highway (<strong>$2.0B</strong>) and Taltson Hydro Expansion (<strong>$2.0B</strong>) are approved. The Tlicho/YKDFN/GNWT partnership supports transition workers.<sup>3</sup><sup>5</sup></p>",
@@ -2994,7 +2997,7 @@
           "name": "Grays Bay Port/Road",
           "description": "Proposed 900-km road and deep-water port connecting the Arctic coast to southern infrastructure. Part of federal northern investment strategy.",
           "sector": "infrastructure",
-          "value": "",
+          "value": "Not disclosed",
           "status": "Proposed",
           "completionDate": "",
           "cma": "",
@@ -3007,7 +3010,8 @@
               "title": "Grays Bay",
               "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/backgrounder-government-of-canada-invests-to-unlock-canadas-critical-minerals-advantage.html"
             }
-          ]
+          ],
+          "value_status": "undisclosed"
         }
       ],
       "sectorHighlights": "<p><strong>Mining &amp; Critical Minerals:</strong> Three gold mines produce over <strong>1.2 million ounces per year</strong>. The Baffinland Steensby Expansion (<strong>$3.0B</strong>) is approved, with construction planned for 2026. Back River Gold (<strong>$610M</strong>) is under construction. The federal government committed over <strong>$40 billion</strong> to northern infrastructure and critical minerals.<sup>3</sup><sup>5</sup></p><p><strong>Housing &amp; Infrastructure:</strong> The 750 Homes Initiative (<strong>$480M</strong>) is under construction. The Grays Bay Port and Road (900 km) is proposed. B2Gold's Goose Mine installed a hybrid energy system reducing diesel by approximately <strong>4,000 litres per day</strong>.<sup>4</sup><sup>5</sup></p>",

@@ -575,7 +575,7 @@ The validator `tools/validate_briefing_schema.py` hard-fails the weekly ship if 
 | `indicatorMeta.{gdp,unemployment,cpi,housingStarts,participationRate,employmentRate,buildingPermits}` | object | Each key present (sub-keys `prev`, `change`, `period` are WARN-tier today — upgrade to FAIL after B.4 regen) |
 | `sources` | array of `{id, title, url}` | >=3 items, every item has non-empty `title` AND (`url` OR `archive_url`) |
 | `watchlistItems` | array | >=2 items, every item has non-empty `date` AND (`event` OR `event_name` OR `name`) AND `description` |
-| `projects` | array | >=3 items, every item has non-empty `name` AND `status` (`value` is WARN-tier — some legitimate TBD) |
+| `projects` | array | >=3 items, every item has non-empty `name` AND `status`. `value` is required as a non-empty string — when the project cost is genuinely not public, emit `value: "Not disclosed"` and `value_status: "undisclosed"` instead of leaving it blank. The validator tolerates `value_status == "undisclosed"` explicitly; blank `value` still WARNs. |
 
 ### WARN-tier today (populate when possible, will become FAIL after B.4 producer regen)
 
