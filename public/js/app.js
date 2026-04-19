@@ -2896,31 +2896,85 @@ function _provFindData(code){
 function renderProvinces(){
   const container=$('provincesPage');
   if(!container)return;
-  // Build horizontal province selector bar with short labels
-  const PROV_SHORT={ON:'ON',QC:'QC',AB:'AB',BC:'BC',SK:'SK',MB:'MB',NS:'NS',NB:'NB',NL:'NL',PE:'PEI',YT:'YT',NT:'NWT',NU:'NU'};
-  let barHtml='<nav class="prov-bar"><div class="prov-bar-inner">';
-  PROV_ORDER.forEach(code=>{
-    barHtml+='<input type="radio" name="province" id="prov-'+code+'" value="'+code+'" class="prov-radio"'+(code===selectedProvince?' checked':'')+'>';
-    barHtml+='<label for="prov-'+code+'" class="prov-pill" title="'+PROV_NAMES[code]+'">'+(PROV_SHORT[code]||code)+'</label>';
-  });
-  barHtml+='<span class="prov-bar-sep"></span>';
-  TERR_ORDER.forEach(code=>{
-    barHtml+='<input type="radio" name="province" id="prov-'+code+'" value="'+code+'" class="prov-radio"'+(code===selectedProvince?' checked':'')+'>';
-    barHtml+='<label for="prov-'+code+'" class="prov-pill prov-pill-terr" title="'+PROV_NAMES[code]+'">'+(PROV_SHORT[code]||code)+'</label>';
-  });
-  barHtml+='</div></nav>';
+  const PROV_SHORT={ON:'ON',QC:'QC',AB:'AB',BC:'BC',SK:'SK',MB:'MB',NS:'NS',NB:'NB',NL:'NL',PE:'PE',YT:'YT',NT:'NT',NU:'NU'};
+  // Build a vertical listbox rail: Provinces section + Territories section.
+  function itemHtml(code){
+    var selected=code===selectedProvince?' aria-selected="true"':' aria-selected="false"';
+    var tabIndex=code===selectedProvince?'0':'-1';
+    return '<li role="option" class="prov-rail-item" data-code="'+code+'"'+selected+' tabindex="'+tabIndex+'">'+
+      '<span class="prov-rail-code">'+(PROV_SHORT[code]||code)+'</span>'+
+      '<span class="prov-rail-name">'+PROV_NAMES[code]+'</span>'+
+      '<span class="prov-rail-metric is-loading" data-metric="'+code+'">\u2014</span>'+
+    '</li>';
+  }
+  var railHtml='<aside class="prov-rail" aria-label="Province selector">';
+  railHtml+='<div class="prov-rail-head">Provinces<span class="prov-rail-head-count">'+PROV_ORDER.length+'</span></div>';
+  railHtml+='<ul class="prov-rail-list" role="listbox" aria-label="Provinces" tabindex="0">';
+  PROV_ORDER.forEach(function(code){railHtml+=itemHtml(code)});
+  railHtml+='</ul>';
+  railHtml+='<div class="prov-rail-head">Territories<span class="prov-rail-head-count">'+TERR_ORDER.length+'</span></div>';
+  railHtml+='<ul class="prov-rail-list" role="listbox" aria-label="Territories" tabindex="0">';
+  TERR_ORDER.forEach(function(code){railHtml+=itemHtml(code)});
+  railHtml+='</ul>';
+  railHtml+='</aside>';
 
-  container.innerHTML='<div class="prov-page">'+barHtml+'<div class="prov-page-main" id="provMainContent"></div></div>';
+  container.innerHTML='<div class="prov-page">'+railHtml+'<div class="prov-page-main" id="provMainContent"></div></div>';
 
-  // Wire up radio change events
-  container.querySelectorAll('.prov-radio').forEach(radio=>{
-    radio.addEventListener('change',function(){
-      selectedProvince=this.value;
-      _renderProvContent();
+  // Wire click + keyboard handlers across both lists
+  var lists=container.querySelectorAll('.prov-rail-list');
+  var allItems=Array.prototype.slice.call(container.querySelectorAll('.prov-rail-item'));
+  function selectCode(code){
+    if(!code||code===selectedProvince)return;
+    selectedProvince=code;
+    allItems.forEach(function(it){
+      var on=it.getAttribute('data-code')===code;
+      it.setAttribute('aria-selected',on?'true':'false');
+      it.setAttribute('tabindex',on?'0':'-1');
     });
+    _renderProvContent();
+  }
+  lists.forEach(function(list){
+    list.addEventListener('click',function(e){
+      var item=e.target.closest('.prov-rail-item');if(!item)return;
+      selectCode(item.getAttribute('data-code'));
+      item.focus();
+    });
+  });
+  container.addEventListener('keydown',function(e){
+    var item=e.target.closest('.prov-rail-item');if(!item)return;
+    var idx=allItems.indexOf(item);if(idx<0)return;
+    var next=null;
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'){next=allItems[Math.min(idx+1,allItems.length-1)];e.preventDefault()}
+    else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){next=allItems[Math.max(idx-1,0)];e.preventDefault()}
+    else if(e.key==='Home'){next=allItems[0];e.preventDefault()}
+    else if(e.key==='End'){next=allItems[allItems.length-1];e.preventDefault()}
+    else if(e.key==='Enter'||e.key===' '){selectCode(item.getAttribute('data-code'));e.preventDefault();return}
+    if(next){selectCode(next.getAttribute('data-code'));next.focus()}
   });
 
   _renderProvContent();
+  _populateProvRailMetrics(container);
+}
+
+// Load projects_all.json once, count by province code, paint the count spans.
+async function _populateProvRailMetrics(container){
+  try{
+    var all=await fetchJSON('projects_all.json');
+    if(!Array.isArray(all))return;
+    var counts={};
+    for(var i=0;i<all.length;i++){
+      var pc=(all[i].province||'').toUpperCase();
+      if(!pc)continue;
+      counts[pc]=(counts[pc]||0)+1;
+    }
+    container.querySelectorAll('.prov-rail-metric').forEach(function(el){
+      var code=el.getAttribute('data-metric');
+      var n=counts[code]||0;
+      el.textContent=n>=1000?(n/1000).toFixed(1)+'k':String(n);
+      el.classList.remove('is-loading');
+      el.setAttribute('title',n.toLocaleString()+' tracked projects');
+    });
+  }catch(e){console.warn('prov rail metrics:',e)}
 }
 
 async function _renderProvContent(){
@@ -3427,27 +3481,69 @@ function renderIndustries(){
   if(!goodsArr.length)['11','21','22','23','31-33'].forEach(function(code){goodsArr.push({code:code,name:NAICS_NAMES[code]})});
   if(!servArr.length)['41','44-45','48-49','51','52','53','54','55','56','61','62','71','72','81','91'].forEach(function(code){servArr.push({code:code,name:NAICS_NAMES[code]})});
 
-  // Build horizontal industry sub-nav bar
-  var barHtml='<nav class="ind-bar"><div class="ind-bar-inner">';
-  goodsArr.forEach(function(s){
-    barHtml+='<input type="radio" name="industry" id="ind-'+s.code+'" value="'+s.code+'" class="ind-radio"'+(s.code===selectedIndustry?' checked':'')+'>';
-    barHtml+='<label for="ind-'+s.code+'" class="ind-pill" title="'+san(s.name||'')+'">'+(IND_SHORT[s.code]||s.code)+'</label>';
-  });
-  barHtml+='<span class="ind-bar-sep"></span>';
-  servArr.forEach(function(s){
-    barHtml+='<input type="radio" name="industry" id="ind-'+s.code+'" value="'+s.code+'" class="ind-radio"'+(s.code===selectedIndustry?' checked':'')+'>';
-    barHtml+='<label for="ind-'+s.code+'" class="ind-pill ind-pill-serv" title="'+san(s.name||'')+'">'+(IND_SHORT[s.code]||s.code)+'</label>';
-  });
-  barHtml+='</div></nav>';
+  // Format an m/m GDP delta string into a {text, cls} pair for the rail metric.
+  function fmtMm(raw){
+    var s=String(raw==null?'':raw).trim();
+    if(!s)return{text:'\u2014',cls:'m-flat'};
+    var v=parseFloat(s.replace('%',''));
+    if(isNaN(v))return{text:'\u2014',cls:'m-flat'};
+    var cls=v>0.02?'m-up':(v<-0.02?'m-down':'m-flat');
+    var signed=(v>=0?'+':'')+v.toFixed(1)+'%';
+    return{text:signed,cls:cls};
+  }
 
-  container.innerHTML='<div class="ind-page">'+barHtml+'<div class="ind-page-main" id="indMainContent"></div></div>';
+  function itemHtml(s){
+    var selected=s.code===selectedIndustry?' aria-selected="true"':' aria-selected="false"';
+    var tabIndex=s.code===selectedIndustry?'0':'-1';
+    var m=fmtMm(s.mm);
+    return '<li role="option" class="ind-rail-item" data-code="'+s.code+'"'+selected+' tabindex="'+tabIndex+'">'+
+      '<span class="ind-rail-code">'+san(s.code)+'</span>'+
+      '<span class="ind-rail-name">'+san(s.name||'')+'</span>'+
+      '<span class="ind-rail-metric '+m.cls+'" title="Month-over-month real GDP change">'+m.text+'</span>'+
+    '</li>';
+  }
 
-  // Wire up radio change events
-  container.querySelectorAll('.ind-radio').forEach(function(radio){
-    radio.addEventListener('change',function(){
-      selectedIndustry=this.value;
-      _renderIndContent();
+  var railHtml='<aside class="ind-rail" aria-label="Industry selector">';
+  railHtml+='<div class="ind-rail-head">Goods-producing<span class="ind-rail-head-count">'+goodsArr.length+'</span></div>';
+  railHtml+='<ul class="ind-rail-list" role="listbox" aria-label="Goods-producing industries" tabindex="0">';
+  goodsArr.forEach(function(s){railHtml+=itemHtml(s)});
+  railHtml+='</ul>';
+  railHtml+='<div class="ind-rail-head">Services-producing<span class="ind-rail-head-count">'+servArr.length+'</span></div>';
+  railHtml+='<ul class="ind-rail-list" role="listbox" aria-label="Services-producing industries" tabindex="0">';
+  servArr.forEach(function(s){railHtml+=itemHtml(s)});
+  railHtml+='</ul>';
+  railHtml+='</aside>';
+
+  container.innerHTML='<div class="ind-page">'+railHtml+'<div class="ind-page-main" id="indMainContent"></div></div>';
+
+  var allItems=Array.prototype.slice.call(container.querySelectorAll('.ind-rail-item'));
+  function selectCode(code){
+    if(!code||code===selectedIndustry)return;
+    selectedIndustry=code;
+    allItems.forEach(function(it){
+      var on=it.getAttribute('data-code')===code;
+      it.setAttribute('aria-selected',on?'true':'false');
+      it.setAttribute('tabindex',on?'0':'-1');
     });
+    _renderIndContent();
+  }
+  container.querySelectorAll('.ind-rail-list').forEach(function(list){
+    list.addEventListener('click',function(e){
+      var item=e.target.closest('.ind-rail-item');if(!item)return;
+      selectCode(item.getAttribute('data-code'));
+      item.focus();
+    });
+  });
+  container.addEventListener('keydown',function(e){
+    var item=e.target.closest('.ind-rail-item');if(!item)return;
+    var idx=allItems.indexOf(item);if(idx<0)return;
+    var next=null;
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'){next=allItems[Math.min(idx+1,allItems.length-1)];e.preventDefault()}
+    else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){next=allItems[Math.max(idx-1,0)];e.preventDefault()}
+    else if(e.key==='Home'){next=allItems[0];e.preventDefault()}
+    else if(e.key==='End'){next=allItems[allItems.length-1];e.preventDefault()}
+    else if(e.key==='Enter'||e.key===' '){selectCode(item.getAttribute('data-code'));e.preventDefault();return}
+    if(next){selectCode(next.getAttribute('data-code'));next.focus()}
   });
 
   _renderIndContent();

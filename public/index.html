@@ -710,15 +710,23 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 /* ── Provinces Tab ── */
 #tab-provinces{padding-top:0!important}
 #tab-provinces>#provincesPage{margin-top:0!important}
-#tab-provinces .prov-page{max-width:1200px;margin:0 auto;padding:0 40px 24px}
-#tab-provinces .prov-bar{position:static;background:#2d3748;margin:0 calc(-50vw + 50%) 24px;padding:0 calc(50vw - 50%);border-bottom:3px solid #1a202c}
-#tab-provinces .prov-bar-inner{display:flex;align-items:center;gap:6px;justify-content:center;padding:6px 0;flex-wrap:wrap}
-#tab-provinces .prov-bar-sep{width:1px;height:14px;background:rgba(255,255,255,0.2);margin:0 4px;flex-shrink:0}
-#tab-provinces .prov-radio{display:none}
-#tab-provinces .prov-pill{display:inline-block;padding:8px 10px 6px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,0.65);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color 0.15s,border-color 0.15s;white-space:nowrap;flex-shrink:0;letter-spacing:0.3px}
-#tab-provinces .prov-pill:hover{color:rgba(255,255,255,0.95)}
-#tab-provinces .prov-radio:checked+.prov-pill{color:#fff;font-weight:700;border-bottom-color:#fff}
-#tab-provinces .prov-pill-terr{color:rgba(255,255,255,0.45)}
+#tab-provinces .prov-page{max-width:1400px;margin:0 auto;padding:24px 40px 24px;display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start}
+#tab-provinces .prov-rail{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:14px 0 16px;font-family:'DM Sans',sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+#tab-provinces .prov-rail-head{font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.4px;padding:10px 20px 6px;display:flex;align-items:baseline;justify-content:space-between}
+#tab-provinces .prov-rail-head + .prov-rail-head{margin-top:4px;border-top:1px solid #e8ecf0;padding-top:14px}
+#tab-provinces .prov-rail-head .prov-rail-head-count{font-family:'DM Mono',ui-monospace,monospace;font-size:10px;color:#94a3b8;font-weight:500;letter-spacing:0}
+#tab-provinces .prov-rail-list{list-style:none;margin:0;padding:0;outline:none}
+#tab-provinces .prov-rail-list:focus-visible{box-shadow:inset 0 0 0 2px rgba(0,49,83,0.3)}
+#tab-provinces .prov-rail-item{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px;padding:9px 20px 9px 17px;cursor:pointer;border-left:3px solid transparent;transition:background 0.15s,border-color 0.15s,color 0.15s;color:#0f172a;user-select:none}
+#tab-provinces .prov-rail-item:hover{background:rgba(0,49,83,0.045)}
+#tab-provinces .prov-rail-item[aria-selected="true"]{background:rgba(0,49,83,0.07);border-left-color:#003153}
+#tab-provinces .prov-rail-item[aria-selected="true"] .prov-rail-name{font-weight:700;color:#003153}
+#tab-provinces .prov-rail-item[aria-selected="true"] .prov-rail-code{color:#003153;font-weight:700}
+#tab-provinces .prov-rail-item:focus-visible{outline:2px solid #003153;outline-offset:-2px}
+#tab-provinces .prov-rail-code{font-family:'DM Mono',ui-monospace,monospace;font-size:10px;font-weight:600;color:#94a3b8;letter-spacing:0.3px;text-align:left}
+#tab-provinces .prov-rail-name{font-size:14px;font-weight:500;color:#0f172a;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tab-provinces .prov-rail-metric{font-family:'DM Mono',ui-monospace,monospace;font-size:11px;font-weight:500;color:#4a5568;font-variant-numeric:tabular-nums;text-align:right;min-width:28px}
+#tab-provinces .prov-rail-metric.is-loading{color:#d9d4c7}
 #tab-provinces .prov-enrich-detail{border:1px solid #e8ecf0;border-radius:8px;margin-bottom:8px;overflow:hidden}
 #tab-provinces .prov-enrich-detail summary{padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#1a1a1a;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;background:#f8f9fb}
 #tab-provinces .prov-enrich-detail summary::before{content:'\25B8';font-size:10px;color:#7a8599;transition:transform 0.15s}
@@ -901,25 +909,42 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#f4f6f8;color:#1a
 /* ── Industries Tab ── */
 #tab-industries{padding-top:0!important}
 #tab-industries>#industriesPage{margin-top:0!important}
-#tab-industries .ind-page{max-width:1200px;margin:0 auto;padding:0 40px 24px}
-#tab-industries .ind-bar{position:static;background:#2d3748;margin:0 calc(-50vw + 50%) 24px;padding:0 calc(50vw - 50%);border-bottom:3px solid #1a202c}
-#tab-industries .ind-bar-inner{display:flex;align-items:center;gap:6px;justify-content:center;padding:6px 0;flex-wrap:wrap}
-#tab-industries .ind-bar-sep{width:1px;height:14px;background:rgba(255,255,255,0.2);margin:0 4px;flex-shrink:0}
-#tab-industries .ind-radio{display:none}
-#tab-industries .ind-pill{display:inline-block;padding:8px 10px 6px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,0.65);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color 0.15s,border-color 0.15s;white-space:nowrap;flex-shrink:0;letter-spacing:0.3px}
-#tab-industries .ind-pill:hover{color:rgba(255,255,255,0.95)}
-#tab-industries .ind-radio:checked+.ind-pill{color:#fff;font-weight:700;border-bottom-color:#fff}
-#tab-industries .ind-pill-serv{color:rgba(255,255,255,0.55)}
+#tab-industries .ind-page{max-width:1400px;margin:0 auto;padding:24px 40px 24px;display:grid;grid-template-columns:300px 1fr;gap:32px;align-items:start}
+#tab-industries .ind-rail{background:#ffffff;border:1px solid #d5dbe3;border-radius:8px;padding:14px 0 16px;font-family:'DM Sans',sans-serif;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+#tab-industries .ind-rail-head{font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.4px;padding:10px 20px 6px;display:flex;align-items:baseline;justify-content:space-between}
+#tab-industries .ind-rail-head + .ind-rail-head{margin-top:4px;border-top:1px solid #e8ecf0;padding-top:14px}
+#tab-industries .ind-rail-head .ind-rail-head-count{font-family:'DM Mono',ui-monospace,monospace;font-size:10px;color:#94a3b8;font-weight:500;letter-spacing:0}
+#tab-industries .ind-rail-list{list-style:none;margin:0;padding:0;outline:none}
+#tab-industries .ind-rail-list:focus-visible{box-shadow:inset 0 0 0 2px rgba(0,49,83,0.3)}
+#tab-industries .ind-rail-item{display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:10px;padding:9px 20px 9px 17px;cursor:pointer;border-left:3px solid transparent;transition:background 0.15s,border-color 0.15s,color 0.15s;color:#0f172a;user-select:none}
+#tab-industries .ind-rail-item:hover{background:rgba(0,49,83,0.045)}
+#tab-industries .ind-rail-item[aria-selected="true"]{background:rgba(0,49,83,0.07);border-left-color:#003153}
+#tab-industries .ind-rail-item[aria-selected="true"] .ind-rail-name{font-weight:700;color:#003153}
+#tab-industries .ind-rail-item[aria-selected="true"] .ind-rail-code{color:#003153;font-weight:700}
+#tab-industries .ind-rail-item:focus-visible{outline:2px solid #003153;outline-offset:-2px}
+#tab-industries .ind-rail-code{font-family:'DM Mono',ui-monospace,monospace;font-size:10px;font-weight:600;color:#94a3b8;letter-spacing:0.3px;text-align:left}
+#tab-industries .ind-rail-name{font-size:13px;font-weight:500;color:#0f172a;line-height:1.3;white-space:normal;overflow:hidden;word-break:normal}
+#tab-industries .ind-rail-metric{font-family:'DM Mono',ui-monospace,monospace;font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;text-align:right;min-width:40px;letter-spacing:-0.2px}
+#tab-industries .ind-rail-metric.m-up{color:#0d7a3f}
+#tab-industries .ind-rail-metric.m-down{color:#c4320a}
+#tab-industries .ind-rail-metric.m-flat{color:#94a3b8}
 #tab-industries .ind-page-main{flex:1;min-width:0}
 #tab-industries .industry-header-card{background:#003153;border-radius:8px;padding:28px 32px;color:#fff;margin-bottom:28px;display:flex;flex-direction:column;align-items:stretch;gap:20px}
 #tab-industries .industry-header-card h2{font-family:'DM Sans',sans-serif;font-size:28px;font-weight:700;margin-bottom:4px}
 #tab-industries .industry-sub{font-size:13px;color:rgba(255,255,255,0.65)}
-#tab-industries .industry-header-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
-#tab-industries .industry-header-stats{display:flex;gap:32px;text-align:right}
-#tab-industries .industry-header-stats .stat-value{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+#tab-industries .industry-header-top{display:flex;flex-wrap:nowrap;justify-content:space-between;align-items:flex-start;gap:32px}
+#tab-industries .industry-header-title{flex:1 1 auto;min-width:0}
+#tab-industries .industry-header-stats{flex:0 0 auto;display:flex;gap:36px;text-align:right;align-items:flex-start}
+#tab-industries .industry-header-stats .stat-value{display:inline-flex;align-items:baseline;justify-content:flex-end;gap:7px;font-variant-numeric:tabular-nums;line-height:1.1;min-height:26px;white-space:nowrap}
+#tab-industries .industry-header-stats .stat-arrow{font-size:13px;line-height:1;color:rgba(255,255,255,0.75);flex:0 0 auto;display:inline-block;transform:translateY(-1px)}
+#tab-industries .industry-header-stats .stat-num{font-size:22px;font-weight:700;letter-spacing:-0.3px}
 #tab-industries .industry-header-stats .stat-value.chg-up{color:#6ee7b7}
+#tab-industries .industry-header-stats .stat-value.chg-up .stat-arrow{color:#6ee7b7}
 #tab-industries .industry-header-stats .stat-value.chg-down{color:#fca5a5}
-#tab-industries .industry-header-stats .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:rgba(255,255,255,0.6)}
+#tab-industries .industry-header-stats .stat-value.chg-down .stat-arrow{color:#fca5a5}
+#tab-industries .industry-header-stats .stat-value.chg-flat{color:rgba(255,255,255,0.65)}
+#tab-industries .industry-header-stats .stat-value.chg-flat .stat-arrow{color:rgba(255,255,255,0.55)}
+#tab-industries .industry-header-stats .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:rgba(255,255,255,0.6);margin-top:4px;white-space:nowrap}
 #tab-industries .industry-subsector-strip{border-top:1px solid rgba(255,255,255,0.12);padding-top:16px}
 #tab-industries .industry-subsector-strip .ind-strip-label{font-size:10px;text-transform:uppercase;letter-spacing:0.4px;color:rgba(255,255,255,0.6);margin-bottom:10px;font-weight:600}
 #tab-industries .industry-subsector-strip .ind-strip-chips{display:flex;flex-wrap:wrap;gap:10px}
