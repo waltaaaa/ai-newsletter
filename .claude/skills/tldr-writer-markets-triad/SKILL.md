@@ -47,8 +47,10 @@ From `dossier_macro.json` extract the `financial_markets_package` subset and the
 5. **Conditional language for projections.** "If WTI holds below $70, X projects would..." not "X projects will..."
 6. **Em dash lead sentences** where the skill specifies.
 7. **Basis points for yield moves.** "Rose 12 basis points to 3.58%" not "rose 0.12%."
-8. **Units on every price.** US$/bbl, US$/oz, US$/lb, CAD$/bu, CAD$/MT, US$/MT, US$/mfbm, US$/MMBtu.
+8. **Units on every price.** US$/bbl, US$/oz, US$/lb, CAD$/bu, CAD$/MT, US$/MT, US$/mfbm, US$/MMBtu. Emit the unit both inside the price string AND as a separate `unit` field on every market item (frontend reads both).
 9. **Cross-reference the project database.** Every sub-section must connect market data to specific project pipeline counts and dollar values from the dossier.
+10. **Canonical field names are mandatory.** Emit `val`, `day`, `mm`, `yy`, `context`, `unit` on every market item (commodities, equities, FX pairs). These are the names the frontend reads. Do NOT emit `price`, `weekly_pct`, `mom_pct`, `yoy_pct`, `commentary` as the primary key — the assembler Phase 4.5 aliases them, but emitting the canonical names saves a merge step and prevents drift.
+11. **Canonical commodity/equity names.** Use `Crude Oil (WTI)`, `Crude Oil (Brent)`, `Natural Gas`, `Potash (Nutrien)` for commodities. Use `Dow Jones`, `NASDAQ` for indices. See `PATCH_LOG_SCHEMA_PARITY.md` §1.1 and §1.2 for the full contract.
 
 ### Banned Words
 
@@ -159,19 +161,19 @@ Each narrative opens with `<span class="lead-sentence">` on the first phrase (in
   "equities": [
     {
       "name": "TSX Composite", "symbol": "^GSPTSE",
-      "value": "...", "weekly_pct": "...", "ytd_pct": "...", "yoy_pct": "...",
+      "val": "24,150", "day": "-1.2%", "mm": "+0.8%", "yy": "+12.4%",
       "high_52w": "...", "low_52w": "...",
-      "commentary": "<TSX HTML>"
+      "context": "<TSX HTML>"
     },
-    { "name": "S&P 500", "symbol": "^GSPC", ..., "commentary": "<S&P HTML>" },
-    { "name": "DJIA", "symbol": "^DJI", ..., "commentary": "<DJIA HTML>" },
-    { "name": "Nasdaq Composite", "symbol": "^IXIC", ..., "commentary": "<Nasdaq HTML>" }
+    { "name": "S&P 500", "symbol": "^GSPC", ..., "context": "<S&P HTML>" },
+    { "name": "Dow Jones", "symbol": "^DJI", ..., "context": "<DJIA HTML>" },
+    { "name": "NASDAQ", "symbol": "^IXIC", ..., "context": "<Nasdaq HTML>" }
   ],
   "sources": [ ... ]
 }
 ```
 
-All 4 indices are required. Required fields per index: name, symbol, value, weekly_pct, ytd_pct, yoy_pct, high_52w, low_52w, commentary.
+All 4 indices are required. Canonical index names: `TSX Composite`, `S&P 500`, `Dow Jones`, `NASDAQ` (not `DJIA`, not `Nasdaq Composite`). Required fields per index: name, symbol, val, day, mm, yy, high_52w, low_52w, context. For backward compatibility, you may also emit `value`/`weekly_pct`/`ytd_pct`/`yoy_pct`/`commentary` — the assembler will alias — but the canonical names are the primary output.
 
 ---
 
@@ -203,12 +205,12 @@ Output file: `docs/data/briefing_market_fx_yields.json`
 {
   "fx": {
     "pairs": [
-      {"name": "CAD/USD", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
-      {"name": "USD/CAD", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
-      {"name": "EUR/USD", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
-      {"name": "GBP/USD", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
-      {"name": "USD/JPY", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."},
-      {"name": "USD/CNY", "value": "...", "weekly_pct": "...", "mom_pct": "...", "yoy_pct": "..."}
+      {"name": "CAD/USD", "val": "0.7245", "day": "-0.4%", "mm": "+0.2%", "yy": "-2.1%", "unit": ""},
+      {"name": "USD/CAD", "val": "1.3803", "day": "+0.4%", "mm": "-0.2%", "yy": "+2.1%", "unit": ""},
+      {"name": "EUR/USD", "val": "...", "day": "...", "mm": "...", "yy": "...", "unit": ""},
+      {"name": "GBP/USD", "val": "...", "day": "...", "mm": "...", "yy": "...", "unit": ""},
+      {"name": "USD/JPY", "val": "...", "day": "...", "mm": "...", "yy": "...", "unit": ""},
+      {"name": "USD/CNY", "val": "...", "day": "...", "mm": "...", "yy": "...", "unit": ""}
     ],
     "boc_rate": "...",
     "fed_rate": "...",
@@ -216,16 +218,19 @@ Output file: `docs/data/briefing_market_fx_yields.json`
     "fx_commentary": "<FX HTML>"
   },
   // REQUIRED: pairs array MUST contain all 6 pairs above in this order.
-  // If a pair has no dossier data, emit it with value="N/A" and a note="source stale or missing"
+  // If a pair has no dossier data, emit it with val="N/A" and a note="source stale or missing"
   // field on that pair object — DO NOT drop the pair entry. The assembler validates pair count.
-  // weekly_pct, mom_pct, yoy_pct fields are REQUIRED on every pair (use "N/A" if unavailable).
+  // val, day, mm, yy fields are REQUIRED on every pair (use "N/A" if unavailable). unit is "" for FX.
   "yieldCurve": {
     "tenors": [
-      // Include ONLY the tenors present in the dossier.
-      // Do not interpolate missing ones.
-      {"tenor": "2Y", "current": "...", "year_ago": "...", "change_bp": 33},
-      {"tenor": "3Y", ...}, {"tenor": "5Y", ...}, {"tenor": "7Y", ...},
-      {"tenor": "10Y", ...}, {"tenor": "Long", ...}
+      // Canonical list-of-objects shape. Frontend reads {term, yield, prevYield, highlight}.
+      // Include ONLY the tenors present in the dossier. Do not interpolate missing ones.
+      {"term": "2Y", "yield": "3.58", "prevYield": "3.25", "highlight": false, "change_bp": 33},
+      {"term": "3Y", "yield": "...", "prevYield": "...", "highlight": false},
+      {"term": "5Y", "yield": "...", "prevYield": "...", "highlight": false},
+      {"term": "7Y", "yield": "...", "prevYield": "...", "highlight": false},
+      {"term": "10Y", "yield": "...", "prevYield": "...", "highlight": true},
+      {"term": "Long", "yield": "...", "prevYield": "...", "highlight": false}
     ],
     "spread_2_10": "...",
     "spread_2_10_prior_week": "...",
@@ -274,11 +279,11 @@ Output file: `docs/data/briefing_market_commodities.json`
 
 **If the dossier has fewer than 13 commodities, write narratives only for the ones present.** In the JSON, include all 13 names with the missing ones marked `"price": "N/A"` and `"commentary": "Data unavailable for this commodity this week."`.
 
-Each commodity uses this em dash pattern:
+Each commodity uses this em dash pattern (HTML goes into the `context` field):
 
 ```html
-<p><strong>{Name}:</strong> <strong>{Price with units}</strong>
-(<strong>{weekly_pct}</strong> week-over-week) — {causal driver +
+<p><strong>{Name}:</strong> <strong>{val with units}</strong>
+(<strong>{day}</strong> week-over-week) — {causal driver +
 1-2 sentences of Canadian project cross-reference}<sup>N</sup>.
 {historical context or conditional framing}<sup>N</sup>.</p>
 ```
@@ -298,16 +303,23 @@ Only report project counts above/below breakeven if the dossier's `breakeven_ana
   "commodity_commentary": "<summary paragraph HTML>",
   "commodities": [
     {
-      "name": "WTI Crude Oil", "symbol": "CL=F", "category": "Energy",
-      "price": "...", "weekly_pct": "...", ...,
-      "commentary": "<WTI HTML>"
+      "name": "Crude Oil (WTI)", "symbol": "CL=F", "category": "Energy",
+      "val": "$78.50", "day": "+2.1%", "mm": "+4.8%", "yy": "-12.3%",
+      "unit": "US$/bbl",
+      "context": "<WTI HTML>"
     },
-    // ... 12 more. Use N/A for commodities not in dossier.
+    // ... 12 more. Use "N/A" for val on commodities not in dossier.
   ],
   "wcs_analysis": { ... } | null,
   "sources": [ ... ]
 }
 ```
+
+**Canonical commodity names** (must match `_mktTsMap` in frontend):
+
+`Crude Oil (WTI)`, `Western Canadian Select`, `Crude Oil (Brent)`, `Natural Gas`, `Gold`, `Silver`, `Copper`, `Uranium`, `Nickel`, `Wheat`, `Canola`, `Potash (Nutrien)`, `Lumber`.
+
+Do NOT use `WTI Crude Oil`, `Brent Crude`, `Natural Gas (Henry Hub)`, or `Potash (Nutrien proxy)` — the assembler will rename them but emitting them canonically saves a step.
 
 ---
 
@@ -369,10 +381,18 @@ def check_citations(html, sources):
     ids = set(s['id'] for s in sources)
     return refs - ids
 
+def get_prose(item):
+    """Return narrative HTML regardless of field name (canonical `context` or legacy `commentary`)."""
+    return item.get('context') or item.get('commentary') or ''
+
 # ── Equities ──
 d = json.load(open('docs/data/briefing_market_equities.json', encoding='utf-8'))
 assert len(d.get('equities', [])) == 4
-all_eq = ''.join(e.get('commentary','') for e in d['equities'])
+# Canonical name check — these are what the frontend expects
+canonical_eq_names = {'TSX Composite', 'S&P 500', 'Dow Jones', 'NASDAQ'}
+emitted_names = {e.get('name','') for e in d['equities']}
+# Allow legacy names but warn (assembler aliases them)
+all_eq = ''.join(get_prose(e) for e in d['equities'])
 n = wc(all_eq)
 print(f"Equities: {n} words (target 380-475)")
 assert 380 <= n <= 475, f"FAIL equities wc {n}"
@@ -403,15 +423,26 @@ print(f"  drivers: {drivers}, conditionals: {conds}")
 # ── Commodities ──
 d = json.load(open('docs/data/briefing_market_commodities.json', encoding='utf-8'))
 summary_wc = wc(d.get('commodity_commentary',''))
-# Count only commodities with real data (not N/A)
-real_commodities = [c for c in d.get('commodities',[]) if c.get('price','') not in ['N/A', '', None]]
-per_wc = sum(wc(c.get('commentary','')) for c in real_commodities)
+# Count only commodities with real data. Support both canonical (val) and legacy (price) field names.
+def commodity_val(c):
+    return c.get('val') or c.get('price') or ''
+real_commodities = [c for c in d.get('commodities',[]) if commodity_val(c) not in ['N/A', '', None]]
+per_wc = sum(wc(get_prose(c)) for c in real_commodities)
 print(f"Commodities: summary {summary_wc} + per {per_wc} ({len(real_commodities)} real)")
 assert 170 <= summary_wc <= 210, f"FAIL summary wc {summary_wc}"
 # Per-commodity budget scales with how many are real
 if len(real_commodities) == 13:
     assert 980 <= per_wc <= 1210, f"FAIL per-c wc {per_wc}"
-all_comm = d.get('commodity_commentary','') + ''.join(c.get('commentary','') for c in real_commodities)
+# Canonical-name guardrail: warn on legacy names so the writer is nudged toward canonical.
+LEGACY_COMMODITY_NAMES = {'WTI Crude Oil', 'Brent Crude', 'Natural Gas (Henry Hub)', 'Potash (Nutrien proxy)'}
+legacy_used = {c.get('name','') for c in d.get('commodities',[])} & LEGACY_COMMODITY_NAMES
+if legacy_used:
+    print(f"⚠ Legacy commodity names emitted (assembler will alias): {sorted(legacy_used)}")
+# Every real commodity must carry `unit`
+missing_unit = [c.get('name') for c in real_commodities if not c.get('unit')]
+if missing_unit:
+    print(f"⚠ Commodities missing `unit` field: {missing_unit}")
+all_comm = d.get('commodity_commentary','') + ''.join(get_prose(c) for c in real_commodities)
 assert not check_banned(all_comm), "FAIL banned words commodities"
 assert not check_leak(all_comm), "FAIL taxonomy leak commodities"
 assert not check_citations(all_comm, d.get('sources',[])), "FAIL citations commodities"

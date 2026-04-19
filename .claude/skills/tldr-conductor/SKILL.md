@@ -25,29 +25,38 @@ The pipeline has two parallel tracks:
 
 ```
 BRIEFING TRACK (Sequential with parallelism)
-Phase 0   → Agent 0    → Data Refresh (8 min)
+Phase 0   → Agent 0        → Data Refresh (8 min)
             ↓
-Phase 0.5 → Agent 0.5  → Data Gap Audit (5 min)
+Phase 0.1 → sync_timeseries → indicators → timeseries (1 min) [python tool]
+            ↓
+Phase 0.5 → Agent 0.5      → Data Gap Audit (5 min)
+            ↓
+Phase 0.9 → Load Obsidian vault (running-threads + last edition) (1 min)
             ↓
 Phase 1   → 1A + 1B + 1C parallel → Research (20 min)
+            (each researcher receives cross-edition context block)
             ↓
 Phase 2   → 2A + 2B + 2C parallel → Analysis (12 min)
             ↓
 Phase 3   → 3A-3D + 3F + 3-TRIAD parallel → Writing (20 min)
             ↓
-Phase 3.25 → Visualizer → Editorial Charts (5 min)
+Phase 3.25 → Visualizer   → Editorial Charts (5 min)
             ↓
-Phase 3.5 → Agent 3E → Assembly (8 min)
+Phase 3.5 → Agent 3E       → Assembly (8 min)
             ↓
-Phase 4   → Agent 4  → Charts (8 min)
+GATE 3.5  → validate_briefing_schema → hard fail on schema gaps (1 min) [python tool]
+            ↓
+Phase 4   → Agent 4        → Charts (10 min)
+            ↓
+GATE 4    → validate_briefing_schema → hard fail on schema gaps (1 min) [python tool]
             ↓
 Phase 5   → 5 + 7 parallel → Audit + Discovery (8 min)
             ↓
-Phase 6   → Agent 6  → Fix (conditional, 8 min)
+Phase 6   → Agent 6        → Fix (conditional, 8 min)
             ↓
-DEPLOY    → Bash      → Publish + Push (3 min)
+DEPLOY    → Bash           → Publish + Push (3 min)
 
-Total: 88–105 minutes
+Total: 90–108 minutes
 
 PROJECT TRACK (Can run in parallel with briefing phases 0–0.5)
 Phase P0 → 29 monitors (1 NAT + 13 provinces + 15 CMAs) parallel → Monitor (15 min)
@@ -91,6 +100,27 @@ Total: 40 minutes
 
 ---
 
+### Phase 0.1: Timeseries Sync (Python tool)
+
+**Tool:** `tools/sync_timeseries.py`
+
+**Your job:**
+1. Run `python tools/sync_timeseries.py` immediately after Phase 0.
+2. The tool syncs the seven authoritative national indicators from `indicators.json` (StatCan / BoC history) into `timeseries.json`:
+   - `unemployment`, `cpi`, `gdp`, `housing_starts`, `boc_rate`, `employment_rate`, `participation_rate`
+3. Validate:
+   - Exit code 0
+   - `timeseries.json` modified timestamp newer than before the run
+   - Log reports ">= 7 series synced"
+
+**Why this gate exists:** `indicators.json` and `timeseries.json` are separate stores. Charts read `timeseries.json`. Without this sync, national unemployment / CPI / GDP charts render blank even though the data exists in `indicators.json`. This gate was added after the 2026-04-18 regression where the national unemployment chart was blank.
+
+**On failure:**
+- Report exit code + stderr
+- Ask: Retry, continue with stale timeseries (chart blanks expected), or abort?
+
+---
+
 ### Phase 0.5: Data Gap Audit
 
 **Agent:** `tldr-data-gap`
@@ -109,12 +139,34 @@ Total: 40 minutes
 
 ---
 
+### Phase 0.9: Load Cross-Edition Context (1 min)
+
+Before dispatching researchers, load the Obsidian vault context so researchers frame stories as "what changed since last edition" rather than treating every story as new.
+
+**Your job:**
+1. Read `C:/Users/walte/OneDrive/SecondBrain/01-projects/can-macro-dashboard/running-threads.md` — the 8 active story threads the agents should track week-to-week
+2. Find and read the most recent edition summary in `C:/Users/walte/OneDrive/SecondBrain/01-projects/can-macro-dashboard/editions/` (latest file by date — e.g. `2026-04-18.md`)
+3. Optionally skim `data-freshness.md` for any indicators flagged stale
+4. Build a cross-edition context block (under 500 words) containing:
+   - The titles of all active running threads + one-line "next watch" for each
+   - The previous edition's headline + 3-5 key data points shipped
+   - Any data freshness flags that researchers should be aware of
+5. Pass this context block to **all three Phase 1 researchers** as a prepended section in their dispatch prompt, labeled `## Cross-Edition Context — Previous Edition & Active Threads`
+
+**Why this exists:** Researchers previously treated every edition as a cold start, causing stale framing (repeating context already delivered last week) and missed continuity (ignoring threads the reader was already following). Adding this context preamble to each researcher prompt keeps the 8 active threads visible and lets researchers write "what changed" rather than "what happened." See `project_obsidian_agent_context.md` in user memory for background.
+
+**On failure:**
+- If vault files are missing: log a warning and proceed without cross-edition context. Do NOT block the pipeline on a missing vault. Researchers default to their normal cold-start behavior.
+- If the vault is present but empty: use whatever is available.
+
+---
+
 ### Phase 1: Research (3 parallel agents)
 
 **Agents:** `tldr-researcher-macro` (1A), `tldr-researcher-provincial` (1B), `tldr-researcher-sector` (1C)
 
 **Your job:**
-1. Dispatch all three in parallel via single Skill call with separate agent specifications
+1. Dispatch all three in parallel via single Skill call with separate agent specifications. **Each dispatch prompt MUST include the cross-edition context block built in Phase 0.9 as the first section.**
 2. Wait for all three to complete
 3. Validate each:
 
@@ -317,6 +369,27 @@ If not found and tone is good: Proceed.
 
 ---
 
+### GATE 3.5: Schema Validation (Python tool) — HARD FAIL
+
+**Tool:** `tools/validate_briefing_schema.py`
+
+**Your job:**
+1. Immediately after Phase 3.5 assembly succeeds, run:
+   ```
+   python tools/validate_briefing_schema.py docs/data/briefing_YYYY-MM-DD.json
+   ```
+2. The validator runs 639 checks covering: canonical field names, metric `_chg` keys, commodity/equity name conformance to `_mktTsMap`, yieldCurve list structure, global 5-key requirement, per-province `marketContext` + `watchlistItems`, banned-word scan, citation integrity.
+3. This is a **hard gate** — exit code != 0 means the briefing does NOT proceed to Phase 4. No "proceed anyway" option.
+
+**On failure:**
+- Capture stdout (the failure report)
+- Report the first 10 failures to the user
+- Options: (a) re-run Phase 3.5 assembler (assembler Phase 4.5 normalization may have bugs), (b) spot-fix JSON manually and re-validate, (c) abort
+
+**Why this gate exists:** The 2026-04-18 audit found 42 schema gaps that silently shipped to production because there was no pre-ship validation. See `PATCH_LOG_SCHEMA_PARITY.md` for the full inventory.
+
+---
+
 ### Phase 4: Charts
 
 **Agent:** `tldr-charts`
@@ -328,8 +401,10 @@ If not found and tone is good: Proceed.
    - Briefing JSON updated (check timestamp)
    - Top-level `insightCharts` array = 2 items
    - Each province object has `insightCharts` array = 2 items
-   - Total charts = 28 (2 national + 2 × 13 provinces)
-   - All `dataKeys` exist in `timeseries.json`
+   - **Each `goodsIndustries[]` object (5 total) has `insightCharts` array = 1 item**
+   - **Each `servicesIndustries[]` object (15 total) has `insightCharts` array = 1 item**
+   - **Total charts ≥ 48 (2 national + 26 provincial + 20 industry)**
+   - All `dataKeys` exist in declared `dataSource` (`indicators.json` history or `timeseries.json`)
    - **Option C ratio:** both national charts have non-empty `kpis` arrays; ≥21/26 provincial charts have non-empty `kpis` arrays (≥80%)
 
 **Quick Python validation:**
@@ -337,26 +412,53 @@ If not found and tone is good: Proceed.
 import json
 b = json.load(open('docs/data/briefing_YYYY-MM-DD.json'))
 ts = json.load(open('docs/data/timeseries.json'))
+try:
+    ind = json.load(open('docs/data/indicators.json'))
+    ind_keys = {r.get('indicator_name') for r in ind.get('history', []) if r.get('indicator_name')}
+except Exception:
+    ind_keys = set()
 ts_keys = set(ts.keys())
 
 issues = []
 for c in b.get('insightCharts', []):
+    ds = c.get('dataSource', 'timeseries')
     for dk in c.get('dataKeys', []):
-        if dk not in ts_keys:
-            issues.append(f'National: missing {dk}')
+        keyset = ind_keys if ds == 'indicators' else ts_keys
+        if dk not in keyset:
+            issues.append(f'National/{ds}: missing {dk}')
 
 for p in b.get('provinces', []):
     for c in p.get('insightCharts', []):
+        ds = c.get('dataSource', 'timeseries')
         for dk in c.get('dataKeys', []):
-            if dk not in ts_keys:
-                issues.append(f'{p["name"]}: missing {dk}')
+            keyset = ind_keys if ds == 'indicators' else ts_keys
+            if dk not in keyset:
+                issues.append(f'{p["name"]}/{ds}: missing {dk}')
+
+for tier in ('goodsIndustries', 'servicesIndustries'):
+    for ind_obj in b.get(tier, []):
+        for c in ind_obj.get('insightCharts', []):
+            ds = c.get('dataSource', 'indicators')
+            for dk in c.get('dataKeys', []):
+                keyset = ind_keys if ds == 'indicators' else ts_keys
+                if dk not in keyset:
+                    issues.append(f'{ind_obj.get("name","?")}/{ds}: missing {dk}')
+
+# Mandatory count gate — HARD FAIL
+nat = len(b.get('insightCharts', []))
+prov_charts = [c for p in b.get('provinces', []) for c in p.get('insightCharts', [])]
+goods_charts = [c for g in b.get('goodsIndustries', []) for c in g.get('insightCharts', [])]
+svc_charts = [c for s in b.get('servicesIndustries', []) for c in s.get('insightCharts', [])]
+total = nat + len(prov_charts) + len(goods_charts) + len(svc_charts)
+print(f'Chart counts: national={nat}, provincial={len(prov_charts)}, goods={len(goods_charts)}, services={len(svc_charts)}, total={total}')
+if total < 48:
+    raise SystemExit(f'FAIL — expected >= 48 charts, got {total}. Industries most likely empty. Re-dispatch chart agent.')
 
 print(f'Issues: {len(issues)}')
-if issues: print('\n'.join(issues[:5]))
+if issues: print('\n'.join(issues[:10]))
 
 # Option C ratio check (Tier 1.7 — editorial layout default)
 nat_optc = sum(1 for c in b.get('insightCharts', []) if c.get('kpis'))
-prov_charts = [c for p in b.get('provinces', []) for c in p.get('insightCharts', [])]
 prov_optc = sum(1 for c in prov_charts if c.get('kpis'))
 print(f'Option C: National {nat_optc}/2, Provincial {prov_optc}/{len(prov_charts)}')
 if nat_optc < 2:
@@ -366,8 +468,27 @@ if prov_charts and prov_optc / len(prov_charts) < 0.8:
 ```
 
 **On failure:**
+- If chart count < 48: re-dispatch `tldr-charts` agent with explicit instruction to generate all three tiers (national, provinces, industries). Do NOT proceed with partial charts.
 - Report specific issues
 - Ask: Retry or skip charts?
+
+---
+
+### GATE 4: Schema Validation (Python tool) — HARD FAIL
+
+**Tool:** `tools/validate_briefing_schema.py`
+
+**Your job:**
+1. Immediately after Phase 4 charts succeed, re-run:
+   ```
+   python tools/validate_briefing_schema.py docs/data/briefing_YYYY-MM-DD.json
+   ```
+2. The chart agent can introduce new data (inline series data on chart specs) that may violate the schema. Re-running the validator after Phase 4 catches regressions.
+3. This is a **hard gate** — exit code != 0 means the briefing does NOT proceed to Phase 5.
+
+**On failure:**
+- Capture stdout failures
+- Options: (a) re-run Phase 4 charts, (b) spot-fix JSON, (c) abort
 
 ---
 
@@ -476,6 +597,29 @@ git push origin main
 - All git commands succeeded (no errors)
 - Files committed and pushed
 - GitHub Actions triggered (if configured)
+
+---
+
+### Post-Deploy: Update Obsidian Vault (1 min)
+
+After a successful deploy, write back to the Obsidian vault so the next edition's Phase 0.9 picks up current state:
+
+1. Create a new edition summary at `C:/Users/walte/OneDrive/SecondBrain/01-projects/can-macro-dashboard/editions/YYYY-MM-DD.md` with:
+   - Headline
+   - 3-5 key data points shipped (exact figures)
+   - List of threads this edition touched
+   - Any stories introduced for the first time (candidates for new running threads)
+2. Update `running-threads.md`:
+   - For each active thread, update the "Current state" and "Next" lines based on what shipped
+   - Retire threads that have fully resolved (move to a `retired-threads.md` section or delete)
+   - Add any new multi-week stories as new threads
+3. Update `data-freshness.md`:
+   - Bump the "last refreshed" column for any indicator that got a new reading
+   - Flag any series that are now >2 periods stale
+
+**On failure:**
+- If the vault write fails (permissions, disk), log the error but do NOT fail the pipeline. The edition is already live.
+- Surface the failure to the user at the end of the summary so they can hand-update.
 
 ---
 
@@ -712,6 +856,9 @@ Conductor:
 > Phase 0: Dispatching Agent 0 (Data Refresh)...
   ✓ Agent 0 complete. 102 indicators updated, 12 market prices refreshed.
 
+> Phase 0.1: Running tools/sync_timeseries.py...
+  ✓ Synced 7 national series (unemployment, cpi, gdp, housing_starts, boc_rate, employment_rate, participation_rate) from indicators.json → timeseries.json.
+
 > Phase 0.5: Dispatching Agent 0.5 (Data Gap Audit)...
   ✓ Agent 0.5 complete. 2 warnings (US GDP delayed, NL not yet released).
   Proceed? (yes/review)
@@ -740,8 +887,14 @@ User: yes
 > Phase 3.5: Assembling briefing_2026-03-31.json...
   ✓ Complete. All required fields. 13 provinces, 20 industries, 4 market fragments merged, 3 charts inserted, citations intact.
 
-> Phase 4: Generating 28 charts...
-  ✓ Complete. National 2 + provinces 26.
+> GATE 3.5: Running tools/validate_briefing_schema.py...
+  ✓ 639/639 checks passed. Schema contract honored.
+
+> Phase 4: Generating 48 charts...
+  ✓ Complete. National 2 + provinces 26 + industries 20 = 48.
+
+> GATE 4: Re-running tools/validate_briefing_schema.py...
+  ✓ 639/639 checks passed post-charts.
 
 > Phase 5: Running audits (parallel)...
   ✓ Auditor: PASS WITH WARNINGS (2 generic URLs, 1 duplicate)
@@ -752,8 +905,11 @@ User: yes
 
 PIPELINE COMPLETE — Week of 2026-03-31
   Headline: "BoC Hold Amid Labour Softening"
-  Industries: 5 goods + 15 services
-  Provinces: 13 with 28 charts
+  Industries: 5 goods + 15 services (20 charts)
+  Provinces: 13 with 26 charts
+  National: 2 charts
+  Total charts: 48
+  Schema validation: PASS (639/639 checks)
   Sources: 247 citations
   Audit: PASS
 

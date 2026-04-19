@@ -154,6 +154,83 @@ HOUSING_PRICE_INDEX = {
     },
 }
 
+# ── National LFS Aggregates (added 2026-04-19) ───────────────────────────────
+#
+# Added to close gaps identified in the 2026-04-18 schema audit. The pipeline
+# currently tracks employment rate, participation rate, and wage growth per
+# province but not at the national level, which leaves 7 national series blank
+# on the frontend. Building permits, trade balance, manufacturing sales, and
+# retail sales national totals are also missing from timeseries.json.
+#
+# Vector IDs below MUST be verified via StatCan WDS coordinate lookup before
+# enabling. See statcan_permits.py for the coordinate lookup pattern
+# (getSeriesInfoFromCubePidCoord). Until verified, this group is NOT included
+# in ALL_TABLE_GROUPS — activation requires setting _NATIONAL_LFS_VERIFIED=True
+# after confirming each vector returns data with a recent refPer.
+
+_NATIONAL_LFS_VERIFIED = False  # flip to True after vector coordinate lookup
+
+# Table 14-10-0287-01: Labour force characteristics, monthly, seasonally adjusted
+# Geography=Canada, both sexes, 15 years and over
+NATIONAL_LFS_AGGREGATES = {
+    "table": "14-10-0287",
+    "frequency": "monthly",
+    "vectors": {
+        # TODO(vector-verify): run WDS coordinate lookup before enabling
+        "national_employment_rate":     (0, "%", "Labour"),          # coord [1,2,5,1,1]
+        "national_participation_rate":  (0, "%", "Labour"),          # coord [1,2,4,1,1]
+    },
+}
+
+# Table 14-10-0064-01: Employee wages by industry, annual
+# (Or table 14-10-0222 for monthly average hourly wages.) National totals.
+NATIONAL_WAGE_GROWTH = {
+    "table": "14-10-0222",
+    "frequency": "monthly",
+    "vectors": {
+        "national_wage_growth_yoy":    (0, "%", "Labour"),  # TODO(vector-verify)
+    },
+}
+
+# Table 34-10-0066-01: Building permits, value, monthly, SA — national total
+NATIONAL_BUILDING_PERMITS = {
+    "table": "34-10-0066",
+    "frequency": "monthly",
+    "vectors": {
+        "national_building_permits_total":    (0, "$M", "Housing"),  # TODO(vector-verify)
+    },
+}
+
+# Table 12-10-0011-01: Merchandise trade, exports and imports, monthly, SA
+# National total trade balance = exports - imports (can compute from two vectors).
+NATIONAL_TRADE_BALANCE = {
+    "table": "12-10-0011",
+    "frequency": "monthly",
+    "vectors": {
+        "national_total_exports":    (0, "$M", "Trade"),  # TODO(vector-verify)
+        "national_total_imports":    (0, "$M", "Trade"),  # TODO(vector-verify)
+        # Downstream: trade_balance = national_total_exports - national_total_imports
+    },
+}
+
+# Table 16-10-0048-01: Manufacturing sales, monthly, SA — Canada total
+NATIONAL_MANUFACTURING_SALES = {
+    "table": "16-10-0048",
+    "frequency": "monthly",
+    "vectors": {
+        "national_manufacturing_sales":    (0, "$M", "Manufacturing"),  # TODO(vector-verify)
+    },
+}
+
+# Table 20-10-0008-01: Retail trade, sales, monthly, SA — Canada total
+NATIONAL_RETAIL_SALES = {
+    "table": "20-10-0008",
+    "frequency": "monthly",
+    "vectors": {
+        "national_retail_sales":    (0, "$M", "Retail"),  # TODO(vector-verify)
+    },
+}
+
 # ── All table groups ──────────────────────────────────────────────────────────
 # Vectors refreshed 2026-03-31 via WDS getSeriesInfoFromCubePidCoord.
 #
@@ -182,8 +259,24 @@ ALL_TABLE_GROUPS = [
     HOUSING_PRICE_INDEX,
 ]
 
+# National aggregates — appended only after vector IDs are verified. See the
+# NATIONAL_* groups above for the 7 series that close the 2026-04-18 audit gap.
+if _NATIONAL_LFS_VERIFIED:
+    ALL_TABLE_GROUPS.extend([
+        NATIONAL_LFS_AGGREGATES,
+        NATIONAL_WAGE_GROWTH,
+        NATIONAL_BUILDING_PERMITS,
+        NATIONAL_TRADE_BALANCE,
+        NATIONAL_MANUFACTURING_SALES,
+        NATIONAL_RETAIL_SALES,
+    ])
+
 # Frequency classification for mode-aware skipping
-_MONTHLY_TABLES = {"14-10-0022", "12-10-0129", "34-10-0143", "18-10-0205"}
+_MONTHLY_TABLES = {
+    "14-10-0022", "12-10-0129", "34-10-0143", "18-10-0205",
+    "14-10-0287", "14-10-0222", "34-10-0066",
+    "12-10-0011", "16-10-0048", "20-10-0008",
+}
 _QUARTERLY_TABLES = {"34-10-0175", "18-10-0135", "14-10-0326"}
 _ANNUAL_TABLES = {"34-10-0035"}
 

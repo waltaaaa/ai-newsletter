@@ -531,6 +531,277 @@ else:
     print(f"⚠ No visualizations to integrate (briefing_visualizations.json absent or empty)")
 ```
 
+## Phase 4.5: Canonical Field Normalization (5 minutes)
+
+**Purpose:** The frontend (`app.js`) reads specific field names that may differ from what the writer/analyst agents produce. This phase normalizes pipeline output to canonical field names BEFORE validation, so next week's edition does not reproduce the 42 schema gaps fixed in the 2026-04-18 audit. See `PATCH_LOG_SCHEMA_PARITY.md` for the full field contract.
+
+Run these normalization steps in order. Each one is idempotent (re-running on already-normalized data is safe).
+
+### 4.5.1 — Canonicalize commodity names to match `_mktTsMap`
+
+```python
+COMMODITY_NAME_MAP = {
+    'WTI Crude Oil': 'Crude Oil (WTI)',
+    'WTI': 'Crude Oil (WTI)',
+    'Brent Crude': 'Crude Oil (Brent)',
+    'Brent': 'Crude Oil (Brent)',
+    'Natural Gas (Henry Hub)': 'Natural Gas',
+    'Henry Hub': 'Natural Gas',
+    'Potash (Nutrien proxy)': 'Potash (Nutrien)',
+    'Nutrien': 'Potash (Nutrien)',
+    'WCS': 'Western Canadian Select',
+}
+
+for comm in output.get('commodities', []):
+    name = comm.get('name', '')
+    if name in COMMODITY_NAME_MAP:
+        comm['name'] = COMMODITY_NAME_MAP[name]
+```
+
+### 4.5.2 — Canonicalize equity index names to match `_mktTsMap`
+
+```python
+EQUITY_NAME_MAP = {
+    'DJIA': 'Dow Jones',
+    'Dow Jones Industrial Average': 'Dow Jones',
+    'Nasdaq Composite': 'NASDAQ',
+    'Nasdaq': 'NASDAQ',
+    'NASDAQ Composite': 'NASDAQ',
+}
+
+for idx in output.get('financialMarkets', {}).get('indices', []):
+    name = idx.get('name', '')
+    if name in EQUITY_NAME_MAP:
+        idx['name'] = EQUITY_NAME_MAP[name]
+```
+
+### 4.5.3 — Alias commodity/equity/fx fields to canonical names
+
+The frontend reads `val`, `day`, `mm`, `yy`, `context`, `unit`. Writers may still emit `price`, `weekly_pct`, `mom_pct`, `yoy_pct`, `commentary`. Alias both directions so both paths resolve.
+
+```python
+import re
+
+def _extract_unit(price_val):
+    """Extract unit from a price string like '$78.50/bbl' → '$/bbl'."""
+    if not isinstance(price_val, str):
+        return ''
+    m = re.search(r'(\$?/\w+)$', price_val.strip())
+    return m.group(1) if m else ''
+
+def _normalize_market_item(item):
+    # Price → val
+    if 'price' in item and 'val' not in item:
+        item['val'] = item['price']
+    elif 'val' in item and 'price' not in item:
+        item['price'] = item['val']
+
+    # weekly_pct → day
+    if 'weekly_pct' in item and 'day' not in item:
+        item['day'] = item['weekly_pct']
+    elif 'day' in item and 'weekly_pct' not in item:
+        item['weekly_pct'] = item['day']
+
+    # mom_pct / ytd_pct → mm
+    if 'mom_pct' in item and 'mm' not in item:
+        item['mm'] = item['mom_pct']
+    elif 'ytd_pct' in item and 'mm' not in item:
+        item['mm'] = item['ytd_pct']
+    elif 'mm' in item and 'mom_pct' not in item:
+        item['mom_pct'] = item['mm']
+
+    # yoy_pct → yy
+    if 'yoy_pct' in item and 'yy' not in item:
+        item['yy'] = item['yoy_pct']
+    elif 'yy' in item and 'yoy_pct' not in item:
+        item['yoy_pct'] = item['yy']
+
+    # commentary → context
+    if 'commentary' in item and 'context' not in item:
+        item['context'] = item['commentary']
+    elif 'context' in item and 'commentary' not in item:
+        item['commentary'] = item['context']
+
+    # Extract unit from price string if missing
+    if 'unit' not in item or not item.get('unit'):
+        unit = _extract_unit(item.get('val') or item.get('price') or '')
+        if unit:
+            item['unit'] = unit
+    return item
+
+for comm in output.get('commodities', []):
+    _normalize_market_item(comm)
+for idx in output.get('financialMarkets', {}).get('indices', []):
+    _normalize_market_item(idx)
+for pair in output.get('financialMarkets', {}).get('fx', []):
+    _normalize_market_item(pair)
+```
+
+### 4.5.4 — Convert yieldCurve dict → list
+
+Frontend expects a list of `{term, yield, prevYield, highlight}`. If writer emitted a dict with `tenors`, flatten to a list.
+
+```python
+yc = output.get('yieldCurve', {})
+if isinstance(yc, dict) and 'tenors' in yc:
+    tenors = yc.get('tenors', [])
+    if isinstance(tenors, list):
+        yc_list = []
+        for t in tenors:
+            yc_list.append({
+                'term': t.get('term') or t.get('tenor', ''),
+                'yield': t.get('yield') or t.get('current'),
+                'prevYield': t.get('prevYield') or t.get('prev') or t.get('year_ago'),
+                'highlight': t.get('highlight', False),
+            })
+        # Keep the commentary under a separate key — don't lose it
+        commentary = yc.get('yield_commentary', '')
+        output['yieldCurve'] = yc_list
+        if commentary:
+            output['yieldCurveCommentary'] = commentary
+elif isinstance(yc, dict) and not yc:
+    output['yieldCurve'] = []
+```
+
+### 4.5.5 — Emit `_chg` keys from `indicatorMeta`
+
+Frontend enrichment cards read `metrics[key + '_chg']`. The analyst writes changes into `indicatorMeta[key].change` but not into `metrics`. Derive.
+
+```python
+metrics = output.get('metrics', {})
+indicator_meta = output.get('indicatorMeta', {})
+
+for key, meta in indicator_meta.items():
+    if not isinstance(meta, dict):
+        continue
+    change = meta.get('change')
+    if change is None:
+        continue
+    chg_key = f"{key}_chg"
+    if chg_key not in metrics:
+        metrics[chg_key] = change
+
+output['metrics'] = metrics
+```
+
+### 4.5.6 — Add snake_case aliases for camelCase metrics
+
+Some frontend paths read snake_case (`building_permits`, `trade_balance`). Emit both forms.
+
+```python
+CAMEL_TO_SNAKE_ALIASES = {
+    'buildingPermits': 'building_permits',
+    'housingStarts': 'housing_starts',
+    'tradeBalance': 'trade_balance',
+    'employmentChange': 'employment_change',
+    'residentialPermits': 'residential_permits',
+    'nonresidentialPermits': 'nonresidential_permits',
+    'merchandiseExports': 'merchandise_exports',
+    'merchandiseImports': 'merchandise_imports',
+    'coreCpiMedian': 'core_cpi_median',
+    'shelterCpi': 'shelter_cpi',
+    'foodCpi': 'food_cpi',
+    'energyCpi': 'energy_cpi',
+    'fulltimeChange': 'fulltime_change',
+    'parttimeChange': 'parttime_change',
+    'privateSectorChange': 'private_sector_change',
+    'publicSectorChange': 'public_sector_change',
+    'manufacturingSales': 'manufacturing_sales',
+    'retailSales': 'retail_sales',
+    'wageGrowth': 'wage_growth',
+    'participationRate': 'participation_rate',
+    'employmentRate': 'employment_rate',
+}
+
+metrics = output.get('metrics', {})
+for camel, snake in CAMEL_TO_SNAKE_ALIASES.items():
+    if camel in metrics and snake not in metrics:
+        metrics[snake] = metrics[camel]
+    if snake in metrics and camel not in metrics:
+        metrics[camel] = metrics[snake]
+    # Also alias _chg keys
+    camel_chg, snake_chg = f"{camel}_chg", f"{snake}_chg"
+    if camel_chg in metrics and snake_chg not in metrics:
+        metrics[snake_chg] = metrics[camel_chg]
+    if snake_chg in metrics and camel_chg not in metrics:
+        metrics[camel_chg] = metrics[snake_chg]
+output['metrics'] = metrics
+```
+
+### 4.5.7 — Normalize global indicator keys to canonical 5
+
+Frontend hardcodes `gdp`, `cpi`, `rate`, `unemployment`, `tradeBalance`. Writers/analysts may have emitted region-specific keys (`fed_funds`, `hicp`, `ecb_deposit_rate`, `boe_rate`, `usd_cny`). Map them.
+
+```python
+GLOBAL_KEY_ALIASES = {
+    'fed_funds': 'rate',
+    'fed_funds_rate': 'rate',
+    'ecb_deposit_rate': 'rate',
+    'boe_rate': 'rate',
+    'pboc_rate': 'rate',
+    'hicp': 'cpi',
+    'core_cpi': 'cpi',
+    'jobless_rate': 'unemployment',
+    'trade_balance': 'tradeBalance',
+    'current_account': 'tradeBalance',
+}
+
+for region in output.get('global', []):
+    indicators = region.get('indicators', {}) or {}
+    meta = region.get('indicatorMeta', {}) or {}
+    for alias, canonical in GLOBAL_KEY_ALIASES.items():
+        if alias in indicators and canonical not in indicators:
+            indicators[canonical] = indicators[alias]
+        if alias in meta and canonical not in meta:
+            meta[canonical] = meta[alias]
+    # Ensure all 5 required keys exist (empty if absent so frontend doesn't throw)
+    for required in ('gdp', 'cpi', 'rate', 'unemployment', 'tradeBalance'):
+        if required not in indicators:
+            indicators[required] = None
+        if required not in meta:
+            meta[required] = {'period': '', 'source': '', 'change': None, 'prev': None}
+        else:
+            # Ensure change/prev exist (frontend reads them)
+            m = meta[required]
+            if isinstance(m, dict):
+                m.setdefault('change', None)
+                m.setdefault('prev', None)
+    region['indicators'] = indicators
+    region['indicatorMeta'] = meta
+```
+
+### 4.5.8 — Province fallback fields
+
+If the provincial writer did not emit `marketContext` or `watchlistItems`, create them from fallbacks.
+
+```python
+for prov in output.get('provinces', []):
+    # marketContext: first sentence of analysis as fallback
+    if not prov.get('marketContext'):
+        analysis = prov.get('analysis', '')
+        if analysis:
+            import re as _re
+            clean = _re.sub(r'<[^>]+>', '', analysis).strip()
+            first_sentence = clean.split('. ')[0] if clean else ''
+            if first_sentence:
+                prov['marketContext'] = first_sentence + '.' if not first_sentence.endswith('.') else first_sentence
+
+    # watchlistItems: empty list if absent (frontend iterates; None would crash)
+    if 'watchlistItems' not in prov:
+        prov['watchlistItems'] = []
+```
+
+After all 8 normalization steps, print a summary:
+
+```python
+print(f"✓ Phase 4.5 canonical normalization complete:")
+print(f"  Commodities normalized: {len(output.get('commodities', []))}")
+print(f"  Equity indices normalized: {len(output.get('financialMarkets', {}).get('indices', []))}")
+print(f"  Global regions normalized: {len(output.get('global', []))}")
+print(f"  Provinces fallback-filled: {len(output.get('provinces', []))}")
+print(f"  _chg keys emitted: {sum(1 for k in output.get('metrics', {}) if k.endswith('_chg'))}")
+```
+
 ## Phase 5: Validate Completeness (5 minutes)
 
 Check that the merged output has all required fields per the specification:
@@ -800,6 +1071,8 @@ Next step:
 11. **Visualization graceful degradation.** If `briefing_visualizations.json` doesn't exist or is invalid, skip chart insertion entirely. The briefing must still be complete and valid without charts. Never fail the assembly because charts are missing.
 
 12. **Market fields come from market agents, not macro.** `financialMarkets` is assembled from 3G (equities) and 3H (FX/yields). `commodities` comes from 3I. `yieldCurve` comes from 3H. The macro agent (3A) no longer produces these fields — do NOT fall back to `macro.get('financialMarkets')`.
+
+13. **Canonical field normalization is mandatory.** Phase 4.5 MUST run before validation. It is the enforcement layer that prevents field-name drift from recurring week after week. See `PATCH_LOG_SCHEMA_PARITY.md` for the full contract (canonical names, required keys, required structure). The `tools/validate_briefing_schema.py` validator is the external gate that catches any gaps Phase 4.5 missed — the conductor runs it after assembly as a hard fail.
 
 ## Example Output Summary
 

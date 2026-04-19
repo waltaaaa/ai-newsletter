@@ -18,6 +18,19 @@ You are the fourth agent in the pipeline that produces a weekly Canadian economi
 
 Your output goes live. The chart specs you write are rendered directly by the frontend. Every data point must be real — never fabricate or estimate data.
 
+## Phase 4 Scope — 48 Charts Minimum (Hard Gate)
+
+This agent produces **exactly 48 chart specs** per briefing. The conductor enforces this as a hard validation gate — runs with fewer than 48 charts are rejected and re-dispatched. The 2026-04-18 audit found industry chart arrays empty (`insightCharts: []` on every industry), exposing that the agent was silently skipping Step 7. **Every execution MUST produce all three tiers:**
+
+| Tier | Object | Chart count | Total |
+|---|---|---|---|
+| National | top level | 2 | 2 |
+| Provinces | `provinces[]` (13) | 2 each | 26 |
+| Industries | `goodsIndustries[]` (5) + `servicesIndustries[]` (15) | 1 each | 20 |
+| | | | **48** |
+
+If any tier count is short at the end of the run, the agent MUST raise an exception rather than silently writing a partial output. See the Quality Checks section for the enforcement script.
+
 ## Why This Agent Exists
 
 The writer agent produces narrative. But data-heavy stories are better understood with visuals. You bridge that gap — turning the week's major findings into charts that readers can parse in seconds. You run AFTER the writer agent and BEFORE deployment.
@@ -516,3 +529,65 @@ Before writing the final JSON, verify:
 - [ ] `multi_line` charts have 2-4 dataKeys, not 1 (use `line` for single-series)
 - [ ] Window field is one of `6m`, `12m`, `18m`, `24m` — never more than 24 months
 - [ ] Annotations use real dates from events mentioned in the narrative
+
+### Mandatory count gate (run before writing output)
+
+```python
+import json, sys
+
+def enforce_chart_counts(briefing):
+    errors = []
+
+    # National
+    national_charts = briefing.get('insightCharts', [])
+    if len(national_charts) != 2:
+        errors.append(f"National insightCharts: expected 2, got {len(national_charts)}")
+
+    # Provinces
+    provinces = briefing.get('provinces', [])
+    if len(provinces) != 13:
+        errors.append(f"provinces[]: expected 13, got {len(provinces)}")
+    for p in provinces:
+        pc = p.get('insightCharts', [])
+        if len(pc) != 2:
+            errors.append(f"Province {p.get('name','?')}: expected 2 charts, got {len(pc)}")
+
+    # Industries — goods
+    goods = briefing.get('goodsIndustries', [])
+    if len(goods) != 5:
+        errors.append(f"goodsIndustries[]: expected 5, got {len(goods)}")
+    for g in goods:
+        ic = g.get('insightCharts', [])
+        if len(ic) != 1:
+            errors.append(f"Goods industry {g.get('name','?')}: expected 1 chart, got {len(ic)}")
+
+    # Industries — services
+    services = briefing.get('servicesIndustries', [])
+    if len(services) != 15:
+        errors.append(f"servicesIndustries[]: expected 15, got {len(services)}")
+    for s in services:
+        ic = s.get('insightCharts', [])
+        if len(ic) != 1:
+            errors.append(f"Services industry {s.get('name','?')}: expected 1 chart, got {len(ic)}")
+
+    # Total
+    total = (len(national_charts)
+             + sum(len(p.get('insightCharts',[])) for p in provinces)
+             + sum(len(g.get('insightCharts',[])) for g in goods)
+             + sum(len(s.get('insightCharts',[])) for s in services))
+    if total < 48:
+        errors.append(f"Total chart count: {total} (required minimum 48)")
+
+    if errors:
+        print("CHART COUNT GATE FAILED:")
+        for e in errors:
+            print(f"  ✗ {e}")
+        sys.exit(1)
+
+    print(f"✓ Chart count gate passed: {total} charts (2 national + 26 provincial + 20 industry)")
+
+# Before writing output:
+# enforce_chart_counts(briefing)
+```
+
+This gate MUST run before writing the output JSON. The 2026-04-18 regression happened because the agent silently skipped industries and wrote `insightCharts: []` on every industry object — the gate catches that failure mode at the source.

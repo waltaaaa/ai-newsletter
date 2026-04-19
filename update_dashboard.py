@@ -546,6 +546,24 @@ if __name__ == "__main__":
             else:
                 print("[WARN] No indicators fetched or no DB connection")
 
+            # Policy tracker runs in daily mode too (added 2026-04-19).
+            # Just RSS parsing — lightweight. Freshens policy_snapshots so the
+            # weekly run does not miss items that surfaced mid-week.
+            print("\n[DAILY MODE] Running policy tracker (RSS only, no researcher merge)...")
+            try:
+                from policy_tracker import run_policy_tracker
+                policy_result = run_policy_tracker(conn, research_paths=None)
+                print(
+                    f"[OK] Policy tracker: {len(policy_result.get('policy_items', []))} items, "
+                    f"{len(policy_result.get('policy_new_items', []))} new"
+                )
+                daily_log.log_step("policy_tracker_daily")
+            except Exception as e:
+                print(f"[WARN] Policy tracker failed (non-fatal): {e}")
+                import traceback
+                traceback.print_exc()
+                daily_log.log_error("policy_tracker_daily", e, recovered=True)
+
             print("\n[DAILY MODE] Exporting static JSON files...")
             try:
                 export_result = export_all(conn=conn)

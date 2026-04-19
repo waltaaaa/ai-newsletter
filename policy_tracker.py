@@ -174,7 +174,9 @@ INVESTMENT_POLICY_KEYWORDS = {
     "infrastructure_funding": {
         "keywords": ["infrastructure bank", "icip", "investing in canada",
                      "transit fund", "trade corridor", "broadband", "green infrastructure",
-                     "water infrastructure", "disaster mitigation"],
+                     "water infrastructure", "disaster mitigation",
+                     "capital plan", "capital program", "infrastructure program",
+                     "infrastructure strategy", "investment program"],
         "sectors": ["infrastructure", "transport_logistics", "telecom"],
     },
     "trade_policy": {
@@ -203,8 +205,24 @@ INVESTMENT_POLICY_KEYWORDS = {
     "fiscal_policy": {
         "keywords": ["budget", "fiscal update", "fall economic statement",
                      "deficit", "capital gains", "tax credit", "investment tax credit",
-                     "accelerated depreciation", "sr&ed"],
+                     "accelerated depreciation", "sr&ed",
+                     "fiscal framework", "fiscal plan", "budget implementation",
+                     "estimates", "supplementary estimates", "main estimates"],
         "sectors": [],  # Affects all sectors
+    },
+    # Broad catchall — catches generic capital-investment signals that don't
+    # fit a narrow category but still indicate policy affecting the project pipeline.
+    # Added 2026-04-19 after policy tracker classification was found too strict (1/30
+    # pass rate in the 2026-04-18 audit). These keywords intentionally fire on many
+    # items — downstream classifier ranks by signal strength.
+    "capital_investment": {
+        "keywords": ["billion", "$1b", "$2b", "$5b", "$10b", "funding announcement",
+                     "investment announcement", "strategic investment",
+                     "procurement", "contract award", "federal funding",
+                     "provincial funding", "municipal funding", "grant program",
+                     "loan guarantee", "equity investment", "fund", "initiative",
+                     "announcement", "strategy", "program"],
+        "sectors": [],  # Sector is inferred from surrounding text
     },
 }
 
@@ -455,14 +473,95 @@ def generate_policy_summary(items):
     }
 
 
-def run_policy_tracker(conn):
+def extract_policy_from_research(research_paths):
+    """
+    Read researcher output (research_macro.md, research_provinces.md,
+    research_sectors.md) and extract policy-relevant items that the RSS feeds
+    may have missed. Returns a list of item dicts compatible with the main
+    classification path.
+
+    Researchers pick up policy items from sources the RSS feeds don't cover
+    (press releases, minister statements, trade publications, direct web search).
+    Added 2026-04-19 after the audit found that researcher-found policy items
+    were not flowing into policy_snapshots.
+
+    Args:
+      research_paths: list of file paths to researcher markdown outputs
+    """
+    import re as _re
+
+    items = []
+    for path in research_paths:
+        try:
+            with open(path, encoding="utf-8") as f:
+                text = f.read()
+        except (FileNotFoundError, OSError):
+            continue
+
+        # Extract bulleted lines that look like policy announcements:
+        # "- [Title](url) — context"  OR  "- Title — context (source: url)"
+        line_pattern = _re.compile(
+            r"^[\-*]\s+(?:\[([^\]]+)\]\(([^)]+)\)|([^\n]+?))\s*(?:[—–-]\s*(.+?))?$",
+            _re.MULTILINE,
+        )
+        url_pattern = _re.compile(r"https?://\S+")
+
+        for match in line_pattern.finditer(text):
+            title_md, url_md, title_plain, context = match.groups()
+            title = title_md or title_plain or ""
+            title = title.strip()
+            if len(title) < 15 or len(title) > 250:
+                continue
+
+            url = url_md or ""
+            if not url:
+                m = url_pattern.search(context or "")
+                if m:
+                    url = m.group(0)
+            if not url:
+                continue
+
+            items.append({
+                "title": title,
+                "url": url.rstrip(".,);"),
+                "summary": (context or "")[:300],
+                "source_description": f"researcher:{path}",
+                "level": "researcher",
+                "date": "",
+                "province": None,
+            })
+
+    return items
+
+
+def run_policy_tracker(conn, research_paths=None):
     """
     Main entry point. Fetch, classify, detect changes, link to projects.
+
+    Args:
+      conn: sqlite3 connection
+      research_paths: optional list of researcher output paths
+        (research_macro.md, research_provinces.md, research_sectors.md).
+        If provided, items extracted from research are merged with RSS items
+        before classification. Deduped by URL.
 
     Returns dict with policy data for the pipeline context.
     """
     # Fetch from all feeds
     all_items = fetch_all_policy_feeds()
+
+    # Merge researcher-found policy items (added 2026-04-19)
+    if research_paths:
+        research_items = extract_policy_from_research(research_paths)
+        seen_urls = {i.get("url", "") for i in all_items if i.get("url")}
+        for r in research_items:
+            if r["url"] not in seen_urls:
+                all_items.append(r)
+                seen_urls.add(r["url"])
+        logger.info(
+            "[POLICY] Merged %d researcher-found items into %d total",
+            len(research_items), len(all_items),
+        )
 
     # Classify by policy category and affected sectors
     relevant = classify_policy_items(all_items)

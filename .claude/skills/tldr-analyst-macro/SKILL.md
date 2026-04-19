@@ -257,7 +257,19 @@ Structure the macro-level analytical data:
 
 ### Step 7: Build Global Context Package (10 minutes)
 
-Four regions: US, China, EU, UK. For each:
+Four regions: US, China, EU, UK. For each region, emit **exactly these 5 canonical indicator keys — no region-specific aliases**. The frontend (`app.js`) hardcodes these keys; any other key name (`fed_funds`, `hicp`, `ecb_deposit_rate`, `boe_rate`, `pboc_rate`, `jobless_rate`, `current_account`, `usd_cny`) will be ignored at render time.
+
+**Canonical global indicator keys (required for every region):**
+
+| Key | Semantic meaning | Examples by region |
+|---|---|---|
+| `gdp` | Latest GDP growth rate (YoY or annualized QoQ) | US BEA, China NBS, Eurostat, ONS |
+| `cpi` | Headline CPI / inflation rate (YoY) | BLS CPI-U, China NBS CPI, Eurostat HICP (map hicp → cpi), ONS CPIH |
+| `rate` | Primary policy rate | Fed funds target, PBOC 1y LPR, ECB deposit rate, BoE bank rate |
+| `unemployment` | Headline unemployment rate | BLS U-3, China urban surveyed, Eurostat harmonised, ONS LFS |
+| `tradeBalance` | Latest goods trade balance in USD (or region-native currency) | BEA trade, China customs, Eurostat trade, ONS trade |
+
+Every indicator in `indicatorMeta` must include `period`, `obsDate`, `source`, **AND `change`** (YoY or period-over-period delta) **AND `prev`** (prior period value). The frontend reads change/prev for every indicator; missing them renders blank cells.
 
 ```json
 {
@@ -267,13 +279,23 @@ Four regions: US, China, EU, UK. For each:
     "gdp": "+2.5%",
     "cpi": "+2.7%",
     "rate": "3.64%",
-    "unemployment": "4.4%"
+    "unemployment": "4.4%",
+    "tradeBalance": "-$78.2B"
   },
   "indicatorMeta": {
-    "gdp": {"period": "Q4 2025", "obsDate": "2026-01-30"},
-    "cpi": {"period": "Feb 2026", "obsDate": "2026-03-15"}
+    "gdp":          {"period": "Q4 2025", "obsDate": "2026-01-30", "source": "BEA",  "change": "+0.3pp", "prev": "+2.2%"},
+    "cpi":          {"period": "Feb 2026", "obsDate": "2026-03-15", "source": "BLS",  "change": "-0.1pp", "prev": "+2.8%"},
+    "rate":         {"period": "Mar 2026", "obsDate": "2026-03-19", "source": "FOMC", "change": "-25bps","prev": "3.89%"},
+    "unemployment": {"period": "Feb 2026", "obsDate": "2026-03-08", "source": "BLS",  "change": "+0.1pp","prev": "4.3%"},
+    "tradeBalance": {"period": "Jan 2026", "obsDate": "2026-03-06", "source": "BEA",  "change": "-$3.1B","prev": "-$75.1B"}
   },
-  "indicatorSources": {"gdp": "US Bureau of Economic Analysis", "cpi": "US Bureau of Labor Statistics"},
+  "indicatorSources": {
+    "gdp": "US Bureau of Economic Analysis",
+    "cpi": "US Bureau of Labor Statistics",
+    "rate": "Federal Reserve",
+    "unemployment": "US Bureau of Labor Statistics",
+    "tradeBalance": "US Bureau of Economic Analysis"
+  },
   "key_developments": [
     "Federal Reserve holding rates steady at 3.5-3.75%",
     "Manufacturing activity declined in March",
@@ -283,6 +305,16 @@ Four regions: US, China, EU, UK. For each:
   "source_urls": ["https://...", "https://..."]
 }
 ```
+
+**Mapping guidance for non-standard region inputs:**
+
+- EU region: if your research gave you `hicp`, emit under `cpi`. If it gave you `ecb_deposit_rate`, emit under `rate`.
+- UK region: `boe_rate` → `rate`. `CPIH` → `cpi`.
+- China region: `pboc_rate` / `1y_lpr` → `rate`. `urban_surveyed_unemployment` → `unemployment`.
+- US region: `fed_funds` → `rate`.
+- All regions: `current_account` → `tradeBalance` only if no goods-trade series is available (note the substitution in `indicatorMeta[tradeBalance].source`).
+
+If a region genuinely lacks one of the 5 keys this week, still emit the key with a null value and populate `indicatorMeta[key]` with `{"period": "N/A", "change": null, "prev": null, "source": "unavailable"}`. Do NOT silently drop the key — the frontend iterates all 5 and will render "—" for null values, but will crash if a key is missing.
 
 Pull global data from research_macro.md and hard data. For each region, identify:
 - 3-4 recent developments
@@ -550,6 +582,8 @@ Verify before writing the dossier:
    - key_indicators has 7-8 items
    - sources_registry has ≥20 entries
    - global[] has exactly 4 regions (US, China, EU, UK)
+   - **Every global region has EXACTLY these 5 canonical keys in `indicators`: `gdp`, `cpi`, `rate`, `unemployment`, `tradeBalance`. No region-specific aliases (fed_funds, hicp, ecb_deposit_rate, boe_rate, pboc_rate).**
+   - **Every global region has `indicatorMeta[key]` with `period`, `obsDate`, `source`, `change`, `prev` populated for all 5 keys (null values allowed if data is genuinely unavailable; missing keys are not).**
    - industry_gdp has all 20 industries
    - watchlist_package has 18-25 events
    - charts has 6 yield curve points for both current and last year

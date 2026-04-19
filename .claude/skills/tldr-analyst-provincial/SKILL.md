@@ -359,6 +359,7 @@ For **ALL 13 PROVINCES**, build a complete package:
       "source_url": "https://..."
     }
   ],
+  "marketContext": "Ontario's project pipeline spans 547 tracked projects valued at $89.2B across 18 sectors, with residential ($34B) and infrastructure ($22B) the two largest components. Commodity-sensitive exposure runs through the 67 manufacturing projects ($12.3B) tied to auto parts and steel, where WTI, copper, and CAD/USD moves flow through to capital plans.",
   "key_facts": [
     "Ontario's residential pipeline includes 89 projects valued at $34B, up 12% from last quarter",
     "Manufacturing sector headwinds affect 67 projects ($12.3B) as sector GDP declined 2.5% YoY",
@@ -394,6 +395,7 @@ For **ALL 13 PROVINCES**, build a complete package:
 - `indicatorMeta` should have prev, change, period, obsDate for each indicator that has a historical value
 - `story_threads`: 2-4 narrative connections linking indicators to projects
 - `cross_references`: connect indicator movements to project counts and values
+- **`marketContext` (REQUIRED):** A 2-3 sentence factual summary of the province's project pipeline as it intersects with market data. Frontend reads this in the province Markets section. Must state: (1) total tracked projects + pipeline value, (2) 2-3 largest sectors by value with project counts, (3) 1-2 explicit commodity/FX/rate exposure pathways (e.g., "WTI moves flow through to the 63 oil-and-gas projects", "CAD/USD moves affect the 34 export-exposed manufacturing projects"). No editorializing — report only what the data shows. If the province genuinely has no market-sensitive projects, state that factually.
 - `key_facts`: 2-4 bullet-point facts about the province from research
 - `projects`: 3-5 top projects by value
 - `news_stories`: 3-5 top news headlines for the province
@@ -423,6 +425,8 @@ Verify before writing the dossier:
    - key_facts: 2-4 items
    - projects: 3-5 items (acceptable if fewer for small provinces)
    - indicatorMeta: at least unemployment, cpi, gdp
+   - **`marketContext` non-empty (2-3 sentences tying project pipeline to market exposure) — REQUIRED for every province**
+   - **`watchlistItems` is a list (may be empty `[]` if the province has no tracked events, but must be present)**
 
 5. **JSON validity:**
    - Run through JSON validator
@@ -512,6 +516,7 @@ Save the complete dossier to: `docs/data/dossier_provinces.json`
       "cross_references": [],
       "policy_items": [],
       "watchlistItems": [],
+      "marketContext": "Ontario's pipeline: 547 projects / $89.2B across 18 sectors. Largest: residential ($34B, 89 projects), infrastructure ($22B, 54 projects), manufacturing ($12.3B, 67 projects). Manufacturing exposure: CAD/USD and steel/copper prices flow through to auto-parts and equipment capital plans.",
       "key_facts": [],
       "projects": [],
       "news_stories": []
