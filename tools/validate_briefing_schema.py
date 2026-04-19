@@ -1339,25 +1339,21 @@ def validate(briefing_path):
                           f"Missing or non-string indicator: {val!r}"):
                 fails += 1
             # indicatorMeta[key].change — frontend displays movement from
-            # this field; absence leaves the change column blank. Producer
-            # (tldr-analyst-macro) currently emits empty strings for every
-            # global region × indicator pair — a real gap that causes every
-            # global KPI movement column to render blank. Kept as WARN here
-            # so Cluster 3 surfaces the gap in validator output without
-            # immediately blocking deploys. Upgrade to `check()` (FAIL)
-            # once the analyst is updated to populate this field. The
-            # existing WARN at L338 of the pre-Cluster-3 validator only
-            # tested key presence; this tightens to non-empty string.
+            # this field; absence leaves the change column blank. B.4
+            # producer regen (dossier_macro + briefing_macro) now guarantees
+            # every global region × indicator pair has a non-empty string
+            # (real value or "N/A" sentinel). Upgraded from WARN to FAIL —
+            # an empty value here means the producer pipeline regressed.
             has_change = (
                 key in meta
                 and isinstance(meta.get(key), dict)
                 and isinstance(meta[key].get("change"), str)
                 and bool(meta[key].get("change", "").strip())
             )
-            if not warn(results, f"global.{region}.indicatorMeta.{key}.change",
+            if not check(results, f"global.{region}.indicatorMeta.{key}.change",
                          has_change,
                          f"Missing or empty indicatorMeta[{key}].change — movement signal will render blank"):
-                warns += 1
+                fails += 1
 
     # ============================================================
     # 7.5 NATIONAL ANALYSIS + SOURCES
@@ -1417,11 +1413,12 @@ def validate(briefing_path):
     #   to briefing_macro.metrics.* (SKILL.md L474); tldr-assembler merges
     #   to top-level metrics.* via `macro.get('metrics', {})` (SKILL.md L426).
     #
-    # WARN-tier (not FAIL): the current edition has 8 of 12 populated and
-    # 4 empty (private_sector_change, public_sector_change, residential_
-    # permits, nonresidential_permits). The frontend's `pick()` helper
-    # degrades gracefully to em-dash on missing keys. Upgrade to FAIL
-    # once the analyst populates the 4 gaps from StatCan source tables.
+    # B.4 producer regen closed the 4 empty enrichment metrics —
+    # residential_permits / nonresidential_permits now sourced from
+    # national_analysis_package narrative ($135.6M / -$1.3B, Feb 2026),
+    # private_sector_change / public_sector_change carry "N/A" where
+    # LFS sector split isn't in the dossier. All 12 keys must now hold a
+    # non-empty string. Upgraded from WARN to FAIL.
     # ============================================================
     ENRICHMENT_METRICS = (
         # Labour Market card
@@ -1437,12 +1434,12 @@ def validate(briefing_path):
     for key in ENRICHMENT_METRICS:
         val = m.get(key)
         present = isinstance(val, str) and bool(val.strip())
-        if not warn(results, f"metrics.{key}",
+        if not check(results, f"metrics.{key}",
                      present,
                      f"Enrichment card metric missing/empty — producer tldr-analyst-macro "
                      f"(dossier_macro.national_analysis_package.metrics.{key}); "
                      f"renders em-dash fallback in _renderNatEnrichmentCards"):
-            warns += 1
+            fails += 1
 
     # ============================================================
     # 9. PROVINCE COMPLETENESS (Cluster 2 — provincial contract)
@@ -1520,15 +1517,16 @@ def validate(briefing_path):
                 p.get(attr), min_len,
             )
 
-        # 9b. tradeExposure — producer gap (empty on all 13 today). Tracks
-        # the word-cloud input on app.js L1701. Upgrade to FAIL after B.4
-        # regen surfaces a populated value on every region.
+        # 9b. tradeExposure — B.4 producer regen closed this gap on all 13
+        # regions (deterministic per-region sentence based on dominant
+        # export mix / trading partner). Upgraded from WARN to FAIL.
         te = p.get("tradeExposure")
         te_ok = isinstance(te, str) and bool(te.strip())
-        if not warn(results, f"{plabel}.tradeExposure",
+        if not check(results, f"{plabel}.tradeExposure",
                     te_ok,
-                    "Empty string today on all 13 regions — upgrade to FAIL after B.4 producer regen"):
-            warns += 1
+                    "Empty tradeExposure — B.4 producer regen should emit a non-empty "
+                    "factual sentence (or the domestic-facing fallback) on every region"):
+            fails += 1
 
         # 9c. Indicators object — hard-fail keys required on every region.
         inds = p.get("indicators", {}) or {}
@@ -1543,22 +1541,27 @@ def validate(briefing_path):
                          key_ok,
                          f"Missing or empty indicator (got {val!r}) — Key Indicators row em-dashes"):
                 fails += 1
-        # WARN-tier indicators (empty on 3 territories today).
+        # B.4 producer regen closed this gap — territories now carry either
+        # a real value (where LFS publishes) or the "N/A" sentinel. Upgraded
+        # from WARN to FAIL.
         for key in PROV_IND_WARN_KEYS:
             val = inds.get(key)
             key_ok = isinstance(val, str) and bool(val.strip())
-            if not warn(results, f"{plabel}.indicators.{key}",
+            if not check(results, f"{plabel}.indicators.{key}",
                         key_ok,
-                        f"Empty on territories — upgrade to FAIL after B.4 producer regen"):
-                warns += 1
-        # Pure producer gaps (not yet emitted).
+                        f"Empty indicator — B.4 regen should emit a non-empty string "
+                        f"(real value or 'N/A' sentinel) on every region"):
+                fails += 1
+        # B.4 producer regen added wageGrowth across all 13 regions (national
+        # SEPH proxy where provincial series unavailable). Upgraded to FAIL.
         for key in PROV_IND_GAP_KEYS:
             val = inds.get(key)
             key_ok = isinstance(val, str) and bool(val.strip())
-            if not warn(results, f"{plabel}.indicators.{key}",
+            if not check(results, f"{plabel}.indicators.{key}",
                         key_ok,
-                        f"Not currently emitted by producer — upgrade to FAIL after B.4 regen"):
-                warns += 1
+                        f"Empty wageGrowth — B.4 regen should emit the national SEPH "
+                        f"proxy or 'N/A' on every region"):
+                fails += 1
 
         # 9d. indicatorMeta — object presence + key presence (FAIL).
         # Per-sub-key non-empty (prev/change/period) is WARN-only today
@@ -1580,10 +1583,11 @@ def validate(briefing_path):
             for sub in ("prev", "change", "period"):
                 v = mobj.get(sub)
                 sub_ok = isinstance(v, str) and bool(v.strip())
-                if not warn(results, f"{plabel}.indicatorMeta.{key}.{sub}",
+                if not check(results, f"{plabel}.indicatorMeta.{key}.{sub}",
                             sub_ok,
-                            f"Empty {sub} — upgrade to FAIL after B.4 producer regen"):
-                    warns += 1
+                            f"Empty {sub} — B.4 regen should emit a non-empty string "
+                            f"(real value or 'N/A' sentinel)"):
+                    fails += 1
 
         # 9e. Sources — min 3 items + per-item {url,title} shape.
         # Reuses Cluster 3's check_sources_array helper.
