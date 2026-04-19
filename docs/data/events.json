@@ -33,7 +33,8 @@
       "YT"
     ],
     "indicator": "gdp_monthly",
-    "relevance": "Economic growth breakdown. Construction and mining sectors directly reported."
+    "relevance": "Economic growth breakdown. Construction and mining sectors directly reported.",
+    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
   },
   {
     "date": "2026-05-03",
@@ -59,7 +60,8 @@
       "YT"
     ],
     "indicator": "employment",
-    "relevance": "Employment and unemployment by province. Affects infrastructure spending pressure and construction labour availability."
+    "relevance": "Employment and unemployment by province. Affects infrastructure spending pressure and construction labour availability.",
+    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701"
   },
   {
     "date": "2026-05-10",
@@ -85,7 +87,8 @@
       "YT"
     ],
     "indicator": "building_permits",
-    "relevance": "6-12 month leading indicator of construction activity by province."
+    "relevance": "6-12 month leading indicator of construction activity by province.",
+    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410006601"
   },
   {
     "date": "2026-05-10",
@@ -111,7 +114,8 @@
       "YT"
     ],
     "indicator": "investment_nonresidential",
-    "relevance": "Directly measures capital spending on non-residential construction."
+    "relevance": "Directly measures capital spending on non-residential construction.",
+    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410017501"
   },
   {
     "date": "2026-05-17",
@@ -137,7 +141,8 @@
       "YT"
     ],
     "indicator": "cpi_total",
-    "relevance": "Inflation reading. Directly influences BoC rate path and project financing costs."
+    "relevance": "Inflation reading. Directly influences BoC rate path and project financing costs.",
+    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401"
   },
   {
     "date": "2026-05-17",
@@ -163,6 +168,7 @@
       "YT"
     ],
     "indicator": "housing_starts",
-    "relevance": "Current residential construction activity level."
+    "relevance": "Current residential construction activity level.",
+    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301"
   }
 ]

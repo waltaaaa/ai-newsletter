@@ -35,6 +35,8 @@ STATCAN_RECURRING = [
         "indicator": "employment",
         "significance": "high",
         "relevance": "Employment and unemployment by province. Affects infrastructure spending pressure and construction labour availability.",
+        # Canonical StatCan headline LFS table (14-10-0287, monthly SA + trend-cycle).
+        "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701",
     },
     {
         "name": "Consumer Price Index",
@@ -44,6 +46,8 @@ STATCAN_RECURRING = [
         "indicator": "cpi_total",
         "significance": "high",
         "relevance": "Inflation reading. Directly influences BoC rate path and project financing costs.",
+        # Canonical StatCan headline CPI table (18-10-0004, monthly).
+        "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401",
     },
     {
         "name": "GDP by Industry",
@@ -53,6 +57,8 @@ STATCAN_RECURRING = [
         "indicator": "gdp_monthly",
         "significance": "medium",
         "relevance": "Economic growth breakdown. Construction and mining sectors directly reported.",
+        # Canonical StatCan monthly GDP-by-industry table (36-10-0434).
+        "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401",
     },
     {
         "name": "Building Permits",
@@ -62,6 +68,8 @@ STATCAN_RECURRING = [
         "indicator": "building_permits",
         "significance": "medium",
         "relevance": "6-12 month leading indicator of construction activity by province.",
+        # Canonical StatCan monthly Building Permits table (34-10-0066).
+        "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410006601",
     },
     {
         "name": "Housing Starts (CMHC)",
@@ -71,6 +79,8 @@ STATCAN_RECURRING = [
         "indicator": "housing_starts",
         "significance": "medium",
         "relevance": "Current residential construction activity level.",
+        # Canonical StatCan housing starts table (34-10-0143, monthly).
+        "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301",
     },
     {
         "name": "Investment in Building Construction",
@@ -78,8 +88,35 @@ STATCAN_RECURRING = [
         "indicator": "investment_nonresidential",
         "significance": "medium",
         "relevance": "Directly measures capital spending on non-residential construction.",
+        # Canonical StatCan investment-in-building-construction table (34-10-0175).
+        "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410017501",
     },
 ]
+
+# Bank of Canada rate decision schedule permalink — always resolves to the
+# current year's announcement dates.
+BOC_RATE_DECISION_URL = (
+    "https://www.bankofcanada.ca/core-functions/monetary-policy/"
+    "key-interest-rate/"
+)
+
+# Official finance-ministry / budget-portal landing pages. Stable permalinks.
+PROVINCIAL_BUDGET_URLS = {
+    "federal": "https://www.budget.canada.ca/",
+    "AB": "https://www.alberta.ca/budget.aspx",
+    "BC": "https://www.bcbudget.gov.bc.ca/",
+    "ON": "https://budget.ontario.ca/",
+    "QC": "https://www.budget.finances.gouv.qc.ca/",
+    "MB": "https://www.gov.mb.ca/finance/budget/",
+    "SK": "https://www.saskatchewan.ca/government/budget-planning-and-reporting",
+    "NS": "https://beta.novascotia.ca/budget",
+    "NB": "https://www2.gnb.ca/content/gnb/en/departments/finance/budget.html",
+    "NL": "https://www.gov.nl.ca/fin/budget/",
+    "PEI": "https://www.princeedwardisland.ca/en/topic/budget",
+    "NT": "https://www.fin.gov.nt.ca/en/services/budget-and-fiscal-planning",
+    "YT": "https://yukon.ca/en/budget",
+    "NU": "https://www.gov.nu.ca/finance/information/budget-documents",
+}
 
 # ── Provincial budget season (typically Feb-April) ───────────────────
 
@@ -155,6 +192,7 @@ def get_upcoming_events(conn=None, days_ahead=14, db=None):
                 "indicators_affected": ["policy_rate", "mortgage_5y_fixed", "prime_rate"],
                 "sectors_affected": ["Real Estate", "Construction", "Finance"],
                 "relevance": "Rate decisions directly affect mortgage rates, project financing costs, and housing market activity.",
+                "url": BOC_RATE_DECISION_URL,
             })
 
     # StatsCan recurring releases — national, affects all provinces
@@ -174,6 +212,7 @@ def get_upcoming_events(conn=None, days_ahead=14, db=None):
                     "provinces_affected": _PROVINCE_CODES,
                     "indicator": release["indicator"],
                     "relevance": release["relevance"],
+                    "url": release.get("url", ""),
                 })
                 break  # only add one occurrence per release
 
@@ -195,6 +234,7 @@ def get_upcoming_events(conn=None, days_ahead=14, db=None):
                     "significance": "high",
                     "province": prov if prov != "federal" else "national",
                     "relevance": f"Budget may include capital spending allocations, tax incentives, and infrastructure funding for {prov}.",
+                    "url": PROVINCIAL_BUDGET_URLS.get(prov, ""),
                 })
         else:
             # Emit unconfirmed budget with estimated month
@@ -214,6 +254,7 @@ def get_upcoming_events(conn=None, days_ahead=14, db=None):
                             "significance": "medium",
                             "province": prov if prov != "federal" else "national",
                             "relevance": f"Expected {expected}. Date not yet confirmed.",
+                            "url": PROVINCIAL_BUDGET_URLS.get(prov, ""),
                         })
                 except ValueError:
                     pass
