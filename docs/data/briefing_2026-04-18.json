@@ -348,7 +348,8 @@
         "title": "Bank of Canada — April 29 Rate Decision Schedule",
         "url": "https://www.bankofcanada.ca/2026/04/interest-rate-announcement-and-monetary-policy-report-april-29-2026/"
       }
-    ]
+    ],
+    "chart_callout": "National unemployment held at 6.7% in March after +14,000 jobs partially recovered February's -84,000 loss. The database tracks 1,998,800 construction-employment sector jobs across 7,344 tracked projects nationally."
   },
   "global": [
     {
@@ -433,7 +434,8 @@
           "period": "",
           "source": ""
         }
-      }
+      },
+      "chart_callout": "The Fed held at 3.50-3.75%, keeping a 125-150bp gap above the BoC's 2.25%. S&P 500 reached 7,022.95 on April 13 across 427 mining and oil and gas projects ($259.7B) exposed to US tariff policy."
     },
     {
       "region": "China",
@@ -507,7 +509,8 @@
           "period": "",
           "source": ""
         }
-      }
+      },
+      "chart_callout": "China's Q1 GDP grew 5.0% with March imports surging 27.8%, the strongest since November 2021. The pipeline tracks 367 mining projects ($159.5B) and 63 oil and gas projects ($100.2B) exposed to Chinese commodity demand."
     },
     {
       "region": "European Union",
@@ -567,7 +570,8 @@
           "period": "",
           "source": ""
         }
-      }
+      },
+      "chart_callout": "ECB held the deposit facility at 2.0% with markets pricing a June hike to 2.5% or above. EUR/USD at 1.1696 (+6.79% YoY) frames pricing for 5 tracked Quebec manufacturing projects with euro exposure."
     },
     {
       "region": "United Kingdom",
@@ -632,7 +636,8 @@
           "period": "",
           "source": ""
         }
-      }
+      },
+      "chart_callout": "BoE base rate stood at 3.75%, 150bp above BoC's 2.25%, with UK CPI at 3.0% versus Canada's 1.8%. Brent at $90.38/bbl after the $118 peak anchors 63 oil and gas projects ($100.2B) with sterling cross-rate exposure."
     }
   ],
   "globalVectors": {
@@ -957,7 +962,8 @@
           ],
           "reasoning": "Ontario's manufacturing sector faces direct exposure to Section 232 tariffs on aluminum and steel; aluminum price is a proxy for manufacturing cost pressure",
           "insight": "Aluminum reached $3,423/mt as 50% Section 232 tariffs reshaped cost structures for Ontario's manufacturing sector, the province with the deepest CPI deflation at -1.8%.",
-          "source": "LME, Yahoo Finance"
+          "source": "LME, Yahoo Finance",
+          "callout": "Aluminum reached $3,423/mt, up 18% since January, as US Section 232 restructured to 50% on core metal imports. Ontario CPI at -1.8% is the lowest provincial reading while 7.6% unemployment held across 5 tracked provincial projects."
         },
         {
           "chartType": "line",
@@ -1035,7 +1041,8 @@
           ],
           "reasoning": "CAD/USD movement directly affects Ontario's export-oriented manufacturing and auto sectors amid widening trade deficit",
           "insight": "The Canadian dollar strengthened 1.5% to 0.7305 on broad USD weakness while the merchandise trade deficit widened to $5.7B, the largest since August 2025.",
-          "source": "Bank of Canada, Statistics Canada"
+          "source": "Bank of Canada, Statistics Canada",
+          "callout": "CAD/USD strengthened to 0.7305 on April 17, up 1.5% over the two-week period, as the DXY weakened toward 98.05. Ontario's manufacturing-heavy export base feeds 5 tracked provincial projects exposed to cross-border pricing."
         }
       ],
       "marketContext": "Ontario's unemployment rate held at 7.6% in the March Labour Force Survey148, unchanged from February, as Q4 2025 employment gains of +58,900 (+0.7%) absorbed into a stable base after two preceding weak quarters.",
@@ -1372,7 +1379,8 @@
           ],
           "reasoning": "Quebec is Canada's largest aluminum producer; the $3,423/mt price directly affects smelter margins and export revenue",
           "insight": "Aluminum at $3,423/mt supports Quebec's hydro-powered smelter operations as the province's unemployment fell to 5.4%, the second-lowest nationally.",
-          "source": "LME, Yahoo Finance"
+          "source": "LME, Yahoo Finance",
+          "callout": "Aluminum held at $3,423/mt, up 18% since January, after the Section 232 restructure to 50% on metal imports. Quebec's hydro-powered smelter base anchors 5 tracked provincial projects, with unemployment falling 0.5pp to 5.4%."
         },
         {
           "chartType": "line",
@@ -1444,7 +1452,8 @@
           ],
           "reasoning": "Iron ore price tracks Chinese demand; Quebec hosts major iron ore operations on C�te-Nord with direct exposure to this price environment",
           "insight": "Iron ore climbed 10.8% in April to $17.78 as China's Q1 GDP beat consensus at 5.0%, supporting demand for Quebec's C�te-Nord mining operations.",
-          "source": "Yahoo Finance, NBS China"
+          "source": "Yahoo Finance, NBS China",
+          "callout": "Iron ore traded at $17.78, up 10.8% through April, as China's Q1 GDP grew 5.0% with imports surging 27.8% in March. Quebec's Côte-Nord operations underpin 5 tracked provincial mining and metals projects."
         }
       ],
       "marketContext": "Quebec's unemployment rate fell 0.5 percentage points to 5.4% in March148, though the decline reflects fewer active job seekers rather than net hiring — employment was little changed after a -57,000 loss in February.",
@@ -1813,7 +1822,8 @@
             }
           ],
           "insight": "WTI's 34% collapse from its April peak to $83.85 reshapes Alberta's $9.4B deficit projection, built on a $75/bbl assumption that WTI still exceeds.",
-          "source": "Yahoo Finance, Alberta Budget 2026"
+          "source": "Yahoo Finance, Alberta Budget 2026",
+          "callout": "WTI collapsed from the $128/bbl April 2 peak to $83.85 after the Hormuz ceasefire, a 34% retrace. Alberta's 727 tracked provincial projects carry breakeven thresholds that determine netback margins through the quarter."
         },
         {
           "chartType": "line",
@@ -1885,7 +1895,8 @@
           ],
           "reasoning": "Natural gas price context complements the WTI story for Alberta's energy sector; the post-winter price normalization affects gas project economics",
           "insight": "Natural gas at $3.12/MMBtu after spiking to $6.80 in January reflects seasonal normalization, with LNG Canada Phase 1 construction continuing in Kitimat.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "Natural gas held near $3.12/MMBtu, flat through the Hormuz episode as domestic storage proved adequate. Alberta's LNG export build-out and 5 tracked provincial projects depend on sustained gas price stability."
         }
       ],
       "marketContext": "Alberta's unemployment rate rose 0.2 percentage points to 6.5% in March148, edging up despite approximately 85,000 jobs added over the prior year.",
@@ -2204,7 +2215,8 @@
           ],
           "reasoning": "BC's mining sector is directly exposed to copper prices; elevated copper contrasts with a rapidly deteriorating labour market losing 39,000 jobs over two months",
           "insight": "Copper at $5.53/lb (+43% YoY) supports BC mining operations while the province shed 39,000 jobs over two months, pushing unemployment to 6.7%.",
-          "source": "LME, Yahoo Finance"
+          "source": "LME, Yahoo Finance",
+          "callout": "Copper settled at $5.53/lb, up from below $4.50/lb twelve months ago, as the 50% Section 232 expansion added smelter-demand pressure. BC lost 19,000 jobs in March, the largest monthly drop among 4 tracked provincial projects."
         },
         {
           "chartType": "line",
@@ -2276,7 +2288,8 @@
           ],
           "reasoning": "Gold price supports BC's mining sector; Artemis Gold's Blackwater mine and Newmont's Brucejack are active operations with gold price exposure",
           "insight": "Gold at $4,572/oz (+73% YoY) underpins BC's gold mining operations as Artemis Gold's Blackwater mine continues construction and Brucejack produces.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "Gold held at $4,572/oz, up 73% year-over-year, after retracing 12.6% from the $5,230 record. BC's unemployment rose 0.6pp to 6.7%, matching the national rate across 4 tracked provincial mining and forestry projects."
         }
       ],
       "marketContext": "British Columbia shed 19,000 jobs (-0.7%) in March following a -20,000 loss in February — two consecutive months of employment declines totalling 39,000 positions.148 Unemployment rose 0.6 percentage points to 6.7%, the highest reading since February 2016 outside of the pandemic period, and now ma",
@@ -2606,7 +2619,8 @@
           ],
           "reasoning": "Potash is Saskatchewan's primary commodity export; BHP Jansen Stage 1 is the largest tracked project in the province at $7.5B",
           "insight": "Potash (Nutrien proxy) at $96.75 as BHP's $7.5B Jansen Stage 1 mine approaches late 2026 production, with Saskatchewan posting the lowest unemployment nationally at 5.0%.",
-          "source": "Yahoo Finance, BHP"
+          "source": "Yahoo Finance, BHP",
+          "callout": "Potash prices tracked at $96.75, down 6.6% in April after earlier strength. Saskatchewan posted the lowest unemployment nationally at 5.0%, with BHP's Jansen Stage 1 ($7.5B, Under Construction) among 5 tracked provincial projects."
         },
         {
           "chartType": "line",
@@ -2678,7 +2692,8 @@
           ],
           "reasoning": "Wheat price directly affects Saskatchewan's agricultural sector, the province's largest employer and export category",
           "insight": "Wheat climbed 18% since January to 601.75c/bu as Hormuz disruption affected grain shipping, directly impacting Saskatchewan's agricultural economy.",
-          "source": "CBOT, Yahoo Finance"
+          "source": "CBOT, Yahoo Finance",
+          "callout": "Wheat settled at $601.75/bu, up 18% since January, as the Hormuz disruption affected grain shipping routes. Saskatchewan is Canada's largest wheat producer and hosts 5 tracked provincial agriculture projects."
         }
       ],
       "marketContext": "Saskatchewan posted the lowest unemployment rate in the country at 5.0% in March, down 0.6 percentage points from February, as employment rose 5,800 (+0.9%) — the strongest provincial employment growth rate nationally.148 Full-time employment added 15,000 positions year-over-year.148 CPI swung to ",
@@ -3015,7 +3030,8 @@
           ],
           "reasoning": "Wheat price is Manitoba's primary agricultural commodity; the province posted the strongest employment gain nationally in March",
           "insight": "Wheat at 601.75c/bu supports Manitoba's farm economy as the province posted the strongest employment gain nationally at +11,000 (+1.5%) in March.",
-          "source": "CBOT, Yahoo Finance"
+          "source": "CBOT, Yahoo Finance",
+          "callout": "Wheat traded at $601.75/bu, up 18% since January, supporting Manitoba's crop export base. Provincial employment surged 11,000 (+1.5%) in March, the strongest gain nationally, across 5 tracked provincial agriculture projects."
         },
         {
           "chartType": "line",
@@ -3087,7 +3103,8 @@
           ],
           "reasoning": "Soybeans provide diversification context for Manitoba's agricultural economy alongside wheat",
           "insight": "Soybeans held near 1,049c/bu, providing diversified crop revenue for Manitoba producers alongside the 18% wheat rally.",
-          "source": "CBOT, Yahoo Finance"
+          "source": "CBOT, Yahoo Finance",
+          "callout": "Soybeans held at $1,201.75/bu across the two-week window as Manitoba CPI rose to +3.4% YoY, the third-highest provincial reading. The province's 5 tracked provincial projects carry agricultural input-cost exposure."
         }
       ],
       "marketContext": "Manitoba employment surged 11,000 (+1.5%) in March — the strongest gain nationally — rebounding from February declines.148 Unemployment edged down 0.1 percentage points to 5.6%.148 The participation rate carried at 66.3%, down 0.8 percentage points from the prior observation, while the employmen",
@@ -3418,7 +3435,8 @@
           ],
           "reasoning": "Gold price supports Nova Scotia's mining operations; the province's offshore wind regulatory framework is the week's major policy development",
           "insight": "Gold at $4,572/oz (+73% YoY) supports NS mining operations as the province enacted the Powering the Economy Act for offshore wind regulation.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "Gold retreated 12.6% to $4,572/oz from the $5,230 record, with NS unemployment falling 0.5pp to 6.6% on 3,900 jobs added. The province hosts 5 tracked provincial projects under the Powering the Economy Act passed April 9."
         },
         {
           "chartType": "line",
@@ -3490,7 +3508,8 @@
           ],
           "reasoning": "Natural gas price provides context for Nova Scotia's energy transition from fossil fuels to offshore wind",
           "insight": "Natural gas at $3.12/MMBtu after a January spike provides the price backdrop against which Nova Scotia's 5 GW offshore wind ambition competes.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "Natural gas held near $3.12/MMBtu through the Hormuz episode as storage proved adequate. NS CPI rose to +1.7% YoY, with 5 tracked provincial projects including offshore and LNG development in Sable and Goldboro."
         }
       ],
       "marketContext": "Nova Scotia's unemployment rate fell 0.5 percentage points to 6.6% in March, with employment rising 3,900 (+0.7%).148 Halifax CMA unemployment stood at 6.1%, up 0.2 percentage points.148 Halifax GDP grew 2.3% in 2025, with a forecast of 1.5% for 2026.156 The participation rate carried at 61.3% and t",
@@ -3821,7 +3840,8 @@
           ],
           "reasoning": "NB Power's 1,400 MW capacity addition and energy rate applications connect directly to natural gas price dynamics",
           "insight": "Natural gas at $3.12/MMBtu shapes NB Power's cost structure as the utility plans 1,400 MW of new capacity and filed rate applications with the EUB.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "Natural gas held near $3.12/MMBtu as NB Power filed two EUB applications in week one, covering reliability and revenue stabilization. The utility targets 1,400 MW of new supply across 5 tracked provincial projects."
         },
         {
           "chartType": "line",
@@ -3893,7 +3913,8 @@
           ],
           "reasoning": "Irving Oil's Saint John refinery is New Brunswick's largest industrial operation and its margins are directly tied to crude oil input costs",
           "insight": "WTI's collapse to $83.85 from $128 affects refining margins at Irving Oil's 320,000 bpd Saint John refinery, NB's largest industrial operation.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "WTI collapsed 34% from $128/bbl to $83.85 after the Hormuz ceasefire. NB's refining exposure via Irving Oil's Saint John complex anchors 5 tracked provincial projects alongside the $178M Port Saint John modernization."
         }
       ],
       "marketContext": "New Brunswick's unemployment held steady at 7.0% in March, unchanged from February, with employment little changed over the period.148 The participation rate edged up 0.1 percentage points to 60.7% and the employment rate held at 56.5%.156 CPI accelerated 1.2 percentage points to +2.4% year-over-yea",
@@ -4231,7 +4252,8 @@
             }
           ],
           "insight": "Brent at $90.38 after the Hormuz ceasefire shapes the economics for NL's offshore sector, which accounts for 20% of GDP and anchors the $12B Bay du Nord project.",
-          "source": "Yahoo Finance, Equinor"
+          "source": "Yahoo Finance, Equinor",
+          "callout": "Brent settled at $90.38/bbl on April 17, down 9.0% in the session and from the $118/bbl earlier peak. Offshore petroleum accounts for 20% of NL GDP and 55% of exports across 5 tracked provincial projects."
         },
         {
           "chartType": "line",
@@ -4303,7 +4325,8 @@
           ],
           "reasoning": "Iron ore price directly affects Labrador mining operations including IOC Carol Lake and the Voisey's Bay expansion",
           "insight": "Iron ore at $17.78 (+10.8% in April) supports Labrador's mining complex as China's Q1 GDP beat expectations at 5.0%.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "Iron ore traded at $17.78, up 10.8% through April, as China's Q1 imports surged 27.8%. Labrador's IOC Carol Lake and Tacora Scully Mine anchor 5 tracked provincial projects exposed to Chinese demand."
         }
       ],
       "marketContext": "Newfoundland and Labrador's unemployment rate rose 0.3 percentage points to 9.5% in March — the highest provincial reading in Canada — despite ongoing offshore project ramp-ups.148 The offshore petroleum sector accounts for approximately 20% of provincial GDP and 55% of exports.156 The participa",
@@ -4609,7 +4632,8 @@
           ],
           "reasoning": "PEI's agricultural economy and record-high CPI of 7.3% connect directly to rising commodity and food prices",
           "insight": "Wheat's 18% rise since January contributes to PEI's record CPI of +7.3%, the highest provincially and 5.5pp above the national reading.",
-          "source": "CBOT, Statistics Canada"
+          "source": "CBOT, Statistics Canada",
+          "callout": "Wheat held at $601.75/bu, up 18% since January, as PE CPI reached +7.3% YoY — the highest provincial reading nationally, 5.5pp above the Canadian 1.8%. The province's 4 tracked provincial projects span agriculture and tourism."
         },
         {
           "chartType": "line",
@@ -4687,7 +4711,8 @@
           ],
           "reasoning": "Oil prices pass through to PEI's consumer costs as the province is a net energy importer, connecting to the record 7.3% CPI reading",
           "insight": "WTI's collapse from $128 to $83.85 may provide relief for PEI's record CPI of 7.3%, driven partly by energy cost pass-through to the island province.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "WTI collapsed 34% from $128/bbl to $83.85 post-Hormuz, affecting PE fuel import costs as CPI ran at +7.3% YoY. Average weekly earnings grew 5.5% to $1,126.63, the fastest nationally across 4 tracked provincial projects."
         }
       ],
       "marketContext": "Prince Edward Island's CPI reached +7.3% year-over-year in February — the highest provincial reading in Canada, 5.5 percentage points above the national +1.8% figure — accelerating 1.9 percentage points from the prior +5.4%.148 At the same time, the province posted the fastest average weekly ear",
@@ -4999,7 +5024,8 @@
           ],
           "reasoning": "Gold is Yukon's primary mineral resource; the $313M in mineral spending and Kudz Ze Kayah mine approval are this week's major developments",
           "insight": "Gold at $4,572/oz (+73% YoY) underpins Yukon's $313M mineral spending as the Kudz Ze Kayah mine received federal-territorial approval on April 15.",
-          "source": "Yahoo Finance, Yukon Government"
+          "source": "Yahoo Finance, Yukon Government",
+          "callout": "Gold held at $4,572/oz, up 73% year-over-year, after the 12.6% retracement from $5,230. Yukon's mineral spending totalled $313M in 2025 across 5 tracked provincial mining projects including the approved Kudz Ze Kayah mine."
         },
         {
           "chartType": "line",
@@ -5071,7 +5097,8 @@
           ],
           "reasoning": "Copper price directly affects the newly approved Kudz Ze Kayah mine economics, the week's headline Yukon development",
           "insight": "Copper at $5.53/lb (+43% YoY) strengthens the case for BMC Minerals' Kudz Ze Kayah mine, approved April 15 to process 2M tonnes/year over 10 years.",
-          "source": "LME, Yahoo Finance"
+          "source": "LME, Yahoo Finance",
+          "callout": "Copper traded at $5.53/lb, up from below $4.50/lb twelve months ago, as the 50% Section 232 restructured metal tariffs. Yukon unemployment held at 3.9%, the lowest territorial rate, across 5 tracked provincial projects."
         }
       ],
       "marketContext": "Yukon's unemployment held at 3.9% in March, unchanged from February and the lowest territorial rate.148 The 2024 annual GDP contracted 3.3%.156 CPI, housing starts, and participation rate are not published at the territorial level.",
@@ -5371,7 +5398,8 @@
           ],
           "reasoning": "Diavik closure and diamond sector wind-down is the NWT headline; gold price represents the territory's economic transition pathway",
           "insight": "Gold at $4,572/oz provides a transition path for NWT's economy as the Diavik mine closed after 23 years, contributing to the 0.8pp unemployment surge to 6.1%.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "Gold held at $4,572/oz, up 73% YoY, amid the Diavik diamond closure after 23 years and 150M carats. NT unemployment surged 0.8pp to 6.1% across 5 tracked provincial projects."
         },
         {
           "chartType": "line",
@@ -5443,7 +5471,8 @@
           ],
           "reasoning": "WTI price provides secondary economic context for NWT alongside the dominant gold/diamond mining transition story",
           "insight": "WTI at $83.85 after the Hormuz collapse affects NWT's energy corridor economics as the territory navigates a GDP contraction of 1.1% in 2024.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "WTI collapsed 34% from $128/bbl to $83.85 post-Hormuz, affecting NT's fuel-import economy as diamond output winds down. The territory's 5 tracked provincial projects span critical minerals and energy infrastructure."
         }
       ],
       "marketContext": "The Northwest Territories recorded the largest unemployment increase nationally in March, surging 0.8 percentage points to 6.1% from 5.3% in February.148 The spike reflects the ongoing wind-down of the territory's diamond mining sector.",
@@ -5750,7 +5779,8 @@
           ],
           "reasoning": "Gold price is Nunavut's primary economic driver; three operating gold mines produce 1.2M oz/year and drove 7.5% GDP growth",
           "insight": "Gold at $4,572/oz supports Nunavut's three mines producing 1.2M oz/year, underpinning the territory's 7.5% GDP growth, the strongest nationally.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "Gold held at $4,572/oz, up 73% year-over-year, supporting Nunavut's three gold mines producing 1.2M oz/year. The territory posted 7.5% GDP growth in 2024, the strongest nationally, across 5 tracked provincial projects."
         },
         {
           "chartType": "line",
@@ -5822,7 +5852,8 @@
           ],
           "reasoning": "Iron ore price affects Nunavut's Baffinland Mary River mine and broader critical minerals development potential",
           "insight": "Iron ore at $17.78 (+10.8% in April) supports Nunavut's Baffinland Mary River operations and critical minerals development pipeline.",
-          "source": "Yahoo Finance"
+          "source": "Yahoo Finance",
+          "callout": "Iron ore traded at $17.78, up 10.8% in April, as China's Q1 imports surged 27.8%. Nunavut hosts Baffinland's Mary River operation among 5 tracked provincial critical-mineral projects exposed to Chinese demand."
         }
       ],
       "marketContext": "Nunavut's unemployment rate stands at approximately 13.8% (three-month average through January 2026) — the highest rate in Canada — reflecting structural barriers to employment in remote communities despite active mining operations.148 The March rate is not separately enumerated for Nunavut.",
@@ -6000,7 +6031,7 @@
           ],
           "context": "The database tracks <strong>17 agriculture and forestry projects ($5.47B)</strong> with commodity price exposure. China imposed 75.8% duty on Canadian canola seed atop 100% tariff on oil/meal, redirecting trade flows while wheat remains 7% above five-year lows.",
           "reasoning": "Agriculture GDP +5.4% YoY (strongest among 20 NAICS) but China canola tariffs at 75.8% dominate the sector story; wheat and corn track the crop commodity environment",
-          "callout": "The two crop price lines show wheat holding above five-year lows while corn traced a separate supply-demand dynamic. The spread between the series contextualizes crop production GDP at +8.9% YoY against forestry at -7.5% YoY, the sharpest subsector divergence in goods industries.",
+          "callout": "Wheat held above five-year lows at $601.75/bu while corn traced a separate path. The spread contextualizes crop production GDP at +8.9% YoY versus forestry at -7.5% across 17 agriculture and forestry projects ($5.47B).",
           "source": "Source: CBOT"
         }
       ]
@@ -6177,7 +6208,7 @@
           ],
           "context": "The database tracks <strong>421 mining and oil and gas projects ($268.74B)</strong>. WTI collapsed from $128/bbl to $83.85 in 15 trading days on the Hormuz reopening, while the Critical Minerals Alliance unlocked $12.1B in project capital.",
           "reasoning": "WTI plunged >10% in a single session below $84/bbl as Hormuz ceasefire progressed; dominant sector story for 421 tracked mining/O&G projects",
-          "callout": "The WTI line shows a parabolic spike through early April followed by sharp reversal on ceasefire. Gold traced a parallel safe-haven path with less amplitude. The divergence in the most recent week — oil collapsing while gold held — reflects the shift from supply-disruption to resolution pricing.",
+          "callout": "WTI spiked parabolically then collapsed 34% on the Hormuz ceasefire while gold traced a shallower safe-haven path. The divergence reshaped pricing for 421 tracked mining and oil and gas projects ($268B).",
           "annotations": [
             {
               "date": "2026-03-02",
@@ -6335,7 +6366,7 @@
           ],
           "context": "The database tracks <strong>824 utilities and power-energy projects ($522.89B)</strong>, the largest bucket by capital value. OPG applied for the Darlington SMR operating licence in March; LNG Canada Phase 2 was referred for fast-track review.",
           "reasoning": "Canadian natural gas remained flat while global markets spiked; divergence from crude defines utilities fuel-cost environment for 824 projects",
-          "callout": "The natural gas price line shows seasonal winter volatility but returned to the same range as 12 months ago, contrasting with crude oil which remains above year-ago levels. The flat trajectory provides operating cost stability for gas-fired generation and LNG export operations.",
+          "callout": "Natural gas held near $3.12/MMBtu, flat over 12 months and back to year-ago levels, contrasting with crude's volatility. The stable range frames cost inputs across 824 tracked utilities and power-energy projects ($522B).",
           "source": "Source: NYMEX, EIA"
         }
       ]
@@ -6495,7 +6526,7 @@
           ],
           "context": "The database tracks <strong>2,196 construction projects ($258.36B)</strong>. U.S. single-family starts collapsed 14.2% and permits declined 5.4%, compressing lumber demand. The $51B Build Communities Strong Fund launched April 7.",
           "reasoning": "Lumber fell to $570/mbf as U.S. housing starts collapsed 14.2%; input cost relief for framers while CMHC March starts at 235,852 SAAR (-6%)",
-          "callout": "The lumber line declined from mid-$600s to the $570 range in recent weeks. Over 12 months lumber trades below 2024 peaks, providing input cost relief for residential construction as housing starts fell 6% and the MLS HPI declined for a 16th consecutive month.",
+          "callout": "Lumber declined from the mid-$600s to the $570 range as US single-family starts collapsed 14.2%. Housing starts fell 6% to 235,852 SAAR across 2,196 tracked construction-category projects ($258B).",
           "source": "Source: CME"
         }
       ]
@@ -6656,7 +6687,7 @@
           ],
           "context": "The database tracks <strong>52 manufacturing projects ($67.39B)</strong>. Manufacturing GDP contracted 4.6% YoY, but Feb sales rebounded 3.6% to $71.2B with unfilled orders at record $117.6B. Section 232 tariffs at 50% on steel, aluminum, copper took effect April 6.",
           "reasoning": "Manufacturing GDP -4.6% YoY (steepest goods decline) while sales rebounded and unfilled orders hit record; CAD/USD and copper track cross-border trade and input costs",
-          "callout": "CAD/USD strengthened toward 0.73 while copper maintained its uptrend. Currency appreciation reduces export competitiveness at a time when Section 232 tariffs add 50% duties on key metal inputs, contextualizing the divergence between contracting GDP and rebounding sales.",
+          "callout": "CAD/USD strengthened to 0.73 while copper held above $5.53/lb. Currency gain and 50% Section 232 tariffs frame -4.6% YoY manufacturing GDP across 52 tracked manufacturing projects ($67B).",
           "source": "Source: BoC, LME"
         }
       ]
@@ -6774,7 +6805,7 @@
           ],
           "context": "Wholesale trade GDP declined 1.2% M/M and 1.7% YoY. The February survey showed a 2.0% rebound to $86.8B. Farm product wholesalers expanded 16.2% YoY while motor vehicle wholesalers contracted 10.5% on cross-border disruptions.",
           "reasoning": "Wholesale GDP -1.7% YoY, steepest in wholesale-retail bloc, with motor vehicle wholesalers -10.5% on cross-border disruptions; CAD/USD defines import pricing",
-          "callout": "The CAD/USD trajectory shows a decline from 0.74 in mid-2025 to a trough near 0.69 in early 2026, followed by recovery to 0.73. Wholesale distributors importing US-priced goods saw margin compression during the trough and partial relief on the rebound.",
+          "callout": "CAD/USD recovered from the 0.69 early-2026 trough back to 0.73. Wholesale distributors saw margin compression during the trough and partial relief on rebound across 601 tracked transportation and wholesale projects.",
           "source": "Source: BoC"
         }
       ]
@@ -6887,7 +6918,7 @@
           ],
           "context": "Retail GDP expanded 0.8% M/M and 2.7% YoY, but consumer sentiment deteriorated; nearly half of Canadians believed the economy was faltering and 43% planned to reduce non-essential spending.",
           "reasoning": "Retail GDP +2.7% YoY but confidence at 46.93 (11-month low) with 43% planning spending cuts; precious metals track safe-haven sentiment",
-          "callout": "Gold and silver traced strong uptrends over 12 months, with gold reaching the $3,900-4,000 range. The sustained precious metals rally reflects the same uncertainty driving consumer confidence to its 11-month low of 46.93.",
+          "callout": "Gold rose 73% YoY while silver held near $81/oz, reshaping jewellery channel pricing. Retail GDP ran +2.7% YoY with motor vehicle dealers leading January at +2.0% across the database tracks.",
           "source": "Source: LBMA"
         }
       ]
@@ -7010,7 +7041,7 @@
           ],
           "context": "The database tracks <strong>601 transportation projects ($44.9B)</strong>. Brent declined from ~$107/bbl to $99.36, providing operating cost relief. Transport Canada announced a freight rate reduction initiative for Canadian steel and lumber beginning spring 2026.",
           "reasoning": "Transport GDP -0.7% M/M with fuel as largest variable cost; oil price collapse from Hormuz reopening provides cost relief for 601 tracked projects",
-          "callout": "Both crude benchmarks show a spike-and-reversal pattern: prices surged from the $60-70 range above $120 during the Hormuz crisis, then collapsed as ceasefire progressed. Current prices remain above year-ago levels despite the decline.",
+          "callout": "WTI collapsed 34% from the $128/bbl peak while Brent dropped 9.0% on April 17. The retrace resets fuel inputs across 601 tracked transportation projects ($44B) including the $178M Port Saint John upgrade.",
           "annotations": [
             {
               "date": "2026-04-17",
@@ -7144,7 +7175,7 @@
           ],
           "context": "Information GDP expanded 3.2% YoY, tied for strongest services reading. The Sovereign AI Compute Strategy commits <strong>$700M</strong> for compute and <strong>$1B</strong> for supercomputing. Data centre pipeline exceeds $4B in private investment.",
           "reasoning": "Information GDP +3.2% YoY with $1.7B+ sovereign AI commitments and $4B+ data centre pipeline driving tech investment",
-          "callout": "The Nasdaq and S&P 500 traced recovery paths in April, with S&P reaching 7,022.95 on April 13. The tech index trajectory proxies digital economy conditions underpinning publishing (+6.7% YoY) and telecom (+2.9% YoY) growth.",
+          "callout": "Nasdaq and S&P 500 posted record closes, S&P 500 at 7,022.95 on April 13. The $4B data-centre pipeline tracks Bell Saskatchewan ($1.7B) inside 43 tracked telecom and data centre projects ($3B+).",
           "source": "Source: Nasdaq, S&P"
         }
       ]
@@ -7267,7 +7298,7 @@
           ],
           "context": "Finance GDP expanded 3.2% YoY but FIRE employment shed 11,000 jobs in March. OSFI 2026-27 Risk Outlook identified volatile markets and heightened credit risks across residential lending and commercial real estate.",
           "reasoning": "Finance GDP +3.2% YoY but FIRE employment -11,000; yield curve shape defines bank NIMs with BoC at 2.25% and 96.5% hold priced for Apr 29",
-          "callout": "The three GoC yield lines show compression over 12 months, with the 2-year declining more than the 10-year. This curve shape contextualizes OSFI identification of heightened credit risks in residential and commercial lending.",
+          "callout": "The GoC 2y converged toward the 10y with the curve compressing across tenors. The shape shift frames bank NIM pressure across the 2.25% BoC hold since March 18 and tracked finance pipeline exposure.",
           "source": "Source: Bank of Canada"
         }
       ]
@@ -7390,7 +7421,7 @@
           ],
           "context": "Real estate GDP declined 0.2% M/M but expanded 1.2% YoY. Vancouver vacancy rates reached 30-year highs. MLS HPI declined for a 16th consecutive month; national average home price $673,084.",
           "reasoning": "Real estate GDP -0.2% M/M with MLS HPI falling 16 months; GoC 5y yield benchmarks fixed-rate mortgage qualification thresholds",
-          "callout": "The GoC 5-year yield declined over the window but flattened recently. Despite rate relief, MLS HPI has declined 16 consecutive months, indicating supply-side factors including Vancouver record vacancies and Toronto condo-to-rental conversions are overriding the rate channel.",
+          "callout": "The 5y GoC flattened while MLS HPI posted a 16th monthly decline. Vancouver record vacancies and Toronto condo-to-rental conversions override the rate channel across tracked real estate pipeline exposure.",
           "source": "Source: Bank of Canada"
         }
       ]
@@ -7500,7 +7531,7 @@
           ],
           "context": "Professional services GDP contracted 0.4% YoY but employment grew 12,000 in March. The combined construction (2,196 projects, $258.4B) and utilities (824 projects, $522.9B) pipelines drive upstream demand for engineering and consulting.",
           "reasoning": "Professional GDP -0.4% YoY while employment +12,000; copper tracks capital project intensity driving upstream professional services demand",
-          "callout": "Copper rose from below $4.50/lb to above $6.00/lb over 12 months, proxying capital project activity. The divergence between rising copper (project demand) and contracting sector GDP suggests a lag between project initiation and professional services revenue recognition.",
+          "callout": "Copper rose from below $4.50/lb to above $5.53/lb, proxying capital-project activity. The divergence between rising copper and -0.4% YoY sector GDP reflects lag across the project pipeline tracked nationally.",
           "source": "Source: LME"
         }
       ]
@@ -7589,7 +7620,7 @@
           ],
           "context": "Management of companies recorded the deepest contraction among 20 NAICS at -21.9% YoY, following -31.3% in 2024. StatCan flags NAICS 55 as a small-denominator sector where single-period prints historically fluctuate by double-digit percentages.",
           "reasoning": "Management GDP -21.9% YoY, deepest across 20 NAICS extending -31.3% in 2024; CAD/USD defines holding company FX translation for cross-border structures",
-          "callout": "The CAD/USD line traces the currency environment for holding companies with cross-border subsidiaries. The 21.9% YoY GDP contraction extends a 31.3% decline in 2024. StatCan flags this as a small-denominator sector where single corporate events move the reading by several percentage points.",
+          "callout": "CAD/USD stabilized near 0.73 after the 0.69 trough as NAICS 55 posted -21.9% YoY, the deepest among 20 industries. StatCan flags small-denominator volatility while the database carries no NAICS 55 capex tagging.",
           "source": "Source: Bank of Canada"
         }
       ]
@@ -7711,7 +7742,7 @@
           ],
           "context": "Administrative support contracted 0.8% YoY while waste collection grew 3.9%, reflecting Ontario Blue Box EPR transition. Support employment declined 9,500 (-1.4%) in March.",
           "reasoning": "Admin/waste GDP -0.2% YoY with admin -0.8% vs waste +3.9% split; copper and lumber track construction activity generating downstream admin/waste demand",
-          "callout": "Copper and lumber diverged over 12 months: copper rose steadily while lumber declined recently. Administrative support services showed 9,500 job losses in March, aligning with construction output moderation despite the $51B Build Communities Strong Fund.",
+          "callout": "Copper rose above $5.53/lb while lumber declined to $570/mbf — divergent inputs. Admin support lost 9,500 jobs in March against the $51B Build Communities Strong Fund feeding 17 tracked remediation and waste projects.",
           "source": "Source: LME, CME"
         }
       ]
@@ -7827,7 +7858,7 @@
           ],
           "context": "The database tracks <strong>157 education projects ($14.7B)</strong>. Education GDP contracted 1.9% YoY. Ontario committed $4.2B for education infrastructure in 2026-27 while ~16,000 sector job losses have been tracked.",
           "reasoning": "Education GDP -1.9% YoY, largest decline in edu/health bloc with ~16,000 job losses; GoC 10y defines capital costs for 157 tracked education projects",
-          "callout": "The GoC 10-year yield ranged between approximately 3.0% and 3.6% over 12 months, setting the borrowing cost for 157 education projects ($14.7B). The yield level contextualizes Ontario $4.2B education commitment against enrollment pressures from student permit reductions.",
+          "callout": "GoC 10y ranged 3.0%-3.6% over 12 months, setting borrowing cost for 157 tracked education projects ($14.7B). The yield frames Ontario's $4.2B education commitment against student-permit enrollment pressure.",
           "source": "Source: Bank of Canada"
         }
       ]
@@ -7961,7 +7992,7 @@
           ],
           "context": "The database tracks <strong>258 healthcare projects ($20.5B)</strong>. Hospital starts projected at $28.4B in 2026, B.C. at $6.4B+. Ontario committed $5.6B for hospital and $1.4B for other health infrastructure.",
           "reasoning": "Healthcare GDP +2.1% YoY with $28.4B projected hospital starts; copper affects construction input costs for 258 tracked projects",
-          "callout": "Copper rose from below $4.50/lb to above $6.00/lb, increasing input costs for $28.4B in projected hospital starts. The sustained uptrend adds cost pressure to South Niagara Hospital (1.3M sq ft) and UHNBC Phase 2 ($1.58B) entering peak construction.",
+          "callout": "Copper rose above $5.53/lb, lifting input costs for the $28.4B projected 2026 hospital pipeline. The uptrend pressures 258 tracked healthcare projects ($20B) including South Niagara Hospital and UHNBC Phase 2.",
           "source": "Source: LME"
         }
       ]
@@ -8083,7 +8114,7 @@
           ],
           "context": "The database tracks <strong>150 tourism and culture projects ($22.3B)</strong>, 94 under construction. Amusement drove growth at +4.6% YoY. Vancouver FIFA 2026 hosting requires ~20,000 incremental hotel rooms.",
           "reasoning": "Arts GDP +2.2% YoY with amusement at +4.6%; CAD/USD defines international tourism competitiveness for 150 tracked projects",
-          "callout": "The CAD/USD line shows the loonie weakening through late 2025 before recovering in April 2026. A weaker dollar makes Canada less expensive for US visitors, supporting 2.2% YoY GDP expansion. The recent recovery toward 0.73 partially reverses this advantage ahead of FIFA 2026.",
+          "callout": "CAD/USD weakened through late 2025 then recovered to 0.73. The weaker dollar supported 2.2% YoY GDP expansion across 150 tracked tourism and culture projects ($22B) ahead of FIFA 2026 hosting.",
           "source": "Source: Bank of Canada"
         }
       ]
@@ -8196,7 +8227,7 @@
           ],
           "context": "Accommodation services grew 7.7% YoY, one of the highest subsector growth rates. Food services near-flat at +0.4%. Employment declined 10,000 (-0.9%), diverging from GDP and indicating persistent labour supply constraints.",
           "reasoning": "Accommodation GDP +7.7% YoY while employment -10,000; CAD/USD and WTI jointly define tourism demand and operating cost environment",
-          "callout": "CAD/USD and WTI diverged sharply during the Hormuz crisis: oil spiked while the loonie weakened, compressing hospitality margins from both cost and demand sides. The recent WTI collapse and loonie recovery reverses both pressures simultaneously.",
+          "callout": "CAD/USD and WTI diverged through the Hormuz crisis — oil spiked while the loonie weakened, compressing hospitality margins. The WTI collapse and loonie recovery to 0.73 reversed both pressures across tracked hospitality pipeline exposure.",
           "source": "Source: BoC, NYMEX"
         }
       ]
@@ -8314,7 +8345,7 @@
           ],
           "context": "Other services posted the largest March LFS gain at +15,000 despite near-flat GDP (+0.3% YoY). Repair and maintenance contracted 0.8% YoY. High vehicle costs drove consumers toward repair over replacement.",
           "reasoning": "Other services +15,000 jobs (largest LFS gain) despite +0.3% GDP; gold and copper track consumer sentiment and industrial backdrop",
-          "callout": "Gold and copper both rose over 12 months but for different reasons: gold as safe-haven reflecting uncertainty, copper as industrial demand indicator. The divergence mirrors the sector split: consumer-facing repair tracking cautious spending versus industrial-adjacent services tracking project activity.",
+          "callout": "Gold and copper both rose over 12 months — gold as safe-haven, copper as industrial demand. The split mirrors sector mix across the other-services pipeline tracked: consumer repair versus industrial-adjacent services.",
           "source": "Source: LBMA, LME"
         }
       ]
@@ -8449,7 +8480,7 @@
           ],
           "context": "The database tracks <strong>231 government and defence projects ($165.0B)</strong>. Federal admin contracted 3.2% YoY while provincial expanded 2.3% and municipal grew 3.2%. Main Estimates present $502.8B in budgetary spending. PM Carney announced 70% domestic procurement mandate.",
           "reasoning": "Public admin GDP +0.7% YoY with federal -3.2% vs provincial +2.3%; GoC yields define fiscal cost of $502.8B Main Estimates and 231 defence/government projects",
-          "callout": "The GoC 10-year and 2-year yield lines show the cost-of-capital for $502.8B in planned spending. The 2-year declined more, reflecting rate expectations. Yield levels affect fiscal cost of defence procurements including submarines, air defence ($127M), and the 70% domestic procurement mandate.",
+          "callout": "GoC 10y and 2y levels set the cost-of-capital for $502.8B in planned spending. The 2y declined more, reflecting rate expectations across 231 tracked government and defence projects ($165B).",
           "source": "Source: Bank of Canada"
         }
       ]
@@ -11159,7 +11190,8 @@
         }
       ],
       "insight": "WTI crude collapsed 34% from its April 2 peak of $128/bbl to $83.85 after the Strait of Hormuz reopened, reshaping the operating environment for 63 tracked oil and gas projects.",
-      "source": "Yahoo Finance, CNBC"
+      "source": "Yahoo Finance, CNBC",
+      "callout": "WTI collapsed 34% from the $128/bbl April 2 peak to $83.85 after the Hormuz reopening, while Brent dropped 9.0% in the April 17 session alone. The database tracks 63 oil and gas projects ($100.2B) with price exposure."
     },
     {
       "chartType": "line",
@@ -11237,7 +11269,8 @@
       ],
       "reasoning": "Gold's retreat from record highs on the ceasefire mirrors the oil collapse and contextualizes the broader commodity retracement affecting 367 mining projects",
       "insight": "Gold retreated 12.6% from its record $5,230/oz to $4,572 as the Hormuz ceasefire reduced safe-haven flows, while remaining 73% above year-ago levels.",
-      "source": "Yahoo Finance"
+      "source": "Yahoo Finance",
+      "callout": "Gold retreated 12.6% from the record $5,230/oz to $4,572 as ceasefire reduced safe-haven flows, while holding 73% above year-ago. The database tracks 367 mining projects ($159.5B) with commodity exposure."
     }
   ],
   "sources": [

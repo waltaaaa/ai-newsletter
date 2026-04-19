@@ -1,12 +1,13 @@
 {
-  "exported_at": "2026-04-19T06:41:30.278936+00:00",
+  "exported_at": "2026-04-19T19:43:35.190202+00:00",
   "province_count": 13,
-  "file_count": 28,
+  "file_count": 29,
   "file_list": [
     "briefing_archive.json",
     "briefing_latest.json",
     "commodities.json",
     "events.json",
+    "events_global.json",
     "iaac.json",
     "indicators.json",
     "jobs.json",
