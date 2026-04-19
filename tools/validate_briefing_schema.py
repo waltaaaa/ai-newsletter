@@ -111,6 +111,76 @@ CALLOUT_BANNED_WORDS = [
 ]
 
 
+# Allowed chart types — frontend renderers (`_svgCalloutChart`, `renderAgentInsightChart`,
+# `renderIndInsightChart` in app.js) branch exclusively on these four values.
+ALLOWED_CHART_TYPES = ("line", "multi_line", "bar", "diverging_bar")
+
+
+def _check_chart_spec_shape(results, chart, label):
+    """Validate a single chart spec's structural sub-schema.
+
+    Frontend reads `chartType`, `title`, `dataKeys`, and `subtitle`. Missing
+    `dataKeys` means the chart silently does not render; missing `chartType`
+    or `title` means the chart renders degraded with generic fallbacks. Per
+    the tldr-charts SKILL contract, all three are hard-required; `subtitle`
+    is recommended (warn).
+
+    Returns (fails_added, warns_added).
+    """
+    fails = 0
+    warns = 0
+    if not isinstance(chart, dict):
+        check(results, f"chart.{label}.is_object", False,
+              f"Chart spec is not an object: {type(chart).__name__}")
+        return (1, 0)
+
+    # chartType — non-empty string, in enum
+    ct = chart.get("chartType")
+    if not isinstance(ct, str) or not ct.strip():
+        check(results, f"chart.{label}.chartType", False,
+              "Missing or empty chartType")
+        fails += 1
+    elif ct not in ALLOWED_CHART_TYPES:
+        check(results, f"chart.{label}.chartType.enum", False,
+              f"chartType '{ct}' not in {list(ALLOWED_CHART_TYPES)}")
+        fails += 1
+    else:
+        check(results, f"chart.{label}.chartType", True, "")
+
+    # title — non-empty string
+    title = chart.get("title")
+    if not isinstance(title, str) or not title.strip():
+        check(results, f"chart.{label}.title", False,
+              "Missing or empty title")
+        fails += 1
+    else:
+        check(results, f"chart.{label}.title", True, "")
+
+    # dataKeys — non-empty array of non-empty strings
+    dk = chart.get("dataKeys")
+    if not isinstance(dk, list) or len(dk) == 0:
+        check(results, f"chart.{label}.dataKeys", False,
+              "Missing or empty dataKeys array — frontend will not render this chart")
+        fails += 1
+    elif not all(isinstance(k, str) and k.strip() for k in dk):
+        check(results, f"chart.{label}.dataKeys.items", False,
+              "dataKeys contains non-string or empty entries")
+        fails += 1
+    else:
+        check(results, f"chart.{label}.dataKeys", True, "")
+
+    # subtitle — recommended (warn if missing/empty)
+    sub = chart.get("subtitle")
+    if not isinstance(sub, str) or not sub.strip():
+        warn(results, f"chart.{label}.subtitle", False,
+             "Missing or empty subtitle (recommended per tldr-charts skill)")
+        warns += 1
+    else:
+        warn(results, f"chart.{label}.subtitle", True, "")
+
+    return (fails, warns)
+
+
 def check_callout(results, label, text):
     """Validate a single callout string against the 5-rule Quality Contract.
 
@@ -332,24 +402,36 @@ def validate(briefing_path):
     # ============================================================
     # Top-level insightCharts
     for i, ch in enumerate(b.get("insightCharts", []) or []):
-        cb = ch.get("callout") or ch.get("reasoning")  # legacy fallback during migration
-        fails += check_callout(results, f"top.insightCharts[{i}]", cb)
+        label = f"top.insightCharts[{i}]"
+        f, w = _check_chart_spec_shape(results, ch, label)
+        fails += f
+        warns += w
+        cb = (ch or {}).get("callout") or (ch or {}).get("reasoning")  # legacy fallback during migration
+        fails += check_callout(results, label, cb)
 
     # Per-province insightCharts
     for p in b.get("provinces", []) or []:
         name = p.get("name", "?")
         for i, ch in enumerate(p.get("insightCharts", []) or []):
-            cb = ch.get("callout") or ch.get("context") or ch.get("reasoning")
-            fails += check_callout(results, f"province.{name}.insightCharts[{i}]", cb)
+            label = f"province.{name}.insightCharts[{i}]"
+            f, w = _check_chart_spec_shape(results, ch, label)
+            fails += f
+            warns += w
+            cb = (ch or {}).get("callout") or (ch or {}).get("context") or (ch or {}).get("reasoning")
+            fails += check_callout(results, label, cb)
 
     # Per-industry insightCharts
-    for ind_list, label in [(b.get("goodsIndustries", []), "goods"),
-                             (b.get("servicesIndustries", []), "services")]:
+    for ind_list, ilabel in [(b.get("goodsIndustries", []), "goods"),
+                              (b.get("servicesIndustries", []), "services")]:
         for ind in ind_list or []:
             iname = ind.get("name", "?")
             for i, ch in enumerate(ind.get("insightCharts", []) or []):
-                cb = ch.get("callout") or ch.get("reasoning")
-                fails += check_callout(results, f"industry.{label}.{iname}.insightCharts[{i}]", cb)
+                label = f"industry.{ilabel}.{iname}.insightCharts[{i}]"
+                f, w = _check_chart_spec_shape(results, ch, label)
+                fails += f
+                warns += w
+                cb = (ch or {}).get("callout") or (ch or {}).get("reasoning")
+                fails += check_callout(results, label, cb)
 
     # National Canada chart callout
     nat = b.get("national") or {}

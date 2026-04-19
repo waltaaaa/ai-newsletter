@@ -277,6 +277,22 @@ Before writing each chart spec to the output, the agent MUST verify for EVERY ch
 
 If any box is unchecked for any chart, the agent MUST raise a loud error and halt rather than emit partial output.
 
+### Chart-spec sub-schema self-check — ENFORCED BY VALIDATOR
+
+In addition to the callout contract, every emitted chart spec (at every tier: TL;DR top-level, per-province, per-industry) MUST include the following sub-schema fields. `tools/validate_briefing_schema.py` hard-fails the build if any are missing or malformed. The agent MUST raise an explicit error naming the offending surface and field rather than emit a partial spec.
+
+Required (hard-fail):
+
+- [ ] `chartType` — non-empty string, one of `line`, `multi_line`, `bar`, `diverging_bar`
+- [ ] `title` — non-empty string (frontend fallback is generic "Weekly Insight"; fail loud so the real title ships)
+- [ ] `dataKeys` — non-empty array of non-empty strings (the frontend gates rendering on this — a chart with no `dataKeys` simply does not render)
+
+Recommended (validator WARN):
+
+- [ ] `subtitle` — non-empty string carrying time range + unit (e.g. "12-month trend · USD/bbl"). Not required by the frontend but strongly recommended for every chart; omission produces a WARN, not a FAIL.
+
+Fail-loud rule: if the agent cannot populate `chartType`, `title`, or `dataKeys` for any chart it attempts to emit, it MUST raise an explicit error identifying the surface (e.g. `provinces[Alberta].insightCharts[1]`) and the missing field. NEVER write an empty string, null, placeholder, or omitted key to satisfy the count gate.
+
 ### Option C (editorial) layout — the DEFAULT
 
 **Option C is the default chart layout for every top-level and provincial chart.** Legacy is the narrow exception (see below). The Option C editorial layout is triggered by the presence of a non-empty `kpis` array. When active, the chart renders with:
