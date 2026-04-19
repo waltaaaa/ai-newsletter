@@ -487,16 +487,16 @@ function _tldrBuildIndicatorTable(){
     'HOUSING STARTS':'housingStarts','TRADE BALANCE':'tradeBalance','RETAIL SALES':'retailSales',
     'CONSUMER CONFIDENCE':'consumerConfidence','PARTICIPATION':'participation','EMPLOYMENT CHANGE':'employmentChange',
     'WAGE GROWTH':'wageGrowth','PARTICIPATION RATE':'participation','EMPLOYMENT':'employmentChange',
-    'WTI CRUDE':'wtiCrude','CAD/USD':'cadUsd','TSX':'tsx'};
+    'WTI CRUDE':'wtiCrude','BRENT CRUDE':'brentCrude','CAD/USD':'cadUsd','TSX':'tsx'};
   const freqMap={'bocRate':'8x/year','realGdp':'Monthly','cpi':'Monthly','unemployment':'Monthly',
     'housingStarts':'Monthly','tradeBalance':'Monthly','retailSales':'Monthly','consumerConfidence':'Monthly',
     'participation':'Monthly','employmentChange':'Monthly','wageGrowth':'Monthly',
-    'wtiCrude':'Daily','cadUsd':'Daily','tsx':'Daily'};
+    'wtiCrude':'Daily','brentCrude':'Daily','cadUsd':'Daily','tsx':'Daily'};
   const srcFallback={'bocRate':'Bank of Canada','realGdp':'Statistics Canada','cpi':'Statistics Canada',
     'unemployment':'Statistics Canada','housingStarts':'CMHC','tradeBalance':'Statistics Canada',
     'retailSales':'Statistics Canada','consumerConfidence':'Conference Board','participation':'Statistics Canada',
     'employmentChange':'Statistics Canada','wageGrowth':'Statistics Canada',
-    'wtiCrude':'yfinance','cadUsd':'yfinance','tsx':'yfinance'};
+    'wtiCrude':'yfinance','brentCrude':'yfinance','cadUsd':'yfinance','tsx':'yfinance'};
   if(!ki.length)return'<div class="tldr-empty">Indicator data pending.</div>';
   let rows='';
   ki.forEach(ind=>{
@@ -3246,6 +3246,14 @@ async function _renderProvContent(){
     html+='<div class="narrative">'+addLeads(linkFootnotes(shNarrative,allSrc))+'</div></div>';
   }
 
+  // Labour Market Detail — render labourDeepDive HTML if present
+  var _labourDeep=provData.labourDeepDive||'';
+  if(_labourDeep&&_labourDeep.length>=20){
+    html+='<div class="section-block">';
+    html+='<div class="section-header"><div class="accent-bar"></div><h3>Labour Market Detail</h3></div>';
+    html+='<div class="narrative">'+san(linkFootnotes(_labourDeep,allSrc))+'</div></div>';
+  }
+
   // Section 5: Projects Preview
   // Filter by province threshold, new projects first with NEW tag
   const thresholdProj=provProj.filter(meetsThreshold);
@@ -3312,22 +3320,30 @@ async function _renderProvContent(){
 
   mainEl.innerHTML=html;
 
-  // Post-render: insight charts — prefer the insightCharts array (first entry) over the legacy single insightChart
+  // Post-render: insight charts — render ALL items in insightCharts[] array, not just the first
   var _icArr=provData.insightCharts||[];
-  const provChartSpec=(_icArr.length?_icArr[0]:provData.insightChart)||null;
+  // Fallback to legacy single insightChart if array is empty
+  if(!_icArr.length&&provData.insightChart)_icArr=[provData.insightChart];
+  var _validIcArr=_icArr.filter(function(s){return s&&s.dataKeys&&s.dataKeys.length});
   const provThemes=extractAnalysisThemes(provContent,provProj);
   const chartArea=$('provInsightChartArea');
   if(chartArea){
-    if(provChartSpec&&provChartSpec.dataKeys&&provChartSpec.dataKeys.length){
-      chartArea.innerHTML=buildAgentInsightStrip('prov',provChartSpec,provData);
+    if(_validIcArr.length){
+      var chartHtml='';
+      _validIcArr.forEach(function(spec,idx){
+        chartHtml+=buildAgentInsightStrip('prov'+idx,spec,provData);
+      });
+      chartArea.innerHTML=chartHtml;
     }else{
       chartArea.innerHTML=buildInsightStrip('prov',provThemes,code);
     }
   }
 
   await _ensureChartData();
-  if(provChartSpec&&provChartSpec.dataKeys&&provChartSpec.dataKeys.length){
-    await renderAgentInsightChart('prov',provChartSpec);
+  if(_validIcArr.length){
+    for(var _icIdx=0;_icIdx<_validIcArr.length;_icIdx++){
+      await renderAgentInsightChart('prov'+_icIdx,_validIcArr[_icIdx]);
+    }
   }else{
     await renderInsightCharts('prov',provThemes,provProj,code,provContent);
   }
@@ -4633,6 +4649,15 @@ window._mktSelectPill=function(pill){
   st.active=new Set([name]);
   pill.parentElement.querySelectorAll('.series-pill,.fx-pill').forEach(function(p){p.classList.toggle('active',p.dataset.name===name)});
   _mktRenderSvg(key);
+  // Update per-index equity commentary when pill changes
+  if(key==='equities'){
+    var commEl=document.getElementById('mktEquityCommentary');
+    if(commEl&&st.items){
+      var sel=st.items.find(function(it){return it.name===name});
+      var comm=sel&&sel.commentary?sel.commentary:'';
+      commEl.innerHTML=comm?'<div class="market-narrative">'+DOMPurify.sanitize(comm,{ADD_ATTR:['target']})+'</div>':'';
+    }
+  }
 };
 /* SVG-aware range handler */
 window._mktSvgSetRange=function(btn){
@@ -4667,7 +4692,23 @@ function _buildMktCommentary(fm){
   var summary=(fm.summary||fm.commentary||(D&&(D.marketCommentary||D.market_commentary)))||'';
   if(!summary)return '';
   var h='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Market Commentary</h3><span class="section-meta"></span></div>';
-  h+='<div class="narrative">'+san(summary)+'</div></div>';
+  h+='<div class="narrative">'+san(summary)+'</div>';
+  // Market callout box — pipeline cross-reference data (project counts + dollar values)
+  var calloutData=(fm.callout||(D&&D.marketCommentaryCallout))||null;
+  if(calloutData&&calloutData.title&&Array.isArray(calloutData.items)&&calloutData.items.length){
+    h+='<div class="inner-card" style="margin-top:16px;padding:16px 20px;border-left:3px solid #003153">';
+    h+='<div style="font-family:DM Sans,sans-serif;font-weight:700;font-size:15px;color:#1a2744;margin-bottom:10px">'+san(calloutData.title)+'</div>';
+    h+='<div style="display:flex;flex-wrap:wrap;gap:20px">';
+    calloutData.items.forEach(function(ci){
+      h+='<div style="flex:1;min-width:140px">';
+      h+='<div style="font-family:DM Sans,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:#64748B;margin-bottom:4px">'+san(ci.label||'')+'</div>';
+      h+='<div style="font-family:DM Sans,sans-serif;font-size:22px;font-weight:700;color:#1a2744;line-height:1.2">'+san(ci.value||'')+'</div>';
+      if(ci.amount)h+='<div style="font-family:DM Sans,sans-serif;font-size:13px;color:#003153;margin-top:2px">'+san(ci.amount)+'</div>';
+      h+='</div>';
+    });
+    h+='</div></div>';
+  }
+  h+='</div>';
   return h;
 }
 
@@ -4677,7 +4718,7 @@ function _buildMktEquities(fm){
     [{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'},{name:'FTSE 100',ind:'ftse100'},{name:'DAX',ind:'dax'},{name:'Nikkei 225',ind:'nikkei225'}].forEach(function(m){var i=indicators.find(function(x){return x.indicator_name===m.ind});if(i&&!indices.find(function(x){return x.name===m.name}))indices.push({name:m.name,value:i.value,change:'',region:''})});
   }
   if(!indices.length)return '';
-  var items=indices.map(function(it){return{name:it.name,value:it.value||'',change:it.change||it.day||'',mm:it.mm||'',yy:it.yy||''}});
+  var items=indices.map(function(it){return{name:it.name,value:it.value||'',change:it.change||it.day||'',mm:it.mm||'',yy:it.yy||'',commentary:it.commentary||''}});
   var defaults=[items[0].name];
   _mktState.equities={items:items,active:new Set(defaults),mode:'price',range:3,freq:'all'};
 
@@ -4701,6 +4742,11 @@ function _buildMktEquities(fm){
   });
   h+='</div></div>';
   h+='<div class="chart-area" id="mktSvg_equities"></div>';
+  // Per-index commentary — show the selected index's commentary text
+  var initComm=items.length&&items[0].commentary?items[0].commentary:'';
+  h+='<div class="mkt-equity-commentary" id="mktEquityCommentary">';
+  if(initComm)h+='<div class="market-narrative">'+san(initComm)+'</div>';
+  h+='</div>';
   h+='</div></div>';
   return h;
 }
@@ -4801,6 +4847,21 @@ function _buildMktCommodities(fm){
   h+='</div><div id="mktCmdTableWrap">'+_buildCmdTable(allComms,'All')+'</div>';
   var commNarr=(fm.commodityNarrative||fm.commodity_narrative||(D&&D.commodityCommentary))||'';
   if(commNarr)h+='<div class="market-narrative">'+san(commNarr)+'</div>';
+  // WCS Discount Analysis — render from D.wcs_analysis (dict) or D.wcsAnalysis (HTML string)
+  var wcsObj=D&&D.wcs_analysis?D.wcs_analysis:null;
+  var wcsHtml=D&&D.wcsAnalysis?D.wcsAnalysis:'';
+  if(wcsObj&&wcsObj.narrative){
+    h+='<div class="section-header" style="margin-top:20px"><div class="accent-bar"></div><h4>WCS Discount Analysis</h4></div>';
+    h+='<div class="market-narrative">'+san(wcsObj.narrative);
+    if(wcsObj.current_discount)h+='<br><strong>Current discount:</strong> '+san(wcsObj.current_discount);
+    if(wcsObj.prior_discount)h+=' &middot; <strong>Prior:</strong> '+san(wcsObj.prior_discount);
+    if(wcsObj.direction)h+=' &middot; <strong>Direction:</strong> '+san(wcsObj.direction);
+    if(wcsObj.estimated_wcs_price)h+=' &middot; <strong>Est. WCS:</strong> '+san(wcsObj.estimated_wcs_price);
+    h+='</div>';
+  }else if(wcsHtml){
+    h+='<div class="section-header" style="margin-top:20px"><div class="accent-bar"></div><h4>WCS Discount Analysis</h4></div>';
+    h+='<div class="market-narrative">'+san(wcsHtml)+'</div>';
+  }
   h+='</div></div>';return h;
 }
 
