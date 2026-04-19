@@ -1,374 +1,339 @@
-# Sector & Industry Research — Week of 2026-04-11
-Generated: 2026-04-11
+# Sector & Industry Research — Double Edition: Mar 31 – Apr 13, 2026
+Generated: 2026-04-18
 Industries covered: All 20 NAICS (5 goods + 15 services)
-Data sources: docs/data/indicators.json (industry_gdp_mm/yy per NAICS), docs/data/projects_all.json (6,632 projects), docs/data/commodities.json, docs/data/briefing_latest.json (financial markets & commodities block), docs/data/iaac.json (62 active federal assessments), docs/data/signals.json, docs/data/data_gap_report.md.
-
-Scope note per data_gap_report.md: lumber timeseries is 1,065 days stale (do not cite), yield curve partial (2Y/5Y/10Y only), policy feed empty for current week, jobs.json and procurement.json contain no populated spikes/contracts for the week of 2026-04-11. Sector labour and procurement commentary therefore relies on project pipeline counts plus GDP-by-industry prints.
+Search waves: Wave 4 (sector-specific) + Wave 4b (NAICS GDP) + Wave 7 (mega projects) + supplementary deep dives
 
 ---
 
-## 1. Data Quality Audit
+## 1. Commodity Price Context (Two-Week Window)
 
-### Sector Project Coverage (mapped from project database)
+Commodity price movements during the Mar 31 – Apr 13 window were dominated by the U.S.-Iran conflict and related Strait of Hormuz disruptions.
 
-| NAICS | Sector Name | Project Count | Total Declared Value | Under Construction | Proposed | Status |
-|-------|------------|---------------|----------------------|--------------------|----------|--------|
-| 11 | Agriculture, Forestry, Fishing & Hunting | 17 | ~$5.5B | 4 | 6 | THIN (forestry-dominant) |
-| 21 | Mining, Quarrying & Oil/Gas Extraction | 421 | ~$255.9B | 33 | 141 | OK |
-| 22 | Utilities (Power, Water & Wastewater) | 1,392 | ~$515.5B | 103 | 328 | OK (largest bucket) |
-| 23 | Construction (infra + residential + commercial) | 1,373 | ~$241.8B | 516 | 382 | OK |
-| 31-33 | Manufacturing | 52 | ~$69.4B | 17 | 25 | THIN |
-| 41 | Wholesale Trade | 0 tagged | — | — | — | GAP (no dedicated tag) |
-| 44-45 | Retail Trade | 0 tagged | — | — | — | GAP (no dedicated tag) |
-| 48-49 | Transportation & Warehousing | 578 | ~$35.1B | 137 | 318 | OK |
-| 51 | Information & Cultural Industries | 38 | ~$0.7B | 11 | 14 | THIN (most data-centre capex lands under manufacturing/telecom) |
-| 52 | Finance & Insurance | 0 tagged | — | — | — | GAP (non-capex sector) |
-| 53 | Real Estate & Rental/Leasing | 0 tagged (overlaps NAICS 23 residential = 138 projects) | — | — | — | GAP |
-| 54 | Professional, Scientific & Technical Services | 0 tagged | — | — | — | GAP |
-| 55 | Management of Companies & Enterprises | 0 tagged | — | — | — | GAP |
-| 56 | Administrative & Waste Management Services | 26 | ~$1.9B | 5 | 1 | THIN |
-| 61 | Educational Services | 157 | ~$14.6B | 13 | 21 | OK |
-| 62 | Health Care & Social Assistance | 258 | ~$20.4B | 47 | 39 | OK |
-| 71 | Arts, Entertainment & Recreation | 150 | ~$22.1B | 94 | 14 | OK |
-| 72 | Accommodation & Food Services | 0 tagged | — | — | — | GAP |
-| 81 | Other Services | 0 tagged | — | — | — | GAP |
-| 91 | Public Administration | 231 | ~$164.9B | 40 | 153 | OK (includes Defence bucket) |
+**Energy:**
+- **Brent Crude:** Settled at US$96.52/bbl on Apr 9, down 11.47% week-over-week, but up 47.40% year-over-year. By Apr 13, Brent had dropped back below US$100/bbl, settling at US$99.36 after a 4.4% daily gain. Brent remained well above the pre-conflict ~US$70 level from late February but below the US$119 peak during the worst of the Iran war fears. [Source: https://tradingeconomics.com/commodity/brent-crude-oil] [Source: https://www.cbc.ca/news/business/markets-april-13-9.7161390]
+- **WTI Crude:** Plunged more than 10% in a single session to below US$84/bbl during week 2, down from US$94.69. The Yahoo Finance scrape was flagged as unreliable during the period. North American oil prices are forecast to average US$85/bbl for full-year 2026. [Source: https://tradingeconomics.com/commodity/crude-oil] [Source: https://www.cbc.ca/news/canada/calgary/bakx-deloitte-wti-natural-gas-gasoline-9.7155159]
+- **Natural Gas (Canada):** Prices remained unchanged during the two-week window. Supply is adequate and storage levels are sufficient, contrasting with global markets where prices spiked on supply disruptions. [Source: https://www.cbc.ca/news/canada/calgary/bakx-deloitte-wti-natural-gas-gasoline-9.7155159]
 
-Plus 2,353 projects carrying sector label "Other" (no NAICS mapping). These are not aggregated into any bucket above.
+**Metals:**
+- **Gold:** Prices cooled 7% from their US$4,400/oz peak the prior month, consolidating in the US$3,900-US$4,000/oz range. [Source: https://economics.td.com/commodity-price-report]
+- **Copper:** Rose to US$6.07/lb on Apr 15, up 4.91% month-over-month and 29.97% year-over-year. Traded near six-week highs. Intra-period volatility: copper fell more than 1% to below US$5.80/lb during week 1 after Trump's Strait of Hormuz blockade announcement, then recovered to near US$6/lb during week 2 as ceasefire signals emerged. [Source: https://tradingeconomics.com/commodity/copper]
 
-### Critical Gaps Flagged by Research
-- NAICS 41, 44-45, 52, 54, 55, 72, 81 have zero project-side tagging; these are services sectors with low capex. Track via StatCan GDP-by-industry prints, not project pipeline.
-- Lumber price treated as unavailable per data_gap_report.md.
-- Jobs.json and procurement.json have empty spike/contract arrays for week of 2026-04-11; labour and contract commentary uses project counts as the proxy.
-- Policy feed is empty for the current week.
+**Agricultural:**
+- **Canola:** Fell to CAD$711.14/tonne on Apr 17, down 1.82% daily and 2.07% monthly, though still 6.40% above year-ago levels. China's 75.8% duty on Canadian canola seed -- building on the 100% tariff on canola oil and meal levied in March -- has softened trade and demand channels. [Source: https://tradingeconomics.com/commodity/canola]
+- **Wheat:** Moved 7% higher after reaching five-year lows the prior month. 2026 full-year prices forecast to grow 5% but remain below their 10-year average on global oversupply. [Source: https://economics.td.com/commodity-price-report]
+
+**Lumber:** Traded around US$570/thousand board feet, near a one-month low. The combination of a 14.2% collapse in U.S. single-family housing starts, a 5.4% decline in building permits, and mortgage rates at 6.46% has compressed demand. [Source: https://tradingeconomics.com/commodity/lumber]
+
+**Week 1 vs. Week 2 material change:** The most dramatic commodity shift was in crude oil. Week 1 (Mar 31 - Apr 6) saw Brent still trading near US$107/bbl. During week 2 (Apr 7 - Apr 13), Brent crashed below US$100 as ceasefire negotiations progressed, with WTI dropping over 10% in a single session to below US$84. Copper moved in the opposite direction -- falling below US$5.80 in week 1 on blockade fears, then recovering toward US$6 in week 2 on ceasefire optimism.
 
 ---
 
-## 2. Sector Activity Summary — Industry GDP Snapshot (StatCan, period 2026-04-11)
-
-Canada's monthly industry-level GDP prints (from indicators.json, industry_gdp_mm_* and industry_gdp_yy_* keys, StatCan):
-
-| NAICS | Sector | MoM | YoY |
-|-------|--------|-----|-----|
-| 11 | Agriculture, Forestry, Fishing & Hunting | -1.4% | +5.4% |
-| 21 | Mining, Quarrying & Oil/Gas Extraction | +1.2% | -0.1% |
-| 22 | Utilities | +0.6% | -1.7% |
-| 23 | Construction | +1.1% | +2.8% |
-| 31-33 | Manufacturing | -1.4% | -4.6% |
-| 41 | Wholesale Trade | -1.2% | -1.7% |
-| 44-45 | Retail Trade | +0.8% | +2.7% |
-| 48-49 | Transportation & Warehousing | -0.7% | +1.6% |
-| 51 | Information & Cultural Industries | +0.9% | +3.2% |
-| 52 | Finance & Insurance | +0.5% | +3.2% |
-| 53 | Real Estate & Rental/Leasing | -0.2% | +1.2% |
-| 54 | Professional, Scientific & Technical Services | -0.1% | -0.4% |
-| 55 | Management of Companies & Enterprises | -4.1% | -21.9% |
-| 56 | Administrative & Waste Management Services | -0.1% | -0.2% |
-| 61 | Educational Services | +0.5% | -1.9% |
-| 62 | Health Care & Social Assistance | +0.0% | +2.1% |
-| 71 | Arts, Entertainment & Recreation | -0.1% | +2.2% |
-| 72 | Accommodation & Food Services | +0.7% | +2.3% |
-| 81 | Other Services | +0.2% | +0.3% |
-| 91 | Public Administration | -0.1% | +0.7% |
-
-Source: StatCan GDP by industry at basic prices, monthly (Table 36-10-0434), values mirrored in `docs/data/indicators.json` — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401
-
-The two largest outliers: Management of Companies & Enterprises at -4.1% MoM / -21.9% YoY, and Manufacturing at -1.4% MoM / -4.6% YoY. The strongest YoY gains: Agriculture/Forestry/Fishing (+5.4%), Finance (+3.2%), Information & Culture (+3.2%).
-
----
-
-## 3. Sector Spotlights — All 20 NAICS Industries
+## 2. Sector Spotlights (ALL 20 NAICS INDUSTRIES)
 
 ### GOODS INDUSTRIES
 
 #### 11: Agriculture, Forestry, Fishing & Hunting
-- **GDP print:** -1.4% MoM, +5.4% YoY (strongest YoY in the table) — StatCan Table 36-10-0434 — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401
-- **Project pipeline:** 17 projects tagged agriculture/forestry totalling ~$5.5B. Largest entries: Biofuel Facility QC ($1.2B, Under Construction), Saint John Pulp Mill Upgrades NB ($1.1B, Under Review), Hinton Pulp Mill Expansion AB ($584M, Proposed).
-- **Commodity backdrop (briefing_latest.json commodities block):**
-  - Wheat: 573.5 USc/bu (-4.1% day, -1.9% MoM, +5.8% YoY) — CBOT front-month
-  - Canola: C$619/t (-0.2% MoM, -0.3% YoY) — StatCan Table 32-10-0077, Saskatchewan producer prices — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701
-  - Oats: 337.8 USc/bu (-2.2% day, -2.0% MoM, +2.3% YoY) — CBOT; Canada largest world exporter
-  - Soybean Oil: 67.73 USc/lb (+46.6% YoY) — CBOT
-  - Potash proxy (Nutrien NTR): US$72.78 share (-3.6% day, -4.3% MoM, +50.3% YoY) — NYSE
-  - Live Cattle: 247.52 USc/lb (+0.5% day, +6.5% MoM, +22.1% YoY) — CME; Alberta feedlot proxy
-  - Lean Hogs: 104.18 USc/lb (+15.3% day, +8.4% MoM, +19.8% YoY) — CME; Quebec and Manitoba exposure
-  - BoC Forestry Index: 449 pts (-1.1% day, +2.7% MoM, -10.6% YoY) — Bank of Canada weekly commodity subindex — https://www.bankofcanada.ca/rates/price-indexes/bcpi/
-  - BoC Fisheries Index: 2,148 pts (flat day, flat MoM, +6.8% YoY) — BoC Atlantic Canada fisheries subindex
-- **Lumber explicitly excluded** per data_gap_report.md (1,065 days stale).
+
+- **Top story:** The Government of Canada announced investment in low-carbon agrichemicals in April 2026, supporting a company developing a bio-electric process converting CO2 and water into formic acid and hydrogen peroxide. [Source: https://www.canada.ca/en/agriculture-agri-food/news/2026/04/government-of-canada-invests-in-low-carbon-agrichemicals-to-advance-sustainability-in-agriculture.html]
+- **Trade disruption:** China's 75.8% duty on Canadian canola seed, layered atop the 100% tariff on canola oil and meal from March, is compressing trade channels. Canola prices at CAD$711.14/tonne remain above year-ago levels but the monthly trajectory is downward (-2.07%).
+- **Research closures:** In January 2026, the federal government announced the closure of three Agriculture and Agri-Food Canada R&D centres in Ontario, Quebec, and Alberta, plus four satellite research farms in Nova Scotia, Manitoba, and Saskatchewan. Senator Robert Black flagged the closures as counter to innovation priorities. [Source: https://sencanada.ca/en/sencaplus/opinion/agricultural-innovation-is-key-to-canada-s-future-so-why-are-we-closing-research-sites-senator-black/]
+- **B.C. agritech:** The B.C. On-Farm Technology Adoption Program had $2.5 million available in the current round, having awarded $6.4 million to 134 farm projects since 2023. [Source: https://news.gov.bc.ca/releases/2026AF0011-000175]
+- **Forestry:** Canada's forest sector supports nearly 200,000 workers and contributes more than $20 billion to GDP. The government is providing $700 million in loan guarantees and $500 million for product diversification. Western Forest Products extended the closure of its Chemainus, B.C. sawmill through end-2026. U.S. Section 232 tariffs and higher anti-dumping/countervailing duties increase Canadian producers' costs by an estimated 25-30%. [Source: https://www.canada.ca/en/natural-resources-canada/news/2026/04/government-of-canada-supports-new-advanced-wood-manufacturing-facility-to-strengthen-canadas-construction-supply-chain.html] [Source: https://www.pulpandpapercanada.com/wfp-extends-closure-of-chemainus-sawmill/]
+- **Labour:** Natural resources employment rose by 10,000 jobs in the March 2026 LFS. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
 
 #### 21: Mining, Quarrying & Oil/Gas Extraction
-- **GDP print:** +1.2% MoM, -0.1% YoY — StatCan 36-10-0434.
-- **Project pipeline:** 421 projects totalling ~$255.9B; 33 Under Construction, 141 Proposed, 147 Under Review. Largest entries include LNG Canada Facility BC ($40B, Complete), Pathways Alliance Carbon Capture and Storage Project AB ($16.5B, Proposed — also listed in IAAC as Pathways Alliance CO2 Transportation Network and Storage Hub), Critical Minerals Production Alliance Round 2 ($12.1B, Proposed), Jackpine Mine Expansion AB ($8.2B, Proposed), Baffinland Mary River Steensby Rail and Port Expansion NU ($3B, Approved).
-- **Commodity prices (briefing_latest.json):**
-  - WTI Crude: US$98.53/bbl (-11.7% day, +18.1% MoM, +58.0% YoY) — NYMEX
-  - Brent Crude: US$96.52/bbl (-11.5% day, +9.9% MoM, +47.4% YoY) — ICE
-  - Western Canadian Select: US$85.53/bbl (-11.7% day, derived as WTI less ~US$13/bbl heavy-crude differential)
-  - Natural Gas (Henry Hub): US$2.67/MMBtu (-4.6% day, -11.5% MoM, -30.0% YoY) — NYMEX
-  - Gold: US$4,783/oz (+2.8% day, -8.6% MoM, +56.5% YoY) — COMEX
-  - Silver: US$75.46/oz (+3.7% day, +148.8% YoY) — COMEX
-  - Copper: US$5.747/lb (+3.3% day, -2.6% MoM, +37.6% YoY) — COMEX
-  - Iron Ore (TSI 62% Fe): US$107.83/t (+0.3% day, +4.8% MoM, +8.6% YoY) — SGX
-  - Aluminum: US$3,370/t (-1.2% day, +1.4% MoM, +55.5% YoY) — LME
-  - Uranium (Cameco CCJ): US$115.54 share (+2.6% day, +188.5% YoY) — NYSE
-  - Uranium (Sprott URA ETF): US$50.93 (+4.2% day, +130.2% YoY)
-  - Diamonds (Canadian production): C$66.09/ct (+6.2% MoM, -43.9% YoY) — StatCan Table 16-10-0020 — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610002001
-  - BoC Metals & Minerals Index: 1,191 pts (+1.3% day, -3.5% MoM, +31.4% YoY) — Bank of Canada — https://www.bankofcanada.ca/rates/price-indexes/bcpi/
-- **IAAC active (21 bucket):** Springpole Gold Project ON (Under Review), Mont Sorcier Mining Project QC (Under Review), Pathways Alliance CO2 Transportation Network and Storage Hub AB, plus 4 Alberta oil & gas surface-lease or gas-fired items (OS-7270, OS-7269, Cold Lake First Nation English Bay, Flipi Gas-Fired Generation). IAAC source: Federal Impact Assessment Registry — https://iaac-aeic.gc.ca/050/evaluations
+
+- **Drilling activity:** Governments across Canada issued 659 new well licences in March 2026, up 48% from 446 a year ago. For full-year 2026, 5,709 wells are expected to be drilled, up ~3% from 2025. Active service rigs forecast at 458 average, up from 447 in 2025. [Source: https://www.industrialinfo.com/news/article/canada-expecting-upstream-drilling-increase-in-2026--350055]
+- **CNRL:** Canadian Natural Resources outlined a 2026 capex budget targeting a 3% overall production increase, with 448 new wells planned. [Source: https://www.industrialinfo.com/news/article/canadian-natural-resources-outlines-plan-to-grow-oil-and-gas-production-drilling--350680]
+- **Critical minerals:** On Mar 2, 2026, the Minister of Energy and Natural Resources announced the second round of the Critical Minerals Production Alliance -- 30 new partnerships unlocking $12.1 billion in project capital with 12 allied partners. The Critical Minerals Sovereign Fund will provide $2 billion over five years. The First and Last Mile Fund will invest $1.5 billion from 2026 to 2030. [Source: https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html]
+- **Key projects:** Frontier Lithium (Thunder Bay, ON) -- $2.3M conditionally approved investment with Panasonic MOU. E3 Lithium Clearwater (Olds, AB) -- up to $36.5M approved. Cyclic Materials rare earth recycling (Kingston, ON) -- up to $9.1M plus US$25M Canada Growth Fund equity. [Source: same as above]
+- **Tariff restructuring (Week 2):** Effective Apr 6, 2026, the U.S. restructured Section 232 tariffs on aluminum, steel, and copper, extending full-value tariffs including a 50% rate on many core metal imports. Articles made entirely or almost entirely of these metals now pay 50% on their full customs value. [Source: https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html]
+- **Pipeline permits:** Trump issued several pipeline permits for U.S.-Canada oil transportation on Apr 15. Alberta's application for a new oil pipeline to the northwest coast is expected by Jul 1, 2026. An Indigenous-led floating LNG terminal on B.C.'s northern coast is nearing a final investment decision in 2026. [Source: https://www.canadianenergycentre.ca/five-things-to-watch-in-canadas-oil-and-gas-industry-in-2026/]
+- **Labour:** Mining and oil/gas extraction employment stood at 350,300 in March 2026. [Source: briefing_latest.json]
 
 #### 22: Utilities (Electricity, Gas, Water)
-- **GDP print:** +0.6% MoM, -1.7% YoY — StatCan 36-10-0434.
-- **Project pipeline:** 1,392 projects totalling ~$515.5B — the largest bucket in the database. 103 Under Construction, 328 Proposed, 773 Under Review. Largest items: LNG Canada Phase 1 BC ($47.9B, Under Construction), Haute-Chaudière QC ($370M, EDF Renouvelables, Under Review), New Nuclear at Wesleyville ON (IAAC Under Review, Ontario Power Generation), Sunshine Coast Water Security Project BC ($117M, Proposed), Arctic Bay Water Treatment Plant NU ($49M, Proposed).
-- **Commodity linkages:** natural gas price at US$2.67/MMBtu (-30.0% YoY) is the direct input cost to Canadian gas utilities and BC LNG feed gas; uranium price (Cameco +188.5% YoY, Sprott URA +130.2% YoY) is the economic input to Wesleyville New Nuclear and SMR build-outs in Saskatchewan, Ontario, New Brunswick.
-- **IAAC:** New Nuclear at Wesleyville Project (Clean Energy bucket, ON, Under Review).
-- **Source (OPG New Nuclear):** https://www.opg.com/powering-ontario/our-generation/nuclear/wesleyville/
+
+- **Ontario rate changes:** As of Jan 1, 2026, the Ontario Energy Board approved delivery rate increases and regulatory charge adjustments across most utilities, including Toronto Hydro, Hydro One, and regional distributors. [Source: https://www.neobanc.com/articles/utility-companies-ontario]
+- **Electricity pricing:** The Canada Energy Regulator published updated cross-provincial electricity price comparisons in 2026, showing persistent regional disparities. [Source: https://www.cer-rec.gc.ca/en/data-analysis/energy-markets/market-snapshots/2026/market-snapshot-how-much-do-your-neighbours-across-canada-pay-for-electricity.html]
+- **Nuclear SMR milestone:** OPG applied to the CNSC for a Licence to Operate the first SMR at Darlington in March 2026, with the CNSC clearing regulatory hold point-1 the same month. The basemat placement is scheduled for summer 2026. [Source: https://www.opg.com/projects-services/projects/nuclear/smr/darlington-smr/]
+- **LNG Canada Phase 2:** A project to double LNG Canada's production was referred to the Major Projects Office for fast-track review. [Source: https://www.world-nuclear-news.org/articles/canadian-smr-project-shortlisted-for-federal-fast-track]
+- **Employment:** Ontario utilities employment declined by 4,600 jobs in Q3 2025, though the 2024-2026 forecast remains upward-trending. [Source: https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-utilities]
+- **Infrastructure:** Several projects underway to replace aging water infrastructure and eliminate long-term drinking water advisories in First Nation communities. [Source: same as above]
 
 #### 23: Construction
-- **GDP print:** +1.1% MoM, +2.8% YoY — StatCan 36-10-0434. Construction is the only goods sector posting positive YoY outside Agriculture.
-- **Project pipeline:** 1,373 projects totalling ~$241.8B; 516 Under Construction (highest of any sector) and 382 Proposed.
-- **Largest items:** North End Water Pollution Control Centre (NEWPCC) Upgrade MB ($3.2B, Under Construction), Arctic Infrastructure Fund CA ($1B, Proposed), Laurentides Region Transport Infrastructure 2026-2028 QC ($491M, Proposed), Scotia Place / Calgary Event Centre AB ($1.2B, Under Construction), Taza Mixed Use Development AB ($4.5B, Under Construction), Portage Place Redevelopment MB ($650M, Under Construction), Nunavut 750 Homes Initiative NU ($480M, Under Construction), Edmonton Affordable Housing Program AB ($2.6B, Complete).
-- **Commodity linkages:** steel ETF (SLX) proxy +6.6% week / +6.0% MoM / +76.3% YoY (commodities.json) — direct input cost to infrastructure and building construction. Aluminum +55.5% YoY, copper +37.6% YoY — also construction inputs.
-- **Residential subset:** 138 projects ~$31.9B declared.
+
+- **Build Communities Strong Fund:** PM Carney launched the $51 billion, 10-year infrastructure fund on Apr 7, 2026, at a construction site in Brampton, ON. The fund is projected to boost GDP by $95 billion over the decade -- roughly $12 billion/year, nearly double the previous eight-year pace. First project: the $64 million Embleton Community Centre in Brampton. First tranche: 13 projects, $300 million federal. [Source: https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and]
+- **Ontario capital plan:** Ontario's 2026 budget commits more than $210 billion over 10 years, including $37 billion in 2026-27, covering highways, hospitals, transit, and community infrastructure. Capital spending set to drop from $38.6B (2026-27) to $28.9B (2028-29). [Source: https://budget.ontario.ca/2026/highlights.html]
+- **Housing starts:** CMHC reported March 2026 total SAAR of 235,852 units, down 6% from February's 250,961. The six-month trend declined 2.9% to 248,378. Year-to-date actual starts were up 9% from 2025. Montreal +26% YoY, Vancouver +21%, Toronto +23% in actuals. [Source: https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026]
+- **Productivity:** An April 2026 CMHC study found residential construction labour productivity declined by a cumulative 37.3% between 2001 and 2023. [Source: https://canada.constructconnect.com/joc/news/economic/2026/04/cmhc-study-finds-housing-construction-productivity-falling-as-crisis-deepens]
+- **Civil construction:** Projected for nearly 30% expansion in 2026 (roads, power infrastructure, other civil). Residential starts forecast to decline 5% YoY -- the fifth straight year of decline. [Source: https://canada.constructconnect.com/dcn/news/economic/2025/12/canadian-construction-economic-insights-for-2026]
+- **Employment:** Construction employment at 1,998,800 in March 2026. [Source: briefing_latest.json]
+- **Laval, QC:** Federal investment in underground infrastructure networks to greenlight nearly 1,800 housing units in Laval's Cartier sector. [Source: https://www.canada.ca/en/housing-infrastructure-communities/news/2026/04/building-canada-strong-by-investing-in-the-revitalization-of-lavals-cartier-sector.html]
 
 #### 31-33: Manufacturing
-- **GDP print:** -1.4% MoM, -4.6% YoY — the steepest YoY decline among goods industries — StatCan 36-10-0434.
-- **Project pipeline:** 52 manufacturing-tagged projects totalling ~$69.4B; 17 Under Construction, 25 Proposed.
-- **Largest items:** Wonder Valley AI Data Centre Park Phase 1 AB ($12B, Proposed — cross-tagged with NAICS 51), Telus Infrastructure Upgrades AB ($19B, Under Construction — also telecom), Arviat Modular Housing Factory NU ($70M, Under Construction).
-- **Manufacturing commodity backdrop:** aluminum US$3,370/t (+55.5% YoY, Quebec smelter exposure); palladium US$1,554/oz (+77.0% YoY, catalytic converter input); platinum US$2,098/oz (+130.9% YoY, hydrogen electrolyzer input); copper +37.6% YoY.
-- **Equity proxies:** Teck Resources TECK US$54.66 (+3.5% day, +63.6% YoY), West Fraser Timber WFG US$64.80 (-0.5% day, -14.2% YoY) — briefing_latest.json commodities.
+
+- **February 2026 data:** Total manufacturing sales rose 3.6% to $71.2 billion, following a 3.1% decline in January. Sales up in 12 of 21 subsectors, led by transportation equipment (+18.8%), machinery (+7.7%), and primary metal (+4.9%). Capacity utilization rose from 75.4% to 77.1%. Unfilled orders reached a record $117.6 billion, up 2.3%, driven by aerospace products and parts (+4.2%). [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260415/dq260415a-eng.htm]
+- **GDP contraction:** Manufacturing GDP fell 1.4% month-over-month and 4.6% year-over-year in the latest StatCan release. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm]
+- **Tariff impact:** U.S. tariffs continue to weigh on manufacturing output and employment. On Apr 2, the White House changed tariffs on steel, aluminum, and copper imports to apply to full customs value with articles made primarily of these metals paying 50% on full value. Canadian mould makers report the tariff tweak directly impacts bottom lines. [Source: https://www.cbc.ca/news/canada/windsor/canadian-mould-makers-tariff-united-states-9.7168162] [Source: https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html]
+- **EV/battery:** The pipeline tracks 52 manufacturing projects worth $67.4 billion. [Source: briefing_latest.json]
+- **Data centres (cross-sector with NAICS 23, 51, 54):** Canada launched the Canadian Sovereign AI Compute Strategy on Apr 15, investing up to $700 million for domestic AI compute capacity and $1 billion for public supercomputing. Microsoft is deploying part of its $13.72 billion commitment across Ontario data centres, generating 1,000 construction jobs and 250 permanent roles. Bell Canada's Saskatchewan AI data centre costs approximately $1.7 billion. eStruxture's $750 million data centre in Rocky View County, AB, is scheduled for completion in 2026. [Source: https://www.canada.ca/en/innovation-science-economic-development/news/2026/04/canada-launches-national-initiative-to-build-large-scale-ai-supercomputing-capacity.html] [Source: https://www.datacenterdynamics.com/en/news/microsoft-commits-to-multi-billion-dollar-investment-in-ai-infrastructure-in-ontario-canada/]
+- **Employment:** Manufacturing employment at 249,600. [Source: briefing_latest.json]
 
 ### SERVICES INDUSTRIES
 
 #### 41: Wholesale Trade
-- **GDP print:** -1.2% MoM, -1.7% YoY — StatCan 36-10-0434. Second-worst MoM print in the services universe after NAICS 55.
-- **Project pipeline:** No projects tagged directly. Track via GDP and merchandise trade indicators (agri_exports, mineral_exports, forestry_exports) in indicators.json.
-- **Source:** StatCan Wholesale Trade Survey (monthly) — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401
+
+- **February 2026 data:** Wholesale trade rose 2.0% month-over-month to $86.8 billion (revised from initial 2.3%), following a revised 1.1% decline in January. Annual growth of 1.2%. Sales up in 5 of 7 subsectors: motor vehicles and parts (+6.1% to $14.4B), food/beverages/tobacco (+2.9% to $16.5B), personal and household goods (+2.5% to record $13.2B). [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260415/dq260415b-eng.htm]
+- **Provincial leaders:** Saskatchewan wholesale trade up 15.3% YoY in February 2026, ranking first among provinces. Ontario posted the largest absolute increase, rising 2.8% to $44.2 billion. [Source: https://www.saskatchewan.ca/en/Government/News-and-Media/2026/april/15/saskatchewan-wholesale-trade-first-in-canada]
+- **Full-year 2025 context:** Wholesale sales (excluding petroleum and oilseed/grain) reached $1.024 trillion in 2025, up 2.9% from 2024. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260217/dq260217b-eng.htm]
+- **Trade disruption:** The Spring 2026 Quarterly Economic and Trade Report from Global Affairs Canada describes a challenging trade environment weighing on wholesale channels. [Source: https://international.canada.ca/en/global-affairs/corporate/reports/chief-economist/quarterly/spring-2026]
 
 #### 44-45: Retail Trade
-- **GDP print:** +0.8% MoM, +2.7% YoY — StatCan 36-10-0434. Positive MoM and YoY.
-- **Project pipeline:** No dedicated tagging. Retail footprint appears inside commercial_mixed projects under NAICS 23.
-- **Source:** StatCan Retail Trade Survey (monthly) — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010000801
+
+- **Q1 2026 spending:** Moneris data (processing ~1 in 3 Canadian transactions) shows total Q1 2026 spending declined 0.27% YoY while average transaction size rose 0.18%. Discretionary spending (all stores less automotive, food, pharmacies) rose 5.6% YoY. [Source: https://retail-insider.com/retail-insider/2026/04/soft-start-to-2026-masks-resilient-consumer-spending-in-canada/]
+- **Consumer sentiment deterioration (Week 2):** Spending intentions weakened in April 2026. Nearly half of Canadians believe the economy is struggling; only 13% expect improvement over the next six months. 43% plan to reduce non-essential spending. Consumers are shifting toward essentials, value, and entertainment. [Source: https://retail-insider.com/retail-insider/2026/04/canadian-spending-intentions-weaken-as-consumer-pressures-build/]
+- **Retail sales:** Year-over-year growth of 1.8%, with overall retail sales at $70.7B (+1.1%). [Source: briefing_latest.json]
+- **Week 1 vs. Week 2:** The consumer sentiment shift was the material change -- early April showed resilient discretionary spending; by mid-April, forward-looking indicators had weakened as economic uncertainty deepened.
 
 #### 48-49: Transportation & Warehousing
-- **GDP print:** -0.7% MoM, +1.6% YoY — StatCan 36-10-0434.
-- **Project pipeline:** 578 projects totalling ~$35.1B; 137 Under Construction, 318 Proposed. Largest items: Trade Diversification Corridors Fund CA ($5B, Proposed), Yonge North Subway Extension ON ($797M, Proposed), Kitchener Central Transit Hub Phase 2 ON ($51M, Proposed), Electrification of the St-Laurent Transportation Center QC ($107M, Proposed), Abitibi-Témiscamingue Transport and Airport Infrastructure QC ($235M, Proposed).
-- **Ports subset (116 projects):** Baffinland Mary River Rail and Port Expansion NU ($3B, Approved) dominates.
-- **Commodity linkage:** Heating Oil ULSD US$3.97/gal (+87.9% YoY) — diesel and freight input cost. BoC Energy Index 1,743 pts (+34.4% MoM, +24.7% YoY).
-- **IAAC ports & logistics:** Wharf 401 Reconstruction Millerand Harbour QC (Under Review), Floating Wharf Replacement at Meteghan Small Craft Harbour NS (Under Review).
+
+- **Government investment:** Canada's newly-elected federal government budgeted $3.6 billion for the Trade Diversification Corridors Fund, including the Saint John Trade Corridor upgrade (road, rail, logistics links between port and inland markets). [Source: https://tc.canada.ca/en/corporate-services/transparency/corporate-management-reporting/departmental-plans-dp/transport-canada-2026-2027-departmental-plan]
+- **Port modernization:** Port Saint John (NB) completed a $178 million modernization with DP World, increasing container terminal capacity from 150,000 TEUs to 1 million TEUs annually. [Source: https://www.freightwaves.com/news/canada-port-dp-world-complete-178m-modernization]
+- **Freight market (April 2026):** Port operations remain fluid but inland rail constraints, rising drayage costs, and shifting cargo flows are introducing localized variability. Canada faces enforcement-driven capacity loss and muted seasonal relief in cross-border markets. [Source: https://www.chrobinson.com/en-us/resources/insights-and-advisories/north-america-freight-insights/apr-2026-freight-market-update/]
+- **Rail freight rates:** Transport Canada is working with railway companies to cut freight rates for transporting Canadian steel and lumber interprovincially, beginning spring 2026. [Source: https://tc.canada.ca/en/corporate-services/transparency/corporate-management-reporting/departmental-plans-dp/transport-canada-2026-2027-departmental-plan]
 
 #### 51: Information & Cultural Industries
-- **GDP print:** +0.9% MoM, +3.2% YoY — StatCan 36-10-0434. Tied with Finance for strongest services YoY.
-- **Project pipeline:** 38 telecom/info projects totalling ~$0.7B direct; most AI data-centre and fibre capex is tagged under manufacturing or telecom. Notable: Bell Canada AI Data Centre RM of Sherwood SK ($1.7B construction, up to $12B projected economic value, Proposed), SaskTel ICT Infrastructure Capital Program SK ($433M, Proposed), Wonder Valley AI Data Centre Park Phase 1 AB ($12B, Proposed).
-- **Source:** StatCan 36-10-0434; Bell Canada press releases — https://www.bce.ca/news-and-media/releases/
+
+- **AI compute strategy:** The Canadian Sovereign AI Compute Strategy, launched Apr 15, includes up to $700 million for compute capacity and $1 billion for public supercomputing infrastructure. [Source: https://www.canada.ca/en/innovation-science-economic-development/news/2026/04/canada-launches-national-initiative-to-build-large-scale-ai-supercomputing-capacity.html]
+- **Telecom market:** The Canada telecom MNO market stands at US$52.28 billion in 2026, forecast to reach US$65.59 billion by 2031 (4.65% CAGR). 5G coverage has surpassed 85% of population. Freedom Mobile's nationwide expansion under Quebecor has driven an 18.2% drop in average wireless tariffs. [Source: https://www.mordorintelligence.com/industry-reports/canada-telecom-market]
+- **Broadband:** The $3.225 billion Universal Broadband Fund is subsidizing backhaul and last-mile builds targeting full 5G rural/Indigenous coverage by 2027. [Source: same as above]
+- **Data centres:** Bell Canada's $1.7 billion Saskatchewan AI data centre, Microsoft's multi-billion-dollar Ontario expansion, and eStruxture's $750 million Alberta project represent combined investment exceeding $4 billion in the period. [Source: https://canada.constructconnect.com/dcn/news/technology/2026/04/ai-driving-data-centre-construction-boom]
+- **Labour:** Information, culture, and recreation employment rose 8,800 (+1%) in March 2026 LFS. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
 
 #### 52: Finance & Insurance
-- **GDP print:** +0.5% MoM, +3.2% YoY — StatCan 36-10-0434. Tied with Information & Culture for strongest services YoY.
-- **Project pipeline:** No direct project tagging (non-capex services sector). Track via S&P/TSX Composite at 33,696 (+42.85% YoY, weekly flat) — briefing_latest.json financialMarkets.indices.
-- **Source:** StatCan 36-10-0434 — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401
+
+- **OSFI outlook:** The 2026-27 Annual Risk Outlook identifies volatile global markets, challenging trade environment, and heightened credit risks in residential secured lending, corporate credit to non-bank financial institutions, and commercial real estate. [Source: https://www.osfi-bsif.gc.ca/en/about-osfi/reports-publications/osfis-annual-risk-outlook-fiscal-year-2026-2027]
+- **Bank licensing pilot:** OSFI is launching a pilot program in June 2026 to expedite approvals for bank licensing, targeting provincial institutions, fintechs, and crypto custodians. [Source: https://www.fasken.com/en/knowledge/2026/02/financial-services-regulatory-updates]
+- **Open banking:** The Consumer-Driven Banking Act is moving Canada toward implementing open banking. [Source: https://www.fasken.com/en/knowledge/2025/12/banking-regulatory-year-in-review-and-2026-outlook]
+- **Credit risk consolidation:** OSFI plans to consolidate credit risk expectations into a single, principles-based guideline covering mortgage lending, commercial real estate, and corporate lending. [Source: same as above]
+- **BoC rate:** Held at 2.25% since Mar 18 (seventh consecutive hold). Next decision: Apr 29, with "no change" priced at 96.5%. [Source: https://wowa.ca/bank-of-canada-interest-rate]
+- **Labour:** Finance, insurance, real estate, and leasing posted the largest March LFS decline at -11,000 jobs. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
 
 #### 53: Real Estate & Rental/Leasing
-- **GDP print:** -0.2% MoM, +1.2% YoY — StatCan 36-10-0434.
-- **Project pipeline:** NAICS 23 residential subset = 138 projects ~$31.9B. Nunavut 750 Homes Initiative ($480M, Under Construction), PEI Affordable Housing Construction 300+ Units ($100M, Proposed), Edmonton Affordable Housing Program ($2.6B, Complete).
-- **Source:** StatCan 36-10-0434.
+
+- **Rental softening:** The era of synchronized national rent inflation is over. Vacancy rates rose sharply in 2025, with Vancouver reaching its highest levels in over 30 years. Landlords in Vancouver are offering incentives including free rent and move-in bonuses. [Source: https://www.cmhc-schl.gc.ca/observer/2025/inside-canada-2025-rental-market-what-changed]
+- **Toronto condo conversions:** Unsold condo units are being converted into rental housing, increasing rental supply short-term while reducing future ownership inventory. [Source: https://www.dashpm.ca/2026/04/10/toronto-real-estate-market-april-2026/]
+- **Purpose-built rental:** Supply expected to rise on high numbers of units under construction, project completions, and policy incentives. [Source: https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/market-reports/housing-market/housing-market-outlook]
+- **Edmonton:** Migration from higher-cost provinces continues to support steady rental demand. [Source: https://www.yegxpanded.com/whats-going-on/edmonton-property-management-in-april-2026-preparing-for-a-strong-second-quarter]
+- **Average home price:** $663,828 nationally. [Source: briefing_latest.json]
 
 #### 54: Professional, Scientific & Technical Services
-- **GDP print:** -0.1% MoM, -0.4% YoY — StatCan 36-10-0434.
-- **Project pipeline:** No direct project tagging. Track via GDP and research-infrastructure programs such as Canada Foundation for Innovation — 92 Research Infrastructure Projects ($552M, Proposed, tagged under education NAICS 61).
-- **Source:** StatCan 36-10-0434.
+
+- **Employment gains:** Professional, scientific, and technical services added 12,000 jobs in March 2026 LFS. [Source: https://www.roberthalf.com/ca/en/insights/research/march-labour-force-survey]
+- **Demographic pressure:** Across western Canada and the North, nearly 19% of the NAICS 54 workforce is over 55. Retirements are expected to increase through 2026, maintaining a tight labour market for advanced technical and engineering roles. [Source: https://www.jobbank.gc.ca/trend-analysis/job-market-reports/western-region/sectoral-profile-technical-services]
+- **GDP contribution (2024):** B.C. $26.3 billion, Alberta $19.4 billion, Manitoba $2.6 billion, Saskatchewan $2.2 billion, territories combined $240 million. [Source: same as above]
+- **Growth drivers:** Infrastructure investment, digital transformation, and demand for technical and legal expertise. [Source: https://ised-isde.canada.ca/app/ixb/cis/summary-sommaire/54]
 
 #### 55: Management of Companies & Enterprises
-- **GDP print:** -4.1% MoM, -21.9% YoY — the single largest GDP contraction in the table — StatCan 36-10-0434. This is a concentrated (small) industry and single-quarter prints are historically volatile; the YoY decline is the largest negative reading in the 20-NAICS universe.
-- **Project pipeline:** No project tagging.
-- **Source:** StatCan 36-10-0434.
+
+- **GDP contraction:** Management of companies and enterprises posted a GDP decline of 31.3% in 2024. The most recent StatCan monthly release shows NAICS 55 down 4.1% month-over-month and 21.9% year-over-year -- the deepest annual contraction among 20 tracked industries. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm] [Source: briefing_latest.json]
+- **Foreign investment:** A DC Report analysis from Apr 16 noted foreign investment flows into Canada signaling renewed global confidence, though the management companies subsector has not yet reflected this in GDP data. [Source: https://www.dcreport.org/2026/04/16/foreign-investment-flows-canada-renewed-global-confidence/]
+- **Context:** This sector's contraction is the outlier among all 20 NAICS industries. No specific project-level activity or new announcements were identified during the two-week window.
 
 #### 56: Administrative & Waste Management Services
-- **GDP print:** -0.1% MoM, -0.2% YoY — StatCan 36-10-0434.
-- **Project pipeline:** 26 environment/waste-tagged projects totalling ~$1.9B; 5 Under Construction. Largest items: Port Lands Flood Protection and Enabling Infrastructure Project ON ($1.3B, Under Construction), Boat Harbour Remediation Project NS ($367M, Approved), City of Regina Railyard Renewal Project SK ($64M, Under Construction).
-- **Source:** StatCan 36-10-0434.
+
+- **Waste management market:** Valued at US$37.02 billion in 2023, forecast to reach US$64.22 billion by 2030 (7.10% CAGR). Growth driven by population increase, technological advancement, and public demand for sustainable waste solutions. [Source: https://www.nextmsc.com/report/canada-waste-management-market]
+- **Ontario Blue Box transition:** As of Jan 1, 2026, producers are fully responsible for providing blue box services across Ontario under extended producer responsibility (EPR). [Source: https://www.ontario.ca/page/waste-management]
+- **Labour:** Business, building, and other support services employment declined 9,500 (-1.4%) in March 2026 LFS. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
+- **B.C. PST expansion:** B.C.'s 2026 budget targets the service economy with PST expansion to professional services, effective 2026. [Source: https://canada-insights.bakermckenzie.com/2026/02/26/british-columbia-2026-budget-targets-service-economy-with-pst-expansion/]
 
 #### 61: Educational Services
-- **GDP print:** +0.5% MoM, -1.9% YoY — StatCan 36-10-0434.
-- **Project pipeline:** 157 projects ~$14.6B; 13 Under Construction, 100 Approved (largest approved count in the services set), 21 Proposed. Largest items: Alberta School Construction Accelerator Program — 16 New Projects ($8.6B, Proposed), Canada Foundation for Innovation — 92 Research Infrastructure Projects CA ($552M, Proposed), Stratford High School Construction PE ($55M, Under Construction).
-- **Source:** StatCan 36-10-0434; Alberta School Capital Projects — https://www.alberta.ca/school-capital-projects
+
+- **Job losses:** Approximately 16,000 sector job losses tracked by consultant Ken Steele, alongside program closures and cost-cutting. [Source: https://thepienews.com/what-will-2026-bring-for-canadian-international-education/]
+- **International student caps:** Further reductions in international student permits are expected in 2026. Graduate-level, doctoral, and research-intensive institutions are comparatively insulated; colleges and pathway-dependent institutions face sustained pressure and enrollment declines. [Source: same as above]
+- **Ontario tuition freeze:** Ontario's tuition freeze remains in place through the 2026-27 academic year, with a broader review of post-secondary funding underway. [Source: https://universityaffairs.ca/news/the-year-ahead-in-higher-ed/]
+- **Tech education contraction:** Several large coding bootcamp providers ceased operations or scaled back following financial shortfalls, reflecting broader pullback as hiring slowed. [Source: same as above]
+- **Capital investment:** Ontario's 2026 budget commits CA$4.2 billion for education infrastructure in 2026-27. [Source: https://budget.ontario.ca/2026/highlights.html]
 
 #### 62: Health Care & Social Assistance
-- **GDP print:** +0.0% MoM, +2.1% YoY — StatCan 36-10-0434.
-- **Project pipeline:** 258 projects ~$20.4B; 47 Under Construction, 107 Approved, 39 Proposed. Largest items: PEI Mental Health Campus Completion PE ($131M, Under Construction), Heart Care Manitoba — Cardiac Centre of Excellence at St. Boniface MB ($22M, Proposed), CT Scanner Installations KCMH and Western Hospital PE ($12M, Proposed), Biindigen Well-Being Centre ON ($13M, Proposed), Women's Health Clinic 419 Graham Redevelopment MB ($10M, Proposed).
-- **Source:** StatCan 36-10-0434.
+
+- **Hospital construction:** Hospital construction starts projected to climb to $28.4 billion in 2026. B.C. has more than $6.4 billion in new hospital construction starting 2025-2026. [Source: https://canada.constructconnect.com/dcn/news/economic/2026/02/hospital-construction-booms-forecasts-point-to-sustained-growth]
+- **South Niagara Hospital:** By April 2026, structural completion reached for the 1.3-million-sq-ft facility (469 single-patient rooms, 8 operating suites, 42 hemodialysis stations, 2 MRIs). On schedule for 2028 completion. [Source: https://www.asianhhm.com/projects/south-niagara-hospital-plans-for-the-construction-of-new-hospital-in-canada]
+- **University Hospital of Northern B.C.:** $103 million Phase 1 (site development and parkade) completing in 2026; Phase 2 ($1.58 billion patient tower) construction to begin fall 2026. [Source: same as above]
+- **Ontario budget:** $5.6 billion for hospital infrastructure and $1.4 billion for other health infrastructure in 2026-27. [Source: https://budget.ontario.ca/2026/highlights.html]
+- **Labour:** Health care and social assistance employment rose 5,000 (+0.2%) in March 2026. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
+- **Quebec:** Hospital staff flagged "lack of urgency" in Quebec's budget for hospital repair projects. [Source: https://www.cbc.ca/news/canada/montreal/quebec-hospital-projects-doctors-staff-react-9.7138974]
 
 #### 71: Arts, Entertainment & Recreation
-- **GDP print:** -0.1% MoM, +2.2% YoY — StatCan 36-10-0434.
-- **Project pipeline:** 150 tourism/culture projects ~$22.1B; 94 Under Construction (highest ratio of Under Construction to total of any services sector). Largest items: Mont-Orford National Park Expansion QC ($59M, Under Construction), Edmonton Winspear Centre Expansion AB ($33M, Under Construction), Flin Flon Community Pool — GRO Program MB ($2.4M, Under Construction).
-- **Source:** StatCan 36-10-0434.
+
+- **Funding deadlines:** Canada Arts Presentation Fund applications opened Apr 1, 2026. Toronto Arts Council Strategic Funding deadline was Apr 13, 2026 (up to $30,000 per project). [Source: https://hellodarwin.com/business-aid/programs/canada-arts-presentation-fund-capf-soutien-a-la-programmation-festivals-artistiques-et-diffuseurs-de-saisons-de-spectacles-professionnels] [Source: https://hellodarwin.com/business-aid/programs/toronto-arts-council-strategic-funding-programs]
+- **Employment:** Ontario's arts, entertainment, and recreation sector employed 177,700 in 2024, with moderate to slow growth expected through 2027. [Source: https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-arts]
+- **Labour (national):** Information, culture, and recreation combined employment rose 8,800 in March LFS. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
+- **FIFA 2026 infrastructure:** Vancouver needs 20,000 incremental rooms to meet peak FIFA demand, mobilizing more than US$1 billion in hotel-related infrastructure. [Source: https://businesstats.com/hospitality-industry-in-canada/]
 
 #### 72: Accommodation & Food Services
-- **GDP print:** +0.7% MoM, +2.3% YoY — StatCan 36-10-0434.
-- **Project pipeline:** No direct tagging in project database. Sector exposure appears indirectly through commercial_mixed projects under NAICS 23. Agricultural commodity inputs: Sugar 13.95 USc/lb (-22.1% YoY), Coffee 276.3 USc/lb (-19.1% YoY), Cocoa US$3,327/t (-60.6% YoY) — all declining YoY (commodities block in briefing_latest.json).
-- **Source:** StatCan 36-10-0434.
+
+- **Market size:** Canada hospitality market valued at US$21.34 billion in 2026, forecast to reach US$27.46 billion by 2031 (5.18% CAGR). Canada's foodservice industry generated a record CAD$120 billion in sales in 2024. [Source: https://www.mordorintelligence.com/industry-reports/hospitality-industry-in-canada]
+- **Labour shortage:** ~1.9 million Canadians work in hospitality (~9.5% of total employment). The sector vacancy rate stands at 3.8% (~18,230 unfilled positions in 2024). [Source: https://businesstats.com/hospitality-industry-in-canada/]
+- **Labour (March LFS):** Accommodation and food services employment declined 10,000 (-0.9%) in March 2026. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
+- **Regional share:** Ontario 29.75% of hospitality market in 2025; B.C. forecast as fastest-growing province at 5.85% CAGR through 2031. [Source: https://businesstats.com/hospitality-industry-in-canada/]
 
 #### 81: Other Services (except Public Administration)
-- **GDP print:** +0.2% MoM, +0.3% YoY — StatCan 36-10-0434. The smallest absolute change in the table.
-- **Project pipeline:** No direct tagging.
-- **Source:** StatCan 36-10-0434.
+
+- **Employment:** Other services posted the largest March 2026 LFS gain at +15,000 jobs. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
+- **Repair subsector:** High costs for new vehicles are driving consumers to repair and maintain existing vehicles, supporting the repair and maintenance subsector. [Source: https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-other-services]
+- **Personal care:** Personal care services are seeing positive demand as inflation weakens and household disposable income stabilizes. [Source: same as above]
+- **B.C. PST expansion:** B.C.'s 2026 budget expands PST to professional services, which will affect portions of NAICS 81. Notice 2026-001 details the scope. [Source: https://www.crowe.com/ca/crowesoberman/insights/bc-notice-2026-001-pst-expansion-professional-services]
 
 #### 91: Public Administration
-- **GDP print:** -0.1% MoM, +0.7% YoY — StatCan 36-10-0434.
-- **Project pipeline:** 231 government/defence/indigenous-tagged projects ~$164.9B; 40 Under Construction, 153 Proposed. Largest items: Northern Defence and Infrastructure — Nunavut Military Bases NU ($32B pan-northern, Proposed), Defence Construction Canada — Active Infrastructure Contracts CA ($8B, Under Construction), Regional Defence Investment Initiative CA ($379M, Proposed).
-- **IAAC:** DND Relocated Infrastructure Project at the 4th Canadian Division Training Centre ON (Under Review), Canadian Coast Guard Westham Island DGPS Tower Removal BC (Under Review), Recapitalize Gagetown Range and Training Area Main Service Roads Upgrade NB (Under Review).
-- **Source:** StatCan 36-10-0434; DCC — https://www.dcc-cdc.gc.ca/
+
+- **Federal spending:** 2026-27 Main Estimates present $502.8 billion in total budgetary spending ($230.4 billion voted, $272.4 billion statutory). Full supply authorization expected in June 2026. [Source: https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending/government-expenditure-plan-main-estimates/2026-27-estimates.html]
+- **Defence procurement:** PM Carney announced a "70% domestic procurement mandate" for military spending, specifying Canadian steel, aluminum, and lumber as primary inputs. An audit warned that military procurement remains plagued by bureaucratic hurdles despite "evolving rapidly." Major procurements include submarines (accelerated timeline), ground-based air defence at CFB Gagetown ($127 million infrastructure), Arctic over-the-horizon radar, and early warning surveillance aircraft. A stand-alone defence investment agency is expected via spring legislation. [Source: https://procurementmag.com/news/canada-pivots-the-new-70-domestic-procurement-mandate] [Source: https://www.cp24.com/politics/2026/04/16/audit-warns-military-procurement-faces-persistent-hurdles/]
+- **PSPC:** Public Services and Procurement Canada's 2026-27 plan forecasts $5.93 billion in total spending and 17,449 FTEs. [Source: https://www.canada.ca/en/public-services-procurement/corporate/transparency/departmental-plan/2026-2027-plan.html]
+- **Trade Diversification Corridors Fund:** $3.6 billion federal allocation for infrastructure linking ports to inland markets. [Source: https://tc.canada.ca/en/corporate-services/transparency/corporate-management-reporting/departmental-plans-dp/transport-canada-2026-2027-departmental-plan]
 
 ---
 
-## 4. Commodity Price Impact Analysis
+## 3. Labour Market by Sector (March 2026 LFS)
 
-### Energy
-Source: briefing_latest.json `commodities` block (43 items, NYMEX/ICE/BoC Valet).
-- WTI Crude US$98.53/bbl — day -11.7%, MoM +18.1%, YoY +58.0%. NYMEX front-month.
-- Brent Crude US$96.52/bbl — day -11.5%, MoM +9.9%, YoY +47.4%. ICE front-month.
-- Western Canadian Select US$85.53/bbl (derived differential).
-- Natural Gas (Henry Hub) US$2.67/MMBtu — day -4.6%, MoM -11.5%, YoY -30.0%. NYMEX.
-- BoC Energy Index 1,743 pts — day +2.0%, MoM +34.4%, YoY +24.7%.
-- Affected NAICS: 21 (421 projects ~$255.9B), 22 (1,392 projects ~$515.5B), 23 (1,373 projects ~$241.8B), 48-49 (578 projects ~$35.1B).
+Statistics Canada published the March 2026 Labour Force Survey on Apr 10. The economy added 14,000 jobs; the unemployment rate held at 6.7%. Average hourly wages rose 4.7% YoY to $37.73/hr, up from 3.9% in February -- the fastest wage growth since October 2024.
 
-### Metals
-- Gold US$4,783/oz — day +2.8%, MoM -8.6%, YoY +56.5%. COMEX.
-- Silver US$75.46/oz — day +3.7%, YoY +148.8%. COMEX.
-- Copper US$5.747/lb — day +3.3%, MoM -2.6%, YoY +37.6%. COMEX.
-- Iron Ore (TSI 62% Fe) US$107.83/t — day +0.3%, MoM +4.8%, YoY +8.6%. SGX.
-- Aluminum US$3,370/t — day -1.2%, YoY +55.5%. LME.
-- Uranium (Cameco CCJ) US$115.54 — day +2.6%, YoY +188.5%. NYSE.
-- Uranium (Sprott URA ETF) US$50.93 — day +4.2%, YoY +130.2%.
-- Steel proxy (SLX ETF) US$98.57 — week +6.6%, MoM +6.0%, YoY +76.3% — commodities.json.
-- Nickel (NIKL ETF proxy) US$28.40 — flat week, flat MoM, flat YoY — commodities.json.
-- BoC Metals & Minerals Index 1,191 pts — day +1.3%, MoM -3.5%, YoY +31.4%.
-- Affected NAICS: 21 (421 projects), 23 (1,373 projects via steel/aluminum/copper input costs).
+| Sector | Change | Direction |
+|--------|--------|-----------|
+| Other services | +15,000 | Up |
+| Professional, scientific, technical | +12,000 | Up |
+| Natural resources | +10,000 | Up |
+| Information, culture, recreation | +8,800 | Up |
+| Health care & social assistance | +5,000 | Up |
+| Finance, insurance, real estate, leasing | -11,000 | Down |
+| Accommodation & food services | -10,000 | Down |
+| Business, building, support services | -9,500 | Down |
 
-### Agriculture
-- Wheat 573.5 USc/bu — day -4.1%, MoM -1.9%, YoY +5.8%. CBOT.
-- Canola C$619/t — MoM -0.2%, YoY -0.3%. StatCan 32-10-0077 Saskatchewan producer prices.
-- Corn 444.5 USc/bu — day -1.7%, YoY -6.2%. CBOT.
-- Soybeans 1,164.2 USc/bu — YoY +15.0%. CBOT.
-- Oats 337.8 USc/bu — day -2.2%. CBOT.
-- Potash (Nutrien NTR) US$72.78 — day -3.6%, YoY +50.3%. NYSE.
-- Live Cattle 247.52 USc/lb — YoY +22.1%. CME.
-- Lean Hogs 104.18 USc/lb — day +15.3%, YoY +19.8%. CME.
-- Feeder Cattle 370.77 USc/lb — YoY +30.7%. CME.
-- Affected NAICS: 11 (17 projects), 72 (input costs for food services).
-
-### Forestry / Forest Products
-- BoC Forestry Index 449 pts — day -1.1%, MoM +2.7%, YoY -10.6%.
-- BoC Fisheries Index 2,148 pts — flat day, YoY +6.8%.
-- Lumber: treated as unavailable (timeseries stale 1,065 days per data_gap_report.md).
-- Affected NAICS: 11 (forestry subset, 12 projects), 23 (residential construction input).
+[Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm] [Source: https://www.roberthalf.com/ca/en/insights/research/march-labour-force-survey]
 
 ---
 
-## 5. Major Project Announcements by Sector (Snapshot, Not Weekly New)
+## 4. Trade Policy & Tariff Impacts
 
-The procurement monitor and jobs monitor both reported empty arrays for the week of 2026-04-11 (signals.json). IAAC tracks 62 active federal assessments (seen_this_week: 18) as the most actionable weekly signal layer.
-
-**IAAC active by bucket (62 total, as of 2026-04-11 snapshot):**
-- Other: 33
-- Energy: 6 (Alberta O&G surface leases OS-7270 & OS-7269, Cold Lake First Nation English Bay Gas Station, Flipi Gas-Fired Generation, Wharf 403 Reconstruction QC)
-- Infrastructure: 4 (Maliseet Road NB, Lucky Man Cree Nation Access Road SK, Graham Road CFB Gagetown NB, Recapitalize Gagetown Main Service Roads NB)
-- Housing: 4
-- Mining: 3 (Springpole Gold ON, Mont Sorcier QC, Ermineskin Drainage AB)
-- Ports & Logistics: 3 (Wharf 401 Millerand QC, Pathways Alliance CO2 Transportation AB, Meteghan Floating Wharf NS)
-- Defence: 2 (Coast Guard Westham Island BC, DND 4th Canadian Division Training Centre ON)
-- Clean Energy: 1 (New Nuclear at Wesleyville ON)
-- Water & Wastewater: 1
-- Transit & Rail: 1
-
-**IAAC by province:** AB 17, ON 15, QC 7, BC 7, SK 5, NB 4, MB 3, NS 2, NL 1, PE 1 (62 total). Source: Federal Impact Assessment Registry — https://iaac-aeic.gc.ca/050/evaluations
+- **U.S. Section 232 restructuring (Apr 6):** Steel, aluminum, and copper tariffs now apply to full customs value; articles made entirely of these metals face 50% on full value. [Source: https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html]
+- **Motor vehicle surtax extension (Apr 8):** Canada extended relief from its 25% counter-tariffs on certain U.S.-manufactured vehicles for an additional year. [Source: same as above]
+- **Softwood lumber:** U.S. Section 232 tariffs and higher AD/CVD rates increase Canadian producers' costs by 25-30%. [Source: https://natural-resources.canada.ca/forest-forestry/forest-industry-trade/measures-transform-canada-softwood-lumber-industry]
+- **China canola tariffs:** 75.8% duty on Canadian canola seed (building on 100% tariff on oil and meal from March). [Source: https://tradingeconomics.com/commodity/canola]
+- **Broader context:** Canada posted its first per-capita GDP increase in three years in 2025 despite trade headwinds. The broader global trade deficit with the U.S. widened slightly despite tariff measures. [Source: https://www.rbc.com/en/economics/canadian-analysis/featured-analysis/insights/one-year-of-tariff-shocks-in-canada-what-we-learned/]
 
 ---
 
-## 6. Labour Market by Sector
+## 5. Major Project Announcements (Two-Week Window)
 
-Jobs file (jobs.json) reports 0 active hiring spikes for the week of 2026-04-11 (signals.job_spikes empty). Sector-level labour commentary for this week relies on:
-- Industry GDP prints in Section 2 as the closest lagging employment proxy.
-- StatCan Labour Force Survey (Table 14-10-0355) — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410035501
-- StatCan SEPH (employment by industry Table 14-10-0022, monthly; statcan_extended.py pipeline source) — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002201
-
-Project-pipeline-derived Under Construction counts (proxy for active labour draw) by sector, ranked:
-1. NAICS 23 Construction — 516 projects Under Construction
-2. NAICS 48-49 Transportation — 137 projects
-3. NAICS 22 Utilities — 103 projects
-4. NAICS 71 Arts/Entertainment — 94 projects
-5. NAICS 62 Healthcare — 47 projects
-6. NAICS 91 Public Administration — 40 projects
-7. NAICS 21 Mining/O&G — 33 projects
-8. NAICS 31-33 Manufacturing — 17 projects
-9. NAICS 61 Education — 13 projects
-10. NAICS 51 Information & Culture — 11 projects
-11. NAICS 56 Admin/Waste — 5 projects
-12. NAICS 11 Agriculture/Forestry — 4 projects
+| Project | Sector | Province | Value | Status | Source |
+|---------|--------|----------|-------|--------|--------|
+| Build Communities Strong Fund launch | Infrastructure | National | $51B (10-yr) | Launched Apr 7 | [PM release](https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and) |
+| Canadian Sovereign AI Compute Strategy | Telecom/Manufacturing | National | $1.7B+ (public) | Launched Apr 15 | [ISED](https://www.canada.ca/en/innovation-science-economic-development/news/2026/04/canada-launches-national-initiative-to-build-large-scale-ai-supercomputing-capacity.html) |
+| Critical Minerals Production Alliance Round 2 | Mining | National | $12.1B unlocked | Announced Mar 2 | [NRCan](https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html) |
+| Microsoft Ontario data centres | Telecom | ON | Multi-billion (part of $13.72B) | Under construction | [DCD](https://www.datacenterdynamics.com/en/news/microsoft-commits-to-multi-billion-dollar-investment-in-ai-infrastructure-in-ontario-canada/) |
+| Bell Saskatchewan AI data centre | Telecom | SK | $1.7B | Under construction | [ConstructConnect](https://canada.constructconnect.com/dcn/news/technology/2026/04/ai-driving-data-centre-construction-boom) |
+| eStruxture data centre | Telecom | AB | $750M | Completing 2026 | [ConstructConnect](https://canada.constructconnect.com/dcn/news/technology/2026/04/ai-driving-data-centre-construction-boom) |
+| Embleton Community Centre (Brampton) | Infrastructure | ON | $64M | First BCSF project | [PM release](https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and) |
+| Port Saint John modernization | Transport | NB | $178M | Completed | [FreightWaves](https://www.freightwaves.com/news/canada-port-dp-world-complete-178m-modernization) |
+| Darlington SMR operating licence application | Power/Energy | ON | N/A | Licence applied Mar 2026 | [OPG](https://www.opg.com/projects-services/projects/nuclear/smr/darlington-smr/) |
+| University Hospital of Northern B.C. Phase 2 | Healthcare | BC | $1.58B | Construction fall 2026 | [ConstructConnect](https://canada.constructconnect.com/dcn/news/economic/2026/02/hospital-construction-booms-forecasts-point-to-sustained-growth) |
+| CFB Gagetown air defence infrastructure | Defence | NB | $127M | Announced | [CBC](https://www.cbc.ca/news/canada/new-brunswick/canadian-armed-forces-drones-air-defence-9.7155019) |
+| Advanced wood manufacturing facility | Forestry | National | N/A | Federal support announced Apr 2026 | [NRCan](https://www.canada.ca/en/natural-resources-canada/news/2026/04/government-of-canada-supports-new-advanced-wood-manufacturing-facility-to-strengthen-canadas-construction-supply-chain.html) |
+| Laval Cartier sector infrastructure | Infrastructure | QC | N/A | 1,800 units greenlit | [HICC](https://www.canada.ca/en/housing-infrastructure-communities/news/2026/04/building-canada-strong-by-investing-in-the-revitalization-of-lavals-cartier-sector.html) |
 
 ---
 
-## 7. Policy and Regulatory Impacts
+## 6. Week 1 vs. Week 2 Material Changes
 
-Policy feed (policy.json) is empty for the week of 2026-04-11 (data_gap_report.md warning). No LEGISinfo, Canada Gazette, or ministry-feed items available to cite.
-
-Cross-sector observation from IAAC: of 62 active federal impact assessments, 11 carry direct project status signals (6 Energy, 3 Mining, 1 Clean Energy, 1 Ports, plus 2 Defence). All remain Under Review except 1 Cancelled and 1 On Hold. Source: https://iaac-aeic.gc.ca/050/evaluations
-
----
-
-## 8. Emerging Stories and Cross-Sector Trends
-
-### Pipeline Activity Ranking (by project count and under-construction count)
-1. **NAICS 22 Utilities — 1,392 projects, ~$515.5B declared, 103 Under Construction, 328 Proposed, 773 Under Review.** Largest bucket by project count and total declared value. Dominated by Water & Wastewater (516), Clean Energy (188), generic power_energy (312), and Energy (239) sub-tags.
-2. **NAICS 23 Construction — 1,373 projects, ~$241.8B, 516 Under Construction (the highest of any sector), 382 Proposed.** Highest Under Construction count and strongest GDP print of the goods sectors (+1.1% MoM, +2.8% YoY).
-3. **NAICS 48-49 Transportation — 578 projects, ~$35.1B, 137 Under Construction, 318 Proposed.** Third-largest pipeline; ports subset dominates Atlantic and Arctic rail activity.
-
-### GDP Divergence
-Largest negative YoY: NAICS 55 Management of Companies & Enterprises -21.9% and NAICS 31-33 Manufacturing -4.6%. Largest positive YoY: NAICS 11 Agriculture/Forestry/Fishing +5.4%, NAICS 51 Information & Culture +3.2%, NAICS 52 Finance & Insurance +3.2%, NAICS 23 Construction +2.8%.
-
-### Commodity-Driven Sector Exposure
-- Uranium (+188.5% YoY Cameco, +130.2% YoY URA ETF) connects to Saskatchewan uranium mining pipeline and to Wesleyville New Nuclear (Ontario, IAAC Under Review).
-- Steel ETF +76.3% YoY and copper +37.6% YoY are priced input costs against the 1,373 NAICS 23 construction projects.
-- Natural gas -30.0% YoY sets the input-cost environment for BC LNG Canada (~$47.9B, Under Construction) and Alberta gas-fired generation projects tracked in IAAC (Flipi, Cold Lake).
-- Gold +56.5% YoY runs alongside Springpole Gold Project ON (IAAC Under Review) and Mont Sorcier QC (IAAC Under Review).
+| Dimension | Week 1 (Mar 31 - Apr 6) | Week 2 (Apr 7 - Apr 13) | Shift |
+|-----------|------------------------|------------------------|-------|
+| Brent crude | ~$107/bbl | Below $100, settled $99.36 Apr 13 | -7.5% |
+| WTI crude | ~$95/bbl | Plunged below $84 | -11%+ |
+| Copper | Fell below $5.80/lb on blockade fears | Recovered toward $6/lb on ceasefire | +3.4% |
+| Infrastructure policy | Pre-launch period | BCSF $51B launch (Apr 7), AI Compute launch (Apr 15) | Major |
+| U.S. tariffs | Baseline Section 232 rates | Full-value restructuring effective Apr 6; motor vehicle surtax extension Apr 8 | Material |
+| Labour | N/A (March LFS data period) | LFS published Apr 10: +14K jobs, 6.7% unemployment, 4.7% wage growth | Data release |
+| Housing starts | N/A (March CMHC data period) | CMHC released Apr 17: 235,852 SAAR, -6% from Feb | Data release |
+| Consumer sentiment | Resilient discretionary spend | Spending intentions weakened; 43% plan to cut non-essentials | Deterioration |
 
 ---
 
-## 9. Coverage Gaps and Priorities
+## 7. Master Source Registry
 
-Industries requiring supplementary research (no project-side tagging, rely on GDP prints alone): NAICS 41 Wholesale, 44-45 Retail, 52 Finance, 54 Professional Services, 55 Management, 72 Accommodation & Food, 81 Other Services. For these sectors, analysts should cite industry_gdp_mm_* / industry_gdp_yy_* from indicators.json and not attempt to populate project-pipeline numbers.
-
-Real Estate (NAICS 53) is partially captured via NAICS 23 residential subset (138 projects, ~$31.9B).
-
-Data-gap warnings that affect this week's sector research:
-- Lumber price: treat as unavailable.
-- Yield curve: 2Y/5Y/10Y only (spread_2_10 citable, longer/shorter tenors not).
-- policy.json: empty week — no legislative quotes available.
-- jobs.json and procurement.json: no populated signals for the week of 2026-04-11.
-
----
-
-## 10. Master Source Registry
-
-1. StatCan Table 36-10-0434 — GDP by industry at basic prices, monthly — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401 — primary source for all 20 NAICS GDP MoM/YoY prints.
-2. StatCan Table 32-10-0077 — Farm product prices (canola producer price) — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701 — canola price cited in Section 3 and Section 4.
-3. StatCan Table 16-10-0020 — Production of non-metallic minerals (diamonds) — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610002001 — Canadian diamond realized price.
-4. StatCan Table 14-10-0355 — Labour Force Survey, monthly — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410035501 — referenced in Section 6.
-5. StatCan Table 14-10-0022 — SEPH employment by industry — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002201 — referenced in Section 6.
-6. StatCan Table 20-10-0074 — Wholesale trade (monthly) — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401 — NAICS 41.
-7. StatCan Table 20-10-0008 — Retail trade (monthly) — https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010000801 — NAICS 44-45.
-8. StatCan Table 12-10-0129 — Canadian international merchandise trade — cited in indicators.json (agri_exports, forestry_exports, mineral_exports).
-9. Bank of Canada Commodity Price Index (BCPI) — https://www.bankofcanada.ca/rates/price-indexes/bcpi/ — source for BoC Energy Index, BoC Metals & Minerals Index, BoC Forestry Index, BoC Fisheries Index.
-10. Federal Impact Assessment Registry (IAAC) — https://iaac-aeic.gc.ca/050/evaluations — source for 62 active federal assessments by sector/province.
-11. Impact Assessment Agency of Canada overview — https://www.canada.ca/en/impact-assessment-agency.html
-12. Ontario Power Generation — Wesleyville New Nuclear — https://www.opg.com/powering-ontario/our-generation/nuclear/wesleyville/ — source for NAICS 22 Clean Energy IAAC entry.
-13. Defence Construction Canada — https://www.dcc-cdc.gc.ca/ — source for NAICS 91 $8B active infrastructure contracts.
-14. Government of Alberta — School Capital Projects — https://www.alberta.ca/school-capital-projects — source for $8.6B Alberta School Construction Accelerator Program (NAICS 61).
-15. Bell Canada press releases — https://www.bce.ca/news-and-media/releases/ — source for Bell Canada AI Data Centre RM of Sherwood SK (NAICS 51).
-16. briefing_latest.json (internal, pipeline-generated from NYMEX/ICE/COMEX/LME/SGX/BoC/StatCan upstream feeds) — 43-item `commodities` block covering all energy, metals, agriculture, livestock, forestry, and Canadian equity proxies cited in Sections 3 and 4.
-17. commodities.json (internal, pipeline-generated from Yahoo Finance ETF proxies) — uranium_spot (URA), nickel (NIKL), steel (SLX), tsx_infrastructure, potash_nutrien (NTR), cameco_uranium (CCJ), sprott_uranium (SRUUF).
-18. indicators.json (internal) — 252 indicators including the 40 industry_gdp_mm_* / industry_gdp_yy_* keys covering all 20 NAICS.
-19. projects_all.json (internal) — 6,632 active projects, sector-tagged and status-tracked; pipeline source for all project counts and declared values in Sections 1, 3, 5, 6, and 8.
-20. signals.json (internal) — aggregated jobs/procurement/IAAC signal summary for the week of 2026-04-11.
-21. data_gap_report.md (internal) — data-quality flags referenced throughout.
-
----
-
-*End of Agent 1C sector research. All 20 NAICS industries covered. Factual reporting only, per editorial policy.*
+[1] https://www.canada.ca/en/agriculture-agri-food/news/2026/04/government-of-canada-invests-in-low-carbon-agrichemicals-to-advance-sustainability-in-agriculture.html -- Low-carbon agrichemicals investment -- AAFC -- Apr 2026
+[2] https://news.gov.bc.ca/releases/2026AF0011-000175 -- B.C. On-Farm Technology Adoption -- BC Gov -- 2026
+[3] https://sencanada.ca/en/sencaplus/opinion/agricultural-innovation-is-key-to-canada-s-future-so-why-are-we-closing-research-sites-senator-black/ -- Research centre closures -- Senate -- 2026
+[4] https://www.industrialinfo.com/news/article/canada-expecting-upstream-drilling-increase-in-2026--350055 -- Drilling activity forecast -- Industrial Info -- 2026
+[5] https://www.industrialinfo.com/news/article/canadian-natural-resources-outlines-plan-to-grow-oil-and-gas-production-drilling--350680 -- CNRL capex -- Industrial Info -- 2026
+[6] https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html -- Critical minerals round 2 -- NRCan -- Mar 2026
+[7] https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html -- Tariff response -- Finance Canada -- Apr 2026
+[8] https://www.canadianenergycentre.ca/five-things-to-watch-in-canadas-oil-and-gas-industry-in-2026/ -- Oil and gas outlook -- CEC -- 2026
+[9] https://www.cer-rec.gc.ca/en/data-analysis/energy-markets/market-snapshots/2026/market-snapshot-how-much-do-your-neighbours-across-canada-pay-for-electricity.html -- Electricity pricing -- CER -- 2026
+[10] https://www.opg.com/projects-services/projects/nuclear/smr/darlington-smr/ -- Darlington SMR -- OPG -- 2026
+[11] https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and -- BCSF launch -- PMO -- Apr 7, 2026
+[12] https://budget.ontario.ca/2026/highlights.html -- Ontario 2026 budget -- Ontario Gov -- 2026
+[13] https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026 -- Housing starts March -- CMHC -- Apr 17, 2026
+[14] https://canada.constructconnect.com/joc/news/economic/2026/04/cmhc-study-finds-housing-construction-productivity-falling-as-crisis-deepens -- Construction productivity -- ConstructConnect -- Apr 2026
+[15] https://canada.constructconnect.com/dcn/news/economic/2025/12/canadian-construction-economic-insights-for-2026 -- Construction outlook -- ConstructConnect -- Dec 2025
+[16] https://www150.statcan.gc.ca/n1/daily-quotidien/260415/dq260415a-eng.htm -- Manufacturing survey Feb 2026 -- StatCan -- Apr 15, 2026
+[17] https://www150.statcan.gc.ca/n1/daily-quotidien/260331/dq260331a-eng.htm -- GDP by industry Jan 2026 -- StatCan -- Mar 31, 2026
+[18] https://www.cbc.ca/news/canada/windsor/canadian-mould-makers-tariff-united-states-9.7168162 -- Mould makers tariff impact -- CBC -- Apr 2026
+[19] https://www150.statcan.gc.ca/n1/daily-quotidien/260415/dq260415b-eng.htm -- Wholesale trade Feb 2026 -- StatCan -- Apr 15, 2026
+[20] https://www.saskatchewan.ca/en/Government/News-and-Media/2026/april/15/saskatchewan-wholesale-trade-first-in-canada -- SK wholesale trade -- SK Gov -- Apr 15, 2026
+[21] https://retail-insider.com/retail-insider/2026/04/soft-start-to-2026-masks-resilient-consumer-spending-in-canada/ -- Consumer spending -- Retail Insider -- Apr 2026
+[22] https://retail-insider.com/retail-insider/2026/04/canadian-spending-intentions-weaken-as-consumer-pressures-build/ -- Spending intentions -- Retail Insider -- Apr 2026
+[23] https://www.chrobinson.com/en-us/resources/insights-and-advisories/north-america-freight-insights/apr-2026-freight-market-update/ -- Freight market update -- C.H. Robinson -- Apr 2026
+[24] https://www.freightwaves.com/news/canada-port-dp-world-complete-178m-modernization -- Port Saint John -- FreightWaves -- 2026
+[25] https://tc.canada.ca/en/corporate-services/transparency/corporate-management-reporting/departmental-plans-dp/transport-canada-2026-2027-departmental-plan -- Transport Canada plan -- TC -- 2026
+[26] https://www.canada.ca/en/innovation-science-economic-development/news/2026/04/canada-launches-national-initiative-to-build-large-scale-ai-supercomputing-capacity.html -- AI Compute Strategy -- ISED -- Apr 15, 2026
+[27] https://www.mordorintelligence.com/industry-reports/canada-telecom-market -- Telecom market -- Mordor Intelligence -- 2026
+[28] https://www.datacenterdynamics.com/en/news/microsoft-commits-to-multi-billion-dollar-investment-in-ai-infrastructure-in-ontario-canada/ -- Microsoft data centres -- DCD -- 2026
+[29] https://canada.constructconnect.com/dcn/news/technology/2026/04/ai-driving-data-centre-construction-boom -- Data centre boom -- ConstructConnect -- Apr 2026
+[30] https://www.osfi-bsif.gc.ca/en/about-osfi/reports-publications/osfis-annual-risk-outlook-fiscal-year-2026-2027 -- OSFI risk outlook -- OSFI -- 2026
+[31] https://www.fasken.com/en/knowledge/2026/02/financial-services-regulatory-updates -- Bank licensing pilot -- Fasken -- Feb 2026
+[32] https://www.fasken.com/en/knowledge/2025/12/banking-regulatory-year-in-review-and-2026-outlook -- Banking outlook -- Fasken -- Dec 2025
+[33] https://wowa.ca/bank-of-canada-interest-rate -- BoC rate -- WOWA -- Apr 2026
+[34] https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/market-reports/housing-market/housing-market-outlook -- Housing market outlook -- CMHC -- 2026
+[35] https://www.dashpm.ca/2026/04/10/toronto-real-estate-market-april-2026/ -- Toronto real estate -- Dash PM -- Apr 10, 2026
+[36] https://www.yegxpanded.com/whats-going-on/edmonton-property-management-in-april-2026-preparing-for-a-strong-second-quarter -- Edmonton rental -- YEG Xpanded -- Apr 2026
+[37] https://www.roberthalf.com/ca/en/insights/research/march-labour-force-survey -- March LFS -- Robert Half -- Apr 2026
+[38] https://www.jobbank.gc.ca/trend-analysis/job-market-reports/western-region/sectoral-profile-technical-services -- Professional services outlook -- Job Bank -- 2025
+[39] https://ised-isde.canada.ca/app/ixb/cis/summary-sommaire/54 -- NAICS 54 summary -- ISED -- 2026
+[40] https://www.dcreport.org/2026/04/16/foreign-investment-flows-canada-renewed-global-confidence/ -- Foreign investment -- DC Report -- Apr 16, 2026
+[41] https://www.nextmsc.com/report/canada-waste-management-market -- Waste management market -- NextMSC -- 2026
+[42] https://www.ontario.ca/page/waste-management -- Ontario waste EPR -- Ontario Gov -- 2026
+[43] https://canada-insights.bakermckenzie.com/2026/02/26/british-columbia-2026-budget-targets-service-economy-with-pst-expansion/ -- B.C. PST expansion -- Baker McKenzie -- Feb 2026
+[44] https://thepienews.com/what-will-2026-bring-for-canadian-international-education/ -- International education outlook -- PIE News -- 2026
+[45] https://universityaffairs.ca/news/the-year-ahead-in-higher-ed/ -- Higher ed outlook -- University Affairs -- 2026
+[46] https://canada.constructconnect.com/dcn/news/economic/2026/02/hospital-construction-booms-forecasts-point-to-sustained-growth -- Hospital construction -- ConstructConnect -- Feb 2026
+[47] https://www.asianhhm.com/projects/south-niagara-hospital-plans-for-the-construction-of-new-hospital-in-canada -- South Niagara Hospital -- AHHM -- 2026
+[48] https://www.cbc.ca/news/canada/montreal/quebec-hospital-projects-doctors-staff-react-9.7138974 -- Quebec hospital repairs -- CBC -- 2026
+[49] https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-arts -- Arts employment outlook -- Job Bank -- 2024-2026
+[50] https://businesstats.com/hospitality-industry-in-canada/ -- Hospitality statistics -- BusinessTats -- 2026
+[51] https://www.mordorintelligence.com/industry-reports/hospitality-industry-in-canada -- Hospitality market -- Mordor Intelligence -- 2026
+[52] https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-other-services -- Other services outlook -- Job Bank -- 2024-2026
+[53] https://www.crowe.com/ca/crowesoberman/insights/bc-notice-2026-001-pst-expansion-professional-services -- B.C. PST notice -- Crowe -- 2026
+[54] https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending/government-expenditure-plan-main-estimates/2026-27-estimates.html -- 2026-27 Estimates -- TBS -- 2026
+[55] https://procurementmag.com/news/canada-pivots-the-new-70-domestic-procurement-mandate -- 70% domestic procurement -- Procurement Mag -- 2026
+[56] https://www.cp24.com/politics/2026/04/16/audit-warns-military-procurement-faces-persistent-hurdles/ -- Military procurement audit -- CP24 -- Apr 16, 2026
+[57] https://www.cbc.ca/news/canada/new-brunswick/canadian-armed-forces-drones-air-defence-9.7155019 -- Air defence procurement -- CBC -- 2026
+[58] https://www.canada.ca/en/public-services-procurement/corporate/transparency/departmental-plan/2026-2027-plan.html -- PSPC plan -- PSPC -- 2026
+[59] https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm -- Labour Force Survey March 2026 -- StatCan -- Apr 10, 2026
+[60] https://www.rbc.com/en/economics/canadian-analysis/featured-analysis/insights/one-year-of-tariff-shocks-in-canada-what-we-learned/ -- One year of tariff shocks -- RBC -- 2026
+[61] https://natural-resources.canada.ca/forest-forestry/forest-industry-trade/measures-transform-canada-softwood-lumber-industry -- Softwood lumber measures -- NRCan -- 2026
+[62] https://www.canada.ca/en/natural-resources-canada/news/2026/04/government-of-canada-supports-new-advanced-wood-manufacturing-facility-to-strengthen-canadas-construction-supply-chain.html -- Advanced wood manufacturing -- NRCan -- Apr 2026
+[63] https://www.pulpandpapercanada.com/wfp-extends-closure-of-chemainus-sawmill/ -- Chemainus sawmill closure -- Pulp and Paper Canada -- 2026
+[64] https://www.cbc.ca/news/canada/calgary/bakx-deloitte-wti-natural-gas-gasoline-9.7155159 -- Oil price outlook -- CBC -- 2026
+[65] https://tradingeconomics.com/commodity/brent-crude-oil -- Brent crude -- Trading Economics -- Apr 2026
+[66] https://tradingeconomics.com/commodity/crude-oil -- WTI crude -- Trading Economics -- Apr 2026
+[67] https://tradingeconomics.com/commodity/copper -- Copper -- Trading Economics -- Apr 2026
+[68] https://tradingeconomics.com/commodity/canola -- Canola -- Trading Economics -- Apr 2026
+[69] https://tradingeconomics.com/commodity/lumber -- Lumber -- Trading Economics -- Apr 2026
+[70] https://economics.td.com/commodity-price-report -- TD Commodities Quick-Take -- TD Economics -- Apr 2026
+[71] https://www.cbc.ca/news/business/markets-april-13-9.7161390 -- Markets Apr 13 -- CBC -- Apr 13, 2026
+[72] https://www.neobanc.com/articles/utility-companies-ontario -- Ontario utilities -- Neobanc -- 2026
+[73] https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-utilities -- Utilities employment -- Job Bank -- 2024-2026
+[74] https://www.canada.ca/en/housing-infrastructure-communities/news/2026/04/building-canada-strong-by-investing-in-the-revitalization-of-lavals-cartier-sector.html -- Laval Cartier -- HICC -- Apr 2026
+[75] https://international.canada.ca/en/global-affairs/corporate/reports/chief-economist/quarterly/spring-2026 -- Spring 2026 trade report -- GAC -- 2026
+[76] https://www.hiringlab.org/en-ca/2026/04/10/march-2026-labour-force-survey-holding-steady/ -- Indeed hiring analysis -- Indeed -- Apr 10, 2026
+[77] https://www.world-nuclear-news.org/articles/canadian-smr-project-shortlisted-for-federal-fast-track -- LNG Canada Phase 2 fast-track -- WNN -- 2026

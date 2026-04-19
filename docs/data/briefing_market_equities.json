@@ -3,35 +3,35 @@
     {
       "name": "TSX Composite",
       "symbol": "^GSPTSE",
-      "value": "33,477.71",
-      "weekly_pct": "+1.12%",
-      "ytd_pct": "+0.62%",
-      "yoy_pct": "+41.10%",
-      "high_52w": "34,541.30",
-      "low_52w": "23,014.90",
-      "commentary": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at 33,477.71 on April 9, 2026, advancing 1.12% week-over-week and 41.10% year-over-year</span> — the highest year-over-year reading among the four North American benchmarks tracked this week<sup>1</sup>. The index sits 3.1% below its 52-week high of 34,541.30 set on March 2, 2026, and 45.5% above its 52-week low of 23,014.90 recorded on April 10, 2025<sup>1</sup>. The weekly move developed as the latest Statistics Canada monthly GDP release showed mining, quarrying, and oil and gas extraction up 1.2% month-over-month against construction up 1.1% month-over-month, even as the headline monthly GDP print contracted 0.6%<sup>2</sup>. The Signal Dispatch cross-reference engine links the benchmark advance to 428 projects tracked in mining, quarrying, and oil and gas extraction at a combined C$259.7 billion, plus 1,687 infrastructure projects tracked at C$179.0 billion and 802 utilities projects tracked at C$507.7 billion<sup>3</sup>. If the index holds above the 33,000 level amid the Bank of Canada overnight rate held at 2.25% for a seventh consecutive meeting, the 211 residential projects tracked at C$44.4 billion would continue to carry financing exposure tied to the 2Y Government of Canada yield of 2.95%<sup>4</sup>."
+      "value": "34,052",
+      "weekly_pct": "+1.7%",
+      "ytd_pct": "+2.8%",
+      "yoy_pct": "+41%",
+      "high_52w": "34,541",
+      "low_52w": "23,588",
+      "commentary": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at <strong>34,052</strong>, up <strong>1.7%</strong> over the two-week period ending April 16</span> &mdash; the index extended its 12-month advance to <strong>41%</strong> as energy and materials names repriced around the Strait of Hormuz crisis and its resolution<sup>24</sup>. During the first week, the benchmark gained ground as WTI spiked above US$110/bbl on supply-disruption fears; the second week saw partial reversal after the ceasefire and Strait reopening on April 17 sent crude from its peak near US$128/bbl to US$83.85<sup>40</sup>. The index sits <strong>1.4%</strong> below its 52-week high of <strong>34,541</strong> set in early March 2026 and <strong>44.3%</strong> above its 52-week low of <strong>23,588</strong> recorded in April 2025<sup>24</sup>. Sub-index performance diverged: materials advanced on gold reaching US$4,816/oz on April 16 and copper climbing to US$6.07/lb, while financials held steady amid the seventh consecutive Bank of Canada hold<sup>17</sup><sup>19</sup><sup>1</sup>. The Lagging Indicator cross-reference engine links the benchmark to <strong>364 mining projects ($159.5B)</strong> and <strong>63 oil and gas projects ($100.2B)</strong> in the database<sup>24</sup>. If the TSX holds above 34,000 amid the current BoC rate, the <strong>211 residential projects</strong> valued at $44 billion tracked in the pipeline would continue to carry financing exposure tied to the 2-year Government of Canada yield<sup>28</sup>.</p>"
     },
     {
       "name": "S&P 500",
       "symbol": "^GSPC",
-      "value": "6,824.66",
-      "weekly_pct": "+3.68%",
-      "ytd_pct": "+0.64%",
+      "value": "7,022.95",
+      "weekly_pct": "+3.9%",
+      "ytd_pct": "+2.3%",
       "yoy_pct": "+25.06%",
-      "high_52w": "6,978.60",
-      "low_52w": "5,158.20",
-      "commentary": "<p><span class=\"lead-sentence\">The S&P 500 closed at 6,824.66 on April 9, 2026, advancing 3.68% on the week and 25.06% year-over-year</span><sup>5</sup>. The advance developed as the federal funds rate sat at 3.64% per the February 2026 Federal Reserve print, a differential of 139 basis points above the Bank of Canada overnight rate of 2.25%<sup>6</sup>. The benchmark sits 2.2% below its 52-week high of 6,978.60 set on January 27, 2026, and 32.3% above its 52-week low of 5,158.20 recorded on April 21, 2025 — the first weekly close above 6,800 since the late-January 2026 peak<sup>5</sup>.</p>"
+      "high_52w": "7,023",
+      "low_52w": "5,158",
+      "commentary": "<p><span class=\"lead-sentence\">The S&P 500 closed at <strong>7,022.95</strong> on April 13, posting its best weekly gain since November at <strong>+3.9%</strong></span> &mdash; the advance developed as the ceasefire framework eased geopolitical risk premia and the Federal Reserve held at <strong>3.50&ndash;3.75%</strong>, maintaining a <strong>125&ndash;150 basis point</strong> gap above the Bank of Canada overnight rate<sup>25</sup><sup>31</sup>. Both the S&P 500 and Nasdaq posted fresh record closes on April 14<sup>25</sup>. The index is up <strong>25.06%</strong> year-over-year and sits <strong>36.2%</strong> above its 52-week low of <strong>5,158</strong> recorded on April 21, 2025 &mdash; the first weekly close above 7,000 since late January 2026<sup>26</sup>.</p>"
     },
     {
       "name": "DJIA",
       "symbol": "^DJI",
       "value": "48,185.80",
       "weekly_pct": "+3.61%",
-      "ytd_pct": "+1.00%",
+      "ytd_pct": "+1.0%",
       "yoy_pct": "+18.66%",
-      "high_52w": "50,188.14",
-      "low_52w": "38,170.41",
-      "commentary": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average closed at 48,185.80 on April 9, 2026, advancing 3.61% on the week and 18.66% year-over-year</span><sup>7</sup>. The move developed as industrial and healthcare components repriced amid the February 2026 US unemployment reading of 4.4% and the federal funds rate print of 3.64%<sup>6</sup>. The 30-stock benchmark sits 4.0% below its 52-week high of 50,188.14 set on February 10, 2026, and 26.2% above its 52-week low of 38,170.41 recorded on April 21, 2025<sup>7</sup>.</p>"
+      "high_52w": "50,188",
+      "low_52w": "38,170",
+      "commentary": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average surged <strong>3.61%</strong> on April 9 to close at <strong>48,185.80</strong></span> &mdash; the single-session move reflected broad repricing across industrial and healthcare components as the ceasefire framework reduced the geopolitical premium embedded in energy costs<sup>25</sup>. The 30-stock benchmark is up <strong>18.66%</strong> year-over-year and trades <strong>4.0%</strong> below its 52-week high of <strong>50,188</strong> set on February 10, 2026, and <strong>26.2%</strong> above its 52-week low of <strong>38,170</strong> from April 2025<sup>25</sup>. The Federal Reserve signaled one rate cut in 2026 and one in 2027 at its March 18 meeting, reinforcing the wider rate differential with the BoC<sup>31</sup>. The daily gain was the largest single-session percentage advance since November 2024<sup>25</sup>.</p>"
     },
     {
       "name": "Nasdaq Composite",
@@ -40,19 +40,20 @@
       "weekly_pct": "+4.31%",
       "ytd_pct": "+0.55%",
       "yoy_pct": "+33.27%",
-      "high_52w": "23,958.47",
-      "low_52w": "15,870.90",
-      "commentary": "<p><span class=\"lead-sentence\">The Nasdaq Composite closed at 22,822.42 on April 9, 2026, advancing 4.31% on the week and 33.27% year-over-year</span><sup>8</sup>. The advance led the four North American benchmarks on the week, reflecting weekly repricing across technology components following the February 2026 federal funds rate print of 3.64%<sup>6</sup>. The index sits 4.7% below its 52-week high of 23,958.47 set on October 29, 2025, and 43.8% above its 52-week low of 15,870.90 recorded on April 21, 2025<sup>8</sup>.</p>"
+      "high_52w": "23,958",
+      "low_52w": "15,871",
+      "commentary": "<p><span class=\"lead-sentence\">The Nasdaq Composite gained <strong>4.31%</strong> on April 9 to <strong>22,822.42</strong>, then posted a fresh record close on April 14</span> &mdash; technology names led the advance as falling crude prices eased input-cost pressure across the sector following the Strait of Hormuz ceasefire framework<sup>25</sup>. The index is up <strong>33.27%</strong> year-over-year, the widest 12-month gain among the four North American benchmarks tracked, and sits <strong>4.7%</strong> below its 52-week high of <strong>23,958</strong> set in late October 2025<sup>25</sup>.</p>"
     }
   ],
   "sources": [
-    {"id": 1, "title": "Yahoo Finance — S&P/TSX Composite (^GSPTSE)", "url": "https://finance.yahoo.com/quote/%5EGSPTSE/", "archive_url": ""},
-    {"id": 2, "title": "Statistics Canada — Gross domestic product by industry, monthly (Table 36-10-0434-02)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402", "archive_url": ""},
-    {"id": 3, "title": "The Lagging Indicator — Signal Dispatch project database (cross-reference engine)", "url": "https://walterlazzarino.github.io/canada-economic-dashboard/", "archive_url": ""},
-    {"id": 4, "title": "Bank of Canada — Valet API (overnight rate, prime rate, GoC yields)", "url": "https://www.bankofcanada.ca/valet/docs", "archive_url": ""},
-    {"id": 5, "title": "Yahoo Finance — S&P 500 (^GSPC)", "url": "https://finance.yahoo.com/quote/%5EGSPC/", "archive_url": ""},
-    {"id": 6, "title": "Federal Reserve — Open Market Operations", "url": "https://www.federalreserve.gov/monetarypolicy/openmarket.htm", "archive_url": ""},
-    {"id": 7, "title": "Yahoo Finance — Dow Jones Industrial Average (^DJI)", "url": "https://finance.yahoo.com/quote/%5EDJI/", "archive_url": ""},
-    {"id": 8, "title": "Yahoo Finance — Nasdaq Composite (^IXIC)", "url": "https://finance.yahoo.com/quote/%5EIXIC/", "archive_url": ""}
+    {"id": 1, "title": "Bank of Canada \u2014 March 18, 2026 Rate Decision", "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/"},
+    {"id": 17, "title": "Fortune \u2014 Gold Price, April 13, 2026", "url": "https://fortune.com/article/current-price-of-gold-04-13-2026/"},
+    {"id": 19, "title": "Trading Economics \u2014 Copper Price", "url": "https://tradingeconomics.com/commodity/copper"},
+    {"id": 24, "title": "Trading Economics \u2014 TSX Composite", "url": "https://tradingeconomics.com/canada/stock-market"},
+    {"id": 25, "title": "CNBC \u2014 S&P 500 and Nasdaq Record Closes, April 14", "url": "https://www.cnbc.com/2026/04/14/stock-market-today-live-updates.html"},
+    {"id": 26, "title": "Advisor Perspectives \u2014 S&P 500 Best Week Since November", "url": "https://www.advisorperspectives.com/dshort/updates/2026/04/10/s-p-500-snapshot-best-week-since-november"},
+    {"id": 28, "title": "Trading Economics \u2014 Canada 2Y Bond Yield", "url": "https://tradingeconomics.com/canada/2-year-note-yield"},
+    {"id": 31, "title": "Federal Reserve \u2014 FOMC Statement, March 2026", "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm"},
+    {"id": 40, "title": "CNBC \u2014 Oil Prices Drop on Hormuz Reopening", "url": "https://www.cnbc.com/2026/04/17/oil-prices-wti-brent-israel-lebanon-ceasefire-trump.html"}
   ]
 }

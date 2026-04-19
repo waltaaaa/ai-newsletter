@@ -1,90 +1,46 @@
 {
-  "market_commentary": "<p><span class=\"lead-sentence\">Canadian and global equity benchmarks advanced in the week ending April 9</span> &mdash; the S&amp;P/TSX Composite closed at <strong>33,478</strong> (<strong>+1.12%</strong> W/W, <strong>+41.10%</strong> Y/Y)<sup>11</sup>, while the S&amp;P 500 added <strong>+3.68%</strong> to <strong>6,825</strong><sup>12</sup> and the Nikkei 225 gained <strong>+4.78%</strong> to <strong>56,308</strong><sup>30</sup>. The Canadian dollar firmed <strong>+0.70%</strong> to <strong>0.7235 CAD/USD</strong><sup>13</sup>, and the Bank of Canada held its policy rate at <strong>2.25%</strong> for a seventh meeting<sup>1</sup>. The database tracks <strong>5,644 active and proposed projects</strong> valued at <strong>$864.6 billion</strong><sup>5</sup>.</p><p><span class=\"lead-sentence\">Commodity moves split the pipeline along energy and metals lines</span> &mdash; Brent crude fell <strong>-11.47%</strong> on the week to <strong>US$96.52/bbl</strong>, still <strong>+47.40%</strong> Y/Y<sup>10</sup>, against <strong>28 oil and gas projects ($50.6B)</strong> and <strong>207 power and energy projects ($328.1B)</strong><sup>5</sup>. Gold settled at <strong>US$4,783/oz</strong> (<strong>+2.82%</strong>)<sup>15</sup>, copper at <strong>US$5.75/lb</strong> (<strong>+3.32%</strong>)<sup>16</sup>, and the Sprott uranium proxy at <strong>US$50.93</strong> (<strong>+4.15%</strong>)<sup>17</sup>, referenced by <strong>265 mining projects totalling $117.8B</strong><sup>5</sup>. The 2s10s Government of Canada spread held at <strong>+63 bp</strong> with the 10-year at <strong>3.58%</strong><sup>2</sup>, against <strong>657 rate-sensitive residential, commercial, and infrastructure projects ($76.4B)</strong><sup>5</sup>.</p>",
+  "market_commentary": "<p><span class=\"lead-sentence\">The Strait of Hormuz crisis and ceasefire dominated the two-week period ending April 13, whipsawing commodity prices while equities advanced</span> &mdash; WTI crude collapsed <strong>34%</strong> from a peak near <strong>US$128/bbl</strong> (Apr 2) to <strong>US$83.85</strong> after the strait reopened Apr 17<sup>40</sup>, while Brent dropped <strong>9.0%</strong> in a single session to <strong>US$90.38</strong><sup>15</sup>. The S&amp;P/TSX Composite rose <strong>1.7%</strong> to <strong>~34,052</strong> (<strong>+41%</strong> Y/Y)<sup>24</sup>, and the S&amp;P 500 posted a record close at <strong>7,022.95</strong><sup>25</sup>. The Canadian dollar strengthened <strong>1.5%</strong> to <strong>0.7305 CAD/USD</strong><sup>27</sup> as the DXY fell toward <strong>98</strong>, and the Bank of Canada held at <strong>2.25%</strong> for a seventh consecutive meeting<sup>1</sup>. The project database tracks <strong>7,344 projects</strong> valued at <strong>$1.37 trillion</strong>.</p><p><span class=\"lead-sentence\">The oil price reversal split the pipeline\u2019s commodity exposure in two directions</span> &mdash; <strong>63 oil and gas projects ($100.2B)</strong> carry direct WTI exposure, with the WCS differential widening to <strong>$16.25/bbl</strong> below WTI on Apr 13<sup>41</sup>. On the metals side, gold reached <strong>US$4,728/oz</strong> (<strong>+2.82%</strong>)<sup>17</sup> and copper climbed to <strong>US$6.07/lb</strong> (<strong>+3.32%</strong>)<sup>19</sup>, referenced by <strong>364 mining projects totalling $159.5B</strong>. The 10-year Government of Canada bond yield stood at <strong>3.47%</strong><sup>29</sup> with the 2-year at <strong>2.80%</strong><sup>28</sup>, a <strong>67-basis-point</strong> spread, against <strong>211 residential ($44.4B)</strong> and <strong>1,671 infrastructure projects ($179.0B)</strong> carrying financing cost exposure to rate movements.</p>",
   "market_commentary_callout": {
     "title": "Pipeline Cross-Reference",
     "items": [
       {
-        "label": "Rate-sensitive projects (residential, commercial, infrastructure)",
-        "value": "657 projects",
-        "amount": "$76.4B"
+        "label": "Oil & gas (WTI-exposed)",
+        "value": "63 projects",
+        "amount": "$100.2B"
       },
       {
         "label": "Mining (metals, uranium, potash)",
-        "value": "265 projects",
-        "amount": "$117.8B"
+        "value": "364 projects",
+        "amount": "$159.5B"
       },
       {
-        "label": "Power & energy",
-        "value": "207 projects",
-        "amount": "$328.1B"
+        "label": "Residential (rate-sensitive)",
+        "value": "211 projects",
+        "amount": "$44.4B"
       },
       {
-        "label": "Oil & gas",
-        "value": "28 projects",
-        "amount": "$50.6B"
+        "label": "Infrastructure (rate-sensitive)",
+        "value": "1,671 projects",
+        "amount": "$179.0B"
       },
       {
-        "label": "Total active & proposed",
-        "value": "5,644 projects",
-        "amount": "$864.6B"
+        "label": "Total pipeline",
+        "value": "7,344 projects",
+        "amount": "$1.37T"
       }
     ]
   },
   "sources": [
-    {
-      "id": 1,
-      "title": "Bank of Canada — Key interest rate",
-      "url": "https://www.bankofcanada.ca/core-functions/monetary-policy/key-interest-rate/"
-    },
-    {
-      "id": 2,
-      "title": "Bank of Canada — Valet API (Government of Canada bond yields)",
-      "url": "https://www.bankofcanada.ca/valet/docs"
-    },
-    {
-      "id": 5,
-      "title": "The Lagging Indicator — project database (projects_all.json)",
-      "url": "https://walterjbaker.github.io/can-macro-dashboard/data/projects_all.json"
-    },
-    {
-      "id": 10,
-      "title": "Yahoo Finance — Brent Crude Oil futures (BZ=F)",
-      "url": "https://finance.yahoo.com/quote/BZ%3DF/"
-    },
-    {
-      "id": 11,
-      "title": "Yahoo Finance — S&P/TSX Composite (^GSPTSE)",
-      "url": "https://finance.yahoo.com/quote/%5EGSPTSE/"
-    },
-    {
-      "id": 12,
-      "title": "Yahoo Finance — S&P 500 (^GSPC)",
-      "url": "https://finance.yahoo.com/quote/%5EGSPC/"
-    },
-    {
-      "id": 13,
-      "title": "Yahoo Finance — CAD/USD (CAD=X)",
-      "url": "https://finance.yahoo.com/quote/CAD%3DX/"
-    },
-    {
-      "id": 15,
-      "title": "Yahoo Finance — Gold futures (GC=F)",
-      "url": "https://finance.yahoo.com/quote/GC%3DF/"
-    },
-    {
-      "id": 16,
-      "title": "Yahoo Finance — Copper futures (HG=F)",
-      "url": "https://finance.yahoo.com/quote/HG%3DF/"
-    },
-    {
-      "id": 17,
-      "title": "Yahoo Finance — Sprott Physical Uranium Trust (U.UN.TO proxy)",
-      "url": "https://finance.yahoo.com/quote/U-UN.TO/"
-    },
-    {
-      "id": 30,
-      "title": "Yahoo Finance — Nikkei 225 (^N225)",
-      "url": "https://finance.yahoo.com/quote/%5EN225/"
-    }
+    {"id": 1, "title": "Bank of Canada \u2014 March 18, 2026 Rate Decision", "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/"},
+    {"id": 15, "title": "Trading Economics \u2014 Brent Crude Oil Price", "url": "https://tradingeconomics.com/commodity/brent-crude-oil"},
+    {"id": 17, "title": "Fortune \u2014 Gold Price, April 13, 2026", "url": "https://fortune.com/article/current-price-of-gold-04-13-2026/"},
+    {"id": 19, "title": "Trading Economics \u2014 Copper Price", "url": "https://tradingeconomics.com/commodity/copper"},
+    {"id": 24, "title": "Trading Economics \u2014 TSX Composite", "url": "https://tradingeconomics.com/canada/stock-market"},
+    {"id": 25, "title": "CNBC \u2014 S&P 500 and Nasdaq Record Closes, April 14", "url": "https://www.cnbc.com/2026/04/14/stock-market-today-live-updates.html"},
+    {"id": 27, "title": "Trading Economics \u2014 CAD/USD Exchange Rate", "url": "https://tradingeconomics.com/canada/currency"},
+    {"id": 28, "title": "Trading Economics \u2014 Canada 2Y Bond Yield", "url": "https://tradingeconomics.com/canada/2-year-note-yield"},
+    {"id": 29, "title": "Trading Economics \u2014 Canada 10Y Bond Yield", "url": "https://tradingeconomics.com/canada/government-bond-yield"},
+    {"id": 40, "title": "CNBC \u2014 Oil Prices Drop on Hormuz Reopening", "url": "https://www.cnbc.com/2026/04/17/oil-prices-wti-brent-israel-lebanon-ceasefire-trump.html"},
+    {"id": 41, "title": "BOE Report \u2014 WCS Differential Widens", "url": "https://boereport.com/2026/04/13/discount-on-western-canada-select-widens-45/"}
   ]
 }

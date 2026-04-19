@@ -1,582 +1,373 @@
-{
-  "week_of": "2026-03-31",
-  "projects": [
-    {
-      "name": "BASF Canola Breeding Centre Expansion — Saskatoon",
-      "province": "SK",
-      "cma": "Saskatoon",
-      "sector": "agriculture",
-      "naics_code": "1114",
-      "value": "$25M",
-      "status": "approved",
-      "confidence": 0.45,
-      "project_type": "expansion",
-      "proponent": "BASF Agricultural Solutions",
-      "description": "BASF Agricultural Solutions is investing 17 million euros (approximately $25M CAD) to expand and transform its Canola Breeding Centre of Innovation in Saskatoon. Construction commenced spring 2026 and is expected to take place through end of 2027.",
-      "evidence": [
-        {
-          "url": "https://www.basf.com/global/en/media/news-releases/2026/03/p-26-047",
-          "title": "BASF Agricultural Solutions invests 17 million euro to expand its Canola Breeding Centre of Innovation in Saskatoon, Canada",
-          "date": "2026-03-01",
-          "snippet": "BASF Agricultural Solutions is investing 17 million euro to expand and transform its Canola Breeding Centre of Innovation in Saskatoon, Canada"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Global Agriculture Technology Exchange (GATE) — Winnipeg",
-      "province": "MB",
-      "cma": "Winnipeg",
-      "sector": "agriculture",
-      "naics_code": "1111",
-      "value": "$102M",
-      "status": "approved",
-      "confidence": 0.45,
-      "project_type": "greenfield",
-      "proponent": "Cereal Canada",
-      "description": "Cereal Canada's Global Agriculture Technology Exchange (GATE) is a $102 million facility planned for downtown Winnipeg's Exchange District. The Manitoba government committed $13 million toward the project, which aims to make Canada a leader in cereal grain innovation and global food security.",
-      "evidence": [
-        {
-          "url": "https://siteselection.com/2025-canadas-best-locations/",
-          "title": "2025 Canada's Best Locations — Site Selection Magazine",
-          "date": "2025-04-01",
-          "snippet": "Cereal Canada announced that it received $13 million from the Manitoba government toward the development of its Global Agriculture Technology Exchange (Gate), a $102 million project"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Drake Meats Processing Facility — Saskatchewan",
-      "province": "SK",
-      "cma": "",
-      "sector": "agriculture",
-      "naics_code": "3116",
-      "value": "",
-      "status": "under_construction",
-      "confidence": 0.35,
-      "project_type": "greenfield",
-      "proponent": "Drake Meats Processors",
-      "description": "Drake Meats Processors is constructing a new 53,000-square-foot meat processing facility in Saskatchewan. Construction has broken ground with expectations to open in September 2026, and the plant is expected to create 200 jobs when fully operational.",
-      "evidence": [
-        {
-          "url": "https://siteselection.com/2025-canadas-best-locations/",
-          "title": "2025 Canada's Best Locations — Site Selection Magazine",
-          "date": "2025-04-01",
-          "snippet": "A new meat processing facility by Saskatchewan meat company Drake Meats Processors has already broken ground, with expectations to open in September 2026"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Olymel La Fernandiere Plant Expansion — Trois-Rivieres",
-      "province": "QC",
-      "cma": "Trois-Rivieres",
-      "sector": "manufacturing",
-      "naics_code": "3116",
-      "value": "$142M",
-      "status": "under_construction",
-      "confidence": 0.45,
-      "project_type": "expansion",
-      "proponent": "Olymel",
-      "description": "Olymel is investing $142 million CAD on a major expansion of its La Fernandiere pork and poultry processing plant in Trois-Rivieres, Quebec. Construction was expected to begin in early 2026, with the start of operations slated for spring 2026.",
-      "evidence": [
-        {
-          "url": "https://www.meatpoultry.com/articles/32024-olymel-investing-in-upgrades-expansion-at-quebec-plant",
-          "title": "Olymel investing in upgrades, expansion at Quebec plant",
-          "date": "2025-12-01",
-          "snippet": "Olymel has announced it will invest $104.3 million ($142 million CAD) on a major expansion of its La Fernandiere plant in Trois-Rivieres, Quebec"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "IMT Precision Ammunition Manufacturing Facility — Ingersoll",
-      "province": "ON",
-      "cma": "",
-      "sector": "defence",
-      "naics_code": "3329",
-      "value": "$306M",
-      "status": "proposed",
-      "confidence": 0.5,
-      "project_type": "greenfield",
-      "proponent": "IMT Precision",
-      "description": "IMT Precision will receive up to $306.4 million through the Canadian Defence Industry Resilience (CDIR) Program to establish a new manufacturing facility for 155mm artillery shell production in Ingersoll, Ontario. The facility will create at least 300 full-time jobs. Announced March 18, 2026.",
-      "evidence": [
-        {
-          "url": "https://www.canada.ca/en/department-national-defence/news/2026/03/minister-mcguinty-announces-investment-of-1-4-billion-into-domestic-ammunition-production.html",
-          "title": "Minister McGuinty announces investment of $1.4 billion into Domestic Ammunition Production",
-          "date": "2026-03-18",
-          "snippet": "IMT Precision receiving as much as C$305.4 million to establish a new facility in Ingersoll, Ontario that will produce empty metal shells"
-        },
-        {
-          "url": "https://www.cbc.ca/news/canada/london/munitions-factory-in-ingersoll-ont-given-multi-million-dollar-defence-contract-9.7132882",
-          "title": "Munitions factory in Ingersoll, Ont., given multi-million dollar defence contract",
-          "date": "2026-03-18",
-          "snippet": "IMT Precision in Ingersoll will receive up to $306.4 million to establish a new manufacturing facility for crucial artillery components"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Bombardier Manufacturing Centre — Dorval",
-      "province": "QC",
-      "cma": "Montreal",
-      "sector": "manufacturing",
-      "naics_code": "3364",
-      "value": "$100M",
-      "status": "approved",
-      "confidence": 0.5,
-      "project_type": "greenfield",
-      "proponent": "Bombardier Inc.",
-      "description": "Bombardier is building a new 126,000-square-foot manufacturing centre in Dorval, Quebec, near its existing facilities. The $100 million facility, supported by a $35 million Investissement Quebec loan, will expand business aircraft production capacity and is expected to open before end of 2027.",
-      "evidence": [
-        {
-          "url": "https://bombardier.com/en/media/news/bombardier-expands-its-manufacturing-footprint-dorval-100-million-project-support",
-          "title": "Bombardier Expands Its Manufacturing Footprint in Dorval with $100 Million Project to Support Worldwide Growth",
-          "date": "2026-01-15",
-          "snippet": "Bombardier is announcing a new 126,000-square-foot, state-of-the-art manufacturing centre in Dorval. The project represents an investment of approximately $100 million"
-        },
-        {
-          "url": "https://www.cbc.ca/news/canada/montreal/bombardier-capacity-montreal-manufacturing-centre-9.7047152",
-          "title": "Bombardier looks to expand capacity with new Montreal-area manufacturing centre",
-          "date": "2026-01-15",
-          "snippet": "Bombardier announced it will build a new 126,000-square-foot manufacturing centre west of Montreal in Dorval that will cost about $100 million"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Coca-Cola Canada Brampton Facility Expansion",
-      "province": "ON",
-      "cma": "Toronto",
-      "sector": "manufacturing",
-      "naics_code": "3121",
-      "value": "$141M",
-      "status": "approved",
-      "confidence": 0.4,
-      "project_type": "expansion",
-      "proponent": "Coca-Cola Canada Bottling Ltd.",
-      "description": "Coca-Cola Canada Bottling Ltd. is spending $141 million to renovate and expand its flagship manufacturing, distribution and sales centre in Brampton, Ontario.",
-      "evidence": [
-        {
-          "url": "https://canada.constructconnect.com/dcn/news/projects/2026/02/now-thats-refreshing-coca-cola-canada-invests-141m-in-brampton-bottling-plant",
-          "title": "Now that's refreshing: Coca-Cola Canada invests $141M in Brampton bottling plant",
-          "date": "2026-02-01",
-          "snippet": "Coca-Cola Canada Bottling Ltd. announced it is spending $141 million to renovate and expand its flagship manufacturing, distribution and sales centre located in Brampton"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Minth Group Automotive Manufacturing Campus — Windsor",
-      "province": "ON",
-      "cma": "Windsor",
-      "sector": "manufacturing",
-      "naics_code": "3363",
-      "value": "$300M",
-      "status": "under_construction",
-      "confidence": 0.5,
-      "project_type": "greenfield",
-      "proponent": "Minth Group",
-      "description": "Minth Group is investing nearly $300 million to build a 379,415-square-foot automotive parts manufacturing facility on 54 acres at Windsor International Airport. Phase 1 produces aluminum, steel, and plastic components for EV and hybrid vehicles, creating 1,099 jobs. Mass production is targeted for late 2026 or early 2027.",
-      "evidence": [
-        {
-          "url": "https://www.investontario.ca/press-release/minth-group-builds-its-first-canadian-manufacturing-facility-windsor-ontario",
-          "title": "Minth Group builds its first Canadian manufacturing facility in Windsor, Ontario",
-          "date": "2025-04-01",
-          "snippet": "Minth Group's first Canadian manufacturing expansion brings 1,099 new jobs, with a facility spanning up to one million square feet"
-        },
-        {
-          "url": "https://windsornewstoday.ca/windsor/news/2025/04/03/new-auto-plant-on-airport-lands-expected-to-create-1100-jobs",
-          "title": "New auto plant on airport lands expected to create 1,100 jobs",
-          "date": "2025-04-03",
-          "snippet": "Minth Group is making a nearly $300 million investment to build a new auto parts manufacturing facility in Windsor, Ontario"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Massilly North America Packaging Facility — Ontario",
-      "province": "ON",
-      "cma": "",
-      "sector": "manufacturing",
-      "naics_code": "3324",
-      "value": "",
-      "status": "approved",
-      "confidence": 0.35,
-      "project_type": "greenfield",
-      "proponent": "Massilly North America Inc.",
-      "description": "Massilly North America Inc. is establishing a new facility to produce cans for food packaging, expanding its operations to include coil cutting and three-piece can production lines. Announced January 2026 by the Government of Ontario.",
-      "evidence": [
-        {
-          "url": "https://budget.ontario.ca/2026/chapter-1b-economy.html",
-          "title": "Government of Ontario Budget 2026 — Economy Chapter",
-          "date": "2026-01-01",
-          "snippet": "Massilly North America Inc. is establishing a new state-of-the-art facility to produce cans for food packaging, expanding its operations to include coil cutting and three-piece can production lines"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Northern Operation Support Hub — Whitehorse",
-      "province": "YT",
-      "cma": "Whitehorse",
-      "sector": "defence",
-      "naics_code": "9711",
-      "value": "",
-      "status": "proposed",
-      "confidence": 0.45,
-      "project_type": "greenfield",
-      "proponent": "Department of National Defence",
-      "description": "One of two main Northern Operation Support Hubs announced as part of Canada's $32 billion northern defence and infrastructure plan. The Whitehorse hub will include airstrips, logistics facilities, and critical supplies to enable faster military responses in the Arctic. Announced March 12, 2026.",
-      "evidence": [
-        {
-          "url": "https://www.pm.gc.ca/en/news/news-releases/2026/03/12/prime-minister-carney-announces-ambitious-new-plan-defend-build-and",
-          "title": "Prime Minister Carney announces ambitious new plan to defend, build, and transform the North",
-          "date": "2026-03-12",
-          "snippet": "Two main Northern Operation Support Hubs will be built in Whitehorse and Resolute, Nunavut, which will include airstrips, logistics facilities and critical supplies"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Northern Operation Support Hub — Resolute",
-      "province": "NU",
-      "cma": "",
-      "sector": "defence",
-      "naics_code": "9711",
-      "value": "",
-      "status": "proposed",
-      "confidence": 0.45,
-      "project_type": "greenfield",
-      "proponent": "Department of National Defence",
-      "description": "One of two main Northern Operation Support Hubs announced as part of Canada's $32 billion northern defence and infrastructure plan. The Resolute hub will include airstrips, logistics facilities, and critical supplies for Arctic military operations. Announced March 12, 2026.",
-      "evidence": [
-        {
-          "url": "https://www.pm.gc.ca/en/news/news-releases/2026/03/12/prime-minister-carney-announces-ambitious-new-plan-defend-build-and",
-          "title": "Prime Minister Carney announces ambitious new plan to defend, build, and transform the North",
-          "date": "2026-03-12",
-          "snippet": "Two main Northern Operation Support Hubs will be built in Whitehorse and Resolute, Nunavut, which will include airstrips, logistics facilities and critical supplies"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Northern Operation Support Nodes — Cambridge Bay and Rankin Inlet",
-      "province": "NU",
-      "cma": "",
-      "sector": "defence",
-      "naics_code": "9711",
-      "value": "",
-      "status": "proposed",
-      "confidence": 0.45,
-      "project_type": "greenfield",
-      "proponent": "Department of National Defence",
-      "description": "Two smaller Northern Operation Support Nodes to be built in Cambridge Bay and Rankin Inlet, Nunavut, as part of Canada's $32 billion northern defence plan. These nodes will provide response services at a smaller scale than the main hubs. Announced March 12, 2026.",
-      "evidence": [
-        {
-          "url": "https://www.pm.gc.ca/en/news/news-releases/2026/03/12/prime-minister-carney-announces-ambitious-new-plan-defend-build-and",
-          "title": "Prime Minister Carney announces ambitious new plan to defend, build, and transform the North",
-          "date": "2026-03-12",
-          "snippet": "Two smaller facilities, referred to as Northern Operation Support Nodes, will be built in Cambridge Bay and Rankin Inlet, Nunavut"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Enwave PEI Waste-to-Energy Processing Facility — Charlottetown",
-      "province": "PE",
-      "cma": "Charlottetown",
-      "sector": "environment",
-      "naics_code": "5622",
-      "value": "$170M",
-      "status": "under_construction",
-      "confidence": 0.5,
-      "project_type": "greenfield",
-      "proponent": "Enwave Energy / Maple Reinders / Marco Group",
-      "description": "A $170 million waste-to-energy processing facility in Charlottetown, PEI, capable of processing 90% of the province's residential black cart waste (up to 49,000 tonnes annually). Foundation work began early 2026. Designed by Maple Reinders and Marco Group joint venture. Expected completion spring 2028.",
-      "evidence": [
-        {
-          "url": "https://canada.constructconnect.com/dcn/news/projects/2025/11/p-e-i-s-170m-waste-processing-facility-a-north-american-energy-marvel",
-          "title": "P.E.I.'s $170M waste processing facility a North American energy marvel",
-          "date": "2025-11-01",
-          "snippet": "A new $170-million waste processing facility is being built on Prince Edward Island that will convert municipal solid waste and scrap wood into power"
-        },
-        {
-          "url": "https://www.cbc.ca/news/canada/prince-edward-island/pei-clean-energy-waste-processing-plant-1.7630328",
-          "title": "New $180-million waste processing plant set to open in Charlottetown in 2028",
-          "date": "2025-11-01",
-          "snippet": "The facility will be capable of processing 90 per cent of the province's total black cart residential waste, diverting up to 49,000 tonnes of solid waste"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Shannon Park Housing Development — Dartmouth",
-      "province": "NS",
-      "cma": "Halifax",
-      "sector": "residential",
-      "naics_code": "2361",
-      "value": "$300M",
-      "status": "proposed",
-      "confidence": 0.5,
-      "project_type": "greenfield",
-      "proponent": "Build Canada Homes / Province of Nova Scotia",
-      "description": "A $300 million joint federal-provincial investment to build 930 housing units at Shannon Park in Dartmouth, Nova Scotia, including 630 mixed-market homes and 300 supportive/transitional housing units. Shovels expected in ground in 2026. RFQ closed February 2026.",
-      "evidence": [
-        {
-          "url": "https://www.halifaxexaminer.ca/government/930-new-housing-units-announced-for-shannon-park/",
-          "title": "930 new housing units announced for Shannon Park",
-          "date": "2025-12-14",
-          "snippet": "The Province and the federal government announced $300 million in joint funding to support the construction of 1,430 new homes, including 930 units at Shannon Park"
-        },
-        {
-          "url": "https://www.cbc.ca/news/canada/nova-scotia/shannon-park-construction-tender-spring-9.7045572",
-          "title": "Tenders for Shannon Park housing construction to begin this spring",
-          "date": "2026-02-01",
-          "snippet": "Construction will take place in phases over several years, with officials expecting shovels to be in the ground in 2026"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Ashbridges Bay Outfall Tunnel — Toronto",
-      "province": "ON",
-      "cma": "Toronto",
-      "sector": "infrastructure",
-      "naics_code": "2371",
-      "value": "",
-      "status": "under_construction",
-      "confidence": 0.4,
-      "project_type": "greenfield",
-      "proponent": "City of Toronto",
-      "description": "A 3.5 km tunnel with 7-metre diameter beneath Lake Ontario to carry treated wastewater from Ashbridges Bay WWTP, replacing the existing 1947 outfall. Includes an onshore 16m diameter shaft at 85m depth and 50 risers for water release. Construction began 2018, pumping station completion expected 2026.",
-      "evidence": [
-        {
-          "url": "https://www.hatch.com/Projects/Infrastructure/Ashbridges-Bay-Treatment-Plant-Outfall",
-          "title": "Ashbridges Bay Treatment Plant Outfall — Hatch",
-          "date": "2026-01-01",
-          "snippet": "The project foresees the construction of a new outfall tunnel for the release of treated water into Lake Ontario: it's the largest and most significant water quality improvement plant undertaking in Toronto"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Prince Albert Victoria Hospital Acute Care Tower",
-      "province": "SK",
-      "cma": "",
-      "sector": "healthcare",
-      "naics_code": "6221",
-      "value": "$898M",
-      "status": "under_construction",
-      "confidence": 0.5,
-      "project_type": "expansion",
-      "proponent": "Government of Saskatchewan / PCL Construction",
-      "description": "An $898 million redevelopment at Prince Albert Victoria Hospital including a new 11-storey acute care tower with heliport, expanded emergency department, and larger operating rooms. Capacity increases from 173 to 242 beds (40% increase). Construction began week of March 30, 2026; completion targeted spring 2028.",
-      "evidence": [
-        {
-          "url": "https://www.saskatchewan.ca/government/news-and-media/2024/may/10/construction-begins-on-prince-albert-victoria-hospital-acute-care-tower",
-          "title": "Construction Begins On Prince Albert Victoria Hospital Acute Care Tower",
-          "date": "2024-05-10",
-          "snippet": "The $898 million redevelopment project at Prince Albert Victoria Hospital includes building a new multi-storey acute care tower that will raise capacity by 40 per cent"
-        },
-        {
-          "url": "https://top100projects.ca/the-projects/prince-albert-victoria-hospital/",
-          "title": "Prince Albert Victoria Hospital — Top100Projects",
-          "date": "2026-01-01",
-          "snippet": "Construction on the new acute care tower began the week of March 30, 2026"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Saskatoon Cancer Patient Lodge",
-      "province": "SK",
-      "cma": "Saskatoon",
-      "sector": "healthcare",
-      "naics_code": "6221",
-      "value": "",
-      "status": "proposed",
-      "confidence": 0.4,
-      "project_type": "greenfield",
-      "proponent": "Government of Saskatchewan",
-      "description": "A new Cancer Patient Lodge in Saskatoon, identified in the Saskatchewan 2026-27 budget as a construction start project. The lodge will serve cancer patients requiring treatment at Saskatoon facilities.",
-      "evidence": [
-        {
-          "url": "https://www.discoverhumboldt.com/articles/saskatchewan-launches-monthly-construction-updates-highlights-regina-long-term-care-project",
-          "title": "Saskatchewan launches monthly construction updates",
-          "date": "2026-03-30",
-          "snippet": "Major investments for 2026-27 include construction start for the Saskatoon Cancer Patient Lodge"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Carpere Valley AI Data Centre and Health Town — Moose Jaw",
-      "province": "SK",
-      "cma": "",
-      "sector": "telecom",
-      "naics_code": "5182",
-      "value": "$485M",
-      "status": "proposed",
-      "confidence": 0.35,
-      "project_type": "redevelopment",
-      "proponent": "Carpere Valley Development Corp",
-      "description": "Carpere Valley Development Corp plans a 150MW AI data centre as the centrepiece of a $485 million redevelopment of the former Valley View Centre site in Moose Jaw, Saskatchewan. The project integrates AI, regenerative health care, and sustainable greenhouse agriculture. Phase 1 construction expected late 2025 or early 2026, with 5-8 year buildout.",
-      "evidence": [
-        {
-          "url": "https://www.moosejawtoday.com/local-news/ambitious-485m-project-could-make-moose-jaw-an-ai-powerhouse-10836858",
-          "title": "'Ambitious' $485M project could make Moose Jaw an AI powerhouse",
-          "date": "2025-12-01",
-          "snippet": "Carpere Valley Development Corp has unveiled plans for a 150MW AI data centre as the centerpiece of its ambitious $485 million redevelopment of the former Valley View Centre site"
-        },
-        {
-          "url": "https://www.datacenterdynamics.com/en/news/150mw-data-center-proposed-in-saskatchewan-canada/",
-          "title": "150MW data center proposed in Saskatchewan, Canada",
-          "date": "2025-12-01",
-          "snippet": "The Carpere Valley data center is a 150 MW data center announced by Carpere Canada in Moose Jaw, Saskatchewan"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Yondr Data Centre — Toronto",
-      "province": "ON",
-      "cma": "Toronto",
-      "sector": "telecom",
-      "naics_code": "5182",
-      "value": "",
-      "status": "under_construction",
-      "confidence": 0.45,
-      "project_type": "greenfield",
-      "proponent": "Yondr Group",
-      "description": "Yondr Group is constructing a three-storey, 27MW data centre on a 4.5-acre site in Toronto, the company's first development in Canada. Groundbreaking held January 29, 2025. Ready for service targeted mid-2026. Features closed-loop cooling design.",
-      "evidence": [
-        {
-          "url": "https://www.yondrgroup.com/newsroom/press-release/yondr-group-celebrates-groundbreaking-for-27mw-toronto-data-center/",
-          "title": "Yondr Group celebrates groundbreaking for 27MW Toronto data center",
-          "date": "2025-01-29",
-          "snippet": "Yondr Group held a groundbreaking ceremony to mark the start of work on its 27MW Toronto data center, scheduled to achieve RFS by mid-2026"
-        },
-        {
-          "url": "https://www.datacenterdynamics.com/en/news/yondr-breaks-ground-on-27mw-data-center-in-toronto-canada/",
-          "title": "Yondr breaks ground on 27MW data center in Toronto, Canada",
-          "date": "2025-01-29",
-          "snippet": "Yondr breaks ground on 27MW data center in Toronto, scheduled for ready-for-service by mid-2026"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Prince George University Hospital Patient Tower — Phase 2",
-      "province": "BC",
-      "cma": "",
-      "sector": "healthcare",
-      "naics_code": "6221",
-      "value": "$1580M",
-      "status": "proposed",
-      "confidence": 0.4,
-      "project_type": "expansion",
-      "proponent": "Province of British Columbia",
-      "description": "Phase 2 of the University Hospital of Northern BC in Prince George: a $1.58 billion, 211-bed patient tower to upgrade surgical, cardiac, and mental health programs. Follows the $103 million Phase 1 site development completing in 2026. Construction start fall 2026, completion targeted 2031.",
-      "evidence": [
-        {
-          "url": "https://outpostrecruitment.com/blog/healthcare-construction-canada/",
-          "title": "Job opportunities in Canadian hospital construction projects — Outpost Recruitment",
-          "date": "2026-01-01",
-          "snippet": "Prince George's University Hospital phase two — a $1.58 billion patient tower with 211-bed tower, with construction starting fall 2026 and completing in 2031"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "UHN Toronto Western Surgical Tower",
-      "province": "ON",
-      "cma": "Toronto",
-      "sector": "healthcare",
-      "naics_code": "6221",
-      "value": "$750M",
-      "status": "under_construction",
-      "confidence": 0.4,
-      "project_type": "expansion",
-      "proponent": "University Health Network",
-      "description": "University Health Network's new 15-storey surgical tower at Toronto Western Hospital, a $750 million expansion adding 82 patient rooms. One of the largest healthcare construction projects underway in Toronto.",
-      "evidence": [
-        {
-          "url": "https://www.constructioncanada.net/one-of-the-largest-healthcare-construction-projects-underway/",
-          "title": "One of the largest healthcare construction projects underway — Construction Canada",
-          "date": "2026-01-01",
-          "snippet": "University Health Network's new 15-storey surgical tower at Toronto Western, a $750 million expansion adding 82 patient rooms"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Taltson Hydro Expansion — Major Projects Office Referral",
-      "province": "NT",
-      "cma": "",
-      "sector": "power_energy",
-      "naics_code": "2211",
-      "value": "",
-      "status": "proposed",
-      "confidence": 0.45,
-      "project_type": "expansion",
-      "proponent": "Government of Northwest Territories / NTPC",
-      "description": "The proposed 60 MW expansion of the Taltson hydroelectric facility would double the Northwest Territories' hydro capacity. In March 2026, the project was referred to Canada's Major Projects Office for accelerated review as part of the northern infrastructure plan. Note: May overlap with existing Taltson Hydro Expansion entries in database; this record reflects the March 2026 MPO referral status update.",
-      "evidence": [
-        {
-          "url": "https://canada.constructconnect.com/dcn/news/projects/2026/03/n-w-t-s-top-three-projects-advance-to-major-projects-office",
-          "title": "N.W.T.'s top three projects advance to Major Projects Office",
-          "date": "2026-03-01",
-          "snippet": "In March 2026, the Taltson Hydro Expansion was referred to the Major Projects Office. The proposed 60 MW expansion would double the Northwest Territories' hydro capacity"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    },
-    {
-      "name": "Saskatchewan North-South Power Line Grid Link",
-      "province": "SK",
-      "cma": "",
-      "sector": "power_energy",
-      "naics_code": "2211",
-      "value": "",
-      "status": "approved",
-      "confidence": 0.4,
-      "project_type": "greenfield",
-      "proponent": "SaskPower",
-      "description": "Saskatchewan has approved construction of a power line linking the province's northern and southern electrical grids, a project aimed at improving energy reliability and enabling transmission of hydroelectric power from the north to the south.",
-      "evidence": [
-        {
-          "url": "https://www.ctvnews.ca/regina/article/saskatchewan-approves-power-line-construction-linking-northern-southern-grids/",
-          "title": "Saskatchewan approves power line construction linking northern, southern grids",
-          "date": "2026-03-01",
-          "snippet": "Saskatchewan approves power line construction linking northern, southern grids"
-        }
-      ],
-      "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-03-31"
-    }
-  ]
-}
+[
+  {
+    "name": "Port of Montreal Contrecoeur Container Terminal Expansion",
+    "province": "QC",
+    "cma": "Montréal",
+    "sector": "transport_logistics",
+    "naics_code": "4883",
+    "value": "$2.3B",
+    "status": "under_construction",
+    "confidence": 0.55,
+    "project_type": "expansion",
+    "proponent": "Montreal Port Authority",
+    "description": "Construction of a new container terminal at Contrecoeur, approximately 40 km east of Montreal along the St. Lawrence River. The terminal will add up to 1.15 million TEUs of annual capacity, representing a 60% increase in the Port of Montreal's container throughput. The CIB is providing a $1.16 billion loan, with additional contributions from Quebec ($130M) and Transport Canada ($150M). DP World Canada is in exclusive discussions to serve as terminal operator.",
+    "evidence": [
+      {
+        "url": "https://cib-bic.ca/en/medias/articles/landmark-1.16-billion-loan-to-boost-trade-capacity-jobs-and-economic-growth-through-one-of-canadas-largest-port-expansions",
+        "title": "Landmark $1.16 billion loan to boost trade capacity, jobs and economic growth through one of Canada's largest port expansions",
+        "date": "2026-04-09",
+        "snippet": "CIB provides a $1.16 billion loan for the Port of Montreal's Contrecoeur expansion project, the largest east coast port expansion in Canadian history."
+      },
+      {
+        "url": "https://www.cbc.ca/news/canada/montreal/port-expansion-quebec-9.7158071",
+        "title": "Port expansion near Montreal kicks off as 1st 'nation-building' project",
+        "date": "2026-04-09",
+        "snippet": "Prime Minister Mark Carney broke ground on the port expansion near Montreal, the first nation-building project to begin construction."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "Bell AI Fabric Saskatchewan Data Centre",
+    "province": "SK",
+    "cma": "Regina",
+    "sector": "telecom",
+    "naics_code": "5182",
+    "value": "$1.7B",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "greenfield",
+    "proponent": "Bell Canada",
+    "description": "Bell Canada is constructing a 300 MW AI data centre facility on a 160-acre site in the Rural Municipality of Sherwood, outside Regina. The facility will host AI computing infrastructure operated by CoreWeave and Cerebras. Construction is scheduled to begin spring 2026, with two data halls entering service in the first half of 2027. The project is a partnership with the Saskatchewan government and George Gordon First Nation. SaskTel fibre will link to Bell's national backbone.",
+    "evidence": [
+      {
+        "url": "https://www.cbc.ca/news/canada/saskatchewan/ai-data-rm-of-sherwood-9.7130417",
+        "title": "Bell Canada to start construction on Canada's largest AI data centre near Regina this spring",
+        "date": "2026-03-16",
+        "snippet": "Bell Canada will partner with the Saskatchewan government and George Gordon First Nation to spend $1.7 billion to construct the data centre."
+      },
+      {
+        "url": "https://www.bce.ca/news-and-media/newsroom?article=bell-ai-fabric-expands-national-network-with-300-mw-data-centre-in-saskatchewan",
+        "title": "Bell AI Fabric Expands National Network with 300 MW Data Centre in Saskatchewan",
+        "date": "2026-03-16",
+        "snippet": "Bell AI Fabric expands national network with 300 MW data centre in Saskatchewan, Canada's largest AI data centre."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "Microsoft Azure Canada Central Data Centre Expansion — Ontario",
+    "province": "ON",
+    "cma": "Toronto",
+    "sector": "telecom",
+    "naics_code": "5182",
+    "value": "$7.5B",
+    "status": "under_construction",
+    "confidence": 0.5,
+    "project_type": "expansion",
+    "proponent": "Microsoft Corporation",
+    "description": "Microsoft is expanding its Azure Canada Central data centre region across Ontario with a multi-billion-dollar investment, part of a wider $13.72 billion commitment to Canada deployed between 2023 and 2027. The expansion includes new and expanded facilities in Markham, Vaughan, and the Greater Toronto Area. The projects are expected to create 1,000 construction jobs and 250 permanent operational roles, with new capacity coming online in the second half of 2026.",
+    "evidence": [
+      {
+        "url": "https://www.investontario.ca/press-release/invest-ontario-welcomes-microsofts-ai-infrastructure-expansion-ontario-supporting-1250-jobs",
+        "title": "Invest Ontario welcomes Microsoft's AI infrastructure expansion in Ontario supporting 1,250 jobs",
+        "date": "2026-04-08",
+        "snippet": "Invest Ontario welcomed Microsoft's investment to expand their Azure Canada Central data centre region in Ontario."
+      },
+      {
+        "url": "https://betakit.com/microsoft-to-spend-7-5-billion-on-ai-data-centre-expansion-with-pledge-to-protect-canadas-digital-sovereignty/",
+        "title": "Microsoft to spend $7.5 billion on AI data centre expansion with pledge to protect Canada's digital sovereignty",
+        "date": "2026-04-07",
+        "snippet": "Microsoft is set to make a multi-billion-dollar investment in data centers and AI infrastructure across Ontario, Canada."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "CFB Gagetown Infrastructure Recapitalization",
+    "province": "NB",
+    "cma": "",
+    "sector": "defence",
+    "naics_code": "9271",
+    "value": "$1.06B",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "modernization",
+    "proponent": "Department of National Defence",
+    "description": "The federal government announced over $1 billion in infrastructure investments at 5th Canadian Support Base Gagetown, including $871 million for recapitalization of the Range and Training Area, $172 million for new ground-based air defence infrastructure, and $20.2 million for a modern transition services building. An additional 2,000 soldiers will be posted at Gagetown over the next decade. Note: Existing database entries for CFB Gagetown cover only road maintenance and access road projects, not this defence recapitalization.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/canada-invests-in-infrastructure-at-canadian-forces-base-gagetown.html",
+        "title": "Canada invests in infrastructure at Canadian Forces Base Gagetown",
+        "date": "2026-04-01",
+        "snippet": "Investments include the recapitalization of the Range and Training Area ($871M) and new ground-based air defence infrastructure ($172M)."
+      },
+      {
+        "url": "https://www.cbc.ca/news/canada/new-brunswick/ottawa-invests-more-than-1-billion-in-5th-canadian-support-base-gagetown-9.7143352",
+        "title": "More than $1 billion going to Base Gagetown as part of military rebuilding",
+        "date": "2026-04-01",
+        "snippet": "Prime Minister Mark Carney announced more than $1 billion in new spending for 5th Canadian Support Base Gagetown."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "5 Wing Goose Bay NORAD Northern Basing Infrastructure",
+    "province": "NL",
+    "cma": "",
+    "sector": "defence",
+    "naics_code": "9271",
+    "value": "$8.0B",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "modernization",
+    "proponent": "Department of National Defence",
+    "description": "The federal government announced up to $8 billion in long-term defence investments at 5 Wing Goose Bay as a NORAD northern basing infrastructure site. The first phase includes a $187 million Energy Performance Contract awarded to MCW Custom Energy Solutions Ltd. to modernize the Central Heating Plant by replacing diesel systems with electric boilers. Construction begins May 2026 with completion anticipated by December 2030. Note: Existing database entries cover only Air Defence Countermeasures Flares/Chaff, not this comprehensive NNBI modernization.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/minister-thompson-announces-largest-defence-investment-in-newfoundland-and-labradors-history.html",
+        "title": "Minister Thompson announces largest Canadian defence investment in Newfoundland and Labrador's history",
+        "date": "2026-04-01",
+        "snippet": "The Government of Canada announced significant long-term investments at 5 Wing Goose Bay that may total up to $8 billion as one of Canada's NORAD northern basing infrastructure sites."
+      },
+      {
+        "url": "https://www.renewcanada.net/department-of-national-defence-to-investment-up-to-8b-in-nl/",
+        "title": "Department of National Defence to invest up to $8B at NL's 5 Wing Goose Bay",
+        "date": "2026-04-01",
+        "snippet": "Construction will begin in May 2026, with completion anticipated by December 2030."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "CFB Esquimalt A/B Jetty Replacement",
+    "province": "BC",
+    "cma": "Victoria",
+    "sector": "defence",
+    "naics_code": "9271",
+    "value": "$1.1B",
+    "status": "under_construction",
+    "confidence": 0.5,
+    "project_type": "decommission_replace",
+    "proponent": "Department of National Defence",
+    "description": "A $1.1 billion investment to replace the aging WWII-era A and B jetties at CFB Esquimalt, supporting Royal Canadian Navy operations and future fleet requirements including Arctic/Offshore Patrol Ships, Joint Support Ships, and future Canadian Surface Combatants. The project is expected to support approximately 1,280 construction jobs and will deliver modern, seismically resilient infrastructure. Note: Existing database entry 'CFB Esquimalt Projects' covers the broader program; this entry captures the specific A/B Jetty replacement with its confirmed $1.1B value.",
+    "evidence": [
+      {
+        "url": "https://canadiandefencereview.com/government-announces-1-1b-for-the-esquimalt-jetty-project/",
+        "title": "Government announces $1.1B for the Esquimalt jetty project",
+        "date": "2026-04-01",
+        "snippet": "$1.1 billion will be invested to replace the aging A and B jetties in Esquimalt, British Columbia, supporting Royal Canadian Navy operations."
+      },
+      {
+        "url": "https://www.canada.ca/en/veterans-affairs-canada/news/2026/04/canada-continues-to-invest-in-defence-to-strengthen-national-security.html",
+        "title": "Canada continues to invest in defence to strengthen national security",
+        "date": "2026-04-01",
+        "snippet": "The Esquimalt jetty project is expected to support approximately 1,280 jobs during construction."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "Kraft Heinz Mont Royal Factory Modernization",
+    "province": "QC",
+    "cma": "Montréal",
+    "sector": "manufacturing",
+    "naics_code": "3114",
+    "value": "$250M",
+    "status": "under_construction",
+    "confidence": 0.5,
+    "project_type": "modernization",
+    "proponent": "Kraft Heinz Canada",
+    "description": "Kraft Heinz Canada announced a $250 million investment to modernize its Mont Royal factory in Montreal, the largest modernization effort in the plant's 70-year history. The project will upgrade 41 production lines producing 500 million pounds of product annually, including Kraft Dinner, Philadelphia Cream Cheese, and Heinz Ketchup. The facility employs over 1,000 workers. The first phase is expected to be fully operational by late 2026.",
+    "evidence": [
+      {
+        "url": "https://www.theglobeandmail.com/business/article-kraft-heinz-montreal-factory-investment-canadian-market/",
+        "title": "Kraft Heinz to invest $250-million in Montreal factory to boost capacity amid increased demand",
+        "date": "2026-03-19",
+        "snippet": "Kraft Heinz Canada announced a $250 million investment to modernize its Mont Royal factory in Montreal."
+      },
+      {
+        "url": "https://finance.yahoo.com/economy/policy/articles/kraft-heinz-invest-250-million-192900196.html",
+        "title": "Kraft Heinz to Invest $250 Million in Montreal's Mont Royal Factory to Strengthen Canadian Manufacturing Capacity",
+        "date": "2026-03-19",
+        "snippet": "The funds will be directed toward upgrading and modernizing key plant systems at the Mont Royal facility to enhance efficiency, sustainability, and innovation."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "Suncor Firebag In-Situ Expansion",
+    "province": "AB",
+    "cma": "",
+    "sector": "oil_gas",
+    "naics_code": "2111",
+    "value": "$4.8B",
+    "status": "proposed",
+    "confidence": 0.45,
+    "project_type": "expansion",
+    "proponent": "Suncor Energy Inc.",
+    "description": "Suncor filed an application with the Alberta Energy Regulator to increase the production ceiling at Firebag from 368,000 bbl/day to 700,000 bbl/day. Four new processing trains, each with 60,000 bbl/day capacity, are planned for phased construction between 2032 and 2036, bringing production to over 500,000 bbl/day. The expansion is part of a broader $13 billion strategy to shift from mining to thermal in-situ production by 2040. Capital spending is expected to peak at $2 billion annually between 2029 and 2032.",
+    "evidence": [
+      {
+        "url": "https://www.oilsandsmagazine.com/news/2026/4/6/less-mining-more-in-situ-suncor-unveils-13b-facelift",
+        "title": "Less mining, more in-situ: Suncor unveils $13B facelift",
+        "date": "2026-04-06",
+        "snippet": "Suncor filed an application with the Alberta Energy Regulator to increase the production ceiling at Firebag from 368,000 bbl/day to 700,000 bbl/day."
+      },
+      {
+        "url": "https://www.bnnbloomberg.ca/business/2026/03/31/suncor-plans-major-shift-in-focus-to-in-situ-oil-sands-output-by-2040/",
+        "title": "Suncor plans major shift in focus to in situ oil sands output by 2040",
+        "date": "2026-03-31",
+        "snippet": "Suncor unveiled $13 billion in expansion projects aimed at increasing thermal in-situ production as Base Mine operations wind down."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "Endayaan Omaa — Treaty One Nations Housing on Naawi-Oodena",
+    "province": "MB",
+    "cma": "Winnipeg",
+    "sector": "indigenous",
+    "naics_code": "2362",
+    "value": "$91M",
+    "status": "approved",
+    "confidence": 0.55,
+    "project_type": "greenfield",
+    "proponent": "Treaty One Nations / Build Canada Homes",
+    "description": "The Government of Canada and Treaty One Nations announced a $91 million First Nations-led affordable housing project to build a 260-unit apartment building on Naawi-Oodena, the former Kapyong Barracks in Winnipeg. Named Endayaan Omaa ('Home is Here' in Anishinaabemowin), 109 units will have below-median-market rents. The project requires a minimum 30% Indigenous workforce. Construction is led by Bockstael Construction with completion expected in 2028.",
+    "evidence": [
+      {
+        "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/canada-announces-funding-treaty-one-nations-build-260-homes-naawi-oodena",
+        "title": "Canada announces funding for Treaty One Nations to build 260 homes on Naawi-Oodena",
+        "date": "2026-03-18",
+        "snippet": "The Government of Canada and Treaty One Nations announced funding to build 260 homes on Naawi-Oodena."
+      },
+      {
+        "url": "https://www.cbc.ca/news/canada/manitoba/naawi-oodena-housing-project-9.7134058",
+        "title": "$91M housing project to bring 260 units to Naawi-Oodena development",
+        "date": "2026-03-18",
+        "snippet": "$91M housing project to bring 260 units to the Naawi-Oodena development in Winnipeg."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "Embleton Community Centre and Park — Brampton",
+    "province": "ON",
+    "cma": "Toronto",
+    "sector": "government",
+    "naics_code": "9131",
+    "value": "$212M",
+    "status": "approved",
+    "confidence": 0.5,
+    "project_type": "greenfield",
+    "proponent": "City of Brampton",
+    "description": "The first project funded under the federal Build Communities Strong Fund. The $212 million project (comprising $64 million federal and $148 million municipal funding) will construct a 175,000-square-foot community centre in Brampton featuring a pool, gymnasium, fitness centre, childcare facility, ice pavilion, and courts for tennis, pickleball, and cricket. Construction is expected to begin later in 2026 with completion targeted for 2028.",
+    "evidence": [
+      {
+        "url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/07/prime-minister-carney-launches-build-communities-strong-fund-and",
+        "title": "Prime Minister Carney launches the Build Communities Strong Fund and announces the first tranche of projects",
+        "date": "2026-04-07",
+        "snippet": "Prime Minister Mark Carney officially launched the Build Communities Strong Fund and announced the Embleton Community Centre and Park as its first project."
+      },
+      {
+        "url": "https://www.brampton.ca/EN/City-Hall/News/Pages/News-Release.aspx/1650",
+        "title": "City of Brampton welcomes historic $64 million federal investment in Embleton Community Centre and Park",
+        "date": "2026-04-07",
+        "snippet": "City of Brampton welcomes historic $64 million federal investment in Embleton Community Centre and Park as part of Build Communities Strong Fund launch."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "Iqaluit Wastewater and Utilidor Expansion",
+    "province": "NU",
+    "cma": "",
+    "sector": "environment",
+    "naics_code": "2213",
+    "value": "$108.7M",
+    "status": "approved",
+    "confidence": 0.5,
+    "project_type": "expansion",
+    "proponent": "City of Iqaluit",
+    "description": "The federal government is investing $108.7 million through the Build Communities Strong Fund for upgrades to trucked water and sewer services and expansion of utilidor infrastructure in Iqaluit. The project will facilitate construction of approximately 2,000 to 2,500 new housing units by 2031. Note: Existing database entry 'Iqaluit Water Infrastructure Improvement Project' is a separate earlier project; this is a new federal investment announced April 2026.",
+    "evidence": [
+      {
+        "url": "https://www.newswire.ca/news-releases/building-canada-strong-by-investing-in-water-and-wastewater-infrastructure-to-support-housing-in-iqaluit-871004174.html",
+        "title": "Building Canada strong by investing in water and wastewater infrastructure to support housing in Iqaluit",
+        "date": "2026-04-07",
+        "snippet": "The federal government is investing $108,721,940 in this project through the Direct Delivery stream of the Build Communities Strong Fund."
+      },
+      {
+        "url": "https://www.cbc.ca/news/canada/north/ottawa-northern-projects-infrastructure-funding-9.7155294",
+        "title": "Ottawa announces millions for Northern projects as it rolls out national infrastructure plan",
+        "date": "2026-04-07",
+        "snippet": "Iqaluit will get $108 million for a major expansion of water infrastructure."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "Corner Brook Pulp and Paper Diversification Project",
+    "province": "NL",
+    "cma": "",
+    "sector": "forestry",
+    "naics_code": "3221",
+    "value": "$700M",
+    "status": "proposed",
+    "confidence": 0.4,
+    "project_type": "modernization",
+    "proponent": "Kruger Products",
+    "description": "Kruger proposed a $700 million diversification plan to transform the Corner Brook Pulp and Paper mill into a modernized, sustainable manufacturing complex. The plan includes a new pulp storage facility, upgraded chip handling systems, biomass drying operations, enhancements to the Deer Lake and Watsons Pond hydroelectric assets, and construction of a private wind farm. The proposal shifts the mill from newsprint toward lumber and Kraft pulp production. Government of Newfoundland and Labrador review is ongoing.",
+    "evidence": [
+      {
+        "url": "https://www.cbc.ca/news/canada/newfoundland-labrador/corner-brook-pulp-paper-100-1.7594413",
+        "title": "Kruger celebrates Corner Brook paper mill's 100th anniversary with $700M investment plan",
+        "date": "2025-07-28",
+        "snippet": "Kruger proposed to invest up to $700 million in a diversification plan to ensure the long-term sustainability of Corner Brook Pulp and Paper."
+      },
+      {
+        "url": "https://www.cbc.ca/news/canada/newfoundland-labrador/sawmills-future-newsprint-9.7154979",
+        "title": "As the newsprint industry sputters, these sawmill owners say they're framing up a bright future",
+        "date": "2026-04-13",
+        "snippet": "Kruger-owned Corner Brook Pulp and Paper has a $700-million strategy to modernize its paper making operations."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  },
+  {
+    "name": "St. Albert Northeast Wastewater and Stormwater Expansion",
+    "province": "AB",
+    "cma": "Edmonton",
+    "sector": "infrastructure",
+    "naics_code": "2213",
+    "value": "$28M",
+    "status": "approved",
+    "confidence": 0.45,
+    "project_type": "expansion",
+    "proponent": "City of St. Albert",
+    "description": "The federal and Alberta governments announced a $28 million investment in wastewater, stormwater, and water system expansion for Northeast St. Albert to support sustainable growth and strengthen municipal infrastructure. The project will support housing development in the growing northeast sector of the city.",
+    "evidence": [
+      {
+        "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/04/building-canada-strong-by-investing-in-wastewater-stormwater-and-water-system-expansion-for-northeast-st-albert-alberta.html",
+        "title": "Building Canada strong by investing in wastewater, stormwater, and water system expansion for Northeast St. Albert, Alberta",
+        "date": "2026-04-07",
+        "snippet": "An investment of more than $28 million in the wastewater, stormwater, and water system expansion for Northeast St. Albert."
+      }
+    ],
+    "discovery_source": "cowork_discovery",
+    "discovered_at": "2026-04-18"
+  }
+]

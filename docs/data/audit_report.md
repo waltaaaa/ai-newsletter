@@ -1,25 +1,30 @@
-# Audit Report — Briefing for Week of 2026-03-31
-Audited: 2026-03-31T22:00:00Z
-Auditor: Agent 5 (TL;DR Auditor)
-Briefing file: briefing_2026-03-31.json
+# Audit Report -- Briefing for Week of 2026-04-18
 
-## Overall Verdict: PASS WITH WARNINGS
+Audited: 2026-04-19T02:30:00Z
+Auditor: Agent 5 (TL;DR Auditor)
+Briefing file: briefing_2026-04-18.json
+Edition: DOUBLE EDITION: Mar 31 -- Apr 13, 2026
+
+## Overall Verdict: FAIL -- DO NOT PUBLISH
+
+Three critical issues must be fixed before publication: (1) missing structural JSON fields that will break the frontend, (2) stale CPI provincial range numbers in the national context line and indicatorMeta, and (3) stale/contradictory numbers in all four infographic directives.
 
 ---
 
 ## Test Results Summary
+
 | # | Test | Result | Issues |
 |---|------|--------|--------|
-| 1 | Number Verification | PASS | 0 mismatches on key metrics; 1 CRITICAL contradiction in NAICS 21 |
-| 2 | Citation Integrity | PASS WITH WARNINGS | 0 orphaned (all 150 refs map to _all_verified_sources); 27 sources have empty URLs |
-| 3 | Editorial Compliance | PASS | 0 violations |
-| 4 | Logic & Consistency | FAIL | 1 critical WTI price contradiction in Mining & Energy analysis |
-| 5 | Completeness | PASS WITH WARNINGS | All 13 provinces, 5 goods, 15 services present; 3 structural fields missing |
-| 6 | Freshness | PASS | 2.5% similarity to previous version — substantially new content |
-| 7 | Schema Compliance | PASS WITH WARNINGS | Core types correct; `sources[]` empty, `yieldCurve[]` empty, `charts` missing, `citation_audit` missing |
-| 8 | Cross-Agent Consistency | PASS WITH WARNINGS | WTI contradiction originated in sector research; not caught by writer |
-| 9 | Comparative Sanity | PASS | Word counts within range; magnitudes plausible; tone appropriate |
-| 10 | Security & Integrity | PASS | No PII, no prompt leakage, no API keys, no hallucinated URLs |
+| 1 | Number Verification | FAIL | 3 critical issues |
+| 2 | Citation Integrity | PASS | 0 orphaned, 0 empty URLs |
+| 3 | Editorial Compliance | FAIL | 2 violations |
+| 4 | Logic & Consistency | WARNING | 1 issue |
+| 5 | Completeness | FAIL | 3 missing structural fields; empty industry_executive_summary |
+| 6 | Freshness | PASS | 6.7% similarity |
+| 7 | Schema Compliance | FAIL | 3 missing required fields |
+| 8 | Cross-Agent Consistency | WARNING | 1 issue |
+| 9 | Comparative Sanity | PASS | Plausible ranges |
+| 10 | Security & Integrity | PASS | 0 flags |
 
 ---
 
@@ -27,215 +32,263 @@ Briefing file: briefing_2026-03-31.json
 
 ### Test 1: Number Verification
 
-**National Metrics — All Match:**
-| Metric | Briefing Value | Research Source Value | Result |
-|--------|---------------|---------------------|--------|
-| BoC Rate | 2.25% | 2.25% | MATCH |
-| Real GDP | +0.1% | +0.1% | MATCH |
-| CPI | +1.8% | +1.8% | MATCH |
-| Unemployment | 6.7% | 6.7% | MATCH |
-| Housing Starts | 250,900 | 250,900 | MATCH |
-| Employment Change | -84,000 | -84,000 | MATCH |
-| Trade Balance | -$3.6B | -$3.6B | MATCH |
-| Retail Sales | $70.7B (+1.1%) | $70.7B (+1.1%) | MATCH |
-| Consumer Confidence | 47.50 | 47.50 | MATCH |
+**FAIL -- 3 critical issues found.**
 
-**Provincial Unemployment Rates — All Match indicators.json:**
-| Province | Briefing | indicators.json | Result |
-|----------|----------|----------------|--------|
-| Ontario | 7.6% | 7.6% | MATCH |
-| Alberta | 6.3% | 6.3% | MATCH |
-| British Columbia | 6.1% | 6.1% | MATCH |
-| Manitoba | 5.7% | 5.7% | MATCH |
-| New Brunswick | 7.0% | 7.0% | MATCH |
-| Newfoundland | 9.2% | 9.2% | MATCH |
-| Nova Scotia | 7.1% | 7.1% | MATCH |
+#### Issue 1.1 -- CRITICAL: CPI provincial range uses previous-period values
 
-**Commodity Prices — Match Research:**
-| Commodity | Briefing | Research | Result |
-|-----------|----------|---------|--------|
-| WTI (headline/exec/commodities) | US$102.88/bbl | US$102.88/bbl | MATCH |
-| Brent | US$112.78/bbl | US$112.78/bbl | MATCH |
-| Gold | ~US$4,578/oz | ~US$4,578/oz | MATCH |
-| Natural Gas | ~US$3.05/MMBtu | ~US$3.05/MMBtu | MATCH |
-| Copper | US$5.25-$6.01/lb | ~US$5.90/lb (late March) | MATCH |
+The `indicatorMeta.cpi.context` and `indicatorContextLines.cpi` fields state:
 
-**CRITICAL ISSUE — WTI in Mining & Energy (NAICS 21) analysis:**
-The Mining & Energy sector analysis (goodsIndustries, code "21") states: "WTI crude fell over 20% in recent months to approximately US$55/bbl". This figure directly contradicts:
-- Headline: "WTI Above $100"
-- Executive summary: "WTI crude to US$102.88/bbl"
-- Commodities section: "US$102.88/bbl"
-- Financial markets summary: "US$102.88/bbl"
-- Alberta analysis: "WTI crude oil at US$102.18/bbl"
-- Research_macro.md: "WTI settled at $102.88/bbl"
+> "Provincial CPI ranges from PE +5.4% to ON -1.1%, a 6.5 percentage-point spread."
 
-The US$55/bbl figure appears to be stale data from a pre-Hormuz-crisis version of the sector research. The sector researcher's source material (research_sectors.md) contains this older reference: "WTI crude fell over 20% in recent months to approximately $55/bbl" which predates the March 2026 Strait of Hormuz crisis spike. The goods industry writer carried this stale figure forward without reconciling it against the current WTI price.
+Both PE +5.4% and ON -1.1% are the **previous-period** values. The current-period values are:
+
+- **PEI CPI: +7.3%** (confirmed by both indicators.json and the PEI province card, where prev = +5.4%)
+- **Ontario CPI: -1.8%** (confirmed by both indicators.json and the Ontario province card, where prev = -1.1%)
+
+The correct range is **PE +7.3% to ON -1.8%**, a **9.1 percentage-point** spread (not 6.5pp).
+
+This error propagates into the national analysis paragraph 3 which cites "6.5 percentage points from PE at +5.4% to ON at -1.1%".
+
+**Locations:** `indicatorMeta.cpi.context`, `indicatorContextLines.cpi`, `national.analysis` (paragraph 3)
+
+**Fix:** Replace "PE +5.4% to ON -1.1%, a 6.5 percentage-point spread" with "PE +7.3% to ON -1.8%, a 9.1 percentage-point spread" in all three locations.
+
+#### Issue 1.2 -- CRITICAL: Infographic directives contain stale numbers
+
+All four `infographic_directives` entries contain data from the **previous edition**, not the current one:
+
+| Directive | Field | Stale Value | Current Value |
+|-----------|-------|-------------|---------------|
+| D1 | subtitle | "lost 84,000 jobs in February 2026" | March LFS: +14,000 jobs |
+| D3 | subtitle | "trade deficit widened to $3.6 billion" | Feb trade deficit: $5.7B |
+| D4 | subtitle | "Brent crude at $98.91" | Brent: $90.38/bbl |
+| D4 | subtitle | "gold at $5,062" | Gold: $4,728/oz |
+| D4 | subtitle/insight | "TSX composite at 32,542" | TSX: ~34,052 |
+
+**Location:** `infographic_directives[0-3]`
+
+**Fix:** Regenerate all four infographic directives with current-edition data.
+
+#### Issue 1.3 -- WARNING: WCS/WTI date mismatch creates apparent pricing impossibility
+
+The WCS commodity price is listed as **~US$86.75/bbl** (Apr 13 basis) while WTI is **US$83.85/bbl** (Apr 17 basis). WCS always trades at a discount to WTI, so showing WCS > WTI appears impossible. The WCS price is mathematically correct for Apr 13 (~$103 WTI minus $16.25 discount), but the WTI crash on Apr 17 makes the pairing misleading.
+
+**Location:** `commodities[1].price`
+
+**Fix:** Either update WCS to an Apr 17 estimate (~$67.60 based on $83.85 - $16.25 discount) or prominently note the date difference in the commodity entry.
+
+#### Spot-Check Results (10 key figures)
+
+| Metric | Briefing | Research/Source | Result |
+|--------|----------|-----------------|--------|
+| BoC Rate | 2.25% | 2.25% (Bank of Canada) | MATCH |
+| Unemployment | 6.7% | 6.7% (StatCan LFS Mar 2026) | MATCH |
+| Employment Change | +14,000 | +14,000 (StatCan LFS) | MATCH |
+| CPI | +1.8% | +1.8% (StatCan Feb 2026) | MATCH |
+| Housing Starts | 235,852 SAAR | 235,852 (CMHC Mar 2026) | MATCH |
+| Trade Balance | -$5.7B | -$5.7B (StatCan Feb 2026) | MATCH |
+| Manufacturing Sales | $71.2B | $71.2B (StatCan Feb 2026) | MATCH |
+| WTI | $83.85/bbl | $83.85 (Apr 17, Trading Economics) | MATCH |
+| Wage Growth | +4.7% YoY | +4.7% (StatCan LFS Mar 2026) | MATCH |
+| Consumer Confidence | 46.93 | 46.93 (Bloomberg-Nanos) | MATCH |
+
+All 10 provincial unemployment rates verified against research_provinces.md -- all MATCH.
+
+---
 
 ### Test 2: Citation Integrity
 
-- **150 unique `<sup>N</sup>` references** found across all narrative HTML fields.
-- **157 entries** in `_all_verified_sources[]`.
-- **All 150 cited references** have matching entries in `_all_verified_sources[]` — zero orphaned citations.
-- **`sources[]` (top-level)** is an empty array. The frontend may depend on this field for its source panel. This is a structural issue but not a factual one, as all citations are resolvable via `_all_verified_sources`.
-- **27 sources have empty URLs** (IDs 1-27). These are all internal "Signal Dispatch Project Database" references and sector database references — acceptable as internal data citations, but they are not clickable for external verification.
-- No suspicious or hallucinated URLs detected among the 130 sources with populated URLs.
+**PASS.**
+
+- Total unique citation numbers found in HTML fields: 55
+- Total sources in `_all_verified_sources`: 158
+- Orphaned citations (referenced but no matching source): **0**
+- Empty URLs: **0**
+- All citations map to entries with specific, non-homepage URLs
+
+**Note:** The top-level `sources` field is missing (None), but `_all_verified_sources` contains 158 entries with valid URLs. The fixer should populate the top-level `sources` array from `_all_verified_sources`.
+
+---
 
 ### Test 3: Editorial Compliance
 
-Zero violations found. Scanned all narrative HTML across executive summary, national analysis, consumer pulse, financial markets summary, 20 industry analyses, 4 global region analyses, and all 13 province analyses (including sectorHighlights, labourDeepDive, and consumerPulse sub-sections) for:
-- 27 banned words (should, must, hopefully, unfortunately, worrying, promising, encouraging, welcome, bullish, bearish, concerning, good news, bad news, optimistic, pessimistic, troubling, reassuring, positive development, negative development, silver lining, bright spot, dark cloud, headwind, tailwind, thrilled, feared, hoped)
-- Editorial patterns (implicit recommendations, characterizations, predictions)
+**FAIL -- 2 violations found.**
 
-The briefing maintains strict factual reporting throughout. Conditional language is used properly (e.g., "If WTI remains near...", "If trade disputes persist..."). Attribution language is appropriate (e.g., "The Bank of Canada cited...", "Bond markets priced approximately 86% probability...").
+#### Violation 3.1: "headwind" in infographic_directives[3].insight
+
+> "The TSX composite at 32,542 trades nearly 5x the S&P 500 level in index points, buoyed by elevated commodity prices despite broad economic **headwinds**."
+
+"Headwind" is on the banned word list. It implies a negative judgment about economic conditions.
+
+**Fix:** Replace "despite broad economic headwinds" with a factual clause, e.g., "alongside a -0.2% Q/Q GDP contraction in Q4 2025."
+
+#### Violation 3.2: "tailwind" in infographic_directives[3].subtitle
+
+> "With Brent crude at $98.91 and gold at $5,062, resource **tailwinds** help support the TSX composite at 32,542."
+
+"Tailwind" is on the banned word list. It implies a positive editorial judgment.
+
+**Fix:** Replace "resource tailwinds help support" with factual language, e.g., "elevated commodity prices coincide with."
+
+**Note:** An initial scan flagged "should" in the Natural Gas commentary, but this was a false positive -- the actual word is "shoulder" in "shoulder-season demand."
+
+---
 
 ### Test 4: Logic & Consistency
 
-**CRITICAL CONTRADICTION:**
-The Mining & Energy (NAICS 21) analysis states WTI is at "approximately US$55/bbl" and discusses the implications of WTI "near US$55/bbl" for oil sands breakeven economics. Every other section of the briefing — including the headline, executive summary, commodities, financial markets, Alberta province analysis, and NL province analysis — correctly reports WTI at US$102.88/bbl. This is an unambiguous factual contradiction.
+**PASS WITH WARNINGS.**
 
-**No other contradictions detected:**
-- BoC rate consistently reported as 2.25% across all sections
-- GDP growth consistently +0.1% across executive summary, national analysis, and key indicators
-- Unemployment consistently 6.7% across all references
-- Employment decline consistently -84,000 across all references
-- Trade deficit consistently -$3.6B
-- Housing starts consistently 250,900 SAAR
-- CPI consistently +1.8%
-- Global central bank rates internally consistent (Fed 3.50-3.75%, ECB 2.00%, BoE 3.75%)
+#### Warning 4.1: WCS pricing dates create logical contradiction
 
-**Timeframe handling:** Appropriate. Monthly indicators (Feb 2026 LFS, Feb 2026 CPI) are clearly dated. Quarterly figures (Q4 2025 GDP) are distinguished from monthly. Annual projections (2026 GDP forecasts) are labeled as projections with sources.
+As described in Issue 1.3, the WCS price ($86.75, Apr 13) and WTI price ($83.85, Apr 17) create an apparent impossibility (heavy crude priced above light crude). The WCS commentary correctly explains the $16.25 discount to WTI as of Apr 13, but the headline WCS price needs to be from the same date as the WTI price to avoid reader confusion.
+
+All other logic checks pass:
+- GDP contraction (-0.2% Q/Q) is consistent across exec summary, national analysis, and metrics
+- Employment figures (+14,000 / -84,000 Feb) are consistent across sections
+- Trade deficit ($5.7B) consistent across exec summary, national analysis, and trade balance card
+- Housing starts (235,852 SAAR, -6.0% M/M) consistent across sections
+- BoC rate (2.25%, seventh hold) consistent across all references
+- Provincial unemployment range (SK 5.0% to NL 9.5%) matches all province cards
+
+---
 
 ### Test 5: Completeness
 
-**Structural counts — All meet requirements:**
-- goodsIndustries: 5 of 5 (codes 11, 21, 22, 23, 31-33) -- PASS
-- servicesIndustries: 15 of 15 (all expected codes present) -- PASS
-- provinces: 13 of 13 (ON, QC, AB, BC, SK, MB, NS, NB, NL, PE, YT, NT, NU) -- PASS
-- global: 4 of 4 (United States, China/Asia, European Union, United Kingdom) -- PASS
-- globalVectors: 4 keys (us, china, eu, uk) -- PASS
-- key_indicators: 8 items -- PASS
-- watchlist: 21 items (exceeds 18 minimum) -- PASS
-- word_cloud_topics: 45 items (exceeds 40 minimum) -- PASS
-- infographic_directives: 4 items -- PASS
-- _all_verified_sources: 157 items -- PASS
-- id: 20 (integer) -- PASS
-- discovery_stats: present with sector_counts and status_counts -- PASS
+**FAIL -- 3 missing structural fields, 1 empty required field.**
 
-**Missing structural fields:**
-- `charts` (with yieldCurveCurrent[6] and yieldCurveLastYear[6]) -- MISSING
-- `citation_audit` -- MISSING
-- `yieldCurve` (top-level, 6 tenors) -- empty array (yield curve data exists inside financialMarkets.yieldCurve but not at top level)
-- `industry_executive_summary` -- empty string
+#### Missing Fields
 
-**Content completeness:**
-- `sources[]` is empty (sources are in `_all_verified_sources` instead)
-- `consumer_pulse` is present and populated -- PASS
-- Every province has analysis, sources, projects, sectorHighlights, labourDeepDive, and consumerPulse -- PASS
-- Every industry has code, name, mm, yy, analysis, industrySources, and subsectors -- PASS
+1. **`sources`** -- Top-level sources array is `None`. The schema requires a `sources` list. The `_all_verified_sources` array (158 items) exists and can be used to populate this.
+2. **`charts`** -- Required field is `None`. Expected structure: `{yieldCurveCurrent: [6 items], yieldCurveLastYear: [6 items]}`. The yield curve data exists in `yieldCurve.tenors` and could be used to build this.
+3. **`citation_audit`** -- Required field is `None`. Expected structure: a dict with audit metadata.
+
+#### Empty Field
+
+4. **`industry_executive_summary`** -- Present but contains an empty string (0 characters). Expected: 200-300 words summarizing the industry landscape.
+
+#### Passing Completeness Checks
+
+- Provinces: 13/13 (ON, QC, AB, BC, SK, MB, NS, NB, NL, PE, YT, NT, NU)
+- Goods industries: 5/5 (codes 11, 21, 22, 23, 31-33)
+- Services industries: 15/15 (codes 41, 44-45, 48-49, 51, 52, 53, 54, 55, 56, 61, 62, 71, 72, 81, 91)
+- Global regions: 4/4 (US, China, EU, UK)
+- Global vectors: 3/3 keys (us, china, eu) -- note: `uk` is also present, which is fine
+- Key indicators: 10 items (within 7-10 range)
+- Watchlist: 19 events (exceeds 18 minimum)
+- Word cloud topics: 50 items (exceeds 40 minimum)
+- Yield curve tenors: 6 items
+- Infographic directives: 4 items
+- `_all_verified_sources`: 158 items
+- `discovery_stats`: present with 5 keys
+- `id`: 21 (integer)
+- All 13 provinces have non-empty analysis, sources, projects, sectorHighlights, labourDeepDive, consumerPulse
+- All 20 industries have non-empty analysis, code, name, mm, yy
+
+---
 
 ### Test 6: Freshness
 
-- **Executive summary similarity to previous version: 2.5%** — substantially different content. PASS.
-- **Headline similarity: 22.6%** — completely different headline. Previous: "Ontario, Quebec Unveil $377B Capital Plans as BoC Holds Rate". Current: "Strait of Hormuz Crisis Drives WTI Above $100 as Canada Posts 0.1% GDP Growth and 84,000 Job Losses". PASS.
-- **Metrics changed:** realGdp, participation, employmentChange, tradeBalance, retailSales, avgHomePrice, consumerConfidence, govtDeficit, payrollEmployment (9 of 13 changed).
-- **Metrics unchanged:** bocRate, cpi, unemployment, housingStarts (4 of 13). These are expected to be unchanged as the underlying data releases (Feb 2026 LFS, Feb 2026 CPI, Feb 2026 housing starts) are the same vintage — the BoC held at the same rate. The January GDP release is new this week (released March 31).
-- **Same `week_of` date (2026-03-31):** This appears to be a re-run for the same week, producing materially different content. The prior version did not incorporate the Strait of Hormuz crisis as the dominant theme. This version properly reflects the geopolitical event.
+**PASS.**
+
+- Executive summary similarity to last edition: **6.7%** (well below 50% threshold)
+- Headline similarity: **32.8%** (different stories)
+- Changed metrics: **22 of 31** (71% of metrics updated)
+- Unchanged metrics are expected holds: bocRate (held), cpi (same Feb reading), unemployment (held at 6.7%), participation (held at 64.9%), retailSales (same Jan data), and core CPI sub-components (same Feb data)
+- The headline reflects the Strait of Hormuz reopening -- a new development not in the previous edition
+- March LFS data (+14,000 jobs) is new data released Apr 10
+- March housing starts (235,852 SAAR) is new data released Apr 17
+
+---
 
 ### Test 7: Schema Compliance
 
-**Type checks — All pass:**
-All 14 checked fields have correct types (str, list, dict, int as required).
+**FAIL -- 3 missing required fields.**
 
-**Structure checks:**
-- All key_indicators have label and value -- PASS
-- All industries have code, name, mm, yy, analysis -- PASS
-- All global regions have region, indicators, analysis, sources -- PASS
-- All watchlist events have date, event_name, institution, impact -- PASS
-- All word_cloud_topics have topic, sentiment_score (-1 to 1), frequency -- PASS
+All type checks pass for present fields. The failures are:
 
-**Warnings:**
-- `sources[]` is an empty array. The frontend's source panel may render empty. Sources exist in `_all_verified_sources[]` but may not be read by the frontend code path that expects `sources[]`.
-- `yieldCurve` at the top level is an empty array. Yield curve data is available inside `financialMarkets.yieldCurve` as a dict with 7 entries. The `charts.yieldCurveCurrent` and `charts.yieldCurveLastYear` arrays expected by the frontend are missing entirely.
-- `charts` field is missing. Frontend chart rendering for yield curve comparison will fail or fall back.
-- `citation_audit` field is missing.
-- `industry_executive_summary` is an empty string.
+1. **`sources`**: Missing (None). Frontend expects `sources` as a list.
+2. **`charts`**: Missing (None). Frontend expects `charts` as a dict with `yieldCurveCurrent` and `yieldCurveLastYear` arrays of 6 items each.
+3. **`citation_audit`**: Missing (None). Frontend expects `citation_audit` as a dict.
+
+Additional schema observations:
+- `yieldCurve` is a dict (not a list), containing 6 tenors with correct fields (`tenor`, `current`, `year_ago`, `change_bp`). The skill spec says "list, 6 tenors" but the actual data is a dict with a `tenors` array inside. This may be acceptable if the frontend handles both formats.
+- Commodity items have no `items` sub-array (13 commodities, all with empty `items`). Each commodity is a standalone object with `name`, `price`, `category`, `commentary`, `week_change`, `month_change`, `year_change` fields. This appears to be an intentional flat structure.
+
+---
 
 ### Test 8: Cross-Agent Consistency
 
-**Research to Briefing — Generally strong:**
-- Macro research numbers (BoC rate, GDP, CPI, unemployment, housing, trade, retail, consumer confidence, financial markets, commodities, global context) all carried through accurately to the briefing.
-- Provincial research numbers (all 13 province unemployment rates, CPI indices, budget figures, project details) carried through accurately.
-- Sector research numbers (GDP figures, PMI, auto sector changes, international student cap) carried through accurately.
+**PASS WITH WARNINGS.**
 
-**Source of WTI contradiction:**
-The sector research file (research_sectors.md) contains stale language: "WTI crude fell over 20% in recent months to approximately $55/bbl." This was valid before the Strait of Hormuz crisis in March 2026 but was not updated by the sector researcher to reflect the crisis-driven surge to $102.88/bbl. The goods industry writer (Agent 3C) used this stale figure without cross-checking against the macro research, which correctly reported $102.88/bbl. The assembler did not catch the contradiction.
+#### Warning 8.1: CPI context line uses stale data while province cards use current data
 
-**Citation numbering:** Citation numbers are consistent within each section. The global source numbering system across `_all_verified_sources` correctly maps all 150 unique references.
+The CPI context line (which appears to originate from the macro analyst/writer) uses previous-period provincial CPI values (PE +5.4%, ON -1.1%), while the provincial writer correctly updated the province indicator cards to current values (PE +7.3%, ON -1.8%). This indicates the context line was carried forward from a prior edition without updating.
+
+#### Passing Checks
+
+- All 10 key metrics are internally consistent between `metrics`, `key_indicators`, `executive_summary`, and `national.analysis`
+- Provincial unemployment rates in province cards match the LFS data in `research_provinces.md`
+- Employment change (+14,000) is consistent across exec summary, national analysis, and metrics
+- WTI ($83.85), Brent ($90.38), CAD/USD (0.7305), TSX (~34,052) are consistent between metrics, key_indicators, and narrative sections
+- National analysis paragraph on trade ($5.7B deficit, $66.3B exports, $72.1B imports) matches research_macro exactly
+
+---
 
 ### Test 9: Comparative Sanity
 
-**Word counts:**
-- Executive summary: 381 words (within 300-500 range) -- PASS
-- National analysis: 424 words (within 400-600 range) -- PASS
-- Consumer pulse: 202 words (within 200-300 range) -- PASS
+**PASS.**
 
-**Magnitude assessment:**
-- 84,000 job losses: Described as "the largest monthly decline since the pandemic recovery period" — this is appropriate magnitude language for a significant but not unprecedented decline.
-- WTI at $102.88: Described as "first settlement above $100 since July 2022" — factual, appropriate.
-- Brent +55% in March: Described as "record monthly gain since inception in 1988" — extreme but verified against research.
-- Gold -14% in March: Described as "steepest monthly drop since October 2008" — extreme but verified.
-- Trade deficit widening from $1.3B to $3.6B: Significant move, appropriately contextualized.
-- Quebec losing 57,000 jobs: Described as "steepest single-month job loss since the pandemic" — appropriate.
+- Executive summary: 369 words (within 300-500 target)
+- National analysis: 475 words (within 400-600 target)
+- Consumer pulse: 247 words (within 200-300 target)
+- Industry executive summary: 0 words (EMPTY -- flagged in Test 5)
+- All major metrics are within historical plausible ranges for Canada
+- Word cloud: 50 topics, sentiment range -0.80 to +0.40, frequency range 3-25 -- all plausible
+- Unemployment 6.7% is plausible; housing starts 235,852 SAAR is plausible; CPI +1.8% is plausible
+- The Strait of Hormuz narrative (WTI crash from ~$128 to $83.85, -34%) is consistent with geopolitical event reporting
+- No claims of dramatic magnitude that appear unsupported by the data
 
-**Word cloud plausibility:** The 45 topics are plausible and reflect the actual content of the briefing. Top topics (Strait of Hormuz crisis, oil prices above $100, US tariffs, job losses, housing affordability) align with the dominant narratives. Sentiment scores are reasonable: negative for crisis/loss topics, slightly positive for inflation decline and retail spending.
-
-**Province data richness:** All 13 provinces have substantive analyses with specific data points. The territories (YT, NT, NU) have thinner data coverage as expected given limited StatsCan data availability, but each has budget data, project data, and labour market information.
+---
 
 ### Test 10: Security & Integrity
 
-- **No PII detected.** All named individuals are public officials: PM Carney, Finance Minister Nate Horner (AB), Premier Rob Lantz (PEI). These are appropriate for a government/economic briefing.
-- **No prompt leakage.** Zero matches for AI-related phrases ("as an AI", "language model", "here is the briefing", etc.).
-- **No API keys or internal paths.** Zero matches for API key patterns or file system paths.
-- **No hallucinated URLs.** All 130 populated URLs use legitimate domains (statcan.gc.ca, bankofcanada.ca, cmhc-schl.gc.ca, bnnbloomberg.ca, cbc.ca, various provincial government sites, etc.). No example.com, placeholder, or suspicious domains.
-- **No data leakage.** No debugging artifacts, no internal identifiers beyond the expected `id: 20`.
+**PASS.**
+
+- No API keys detected
+- No internal file paths detected
+- No email addresses or PII detected
+- No prompt leakage artifacts detected
+- No hallucinated URL patterns detected (all source URLs point to legitimate government, news, and data provider domains)
+- Public figures referenced (PM Carney, Finance Minister Bethlenfalvy) are appropriately in their official capacities
 
 ---
 
 ## Critical Issues (Must Fix Before Publishing)
 
-1. **WTI Price Contradiction in Mining & Energy (NAICS 21) — `goodsIndustries[1].analysis`**
-   - The analysis states "WTI crude fell over 20% in recent months to approximately US$55/bbl" and "If WTI remains near US$55/bbl, oil sands projects with breakeven costs above that level face margin compression."
-   - This directly contradicts the rest of the briefing, which correctly reports WTI at US$102.88/bbl following the Strait of Hormuz crisis.
-   - **Fix:** Replace the two references to US$55/bbl with the current WTI price of US$102.88/bbl and rewrite the breakeven analysis accordingly. The correct framing would note that WTI at $102.88 is above most oil sands breakeven costs, and should reference the Alberta Budget's conservative WTI forecast of US$60/bbl as context.
+1. **CPI provincial range uses previous-period values.** The national CPI context line, indicatorMeta.cpi.context, and national.analysis paragraph 3 cite PE +5.4% and ON -1.1% (both are PREV values). Replace with current: PE +7.3%, ON -1.8%, spread 9.1pp. **Locations:** `indicatorMeta.cpi.context`, `indicatorContextLines.cpi`, `national.analysis` (paragraph 3 mentioning "6.5 percentage points from PE at +5.4% to ON at -1.1%").
 
----
+2. **Missing structural JSON fields: `sources`, `charts`, `citation_audit`.** These are required for the frontend. `sources` can be populated from `_all_verified_sources`. `charts` needs `yieldCurveCurrent` and `yieldCurveLastYear` arrays built from `yieldCurve.tenors`. `citation_audit` needs to be generated.
+
+3. **All four infographic directives contain stale prior-edition data.** D1 references February 84,000 job loss; D3 cites $3.6B deficit; D4 cites TSX 32,542, Brent $98.91, gold $5,062. All are outdated. Regenerate with current-edition figures.
+
+4. **`industry_executive_summary` is empty (0 words).** Required field, expected 200-300 words.
+
+5. **Editorial violations in infographic_directives[3].** Banned words "headwind" and "tailwind" in insight and subtitle fields.
 
 ## Warnings (Should Fix, But Not Blocking)
 
-1. **`sources[]` is empty** — The top-level `sources` array contains zero entries. All 150 citation references are resolvable via `_all_verified_sources[]`, but the frontend may depend on `sources[]` for its source panel rendering. Recommend copying `_all_verified_sources` content to `sources[]` or verifying the frontend reads from `_all_verified_sources`.
+1. **WCS/WTI date mismatch.** WCS price (~$86.75) is from Apr 13 while WTI ($83.85) is from Apr 17, creating an apparent pricing impossibility. Consider updating WCS to an Apr 17 estimate or noting the date difference prominently.
 
-2. **`charts` field missing** — The spec requires `charts` with `yieldCurveCurrent[6]` and `yieldCurveLastYear[6]` arrays. This field is absent. Yield curve data exists in `financialMarkets.yieldCurve` (as a dict). The frontend yield curve chart may not render.
+2. **Commodities lack `items` sub-arrays.** All 13 commodity entries have empty `items` arrays. If the frontend expects nested items, this could cause rendering issues.
 
-3. **`yieldCurve` top-level is empty** — Expected to be a list of 6 tenor objects. Currently an empty array.
-
-4. **`citation_audit` field missing** — Required by spec. Should contain audit metadata.
-
-5. **`industry_executive_summary` is empty** — Expected to be a 200-300 word summary of industry trends. Currently an empty string.
-
-6. **27 sources have empty URLs** (IDs 1-27 in `_all_verified_sources`) — These are all internal database references ("Signal Dispatch Project Database — [Province] Projects" and sector database references). While acceptable as internal citations, they cannot be externally verified. Consider adding a canonical URL or marking them explicitly as internal references.
-
-7. **Freshness edge case: same `week_of` date** — Both the current and previous briefing have `week_of: "2026-03-31"`. This is a re-run producing materially different content (2.5% similarity). The pipeline should either increment the edition number or timestamp to distinguish versions.
-
----
+3. **Nine metrics unchanged from prior edition** (bocRate, cpi, unemployment, participation, retailSales, core_cpi_median, shelter_cpi, food_cpi, energy_cpi). These are expected holds or same-period readings and are not errors, but the reader should understand these are the most recent available data, not new releases.
 
 ## Recommendations for Next Week
 
-1. **Cross-check commodity prices across all agents.** The WTI contradiction originated because the sector researcher's data was stale relative to the macro researcher's data. Add a validation step that compares commodity prices cited in industry analyses against the commodities section before assembly.
+1. **Automate CPI context line generation.** The CPI provincial range in `indicatorContextLines` and `indicatorMeta` appears to be manually carried forward from a prior edition. Build a check that validates context line values against the corresponding province indicator cards before assembly.
 
-2. **Populate `sources[]` at top level.** Either the assembler or a post-assembly step should copy `_all_verified_sources` into `sources[]` to ensure frontend compatibility.
+2. **Validate infographic directives against current-edition metrics.** Add a post-assembly validation step that compares every number in `infographic_directives` against `metrics` and `key_indicators`. Flag any that differ by more than 5%.
 
-3. **Add `charts` generation.** The charts field with yield curve arrays is expected by the frontend. Ensure the chart generation agent runs after assembly.
+3. **Add a date-consistency check for commodity prices.** When WTI and WCS are from different dates and the price gap has moved more than 10%, flag for manual review.
 
-4. **Generate `industry_executive_summary`.** This field is expected to contain a 200-300 word overview of industry trends. It is currently empty.
-
-5. **Version control for same-week re-runs.** When a briefing is regenerated for the same `week_of` date, increment the `id` or add a `version` field to distinguish editions.
+4. **Add a structural field validator to the assembler.** The assembler should refuse to output a briefing missing `sources`, `charts`, or `citation_audit`.
