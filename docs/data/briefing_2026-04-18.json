@@ -1065,7 +1065,8 @@
           "impact": "medium"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "ON"
     },
     {
       "name": "Quebec",
@@ -1473,7 +1474,8 @@
           "impact": "medium"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "QC"
     },
     {
       "name": "Alberta",
@@ -1913,7 +1915,8 @@
           "impact": "high"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "AB"
     },
     {
       "name": "British Columbia",
@@ -2303,7 +2306,8 @@
           "impact": "medium"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "BC"
     },
     {
       "name": "Saskatchewan",
@@ -2704,7 +2708,8 @@
           "impact": "medium"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "SK"
     },
     {
       "name": "Manitoba",
@@ -3106,7 +3111,8 @@
           "impact": "high"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "MB"
     },
     {
       "name": "Nova Scotia",
@@ -3508,7 +3514,8 @@
           "impact": "high"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "NS"
     },
     {
       "name": "New Brunswick",
@@ -3910,7 +3917,8 @@
           "impact": "high"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "NB"
     },
     {
       "name": "Newfoundland and Labrador",
@@ -4319,7 +4327,8 @@
           "impact": "high"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "NL"
     },
     {
       "name": "Prince Edward Island",
@@ -4702,7 +4711,8 @@
           "impact": "high"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "PE"
     },
     {
       "name": "Yukon",
@@ -5079,7 +5089,8 @@
           "impact": "high"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "YT"
     },
     {
       "name": "Northwest Territories",
@@ -5450,7 +5461,8 @@
           "impact": "high"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "NT"
     },
     {
       "name": "Nunavut",
@@ -5828,7 +5840,8 @@
           "impact": "high"
         }
       ],
-      "tradeExposure": ""
+      "tradeExposure": "",
+      "code": "NU"
     }
   ],
   "goodsIndustries": [

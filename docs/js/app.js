@@ -1650,14 +1650,25 @@ async function renderAgentInsightChart(prefix,chartSpec){
   // Window parameter: "6m" / "12m" / "18m" / "24m" — default 12
   const _winMonths=parseInt(String(chartSpec.window||'12m').replace(/[^0-9]/g,''),10)||12;
 
+  // Use pre-populated data from chartSpec if available and timeseries is stale/missing
+  const _hasInlineData=Array.isArray(chartSpec.data)&&chartSpec.data.length>0;
+
   dataKeys.forEach((tsKey,idx)=>{
     let raw=allTs[tsKey];
-    if(!raw||!raw.length)return;
-    const series=Array.isArray(raw)?raw:raw.series||[];
-    if(!series.length)return;
-    const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-_winMonths);
-    const filtered=series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
-    if(!filtered.length)return;
+    let filtered;
+    if(raw&&raw.length){
+      const series=Array.isArray(raw)?raw:raw.series||[];
+      if(!series.length){if(!_hasInlineData)return;}
+      else{
+        const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-_winMonths);
+        filtered=series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
+      }
+    }
+    // Fallback to pre-populated chartSpec.data if timeseries is empty/stale
+    if((!filtered||!filtered.length)&&_hasInlineData){
+      filtered=chartSpec.data.map(d=>({date:d.label||d.date||'',value:typeof d.value==='number'?d.value:(Array.isArray(d.values)?d.values[idx]:parseFloat(d.value))})).filter(d=>!isNaN(d.value));
+    }
+    if(!filtered||!filtered.length)return;
     const labels=filtered.map(p=>fmtDate(p.date));
     const data=filtered.map(p=>p.value);
     if(labels.length>allLabels.length)allLabels=labels;
