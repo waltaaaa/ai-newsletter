@@ -1581,7 +1581,7 @@ const COUNTRY_SUBTABS=[
 const GLOBAL_SRC_MAP={us:'BEA \u00b7 BLS \u00b7 Federal Reserve',china:'NBS \u00b7 PBOC \u00b7 GAC',eu:'Eurostat \u00b7 ECB \u00b7 S&P Global',uk:'ONS \u00b7 BoE \u00b7 LSE'};
 const GLOBAL_CHART_CFG={
   us:{tsKeys:['idx_sp500','sp500'],title:'S&P 500 \u2014 12-Month Performance',subtitle:'Monthly close',source:'S&P Dow Jones Indices',color:'#1e40af',fillColor:'rgba(30,64,175,0.12)',refLine:null,valueSuffix:''},
-  china:{tsKeys:['china_pmi'],title:'Manufacturing PMI \u2014 12-Month Trend',subtitle:'Official NBS PMI \u00b7 50 = expansion threshold',source:'National Bureau of Statistics',color:'#b91c1c',fillColor:'rgba(185,28,28,0.10)',refLine:{value:50,label:'Expansion threshold',color:'#7a8599'},valueSuffix:''},
+  china:{tsKeys:['usdcny','usd_cny'],title:'USD/CNY Exchange Rate \u2014 12-Month Trend',subtitle:'Daily close \u00b7 Yuan per USD',source:'People\u2019s Bank of China',color:'#b91c1c',fillColor:'rgba(185,28,28,0.10)',refLine:null,valueSuffix:''},
   eu:{tsKeys:['eurusd'],title:'EUR/USD Exchange Rate \u2014 12-Month Trend',subtitle:'Daily close \u00b7 ECB reference rate',source:'ECB',color:'#1e40af',fillColor:'rgba(30,64,175,0.12)',refLine:null,valueSuffix:''},
   uk:{tsKeys:['idx_ftse','ftse100'],title:'FTSE 100 \u2014 12-Month Performance',subtitle:'Daily close \u00b7 London Stock Exchange',source:'LSE',color:'#065f46',fillColor:'rgba(6,95,70,0.12)',refLine:null,valueSuffix:''}
 };

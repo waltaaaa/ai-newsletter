@@ -27,6 +27,10 @@ Series map:
     prime_rate        <- BoC Valet V80691311
     bitcoin           <- BTC-USD (yfinance)
     ethereum          <- ETH-USD (yfinance)
+    sp500             <- ^GSPC (yfinance) — S&P 500 index close
+    eurusd            <- EURUSD=X (yfinance) — EUR/USD spot
+    ftse100           <- ^FTSE (yfinance) — FTSE 100 index close
+    usdcny            <- CNY=X (yfinance) — USD/CNY spot
 
 Each run writes >= ~250 daily points (~13 months) to give enough history
 for chart smoothing + min_points checks.
@@ -49,6 +53,11 @@ YF_SERIES = [
     ("wti_crude", "CL=F", "13mo", "WTI Crude Oil futures (alias)"),
     ("bitcoin", "BTC-USD", "13mo", "Bitcoin USD spot"),
     ("ethereum", "ETH-USD", "13mo", "Ethereum USD spot"),
+    # National-tab global charts (GLOBAL_CHART_CFG in docs/js/app.js)
+    ("sp500", "^GSPC", "14mo", "S&P 500 index close"),
+    ("eurusd", "EURUSD=X", "14mo", "EUR/USD spot rate"),
+    ("ftse100", "^FTSE", "14mo", "FTSE 100 index close"),
+    ("usdcny", "CNY=X", "14mo", "USD/CNY spot rate"),
 ]
 
 # BoC Valet observations — (series_key, valet_series_id, recent_N)
