@@ -1197,6 +1197,200 @@ def _validate_events_global_json(data_dir, results, briefing):
     return (fails, warns)
 
 
+# Frontend daily-cadence series hardcoded in docs/js/app.js GLOBAL_CHART_CFG.
+# Used by _validate_global_chart_cfg to stale-flag beyond this many days.
+# Daily equity/FX close series should never fall more than ~14d behind.
+GLOBAL_CHART_CFG_DAILY_STALE_DAYS = 14
+
+
+def _parse_global_chart_cfg(app_js_text):
+    """Parse the literal GLOBAL_CHART_CFG object in docs/js/app.js to
+    recover each region's tsKeys list. The object is a tiny single-level
+    declaration like:
+
+        const GLOBAL_CHART_CFG={
+          us:{tsKeys:['idx_sp500','sp500'],...},
+          china:{tsKeys:['usdcny','usd_cny'],...},
+          ...
+        };
+
+    Returns a dict { region_key: [tsKey, ...] }. Missing / malformed
+    declarations return {}.
+    """
+    # Locate the declaration
+    m = re.search(r"GLOBAL_CHART_CFG\s*=\s*\{", app_js_text)
+    if not m:
+        return {}
+    # Brace-match forward from the opening brace to capture the object body
+    start = m.end() - 1  # index of '{'
+    depth = 0
+    end = None
+    i = start
+    n = len(app_js_text)
+    in_str = None  # track ' " ` strings
+    while i < n:
+        ch = app_js_text[i]
+        if in_str:
+            if ch == "\\":
+                i += 2
+                continue
+            if ch == in_str:
+                in_str = None
+        else:
+            if ch in ("'", '"', "`"):
+                in_str = ch
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    end = i
+                    break
+        i += 1
+    if end is None:
+        return {}
+    body = app_js_text[start + 1:end]
+    # Find each region entry by matching `<key>:{...tsKeys:[...],...}`
+    out = {}
+    # Match region entries at the top level of the body — each looks like
+    # us:{tsKeys:['idx_sp500','sp500'],title:'S&P 500 — ...',...}
+    pattern = re.compile(
+        r"([A-Za-z_][A-Za-z0-9_]*)\s*:\s*\{([^{}]*)\}"
+    )
+    for entry in pattern.finditer(body):
+        region = entry.group(1)
+        inner = entry.group(2)
+        km = re.search(r"tsKeys\s*:\s*\[([^\]]*)\]", inner)
+        if not km:
+            continue
+        keys_raw = km.group(1)
+        keys = re.findall(r"['\"]([^'\"]+)['\"]", keys_raw)
+        if keys:
+            out[region] = keys
+    return out
+
+
+def _find_app_js_path(data_dir):
+    """The data_dir is docs/data. The app.js lives at docs/js/app.js."""
+    # Walk up to docs/
+    docs_dir = os.path.dirname(os.path.abspath(data_dir))
+    candidate = os.path.join(docs_dir, "js", "app.js")
+    return candidate
+
+
+def _validate_global_chart_cfg(data_dir, results, briefing):
+    """Validate that every region's GLOBAL_CHART_CFG.tsKeys in app.js
+    resolves to at least one non-empty series in timeseries.json.
+
+    This closes a silent-failure gap: the National tab global subtabs
+    (United States / China / European Union / United Kingdom) each
+    render a 12-month Chart.js line from hardcoded tsKeys in
+    docs/js/app.js. Those keys are NOT referenced by any
+    insightCharts[].dataKeys[] spec in the briefing, so the existing
+    chart_xref check never sees them. When a producer stopped
+    maintaining china_pmi, the chart silently rendered blank without
+    any validator signal.
+
+    Checks (FAIL tier):
+      - app.js is readable + GLOBAL_CHART_CFG parseable
+      - For each region (us, china, eu, uk), at least ONE tsKey resolves
+        to a series with >=2 points in timeseries.json.
+
+    Checks (WARN tier):
+      - For each region whose winning series is older than
+        GLOBAL_CHART_CFG_DAILY_STALE_DAYS (14d) by last-point date.
+        These are daily equity/FX series that should stay current.
+
+    Returns (fails_added, warns_added).
+    """
+    fails = 0
+    warns = 0
+    prefix = "data.timeseries.global_chart_cfg"
+
+    app_js_path = _find_app_js_path(data_dir)
+    if not check(results, f"{prefix}.app_js.exists",
+                 os.path.exists(app_js_path),
+                 f"File missing: {app_js_path}"):
+        return (1, 0)
+
+    try:
+        with open(app_js_path, "r", encoding="utf-8") as f:
+            app_js_text = f.read()
+    except OSError as e:
+        check(results, f"{prefix}.app_js.readable", False,
+              f"Read error: {e}")
+        return (1, 0)
+
+    cfg = _parse_global_chart_cfg(app_js_text)
+    if not check(results, f"{prefix}.parsed",
+                 len(cfg) > 0,
+                 "Failed to parse GLOBAL_CHART_CFG from app.js — "
+                 "structure may have changed"):
+        return (1, 0)
+
+    # Load timeseries.json
+    ts_path = os.path.join(data_dir, "timeseries.json")
+    try:
+        ts = _load_json_tolerant(ts_path)
+    except (OSError, json.JSONDecodeError) as e:
+        check(results, f"{prefix}.timeseries.readable", False,
+              f"Read error: {e}")
+        return (1, 0)
+
+    today = datetime.date.today()
+    stale_bound = GLOBAL_CHART_CFG_DAILY_STALE_DAYS
+
+    unresolved_regions = []
+    stale_regions = []
+    for region, keys in cfg.items():
+        winning = None
+        for k in keys:
+            raw = ts.get(k)
+            if raw is None:
+                continue
+            series = raw if isinstance(raw, list) else (
+                raw.get("series") if isinstance(raw, dict) else None
+            )
+            if not isinstance(series, list) or len(series) < 2:
+                continue
+            # Track the winning (most-recent) candidate by last date
+            last_date = _parse_iso_date(series[-1].get("date"))
+            if winning is None or (last_date and (winning[2] is None
+                                                  or last_date > winning[2])):
+                winning = (k, len(series), last_date)
+        if winning is None:
+            unresolved_regions.append((region, keys))
+        else:
+            k, npts, last_date = winning
+            if last_date is not None:
+                age = (today - last_date).days
+                if age > stale_bound:
+                    stale_regions.append((region, k, age, stale_bound))
+
+    if not check(results, f"{prefix}.resolved",
+                 len(unresolved_regions) == 0,
+                 f"{len(unresolved_regions)} GLOBAL_CHART_CFG region(s) "
+                 f"have NO resolvable tsKey in timeseries.json "
+                 f"(silent blank chart on National tab). "
+                 f"Unresolved: {unresolved_regions}"):
+        fails += 1
+
+    if not warn(results, f"{prefix}.freshness",
+                len(stale_regions) == 0,
+                f"{len(stale_regions)} GLOBAL_CHART_CFG region(s) "
+                f"exceed the {stale_bound}d daily-cadence bound "
+                f"(National tab chart shows stale data). "
+                f"Stale: {stale_regions}"):
+        warns += 1
+
+    # Visibility: count of regions validated.
+    check(results, f"{prefix}.count", True,
+          f"Validated {len(cfg)} GLOBAL_CHART_CFG region(s) "
+          f"against timeseries.json")
+
+    return (fails, warns)
+
+
 def _validate_data_dir(briefing_path, results, briefing):
     """Phase 2: validate external JSON dependencies in the same directory
     as the briefing.
@@ -1219,6 +1413,7 @@ def _validate_data_dir(briefing_path, results, briefing):
         _validate_indicators_json,
         _validate_events_json,
         _validate_events_global_json,
+        _validate_global_chart_cfg,
     ):
         f, w = fn(data_dir, results, briefing)
         total_f += f
