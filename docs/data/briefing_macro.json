@@ -712,7 +712,9 @@
     "private_sector_change": "N/A",
     "public_sector_change": "N/A",
     "residential_permits": "+$135.6M M/M (Feb 2026)",
-    "nonresidential_permits": "-$1.3B M/M (Feb 2026)"
+    "nonresidential_permits": "-$1.3B M/M (Feb 2026)",
+    "cadUsd_chg": "+1.5% over period",
+    "tsx_chg": "+1.7% over period"
   },
   "indicatorMeta": {
     "bocRate": {

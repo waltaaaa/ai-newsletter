@@ -127,8 +127,8 @@
     "trade_balance": "-$5.7B",
     "employment_change": "+14,000",
     "boc_rate": "2.25%",
-    "cadUsd_chg": "",
-    "tsx_chg": "",
+    "cadUsd_chg": "+1.5% over period",
+    "tsx_chg": "+1.7% over period",
     "employmentChange_chg": "+14,000 (partial recovery)",
     "participation_chg": "+0.1pp"
   },
@@ -772,7 +772,7 @@
         },
         {
           "id": 159,
-          "title": "Ontario Ministry of Finance � Ontario Economic Accounts, Q4 2025",
+          "title": "Ontario Ministry of Finance — Ontario Economic Accounts, Q4 2025",
           "url": "https://data.ontario.ca/dataset/ontario-economic-accounts"
         }
       ],
@@ -892,9 +892,9 @@
             "aluminum"
           ],
           "title": "Aluminum Surges on Section 232 Tariffs",
-          "subtitle": "12-month trend � USD per metric tonne",
+          "subtitle": "12-month trend — USD per metric tonne",
           "yAxisLabel": "USD/mt",
-          "eyebrow": "Manufacturing � Ontario",
+          "eyebrow": "Manufacturing — Ontario",
           "kpis": [
             {
               "label": "Aluminum",
@@ -971,9 +971,9 @@
             "cadusd"
           ],
           "title": "CAD/USD at 0.7305 on Dollar Weakness",
-          "subtitle": "12-month trend � exchange rate",
+          "subtitle": "12-month trend — exchange rate",
           "yAxisLabel": "USD per CAD",
-          "eyebrow": "Currency � Trade",
+          "eyebrow": "Currency — Trade",
           "kpis": [
             {
               "label": "CAD/USD",
@@ -1308,10 +1308,10 @@
           "dataKeys": [
             "aluminum"
           ],
-          "title": "Aluminum at $3,423 � Smelter Margins",
-          "subtitle": "12-month trend � USD per metric tonne",
+          "title": "Aluminum at $3,423 — Smelter Margins",
+          "subtitle": "12-month trend — USD per metric tonne",
           "yAxisLabel": "USD/mt",
-          "eyebrow": "Mining & Metals � Quebec",
+          "eyebrow": "Mining & Metals — Quebec",
           "kpis": [
             {
               "label": "Aluminum",
@@ -1388,9 +1388,9 @@
             "iron_ore"
           ],
           "title": "Iron Ore Climbs to $17.78 on China Demand",
-          "subtitle": "Daily � USD index",
+          "subtitle": "Daily — USD index",
           "yAxisLabel": "USD",
-          "eyebrow": "Mining � Quebec",
+          "eyebrow": "Mining — Quebec",
           "kpis": [
             {
               "label": "Iron Ore",
@@ -1399,7 +1399,7 @@
               "trend": "up"
             }
           ],
-          "context": "China's Q1 GDP grew <strong>5.0%</strong> with imports surging <strong>27.8%</strong> in March, supporting iron ore demand. Quebec's C�te-Nord hosts major iron ore operations including ArcelorMittal's Port-Cartier pellet plant. The ISQ recorded Q4 2025 real GDP at <strong>-0.1%</strong> Q/Q.",
+          "context": "China's Q1 GDP grew <strong>5.0%</strong> with imports surging <strong>27.8%</strong> in March, supporting iron ore demand. Quebec's Côte-Nord hosts major iron ore operations including ArcelorMittal's Port-Cartier pellet plant. The ISQ recorded Q4 2025 real GDP at <strong>-0.1%</strong> Q/Q.",
           "data": [
             {
               "label": "2026-04-01",
@@ -1450,8 +1450,8 @@
               "value": 17.78
             }
           ],
-          "reasoning": "Iron ore price tracks Chinese demand; Quebec hosts major iron ore operations on C�te-Nord with direct exposure to this price environment",
-          "insight": "Iron ore climbed 10.8% in April to $17.78 as China's Q1 GDP beat consensus at 5.0%, supporting demand for Quebec's C�te-Nord mining operations.",
+          "reasoning": "Iron ore price tracks Chinese demand; Quebec hosts major iron ore operations on Côte-Nord with direct exposure to this price environment",
+          "insight": "Iron ore climbed 10.8% in April to $17.78 as China's Q1 GDP beat consensus at 5.0%, supporting demand for Quebec's Côte-Nord mining operations.",
           "source": "Yahoo Finance, NBS China",
           "callout": "Iron ore traded at $17.78, up 10.8% through April, as China's Q1 GDP grew 5.0% with imports surging 27.8% in March. Quebec's Côte-Nord operations underpin 5 tracked provincial mining and metals projects."
         }
@@ -1714,9 +1714,9 @@
             "wti"
           ],
           "title": "WTI Collapses to $83.85 from $128 Peak",
-          "subtitle": "12-month trend � USD per barrel",
+          "subtitle": "12-month trend — USD per barrel",
           "yAxisLabel": "USD/bbl",
-          "eyebrow": "Energy � Alberta",
+          "eyebrow": "Energy — Alberta",
           "kpis": [
             {
               "label": "WTI Crude",
@@ -1831,9 +1831,9 @@
             "natural_gas"
           ],
           "title": "Natural Gas at $3.12 After Winter Spike",
-          "subtitle": "12-month trend � USD per MMBtu",
+          "subtitle": "12-month trend — USD per MMBtu",
           "yAxisLabel": "USD/MMBtu",
-          "eyebrow": "Energy � Alberta",
+          "eyebrow": "Energy — Alberta",
           "kpis": [
             {
               "label": "Natural Gas",
@@ -2145,9 +2145,9 @@
             "copper"
           ],
           "title": "Copper at $5.53 on Supply Constraints",
-          "subtitle": "12-month trend � USD per pound",
+          "subtitle": "12-month trend — USD per pound",
           "yAxisLabel": "USD/lb",
-          "eyebrow": "Mining � British Columbia",
+          "eyebrow": "Mining — British Columbia",
           "kpis": [
             {
               "label": "Copper",
@@ -2223,10 +2223,10 @@
           "dataKeys": [
             "gold"
           ],
-          "title": "Gold at $4,572 � BC Mining Exposure",
-          "subtitle": "12-month trend � USD per troy ounce",
+          "title": "Gold at $4,572 — BC Mining Exposure",
+          "subtitle": "12-month trend — USD per troy ounce",
           "yAxisLabel": "USD/oz",
-          "eyebrow": "Mining � British Columbia",
+          "eyebrow": "Mining — British Columbia",
           "kpis": [
             {
               "label": "Gold",
@@ -2548,10 +2548,10 @@
           "dataKeys": [
             "potash_nutrien"
           ],
-          "title": "Potash at $96.75 � Jansen Stage 1",
-          "subtitle": "Daily � USD (Nutrien proxy)",
+          "title": "Potash at $96.75 — Jansen Stage 1",
+          "subtitle": "Daily — USD (Nutrien proxy)",
           "yAxisLabel": "USD",
-          "eyebrow": "Agriculture � Saskatchewan",
+          "eyebrow": "Agriculture — Saskatchewan",
           "kpis": [
             {
               "label": "Potash (NTR)",
@@ -2627,10 +2627,10 @@
           "dataKeys": [
             "wheat"
           ],
-          "title": "Wheat at $601.75 � Prairie Crop Season",
-          "subtitle": "12-month trend � USD cents per bushel",
+          "title": "Wheat at $601.75 — Prairie Crop Season",
+          "subtitle": "12-month trend — USD cents per bushel",
           "yAxisLabel": "c/bu",
-          "eyebrow": "Agriculture � Saskatchewan",
+          "eyebrow": "Agriculture — Saskatchewan",
           "kpis": [
             {
               "label": "Wheat",
@@ -2959,10 +2959,10 @@
           "dataKeys": [
             "wheat"
           ],
-          "title": "Wheat at $601.75 � Manitoba Agriculture",
-          "subtitle": "12-month trend � USD cents per bushel",
+          "title": "Wheat at $601.75 — Manitoba Agriculture",
+          "subtitle": "12-month trend — USD cents per bushel",
           "yAxisLabel": "c/bu",
-          "eyebrow": "Agriculture � Manitoba",
+          "eyebrow": "Agriculture — Manitoba",
           "kpis": [
             {
               "label": "Wheat",
@@ -3039,9 +3039,9 @@
             "soybeans"
           ],
           "title": "Soybeans Steady Near $1,049",
-          "subtitle": "12-month trend � USD cents per bushel",
+          "subtitle": "12-month trend — USD cents per bushel",
           "yAxisLabel": "c/bu",
-          "eyebrow": "Agriculture � Manitoba",
+          "eyebrow": "Agriculture — Manitoba",
           "kpis": [
             {
               "label": "Soybeans",
@@ -3364,10 +3364,10 @@
           "dataKeys": [
             "gold"
           ],
-          "title": "Gold at $4,572 � NS Mining Operations",
-          "subtitle": "12-month trend � USD per troy ounce",
+          "title": "Gold at $4,572 — NS Mining Operations",
+          "subtitle": "12-month trend — USD per troy ounce",
           "yAxisLabel": "USD/oz",
-          "eyebrow": "Mining � Nova Scotia",
+          "eyebrow": "Mining — Nova Scotia",
           "kpis": [
             {
               "label": "Gold",
@@ -3443,10 +3443,10 @@
           "dataKeys": [
             "natural_gas"
           ],
-          "title": "Natural Gas at $3.12 � NS Energy",
-          "subtitle": "12-month trend � USD per MMBtu",
+          "title": "Natural Gas at $3.12 — NS Energy",
+          "subtitle": "12-month trend — USD per MMBtu",
           "yAxisLabel": "USD/MMBtu",
-          "eyebrow": "Energy � Nova Scotia",
+          "eyebrow": "Energy — Nova Scotia",
           "kpis": [
             {
               "label": "Natural Gas",
@@ -3769,10 +3769,10 @@
           "dataKeys": [
             "natural_gas"
           ],
-          "title": "Natural Gas at $3.12 � NB Power",
-          "subtitle": "12-month trend � USD per MMBtu",
+          "title": "Natural Gas at $3.12 — NB Power",
+          "subtitle": "12-month trend — USD per MMBtu",
           "yAxisLabel": "USD/MMBtu",
-          "eyebrow": "Energy � New Brunswick",
+          "eyebrow": "Energy — New Brunswick",
           "kpis": [
             {
               "label": "Natural Gas",
@@ -3848,10 +3848,10 @@
           "dataKeys": [
             "wti"
           ],
-          "title": "WTI at $83.85 � NB Refining Margins",
-          "subtitle": "12-month trend � USD per barrel",
+          "title": "WTI at $83.85 — NB Refining Margins",
+          "subtitle": "12-month trend — USD per barrel",
           "yAxisLabel": "USD/bbl",
-          "eyebrow": "Energy � New Brunswick",
+          "eyebrow": "Energy — New Brunswick",
           "kpis": [
             {
               "label": "WTI Crude",
@@ -4175,10 +4175,10 @@
           "dataKeys": [
             "brent"
           ],
-          "title": "Brent at $90.38 � Offshore NL Exposure",
-          "subtitle": "12-month trend � USD per barrel",
+          "title": "Brent at $90.38 — Offshore NL Exposure",
+          "subtitle": "12-month trend — USD per barrel",
           "yAxisLabel": "USD/bbl",
-          "eyebrow": "Energy � Newfoundland",
+          "eyebrow": "Energy — Newfoundland",
           "kpis": [
             {
               "label": "Brent Crude",
@@ -4260,10 +4260,10 @@
           "dataKeys": [
             "iron_ore"
           ],
-          "title": "Iron Ore at $17.78 � Labrador Mining",
-          "subtitle": "Daily � USD index",
+          "title": "Iron Ore at $17.78 — Labrador Mining",
+          "subtitle": "Daily — USD index",
           "yAxisLabel": "USD",
-          "eyebrow": "Mining � Labrador",
+          "eyebrow": "Mining — Labrador",
           "kpis": [
             {
               "label": "Iron Ore",
@@ -4561,10 +4561,10 @@
           "dataKeys": [
             "wheat"
           ],
-          "title": "Wheat at $601.75 � PEI Farm Costs",
-          "subtitle": "12-month trend � USD cents per bushel",
+          "title": "Wheat at $601.75 — PEI Farm Costs",
+          "subtitle": "12-month trend — USD cents per bushel",
           "yAxisLabel": "c/bu",
-          "eyebrow": "Agriculture � PEI",
+          "eyebrow": "Agriculture — PEI",
           "kpis": [
             {
               "label": "Wheat",
@@ -4640,10 +4640,10 @@
           "dataKeys": [
             "wti"
           ],
-          "title": "WTI at $83.85 � PEI Energy Costs",
-          "subtitle": "12-month trend � USD per barrel",
+          "title": "WTI at $83.85 — PEI Energy Costs",
+          "subtitle": "12-month trend — USD per barrel",
           "yAxisLabel": "USD/bbl",
-          "eyebrow": "Energy � PEI",
+          "eyebrow": "Energy — PEI",
           "kpis": [
             {
               "label": "WTI Crude",
@@ -4953,10 +4953,10 @@
           "dataKeys": [
             "gold"
           ],
-          "title": "Gold at $4,572 � Yukon Mining Sector",
-          "subtitle": "12-month trend � USD per troy ounce",
+          "title": "Gold at $4,572 — Yukon Mining Sector",
+          "subtitle": "12-month trend — USD per troy ounce",
           "yAxisLabel": "USD/oz",
-          "eyebrow": "Mining � Yukon",
+          "eyebrow": "Mining — Yukon",
           "kpis": [
             {
               "label": "Gold",
@@ -5032,10 +5032,10 @@
           "dataKeys": [
             "copper"
           ],
-          "title": "Copper at $5.53 � Kudz Ze Kayah",
-          "subtitle": "12-month trend � USD per pound",
+          "title": "Copper at $5.53 — Kudz Ze Kayah",
+          "subtitle": "12-month trend — USD per pound",
           "yAxisLabel": "USD/lb",
-          "eyebrow": "Mining � Yukon",
+          "eyebrow": "Mining — Yukon",
           "kpis": [
             {
               "label": "Copper",
@@ -5327,10 +5327,10 @@
           "dataKeys": [
             "gold"
           ],
-          "title": "Gold at $4,572 � Post-Diamond NWT",
-          "subtitle": "12-month trend � USD per troy ounce",
+          "title": "Gold at $4,572 — Post-Diamond NWT",
+          "subtitle": "12-month trend — USD per troy ounce",
           "yAxisLabel": "USD/oz",
-          "eyebrow": "Mining � NWT",
+          "eyebrow": "Mining — NWT",
           "kpis": [
             {
               "label": "Gold",
@@ -5406,10 +5406,10 @@
           "dataKeys": [
             "wti"
           ],
-          "title": "WTI at $83.85 � NWT Energy Sector",
-          "subtitle": "12-month trend � USD per barrel",
+          "title": "WTI at $83.85 — NWT Energy Sector",
+          "subtitle": "12-month trend — USD per barrel",
           "yAxisLabel": "USD/bbl",
-          "eyebrow": "Energy � NWT",
+          "eyebrow": "Energy — NWT",
           "kpis": [
             {
               "label": "WTI Crude",
@@ -5708,10 +5708,10 @@
           "dataKeys": [
             "gold"
           ],
-          "title": "Gold at $4,572 � Nunavut's Three Mines",
-          "subtitle": "12-month trend � USD per troy ounce",
+          "title": "Gold at $4,572 — Nunavut's Three Mines",
+          "subtitle": "12-month trend — USD per troy ounce",
           "yAxisLabel": "USD/oz",
-          "eyebrow": "Mining � Nunavut",
+          "eyebrow": "Mining — Nunavut",
           "kpis": [
             {
               "label": "Gold",
@@ -5787,10 +5787,10 @@
           "dataKeys": [
             "iron_ore"
           ],
-          "title": "Iron Ore at $17.78 � NU Critical Minerals",
-          "subtitle": "Daily � USD index",
+          "title": "Iron Ore at $17.78 — NU Critical Minerals",
+          "subtitle": "Daily — USD index",
           "yAxisLabel": "USD",
-          "eyebrow": "Mining � Nunavut",
+          "eyebrow": "Mining — Nunavut",
           "kpis": [
             {
               "label": "Iron Ore",
@@ -10960,7 +10960,7 @@
     },
     {
       "id": 156,
-      "title": "Ontario FAO � Economic Monitor, Q4 2025",
+      "title": "Ontario FAO — Economic Monitor, Q4 2025",
       "url": "https://www.fao-on.org/en/Blog/Publications/EBO-WI-2026",
       "archive_url": ""
     },
@@ -10977,7 +10977,7 @@
     },
     {
       "id": 159,
-      "title": "Ontario Ministry of Finance � Ontario Economic Accounts, Q4 2025",
+      "title": "Ontario Ministry of Finance — Ontario Economic Accounts, Q4 2025",
       "url": "https://data.ontario.ca/dataset/ontario-economic-accounts",
       "date": "2026-04-10",
       "type": "government"
@@ -11081,9 +11081,9 @@
         "brent"
       ],
       "title": "WTI and Brent Collapse from Hormuz Peak",
-      "subtitle": "12-month trend � USD per barrel",
+      "subtitle": "12-month trend — USD per barrel",
       "yAxisLabel": "USD/bbl",
-      "eyebrow": "Energy Markets � Weekly",
+      "eyebrow": "Energy Markets — Weekly",
       "kpis": [
         {
           "label": "WTI Crude",
@@ -11199,9 +11199,9 @@
         "gold"
       ],
       "title": "Gold Retreats from Record $5,230",
-      "subtitle": "12-month trend � USD per troy ounce",
+      "subtitle": "12-month trend — USD per troy ounce",
       "yAxisLabel": "USD/oz",
-      "eyebrow": "Commodities � Weekly",
+      "eyebrow": "Commodities — Weekly",
       "kpis": [
         {
           "label": "Gold",
@@ -12090,7 +12090,7 @@
     },
     {
       "id": 156,
-      "title": "Ontario FAO � Economic Monitor, Q4 2025",
+      "title": "Ontario FAO — Economic Monitor, Q4 2025",
       "url": "https://www.fao-on.org/en/Blog/Publications/EBO-WI-2026",
       "archive_url": ""
     },
@@ -12107,7 +12107,7 @@
     },
     {
       "id": 159,
-      "title": "Ontario Ministry of Finance � Ontario Economic Accounts, Q4 2025",
+      "title": "Ontario Ministry of Finance — Ontario Economic Accounts, Q4 2025",
       "url": "https://data.ontario.ca/dataset/ontario-economic-accounts",
       "date": "2026-04-10",
       "type": "government"
