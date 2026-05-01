@@ -55,7 +55,7 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "under_review"
     },
     {
       "id": 16211,
@@ -153,23 +153,23 @@
       "validation_status": "passed"
     },
     {
-      "id": 16216,
+      "id": 10854,
       "indicator_name": "copper",
       "category": "",
       "province": "national",
-      "value": 5.53,
-      "period": "2026-03-30",
+      "value": 5.77,
+      "period": "2026-03-03",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T11:48:00Z",
-      "unit": "lb",
-      "frequency": "daily",
+      "fetched_at": "2026-03-10T00:52:01Z",
+      "unit": "USD",
+      "frequency": "weekly",
       "description": "",
-      "backfilled": 0,
+      "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "under_review"
     },
     {
       "id": 14462,
@@ -1255,23 +1255,23 @@
       "validation_status": "passed"
     },
     {
-      "id": 16214,
+      "id": 10865,
       "indicator_name": "gold",
       "category": "",
       "province": "national",
-      "value": 4572.0,
-      "period": "2026-03-30",
+      "value": 5120.2,
+      "period": "2026-03-04",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-03-30T11:48:00Z",
-      "unit": "troy oz",
-      "frequency": "daily",
+      "fetched_at": "2026-03-10T00:52:01Z",
+      "unit": "USD",
+      "frequency": "weekly",
       "description": "",
-      "backfilled": 0,
+      "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "under_review"
     },
     {
       "id": 16191,
@@ -1898,7 +1898,7 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "under_review"
     },
     {
       "id": 14700,
@@ -2810,7 +2810,7 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "under_review"
     },
     {
       "id": 13409,
@@ -4197,22 +4197,6 @@
       "period": "2026-03-30",
       "value": 107.31,
       "unit": "bbl",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "cadusd",
-      "province": "national",
-      "period": "2021-04-19",
-      "value": 0.8,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "cadusd",
-      "province": "national",
-      "period": "2021-04-26",
-      "value": 0.8,
-      "unit": "USD",
       "source": "Yahoo Finance"
     },
     {
@@ -7570,22 +7554,6 @@
     {
       "indicator_name": "copper",
       "province": "national",
-      "period": "2021-04-20",
-      "value": 4.22,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "copper",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 4.74,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "copper",
-      "province": "national",
       "period": "2021-05-04",
       "value": 4.54,
       "unit": "USD",
@@ -9532,22 +9500,6 @@
       "province": "national",
       "period": "2026-03-03",
       "value": 5.77,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "copper",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 4.22,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "copper",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 4.74,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -25170,86 +25122,6 @@
     {
       "indicator_name": "goc_10y_yield",
       "province": "national",
-      "period": "2021-04-19",
-      "value": 1.53,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 1.5,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-04-21",
-      "value": 1.52,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-04-22",
-      "value": 1.52,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-04-23",
-      "value": 1.51,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-04-26",
-      "value": 1.53,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 1.56,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-04-28",
-      "value": 1.53,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-04-29",
-      "value": 1.56,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-04-30",
-      "value": 1.54,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
       "period": "2021-05-03",
       "value": 1.52,
       "unit": "%",
@@ -34918,86 +34790,6 @@
       "value": 3.57,
       "unit": "%",
       "source": "Bank of Canada"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-19",
-      "value": 0.31,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 0.29,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-21",
-      "value": 0.3,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-22",
-      "value": 0.31,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-23",
-      "value": 0.32,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-26",
-      "value": 0.33,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 0.33,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-28",
-      "value": 0.31,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-29",
-      "value": 0.31,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_2y_yield",
-      "province": "national",
-      "period": "2021-04-30",
-      "value": 0.3,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "goc_2y_yield",
@@ -44702,86 +44494,6 @@
       "value": 3.03,
       "unit": "%",
       "source": "Bank of Canada"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-19",
-      "value": 0.95,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 0.91,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-21",
-      "value": 0.94,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-22",
-      "value": 0.93,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-23",
-      "value": 0.93,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-26",
-      "value": 0.94,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 0.96,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-28",
-      "value": 0.93,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-29",
-      "value": 0.95,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "goc_5y_yield",
-      "province": "national",
-      "period": "2021-04-30",
-      "value": 0.93,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "goc_5y_yield",
@@ -54522,22 +54234,6 @@
     {
       "indicator_name": "gold",
       "province": "national",
-      "period": "2021-04-20",
-      "value": 1777.3,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "gold",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 1778.0,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "gold",
-      "province": "national",
       "period": "2021-05-04",
       "value": 1775.8,
       "unit": "USD",
@@ -56484,22 +56180,6 @@
       "province": "national",
       "period": "2026-03-04",
       "value": 5120.2,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "gold",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 1777.3,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "gold",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 1778.0,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -59418,22 +59098,6 @@
     {
       "indicator_name": "lumber",
       "province": "national",
-      "period": "2021-04-20",
-      "value": 1278.7,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "lumber",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 1420.5,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "lumber",
-      "province": "national",
       "period": "2021-05-04",
       "value": 1609.0,
       "unit": "USD",
@@ -60252,22 +59916,6 @@
       "province": "national",
       "period": "2023-05-12",
       "value": 339.0,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "lumber",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 1278.7,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "lumber",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 1420.5,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -61541,22 +61189,6 @@
       "period": "2026-03-30",
       "value": 20948.0,
       "unit": "pts",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "natural_gas",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 2.73,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "natural_gas",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 2.87,
-      "unit": "USD",
       "source": "Yahoo Finance"
     },
     {
@@ -63508,22 +63140,6 @@
       "province": "national",
       "period": "2026-03-03",
       "value": 3.05,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "natural_gas",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 2.73,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "natural_gas",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 2.87,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -70238,86 +69854,6 @@
       "value": 558507.0,
       "unit": "$M",
       "source": "Ontario Economic Accounts"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-19",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-21",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-22",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-23",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-26",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-28",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-29",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-04-30",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "overnight_rate",
@@ -85858,22 +85394,6 @@
     {
       "indicator_name": "prime_rate",
       "province": "national",
-      "period": "2021-04-21",
-      "value": 4.79,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "prime_rate",
-      "province": "national",
-      "period": "2021-04-28",
-      "value": 4.79,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
-    },
-    {
-      "indicator_name": "prime_rate",
-      "province": "national",
       "period": "2021-05-05",
       "value": 4.79,
       "unit": "%",
@@ -95741,38 +95261,6 @@
       "period": "2026-03-30",
       "value": 15.92,
       "unit": "lb",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "tsx_composite",
-      "province": "national",
-      "period": "2021-04-19",
-      "value": 19204.4,
-      "unit": "CAD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "tsx_composite",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 19040.8,
-      "unit": "CAD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "tsx_composite",
-      "province": "national",
-      "period": "2021-04-26",
-      "value": 19170.6,
-      "unit": "CAD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "tsx_composite",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 19175.1,
-      "unit": "CAD",
       "source": "Yahoo Finance"
     },
     {
@@ -106906,22 +106394,6 @@
     {
       "indicator_name": "wti",
       "province": "national",
-      "period": "2021-04-20",
-      "value": 62.44,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "wti",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 62.94,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "wti",
-      "province": "national",
       "period": "2021-05-04",
       "value": 65.69,
       "unit": "USD",
@@ -109293,22 +108765,6 @@
       "period": "2026-03-15",
       "value": 98.71,
       "unit": "bbl",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "wti_oil",
-      "province": "national",
-      "period": "2021-04-20",
-      "value": 62.44,
-      "unit": "USD",
-      "source": "Yahoo Finance"
-    },
-    {
-      "indicator_name": "wti_oil",
-      "province": "national",
-      "period": "2021-04-27",
-      "value": 62.94,
-      "unit": "USD",
       "source": "Yahoo Finance"
     },
     {
@@ -112193,10 +111649,14 @@
     ]
   },
   "validation": {
-    "failed_count": 12,
+    "failed_count": 17,
     "failed_indicators": [
       {
         "indicator": "aluminum",
+        "province": "national"
+      },
+      {
+        "indicator": "brent",
         "province": "national"
       },
       {
@@ -112204,10 +111664,18 @@
         "province": "global"
       },
       {
+        "indicator": "copper",
+        "province": "national"
+      },
+      {
         "indicator": "gold",
         "province": "global"
       },
       {
+        "indicator": "gold",
+        "province": "national"
+      },
+      {
         "indicator": "lumber",
         "province": "global"
       },
@@ -112221,10 +111689,18 @@
       },
       {
         "indicator": "natural_gas",
+        "province": "national"
+      },
+      {
+        "indicator": "palladium",
         "province": "national"
       },
       {
         "indicator": "platinum",
+        "province": "national"
+      },
+      {
+        "indicator": "rice",
         "province": "national"
       },
       {

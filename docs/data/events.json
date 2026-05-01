@@ -1,40 +1,43 @@
 [
   {
-    "date": "2026-04-19",
-    "name": "Housing: Opening more homes in West Vancouver",
+    "date": "2026-05-01",
+    "name": "Infrastructure Funding: Ontario Budget 2026 — $210B Ten-Year Capital Plan",
+    "source": "Ontario Ministry of Finance",
+    "type": "policy",
+    "significance": "medium",
+    "province": "ON",
+    "url": "https://budget.ontario.ca/2026/index.html",
+    "relevance": "Finance Minister tabled Budget 2026 on March 26 with $37B for 2026-27, $64B over 10 years for health infrastructure (50 hospital projects, 3,000 beds), $31B for highways, Ring of Fire road targeted Ju"
+  },
+  {
+    "date": "2026-05-01",
+    "name": "Infrastructure Funding: Quebec Budget 2026-27 — $167B Infrastructure Plan",
+    "source": "Quebec Ministry of Finance",
+    "type": "policy",
+    "significance": "medium",
+    "province": "QC",
+    "url": "https://www.budget.finances.gouv.qc.ca/budget/2026-2027/index.asp",
+    "relevance": "Quebec tabled its 2026-27 budget with a $167B infrastructure plan covering hospitals, transit, and housing across the province."
+  },
+  {
+    "date": "2026-05-01",
+    "name": "Energy Transition: Nova Scotia Powering the Economy Act",
+    "source": "Government of Nova Scotia",
+    "type": "policy",
+    "significance": "medium",
+    "province": "NS",
+    "url": "https://novascotia.ca/news/release/?id=20260409002",
+    "relevance": "Nova Scotia legislature passed the Powering the Economy Act on April 9, enabling offshore wind and subsurface energy development."
+  },
+  {
+    "date": "2026-05-01",
+    "name": "Policy: Accelerating short-term rental opt-out process",
     "source": "BC Government News",
     "type": "policy",
     "significance": "medium",
     "province": "BC",
-    "url": "https://news.gov.bc.ca/releases/2026HMA0028-000325",
-    "relevance": "Two new rental buildings expand housing options for workers, families with middle incomes"
-  },
-  {
-    "date": "2026-04-24",
-    "name": "GDP by Industry",
-    "source": "Statistics Canada",
-    "type": "data_release",
-    "frequency": "monthly",
-    "significance": "medium",
-    "province": "national",
-    "provinces_affected": [
-      "AB",
-      "BC",
-      "MB",
-      "NB",
-      "NL",
-      "NS",
-      "NT",
-      "NU",
-      "ON",
-      "PE",
-      "QC",
-      "SK",
-      "YT"
-    ],
-    "indicator": "gdp_monthly",
-    "relevance": "Economic growth breakdown. Construction and mining sectors directly reported.",
-    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
+    "url": "https://news.gov.bc.ca/releases/2026HMA0045-000428",
+    "relevance": "(Updated April 17, 2026) Change gives communities with healthy vacancy rates more flexibility for peak travel season"
   },
   {
     "date": "2026-05-03",
@@ -170,5 +173,32 @@
     "indicator": "housing_starts",
     "relevance": "Current residential construction activity level.",
     "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301"
+  },
+  {
+    "date": "2026-05-24",
+    "name": "GDP by Industry",
+    "source": "Statistics Canada",
+    "type": "data_release",
+    "frequency": "monthly",
+    "significance": "medium",
+    "province": "national",
+    "provinces_affected": [
+      "AB",
+      "BC",
+      "MB",
+      "NB",
+      "NL",
+      "NS",
+      "NT",
+      "NU",
+      "ON",
+      "PE",
+      "QC",
+      "SK",
+      "YT"
+    ],
+    "indicator": "gdp_monthly",
+    "relevance": "Economic growth breakdown. Construction and mining sectors directly reported.",
+    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
   }
 ]

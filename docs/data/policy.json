@@ -23,7 +23,7 @@
         },
         "top_developments": [
           {
-            "title": "Ontario Budget 2026 — $210B Ten-Year Capital Plan",
+            "title": "Ontario Budget 2026 â€” $210B Ten-Year Capital Plan",
             "summary": "Finance Minister tabled Budget 2026 on March 26 with $37B for 2026-27, $64B over 10 years for health infrastructure (50 hospital projects, 3,000 beds), $31B for highways, Ring of Fire road targeted June 2026.",
             "url": "https://budget.ontario.ca/2026/index.html",
             "date": "2026-03-26",
@@ -42,7 +42,7 @@
             "source_description": "Ontario Ministry of Finance"
           },
           {
-            "title": "U.S. Section 232 Tariff Restructuring — 50% Duties",
+            "title": "U.S. Section 232 Tariff Restructuring â€” 50% Duties",
             "summary": "U.S. restructured Section 232 tariffs effective April 6 with 50% duties on steel and aluminum imports. Motor vehicle surtax extended. Canada weighing retaliatory measures.",
             "url": "https://www.canada.ca/en/department-finance/news/2026/04/canada-responds-to-us-tariff-actions.html",
             "date": "2026-04-06",
@@ -59,7 +59,7 @@
             "source_description": "Department of Finance Canada"
           },
           {
-            "title": "Build Communities Strong Fund — $51B",
+            "title": "Build Communities Strong Fund â€” $51B",
             "summary": "Federal government launched $51B Build Communities Strong Fund on April 7 for municipal infrastructure including transit, water, broadband, and community facilities.",
             "url": "https://www.infrastructure.gc.ca/plan/build-communities-strong-eng.html",
             "date": "2026-04-07",
@@ -75,7 +75,7 @@
             "source_description": "Infrastructure Canada"
           },
           {
-            "title": "Critical Minerals Alliance Round 2 — $12.1B",
+            "title": "Critical Minerals Alliance Round 2 â€” $12.1B",
             "summary": "Canada announced Round 2 of the Critical Minerals Alliance unlocking $12.1B in investment. Covers 659 well licences in March (+48% YoY).",
             "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/critical-minerals-alliance.html",
             "date": "2026-04-03",
@@ -90,7 +90,7 @@
             "source_description": "Natural Resources Canada"
           },
           {
-            "title": "Canadian Sovereign AI Compute Strategy — $1.7B+",
+            "title": "Canadian Sovereign AI Compute Strategy â€” $1.7B+",
             "summary": "Federal government announced Sovereign AI Compute Strategy with $700M in public investment plus $1B+ private sector commitments for AI infrastructure and data centres.",
             "url": "https://ised-isde.canada.ca/site/ai-strategy/en",
             "date": "2026-04-15",
@@ -106,7 +106,7 @@
             "source_description": "Innovation, Science and Economic Development Canada"
           },
           {
-            "title": "Quebec Budget 2026-27 — $167B Infrastructure Plan",
+            "title": "Quebec Budget 2026-27 â€” $167B Infrastructure Plan",
             "summary": "Quebec tabled its 2026-27 budget with a $167B infrastructure plan covering hospitals, transit, and housing across the province.",
             "url": "https://www.budget.finances.gouv.qc.ca/budget/2026-2027/index.asp",
             "date": "2026-03-25",
@@ -212,5 +212,5 @@
       }
     }
   ],
-  "last_updated": "2026-04-19T15:24:09.829234+00:00"
+  "last_updated": "2026-05-01T12:00:53.525139+00:00"
 }
