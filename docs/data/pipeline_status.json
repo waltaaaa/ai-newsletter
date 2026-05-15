@@ -1,13 +1,13 @@
 {
   "last_run": {
-    "started_at": "2026-05-15T03:00:06.683634",
+    "started_at": "2026-05-15T14:30:02.365457",
     "status": "running",
     "duration_seconds": 0,
     "discovery": {
-      "articles_found": 6484,
-      "projects_added": 4891,
+      "articles_found": 6515,
+      "projects_added": 4916,
       "projects_updated": 0,
-      "projects_deduped": 1564
+      "projects_deduped": 1567
     },
     "errors": [
       {
@@ -15,7 +15,7 @@
         "error_type": "Exception",
         "message": "Stale briefing: 100% overlap with previous week",
         "recovered": true,
-        "timestamp": "2026-05-15T03:48:55.264906"
+        "timestamp": "2026-05-15T15:16:23.238254"
       }
     ]
   },
@@ -30,9 +30,20 @@
   },
   "recent_runs": [
     {
-      "started_at": "2026-05-15T03:00:06.683634",
+      "started_at": "2026-05-15T14:30:02.365457",
       "status": "running",
       "duration_seconds": 0,
+      "discovery": {
+        "articles_found": 6515,
+        "projects_added": 4916,
+        "projects_updated": 0,
+        "projects_deduped": 1567
+      }
+    },
+    {
+      "started_at": "2026-05-15T03:00:06.683634",
+      "status": "partial",
+      "duration_seconds": 2930,
       "discovery": {
         "articles_found": 6484,
         "projects_added": 4891,
@@ -60,17 +71,6 @@
         "projects_added": 0,
         "projects_updated": 0,
         "projects_deduped": 0
-      }
-    },
-    {
-      "started_at": "2026-05-14T23:55:12.581904",
-      "status": "partial",
-      "duration_seconds": 3368,
-      "discovery": {
-        "articles_found": 4995,
-        "projects_added": 4911,
-        "projects_updated": 0,
-        "projects_deduped": 57
       }
     }
   ]

@@ -1,6 +1,93 @@
 {
   "weeks": [
     {
+      "week_of": "2026-05-15",
+      "summary": {
+        "total_items": 4,
+        "by_category": {
+          "capital_investment": 3,
+          "energy_transition": 1
+        },
+        "by_province": {
+          "BC": 3
+        },
+        "by_level": {
+          "federal": 1,
+          "provincial": 3
+        },
+        "top_developments": [
+          {
+            "title": "S-212 (45-1) - National Strategy for Children and Youth Act",
+            "source_type": "legislation",
+            "categories": [
+              "capital_investment"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Placed in the Order of Precedence on March 12, 2026 (House of Commons)",
+            "date": "Thu, 12 Mar 2026 08:49:25 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-212"
+          },
+          {
+            "title": "Ticket donation program helping B.C. youth attend FIFA World Cup 2026 matches",
+            "source_type": "policy_announcement",
+            "categories": [
+              "capital_investment"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": "BC",
+            "level": "provincial",
+            "summary": "Province, PavCo, Vancouver enable children and youth facing barriers attend matches",
+            "date": "Thu, 14 May 2026 10:45:00 -0700",
+            "source_description": "BC Government News",
+            "url": "https://news.gov.bc.ca/releases/2026TACS0025-000556"
+          },
+          {
+            "title": "Strong response to 2025 call for power, delivering clean, affordable energy",
+            "source_type": "policy_announcement",
+            "categories": [
+              "energy_transition"
+            ],
+            "affected_sectors": [
+              "mining",
+              "oil_gas",
+              "power_energy"
+            ],
+            "affected_projects_total": 137,
+            "affected_projects_value": 0,
+            "province": "BC",
+            "level": "provincial",
+            "summary": "Renewable power investments will support jobs, investment, long-term growth in B.C.",
+            "date": "Wed, 13 May 2026 13:15:00 -0700",
+            "source_description": "BC Government News",
+            "url": "https://news.gov.bc.ca/releases/2026ECS0014-000552"
+          },
+          {
+            "title": "Advancing made-in-B.C. health technology to strengthen patient care",
+            "source_type": "policy_announcement",
+            "categories": [
+              "capital_investment"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": "BC",
+            "level": "provincial",
+            "summary": "Funding will help homegrown companies pilot new tech to strengthen economic resilience in B.C.",
+            "date": "Wed, 13 May 2026 10:45:00 -0700",
+            "source_description": "BC Government News",
+            "url": "https://news.gov.bc.ca/releases/2026JEG0036-000550"
+          }
+        ]
+      }
+    },
+    {
       "week_of": "2026-05-14",
       "summary": {
         "total_items": 4,
@@ -299,5 +386,5 @@
       }
     }
   ],
-  "last_updated": "2026-05-15T03:48:57.178992+00:00"
+  "last_updated": "2026-05-15T15:16:25.455660+00:00"
 }

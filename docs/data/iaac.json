@@ -770,6 +770,111 @@
     ]
   },
   {
+    "name": "Tl'azt'en Nation - Tache Indian Reserve #1 T6 Road Upgrade Project",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-05-15",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-05-15",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Parking Lot Repaving at the Canada Post Mail Facility, Etobicoke, ON",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-05-15",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-05-15",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Coastal Erosion Protection – Engineered Stone Revetment Installation at Low Point Lighthouse",
+    "status": "Under Review",
+    "province": "NS",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-05-15",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-05-15",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Grand Passage Lifeboat Station, Digby County, NS",
+    "status": "Under Review",
+    "province": "NS",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-05-15",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-05-15",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Construction and Land Exchange at Intersection of Conroy Road and Davidson Road, Ottawa",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-05-15",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-05-15",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Black Birch Heights Residential Development",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Housing",
+    "value": "—",
+    "lastSeen": "2026-05-15",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-05-15",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Construction of a new fishing harbour in Natashquan",
+    "status": "Under Review",
+    "province": "QC",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-05-15",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-05-15",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
     "name": "Improving the reliability of Obedjiwan's stand-alone power grid by adding the equipment and infrastructure needed to integrate renewable energy from the future forest biomass power plant.",
     "status": "Under Review",
     "province": "QC",
