@@ -89,10 +89,17 @@ jobs:
           if gh release download db-latest --repo "$GITHUB_REPOSITORY" --pattern dashboard.db --dir . --clobber 2>/dev/null; then
             echo "Restored dashboard.db from db-latest release ($(du -h dashboard.db | cut -f1))"
           else
-            echo "No db-latest release asset yet — bootstrapping from origin/main"
-            git fetch --depth=1 origin main
-            git show origin/main:dashboard.db > dashboard.db
-            echo "Bootstrapped dashboard.db from origin/main ($(du -h dashboard.db | cut -f1))"
+            echo "No db-latest release asset yet — bootstrapping from git history"
+            del=$(git rev-list -n1 HEAD -- dashboard.db || true)
+            if [ -n "$del" ] && git cat-file -e "${del}^:dashboard.db" 2>/dev/null; then
+              git show "${del}^:dashboard.db" > dashboard.db
+              echo "Bootstrapped dashboard.db from ${del}^ ($(du -h dashboard.db | cut -f1))"
+            elif [ -n "$del" ] && git cat-file -e "${del}:dashboard.db" 2>/dev/null; then
+              git show "${del}:dashboard.db" > dashboard.db
+              echo "Bootstrapped dashboard.db from ${del} ($(du -h dashboard.db | cut -f1))"
+            else
+              echo "::warning::No prior dashboard.db in git history; starting from empty schema — the validator deploy-gate will block a degraded deploy"
+            fi
           fi
 
       - name: Run daily indicator refresh
