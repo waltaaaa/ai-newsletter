@@ -1,146 +1,158 @@
 {
+  "commodity_commentary": "<p><span class=\"lead-sentence\">Commodity markets were led higher this week by energy, where WTI crude rose 4.97% to US$100.16/bbl and Brent gained 7.21% to US$108.59/bbl, both driven by Strait of Hormuz supply disruption flagged in the May IEA Oil Market Report.</span><sup>20</sup> Natural gas added 5.88% to US$2.92/MMBtu while remaining 14.82% below a year ago. Precious metals diverged from energy: gold fell 3.33% to US$4,563.20/oz and silver eased 2.00% to US$78.79/oz, though gold held a 39.1% year-over-year gain after record Q1 2026 global demand reported by the World Gold Council<sup>33</sup>. Base metals firmed, with copper up 1.47% to US$6.34/lb on resilient Chinese demand after Q1 2026 GDP printed 5.0%<sup>25</sup>. Agriculture moved with wheat up 7.82% to 655.00c/bu and potash up 4.34% on the Nutrien proxy; lumber added 1.39% to US$584.50/mfbm. The Signal Dispatch cross-reference engine ties the energy move to 59 oil and gas projects ($97.6B) and the metals strength to the resource pipeline within the database's 7,480 tracked projects valued at $1,472.2B<sup>14</sup>. Western Canadian Select, uranium, nickel and canola carried no priced series in the data this week and are marked unavailable.</p>",
   "commodities": [
     {
       "name": "Crude Oil (WTI)",
-      "val": "$86.25",
-      "day": "+2.9%",
-      "mm": "-8.2%",
-      "yy": "+32%",
-      "context": "Rebounded from $83.85 trough on April 17 after re-closure reports emerged; down 34% from $128 peak on April 2",
+      "symbol": "CL=F",
+      "category": "Energy",
+      "val": "$100.16/bbl",
+      "day": "+4.97%",
+      "mm": "+19.45%",
+      "yy": "+60.10%",
       "unit": "US$/bbl",
-      "commentary": "<p>WTI crude rebounded to <strong>$86.25/bbl</strong> on April 20 after reports of potential Strait of Hormuz re-closure reversed the post-ceasefire decline.<sup>1</sup> The benchmark collapsed from approximately <strong>$128/bbl</strong> on April 2 to <strong>$83.85</strong> on April 17 \u2014 a <strong>34%</strong> decline in 15 days \u2014 following the April 8 ceasefire and April 17 Strait reopening.<sup>1</sup> EIA scenario analysis projects <strong>$110/bbl</strong> under a 1-quarter outage and <strong>$132/bbl</strong> under a 2-quarter disruption.<sup>2</sup> The pipeline tracks <strong>39</strong> oil and gas projects valued at <strong>$97.3B</strong> with direct WTI exposure.<sup>3</sup></p>"
+      "context": "<p><strong>Crude Oil (WTI):</strong> <strong>US$100.16/bbl</strong> (<strong>+4.97%</strong> week-over-week) — crude climbed back toward US$100 following reports of a Trump-Xi discussion of the Strait of Hormuz, with the May IEA Oil Market Report framing the supply-shock backdrop<sup>19</sup><sup>20</sup>. The Signal Dispatch cross-reference engine links the move to 59 oil and gas projects valued at $97.6B, connected to the crude-led March trade surplus. If WTI holds near US$100/bbl, those 59 oil and gas projects would retain netbacks well above the levels implied by the US$70.70/bbl trailing one-year average, with the price now 60.10% above its year-ago level and within the US$55.27-US$112.95/bbl 52-week range<sup>14</sup>.</p>"
+    },
+    {
+      "name": "Western Canadian Select",
+      "symbol": "WCS",
+      "category": "Energy",
+      "val": "N/A",
+      "day": "N/A",
+      "mm": "N/A",
+      "yy": "N/A",
+      "unit": "US$/bbl",
+      "context": "<p><strong>Western Canadian Select:</strong> <strong>N/A</strong> — Data unavailable for this commodity this week. No WCS price or WCS/WTI differential series was carried in the data this run, so the WCS discount calculation and heavy-crude netback analysis are not reported.</p>"
     },
     {
       "name": "Crude Oil (Brent)",
-      "val": "$95.42",
-      "day": "+5.6%",
-      "mm": "-6.8%",
-      "yy": "+38%",
-      "context": "Wider Brent-WTI spread reflects seaborne supply risk premium; OPEC+ output fell 9.4 mb/d",
+      "symbol": "BZ=F",
+      "category": "Energy",
+      "val": "$108.59/bbl",
+      "day": "+7.21%",
+      "mm": "+20.15%",
+      "yy": "+66.09%",
       "unit": "US$/bbl",
-      "commentary": "<p>Brent crude traded at <strong>$95.42/bbl</strong>, maintaining an elevated spread over WTI as seaborne supply risk remained priced in.<sup>1</sup> OPEC+ production fell <strong>9.4 mb/d</strong> month-over-month to <strong>42.4 mb/d</strong> during the blockade period.<sup>2</sup> Approximately <strong>25%</strong> of seaborne oil and <strong>20%</strong> of global LNG transited the Strait of Hormuz prior to disruption.<sup>1</sup> Canada's TMX pipeline provides an alternative corridor for Asian buyers, supporting the strategic rationale for tracked energy export infrastructure.<sup>3</sup></p>"
+      "context": "<p><strong>Crude Oil (Brent):</strong> <strong>US$108.59/bbl</strong> (<strong>+7.21%</strong> week-over-week) — the global benchmark outpaced WTI on the Hormuz supply disruption, widening to 66.09% above its year-ago level, the largest 12-month gain among tracked energy contracts and near the upper end of its US$58.92-US$118.35/bbl 52-week range<sup>20</sup>.</p>"
     },
     {
       "name": "Natural Gas",
-      "val": "$2.71",
-      "day": "+1.5%",
-      "mm": "+8.4%",
-      "yy": "+18%",
-      "context": "Henry Hub supported by LNG disruption premium and spring storage concerns",
+      "symbol": "NG=F",
+      "category": "Energy",
+      "val": "$2.92/MMBtu",
+      "day": "+5.88%",
+      "mm": "+9.16%",
+      "yy": "-14.82%",
       "unit": "US$/MMBtu",
-      "commentary": "<p>Henry Hub natural gas traded at <strong>$2.71/MMBtu</strong>, supported by Hormuz-related LNG supply disruption and below-average spring storage injections.<sup>1</sup> The Strait's closure removed approximately <strong>20%</strong> of global LNG transit capacity, tightening Atlantic Basin pricing.<sup>2</sup> LNG Canada Phase 1 (Kitimat) and tracked BC natural gas projects have exposure to the global LNG rebalancing.<sup>3</sup></p>"
+      "context": "<p><strong>Natural Gas:</strong> <strong>US$2.92/MMBtu</strong> (<strong>+5.88%</strong> week-over-week) — Henry Hub firmed on the broader energy-complex move tied to the Hormuz disruption, yet remained 14.82% below its year-ago level and beneath its US$3.28/MMBtu trailing one-year average, a level relevant to LNG export economics and feed-gas-linked projects in the database<sup>19</sup>. The price held well off the US$7.46/MMBtu 52-week high and above the US$1.64/MMBtu 52-week low.</p>"
     },
     {
       "name": "Gold",
-      "val": "$4,828",
-      "day": "+0.8%",
-      "mm": "+9.09%",
-      "yy": "+40.03%",
-      "context": "Near record on geopolitical risk and central bank demand; Goldman Sachs Dec 2026 target $4,900",
+      "symbol": "GC=F",
+      "category": "Precious Metals",
+      "val": "$4,563.20/oz",
+      "day": "-3.33%",
+      "mm": "-6.06%",
+      "yy": "+39.11%",
       "unit": "US$/oz",
-      "commentary": "<p>Gold traded near <strong>$4,828/oz</strong>, up <strong>+9.09%</strong> over the past month and <strong>+40.03%</strong> year-over-year as Hormuz uncertainty, global rate-hike repricing, and central bank reserve diversification sustained demand.<sup>4</sup> Goldman Sachs maintained a December 2026 target of <strong>$4,900/oz</strong>.<sup>4</sup> The pipeline tracks <strong>305</strong> mining projects valued at <strong>$146.0B</strong>, including gold operations in Ontario, Quebec, and British Columbia that benefit from elevated pricing.<sup>3</sup></p>"
+      "context": "<p><strong>Gold:</strong> <strong>US$4,563.20/oz</strong> (<strong>-3.33%</strong> week-over-week) — bullion eased as the energy-led move pulled flows toward crude, though it held a 39.11% year-over-year gain following record Q1 2026 global gold demand reported by the World Gold Council and continued central-bank buying<sup>33</sup><sup>34</sup>. The Signal Dispatch cross-reference engine connects the price to mining projects within the tracked pipeline; the level sits below the US$5,318.40/oz 52-week high but well above the US$3,659.87/oz one-year average.</p>"
     },
     {
       "name": "Silver",
-      "val": "$31.45",
-      "day": "+1.2%",
-      "mm": "+7.8%",
-      "yy": "+28%",
-      "context": "Industrial and monetary demand both elevated; gold-silver ratio near 153:1",
+      "symbol": "SI=F",
+      "category": "Precious Metals",
+      "val": "$78.79/oz",
+      "day": "-2.00%",
+      "mm": "-3.61%",
+      "yy": "+138.90%",
       "unit": "US$/oz",
-      "commentary": "<p>Silver traded at approximately <strong>$31.45/oz</strong>, gaining alongside gold while also supported by industrial demand from solar panel manufacturing and electronics.<sup>4</sup></p>"
+      "context": "<p><strong>Silver:</strong> <strong>US$78.79/oz</strong> (<strong>-2.00%</strong> week-over-week) — silver eased following the pullback in gold as energy-complex flows drew capital toward crude, but retained a 138.90% year-over-year gain, the largest 12-month move of any tracked commodity, against a US$29.51-US$115.08/oz 52-week range.</p>"
     },
     {
       "name": "Copper",
-      "val": "$4.52",
-      "day": "+0.6%",
-      "mm": "+3.8%",
-      "yy": "+14%",
-      "context": "China industrial production +6.1% supporting demand; electrification buildout continues",
+      "symbol": "HG=F",
+      "category": "Base Metals",
+      "val": "$6.34/lb",
+      "day": "+1.47%",
+      "mm": "+3.89%",
+      "yy": "+37.27%",
       "unit": "US$/lb",
-      "commentary": "<p>Copper traded at approximately <strong>$4.52/lb</strong>, supported by China's industrial production growth of <strong>+6.1%</strong> in Q1 and sustained electrification demand globally.<sup>5</sup> Canadian copper mining operations, including tracked BC and Ontario projects, have exposure to the U.S. Section 232 tariff of <strong>50%</strong> on copper imports.<sup>6</sup></p>"
-    },
-    {
-      "name": "Aluminum",
-      "val": "$1.18",
-      "day": "+0.4%",
-      "mm": "+2.1%",
-      "yy": "+9%",
-      "context": "U.S. 50% Section 232 tariff on aluminum reshaping North American trade flows",
-      "unit": "US$/lb",
-      "commentary": "<p>Aluminum traded near <strong>$1.18/lb</strong>. U.S. Section 232 duties restructured to <strong>50%</strong> on aluminum affect Canadian smelters in Quebec and BC that export to U.S. markets.<sup>6</sup> Canada's retaliatory tariff pause (April 15) provides a 6-month window for negotiation.<sup>6</sup></p>"
-    },
-    {
-      "name": "Lumber",
-      "val": "$520",
-      "day": "+0.3%",
-      "mm": "-4.2%",
-      "yy": "-8%",
-      "context": "Housing starts at 235,852 SAAR below consensus; building permits -8.4%",
-      "unit": "US$/mfbm",
-      "commentary": "<p>Lumber traded near <strong>$520/mfbm</strong>, pressured by Canadian housing starts of <strong>235,852 SAAR</strong> (-6.0% M/M) and building permits declining <strong>-8.4%</strong> to <strong>$12.1B</strong>.<sup>7</sup> The <strong>166</strong> tracked residential projects (<strong>$31.9B</strong>) face a structural gap between current starts and CMHC's <strong>430,000-480,000</strong> annual target for affordability.<sup>3</sup></p>"
-    },
-    {
-      "name": "Potash (Nutrien)",
-      "val": "$310",
-      "day": "+0.2%",
-      "mm": "-1.5%",
-      "yy": "-5%",
-      "context": "Global supply stable; Saskatchewan production steady; spring planting season demand",
-      "unit": "US$/MT",
-      "commentary": "<p>Potash traded near <strong>$310/MT</strong> with Saskatchewan production \u2014 which accounts for approximately <strong>30%</strong> of global supply \u2014 operating at steady rates through spring planting season demand.<sup>8</sup></p>"
+      "context": "<p><strong>Copper:</strong> <strong>US$6.34/lb</strong> (<strong>+1.47%</strong> week-over-week) — copper firmed on resilient Chinese demand after Q1 2026 GDP printed 5.0%, supporting electrification and base-metals mining projects in the database<sup>25</sup>. The price is 37.27% above its year-ago level and near the US$6.64/lb 52-week high, well above the US$4.99/lb one-year average.</p>"
     },
     {
       "name": "Uranium",
-      "val": "$68.50",
-      "day": "+1.8%",
-      "mm": "+5.2%",
-      "yy": "+22%",
-      "context": "Energy security narrative strengthened by Hormuz crisis; nuclear renaissance demand",
+      "symbol": "URA",
+      "category": "Energy",
+      "val": "N/A",
+      "day": "N/A",
+      "mm": "N/A",
+      "yy": "N/A",
       "unit": "US$/lb",
-      "commentary": "<p>Uranium spot traded near <strong>$68.50/lb</strong>, supported by energy security concerns amplified by the Hormuz crisis and continued nuclear capacity commitments globally.<sup>2</sup> Saskatchewan's Cameco operations and tracked uranium projects benefit from the structural supply deficit narrative.<sup>3</sup></p>"
-    },
-    {
-      "name": "Wheat",
-      "val": "$8.15",
-      "day": "+0.5%",
-      "mm": "+3.2%",
-      "yy": "+12%",
-      "context": "Spring planting underway in Western Canada; global supply concerns from Black Sea disruptions",
-      "unit": "CAD$/bu",
-      "commentary": "<p>Canadian wheat traded near <strong>C$8.15/bu</strong> as spring planting commenced across the Prairies. Global supply concerns and elevated input costs supported pricing.<sup>8</sup></p>"
-    },
-    {
-      "name": "Iron Ore",
-      "val": "$105",
-      "day": "+1.1%",
-      "mm": "+4.5%",
-      "yy": "+8%",
-      "context": "China March imports +27.8% YoY; industrial production +6.1% supporting steel demand",
-      "unit": "US$/MT",
-      "commentary": "<p>Iron ore traded near <strong>$105/MT</strong>, supported by China's March imports surging <strong>+27.8%</strong> year-over-year \u2014 the strongest growth since November 2021.<sup>5</sup> Tracked Labrador and Quebec iron ore projects have direct exposure to Chinese steel demand.<sup>3</sup></p>"
+      "context": "<p><strong>Uranium:</strong> <strong>N/A</strong> — Data unavailable for this commodity this week. No spot uranium series was carried in the data this run; Saskatchewan uranium project exposure is referenced qualitatively only.</p>"
     },
     {
       "name": "Nickel",
-      "val": "$7.25",
-      "day": "+0.7%",
-      "mm": "+2.8%",
-      "yy": "-12%",
-      "context": "EV battery demand growing; Indonesian supply overhang persists",
-      "unit": "US$/lb",
-      "commentary": "<p>Nickel traded near <strong>$7.25/lb</strong>, with EV battery demand providing a floor against Indonesian supply expansion.<sup>5</sup> Tracked Ontario and Labrador nickel projects maintain exposure to the energy transition supply chain.<sup>3</sup></p>"
+      "symbol": "NICKEL",
+      "category": "Base Metals",
+      "val": "N/A",
+      "day": "N/A",
+      "mm": "N/A",
+      "yy": "N/A",
+      "unit": "US$/MT",
+      "context": "<p><strong>Nickel:</strong> <strong>N/A</strong> — Data unavailable for this commodity this week. Only a single spot datapoint (about US$17,076/t) was carried, with no computable weekly, monthly or year-over-year deltas, so no price move is published.</p>"
+    },
+    {
+      "name": "Wheat",
+      "symbol": "ZW=F",
+      "category": "Agriculture",
+      "val": "655.00c/bu",
+      "day": "+7.82%",
+      "mm": "+10.78%",
+      "yy": "+19.96%",
+      "unit": "US$/bu",
+      "context": "<p><strong>Wheat:</strong> <strong>655.00c/bu</strong> (<strong>+7.82%</strong> week-over-week) — wheat advanced as the Middle East conflict lifting global input costs fed into grain markets, and now stands 19.96% above its year-ago level at the top of its 495.00-665.00c/bu 52-week range, relevant to Prairie agriculture and grain-handling projects in the pipeline.</p>"
+    },
+    {
+      "name": "Canola",
+      "symbol": "CANOLA",
+      "category": "Agriculture",
+      "val": "N/A",
+      "day": "N/A",
+      "mm": "N/A",
+      "yy": "N/A",
+      "unit": "CAD$/MT",
+      "context": "<p><strong>Canola:</strong> <strong>N/A</strong> — Data unavailable for this commodity this week. No canola series was carried in the data this run; Prairie oilseed exposure is referenced qualitatively only.</p>"
+    },
+    {
+      "name": "Potash (Nutrien)",
+      "symbol": "NTR",
+      "category": "Agriculture",
+      "val": "$97.34",
+      "day": "+4.34%",
+      "mm": "-4.71%",
+      "yy": "+20.28%",
+      "unit": "US$/share",
+      "context": "<p><strong>Potash (Nutrien):</strong> <strong>US$97.34</strong> (<strong>+4.34%</strong> week-over-week, Nutrien proxy) — the potash proxy gained amid the firm global fertilizer demand backdrop and is 20.28% above its year-ago level, within a US$72.29-US$114.41 52-week range, relevant to Saskatchewan fertilizer projects in the database.</p>"
+    },
+    {
+      "name": "Lumber",
+      "symbol": "LB=F",
+      "category": "Forest Products",
+      "val": "$584.50/mfbm",
+      "day": "+1.39%",
+      "mm": "+0.26%",
+      "yy": "-3.39%",
+      "unit": "US$/mfbm",
+      "context": "<p><strong>Lumber:</strong> <strong>US$584.50/mfbm</strong> (<strong>+1.39%</strong> week-over-week) — lumber edged up but remained 3.39% below its year-ago level and essentially in line with its US$583.50/mfbm one-year average, as CMHC March housing starts fell 6% month-over-month, a construction-input read tied to BC forestry and residential projects in the database<sup>16</sup>. The price held below the US$695.50/mfbm 52-week high.</p>"
     }
   ],
-  "commodity_commentary": "<p>Commodity markets this week remained dominated by Strait of Hormuz developments and their cascading effects across the energy complex. WTI crude's <strong>34%</strong> collapse from its April 2 peak of approximately <strong>$128/bbl</strong> to the April 17 trough of <strong>$83.85</strong> represented the most violent price swing since March 2020, before re-closure reports drove a rebound to <strong>$86.25</strong>.<sup>1</sup> The Brent-WTI spread widened as seaborne supply risk commanded a premium, with OPEC+ production declining <strong>9.4 mb/d</strong> during the blockade period.<sup>2</sup></p><p>Precious metals sustained gains with gold near <strong>$4,828/oz</strong> \u2014 up <strong>+40%</strong> year-over-year \u2014 reflecting geopolitical hedging and central bank reserve diversification.<sup>4</sup> Base metals advanced on China's stronger-than-expected Q1 GDP of <strong>+5.0%</strong> and industrial production growth of <strong>+6.1%</strong>.<sup>5</sup> Iron ore benefited from China's March imports surging <strong>+27.8%</strong> year-over-year.<sup>5</sup></p><p>Construction-linked commodities presented a mixed picture: lumber remained soft as Canadian building permits fell <strong>-8.4%</strong> and housing starts missed consensus, while copper held firm on electrification demand despite U.S. <strong>50%</strong> Section 232 tariffs on imports.<sup>6</sup><sup>7</sup> The pipeline's <strong>550</strong> power and energy projects, <strong>305</strong> mining projects, and <strong>39</strong> oil and gas projects \u2014 collectively valued at <strong>$734.2B</strong> \u2014 carry direct commodity price exposure to these movements.<sup>3</sup></p>",
-  "wcs_analysis": "<p>Western Canadian Select traded at an estimated discount of <strong>$12-14/bbl</strong> below WTI, narrower than the <strong>$15-18</strong> range observed during peak Hormuz disruption as TMX operational capacity provided an alternative egress route to Asian markets.<sup>1</sup> The narrowing differential supports economics for <strong>39</strong> tracked oil sands projects with breakeven costs concentrated above <strong>$65/bbl</strong> WTI.<sup>3</sup></p>",
+  "wcs_analysis": null,
   "sources": [
-    {"id": 1, "title": "CNBC \u2014 Oil Markets Hormuz", "url": "https://www.cnbc.com/2026/04/14/oil-wti-brent-as-markets-hormuz-blockade-vance-trump.html"},
-    {"id": 2, "title": "IEA \u2014 Oil Market Report April 2026", "url": "https://www.iea.org/reports/oil-market-report-april-2026"},
-    {"id": 3, "title": "Pipeline Database Cross-Reference", "url": "https://thelaggingindicator.github.io/canadian-macro-dashboard/"},
-    {"id": 4, "title": "Trading Economics \u2014 Gold", "url": "https://tradingeconomics.com/commodity/gold"},
-    {"id": 5, "title": "CNN \u2014 China GDP Q1 2026", "url": "https://www.cnn.com/2026/04/15/china/china-gdp-q1-economy-growth-intl-hnk"},
-    {"id": 6, "title": "CFIB \u2014 U.S. Tariffs", "url": "https://www.cfib-fcei.ca/en/site/us-tariffs"},
-    {"id": 7, "title": "CMHC \u2014 Housing Starts March 2026", "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026"},
-    {"id": 8, "title": "Trading Economics \u2014 Canada Stock Market", "url": "https://tradingeconomics.com/canada/stock-market"}
+    { "id": 14, "title": "Canada posts trade surplus in March — CBC News", "url": "https://www.cbc.ca/news/business/trade-numbers-surplus-march-2026-9.7187910" },
+    { "id": 16, "title": "Housing starts for March 2026 — CMHC", "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026" },
+    { "id": 19, "title": "Oil hovers ~$100 after Trump-Xi Hormuz discussion — CNBC", "url": "https://www.cnbc.com/2026/05/14/oil-prices-today-wti-brent-hormuz-trump-xi-meeting.html" },
+    { "id": 20, "title": "Oil Market Report — May 2026 — IEA", "url": "https://www.iea.org/reports/oil-market-report-may-2026" },
+    { "id": 25, "title": "China's GDP grows 5% in Q1 2026 — China Briefing", "url": "https://www.china-briefing.com/news/chinas-q1-2026-gdp/" },
+    { "id": 33, "title": "Global gold demand record Q1 2026 — Investing.com / WGC", "url": "https://www.investing.com/news/commodities-news/global-gold-demand-inches-up-in-q1-2026-hits-record-high--world-gold-council-4643597" },
+    { "id": 34, "title": "Central banks' gold buying 2026 — MINING.COM", "url": "https://www.mining.com/central-banks-gold-buying-momentum-carries-into-2026/" }
   ]
 }

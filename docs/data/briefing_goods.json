@@ -1,108 +1,163 @@
 {
-  "goods_industries": [
+  "goodsIndustries": [
     {
-      "naics": "11",
+      "code": "11",
       "name": "Agriculture, Forestry, Fishing & Hunting",
-      "gdp_current": "1.8% of national GDP",
-      "gdp_yoy": "-0.6% (real GDP)",
-      "employment_trend": "Stable; seasonal hiring patterns dominate",
-      "analysis": "<p>Canola leads Canada's field crop complex at <strong>21.8 Mt</strong> for 2025-26, up <strong>13%</strong> year-over-year and <strong>19%</strong> above the five-year average.<sup>1</sup> Total Canadian grain production reached a record <strong>107 Mt</strong> in 2025, with carry-out stocks projected to rise <strong>67%</strong>.<sup>1</sup> China's tariff reduction on canola from approximately <strong>85%</strong> to <strong>15%</strong> reopens a <strong>$4B</strong> market for Canadian exporters.<sup>2</sup> Wheat futures sit at <strong>$601.75/bu</strong> while corn trades at <strong>$465.25/bu</strong>.<sup>3</sup> The federal government allocated <strong>$75M</strong> through the AgriMarketing Program (2026-31) for market diversification.<sup>4</sup> Prices for most principal field crops are forecast lower year-over-year except soybeans and mustard seed.<sup>1</sup> The pipeline tracks <strong>13 projects</strong> valued at <strong>$4.7B</strong>, led by a Quebec biofuel facility (<strong>$1.2B</strong>), Saint John Pulp Mill upgrades in New Brunswick (<strong>$1.1B</strong>), and Hinton Pulp Mill expansion in Alberta (<strong>$584M</strong>).<sup>5</sup></p>",
-      "key_commodity": "Canola/Wheat",
-      "commodity_price": "Wheat $601.75/bu; Corn $465.25/bu",
-      "project_exposure": "13 projects ($4.7B) tracked in database",
+      "mm": "-1.3%",
+      "yy": "+3.5%",
+      "trend": "up",
+      "projectCount": 14,
+      "analysis": "<p>Agriculture, forestry, fishing and hunting sector GDP contracted <strong>1.3%</strong> month-over-month while holding <strong>+3.5%</strong> year-over-year<sup>1</sup>. Lead export commodities remained elevated: wheat priced <strong>$655</strong>, up <strong>22.9% Y/Y</strong> and <strong>7.8% W/W</strong>, while Western SPF lumber held <strong>$584.50/mfbm</strong>, up <strong>5.2% Y/Y</strong><sup>2</sup>. Potash (Nutrien proxy) sat at <strong>$97.34</strong>, up <strong>22.2% Y/Y</strong> but down <strong>4.1% M/M</strong><sup>2</sup>.</p><p>The project database tracks <strong>14 discrete projects ($4.74B)</strong> — roughly 2 agriculture and 12 forestry — a research-led rather than project-led pipeline<sup>3</sup>. The 12 forestry projects ($4.73B) sit against U.S. Section 232 plus AD/CVD measures that raise Canadian producer costs an estimated <strong>25-30%</strong>; Western Forest Products extended its Chemainus, B.C. sawmill closure through end of 2026<sup>4</sup>.</p><p>Sector capital flows largely through policy channels. Farm Credit Canada convened a coalition of 20+ investment organizations prepared to deploy up to <strong>$5 billion</strong> by 2030, totalling <strong>$7 billion</strong> with FCC's May 2025 commitment<sup>5</sup>. The five-year <strong>$3.5-billion</strong> Sustainable Canadian Agricultural Partnership continues, with <strong>$75 million</strong> added over five years to AgriMarketing market-diversification streams<sup>6</sup>. If U.S. trade measures persist, additional sawmill closures and rural employment contraction would extend the forestry sub-sector divergence from the +3.5% Y/Y aggregate.</p>",
       "sources": [
-        {"id": 1, "title": "Agriculture and Agri-Food Canada — Field Crop Report", "url": "https://agriculture.canada.ca/en/sector/crops"},
-        {"id": 2, "title": "Canada-China Canola Tariff Agreement", "url": "https://www.canada.ca/en/global-affairs.html"},
-        {"id": 3, "title": "Commodity Futures Data", "url": "https://www.cbot.com/"},
-        {"id": 4, "title": "Canada.ca — AgriMarketing Program", "url": "https://agriculture.canada.ca/en/programs"},
-        {"id": 5, "title": "Seed World — Canadian Agriculture", "url": "https://www.seedworld.com/"}
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Agriculture, Forestry)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity Time Series — Wheat, Lumber, Potash", "url": "https://www.fcc-fac.ca/en/knowledge/economics.html"},
+        {"id": 3, "title": "Canadian Capital Projects Database — Agriculture & Forestry", "url": "https://waltaaaa.github.io/AI_newsletter/"},
+        {"id": 4, "title": "Western Forest Products — Chemainus Sawmill Closure Extension", "url": "https://www.westernforest.com/media/news-releases/"},
+        {"id": 5, "title": "Farm Credit Canada — $5B Investment Coalition for Agriculture and Food", "url": "https://www.fcc-fac.ca/en/about-fcc/media-centre/news-releases/2026/coalition-investment-canadian-agriculture-food"},
+        {"id": 6, "title": "Agriculture and Agri-Food Canada — Market Diversification Program", "url": "https://www.canada.ca/en/agriculture-agri-food/news/2026/02/the-government-of-canada-strengthens-support-for-agricultural-exports-with-a-new-market-diversification-program.html"}
+      ],
+      "isNegative": false,
+      "subsectors": [
+        {"code": "111", "name": "Crop Production"},
+        {"code": "113", "name": "Forestry & Logging"},
+        {"code": "114", "name": "Fishing, Hunting & Trapping"}
+      ],
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-1.3%", "delta": "monthly contraction", "source": "industry_gdp.json:11.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+3.5%", "delta": "year-over-year growth", "source": "industry_gdp.json:11.yy"},
+        {"label": "Lumber (Western SPF)", "value": "$584.50/mfbm", "delta": "+5.2% Y/Y, +1.4% W/W", "source": "timeseries.json:lumber"},
+        {"label": "Wheat", "value": "$655", "delta": "+22.9% Y/Y, +7.8% W/W", "source": "timeseries.json:wheat"},
+        {"label": "Potash (Nutrien proxy)", "value": "$97.34", "delta": "+22.2% Y/Y, -4.1% M/M", "source": "timeseries.json:potash_nutrien"},
+        {"label": "Active Projects", "value": "14", "delta": "$4.74B tracked (research-led pipeline)", "source": "projects_all.json:sector=agriculture+forestry"}
       ]
     },
     {
-      "naics": "21",
-      "name": "Mining, Quarrying, and Oil & Gas Extraction",
-      "gdp_current": "8.2% of national GDP",
-      "gdp_yoy": "+3.1% (energy-weighted)",
-      "employment_trend": "Drilling rig count up 6% YoY; 5,709 wells projected for 2026",
-      "analysis": "<p>WTI crude trades at <strong>$86.25/bbl</strong> amid Strait of Hormuz transit concerns, while Brent sits at <strong>$107.31/bbl</strong>.<sup>1</sup> Gold reached <strong>$4,572/oz</strong> and copper holds at <strong>$5.53/lb</strong>.<sup>1</sup> CAOEC projects <strong>213 active drilling rigs</strong> in 2026, up from 201 in 2025, with <strong>5,709 wells</strong> forecast (+3%).<sup>2</sup> The federal government committed <strong>$3.6B</strong> in new critical minerals programs, with <strong>$165.2M</strong> allocated to 22 projects unlocking <strong>$434M</strong> in investment across eight provinces.<sup>3</sup> The Critical Minerals Partnerships Alliance has mobilized <strong>$18.5B</strong> in Canadian projects.<sup>3</sup> Fast-tracked developments include Foran Mining's McIlvenna Bay copper-zinc project in Saskatchewan and the Red Chris copper expansion in BC (+<strong>15%</strong> annual copper output).<sup>4</sup> An Indigenous-led floating LNG terminal on BC's northern coast is nearing final investment decision in 2026.<sup>2</sup> The Critical Minerals Sovereign Fund provides <strong>$2B</strong> over five years, supplemented by the First and Last Mile Fund at <strong>$1.5B</strong> over four years.<sup>3</sup> The pipeline tracks <strong>397 projects</strong> valued at <strong>$252.3B</strong>, anchored by LNG Canada (<strong>$40.0B</strong>) and KSM gold/copper (<strong>$8.4B</strong>).<sup>5</sup></p>",
-      "key_commodity": "WTI Crude / Gold / Copper",
-      "commodity_price": "WTI $86.25/bbl; Gold $4,572/oz; Copper $5.53/lb",
-      "project_exposure": "397 projects ($252.3B) tracked in database",
+      "code": "21",
+      "name": "Mining, Quarrying & Oil/Gas Extraction",
+      "mm": "+0.4%",
+      "yy": "+3.6%",
+      "trend": "up",
+      "projectCount": 442,
+      "analysis": "<p>Mining, quarrying and oil/gas extraction sector GDP rose <strong>0.4%</strong> month-over-month and <strong>3.6%</strong> year-over-year<sup>1</sup>. WTI crude averaged <strong>$100.16/bbl</strong>, up <strong>5% W/W</strong> and <strong>62.5% Y/Y</strong>; copper held <strong>$6.34/lb</strong>, up <strong>36.5% Y/Y</strong>; iron ore sat at <strong>$16.58</strong>, up <strong>69.4% Y/Y</strong>; gold reached <strong>$4,563</strong>, up <strong>41.7% Y/Y</strong> but down <strong>3.3% W/W</strong><sup>2</sup>.</p><p>The database tracks <strong>442 mining and oil/gas projects ($324.69B)</strong> — 347 mining ($227.11B) and 39 oil/gas ($97.58B) — with 43 new mining projects added in the last 21 days<sup>3</sup>. The cross-reference engine links <strong>26 Alberta oil/gas projects ($44.43B)</strong> to WTI at $100.16/bbl, above the breakeven range cited for oil-sands proposals; 2026 oil-and-gas capex is estimated near <strong>$50B</strong><sup>3</sup>. Western Canada drilling averaged 213 active rigs in 2026, with oil-sands proposals totalling 4.1 million bbl/d combined capacity<sup>4</sup>.</p><p>Federal policy unlocked additional capital. Canada secured <strong>30 new critical-minerals partnerships</strong> tied to <strong>$12.1 billion</strong> in mining-project capital, plus <strong>$165.2M</strong> for 22 projects unlocking $434M across eight provinces and a <strong>$1.5 billion</strong> First and Last Mile Fund for mine-supporting infrastructure<sup>5</sup>. Junior exploration 2026 intentions point to a record <strong>$2.91 billion</strong><sup>4</sup>. If commodity prices hold, the 442-project pipeline would operate under supportive margin conditions.</p>",
       "sources": [
-        {"id": 1, "title": "Canadian Energy Centre — Commodity Prices", "url": "https://www.canadianenergycentre.ca/"},
-        {"id": 2, "title": "CAOEC — 2026 Drilling Forecast", "url": "https://www.caoec.ca/"},
-        {"id": 3, "title": "NRCan — Critical Minerals Strategy", "url": "https://www.canada.ca/en/natural-resources-canada.html"},
-        {"id": 4, "title": "MINING.COM — Canadian Mining Projects", "url": "https://www.mining.com/"},
-        {"id": 5, "title": "Project Database — Mining & O&G Sector", "url": "https://www.canada.ca/en/impact-assessment-agency.html"}
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Mining, Oil & Gas)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity Time Series — WTI, Copper, Iron Ore, Gold", "url": "https://www.eia.gov/dnav/pet/pet_pri_spt_s1_d.htm"},
+        {"id": 3, "title": "Canadian Capital Projects Database — Mining & Oil/Gas", "url": "https://waltaaaa.github.io/AI_newsletter/"},
+        {"id": 4, "title": "NexGen Rook I / Western Canada Drilling — Sector Research", "url": "https://www.cer-rec.gc.ca/en/data-analysis/"},
+        {"id": 5, "title": "Natural Resources Canada — 30 Critical-Minerals Partnerships, $12.1B", "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html"}
+      ],
+      "isNegative": false,
+      "subsectors": [
+        {"code": "211", "name": "Oil & Gas Extraction"},
+        {"code": "212", "name": "Mining & Quarrying (except Oil & Gas)"},
+        {"code": "213", "name": "Support Activities for Mining & Oil/Gas"}
+      ],
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+0.4%", "delta": "monthly growth", "source": "industry_gdp.json:21.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+3.6%", "delta": "year-over-year growth", "source": "industry_gdp.json:21.yy"},
+        {"label": "WTI Crude", "value": "$100.16/bbl", "delta": "+5% W/W, +62.5% Y/Y", "source": "timeseries.json:wti"},
+        {"label": "Copper", "value": "$6.34/lb", "delta": "+1.5% W/W, +36.5% Y/Y", "source": "timeseries.json:copper"},
+        {"label": "Gold", "value": "$4,563", "delta": "-3.3% W/W, +41.7% Y/Y", "source": "timeseries.json:gold"},
+        {"label": "Iron Ore", "value": "$16.58", "delta": "+2.4% W/W, +69.4% Y/Y", "source": "timeseries.json:iron_ore"},
+        {"label": "Active Projects", "value": "442", "delta": "+43 mining this period; $324.69B", "source": "projects_all.json:sector=mining+oil_gas"}
       ]
     },
     {
-      "naics": "22",
-      "name": "Utilities",
-      "gdp_current": "2.3% of national GDP",
-      "gdp_yoy": "+1.8% (generation capacity expansion)",
-      "employment_trend": "Growing; clean energy transition driving new hires",
-      "analysis": "<p>Natural gas trades at <strong>$3.05/MMBtu</strong>, providing baseline generation cost inputs while the sector accelerates its transition to renewables.<sup>1</sup> CanREA reports installed wind, solar, and storage capacity will grow by one-third in four years and double in a decade, with approximately <strong>24 GW</strong> announced and <strong>~8 GW</strong> expected online by 2029.<sup>2</sup> Ontario's Long-Term 2 battery energy storage system awards are expected in Q2 2026, while Quebec and British Columbia are procuring thousands of MW of renewables.<sup>2</sup> The Canada Energy Regulator projects power generation to increase <strong>30%-100%</strong> by 2050, driven partly by AI data centre demand.<sup>3</sup> OPG's Darlington SMR project (<strong>$20.9B</strong>, four BWRX-300 units totalling <strong>1,200 MW</strong>) applied for its Licence to Operate in March 2026, with basemat placement scheduled for summer 2026.<sup>4</sup> SaskPower's BWRX-300 deployment targets the mid-2030s, with a construction decision expected in 2029.<sup>4</sup> Federal funding of <strong>$28.9M</strong> was allocated for 12 clean energy projects spanning CCUS, renewables, and smart grid technologies.<sup>5</sup> The pipeline tracks <strong>1,306 projects</strong> valued at <strong>$505.9B</strong>, led by LNG Canada Phase 1 (<strong>$47.9B</strong>) and the Deep Geological Repository (<strong>$26.0B</strong>).<sup>5</sup></p>",
-      "key_commodity": "Natural Gas / Uranium",
-      "commodity_price": "Natural Gas $3.05/MMBtu; Uranium linked to SMR pipeline",
-      "project_exposure": "1,306 projects ($505.9B) tracked in database",
+      "code": "22",
+      "name": "Utilities (Electricity, Gas, Water)",
+      "mm": "-0.0%",
+      "yy": "-4.0%",
+      "trend": "down",
+      "projectCount": 1441,
+      "analysis": "<p>Utilities sector GDP was flat month-over-month and down <strong>4.0%</strong> year-over-year, the steepest annual decline among goods industries<sup>1</sup>. Natural gas priced <strong>$2.92</strong>, up <strong>5.9% W/W</strong> but down <strong>13.2% Y/Y</strong><sup>2</sup>. The TSX infrastructure basket sat at <strong>55.94</strong>, up <strong>28.5% Y/Y</strong><sup>2</sup>. Canada produced <strong>623 TWh</strong> of electricity in 2024, 65% renewable and 78% non-GHG (hydro 57.4%, nuclear 13.5%)<sup>3</sup>.</p><p>The database tracks <strong>1,441 utilities, power and water projects ($489.23B)</strong>, with 126 added in the last 21 days<sup>4</sup>. The GDP contraction coincides with forward-looking capital commitments and infrastructure valuations up 28.5% Y/Y. AI data-centre load is a new structural electricity-demand driver: Synapse Data Centre Inc. proposed a <strong>$10-billion</strong> data-centre-plus-gas-power plan in rural Alberta, and a Telus cluster scales from 85 to 150 MW<sup>5</sup>.</p><p>Natural Resources Canada is developing a Nuclear Energy Strategy for release at end of 2026, covering new builds, export, uranium and fuel expansion, and fusion innovation, alongside a <strong>$40-million</strong> 2026-27 microreactor assessment for remote DND facilities<sup>6</sup>. OPG and Port Hope reached an agreement for new nuclear at the Wesleyville site, with a project description submitted to IAAC and up to 10 GWe envisaged<sup>5</sup>. If the strategy and the BC 2025 call for power proceed as announced, additional generation capital would enter the pipeline.</p>",
       "sources": [
-        {"id": 1, "title": "CER — Natural Gas Prices", "url": "https://www.cer-rec.gc.ca/en/"},
-        {"id": 2, "title": "CanREA — Renewable Energy Outlook", "url": "https://www.canrea.ca/"},
-        {"id": 3, "title": "Canada Energy Regulator — Energy Futures", "url": "https://www.cer-rec.gc.ca/en/data-analysis/canada-energy-future/"},
-        {"id": 4, "title": "OPG — Darlington New Nuclear Project", "url": "https://www.opg.com/powering-ontario/nuclear-power/darlington-new-nuclear/"},
-        {"id": 5, "title": "NRCan — Clean Energy Funding", "url": "https://www.canada.ca/en/natural-resources-canada.html"}
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Utilities)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity Time Series — Natural Gas, TSX Infrastructure", "url": "https://www.eia.gov/naturalgas/"},
+        {"id": 3, "title": "Canada Energy Regulator — Electricity Generation 2024", "url": "https://www.cer-rec.gc.ca/en/data-analysis/canada-energy-future/"},
+        {"id": 4, "title": "Canadian Capital Projects Database — Utilities, Power & Water", "url": "https://waltaaaa.github.io/AI_newsletter/"},
+        {"id": 5, "title": "OPG–Port Hope Wesleyville / Synapse Data Centre — Sector Research", "url": "https://www.opg.com/news/"},
+        {"id": 6, "title": "Natural Resources Canada — New Nuclear Energy Strategy", "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/04/government-of-canada-commits-to-new-strategy-for-nuclear-energy.html"}
+      ],
+      "isNegative": true,
+      "subsectors": [
+        {"code": "2211", "name": "Electric Power Generation, Transmission & Distribution"},
+        {"code": "2212", "name": "Natural Gas Distribution"},
+        {"code": "2213", "name": "Water, Sewage & Other Systems"}
+      ],
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-0.0%", "delta": "flat month-over-month", "source": "industry_gdp.json:22.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-4.0%", "delta": "year-over-year decline", "source": "industry_gdp.json:22.yy"},
+        {"label": "Natural Gas", "value": "$2.92", "delta": "+5.9% W/W, -13.2% Y/Y", "source": "timeseries.json:natural_gas"},
+        {"label": "TSX Infrastructure Basket", "value": "55.94", "delta": "+3.3% W/W, +28.5% Y/Y", "source": "commodities.json:indicators.tsx_infrastructure"},
+        {"label": "Electricity Generation (2024)", "value": "623 TWh", "delta": "65% renewable, 78% non-GHG", "source": "research_sectors.md:[11]"},
+        {"label": "Active Projects", "value": "1,441", "delta": "+126 this period; $489.23B", "source": "projects_all.json:sector=power_energy+Energy+water+storage"}
       ]
     },
     {
-      "naics": "23",
+      "code": "23",
       "name": "Construction",
-      "gdp_current": "7.4% of national GDP",
-      "gdp_yoy": "-2.1% (permits softening)",
-      "employment_trend": "Civil construction +30% projected growth; overall sector mixed",
-      "analysis": "<p>Lumber trades at <strong>$339/MBF</strong>, aluminum at <strong>$3,423/lb</strong>, and copper at <strong>$5.53/lb</strong>, forming the primary material cost base for the sector.<sup>1</sup> February 2026 building permits totalled <strong>$12.1B</strong>, down <strong>8.4%</strong> month-over-month, with non-residential collapsing <strong>24.0%</strong> to <strong>$4.0B</strong>.<sup>2</sup> Institutional permits fell <strong>51.5%</strong>, commercial declined <strong>7.2%</strong>, and industrial dropped <strong>9.6%</strong>.<sup>2</sup> On the residential side, <strong>21,000</strong> multi-unit and <strong>3,900</strong> single-family dwellings were authorized, with the 12-month multi-family total reaching <strong>255,500</strong> units.<sup>2</sup> Civil construction is the only major category projected for growth in 2026, at approximately <strong>30%</strong> expansion.<sup>3</sup> Federal budget commitments include <strong>$25B</strong> for housing, <strong>$30B</strong> for defence/security, <strong>$110B</strong> for productivity, and <strong>$115B</strong> for infrastructure.<sup>4</sup> The Build Communities Strong Fund launched April 7, 2026 with <strong>$51B</strong> over 10 years; the first tranche covers 13 projects at <strong>$300M</strong> federal.<sup>4</sup> The pipeline tracks <strong>1,033 projects</strong> valued at <strong>$210.3B</strong>, led by the Ontario Line (<strong>$27.4B</strong>) and GO Expansion (<strong>$26.1B</strong>).<sup>5</sup></p>",
-      "key_commodity": "Lumber / Aluminum / Copper",
-      "commodity_price": "Lumber $339/MBF; Aluminum $3,423/lb; Copper $5.53/lb",
-      "project_exposure": "1,033 projects ($210.3B) tracked in database",
+      "mm": "-0.5%",
+      "yy": "+2.8%",
+      "trend": "up",
+      "projectCount": 1075,
+      "analysis": "<p>Construction sector GDP contracted <strong>0.5%</strong> month-over-month while holding <strong>+2.8%</strong> year-over-year<sup>1</sup>. Key inputs rose: Western SPF lumber priced <strong>$584.50/mfbm</strong>, up <strong>5.2% Y/Y</strong> and <strong>1.4% W/W</strong>, while iron ore sat at <strong>$16.58</strong>, up <strong>69.4% Y/Y</strong> and <strong>2.4% W/W</strong><sup>2</sup>. February 2026 construction GDP rose <strong>+0.2%</strong> with manufacturing-led activity, and heavy-civil labour demand concentrated in transit and energy corridors<sup>3</sup>.</p><p>The database tracks <strong>1,075 infrastructure projects ($209.84B)</strong>, with 44 added in the last 21 days; <strong>419 are Under Construction</strong> and 118 Approved<sup>4</sup>. The 419 Under Construction projects face iron-ore inputs up 69.4% Y/Y and lumber up 5.2% Y/Y. Active heavy-civil work includes the George Massey Tunnel replacement (<strong>$4.15B</strong>, 8-lane, BC), the GO Transit Bowmanville Extension (18.7 km, broke ground January 2026), and the Queensborough Bridge upgrade (<strong>$20.8M</strong> contract, spring 2026 start)<sup>5</sup>.</p><p>Ontario's <strong>$210 billion-plus</strong> 10-year capital plan — including <strong>$37 billion</strong> in 2026-27 — represents the largest provincial capital plan in Canadian history, concentrated in urban transit, energy infrastructure, transportation corridors, port expansions, and regional utilities<sup>6</sup>. If the $37B 2026-27 tranche is released as scheduled, heavy-civil and transit-corridor activity would expand; if input-cost increases persist, project budgets in the 419 Under Construction set would face cost pressure.</p>",
       "sources": [
-        {"id": 1, "title": "ConstructConnect — Material Prices", "url": "https://www.constructconnect.com/"},
-        {"id": 2, "title": "Statistics Canada — Building Permits", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/en.htm"},
-        {"id": 3, "title": "On-Site Magazine — Construction Outlook 2026", "url": "https://www.on-sitemag.com/"},
-        {"id": 4, "title": "PM.gc.ca — Build Communities Strong Fund", "url": "https://pm.gc.ca/en/"},
-        {"id": 5, "title": "Project Database — Construction Sector", "url": "https://www.constructconnect.com/"}
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Construction)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity Time Series — Lumber, Iron Ore", "url": "https://www.fcc-fac.ca/en/knowledge/economics.html"},
+        {"id": 3, "title": "Statistics Canada — Monthly GDP by Industry, February 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/"},
+        {"id": 4, "title": "Canadian Capital Projects Database — Infrastructure", "url": "https://waltaaaa.github.io/AI_newsletter/"},
+        {"id": 5, "title": "George Massey Tunnel / GO Bowmanville / Queensborough — Project Records", "url": "https://www.gov.bc.ca/transportationprojects"},
+        {"id": 6, "title": "Ontario 2026 Capital Plan — $210B Over 10 Years", "url": "https://budget.ontario.ca/2026/chapter-1b-building.html"}
+      ],
+      "isNegative": false,
+      "subsectors": [
+        {"code": "236", "name": "Construction of Buildings"},
+        {"code": "237", "name": "Heavy & Civil Engineering Construction"},
+        {"code": "238", "name": "Specialty Trade Contractors"}
+      ],
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "-0.5%", "delta": "monthly contraction", "source": "industry_gdp.json:23.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+2.8%", "delta": "year-over-year growth", "source": "industry_gdp.json:23.yy"},
+        {"label": "Lumber (input)", "value": "$584.50/mfbm", "delta": "+5.2% Y/Y, +1.4% W/W", "source": "timeseries.json:lumber"},
+        {"label": "Iron Ore (input)", "value": "$16.58", "delta": "+69.4% Y/Y, +2.4% W/W", "source": "timeseries.json:iron_ore"},
+        {"label": "Projects Under Construction", "value": "419", "delta": "of 1,075 infrastructure projects", "source": "projects_all.json:sector=infrastructure,status=Under Construction"},
+        {"label": "Active Projects", "value": "1,075", "delta": "+44 this period; $209.84B", "source": "projects_all.json:sector=infrastructure"}
       ]
     },
     {
-      "naics": "31-33",
+      "code": "31-33",
       "name": "Manufacturing",
-      "gdp_current": "10.1% of national GDP",
-      "gdp_yoy": "-1.4% (auto production decline)",
-      "employment_trend": "EV battery plants adding jobs; traditional auto declining",
-      "analysis": "<p>Aluminum at <strong>$3,423/lb</strong>, copper at <strong>$5.53/lb</strong>, and nickel (linked to EV battery supply chains) form the key input costs for Canadian manufacturing.<sup>1</sup> Auto production is expected to decline approximately <strong>4%</strong> in 2026, following 2025 output of <strong>1.2M+ vehicles</strong> (-5.4% YoY).<sup>2</sup> Auto exports fell <strong>21.2%</strong> to <strong>$5.4B</strong> in January 2026 (the lowest since September 2021), then recovered <strong>30.2%</strong> in February.<sup>2</sup> The federal government allocated <strong>$3B</strong> through the Strategic Response Fund plus <strong>$100M</strong> via the Regional Tariff Response Initiative for the auto sector.<sup>3</sup> EV sales targets stand at <strong>75%</strong> by 2035 and <strong>90%</strong> by 2040.<sup>3</sup> VW PowerCo's St. Thomas gigafactory completed primary concrete foundations and will become Canada's largest manufacturing plant.<sup>4</sup> NextStar Energy in Windsor commenced battery module production.<sup>4</sup> An additional <strong>$11.7M</strong> was allocated for 15 EV charging projects installing <strong>1,600+</strong> chargers nationally.<sup>5</sup> The pipeline tracks <strong>49 projects</strong> valued at <strong>$67.3B</strong>, including the Dow Fort Saskatchewan Path2Zero expansion (<strong>$10.1B</strong>).<sup>5</sup></p>",
-      "key_commodity": "Aluminum / Copper / Nickel",
-      "commodity_price": "Aluminum $3,423/lb; Copper $5.53/lb; Nickel (EV supply chain)",
-      "project_exposure": "49 projects ($67.3B) tracked in database",
+      "mm": "+1.8%",
+      "yy": "-3.1%",
+      "trend": "up",
+      "projectCount": 73,
+      "analysis": "<p>Manufacturing sector GDP rose <strong>1.8%</strong> month-over-month — the largest sector gain since January 2023 — while remaining <strong>-3.1%</strong> year-over-year<sup>1</sup>. The S&P Global Canada Manufacturing PMI rose to <strong>53.3</strong> in April 2026 from 50.0 in March, the strongest reading since June 2022<sup>2</sup>. February manufacturing sales reached <strong>$71.2 billion</strong>, up <strong>3.6% M/M</strong>, with durable goods up 3.6% leading the February GDP gain<sup>2</sup>. Copper, a key input, held <strong>$6.34/lb</strong>, up <strong>36.5% Y/Y</strong><sup>3</sup>.</p><p>The database tracks <strong>73 manufacturing projects ($68.8B)</strong>, excluding the suspended Honda Ontario $15B EV plant, which is recorded as Cancelled across four duplicate records and excluded to avoid a nominal $60B double-count<sup>4</sup>. Copper inputs up 36.5% Y/Y intersect EV and battery supply-chain projects; April PMI data noted input costs rising at the fastest pace in more than 3.5 years<sup>2</sup>.</p><p>Electra Battery Materials received a <strong>$20 million</strong> federal Strategic Response Fund investment toward a <strong>$99.4 million</strong> cobalt-sulfate refinery expansion in Temiskaming Shores, Ontario, part of the Critical Minerals Strategy battery build-out; Northvolt QC funding ended in September 2025<sup>5</sup>. February's month-over-month momentum reverses the negative Y/Y trend, with January 2026 production at -4.20% Y/Y. If the PMI expansion holds, the Y/Y comparison would narrow through Q2 2026; if U.S. tariff uncertainty intensifies, the EV/battery project set would face delivery risk, as the Honda suspension already illustrates.</p>",
       "sources": [
-        {"id": 1, "title": "BNN Bloomberg — Industrial Metals", "url": "https://www.bnnbloomberg.ca/"},
-        {"id": 2, "title": "TD Economics — Canadian Auto Sector", "url": "https://economics.td.com/"},
-        {"id": 3, "title": "PM.gc.ca — Auto Sector Support", "url": "https://pm.gc.ca/en/"},
-        {"id": 4, "title": "BNN Bloomberg — EV Manufacturing", "url": "https://www.bnnbloomberg.ca/"},
-        {"id": 5, "title": "NRCan — EV Infrastructure", "url": "https://www.canada.ca/en/natural-resources-canada.html"}
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Manufacturing)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "S&P Global Canada Manufacturing PMI & StatCan Manufacturing Sales", "url": "https://www.pmi.spglobal.com/Public/Release/PressReleases"},
+        {"id": 3, "title": "Commodity Time Series — Copper", "url": "https://www.lme.com/en/Metals/Non-ferrous/LME-Copper"},
+        {"id": 4, "title": "Canadian Capital Projects Database — Manufacturing (ex-Honda)", "url": "https://waltaaaa.github.io/AI_newsletter/"},
+        {"id": 5, "title": "ISED — Electra Battery Materials Strategic Response Fund Investment", "url": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/05/government-of-canada-announces-major-investment-with-electra-battery-materials-to-expand-its-refinery-in-temiskaming-shores-ontario.html"}
+      ],
+      "isNegative": true,
+      "subsectors": [
+        {"code": "31", "name": "Food, Beverage, Textile & Apparel Manufacturing"},
+        {"code": "32", "name": "Wood, Paper, Chemical, Plastics & Mineral Manufacturing"},
+        {"code": "33", "name": "Metal, Machinery, Electronics & Transportation Equipment"}
+      ],
+      "indicatorSrc": "StatCan",
+      "indicators": [
+        {"label": "Sector GDP (M/M)", "value": "+1.8%", "delta": "largest gain since Jan 2023", "source": "industry_gdp.json:31-33.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-3.1%", "delta": "year-over-year decline", "source": "industry_gdp.json:31-33.yy"},
+        {"label": "S&P Global Mfg PMI (April)", "value": "53.3", "delta": "from 50.0 March; strongest since Jun 2022", "source": "research_sectors.md:[16][20]"},
+        {"label": "Manufacturing Sales (Feb)", "value": "$71.2B", "delta": "+3.6% M/M", "source": "research_sectors.md:[19]"},
+        {"label": "Copper (input)", "value": "$6.34/lb", "delta": "+36.5% Y/Y, +1.5% W/W", "source": "timeseries.json:copper"},
+        {"label": "Active Projects (ex-Honda)", "value": "73", "delta": "+25 this period; $68.8B (Honda $15B excluded)", "source": "projects_all.json:sector=Manufacturing,exclude=Honda"}
       ]
     }
-  ],
-  "sources": [
-    {"id": 1, "title": "Agriculture and Agri-Food Canada", "url": "https://agriculture.canada.ca/en/sector/crops"},
-    {"id": 2, "title": "Canadian Association of Energy Contractors", "url": "https://www.caoec.ca/"},
-    {"id": 3, "title": "Natural Resources Canada", "url": "https://www.canada.ca/en/natural-resources-canada.html"},
-    {"id": 4, "title": "Statistics Canada — Building Permits", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/en.htm"},
-    {"id": 5, "title": "TD Economics", "url": "https://economics.td.com/"},
-    {"id": 6, "title": "CanREA", "url": "https://www.canrea.ca/"},
-    {"id": 7, "title": "Canada Energy Regulator", "url": "https://www.cer-rec.gc.ca/en/"},
-    {"id": 8, "title": "OPG — Darlington New Nuclear", "url": "https://www.opg.com/powering-ontario/nuclear-power/darlington-new-nuclear/"},
-    {"id": 9, "title": "PM.gc.ca", "url": "https://pm.gc.ca/en/"},
-    {"id": 10, "title": "BNN Bloomberg", "url": "https://www.bnnbloomberg.ca/"},
-    {"id": 11, "title": "MINING.COM", "url": "https://www.mining.com/"},
-    {"id": 12, "title": "On-Site Magazine", "url": "https://www.on-sitemag.com/"}
   ]
 }

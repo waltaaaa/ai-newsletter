@@ -1,73 +1,41 @@
 {
   "fx": {
     "pairs": [
-      {
-        "name": "CAD/USD",
-        "val": "0.7305",
-        "day": "+0.3%",
-        "mm": "+1.5%",
-        "yy": "-2.1%",
-        "context": "Strengthened on crude rebound and narrowing rate differential expectations ahead of April 29 BoC decision",
-        "unit": ""
-      },
-      {
-        "name": "EUR/USD",
-        "val": "1.1380",
-        "day": "+0.2%",
-        "mm": "+1.8%",
-        "yy": "+6.4%",
-        "context": "Euro supported by ECB hawkish pivot; markets pricing June hike from 2.15% deposit rate",
-        "unit": ""
-      },
-      {
-        "name": "USD/JPY",
-        "val": "142.50",
-        "day": "-0.4%",
-        "mm": "-2.8%",
-        "yy": "-7.2%",
-        "context": "Yen strengthened as geopolitical uncertainty drove safe-haven flows; BoJ maintaining tightening bias",
-        "unit": ""
-      },
-      {
-        "name": "GBP/USD",
-        "val": "1.3290",
-        "day": "+0.1%",
-        "mm": "+1.2%",
-        "yy": "+5.1%",
-        "context": "Sterling steady; Bank of England expected to hold amid global inflation re-acceleration",
-        "unit": ""
-      },
-      {
-        "name": "USD/CNY",
-        "val": "7.2350",
-        "day": "-0.1%",
-        "mm": "-0.6%",
-        "yy": "-1.8%",
-        "context": "Yuan stable as China Q1 GDP at +5.0% beat forecasts; Canada-China bilateral trade C$124.8B in 2025",
-        "unit": ""
-      }
+      {"name": "CAD/USD", "val": "0.7276", "day": "-0.6%", "mm": "N/A", "yy": "+1.6%", "unit": ""},
+      {"name": "USD/CAD", "val": "1.3743", "day": "+0.6%", "mm": "N/A", "yy": "-1.5%", "unit": ""},
+      {"name": "EUR/USD", "val": "1.1640", "day": "-0.8%", "mm": "N/A", "yy": "+3.6%", "unit": ""},
+      {"name": "GBP/USD", "val": "N/A", "day": "N/A", "mm": "N/A", "yy": "N/A", "unit": "", "note": "source stale or missing"},
+      {"name": "USD/JPY", "val": "158.49", "day": "+1.1%", "mm": "N/A", "yy": "+9.3%", "unit": ""},
+      {"name": "USD/CNY", "val": "6.81", "day": "+0.1%", "mm": "N/A", "yy": "-5.5%", "unit": ""}
     ],
-    "fx_commentary": "<p>The Canadian dollar advanced to <strong>0.7305 USD</strong> (USD/CAD <strong>~1.369</strong>), gaining <strong>+1.5%</strong> over the period as WTI's rebound from its April 17 trough supported the commodity-linked currency.<sup>1</sup> Forecasters project USD/CAD in the <strong>1.37-1.40</strong> range near-term, with potential strengthening toward <strong>1.34</strong> by year-end if BoC tightening materializes.<sup>2</sup> The Canada-U.S. rate differential narrowed as bond markets priced <strong>~41 basis points</strong> of BoC tightening by December, while the Fed is expected to hold at <strong>3.50%-3.75%</strong>.<sup>3</sup> The euro gained on ECB hawkish signaling, while the yen strengthened on safe-haven demand. The yuan remained stable as China's <strong>+5.0%</strong> Q1 GDP print exceeded the <strong>4.8%</strong> consensus \u2014 relevant for Canada's <strong>305</strong> mining projects (<strong>$146.0B</strong>) with exposure to Chinese commodity demand.<sup>4</sup></p>"
+    "boc_rate": "2.25%",
+    "fed_rate": "3.50%-3.75%",
+    "rate_differential_bp": 138,
+    "fx_commentary": "<p>The Canadian dollar eased to 0.7276 against the U.S. dollar, down 0.6% on the week and up 1.6% year-over-year, with USD/CAD at 1.3743 — driven by the wide Bank of Canada–Federal Reserve policy gap, which held the loonie soft even as WTI crude traded near US$100/bbl<sup>19</sup>. The Bank of Canada's 2.25% policy rate sits roughly 138 basis points below the Federal Reserve's 3.50%-3.75% target midpoint after both central banks held in late April, a differential that continued to favour U.S.-dollar carry over crude-linked Canadian-dollar support<sup>1</sup><sup>23</sup>. EUR/USD slipped 0.8% on the week to 1.1640, though it remained 3.6% above its year-ago level, as Bloomberg-surveyed economists positioned for two ECB quarter-point hikes in 2026 against the energy-driven inflation backdrop<sup>28</sup>. USD/JPY rose 1.1% to 158.49 and stands 9.3% above a year ago, while USD/CNY was little changed at 6.81. The Signal Dispatch cross-reference engine ties the softer loonie to the 83 manufacturing projects valued at $129.0B exposed to cross-border trade. If the loonie holds near its current soft level against the greenback through the CUSMA review window, those 83 trade-exposed manufacturing projects would face the input-cost and tariff conditions documented in the March merchandise trade data. CAD/USD at 0.7276 frames that exposure<sup>13</sup>.</p>"
   },
   "yieldCurve": {
     "tenors": [
-      {"term": "3-month", "yield": "2.20%", "highlight": false},
-      {"term": "6-month", "yield": "2.35%", "highlight": false},
-      {"term": "1-year", "yield": "2.55%", "highlight": false},
-      {"term": "2-year", "yield": "2.92%", "highlight": true},
-      {"term": "5-year", "yield": "3.06%", "highlight": true},
-      {"term": "10-year", "yield": "3.48%", "highlight": true},
-      {"term": "30-year", "yield": "3.62%", "highlight": false}
+      {"term": "2Y", "yield": "2.96", "prevYield": "2.57", "highlight": false, "change_bp": 39},
+      {"term": "3Y", "yield": "3.04", "prevYield": "2.57", "highlight": false, "change_bp": 47},
+      {"term": "5Y", "yield": "3.22", "prevYield": "2.72", "highlight": false, "change_bp": 50},
+      {"term": "7Y", "yield": "3.36", "prevYield": "2.88", "highlight": false, "change_bp": 48},
+      {"term": "10Y", "yield": "3.56", "prevYield": "3.06", "highlight": true, "change_bp": 50},
+      {"term": "Long", "yield": "3.91", "prevYield": "3.30", "highlight": false, "change_bp": 61}
     ],
-    "yield_commentary": "<p>The Government of Canada yield curve steepened at the front end while bear-flattening at longer tenors. The <strong>2-year</strong> yield rose <strong>35 basis points</strong> as markets repriced BoC rate expectations from cuts to potential tightening.<sup>5</sup> The <strong>5-year</strong> benchmark \u2014 the reference rate for most fixed-rate mortgages and project financing \u2014 stood at <strong>3.06%</strong>, down <strong>0.13 percentage points</strong> over the past month but up <strong>0.26 percentage points</strong> year-over-year.<sup>5</sup> The <strong>10-year</strong> traded at approximately <strong>3.48%</strong>. Bond market pricing implies a <strong>~92%</strong> probability of hold at the April 29 decision, with tightening expected later in 2026.<sup>6</sup> The 10-year/2-year spread of <strong>56 basis points</strong> reflects market expectations for higher near-term policy rates relative to long-run neutral, signaling a normalization cycle rather than recessionary inversion.<sup>5</sup></p>",
-    "spread_10y2y": "+56bps"
+    "spread_2_10": "60 bp",
+    "spread_2_10_prior_week": "N/A",
+    "curve_shape": "normal",
+    "boc_rate": "2.25%",
+    "yield_commentary": "<p>The Government of Canada curve held a normal, upward slope, with the 2Y at 2.96% and the 10Y at 3.56% for a 2s10s spread of about 60 basis points — steeper than the roughly 49 basis points recorded a year ago, reflecting global term-premium repricing as the synchronized G7 central-bank hold met an energy-driven inflation regime<sup>29</sup>. Prior-week tenor levels were unavailable, so moves are measured against year-ago levels. Against a year ago, the 2Y is up about 39 basis points from 2.57% and the 10Y up about 50 basis points from 3.06%, with the Long bond up roughly 61 basis points to 3.91% — the steepest year-over-year back-up on the curve. The Bank of Canada's fourth consecutive hold at 2.25% on April 29 anchored the front end while ECB tightening expectations and the BoE's second consecutive hold pushed the global long end higher<sup>1</sup><sup>27</sup>. The Signal Dispatch cross-reference engine links the rate path to 1,663 infrastructure projects ($210.3B) and 211 residential projects ($32.2B) carrying rate-sensitive financing exposure. If the yields tracked here hold near current levels rather than retreating, those rate-sensitive infrastructure and residential projects, totalling roughly two hundred forty billion dollars with commercial-adjacent exposure, would carry financing costs consistent with the held policy rate rather than the lower term yields seen a year earlier<sup>3</sup>.</p>"
   },
   "sources": [
-    {"id": 1, "title": "MTFX \u2014 FX Forecast", "url": "https://www.mtfx.com/fx-forecast/"},
-    {"id": 2, "title": "Interchange Financial \u2014 Canadian Dollar Forecast", "url": "https://www.interchangefinancial.com/canadian-dollar-forecast/"},
-    {"id": 3, "title": "Bank of Canada \u2014 March 2026 Decision", "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/"},
-    {"id": 4, "title": "CNN \u2014 China GDP Q1 2026", "url": "https://www.cnn.com/2026/04/15/china/china-gdp-q1-economy-growth-intl-hnk"},
-    {"id": 5, "title": "Bank of Canada \u2014 Bond Yields", "url": "https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/"},
-    {"id": 6, "title": "RBC Economics \u2014 BoC Rate Path", "url": "https://www.rbc.com/en/economics/canadian-analysis/data-flashes/boc-done-with-rate-cuts-expects-2-inflation-to-persist/"}
+    { "id": 1, "title": "Bank of Canada maintains policy rate at 2.25% (Apr 29, 2026)", "url": "https://www.bankofcanada.ca/2026/04/fad-press-release-2026-04-29/" },
+    { "id": 3, "title": "BoC holds key rate at 2.25% amid uncertainty — CBC News", "url": "https://www.cbc.ca/news/business/bank-of-canada-interest-rate-april-2026-9.7181093" },
+    { "id": 13, "title": "Canadian international merchandise trade, March 2026 — Statistics Canada", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260505/dq260505a-eng.htm" },
+    { "id": 19, "title": "Oil hovers ~$100 after Trump-Xi Hormuz discussion — CNBC", "url": "https://www.cnbc.com/2026/05/14/oil-prices-today-wti-brent-hormuz-trump-xi-meeting.html" },
+    { "id": 23, "title": "Fed holds rates steady amid dissent — CNBC", "url": "https://www.cnbc.com/2026/04/29/fed-interest-rate-decision-april-2026.html" },
+    { "id": 27, "title": "ECB monetary policy decisions — European Central Bank", "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260430~81b7179e6f.en.html" },
+    { "id": 28, "title": "ECB to hike twice in 2026 — Bloomberg", "url": "https://www.bloomberg.com/news/articles/2026-05-11/ecb-to-hike-rates-twice-in-2026-as-inflation-jumps-survey-shows" },
+    { "id": 29, "title": "BoE holds Bank Rate at 3.75% — Bank of England", "url": "https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate" }
   ]
 }

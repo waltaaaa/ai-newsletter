@@ -1,143 +1,284 @@
 {
-  "generated_at": "2026-04-20T08:00:00Z",
-  "searches_run": 18,
+  "generated_at": "2026-05-15T00:00:00Z",
+  "searches_run": 12,
   "new_projects_found": 11,
   "projects": [
     {
-      "name": "Western Archrib Mass Timber Plant",
-      "province": "AB",
+      "name": "Drake Meat Processors Saskatoon Processing Plant",
+      "province": "SK",
+      "cma": "Saskatoon",
+      "sector": "agriculture",
+      "naics_code": "3116",
+      "value": "",
+      "status": "under_construction",
+      "confidence": 0.35,
+      "project_type": "greenfield",
+      "proponent": "Drake Meat Processors",
+      "description": "A new 53,000-square-foot meat processing facility under construction in Saskatoon, Saskatchewan, with capacity to produce over 17.6 million pounds of product annually. Supported by an equity investment.",
+      "evidence": [
+        {
+          "url": "https://www.provisioneronline.com/articles/118860-drake-meat-processors-equity-investment-supports-construction-of-canada-processing-plant",
+          "title": "Drake Meat Processors equity investment supports construction of Canada processing plant",
+          "date": "2026-05-15",
+          "snippet": "A new 53,000-square-foot meat processing facility is under construction in Saskatoon, Saskatchewan, capable of producing over 17.6 million pounds of product annually."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
+    },
+    {
+      "name": "Atlantic Beef Products Halal Processing Expansion",
+      "province": "PE",
+      "cma": "",
+      "sector": "agriculture",
+      "naics_code": "3116",
+      "value": "$2.26M",
+      "status": "approved",
+      "confidence": 0.5,
+      "project_type": "modernization",
+      "proponent": "Atlantic Beef Products Inc.",
+      "description": "Atlantic Beef Products Inc. in Albany, PEI — the only federally registered beef processing plant east of Quebec — received up to $2,256,786 in federal funding under the Kosher and Halal Investment Program to install advanced steam vacuum systems, upgrade meat-recovery equipment, add new packaging technology, and implement an in-line x-ray analyzer to expand halal processing capacity.",
+      "evidence": [
+        {
+          "url": "https://www.canada.ca/en/agriculture-agri-food/news/2026/01/government-of-canada-invests-in-improved-halal-beef-processing-and-packaging-in-prince-edward-island.html",
+          "title": "Government of Canada invests in improved halal beef processing and packaging in Prince Edward Island",
+          "date": "2026-01-09",
+          "snippet": "The Government of Canada announced an investment of up to $2,256,786 for Atlantic Beef Products Inc. on January 9, 2026."
+        },
+        {
+          "url": "https://www.mromagazine.com/2026/01/08/atlantic-beef-products-receives-2-2m-in-federal-funding-to-modernize-operations/",
+          "title": "Atlantic Beef Products receives $2.2M in federal funding to modernize operations",
+          "date": "2026-01-08",
+          "snippet": "Atlantic Beef Products Inc. (ABPI), located in Albany, PEI, is the only federally registered beef processing plant east of Quebec."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
+    },
+    {
+      "name": "Atlas Engineered Products Advanced Wood Manufacturing Facility (Clinton, ON)",
+      "province": "ON",
+      "cma": "",
       "sector": "forestry",
-      "value": "$80M",
+      "naics_code": "3212",
+      "value": "",
       "status": "approved",
-      "proponent": "Western Archrib Enterprises Ltd.",
-      "description": "160,000 sq ft mass timber manufacturing plant in Sturgeon County, Alberta. Fully automated production line increasing capacity from 12M to 30-35M board feet annually. Supported by $4M federal IFIT program funding.",
-      "source_url": "https://www.canada.ca/en/natural-resources-canada/news/2026/04/government-of-canada-supports-new-advanced-wood-manufacturing-facility-to-strengthen-canadas-construction-supply-chain.html",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.85
+      "confidence": 0.45,
+      "project_type": "greenfield",
+      "proponent": "Atlas Engineered Products Ltd.",
+      "description": "A new advanced wood manufacturing facility in Clinton, Ontario, powered by advanced robotics to produce wooden trusses. The Government of Canada is contributing over $4 million under Natural Resources Canada's Investments in Forest Industry Transformation (IFIT) program.",
+      "evidence": [
+        {
+          "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/04/government-of-canada-supports-new-advanced-wood-manufacturing-facility-to-strengthen-canadas-construction-supply-chain.html",
+          "title": "Government of Canada supports new advanced wood manufacturing facility to strengthen Canada's construction supply chain",
+          "date": "2026-04-09",
+          "snippet": "Atlas Engineered Products Ltd. will build a new, cutting-edge wood manufacturing facility, powered by advanced robotics, with over $4 million federal support."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
     },
     {
-      "name": "Esquimalt A/B Jetty Replacement",
-      "province": "BC",
-      "sector": "defence",
-      "value": "$1100M",
-      "status": "approved",
-      "proponent": "Department of National Defence",
-      "description": "Replacement of aging A and B jetties at CFB Esquimalt to support Royal Canadian Navy operations and future fleet requirements. Part of broader NNBI northern basing plan.",
-      "source_url": "https://www.canada.ca/en/department-national-defence/services/infrastructure-projects.html",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.8
+      "name": "Kap Paper Kapuskasing MDF Facility Conversion",
+      "province": "ON",
+      "cma": "",
+      "sector": "forestry",
+      "naics_code": "3219",
+      "value": "$17.5M",
+      "status": "proposed",
+      "confidence": 0.5,
+      "project_type": "conversion",
+      "proponent": "Kap Paper Inc.",
+      "description": "Kap Paper Inc. in Kapuskasing, Ontario is pursuing conversion of its mill to a medium-density fibreboard (MDF) facility. The Government of Canada is investing $7.5 million (January 2026) through the Strategic Response Fund for a Front End Engineering Design study, bringing combined federal support to $17.5 million including $10 million announced October 2025. Plant conversion forecast at up to 30 months.",
+      "evidence": [
+        {
+          "url": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/01/government-of-canada-announces-funding-to-support-regional-sawmills-and-employment-in-northeast-ontario.html",
+          "title": "Government of Canada announces funding to support regional sawmills and employment in Northeast Ontario",
+          "date": "2026-01-29",
+          "snippet": "The Government of Canada is investing $7.5 million through the Strategic Response Fund to help Kap Paper Inc. complete a FEED study toward a new MDF facility."
+        },
+        {
+          "url": "https://www.northernontariobusiness.com/industry-news/forestry/ottawa-funds-engineering-study-to-convert-kap-paper-into-fibreboard-mill-11827379",
+          "title": "Ottawa funds engineering study to convert Kap Paper into fibreboard mill",
+          "date": "2026-01-29",
+          "snippet": "The study will establish criteria for a final investment decision on creating a new MDF facility in Kapuskasing."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
     },
     {
-      "name": "CFB Gagetown Recapitalization and Air Defence",
-      "province": "NB",
-      "sector": "defence",
-      "value": "$1063M",
-      "status": "approved",
-      "proponent": "Department of National Defence",
-      "description": "Over $1B investment at CFB Gagetown including $871M range and training area recapitalization, $172M ground-based air defence infrastructure, and $20.2M transition services building. Up to 2,000 additional soldiers posted over next decade.",
-      "source_url": "https://www.canada.ca/en/department-national-defence/news/2026/04/canada-invests-in-infrastructure-at-canadian-forces-base-gagetown.html",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.9
-    },
-    {
-      "name": "5 Wing Goose Bay Energy Performance Upgrade",
+      "name": "5 Wing Goose Bay Energy Performance Contract",
       "province": "NL",
+      "cma": "",
       "sector": "defence",
+      "naics_code": "",
       "value": "$187M",
       "status": "approved",
-      "proponent": "MCW Custom Energy Solutions Ltd.",
-      "description": "Energy Performance Contract to modernize Central Heating Plant at 5 Wing Goose Bay, replacing diesel systems with electric boilers. Part of potential $8B NORAD NNBI site investment. Construction begins May 2026, completion targeted December 2030.",
-      "source_url": "https://www.canada.ca/en/department-national-defence/news/2026/04/minister-thompson-announces-largest-defence-investment-in-newfoundland-and-labradors-history.html",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.9
+      "confidence": 0.5,
+      "project_type": "modernization",
+      "proponent": "Department of National Defence / MCW Custom Energy Solutions Ltd.",
+      "description": "A $187 million Energy Performance Contract awarded to MCW Custom Energy Solutions Ltd. to modernize the Central Heating Plant at 5 Wing Goose Bay, replacing diesel systems with electric boilers powered by Labrador's hydroelectric grid. Part of long-term NORAD northern basing investments at the site totalling up to $8 billion. Construction begins May 2026, completion expected December 2030.",
+      "evidence": [
+        {
+          "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/minister-thompson-announces-largest-defence-investment-in-newfoundland-and-labradors-history.html",
+          "title": "Minister Thompson announces largest Canadian defence investment in Newfoundland and Labrador's history",
+          "date": "2026-04-01",
+          "snippet": "A $187 million Energy Performance Contract awarded to MCW Custom Energy Solutions Ltd.; construction begins May 2026, completion December 2030."
+        },
+        {
+          "url": "https://canadiandefencereview.com/largest-canadian-defence-investment-in-newfoundland-and-labradors-history/",
+          "title": "Largest Canadian defence investment in Newfoundland and Labrador",
+          "date": "2026-04-01",
+          "snippet": "Up to $8 billion in long-term investments at 5 Wing Goose Bay; $187 million EPC to MCW Custom Energy Solutions."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
     },
     {
-      "name": "CAF National Military Housing Program Phase 2",
-      "province": "ON",
-      "sector": "defence",
-      "value": "$3700M",
-      "status": "proposed",
-      "proponent": "Department of National Defence",
-      "description": "Approximately 7,500 new Residential Housing Units across 25 sites in 6 regions. Multi-year construction program to address CAF housing shortfall. Spans design, construction, building systems manufacturing.",
-      "source_url": "https://www.canada.ca/en/department-national-defence/news/2026/02/government-of-canada-investing-in-historic-military-housing-expansion-to-support-caf-members-and-families.html",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.85
-    },
-    {
-      "name": "Contrecoeur Container Terminal Expansion",
-      "province": "QC",
-      "sector": "transport_logistics",
-      "value": "$1160M",
-      "status": "under_construction",
-      "proponent": "Port of Montreal",
-      "description": "Largest eastern port expansion in Canadian history, increasing Port of Montreal capacity by 60%. Funded via $1.16B Canada Infrastructure Bank financing. PM Carney broke ground April 2026.",
-      "source_url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/09/prime-minister-carney-breaks-ground-contrecoeur-terminal-expansion",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.9
-    },
-    {
-      "name": "Bitdeer Fox Creek AI and Crypto Campus",
+      "name": "Woodland's Mihta Askiy Data Centre",
       "province": "AB",
+      "cma": "",
       "sector": "telecom",
-      "value": null,
-      "status": "under_construction",
-      "proponent": "Bitdeer Technologies Group",
-      "description": "99 MW AI and crypto data centre campus in Fox Creek, Alberta. Expected operational by Q4 2026.",
-      "source_url": "https://canada.constructconnect.com/dcn/news/projects/2026/03/6-pre-bid-data-centre-projects-in-canada-march-2026",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.7
+      "naics_code": "5182",
+      "value": "$1.5B",
+      "status": "proposed",
+      "confidence": 0.35,
+      "project_type": "greenfield",
+      "proponent": "Woodland Cree First Nation / Sovereign Digital Infrastructure",
+      "description": "A proposed USD 1.5 billion data centre near Peace River, Alberta, developed by Woodland Cree First Nation in partnership with Sovereign Digital Infrastructure. Targeted for commissioning by 2027.",
+      "evidence": [
+        {
+          "url": "https://www.blackridgeresearch.com/blog/list-of-largest-upcoming-data-centers-in-canada",
+          "title": "Largest Upcoming Data Centers in Canada 2026",
+          "date": "2026-05-15",
+          "snippet": "Woodland's Mihta Askiy — Woodland Cree First Nation & Sovereign Digital Infrastructure — Peace River, Alberta — USD 1.5 billion — Planning — Commission by 2027."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
     },
     {
-      "name": "North Coast Transmission Line (NCTL)",
-      "province": "BC",
-      "sector": "power_energy",
-      "value": null,
+      "name": "Beacon AI Centers High River Data Centre",
+      "province": "AB",
+      "cma": "",
+      "sector": "telecom",
+      "naics_code": "5182",
+      "value": "$4.0B",
+      "status": "proposed",
+      "confidence": 0.35,
+      "project_type": "greenfield",
+      "proponent": "Beacon AI Centers / Nadia Partners",
+      "description": "A proposed 400 MW data centre in Foothills County near High River, Alberta, a USD 4 billion project. Construction targeted for 2025-2026 with operations by 2030.",
+      "evidence": [
+        {
+          "url": "https://www.blackridgeresearch.com/blog/list-of-largest-upcoming-data-centers-in-canada",
+          "title": "Largest Upcoming Data Centers in Canada 2026",
+          "date": "2026-05-15",
+          "snippet": "Beacon AI Centers — Foothills County (High River), Alberta — USD 4 billion — Planned — Construction 2025-2026, operational by 2030."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
+    },
+    {
+      "name": "Hay River Water Treatment Plant",
+      "province": "NT",
+      "cma": "",
+      "sector": "environment",
+      "naics_code": "2213",
+      "value": "$20.1M",
       "status": "approved",
-      "proponent": "BC Hydro",
-      "description": "Major transmission line project supporting LNG and industrial development on BC's north coast. Construction start expected summer 2026, phased completion 2032-2034.",
-      "source_url": "https://news.gov.bc.ca/releases/2025ECS0044-001032",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.8
+      "confidence": 0.5,
+      "project_type": "decommission_replace",
+      "proponent": "Town of Hay River",
+      "description": "A new water treatment plant in Hay River, Northwest Territories, replacing aging infrastructure that serves the town, the Hamlet of Enterprise, K'atl'odeeche First Nation and Ka'a'gee Tu First Nation. The federal government is contributing $20,138,995 through the Build Communities Strong Fund. Project to begin 2026-27.",
+      "evidence": [
+        {
+          "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/04/building-canada-strong-by-investing-in-a-new-water-treatment-plant-in-hay-river.html",
+          "title": "Building Canada strong by investing in a new water treatment plant in Hay River",
+          "date": "2026-04-07",
+          "snippet": "The federal government is investing $20,138,995 in this project through the Direct Delivery stream of the Build Communities Strong Fund."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
     },
     {
-      "name": "SFU School of Medicine",
-      "province": "BC",
-      "sector": "education",
-      "value": "$520M",
-      "status": "approved",
-      "proponent": "Simon Fraser University",
-      "description": "Western Canada's first new medical school in nearly 60 years. Construction begins late 2026 in Surrey, BC.",
-      "source_url": "https://canada.constructconnect.com/joc/news/projects/2026/03/ubcs-gateway-health-building-a-student-hub-for-health-care",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.75
-    },
-    {
-      "name": "Halifax Infirmary Expansion",
-      "province": "NS",
-      "sector": "healthcare",
-      "value": "$1200M",
-      "status": "under_construction",
-      "proponent": "Nova Scotia Health / Build Nova Scotia",
-      "description": "Part of Nova Scotia's $3.5B Capital Plan 2026-27. Major healthcare facility expansion alongside Cape Breton Regional Municipality healthcare redevelopment. Province's largest capital plan in history.",
-      "source_url": "https://news.novascotia.ca/en/2026/02/23/capital-plan-2026-27-released",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.8
-    },
-    {
-      "name": "Port of Churchill Critical Minerals Facility and Rail Upgrades",
+      "name": "Red-Seine-Rat Cooperative Wastewater Treatment Facility",
       "province": "MB",
-      "sector": "transport_logistics",
-      "value": "$262M",
+      "cma": "",
+      "sector": "environment",
+      "naics_code": "2213",
+      "value": "$205M",
       "status": "approved",
-      "proponent": "Arctic Gateway Group",
-      "description": "$262.5M federal-provincial funding over 5 years for Port of Churchill and Hudson Bay rail line upgrades. Includes $10M Churchill Catalyst Fund and new critical minerals storage facility. Budget 2026 commitment.",
-      "source_url": "https://news.gov.mb.ca/news/index.html?item=73198",
-      "discovery_date": "2026-04-20",
-      "confidence": 0.8
+      "confidence": 0.5,
+      "project_type": "greenfield",
+      "proponent": "Red-Seine-Rat Cooperative / Aecon",
+      "description": "A new $205 million wastewater treatment facility in Niverville, Manitoba, with construction contract awarded to Aecon (February 2026). Serves the municipalities of Niverville, Tache, Hanover, Ritchot, La Broquerie and De Salaberry — initially more than 30,000 people, with capacity for up to 70,000 residents.",
+      "evidence": [
+        {
+          "url": "https://canada.constructconnect.com/joc/news/infrastructure/2026/02/aecon-awarded-contract-to-build-205m-wastewater-treatment-plant-in-manitoba",
+          "title": "Aecon awarded contract to build $205M wastewater treatment plant in Manitoba",
+          "date": "2026-02-17",
+          "snippet": "Aecon has been awarded a contract for the Red-Seine-Rat Cooperative Wastewater Treatment Facility project in Niverville, Man. with a contract value of $205 million."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
+    },
+    {
+      "name": "Iqaluit Nukkiksautiit Hydroelectric Project",
+      "province": "NU",
+      "cma": "",
+      "sector": "indigenous",
+      "naics_code": "2211",
+      "value": "$6M",
+      "status": "proposed",
+      "confidence": 0.5,
+      "project_type": "greenfield",
+      "proponent": "Nunavut Nukkiksautiit Corporation",
+      "description": "A proposed 15-30 MW, 100% Inuit-owned hydroelectric facility on the Kuugaluk River (McKeand River South) near Iqaluit, Nunavut, intended to replace the city's diesel-generated electricity. The federal government is investing $6 million for engineering and design work. Project referred to the federal Major Projects Office; construction expected to begin 2028, operational by 2030.",
+      "evidence": [
+        {
+          "url": "https://www.cbc.ca/news/canada/north/iqaluit-hydro-federal-investment-1.7450146",
+          "title": "Federal government invests $6M into Iqaluit hydro project",
+          "date": "2026-01-30",
+          "snippet": "This project is 100 per cent Inuit-owned, and the federal government is investing $6 million into the hydro project for engineering and design work."
+        },
+        {
+          "url": "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs/news/2025/11/iqaluit-nukkiksautiit-hydroelectric-project-referred-to-the-major-projects-office.html",
+          "title": "Iqaluit Nukkiksautiit Hydroelectric Project referred to the Major Projects Office",
+          "date": "2025-11-14",
+          "snippet": "The Iqaluit Nukkiksautiit Hydroelectric Project, led by the Nunavut Nukkiksautiit Corporation, will advance planning for a hydroelectric facility near Iqaluit."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
+    },
+    {
+      "name": "Upper Afton Wind Project",
+      "province": "NS",
+      "cma": "",
+      "sector": "power_energy",
+      "naics_code": "2211",
+      "value": "",
+      "status": "approved",
+      "confidence": 0.45,
+      "project_type": "greenfield",
+      "proponent": "Government of Nova Scotia (environmental assessment approved)",
+      "description": "A wind farm to be built in Antigonish and Guysborough counties, Nova Scotia, with up to 28 eight-megawatt turbines. Received environmental assessment approval on April 22, 2026; construction expected to begin in 2027.",
+      "evidence": [
+        {
+          "url": "https://news.novascotia.ca/en/2026/04/22/upper-afton-wind-project-receives-environmental-assessment-approval",
+          "title": "Upper Afton Wind Project Receives Environmental Assessment Approval",
+          "date": "2026-04-22",
+          "snippet": "The Upper Afton Wind Project, to be built in Antigonish and Guysborough counties, received its environmental assessment approval on April 22, with up to 28 eight-megawatt turbines."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-05-15"
     }
-  ],
-  "coverage_impact": {
-    "sectors_improved": ["defence", "forestry", "telecom", "transport_logistics", "education", "healthcare", "power_energy"],
-    "provinces_improved": ["NB", "NL", "NS", "MB", "QC", "BC", "AB"]
-  }
+  ]
 }

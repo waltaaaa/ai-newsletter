@@ -5098,6 +5098,7 @@ async function renderProjectsTab(){
   $('filterCma').onchange=filterProjects;
   $('filterSector').onchange=filterProjects;
   $('filterStatus').onchange=filterProjects;
+  $('filterNew').onchange=filterProjects;
   $('sortProjects').onchange=filterProjects;
   $('loadMoreBtn').onclick=()=>{projectPage++;renderProjectTable()};
   filterProjects();
@@ -5130,6 +5131,9 @@ async function filterProjects(){
   const cma=$('filterCma').value;
   const sector=$('filterSector').value;
   const status=$('filterStatus').value;
+  const newDays=parseInt(($('filterNew')&&$('filterNew').value)||'',10);
+  let newCutoff=null;
+  if(newDays>0){const d=new Date();d.setDate(d.getDate()-newDays);newCutoff=d.toISOString().split('T')[0];}
   const sort=$('sortProjects').value;
   // If province changed, reload from static JSON (lazy load)
   if(prov!==_lastLoadedProvince){
@@ -5145,6 +5149,7 @@ async function filterProjects(){
     if(cma&&(p.cma||'').trim()!==cma)return false;
     if(sector&&p.naics_code!==sector&&!(NAICS_NAMES[sector]&&(NAICS_NAMES[sector].toLowerCase().includes((p.sector||'').replace(/_/g,' ').toLowerCase())||(p.sector||'').toLowerCase().includes(NAICS_NAMES[sector].toLowerCase().split(',')[0].trim().toLowerCase()))))return false;
     if(status&&p.status!==status)return false;
+    if(newCutoff&&!(p.firstTracked&&p.firstTracked>=newCutoff))return false;
     return true;
   });
   if(sort==='value_desc')filteredProjects.sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value));

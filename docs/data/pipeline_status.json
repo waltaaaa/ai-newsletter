@@ -1,13 +1,13 @@
 {
   "last_run": {
-    "started_at": "2026-05-15T14:30:02.365457",
+    "started_at": "2026-05-15T18:56:34.889989",
     "status": "running",
     "duration_seconds": 0,
     "discovery": {
-      "articles_found": 6515,
-      "projects_added": 4916,
+      "articles_found": 0,
+      "projects_added": 0,
       "projects_updated": 0,
-      "projects_deduped": 1567
+      "projects_deduped": 0
     },
     "errors": [
       {
@@ -15,7 +15,7 @@
         "error_type": "Exception",
         "message": "Stale briefing: 100% overlap with previous week",
         "recovered": true,
-        "timestamp": "2026-05-15T15:16:23.238254"
+        "timestamp": "2026-05-15T20:15:17.262897"
       }
     ]
   },
@@ -30,47 +30,47 @@
   },
   "recent_runs": [
     {
-      "started_at": "2026-05-15T14:30:02.365457",
+      "started_at": "2026-05-15T18:56:34.889989",
       "status": "running",
       "duration_seconds": 0,
+      "discovery": {
+        "articles_found": 0,
+        "projects_added": 0,
+        "projects_updated": 0,
+        "projects_deduped": 0
+      }
+    },
+    {
+      "started_at": "2026-05-15T16:43:31.336307",
+      "status": "partial",
+      "duration_seconds": 696,
+      "discovery": {
+        "articles_found": 0,
+        "projects_added": 0,
+        "projects_updated": 0,
+        "projects_deduped": 0
+      }
+    },
+    {
+      "started_at": "2026-05-15T16:36:06.358321",
+      "status": "partial",
+      "duration_seconds": 10,
+      "discovery": {
+        "articles_found": 0,
+        "projects_added": 0,
+        "projects_updated": 0,
+        "projects_deduped": 0
+      }
+    },
+    {
+      "started_at": "2026-05-15T14:30:02.365457",
+      "status": "partial",
+      "duration_seconds": 2783,
       "discovery": {
         "articles_found": 6515,
         "projects_added": 4916,
         "projects_updated": 0,
         "projects_deduped": 1567
-      }
-    },
-    {
-      "started_at": "2026-05-15T03:00:06.683634",
-      "status": "partial",
-      "duration_seconds": 2930,
-      "discovery": {
-        "articles_found": 6484,
-        "projects_added": 4891,
-        "projects_updated": 0,
-        "projects_deduped": 1564
-      }
-    },
-    {
-      "started_at": "2026-05-15T02:06:38.213892",
-      "status": "running",
-      "duration_seconds": 0,
-      "discovery": {
-        "articles_found": 0,
-        "projects_added": 0,
-        "projects_updated": 0,
-        "projects_deduped": 0
-      }
-    },
-    {
-      "started_at": "2026-05-15T01:07:51.804421",
-      "status": "partial",
-      "duration_seconds": 2405,
-      "discovery": {
-        "articles_found": 0,
-        "projects_added": 0,
-        "projects_updated": 0,
-        "projects_deduped": 0
       }
     }
   ]

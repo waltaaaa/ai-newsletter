@@ -2,13 +2,13 @@
   "indicators": {
     "tsx_infrastructure": {
       "description": "Canadian infrastructure companies basket",
-      "current": 55.74,
+      "current": 55.94,
       "week_ago": 54.17,
       "month_ago": 54.62,
       "year_ago": 43.53,
-      "pct_1w": 2.9,
-      "pct_1m": 2.1,
-      "pct_1y": 28.1,
+      "pct_1w": 3.3,
+      "pct_1m": 2.4,
+      "pct_1y": 28.5,
       "affected_sectors": [
         "Utilities",
         "Transportation"
@@ -17,5 +17,5 @@
       "relevance": "Market valuation of infrastructure companies signals investment appetite."
     }
   },
-  "updated_at": "2026-05-15T15:15:57.698498"
+  "updated_at": "2026-05-15T18:57:16.843749"
 }
