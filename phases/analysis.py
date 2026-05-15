@@ -388,7 +388,12 @@ def _call_claude(prompt: str, label: str, max_tokens: int = 8096, model: str = '
                         except Exception:
                             pass
                     return repaired
-        # If Claude Code failed, fall through to API if available
+        # If Claude Code failed, fall through to API only if explicitly enabled
+        from claude_reasoning import ALLOW_API_FALLBACK
+        if not ALLOW_API_FALLBACK:
+            print(f"    [Claude Code] {label}: failed; API fallback disabled "
+                  "(set CLAUDE_ALLOW_API_FALLBACK=1 to enable)")
+            return {}
         if not anthropic_client:
             print(f"    [Claude Code] {label}: failed, no API fallback available")
             return {}
@@ -1651,12 +1656,18 @@ def generate_context_lines(ind_meta: dict, national_values: dict,
         text = None
 
         # ── Claude Code mode (default, $0) ──────────────────────────
-        from claude_reasoning import REASONING_AGENT_MODE, _call_claude_code_sync
+        from claude_reasoning import (
+            REASONING_AGENT_MODE, _call_claude_code_sync, ALLOW_API_FALLBACK,
+        )
         if REASONING_AGENT_MODE == 'claude_code':
             text = _call_claude_code_sync(prompt, "context-lines")
 
-        # ── API fallback ────────────────────────────────────────────
-        if not text and anthropic_client:
+        # ── API fallback (gated; non-critical so silent skip is fine) ──
+        if not text and ALLOW_API_FALLBACK:
+            if anthropic_client is None:
+                anthropic_client = anthropic.Anthropic(
+                    api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip()
+                )
             msg = anthropic_client.messages.create(
                 model=SONNET_MODEL,
                 max_tokens=400,
@@ -1664,18 +1675,6 @@ def generate_context_lines(ind_meta: dict, national_values: dict,
             )
             if msg.content:
                 text = msg.content[0].text
-        elif not text:
-            if anthropic_client is None:
-                anthropic_client = anthropic.Anthropic(
-                    api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip()
-                )
-                msg = anthropic_client.messages.create(
-                    model=SONNET_MODEL,
-                    max_tokens=400,
-                    messages=[{'role': 'user', 'content': prompt}]
-                )
-                if msg.content:
-                    text = msg.content[0].text
 
         if not text:
             print(f"  [CONTEXT LINES] Empty response (non-critical)")

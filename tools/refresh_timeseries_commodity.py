@@ -58,12 +58,88 @@ YF_SERIES = [
     ("eurusd", "EURUSD=X", "14mo", "EUR/USD spot rate"),
     ("ftse100", "^FTSE", "14mo", "FTSE 100 index close"),
     ("usdcny", "CNY=X", "14mo", "USD/CNY spot rate"),
+    ("wti", "CL=F", "13mo", "WTI Crude Oil futures (alias)"),
+    # Global indices / FX — previously had no refresher (chronically stale)
+    ("djia", "^DJI", "14mo", "Dow Jones Industrial Average"),
+    ("nasdaq", "^IXIC", "14mo", "NASDAQ Composite"),
+    ("nikkei225", "^N225", "14mo", "Nikkei 225"),
+    ("dax", "^GDAXI", "14mo", "DAX 40 (Germany)"),
+    ("tsx_composite", "^GSPTSE", "14mo", "S&P/TSX Composite"),
+    ("usdjpy", "JPY=X", "14mo", "USD/JPY spot rate"),
+    ("cadusd", "CADUSD=X", "14mo", "CAD/USD spot rate"),
+    # Commodities — previously stale
+    ("brent", "BZ=F", "13mo", "Brent Crude Oil futures"),
+    ("natural_gas", "NG=F", "13mo", "Henry Hub Natural Gas futures"),
+    ("gold", "GC=F", "13mo", "Gold futures"),
+    ("silver", "SI=F", "13mo", "Silver futures"),
+    ("platinum", "PL=F", "13mo", "Platinum futures"),
+    ("palladium", "PA=F", "13mo", "Palladium futures"),
+    ("copper", "HG=F", "13mo", "Copper futures"),
+    ("aluminum", "ALI=F", "13mo", "Aluminum futures"),
+    ("wheat", "ZW=F", "13mo", "Wheat futures"),
+    ("corn", "ZC=F", "13mo", "Corn futures"),
+    ("soybeans", "ZS=F", "13mo", "Soybean futures"),
+    ("coffee", "KC=F", "13mo", "Coffee futures"),
+    ("cocoa", "CC=F", "13mo", "Cocoa futures"),
+    ("sugar", "SB=F", "13mo", "Sugar futures"),
+    ("cotton", "CT=F", "13mo", "Cotton futures"),
+    ("rice", "ZR=F", "13mo", "Rough Rice futures"),
+    ("soybean_oil", "ZL=F", "13mo", "Soybean Oil futures"),
+    ("soybean_meal", "ZM=F", "13mo", "Soybean Meal futures"),
+    # Dry-bulk shipping proxy (was single-point; no FRED BDI series exists)
+    ("dry_bulk_shipping", "BDRY", "13mo", "Breakwave Dry Bulk Shipping ETF"),
+]
+
+# FRED series (no API key — public CSV endpoint). Covers base metals, credit
+# spreads, and the 10y-2y curve that have no usable yfinance ticker. NOTE:
+# some corporate networks block fred.stlouisfed.org; the fetch fails soft and
+# leaves the existing series untouched (succeeds in CI / unrestricted nets).
+# (series_key, fred_series_id, description)
+FRED_SERIES = [
+    ("nickel",            "PNICKUSDM",    "Global price of Nickel (USD/t)"),
+    ("zinc",              "PZINCUSDM",    "Global price of Zinc (USD/t)"),
+    ("tin",               "PTINUSDM",     "Global price of Tin (USD/t)"),
+    ("lead",              "PLEADUSDM",    "Global price of Lead (USD/t)"),
+    ("lng_asia",          "PNGASJPUSDM",  "Global price of LNG, Asia (USD/MMBtu)"),
+    ("ig_spread",         "BAMLC0A0CM",   "ICE BofA US Corp Index OAS (%)"),
+    ("hy_spread",         "BAMLH0A0HYM2", "ICE BofA US High Yield Index OAS (%)"),
+    ("yield_curve_10y2y", "T10Y2Y",       "10Y-2Y Treasury spread (%)"),
 ]
 
 # BoC Valet observations — (series_key, valet_series_id, recent_N)
 BOC_SERIES = [
-    ("prime_rate", "V80691311", 300),  # Weekly Chartered Bank Prime Rate
+    ("prime_rate",     "V80691311",          300),  # Weekly Chartered Bank Prime
+    ("overnight_rate", "V39079",             400),  # BoC policy (overnight) rate
+    ("boc_rate",       "V39079",             400),  # alias of policy rate
+    ("goc_2y_yield",   "BD.CDN.2YR.DQ.YLD",  400),
+    ("goc_3y_yield",   "BD.CDN.3YR.DQ.YLD",  400),
+    ("goc_5y_yield",   "BD.CDN.5YR.DQ.YLD",  400),
+    ("goc_7y_yield",   "BD.CDN.7YR.DQ.YLD",  400),
+    ("goc_10y_yield",  "BD.CDN.10YR.DQ.YLD", 400),
+    ("goc_long_yield", "BD.CDN.LONG.DQ.YLD", 400),
 ]
+
+
+def _pt_date(p):
+    return p.get("date") or p.get("refPer") or p.get("period") or ""
+
+
+def _merge_points(existing, fresh):
+    """Union existing + fresh point lists by date (fresh wins on conflict).
+
+    Preserves deep history — a 13-month yfinance pull must NEVER truncate a
+    series that already holds years of data. Returns ascending [{date,value}].
+    """
+    by_date = {}
+    for p in (existing or []):
+        d = _pt_date(p)
+        if d:
+            by_date[d[:10]] = {"date": d[:10], "value": p.get("value")}
+    for p in (fresh or []):
+        d = _pt_date(p)
+        if d and p.get("value") is not None:
+            by_date[d[:10]] = {"date": d[:10], "value": p.get("value")}
+    return [by_date[k] for k in sorted(by_date)]
 
 
 def _load_ts():
@@ -130,6 +206,33 @@ def _fetch_boc(series_id: str, recent_n: int):
     return points
 
 
+def _fetch_fred(series_id: str):
+    """Fetch a FRED series via the public no-key CSV endpoint.
+
+    Returns ascending [{date,value}]. Raises on network failure so the caller
+    can fail soft (FRED is blocked on some corporate nets — see FRED_SERIES).
+    """
+    url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        text = r.read().decode("utf-8", "replace")
+    lines = text.strip().split("\n")
+    points = []
+    for ln in lines[1:]:  # skip header
+        parts = ln.split(",")
+        if len(parts) < 2:
+            continue
+        d, v = parts[0].strip(), parts[1].strip()
+        if not d or v in ("", "."):
+            continue
+        try:
+            points.append({"date": d, "value": float(v)})
+        except ValueError:
+            continue
+    points.sort(key=lambda p: p["date"])
+    return points
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true",
@@ -162,8 +265,10 @@ def main():
             failed.append((key, f"yfinance {ticker}: no rows"))
             continue
         prev_pts = len(ts.get(key, []) or [])
-        ts[key] = pts
-        refreshed.append((key, ticker, prev_pts, len(pts), pts[-1]["date"], label))
+        merged = _merge_points(ts.get(key, []), pts)
+        ts[key] = merged
+        refreshed.append((key, ticker, prev_pts, len(merged),
+                          merged[-1]["date"], label))
 
     # BoC Valet series
     for key, series_id, recent_n in BOC_SERIES:
@@ -178,9 +283,29 @@ def main():
             failed.append((key, f"BoC {series_id}: no rows"))
             continue
         prev_pts = len(ts.get(key, []) or [])
-        ts[key] = pts
-        refreshed.append((key, f"BoC:{series_id}", prev_pts, len(pts),
-                          pts[-1]["date"], "Weekly Chartered Bank Prime Rate"))
+        merged = _merge_points(ts.get(key, []), pts)
+        ts[key] = merged
+        refreshed.append((key, f"BoC:{series_id}", prev_pts, len(merged),
+                          merged[-1]["date"], f"BoC Valet {series_id}"))
+
+    # FRED series (fail soft — endpoint blocked on some corporate networks)
+    for key, fred_id, label in FRED_SERIES:
+        if subset is not None and key not in subset:
+            continue
+        try:
+            pts = _fetch_fred(fred_id)
+        except Exception as e:
+            failed.append((key, f"FRED {fred_id}: {type(e).__name__} "
+                                f"(endpoint may be network-blocked here)"))
+            continue
+        if not pts:
+            failed.append((key, f"FRED {fred_id}: no rows"))
+            continue
+        prev_pts = len(ts.get(key, []) or [])
+        merged = _merge_points(ts.get(key, []), pts)
+        ts[key] = merged
+        refreshed.append((key, f"FRED:{fred_id}", prev_pts, len(merged),
+                          merged[-1]["date"], label))
 
     # Report
     print("[refresh_timeseries_commodity] Results:")

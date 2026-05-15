@@ -101,3 +101,9 @@ backup_*/
 fix_log_*.txt
 filtered_*.txt
 seed_run_*.log
+
+# Pipeline working database — persisted via the db-latest GitHub Release
+# asset (workflows restore at start / upload at end), not git-versioned
+# (exceeds GitHub 100MB/file). Reader-facing weekly history lives in docs/data.
+dashboard.db
+dashboard.db.bak

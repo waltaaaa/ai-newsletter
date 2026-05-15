@@ -209,15 +209,75 @@ def convert_queries_to_rss_urls(queries):
     return rss_feeds
 
 
-async def fetch_rss_feed(session, feed, semaphore):
+# Browser-like headers reduce the chance of being flagged as automated. Google
+# News RSS still bans bursty traffic from the same IP — see _CIRCUIT below.
+_BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/rss+xml, application/xml, text/xml, */*;q=0.8",
+    "Accept-Language": "en-CA,en-US;q=0.9,en;q=0.8",
+}
+
+# Soft circuit breaker: if the first N requests all 503, the IP is banned and
+# hammering through the remaining 2000+ feeds prolongs the ban and trashes the
+# log. Trip the breaker, log once, and short-circuit all later fetches.
+class _Circuit:
+    def __init__(self, threshold=20):
+        self.threshold = threshold
+        self.consecutive_503 = 0
+        self.tripped = False
+        self.warned = False
+        self._lock = asyncio.Lock()
+
+    async def record_503(self):
+        async with self._lock:
+            self.consecutive_503 += 1
+            if self.consecutive_503 >= self.threshold and not self.tripped:
+                self.tripped = True
+
+    async def record_ok(self):
+        async with self._lock:
+            self.consecutive_503 = 0
+
+    async def warn_once(self, label="Google News RSS"):
+        async with self._lock:
+            if not self.warned:
+                self.warned = True
+                logger.warning(
+                    f"  [{label}] Circuit breaker TRIPPED after "
+                    f"{self.threshold} consecutive 503s — IP appears "
+                    "rate-limited. Skipping remaining fetches."
+                )
+                print(
+                    f"  [{label}] Circuit breaker tripped — "
+                    f"abandoning remaining feeds (Google's typical "
+                    "cooldown is 12-24h; reduce concurrency or rotate IP)."
+                )
+
+
+_CIRCUIT = _Circuit(threshold=20)
+
+
+async def fetch_rss_feed(session, feed, semaphore, circuit=None):
     """Fetch a single Google News RSS feed. Returns list of article dicts."""
+    cb = circuit or _CIRCUIT
+    if cb.tripped:
+        await cb.warn_once()
+        return []
     async with semaphore:
+        if cb.tripped:  # re-check after waiting on the semaphore
+            await cb.warn_once()
+            return []
         try:
             async with session.get(
                 feed["url"],
+                headers=_BROWSER_HEADERS,
                 timeout=aiohttp.ClientTimeout(total=15),
             ) as resp:
                 if resp.status == 200:
+                    await cb.record_ok()
                     text = await resp.text()
                     parsed = feedparser.parse(text)
 
@@ -241,6 +301,8 @@ async def fetch_rss_feed(session, feed, semaphore):
                         })
                     return articles
                 else:
+                    if resp.status == 503:
+                        await cb.record_503()
                     logger.warning(
                         f"RSS fetch {resp.status}: {feed['short_query']}"
                     )
@@ -276,7 +338,12 @@ async def run_google_news_discovery(json_path=None):
     compound_feeds = convert_queries_to_rss_urls(queries)
     print(f"  [GOOGLE-NEWS] Pass 1: {len(queries)} compound queries → {len(compound_feeds)} unique feeds")
 
-    semaphore_p1 = asyncio.Semaphore(30)
+    # Concurrency intentionally low: Google News bot detection trips on bursty
+    # parallel RSS pulls and can soft-ban the IP for 12-24h. 3 keeps us under
+    # the radar while still finishing in reasonable time. Override with
+    # GOOGLE_NEWS_CONCURRENCY if needed.
+    p1_concurrency = int(os.environ.get('GOOGLE_NEWS_CONCURRENCY', '3'))
+    semaphore_p1 = asyncio.Semaphore(p1_concurrency)
     all_articles = []
     seen_urls = set()
 
@@ -306,7 +373,9 @@ async def run_google_news_discovery(json_path=None):
         if naics_feeds:
             print(f"  [GOOGLE-NEWS] Pass 2: {len(naics_feeds)} new NAICS feeds (after compound dedup)")
 
-            semaphore_p2 = asyncio.Semaphore(50)  # higher concurrency for additive pass
+            # Same low concurrency for additive pass (bot detection has no
+            # special pass for "additive" requests).
+            semaphore_p2 = asyncio.Semaphore(p1_concurrency)
             async with aiohttp.ClientSession() as session:
                 tasks = [fetch_rss_feed(session, feed, semaphore_p2) for feed in naics_feeds]
                 results = await asyncio.gather(*tasks, return_exceptions=True)

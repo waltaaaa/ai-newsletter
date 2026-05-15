@@ -41,7 +41,7 @@ GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')  # legacy fall
 
 # Groq — primary classifier (replaces Gemini Flash)
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
-GROQ_MODEL = os.environ.get('GROQ_MODEL', 'llama-3.3-70b-versatile')
+GROQ_MODEL = os.environ.get('GROQ_MODEL', 'openai/gpt-oss-120b')
 GROQ_BASE_URL = 'https://api.groq.com/openai/v1'
 GROQ_TPM_LIMIT = 6000    # tokens per minute (free tier)
 GROQ_TPD_LIMIT = 500000  # tokens per day (free tier)
@@ -569,8 +569,8 @@ NIM_RATE_LIMIT_RPM = int(os.environ.get('NIM_RATE_LIMIT_RPM', '40'))
 # Models — upgraded March 2026
 NIM_CLASSIFY_MODEL = 'nvidia/nemotron-3-super-120b-a12b'    # L6 article classification (was: Ollama Qwen 2.5 3B)
 NIM_EXTRACTION_MODEL = 'nvidia/nemotron-3-super-120b-a12b'  # was: moonshotai/kimi-k2.5
-NIM_EXTRACTION_FALLBACK = 'moonshotai/kimi-k2.5'            # emergency fallback only
-NIM_HARD_CASE_MODEL = 'deepseek-ai/deepseek-v3_2'           # second-opinion on incomplete extractions
+NIM_EXTRACTION_FALLBACK = 'moonshotai/kimi-k2.6'            # emergency fallback only (was kimi-k2.5, no longer on NIM)
+NIM_HARD_CASE_MODEL = 'deepseek-ai/deepseek-v4-flash'       # second-opinion on incomplete extractions (was: deepseek-v3_2; 284B MoE / 13B active, 1M ctx, fast)
 NIM_EMBEDDING_MODEL = 'nvidia/llama-nemotron-embed-1b-v2'    # was: nvidia/nv-embedqa-e5-v5
 NIM_RERANK_MODEL = 'nvidia/llama-nemotron-rerank-1b-v2'      # was: nvidia/llama-3.2-nv-rerankqa-1b-v2
 

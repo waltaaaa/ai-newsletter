@@ -1,0 +1,213 @@
+name: Monthly Deep Sweep
+
+on:
+  schedule:
+    # 15th of each month at 09:00 UTC — deliberately offset from the weekly
+    # Monday run (10:30 UTC) and monthly-refresh.yml (11:00 UTC on the 1st)
+    # so the heavy NAICS deep sweep never collides with another pipeline.
+    - cron: "0 9 15 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  deep-sweep:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # ── Claude subscription auth (no API, $0) — fail fast ───────────────
+      # Every agent defaults to claude_code mode and shells out to `claude -p`
+      # with ANTHROPIC_API_KEY stripped from the subprocess env
+      # (claude_reasoning._CLAUDE_ENV). On a GitHub-hosted runner the CLI must
+      # be installed and authenticated head-lessly via CLAUDE_CODE_OAUTH_TOKEN
+      # (minted locally with `claude setup-token`, stored as a repo secret).
+      # These steps run BEFORE the heavy pip/model steps so a missing/expired
+      # token fails the job in seconds, not after a long install.
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Claude Code CLI
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude --version
+
+      - name: Verify Claude subscription auth
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+        run: |
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "::error::CLAUDE_CODE_OAUTH_TOKEN secret is not set. Mint one locally with 'claude setup-token' and add it as a repo secret named CLAUDE_CODE_OAUTH_TOKEN."
+            exit 1
+          fi
+          if ! out=$(claude -p "Reply with exactly: OK" --model sonnet 2>&1); then
+            echo "::error::Claude subscription auth failed — CLAUDE_CODE_OAUTH_TOKEN may be expired or revoked. Re-mint with 'claude setup-token' and update the repo secret."
+            echo "$out"
+            exit 1
+          fi
+          echo "Claude subscription auth OK: $out"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download NLTK data for sumy
+        run: python -c "import nltk; nltk.download('punkt_tab', quiet=True)"
+
+      - name: Cache local LLM model
+        uses: actions/cache@v4
+        with:
+          path: models/
+          key: local-llm-qwen25-3b-q4km-v1
+
+      - name: Download model if not cached
+        run: |
+          if [ ! -f models/qwen2.5-3b-instruct-q4_k_m.gguf ]; then
+            mkdir -p models
+            wget -q https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf -O models/qwen2.5-3b-instruct-q4_k_m.gguf
+          fi
+
+      # dashboard.db is the pipeline's stateful working DB. It exceeds GitHub's
+      # 100MB/file limit so it is NOT git-versioned; it is persisted as the
+      # `db-latest` Release asset (restored here, re-uploaded at the end).
+      # Bootstrap fallback: the last git-tracked copy on origin/main. If both
+      # are unavailable the pipeline starts from an empty schema and the
+      # validator deploy-gate blocks the (degraded) deploy — never silent.
+      - name: Restore dashboard.db
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release download db-latest --repo "$GITHUB_REPOSITORY" --pattern dashboard.db --dir . --clobber 2>/dev/null; then
+            echo "Restored dashboard.db from db-latest release ($(du -h dashboard.db | cut -f1))"
+          else
+            echo "No db-latest release asset yet — bootstrapping from git history"
+            del=$(git rev-list -n1 HEAD -- dashboard.db || true)
+            if [ -n "$del" ] && git cat-file -e "${del}^:dashboard.db" 2>/dev/null; then
+              git show "${del}^:dashboard.db" > dashboard.db
+              echo "Bootstrapped dashboard.db from ${del}^ ($(du -h dashboard.db | cut -f1))"
+            elif [ -n "$del" ] && git cat-file -e "${del}:dashboard.db" 2>/dev/null; then
+              git show "${del}:dashboard.db" > dashboard.db
+              echo "Bootstrapped dashboard.db from ${del} ($(du -h dashboard.db | cut -f1))"
+            else
+              echo "::warning::No prior dashboard.db in git history; starting from empty schema — the validator deploy-gate will block a degraded deploy"
+            fi
+          fi
+
+      - name: Backup database before deep sweep
+        run: cp dashboard.db dashboard.db.bak 2>/dev/null || true
+
+      # Issue #1: ON_on_* / QC_qc_* provincial series come from provincial
+      # Excel workbooks, not the regular pipeline. Refresh them so they don't
+      # go stale. continue-on-error: provincial source flakiness is WARN-tier,
+      # never a hard pipeline failure.
+      - name: Refresh provincial OEA/ISQ series
+        run: python tools/refresh_provincial_oea_isq.py
+        continue-on-error: true
+
+      - name: Run monthly deep sweep
+        env:
+          # ANTHROPIC_API_KEY is intentionally omitted. The pipeline runs all
+          # agents on the Claude subscription via CLAUDE_CODE_OAUTH_TOKEN. With
+          # no API key present, a failed Claude Code call CANNOT fall back to
+          # the paid Anthropic API (see claude_reasoning.py:148-151) — instead
+          # the agents return empty and the validator deploy-gate FAILs loudly,
+          # so a dead/expired token never silently bills the API.
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash
+          SONNET_MODEL: claude-sonnet-4-6
+          OPUS_MODEL: claude-opus-4-6
+          GEMINI_SEARCH_ENABLED: "false"
+          LOCAL_MODEL_PATH: models/qwen2.5-3b-instruct-q4_k_m.gguf
+        run: python update_dashboard.py --deep-sweep
+
+      - name: Generate briefing exports
+        run: python briefing_export.py
+        continue-on-error: true
+
+      # Validator-as-deploy-gate (Phase B.5). Blocks the workflow on any
+      # schema FAIL so the deep sweep cannot clobber required fields.
+      # Exit codes: 0 = PASS, 2 = WARN (known producer-regen gaps, pass),
+      # 1 = FAIL (any other non-zero → fail the job).
+      # No override flag. No silent ship.
+      - name: Validate briefing schema (deploy gate)
+        run: |
+          set +e
+          python tools/validate_briefing_schema.py docs/data/briefing_latest.json
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "Validator PASS"
+            exit 0
+          elif [ "$rc" -eq 2 ]; then
+            echo "Validator WARN (0 FAIL) — proceeding to deploy"
+            exit 0
+          else
+            echo "Validator FAIL — rc=$rc — blocking deploy"
+            exit 1
+          fi
+
+      - name: Deploy static assets to docs/
+        run: python tools/deploy_to_github.py
+
+      - name: Compact database
+        run: python -c "import sqlite3; c=sqlite3.connect('dashboard.db'); c.execute('VACUUM'); c.close()"
+
+      - name: Persist dashboard.db to Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view db-latest --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create db-latest --repo "$GITHUB_REPOSITORY" \
+              --title "dashboard.db (rolling)" \
+              --notes "Pipeline working database. Auto-updated by the pipeline workflows; not git-versioned (exceeds GitHub 100MB/file). Reader-facing weekly history is in docs/data."
+          gh release upload db-latest dashboard.db --repo "$GITHUB_REPOSITORY" --clobber
+          echo "Uploaded dashboard.db to db-latest release ($(du -h dashboard.db | cut -f1))"
+
+      - name: Commit and push updated docs/
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git diff --staged --quiet || (git commit -m "auto: monthly deep sweep $(date +%Y-%m-%d)" && git push)
+
+      - name: Archive database backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard-backup-${{ github.run_number }}
+          path: dashboard.db.bak
+          retention-days: 14
+
+      - name: Create issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Deep sweep failure: ${new Date().toISOString().split('T')[0]}`;
+            const body = `The monthly deep sweep failed on run #${context.runNumber}.\n\n` +
+              `[View run logs](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})\n\n` +
+              `A database backup artifact is available for this run.`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['pipeline-failure']
+            });

@@ -1,337 +1,332 @@
-# Macro & Markets Research — Double Edition: Mar 31 – Apr 13, 2026
-Generated: 2026-04-18T12:00:00Z
-Search waves completed: Wave 1 (National Macro), Wave 2 (Trade/Geopolitics), Wave 5 (Financial Markets), Wave 6 (Consumer/Labour), Wave 9 (Global Context) + consumer sentiment + events
-Coverage: Two-week window Mar 31 – Apr 13, 2026
+# Macro & Markets Research Brief
+## Week ending April 25, 2026 | Compiled April 20, 2026
 
 ---
 
-## 1. Data Quality Audit
+## 1. Core Macro Indicators
 
-### Indicator Freshness
-| Indicator | Latest Period | Age (days) | Status |
-|-----------|--------------|------------|--------|
-| Real GDP (monthly) | Latest StatCan monthly | ~7 | FRESH |
-| CPI | Feb 2026 | ~33 | FRESH (Mar release Apr 20) |
-| Unemployment | Mar 2026 (released Apr 10) | 8 | FRESH |
-| Housing Starts | Mar 2026 (released Apr 17) | 1 | FRESH |
-| BoC Rate | Mar 18, 2026 decision | 31 | FRESH |
-| Trade Balance | Feb 2026 (released Apr 2) | 16 | FRESH |
-| Building Permits | Feb 2026 (released Apr 13) | 5 | FRESH |
-| Manufacturing Sales | Feb 2026 (released Apr 15) | 3 | FRESH |
+### CPI / Inflation (March 2026)
+- Canada annual CPI rose to **+2.4% YoY** in March, up from +1.8% in February (Statistics Canada, released April 20).
+- Gasoline prices surged **+21.2% M/M** in March, the largest monthly increase on record, driven by Strait of Hormuz disruptions.
+- Gasoline rose **+5.9% YoY** in March.
+- Excluding gasoline, CPI rose at a slower pace: **+2.2% YoY** (down from +2.4% ex-gasoline in February).
+- Food purchased from stores: **+4.4% YoY** (up from +4.1% in Feb). Fresh vegetables: **+7.8% YoY**, largest since August 2023.
+- Sources: [StatCan Daily](https://www150.statcan.gc.ca/n1/daily-quotidien/260420/dq260420a-eng.htm), [CBC](https://www.cbc.ca/news/business/march-2026-inflation-rate-9.7170077), [Investing.com](https://ca.investing.com/news/economy-news/gasoline-prices-drive-canadian-inflation-higher-while-core-measures-remain-tame-4574027)
 
-### Critical Gaps Found
-- March CPI not yet released (scheduled Apr 20)
-- Ontario Economic Accounts Q4 2025: The OEA follows a quarterly release cycle approximately 3-4 months after quarter-end. The Q3 2025 OEA was released Jan 12, 2026. The Q4 2025 OEA release was not confirmed for Apr 10 in search results; the FAO's Ontario Economic Monitor covering Jul-Dec 2025 is the closest available proxy. [Source: https://fao-on.org/en/report/oem-2025-q4/]
-- WTI crude scrape flagged unreliable in previous edition; FRED and Trading Economics show WTI at $84.36 as of Apr 17
-- April 2026 LFS data currently in collection (Apr 19-28); next release expected early May
+### Bank of Canada Monetary Policy
+- Policy rate held at **2.25%** since March 18, 2026.
+- Next decision: **April 29, 2026** (with Monetary Policy Report).
+- Bond markets price **~92% probability of hold**, 8% probability of a 25bp cut on April 29.
+- Money markets price ~41bps of tightening by year-end, reflecting inflation risk from energy prices.
+- 2-year yields up 35bps; yield curve bear flattening reflects growing odds of BoC hikes.
+- Sources: [BoC press release](https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/), [WOWA](https://wowa.ca/bank-of-canada-interest-rate), [RBC Economics](https://www.rbc.com/en/economics/canadian-analysis/data-flashes/boc-done-with-rate-cuts-expects-2-inflation-to-persist/)
 
----
+### GDP
+- Q4 2025: **-0.2% Q/Q** (contraction).
+- Q1 2026 forecast: **+0.8% SAAR** (NBC Economics), tracking slightly better than expected.
+- Full-year 2026: BoC forecasts **1.1%**, Vanguard forecasts **1.8%**, S&P Global forecasts growth set to improve.
+- Below-trend growth expected through 2026 due to slower population growth and U.S. tariff impacts.
+- Sources: [BoC Projections](https://www.bankofcanada.ca/publications/mpr/mpr-2026-01-28/projections/), [S&P Global](https://www.spglobal.com/ratings/en/regulatory/article/economic-outlook-canada-q1-2026-growth-is-set-to-improve-s101658937), [RBC Economics](https://www.rbc.com/en/economics/canadian-analysis/featured-analysis/quarterly-canadian-outlook/quarterly-canadian-outlook-growth-headwinds-offset-by-stabilizing-trade-and-jobs/)
 
-## 2. Highest-Signal Releases of the Window
+### Labour Force (March 2026)
+- Employment: **+14,000** (+0.1%), employment rate steady at **60.6%**.
+- Unemployment rate: **6.7%** (unchanged).
+- Participation rate: **64.9%**.
+- Ontario unemployment: **7.6%** (unchanged). Quebec unemployment: fell to **5.4%** (-0.5pp).
+- Average hourly wages: **+4.7% YoY** to $37.73/hr (fastest since Oct 2024), up from +3.9% in Feb.
+- Employment gains in natural resources (+10,000; +3.0%) and other services (+15,000; +1.9%). Declines in finance/insurance/real estate (-11,000; -0.8%).
+- Sources: [StatCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm), [Indeed Hiring Lab](https://www.hiringlab.org/en-ca/2026/04/10/march-2026-labour-force-survey-holding-steady/)
 
-### RELEASE 1: StatCan Labour Force Survey — March 2026 (Released Apr 10, 2026)
+### Housing
+- Housing starts (March): **235,852 SAAR**.
+- CMHC projects housing starts to decline nationally 2026-2028; Ontario and BC to see sharp declines.
+- National aggregate home price: **-2.0% YoY** in Q1 2026. Montreal: +3.3% YoY. Toronto: -4.7% YoY. Vancouver: -4.5% YoY.
+- CMHC: Canada needs ~430,000-480,000 starts/year to restore affordability by 2035; 2025 delivered ~259,000.
+- RBC affordability measure: 52.4% of median pre-tax household income (long-term average: 40.5%).
+- Sources: [CMHC housing starts](https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026), [CMHC Outlook](https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/market-reports/housing-market/housing-market-outlook)
 
-Employment rose by 14,000 (+0.1%) in March, with total employment reaching 21,051,000. The unemployment rate held at 6.7%. The employment rate was unchanged at 60.6% and the participation rate at 64.9%. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
+### Retail Sales & Consumer Spending
+- Retail sales: +1.1% in January, +0.9% in February.
+- Q1 2026 total spending: -0.27% YoY; average transaction size: +0.18%.
+- Grocery spending: +3% YoY. Mass merchants: +7% YoY. Apparel: -2% YoY. Department stores: -8% YoY.
+- Consumers shifting toward essentials and value-oriented retailers; discretionary categories underperforming.
+- Sources: [Bloomberg/BNN](https://www.bnnbloomberg.ca/business/economics/2026/03/20/the-daily-chase-consumer-spending-rises-to-start-the-year/), [Retail Insider](https://retail-insider.com/retail-insider/2026/04/soft-start-to-2026-masks-resilient-consumer-spending-in-canada/)
 
-Sector breakdown:
-- Other services: +15,000 (+1.9%)
-- Natural resources: +10,000 (+3.0%)
-- Professional, scientific, and technical services: +12,000
-- Finance, insurance, real estate, rental, and leasing: -11,000 (-0.8%)
-- Accommodation and food services: -10,000 (-0.9%)
-- Health care and social assistance: little changed month-over-month but +94,000 (+3.3%) year-over-year, the largest YoY gain among industries
+### Trade Balance (February 2026)
+- Trade deficit: **-C$5.7B** (widest since August 2025).
+- Imports surged **+8.4%** to record C$72.1B. Exports rose **+6.4%** to C$66.3B.
+- Export gains led by motor vehicles/parts (+24.2%), precious metals (+14.2%), fishing/food products (+10.5%).
+- Canada's merchandise exports to non-U.S. economies: **+17% YoY** (12 months to Jan 2026); to U.S.: **-10% YoY** (trade diversion).
+- Sources: [StatCan Trade Feb](https://www150.statcan.gc.ca/n1/daily-quotidien/260402/dq260402a-eng.htm), [TD Economics](https://economics.td.com/ca-merchandise-trade)
 
-Average hourly wages rose 4.7% year-over-year to $37.73/hr, up from 3.9% in February — the fastest pace since October 2024. Composition-adjusted wage growth was 3.6% YoY. Wage growth among employees aged 55+ was 5.2%; among those aged 15-24, 1.8%. [Source: https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
-
-The +14,000 gain follows February's -84,000 loss, meaning the economy has recovered only a fraction of that decline. Full-time and part-time employment were both "little changed" in March. [Source: https://refdesk.ca/blog/canada-march-2026-jobs-report-unemployment-holds-steady]
-
-### RELEASE 2: Ontario Economic Accounts / FAO Ontario Economic Monitor — Q4 2025
-
-The FAO's Ontario Economic Monitor covering July-December 2025 reports that Ontario's economy was "little changed" in Q4 2025. Employment in Ontario increased by 58,900 (+0.7%) in Q4 2025 after weak job performance in the prior two quarters. Ontario's real GDP growth slowed to an estimated 1.3% for full-year 2025, down from 1.6% in 2024, as US tariffs contracted Ontario's exports and business investment. The FAO projects Ontario growth of 1.4% in 2026. [Source: https://fao-on.org/en/report/oem-2025-q4/]
-
----
-
-## 3. Key Data Movements (Two-Week Window)
-
-### National Indicators
-| Indicator | Current | Previous | Change | Period | Source |
-|-----------|---------|----------|--------|--------|--------|
-| BoC Rate | 2.25% | 2.25% | Held | Mar 18, 2026 decision | [Bank of Canada](https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/) |
-| Real GDP (Q4 2025) | -0.2% Q/Q (-0.6% annualized) | +0.6% (Q3 2025) | -0.8pp | Q4 2025 | [StatCan](https://www150.statcan.gc.ca/n1/daily-quotidien/260227/dq260227a-eng.htm) |
-| CPI | +1.8% YoY | +2.3% YoY | -0.5pp | Feb 2026 | [StatCan](https://www150.statcan.gc.ca/n1/daily-quotidien/260316/dq260316a-eng.htm) |
-| Unemployment | 6.7% | 6.7% | Unchanged | Mar 2026 | [StatCan](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-| Housing Starts | 235,852 SAAR | 250,961 SAAR | -6.0% M/M | Mar 2026 | [CMHC](https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026) |
-| Trade Balance | -$5.7B | -$4.2B (revised Jan) | Deficit widened $1.5B | Feb 2026 | [StatCan](https://www150.statcan.gc.ca/n1/daily-quotidien/260402/dq260402a-eng.htm) |
-| Building Permits | $12.1B | $13.2B | -8.4% | Feb 2026 | [StatCan](https://www150.statcan.gc.ca/n1/daily-quotidien/260413/dq260413b-eng.htm) |
-| Manufacturing Sales | $71.2B | $68.7B | +3.6% | Feb 2026 | [StatCan](https://www150.statcan.gc.ca/n1/daily-quotidien/260415/dq260415a-eng.htm) |
-| Avg Home Price (MLS) | $673,084 | — | -0.8% YoY | Mar 2026 | [CREA](https://stats.crea.ca/en-ca/) |
-| Avg Hourly Wages | $37.73 | $36.05 (Mar 2025) | +4.7% YoY | Mar 2026 | [StatCan LFS](https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm) |
-
-### Commodity Movements
-| Commodity | Price (Apr 13) | Two-Week Trend | YoY Change | Source |
-|-----------|---------------|----------------|------------|--------|
-| WTI Crude | ~$103/bbl (Apr 13); fell to $83.85 Apr 17 | Extreme volatility: peaked ~$128 Apr 2, collapsed on ceasefire news | +50% YoY approx | [Fortune](https://fortune.com/article/price-of-oil-04-13-2026/) |
-| Brent Crude | ~$103.72/bbl (Apr 13); fell to $90.38 Apr 17 | -11.5% W/W Apr 9 vs prior; -9% on Apr 17 | +47% YoY | [Trading Economics](https://tradingeconomics.com/commodity/brent-crude-oil) |
-| WCS Differential | $16.25/bbl below WTI (Apr 13) | Widened from $15.55 | — | [BOE Report](https://boereport.com/2026/04/13/discount-on-western-canada-select-widens-45/) |
-| Gold | $4,728/oz (Apr 13) | Range: $4,656 (Apr 7) – $4,816 (Apr 16) | +50% YoY | [Fortune](https://fortune.com/article/current-price-of-gold-04-13-2026/) |
-| Silver | $78-80/oz range (mid-Apr) | Climbed above $80 Apr 16 | +$46/oz YoY | [Fortune](https://fortune.com/article/current-price-of-silver-4-13-2026/) |
-| Copper | $5.76/lb COMEX (Apr 9); ~$6.07/lb (Apr 15) | +4.91% M/M | +30% YoY | [Trading Economics](https://tradingeconomics.com/commodity/copper) |
-| Natural Gas (Henry Hub) | $2.67/MMBtu (Apr 17) | Near 17-month low; EIA storage build 59 Bcf (wk Apr 10) | — | [Trading Economics](https://tradingeconomics.com/commodity/natural-gas) |
-| Lumber (W-SPF 2x4) | US$490/Mbf (wk Apr 3) | +$5 (+1%) W/W | — | [NRCan](https://natural-resources.canada.ca/domestic-international-markets/current-lumber-pulp-panel-prices) |
-| Uranium | $86.30/lb (Apr 16) | -0.23% M/M | +32.67% YoY | [Trading Economics](https://tradingeconomics.com/commodity/uranium) |
-| Nickel | $17,985/T (Apr 17) | +4.81% M/M | +14.23% YoY | [Trading Economics](https://tradingeconomics.com/commodity/nickel) |
-| Canola (May futures) | $726.60/T | Supported by Middle East energy disruption and vegetable oil markets | — | [Western Producer](https://www.producer.com/am-market-reports/am-market-report-april-7-2026/) |
-
-### Financial Market Movements
-| Index/FX | Value | Period Change | YoY Change | Source |
-|----------|-------|--------------|------------|--------|
-| TSX Composite | ~33,478 (Apr 9); ~34,052 (Apr 16) | +1.10% W/W (wk 1); +1.74% (Mar 12 – Apr 12 range) | +41% YoY | [Trading Economics](https://tradingeconomics.com/canada/stock-market) |
-| S&P 500 | 7,022.95 (Apr 13) | -4% YTD through Apr 1; +3.9% weekly gain early Apr; record close Apr 14 | — | [CNBC](https://www.cnbc.com/2026/04/14/stock-market-today-live-updates.html) |
-| CAD/USD | ~0.7305 (Apr 17) | Strengthened from ~0.72 (Mar 30) | -1.85% YoY (per prior edition) | [Trading Economics](https://tradingeconomics.com/canada/currency) |
-| USD/CAD | 1.3688 (Apr 17) | Near strongest since March | — | [Trading Economics](https://tradingeconomics.com/canada/currency) |
-
-### Yield Curve
-| Tenor | Current (mid-Apr) | Direction | Source |
-|-------|-------------------|-----------|--------|
-| 2Y GoC | 2.80% (Apr 15) | +0.02pp from prior session; +35 bps vs earlier 2026 | [Trading Economics](https://tradingeconomics.com/canada/2-year-note-yield) |
-| 10Y GoC | ~3.47% | Stabilized | [Trading Economics](https://tradingeconomics.com/canada/government-bond-yield) |
-| Curve Shape | Flattening | 2Y rising faster than 10Y; market pricing potential BoC hikes later in 2026 | [NBC Financial](https://www.nbc.ca/content/dam/bnc/taux-analyses/analyse-eco/mensuel/monthly-fixed-income-monitor.pdf) |
+### Federal Spring Economic Update
+- Scheduled for **April 28, 2026** (Finance Minister Champagne).
+- Previous projection (Nov 2025): federal deficit of $78.3B for last fiscal year.
+- Update expected to show impact of Iran conflict on fiscal forecasts and tariff-related revenue effects.
+- Sources: [Canada.ca](https://www.canada.ca/en/department-finance/news/2026/04/government-of-canada-to-release-spring-economic-update-on-april-28-2026.html), [CBC](https://www.cbc.ca/news/politics/spring-economic-update-9.7163590)
 
 ---
 
-## 4. Week 1 vs Week 2 Material Changes
+## 2. Trade & Geopolitics
 
-### Oil Prices: The Defining Split
-- **Week 1 (Mar 31 – Apr 6):** WTI surged sharply; May WTI settled at $111.54 on Apr 3, up $11.90 (+11.94%) for the holiday-shortened week. Brent peaked near $128/bbl on Apr 2. The Strait of Hormuz remained effectively closed. [Source: https://tradingeconomics.com/commodity/crude-oil]
-- **Week 2 (Apr 7 – Apr 13):** A temporary ceasefire was agreed Apr 8 that was to involve re-opening the Strait. WTI and Brent fell 13-15% intraday during the week as geopolitical risk premium unwound. Brent at ~$103.72 on Apr 13. The full Strait reopening announcement came Apr 17, sending WTI to $83.85 (-11.4%) and Brent to $90.38 (-9%). [Source: https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis]
+### Canada-U.S. Tariffs
+- April 15: Canada announced **6-month pause** on tariffs for U.S. goods used in Canadian manufacturing, food/beverage packaging, health care, and national security.
+- Automakers keeping production in Canada receive exemption from Canada's retaliatory tariffs.
+- April 6: U.S. restructured Section 232 tariffs on aluminum, steel, copper — 50% rate on many core metal imports.
+- Current U.S. tariff regime: 10% global tariff (effective Feb 24, 2026); CUSMA-compliant goods exempt.
+- After one year of tariffs, early labour market resilience giving way to stalled job growth.
+- Sources: [Wikipedia timeline](https://en.wikipedia.org/wiki/Timeline_of_the_2025%E2%80%932026_United_States_trade_war_with_Canada), [CFIB](https://www.cfib-fcei.ca/en/site/us-tariffs), [RBC Economics](https://www.rbc.com/en/economics/canadian-analysis/featured-analysis/insights/one-year-of-tariff-shocks-in-canada-what-we-learned/)
 
-### Equity Markets
-- **Week 1:** S&P 500 was down 4% YTD through Apr 1; TSX at ~33,478 (Apr 9 reading). Volatility elevated on war risk.
-- **Week 2:** S&P 500 achieved its second consecutive weekly gain, climbing 3.9%. The S&P 500 closed at 7,022.95 on Apr 13, within 2.32% of its all-time high from Jan 27. S&P 500 and Nasdaq closed at fresh records on Apr 14. [Source: https://www.cnbc.com/2026/04/14/stock-market-today-live-updates.html]
+### CUSMA/USMCA 2026 Review
+- First mandatory joint review scheduled for **July 2026**.
+- Possible outcomes: 16-year extension to 2042, renegotiation, withdrawal, or annual reviews until 2036 expiry.
+- Trade Minister LeBlanc stated Canada will not delay negotiations.
+- Sources: [BLG](https://www.blg.com/en/insights/2026/03/2026-cusma-review-enhancing-trade-negotiation-transparency), [Global News](https://globalnews.ca/news/11804420/leblanc-cusma-trade-talks-delay-greer/)
+
+### Canada-China Trade
+- Minister Sidhu attended China International Consumer Products Expo (April 12-14); Canada is Guest Country of Honour.
+- Finance Minister Champagne concluded China visit in April advancing trade/financial services partnerships.
+- 2025 bilateral merchandise trade: C$124.8B (exports: C$34.1B, imports: C$90.1B).
+- Strategic partnership forged by PM Carney in January 2026 covering energy, agri-food, and trade.
+- Sources: [Canada.ca (Sidhu)](https://www.canada.ca/en/global-affairs/news/2026/04/minister-sidhu-to-represent-canada-and-advance-trade-efforts-in-peoples-republic-of-china.html), [PM.gc.ca](https://www.pm.gc.ca/en/news/news-releases/2026/01/16/prime-minister-carney-forges-new-strategic-partnership-peoples)
+
+### Energy Exports & Pipelines
+- Canada sends **97%** of oil exports and **100%** of natural gas exports to the U.S.
+- 83% of Canadians support expanding oil/gas exports outside the U.S. (Ipsos poll).
+- TMX operating at high capacity (890,000 b/d), providing independent supply corridor to Asia.
+- CER recommended approval of Westcoast Energy Sunrise pipeline expansion (feeds Woodfibre LNG, start-up 2027).
+- BC LPG terminal expected to start up late 2026 for Asian exports.
+- Trump signed new pipeline permits April 19 for Bakken and Enbridge facilities.
+- Sources: [The Hub](https://thehub.ca/2026/04/13/canada-has-83-percent-support-for-oil-export-diversification-yet-the-country-is-still-set-on-building-pipelines-to-the-u-s/), [CER](https://www.cer-rec.gc.ca/en/data-analysis/canada-energy-future/2026/analysis-energy-security-and-trade-diversification/)
+
+### Strait of Hormuz Crisis
+- Largest disruption to world energy supply since the 1970s energy crisis.
+- ~25% of world seaborne oil trade and 20% of LNG previously transited the Strait.
+- Tanker traffic dropped to near-zero; largest monthly oil price increase in history occurred in March 2026.
+- Canada lacks a strategic petroleum reserve (SPR) — only G7 nation without one.
+- TMX provides a corridor independent of the Strait for Japan, South Korea, and China buyers.
+- Sources: [Wikipedia](https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis), [BNN Bloomberg](https://www.bnnbloomberg.ca/investing/market-outlook/2026/03/09/market-outlook-hormuz-disruption-could-raise-oil-prices-in-canada/), [Dallas Fed](https://www.dallasfed.org/research/economics/2026/0320)
+
+### Canadian Dollar
+- CAD/USD: **0.7305** (~USD/CAD 1.369).
+- April forecast range: USD/CAD 1.37-1.40, volatile.
+- Key drivers: persistent inflation, geopolitical risk, U.S. economic strength supporting USD.
+- Expected to strengthen toward USD/CAD 1.34 by end-2026 as commodity prices stabilize.
+- Sources: [MTFX](https://www.mtfxgroup.com/fx-forecast/), [Interchange Financial](https://www.interchangefinancial.com/canadian-dollar-forecast/)
+
+---
+
+## 3. Financial Markets
+
+### TSX Composite
+- TSX at **~34,346** (April 17), up 6.29% over past month, up 43.06% YoY.
+- Nearing February record highs after Iran declared Strait of Hormuz open.
+- Banks rallied on oil price dip: BMO +1.65%, BNS +2.03%, RBC +1.35%, TD +1.23%.
+- Energy stocks slumped on ceasefire hopes: CNRL -7.28%, Suncor -4%, Cenovus -5.4%, Whitecap -4.16%.
+- Sources: [Trading Economics](https://tradingeconomics.com/canada/stock-market), [TMX Money](https://money.tmx.com/en/canadian-markets)
+
+### Canadian Banks
+- Bank EPS expected to rise ~10% in 2026, driven by wealth management and capital markets.
+- Scotiabank FQ1 2025: revenue C$9.6B (+1.8% YoY), net income C$2.3B, adjusted EPS +16% YoY to C$2.05.
+- 2026 is the final year of the 5-year mortgage renewal cycle (2021 cohort); could support net interest margins.
+- Modest uptick in credit card and auto loan delinquencies noted.
+- Sources: [Globe and Mail](https://www.theglobeandmail.com/investing/markets/markets-news/motley/953124/what-to-know-about-canadian-bank-stocks-in-2026/), [BNN Bloomberg](https://www.bnnbloomberg.ca/investing/market-outlook/2026/02/24/market-outlook-canadian-banks-kick-off-earnings-with-profits-tied-to-stocks/)
+
+### Crude Oil
+- WTI: **~$86.25/bbl** (rebounding after ceasefire collapse). Brent: **~$95.42/bbl**.
+- April range: $82-$134 depending on Hormuz developments.
+- EIA scenarios: 1-quarter Persian Gulf outage = WTI $110/bbl; 2-quarter outage = WTI peaks at $132/bbl.
+- OPEC+ production fell 9.4 mb/d M/M to 42.4 mb/d; forecast 2026 annual production decline of 2.4 mb/d to 48.8 mb/d.
+- OPEC+ agreed to 206 kb/d increase for April; further 206 kb/d for May contingent on Strait conditions.
+- Sources: [CNBC](https://www.cnbc.com/2026/04/14/oil-wti-brent-as-markets-hormuz-blockade-vance-trump.html), [IEA April OMR](https://www.iea.org/reports/oil-market-report-april-2026), [EIA STEO](https://www.eia.gov/outlooks/steo/)
+
+### Gold
+- Gold: **~$4,828/oz**, near record highs.
+- Up 9.09% over past month, up 40.03% YoY.
+- 2025 saw 53 new all-time highs (LBMA). Price surged ~65% in 2025 alone.
+- Goldman Sachs raised Dec 2026 forecast to **$4,900/oz**, citing ETF inflows and central bank buying.
+- Sources: [Trading Economics](https://tradingeconomics.com/commodity/gold), [Fortune](https://fortune.com/article/current-price-of-gold-04-17-2026/)
+
+### Bond Yields
+- Canada 5-year: **3.06%** (April 20). 10-year: **~3.48%**.
+- 5-year yield down 0.13pp over past month but up 0.26pp YoY.
+- 2-year yields up 35bps; bear flattening as markets price potential BoC hikes.
+- Sources: [BoC bonds](https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/), [Trading Economics](https://tradingeconomics.com/canada/government-bond-yield)
+
+### REITs
+- CAPREIT acquiring European Residential REIT (ISS and Glass Lewis recommend FOR).
+- Industrial and purpose-built rental REITs showing resilience amid housing shortages and logistics demand.
+- Monthly distributions continuing: True North ($0.0575/unit), Minto ($0.04458/unit), Morguard NAR ($0.06583/unit).
+- Sources: [GlobeNewswire](https://www.globenewswire.com/news-release/2026/04/13/3272479/0/en/ISS-and-Glass-Lewis-Endorse-European-Residential-Real-Estate-Investment-Trust-s-Arrangement-with-Canadian-Apartment-Properties-Real-Estate-Investment-Trust.html)
+
+---
+
+## 4. Consumer & Labour
 
 ### Consumer Confidence
-- **Week 1:** Bloomberg-Nanos Canadian Consumer Confidence Index fell to 46.93 (week ended Apr 3), an 11-month low. Expectations index lost nearly 10 points over four weeks. [Source: https://tradingeconomics.com/canada/consumer-confidence]
-- **Week 2:** The Apr 10 LFS print (unemployment unchanged at 6.7%, +14,000 jobs) provided partial stabilization data, but confidence readings remained below 50.
+- Bloomberg-Nanos Canadian Consumer Confidence Index: **46.93** (week ended April 3), an 11-month low.
+- Expectations index lost ~10 points over 4 weeks.
+- Only 15% see a stronger economy in 6 months (down from 27% four weeks ago).
+- Only 13% say personal finances improved over past year (down from 15%).
+- ~59% feel somewhat secure in jobs (slight decrease).
+- Sources: [Bloomberg](https://www.bloomberg.com/news/articles/2026-04-06/canadian-confidence-hits-11-month-low-as-iran-war-drags-on), [Nanos](https://nanos.co/consumer-confidence-on-a-clear-negative-trajectory-bloomberg-nanos/)
+
+### Wages & Income
+- Federal minimum wage rose to **$18.15/hr** on April 1, 2026 (+2.1%).
+- Five provinces, three territories, and federal raised minimum wages April 1. Yukon: largest increase (+$0.92 to $18.51).
+- Average hourly wages: **+4.7% YoY** to $37.73 in March (real purchasing power gains above current inflation).
+- Average salary in Canada 2026: ~C$65,000/year.
+- Sources: [Canada.ca](https://www.canada.ca/en/employment-social-development/news/2026/03/government-of-canada-raises-the-federal-minimum-wage.html), [Littler](https://www.littler.com/news-analysis/asap/canada-minimum-wage-increases-2026)
+
+### Cost of Living & Housing Affordability
+- RBC affordability: 52.4% of median income (long-term avg: 40.5%).
+- Food prices 27% higher than five years ago.
+- ~60% of mortgage holders renewing at today's rates face sharp payment increases.
+- Shelter inflation consistently outpacing overall CPI.
+- Sources: [NBC Housing Affordability Monitor](https://www.nbc.ca/content/dam/bnc/taux-analyses/analyse-eco/logement/housing-affordability.pdf), [CMHC](https://www.cmhc-schl.gc.ca/observer/2026/beyond-toronto-vancouver-affordability-challenges-spread-across-canadian-cities)
+
+### Immigration & Population
+- 2026-2028 Levels Plan: 385,000 new temporary residents in 2026 (down from previous levels).
+- Permanent economic immigration: 64% of all immigration in 2027-2028 (highest proportion in decades).
+- Population projected to remain flat in 2026 after surging 2M+ over prior two years.
+- Labour force projected 0.2% smaller by end-2026 (~40,000-50,000 fewer workers) vs. prior policies.
+- Sources: [Canada.ca Levels](https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/corporate-initiatives/levels.html), [PBO](https://www.pbo-dpb.ca/en/publications/RP-2526-025-S--demographic-implications-2026-2028-immigration-levels-plan--implications-demographiques-plan-niveaux-immigration-2026-2028)
+
+### Job Vacancies & Labour Shortages
+- Job postings on Indeed (as of Feb 20): flat YoY, slightly above pre-pandemic (+3%).
+- Full-time vacancies decreased ~11,200 (-3%) in Q3 2025.
+- 36.9% of businesses expect recruiting skilled employees to be an obstacle in next 3 months.
+- Construction (49.5%), manufacturing (47.4%), and accommodation/food (46.3%) report highest difficulty.
+- Healthcare and essential services continue to grow; hospitality and professional services face slower hiring.
+- Sources: [Indeed Hiring Lab](https://www.hiringlab.org/en-ca/2026/03/11/canadians-back-on-the-job-hunt-to-start-2026/), [StatCan Labour Shortage Trends](https://www.statcan.gc.ca/en/subjects-start/labour_/labour-shortage-trends-canada)
 
 ---
 
-## 5. National Macro Stories
+## 5. Policy & Regulatory
 
-### Story 1: March LFS — Modest Recovery After February's 84,000-Job Loss
-- **Source:** Statistics Canada — [https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm]
-- **Additional sources:** [Refdesk.ca](https://refdesk.ca/blog/canada-march-2026-jobs-report-unemployment-holds-steady), [Robert Half](https://www.roberthalf.com/ca/en/insights/research/march-labour-force-survey), [Indeed Hiring Lab](https://www.hiringlab.org/en-ca/2026/04/10/march-2026-labour-force-survey-holding-steady/)
-- **Key facts:**
-  - +14,000 jobs in March vs -84,000 in February
-  - Unemployment unchanged at 6.7%
-  - Wage growth accelerated to 4.7% YoY ($37.73/hr), highest since Oct 2024
-  - Health care: +94,000 YoY (+3.3%), largest annual gain among industries
-  - Finance/insurance/real estate: -11,000 in March
-- **Affected sectors:** Health care (NAICS 62), professional services (NAICS 54), natural resources (NAICS 11/21), finance/insurance (NAICS 52/53)
-- **Coverage status:** IN DATA
+### Environmental Assessment
+- IAAC re-engineering impact assessment process to complete reviews within **2 years**.
+- Federal-provincial cooperation agreements signed with 6 provinces: NS, PEI, ON, NB, BC, and Alberta (April 2026).
+- Alberta agreement allows federal reliance on provincial environmental/regulatory system for projects primarily within provincial jurisdiction.
+- Recent decisions: Point Rousse Port Expansion (NL) cleared; Manitoba all-season road cleared.
+- Sources: [Canada.ca (Alberta)](https://www.canada.ca/en/impact-assessment-agency/news/2026/04/alberta-and-canada-sign-co-operation-agreement-to-accelerate-major-project-assessments.html), [Canada.ca (PEI)](https://www.canada.ca/en/impact-assessment-agency/news/2026/03/prince-edward-island-and-canada-sign-co-operation-agreement-to-accelerate-major-project-assessments.html)
 
-### Story 2: Canada Trade Deficit Widens to $5.7B in February
-- **Source:** Statistics Canada — [https://www150.statcan.gc.ca/n1/daily-quotidien/260402/dq260402a-eng.htm]
-- **Key facts:**
-  - Deficit widened from $4.2B (Jan revised) to $5.7B, largest since Aug 2025
-  - Exports rose 6.4% to $66.3B (highest since Mar 2025)
-  - Imports surged 8.4% to record $72.1B
-- **Affected sectors:** Manufacturing (NAICS 31-33), transport/logistics (NAICS 48-49)
-- **Coverage status:** IN DATA
+### Carbon Pricing
+- Consumer carbon tax removed effective April 1, 2025. Canada Carbon Rebate ended in 2026.
+- Industrial carbon tax: **$110/tonne** in 2026.
+- Federal benchmark review underway in 2026 for industrial pricing systems.
+- Alberta agreed to increase its industrial carbon tax by April 1, 2026 under MOU with Ottawa.
+- Sources: [Canada.ca](https://www.canada.ca/en/department-finance/news/2025/03/removing-the-consumer-carbon-price-effective-april-1-2025.html), [Carbon Credits](https://carboncredits.com/canadas-carbon-pricing-reset-in-2026-will-industry-step-up-or-stall-climate-progress/)
 
-### Story 3: Housing Starts Slow; CREA Downgrades Forecast
-- **Sources:** [CMHC](https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026), [CREA](https://stats.crea.ca/en-ca/), [CBC](https://www.cbc.ca/news/business/crea-housing-market-downgrade-april-9.7165168)
-- **Key facts:**
-  - Housing starts fell 6.0% M/M to 235,852 SAAR in March (vs 255K expected)
-  - Six-month trend decreased 2.9% to 248,378
-  - YTD actual starts +9% YoY (49,206 units through March)
-  - MLS HPI fell 0.4% M/M in March — 16th consecutive monthly decline
-  - National average home price: $673,084 (-0.8% YoY)
-  - CREA downgraded forecast citing "oil shock"; still expects +1.5% annual price gain to $688,955 for 2026
-  - 5 months of inventory nationally, in line with long-term average
-- **Affected sectors:** Residential construction (NAICS 236), real estate (NAICS 53)
-- **Coverage status:** IN DATA
+### Housing Policy
+- Housing Accelerator Fund: C$4.4B programme; recent agreements with 23 Ontario municipalities.
+- Build Canada Homes: advancing modular, mass timber, factory-built under Buy Canadian policy.
+- Municipalities required to permit 3-6 unit development on single-family/duplex lots near transit.
+- Parking minimums being reduced; zoning reforms promoting mixed-use and transit-oriented development.
+- Sources: [YPP Canada](https://www.yppcanada.com/post/canada-s-housing-strategy-in-2026-what-the-federal-government-is-doing), [HICC](https://housing-infrastructure.canada.ca/housing-logement/housing-plan-report-rapport-plan-logement-eng.html)
 
-### Story 4: Building Permits Drop 8.4%; Manufacturing Sales Rebound 3.6%
-- **Sources:** [StatCan building permits](https://www150.statcan.gc.ca/n1/daily-quotidien/260413/dq260413b-eng.htm), [StatCan manufacturing](https://www150.statcan.gc.ca/n1/daily-quotidien/260415/dq260415a-eng.htm)
-- **Key facts:**
-  - Building permits: -$1.1B (-8.4%) to $12.1B in February; non-residential led decline (-$1.3B); residential +$135.6M
-  - 21,000 multi-unit + 3,900 single-family dwellings authorized (-0.8% M/M)
-  - Manufacturing sales: +3.6% to $71.2B in February; transportation equipment +18.8%, primary metals +4.9% to record $6.5B
-  - Unfilled manufacturing orders reached record $117.6B
-- **Affected sectors:** Construction (NAICS 23), manufacturing (NAICS 31-33)
-- **Coverage status:** IN DATA
+### Competition & M&A
+- Pre-merger notification threshold: **$93M** (unchanged for 2026).
+- New presumption: mergers with >30% aggregate market share or HHI >1,800 (with >100 increase) presumed anticompetitive.
+- Investment Canada Act thresholds increased: $2.179B (trade agreement investors), $578M (SOEs).
+- Sources: [Canada.ca Competition Bureau](https://www.canada.ca/en/competition-bureau/news/2026/03/pre-merger-competition-bureau-notification-threshold-to-remain-at-93m-in-2026.html), [Torys](https://www.torys.com/our-latest-thinking/publications/2026/03/2026-thresholds-for-canadian-merger-reviews)
 
-### Story 5: Bank of Canada Summary of Deliberations (Published Apr 1)
-- **Source:** [Bank of Canada](https://www.bankofcanada.ca/2026/04/summary-governing-council-deliberations-fixed-announcement-date-of-march-18-2026/)
-- **Key facts:**
-  - Rate held at 2.25% on Mar 18 (published deliberations Apr 1)
-  - Near-term growth expected weaker than January projection
-  - Labour market remains soft; Q4 2025 employment gains "largely reversed" in first two months of 2026
-  - Next rate decision: Apr 29, 2026 (with Monetary Policy Report)
-  - Market pricing: 96.5% probability of hold on Polymarket
-- **Coverage status:** IN DATA
+### Immigration / TFW Policy
+- TFW admissions target: ~60,000 in 2026 (down sharply).
+- Low-wage TFWP positions blocked in areas where unemployment exceeds 6%.
+- Rural employers: low-wage TFW share increased from 10% to 15% (April 2026 - March 2027).
+- TR-to-PR pathway for 33,000 temporary workers in 2026-2027.
+- Government targeting temporary population below 5% of total by end of 2027.
+- Sources: [Canada.ca](https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/corporate-initiatives/levels/supplementary-immigration-levels-2026-2028.html), [FWCHP](https://www.fwchppc.com/blog/upcoming-2026-policy-changes-for-foreign-workers-in-canada)
 
 ---
 
-## 6. Global Economic Context
+## 6. Global Context
 
-### United States
-- **Fed rate:** 3.50%–3.75% (held Mar 18); next decision Apr 29. FOMC still signaling one cut in 2026 and one in 2027. [Source: https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm]
-- **Equity markets:** S&P 500 was down 4% YTD through Apr 1; recovered to 7,022.95 by Apr 13; closed at fresh record Apr 14. [Source: https://www.cnbc.com/2026/04/14/stock-market-today-live-updates.html]
-- **Tariffs:** US Supreme Court struck down several of Trump's IEEPA emergency tariffs; Trump announced temporary 10% global tariff largely exempting CUSMA-compliant goods. On Apr 6, US restructured Section 232 tariffs on aluminum, steel, and copper — 50% rate on many core metal imports. On Apr 15, Canada announced 6-month pause on tariffs for US-origin manufacturing inputs. [Source: https://en.wikipedia.org/wiki/Timeline_of_the_2025%E2%80%932026_United_States_trade_war_with_Canada]
-- **Impact on Canada:** Trade deficit widening; manufacturing sector absorbing input cost changes; auto sector recovering after shutdowns
+### U.S. Federal Reserve
+- Fed funds rate: **3.50%-3.75%** (held steady for 2nd consecutive meeting, March 18).
+- Next decision: **April 29, 2026**. JP Morgan expects hold.
+- Fed signaled 1 rate cut in 2026, 1 in 2027, but timing unclear.
+- March FOMC minutes showed willingness to consider rate increases.
+- Sources: [Federal Reserve](https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm), [Axios](https://www.axios.com/2026/04/08/fed-interest-rates-fomc-march)
+
+### U.S. Economy
+- Nonfarm payrolls: **+178,000** in March; unemployment: **4.3%**.
+- Q4 2025 GDP revised down to **+0.5% annualized** (sluggish).
+- Fed Chair Powell believes payroll growth has been overstated; revised data may show job losses since April.
+- University of Michigan Consumer Sentiment: plunged to **50.8**, second-lowest since records began (1952).
+- Sources: [BLS](https://www.bls.gov/news.release/empsit.nr0.htm), [Washington Post](https://www.washingtonpost.com/business/2026/04/09/economy-gdp-jobs-iran/7f57d9fc-3412-11f1-b85b-2cd751275c1d_story.html)
 
 ### China
-- **GDP:** Q1 2026 GDP grew 5.0%, beating the 4.8% consensus and accelerating from 4.5% in Q4 2025. [Source: https://www.cnbc.com/2026/04/16/china-gdp-growth-first-quarter-exports-property-retail-sales-iran-war.html]
-- **Industrial production:** +6.1% YoY; high-tech manufacturing +12.5%; equipment manufacturing +8.9%
-- **Trade:** Exports +2.5% YoY in March (USD terms), down sharply from +21.8% in Jan-Feb. Imports surged +27.8% in March, strongest since Nov 2021. [Source: https://www.cnbc.com/2026/04/14/china-trade-data-march-exports-imports-march.html]
-- **Factory-gate prices turned positive** for first time in 3+ years on soaring commodity prices
-- **Impact on Canada:** Strong import demand supports Canadian commodity exports; factory-gate price reversal affects commodity pricing dynamics
+- Q1 2026 GDP: **+5.0% YoY** (beat 4.8% forecast, up from 4.5% in Q4 2025).
+- Industrial production: +6.1% YoY in Q1. High-tech manufacturing: +12.5%.
+- March exports: +2.5% YoY (down from +21.8% in Jan-Feb combined). Imports: +27.8% YoY (strongest since Nov 2021).
+- Exports to U.S.: -26.5% YoY in March. EV/battery/wind exports surged 78%/50%/45% YoY.
+- Sources: [CNN](https://www.cnn.com/2026/04/15/china/china-gdp-q1-economy-growth-intl-hnk), [CNBC](https://www.cnbc.com/2026/04/16/china-gdp-growth-first-quarter-exports-property-retail-sales-iran-war.html)
 
-### European Union
-- **ECB rate:** Main refinancing rate at 2.15%; deposit facility at 2.0%. Hold expected at Apr 29-30 meeting; markets pricing a hike in June to 2.5%+. [Source: https://tradingeconomics.com/euro-area/interest-rate]
-- **Inflation forecast raised** to 2.6% for 2026 due to higher energy prices from Middle East conflict
-- ECB warned of "layer cake of shocks" from geopolitical developments. [Source: https://www.cnbc.com/2026/04/16/ecb-interest-rates-hike-inflation-iran-washington.html]
+### European Central Bank
+- Main refinancing rate: **2.15%**; deposit facility: **2.0%**.
+- Markets pricing hold at April 29-30 meeting, hike in June.
+- Traders expect at least 2.5% by year-end (+50bps from current).
+- Sources: [Trading Economics](https://tradingeconomics.com/euro-area/interest-rate), [CNBC](https://www.cnbc.com/2026/04/16/ecb-interest-rates-hike-inflation-iran-washington.html)
 
-### United Kingdom
-- **BoE base rate:** 3.75%. Next decision Apr 30. [Source: https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate]
-- 90% of Reuters-surveyed economists expect hold; 5 expect 25bp hike
-- UK CPI at 3.0%, above the 2% target
-- Pre-Iran-war expectations of two 2026 rate cuts have been abandoned; markets now split between hold and hike [Source: https://hoa.org.uk/news/interest-rate-predictions-2/]
+### OPEC+
+- Production fell to 42.4 mb/d (down 9.4 mb/d M/M); forecast annual decline of 2.4 mb/d to 48.8 mb/d in 2026.
+- 206 kb/d increase agreed for April; further May increase contingent on Strait conditions.
+- Gulf producer losses the primary driver of supply decline.
+- Sources: [IEA](https://www.iea.org/reports/oil-market-report-april-2026), [Enerdata](https://www.enerdata.net/publications/daily-energy-news/opec-raise-output-206-kbd-april-2026-amid-middle-east-tensions.html)
 
-### OPEC+ and Middle East
-- OPEC+ agreed to increase output by 206,000 bpd starting April 2026; actual production fell 9.4 mb/d M/M to 42.4 mb/d due to Gulf supply disruptions. [Source: https://www.iea.org/reports/oil-market-report-april-2026]
-- IEA characterized the Strait of Hormuz closure as "the largest supply disruption in the history of the global oil market," affecting 20% of global oil supplies. [Source: https://en.wikipedia.org/wiki/Economic_impact_of_the_2026_Iran_war]
-- Temporary ceasefire agreed Apr 8; full Strait reopening announced Apr 17; oil prices dropped 9-12% on the announcement. [Source: https://www.cnbc.com/2026/04/17/oil-prices-wti-brent-israel-lebanon-ceasefire-trump.html]
-
-### IMF
-- IMF World Economic Outlook (Apr 14, 2026): Global growth projected at 3.1% for 2026 and 3.2% for 2027, based on assumption of limited Middle East conflict. MENA region forecast cut by 2.8pp to 1.1%. [Source: https://www.imf.org/en/publications/weo/issues/2026/04/14/world-economic-outlook-april-2026]
-
----
-
-## 7. Financial Markets Summary
-
-### Equity Markets
-The TSX Composite traded near 33,478 on Apr 9 and rose to approximately 34,052 by Apr 16, a gain of roughly 1.7% over the period. Year-over-year, the TSX was up approximately 41%. TMX March 2026 consolidated trading value reached $502.83B, with YTD value up 46.0%. [Source: https://tradingeconomics.com/canada/stock-market]
-
-The S&P 500 recovered from a 4% YTD loss as of Apr 1 to close at 7,022.95 on Apr 13, within 2.32% of its Jan 27 all-time high. The index recorded its best week since November in early April (+3.9%). S&P 500 and Nasdaq posted fresh record closes on Apr 14. [Source: https://www.advisorperspectives.com/dshort/updates/2026/04/10/s-p-500-snapshot-best-week-since-november]
-
-### Foreign Exchange
-CAD strengthened to approximately 0.7305 USD (USD/CAD 1.3688) on Apr 17, its strongest level since March. The move was driven primarily by broader USD depreciation as the DXY fell toward 98.05. [Source: https://tradingeconomics.com/canada/currency]
-
-### Commodities
-Oil dominated the two-week window. WTI ranged from $80.56 to $117.63 between Mar 18 and Apr 18, with an average of $98.15. Brent averaged $103/bbl in March, $32/bbl higher than February. The Apr 8 ceasefire agreement and Apr 17 Strait reopening announcement drove the sharpest single-session declines. The WCS differential widened to $16.25/bbl below WTI on Apr 13 from $15.55 on Apr 11.
-
-Gold traded between $4,656/oz (Apr 7) and $4,816/oz (Apr 16), up over 50% year-over-year. Silver reached $80/oz. Copper rose to $6.07/lb on Apr 15, up ~30% YoY, supported by AI data center demand and US-Iran diplomacy optimism. Natural gas fell to $2.67/MMBtu, near 17-month lows, as EIA reported a 59 Bcf storage build exceeding forecasts.
-
-### Fixed Income
-The 2Y GoC yield stood at 2.80% on Apr 15 — approximately 55 bps above the 2.25% policy rate. The 10Y GoC yield stabilized near 3.47%. The curve has been flattening, with 2Y rates up 35 bps since earlier in 2026, reflecting market pricing of potential BoC rate hikes later in the year. [Source: https://tradingeconomics.com/canada/2-year-note-yield]
+### Global Trade & Supply Chains
+- U.S. IEEPA tariffs jolted global trade into adjustment.
+- WTO warns of risk to 2026 trade volumes.
+- Companies deepening supplier diversification and regional realignment (nearshoring/friendshoring).
+- Supply chains strained by pandemic aftereffects, sanctions, sea blockades, and tariff volatility.
+- Sources: [KPMG](https://kpmg.com/us/en/articles/2026/global-trade-outlook-2026.html), [UNCTAD](https://unctad.org/publication/global-trade-update-april-2026-global-trade-growth-continues-fragility-rises), [ING](https://think.ing.com/articles/global-trade-in-2026-significant-slowdown-amid-large-shifts/)
 
 ---
 
-## 8. Consumer Pulse Raw Material
+## 7. Upcoming Events & Scheduled Releases
 
-### Sentiment Indicators
-- Bloomberg-Nanos Consumer Confidence Index: 46.93 (week ended Apr 3), an 11-month low. Below-50 reading indicates net negative views. The expectations sub-index lost nearly 10 points over four weeks. [Source: https://tradingeconomics.com/canada/consumer-confidence]
-- The decline was linked to the Iran war entering its sixth week, elevated energy prices, and inflation concerns.
-- From the previous edition: consumer confidence at 47.50
+| Date | Event | Relevance |
+|------|-------|-----------|
+| April 28 | Federal Spring Economic Update (Finance Min. Champagne) | Fiscal outlook, deficit forecasts, tariff/conflict impact |
+| April 29 | BoC rate decision + Monetary Policy Report (09:45 ET) | Rate path, inflation assessment, economic projections |
+| April 29 | U.S. Fed rate decision (14:00 ET) | Rate differential, CAD implications |
+| April 29-30 | ECB rate decision | Global monetary policy coordination |
+| May 11 | BoC Market Participants Survey (10:30 ET) | Rate expectations |
+| May 13 | BoC Summary of Deliberations (13:30 ET) | Policy reasoning from April decision |
 
-### Key Themes
-- Energy prices: gasoline price increases linked to Strait of Hormuz disruptions
-- Housing affordability: MLS HPI down 16 consecutive months; CREA downgrading sales forecasts
-- Trade war uncertainty: US tariff restructuring on metals; Canada's 6-month tariff pause on US manufacturing inputs
-- Labour market softness: net recovery of only 14,000 jobs after 84,000 loss in February
-- Wage growth acceleration: 4.7% YoY headline (3.6% composition-adjusted)
-- Inflation trajectory: CPI at 1.8% YoY, within BoC target band, but energy-driven price pressures building
+### Provincial Budgets Already Tabled (Spring 2026)
+- British Columbia: February 17
+- Alberta: February 26
+- New Brunswick: March 18
+- Ontario: March 26 (deficit projected at $13.8B)
+- Prince Edward Island: April 15
 
----
-
-## 9. Upcoming Events (30-Day Window from Apr 13)
-
-| Date | Event | Institution | Impact | Description | Source URL |
-|------|-------|-------------|--------|-------------|-----------|
-| Apr 17, 2026 | Housing starts (March) | CMHC | MEDIUM | March SAAR data — released 235,852 | [CMHC](https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026) |
-| Apr 20, 2026 | CPI (March) | Statistics Canada | HIGH | Headline CPI release; Feb was +1.8% YoY | [StatCan calendar](https://www150.statcan.gc.ca/n1/dai-quo/cal1-eng.htm) |
-| Apr 28, 2026 | Spring Economic Update 2026 | Dept of Finance Canada | HIGH | Fiscal update; deficit and growth projections | [Canada.ca](https://www.canada.ca/en/department-finance/news/2026/04/government-of-canada-to-release-spring-economic-update-on-april-28-2026.html) |
-| Apr 29, 2026 | BoC Rate Decision + MPR | Bank of Canada | HIGH | Rate announcement and Monetary Policy Report; markets pricing 96.5% hold | [BoC](https://www.bankofcanada.ca/2026/04/interest-rate-announcement-and-monetary-policy-report-april-29-2026/) |
-| Apr 29, 2026 | FOMC Rate Decision | US Federal Reserve | HIGH | US rate decision; currently 3.50-3.75% | [Fed](https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm) |
-| Apr 29-30, 2026 | ECB Rate Decision | European Central Bank | MEDIUM | Currently 2.15%; hold expected | [ECB](https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260205~001d26959b.en.html) |
-| Apr 30, 2026 | BoE Rate Decision | Bank of England | MEDIUM | Currently 3.75%; 90% expect hold | [BoE](https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate) |
-| Apr 30, 2026 | Monthly GDP by industry (Jan) | Statistics Canada | HIGH | Monthly real GDP print | [StatCan calendar](https://www150.statcan.gc.ca/n1/dai-quo/cal1-eng.htm) |
-| Early May 2026 | LFS (April) | Statistics Canada | HIGH | April employment data; collection Apr 19-28 | [StatCan](https://www.statcan.gc.ca/en/survey/household/3701) |
-| Mid-May 2026 | Retail trade (February final) | Statistics Canada | MEDIUM | Advance estimate was +0.9% | [StatCan](https://www150.statcan.gc.ca/n1/daily-quotidien/260320/dq260320a-eng.htm) |
-| Mid-May 2026 | International merchandise trade (March) | Statistics Canada | MEDIUM | Feb deficit was $5.7B | [StatCan](https://www150.statcan.gc.ca/n1/daily-quotidien/260402/dq260402a-eng.htm) |
-| Mid-May 2026 | Building permits (March) | Statistics Canada | MEDIUM | Feb was -8.4% to $12.1B | [StatCan](https://www150.statcan.gc.ca/n1/daily-quotidien/260413/dq260413b-eng.htm) |
+### StatCan Release Schedule
+- Releases published daily at 08:30 ET. Full schedule: [StatCan release calendar](https://www150.statcan.gc.ca/n1/dai-quo/cal1-eng.htm)
 
 ---
 
-## 10. Coverage Gaps and Data Priorities
+## 8. Key Cross-References for Pipeline
 
-1. **March CPI (Apr 20 release):** The Feb CPI of +1.8% YoY will be updated; this is high-priority given energy price volatility from Strait of Hormuz disruption. Energy CPI was -14.2% in the previous edition — the March print will capture oil price surge effects.
+### Sector Connections
+- **Oil & Gas:** Hormuz crisis driving WTI volatility ($82-$134 range); TMX at capacity; OPEC+ output down 9.4 mb/d; pipeline permits signed by Trump; Sunrise pipeline expansion recommended by CER.
+- **Mining:** Gold at record ~$4,828/oz; Goldman target $4,900 by Dec 2026; mining equities linked to commodity rally.
+- **Infrastructure:** IAAC streamlining (2-year target); 6 federal-provincial cooperation agreements; Housing Accelerator Fund C$4.4B flowing.
+- **Manufacturing:** Construction (49.5%) and manufacturing (47.4%) report highest hiring difficulty; industrial carbon tax $110/tonne; Build Canada Homes modular/mass timber push.
+- **Residential:** Housing starts declining; Toronto/Vancouver prices -4.5% to -4.7%; zoning reforms underway; CMHC supply gap (~170,000 starts/year deficit).
+- **Transport/Logistics:** TMX at capacity; BC LPG terminal late 2026; Woodfibre LNG 2027; CAPREIT acquiring ERES; industrial REITs resilient.
+- **Defence:** Canada lacks SPR (only G7 without one); Hormuz exposing defence/energy security gaps.
+- **Agriculture:** Fresh vegetable prices +7.8% YoY; food prices 27% above 5 years ago; Canada-China agri-food trade expanding.
 
-2. **Ontario Economic Accounts Q4 2025:** The user's brief identified this as a highest-signal release on Apr 10. The formal OEA release schedule could not be confirmed for that date; the FAO Ontario Economic Monitor (Jul-Dec 2025) is available. Data priority: confirm whether the Ontario Ministry of Finance released the quarterly OEA on or near Apr 10.
-
-3. **WTI price reliability:** The previous edition flagged the WTI Yahoo scrape as unreliable. FRED and Trading Economics show WTI at $84.36 (Apr 17) after the Strait reopening. This should be cross-checked against pipeline indicator data.
-
-4. **Spring Economic Update (Apr 28):** Federal fiscal projections in context of oil price shock, tariff impacts, and slowing GDP growth. Pre-event analysis required.
-
-5. **BoC April 29 MPR:** The Monetary Policy Report will include updated growth and inflation projections incorporating the Iran war/oil shock. The BoC's January projections are now stale.
-
-6. **CAD/USD strengthening:** The loonie moved from ~0.72 (Mar 30) to ~0.7305 (Apr 17). This occurred alongside oil price declines and broad USD weakness. The pipeline data shows 0.7198; update required.
+### Indicator Watch
+- CPI: 2.4% headline, 2.2% ex-gasoline (divergence signals energy-driven inflation, not broad-based)
+- Wages vs. CPI: 4.7% wage growth vs. 2.4% CPI = real wage gains, but consumer confidence at 11-month low
+- Trade deficit widening despite export diversification away from U.S.
+- BoC rate: market pricing shifting from cuts to potential hikes — bond curve flattening
+- Q1 GDP tracking above Q4 contraction but below trend
 
 ---
 
-## 11. Master Source Registry
-
-[1] https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/ — BoC maintains rate at 2.25% — Bank of Canada — Mar 18, 2026
-[2] https://www150.statcan.gc.ca/n1/daily-quotidien/260410/dq260410a-eng.htm — Labour Force Survey, March 2026 — Statistics Canada — Apr 10, 2026
-[3] https://www150.statcan.gc.ca/n1/daily-quotidien/260316/dq260316a-eng.htm — Consumer Price Index, February 2026 — Statistics Canada — Mar 16, 2026
-[4] https://www150.statcan.gc.ca/n1/daily-quotidien/260227/dq260227a-eng.htm — GDP income and expenditure Q4 2025 — Statistics Canada — Feb 27, 2026
-[5] https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026 — Housing starts March 2026 — CMHC — Apr 17, 2026
-[6] https://www150.statcan.gc.ca/n1/daily-quotidien/260402/dq260402a-eng.htm — International merchandise trade Feb 2026 — Statistics Canada — Apr 2, 2026
-[7] https://www150.statcan.gc.ca/n1/daily-quotidien/260413/dq260413b-eng.htm — Building permits February 2026 — Statistics Canada — Apr 13, 2026
-[8] https://www150.statcan.gc.ca/n1/daily-quotidien/260415/dq260415a-eng.htm — Manufacturing sales February 2026 — Statistics Canada — Apr 15, 2026
-[9] https://stats.crea.ca/en-ca/ — CREA MLS Statistics April 2026 — CREA — Apr 15, 2026
-[10] https://www.cbc.ca/news/business/crea-housing-market-downgrade-april-9.7165168 — CREA downgrades forecast — CBC — Apr 2026
-[11] https://fao-on.org/en/report/oem-2025-q4/ — Ontario Economic Monitor Jul-Dec 2025 — FAO Ontario — 2026
-[12] https://www.bankofcanada.ca/2026/04/summary-governing-council-deliberations-fixed-announcement-date-of-march-18-2026/ — BoC Summary of Deliberations — Bank of Canada — Apr 1, 2026
-[13] https://www.bankofcanada.ca/2026/04/interest-rate-announcement-and-monetary-policy-report-april-29-2026/ — BoC Apr 29 announcement schedule — Bank of Canada — 2026
-[14] https://tradingeconomics.com/commodity/crude-oil — WTI crude oil price data — Trading Economics — Apr 2026
-[15] https://tradingeconomics.com/commodity/brent-crude-oil — Brent crude oil price data — Trading Economics — Apr 2026
-[16] https://fortune.com/article/price-of-oil-04-13-2026/ — Oil price Apr 13 — Fortune — Apr 13, 2026
-[17] https://fortune.com/article/current-price-of-gold-04-13-2026/ — Gold price Apr 13 — Fortune — Apr 13, 2026
-[18] https://tradingeconomics.com/commodity/natural-gas — Natural gas price data — Trading Economics — Apr 2026
-[19] https://tradingeconomics.com/commodity/copper — Copper price data — Trading Economics — Apr 2026
-[20] https://tradingeconomics.com/commodity/uranium — Uranium price data — Trading Economics — Apr 2026
-[21] https://tradingeconomics.com/commodity/nickel — Nickel price data — Trading Economics — Apr 2026
-[22] https://fortune.com/article/current-price-of-silver-4-13-2026/ — Silver price Apr 13 — Fortune — Apr 13, 2026
-[23] https://natural-resources.canada.ca/domestic-international-markets/current-lumber-pulp-panel-prices — Lumber prices — NRCan — Apr 2026
-[24] https://tradingeconomics.com/canada/stock-market — TSX Composite data — Trading Economics — Apr 2026
-[25] https://www.cnbc.com/2026/04/14/stock-market-today-live-updates.html — S&P 500 and Nasdaq record closes Apr 14 — CNBC — Apr 14, 2026
-[26] https://www.advisorperspectives.com/dshort/updates/2026/04/10/s-p-500-snapshot-best-week-since-november — S&P 500 best week — Advisor Perspectives — Apr 10, 2026
-[27] https://tradingeconomics.com/canada/currency — CAD/USD exchange rate — Trading Economics — Apr 2026
-[28] https://tradingeconomics.com/canada/2-year-note-yield — Canada 2Y bond yield — Trading Economics — Apr 2026
-[29] https://tradingeconomics.com/canada/government-bond-yield — Canada 10Y bond yield — Trading Economics — Apr 2026
-[30] https://tradingeconomics.com/canada/consumer-confidence — Consumer confidence data — Trading Economics — Apr 2026
-[31] https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm — FOMC statement Mar 2026 — Federal Reserve — Mar 18, 2026
-[32] https://www.cnbc.com/2026/04/16/china-gdp-growth-first-quarter-exports-property-retail-sales-iran-war.html — China Q1 2026 GDP — CNBC — Apr 16, 2026
-[33] https://www.cnbc.com/2026/04/14/china-trade-data-march-exports-imports-march.html — China trade data Mar 2026 — CNBC — Apr 14, 2026
-[34] https://tradingeconomics.com/euro-area/interest-rate — ECB interest rate — Trading Economics — Apr 2026
-[35] https://www.cnbc.com/2026/04/16/ecb-interest-rates-hike-inflation-iran-washington.html — ECB rate guidance — CNBC — Apr 16, 2026
-[36] https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate — BoE interest rate — Bank of England — Apr 2026
-[37] https://www.iea.org/reports/oil-market-report-april-2026 — IEA Oil Market Report Apr 2026 — IEA — Apr 2026
-[38] https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis — Strait of Hormuz crisis timeline — Wikipedia — Apr 2026
-[39] https://en.wikipedia.org/wiki/Economic_impact_of_the_2026_Iran_war — Economic impact of Iran war — Wikipedia — Apr 2026
-[40] https://www.cnbc.com/2026/04/17/oil-prices-wti-brent-israel-lebanon-ceasefire-trump.html — Oil prices drop on Hormuz reopening — CNBC — Apr 17, 2026
-[41] https://boereport.com/2026/04/13/discount-on-western-canada-select-widens-45/ — WCS differential widens — BOE Report — Apr 13, 2026
-[42] https://en.wikipedia.org/wiki/Timeline_of_the_2025%E2%80%932026_United_States_trade_war_with_Canada — US-Canada trade war timeline — Wikipedia — Apr 2026
-[43] https://www.canada.ca/en/department-finance/news/2026/04/government-of-canada-to-release-spring-economic-update-on-april-28-2026.html — Spring Economic Update Apr 28 — Dept of Finance — Apr 2026
-[44] https://www.imf.org/en/publications/weo/issues/2026/04/14/world-economic-outlook-april-2026 — IMF WEO April 2026 — IMF — Apr 14, 2026
-[45] https://refdesk.ca/blog/canada-march-2026-jobs-report-unemployment-holds-steady — March jobs report analysis — Refdesk.ca — Apr 2026
-[46] https://www.roberthalf.com/ca/en/insights/research/march-labour-force-survey — March LFS analysis — Robert Half — Apr 2026
-[47] https://www.hiringlab.org/en-ca/2026/04/10/march-2026-labour-force-survey-holding-steady/ — March LFS analysis — Indeed Hiring Lab — Apr 10, 2026
-[48] https://www.producer.com/am-market-reports/am-market-report-april-7-2026/ — Canola/grain prices — Western Producer — Apr 7, 2026
-[49] https://www.nbc.ca/content/dam/bnc/taux-analyses/analyse-eco/mensuel/monthly-fixed-income-monitor.pdf — Monthly Fixed Income Monitor Apr 2026 — NBC Financial — Apr 2026
-[50] https://www.bnnbloomberg.ca/business/2026/04/15/manufacturing-sales-up-in-february-as-auto-production-ramped-up-after-shutdowns/ — Manufacturing sales Feb 2026 — BNN Bloomberg — Apr 15, 2026
-[51] https://www.bnnbloomberg.ca/business/real-estate/2026/04/16/crea-lowers-home-sales-forecast-for-2026-amid-shaky-economic-start-to-year/ — CREA lowers forecast — BNN Bloomberg — Apr 16, 2026
-[52] https://hoa.org.uk/news/interest-rate-predictions-2/ — BoE rate predictions — HomeOwners Alliance — Apr 2026
+*Research compiled from 40 web searches across 8 thematic waves. All figures sourced from official releases (Statistics Canada, Bank of Canada, CMHC) and major financial data providers. No editorial judgment applied.*

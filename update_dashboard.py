@@ -57,13 +57,22 @@ load_dotenv()
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
 TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY", "").strip()
 
-if not ANTHROPIC_API_KEY:
-    raise ValueError("ANTHROPIC_API_KEY not set in .env")
+# Anthropic API key is only required when any agent runs in 'api' mode.
+# Default mode is 'claude_code' (subscription via `claude -p` CLI), which costs $0.
+_api_mode_active = any(
+    os.environ.get(var, "").strip().lower() == "api"
+    for var in ("REASONING_AGENT_MODE", "WRITING_AGENT_MODE", "PROVINCE_AGENT_MODE")
+)
+if _api_mode_active and not ANTHROPIC_API_KEY:
+    raise ValueError(
+        "ANTHROPIC_API_KEY required when REASONING/WRITING/PROVINCE_AGENT_MODE=api. "
+        "Either set the key or switch the mode to 'claude_code' (default)."
+    )
 if not TAVILY_API_KEY:
     print("[WARN] TAVILY_API_KEY not set — article extraction will be skipped")
 
-# API clients
-anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+# API clients — only instantiate Anthropic client if a key is present.
+anthropic_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
 
 tavily_client = None
 try:
