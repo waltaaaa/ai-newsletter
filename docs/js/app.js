@@ -388,6 +388,8 @@ async function renderTLDR(){
 
   // Key Indicators table
   const kiHtml=_tldrBuildIndicatorTable();
+  // Markets table
+  const mkHtml=_tldrBuildMarketsTable();
   // Briefing narrative
   const briefingHtml=_tldrBuildBriefing();
   // Policy section
@@ -409,8 +411,13 @@ async function renderTLDR(){
       <div class="tldr-glance-body">
         <div class="tldr-toggle-row">
           <span class="tldr-glance-label">Canada \u2014 National</span>
+          <div class="tldr-toggle" id="tldrGlanceToggle">
+            <button class="active" data-view="indicators">Key Indicators</button>
+            <button data-view="markets">Markets</button>
+          </div>
         </div>
         <div id="tldrIndicatorsView">${weeklyDataHtml}${kiHtml}</div>
+        <div id="tldrMarketsView" style="display:none">${mkHtml}</div>
       </div>
     </details>
 
@@ -418,6 +425,15 @@ async function renderTLDR(){
     ${policyHtml}
     ${projectsHtml}`;
 
+  // Wire up toggle
+  const tog=$('tldrGlanceToggle');
+  if(tog){tog.querySelectorAll('button').forEach(btn=>{btn.addEventListener('click',()=>{
+    tog.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const v=btn.dataset.view;
+    $('tldrIndicatorsView').style.display=v==='indicators'?'':'none';
+    $('tldrMarketsView').style.display=v==='markets'?'':'none';
+  })})}
   // Render callout charts async
   setTimeout(function(){_tldrRenderCalloutCharts()},100);
 }
@@ -664,7 +680,7 @@ function _tldrBuildBriefing(){
   var c1Text=(stats.total_projects)?'<strong>Cross-reference:</strong> The database tracks '+(stats.total_projects||0).toLocaleString()+' active projects valued at '+(D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B')+' across Canada.'+(stats.new_this_week?' '+stats.new_this_week+' new projects discovered this week.':''):'';
   if(ic.length>=1){
     var ch=ic[0];
-    c1Text=((ch.callout||ch.reasoning)?san(ch.callout||ch.reasoning):c1Text);
+    c1Text=(ch.reasoning?san(ch.reasoning):c1Text);
     callouts.push({text:c1Text,chart:ch});
   }else if(c1Text){
     callouts.push({text:c1Text,chart:null});
@@ -673,7 +689,7 @@ function _tldrBuildBriefing(){
   // Second callout: second insight chart
   if(ic.length>=2){
     var ch2=ic[1];
-    callouts.push({text:(ch2.callout||ch2.reasoning)?san(ch2.callout||ch2.reasoning):'',chart:ch2});
+    callouts.push({text:ch2.reasoning?san(ch2.reasoning):'',chart:ch2});
   }
 
   // Intersperse callouts between paragraphs
@@ -712,17 +728,26 @@ function _tldrBuildBriefing(){
   </div>`;
 }
 
-/* Build a callout box with optional inline SVG chart.
-   When a chart is present, the TL;DR callout reuses _calloutChrome so the layout is:
-   red rule → kicker → title → subtitle → co.text → chart body → source line.
-   When there is no chart (text-only callout), preserve the legacy .tldr-callout box. */
+/* Build a callout box with optional inline SVG chart */
 function _tldrCalloutHtml(co,idx){
-  if(co.chart){
-    var _srcHint='Source: The Lagging Indicator';
-    return '<div class="tldr-callout-chart-host" id="tldrCalloutChart_'+idx+'" data-callout-idx="'+idx+'" data-callout-text="'+encodeURIComponent(co.text||'')+'"><div id="tldrCalloutSvg_'+idx+'"><div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div></div>';
-  }
   var h='<div class="tldr-callout">';
   if(co.text)h+=co.text;
+  if(co.chart){
+    var ch=co.chart;
+    var keys=ch.dataKeys||[];
+    h+='<div class="tldr-callout-chart" id="tldrCalloutChart_'+idx+'">';
+    h+='<div class="tldr-callout-chart-title">'+(ch.title||'')+(ch.subtitle?' \u00B7 '+ch.subtitle:'')+'</div>';
+    // Legend
+    var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
+    if(keys.length>1){
+      h+='<div class="tldr-chart-legend">';
+      keys.forEach(function(k,i){h+='<span class="tldr-chart-legend-item"><span class="tldr-chart-legend-dot" style="background:'+colors[i%colors.length]+'"></span>'+k+'</span>'});
+      h+='</div>';
+    }
+    // Chart placeholder — filled async after render
+    h+='<div class="tldr-callout-svg" id="tldrCalloutSvg_'+idx+'"><div style="height:120px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div>';
+    h+='</div>';
+  }
   h+='</div>';
   return h;
 }
@@ -733,9 +758,8 @@ async function _tldrRenderCalloutCharts(){
   var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
   for(var idx=0;idx<ic.length&&idx<2;idx++){
     var ch=ic[idx];var keys=ch.dataKeys||[];
-    var host=document.getElementById('tldrCalloutChart_'+idx);
     var el=document.getElementById('tldrCalloutSvg_'+idx);
-    if(!host||!el||!keys.length)continue;
+    if(!el||!keys.length)continue;
     // Load all timeseries for this chart
     var allSeries=[];
     for(var ki=0;ki<keys.length;ki++){
@@ -744,264 +768,62 @@ async function _tldrRenderCalloutCharts(){
       var raw=ts&&(ts.series||ts);
       if(Array.isArray(raw)&&raw.length)allSeries.push({key:keys[ki],data:raw,color:colors[ki%colors.length]});
     }
-    if(!allSeries.length){el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
+    if(!allSeries.length){el.innerHTML='<div style="height:120px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
     // Filter to last 12 months
     var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
     allSeries.forEach(function(s){s.data=s.data.filter(function(p){return new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)})});
-    // Derive source attribution from data keys if the chart spec does not carry one
-    var src=ch.source;
-    if(!src){
-      var ks=keys.map(function(k){return String(k).toLowerCase()}).join(',');
-      if(/\bwti\b|\bbrent\b|\bwcs\b/.test(ks))src='Source: EIA, ICE \u00b7 daily spot close';
-      else if(/\bgold\b|\bsilver\b|\bcopper\b|\bnickel\b|\bzinc\b|\blithium\b/.test(ks))src='Source: LBMA, LME';
-      else if(/\bnatural_gas\b|\bpropane\b|\blng\b/.test(ks))src='Source: EIA, NYMEX';
-      else if(/\bwheat\b|\bcanola\b|\bsoybean\b|\bcorn\b|\bpotash\b/.test(ks))src='Source: CBOT, ICE Futures';
-      else if(/\bboc_rate\b|\bgoc_\w+_yield\b/.test(ks))src='Source: Bank of Canada';
-      else if(/\bcpi\b|\bgdp\b|\bunemploy|\bhousing_starts\b|\bemployment\b|\bparticipation\b/.test(ks))src='Source: Statistics Canada';
-      else src='Source: The Lagging Indicator';
-    }
-    // Build plot-area-only SVG; chrome (red rule, title, subtitle, source) lives in _calloutChrome.
-    var svg=_svgCalloutChart(allSeries,ch.annotations||[],ch.title||'',ch.subtitle||'',ch.chartType||'line',src,{kicker:ch.eyebrow||'',headerMode:'external'});
-    var coText=host.getAttribute('data-callout-text');
-    try{coText=coText?decodeURIComponent(coText):''}catch(e){coText=''}
-    var innerHtml=(coText?'<div style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+coText+'</div>':'')+svg;
-    host.innerHTML=_calloutChrome({kicker:ch.eyebrow||'',title:ch.title||'',subtitle:ch.subtitle||'',source:src,innerHtml:innerHtml});
+    // Build multi-line SVG
+    el.innerHTML=_svgCalloutChart(allSeries,ch.annotations||[]);
   }
 }
 
-function _svgCalloutChart(seriesArr,annotations,title,subtitle,chartType,source,opts){
-  // Economist-style chart with Prussian blue theme.
-  // Types: 'line' (area under curve), 'multi_line' (rebased to 100), 'bar', 'diverging_bar' (auto MoM for level series).
-  if(!seriesArr||!seriesArr.length)return '';
-  chartType=chartType||'line';
-  var isBar=(chartType==='bar'||chartType==='diverging_bar');
-  var isMulti=(chartType==='multi_line');
-  var isDiv=(chartType==='diverging_bar');
-
-  var _extHdrDim=(opts&&opts.headerMode==='external');
-  var W=1100,H=_extHdrDim?240:360,PAD_X=0,PAD_TOP=14,PAD_BOT=_extHdrDim?8:32;
-  var pL=PAD_X,pR=48,pT=_extHdrDim?12:96,pB=_extHdrDim?32:82;
-  var pW=W-pL-pR,pH=H-pT-pB;
-  var BRAND='#003153',INK='#0f172a',MUTED='#4a5568',FAINT='#94a3b8',EVENT='#E3120B',GRID='#d9d4c7',POS='#0d7a3f',NEG='#c4320a';
-  var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-  function fmtVal(v){return _svgFmtVal(v).replace(/\.00$/,'')}
-  function fmtDate(iso){var d=new Date(iso);return MONTHS[d.getUTCMonth()]+' '+d.getUTCDate()+' '+d.getUTCFullYear()}
-
-  // Clone input (avoid mutating caller).
-  var prepared=seriesArr.map(function(s){return{key:s.key,data:s.data.slice(),color:s.color}});
-
-  // diverging_bar: if a series looks like a level (same sign, tight range), convert to MoM deltas so the "change" story is visible.
-  if(isDiv){
-    prepared.forEach(function(s){
-      var vals=s.data.map(function(p){return p.value}).filter(function(v){return v!=null});
-      if(vals.length<3)return;
-      var vmn=Math.min.apply(null,vals),vmx=Math.max.apply(null,vals);
-      var sameSign=(vmn>=0)||(vmx<=0);
-      var mag=Math.max(Math.abs(vmn),Math.abs(vmx));
-      var rangeRatio=mag===0?0:(vmx-vmn)/mag;
-      if(sameSign&&rangeRatio<0.6){
-        var deltas=[];
-        for(var i=1;i<s.data.length;i++){
-          if(s.data[i].value==null||s.data[i-1].value==null)continue;
-          deltas.push({date:s.data[i].date,value:s.data[i].value-s.data[i-1].value});
-        }
-        s.data=deltas;
-      }
-    });
-  }
-
-  // multi_line: rebase each series to 100 at first non-null point
-  if(isMulti){
-    prepared.forEach(function(s){
-      var base=null;
-      for(var i=0;i<s.data.length;i++){if(s.data[i].value!=null&&s.data[i].value!==0){base=s.data[i].value;break}}
-      if(base==null||base===0)return;
-      s.data=s.data.map(function(p){return{date:p.date,value:p.value==null?null:(p.value/base)*100}});
-    });
-  }
-
-  // Align all series to shortest common length
-  var n=Math.min.apply(null,prepared.map(function(s){return s.data.length}));
-  if(!n||n<2)return '';
-  var slices=prepared.map(function(s){return s.data.slice(-n)});
-  var primary=slices[0];
-
-  // y-range
-  var allVals=[];
-  slices.forEach(function(sl){sl.forEach(function(p){if(p.value!=null)allVals.push(p.value)})});
+function _svgCalloutChart(seriesArr,annotations){
+  var W=700,H=120,pL=45,pR=10,pT=10,pB=18;
+  // Compute global min/max across all series
+  var allVals=[];seriesArr.forEach(function(s){s.data.forEach(function(p){allVals.push(p.value)})});
   if(!allVals.length)return '';
-  var mn=Math.min.apply(null,allVals),mx=Math.max.apply(null,allVals);
-  if(isDiv){var absMx=Math.max(Math.abs(mn),Math.abs(mx))||1;mn=-absMx;mx=absMx}
-  var rng=mx-mn;if(rng===0)rng=Math.abs(mn)*0.1||1;
-  if(isBar){mx+=rng*0.14;rng=mx-mn;if(!isDiv){mn-=rng*0.04;rng=mx-mn}}
-  else{
-    // Add ~one gridline-step of headroom below the data minimum so the lines don't hug the floor.
-    var dataMin=mn;
-    if(dataMin>0){mn=Math.max(0,dataMin-rng*0.25)}
-    else if(dataMin<0){mn-=rng*0.25}
-    mx+=rng*0.14;rng=mx-mn;
-  }
+  var mn=Math.min.apply(null,allVals),mx=Math.max.apply(null,allVals),rng=mx-mn;
+  if(rng===0)rng=Math.abs(mn)*0.1||1;
+  mn-=rng*0.08;mx+=rng*0.08;rng=mx-mn;
+  var pW=W-pL-pR,pH=H-pT-pB;
+  function xPos(date,dates){var i=dates.indexOf(date);return pL+(i/(dates.length-1))*pW}
+  function yPos(v){return pT+(1-(v-mn)/rng)*pH}
 
-  function xp(i,L){return pL+(i/Math.max(L-1,1))*pW}
-  function yp(v){return pT+(1-(v-mn)/rng)*pH}
-  var base_y=pT+pH;
-  var zero_y=isDiv?yp(0):base_y;
-
-  // Smooth path (Catmull-Rom → Cubic Bezier, tension 0.5)
-  function smoothPath(pts){
-    if(pts.length<2)return '';
-    if(pts.length===2)return 'M'+pts[0][0].toFixed(1)+','+pts[0][1].toFixed(1)+' L'+pts[1][0].toFixed(1)+','+pts[1][1].toFixed(1);
-    var d='M'+pts[0][0].toFixed(1)+','+pts[0][1].toFixed(1);
-    for(var i=0;i<pts.length-1;i++){
-      var p0=i>0?pts[i-1]:pts[i];
-      var p1=pts[i],p2=pts[i+1];
-      var p3=i+2<pts.length?pts[i+2]:pts[i+1];
-      var cp1x=p1[0]+(p2[0]-p0[0])/6,cp1y=p1[1]+(p2[1]-p0[1])/6;
-      var cp2x=p2[0]-(p3[0]-p1[0])/6,cp2y=p2[1]-(p3[1]-p1[1])/6;
-      d+=' C'+cp1x.toFixed(1)+','+cp1y.toFixed(1)+' '+cp2x.toFixed(1)+','+cp2y.toFixed(1)+' '+p2[0].toFixed(1)+','+p2[1].toFixed(1);
-    }
-    return d;
-  }
-  function areaPath(pts,baselineY){
-    if(pts.length<2)return '';
-    return smoothPath(pts)+' L'+pts[pts.length-1][0].toFixed(1)+','+baselineY.toFixed(1)+' L'+pts[0][0].toFixed(1)+','+baselineY.toFixed(1)+' Z';
-  }
-
-  // Screen points per series (null values map to baseline y — bars skip them separately)
-  var seriesPts=slices.map(function(slice){return slice.map(function(p,i){return[xp(i,slice.length),yp(p.value==null?mn:p.value)]})});
-
-  // First annotation → flag above plot, dashed drop-line to data point (line/multi_line only)
-  var event_x=null,event_y=null,evLabel='',evDate=null;
-  if(!isBar&&annotations&&annotations.length&&annotations[0].date){
-    var tEv=new Date(annotations[0].date).getTime();
-    var bestI=0,bestD=Infinity;
-    for(var ii=0;ii<primary.length;ii++){
-      var dd=Math.abs(new Date(primary[ii].date).getTime()-tEv);
-      if(dd<bestD){bestD=dd;bestI=ii}
-    }
-    event_x=xp(bestI,primary.length);
-    event_y=seriesPts[0][bestI][1];
-    evLabel=annotations[0].label||'';
-    evDate=annotations[0].date;
-  }
-
-  // ---- SVG start ----
-  var svg='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:\'Inter\',-apple-system,sans-serif;overflow:visible" role="img" aria-label="'+esc(title||'Chart')+'">';
-
-  // Defs — arrow marker + per-series area gradients (line mode only)
-  svg+='<defs>';
-  svg+='<marker id="le_arrow_event_'+(++_svgUid)+'" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="'+EVENT+'"/></marker>';
-  if(!isBar){
-    var gradPrimaryId='area_primary_'+_svgUid;
-    var gradSecondaryId='area_secondary_'+_svgUid;
-    var primaryColor=prepared[0].color||BRAND;
-    svg+='<linearGradient id="'+gradPrimaryId+'" x1="0" y1="0" x2="0" y2="1">';
-    svg+='<stop offset="0%" stop-color="'+primaryColor+'" stop-opacity="0.22"/>';
-    svg+='<stop offset="100%" stop-color="'+primaryColor+'" stop-opacity="0"/>';
-    svg+='</linearGradient>';
-    if(prepared.length>=2){
-      var secondaryColor=prepared[1].color||BRAND;
-      svg+='<linearGradient id="'+gradSecondaryId+'" x1="0" y1="0" x2="0" y2="1">';
-      svg+='<stop offset="0%" stop-color="'+secondaryColor+'" stop-opacity="0.16"/>';
-      svg+='<stop offset="100%" stop-color="'+secondaryColor+'" stop-opacity="0"/>';
-      svg+='</linearGradient>';
-    }
-  }
-  svg+='</defs>';
-
-  // Signal49 / Economist-style: red rule + optional uppercase kicker + Inter bold title + Inter italic deck
-  // Skipped when opts.headerMode==='external' so a wrapping chrome can own the header.
-  var _extHdr=(opts&&opts.headerMode==='external');
-  if(!_extHdr){
-    svg+='<rect x="'+PAD_X+'" y="'+PAD_TOP+'" width="48" height="4" fill="#E3120B"/>';
-    var _ck=(opts&&opts.kicker)||'';
-    var _ttlY=PAD_TOP+34;
-    if(_ck){
-      svg+='<text x="'+PAD_X+'" y="'+(PAD_TOP+22)+'" font-size="10" font-weight="700" fill="'+INK+'" letter-spacing="1.4">'+esc(_ck.toUpperCase())+'</text>';
-      _ttlY=PAD_TOP+46;
-    }
-    svg+='<text x="'+PAD_X+'" y="'+_ttlY+'" font-size="22" font-weight="700" fill="'+INK+'" letter-spacing="-0.3" font-family="Inter,sans-serif">'+esc(title||'')+'</text>';
-    if(subtitle)svg+='<text x="'+PAD_X+'" y="'+(_ttlY+22)+'" font-size="13" font-weight="500" font-style="italic" fill="'+MUTED+'" font-family="Inter,sans-serif">'+esc(subtitle)+'</text>';
-  }
-
-  // Horizontal gridlines + right-side y-axis labels
-  for(var g=0;g<=4;g++){
-    var gy=pT+(g/4)*pH;
-    var gv=mx-(g/4)*rng;
-    svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="'+GRID+'" stroke-width="1"/>';
-    svg+='<text x="'+(W-pR+8)+'" y="'+(gy+4)+'" text-anchor="start" font-size="11" font-weight="400" fill="'+MUTED+'" style="font-variant-numeric:tabular-nums">'+fmtVal(gv)+'</text>';
-  }
-
-  // Bold chart floor
-  svg+='<line x1="'+pL+'" y1="'+base_y+'" x2="'+(W-pR)+'" y2="'+base_y+'" stroke="'+INK+'" stroke-width="1.2"/>';
-
-  // Zero line for diverging_bar (overlays gridlines)
-  if(isDiv&&zero_y>pT&&zero_y<base_y){
-    svg+='<line x1="'+pL+'" y1="'+zero_y.toFixed(1)+'" x2="'+(W-pR)+'" y2="'+zero_y.toFixed(1)+'" stroke="'+INK+'" stroke-width="1.4"/>';
-  }
-
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;">';
+  // Grid
+  for(var g=0;g<4;g++){var gy=pT+(g/3)*pH;var gv=mx-(g/3)*rng;svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="#e4e2dd" stroke-width="0.5"/>';svg+='<text x="'+(pL-4)+'" y="'+(gy+3)+'" text-anchor="end" fill="#aaa" font-size="7" font-family="DM Sans">'+_svgFmtVal(gv)+'</text>';}
   // X-axis labels
-  var NT=6;if(primary.length<NT)NT=Math.max(2,primary.length);
-  for(var xi=0;xi<NT;xi++){
-    var di=Math.round((xi/(NT-1))*(primary.length-1));
-    var dx=xp(di,primary.length);
-    var dObj=new Date(primary[di].date);
-    var lbl=MONTHS[dObj.getUTCMonth()];
-    if(xi===0||dObj.getUTCMonth()===0)lbl=MONTHS[dObj.getUTCMonth()]+'\u2009'+dObj.getUTCFullYear();
-    var xAnc=xi===0?'start':(xi===NT-1?'end':'middle');
-    svg+='<text x="'+dx+'" y="'+(base_y+22)+'" text-anchor="'+xAnc+'" font-size="11" font-weight="400" fill="'+MUTED+'">'+lbl+'</text>';
-  }
+  var refDates=seriesArr[0].data;
+  var xLabels=Math.min(4,refDates.length);
+  for(var xi=0;xi<xLabels;xi++){var di=Math.round(xi/(xLabels-1)*(refDates.length-1));var dx=pL+(di/(refDates.length-1))*pW;svg+='<text x="'+dx+'" y="'+(H-3)+'" text-anchor="middle" fill="#aaa" font-size="7" font-family="DM Sans">'+_svgFmtDate(refDates[di].date)+'</text>';}
 
-  // Annotation flag (line mode only) — flag text sits above plot, dashed line drops from flag to data point
-  if(event_x!==null){
-    var flagY=pT-8;
-    var flagAnchor='middle',flagX=event_x;
-    if(event_x<pL+pW*0.22){flagAnchor='start';flagX=event_x+4}
-    else if(event_x>pL+pW*0.78){flagAnchor='end';flagX=event_x-4}
-    svg+='<text x="'+flagX+'" y="'+flagY+'" text-anchor="'+flagAnchor+'" font-size="11" font-weight="600" fill="'+EVENT+'">'+esc(evLabel)+' \u00b7 '+fmtDate(evDate)+'</text>';
-    svg+='<line x1="'+event_x+'" y1="'+(pT-3)+'" x2="'+event_x+'" y2="'+event_y.toFixed(1)+'" stroke="'+EVENT+'" stroke-width="1" stroke-dasharray="2,3" opacity="0.85"/>';
-    svg+='<circle cx="'+event_x+'" cy="'+event_y.toFixed(1)+'" r="3" fill="'+EVENT+'"/>';
-  }
-
-  // ---- Data rendering ----
-  if(isBar){
-    var sp=seriesPts[0],slice=slices[0];
-    var barColor=prepared[0].color||BRAND;
-    var barW=sp.length>1?Math.max(2,(sp[1][0]-sp[0][0])*0.7):20;
-    for(var bi=0;bi<sp.length;bi++){
-      var v=slice[bi].value;if(v==null)continue;
-      var y0=isDiv?zero_y:base_y;
-      var y1=sp[bi][1];
-      var top=Math.min(y0,y1),h=Math.abs(y1-y0);
-      var fill=isDiv?(v>=0?POS:NEG):barColor;
-      svg+='<rect x="'+(sp[bi][0]-barW/2).toFixed(1)+'" y="'+top.toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+Math.max(h,0.5).toFixed(1)+'" fill="'+fill+'" rx="1"/>';
+  // Draw each series
+  seriesArr.forEach(function(s){
+    if(!s.data.length)return;
+    var pts=s.data.map(function(p,i){return{x:pL+(i/(s.data.length-1))*pW,y:yPos(p.value)}});
+    var poly=pts.map(function(p){return p.x+','+p.y}).join(' ');
+    // Area fill for first series only
+    if(s===seriesArr[0]){
+      var fid='tldrCF_'+(++_svgUid);
+      svg+='<defs><linearGradient id="'+fid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+s.color+'" stop-opacity="0.08"/><stop offset="100%" stop-color="'+s.color+'" stop-opacity="0"/></linearGradient></defs>';
+      var lp=pts[pts.length-1],fp=pts[0],bot=pT+pH;
+      svg+='<polygon fill="url(#'+fid+')" points="'+poly+' '+lp.x+','+bot+' '+fp.x+','+bot+'"/>';
     }
-  }else{
-    // Filled area under each series — secondary first (back), primary on top
-    if(seriesPts.length>=2){svg+='<path d="'+areaPath(seriesPts[1],base_y)+'" fill="url(#area_secondary_'+_svgUid+')"/>'}
-    svg+='<path d="'+areaPath(seriesPts[0],base_y)+'" fill="url(#area_primary_'+_svgUid+')"/>';
-    var drawOrder=seriesPts.length>1?[1,0]:[0];
-    drawOrder.forEach(function(sIdx){
-      var pts=seriesPts[sIdx];
-      var color=prepared[sIdx].color||BRAND;
-      var sw=sIdx===0?3:2.4;
-      svg+='<path d="'+smoothPath(pts)+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linejoin="round" stroke-linecap="round"/>';
-    });
-    seriesPts.forEach(function(pts,sIdx){
-      var last=pts[pts.length-1];
-      var color=prepared[sIdx].color||BRAND;
-      var r=sIdx===0?4.5:4;
-      svg+='<circle cx="'+last[0]+'" cy="'+last[1]+'" r="'+r+'" fill="'+color+'"/>';
-    });
-  }
+    svg+='<polyline fill="none" stroke="'+s.color+'" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" points="'+poly+'"/>';
+    var last=pts[pts.length-1];
+    svg+='<circle cx="'+last.x+'" cy="'+last.y+'" r="2.5" fill="'+s.color+'"/>';
+  });
 
-  // Source line (italicized, Economist-style) — skipped when external chrome owns it.
-  if(!_extHdr){
-    var srcText=source||'Source: The Lagging Indicator';
-    svg+='<text x="'+PAD_X+'" y="'+(H-PAD_BOT-2)+'" font-size="10" font-weight="500" font-style="italic" fill="'+MUTED+'">'+esc(srcText)+'</text>';
-  }
+  // Annotations (vertical markers)
+  annotations.forEach(function(a){
+    if(!a.date)return;
+    // Find x position from first series dates
+    var rd=seriesArr[0].data;
+    var closest=0,minDiff=Infinity;
+    rd.forEach(function(p,i){var diff=Math.abs(new Date(p.date)-new Date(a.date));if(diff<minDiff){minDiff=diff;closest=i}});
+    var ax=pL+(closest/(rd.length-1))*pW;
+    svg+='<line x1="'+ax+'" y1="'+pT+'" x2="'+ax+'" y2="'+(pT+pH)+'" stroke="#7a8599" stroke-width="0.5" stroke-dasharray="3,2"/>';
+  });
 
   svg+='</svg>';return svg;
 }
@@ -1581,7 +1403,7 @@ const COUNTRY_SUBTABS=[
 const GLOBAL_SRC_MAP={us:'BEA \u00b7 BLS \u00b7 Federal Reserve',china:'NBS \u00b7 PBOC \u00b7 GAC',eu:'Eurostat \u00b7 ECB \u00b7 S&P Global',uk:'ONS \u00b7 BoE \u00b7 LSE'};
 const GLOBAL_CHART_CFG={
   us:{tsKeys:['idx_sp500','sp500'],title:'S&P 500 \u2014 12-Month Performance',subtitle:'Monthly close',source:'S&P Dow Jones Indices',color:'#1e40af',fillColor:'rgba(30,64,175,0.12)',refLine:null,valueSuffix:''},
-  china:{tsKeys:['usdcny','usd_cny'],title:'USD/CNY Exchange Rate \u2014 12-Month Trend',subtitle:'Daily close \u00b7 Yuan per USD',source:'People\u2019s Bank of China',color:'#b91c1c',fillColor:'rgba(185,28,28,0.10)',refLine:null,valueSuffix:''},
+  china:{tsKeys:['china_pmi'],title:'Manufacturing PMI \u2014 12-Month Trend',subtitle:'Official NBS PMI \u00b7 50 = expansion threshold',source:'National Bureau of Statistics',color:'#b91c1c',fillColor:'rgba(185,28,28,0.10)',refLine:{value:50,label:'Expansion threshold',color:'#7a8599'},valueSuffix:''},
   eu:{tsKeys:['eurusd'],title:'EUR/USD Exchange Rate \u2014 12-Month Trend',subtitle:'Daily close \u00b7 ECB reference rate',source:'ECB',color:'#1e40af',fillColor:'rgba(30,64,175,0.12)',refLine:null,valueSuffix:''},
   uk:{tsKeys:['idx_ftse','ftse100'],title:'FTSE 100 \u2014 12-Month Performance',subtitle:'Daily close \u00b7 London Stock Exchange',source:'LSE',color:'#065f46',fillColor:'rgba(6,95,70,0.12)',refLine:null,valueSuffix:''}
 };
@@ -1742,27 +1564,6 @@ function _buildProvCalloutText(chartSpec,provData,chartIdx){
   return enriched||reasoning||(chartSpec.title||'');
 }
 
-// Shared TL;DR-style callout chrome — red rule, uppercase kicker, Inter bold title,
-// italic subtitle, italic source line. Wraps arbitrary innerHtml (chart + KPI tiles,
-// context panel, etc.). Kept visually identical to _svgCalloutChart (docs/js/app.js:765).
-function _calloutChrome(o){
-  o=o||{};
-  var k=o.kicker||'';
-  var t=o.title||'';
-  var s=o.subtitle||'';
-  var src=o.source||'Source: The Lagging Indicator';
-  var inner=o.innerHtml||'';
-  var h='<div class="tldr-callout-wrap" style="margin:24px 0;background:#FBF6EE;border:1px solid #e8dfcc;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04);font-family:Inter,sans-serif">';
-  h+='<div style="width:48px;height:4px;background:#E3120B;margin-bottom:14px"></div>';
-  if(k)h+='<div style="font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:#0f172a;margin-bottom:10px">'+san(String(k))+'</div>';
-  if(t)h+='<div style="font-size:22px;font-weight:700;letter-spacing:-0.3px;color:#0f172a;line-height:1.2;margin-bottom:6px;font-family:Inter,sans-serif">'+san(String(t))+'</div>';
-  if(s)h+='<div style="font-size:13px;font-weight:500;font-style:italic;color:#4a5568;line-height:1.4;margin-bottom:18px;font-family:Inter,sans-serif">'+san(String(s))+'</div>';
-  h+=inner;
-  h+='<div style="font-size:10px;font-weight:500;font-style:italic;color:#4a5568;margin-top:14px;font-family:Inter,sans-serif">'+String(src)+'</div>';
-  h+='</div>';
-  return h;
-}
-
 function buildAgentInsightStrip(prefix,chartSpec,provData){
   if(!chartSpec||!chartSpec.dataKeys||!chartSpec.dataKeys.length)return '';
   const id=prefix+'AgentInsight';
@@ -1770,35 +1571,45 @@ function buildAgentInsightStrip(prefix,chartSpec,provData){
   const subtitle=chartSpec.subtitle||'Agent-selected visualization';
   const kpis=Array.isArray(chartSpec.kpis)?chartSpec.kpis:[];
   // Option C editorial layout — triggered by presence of non-empty kpis array.
-  // Renders KPI tile row, Prussian blue chart, integrated context panel. Wrapped in
-  // _calloutChrome so header/footer match the TL;DR callout visually.
+  // Renders eyebrow label, KPI tile row, Prussian blue chart, integrated context panel.
   if(kpis.length){
     const eyebrow=chartSpec.eyebrow||'';
-    const context=chartSpec.callout||chartSpec.context||'';
-    let inner='';
-    if(context){
-      var safeCtx=String(context).replace(/<(?!\/?strong\b)[^>]+>/gi,'');
-      inner+='<div style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+safeCtx+'</div>';
-    }
-    inner+='<div style="display:flex;gap:28px;margin-bottom:20px;padding:16px 0;border-top:1px solid #e8dfcc;border-bottom:1px solid #e8dfcc;flex-wrap:wrap;justify-content:flex-start">';
+    const context=chartSpec.context||'';
+    let oc='<div class="optc-card" style="margin:24px 0;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">';
+    if(eyebrow){oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#003153;margin-bottom:8px;border-bottom:2px solid #003153;display:inline-block;padding-bottom:2px">'+san(eyebrow)+'</div>';}
+    oc+='<div style="font-family:DM Sans,sans-serif;font-size:20px;font-weight:700;color:#1a2744;line-height:1.3;margin-bottom:4px">'+san(title)+'</div>';
+    oc+='<div style="font-family:DM Sans,sans-serif;font-size:13px;color:#64748B;margin-bottom:18px">'+san(subtitle)+'</div>';
+    oc+='<div style="display:flex;gap:32px;margin-bottom:20px;padding:16px 0;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;flex-wrap:wrap">';
     kpis.slice(0,3).forEach(function(k){
       var tr=(k.trend||'').toLowerCase();
       var trendColor=tr==='up'?'#0d7a3f':tr==='down'?'#c4320a':'#64748B';
-      inner+='<div style="flex:0 0 auto;min-width:auto">';
-      inner+='<div style="font-family:Inter,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#64748B;margin-bottom:6px">'+san(k.label||'')+'</div>';
-      inner+='<div style="font-family:Inter,sans-serif;font-size:26px;font-weight:700;color:#0f172a;line-height:1.1">'+san(k.value||'')+'</div>';
-      if(k.delta){inner+='<div style="font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:'+trendColor+';margin-top:4px">'+san(k.delta)+'</div>';}
-      inner+='</div>';
+      oc+='<div style="flex:1;min-width:120px">';
+      oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#64748B;margin-bottom:6px">'+san(k.label||'')+'</div>';
+      oc+='<div style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:700;color:#1a2744;line-height:1.1">'+san(k.value||'')+'</div>';
+      if(k.delta){oc+='<div style="font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;color:'+trendColor+';margin-top:4px">'+san(k.delta)+'</div>';}
+      oc+='</div>';
     });
-    inner+='</div>';
-    inner+='<div style="height:260px;position:relative"><canvas id="'+id+'"></canvas></div>';
-    return _calloutChrome({kicker:eyebrow,title:title,subtitle:subtitle,source:'Source: The Lagging Indicator',innerHtml:inner});
+    oc+='</div>';
+    oc+='<div style="height:260px;position:relative;margin-bottom:16px"><canvas id="'+id+'"></canvas></div>';
+    if(context){
+      var safeCtx=String(context).replace(/<(?!\/?strong\b)[^>]+>/gi,'');
+      oc+='<div style="font-family:DM Sans,sans-serif;font-size:14px;line-height:1.6;color:#2d3a52;padding:14px 16px;background:#f8fafc;border-left:3px solid #003153;border-radius:0 4px 4px 0">'+safeCtx+'</div>';
+    }
+    oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;color:#94A3B8;margin-top:12px;text-align:right">Source: The Lagging Indicator</div>';
+    oc+='</div>';
+    return oc;
   }
-  // Legacy callout layout — calloutText above the chart canvas. Same chrome as TL;DR.
+  // Legacy callout layout (unchanged) — used when chartSpec has no kpis array
   const calloutText=_buildProvCalloutText(chartSpec,provData||{},0);
-  let inner='<div style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+calloutText+'</div>';
-  inner+='<div style="height:280px;position:relative"><canvas id="'+id+'"></canvas></div>';
-  return _calloutChrome({kicker:chartSpec.eyebrow||'',title:title,subtitle:subtitle,source:'Source: The Lagging Indicator',innerHtml:inner});
+  let html='<div class="tldr-callout" style="margin:20px 0">';
+  html+='<div style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+calloutText+'</div>';
+  html+='<div class="tldr-callout-chart">';
+  html+='<div class="tldr-callout-chart-title" id="'+prefix+'AgentInsightTitle">'+title+'</div>';
+  html+='<div id="'+prefix+'AgentInsightSub" style="font-family:DM Sans,sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+subtitle+'</div>';
+  html+='<div style="height:280px;position:relative;padding:12px 16px;background:#fff;border-radius:6px"><canvas id="'+id+'"></canvas></div>';
+  html+='<div class="tldr-callout-source">Source: The Lagging Indicator</div>';
+  html+='</div></div>';
+  return html;
 }
 
 async function renderAgentInsightChart(prefix,chartSpec){
@@ -1909,23 +1720,16 @@ async function renderAgentInsightChart(prefix,chartSpec){
   const hasAnnotation=Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation');
   const annotationCfg=hasAnnotation&&Object.keys(evtAnnotations).length?{annotation:{annotations:{...evtAnnotations}}}:{};
 
-  // Scales — TL;DR callout parity: horizontal-only grid in #d9d4c7, 1.2px #0f172a chart floor,
-  // right-side y labels (unless dual-axis), 11px/400 Inter in #4a5568.
-  const scales={
-    x:{
-      border:{display:true,color:'#0f172a',width:1.2},
-      grid:{display:false},
-      ticks:{maxTicksLimit:isBarType?10:8,font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,maxRotation:isBarType?45:0,minRotation:0}
-    },
-    y:{
-      position:needDualAxis?'left':'right',
-      border:{display:false},
-      grid:{color:'#d9d4c7',lineWidth:1,drawTicks:false},
-      ticks:{font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,callback:v=>fmtNum(v)}
-    }
+  // Scales
+  const scales=isBarType?{
+    x:{border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{maxTicksLimit:10,font:{family:_ic.font,size:9},color:_ic.prussian,maxRotation:45,minRotation:0}},
+    y:{border:{display:true,color:_ic.prussian,width:1},grid:{color:_ic.gridSoft,lineWidth:0.5},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,callback:v=>fmtNum(v)}}
+  }:{
+    x:{border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.prussian,padding:10}},
+    y:{position:'left',border:{display:true,color:_ic.prussian,width:1},grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:v=>fmtNum(v)}}
   };
   if(needDualAxis){
-    scales.y1={position:'right',border:{display:false},grid:{display:false},ticks:{font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,callback:v=>fmtNum(v)}};
+    scales.y1={position:'right',border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:v=>fmtNum(v)}};
   }
 
   // Endpoint label plugin (line charts only)
@@ -1938,12 +1742,12 @@ async function renderAgentInsightChart(prefix,chartSpec){
     });
   }};
 
-  // Legend — TL;DR callout parity: top-start, Inter 11/500 #0f172a. Hidden when single series.
+  // Legend
   const legendCfg=needDualAxis?{
     display:true,position:'top',align:'start',
-    labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:'Inter',size:11,weight:'500'},color:'#0f172a',usePointStyle:false,
+    labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:_ic.font,size:11,weight:'500'},color:_ic.prussian,usePointStyle:false,
       generateLabels:function(chart){return chart.data.datasets.map(function(ds,i){const axis=i===0?'left axis':'right axis';return{text:ds.label+' ('+axis+')',fillColor:ds.borderColor||ds.backgroundColor,strokeColor:ds.borderColor||ds.backgroundColor,lineWidth:2,hidden:false,datasetIndex:i}})}}
-  }:datasets.length>1?{display:true,position:'top',align:'start',labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:'Inter',size:11,weight:'500'},color:'#0f172a'}}:{display:false};
+  }:isBarType&&datasets.length>1?{display:true,position:'top',labels:{boxWidth:10,padding:8,font:{family:_ic.font,size:10},color:_ic.heading}}:{display:false};
 
   const cType=isBarType?'bar':'line';
   const plugins=[].concat(endpointPlugin?[endpointPlugin]:[]);
@@ -1954,11 +1758,11 @@ async function renderAgentInsightChart(prefix,chartSpec){
     plugins:plugins,
     options:{
       responsive:true,maintainAspectRatio:false,
-      layout:{padding:{top:8,right:48,bottom:8,left:0}},
+      layout:{padding:{top:10,right:needDualAxis?50:20,bottom:6,left:10}},
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:legendCfg,
-        tooltip:{backgroundColor:'rgba(15,23,42,0.95)',titleColor:'#fff',titleFont:{family:'Inter',size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:'Inter',size:11,weight:'400'},padding:12,cornerRadius:4,displayColors:needDualAxis||datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}},
+        tooltip:{backgroundColor:'rgba(0,49,83,0.92)',titleColor:'#fff',titleFont:{family:_ic.font,size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:_ic.font,size:11},padding:12,cornerRadius:4,borderColor:'rgba(0,49,83,0.15)',borderWidth:1,displayColors:needDualAxis||datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}},
         ...annotationCfg
       },
       scales:scales
@@ -1974,7 +1778,7 @@ function buildInsightStrip(prefix,themes,provCode){
   const sub=tsEntries.length?tsEntries.map(s=>s.label).join(', ')+' \u2014 12-month trend':'From this week\u2019s analysis';
   // Build callout structure matching TL;DR pattern: text component on top, chart below
   let html='<div class="tldr-callout" style="margin:20px 0">';
-  html+='<div id="'+prefix+'InsightCalloutText" style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+t.label+'</div>';
+  html+='<div id="'+prefix+'InsightCalloutText" style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+t.label+'</div>';
   html+='<div class="tldr-callout-chart">';
   html+='<div class="tldr-callout-chart-title" id="'+prefix+'InsightTitle">'+t.label+'</div>';
   html+='<div id="'+prefix+'InsightSub" style="font-family:DM Sans,sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+sub+'</div>';
@@ -2564,8 +2368,7 @@ async function _renderCanadaSubtab(){
   var html='';
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>National Analysis</h3></div>';
   if(natContent){html+=_natNarrative(natContent,allSources)}else{html+='<div class="dash-narrative"><p style="color:#7a8599">National analysis available after next pipeline run.</p></div>'}
-  var _caCallout=(D&&D.national&&D.national.chart_callout)||'';
-  html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">Unemployment Rate \u2014 12-Month Trend</div><div class="insight-chart-subtitle">Seasonally adjusted</div>'+(_caCallout?'<div class="insight-chart-callout">'+san(_caCallout)+'</div>':'')+'<div class="chart-wrap"><canvas id="natChartCaUnemployment"></canvas></div><div class="chart-source">Source: Statistics Canada, Table 14-10-0287</div></div>';
+  html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">Unemployment Rate \u2014 12-Month Trend</div><div class="insight-chart-subtitle">Seasonally adjusted</div><div class="chart-wrap"><canvas id="natChartCaUnemployment"></canvas></div><div class="chart-source">Source: Statistics Canada, Table 14-10-0287</div></div>';
   html+=_natSourcesSection(allSources);
   html+='</div>';
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Policy Developments</h3><span class="section-meta" id="natPolicyMeta"></span></div><div id="natPolicyNarrative"></div><div id="natPolicyAccordion"></div></div>';
@@ -2724,7 +2527,7 @@ async function _renderGlobalSubtab(key){
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>'+countryInfo.label+' Analysis</h3></div>';
   if(analysis){html+=_natNarrative(analysis,gData.sources||[])}else{html+='<div class="dash-narrative"><p style="color:#7a8599">Analysis available after next pipeline run.</p></div>'}
   var chartCfg=GLOBAL_CHART_CFG[key];
-  if(chartCfg){var chartId='natChart_'+key;var _gco=(gData&&gData.chart_callout)||chartCfg.callout||'';html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">'+chartCfg.title+'</div><div class="insight-chart-subtitle">'+chartCfg.subtitle+'</div>'+(_gco?'<div class="insight-chart-callout">'+san(_gco)+'</div>':'')+'<div class="chart-wrap"><canvas id="'+chartId+'"></canvas></div><div class="chart-source">Source: '+chartCfg.source+'</div></div>'}
+  if(chartCfg){var chartId='natChart_'+key;html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">'+chartCfg.title+'</div><div class="insight-chart-subtitle">'+chartCfg.subtitle+'</div><div class="chart-wrap"><canvas id="'+chartId+'"></canvas></div><div class="chart-source">Source: '+chartCfg.source+'</div></div>'}
   html+=_natSourcesSection(gData.sources||[]);
   html+='</div>';
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Key Indicators</h3><span class="section-meta">'+indRows.filter(function(r){return hasVal(r.value)}).length+' indicators</span></div>';
@@ -4310,11 +4113,16 @@ function buildIndInsightStrip(spec){
   var sourceLbl='Statistics Canada';
   var sourceUrl='https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401';
   if(spec.dataSource==='timeseries'){sourceLbl='Market data';sourceUrl=''}
-  var inner='';
-  if(callout)inner+='<div style="font-family:Inter,sans-serif;font-size:15px;line-height:1.6;color:#2d3a52;margin-bottom:16px">'+san(callout)+'</div>';
-  inner+='<div style="height:320px;position:relative"><canvas id="indInsightChart"></canvas></div>';
-  var srcHtml=sourceUrl?'Source: <a href="'+san(sourceUrl)+'" target="_blank" rel="noopener noreferrer" class="ind-src-link">'+san(sourceLbl)+'</a>':'Source: '+san(sourceLbl);
-  return _calloutChrome({kicker:spec.eyebrow||'',title:title,subtitle:subtitle,source:srcHtml,innerHtml:inner});
+  var h='<div class="tldr-callout" style="margin:20px 0">';
+  h+='<div style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+san(callout)+'</div>';
+  h+='<div class="tldr-callout-chart">';
+  h+='<div class="tldr-callout-chart-title">'+san(title)+'</div>';
+  h+='<div style="font-family:DM Sans,sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+san(subtitle)+'</div>';
+  h+='<div style="height:320px;position:relative;padding:12px 16px;background:#fff;border-radius:6px"><canvas id="indInsightChart"></canvas></div>';
+  var srcHtml=sourceUrl?'<a href="'+san(sourceUrl)+'" target="_blank" rel="noopener noreferrer" class="ind-src-link">'+san(sourceLbl)+'</a>':san(sourceLbl);
+  h+='<div class="tldr-callout-source">Source: '+srcHtml+'</div>';
+  h+='</div></div>';
+  return h;
 }
 
 // Renders the industry insight chart — supports line / multi_line / bar / diverging_bar
@@ -4434,27 +4242,26 @@ async function renderIndInsightChart(spec){
     data:{labels:labels,datasets:datasets},
     options:{
       responsive:true,maintainAspectRatio:false,
-      layout:{padding:{top:8,right:48,bottom:8,left:0}},
+      layout:{padding:{top:8,right:18,bottom:6,left:10}},
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:(isMulti||datasets.length>1)?{display:true,position:'top',align:'start',labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:'Inter',size:11,weight:'500'},color:'#0f172a'}}:{display:false},
-        tooltip:{backgroundColor:'rgba(15,23,42,0.95)',titleColor:'#fff',titleFont:{family:'Inter',size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:'Inter',size:11,weight:'400'},padding:12,cornerRadius:4,displayColors:datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:function(ctx){var v=ctx.raw;if(v==null)return ctx.dataset.label+': —';return ctx.dataset.label+': '+(typeof v==='number'?(isMulti?v.toFixed(1):fmtNum(v)):v)}}}
+        legend:(isMulti||datasets.length>1)?{display:true,position:'top',align:'start',labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:_ic.font,size:11,weight:'500'},color:_ic.prussian}}:{display:false},
+        tooltip:{backgroundColor:'rgba(0,49,83,0.92)',titleColor:'#fff',titleFont:{family:_ic.font,size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:_ic.font,size:11},padding:12,cornerRadius:4,displayColors:datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:function(ctx){var v=ctx.raw;if(v==null)return ctx.dataset.label+': —';return ctx.dataset.label+': '+(typeof v==='number'?(isMulti?v.toFixed(1):fmtNum(v)):v)}}}
       },
       scales:{
-        x:{border:{display:true,color:'#0f172a',width:1.2},grid:{display:false},ticks:{maxTicksLimit:isBar?10:8,font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,autoSkip:true,maxRotation:isBar?45:0,minRotation:0}},
+        x:{border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.prussian,padding:10,autoSkip:true}},
         y:{
-          position:'right',
           beginAtZero:false,
           grace:'8%',
-          border:{display:false},
-          grid:{color:'#d9d4c7',lineWidth:1,drawTicks:false},
-          ticks:{font:{family:'Inter',size:11,weight:'400'},color:'#4a5568',padding:10,callback:function(v){
+          border:{display:true,color:_ic.prussian,width:1},
+          grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},
+          ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:function(v){
             if(isMulti)return v.toFixed(0);
             if(typeof v!=='number')return v;
             if(Math.abs(v)>=1000)return v.toLocaleString('en-CA',{maximumFractionDigits:0});
             return v.toLocaleString('en-CA',{maximumFractionDigits:2});
           }},
-          title:yTitleTxt?{display:true,text:yTitleTxt,font:{family:'Inter',size:10,weight:'500'},color:'#4a5568',padding:{bottom:8}}:{display:false}
+          title:yTitleTxt?{display:true,text:yTitleTxt,font:{family:_ic.font,size:10,weight:'500'},color:_ic.muted,padding:{bottom:8}}:{display:false}
         }
       }
     }
