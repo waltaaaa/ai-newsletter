@@ -575,11 +575,15 @@ def backfill_isq(conn, years=5):
                 qtr_dates[col] = current_year + qtr_map[qtr]
 
     # Quarterly indicators to extract: (row_index_0based, indicator_id, unit)
+    # Row indices realigned 2026-05-15 to the current ISQ workbook layout: the
+    # 'indicat' quarterly-levels block shifted so government final consumption
+    # is row 9 and business gross fixed capital formation is row 10 (were 10/11).
+    # Verified against statistique.quebec.ca (Comptes économiques trimestriels).
     quarterly_indicators = [
         (6,  'qc_real_gdp', '$M'),
         (8,  'qc_household_consumption', '$M'),
-        (10, 'qc_gov_consumption', '$M'),
-        (11, 'qc_business_investment', '$M'),
+        (9,  'qc_gov_consumption', '$M'),
+        (10, 'qc_business_investment', '$M'),
         (12, 'qc_exports', '$M'),
         (13, 'qc_imports', '$M'),
         (15, 'qc_nominal_gdp', '$M'),

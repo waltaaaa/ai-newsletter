@@ -76,8 +76,8 @@
         "Nunavut unemployment 13.8% retained from prior snapshot (no update found for Feb 2026)",
         "Potash price $350/t retained (price surged Mar 2026 per CNBC but no specific value confirmed)",
         "Aluminum unit corrected from 'lb' to 't' in briefing_latest.json commodities",
-        "GoC 5Y yield updated 3.10% \u2192 3.21% (March 27, 2026)",
-        "Wage growth updated +4.2% \u2192 +3.9% (Feb 2026 LFS)",
+        "GoC 5Y yield updated 3.10% → 3.21% (March 27, 2026)",
+        "Wage growth updated +4.2% → +3.9% (Feb 2026 LFS)",
         "Next BoC rate decision: April 29, 2026 (watchlist had April 16 - may need update)"
       ]
     }
@@ -182,6 +182,108 @@
         "unemployment": 6.1,
         "change": 0.8
       }
+    }
+  },
+  {
+    "date": "2026-04-20",
+    "timestamp": "2026-04-20T12:00:00Z",
+    "source": "websearch_refresh_agent0",
+    "national": {
+      "boc_rate": 2.25,
+      "cpi_yoy_mar": 2.4,
+      "cpi_yoy_feb": 1.8,
+      "cpi_mom_mar": 0.9,
+      "cpi_mom_sa_mar": 0.5,
+      "gasoline_mom_mar": 21.2,
+      "cpi_ex_gasoline_yoy_mar": 2.2,
+      "unemployment": 6.7,
+      "employment_rate": 60.6,
+      "participation_rate": 64.9,
+      "housing_starts_saar_mar": 235852,
+      "wage_growth_yoy": 4.7
+    },
+    "markets": {
+      "tsx": 34270,
+      "cad_usd": 0.7305
+    },
+    "commodities": {
+      "wti": 86.25,
+      "brent": 95.42,
+      "natural_gas": 2.71,
+      "gold": 4828
+    },
+    "yields": {
+      "goc_2y": 2.97,
+      "goc_5y": 3.1,
+      "goc_10y": 3.47
+    },
+    "provincial": {
+      "ON": {
+        "unemployment": 7.6,
+        "change": 0.0
+      },
+      "QC": {
+        "unemployment": 5.4,
+        "change": -0.5
+      },
+      "AB": {
+        "unemployment": 6.5,
+        "change": 0.2
+      },
+      "BC": {
+        "unemployment": 6.7,
+        "change": 0.6
+      },
+      "SK": {
+        "unemployment": 5.0,
+        "change": -0.6
+      },
+      "MB": {
+        "unemployment": 5.6,
+        "change": -0.1
+      },
+      "NS": {
+        "unemployment": 6.6,
+        "change": -0.5
+      },
+      "NB": {
+        "unemployment": 7.0,
+        "change": 0.0
+      },
+      "NL": {
+        "unemployment": 9.5,
+        "change": 0.3
+      },
+      "PE": {
+        "unemployment": 7.3,
+        "change": 0.1
+      },
+      "YT": {
+        "unemployment": 3.9,
+        "change": 0.0
+      },
+      "NT": {
+        "unemployment": 6.1,
+        "change": 0.8
+      }
+    },
+    "data_quality": {
+      "searches_run": 8,
+      "values_updated": 7,
+      "values_unchanged": 12,
+      "values_not_found": 3,
+      "coverage_pct": 86.4,
+      "notes": [
+        "March CPI released today Apr 20: headline +2.4% YoY (up from +1.8% Feb), gasoline +21.2% M/M (record)",
+        "WTI rebounded to ~$86.25 from $83.85 (Apr 17) on Hormuz re-closure reports",
+        "Brent surged to $95.42, up 5.6% from $90.38 (Apr 17)",
+        "TSX closed ~34,270 on Apr 18; banks up (BMO +1.65%), energy down (CNRL -7.28%)",
+        "Gold at ~$4,828/oz, easing from $4,850+ highs on ceasefire progress",
+        "Natural gas $2.71/MMBtu, up 1.5% from prior day",
+        "BoC next decision Apr 29 with MPR; markets price 96.5% hold at 2.25%",
+        "Spring Economic Update scheduled Apr 28",
+        "Provincial unemployment unchanged from Apr 13 snapshot (no new LFS release)"
+      ]
     }
   }
 ]

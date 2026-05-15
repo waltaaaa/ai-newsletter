@@ -1,46 +1,13 @@
 {
-  "market_commentary": "<p><span class=\"lead-sentence\">The Strait of Hormuz crisis and ceasefire dominated the two-week period ending April 13, whipsawing commodity prices while equities advanced</span> &mdash; WTI crude collapsed <strong>34%</strong> from a peak near <strong>US$128/bbl</strong> (Apr 2) to <strong>US$83.85</strong> after the strait reopened Apr 17<sup>40</sup>, while Brent dropped <strong>9.0%</strong> in a single session to <strong>US$90.38</strong><sup>15</sup>. The S&amp;P/TSX Composite rose <strong>1.7%</strong> to <strong>~34,052</strong> (<strong>+41%</strong> Y/Y)<sup>24</sup>, and the S&amp;P 500 posted a record close at <strong>7,022.95</strong><sup>25</sup>. The Canadian dollar strengthened <strong>1.5%</strong> to <strong>0.7305 CAD/USD</strong><sup>27</sup> as the DXY fell toward <strong>98</strong>, and the Bank of Canada held at <strong>2.25%</strong> for a seventh consecutive meeting<sup>1</sup>. The project database tracks <strong>7,344 projects</strong> valued at <strong>$1.37 trillion</strong>.</p><p><span class=\"lead-sentence\">The oil price reversal split the pipeline\u2019s commodity exposure in two directions</span> &mdash; <strong>63 oil and gas projects ($100.2B)</strong> carry direct WTI exposure, with the WCS differential widening to <strong>$16.25/bbl</strong> below WTI on Apr 13<sup>41</sup>. On the metals side, gold reached <strong>US$4,728/oz</strong> (<strong>+2.82%</strong>)<sup>17</sup> and copper climbed to <strong>US$6.07/lb</strong> (<strong>+3.32%</strong>)<sup>19</sup>, referenced by <strong>364 mining projects totalling $159.5B</strong>. The 10-year Government of Canada bond yield stood at <strong>3.47%</strong><sup>29</sup> with the 2-year at <strong>2.80%</strong><sup>28</sup>, a <strong>67-basis-point</strong> spread, against <strong>211 residential ($44.4B)</strong> and <strong>1,671 infrastructure projects ($179.0B)</strong> carrying financing cost exposure to rate movements.</p>",
-  "market_commentary_callout": {
-    "title": "Pipeline Cross-Reference",
-    "items": [
-      {
-        "label": "Oil & gas (WTI-exposed)",
-        "value": "63 projects",
-        "amount": "$100.2B"
-      },
-      {
-        "label": "Mining (metals, uranium, potash)",
-        "value": "364 projects",
-        "amount": "$159.5B"
-      },
-      {
-        "label": "Residential (rate-sensitive)",
-        "value": "211 projects",
-        "amount": "$44.4B"
-      },
-      {
-        "label": "Infrastructure (rate-sensitive)",
-        "value": "1,671 projects",
-        "amount": "$179.0B"
-      },
-      {
-        "label": "Total pipeline",
-        "value": "7,344 projects",
-        "amount": "$1.37T"
-      }
-    ]
-  },
+  "market_commentary": "<p>Canadian and global markets navigated a week defined by Strait of Hormuz volatility and shifting rate expectations. The S&P/TSX Composite closed near <strong>34,270</strong> on April 18, advancing <strong>+2.3%</strong> over the period as financials offset energy sector weakness.<sup>1</sup> Banks led gains \u2014 BMO rose <strong>+1.65%</strong> and Bank of Nova Scotia added <strong>+2.03%</strong> \u2014 as investors repositioned toward rate-sensitive sectors following bond market repricing of the Bank of Canada path.<sup>2</sup> Energy names moved in the opposite direction: Canadian Natural Resources declined <strong>-7.28%</strong> and Suncor fell <strong>-4%</strong> as WTI collapsed from its April 2 peak near <strong>$128/bbl</strong> to <strong>$83.85</strong> on April 17 before rebounding to <strong>$86.25</strong> on re-closure reports.<sup>3</sup></p><p>The Canadian dollar strengthened to <strong>0.7305 USD</strong> (+1.5% over the period), supported by crude's partial recovery and narrowing Canada-U.S. rate differentials.<sup>4</sup> Gold traded near <strong>$4,828/oz</strong>, up <strong>+9.09%</strong> over the past month and <strong>+40.03%</strong> year-over-year, as geopolitical uncertainty sustained safe-haven demand.<sup>5</sup></p><p>Bond markets priced <strong>~41 basis points</strong> of tightening by year-end, a material shift from rate-cut expectations that prevailed through Q1. The 2-year Government of Canada yield rose <strong>35 basis points</strong>, producing a bear-flattening dynamic ahead of the April 29 BoC decision.<sup>6</sup> This repricing affects financing assumptions for <strong>4,471</strong> active projects (Proposed, Under Review, and Approved status) representing the bulk of the <strong>$1,161.7B</strong> tracked pipeline.<sup>7</sup> The pipeline's <strong>550</strong> power and energy projects (<strong>$490.9B</strong>) and <strong>39</strong> oil and gas projects (<strong>$97.3B</strong>) carry direct exposure to Hormuz-driven commodity price swings, while <strong>305</strong> mining projects (<strong>$146.0B</strong>) benefit from gold's advance toward record levels.<sup>7</sup></p>",
+  "market_commentary_callout": "TSX advanced +2.3% as banks gained on rate repricing while energy names declined 4-7% on WTI's 34% collapse from April 2 peak; bond markets now price ~41bps of year-end tightening affecting $1,161.7B in tracked pipeline projects.",
   "sources": [
-    {"id": 1, "title": "Bank of Canada \u2014 March 18, 2026 Rate Decision", "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/"},
-    {"id": 15, "title": "Trading Economics \u2014 Brent Crude Oil Price", "url": "https://tradingeconomics.com/commodity/brent-crude-oil"},
-    {"id": 17, "title": "Fortune \u2014 Gold Price, April 13, 2026", "url": "https://fortune.com/article/current-price-of-gold-04-13-2026/"},
-    {"id": 19, "title": "Trading Economics \u2014 Copper Price", "url": "https://tradingeconomics.com/commodity/copper"},
-    {"id": 24, "title": "Trading Economics \u2014 TSX Composite", "url": "https://tradingeconomics.com/canada/stock-market"},
-    {"id": 25, "title": "CNBC \u2014 S&P 500 and Nasdaq Record Closes, April 14", "url": "https://www.cnbc.com/2026/04/14/stock-market-today-live-updates.html"},
-    {"id": 27, "title": "Trading Economics \u2014 CAD/USD Exchange Rate", "url": "https://tradingeconomics.com/canada/currency"},
-    {"id": 28, "title": "Trading Economics \u2014 Canada 2Y Bond Yield", "url": "https://tradingeconomics.com/canada/2-year-note-yield"},
-    {"id": 29, "title": "Trading Economics \u2014 Canada 10Y Bond Yield", "url": "https://tradingeconomics.com/canada/government-bond-yield"},
-    {"id": 40, "title": "CNBC \u2014 Oil Prices Drop on Hormuz Reopening", "url": "https://www.cnbc.com/2026/04/17/oil-prices-wti-brent-israel-lebanon-ceasefire-trump.html"},
-    {"id": 41, "title": "BOE Report \u2014 WCS Differential Widens", "url": "https://boereport.com/2026/04/13/discount-on-western-canada-select-widens-45/"}
+    {"id": 1, "title": "TMX Canadian Markets Data", "url": "https://money.tmx.com/en/canadian-markets"},
+    {"id": 2, "title": "Globe and Mail \u2014 Canadian Bank Stocks 2026", "url": "https://www.theglobeandmail.com/investing/markets/markets-news/motley/953124/what-to-know-about-canadian-bank-stocks-in-2026/"},
+    {"id": 3, "title": "CNBC \u2014 Oil Markets Hormuz Blockade", "url": "https://www.cnbc.com/2026/04/14/oil-wti-brent-as-markets-hormuz-blockade-vance-trump.html"},
+    {"id": 4, "title": "Interchange Financial \u2014 Canadian Dollar Forecast", "url": "https://www.interchangefinancial.com/canadian-dollar-forecast/"},
+    {"id": 5, "title": "Trading Economics \u2014 Gold", "url": "https://tradingeconomics.com/commodity/gold"},
+    {"id": 6, "title": "Bank of Canada \u2014 Bond Yields", "url": "https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/"},
+    {"id": 7, "title": "Pipeline Database Cross-Reference", "url": "https://thelaggingindicator.github.io/canadian-macro-dashboard/"}
   ]
 }

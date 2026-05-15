@@ -197,7 +197,9 @@ def spot_check_citations(
     sample = random.sample(checkable, min(max_checks, len(checkable)))
 
     # Determine execution mode
-    from claude_reasoning import REASONING_AGENT_MODE, _call_claude_code_sync
+    from claude_reasoning import (
+        REASONING_AGENT_MODE, _call_claude_code_sync, ALLOW_API_FALLBACK,
+    )
 
     results = []
     for cite in sample:
@@ -218,7 +220,7 @@ def spot_check_citations(
             answer = None
             if REASONING_AGENT_MODE == 'claude_code':
                 answer = _call_claude_code_sync(prompt, f"cite-check-{cite_id}")
-            if not answer and anthropic_client:
+            if not answer and anthropic_client and ALLOW_API_FALLBACK:
                 msg = anthropic_client.messages.create(
                     model=SONNET_MODEL,
                     max_tokens=200,

@@ -285,17 +285,24 @@ _ANNUAL_TABLES = {"34-10-0035"}
 # WDS fetch — mirrors _fetch_wds() in statcan_permits.py
 # ─────────────────────────────────────────────────────────────────────────────
 
+_WDS_CHUNK = 40       # vectors per request — large batches time out on WDS
+_WDS_TIMEOUT = 40     # was 25; WDS is slow under load
+_WDS_BACKOFF = [5, 15]  # seconds between the 3 total attempts
+
+
 def _fetch_wds(vector_ids: list, n: int = 14) -> dict:
     """Fetch last N observations from StatCan WDS for a list of vector IDs.
 
     Returns {vectorId: [{'refPer': 'YYYY-MM-DD', 'value': float}]} sorted by date.
-    Retries once after 5s on failure (same pattern as data_collection.py).
-    """
-    payload = [{"vectorId": vid, "latestN": n} for vid in vector_ids]
 
-    def _do_fetch():
+    Resilience: vectors are chunked (large single payloads reliably time out on
+    www150), each chunk gets 3 attempts with exponential backoff, and a chunk
+    failure no longer loses the whole group — successful chunks are kept.
+    """
+    def _fetch_chunk(vids: list) -> dict:
+        payload = [{"vectorId": vid, "latestN": n} for vid in vids]
         resp = requests.post(
-            _STATCAN_WDS_URL, json=payload, timeout=25,
+            _STATCAN_WDS_URL, json=payload, timeout=_WDS_TIMEOUT,
             headers=_WDS_HEADERS,
         )
         resp.raise_for_status()
@@ -314,19 +321,20 @@ def _fetch_wds(vector_ids: list, n: int = 14) -> dict:
             result[vid] = points
         return result
 
-    try:
-        r = _do_fetch()
-        if r:
-            return r
-    except Exception as e:
-        print(f"  [STATCAN-EXT] First attempt failed: {e}")
-
-    time.sleep(5)
-    try:
-        return _do_fetch()
-    except Exception as e:
-        print(f"  [STATCAN-EXT] Retry failed: {e}")
-        return {}
+    merged: dict = {}
+    for start in range(0, len(vector_ids), _WDS_CHUNK):
+        chunk = vector_ids[start:start + _WDS_CHUNK]
+        for attempt in range(3):
+            try:
+                merged.update(_fetch_chunk(chunk))
+                break
+            except Exception as e:
+                if attempt < 2:
+                    time.sleep(_WDS_BACKOFF[attempt])
+                else:
+                    print(f"  [STATCAN-EXT] Chunk {start//_WDS_CHUNK + 1} "
+                          f"({len(chunk)} vectors) failed after 3 attempts: {e}")
+    return merged
 
 
 # ─────────────────────────────────────────────────────────────────────────────

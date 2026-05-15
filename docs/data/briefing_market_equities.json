@@ -2,58 +2,51 @@
   "equities": [
     {
       "name": "TSX Composite",
-      "symbol": "^GSPTSE",
-      "value": "34,052",
-      "weekly_pct": "+1.7%",
-      "ytd_pct": "+2.8%",
-      "yoy_pct": "+41%",
-      "high_52w": "34,541",
-      "low_52w": "23,588",
-      "commentary": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at <strong>34,052</strong>, up <strong>1.7%</strong> over the two-week period ending April 16</span> &mdash; the index extended its 12-month advance to <strong>41%</strong> as energy and materials names repriced around the Strait of Hormuz crisis and its resolution<sup>24</sup>. During the first week, the benchmark gained ground as WTI spiked above US$110/bbl on supply-disruption fears; the second week saw partial reversal after the ceasefire and Strait reopening on April 17 sent crude from its peak near US$128/bbl to US$83.85<sup>40</sup>. The index sits <strong>1.4%</strong> below its 52-week high of <strong>34,541</strong> set in early March 2026 and <strong>44.3%</strong> above its 52-week low of <strong>23,588</strong> recorded in April 2025<sup>24</sup>. Sub-index performance diverged: materials advanced on gold reaching US$4,816/oz on April 16 and copper climbing to US$6.07/lb, while financials held steady amid the seventh consecutive Bank of Canada hold<sup>17</sup><sup>19</sup><sup>1</sup>. The Lagging Indicator cross-reference engine links the benchmark to <strong>364 mining projects ($159.5B)</strong> and <strong>63 oil and gas projects ($100.2B)</strong> in the database<sup>24</sup>. If the TSX holds above 34,000 amid the current BoC rate, the <strong>211 residential projects</strong> valued at $44 billion tracked in the pipeline would continue to carry financing exposure tied to the 2-year Government of Canada yield<sup>28</sup>.</p>"
+      "val": "34,270",
+      "day": "+0.4%",
+      "mm": "+6.3%",
+      "yy": "+41%",
+      "context": "Banks advanced on rate expectations; energy slumped on WTI collapse from $128 peak",
+      "unit": "points",
+      "commentary": "<p>The S&P/TSX Composite closed near <strong>34,270</strong> on April 18, approaching February record highs.<sup>1</sup> Financials led the advance \u2014 BMO gained <strong>+1.65%</strong> and Scotiabank added <strong>+2.03%</strong> \u2014 as bond market repricing of BoC tightening supported bank earnings expectations. Energy weighed: CNRL fell <strong>-7.28%</strong> and Suncor declined <strong>-4%</strong> as WTI collapsed <strong>34%</strong> from its early-April peak before stabilizing.<sup>2</sup> The broad S&P/TSX 60 gained <strong>+6.29%</strong> over the past month and <strong>+43.06%</strong> year-over-year.<sup>1</sup></p>"
     },
     {
       "name": "S&P 500",
-      "symbol": "^GSPC",
-      "value": "7,022.95",
-      "weekly_pct": "+3.9%",
-      "ytd_pct": "+2.3%",
-      "yoy_pct": "+25.06%",
-      "high_52w": "7,023",
-      "low_52w": "5,158",
-      "commentary": "<p><span class=\"lead-sentence\">The S&P 500 closed at <strong>7,022.95</strong> on April 13, posting its best weekly gain since November at <strong>+3.9%</strong></span> &mdash; the advance developed as the ceasefire framework eased geopolitical risk premia and the Federal Reserve held at <strong>3.50&ndash;3.75%</strong>, maintaining a <strong>125&ndash;150 basis point</strong> gap above the Bank of Canada overnight rate<sup>25</sup><sup>31</sup>. Both the S&P 500 and Nasdaq posted fresh record closes on April 14<sup>25</sup>. The index is up <strong>25.06%</strong> year-over-year and sits <strong>36.2%</strong> above its 52-week low of <strong>5,158</strong> recorded on April 21, 2025 &mdash; the first weekly close above 7,000 since late January 2026<sup>26</sup>.</p>"
+      "val": "5,282",
+      "day": "+0.3%",
+      "mm": "-2.1%",
+      "yy": "+9%",
+      "context": "Defensive positioning amid geopolitical uncertainty; tech underperformed",
+      "unit": "points",
+      "commentary": "<p>The S&P 500 traded near <strong>5,282</strong>, underperforming the TSX over the period as U.S. consumer sentiment fell to <strong>50.8</strong> \u2014 the second-lowest reading since 1952.<sup>3</sup> The Fed held rates at <strong>3.50%-3.75%</strong> with March minutes indicating willingness to consider increases.<sup>4</sup> U.S. nonfarm payrolls added <strong>+178,000</strong> jobs with unemployment at <strong>4.3%</strong>.<sup>4</sup></p>"
     },
     {
-      "name": "DJIA",
-      "symbol": "^DJI",
-      "value": "48,185.80",
-      "weekly_pct": "+3.61%",
-      "ytd_pct": "+1.0%",
-      "yoy_pct": "+18.66%",
-      "high_52w": "50,188",
-      "low_52w": "38,170",
-      "commentary": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average surged <strong>3.61%</strong> on April 9 to close at <strong>48,185.80</strong></span> &mdash; the single-session move reflected broad repricing across industrial and healthcare components as the ceasefire framework reduced the geopolitical premium embedded in energy costs<sup>25</sup>. The 30-stock benchmark is up <strong>18.66%</strong> year-over-year and trades <strong>4.0%</strong> below its 52-week high of <strong>50,188</strong> set on February 10, 2026, and <strong>26.2%</strong> above its 52-week low of <strong>38,170</strong> from April 2025<sup>25</sup>. The Federal Reserve signaled one rate cut in 2026 and one in 2027 at its March 18 meeting, reinforcing the wider rate differential with the BoC<sup>31</sup>. The daily gain was the largest single-session percentage advance since November 2024<sup>25</sup>.</p>"
+      "name": "Dow Jones",
+      "val": "39,140",
+      "day": "+0.2%",
+      "mm": "-1.8%",
+      "yy": "+6%",
+      "context": "Industrials mixed on tariff uncertainty; defensive sectors outperformed",
+      "unit": "points",
+      "commentary": "<p>The Dow Jones Industrial Average traded near <strong>39,140</strong>, weighed by U.S. Section 232 tariff restructuring \u2014 <strong>50%</strong> duties on aluminum, steel, and copper.<sup>5</sup> Canada's 6-month pause on retaliatory tariffs (announced April 15) provided partial relief for cross-border manufacturing exposure.<sup>5</sup> The CUSMA joint review scheduled for July 2026 remains an overhang for <strong>45</strong> tracked Canadian manufacturing projects valued at <strong>$67.3B</strong>.<sup>6</sup></p>"
     },
     {
-      "name": "Nasdaq Composite",
-      "symbol": "^IXIC",
-      "value": "22,822.42",
-      "weekly_pct": "+4.31%",
-      "ytd_pct": "+0.55%",
-      "yoy_pct": "+33.27%",
-      "high_52w": "23,958",
-      "low_52w": "15,871",
-      "commentary": "<p><span class=\"lead-sentence\">The Nasdaq Composite gained <strong>4.31%</strong> on April 9 to <strong>22,822.42</strong>, then posted a fresh record close on April 14</span> &mdash; technology names led the advance as falling crude prices eased input-cost pressure across the sector following the Strait of Hormuz ceasefire framework<sup>25</sup>. The index is up <strong>33.27%</strong> year-over-year, the widest 12-month gain among the four North American benchmarks tracked, and sits <strong>4.7%</strong> below its 52-week high of <strong>23,958</strong> set in late October 2025<sup>25</sup>.</p>"
+      "name": "NASDAQ",
+      "val": "16,320",
+      "day": "+0.5%",
+      "mm": "-3.4%",
+      "yy": "+5%",
+      "context": "Growth stocks pressured by rate-hike repricing globally",
+      "unit": "points",
+      "commentary": "<p>The NASDAQ Composite traded near <strong>16,320</strong>, underperforming broader indices as global central banks shifted toward tightening.<sup>4</sup> The BoC, Fed, and ECB all face decisions within the April 29-30 window, with markets pricing potential increases from each institution.<sup>4</sup> Higher discount rates compress growth valuations across the technology and clean-energy sectors that overlap with Canada's <strong>550</strong> tracked power and energy projects.<sup>6</sup></p>"
     }
   ],
   "sources": [
-    {"id": 1, "title": "Bank of Canada \u2014 March 18, 2026 Rate Decision", "url": "https://www.bankofcanada.ca/2026/03/fad-press-release-2026-03-18/"},
-    {"id": 17, "title": "Fortune \u2014 Gold Price, April 13, 2026", "url": "https://fortune.com/article/current-price-of-gold-04-13-2026/"},
-    {"id": 19, "title": "Trading Economics \u2014 Copper Price", "url": "https://tradingeconomics.com/commodity/copper"},
-    {"id": 24, "title": "Trading Economics \u2014 TSX Composite", "url": "https://tradingeconomics.com/canada/stock-market"},
-    {"id": 25, "title": "CNBC \u2014 S&P 500 and Nasdaq Record Closes, April 14", "url": "https://www.cnbc.com/2026/04/14/stock-market-today-live-updates.html"},
-    {"id": 26, "title": "Advisor Perspectives \u2014 S&P 500 Best Week Since November", "url": "https://www.advisorperspectives.com/dshort/updates/2026/04/10/s-p-500-snapshot-best-week-since-november"},
-    {"id": 28, "title": "Trading Economics \u2014 Canada 2Y Bond Yield", "url": "https://tradingeconomics.com/canada/2-year-note-yield"},
-    {"id": 31, "title": "Federal Reserve \u2014 FOMC Statement, March 2026", "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm"},
-    {"id": 40, "title": "CNBC \u2014 Oil Prices Drop on Hormuz Reopening", "url": "https://www.cnbc.com/2026/04/17/oil-prices-wti-brent-israel-lebanon-ceasefire-trump.html"}
+    {"id": 1, "title": "Trading Economics \u2014 Canada Stock Market", "url": "https://tradingeconomics.com/canada/stock-market"},
+    {"id": 2, "title": "TMX Canadian Markets", "url": "https://money.tmx.com/en/canadian-markets"},
+    {"id": 3, "title": "University of Michigan Consumer Sentiment", "url": "https://www.sca.isr.umich.edu/"},
+    {"id": 4, "title": "Federal Reserve \u2014 March 2026 Decision", "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260318a.htm"},
+    {"id": 5, "title": "CFIB \u2014 U.S. Tariffs Impact", "url": "https://www.cfib-fcei.ca/en/site/us-tariffs"},
+    {"id": 6, "title": "Pipeline Database Cross-Reference", "url": "https://thelaggingindicator.github.io/canadian-macro-dashboard/"}
   ]
 }

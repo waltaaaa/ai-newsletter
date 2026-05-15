@@ -443,25 +443,32 @@ DATA_MAX_AGE_DAYS = {
 # bound produced false-positive WARNs every week. These overrides reflect
 # actual release cadence + publication lag for each series family.
 #
-# QUARTERLY provincial accounts (T36-10-* family, quarterly provincial GDP):
-#   typical release lag = 90-120d. Allow up to 220d.
+# QUARTERLY provincial accounts (Ontario OEA / Quebec ISQ comptes
+#   trimestriels): each observation is dated to quarter-start (Q4 -> Oct 1).
+#   The next quarter (Q1) typically publishes late May/June, so the Q4 point
+#   is legitimately the newest for ~240d, and up to ~300d if a release slips.
+#   Bound = 300d: covers normal publication cadence without perpetual
+#   false-positive WARNs, while still flagging a series with no update for
+#   ~1.5+ quarters (genuinely dead source). Raised from 220 -> 300 on
+#   2026-05-15 after refreshing OEA/ISQ to their latest published quarter
+#   (2025Q4 = 226d old) still tripped the old 220d bound by 6 days.
 # MONTHLY provincial series (LFS/retail/manufacturing/permits/housing):
 #   monthly cadence + 60-90d lag. Allow up to 120d.
 #
 # When no override matches, fall back to DATA_MAX_AGE_DAYS["timeseries.json"].
 TIMESERIES_FRESHNESS_OVERRIDES = {
-    # Ontario Economic Accounts (quarterly, ~4mo lag)
-    "ON_on_exports": 220,
-    "ON_on_imports": 220,
-    "ON_on_gdp_goods": 220,
-    "ON_on_real_capital_investment": 220,
-    "ON_on_real_consumption": 220,
-    "ON_on_real_household": 220,
-    # Quebec provincial accounts (quarterly, ~4mo lag)
-    "QC_qc_real_gdp": 220,
-    "QC_qc_business_investment": 220,
-    "QC_qc_exports": 220,
-    "QC_qc_imports": 220,
+    # Ontario Economic Accounts (quarterly; quarter-start dated, ~1-2q lag)
+    "ON_on_exports": 300,
+    "ON_on_imports": 300,
+    "ON_on_gdp_goods": 300,
+    "ON_on_real_capital_investment": 300,
+    "ON_on_real_consumption": 300,
+    "ON_on_real_household": 300,
+    # Quebec provincial accounts (quarterly; quarter-start dated, ~1-2q lag)
+    "QC_qc_real_gdp": 300,
+    "QC_qc_business_investment": 300,
+    "QC_qc_exports": 300,
+    "QC_qc_imports": 300,
     # Quebec monthly (retail/trade/permits/housing/LFS, 45-90d lag)
     "QC_qc_intl_exports": 120,
     "QC_qc_intl_imports": 120,
@@ -1271,11 +1278,27 @@ def _parse_global_chart_cfg(app_js_text):
 
 
 def _find_app_js_path(data_dir):
-    """The data_dir is docs/data. The app.js lives at docs/js/app.js."""
-    # Walk up to docs/
+    """Locate the deployed app.js.
+
+    Originally `docs/js/app.js` lived next to `docs/data` in a co-located
+    backend+frontend tree. After the backend↔frontend split, app.js moved to
+    `<repo>/frontend/docs/js/app.js`. Try the legacy path first for back-compat,
+    then walk to the sibling frontend tree.
+    """
     docs_dir = os.path.dirname(os.path.abspath(data_dir))
-    candidate = os.path.join(docs_dir, "js", "app.js")
-    return candidate
+    legacy = os.path.join(docs_dir, "js", "app.js")
+    if os.path.exists(legacy):
+        return legacy
+
+    # docs_dir = .../backend/docs → repo root = parent of backend
+    repo_root = os.path.dirname(os.path.dirname(docs_dir))
+    for rel in ("frontend/docs/js/app.js",
+                "frontend/public/js/app.js",
+                "frontend/docs/demo/js/app.js"):
+        candidate = os.path.join(repo_root, *rel.split("/"))
+        if os.path.exists(candidate):
+            return candidate
+    return legacy  # return the legacy path so the failure message points somewhere
 
 
 def _validate_global_chart_cfg(data_dir, results, briefing):

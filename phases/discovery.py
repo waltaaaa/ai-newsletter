@@ -28,6 +28,18 @@ def _run_google_news(gemini_client):
     return run_google_news_search(gemini_client=gemini_client)
 
 
+def _run_bing_news():
+    """Tier 2b: Bing News RSS discovery (parallel coverage source).
+
+    Same compound + NAICS queries as Google. Resilient when Google soft-bans
+    the IP (12-24h cooldown after bursty pulls); Bing also surfaces Canadian
+    outlets (Canadian Mining Journal, BNN Bloomberg, MSN, etc.) that don't
+    always appear in Google News.
+    """
+    from bing_news_rss_search import run_bing_news_search
+    return run_bing_news_search()
+
+
 def run(conn, context, logger):
     """Run all discovery tiers."""
     step_name = "Phase 2: Discovery"
@@ -36,17 +48,19 @@ def run(conn, context, logger):
         gemini_client = context.get("gemini_client")
 
         # ── Parallel batch: independent tiers (no shared state) ────────
-        print("\n[DISCOVERY] Running Tiers 1, 2, 13, 14 in parallel...")
+        print("\n[DISCOVERY] Running Tiers 1, 2, 2b, 13, 14 in parallel...")
         registry_projects = []
         municipal_projects = []
         institutional_projects = []
         news_articles = []
+        bing_articles = []
 
-        with ThreadPoolExecutor(max_workers=4) as executor:
+        with ThreadPoolExecutor(max_workers=5) as executor:
             f_tier1  = executor.submit(_run_tier1, tavily_client)
             f_tier13 = executor.submit(_run_tier13)
             f_tier14 = executor.submit(_run_tier14)
             f_news   = executor.submit(_run_google_news, gemini_client)
+            f_bing   = executor.submit(_run_bing_news)
 
             # Collect results inside the with-block (executor waits on exit)
             try:
@@ -74,6 +88,32 @@ def run(conn, context, logger):
             except Exception as e:
                 print(f"  [TIER 2] Google News RSS failed: {type(e).__name__}: {e}")
                 logger.log_error("tier_2_google_news", e)
+
+            try:
+                bing_articles = f_bing.result() or []
+                print(f"  [TIER 2b] Bing News RSS: {len(bing_articles)} articles")
+            except Exception as e:
+                print(f"  [TIER 2b] Bing News RSS failed: {type(e).__name__}: {e}")
+                logger.log_error("tier_2b_bing_news", e)
+
+        # Merge Bing into news_articles, deduping by URL. Even though each
+        # source dedupes internally, the same article can surface via both
+        # Google's and Bing's redirectors with different wrapper URLs — title
+        # match catches obvious duplicates.
+        if bing_articles:
+            seen_urls = {a.get("link") or a.get("url") for a in news_articles}
+            seen_titles = {(a.get("title") or "").strip().lower() for a in news_articles}
+            added = 0
+            for art in bing_articles:
+                url = art.get("link") or art.get("url")
+                title_key = (art.get("title") or "").strip().lower()
+                if url and url not in seen_urls and title_key not in seen_titles:
+                    news_articles.append(art)
+                    seen_urls.add(url)
+                    seen_titles.add(title_key)
+                    added += 1
+            print(f"  [TIER 2/2b] Merged: {added} unique Bing articles added "
+                  f"(news_articles total: {len(news_articles)})")
 
         logger.log_step("tier_1_registries")
 

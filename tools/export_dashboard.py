@@ -947,9 +947,50 @@ def export_timeseries(conn, output_dir: str) -> str:
             bundle[key] = [dict(r) for r in rows]
 
     out_path = os.path.join(output_dir, "timeseries.json")
+
+    # Preserve-merge: existing series with more history (hand-curated commodity
+    # data, FRED imports, etc.) must not be clobbered by a thinner DB pull.
+    # Keep existing keys that the rebuild can't reproduce, and only overwrite
+    # a key when the new pull is richer than what's on disk.
+    existing = {}
+    if os.path.exists(out_path):
+        try:
+            with open(out_path, "r", encoding="utf-8") as f:
+                existing = json.load(f) or {}
+            if not isinstance(existing, dict):
+                existing = {}
+        except (json.JSONDecodeError, OSError):
+            existing = {}
+
+    def _len(v):
+        if isinstance(v, list):
+            return len(v)
+        if isinstance(v, dict):
+            for sub in ("history", "points", "data"):
+                if isinstance(v.get(sub), list):
+                    return len(v[sub])
+        return 0
+
+    merged = dict(existing)
+    overwritten = 0
+    added = 0
+    preserved = 0
+    for k, new_v in bundle.items():
+        if k not in merged:
+            merged[k] = new_v
+            added += 1
+        elif _len(new_v) >= _len(merged[k]):
+            merged[k] = new_v
+            overwritten += 1
+        else:
+            preserved += 1
+    print(f"  [timeseries] merge: {added} added, {overwritten} refreshed, "
+          f"{preserved} preserved (DB pull thinner than file), "
+          f"{len(merged)} total series")
+
     with open(out_path, "w", encoding="utf-8") as f:
         # Compact for potentially large commodity data
-        json.dump(bundle, f, ensure_ascii=False, separators=(",", ":"))
+        json.dump(merged, f, ensure_ascii=False, separators=(",", ":"))
 
     return out_path
 
@@ -976,6 +1017,9 @@ def _project_for_export_slim(proj_dict: dict) -> dict:
     shaped.pop("tags", None)
     shaped.pop("discovery_sources", None)
     shaped.pop("sources", None)
+    # Quality tier (featured / registry / archive) — lets the frontend default
+    # to material projects and keep the registry/backfill archive collapsible.
+    shaped["quality_tier"] = proj_dict.get("quality_tier") or "registry"
     return shaped
 
 
@@ -987,10 +1031,17 @@ def export_all_projects(conn, output_dir: str) -> str:
 
     Returns the path of the written file.
     """
+    # Order featured → registry → archive, then most-recently-seen first, so
+    # the frontend's default view leads with material projects.
     rows = conn.execute(
         """
         SELECT * FROM projects
-        ORDER BY lastSeen DESC
+        ORDER BY CASE quality_tier
+                   WHEN 'featured' THEN 0
+                   WHEN 'registry' THEN 1
+                   WHEN 'archive'  THEN 2
+                   ELSE 3 END,
+                 lastSeen DESC
         """
     ).fetchall()
 

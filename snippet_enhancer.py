@@ -50,17 +50,18 @@ def _get_summarizer():
 
 
 def _fetch_article_text_trafilatura(url, timeout=FETCH_TIMEOUT):
-    """Fetch article text using trafilatura (purpose-built for news extraction).
+    """Fetch article text using trafilatura's extractor on requests-fetched HTML.
 
-    Returns the extracted article body text, or empty string on failure.
-    trafilatura handles: varied HTML layouts, boilerplate removal, paywall stubs,
-    navigation/sidebar/comment stripping, and multi-page articles.
+    trafilatura.fetch_url() does NOT honor any caller timeout (uses its own
+    long internal default), which can hang the entire pipeline on a single
+    slow URL. We fetch the HTML ourselves with a hard timeout, then hand the
+    raw bytes to trafilatura.extract() which is purely parser-side and won't
+    block on the network.
     """
     try:
-        downloaded = trafilatura.fetch_url(url)
-        if not downloaded:
-            return ""
-        text = trafilatura.extract(downloaded, favor_recall=True,
+        resp = requests.get(url, timeout=timeout, headers=_HEADERS)
+        resp.raise_for_status()
+        text = trafilatura.extract(resp.text, favor_recall=True,
                                    include_comments=False)
         return (text or "").strip()
     except Exception as e:

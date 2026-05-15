@@ -39,6 +39,12 @@ CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages"
 REASONING_AGENT_MODE = os.environ.get('REASONING_AGENT_MODE', 'claude_code')
 REASONING_AGENT_MODEL = os.environ.get('REASONING_AGENT_MODEL', 'sonnet')
 
+# Silent API fallback is OFF by default. When the Claude Code subprocess fails
+# (timeout, parse error, exit code) the pipeline returns None instead of
+# silently billing the Anthropic API. Set CLAUDE_ALLOW_API_FALLBACK=1 in .env
+# to opt back in (e.g. for unattended GitHub Actions runs).
+ALLOW_API_FALLBACK = os.environ.get('CLAUDE_ALLOW_API_FALLBACK', '0') == '1'
+
 # Resolve claude CLI path — npm installs to AppData/Roaming/npm which may not
 # be on the PATH that Python's subprocess inherits on Windows.
 _CLAUDE_CLI = shutil.which('claude')
@@ -145,7 +151,10 @@ async def reason_with_claude(system_prompt, user_prompt, max_tokens=4096):
         )
         if text:
             return text
-        # If Claude Code failed and API key exists, fall through to API
+        if not ALLOW_API_FALLBACK:
+            logger.warning("  [Claude Code] failed; API fallback disabled "
+                           "(set CLAUDE_ALLOW_API_FALLBACK=1 to enable)")
+            return None
         if not ANTHROPIC_API_KEY:
             return None
         logger.info("  [Claude Code] Falling back to API...")
@@ -260,7 +269,10 @@ async def reason_with_claude_tracked(system_prompt, user_prompt, task_name,
                 "output_tokens": 0,
                 "cost_usd": 0.0,
             }
-        # If Claude Code failed and API key exists, fall through to API
+        if not ALLOW_API_FALLBACK:
+            logger.warning(f"  [Claude Code] [{task_name}] failed; API fallback "
+                           "disabled (set CLAUDE_ALLOW_API_FALLBACK=1 to enable)")
+            return None
         if not ANTHROPIC_API_KEY:
             return None
         logger.info(f"  [Claude Code] [{task_name}] Falling back to API...")

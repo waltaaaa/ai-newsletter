@@ -1,20 +1,28 @@
 {
   "last_run": {
-    "started_at": "2026-04-19T06:31:37.537930",
+    "started_at": "2026-05-15T03:00:06.683634",
     "status": "running",
     "duration_seconds": 0,
     "discovery": {
-      "articles_found": 0,
-      "projects_added": 0,
+      "articles_found": 6484,
+      "projects_added": 4891,
       "projects_updated": 0,
-      "projects_deduped": 0
+      "projects_deduped": 1564
     },
-    "errors": []
+    "errors": [
+      {
+        "step": "quality_gate",
+        "error_type": "Exception",
+        "message": "Stale briefing: 100% overlap with previous week",
+        "recovered": true,
+        "timestamp": "2026-05-15T03:48:55.264906"
+      }
+    ]
   },
   "analysis_incomplete": false,
   "tavily": {
-    "used": 641,
-    "month": "2026-03"
+    "used": 11,
+    "month": "2026-05"
   },
   "claude_tokens": {
     "input": 0,
@@ -22,7 +30,18 @@
   },
   "recent_runs": [
     {
-      "started_at": "2026-04-19T06:31:37.537930",
+      "started_at": "2026-05-15T03:00:06.683634",
+      "status": "running",
+      "duration_seconds": 0,
+      "discovery": {
+        "articles_found": 6484,
+        "projects_added": 4891,
+        "projects_updated": 0,
+        "projects_deduped": 1564
+      }
+    },
+    {
+      "started_at": "2026-05-15T02:06:38.213892",
       "status": "running",
       "duration_seconds": 0,
       "discovery": {
@@ -33,9 +52,9 @@
       }
     },
     {
-      "started_at": "2026-04-18T06:16:47.777225",
-      "status": "success",
-      "duration_seconds": 592,
+      "started_at": "2026-05-15T01:07:51.804421",
+      "status": "partial",
+      "duration_seconds": 2405,
       "discovery": {
         "articles_found": 0,
         "projects_added": 0,
@@ -44,25 +63,14 @@
       }
     },
     {
-      "started_at": "2026-04-17T07:00:46.165322",
-      "status": "success",
-      "duration_seconds": 610,
+      "started_at": "2026-05-14T23:55:12.581904",
+      "status": "partial",
+      "duration_seconds": 3368,
       "discovery": {
-        "articles_found": 0,
-        "projects_added": 0,
+        "articles_found": 4995,
+        "projects_added": 4911,
         "projects_updated": 0,
-        "projects_deduped": 0
-      }
-    },
-    {
-      "started_at": "2026-04-16T07:00:18.517355",
-      "status": "success",
-      "duration_seconds": 626,
-      "discovery": {
-        "articles_found": 0,
-        "projects_added": 0,
-        "projects_updated": 0,
-        "projects_deduped": 0
+        "projects_deduped": 57
       }
     }
   ]

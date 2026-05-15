@@ -403,16 +403,17 @@ def fetch_page_text(url: str) -> str:
 
     Returns extracted text or empty string on failure.
     """
-    # Try trafilatura first
+    # Try trafilatura first. NOTE: trafilatura.fetch_url() ignores timeout —
+    # we fetch the HTML ourselves with a hard timeout, then hand to extract().
     if _HAS_TRAFILATURA:
         try:
-            downloaded = trafilatura.fetch_url(url)
-            if downloaded:
-                text = trafilatura.extract(
-                    downloaded, favor_recall=True, include_comments=False,
-                )
-                if text and len(text) >= 100:
-                    return text.strip()
+            resp = requests.get(url, timeout=FETCH_TIMEOUT, headers=_HEADERS)
+            resp.raise_for_status()
+            text = trafilatura.extract(
+                resp.text, favor_recall=True, include_comments=False,
+            )
+            if text and len(text) >= 100:
+                return text.strip()
         except Exception as e:
             logger.debug(f"trafilatura failed for {url}: {e}")
 

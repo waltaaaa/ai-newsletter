@@ -1,10 +1,18 @@
 """Phase 3: Filtering — RSS filter, dedup, URL hard gate"""
+import os
 import traceback
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 
 import rss_monitor
+
+# Parallel workers for the per-province chunked extraction loop. Canada alone
+# can produce 60+ chunks (one claude subprocess per chunk); sequential runs
+# blew the 2400s Phase 3 budget. 3 parallel keeps stdin pressure low while
+# cutting Canada's wall-clock by ~3x.
+RSS_EXTRACT_WORKERS = int(os.environ.get('RSS_EXTRACT_WORKERS', '3'))
 from pipeline_config import SONNET_MODEL
 from project_dedup import deduplicate_projects
 from project_schema import normalize_project_type, is_brownfield
@@ -194,7 +202,9 @@ SOURCE TEXT:
         return []
 
     # ── Claude Code mode (default, $0) ──────────────────────────
-    from claude_reasoning import REASONING_AGENT_MODE, _call_claude_code_sync
+    from claude_reasoning import (
+        REASONING_AGENT_MODE, _call_claude_code_sync, ALLOW_API_FALLBACK,
+    )
     if REASONING_AGENT_MODE == 'claude_code':
         full_prompt = f"{system_prompt}\n\n{user_prompt}"
         raw = _call_claude_code_sync(full_prompt, f"filter-{context_label}")
@@ -217,7 +227,11 @@ SOURCE TEXT:
                         return projects
             except json.JSONDecodeError:
                 print(f"    [Claude Code] {context_label}: JSON parse failed")
-        # Fall through to API if available
+        # Fall through to API only if explicitly enabled
+        if not ALLOW_API_FALLBACK:
+            print(f"    [Claude Code] {context_label}: failed; API fallback disabled "
+                  "(set CLAUDE_ALLOW_API_FALLBACK=1 to enable)")
+            return []
         if not anthropic_client:
             return []
         print(f"    [Claude Code] {context_label}: falling back to API...")
@@ -300,56 +314,77 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
     # >BATCH_ITEM_CAP items into sub-batches. Applies to every province for safety,
     # but in practice only Canada hits the cap.
     BATCH_ITEM_CAP = 20
+
+    def _process_chunk(province, chunk_idx, chunk_count, chunk):
+        """Run one (province, chunk) extraction. Returns (projects, failed_items)."""
+        text = rss_monitor.format_for_context(chunk, max_items=BATCH_ITEM_CAP)
+        if not text.strip():
+            return [], []
+        label_suffix = f" [{chunk_idx+1}/{chunk_count}]" if chunk_count > 1 else ""
+        projects = _parse_projects_with_sonnet(
+            f"Government news releases from {province}{label_suffix}:\n\n{text}",
+            province if province != 'Canada' else 'Canada',
+            f"RSS/{province[:15]}{label_suffix}",
+            anthropic_client=anthropic_client,
+            claude_model=claude_model,
+            cost_state=cost_state,
+        )
+        if projects:
+            rss_urls = [{"url": i.get('url') or i.get('link') or '',
+                         "name": i.get('source_name', ''),
+                         "date": (i.get('published') or '')[:10],
+                         "source_type": "rss_government" if i.get('source_level') != 'media' else "rss_news"}
+                        for i in chunk if (i.get('url') or i.get('link'))]
+            for p in projects:
+                p.setdefault('_evidence', [])
+                existing = {e.get('url') for e in p['_evidence']}
+                for ru in rss_urls:
+                    if ru['url'] not in existing:
+                        p['_evidence'].append(ru)
+                        existing.add(ru['url'])
+                if not p.get('source_url') and rss_urls:
+                    p['source_url'] = rss_urls[0]['url']
+            return projects, []
+        # Sonnet found no projects — collect articles for Pro recovery
+        failed = [{
+            "title": item.get("title", ""),
+            "summary": item.get("summary", ""),
+            "url": item.get("url") or item.get("link", ""),
+            "source_name": item.get("source_name", ""),
+            "province": province,
+        } for item in chunk]
+        return [], failed
+
+    # Build the full work list across all provinces, then run in parallel.
+    # Provinces with one chunk are still fine — they just run alongside others.
+    work = []
+    chunk_counts = {}
     for province, items in sorted(by_province.items()):
-        # Split items into chunks of at most BATCH_ITEM_CAP
         chunks = [items[i:i + BATCH_ITEM_CAP] for i in range(0, len(items), BATCH_ITEM_CAP)] or [[]]
-        chunk_count = len(chunks)
-        province_projects: list = []
+        chunks = [c for c in chunks if c]
+        chunk_counts[province] = len(chunks)
         for chunk_idx, chunk in enumerate(chunks):
-            if not chunk:
-                continue
-            text = rss_monitor.format_for_context(chunk, max_items=BATCH_ITEM_CAP)
-            if not text.strip():
-                continue
-            label_suffix = f" [{chunk_idx+1}/{chunk_count}]" if chunk_count > 1 else ""
-            projects = _parse_projects_with_sonnet(
-                f"Government news releases from {province}{label_suffix}:\n\n{text}",
-                province if province != 'Canada' else 'Canada',
-                f"RSS/{province[:15]}{label_suffix}",
-                anthropic_client=anthropic_client,
-                claude_model=claude_model,
-                cost_state=cost_state,
-            )
-            if projects:
-                # Inject RSS article URLs as evidence (model often can't extract them)
-                rss_urls = [{"url": i.get('url') or i.get('link') or '',
-                             "name": i.get('source_name', ''),
-                             "date": (i.get('published') or '')[:10],
-                             "source_type": "rss_government" if i.get('source_level') != 'media' else "rss_news"}
-                            for i in chunk if (i.get('url') or i.get('link'))]
-                for p in projects:
-                    p.setdefault('_evidence', [])
-                    existing = {e.get('url') for e in p['_evidence']}
-                    for ru in rss_urls:
-                        if ru['url'] not in existing:
-                            p['_evidence'].append(ru)
-                            existing.add(ru['url'])
-                    if not p.get('source_url') and rss_urls:
-                        p['source_url'] = rss_urls[0]['url']
-                province_projects.extend(projects)
-            else:
-                # Sonnet found no projects — collect articles for Pro recovery
-                for item in chunk:
-                    failed_articles.append({
-                        "title": item.get("title", ""),
-                        "summary": item.get("summary", ""),
-                        "url": item.get("url") or item.get("link", ""),
-                        "source_name": item.get("source_name", ""),
-                        "province": province,
-                    })
-        if province_projects:
-            print(f"    {province}: {len(province_projects)} projects from RSS ({chunk_count} chunk{'s' if chunk_count != 1 else ''})")
-        all_projects.extend(province_projects)
+            work.append((province, chunk_idx, len(chunks), chunk))
+
+    province_projects: dict[str, list] = {p: [] for p in by_province}
+    if work:
+        with ThreadPoolExecutor(max_workers=RSS_EXTRACT_WORKERS) as ex:
+            futs = {ex.submit(_process_chunk, *w): w for w in work}
+            for fut in as_completed(futs):
+                province = futs[fut][0]
+                try:
+                    projects, failed = fut.result()
+                except Exception as e:
+                    print(f"    [RSS PROJECTS] {province} chunk failed: {type(e).__name__}: {e}")
+                    continue
+                province_projects[province].extend(projects)
+                failed_articles.extend(failed)
+
+    for province, projs in province_projects.items():
+        if projs:
+            cnt = chunk_counts.get(province, 0)
+            print(f"    {province}: {len(projs)} projects from RSS ({cnt} chunk{'s' if cnt != 1 else ''})")
+        all_projects.extend(projs)
 
     print(f"  [RSS PROJECTS] {len(all_projects)} extracted, "
           f"{len(failed_articles)} articles queued for Pro recovery")
