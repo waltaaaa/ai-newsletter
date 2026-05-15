@@ -1,16 +1,19 @@
-name: Daily Indicators
+name: Monthly Deep Sweep
 
 on:
   schedule:
-    # Midnight ET = 5:00 UTC (UTC-5 in winter, UTC-4 in summer; use 5:00 UTC)
-    - cron: "0 5 * * *"
+    # 15th of each month at 09:00 UTC — deliberately offset from the weekly
+    # Monday run (10:30 UTC) and monthly-refresh.yml (11:00 UTC on the 1st)
+    # so the heavy NAICS deep sweep never collides with another pipeline.
+    - cron: "0 9 15 * *"
   workflow_dispatch:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
-  refresh-indicators:
+  deep-sweep:
     runs-on: ubuntu-latest
 
     steps:
@@ -78,10 +81,12 @@ jobs:
             wget -q https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf -O models/qwen2.5-3b-instruct-q4_k_m.gguf
           fi
 
-      # dashboard.db is persisted via the `db-latest` Release asset (it
-      # exceeds GitHub's 100MB/file limit and is not git-versioned). The daily
-      # run inherits provincial OEA/ISQ data from whatever the weekly /
-      # deep-sweep run last persisted — it does not re-fetch it itself.
+      # dashboard.db is the pipeline's stateful working DB. It exceeds GitHub's
+      # 100MB/file limit so it is NOT git-versioned; it is persisted as the
+      # `db-latest` Release asset (restored here, re-uploaded at the end).
+      # Bootstrap fallback: the last git-tracked copy on origin/main. If both
+      # are unavailable the pipeline starts from an empty schema and the
+      # validator deploy-gate blocks the (degraded) deploy — never silent.
       - name: Restore dashboard.db
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -95,7 +100,18 @@ jobs:
             echo "Bootstrapped dashboard.db from origin/main ($(du -h dashboard.db | cut -f1))"
           fi
 
-      - name: Run daily indicator refresh
+      - name: Backup database before deep sweep
+        run: cp dashboard.db dashboard.db.bak 2>/dev/null || true
+
+      # Issue #1: ON_on_* / QC_qc_* provincial series come from provincial
+      # Excel workbooks, not the regular pipeline. Refresh them so they don't
+      # go stale. continue-on-error: provincial source flakiness is WARN-tier,
+      # never a hard pipeline failure.
+      - name: Refresh provincial OEA/ISQ series
+        run: python tools/refresh_provincial_oea_isq.py
+        continue-on-error: true
+
+      - name: Run monthly deep sweep
         env:
           # ANTHROPIC_API_KEY is intentionally omitted. The pipeline runs all
           # agents on the Claude subscription via CLAUDE_CODE_OAUTH_TOKEN. With
@@ -109,12 +125,17 @@ jobs:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           GEMINI_MODEL: gemini-2.5-flash
           SONNET_MODEL: claude-sonnet-4-6
+          OPUS_MODEL: claude-opus-4-6
           GEMINI_SEARCH_ENABLED: "false"
           LOCAL_MODEL_PATH: models/qwen2.5-3b-instruct-q4_k_m.gguf
-        run: python update_dashboard.py --indicators-only
+        run: python update_dashboard.py --deep-sweep
+
+      - name: Generate briefing exports
+        run: python briefing_export.py
+        continue-on-error: true
 
       # Validator-as-deploy-gate (Phase B.5). Blocks the workflow on any
-      # schema FAIL so the daily run cannot clobber required fields.
+      # schema FAIL so the deep sweep cannot clobber required fields.
       # Exit codes: 0 = PASS, 2 = WARN (known producer-regen gaps, pass),
       # 1 = FAIL (any other non-zero → fail the job).
       # No override flag. No silent ship.
@@ -157,4 +178,29 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/
-          git diff --staged --quiet || (git commit -m "auto: daily indicators $(date +%Y-%m-%d)" && git push)
+          git diff --staged --quiet || (git commit -m "auto: monthly deep sweep $(date +%Y-%m-%d)" && git push)
+
+      - name: Archive database backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard-backup-${{ github.run_number }}
+          path: dashboard.db.bak
+          retention-days: 14
+
+      - name: Create issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Deep sweep failure: ${new Date().toISOString().split('T')[0]}`;
+            const body = `The monthly deep sweep failed on run #${context.runNumber}.\n\n` +
+              `[View run logs](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})\n\n` +
+              `A database backup artifact is available for this run.`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['pipeline-failure']
+            });

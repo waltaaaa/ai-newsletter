@@ -26,6 +26,40 @@ jobs:
         with:
           python-version: "3.12"
 
+      # ── Claude subscription auth (no API, $0) — fail fast ───────────────
+      # Every agent defaults to claude_code mode and shells out to `claude -p`
+      # with ANTHROPIC_API_KEY stripped from the subprocess env
+      # (claude_reasoning._CLAUDE_ENV). On a GitHub-hosted runner the CLI must
+      # be installed and authenticated head-lessly via CLAUDE_CODE_OAUTH_TOKEN
+      # (minted locally with `claude setup-token`, stored as a repo secret).
+      # These steps run BEFORE the heavy pip/model steps so a missing/expired
+      # token fails the job in seconds, not after a long install.
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Claude Code CLI
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude --version
+
+      - name: Verify Claude subscription auth
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+        run: |
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "::error::CLAUDE_CODE_OAUTH_TOKEN secret is not set. Mint one locally with 'claude setup-token' and add it as a repo secret named CLAUDE_CODE_OAUTH_TOKEN."
+            exit 1
+          fi
+          if ! out=$(claude -p "Reply with exactly: OK" --model sonnet 2>&1); then
+            echo "::error::Claude subscription auth failed — CLAUDE_CODE_OAUTH_TOKEN may be expired or revoked. Re-mint with 'claude setup-token' and update the repo secret."
+            echo "$out"
+            exit 1
+          fi
+          echo "Claude subscription auth OK: $out"
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
@@ -45,12 +79,46 @@ jobs:
             wget -q https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf -O models/qwen2.5-3b-instruct-q4_k_m.gguf
           fi
 
+      # dashboard.db is the pipeline's stateful working DB. It exceeds GitHub's
+      # 100MB/file limit so it is NOT git-versioned; it is persisted as the
+      # `db-latest` Release asset (restored here, re-uploaded at the end).
+      # Bootstrap fallback: the last git-tracked copy on origin/main. If both
+      # are unavailable the pipeline starts from an empty schema and the
+      # validator deploy-gate blocks the (degraded) deploy — never silent.
+      - name: Restore dashboard.db
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release download db-latest --repo "$GITHUB_REPOSITORY" --pattern dashboard.db --dir . --clobber 2>/dev/null; then
+            echo "Restored dashboard.db from db-latest release ($(du -h dashboard.db | cut -f1))"
+          else
+            echo "No db-latest release asset yet — bootstrapping from origin/main"
+            git fetch --depth=1 origin main
+            git show origin/main:dashboard.db > dashboard.db
+            echo "Bootstrapped dashboard.db from origin/main ($(du -h dashboard.db | cut -f1))"
+          fi
+
       - name: Backup database before pipeline
         run: cp dashboard.db dashboard.db.bak 2>/dev/null || true
 
+      # Issue #1: ON_on_* / QC_qc_* provincial series come from provincial
+      # Excel workbooks, not the regular pipeline. Refresh them so they don't
+      # go stale. continue-on-error: provincial source flakiness is WARN-tier,
+      # never a hard pipeline failure.
+      - name: Refresh provincial OEA/ISQ series
+        run: python tools/refresh_provincial_oea_isq.py
+        continue-on-error: true
+
       - name: Run weekly pipeline
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # ANTHROPIC_API_KEY is intentionally omitted. The pipeline runs all
+          # agents on the Claude subscription via CLAUDE_CODE_OAUTH_TOKEN. With
+          # no API key present, a failed Claude Code call CANNOT fall back to
+          # the paid Anthropic API (see claude_reasoning.py:148-151) — instead
+          # the agents return empty and the validator deploy-gate FAILs loudly,
+          # so a dead/expired token never silently bills the API.
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           GEMINI_MODEL: gemini-2.5-flash
@@ -92,11 +160,22 @@ jobs:
       - name: Compact database
         run: python -c "import sqlite3; c=sqlite3.connect('dashboard.db'); c.execute('VACUUM'); c.close()"
 
-      - name: Commit and push updated docs/ and dashboard.db
+      - name: Persist dashboard.db to Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view db-latest --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create db-latest --repo "$GITHUB_REPOSITORY" \
+              --title "dashboard.db (rolling)" \
+              --notes "Pipeline working database. Auto-updated by the pipeline workflows; not git-versioned (exceeds GitHub 100MB/file). Reader-facing weekly history is in docs/data."
+          gh release upload db-latest dashboard.db --repo "$GITHUB_REPOSITORY" --clobber
+          echo "Uploaded dashboard.db to db-latest release ($(du -h dashboard.db | cut -f1))"
+
+      - name: Commit and push updated docs/
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/ dashboard.db
+          git add docs/
           git diff --staged --quiet || (git commit -m "auto: weekly pipeline update $(date +%Y-%m-%d)" && git push)
 
       - name: Archive database backup
