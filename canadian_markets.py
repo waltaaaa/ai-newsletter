@@ -14,6 +14,30 @@ from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
+
+def _yf_close(obj):
+    """Coerce a yfinance 'Close' slice into a flat numeric Series.
+
+    yfinance >=1.x returns MultiIndex columns even for single-ticker
+    downloads, so df['Close'] is a 1-column DataFrame and float(x.iloc[-1])
+    raises "not 'Series'". Squeeze 1-col frames to a Series (multi-col → first
+    column); pass real Series through. Returns a NaN-dropped float Series, or
+    None if unusable.
+    """
+    try:
+        import pandas as pd
+        if obj is None:
+            return None
+        if isinstance(obj, pd.DataFrame):
+            if obj.shape[1] == 0:
+                return None
+            obj = obj.iloc[:, 0]
+        s = pd.to_numeric(obj, errors="coerce").dropna()
+        return s if len(s) else None
+    except Exception:
+        return None
+
+
 # ── Canadian commodity indicator definitions ─────────────────────────
 
 CANADIAN_COMMODITY_INDICATORS = {
@@ -126,12 +150,18 @@ def fetch_canadian_commodities():
                 prices = []
                 for ticker in tickers:
                     data = yf.download(ticker, period="1y", progress=False)
-                    if data is not None and len(data) > 0:
-                        prices.append(data["Close"])
+                    try:
+                        s = _yf_close(data["Close"]) if data is not None and len(data) else None
+                    except Exception:
+                        s = None
+                    if s is not None and len(s) > 0:
+                        prices.append(s)
                 if not prices:
                     continue
                 import pandas as pd
-                combined = pd.concat(prices, axis=1).mean(axis=1)
+                combined = pd.concat(prices, axis=1).mean(axis=1).dropna()
+                if len(combined) == 0:
+                    continue
                 current = float(combined.iloc[-1])
                 week_ago = float(combined.iloc[-6]) if len(combined) > 5 else current
                 month_ago = float(combined.iloc[-22]) if len(combined) > 21 else current
@@ -139,13 +169,14 @@ def fetch_canadian_commodities():
 
             elif compute == "spread":
                 # Difference between two tickers
-                data_list = []
+                closes = []
                 for ticker in tickers[:2]:
-                    data = yf.download(ticker, period="1y", progress=False)
-                    data_list.append(data)
-                if len(data_list) < 2:
+                    closes.append(_yf_close(yf.download(ticker, period="1y", progress=False)["Close"]))
+                if len(closes) < 2 or any(c is None for c in closes):
                     continue
-                spread = data_list[0]["Close"] - data_list[1]["Close"]
+                spread = (closes[0] - closes[1]).dropna()
+                if len(spread) == 0:
+                    continue
                 current = float(spread.iloc[-1])
                 week_ago = float(spread.iloc[-6]) if len(spread) > 5 else current
                 month_ago = float(spread.iloc[-22]) if len(spread) > 21 else current
@@ -157,12 +188,13 @@ def fetch_canadian_commodities():
                 if not ticker:
                     continue
                 data = yf.download(ticker, period="1y", progress=False)
-                if data is None or len(data) == 0:
+                col = _yf_close(data["Close"]) if data is not None and len(data) else None
+                if col is None or len(col) == 0:
                     continue
-                current = float(data["Close"].iloc[-1])
-                week_ago = float(data["Close"].iloc[-6]) if len(data) > 5 else current
-                month_ago = float(data["Close"].iloc[-22]) if len(data) > 21 else current
-                year_ago = float(data["Close"].iloc[0]) if len(data) > 200 else current
+                current = float(col.iloc[-1])
+                week_ago = float(col.iloc[-6]) if len(col) > 5 else current
+                month_ago = float(col.iloc[-22]) if len(col) > 21 else current
+                year_ago = float(col.iloc[0]) if len(col) > 200 else current
 
             results[ind_id] = {
                 "description": info["description"],

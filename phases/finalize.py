@@ -232,6 +232,22 @@ def run(conn, context, logger):
             toronto_tz2 = pytz.timezone('America/Toronto')
             today2 = datetime.now(toronto_tz2)
             dated_id = today2.strftime('%Y-%m-%d')
+
+            # Snapshot the PREVIOUS edition before newsletter_latest is
+            # overwritten below. The stale-briefing gate (Check 5) must compare
+            # against the prior week; reading newsletter_latest AFTER this write
+            # compared the new briefing against itself and reported ~100%
+            # overlap on every run (chronic false positive).
+            _prev_headline, _prev_exec_summary = "", ""
+            try:
+                from db import get_dashboard_state as _gds_prev
+                _prev_nl = _gds_prev(conn, 'newsletter_latest')
+                if isinstance(_prev_nl, dict):
+                    _prev_headline = (_prev_nl.get("headline", "") or "").strip()
+                    _prev_exec_summary = _prev_nl.get("executive_summary", "") or ""
+            except Exception:
+                pass
+
             save_dashboard_state(conn, 'newsletter_latest', final_payload)
             save_dashboard_state(conn, f'newsletter_{dated_id}', final_payload)
             if final_payload.get('_analysis_incomplete'):
@@ -304,21 +320,28 @@ def run(conn, context, logger):
                 print(f"  - {v}")
             # Editorial violations are warnings, not gate blockers
 
-        # Check 5: stale briefing detection
+        # Check 5: stale briefing detection. The real failure mode is the
+        # pipeline republishing the PREVIOUS edition (conductor stale-fallback).
+        # Compare against the prior edition snapshotted before the overwrite
+        # above — and flag only on a (near-)identical republish, not on the
+        # shared macro vocabulary that any two distinct weeks naturally have
+        # (the old shared-words/0.90 ratio fired on every genuine new edition).
         try:
-            from db import get_dashboard_state
-            prev = get_dashboard_state(conn, "newsletter_latest")
-            if prev and isinstance(prev, dict):
-                prev_summary = prev.get("executive_summary", "")
-                if prev_summary and exec_summary:
-                    # Simple overlap check: shared words / total words
-                    prev_words = set(prev_summary.lower().split())
+            new_headline = (final_payload.get("headline", "") or "").strip()
+            if _prev_exec_summary and exec_summary:
+                if _prev_headline and new_headline and _prev_headline == new_headline:
+                    print(f"\n[STALE WARNING] Headline identical to previous edition: {new_headline!r}")
+                    gate_failures.append("Stale briefing: headline identical to previous edition")
+                    gate_passed = False
+                else:
+                    prev_words = set(_prev_exec_summary.lower().split())
                     new_words = set(exec_summary.lower().split())
                     if prev_words and new_words:
                         overlap = len(prev_words & new_words) / max(len(prev_words), len(new_words))
-                        if overlap > 0.90:
-                            print(f"\n[STALE WARNING] Briefing has {overlap:.0%} overlap with previous week")
-                            gate_failures.append(f"Stale briefing: {overlap:.0%} overlap with previous week")
+                        # >=0.98 = effectively the same text, not just same topic
+                        if overlap >= 0.98:
+                            print(f"\n[STALE WARNING] Briefing {overlap:.0%} identical to previous week")
+                            gate_failures.append(f"Stale briefing: {overlap:.0%} identical to previous week")
                             gate_passed = False
         except Exception:
             pass

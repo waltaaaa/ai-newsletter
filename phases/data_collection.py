@@ -18,6 +18,33 @@ from pipeline_store import cache as _cache
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# yfinance helper
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _yf_close(obj):
+    """Coerce a yfinance 'Close' slice into a flat numeric Series.
+
+    yfinance >=1.x returns MultiIndex columns even for single-ticker
+    downloads, so df['Close'] is a 1-column DataFrame and float(x.iloc[-1])
+    raises "not 'Series'". Squeeze 1-col frames to a Series (multi-col → first
+    column); pass real Series through. Returns a NaN-dropped float Series, or
+    None if unusable.
+    """
+    try:
+        import pandas as pd
+        if obj is None:
+            return None
+        if isinstance(obj, pd.DataFrame):
+            if obj.shape[1] == 0:
+                return None
+            obj = obj.iloc[:, 0]
+        s = pd.to_numeric(obj, errors="coerce").dropna()
+        return s if len(s) else None
+    except Exception:
+        return None
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Formatting helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -121,18 +148,16 @@ def get_live_commodities():
         """Get price series for a ticker from batch data, falling back to individual download."""
         if data is not None:
             try:
-                col = data[ticker] if len(all_tickers) > 1 else data
-                col = col.dropna()
-                if len(col) >= 2:
+                raw = data[ticker] if len(all_tickers) > 1 else data
+                col = _yf_close(raw)
+                if col is not None and len(col) >= 2:
                     return col
             except (KeyError, TypeError):
                 pass
         # Individual fallback for tickers that failed in batch
         try:
-            ind = yf.download(ticker, period="1y", progress=False)['Close']
-            if hasattr(ind, 'dropna'):
-                ind = ind.dropna()
-            if len(ind) >= 2:
+            ind = _yf_close(yf.download(ticker, period="1y", progress=False)['Close'])
+            if ind is not None and len(ind) >= 2:
                 return ind
         except Exception:
             pass
@@ -222,8 +247,16 @@ def get_financial_markets():
 
     def get_row(ticker, label, extra=None):
         try:
-            col = (data[ticker] if len(all_tickers) > 1 else data).dropna()
-            if len(col) < 2:
+            col = _yf_close(data[ticker] if len(all_tickers) > 1 else data)
+            if col is None or len(col) < 2:
+                # Individual fallback — a ticker absent/NaN in the batch
+                # (partial Yahoo response / rate-limit) otherwise silently
+                # drops that index or FX pair from the briefing.
+                try:
+                    col = _yf_close(yf.download(ticker, period="1y", progress=False)['Close'])
+                except Exception:
+                    col = None
+            if col is None or len(col) < 2:
                 return None
             current  = float(col.iloc[-1])
             prev     = float(col.iloc[-2])
