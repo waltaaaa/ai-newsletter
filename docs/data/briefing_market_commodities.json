@@ -1,16 +1,16 @@
 {
-  "commodity_commentary": "<p><span class=\"lead-sentence\">Commodity markets were led higher this week by energy, where WTI crude rose 4.97% to US$100.16/bbl and Brent gained 7.21% to US$108.59/bbl, both driven by Strait of Hormuz supply disruption flagged in the May IEA Oil Market Report.</span><sup>20</sup> Natural gas added 5.88% to US$2.92/MMBtu while remaining 14.82% below a year ago. Precious metals diverged from energy: gold fell 3.33% to US$4,563.20/oz and silver eased 2.00% to US$78.79/oz, though gold held a 39.1% year-over-year gain after record Q1 2026 global demand reported by the World Gold Council<sup>33</sup>. Base metals firmed, with copper up 1.47% to US$6.34/lb on resilient Chinese demand after Q1 2026 GDP printed 5.0%<sup>25</sup>. Agriculture moved with wheat up 7.82% to 655.00c/bu and potash up 4.34% on the Nutrien proxy; lumber added 1.39% to US$584.50/mfbm. The Signal Dispatch cross-reference engine ties the energy move to 59 oil and gas projects ($97.6B) and the metals strength to the resource pipeline within the database's 7,480 tracked projects valued at $1,472.2B<sup>14</sup>. Western Canadian Select, uranium, nickel and canola carried no priced series in the data this week and are marked unavailable.</p>",
+  "commodity_commentary": "<p><span class=\"lead-sentence\">Commodity markets were led by energy, where WTI crude held at US$103.02/bbl, up 0.82% on the week and 64.33% year-over-year, and Brent rose 2.20% to US$110.14/bbl, both reflecting the Strait of Hormuz supply disruption that the World Bank flagged as the biggest energy price surge in four years.</span><sup>13</sup> Natural gas eased 1.31% to US$3.079/MMBtu, holding 8.36% below a year ago. Precious metals diverged from crude: gold slipped 1.64% to US$4,497.00/oz and silver fell 10.41% to US$76.27/oz, though silver remained 136.04% above its year-ago level — the steepest 12-month move in the complex — after a year of safe-haven demand against the energy-led inflation regime<sup>12</sup>. Base metals firmed, with copper up 14.29% to US$6.32/lb (+36.21% year-over-year) as China halted sulfuric-acid exports from May and Q1 2026 Chinese GDP printed +5.0%<sup>18</sup>. Agriculture advanced, with wheat up 1.02% to US$671.75/bu — a fresh 52-week high — and the Nutrien potash proxy up 5.31%; lumber added 1.89% to US$593.00/mfbm. The Signal Dispatch cross-reference engine ties the energy move to 59 oil and gas projects valued at $97.58B and the metals strength to 390 mining projects valued at $227.11B<sup>18</sup>. Western Canadian Select, uranium, nickel and canola carried no priced series this cycle and are marked unavailable.</p>",
   "commodities": [
     {
       "name": "Crude Oil (WTI)",
       "symbol": "CL=F",
       "category": "Energy",
-      "val": "$100.16/bbl",
-      "day": "+4.97%",
-      "mm": "+19.45%",
-      "yy": "+60.10%",
+      "val": "$103.02/bbl",
+      "day": "+0.82%",
+      "mm": "+22.86%",
+      "yy": "+64.33%",
       "unit": "US$/bbl",
-      "context": "<p><strong>Crude Oil (WTI):</strong> <strong>US$100.16/bbl</strong> (<strong>+4.97%</strong> week-over-week) — crude climbed back toward US$100 following reports of a Trump-Xi discussion of the Strait of Hormuz, with the May IEA Oil Market Report framing the supply-shock backdrop<sup>19</sup><sup>20</sup>. The Signal Dispatch cross-reference engine links the move to 59 oil and gas projects valued at $97.6B, connected to the crude-led March trade surplus. If WTI holds near US$100/bbl, those 59 oil and gas projects would retain netbacks well above the levels implied by the US$70.70/bbl trailing one-year average, with the price now 60.10% above its year-ago level and within the US$55.27-US$112.95/bbl 52-week range<sup>14</sup>.</p>"
+      "context": "<p><strong>Crude Oil (WTI):</strong> <strong>US$103.02/bbl</strong> (<strong>+0.82%</strong> week-over-week) — crude held above the US$100 mark as the Strait of Hormuz disruption sustained the supply premium the World Bank described as the biggest energy price surge in four years<sup>13</sup>. The Signal Dispatch cross-reference engine links the level to 59 oil and gas projects valued at $97.58B and 613 transport and logistics projects valued at $44.13B exposed to fuel-cost dynamics. WTI is up 22.86% on the month and 64.33% year-over-year against a one-year average of US$70.25/bbl, sitting below its 52-week high of US$112.95/bbl set during the spring supply shock<sup>11</sup>. If WTI holds above US$100/bbl, the database's 35 NAICS-21 mining and extraction projects carrying $81.39B in tracked value would maintain the netback assumptions cited in public filings, with the broader 59-project oil and gas pipeline retaining measurable exposure to sustained crude levels<sup>11</sup>.</p>"
     },
     {
       "name": "Western Canadian Select",
@@ -21,138 +21,140 @@
       "mm": "N/A",
       "yy": "N/A",
       "unit": "US$/bbl",
-      "context": "<p><strong>Western Canadian Select:</strong> <strong>N/A</strong> — Data unavailable for this commodity this week. No WCS price or WCS/WTI differential series was carried in the data this run, so the WCS discount calculation and heavy-crude netback analysis are not reported.</p>"
+      "context": "<p><strong>Western Canadian Select:</strong> Data unavailable for this commodity this week. The dossier carries no WCS pricing or WCS/WTI differential this cycle; WCS discount analysis is reported as not available.</p>"
     },
     {
       "name": "Crude Oil (Brent)",
       "symbol": "BZ=F",
       "category": "Energy",
-      "val": "$108.59/bbl",
-      "day": "+7.21%",
-      "mm": "+20.15%",
-      "yy": "+66.09%",
+      "val": "$110.14/bbl",
+      "day": "+2.20%",
+      "mm": "+21.86%",
+      "yy": "+68.05%",
       "unit": "US$/bbl",
-      "context": "<p><strong>Crude Oil (Brent):</strong> <strong>US$108.59/bbl</strong> (<strong>+7.21%</strong> week-over-week) — the global benchmark outpaced WTI on the Hormuz supply disruption, widening to 66.09% above its year-ago level, the largest 12-month gain among tracked energy contracts and near the upper end of its US$58.92-US$118.35/bbl 52-week range<sup>20</sup>.</p>"
+      "context": "<p><strong>Crude Oil (Brent):</strong> <strong>US$110.14/bbl</strong> (<strong>+2.20%</strong> week-over-week) — the global benchmark outpaced WTI as OPEC output posted its biggest monthly drop in decades and the cartel announced only a symbolic output rise during the Hormuz closure<sup>14</sup><sup>15</sup>. Brent is up 68.05% year-over-year against a one-year average of US$74.44/bbl, holding below its 52-week high of US$118.35/bbl. The Signal Dispatch cross-reference engine ties the global crude strength to the 59 oil and gas projects valued at $97.58B in the pipeline<sup>15</sup>.</p>"
     },
     {
       "name": "Natural Gas",
       "symbol": "NG=F",
       "category": "Energy",
-      "val": "$2.92/MMBtu",
-      "day": "+5.88%",
-      "mm": "+9.16%",
-      "yy": "-14.82%",
+      "val": "$3.079/MMBtu",
+      "day": "-1.31%",
+      "mm": "-1.31%",
+      "yy": "-8.36%",
       "unit": "US$/MMBtu",
-      "context": "<p><strong>Natural Gas:</strong> <strong>US$2.92/MMBtu</strong> (<strong>+5.88%</strong> week-over-week) — Henry Hub firmed on the broader energy-complex move tied to the Hormuz disruption, yet remained 14.82% below its year-ago level and beneath its US$3.28/MMBtu trailing one-year average, a level relevant to LNG export economics and feed-gas-linked projects in the database<sup>19</sup>. The price held well off the US$7.46/MMBtu 52-week high and above the US$1.64/MMBtu 52-week low.</p>"
+      "context": "<p><strong>Natural Gas:</strong> <strong>US$3.079/MMBtu</strong> (<strong>-1.31%</strong> week-over-week) — the Henry Hub benchmark eased, diverging from crude as the oil-driven supply premium did not extend to gas, leaving the contract 8.36% below its year-ago level against a one-year average of US$3.53/MMBtu<sup>13</sup>. The price sits well below its 52-week high of US$6.80/MMBtu. The Signal Dispatch cross-reference engine links gas pricing to LNG-linked projects within the 59-project oil and gas pipeline valued at $97.58B, where export economics track the gap between domestic prices and Asian delivered cost<sup>11</sup>.</p>"
     },
     {
       "name": "Gold",
       "symbol": "GC=F",
       "category": "Precious Metals",
-      "val": "$4,563.20/oz",
-      "day": "-3.33%",
-      "mm": "-6.06%",
-      "yy": "+39.11%",
+      "val": "$4,497.00/oz",
+      "day": "-1.64%",
+      "mm": "-1.64%",
+      "yy": "+41.33%",
       "unit": "US$/oz",
-      "context": "<p><strong>Gold:</strong> <strong>US$4,563.20/oz</strong> (<strong>-3.33%</strong> week-over-week) — bullion eased as the energy-led move pulled flows toward crude, though it held a 39.11% year-over-year gain following record Q1 2026 global gold demand reported by the World Gold Council and continued central-bank buying<sup>33</sup><sup>34</sup>. The Signal Dispatch cross-reference engine connects the price to mining projects within the tracked pipeline; the level sits below the US$5,318.40/oz 52-week high but well above the US$3,659.87/oz one-year average.</p>"
+      "context": "<p><strong>Gold:</strong> <strong>US$4,497.00/oz</strong> (<strong>-1.64%</strong> week-over-week) — bullion eased as higher U.S. Treasury yields following the Fed's April 29 hold raised the opportunity cost of holding the metal, though it retained a 41.33% year-over-year gain against a one-year average of US$4,013.24/oz<sup>12</sup>. Gold sits below its 52-week high of US$5,318.40/oz. The Signal Dispatch cross-reference engine ties precious-metals pricing to 390 mining projects valued at $227.11B; mining and quarrying GDP rose +3.6% year-over-year over the same window<sup>8</sup>.</p>"
     },
     {
       "name": "Silver",
       "symbol": "SI=F",
       "category": "Precious Metals",
-      "val": "$78.79/oz",
-      "day": "-2.00%",
-      "mm": "-3.61%",
-      "yy": "+138.90%",
+      "val": "$76.27/oz",
+      "day": "-10.41%",
+      "mm": "-6.69%",
+      "yy": "+136.04%",
       "unit": "US$/oz",
-      "context": "<p><strong>Silver:</strong> <strong>US$78.79/oz</strong> (<strong>-2.00%</strong> week-over-week) — silver eased following the pullback in gold as energy-complex flows drew capital toward crude, but retained a 138.90% year-over-year gain, the largest 12-month move of any tracked commodity, against a US$29.51-US$115.08/oz 52-week range.</p>"
+      "context": "<p><strong>Silver:</strong> <strong>US$76.27/oz</strong> (<strong>-10.41%</strong> week-over-week) — silver posted the sharpest weekly decline in the complex on the same yield-driven pressure that weighed on gold, yet it held 136.04% above its year-ago level, the steepest 12-month gain among tracked commodities, against a one-year average of US$58.60/oz and a 52-week high of US$115.08/oz<sup>12</sup>.</p>"
     },
     {
       "name": "Copper",
       "symbol": "HG=F",
       "category": "Base Metals",
-      "val": "$6.34/lb",
-      "day": "+1.47%",
-      "mm": "+3.89%",
-      "yy": "+37.27%",
+      "val": "$6.32/lb",
+      "day": "+14.29%",
+      "mm": "+14.29%",
+      "yy": "+36.21%",
       "unit": "US$/lb",
-      "context": "<p><strong>Copper:</strong> <strong>US$6.34/lb</strong> (<strong>+1.47%</strong> week-over-week) — copper firmed on resilient Chinese demand after Q1 2026 GDP printed 5.0%, supporting electrification and base-metals mining projects in the database<sup>25</sup>. The price is 37.27% above its year-ago level and near the US$6.64/lb 52-week high, well above the US$4.99/lb one-year average.</p>"
+      "context": "<p><strong>Copper:</strong> <strong>US$6.32/lb</strong> (<strong>+14.29%</strong> week-over-week) — copper firmed as China halted sulfuric-acid exports from May, tightening the global supply chain, with Q1 2026 Chinese GDP at +5.0% reinforcing demand and the metal nearing a record US$6.58/lb on May 12<sup>18</sup>. The Signal Dispatch cross-reference engine links electrification and grid demand to 390 mining projects valued at $227.11B; copper is up 36.21% year-over-year against a one-year average of US$5.17/lb<sup>19</sup>.</p>"
     },
     {
       "name": "Uranium",
-      "symbol": "URA",
-      "category": "Energy",
-      "val": "N/A",
-      "day": "N/A",
-      "mm": "N/A",
-      "yy": "N/A",
-      "unit": "US$/lb",
-      "context": "<p><strong>Uranium:</strong> <strong>N/A</strong> — Data unavailable for this commodity this week. No spot uranium series was carried in the data this run; Saskatchewan uranium project exposure is referenced qualitatively only.</p>"
-    },
-    {
-      "name": "Nickel",
-      "symbol": "NICKEL",
+      "symbol": "UX",
       "category": "Base Metals",
       "val": "N/A",
       "day": "N/A",
       "mm": "N/A",
       "yy": "N/A",
-      "unit": "US$/MT",
-      "context": "<p><strong>Nickel:</strong> <strong>N/A</strong> — Data unavailable for this commodity this week. Only a single spot datapoint (about US$17,076/t) was carried, with no computable weekly, monthly or year-over-year deltas, so no price move is published.</p>"
+      "unit": "US$/lb",
+      "context": "<p><strong>Uranium:</strong> Data unavailable for this commodity this week. The timeseries carries only a single level datapoint (US$86.25/lb U3O8) with no computable deltas; referenced qualitatively only.</p>"
+    },
+    {
+      "name": "Nickel",
+      "symbol": "NI",
+      "category": "Base Metals",
+      "val": "N/A",
+      "day": "N/A",
+      "mm": "N/A",
+      "yy": "N/A",
+      "unit": "US$/t",
+      "context": "<p><strong>Nickel:</strong> Data unavailable for this commodity this week. The timeseries carries only flat-stub history (US$18,567/t) with no computable deltas; referenced qualitatively only.</p>"
     },
     {
       "name": "Wheat",
       "symbol": "ZW=F",
       "category": "Agriculture",
-      "val": "655.00c/bu",
-      "day": "+7.82%",
-      "mm": "+10.78%",
-      "yy": "+19.96%",
-      "unit": "US$/bu",
-      "context": "<p><strong>Wheat:</strong> <strong>655.00c/bu</strong> (<strong>+7.82%</strong> week-over-week) — wheat advanced as the Middle East conflict lifting global input costs fed into grain markets, and now stands 19.96% above its year-ago level at the top of its 495.00-665.00c/bu 52-week range, relevant to Prairie agriculture and grain-handling projects in the pipeline.</p>"
+      "val": "$671.75/bu",
+      "day": "+1.02%",
+      "mm": "+13.62%",
+      "yy": "+26.98%",
+      "unit": "CAD$/bu",
+      "context": "<p><strong>Wheat:</strong> <strong>$671.75/bu</strong> (<strong>+1.02%</strong> week-over-week) — wheat advanced to a fresh 52-week high of $671.75/bu, up 26.98% year-over-year against a one-year average of $545.06/bu, as the energy-cost backdrop lifted input and transport expenses across Prairie agriculture<sup>13</sup>.</p>"
     },
     {
       "name": "Canola",
-      "symbol": "CANOLA",
+      "symbol": "RS=F",
       "category": "Agriculture",
       "val": "N/A",
       "day": "N/A",
       "mm": "N/A",
       "yy": "N/A",
-      "unit": "CAD$/MT",
-      "context": "<p><strong>Canola:</strong> <strong>N/A</strong> — Data unavailable for this commodity this week. No canola series was carried in the data this run; Prairie oilseed exposure is referenced qualitatively only.</p>"
+      "unit": "CAD$/t",
+      "context": "<p><strong>Canola:</strong> Data unavailable for this commodity this week. The timeseries carries only a single level datapoint (CAD$733.20/t) with no computable deltas; referenced qualitatively only.</p>"
     },
     {
       "name": "Potash (Nutrien)",
       "symbol": "NTR",
       "category": "Agriculture",
-      "val": "$97.34",
-      "day": "+4.34%",
-      "mm": "-4.71%",
-      "yy": "+20.28%",
-      "unit": "US$/share",
-      "context": "<p><strong>Potash (Nutrien):</strong> <strong>US$97.34</strong> (<strong>+4.34%</strong> week-over-week, Nutrien proxy) — the potash proxy gained amid the firm global fertilizer demand backdrop and is 20.28% above its year-ago level, within a US$72.29-US$114.41 52-week range, relevant to Saskatchewan fertilizer projects in the database.</p>"
+      "val": "$98.45",
+      "day": "+5.31%",
+      "mm": "-2.33%",
+      "yy": "+22.74%",
+      "unit": "US$ (NTR proxy)",
+      "context": "<p><strong>Potash (Nutrien):</strong> <strong>US$98.45</strong> (<strong>+5.31%</strong> week-over-week) — the Nutrien equity proxy for potash rose, up 22.74% year-over-year against a one-year average of US$87.79 and below a 52-week high of US$114.41, on resilient global fertilizer demand channels tied to Saskatchewan production<sup>19</sup>. No spot potash feed is available, so the Nutrien equity is used as the proxy.</p>"
     },
     {
       "name": "Lumber",
       "symbol": "LB=F",
       "category": "Forest Products",
-      "val": "$584.50/mfbm",
-      "day": "+1.39%",
-      "mm": "+0.26%",
-      "yy": "-3.39%",
+      "val": "$593.00/mfbm",
+      "day": "+1.89%",
+      "mm": "+1.98%",
+      "yy": "-1.66%",
       "unit": "US$/mfbm",
-      "context": "<p><strong>Lumber:</strong> <strong>US$584.50/mfbm</strong> (<strong>+1.39%</strong> week-over-week) — lumber edged up but remained 3.39% below its year-ago level and essentially in line with its US$583.50/mfbm one-year average, as CMHC March housing starts fell 6% month-over-month, a construction-input read tied to BC forestry and residential projects in the database<sup>16</sup>. The price held below the US$695.50/mfbm 52-week high.</p>"
+      "context": "<p><strong>Lumber:</strong> <strong>US$593.00/mfbm</strong> (<strong>+1.89%</strong> week-over-week) — lumber firmed as Canadian housing starts jumped +17% in April to a 279,317 SAAR, lifting construction-input demand, though the contract remained 1.66% below its year-ago level against a one-year average of US$585.45/mfbm and a 52-week high of US$695.50/mfbm<sup>5</sup>. The Signal Dispatch cross-reference engine ties lumber to 72 NAICS-23 construction projects valued at $9.96B and 211 residential projects valued at $32.23B; construction GDP was -0.5% month-over-month despite the starts rebound<sup>5</sup>.</p>"
     }
   ],
   "wcs_analysis": null,
   "sources": [
-    { "id": 14, "title": "Canada posts trade surplus in March — CBC News", "url": "https://www.cbc.ca/news/business/trade-numbers-surplus-march-2026-9.7187910" },
-    { "id": 16, "title": "Housing starts for March 2026 — CMHC", "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-march-2026" },
-    { "id": 19, "title": "Oil hovers ~$100 after Trump-Xi Hormuz discussion — CNBC", "url": "https://www.cnbc.com/2026/05/14/oil-prices-today-wti-brent-hormuz-trump-xi-meeting.html" },
-    { "id": 20, "title": "Oil Market Report — May 2026 — IEA", "url": "https://www.iea.org/reports/oil-market-report-may-2026" },
-    { "id": 25, "title": "China's GDP grows 5% in Q1 2026 — China Briefing", "url": "https://www.china-briefing.com/news/chinas-q1-2026-gdp/" },
-    { "id": 33, "title": "Global gold demand record Q1 2026 — Investing.com / WGC", "url": "https://www.investing.com/news/commodities-news/global-gold-demand-inches-up-in-q1-2026-hits-record-high--world-gold-council-4643597" },
-    { "id": 34, "title": "Central banks' gold buying 2026 — MINING.COM", "url": "https://www.mining.com/central-banks-gold-buying-momentum-carries-into-2026/" }
+    {"id": 5, "title": "CMHC — Housing starts for April 2026", "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-april-2026", "archive_url": ""},
+    {"id": 8, "title": "Statistics Canada — GDP, income and expenditure, Q4 2025", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260227/dq260227a-eng.htm", "archive_url": ""},
+    {"id": 11, "title": "FXLeaders — WTI near $106, Hormuz supply shock", "url": "https://www.fxleaders.com/news/2026/05/01/wti-crude-oil-price-today-may-1-2026-trading-near-106-hormuz-supply-shock/", "archive_url": ""},
+    {"id": 12, "title": "Fortune — Current price of gold: May 18, 2026", "url": "https://fortune.com/article/current-price-of-gold-05-18-2026/", "archive_url": ""},
+    {"id": 13, "title": "World Bank — Middle East War to Spark Biggest Energy Price Surge in Four Years", "url": "https://www.worldbank.org/en/news/press-release/2026/04/28/commodity-markets-outlook-april-2026-press-release", "archive_url": ""},
+    {"id": 14, "title": "Bloomberg — OPEC Output Posts Biggest Monthly Drop in Decades", "url": "https://www.bloomberg.com/news/articles/2026-04-07/opec-output-fell-most-in-decades-last-month-on-war-survey-shows", "archive_url": ""},
+    {"id": 15, "title": "Al Jazeera — OPEC+ symbolic output rise during Hormuz closure", "url": "https://www.aljazeera.com/news/2026/5/3/opec-announces-symbolic-oil-output-rise-during-strait-of-hormuz-closure", "archive_url": ""},
+    {"id": 18, "title": "Mining.com — Copper price nears record on China demand, supply worries", "url": "https://www.mining.com/copper-price-nears-record-on-china-demand-supply-worries/", "archive_url": ""},
+    {"id": 19, "title": "China Briefing — China's GDP Grows 5% in Q1 2026", "url": "https://www.china-briefing.com/news/chinas-q1-2026-gdp/", "archive_url": ""}
   ]
 }

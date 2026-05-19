@@ -1,6 +1,6 @@
 {
   "headline": "April CPI Accelerates to 2.8% on Record 28.6% Gasoline Spike as BoC Holds at 2.25%",
-  "edition": "EDITION: MAY 12 – MAY 19 // STATUS: AI-SYNTHESIZED",
+  "edition": "EDITION: May 19 – May 25 // STATUS: AI-SYNTHESIZED",
   "week_of": "2026-05-19",
   "generated_at": "2026-05-19T16:31:47.247801Z",
   "updated_at": "2026-05-19",
@@ -9601,518 +9601,589 @@
   ],
   "sources": [
     {
-      "url": "https://budget.ontario.ca/2026/highlights.html",
+      "id": 1,
       "title": "Ontario source [ON_budget]",
+      "url": "https://budget.ontario.ca/2026/highlights.html",
       "archive_url": ""
     },
     {
-      "url": "https://cib-bic.ca/en/projects/clean-energy/saint-john-mill-modernization/",
+      "id": 2,
       "title": "New Brunswick source [NB_cib]",
+      "url": "https://cib-bic.ca/en/projects/clean-energy/saint-john-mill-modernization/",
       "archive_url": ""
     },
     {
-      "url": "https://cms.law/en/int/legal-updates/nova-scotia-s-offshore-wind-strategy-gathers-pace",
+      "id": 3,
       "title": "Nova Scotia source [NS_cms]",
+      "url": "https://cms.law/en/int/legal-updates/nova-scotia-s-offshore-wind-strategy-gathers-pace",
       "archive_url": ""
     },
     {
-      "url": "https://discoveryalert.com.au/alberta-carbon-capture-acceleration-2026-strategy/",
+      "id": 4,
       "title": "Alberta source [AB_da]",
+      "url": "https://discoveryalert.com.au/alberta-carbon-capture-acceleration-2026-strategy/",
       "archive_url": ""
     },
     {
-      "url": "https://economics.td.com/pei-budget",
+      "id": 5,
       "title": "Prince Edward Island source [PE_td]",
+      "url": "https://economics.td.com/pei-budget",
       "archive_url": ""
     },
     {
-      "url": "https://electrek.co/2026/05/05/honda-shelves-11b-canada-ev-plant-electric-retreat/",
+      "id": 6,
       "title": "Electrek — Honda shelves C$15B Canada EV/battery hub",
-      "archive_url": ""
+      "url": "https://electrek.co/2026/05/05/honda-shelves-11b-canada-ev-plant-electric-retreat/"
     },
     {
-      "url": "https://fao-on.org/en/report/2026-ontario-budget-note/",
+      "id": 7,
       "title": "Ontario source [ON_fao]",
+      "url": "https://fao-on.org/en/report/2026-ontario-budget-note/",
       "archive_url": ""
     },
     {
-      "url": "https://fortune.com/article/current-price-of-gold-05-18-2026/",
+      "id": 8,
       "title": "Fortune — Current price of gold: May 18, 2026",
+      "url": "https://fortune.com/article/current-price-of-gold-05-18-2026/",
       "archive_url": ""
     },
     {
-      "url": "https://globalnews.ca/news/11815564/federal-government-natural-gas-pipeline-expansion/",
+      "id": 9,
       "title": "British Columbia source [BC_gn]",
+      "url": "https://globalnews.ca/news/11815564/federal-government-natural-gas-pipeline-expansion/",
       "archive_url": ""
     },
     {
-      "url": "https://globalnews.ca/news/11854990/consumer-price-index-april-2026/",
+      "id": 10,
       "title": "Global News — Higher gas prices pushed inflation up to 2.8% in April",
+      "url": "https://globalnews.ca/news/11854990/consumer-price-index-april-2026/",
       "archive_url": ""
     },
     {
-      "url": "https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres",
+      "id": 11,
       "title": "research_sectors.md sec.3 (src [23]) — Big 3 telecom capex reductions",
-      "archive_url": ""
+      "url": "https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres"
     },
     {
-      "url": "https://mcmillan.ca/uncategorized/built-to-move-ontario-accelerates-infrastructure-delivery-in-the-2026-budget/",
+      "id": 12,
       "title": "Ontario source [ON_mcm]",
+      "url": "https://mcmillan.ca/uncategorized/built-to-move-ontario-accelerates-infrastructure-delivery-in-the-2026-budget/",
       "archive_url": ""
     },
     {
-      "url": "https://money.tmx.com/canadian-markets",
+      "id": 13,
       "title": "TMX Money — TSX Today / Canadian Stock Market Summary",
+      "url": "https://money.tmx.com/canadian-markets",
       "archive_url": ""
     },
     {
-      "url": "https://news.gov.bc.ca/releases/2026ECS0014-000552",
+      "id": 14,
       "title": "Government of British Columbia — Strong response to 2025 call for power (2026ECS0014)",
-      "archive_url": ""
+      "url": "https://news.gov.bc.ca/releases/2026ECS0014-000552"
     },
     {
-      "url": "https://news.gov.bc.ca/releases/2026HMA0052-000510",
+      "id": 15,
       "title": "British Columbia source [BC_rent]",
+      "url": "https://news.gov.bc.ca/releases/2026HMA0052-000510",
       "archive_url": ""
     },
     {
-      "url": "https://news.gov.bc.ca/releases/2026PREM0032-000559",
+      "id": 16,
       "title": "British Columbia source [BC_prem]",
+      "url": "https://news.gov.bc.ca/releases/2026PREM0032-000559",
       "archive_url": ""
     },
     {
-      "url": "https://news.gov.bc.ca/releases/2026TACS0025-000556",
+      "id": 17,
       "title": "Province of BC — FIFA World Cup 2026 ticket-donation program (2026TACS0025)",
-      "archive_url": ""
+      "url": "https://news.gov.bc.ca/releases/2026TACS0025-000556"
     },
     {
-      "url": "https://news.hydroquebec.com/news/press-releases/all-quebec/hydro-quebec-introduces-new-procurement-strategy-maximize-economic-benefits-quebec-major-wind-power-projects.html",
+      "id": 18,
       "title": "Quebec source [QC_hq_proc]",
+      "url": "https://news.hydroquebec.com/news/press-releases/all-quebec/hydro-quebec-introduces-new-procurement-strategy-maximize-economic-benefits-quebec-major-wind-power-projects.html",
       "archive_url": ""
     },
     {
-      "url": "https://news.hydroquebec.com/news/press-releases/all-quebec/hydro-quebec-reports-solid-financial-results-major-contribution-quebec-economy.html",
+      "id": 19,
       "title": "Quebec source [QC_hq_fin]",
+      "url": "https://news.hydroquebec.com/news/press-releases/all-quebec/hydro-quebec-reports-solid-financial-results-major-contribution-quebec-economy.html",
       "archive_url": ""
     },
     {
-      "url": "https://news.novascotia.ca/en/2026/02/24/province-introduces-legislation-power-economy",
+      "id": 20,
       "title": "Nova Scotia source [NS_leg]",
+      "url": "https://news.novascotia.ca/en/2026/02/24/province-introduces-legislation-power-economy",
       "archive_url": ""
     },
     {
-      "url": "https://novascotia.ca/offshore-wind/",
+      "id": 21,
       "title": "Nova Scotia source [NS_ow]",
+      "url": "https://novascotia.ca/offshore-wind/",
       "archive_url": ""
     },
     {
-      "url": "https://nunatsiaq.com/stories/article/grays-bay-impact-assessment-predicts-project-could-boost-nunavut-gdp-by-20/",
+      "id": 22,
       "title": "Nunavut source [NU_nun]",
+      "url": "https://nunatsiaq.com/stories/article/grays-bay-impact-assessment-predicts-project-could-boost-nunavut-gdp-by-20/",
       "archive_url": ""
     },
     {
-      "url": "https://tourismhr.ca/labour-force-survey-snapshot-march-2026/",
+      "id": 23,
       "title": "research_sectors.md sec.3 (src [34]) — recreation/entertainment hours worked, March 2026",
-      "archive_url": ""
+      "url": "https://tourismhr.ca/labour-force-survey-snapshot-march-2026/"
     },
     {
-      "url": "https://vocm.com/2026/05/14/prime-minister-indicates-ottawa-may-become-involved-financially-in-hydro-quebecs-expansion-plans-including-development-in-labrador/",
+      "id": 24,
       "title": "Quebec source [QC_vocm]",
+      "url": "https://vocm.com/2026/05/14/prime-minister-indicates-ottawa-may-become-involved-financially-in-hydro-quebecs-expansion-plans-including-development-in-labrador/",
       "archive_url": ""
     },
     {
-      "url": "https://waltaaaa.github.io/ai-newsletter/data/commodities.json",
+      "id": 25,
       "title": "The Lagging Indicator — Commodities & Indicators (TSX infrastructure basket)",
-      "archive_url": ""
+      "url": "https://waltaaaa.github.io/ai-newsletter/data/commodities.json"
     },
     {
-      "url": "https://waltaaaa.github.io/ai-newsletter/data/projects_all.json",
+      "id": 26,
       "title": "Canadian Capital Projects Database — residential/Housing/commercial_mixed roll-up",
-      "archive_url": ""
+      "url": "https://waltaaaa.github.io/ai-newsletter/data/projects_all.json"
     },
     {
-      "url": "https://waltaaaa.github.io/ai-newsletter/data/timeseries.json",
+      "id": 27,
       "title": "timeseries.json / commodities.json — WTI crude and TSX infrastructure basket",
-      "archive_url": ""
+      "url": "https://waltaaaa.github.io/ai-newsletter/data/timeseries.json"
     },
     {
-      "url": "https://worldoil.com/news/2026/4/30/newfoundland-and-labrador-budget-boosts-offshore-exploration-funding/",
+      "id": 28,
       "title": "Newfoundland and Labrador source [NL_wo]",
+      "url": "https://worldoil.com/news/2026/4/30/newfoundland-and-labrador-budget-boosts-offshore-exploration-funding/",
       "archive_url": ""
     },
     {
-      "url": "https://www.aljazeera.com/news/2026/5/3/opec-announces-symbolic-oil-output-rise-during-strait-of-hormuz-closure",
+      "id": 29,
       "title": "Al Jazeera — OPEC+ symbolic output rise during Hormuz closure",
+      "url": "https://www.aljazeera.com/news/2026/5/3/opec-announces-symbolic-oil-output-rise-during-strait-of-hormuz-closure",
       "archive_url": ""
     },
     {
-      "url": "https://www.aptnnews.ca/national-news/proposed-casino-mine-inches-forward-to-yukons-first-panel-review/",
+      "id": 30,
       "title": "Yukon source [YT_aptn]",
+      "url": "https://www.aptnnews.ca/national-news/proposed-casino-mine-inches-forward-to-yukons-first-panel-review/",
       "archive_url": ""
     },
     {
-      "url": "https://www.bankofcanada.ca/2026/04/fad-announcement-release-mpr-2026-04-29/",
+      "id": 31,
       "title": "Bank of Canada — Rate announcement & Monetary Policy Report, April 2026",
+      "url": "https://www.bankofcanada.ca/2026/04/fad-announcement-release-mpr-2026-04-29/",
       "archive_url": ""
     },
     {
-      "url": "https://www.bankofcanada.ca/2026/04/fad-press-release-2026-04-29/",
+      "id": 32,
       "title": "Bank of Canada — Maintains policy rate at 2.25% (April 29, 2026)",
+      "url": "https://www.bankofcanada.ca/2026/04/fad-press-release-2026-04-29/",
       "archive_url": ""
     },
     {
-      "url": "https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate",
+      "id": 33,
       "title": "Bank of England — Bank Rate held at 3.75%",
+      "url": "https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate",
       "archive_url": ""
     },
     {
-      "url": "https://www.bcbc.com/insight/bcs-economy-faces-challenges-now-that-mega-projects-are-completed",
+      "id": 34,
       "title": "British Columbia source [BC_bcbc]",
+      "url": "https://www.bcbc.com/insight/bcs-economy-faces-challenges-now-that-mega-projects-are-completed",
       "archive_url": ""
     },
     {
-      "url": "https://www.bhp.com/what-we-do/global-locations/canada/jansen/ready-for-jansen",
+      "id": 35,
       "title": "Saskatchewan source [SK_bhp]",
+      "url": "https://www.bhp.com/what-we-do/global-locations/canada/jansen/ready-for-jansen",
       "archive_url": ""
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-03-30/canada-s-far-north-poised-for-economic-turnaround-premier-says",
+      "id": 36,
       "title": "Northwest Territories source [NT_bbg]",
+      "url": "https://www.bloomberg.com/news/articles/2026-03-30/canada-s-far-north-poised-for-economic-turnaround-premier-says",
       "archive_url": ""
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-04-07/opec-output-fell-most-in-decades-last-month-on-war-survey-shows",
+      "id": 37,
       "title": "Bloomberg — OPEC Output Posts Biggest Monthly Drop in Decades",
+      "url": "https://www.bloomberg.com/news/articles/2026-04-07/opec-output-fell-most-in-decades-last-month-on-war-survey-shows",
       "archive_url": ""
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-05-11/ecb-to-hike-rates-twice-in-2026-as-inflation-jumps-survey-shows",
+      "id": 38,
       "title": "Bloomberg — ECB to hike rates twice in 2026 as inflation jumps (survey)",
+      "url": "https://www.bloomberg.com/news/articles/2026-05-11/ecb-to-hike-rates-twice-in-2026-as-inflation-jumps-survey-shows",
       "archive_url": ""
     },
     {
-      "url": "https://www.bnnbloomberg.ca/business/2026/03/23/heres-where-15000-federal-public-service-jobs-will-be-cut-over-3-years/",
+      "id": 39,
       "title": "BNN Bloomberg — Where 15,000 federal public service jobs will be cut over 3 years",
-      "archive_url": ""
+      "url": "https://www.bnnbloomberg.ca/business/2026/03/23/heres-where-15000-federal-public-service-jobs-will-be-cut-over-3-years/"
     },
     {
-      "url": "https://www.bnnbloomberg.ca/business/economics/2026/05/19/christopher-liew-what-rising-oil-prices-actually-mean-for-your-cost-of-living/",
+      "id": 40,
       "title": "BNN Bloomberg — What rising oil prices mean for cost of living",
+      "url": "https://www.bnnbloomberg.ca/business/economics/2026/05/19/christopher-liew-what-rising-oil-prices-actually-mean-for-your-cost-of-living/",
       "archive_url": ""
     },
     {
-      "url": "https://www.bnnbloomberg.ca/tariffs/2026/01/01/northwest-territories-facing-a-hard-as-diamonds-reality-as-pivotal-industry-wanes/",
+      "id": 41,
       "title": "Northwest Territories source [NT_bnn]",
+      "url": "https://www.bnnbloomberg.ca/tariffs/2026/01/01/northwest-territories-facing-a-hard-as-diamonds-reality-as-pivotal-industry-wanes/",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html",
+      "id": 42,
       "title": "Department of Finance Canada — Canada's response to US tariffs",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/department-finance/programs/international-trade-finance-policy/canadas-response-us-tariffs.html"
     },
     {
-      "url": "https://www.canada.ca/en/environment-climate-change/services/climate-change/indigenous-partnership/funding.html",
+      "id": 43,
       "title": "ECCC / Indigenous Services Canada — FCSAP Phase V contaminated-sites funding",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/environment-climate-change/services/climate-change/indigenous-partnership/funding.html"
     },
     {
-      "url": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/05/government-of-canada-and-telus-advance-work-to-build-sovereign-ai-infrastructure.html",
+      "id": 44,
       "title": "ISED — Government of Canada and Telus advance sovereign AI infrastructure",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/05/government-of-canada-and-telus-advance-work-to-build-sovereign-ai-infrastructure.html"
     },
     {
-      "url": "https://www.canada.ca/en/natural-resources-canada.html",
+      "id": 45,
       "title": "Natural Resources Canada — Federal electricity & nuclear strategy, March 2026",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/natural-resources-canada.html"
     },
     {
-      "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html",
+      "id": 46,
       "title": "Natural Resources Canada — 30 critical minerals partnerships, $12.1B unlocked",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html"
     },
     {
-      "url": "https://www.canadianenergycentre.ca/five-things-to-watch-in-canadas-oil-and-gas-industry-in-2026/",
+      "id": 47,
       "title": "Alberta source [AB_cec]",
+      "url": "https://www.canadianenergycentre.ca/five-things-to-watch-in-canadas-oil-and-gas-industry-in-2026/",
       "archive_url": ""
     },
     {
-      "url": "https://www.canadianmortgagetrends.com/2026/04/loonies-weakening-ties-to-oil-prices-amplifies-bets-against-it/",
+      "id": 48,
       "title": "Canadian Mortgage Trends — Loonie's weakening ties to oil prices",
+      "url": "https://www.canadianmortgagetrends.com/2026/04/loonies-weakening-ties-to-oil-prices-amplifies-bets-against-it/",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbc.ca/news/business/canada-gdp-dec-2025-9.7108015",
+      "id": 49,
       "title": "CBC News — Canada's economy contracted unexpectedly in Q4 2025",
+      "url": "https://www.cbc.ca/news/business/canada-gdp-dec-2025-9.7108015",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbc.ca/news/canada/manitoba/winnipeg-releases-2026-budget-9.6978976",
+      "id": 50,
       "title": "Manitoba source [MB_cbc]",
+      "url": "https://www.cbc.ca/news/canada/manitoba/winnipeg-releases-2026-budget-9.6978976",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbc.ca/news/canada/montreal/hydro-quebec-action-plan-announcement-1.7016221",
+      "id": 51,
       "title": "Quebec source [QC_cbc]",
+      "url": "https://www.cbc.ca/news/canada/montreal/hydro-quebec-action-plan-announcement-1.7016221",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbc.ca/news/canada/newfoundland-labrador/equinor-bay-du-nord-development-application-9.7188650",
+      "id": 52,
       "title": "Newfoundland and Labrador source [NL_cbc]",
+      "url": "https://www.cbc.ca/news/canada/newfoundland-labrador/equinor-bay-du-nord-development-application-9.7188650",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbc.ca/news/canada/north/arctic-security-corridor-mining-nunavut-9.7187617",
+      "id": 53,
       "title": "Northwest Territories source [NT_cbc]",
+      "url": "https://www.cbc.ca/news/canada/north/arctic-security-corridor-mining-nunavut-9.7187617",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbc.ca/news/canada/north/nunavut-b2gold-gold-mine-enters-production-1.7627929",
+      "id": 54,
       "title": "Nunavut source [NU_cbc]",
+      "url": "https://www.cbc.ca/news/canada/north/nunavut-b2gold-gold-mine-enters-production-1.7627929",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbre.ca/press-releases/canadian-commercial-real-estate-investment-could-rise-to-56-billion-dollars-in-2026",
+      "id": 55,
       "title": "CBRE — Canadian commercial real-estate investment could rise to $56 billion in 2026",
-      "archive_url": ""
+      "url": "https://www.cbre.ca/press-releases/canadian-commercial-real-estate-investment-could-rise-to-56-billion-dollars-in-2026"
     },
     {
-      "url": "https://www.china-briefing.com/news/chinas-q1-2026-gdp/",
+      "id": 56,
       "title": "China Briefing — China's GDP Grows 5% in Q1 2026",
+      "url": "https://www.china-briefing.com/news/chinas-q1-2026-gdp/",
       "archive_url": ""
     },
     {
-      "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-april-2026",
+      "id": 57,
       "title": "Statistics Canada & CMHC — GDP by Industry and Housing Starts, April 2026",
-      "archive_url": ""
+      "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-april-2026"
     },
     {
-      "url": "https://www.cnbc.com/2026/04/29/fed-interest-rate-decision-april-2026.html",
+      "id": 58,
       "title": "CNBC — Fed holds rates steady amid dissent (April 2026)",
+      "url": "https://www.cnbc.com/2026/04/29/fed-interest-rate-decision-april-2026.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.congress.gov/crs-product/IF12595",
+      "id": 59,
       "title": "Congress.gov CRS — U.S.-Canada Trade Relations",
+      "url": "https://www.congress.gov/crs-product/IF12595",
       "archive_url": ""
     },
     {
-      "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260430~81b7179e6f.en.html",
+      "id": 60,
       "title": "European Central Bank — Monetary policy decisions, 30 April 2026",
+      "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260430~81b7179e6f.en.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.fxleaders.com/news/2026/05/01/wti-crude-oil-price-today-may-1-2026-trading-near-106-hormuz-supply-shock/",
+      "id": 61,
       "title": "FXLeaders — WTI near $106, Hormuz supply shock",
+      "url": "https://www.fxleaders.com/news/2026/05/01/wti-crude-oil-price-today-may-1-2026-trading-near-106-hormuz-supply-shock/",
       "archive_url": ""
     },
     {
-      "url": "https://www.gnb.ca/en/news/n-b.2026.03.supporting-energy-efficiency-campbellton-pulp-mill.html",
+      "id": 62,
       "title": "New Brunswick source [NB_gnb]",
+      "url": "https://www.gnb.ca/en/news/n-b.2026.03.supporting-energy-efficiency-campbellton-pulp-mill.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.gov.mb.ca/budget2026/index.html",
+      "id": 63,
       "title": "Manitoba source [MB_budget]",
+      "url": "https://www.gov.mb.ca/budget2026/index.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.gov.nl.ca/releases/2026/exec/0303n05/",
+      "id": 64,
       "title": "Newfoundland and Labrador source [NL_gov]",
+      "url": "https://www.gov.nl.ca/releases/2026/exec/0303n05/",
       "archive_url": ""
     },
     {
-      "url": "https://www.gov.nt.ca/en/newsroom/tlicho-government-ykdfn-and-gnwt-partner-support-residents-and-resource-sector",
+      "id": 65,
       "title": "Northwest Territories source [NT_gov]",
+      "url": "https://www.gov.nt.ca/en/newsroom/tlicho-government-ykdfn-and-gnwt-partner-support-residents-and-resource-sector",
       "archive_url": ""
     },
     {
-      "url": "https://www.infrastructureontario.ca/en/news-and-media/io-stories/a-new-generation-of-health-care-projects-in-full-swing/",
+      "id": 66,
       "title": "Infrastructure Ontario — A new generation of health-care projects in full swing",
-      "archive_url": ""
+      "url": "https://www.infrastructureontario.ca/en/news-and-media/io-stories/a-new-generation-of-health-care-projects-in-full-swing/"
     },
     {
-      "url": "https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-accommodation",
+      "id": 67,
       "title": "Job Bank — Ontario sectoral profile (construction-trades education expansion)",
-      "archive_url": ""
+      "url": "https://www.jobbank.gc.ca/trend-analysis/job-market-reports/ontario/sectoral-profile-accommodation"
     },
     {
-      "url": "https://www.mining.com/copper-price-nears-record-on-china-demand-supply-worries/",
+      "id": 68,
       "title": "Mining.com — Copper price nears record on China demand, supply worries",
+      "url": "https://www.mining.com/copper-price-nears-record-on-china-demand-supply-worries/",
       "archive_url": ""
     },
     {
-      "url": "https://www.miningnewsnorth.com/story/2026/01/30/northern-neighbors/yukon-moves-to-tighten-mining-timelines/9515.html",
+      "id": 69,
       "title": "Yukon source [YT_mnn]",
+      "url": "https://www.miningnewsnorth.com/story/2026/01/30/northern-neighbors/yukon-moves-to-tighten-mining-timelines/9515.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.miningnewsnorth.com/story/2026/03/20/news/canada-moves-to-advance-arctic-corridor/9584.html",
+      "id": 70,
       "title": "Nunavut source [NU_mnn]",
+      "url": "https://www.miningnewsnorth.com/story/2026/03/20/news/canada-moves-to-advance-arctic-corridor/9584.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.mnp.ca/en/insights/directory/prince-edward-island-2026-budget-highlights",
+      "id": 71,
       "title": "Prince Edward Island source [PE_mnp]",
+      "url": "https://www.mnp.ca/en/insights/directory/prince-edward-island-2026-budget-highlights",
       "archive_url": ""
     },
     {
-      "url": "https://www.mtfxgroup.com/fx-forecast/",
+      "id": 72,
       "title": "MTFX Group — Canadian Dollar Forecast May 2026",
+      "url": "https://www.mtfxgroup.com/fx-forecast/",
       "archive_url": ""
     },
     {
-      "url": "https://www.nationalobserver.com/2026/05/15/news/worlds-largest-carbon-capture-complex-gets-go-ahead-ottawas-oilsands-grand-bargain",
+      "id": 73,
       "title": "Alberta source [AB_no]",
+      "url": "https://www.nationalobserver.com/2026/05/15/news/worlds-largest-carbon-capture-complex-gets-go-ahead-ottawas-oilsands-grand-bargain",
       "archive_url": ""
     },
     {
-      "url": "https://www.newswire.ca/news-releases/landmark-1-16-billion-loan-to-boost-trade-capacity-jobs-and-economic-growth-through-one-of-canada-s-largest-port-expansions-867217970.html",
+      "id": 74,
       "title": "CIB / Newswire — $1.16B Contrecoeur container terminal loan",
-      "archive_url": ""
+      "url": "https://www.newswire.ca/news-releases/landmark-1-16-billion-loan-to-boost-trade-capacity-jobs-and-economic-growth-through-one-of-canada-s-largest-port-expansions-867217970.html"
     },
     {
-      "url": "https://www.princeedwardisland.ca/en/information/finance-and-affordability/provincial-budget-operating-budget",
+      "id": 75,
       "title": "Prince Edward Island source [PE_budget]",
+      "url": "https://www.princeedwardisland.ca/en/information/finance-and-affordability/provincial-budget-operating-budget",
       "archive_url": ""
     },
     {
-      "url": "https://www.rbc.com/en/economics/canadian-analysis/provincial-and-fiscal-outlooks/provincial-budgets-and-economic-statements/manitoba-budget-2026-path-to-balance-maintained-despite-negative-in-year-surprise/",
+      "id": 76,
       "title": "Manitoba source [MB_rbc]",
+      "url": "https://www.rbc.com/en/economics/canadian-analysis/provincial-and-fiscal-outlooks/provincial-budgets-and-economic-statements/manitoba-budget-2026-path-to-balance-maintained-despite-negative-in-year-surprise/",
       "archive_url": ""
     },
     {
-      "url": "https://www.renewcanada.net/cib-loans-660m-towards-saint-john-mill-modernization/",
+      "id": 77,
       "title": "New Brunswick source [NB_renew]",
+      "url": "https://www.renewcanada.net/cib-loans-660m-towards-saint-john-mill-modernization/",
       "archive_url": ""
     },
     {
-      "url": "https://www.renewcanada.net/ontario-budget-2026-includes-infrastructure-spending-but-few-details/",
+      "id": 78,
       "title": "Ontario source [ON_renew]",
+      "url": "https://www.renewcanada.net/ontario-budget-2026-includes-infrastructure-spending-but-few-details/",
       "archive_url": ""
     },
     {
-      "url": "https://www.thecivilengineer.org/news/prince-edward-island-pei-unveils-10-year-energy-strategy-to-grow-on-island-renewables-and-achieve-net-zero-by-2040",
+      "id": 79,
       "title": "Prince Edward Island source [PE_ce]",
+      "url": "https://www.thecivilengineer.org/news/prince-edward-island-pei-unveils-10-year-energy-strategy-to-grow-on-island-renewables-and-achieve-net-zero-by-2040",
       "archive_url": ""
     },
     {
-      "url": "https://www.theglobeandmail.com/business/article-bc-ottawa-reach-pact-to-support-lng-canadas-expansion-plans/",
+      "id": 80,
       "title": "British Columbia source [BC_gm]",
+      "url": "https://www.theglobeandmail.com/business/article-bc-ottawa-reach-pact-to-support-lng-canadas-expansion-plans/",
       "archive_url": ""
     },
     {
-      "url": "https://www.theglobeandmail.com/business/economy/article-bhps-new-potash-mine-is-a-test-case-for-canada-in-how-to-build-big/",
+      "id": 81,
       "title": "Saskatchewan source [SK_gm]",
+      "url": "https://www.theglobeandmail.com/business/economy/article-bhps-new-potash-mine-is-a-test-case-for-canada-in-how-to-build-big/",
       "archive_url": ""
     },
     {
-      "url": "https://www.westerncopperandgold.com/casino-project/",
+      "id": 82,
       "title": "Yukon source [YT_wcg]",
+      "url": "https://www.westerncopperandgold.com/casino-project/",
       "archive_url": ""
     },
     {
-      "url": "https://www.worldbank.org/en/news/press-release/2026/04/28/commodity-markets-outlook-april-2026-press-release",
+      "id": 83,
       "title": "World Bank — Middle East War to Spark Biggest Energy Price Surge in Four Years",
+      "url": "https://www.worldbank.org/en/news/press-release/2026/04/28/commodity-markets-outlook-april-2026-press-release",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260227/dq260227a-eng.htm",
+      "id": 84,
       "title": "Statistics Canada — GDP, income and expenditure, Q4 2025",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260227/dq260227a-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260430/dq260430a-eng.htm",
+      "id": 85,
       "title": "Statistics Canada — GDP by industry, February 2026 (Q1 +0.4% advance)",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260430/dq260430a-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260505/dq260505a-eng.htm",
+      "id": 86,
       "title": "Statistics Canada — Canadian international merchandise trade, March 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260505/dq260505a-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260508/dq260508a-eng.htm",
+      "id": 87,
       "title": "Statistics Canada — Labour Force Survey, April 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260508/dq260508a-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260519/dq260519a-eng.htm",
+      "id": 88,
       "title": "Statistics Canada — Consumer Price Index, April 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260519/dq260519a-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/cpi.htm",
+      "id": 89,
       "title": "StatCan — Consumer Price Index (Mar 2026) and household disposable income (Q4 2025)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/cpi.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/ei.htm",
+      "id": 90,
       "title": "StatCan — Regular Employment Insurance beneficiaries, February 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/ei.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/lfs.htm",
+      "id": 91,
       "title": "StatCan — Average weekly earnings (Feb 2026) and Employment level (Apr 2026)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/lfs.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/nbsheets.htm",
+      "id": 92,
       "title": "StatCan — Household net worth, Q4 2025",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/nbsheets.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/nea.htm",
+      "id": 93,
       "title": "StatCan — Household debt service ratio, Q4 2025",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/nea.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/qfs.htm",
+      "id": 94,
       "title": "StatCan — Canadian corporations operating profit, Q4 2025",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/qfs.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/retail.htm",
+      "id": 95,
       "title": "StatCan / TD card data — Retail Trade, February–March 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/retail.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/tourism.htm",
+      "id": 96,
       "title": "StatCan — Jobs generated by tourism and tourism spending, Q4 2025",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/tourism.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/wholesale.htm",
+      "id": 97,
       "title": "StatCan — Wholesale Inventories, March 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/wholesale.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/cv.action?pid=3210004701",
+      "id": 98,
       "title": "Statistics Canada — Farm income and canola production indicators",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/cv.action?pid=3210004701"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028703",
+      "id": 99,
       "title": "Labour force characteristics by province (14-10-0287) — Statistics Canada",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028703",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
+      "id": 100,
       "title": "Statistics Canada — Manufacturing sales, orders and goods exports (Mar 2026)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410006601",
+      "id": 101,
       "title": "Statistics Canada — Building permits and investment in building construction (Feb 2026)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410006601"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401",
+      "id": 102,
       "title": "StatCan — Gross Domestic Product by Industry (table 36-10-0434, via research_sectors.md sec.1/sec.3)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
     },
     {
-      "url": "https://www2.gov.bc.ca/gov/content/employment-business/look-west-strategy/delivering-major-projects-faster",
+      "id": 103,
       "title": "British Columbia source [BC_lw]",
+      "url": "https://www2.gov.bc.ca/gov/content/employment-business/look-west-strategy/delivering-major-projects-faster",
       "archive_url": ""
     }
   ],

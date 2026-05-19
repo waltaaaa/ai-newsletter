@@ -1,36 +1,6 @@
 [
   {
     "date": "2026-05-15",
-    "name": "Capital Investment: Ticket donation program helping B.C. youth attend FIFA World Cup 2026 matches",
-    "source": "BC Government News",
-    "type": "policy",
-    "significance": "medium",
-    "province": "BC",
-    "url": "https://news.gov.bc.ca/releases/2026TACS0025-000556",
-    "relevance": "Province, PavCo, Vancouver enable children and youth facing barriers attend matches"
-  },
-  {
-    "date": "2026-05-15",
-    "name": "Energy Transition: Strong response to 2025 call for power, delivering clean, affordable energy",
-    "source": "BC Government News",
-    "type": "policy",
-    "significance": "medium",
-    "province": "BC",
-    "url": "https://news.gov.bc.ca/releases/2026ECS0014-000552",
-    "relevance": "Renewable power investments will support jobs, investment, long-term growth in B.C."
-  },
-  {
-    "date": "2026-05-15",
-    "name": "Capital Investment: Advancing made-in-B.C. health technology to strengthen patient care",
-    "source": "BC Government News",
-    "type": "policy",
-    "significance": "medium",
-    "province": "BC",
-    "url": "https://news.gov.bc.ca/releases/2026JEG0036-000550",
-    "relevance": "Funding will help homegrown companies pilot new tech to strengthen economic resilience in B.C."
-  },
-  {
-    "date": "2026-05-15",
     "name": "[PDF] Spring Economic Update 2026 - Canada Strong For All",
     "source": "budget.canada.ca",
     "type": "watchlist",
@@ -580,58 +550,24 @@
     "relevance": "In Budget 2026, PEI is forecasting deep deficits that persist over the forecast horizon. In FY 2026/27, the deficit is."
   },
   {
-    "date": "2026-05-17",
-    "name": "Consumer Price Index",
-    "source": "Statistics Canada",
-    "type": "data_release",
-    "frequency": "monthly",
-    "significance": "high",
-    "province": "national",
-    "provinces_affected": [
-      "AB",
-      "BC",
-      "MB",
-      "NB",
-      "NL",
-      "NS",
-      "NT",
-      "NU",
-      "ON",
-      "PE",
-      "QC",
-      "SK",
-      "YT"
-    ],
-    "indicator": "cpi_total",
-    "relevance": "Inflation reading. Directly influences BoC rate path and project financing costs.",
-    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401"
+    "date": "2026-05-19",
+    "name": "Capital Investment: Ticket donation program helping B.C. youth attend FIFA World Cup 2026 matches",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026TACS0025-000556",
+    "relevance": "Province, PavCo, Vancouver enable children and youth facing barriers attend matches"
   },
   {
-    "date": "2026-05-17",
-    "name": "Housing Starts (CMHC)",
-    "source": "Statistics Canada",
-    "type": "data_release",
-    "frequency": "monthly",
+    "date": "2026-05-19",
+    "name": "Energy Transition: Strong response to 2025 call for power, delivering clean, affordable energy",
+    "source": "BC Government News",
+    "type": "policy",
     "significance": "medium",
-    "province": "national",
-    "provinces_affected": [
-      "AB",
-      "BC",
-      "MB",
-      "NB",
-      "NL",
-      "NS",
-      "NT",
-      "NU",
-      "ON",
-      "PE",
-      "QC",
-      "SK",
-      "YT"
-    ],
-    "indicator": "housing_starts",
-    "relevance": "Current residential construction activity level.",
-    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301"
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026ECS0014-000552",
+    "relevance": "Renewable power investments will support jobs, investment, long-term growth in B.C."
   },
   {
     "date": "2026-05-24",
@@ -775,5 +711,59 @@
     "indicator": "investment_nonresidential",
     "relevance": "Directly measures capital spending on non-residential construction.",
     "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410017501"
+  },
+  {
+    "date": "2026-06-17",
+    "name": "Consumer Price Index",
+    "source": "Statistics Canada",
+    "type": "data_release",
+    "frequency": "monthly",
+    "significance": "high",
+    "province": "national",
+    "provinces_affected": [
+      "AB",
+      "BC",
+      "MB",
+      "NB",
+      "NL",
+      "NS",
+      "NT",
+      "NU",
+      "ON",
+      "PE",
+      "QC",
+      "SK",
+      "YT"
+    ],
+    "indicator": "cpi_total",
+    "relevance": "Inflation reading. Directly influences BoC rate path and project financing costs.",
+    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401"
+  },
+  {
+    "date": "2026-06-17",
+    "name": "Housing Starts (CMHC)",
+    "source": "Statistics Canada",
+    "type": "data_release",
+    "frequency": "monthly",
+    "significance": "medium",
+    "province": "national",
+    "provinces_affected": [
+      "AB",
+      "BC",
+      "MB",
+      "NB",
+      "NL",
+      "NS",
+      "NT",
+      "NU",
+      "ON",
+      "PE",
+      "QC",
+      "SK",
+      "YT"
+    ],
+    "indicator": "housing_starts",
+    "relevance": "Current residential construction activity level.",
+    "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301"
   }
 ]

@@ -3,54 +3,53 @@
     {
       "name": "TSX Composite",
       "symbol": "^GSPTSE",
-      "val": "34,268",
-      "day": "+1.2%",
+      "val": "33,833",
+      "day": "-0.72%",
       "mm": "N/A",
-      "yy": "+31.9%",
+      "yy": "N/A",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "context": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed the week to May 14 at 34,268, up 1.2% week-over-week and 31.9% year-over-year.</span> The 12-month advance ranks among the index's widest year-over-year gains since the 2021 commodity recovery, moving in step with a 60.1% year-over-year rise in WTI crude to about US$100.16/bbl as Strait of Hormuz supply disruption lifted the index's energy and materials components<sup>19</sup>. Gold's 39.1% year-over-year gain to US$4,563.20/oz and copper's 37.3% year-over-year rise to US$6.34/lb reinforced the materials weighting that distinguishes the TSX from the U.S. benchmarks<sup>33</sup>. The Signal Dispatch cross-reference engine links the energy-led move to 59 oil and gas projects valued at $97.6B in the database. If WTI holds near US$100/bbl, those 59 oil and gas projects would retain the netback support implied by the crude-led March trade surplus, while the database's 7,480 tracked projects, with an aggregate value of $1,472.2B, carry broad exposure to sustained resource pricing at current TSX levels<sup>14</sup>. The cross-reference engine separately ties the materials strength to 83 manufacturing projects valued at $129.0B, which face the offsetting U.S. steel and aluminum tariff drag noted in the trade data<sup>13</sup>.</p>"
+      "context": "<p><span class=\"lead-sentence\">The S&P/TSX Composite closed at 33,833 on May 15, down 0.72% on the week.</span> The index gave ground as the loonie eased to 0.7264 against the U.S. dollar and following the April CPI print of +2.8% year-over-year released May 19, the highest reading in roughly two years, which firmed expectations the Bank of Canada will hold its 2.25% overnight rate at its next decision<sup>2</sup>. The materials and energy sub-indices diverged from the broader tape: copper at US$6.32/lb (+36.21% year-over-year) and gold at US$4,497.00/oz (+41.33% year-over-year) underpinned resource names, while WTI at US$103.02/bbl (+64.33% year-over-year) supported the energy weighting amid the Strait of Hormuz disruption<sup>11</sup>. The Signal Dispatch cross-reference engine links the resource complex to 390 mining projects valued at $227.11B and 59 oil and gas projects valued at $97.58B. If copper and gold sustain current levels, the 390 tracked mining projects would retain the revenue assumptions cited in public filings, while the 35 NAICS-21 mining and extraction projects carrying $81.39B in tracked value would maintain the cash-flow profile underpinning their development timelines<sup>18</sup>. Mining and quarrying GDP rose +3.6% year-over-year against a manufacturing contraction of -3.1%, a divergence the index reflected through its sector weighting; the database tracks 38 manufacturing projects totalling $62.19B exposed to that contraction<sup>8</sup>.</p>"
     },
     {
       "name": "S&P 500",
       "symbol": "^GSPC",
-      "val": "7,501",
-      "day": "+2.2%",
+      "val": "7,339",
+      "day": "+6.65%",
       "mm": "N/A",
-      "yy": "+25.8%",
+      "yy": "N/A",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "context": "<p><span class=\"lead-sentence\">The S&P 500 ended the week at 7,501, up 2.2% week-over-week and 25.8% year-over-year.</span> The weekly gain came after the Federal Reserve held the fed funds target at 3.50%-3.75% on April 29 for a third consecutive meeting, with markets pricing no Fed changes through the rest of 2026<sup>23</sup>. The 25.8% year-over-year advance marks one of the index's larger 12-month moves since the 2023 disinflation run, recorded as the FOMC cited elevated inflation reflecting the recent increase in global energy prices<sup>24</sup>.</p>"
+      "context": "<p><span class=\"lead-sentence\">The S&P 500 stood at 7,339, up 6.65% measured against a sparse March baseline series.</span> The move came after the Federal Reserve held the federal funds target at 3.50%-3.75% on April 29 in an 8-4 split, the most dissents since October 1992, with markets pricing the range holding through year-end following the decision<sup>16</sup>. March U.S. CPI registered +3.3% year-over-year with core at +2.6%, and the FOMC statement attributed part of elevated inflation to higher global energy prices, framing the index reading against the energy-led inflation regime carried through the equity tape<sup>16</sup>. The level marks the highest print on the available series since the March reference point.</p>"
     },
     {
       "name": "Dow Jones",
       "symbol": "^DJI",
-      "val": "50,063",
-      "day": "+0.9%",
+      "val": "49,438",
+      "day": "+6.19%",
       "mm": "N/A",
-      "yy": "+17.0%",
+      "yy": "N/A",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "context": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average closed at 50,063, up 0.9% week-over-week and 17.0% year-over-year.</span> The blue-chip benchmark cleared the 50,000 mark following the Fed's hold and amid U.S. growth of 2.0% in Q4 2025 that sustained demand across industrial and healthcare components<sup>23</sup>. The 17.0% year-over-year gain trailed the broader S&P 500 and Nasdaq, its narrowest relative 12-month performance since the late-2024 industrials rotation<sup>24</sup>.</p>"
+      "context": "<p><span class=\"lead-sentence\">The Dow Jones Industrial Average was at 49,438, up 6.19% against the March baseline series.</span> The industrials-weighted benchmark moved as the Fed held rates steady on April 29 and the Kevin Warsh appointment took effect May 15, with the central bank citing higher global energy prices in its inflation assessment<sup>16</sup>. The print sits at the highest level on the available series since the March reference, recorded as WTI rose to US$103.02/bbl, up 64.33% year-over-year amid the Strait of Hormuz supply disruption<sup>11</sup>.</p>"
     },
     {
       "name": "NASDAQ",
       "symbol": "^IXIC",
-      "val": "26,635",
-      "day": "+3.2%",
+      "val": "26,090",
+      "day": "-0.70%",
       "mm": "N/A",
-      "yy": "+38.6%",
+      "yy": "N/A",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "context": "<p><span class=\"lead-sentence\">The Nasdaq Composite closed at 26,635, up 3.2% week-over-week and 38.6% year-over-year.</span> The technology-weighted index posted the largest weekly gain of the four benchmarks after the Fed's third consecutive hold, which markets read as removing near-term tightening risk for rate-sensitive growth shares<sup>23</sup>. The 38.6% year-over-year advance is the steepest 12-month move among the tracked indices, exceeding the S&P 500's 25.8% over the same window<sup>24</sup>.</p>"
+      "context": "<p><span class=\"lead-sentence\">The Nasdaq Composite closed at 26,090, down 0.70% on the week.</span> The technology-weighted index diverged from the broader U.S. tape as the Fed held the funds target at 3.50%-3.75% on April 29 and markets priced no change through year-end, leaving rate-sensitive growth names without a downward shift in discount-rate expectations following the decision<sup>16</sup>. The weekly decline contrasts with the highest-level prints recorded on the S&P 500 and Dow series over the same window since the March reference point.</p>"
     }
   ],
   "sources": [
-    { "id": 13, "title": "Canadian international merchandise trade, March 2026 — Statistics Canada", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260505/dq260505a-eng.htm" },
-    { "id": 14, "title": "Canada posts trade surplus in March — CBC News", "url": "https://www.cbc.ca/news/business/trade-numbers-surplus-march-2026-9.7187910" },
-    { "id": 19, "title": "Oil hovers ~$100 after Trump-Xi Hormuz discussion — CNBC", "url": "https://www.cnbc.com/2026/05/14/oil-prices-today-wti-brent-hormuz-trump-xi-meeting.html" },
-    { "id": 23, "title": "Fed holds rates steady amid dissent — CNBC", "url": "https://www.cnbc.com/2026/04/29/fed-interest-rate-decision-april-2026.html" },
-    { "id": 24, "title": "Key takeaways from Powell's last meeting — CNN Business", "url": "https://www.cnn.com/2026/04/29/economy/fed-decision-powell-warsh" },
-    { "id": 33, "title": "Global gold demand record Q1 2026 — Investing.com / WGC", "url": "https://www.investing.com/news/commodities-news/global-gold-demand-inches-up-in-q1-2026-hits-record-high--world-gold-council-4643597" }
+    {"id": 2, "title": "Statistics Canada — Consumer Price Index, April 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260519/dq260519a-eng.htm", "archive_url": ""},
+    {"id": 8, "title": "Statistics Canada — GDP, income and expenditure, Q4 2025", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260227/dq260227a-eng.htm", "archive_url": ""},
+    {"id": 11, "title": "FXLeaders — WTI near $106, Hormuz supply shock", "url": "https://www.fxleaders.com/news/2026/05/01/wti-crude-oil-price-today-may-1-2026-trading-near-106-hormuz-supply-shock/", "archive_url": ""},
+    {"id": 16, "title": "CNBC — Fed holds rates steady amid dissent (April 2026)", "url": "https://www.cnbc.com/2026/04/29/fed-interest-rate-decision-april-2026.html", "archive_url": ""},
+    {"id": 18, "title": "Mining.com — Copper price nears record on China demand, supply worries", "url": "https://www.mining.com/copper-price-nears-record-on-china-demand-supply-worries/", "archive_url": ""}
   ]
 }
