@@ -33,13 +33,18 @@ def summarize(path):
     exec_html = p.get("executive_summary") or ""
     text = re.sub(r"<[^>]+>", " ", exec_html)
     wc = len(text.split())
-    week_of = p.get("week_of")
-    if not week_of:
-        m = re.search(r"briefing_(\d{4}-\d{2}-\d{2})", os.path.basename(path))
-        if m:
-            week_of = m.group(1)
+    # file_date = the date in the actual filename (briefing_<file_date>.json).
+    # This is the id the frontend must fetch by; week_of can differ from it
+    # (week_of is editorial, the filename uses the generation date), which
+    # otherwise 404s the edition and silently falls back to "latest".
+    file_date = ""
+    m = re.search(r"briefing_(\d{4}-\d{2}-\d{2})", os.path.basename(path))
+    if m:
+        file_date = m.group(1)
+    week_of = p.get("week_of") or file_date
     return {
         "week_of": week_of or "",
+        "file_date": file_date,
         "headline": headline,
         "word_count": wc,
         "generated_at": p.get("generated_at") or p.get("updated_at") or "",

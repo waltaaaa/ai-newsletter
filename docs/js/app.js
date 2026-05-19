@@ -197,23 +197,26 @@ async function loadNewsletter(editionId){
 async function loadEditionList(){
   try{
     const archive=await fetchJSON('briefing_archive.json');
-    const editions=(archive||[]).map(e=>({id:e.week_of||'',edition:e.headline||'',date:e.generated_at||e.week_of||''}));
+    const editions=(archive||[]).map(e=>({id:e.week_of||'',file:e.file_date||e.week_of||'',edition:e.headline||'',date:e.generated_at||e.week_of||''}));
     const list=$('editionList');
     list.innerHTML=editions.map(e=>{
       const label=(e.edition||'').replace(/EDITION:\s*/i,'').split('//')[0].trim()||e.id;
       const active=e.id===currentEdition?'font-weight:700;background:#e2e8f0;':'';
-      return'<div class="edition-item" data-id="'+e.id+'" style="padding:8px 14px;font-size:var(--text-xs);cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.06);color:#1a2744;'+active+'">'+label+'</div>';
+      return'<div class="edition-item" data-id="'+e.id+'" data-file="'+e.file+'" style="padding:8px 14px;font-size:var(--text-xs);cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.06);color:#1a2744;'+active+'">'+label+'</div>';
     }).join('');
-    list.querySelectorAll('.edition-item').forEach(el=>el.addEventListener('click',()=>switchEdition(el.dataset.id)));
+    list.querySelectorAll('.edition-item').forEach(el=>el.addEventListener('click',()=>switchEdition(el.dataset.id,el.dataset.file)));
   }catch(e){console.warn('Edition list load:',e)}
 }
-async function switchEdition(editionId){
+async function switchEdition(editionId,fileId){
   currentEdition=editionId;
   $('editionList').style.display='none';
   $('navMeta').textContent='Loading...';
   tabRendered={};
   Object.values(charts).forEach(c=>{if(c&&c.destroy)c.destroy()});charts={};
-  await loadNewsletter(editionId);
+  // Fetch by the actual dated filename (fileId); editionId (week_of) is kept
+  // only for the dropdown's active-highlight. Falls back to editionId for
+  // legacy archive entries that predate the file_date field.
+  await loadNewsletter(fileId||editionId);
   try{await renderTab('tldr');tabRendered.tldr=true}catch(e){console.error('renderTLDR:',e)}
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
   $('navMeta').textContent=edStr||'Latest Edition';
