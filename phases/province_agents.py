@@ -83,8 +83,10 @@ _PROVINCE_KEYWORDS = {
 
 CITATION_RULES = (
     "CITATION RULES: Every factual claim must end with <sup>N</sup> matching a source in the sources array. "
-    "N starts at 1 and increments. Use exact URLs from articles — never fabricate URLs. "
-    "If an article has no URL, use the publication homepage."
+    "N starts at 1 and increments. Use the EXACT deep-link URL of the specific article/release that backs "
+    "the claim, copied verbatim from the provided article list — never fabricate URLs, and NEVER substitute "
+    "a publication homepage, section index, or generic landing page. If no article in the list specifically "
+    "supports a claim, soften or omit the claim rather than cite a generic page."
 )
 
 EDITORIAL_RULES = (
@@ -668,6 +670,10 @@ j) insightChart: THE MOST IMPORTANT VISUALIZATION FOR THIS PROVINCE THIS WEEK.
    Connect the chart to specific projects or policy developments mentioned in your analysis.
 
 k) sources: Array matching ALL citation numbers across ALL sections. id, title, url (REQUIRED).
+   title MUST be the real publication/article name (e.g. "Ontario 2026 Budget — Highlights",
+   "Statistics Canada — Labour Force Survey, April 2026"), NOT a slug/placeholder like
+   "Ontario source [ON_budget]". url MUST be the specific deep link from the article list — never a
+   bare domain or homepage.
 
 l) projects: 2-4 major capital projects. Each: name, description, sector, value, status, completionDate, cma, tags, sources.
 

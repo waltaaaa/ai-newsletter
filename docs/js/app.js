@@ -668,11 +668,13 @@ function _tldrBuildBriefing(){
   let html=bulletsToParas(san(linkFootnotes(raw,sources)));
 
   // Merge short header paragraphs into the following content paragraph.
+  // Demo format: bold lead-off, then em dash OUTSIDE the bold, then the rest.
   html=html.replace(/<p>\s*<strong>([^<]{3,60})<\/strong>\s*<\/p>\s*<p>/gi,function(m,heading){
-    return '<p><span class="tldr-lead-sentence">'+heading.replace(/&amp;/g,'&')+' \u2014</span> ';
+    return '<p><span class="tldr-lead-sentence">'+heading.replace(/&amp;/g,'&')+'</span> \u2014 ';
   });
-  // For remaining content paragraphs without a lead-sentence, auto-wrap first sentence
-  html=html.replace(/<p>(?!<span class="tldr-lead-sentence")([^<]{20,}?[.!?])\s/g,function(m,first){return'<p><span class="tldr-lead-sentence">'+first+'</span> '});
+  // For remaining content paragraphs without a lead-sentence, auto-wrap the
+  // first sentence in bold and follow it with an em dash (demo style).
+  html=html.replace(/<p>(?!<span class="tldr-lead-sentence")([^<]{20,}?[.!?])\s/g,function(m,first){return'<p><span class="tldr-lead-sentence">'+first+'</span> \u2014 '});
 
   // Build callout boxes with inline charts from D.insightCharts
   const ic=D.insightCharts||D.insight_charts||[];
@@ -5155,7 +5157,23 @@ async function filterProjects(){
     if(newCutoff&&!(p.firstTracked&&p.firstTracked>=newCutoff))return false;
     return true;
   });
-  if(sort==='value_desc')filteredProjects.sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value));
+  if(sort==='new_updated'){
+    // Projects newly added or updated in the most recent run first
+    // (firstTracked / lastUpdated == the latest such date in the dataset),
+    // then everything else by value.
+    let maxD='';
+    for(const p of allProjects){
+      if(p.firstTracked&&p.firstTracked>maxD)maxD=p.firstTracked;
+      if(p.lastUpdated&&p.lastUpdated>maxD)maxD=p.lastUpdated;
+    }
+    const isRecent=p=>maxD&&((p.firstTracked&&p.firstTracked>=maxD)||(p.lastUpdated&&p.lastUpdated>=maxD));
+    filteredProjects.sort((a,b)=>{
+      const ra=isRecent(a)?1:0,rb=isRecent(b)?1:0;
+      if(ra!==rb)return rb-ra;
+      return parseNumericValue(b.value)-parseNumericValue(a.value);
+    });
+  }
+  else if(sort==='value_desc')filteredProjects.sort((a,b)=>parseNumericValue(b.value)-parseNumericValue(a.value));
   else if(sort==='updated')filteredProjects.sort((a,b)=>(b.lastSeen||'').localeCompare(a.lastSeen||''));
   else if(sort==='name_asc')filteredProjects.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
   else if(sort==='confidence')filteredProjects.sort((a,b)=>(b.confidence||0)-(a.confidence||0));

@@ -1386,7 +1386,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:#f4f6f8;color:#1a1a
 <nav class="main-nav" id="mainNav" aria-label="Main navigation">
   <div class="nav-inner" style="display:flex;align-items:center;gap:16px">
     <ul class="nav-tabs" id="navTabs" role="tablist" style="flex:1">
-      <li class="nav-tab active" data-tab="tldr" role="tab" aria-selected="true" aria-controls="tab-tldr" tabindex="0">TL;DR</li>
+      <li class="nav-tab active" data-tab="tldr" role="tab" aria-selected="true" aria-controls="tab-tldr" tabindex="0">Brief</li>
       <li class="nav-tab" data-tab="national" role="tab" aria-selected="false" aria-controls="tab-national" tabindex="-1">National</li>
       <li class="nav-tab" data-tab="provinces" role="tab" aria-selected="false" aria-controls="tab-provinces" tabindex="-1">Provinces</li>
       <li class="nav-tab" data-tab="industries" role="tab" aria-selected="false" aria-controls="tab-industries" tabindex="-1">Industries</li>
@@ -1443,7 +1443,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:#f4f6f8;color:#1a1a
         <select id="filterSector" aria-label="Filter by sector"><option value="">All Sectors</option></select>
         <select id="filterStatus" aria-label="Filter by status"><option value="">All Statuses</option></select>
         <select id="filterNew" aria-label="Filter by how recently the project was first tracked"><option value="">Any Age</option><option value="7">New this week</option><option value="30">New this month</option><option value="90">New this quarter</option></select>
-        <select id="sortProjects" aria-label="Sort projects"><option value="value_desc">Value (High to Low)</option><option value="updated">Recently Updated</option><option value="name_asc">Name A-Z</option><option value="confidence">Confidence</option></select>
+        <select id="sortProjects" aria-label="Sort projects"><option value="new_updated">New / Updated First</option><option value="value_desc">Value (High to Low)</option><option value="updated">Recently Updated</option><option value="name_asc">Name A-Z</option><option value="confidence">Confidence</option></select>
         <label class="toggle-label" title="Show only projects with estimated value above provincial GDP threshold"><input type="checkbox" id="confirmedToggle" checked onchange="_confirmedOnly=this.checked;filterProjects()"><span class="toggle-slider"></span> Above Threshold</label>
         <button onclick="exportProjects()" style="background:#ffffff;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:var(--text-sm);color:#003153;white-space:nowrap" title="Export filtered projects as CSV">Export CSV</button>
         <button id="toggleMissedForm" onclick="document.getElementById('missedProjectForm').style.display=document.getElementById('missedProjectForm').style.display==='none'?'block':'none'" style="background:#ffffff;border:1px solid rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:var(--text-sm);color:#003153;white-space:nowrap" title="Report a capital project we haven't tracked yet">+ Report Missing</button>

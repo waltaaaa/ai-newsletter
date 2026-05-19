@@ -721,6 +721,19 @@ _PROV_GDP_VIDS = {
     "British Columbia":          62467264,
 }
 
+# Provincial building permits & average wage — StatCan WDS vectors are
+# UNCONFIRMED and intentionally empty. These must be resolved during a CI run
+# (StatCan WDS is unreachable from the dev machine) via getCubeMetadata on:
+#   - building permits: StatCan Table 34-10-0066-01 (building permits, by
+#     province, total value, SA)
+#   - average wage:      StatCan Table 14-10-0063-01 (avg hourly/weekly wage,
+#     employees, by province)
+# DO NOT hardcode guessed vector IDs — wrong financial figures are worse than
+# N/A. While empty, get_provincial_indicators logs a research hint and these
+# indicators stay N/A (frontend already handles N/A gracefully).
+_PROV_BUILDING_PERMITS_VIDS: dict[str, int] = {}
+_PROV_WAGE_VIDS: dict[str, int] = {}
+
 # Provincial employment rate — StatCan WDS vector IDs
 # Table 14-10-0287-01 (PID 14100287): Employment rate, both sexes, 15 years+, SA
 # Offset: unemployment_rate_vector + 2
@@ -792,6 +805,18 @@ def get_provincial_indicators() -> dict:
                 + list(_TERR_UNEMP_VIDS.values()) + list(_TERR_PARTRATE_VIDS.values())
                 + list(_TERR_EMPRATE_VIDS.values()))
     data = _statcan_wds(all_vids, n=14)
+
+    # Research hint (CI): building permits / wage growth need StatCan vectors
+    # confirmed from a CI run before they can be fetched. Until then they
+    # remain N/A rather than risk wrong figures from guessed vector IDs.
+    if not _PROV_BUILDING_PERMITS_VIDS:
+        print("  [STATCAN-RESEARCH] provincial building permits: vectors UNCONFIRMED "
+              "— resolve StatCan Table 34-10-0066-01 in CI, then populate "
+              "_PROV_BUILDING_PERMITS_VIDS. Emitting N/A for now.")
+    if not _PROV_WAGE_VIDS:
+        print("  [STATCAN-RESEARCH] provincial wage growth: vectors UNCONFIRMED "
+              "— resolve StatCan Table 14-10-0063-01 in CI, then populate "
+              "_PROV_WAGE_VIDS. Emitting N/A for now.")
 
     # Batch 2: provincial annual real GDP (10) — n=2 for current + prior year Y/Y
     gdp_data = _statcan_wds(list(_PROV_GDP_VIDS.values()), n=2)

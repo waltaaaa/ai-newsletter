@@ -1991,6 +1991,38 @@ def run(conn, context, logger):
                     'period':  raw.get('gdp_date', ''),  # e.g. "2024"
                     'obsDate': raw.get('gdp_date', ''),
                 },
+                # These are already fetched per-province (LFS emp/participation
+                # rate, _PROV_EMPRATE_VIDS / _PROV_PARTRATE_VIDS) but were not
+                # surfaced into indicatorMeta, so the dashboard showed blank
+                # change columns for them.
+                'employmentRate': {
+                    'prev':    raw.get('employmentRate_prev', ''),
+                    'change':  _calc_change(raw.get('employmentRate', ''), raw.get('employmentRate_prev', '')),
+                    'period':  _fmt_period(raw.get('employmentRate_date', '')),
+                    'obsDate': raw.get('employmentRate_date', ''),
+                },
+                'participationRate': {
+                    'prev':    raw.get('participationRate_prev', ''),
+                    'change':  _calc_change(raw.get('participationRate', ''), raw.get('participationRate_prev', '')),
+                    'period':  _fmt_period(raw.get('participationRate_date', '')),
+                    'obsDate': raw.get('participationRate_date', ''),
+                },
+                # Wired but data-pending: StatCan vectors for these are
+                # CI-research TODOs (_PROV_BUILDING_PERMITS_VIDS / _PROV_WAGE_VIDS
+                # in data_collection.py). raw.get(...) stays '' until confirmed,
+                # so these render as N/A rather than wrong numbers.
+                'buildingPermits': {
+                    'prev':    raw.get('buildingPermits_prev', ''),
+                    'change':  _calc_change(raw.get('buildingPermits', ''), raw.get('buildingPermits_prev', '')),
+                    'period':  _fmt_period(raw.get('buildingPermits_date', '')),
+                    'obsDate': raw.get('buildingPermits_date', ''),
+                },
+                'wageGrowth': {
+                    'prev':    raw.get('wageGrowth_prev', ''),
+                    'change':  _calc_change(raw.get('wageGrowth', ''), raw.get('wageGrowth_prev', '')),
+                    'period':  _fmt_period(raw.get('wageGrowth_date', '')),
+                    'obsDate': raw.get('wageGrowth_date', ''),
+                },
             }
 
         # ── STEP 4f: Industry indicators — API or N/A, never AI ────

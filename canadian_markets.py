@@ -51,11 +51,14 @@ CANADIAN_COMMODITY_INDICATORS = {
         "compute": "spread",
     },
     "uranium_spot": {
-        "description": "Uranium spot price proxy (URA ETF)",
+        # Real physical-uranium proxy: Sprott Physical Uranium Trust holds
+        # physical U3O8, so its unit price tracks the uranium spot price —
+        # far closer to spot than URA (a basket of uranium *equities*).
+        "description": "Uranium spot price proxy (Sprott Physical Uranium Trust)",
         "relevance": "Determines Saskatchewan uranium mine expansion viability and SMR project economics.",
         "affected_sectors": ["Mining & O&G", "Utilities"],
         "affected_provinces": ["SK", "ON", "NB"],
-        "tickers": ["URA"],
+        "tickers": ["U-UN.TO"],
     },
     "nickel": {
         "description": "Nickel price proxy",
@@ -67,11 +70,18 @@ CANADIAN_COMMODITY_INDICATORS = {
         "tickers": ["FM.TO"],
     },
     "canola": {
-        "description": "Canola/oilseed price proxy (Bunge Global)",
-        "relevance": "Canola is Saskatchewan and Alberta's dominant oilseed crop. Bunge is a global oilseed processor — no free canola futures on Yahoo.",
+        # Bunge (BG) is a global oilseed-processor STOCK (~$80), not a canola
+        # price (~$600-700/t) — a misleading proxy that the poison filter
+        # silently rejects anyway. Yahoo has no free canola feed (RS=F futures
+        # delisted). Disabled (no ticker) until the real source is wired:
+        # TODO(ci-research): StatCan Table 32-10-0077-01 (farm product prices,
+        # canola) — resolve the vector in a CI run, then fetch via _statcan_wds.
+        # Until then canola is an honest N/A, not a wrong stock figure.
+        "description": "Canola farm price (StatCan — source pending CI research)",
+        "relevance": "Canola is Saskatchewan and Alberta's dominant oilseed crop.",
         "affected_sectors": ["Agriculture"],
         "affected_provinces": ["SK", "AB", "MB"],
-        "tickers": ["BG"],
+        "tickers": [],
     },
     "iron_ore": {
         "description": "Iron ore price proxy (Vale SA)",
@@ -300,7 +310,7 @@ def fetch_and_store_commodities(conn=None, db=None):
 
             # Map canadian_markets indicator IDs to timeseries series names
             COMMODITY_TS_MAP = {
-                'uranium_spot':       ('comm_uranium',    '$', 'yfinance (URA ETF)'),
+                'uranium_spot':       ('comm_uranium',    '$', 'Sprott Physical Uranium Trust (U-UN.TO)'),
                 'nickel':             ('comm_nickel',     '$', 'yfinance (JJN ETN)'),
                 'steel':              ('comm_steel',      '$', 'yfinance (SLX ETF)'),
                 'lumber':             ('comm_lumber',     '$/mbf', 'yfinance (LBR=F)'),
