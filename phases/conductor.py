@@ -198,8 +198,13 @@ def _invoke_conductor(prompt: str) -> bool:
 
     prompt_file = None
     try:
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
-                                         encoding='utf-8') as f:
+        # Write the prompt file INSIDE PROJECT_ROOT (not the system %TEMP%).
+        # The conductor runs `claude -p` with cwd=PROJECT_ROOT and its tool
+        # sandbox only permits reads within the working dir; a %TEMP% path is
+        # denied, leaving the conductor with no instructions (stale briefing).
+        with tempfile.NamedTemporaryFile(mode='w', prefix='conductor_prompt_',
+                                         suffix='.txt', delete=False,
+                                         encoding='utf-8', dir=PROJECT_ROOT) as f:
             f.write(prompt)
             prompt_file = f.name
 
@@ -212,6 +217,11 @@ def _invoke_conductor(prompt: str) -> bool:
             _CLAUDE_CLI, '-p', prompt_arg,
             '--model', CONDUCTOR_MODEL,
             '--max-turns', str(CONDUCTOR_MAX_TURNS),
+            # Headless `-p` has no interactive approval path. The conductor must
+            # Write/Edit briefing JSON and run `python tools/*.py` within its own
+            # project dir (cwd=PROJECT_ROOT); without this every mutating tool is
+            # auto-denied and the pipeline falls back to a stale briefing.
+            '--permission-mode', 'bypassPermissions',
         ]
 
         print(f"    Invoking conductor ({CONDUCTOR_MODEL}, "
