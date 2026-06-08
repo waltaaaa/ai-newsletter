@@ -34,7 +34,7 @@ function pick(){for(let i=0;i<arguments.length;i++){if(hasVal(arguments[i]))retu
 function fmtPeriod(dateStr){if(!dateStr)return '';try{const d=new Date(dateStr+'T00:00:00');if(isNaN(d))return dateStr;return d.toLocaleDateString('en-CA',{month:'short',year:'numeric'})}catch(e){return dateStr}}
 function indBasis(rec,metaPeriod,freq){const p=pick(metaPeriod,rec&&rec.period);const dt=hasVal(p)?fmtPeriod(p):'';const f=freq||rec&&rec.frequency||'';const fLabel=f?f.charAt(0).toUpperCase()+f.slice(1):'';return dt||(fLabel||'')}
 function indSource(rec,fallback){return (rec&&rec.source)||fallback||''}
-function fmtNum(v){if(v==null||v==='N/A'||v==='\u2014'||v==='')return v;const s=String(v).replace(/,/g,'');const m=s.match(/^([+\-]?)(\$?)(\d[\d]*\.?\d*)(.*)/);if(!m)return String(v);const sign=m[1],prefix=m[2],num=parseFloat(m[3]),suffix=m[4];if(isNaN(num))return String(v);const rounded=num%1===0&&num>=1000?num.toFixed(0):num.toFixed(1);const parts=rounded.split('.');parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');if(parts[1]==='0'&&num>=1000)return sign+prefix+parts[0]+suffix;return sign+prefix+parts.join('.')+suffix}
+function fmtNum(v){if(v==null)return'\u2014';if(v==='N/A'||v==='\u2014'||v==='')return v;const s=String(v).replace(/,/g,'');const m=s.match(/^([+\-]?)(\$?)(\d[\d]*\.?\d*)(.*)/);if(!m)return String(v);const sign=m[1],prefix=m[2],num=parseFloat(m[3]),suffix=m[4];if(isNaN(num))return String(v);const rounded=num%1===0&&num>=1000?num.toFixed(0):num.toFixed(1);const parts=rounded.split('.');parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');if(parts[1]==='0'&&num>=1000)return sign+prefix+parts[0]+suffix;return sign+prefix+parts.join('.')+suffix}
 // Compute period-over-period change from indicator history array
 let _indHistory=null;
 function _getHistory(){if(_indHistory)return _indHistory;try{const d=_cache['indicators.json'];_indHistory=(d&&d.history)||[]}catch(e){_indHistory=[]}return _indHistory}
@@ -733,24 +733,13 @@ function _tldrBuildBriefing(){
   </div>`;
 }
 
-/* Build a callout box with optional inline SVG chart */
+/* Build a callout box with optional inline SVG chart (header lives inside the SVG) */
 function _tldrCalloutHtml(co,idx){
   var h='<div class="tldr-callout">';
   if(co.text)h+=co.text;
   if(co.chart){
-    var ch=co.chart;
-    var keys=ch.dataKeys||[];
     h+='<div class="tldr-callout-chart" id="tldrCalloutChart_'+idx+'">';
-    h+='<div class="tldr-callout-chart-title">'+(ch.title||'')+(ch.subtitle?' \u00B7 '+ch.subtitle:'')+'</div>';
-    // Legend
-    var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
-    if(keys.length>1){
-      h+='<div class="tldr-chart-legend">';
-      keys.forEach(function(k,i){h+='<span class="tldr-chart-legend-item"><span class="tldr-chart-legend-dot" style="background:'+colors[i%colors.length]+'"></span>'+k+'</span>'});
-      h+='</div>';
-    }
-    // Chart placeholder — filled async after render
-    h+='<div class="tldr-callout-svg" id="tldrCalloutSvg_'+idx+'"><div style="height:120px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div>';
+    h+='<div class="tldr-callout-svg" id="tldrCalloutSvg_'+idx+'"><div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div>';
     h+='</div>';
   }
   h+='</div>';
@@ -773,64 +762,290 @@ async function _tldrRenderCalloutCharts(){
       var raw=ts&&(ts.series||ts);
       if(Array.isArray(raw)&&raw.length)allSeries.push({key:keys[ki],data:raw,color:colors[ki%colors.length]});
     }
-    if(!allSeries.length){el.innerHTML='<div style="height:120px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
-    // Filter to last 12 months
-    var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
+    if(!allSeries.length){el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
+    // Filter to last 5 months (tighter window for the editorial chart)
+    var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-5);
     allSeries.forEach(function(s){s.data=s.data.filter(function(p){return new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)})});
-    // Build multi-line SVG
-    el.innerHTML=_svgCalloutChart(allSeries,ch.annotations||[]);
+    var chartTitle=ch.title||'';
+    var chartSubtitle=(ch.subtitle||'').replace(/\b\d+[-\s]?month\b/i,'5-month');
+    // Pick a sensible source line for the top-level hero. If keys look like crude/brent keep the existing EIA+ICE attribution.
+    var src=ch.source;
+    if(!src){
+      var ks=keys.map(function(k){return String(k).toLowerCase()}).join(',');
+      if(/\bwti\b|\bbrent\b|\bwcs\b/.test(ks))src='Source: EIA, ICE \u00b7 daily spot close';
+      else if(/\bgold\b|\bsilver\b|\bcopper\b|\bnickel\b|\bzinc\b|\blithium\b/.test(ks))src='Source: LBMA, LME';
+      else if(/\bnatural_gas\b|\bpropane\b|\blng\b/.test(ks))src='Source: EIA, NYMEX';
+      else if(/\bwheat\b|\bcanola\b|\bsoybean\b|\bcorn\b|\bpotash\b/.test(ks))src='Source: CBOT, ICE Futures';
+      else src='Source: The Lagging Indicator';
+    }
+    el.innerHTML=_svgCalloutChart(allSeries,ch.annotations||[],chartTitle,chartSubtitle,ch.chartType||'line',src);
   }
 }
 
-function _svgCalloutChart(seriesArr,annotations){
-  var W=700,H=120,pL=45,pR=10,pT=10,pB=18;
-  // Compute global min/max across all series
-  var allVals=[];seriesArr.forEach(function(s){s.data.forEach(function(p){allVals.push(p.value)})});
-  if(!allVals.length)return '';
-  var mn=Math.min.apply(null,allVals),mx=Math.max.apply(null,allVals),rng=mx-mn;
-  if(rng===0)rng=Math.abs(mn)*0.1||1;
-  mn-=rng*0.08;mx+=rng*0.08;rng=mx-mn;
+function _svgCalloutChart(seriesArr,annotations,title,subtitle,chartType,source,opts){
+  // Economist-style chart with Prussian blue theme.
+  // Types: 'line' (area under curve), 'multi_line' (rebased to 100), 'bar', 'diverging_bar' (auto MoM for level series).
+  if(!seriesArr||!seriesArr.length)return '';
+  chartType=chartType||'line';
+  var isBar=(chartType==='bar'||chartType==='diverging_bar');
+  var isMulti=(chartType==='multi_line');
+  var isDiv=(chartType==='diverging_bar');
+
+  var W=1100,H=360,PAD_X=0,PAD_TOP=14,PAD_BOT=32;
+  var pL=PAD_X,pR=48,pT=96,pB=82;
   var pW=W-pL-pR,pH=H-pT-pB;
-  function xPos(date,dates){var i=dates.indexOf(date);return pL+(i/(dates.length-1))*pW}
-  function yPos(v){return pT+(1-(v-mn)/rng)*pH}
+  var BRAND='#003153',INK='#0f172a',MUTED='#4a5568',FAINT='#94a3b8',EVENT='#E3120B',GRID='#d9d4c7',POS='#0d7a3f',NEG='#c4320a';
+  var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;">';
-  // Grid
-  for(var g=0;g<4;g++){var gy=pT+(g/3)*pH;var gv=mx-(g/3)*rng;svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="#e4e2dd" stroke-width="0.5"/>';svg+='<text x="'+(pL-4)+'" y="'+(gy+3)+'" text-anchor="end" fill="#aaa" font-size="7" font-family="DM Sans">'+_svgFmtVal(gv)+'</text>';}
-  // X-axis labels
-  var refDates=seriesArr[0].data;
-  var xLabels=Math.min(4,refDates.length);
-  for(var xi=0;xi<xLabels;xi++){var di=Math.round(xi/(xLabels-1)*(refDates.length-1));var dx=pL+(di/(refDates.length-1))*pW;svg+='<text x="'+dx+'" y="'+(H-3)+'" text-anchor="middle" fill="#aaa" font-size="7" font-family="DM Sans">'+_svgFmtDate(refDates[di].date)+'</text>';}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function fmtVal(v){return _svgFmtVal(v).replace(/\.00$/,'')}
+  function fmtDate(iso){var d=new Date(iso);return MONTHS[d.getUTCMonth()]+' '+d.getUTCDate()+' '+d.getUTCFullYear()}
 
-  // Draw each series
-  seriesArr.forEach(function(s){
-    if(!s.data.length)return;
-    var pts=s.data.map(function(p,i){return{x:pL+(i/(s.data.length-1))*pW,y:yPos(p.value)}});
-    var poly=pts.map(function(p){return p.x+','+p.y}).join(' ');
-    // Area fill for first series only
-    if(s===seriesArr[0]){
-      var fid='tldrCF_'+(++_svgUid);
-      svg+='<defs><linearGradient id="'+fid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+s.color+'" stop-opacity="0.08"/><stop offset="100%" stop-color="'+s.color+'" stop-opacity="0"/></linearGradient></defs>';
-      var lp=pts[pts.length-1],fp=pts[0],bot=pT+pH;
-      svg+='<polygon fill="url(#'+fid+')" points="'+poly+' '+lp.x+','+bot+' '+fp.x+','+bot+'"/>';
+  // Clone input (avoid mutating caller). Each prepared series keeps key/data/color.
+  var prepared=seriesArr.map(function(s){return{key:s.key,data:s.data.slice(),color:s.color}});
+
+  // diverging_bar: if a series looks like a level (same sign, tight range), convert to MoM deltas so the "change" story is visible.
+  if(isDiv){
+    prepared.forEach(function(s){
+      var vals=s.data.map(function(p){return p.value}).filter(function(v){return v!=null});
+      if(vals.length<3)return;
+      var vmn=Math.min.apply(null,vals),vmx=Math.max.apply(null,vals);
+      var sameSign=(vmn>=0)||(vmx<=0);
+      var mag=Math.max(Math.abs(vmn),Math.abs(vmx));
+      var rangeRatio=mag===0?0:(vmx-vmn)/mag;
+      if(sameSign&&rangeRatio<0.6){
+        var deltas=[];
+        for(var i=1;i<s.data.length;i++){
+          if(s.data[i].value==null||s.data[i-1].value==null)continue;
+          deltas.push({date:s.data[i].date,value:s.data[i].value-s.data[i-1].value});
+        }
+        s.data=deltas;
+      }
+    });
+  }
+
+  // multi_line: rebase each series to 100 at first non-null point
+  if(isMulti){
+    prepared.forEach(function(s){
+      var base=null;
+      for(var i=0;i<s.data.length;i++){if(s.data[i].value!=null&&s.data[i].value!==0){base=s.data[i].value;break}}
+      if(base==null||base===0)return;
+      s.data=s.data.map(function(p){return{date:p.date,value:p.value==null?null:(p.value/base)*100}});
+    });
+  }
+
+  // Align all series to shortest common length
+  var n=Math.min.apply(null,prepared.map(function(s){return s.data.length}));
+  if(!n||n<2)return '';
+  var slices=prepared.map(function(s){return s.data.slice(-n)});
+  var primary=slices[0];
+
+  // y-range
+  var allVals=[];
+  slices.forEach(function(sl){sl.forEach(function(p){if(p.value!=null)allVals.push(p.value)})});
+  if(!allVals.length)return '';
+  var mn=Math.min.apply(null,allVals),mx=Math.max.apply(null,allVals);
+  if(isDiv){var absMx=Math.max(Math.abs(mn),Math.abs(mx))||1;mn=-absMx;mx=absMx}
+  var rng=mx-mn;if(rng===0)rng=Math.abs(mn)*0.1||1;
+  if(isBar){mx+=rng*0.14;rng=mx-mn;if(!isDiv){mn-=rng*0.04;rng=mx-mn}}
+  else{
+    // Add ~one gridline-step of headroom below the data minimum so the lines don't hug the floor.
+    // Exception: if the data minimum is exactly 0, keep 0 as the natural floor (don't go negative).
+    // If the data is all-positive and the expansion would cross 0, clamp to 0.
+    var dataMin=mn;
+    if(dataMin>0){mn=Math.max(0,dataMin-rng*0.25)}
+    else if(dataMin<0){mn-=rng*0.25}
+    mx+=rng*0.14;rng=mx-mn;
+  }
+
+  function xp(i,L){return pL+(i/Math.max(L-1,1))*pW}
+  function yp(v){return pT+(1-(v-mn)/rng)*pH}
+  var base_y=pT+pH;
+  var zero_y=isDiv?yp(0):base_y;
+
+  // Smooth path (Catmull-Rom → Cubic Bezier, tension 0.5)
+  function smoothPath(pts){
+    if(pts.length<2)return '';
+    if(pts.length===2)return 'M'+pts[0][0].toFixed(1)+','+pts[0][1].toFixed(1)+' L'+pts[1][0].toFixed(1)+','+pts[1][1].toFixed(1);
+    var d='M'+pts[0][0].toFixed(1)+','+pts[0][1].toFixed(1);
+    for(var i=0;i<pts.length-1;i++){
+      var p0=i>0?pts[i-1]:pts[i];
+      var p1=pts[i],p2=pts[i+1];
+      var p3=i+2<pts.length?pts[i+2]:pts[i+1];
+      var cp1x=p1[0]+(p2[0]-p0[0])/6,cp1y=p1[1]+(p2[1]-p0[1])/6;
+      var cp2x=p2[0]-(p3[0]-p1[0])/6,cp2y=p2[1]-(p3[1]-p1[1])/6;
+      d+=' C'+cp1x.toFixed(1)+','+cp1y.toFixed(1)+' '+cp2x.toFixed(1)+','+cp2y.toFixed(1)+' '+p2[0].toFixed(1)+','+p2[1].toFixed(1);
     }
-    svg+='<polyline fill="none" stroke="'+s.color+'" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" points="'+poly+'"/>';
-    var last=pts[pts.length-1];
-    svg+='<circle cx="'+last.x+'" cy="'+last.y+'" r="2.5" fill="'+s.color+'"/>';
-  });
+    return d;
+  }
+  function areaPath(pts,baselineY){
+    if(pts.length<2)return '';
+    return smoothPath(pts)+' L'+pts[pts.length-1][0].toFixed(1)+','+baselineY.toFixed(1)+' L'+pts[0][0].toFixed(1)+','+baselineY.toFixed(1)+' Z';
+  }
 
-  // Annotations (vertical markers)
-  annotations.forEach(function(a){
-    if(!a.date)return;
-    // Find x position from first series dates
-    var rd=seriesArr[0].data;
-    var closest=0,minDiff=Infinity;
-    rd.forEach(function(p,i){var diff=Math.abs(new Date(p.date)-new Date(a.date));if(diff<minDiff){minDiff=diff;closest=i}});
-    var ax=pL+(closest/(rd.length-1))*pW;
-    svg+='<line x1="'+ax+'" y1="'+pT+'" x2="'+ax+'" y2="'+(pT+pH)+'" stroke="#7a8599" stroke-width="0.5" stroke-dasharray="3,2"/>';
-  });
+  // Screen points per series (null values map to baseline y — bars skip them separately)
+  var seriesPts=slices.map(function(slice){return slice.map(function(p,i){return[xp(i,slice.length),yp(p.value==null?mn:p.value)]})});
+
+  // First annotation → flag above plot, dashed drop-line to data point (line/multi_line only)
+  var event_x=null,event_y=null,evLabel='',evDate=null;
+  if(!isBar&&annotations&&annotations.length&&annotations[0].date){
+    var tEv=new Date(annotations[0].date).getTime();
+    var bestI=0,bestD=Infinity;
+    for(var ii=0;ii<primary.length;ii++){
+      var dd=Math.abs(new Date(primary[ii].date).getTime()-tEv);
+      if(dd<bestD){bestD=dd;bestI=ii}
+    }
+    event_x=xp(bestI,primary.length);
+    event_y=seriesPts[0][bestI][1];
+    evLabel=annotations[0].label||'';
+    evDate=annotations[0].date;
+  }
+
+  // ---- SVG start ----
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:\'Inter\',-apple-system,sans-serif;overflow:visible" role="img" aria-label="'+esc(title||'Chart')+'">';
+
+  // Defs — arrow marker + per-series area gradients (line mode only)
+  svg+='<defs>';
+  svg+='<marker id="le_arrow_event" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="'+EVENT+'"/></marker>';
+  if(!isBar){
+    var primaryColor=prepared[0].color||BRAND;
+    svg+='<linearGradient id="area_primary" x1="0" y1="0" x2="0" y2="1">';
+    svg+='<stop offset="0%" stop-color="'+primaryColor+'" stop-opacity="0.22"/>';
+    svg+='<stop offset="100%" stop-color="'+primaryColor+'" stop-opacity="0"/>';
+    svg+='</linearGradient>';
+    if(prepared.length>=2){
+      var secondaryColor=prepared[1].color||BRAND;
+      svg+='<linearGradient id="area_secondary" x1="0" y1="0" x2="0" y2="1">';
+      svg+='<stop offset="0%" stop-color="'+secondaryColor+'" stop-opacity="0.16"/>';
+      svg+='<stop offset="100%" stop-color="'+secondaryColor+'" stop-opacity="0"/>';
+      svg+='</linearGradient>';
+    }
+  }
+  svg+='</defs>';
+
+  // Signal49-style: red rule + optional uppercase kicker + Inter bold title + Inter italic deck
+  svg+='<rect x="'+PAD_X+'" y="'+PAD_TOP+'" width="48" height="4" fill="#E3120B"/>';
+  var _ck=(opts&&opts.kicker)||'';
+  var _ttlY=PAD_TOP+34;
+  if(_ck){
+    svg+='<text x="'+PAD_X+'" y="'+(PAD_TOP+22)+'" font-size="10" font-weight="700" fill="'+INK+'" letter-spacing="1.4">'+esc(_ck.toUpperCase())+'</text>';
+    _ttlY=PAD_TOP+46;
+  }
+  svg+='<text x="'+PAD_X+'" y="'+_ttlY+'" font-size="22" font-weight="700" fill="'+INK+'" letter-spacing="-0.3" font-family="Inter,sans-serif">'+esc(title||'')+'</text>';
+  if(subtitle)svg+='<text x="'+PAD_X+'" y="'+(_ttlY+22)+'" font-size="13" font-weight="500" font-style="italic" fill="'+MUTED+'" font-family="Inter,sans-serif">'+esc(subtitle)+'</text>';
+
+  // Horizontal gridlines + right-side y-axis labels
+  for(var g=0;g<=4;g++){
+    var gy=pT+(g/4)*pH;
+    var gv=mx-(g/4)*rng;
+    svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="'+GRID+'" stroke-width="1"/>';
+    svg+='<text x="'+(W-pR+8)+'" y="'+(gy+4)+'" text-anchor="start" font-size="11" font-weight="400" fill="'+MUTED+'" style="font-variant-numeric:tabular-nums">'+fmtVal(gv)+'</text>';
+  }
+
+  // Bold chart floor
+  svg+='<line x1="'+pL+'" y1="'+base_y+'" x2="'+(W-pR)+'" y2="'+base_y+'" stroke="'+INK+'" stroke-width="1.2"/>';
+
+  // Zero line for diverging_bar (overlays gridlines)
+  if(isDiv&&zero_y>pT&&zero_y<base_y){
+    svg+='<line x1="'+pL+'" y1="'+zero_y.toFixed(1)+'" x2="'+(W-pR)+'" y2="'+zero_y.toFixed(1)+'" stroke="'+INK+'" stroke-width="1.4"/>';
+  }
+
+  // X-axis labels
+  var NT=6;if(primary.length<NT)NT=Math.max(2,primary.length);
+  for(var xi=0;xi<NT;xi++){
+    var di=Math.round((xi/(NT-1))*(primary.length-1));
+    var dx=xp(di,primary.length);
+    var dObj=new Date(primary[di].date);
+    var lbl=MONTHS[dObj.getUTCMonth()];
+    if(xi===0||dObj.getUTCMonth()===0)lbl=MONTHS[dObj.getUTCMonth()]+'\u2009'+dObj.getUTCFullYear();
+    var xAnc=xi===0?'start':(xi===NT-1?'end':'middle');
+    svg+='<text x="'+dx+'" y="'+(base_y+22)+'" text-anchor="'+xAnc+'" font-size="11" font-weight="400" fill="'+MUTED+'">'+lbl+'</text>';
+  }
+
+  // Closure flag (line mode only) — flag text sits above plot, dashed line drops from flag to data point
+  if(event_x!==null){
+    var flagY=pT-8;
+    var flagAnchor='middle',flagX=event_x;
+    if(event_x<pL+pW*0.22){flagAnchor='start';flagX=event_x+4}
+    else if(event_x>pL+pW*0.78){flagAnchor='end';flagX=event_x-4}
+    svg+='<text x="'+flagX+'" y="'+flagY+'" text-anchor="'+flagAnchor+'" font-size="11" font-weight="600" fill="'+EVENT+'">'+esc(evLabel)+' \u00b7 '+fmtDate(evDate)+'</text>';
+    svg+='<line x1="'+event_x+'" y1="'+(pT-3)+'" x2="'+event_x+'" y2="'+event_y.toFixed(1)+'" stroke="'+EVENT+'" stroke-width="1" stroke-dasharray="2,3" opacity="0.85"/>';
+    svg+='<circle cx="'+event_x+'" cy="'+event_y.toFixed(1)+'" r="3" fill="'+EVENT+'"/>';
+  }
+
+  // ---- Data rendering ----
+  if(isBar){
+    // Single-series bar. Bar width = ~70% of x-step, min 2px.
+    var sp=seriesPts[0],slice=slices[0];
+    var barColor=prepared[0].color||BRAND;
+    var barW=sp.length>1?Math.max(2,(sp[1][0]-sp[0][0])*0.7):20;
+    for(var bi=0;bi<sp.length;bi++){
+      var v=slice[bi].value;if(v==null)continue;
+      var y0=isDiv?zero_y:base_y;
+      var y1=sp[bi][1];
+      var top=Math.min(y0,y1),h=Math.abs(y1-y0);
+      var fill=isDiv?(v>=0?POS:NEG):barColor;
+      svg+='<rect x="'+(sp[bi][0]-barW/2).toFixed(1)+'" y="'+top.toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+Math.max(h,0.5).toFixed(1)+'" fill="'+fill+'" rx="1"/>';
+    }
+  }else{
+    // Filled area under each series — secondary first (back), primary on top
+    if(seriesPts.length>=2){svg+='<path d="'+areaPath(seriesPts[1],base_y)+'" fill="url(#area_secondary)"/>'}
+    svg+='<path d="'+areaPath(seriesPts[0],base_y)+'" fill="url(#area_primary)"/>';
+    var drawOrder=seriesPts.length>1?[1,0]:[0];
+    drawOrder.forEach(function(sIdx){
+      var pts=seriesPts[sIdx];
+      var color=prepared[sIdx].color||BRAND;
+      var sw=sIdx===0?3:2.4;
+      svg+='<path d="'+smoothPath(pts)+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linejoin="round" stroke-linecap="round"/>';
+    });
+    seriesPts.forEach(function(pts,sIdx){
+      var last=pts[pts.length-1];
+      var color=prepared[sIdx].color||BRAND;
+      var r=sIdx===0?4.5:4;
+      svg+='<circle cx="'+last[0]+'" cy="'+last[1]+'" r="'+r+'" fill="'+color+'"/>';
+    });
+  }
+
+  // Source line (italicized, Economist-style)
+  var srcText=source||'Source: The Lagging Indicator';
+  svg+='<text x="'+PAD_X+'" y="'+(H-PAD_BOT-2)+'" font-size="10" font-weight="500" font-style="italic" fill="'+MUTED+'">'+esc(srcText)+'</text>';
 
   svg+='</svg>';return svg;
+}
+
+// Resolves a chartSpec ({dataKeys, chartType, window, dataSource, ...}) into a pre-loaded seriesArr
+// suitable for _svgCalloutChart. Handles both timeseries.json (loadTimeseries) and indicators.json history.
+async function _loadChartSpecSeries(spec){
+  var keys=(spec&&spec.dataKeys)||[];
+  var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
+  var dataSource=spec.dataSource||'timeseries';
+  // Default window: 12m for timeseries data, 24m for indicator history.
+  var defaultWindow=dataSource==='indicators'?24:12;
+  var windowMonths=spec.window?_indWindowMonths(spec.window):defaultWindow;
+  var out=[];
+
+  if(dataSource==='indicators'){
+    for(var ki=0;ki<keys.length;ki++){
+      var pts=_indResolveIndicatorsSeries(keys[ki],windowMonths);
+      if(!pts||pts.length<2)continue;
+      out.push({key:keys[ki],data:pts.map(function(p){return{date:p.label+'-01',value:p.value}}),color:colors[ki%colors.length]});
+    }
+    return out;
+  }
+
+  for(var kj=0;kj<keys.length;kj++){
+    var key=keys[kj];
+    var ts=null;
+    try{ts=await loadTimeseries(key)}catch(e){}
+    if(!ts){try{ts=await loadTimeseries('comm_'+key)}catch(e){}}
+    var raw=ts&&(ts.series||ts);
+    if(!Array.isArray(raw)||!raw.length)continue;
+    var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-windowMonths);
+    var filtered=raw.filter(function(p){return p.date&&new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)});
+    if(filtered.length<2)continue;
+    out.push({key:key,data:filtered.map(function(p){return{date:p.date,value:parseFloat(p.value)||0}}),color:colors[kj%colors.length]});
+  }
+  return out;
 }
 
 /* ── TL;DR: Policy Developments ── */
@@ -1571,208 +1786,43 @@ function _buildProvCalloutText(chartSpec,provData,chartIdx){
 
 function buildAgentInsightStrip(prefix,chartSpec,provData){
   if(!chartSpec||!chartSpec.dataKeys||!chartSpec.dataKeys.length)return '';
-  const id=prefix+'AgentInsight';
-  const title=chartSpec.title||'Weekly Insight';
-  const subtitle=chartSpec.subtitle||'Agent-selected visualization';
-  const kpis=Array.isArray(chartSpec.kpis)?chartSpec.kpis:[];
-  // Option C editorial layout — triggered by presence of non-empty kpis array.
-  // Renders eyebrow label, KPI tile row, Prussian blue chart, integrated context panel.
-  if(kpis.length){
-    const eyebrow=chartSpec.eyebrow||'';
-    const context=chartSpec.context||'';
-    let oc='<div class="optc-card" style="margin:24px 0;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04)">';
-    if(eyebrow){oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#003153;margin-bottom:8px;border-bottom:2px solid #003153;display:inline-block;padding-bottom:2px">'+san(eyebrow)+'</div>';}
-    oc+='<div style="font-family:DM Sans,sans-serif;font-size:20px;font-weight:700;color:#1a2744;line-height:1.3;margin-bottom:4px">'+san(title)+'</div>';
-    oc+='<div style="font-family:DM Sans,sans-serif;font-size:13px;color:#64748B;margin-bottom:18px">'+san(subtitle)+'</div>';
-    oc+='<div style="display:flex;gap:32px;margin-bottom:20px;padding:16px 0;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;flex-wrap:wrap">';
-    kpis.slice(0,3).forEach(function(k){
-      var tr=(k.trend||'').toLowerCase();
-      var trendColor=tr==='up'?'#0d7a3f':tr==='down'?'#c4320a':'#64748B';
-      oc+='<div style="flex:1;min-width:120px">';
-      oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#64748B;margin-bottom:6px">'+san(k.label||'')+'</div>';
-      oc+='<div style="font-family:DM Sans,sans-serif;font-size:26px;font-weight:700;color:#1a2744;line-height:1.1">'+san(k.value||'')+'</div>';
-      if(k.delta){oc+='<div style="font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;color:'+trendColor+';margin-top:4px">'+san(k.delta)+'</div>';}
-      oc+='</div>';
-    });
-    oc+='</div>';
-    oc+='<div style="height:260px;position:relative;margin-bottom:16px"><canvas id="'+id+'"></canvas></div>';
-    if(context){
-      var safeCtx=String(context).replace(/<(?!\/?strong\b)[^>]+>/gi,'');
-      oc+='<div style="font-family:DM Sans,sans-serif;font-size:14px;line-height:1.6;color:#2d3a52;padding:14px 16px;background:#f8fafc;border-left:3px solid #003153;border-radius:0 4px 4px 0">'+safeCtx+'</div>';
-    }
-    oc+='<div style="font-family:DM Sans,sans-serif;font-size:10px;color:#94A3B8;margin-top:12px;text-align:right">Source: The Lagging Indicator</div>';
-    oc+='</div>';
-    return oc;
-  }
-  // Legacy callout layout (unchanged) — used when chartSpec has no kpis array
-  const calloutText=_buildProvCalloutText(chartSpec,provData||{},0);
-  let html='<div class="tldr-callout" style="margin:20px 0">';
-  html+='<div style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+calloutText+'</div>';
+  var calloutText=_buildProvCalloutText(chartSpec,provData||{},0);
+  var html='';
+  if(calloutText)html+='<div class="narrative chart-intro"><p>'+calloutText+'</p></div>';
+  html+='<div class="tldr-callout">';
   html+='<div class="tldr-callout-chart">';
-  html+='<div class="tldr-callout-chart-title" id="'+prefix+'AgentInsightTitle">'+title+'</div>';
-  html+='<div id="'+prefix+'AgentInsightSub" style="font-family:DM Sans,sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+subtitle+'</div>';
-  html+='<div style="height:280px;position:relative;padding:12px 16px;background:#fff;border-radius:6px"><canvas id="'+id+'"></canvas></div>';
-  html+='<div class="tldr-callout-source">Source: The Lagging Indicator</div>';
+  html+='<div class="tldr-callout-svg" id="'+prefix+'AgentInsightSvg"><div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div>';
   html+='</div></div>';
   return html;
 }
 
 async function renderAgentInsightChart(prefix,chartSpec){
   if(!chartSpec||!chartSpec.dataKeys||!chartSpec.dataKeys.length)return;
-  const canvasId=prefix+'AgentInsight';
-  const canvas=document.getElementById(canvasId);
-  if(!canvas)return;
-  const key='_agentInsight_'+canvasId;
-  if(charts[key]){charts[key].destroy();delete charts[key]}
-
-  // Data source routing: chartSpec.dataSource === "indicators" pulls from
-  // indicators.json history grouped by indicator_name; otherwise timeseries.json.
-  const dataSource=chartSpec.dataSource||'timeseries';
-  let allTs={};
-  if(dataSource==='indicators'){
-    const ind=await fetchJSON('indicators.json').catch(()=>({}));
-    const hist=(ind&&ind.history)||[];
-    for(let hi=0;hi<hist.length;hi++){
-      const row=hist[hi];if(!row)continue;
-      const iname=row.indicator_name;if(!iname)continue;
-      const v=parseFloat(row.value);
-      if(isNaN(v)||!row.period)continue;
-      if(!allTs[iname])allTs[iname]=[];
-      allTs[iname].push({date:row.period,value:v});
-    }
-    for(const k in allTs)allTs[k].sort((a,b)=>new Date(a.date)-new Date(b.date));
-  }else{
-    allTs=await fetchJSON('timeseries.json').catch(()=>({}));
-  }
-  const chartType=chartSpec.chartType||'line';
-  const dataKeys=chartSpec.dataKeys;
-  const annotations=chartSpec.annotations||[];
-  // Option C charts use Prussian blue as the primary line color
-  const _isOptC=Array.isArray(chartSpec.kpis)&&chartSpec.kpis.length>0;
-  const lineColors=_isOptC?['#003153','#7c3aed','#c4320a','#0d7a3f']:[_ic.accent,_ic.pos,'#F59E0B','#8B5CF6'];
-  const datasets=[];
-  let allLabels=[];
-  // Window parameter: "6m" / "12m" / "18m" / "24m" — default 12
-  const _winMonths=parseInt(String(chartSpec.window||'12m').replace(/[^0-9]/g,''),10)||12;
-
-  // Use pre-populated data from chartSpec if available and timeseries is stale/missing
-  const _hasInlineData=Array.isArray(chartSpec.data)&&chartSpec.data.length>0;
-
-  dataKeys.forEach((tsKey,idx)=>{
-    let raw=allTs[tsKey];
-    let filtered;
-    if(raw&&raw.length){
-      const series=Array.isArray(raw)?raw:raw.series||[];
-      if(!series.length){if(!_hasInlineData)return;}
-      else{
-        const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-_winMonths);
-        filtered=series.filter(p=>new Date(p.date)>=cutoff).sort((a,b)=>new Date(a.date)-new Date(b.date));
-      }
-    }
-    // Fallback to pre-populated chartSpec.data if timeseries is empty/stale
-    if((!filtered||!filtered.length)&&_hasInlineData){
-      filtered=chartSpec.data.map(d=>({date:d.label||d.date||'',value:typeof d.value==='number'?d.value:(Array.isArray(d.values)?d.values[idx]:parseFloat(d.value))})).filter(d=>!isNaN(d.value));
-    }
-    if(!filtered||!filtered.length)return;
-    const labels=filtered.map(p=>fmtDate(p.date));
-    const data=filtered.map(p=>p.value);
-    if(labels.length>allLabels.length)allLabels=labels;
-    const c=lineColors[idx%lineColors.length];
-    const isPrimary=datasets.length===0;
-
-    if(chartType==='bar'||chartType==='diverging_bar'){
-      datasets.push({
-        label:tsKey.replace(/_/g,' ').replace(/\b\w/g,x=>x.toUpperCase()),
-        data:data,
-        backgroundColor:chartType==='diverging_bar'?data.map(v=>v>=0?_ic.pos:_ic.neg):_ic.hexAlpha(c,0.7),
-        borderRadius:4,barPercentage:0.65
-      });
-    }else{
-      datasets.push({
-        label:tsKey.replace(/_/g,' ').replace(/\b\w/g,x=>x.toUpperCase()),
-        data:data,
-        borderColor:c,
-        backgroundColor:isPrimary?_ic.hexAlpha(c,0.05):'transparent',
-        borderWidth:isPrimary?2.5:2,
-        pointRadius:data.map((_,i)=>i===data.length-1?5:0),
-        pointBackgroundColor:c,
-        pointBorderColor:_ic.white,
-        pointBorderWidth:2,
-        fill:isPrimary,
-        tension:0.35,
-        yAxisID:isPrimary?'y':'y1'
-      });
-    }
-  });
-
-  if(!datasets.length){
-    canvas.parentElement.insertAdjacentHTML('beforeend','<div style="text-align:center;color:'+_ic.light+';font-size:var(--text-xs);padding:24px">No historical data available for selected indicators</div>');
+  var el=document.getElementById(prefix+'AgentInsightSvg');
+  if(!el)return;
+  var series=await _loadChartSpecSeries(chartSpec);
+  if(!series.length){
+    el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No historical data available</div>';
     return;
   }
+  var title=chartSpec.title||'Weekly Insight';
+  var subtitle=(chartSpec.subtitle||'').replace(/\b\d+[-\s]?month\b/i,'12-month');
+  var chartType=chartSpec.chartType||'line';
+  var source=chartSpec.source||_deriveChartSource(chartSpec.dataKeys);
+  el.innerHTML=_svgCalloutChart(series,chartSpec.annotations||[],title,subtitle,chartType,source);
+}
 
-  const isBarType=chartType==='bar'||chartType==='diverging_bar';
-  const needDualAxis=!isBarType&&datasets.length>=2;
-
-  // Event annotations from agent
-  const evtAnnotations={};
-  annotations.forEach((ann,i)=>{
-    try{
-      const ed=new Date(ann.date);if(isNaN(ed))return;
-      const ds=fmtDate(ed);const li=allLabels.indexOf(ds);if(li===-1)return;
-      evtAnnotations['agentEvt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(0,49,83,0.25)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(ann.label||'').substring(0,25),position:'start',backgroundColor:'rgba(0,49,83,0.8)',color:_ic.white,font:{family:_ic.font,size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
-    }catch(e){}
-  });
-  const hasAnnotation=Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation');
-  const annotationCfg=hasAnnotation&&Object.keys(evtAnnotations).length?{annotation:{annotations:{...evtAnnotations}}}:{};
-
-  // Scales
-  const scales=isBarType?{
-    x:{border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{maxTicksLimit:10,font:{family:_ic.font,size:9},color:_ic.prussian,maxRotation:45,minRotation:0}},
-    y:{border:{display:true,color:_ic.prussian,width:1},grid:{color:_ic.gridSoft,lineWidth:0.5},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,callback:v=>fmtNum(v)}}
-  }:{
-    x:{border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.prussian,padding:10}},
-    y:{position:'left',border:{display:true,color:_ic.prussian,width:1},grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:v=>fmtNum(v)}}
-  };
-  if(needDualAxis){
-    scales.y1={position:'right',border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:v=>fmtNum(v)}};
-  }
-
-  // Endpoint label plugin (line charts only)
-  const endpointPlugin=isBarType?null:{id:'agentEndpoint_'+prefix,afterDraw(chart){
-    datasets.forEach((ds,di)=>{
-      const meta=chart.getDatasetMeta(di);const lastPt=meta.data[meta.data.length-1];
-      if(!lastPt)return;const lastVal=ds.data[ds.data.length-1];
-      const ctx=chart.ctx;ctx.save();ctx.font='600 11px '+_ic.font;ctx.fillStyle=ds.borderColor;
-      ctx.textAlign=di===0?'left':'right';ctx.fillText(typeof lastVal==='number'?fmtNum(lastVal):lastVal,lastPt.x+(di===0?6:-6),lastPt.y-8);ctx.restore();
-    });
-  }};
-
-  // Legend
-  const legendCfg=needDualAxis?{
-    display:true,position:'top',align:'start',
-    labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:_ic.font,size:11,weight:'500'},color:_ic.prussian,usePointStyle:false,
-      generateLabels:function(chart){return chart.data.datasets.map(function(ds,i){const axis=i===0?'left axis':'right axis';return{text:ds.label+' ('+axis+')',fillColor:ds.borderColor||ds.backgroundColor,strokeColor:ds.borderColor||ds.backgroundColor,lineWidth:2,hidden:false,datasetIndex:i}})}}
-  }:isBarType&&datasets.length>1?{display:true,position:'top',labels:{boxWidth:10,padding:8,font:{family:_ic.font,size:10},color:_ic.heading}}:{display:false};
-
-  const cType=isBarType?'bar':'line';
-  const plugins=[].concat(endpointPlugin?[endpointPlugin]:[]);
-
-  charts[key]=new Chart(canvas,{
-    type:cType,
-    data:{labels:allLabels,datasets:datasets},
-    plugins:plugins,
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      layout:{padding:{top:10,right:needDualAxis?50:20,bottom:6,left:10}},
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:legendCfg,
-        tooltip:{backgroundColor:'rgba(0,49,83,0.92)',titleColor:'#fff',titleFont:{family:_ic.font,size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:_ic.font,size:11},padding:12,cornerRadius:4,borderColor:'rgba(0,49,83,0.15)',borderWidth:1,displayColors:needDualAxis||datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:ctx=>ctx.dataset.label+': '+fmtNum(ctx.raw)}},
-        ...annotationCfg
-      },
-      scales:scales
-    }
-  });
+// Pick a sensible source attribution from dataKeys when the chart spec doesn't provide one.
+function _deriveChartSource(keys){
+  var ks=(keys||[]).map(function(k){return String(k).toLowerCase()}).join(',');
+  if(/\bwti\b|\bbrent\b|\bwcs\b/.test(ks))return'Source: EIA, ICE \u00b7 daily spot close';
+  if(/\bnatural_gas\b|\bpropane\b|\blng\b/.test(ks))return'Source: EIA, NYMEX';
+  if(/\bgold\b|\bsilver\b|\bcopper\b|\bnickel\b|\bzinc\b|\blithium\b|\baluminum\b|\biron_ore\b|\bpotash\b/.test(ks))return'Source: LBMA, LME';
+  if(/\bwheat\b|\bcanola\b|\bsoybean\b|\bcorn\b|\blumber\b/.test(ks))return'Source: CBOT, ICE Futures';
+  if(/\bcadusd\b|\bcad_usd\b|\busdcad\b/.test(ks))return'Source: Bank of Canada';
+  if(/\bboc_rate\b|\bovernight\b|\bgoc_\d/.test(ks))return'Source: Bank of Canada';
+  if(/^(on|qc|ab|bc|sk|mb|ns|nb|nl|pe|yt|nt|nu)_/i.test((keys||[])[0]||'')||/_unemployment|_cpi|_gdp|_employment|_exports|_imports|_housing|_permits|_manufacturing/.test(ks))return'Source: Statistics Canada';
+  return'Source: Statistics Canada, Bank of Canada';
 }
 
 function buildInsightStrip(prefix,themes,provCode){
@@ -1783,10 +1833,10 @@ function buildInsightStrip(prefix,themes,provCode){
   const sub=tsEntries.length?tsEntries.map(s=>s.label).join(', ')+' \u2014 12-month trend':'From this week\u2019s analysis';
   // Build callout structure matching TL;DR pattern: text component on top, chart below
   let html='<div class="tldr-callout" style="margin:20px 0">';
-  html+='<div id="'+prefix+'InsightCalloutText" style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+t.label+'</div>';
+  html+='<div id="'+prefix+'InsightCalloutText" style="font-family:\'Inter\',sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+t.label+'</div>';
   html+='<div class="tldr-callout-chart">';
   html+='<div class="tldr-callout-chart-title" id="'+prefix+'InsightTitle">'+t.label+'</div>';
-  html+='<div id="'+prefix+'InsightSub" style="font-family:DM Sans,sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+sub+'</div>';
+  html+='<div id="'+prefix+'InsightSub" style="font-family:\'Inter\',sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+sub+'</div>';
   html+='<div style="height:280px;position:relative;padding:12px 16px;background:#fff;border-radius:6px"><canvas id="'+id+'"></canvas></div>';
   html+='<div class="tldr-callout-source">Source: Signal Dispatch pipeline data</div>';
   html+='</div></div>';
@@ -2294,43 +2344,50 @@ function _natNarrative(text,sources){
   var processed=san(linkFootnotes(text,sources||[]));
   return '<div class="dash-narrative">'+processed+'</div>';
 }
-function _initCanadaInsightChart(canvasId){
+async function _initCanadaInsightChart(canvasId){
   var canvas=document.getElementById(canvasId);if(!canvas)return;
-  var key='_natCaChart';if(charts[key]){charts[key].destroy();delete charts[key]}
-  fetchJSON('timeseries.json').then(function(allTs){
-    var raw=allTs['unemployment_rate']||allTs['unemployment']||null;if(!raw)return;
-    var series=Array.isArray(raw)?raw:(raw.series||[]);if(!series.length)return;
+  // Replace the parent .insight-chart-wrapper (title+subtitle+chart+source) with a cream tldr-callout containing one SVG chart.
+  var wrapper=canvas.closest('.insight-chart-wrapper')||canvas.parentElement;
+  if(!wrapper)return;
+  try{
+    var ts=await loadTimeseries('unemployment_rate');
+    var raw=ts&&(ts.series||ts);
+    if(!Array.isArray(raw)||!raw.length){wrapper.innerHTML='<div class="tldr-callout"><div class="tldr-callout-chart" style="padding:40px 0;text-align:center;color:#7a8599;font-size:12px">No data</div></div>';return}
     var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
-    var filtered=series.filter(function(p){return new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)});
-    if(filtered.length<3)return;
-    var labels=filtered.map(function(p){return fmtDate(p.date)});
-    var data=filtered.map(function(p){return p.value});
-    var refVal=data[data.length-1]||6.7;
-    charts[key]=new Chart(canvas,{type:'line',data:{labels:labels,datasets:[
-      {label:'Unemployment Rate',data:data,borderColor:'#003153',backgroundColor:'rgba(0,49,83,0.10)',fill:true,tension:0.35,borderWidth:2.5,pointRadius:0,pointHoverRadius:5,pointHoverBackgroundColor:'#003153',pointHoverBorderColor:'#fff',pointHoverBorderWidth:2},
-      {label:'Current ('+fmtNum(refVal)+'%)',data:Array(data.length).fill(refVal),borderColor:'#c4320a',borderWidth:1,borderDash:[4,3],pointRadius:0,pointHoverRadius:0,fill:false}
-    ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#00253f',titleFont:{family:'Inter',size:11,weight:'600'},bodyFont:{family:'Inter',size:12},padding:10,cornerRadius:6,displayColors:false,filter:function(item){return item.datasetIndex===0}}},scales:{x:{grid:{display:false},ticks:{font:{family:'Inter',size:11,weight:'500'},color:'#4a5568'},border:{color:'#9aa5b4'}},y:{grid:{display:false},ticks:{font:{family:'Inter',size:11,weight:'500'},color:'#4a5568',callback:function(v){return v+'%'}},border:{display:false}}}}});
-  }).catch(function(e){console.warn('Canada insight chart:',e)});
+    var filtered=raw.filter(function(p){return p.date&&new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)});
+    if(filtered.length<3){wrapper.innerHTML='<div class="tldr-callout"><div class="tldr-callout-chart" style="padding:40px 0;text-align:center;color:#7a8599;font-size:12px">No data</div></div>';return}
+    var series=[{key:'unemployment_rate',data:filtered,color:'#003153'}];
+    var svg=_svgCalloutChart(series,[],'Canada Unemployment Rate','Seasonally adjusted \u00b7 12-month trend','line','Source: Statistics Canada, Table 14-10-0287');
+    wrapper.outerHTML='<div class="tldr-callout"><div class="tldr-callout-chart"><div class="tldr-callout-svg">'+svg+'</div></div></div>';
+  }catch(e){console.warn('Canada insight chart:',e)}
 }
 var _globalChartInited={};
-function _initGlobalInsightChart(countryKey,canvasId){
+async function _initGlobalInsightChart(countryKey,canvasId){
   if(_globalChartInited[countryKey])return;_globalChartInited[countryKey]=true;
   var cfg=GLOBAL_CHART_CFG[countryKey];if(!cfg)return;
   var canvas=document.getElementById(canvasId);if(!canvas)return;
-  var chartKey='_natGlobal_'+countryKey;if(charts[chartKey]){charts[chartKey].destroy();delete charts[chartKey]}
-  fetchJSON('timeseries.json').then(function(allTs){
-    var raw=null;var keys=cfg.tsKeys||[cfg.tsKey];for(var k=0;k<keys.length;k++){var candidate=allTs[keys[k]];if(candidate){var arr=Array.isArray(candidate)?candidate:(candidate.series||[]);if(!raw||arr.length>raw.length)raw=arr}}if(!raw||!raw.length)return;
-    var series=raw;
+  var wrapper=canvas.closest('.insight-chart-wrapper')||canvas.parentElement;
+  if(!wrapper)return;
+  try{
+    var allTs=await fetchJSON('timeseries.json').catch(function(){return{}});
+    var raw=null;var keys=cfg.tsKeys||[cfg.tsKey];var pickedKey=keys[0];
+    for(var k=0;k<keys.length;k++){
+      var candidate=allTs[keys[k]];
+      if(candidate){
+        var arr=Array.isArray(candidate)?candidate:(candidate.series||[]);
+        if(!raw||arr.length>raw.length){raw=arr;pickedKey=keys[k]}
+      }
+    }
+    if(!raw||!raw.length){wrapper.innerHTML='<div class="tldr-callout"><div class="tldr-callout-chart" style="padding:40px 0;text-align:center;color:#7a8599;font-size:12px">No data</div></div>';return}
     var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-12);
-    var filtered=series.filter(function(p){return new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)});
-    // If not enough recent data, use the most recent N entries instead
-    if(filtered.length<3){filtered=series.sort(function(a,b){return new Date(a.date)-new Date(b.date)}).slice(-24)}
-    if(filtered.length<3)return;
-    var labels=filtered.map(function(p){return fmtDate(p.date)});var data=filtered.map(function(p){return p.value});
-    var datasets=[{label:cfg.title.split(' \u2014')[0]||cfg.title,data:data,borderColor:cfg.color,backgroundColor:cfg.fillColor,fill:true,tension:0.35,borderWidth:2.5,pointRadius:0,pointHoverRadius:5,pointHoverBackgroundColor:cfg.color,pointHoverBorderColor:'#fff',pointHoverBorderWidth:2}];
-    if(cfg.refLine){datasets.push({label:cfg.refLine.label,data:Array(data.length).fill(cfg.refLine.value),borderColor:cfg.refLine.color,borderWidth:1,borderDash:[4,3],pointRadius:0,pointHoverRadius:0,fill:false})}
-    charts[chartKey]=new Chart(canvas,{type:'line',data:{labels:labels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#00253f',titleFont:{family:'Inter',size:11,weight:'600'},bodyFont:{family:'Inter',size:12},padding:10,cornerRadius:6,displayColors:false,filter:function(item){return item.datasetIndex===0}}},scales:{x:{grid:{display:false},ticks:{font:{family:'Inter',size:11,weight:'500'},color:'#4a5568'},border:{color:'#9aa5b4'}},y:{grid:{display:false},ticks:{font:{family:'Inter',size:11,weight:'500'},color:'#4a5568'},border:{display:false}}}}});
-  }).catch(function(e){console.warn('Global insight chart '+countryKey+':',e)});
+    var filtered=raw.filter(function(p){return p.date&&new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)});
+    if(filtered.length<3){filtered=raw.slice().sort(function(a,b){return new Date(a.date)-new Date(b.date)}).slice(-24)}
+    if(filtered.length<3){wrapper.innerHTML='<div class="tldr-callout"><div class="tldr-callout-chart" style="padding:40px 0;text-align:center;color:#7a8599;font-size:12px">No data</div></div>';return}
+    var series=[{key:pickedKey,data:filtered,color:cfg.color||'#003153'}];
+    var title=(cfg.title||'').split(' \u2014')[0]||cfg.title||'';
+    var svg=_svgCalloutChart(series,[],title,cfg.subtitle||'','line','Source: '+(cfg.source||'Market data'));
+    wrapper.outerHTML='<div class="tldr-callout"><div class="tldr-callout-chart"><div class="tldr-callout-svg">'+svg+'</div></div></div>';
+  }catch(e){console.warn('Global insight chart '+countryKey+':',e)}
 }
 async function _renderCanadaSubtab(){
   var el=$('natContent-canada');if(!el)return;
@@ -2644,23 +2701,23 @@ function renderIndicatorDropdown(inds,title,idSuffix){
     if(!groups[cat])groups[cat]=[];
     groups[cat].push(ind);
   });
-  const groupOrder=['GDP by Industry','Labour Market','Housing','Trade','Monetary & Financial','Other'];
+  const _rowHtml=(ind)=>{
+    const cls=ind.arrow===1?'change-up':ind.arrow===2?'change-down':'change-flat';
+    const chgTxt=ind.change?changeIcon(ind.arrow)+' '+ind.change:'';
+    const clickAttr=ind.expId?' onclick="_indExpSelectFromList(\''+ind.expId+'\')"':'';
+    const extraCls=ind.expId?' clickable':'';
+    return '<div class="indicator-row'+extraCls+'" data-name="'+(ind.name||'').toLowerCase()+'"'+clickAttr+'><div class="indicator-row-name">'+(ind.name||'')+'</div><div class="indicator-row-value">'+(ind.value||'N/A')+'</div><div class="indicator-row-change '+cls+'">'+chgTxt+'</div><div class="indicator-row-period">'+(ind.refPer||'')+'</div><div class="indicator-row-source">'+(ind.tableUrl?'<a href="'+ind.tableUrl+'" target="_blank" onclick="event.stopPropagation()">\u2197</a>':'')+'</div></div>';
+  };
+  const groupOrder=['Key Economic Indicators','GDP by Industry','Labour Market','Housing','Trade','Monetary & Financial','Other'];
   groupOrder.forEach(g=>{
     const items=groups[g];if(!items||!items.length)return;
     html+='<div class="indicator-group-header">'+g+'</div>';
-    items.forEach(ind=>{
-      const cls=ind.arrow===1?'change-up':ind.arrow===2?'change-down':'change-flat';
-      const chgTxt=ind.change?changeIcon(ind.arrow)+' '+ind.change:'';
-      html+='<div class="indicator-row" data-name="'+(ind.name||'').toLowerCase()+'"><div class="indicator-row-name">'+(ind.name||'')+'</div><div class="indicator-row-value">'+(ind.value||'N/A')+'</div><div class="indicator-row-change '+cls+'">'+chgTxt+'</div><div class="indicator-row-period">'+(ind.refPer||'')+'</div><div class="indicator-row-source">'+(ind.tableUrl?'<a href="'+ind.tableUrl+'" target="_blank">\u2197</a>':'')+'</div></div>';
-    });
+    items.forEach(ind=>{html+=_rowHtml(ind);});
   });
   Object.keys(groups).filter(g=>!groupOrder.includes(g)).forEach(g=>{
     const items=groups[g];if(!items||!items.length)return;
     html+='<div class="indicator-group-header">'+g+'</div>';
-    items.forEach(ind=>{
-      const cls=ind.arrow===1?'change-up':ind.arrow===2?'change-down':'change-flat';
-      html+='<div class="indicator-row" data-name="'+(ind.name||'').toLowerCase()+'"><div class="indicator-row-name">'+(ind.name||'')+'</div><div class="indicator-row-value">'+(ind.value||'N/A')+'</div><div class="indicator-row-change '+cls+'">'+(ind.change?changeIcon(ind.arrow)+' '+ind.change:'')+'</div><div class="indicator-row-period">'+(ind.refPer||'')+'</div><div class="indicator-row-source">'+(ind.tableUrl?'<a href="'+ind.tableUrl+'" target="_blank">\u2197</a>':'')+'</div></div>';
-    });
+    items.forEach(ind=>{html+=_rowHtml(ind);});
   });
   html+='</div></div>';
   return html;
@@ -2684,48 +2741,69 @@ window.filterIndicators=function(dropId,filtId){
 
 /* == Interactive Indicator Explorer == */
 const INDICATOR_CATALOG=[
-  {group:'Rates',items:[
-    {id:'overnight_rate',label:'BoC Overnight Rate',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/key-interest-rates/',prov:false},
-    {id:'prime_rate',label:'Prime Rate',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/',prov:false},
-    {id:'goc_5y_yield',label:'5Y GoC Yield',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/',prov:false},
-    {id:'goc_10y_yield',label:'10Y GoC Yield',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/',prov:false},
-    {id:'goc_2y_yield',label:'2Y GoC Yield',unit:'%',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/interest-rates/canadian-bonds/',prov:false}
-  ]},
   {group:'Prices',items:[
-    {id:'cpi',label:'CPI (All Items)',unit:'%',source:'Statistics Canada',statcan:true,prov:true},
-    {id:'wti',label:'WTI Crude Oil',unit:'USD/bbl',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/CL%3DF/',prov:false},
-    {id:'gold',label:'Gold',unit:'USD/oz',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/GC%3DF/',prov:false},
-    {id:'cadusd',label:'CAD/USD',unit:'',source:'Bank of Canada',url:'https://www.bankofcanada.ca/rates/exchange/',prov:false}
+    {id:'cpi',label:'Consumer Price Index (All Items)',unit:'%',source:'Statistics Canada',statcan:true,prov:true,url:'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401'}
   ]},
-  {group:'Labour',items:[
-    {id:'unemployment',label:'Unemployment Rate',unit:'%',source:'Statistics Canada',statcan:true,prov:true}
+  {group:'Labour Market',items:[
+    {id:'unemployment',label:'Unemployment Rate',unit:'%',source:'Statistics Canada',statcan:true,prov:true,url:'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701'},
+    {id:'employmentRate',label:'Employment Rate',unit:'%',source:'Statistics Canada',statcan:true,prov:true,url:'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701'},
+    {id:'participationRate',label:'Participation Rate',unit:'%',source:'Statistics Canada',statcan:true,prov:true,url:'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701'},
+    {id:'employmentChange',label:'Employment Change',unit:'K',source:'Statistics Canada',statcan:true,prov:false,url:'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701'},
+    {id:'wageGrowth',label:'Wage Growth (Y/Y)',unit:'%',source:'Statistics Canada',statcan:true,prov:false,url:'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410006401'}
   ]},
-  {group:'Activity',items:[
-    {id:'realGdp',label:'Real GDP (Q/Q)',unit:'%',source:'Statistics Canada',statcan:true,prov:false},
-    {id:'housingStarts',label:'Housing Starts',unit:'K',source:'CMHC',url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research',prov:false}
+  {group:'GDP & Output',items:[
+    {id:'realGdp',label:'Real GDP (Q/Q)',unit:'%',source:'Statistics Canada',statcan:true,prov:false,url:'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610010401'}
   ]},
-  {group:'Markets',items:[
-    {id:'tsx',label:'S&P/TSX Composite',unit:'',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/%5EGSPTSE/',prov:false},
-    {id:'lumber',label:'Lumber',unit:'USD',source:'Yahoo Finance',url:'https://finance.yahoo.com/quote/LBS%3DF/',prov:false}
+  {group:'Housing & Construction',items:[
+    {id:'housingStarts',label:'Housing Starts',unit:'K',source:'CMHC',statcan:false,prov:true,url:'https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research'},
+    {id:'buildingPermits',label:'Building Permits',unit:'',source:'Statistics Canada',statcan:true,prov:true,url:'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410006601'}
   ]}
 ];
 
-let _indExpData={},_indExpSel='overnight_rate',_indExpRange=12,_indExpProv='national';
+let _indExpData={},_indExpSel='cpi',_indExpRange=12,_indExpProv='national',_indExpProvOnly=false;
+// Runtime-populated StatCan feed items grouped by category — merged into the explorer's
+// single <select> menu so users see both INDICATOR_CATALOG key indicators and the full
+// Statistics Canada Key Economic Indicators feed in one place.
+let _statcanExplorerGroups=[];
 
 function renderIndicatorExplorer(){
-  // Build selector
-  let selHtml='<div class="exp-card fade-in"><div class="exp-card-title">Indicator Explorer</div><div class="exp-card-sub">Chart any indicator with a configurable time window</div><div class="exp-control-row">';
-  selHtml+='<select id="indExpSelect" class="exp-select" onchange="onIndExpChange()">';
+  const selItem=findIndItem(_indExpSel);
+  // Dynamic chart header (sits inside the outer Statistics Canada card, beneath the indicator list)
+  const title=selItem?selItem.label:'Select an indicator';
+  const rangeLabel=_indExpRange===3?'last 3 months':_indExpRange===12?'last year':_indExpRange===36?'last 3 years':'last 5 years';
+  const provContext=(selItem&&selItem.prov)?(_indExpProv==='national'?'National':(PROVS.find(p=>p.code===_indExpProv)||{}).name||_indExpProv):'';
+  const deck=selItem?((provContext?provContext+' \u00B7 ':'')+rangeLabel):'';
+  let selHtml='<div class="exp-explorer-section">';
+  selHtml+='<div class="exp-chart-title">'+title+'</div>';
+  selHtml+='<div class="exp-chart-deck">'+deck+'</div>';
+  selHtml+='<div class="exp-control-row">';
+  selHtml+='<select id="indExpSelect" class="exp-select exp-select-wide" onchange="onIndExpChange()">';
+  // Key Economic Indicators first (curated). When provincial-only toggle is active, show
+  // only items with prov:true (provincial breakdowns available).
+  const _filterFn=(it)=>(_indExpProvOnly?it.prov===true:true);
   INDICATOR_CATALOG.forEach(g=>{
+    const items=g.items.filter(_filterFn);
+    if(!items.length)return;
     selHtml+='<optgroup label="'+g.group+'">';
-    g.items.forEach(it=>{
+    items.forEach(it=>{
+      selHtml+='<option value="'+it.id+'"'+(it.id===_indExpSel?' selected':'')+'>'+it.label+'</option>';
+    });
+    selHtml+='</optgroup>';
+  });
+  // Then the full Statistics Canada Key Economic Indicators feed (~200 items)
+  _statcanExplorerGroups.forEach(g=>{
+    const items=(g.items||[]).filter(_filterFn);
+    if(!items.length)return;
+    selHtml+='<optgroup label="'+g.group+'">';
+    items.forEach(it=>{
       selHtml+='<option value="'+it.id+'"'+(it.id===_indExpSel?' selected':'')+'>'+it.label+'</option>';
     });
     selHtml+='</optgroup>';
   });
   selHtml+='</select>';
+  // Provincial-level toggle — filters the <select> to only indicators that have provincial breakdowns
+  selHtml+='<label class="exp-toggle-switch" title="Show only indicators with provincial breakdowns"><input type="checkbox" id="indExpProvOnlyBtn" onchange="window._toggleIndExpProvOnly()"'+(_indExpProvOnly?' checked':'')+'><span class="exp-toggle-slider"></span><span class="exp-toggle-label">Available at provincial level</span></label>';
   // Province toggle (shown only for provincial indicators)
-  const selItem=findIndItem(_indExpSel);
   if(selItem&&selItem.prov){
     selHtml+='<select id="indExpProv" class="exp-select" onchange="onIndExpChange()">';
     selHtml+='<option value="national"'+((_indExpProv==='national')?' selected':'')+'>National</option>';
@@ -2737,17 +2815,18 @@ function renderIndicatorExplorer(){
   [3,12,36,60].forEach(m=>{
     const lbl=m===3?'3M':m===12?'1Y':m===36?'3Y':'5Y';
     const active=_indExpRange===m?' active':'';
-    selHtml+='<button class="exp-range-btn'+active+'" onclick="_indExpRange='+m+';loadIndExpData()">'+lbl+'</button>';
+    selHtml+='<button class="exp-range-btn'+active+'" onclick="_indExpRange='+m+';renderIndicatorExplorer()">'+lbl+'</button>';
   });
   selHtml+='</div></div>';
   // Callout + chart
   selHtml+='<div id="indExpCallout"></div>';
   selHtml+='<div class="exp-chart-wrap"><canvas id="indExpCanvas"></canvas></div>';
-  // Source link
+  // Source line (italic, matches SVG editorial chart footer)
   if(selItem){
     const linkUrl=selItem.statcan?'https://www150.statcan.gc.ca/n1/en/type/data':selItem.url||'#';
-    const linkLabel=selItem.statcan?'View on StatsCan \u2197':selItem.source+' \u2197';
-    selHtml+='<div class="exp-card-footlink"><a href="'+linkUrl+'" target="_blank" rel="noopener noreferrer">'+linkLabel+'</a></div>';
+    const linkLabel=selItem.statcan?'View on StatsCan \u2197':(selItem.source||'Source')+' \u2197';
+    const sourceName=selItem.source||(selItem.statcan?'Statistics Canada':'');
+    selHtml+='<div class="exp-card-source">Source: '+sourceName+' <a href="'+linkUrl+'" target="_blank" rel="noopener noreferrer">'+linkLabel+'</a></div>';
   }
   selHtml+='</div>';
   $('indicatorExplorer').innerHTML=selHtml;
@@ -2756,6 +2835,7 @@ function renderIndicatorExplorer(){
 
 function findIndItem(id){
   for(const g of INDICATOR_CATALOG)for(const it of g.items)if(it.id===id)return it;
+  for(const g of _statcanExplorerGroups)for(const it of g.items)if(it.id===id)return it;
   return null;
 }
 
@@ -2763,6 +2843,31 @@ window.onIndExpChange=function(){
   _indExpSel=$('indExpSelect').value;
   const provSel=$('indExpProv');
   _indExpProv=provSel?provSel.value:'national';
+  renderIndicatorExplorer();
+};
+
+window._indExpSelectFromList=function(id){
+  _indExpSel=id;
+  renderIndicatorExplorer();
+  const el=document.querySelector('#indicatorExplorer');
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+window._toggleIndExpProvOnly=function(){
+  _indExpProvOnly=!_indExpProvOnly;
+  // If the currently selected indicator is no longer visible under the filter, fall back to
+  // the first provincial-capable item so the chart doesn't go blank.
+  if(_indExpProvOnly){
+    const cur=findIndItem(_indExpSel);
+    if(!cur||cur.prov!==true){
+      let firstProv=null;
+      for(const g of INDICATOR_CATALOG){const f=g.items.find(it=>it.prov===true);if(f){firstProv=f;break;}}
+      if(!firstProv){
+        for(const g of _statcanExplorerGroups){const f=(g.items||[]).find(it=>it.prov===true);if(f){firstProv=f;break;}}
+      }
+      if(firstProv)_indExpSel=firstProv.id;
+    }
+  }
   renderIndicatorExplorer();
 };
 
@@ -2809,35 +2914,13 @@ async function loadIndExpData(){
   if(!pts.length)return;
   const labels=pts.map(p=>p.date);
   const data=pts.map(p=>p.value);
-  // Compute range band (25th-75th percentile) — filter non-numeric, avoid falsy-zero bug
-  const numericData=data.filter(v=>typeof v==='number'&&!isNaN(v));
-  const sorted=[...numericData].sort((a,b)=>a-b);
-  const bandLow=sorted.length>0?sorted[Math.floor(sorted.length*0.25)]:null;
-  const bandHigh=sorted.length>0?sorted[Math.floor(sorted.length*0.75)]:null;
-  // Build event flag annotations from watchlist
-  const evtAnnotations={};
-  try{
-    if(D&&(D.watchlist||D.events)){
-      const wl=D.watchlist||D.events||[];
-      wl.filter(e=>(e.impact||'').toLowerCase()==='high').forEach((evt,i)=>{
-        try{
-          const ed=parseEvtDate(evt.date);if(!ed)return;
-          const ds=fmtDate(ed);const li=labels.indexOf(ds);if(li===-1)return;
-          evtAnnotations['evt_'+i]={type:'line',xMin:li,xMax:li,borderColor:'rgba(245,158,11,0.5)',borderWidth:1,borderDash:[4,3],label:{display:true,content:(evt.event_name||evt.name||'').substring(0,20),position:'start',backgroundColor:'rgba(245,158,11,0.85)',color:'#fff',font:{family:'Inter',size:9,weight:'600'},padding:{top:2,bottom:2,left:5,right:5},borderRadius:3,rotation:-90}};
-        }catch(evtErr){}
-      });
-    }
-  }catch(annErr){console.warn('Event annotations:',annErr)}
-  const hasAnnotationPlugin=typeof window.ChartAnnotation!=='undefined'||(typeof Chart!=='undefined'&&Chart.registry&&Chart.registry.plugins&&Chart.registry.plugins.get('annotation'));
-  const bandAnnotation=(bandLow!==null&&bandHigh!==null)?{band:{type:'box',yMin:bandLow,yMax:bandHigh,backgroundColor:'rgba(59,130,246,0.06)',borderWidth:0}}:{};
-  const annotationCfg=hasAnnotationPlugin?{annotation:{annotations:{...bandAnnotation,...evtAnnotations}}}:{};
-  const endpointPlugin={id:'endpointLabel',afterDraw(chart){try{const ds=chart.data.datasets[0];if(!ds||!ds.data||!ds.data.length)return;const lastVal=ds.data[ds.data.length-1];if(lastVal==null)return;const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px DM Sans';ctx.fillStyle='#3B82F6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?fmtNum(lastVal):String(lastVal),lastPt.x+6,lastPt.y-4);ctx.restore();}catch(e){}}};
-  const chartCfg={type:'line',data:{labels,datasets:[{data,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.08)',borderWidth:2,pointRadius:pts.length>60?0:3,pointBackgroundColor:'#3B82F6',fill:true,tension:0.3}]},plugins:[endpointPlugin],options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},...annotationCfg,tooltip:{backgroundColor:'rgba(45,75,130,0.95)',titleColor:'#ffffff',bodyColor:'#93C5FD',borderColor:'rgba(255,255,255,0.12)',borderWidth:1,padding:10,cornerRadius:6,callbacks:{label:function(ctx){
+  // Editorial chart — no event flags, no quartile band (matches editorial/callout no-flag rule)
+  const chartCfg={type:'line',data:{labels,datasets:[{data,borderColor:'#003153',backgroundColor:'transparent',borderWidth:2.8,pointRadius:0,pointHoverRadius:5,pointBackgroundColor:'#003153',pointBorderColor:'#ffffff',pointBorderWidth:2,fill:false,tension:0.35}]},options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#cbd5e1',bodyColor:'#ffffff',padding:10,cornerRadius:4,titleFont:{family:'Inter',size:10,weight:'400'},bodyFont:{family:'Inter',size:13,weight:'700'},displayColors:false,callbacks:{label:function(ctx){
     const val=ctx.parsed.y;const idx=ctx.dataIndex;
-    if(idx>0){const prev=data[idx-1];const diff=val-prev;return fmtNum(val)+' ('+(diff>=0?'+':'')+fmtNum(diff)+' vs prev)';}
+    if(idx>0){const prev=data[idx-1];const diff=val-prev;return fmtNum(val)+'  '+(diff>=0?'+':'')+fmtNum(diff)+' vs prev';}
     return fmtNum(val);
-  }}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Inter',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.06)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'Inter',size:10},color:'#636363',callback:v=>fmtNum(v)}}}}};
-  try{charts._indExp=new Chart(canvas,chartCfg);}catch(chartErr){console.warn('Chart with annotations failed, retrying without:',chartErr);try{chartCfg.options.plugins={legend:{display:false},tooltip:chartCfg.options.plugins.tooltip};chartCfg.plugins=[];charts._indExp=new Chart(canvas,chartCfg);}catch(e2){console.error('Chart creation failed completely:',e2);}}
+  }}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Inter',size:11},color:'#4a5568'}},y:{position:'right',grid:{color:'#e8ecf0',lineWidth:1,drawBorder:false},ticks:{font:{family:'Inter',size:11},color:'#4a5568',callback:v=>fmtNum(v)}}}}};
+  try{charts._indExp=new Chart(canvas,chartCfg);}catch(chartErr){console.error('Chart creation failed:',chartErr);}
 }
 
 
@@ -3390,29 +3473,23 @@ async function _renderProvContent(){
 
   mainEl.innerHTML=html;
 
-  // Post-render: insight charts — render ALL items in insightCharts[] array, not just the first
-  var _icArr=provData.insightCharts||[];
-  // Fallback to legacy single insightChart if array is empty
-  if(!_icArr.length&&provData.insightChart)_icArr=[provData.insightChart];
-  var _validIcArr=_icArr.filter(function(s){return s&&s.dataKeys&&s.dataKeys.length});
+  // Post-render: insight charts — render every spec in the insightCharts array.
+  var _icArr=(provData.insightCharts||[]).filter(function(s){return s&&s.dataKeys&&s.dataKeys.length});
+  if(!_icArr.length&&provData.insightChart&&provData.insightChart.dataKeys&&provData.insightChart.dataKeys.length)_icArr=[provData.insightChart];
   const provThemes=extractAnalysisThemes(provContent,provProj);
   const chartArea=$('provInsightChartArea');
   if(chartArea){
-    if(_validIcArr.length){
-      var chartHtml='';
-      _validIcArr.forEach(function(spec,idx){
-        chartHtml+=buildAgentInsightStrip('prov'+idx,spec,provData);
-      });
-      chartArea.innerHTML=chartHtml;
+    if(_icArr.length){
+      chartArea.innerHTML=_icArr.map(function(s,i){return buildAgentInsightStrip('prov'+i,s,provData)}).join('');
     }else{
       chartArea.innerHTML=buildInsightStrip('prov',provThemes,code);
     }
   }
 
   await _ensureChartData();
-  if(_validIcArr.length){
-    for(var _icIdx=0;_icIdx<_validIcArr.length;_icIdx++){
-      await renderAgentInsightChart('prov'+_icIdx,_validIcArr[_icIdx]);
+  if(_icArr.length){
+    for(var ci=0;ci<_icArr.length;ci++){
+      await renderAgentInsightChart('prov'+ci,_icArr[ci]);
     }
   }else{
     await renderInsightCharts('prov',provThemes,provProj,code,provContent);
@@ -4112,165 +4189,31 @@ function _indFmtMonthLabel(ym){
 // Builds the HTML shell for an industry insight callout + chart container
 function buildIndInsightStrip(spec){
   if(!spec)return'';
-  var title=spec.title||'Industry Insight';
-  var subtitle=spec.subtitle||'';
   var callout=spec.callout||spec.reasoning||'';
-  var sourceLbl='Statistics Canada';
-  var sourceUrl='https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401';
-  if(spec.dataSource==='timeseries'){sourceLbl='Market data';sourceUrl=''}
-  var h='<div class="tldr-callout" style="margin:20px 0">';
-  h+='<div style="font-family:DM Sans,sans-serif;font-size:15px;line-height:1.6;color:#4a5568">'+san(callout)+'</div>';
+  var h='';
+  if(callout)h+='<div class="narrative chart-intro"><p>'+san(callout)+'</p></div>';
+  h+='<div class="tldr-callout">';
   h+='<div class="tldr-callout-chart">';
-  h+='<div class="tldr-callout-chart-title">'+san(title)+'</div>';
-  h+='<div style="font-family:DM Sans,sans-serif;font-size:10px;color:#7a8599;margin-bottom:10px">'+san(subtitle)+'</div>';
-  h+='<div style="height:320px;position:relative;padding:12px 16px;background:#fff;border-radius:6px"><canvas id="indInsightChart"></canvas></div>';
-  var srcHtml=sourceUrl?'<a href="'+san(sourceUrl)+'" target="_blank" rel="noopener noreferrer" class="ind-src-link">'+san(sourceLbl)+'</a>':san(sourceLbl);
-  h+='<div class="tldr-callout-source">Source: '+srcHtml+'</div>';
+  h+='<div class="tldr-callout-svg" id="indInsightSvg"><div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">Loading chart\u2026</div></div>';
   h+='</div></div>';
   return h;
 }
 
-// Renders the industry insight chart — supports line / multi_line / bar / diverging_bar
+// Renders the industry insight chart through the shared SVG callout chart.
 async function renderIndInsightChart(spec){
   if(!spec||!spec.dataKeys||!spec.dataKeys.length)return;
-  var canvas=document.getElementById('indInsightChart');
-  if(!canvas||typeof Chart==='undefined')return;
-  var chartType=spec.chartType||'line';
-  var dataSource=spec.dataSource||'indicators';
-  var windowMonths=_indWindowMonths(spec.window);
-  var yLabel=spec.yAxisLabel||'';
-
-  // Resolve each dataKey to a series
-  var seriesList=[];
-  if(dataSource==='indicators'){
-    spec.dataKeys.forEach(function(k){
-      var pts=_indResolveIndicatorsSeries(k,windowMonths);
-      if(pts.length>=2)seriesList.push({key:k,points:pts});
-    });
-  }else{
-    var allTs={};
-    try{allTs=await fetchJSON('timeseries.json')}catch(e){}
-    spec.dataKeys.forEach(function(k){
-      var raw=allTs[k];
-      if(!raw)return;
-      var arr=Array.isArray(raw)?raw:(raw.series||[]);
-      if(!arr.length)return;
-      var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-windowMonths);
-      var filtered=arr.filter(function(p){return p.date&&new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)});
-      if(filtered.length<2)return;
-      var pts=filtered.map(function(p){return{label:fmtDate(p.date),value:parseFloat(p.value)||0}});
-      seriesList.push({key:k,points:pts});
-    });
-  }
-
-  if(!seriesList.length){
-    canvas.parentElement.innerHTML='<div style="height:320px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">No historical data available</div>';
+  var el=document.getElementById('indInsightSvg');
+  if(!el)return;
+  var series=await _loadChartSpecSeries(spec);
+  if(!series.length){
+    el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">No historical data available</div>';
     return;
   }
-
-  // Align labels to the longest series (they're all monthly for indicators source)
-  var longest=seriesList.reduce(function(a,b){return b.points.length>a.points.length?b:a},seriesList[0]);
-  var labels=longest.points.map(function(p){return dataSource==='indicators'?_indFmtMonthLabel(p.label):p.label});
-
-  // Map each series onto the longest series' x-axis (pad with null for missing months)
-  function alignTo(series,masterLabels){
-    var map={};
-    series.points.forEach(function(p){map[p.label]=p.value});
-    return longest.points.map(function(mp){return map[mp.label]!=null?map[mp.label]:null});
-  }
-
-  // Clean up any prior chart
-  if(charts._indInsightChart){try{charts._indInsightChart.destroy()}catch(e){}delete charts._indInsightChart}
-
-  var isMulti=(chartType==='multi_line');
-  var isBar=(chartType==='bar'||chartType==='diverging_bar');
-  var palette=[_ic.prussian,_ic.accent,'#F59E0B','#8B5CF6'];
-
-  // Pretty-print a dataKey for legend/tooltip
-  function prettyKey(k){
-    var map={
-      gdp_agriculture:'Agriculture GDP',gdp_mining_og:'Mining & Energy GDP',gdp_utilities:'Utilities GDP',
-      gdp_construction:'Construction GDP',gdp_manufacturing:'Manufacturing GDP',gdp_wholesale:'Wholesale GDP',
-      gdp_retail:'Retail GDP',gdp_transportation:'Transportation GDP',gdp_information:'Information GDP',
-      gdp_finance:'Finance & Insurance GDP',gdp_real_estate:'Real Estate GDP',gdp_professional:'Professional Services GDP',
-      gdp_management:'Management GDP',gdp_admin_waste:'Admin & Waste GDP',gdp_education:'Education GDP',
-      gdp_healthcare:'Health Care GDP',gdp_entertainment:'Arts & Recreation GDP',gdp_accommodation:'Accommodation & Food GDP',
-      gdp_other_services:'Other Services GDP',gdp_public_admin:'Public Admin GDP',
-      construction_employment:'Construction Employment',manufacturing_employment:'Manufacturing Employment',
-      mining_og_employment:'Mining & Energy Employment',
-      goc_2y_yield:'GoC 2-year Yield',goc_3y_yield:'GoC 3-year Yield',goc_5y_yield:'GoC 5-year Yield',
-      goc_7y_yield:'GoC 7-year Yield',goc_10y_yield:'GoC 10-year Yield',goc_long_yield:'GoC Long Yield',
-      boc_rate:'BoC Overnight Rate',nat_unemployment:'National Unemployment',
-      nat_employment_rate:'National Employment Rate',nat_participation_rate:'National Participation Rate',
-      cpi_national:'National CPI'
-    };
-    return map[k]||k.replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase()});
-  }
-
-  var datasets=[];
-  if(isBar){
-    var s0=seriesList[0];
-    var vals=s0.points.map(function(p){return p.value});
-    datasets.push({
-      label:prettyKey(s0.key),
-      data:vals,
-      backgroundColor:chartType==='diverging_bar'?vals.map(function(v){return v>=0?_ic.pos:_ic.neg}):_ic.accent,
-      borderRadius:4,barPercentage:0.7
-    });
-  }else{
-    seriesList.forEach(function(s,i){
-      var aligned=alignTo(s,labels);
-      var plotVals=isMulti?_indNormalize(aligned):aligned;
-      var c=palette[i%palette.length];
-      datasets.push({
-        label:prettyKey(s.key),
-        data:plotVals,
-        borderColor:c,
-        backgroundColor:i===0&&!isMulti?'rgba(0,49,83,0.06)':'transparent',
-        borderWidth:i===0?2.5:2,
-        pointRadius:plotVals.map(function(_,idx){return idx===plotVals.length-1?5:0}),
-        pointBackgroundColor:c,
-        pointBorderColor:'#fff',
-        pointBorderWidth:2,
-        fill:i===0&&!isMulti,
-        tension:0.35,
-        spanGaps:true
-      });
-    });
-  }
-
-  var cType=isBar?'bar':'line';
-  var yTitleTxt=yLabel?(isMulti?'Index (window start = 100)':yLabel):(isMulti?'Index (window start = 100)':'');
-
-  charts._indInsightChart=new Chart(canvas,{
-    type:cType,
-    data:{labels:labels,datasets:datasets},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      layout:{padding:{top:8,right:18,bottom:6,left:10}},
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:(isMulti||datasets.length>1)?{display:true,position:'top',align:'start',labels:{boxWidth:14,boxHeight:3,padding:18,font:{family:_ic.font,size:11,weight:'500'},color:_ic.prussian}}:{display:false},
-        tooltip:{backgroundColor:'rgba(0,49,83,0.92)',titleColor:'#fff',titleFont:{family:_ic.font,size:11,weight:'600'},bodyColor:'#CBD5E1',bodyFont:{family:_ic.font,size:11},padding:12,cornerRadius:4,displayColors:datasets.length>1,boxWidth:8,boxHeight:2,callbacks:{label:function(ctx){var v=ctx.raw;if(v==null)return ctx.dataset.label+': —';return ctx.dataset.label+': '+(typeof v==='number'?(isMulti?v.toFixed(1):fmtNum(v)):v)}}}
-      },
-      scales:{
-        x:{border:{display:true,color:_ic.prussian,width:1},grid:{display:false},ticks:{maxTicksLimit:8,font:{family:_ic.font,size:10},color:_ic.prussian,padding:10,autoSkip:true}},
-        y:{
-          beginAtZero:false,
-          grace:'8%',
-          border:{display:true,color:_ic.prussian,width:1},
-          grid:{color:_ic.gridSoft,lineWidth:0.5,drawTicks:false},
-          ticks:{font:{family:_ic.font,size:10},color:_ic.prussian,padding:14,callback:function(v){
-            if(isMulti)return v.toFixed(0);
-            if(typeof v!=='number')return v;
-            if(Math.abs(v)>=1000)return v.toLocaleString('en-CA',{maximumFractionDigits:0});
-            return v.toLocaleString('en-CA',{maximumFractionDigits:2});
-          }},
-          title:yTitleTxt?{display:true,text:yTitleTxt,font:{family:_ic.font,size:10,weight:'500'},color:_ic.muted,padding:{bottom:8}}:{display:false}
-        }
-      }
-    }
-  });
+  var title=spec.title||'Industry Insight';
+  var subtitle=(spec.subtitle||'').replace(/\b\d+[-\s]?month\b/i,'12-month');
+  var chartType=spec.chartType||'line';
+  var source=spec.source||(spec.dataSource==='indicators'?'Source: Statistics Canada':_deriveChartSource(spec.dataKeys));
+  el.innerHTML=_svgCalloutChart(series,spec.annotations||[],title,subtitle,chartType,source);
 }
 
 async function _renderIndContent(){
@@ -4342,15 +4285,22 @@ async function _renderIndContent(){
   var html='';
 
   // Hero card (title + headline stats + attached subsector chip strip)
+  // Consistent layout: title on the left (flex:1 1 auto), 4 stat blocks on the right (flex:0 0 auto).
+  // Each stat-value is an inline-flex row with arrow + number as separate spans so the arrow
+  // baseline-aligns cleanly with the number instead of floating inline.
+  function statHtml(cls,arrow,num,label){
+    var arrowHtml=arrow&&arrow!=='\u2014'?'<span class="stat-arrow">'+arrow+'</span>':'';
+    return '<div><div class="stat-value '+cls+'">'+arrowHtml+'<span class="stat-num">'+num+'</span></div><div class="stat-label">'+label+'</div></div>';
+  }
   html+='<div class="industry-header-card">';
   html+='<div class="industry-header-top">';
-  html+='<div><h2>'+san(name)+'</h2>';
+  html+='<div class="industry-header-title"><h2>'+san(name)+'</h2>';
   html+='<div class="industry-sub">Weekly industry analysis \u00B7 NAICS '+san(code)+'</div></div>';
   html+='<div class="industry-header-stats">';
-  html+='<div><div class="stat-value '+mmCls+'">'+mmArr+' '+san(mm)+'</div><div class="stat-label">GDP M/M</div></div>';
-  html+='<div><div class="stat-value '+yyCls+'">'+yyArr+' '+san(yy)+'</div><div class="stat-label">GDP Y/Y</div></div>';
-  html+='<div><div class="stat-value">'+projCount.toLocaleString('en-CA')+'</div><div class="stat-label">Active Projects</div></div>';
-  html+='<div><div class="stat-value">'+san(pipelineValueDisplay)+'</div><div class="stat-label">Pipeline Value</div></div>';
+  html+=statHtml(mmCls,mmArr,san(mm),'GDP M/M');
+  html+=statHtml(yyCls,yyArr,san(yy),'GDP Y/Y');
+  html+=statHtml('chg-flat','',projCount.toLocaleString('en-CA'),'Active Projects');
+  html+=statHtml('chg-flat','',san(pipelineValueDisplay),'Pipeline Value');
   html+='</div>';
   html+='</div>'; // close industry-header-top
 
@@ -4486,7 +4436,7 @@ async function _renderIndContent(){
       // Defer Chart.js render one tick so the canvas is attached to the DOM
       setTimeout(function(){renderIndInsightChart(icSpec)},50);
     }else{
-      chartArea.innerHTML='<div class="tldr-callout" style="margin:20px 0"><div style="font-family:DM Sans,sans-serif;font-size:14px;line-height:1.6;color:#64748B">No insight chart available for '+san(name)+' this week.</div></div>';
+      chartArea.innerHTML='<div class="tldr-callout" style="margin:20px 0"><div style="font-family:\'Inter\',sans-serif;font-size:14px;line-height:1.6;color:#64748B">No insight chart available for '+san(name)+' this week.</div></div>';
     }
   }
 }
@@ -4703,38 +4653,191 @@ function _svgTimeseries(series,opts){
   var pts=series.map(function(p,i){return{x:pL+(i/(series.length-1))*pW,y:pT+(1-(p.value-mn)/rng)*pH}});
   var s='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="width:100%;display:block">';
   s+='<defs><linearGradient id="'+fid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+color+'" stop-opacity="0.12"/><stop offset="100%" stop-color="'+color+'" stop-opacity="0.01"/></linearGradient></defs>';
-  for(var g=0;g<3;g++){var gy=pT+(g/2)*pH;var gv=mx-(g/2)*rng;s+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="#e8ecf0" stroke-width="1"/>';s+='<text x="'+(pL-6)+'" y="'+(gy+4)+'" fill="#7a8599" font-size="10" font-family="DM Sans" text-anchor="end">'+_svgFmtVal(gv)+'</text>';}
+  for(var g=0;g<3;g++){var gy=pT+(g/2)*pH;var gv=mx-(g/2)*rng;s+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="#e8ecf0" stroke-width="1"/>';s+='<text x="'+(pL-6)+'" y="'+(gy+4)+'" fill="#7a8599" font-size="10" font-family="\'Inter\',sans-serif" text-anchor="end">'+_svgFmtVal(gv)+'</text>';}
   var poly=pts.map(function(p){return p.x+','+p.y}).join(' ');
   var lp=pts[pts.length-1],fp=pts[0],bot=pT+pH;
   s+='<path d="M'+fp.x+','+fp.y+' '+pts.slice(1).map(function(p){return 'L'+p.x+','+p.y}).join(' ')+' L'+lp.x+','+bot+' L'+fp.x+','+bot+' Z" fill="url(#'+fid+')"/>';
   s+='<polyline points="'+poly+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
   s+='<circle cx="'+lp.x+'" cy="'+lp.y+'" r="4" fill="'+color+'" stroke="#fff" stroke-width="2"/>';
   var lc=Math.min(4,series.length);
-  for(var li=0;li<lc;li++){var idx=Math.round(li/(lc-1)*(series.length-1));var anc=li===0?'start':li===lc-1?'end':'middle';var dl=li===lc-1?'Now':_svgFmtDate(series[idx].date);s+='<text x="'+pts[idx].x+'" y="'+(H-5)+'" fill="#7a8599" font-size="10" font-family="DM Sans" text-anchor="'+anc+'">'+dl+'</text>';}
+  for(var li=0;li<lc;li++){var idx=Math.round(li/(lc-1)*(series.length-1));var anc=li===0?'start':li===lc-1?'end':'middle';var dl=li===lc-1?'Now':_svgFmtDate(series[idx].date);s+='<text x="'+pts[idx].x+'" y="'+(H-5)+'" fill="#7a8599" font-size="10" font-family="\'Inter\',sans-serif" text-anchor="'+anc+'">'+dl+'</text>';}
   s+='</svg>';return s;
 }
 function _svgFmtVal(v){if(Math.abs(v)>=10000)return(v/1000).toFixed(0)+'k';if(Math.abs(v)>=1000)return v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');if(Math.abs(v)>=1)return v.toFixed(2);return v.toFixed(4)}
 function _svgFmtDate(d){try{var dt=new Date(d);return dt.toLocaleDateString('en-CA',{month:'short'})}catch(e){return d}}
 
+/* Editorial SVG chart — editorial sibling of _svgCalloutChart (markets + explorer).
+   Shares typography, grid, y-axis, source line of the callout chart family, but:
+   no cream wrapper, thin 60x2 brand rule instead of the 48x5 brand tab, no area
+   fill under the line, no annotation flags, and includes a mousemove hover tooltip. */
+var _edChartStore={};var _edChartUid=0;
+function _svgEditorialChart(series,opts){
+  opts=opts||{};
+  var H=opts.height||360;
+  if(!series||!series.length)return'<div style="height:'+H+'px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">No data available</div>';
+  var W=1100,PAD_TOP=14,PAD_BOT=32;
+  var pL=0,pR=48,pT=96,pB=82;
+  var pW=W-pL-pR,pH=H-pT-pB;
+  var BRAND=opts.color||'#003153',INK='#0f172a',MUTED='#4a5568',GRID='#e8ecf0',BASELINE='#cbd5e1';
+  var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+  function fmtVal(v){if(opts.valueFmt)return opts.valueFmt(v);return _svgFmtVal(v).replace(/\.00$/,'')}
+  function fmtDate(iso){try{var d=new Date(iso);return MONTHS[d.getUTCMonth()]+' '+d.getUTCDate()+' '+d.getUTCFullYear()}catch(e){return String(iso)}}
+  var sorted=series.slice().sort(function(a,b){return new Date(a.date)-new Date(b.date)});
+  var vals=sorted.map(function(p){return p.value}).filter(function(v){return v!=null&&!isNaN(v)});
+  if(vals.length<2)return'<div style="height:'+H+'px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">Insufficient data</div>';
+  var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),rng=mx-mn;
+  if(rng===0)rng=Math.abs(mn)*0.1||1;
+  var dataMin=mn;
+  if(dataMin>0)mn=Math.max(0,dataMin-rng*0.25);
+  else if(dataMin<0)mn-=rng*0.25;
+  mx+=rng*0.14;rng=mx-mn;
+  function xp(i){return pL+(i/Math.max(sorted.length-1,1))*pW}
+  function yp(v){return pT+(1-(v-mn)/rng)*pH}
+  var base_y=pT+pH;
+  function smoothPath(pts){
+    if(pts.length<2)return'';
+    if(pts.length===2)return'M'+pts[0][0].toFixed(1)+','+pts[0][1].toFixed(1)+' L'+pts[1][0].toFixed(1)+','+pts[1][1].toFixed(1);
+    var d='M'+pts[0][0].toFixed(1)+','+pts[0][1].toFixed(1);
+    for(var i=0;i<pts.length-1;i++){
+      var p0=i>0?pts[i-1]:pts[i];
+      var p1=pts[i],p2=pts[i+1];
+      var p3=i+2<pts.length?pts[i+2]:pts[i+1];
+      var cp1x=p1[0]+(p2[0]-p0[0])/6,cp1y=p1[1]+(p2[1]-p0[1])/6;
+      var cp2x=p2[0]-(p3[0]-p1[0])/6,cp2y=p2[1]-(p3[1]-p1[1])/6;
+      d+=' C'+cp1x.toFixed(1)+','+cp1y.toFixed(1)+' '+cp2x.toFixed(1)+','+cp2y.toFixed(1)+' '+p2[0].toFixed(1)+','+p2[1].toFixed(1);
+    }
+    return d;
+  }
+  var pts=sorted.map(function(p,i){return[xp(i),yp(p.value==null?mn:p.value)]});
+  var hoverPoints=sorted.map(function(p,i){return{x:pts[i][0],y:pts[i][1],label:fmtDate(p.date),val:p.value==null?'\u2014':fmtVal(p.value)}});
+  var chartId='edChart_'+(++_edChartUid);
+  _edChartStore[chartId]={points:hoverPoints};
+  var svg='<svg id="'+chartId+'" class="editorial-chart" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:\'Inter\',-apple-system,sans-serif;overflow:visible" role="img" aria-label="'+esc(opts.title||'Chart')+'" onmousemove="_edChartHover(event,this)" onmouseleave="_edChartLeave(this)">';
+  svg+='<rect x="0" y="'+PAD_TOP+'" width="60" height="2" fill="#E3120B"/>';
+  var _ck=opts.kicker||'';
+  var _ttlY=PAD_TOP+30;
+  if(_ck){
+    svg+='<text x="0" y="'+(PAD_TOP+18)+'" font-size="10" font-weight="700" fill="'+INK+'" letter-spacing="1.4">'+esc(_ck.toUpperCase())+'</text>';
+    _ttlY=PAD_TOP+42;
+  }
+  svg+='<text x="0" y="'+_ttlY+'" font-size="22" font-weight="700" fill="'+INK+'" letter-spacing="-0.3" font-family="Inter,sans-serif">'+esc(opts.title||'')+'</text>';
+  if(opts.subtitle)svg+='<text x="0" y="'+(_ttlY+22)+'" font-size="13" font-weight="500" font-style="italic" fill="'+MUTED+'" font-family="Inter,sans-serif">'+esc(opts.subtitle)+'</text>';
+  for(var g=0;g<=4;g++){
+    var gy=pT+(g/4)*pH;
+    var gv=mx-(g/4)*rng;
+    svg+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="'+GRID+'" stroke-width="1"/>';
+    svg+='<text x="'+(W-pR+8)+'" y="'+(gy+4)+'" text-anchor="start" font-size="11" font-weight="400" fill="'+MUTED+'" style="font-variant-numeric:tabular-nums">'+fmtVal(gv)+'</text>';
+  }
+  svg+='<line x1="'+pL+'" y1="'+base_y+'" x2="'+(W-pR)+'" y2="'+base_y+'" stroke="'+BASELINE+'" stroke-width="1"/>';
+  var NT=Math.min(6,sorted.length);
+  for(var xi=0;xi<NT;xi++){
+    var di=Math.round((xi/Math.max(NT-1,1))*(sorted.length-1));
+    var dx=xp(di);
+    var dObj=new Date(sorted[di].date);
+    var lbl=MONTHS[dObj.getUTCMonth()];
+    if(xi===0||dObj.getUTCMonth()===0)lbl=MONTHS[dObj.getUTCMonth()]+'\u2009'+dObj.getUTCFullYear();
+    var xAnc=xi===0?'start':(xi===NT-1?'end':'middle');
+    svg+='<text x="'+dx+'" y="'+(base_y+22)+'" text-anchor="'+xAnc+'" font-size="11" font-weight="400" fill="'+MUTED+'">'+lbl+'</text>';
+  }
+  svg+='<path d="'+smoothPath(pts)+'" fill="none" stroke="'+BRAND+'" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>';
+  var last=pts[pts.length-1];
+  svg+='<circle cx="'+last[0]+'" cy="'+last[1]+'" r="4" fill="'+BRAND+'"/>';
+  var srcText=opts.source||'Source: The Lagging Indicator';
+  svg+='<text x="0" y="'+(H-PAD_BOT-2)+'" font-size="10" font-weight="500" font-style="italic" fill="'+MUTED+'">'+esc(srcText)+'</text>';
+  svg+='<g class="ed-hover-layer" opacity="0" pointer-events="none">';
+  svg+='<line class="ed-hover-line" x1="0" y1="'+pT+'" x2="0" y2="'+base_y+'" stroke="'+INK+'" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>';
+  svg+='<circle class="ed-hover-dot" r="5" fill="'+BRAND+'" stroke="#ffffff" stroke-width="2"/>';
+  svg+='<rect class="ed-hover-tt-bg" width="160" height="40" rx="4" fill="#0f172a" opacity="0.92"/>';
+  svg+='<text class="ed-hover-tt-date" font-size="10" fill="#cbd5e1" font-family="\'Inter\',sans-serif"></text>';
+  svg+='<text class="ed-hover-tt-val" font-size="14" font-weight="700" fill="#ffffff" font-family="\'Inter\',sans-serif" style="font-variant-numeric:tabular-nums"></text>';
+  svg+='</g>';
+  svg+='<rect x="'+pL+'" y="'+pT+'" width="'+pW+'" height="'+pH+'" fill="transparent"/>';
+  svg+='</svg>';
+  return svg;
+}
+window._edChartHover=function(evt,svg){
+  var store=_edChartStore[svg.id];
+  if(!store||!store.points||!store.points.length)return;
+  var rect=svg.getBoundingClientRect();
+  var vb=svg.getAttribute('viewBox').split(' ');
+  var vbW=parseFloat(vb[2]);
+  var x=(evt.clientX-rect.left)*(vbW/rect.width);
+  var best=0,bd=Infinity;
+  for(var i=0;i<store.points.length;i++){
+    var d=Math.abs(store.points[i].x-x);
+    if(d<bd){bd=d;best=i}
+  }
+  var p=store.points[best];
+  var layer=svg.querySelector('.ed-hover-layer');
+  if(!layer)return;
+  layer.setAttribute('opacity','1');
+  var line=layer.querySelector('.ed-hover-line');
+  line.setAttribute('x1',p.x);line.setAttribute('x2',p.x);
+  var dot=layer.querySelector('.ed-hover-dot');
+  dot.setAttribute('cx',p.x);dot.setAttribute('cy',p.y);
+  var ttX=p.x+12,ttY=p.y-48;
+  if(ttX+160>vbW-48)ttX=p.x-172;
+  if(ttY<90)ttY=p.y+14;
+  var ttBg=layer.querySelector('.ed-hover-tt-bg');
+  ttBg.setAttribute('x',ttX);ttBg.setAttribute('y',ttY);
+  var ttDate=layer.querySelector('.ed-hover-tt-date');
+  ttDate.setAttribute('x',ttX+10);ttDate.setAttribute('y',ttY+16);
+  ttDate.textContent=p.label;
+  var ttVal=layer.querySelector('.ed-hover-tt-val');
+  ttVal.setAttribute('x',ttX+10);ttVal.setAttribute('y',ttY+32);
+  ttVal.textContent=p.val;
+};
+window._edChartLeave=function(svg){
+  var layer=svg.querySelector('.ed-hover-layer');
+  if(layer)layer.setAttribute('opacity','0');
+};
+
 function _svgYieldCurve(yc,ycPrev){
-  if(!yc||!yc.length)return '';
-  var W=800,H=180,pL=50,pR=40,pT=20,pB=30;
+  if(!yc||!yc.length)return'';
+  var W=1100,H=360,PAD_TOP=14,PAD_BOT=32;
+  var pL=0,pR=48,pT=96,pB=82;
+  var pW=W-pL-pR,pH=H-pT-pB;
+  var BRAND='#003153',PREV='#c4320a',INK='#0f172a',MUTED='#4a5568',GRID='#e8ecf0',BASELINE='#cbd5e1';
   var data=yc.map(function(y){return parseFloat(y.yield)||0});
   var allVals=data.slice();if(ycPrev&&ycPrev.length)allVals=allVals.concat(ycPrev);
   var mn=Math.min.apply(null,allVals),mx=Math.max.apply(null,allVals),rng=mx-mn;
-  if(rng===0)rng=1;mn-=rng*0.15;mx+=rng*0.15;rng=mx-mn;
-  var pW=W-pL-pR,pH=H-pT-pB;var n=yc.length;
-  var xPts=yc.map(function(y,i){return pL+(i/(n-1))*pW});
+  if(rng===0)rng=1;mn-=rng*0.2;mx+=rng*0.18;rng=mx-mn;
+  var n=yc.length;
+  var xPts=yc.map(function(y,i){return pL+(i/Math.max(n-1,1))*pW});
   function yPos(v){return pT+(1-(v-mn)/rng)*pH}
-  var s='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="width:100%;display:block">';
-  for(var g=0;g<4;g++){var gy=pT+(g/3)*pH;var gv=mx-(g/3)*rng;s+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="#e8ecf0" stroke-width="1"/>';s+='<text x="'+(pL-6)+'" y="'+(gy+4)+'" fill="#7a8599" font-size="10" font-family="DM Sans" text-anchor="end">'+gv.toFixed(1)+'%</text>';}
-  if(ycPrev&&ycPrev.length>=n){var prevPoly=xPts.map(function(x,i){return x+','+yPos(ycPrev[i])}).join(' ');s+='<polyline points="'+prevPoly+'" fill="none" stroke="#c4320a" stroke-width="1.5" stroke-dasharray="5,3" stroke-linejoin="round"/>';}
-  var curPoly=xPts.map(function(x,i){return x+','+yPos(data[i])}).join(' ');
-  s+='<polyline points="'+curPoly+'" fill="none" stroke="#003153" stroke-width="2.5" stroke-linejoin="round"/>';
-  xPts.forEach(function(x,i){s+='<circle cx="'+x+'" cy="'+yPos(data[i])+'" r="4" fill="#003153" stroke="#fff" stroke-width="2"/>';});
-  yc.forEach(function(y,i){s+='<text x="'+xPts[i]+'" y="'+(H-8)+'" fill="#7a8599" font-size="10" font-family="DM Sans" text-anchor="middle">'+y.term+'</text>'});
-  if(ycPrev&&ycPrev.length>=n){s+='<line x1="'+(W-pR-120)+'" y1="10" x2="'+(W-pR-95)+'" y2="10" stroke="#003153" stroke-width="2.5"/><text x="'+(W-pR-90)+'" y="14" fill="#4a5568" font-size="10" font-family="DM Sans">Current</text>';s+='<line x1="'+(W-pR-50)+'" y1="10" x2="'+(W-pR-25)+'" y2="10" stroke="#c4320a" stroke-width="1.5" stroke-dasharray="5,3"/><text x="'+(W-pR-20)+'" y="14" fill="#4a5568" font-size="10" font-family="DM Sans">1 Year Ago</text>';}
-  s+='</svg>';return s;
+  var base_y=pT+pH;
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:\'Inter\',-apple-system,sans-serif;overflow:visible" role="img" aria-label="Government of Canada yield curve">';
+  s+='<rect x="0" y="'+PAD_TOP+'" width="60" height="2" fill="#E3120B"/>';
+  s+='<text x="0" y="'+(PAD_TOP+18)+'" font-size="10" font-weight="700" fill="'+INK+'" letter-spacing="1.4">INTEREST RATES \u00b7 CANADA</text>';
+  s+='<text x="0" y="'+(PAD_TOP+42)+'" font-size="22" font-weight="700" fill="'+INK+'" letter-spacing="-0.3" font-family="Inter,sans-serif">Yield curve</text>';
+  s+='<text x="0" y="'+(PAD_TOP+64)+'" font-size="13" font-weight="500" font-style="italic" fill="'+MUTED+'" font-family="Inter,sans-serif">Government of Canada benchmark bonds</text>';
+  for(var g=0;g<=4;g++){
+    var gy=pT+(g/4)*pH;
+    var gv=mx-(g/4)*rng;
+    s+='<line x1="'+pL+'" y1="'+gy+'" x2="'+(W-pR)+'" y2="'+gy+'" stroke="'+GRID+'" stroke-width="1"/>';
+    s+='<text x="'+(W-pR+8)+'" y="'+(gy+4)+'" text-anchor="start" font-size="11" font-weight="400" fill="'+MUTED+'" style="font-variant-numeric:tabular-nums">'+gv.toFixed(1)+'%</text>';
+  }
+  s+='<line x1="'+pL+'" y1="'+base_y+'" x2="'+(W-pR)+'" y2="'+base_y+'" stroke="'+BASELINE+'" stroke-width="1"/>';
+  yc.forEach(function(y,i){s+='<text x="'+xPts[i]+'" y="'+(base_y+22)+'" text-anchor="middle" font-size="11" font-weight="400" fill="'+MUTED+'">'+y.term+'</text>'});
+  if(ycPrev&&ycPrev.length>=n){
+    var prevPoly=xPts.map(function(x,i){return x.toFixed(1)+','+yPos(ycPrev[i]).toFixed(1)}).join(' ');
+    s+='<polyline points="'+prevPoly+'" fill="none" stroke="'+PREV+'" stroke-width="2" stroke-dasharray="5,4" stroke-linejoin="round" stroke-linecap="round"/>';
+    xPts.forEach(function(x,i){s+='<circle cx="'+x.toFixed(1)+'" cy="'+yPos(ycPrev[i]).toFixed(1)+'" r="3" fill="'+PREV+'"/>';});
+  }
+  var curPoly=xPts.map(function(x,i){return x.toFixed(1)+','+yPos(data[i]).toFixed(1)}).join(' ');
+  s+='<polyline points="'+curPoly+'" fill="none" stroke="'+BRAND+'" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>';
+  xPts.forEach(function(x,i){s+='<circle cx="'+x.toFixed(1)+'" cy="'+yPos(data[i]).toFixed(1)+'" r="4.5" fill="'+BRAND+'" stroke="#ffffff" stroke-width="2"/>';});
+  if(ycPrev&&ycPrev.length>=n){
+    var lgX=W-pR-260,lgY=pT+14;
+    s+='<line x1="'+lgX+'" y1="'+lgY+'" x2="'+(lgX+22)+'" y2="'+lgY+'" stroke="'+BRAND+'" stroke-width="2.8"/>';
+    s+='<text x="'+(lgX+28)+'" y="'+(lgY+4)+'" font-size="11" font-weight="500" fill="'+MUTED+'">Current</text>';
+    s+='<line x1="'+(lgX+100)+'" y1="'+lgY+'" x2="'+(lgX+122)+'" y2="'+lgY+'" stroke="'+PREV+'" stroke-width="2" stroke-dasharray="5,4"/>';
+    s+='<text x="'+(lgX+128)+'" y="'+(lgY+4)+'" font-size="11" font-weight="500" fill="'+MUTED+'">1 year ago</text>';
+  }
+  s+='<text x="0" y="'+(H-PAD_BOT-2)+'" font-size="10" font-weight="500" font-style="italic" fill="'+MUTED+'">Source: Bank of Canada</text>';
+  s+='</svg>';
+  return s;
 }
 
 async function _mktRenderSvg(key){
@@ -4742,16 +4845,27 @@ async function _mktRenderSvg(key){
   var chartDiv=document.getElementById('mktSvg_'+key);if(!chartDiv)return;
   var activeName=[].concat(Array.from(st.active))[0];
   var item=st.items.find(function(it){return it.name===activeName});
-  if(!item){chartDiv.innerHTML='<div style="height:220px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">Select a series</div>';return;}
+  if(!item){chartDiv.innerHTML='<div style="height:360px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">Select a series</div>';return;}
   var tsId=_mktTsMap[item.name]||'';
   var ts=await loadTimeseries(tsId);
-  if(!ts){chartDiv.innerHTML='<div style="height:220px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">No timeseries data for '+item.name+'</div>';return;}
+  if(!ts){chartDiv.innerHTML='<div style="height:360px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">No timeseries data for '+item.name+'</div>';return;}
   var raw=ts.series||ts;if(!Array.isArray(raw)){chartDiv.innerHTML='';return;}
   var rangeMonths=st.range||3;
   var cutoff=rangeMonths>0?(function(){var d=new Date();d.setMonth(d.getMonth()-rangeMonths);return d})():new Date('1900-01-01');
   var filtered=raw.filter(function(p){return new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)});
-  if(!filtered.length){chartDiv.innerHTML='<div style="height:220px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">No data in selected range</div>';return;}
-  chartDiv.innerHTML=_svgTimeseries(filtered,{color:'#003153',height:key==='fx'?180:220});
+  if(!filtered.length){chartDiv.innerHTML='<div style="height:360px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:13px">No data in selected range</div>';return;}
+  var rangeLabel=rangeMonths===1?'1 month':rangeMonths===3?'3 months':rangeMonths===6?'6 months':rangeMonths===12?'1 year':rangeMonths===36?'3 years':rangeMonths+' months';
+  var srcMap={equities:'Source: Yahoo Finance',fx:'Source: Bank of Canada',commodities:'Source: EIA, LME, LBMA'};
+  var kickerMap={equities:'Equity indices',fx:'Foreign exchange',commodities:'Commodities'};
+  var source=srcMap[key]||'Source: Market data';
+  chartDiv.innerHTML=_svgEditorialChart(filtered,{
+    title:item.name,
+    subtitle:'Last '+rangeLabel,
+    source:source,
+    color:'#003153',
+    height:360,
+    kicker:kickerMap[key]||''
+  });
 }
 
 /* Single-select pill handler for SVG charts */
@@ -5022,7 +5136,7 @@ function drawYieldChart(yc){
   if(charts.yield)charts.yield.destroy();
   const labels=yc.map(y=>y.term);
   const data=yc.map(y=>parseFloat(y.yield)||0);
-  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#3B82F6',pointBorderColor:'#3B82F6',pointBorderWidth:2,fill:true,tension:0.3}]},plugins:[{id:'yieldEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px DM Sans';ctx.fillStyle='#3B82F6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?fmtNum(lastVal,2)+'%':lastVal,lastPt.x+6,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(45,75,130,0.95)',titleColor:'#ffffff',bodyColor:'#93C5FD',borderColor:'rgba(0,0,0,0.12)',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Inter',size:11},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.06)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'Inter',size:11},color:'#636363',callback:v=>fmtNum(v,2)+'%'}}}}});
+  charts.yield=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#3B82F6',pointBorderColor:'#3B82F6',pointBorderWidth:2,fill:true,tension:0.3}]},plugins:[{id:'yieldEndpoint',afterDraw(chart){const ds=chart.data.datasets[0];const lastVal=ds.data[ds.data.length-1];const meta=chart.getDatasetMeta(0);const lastPt=meta.data[meta.data.length-1];if(!lastPt)return;const ctx=chart.ctx;ctx.save();ctx.font='600 11px Inter';ctx.fillStyle='#3B82F6';ctx.textAlign='left';ctx.fillText(typeof lastVal==='number'?fmtNum(lastVal,2)+'%':lastVal,lastPt.x+6,lastPt.y-4);ctx.restore();}}],options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(45,75,130,0.95)',titleColor:'#ffffff',bodyColor:'#93C5FD',borderColor:'rgba(0,0,0,0.12)',borderWidth:1,padding:10,cornerRadius:6}},scales:{x:{grid:{display:false},ticks:{font:{family:'Inter',size:11},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.06)',lineWidth:0.5,drawTicks:false},ticks:{font:{family:'Inter',size:11},color:'#636363',callback:v=>fmtNum(v,2)+'%'}}}}});
 }
 function drawLineChart(canvasId,tsData,months){
   const canvas=document.getElementById(canvasId);
@@ -5103,8 +5217,8 @@ async function renderProjectsTab(){
   $('filterCma').onchange=filterProjects;
   $('filterSector').onchange=filterProjects;
   $('filterStatus').onchange=filterProjects;
-  $('filterNew').onchange=filterProjects;
   $('sortProjects').onchange=filterProjects;
+  $('filterNew').onchange=filterProjects;
   $('loadMoreBtn').onclick=()=>{projectPage++;renderProjectTable()};
   filterProjects();
   // Populate missed project form dropdowns
@@ -5136,10 +5250,10 @@ async function filterProjects(){
   const cma=$('filterCma').value;
   const sector=$('filterSector').value;
   const status=$('filterStatus').value;
+  const sort=$('sortProjects').value;
   const newDays=parseInt(($('filterNew')&&$('filterNew').value)||'',10);
   let newCutoff=null;
   if(newDays>0){const d=new Date();d.setDate(d.getDate()-newDays);newCutoff=d.toISOString().split('T')[0];}
-  const sort=$('sortProjects').value;
   // If province changed, reload from static JSON (lazy load)
   if(prov!==_lastLoadedProvince){
     await loadProjects(prov);
@@ -5710,6 +5824,18 @@ async function renderCanadianCommodities(){
 }
 
 /* ====== PHASE 4: DATA EXPLORER (V-Code Search) ====== */
+// Normalize a StatCan table id to always end with -01 (the canonical "main table" suffix).
+// Handles 3-part ids ("XX-XX-XXXX" → "XX-XX-XXXX-01") and 4-part ids with any other
+// suffix ("XX-XX-XXXX-NN" → "XX-XX-XXXX-01"). Leaves non-StatCan references
+// (e.g. Bank of Canada Valet) untouched.
+function _normalizeStatcanTable(t){
+  var s=String(t||'').trim();
+  if(!s||s.indexOf('BoC')>=0)return s;
+  var parts=s.split('-');
+  if(parts.length===4){parts[3]='01';return parts.join('-')}
+  if(parts.length===3)return s+'-01';
+  return s;
+}
 const VCODE_INDEX=[
   // ── NATIONAL INDICATORS ──
   {vcode:'V41690973',table:'18-10-0004-01',title:'Consumer Price Index, monthly',keywords:'cpi inflation prices consumer',category:'Prices',freq:'Monthly',geo:'Canada'},
@@ -5867,8 +5993,10 @@ const VCODE_INDEX=[
 
 /* Full StatCan table directory (loaded async from JSON) */
 let _fullTableDir=[];
+let _fullDirRawLength=0;
 let _fullDirLoaded=false;
 let _expSearchPage=1;
+let _expVcodeOnly=false;
 const EXP_PAGE_SIZE=10;
 const FREQ_MAP={M:'Monthly',Q:'Quarterly',A:'Annual',D:'Daily',W:'Weekly',E:'Every 2 months',S:'Semi-annual',O:'Occasional'};
 
@@ -5877,12 +6005,13 @@ const FREQ_MAP={M:'Monthly',Q:'Quarterly',A:'Annual',D:'Daily',W:'Weekly',E:'Eve
     const resp=await fetch('data/statcan_tables.json');
     if(!resp.ok)return;
     const raw=await resp.json();
-    /* Build a Set of table IDs already in curated index */
-    const curated=new Set(VCODE_INDEX.map(v=>v.table));
-    _fullTableDir=raw.filter(r=>!curated.has(r.t)).map(r=>({
-      vcode:'—',table:r.t,title:r.n,keywords:r.k,
+    _fullDirRawLength=Array.isArray(raw)?raw.length:0;
+    /* Build a Set of normalized table IDs already in curated index (all canonical -01 form) */
+    const curated=new Set(VCODE_INDEX.map(v=>_normalizeStatcanTable(v.table)));
+    _fullTableDir=raw.map(r=>({
+      vcode:'\u2014',table:_normalizeStatcanTable(r.t),title:r.n,keywords:r.k,
       category:r.c,freq:FREQ_MAP[r.f]||r.f,geo:r.g,_dir:true
-    }));
+    })).filter(r=>!curated.has(r.table));
     _fullDirLoaded=true;
     if(typeof _expRenderHeroStats==='function')_expRenderHeroStats();
   }catch(e){/* silent — curated index still works */}
@@ -5996,9 +6125,10 @@ function _expRenderHeroStats(){
   const indCount=(_indJsonCache&&Array.isArray(_indJsonCache.indicators))?_indJsonCache.indicators.length:(Array.isArray(indicators)?indicators.length:0);
   setText('expStatIndicators',indCount.toLocaleString('en-CA'));
   setText('expStatVcodes',VCODE_INDEX.length.toLocaleString('en-CA'));
-  // StatCan Tables = the full directory count loaded from statcan_tables.json (curated tables
-  // are filtered out before storage, so add them back for the headline count)
-  const tablesTotal=_fullDirLoaded?(_fullTableDir.length+VCODE_INDEX.length):0;
+  // StatCan Tables = raw statcan_tables.json directory count + curated VCODE_INDEX entries.
+  // We track the raw length before dedup filtering so the headline count matches the real total
+  // (directory rows + curated indicators) rather than undercounting due to overlap removal.
+  const tablesTotal=_fullDirLoaded?(_fullDirRawLength+VCODE_INDEX.length):0;
   setText('expStatTables',_fullDirLoaded?tablesTotal.toLocaleString('en-CA'):'…');
   // Updated from statcan_latest.updatedAt if available
   let upd='—';
@@ -6024,7 +6154,7 @@ function renderExplorer(){
 
   _expRenderHeroStats();
 
-  searchEl.innerHTML='<div class="exp-search-row"><input type="text" id="vcodeSearch" class="exp-search-input" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." onkeyup="if(event.key===\'Enter\'){_expSearchPage=1;window._doVcodeSearch()}"><button class="exp-search-btn" onclick="_expSearchPage=1;window._doVcodeSearch()">Search</button></div>';
+  searchEl.innerHTML='<div class="exp-search-row"><input type="text" id="vcodeSearch" class="exp-search-input" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." onkeyup="if(event.key===\'Enter\'){_expSearchPage=1;window._doVcodeSearch()}"><button class="exp-search-btn" onclick="_expSearchPage=1;window._doVcodeSearch()">Search</button><label class="exp-toggle-switch" title="Show only entries with a V-Code (curated indicators)"><input type="checkbox" id="expVcodeOnlyBtn" onchange="window._toggleVcodeOnly()"'+(_expVcodeOnly?' checked':'')+'><span class="exp-toggle-slider"></span><span class="exp-toggle-label">V-codes only</span></label></div>';
 
   const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Energy','Manufacturing','Agriculture','Infrastructure','Transportation','Health','Demographics','Tourism'];
   catEl.innerHTML='<div class="exp-cat-row">'+categories.map(c=>'<button class="exp-cat-btn" onclick="_expSearchPage=1;window._doVcodeSearch(\''+c+'\')">'+c+'</button>').join('')+'</div>';
@@ -6032,75 +6162,62 @@ function renderExplorer(){
   resEl.innerHTML='<div class="exp-empty">Enter a search term or click a category to find StatCan tables.</div>';
   const metaEl=$('expSearchMeta');if(metaEl)metaEl.textContent='';
 
-  // National indicator section: StatCan key economic indicators + explorer chart
+  // National indicator section: single unified menu (explorer <select>) containing both the
+  // curated Key Economic Indicators (INDICATOR_CATALOG) and the full Statistics Canada feed
+  // (_statcanExplorerGroups, populated from statcan_latest.indicators).
   const cis=$('canadaIndicatorSection');
   if(cis){
-    cis.innerHTML='<div class="exp-card"><div class="exp-card-title">Statistics Canada \u2014 Key Economic Indicators</div><div class="exp-card-sub">Official economic indicators published by Statistics Canada (<a href="https://www150.statcan.gc.ca/n1/dai-quo/ssi/homepage/ind-econ-eng.htm" target="_blank" rel="noopener noreferrer">source</a>)</div><div id="canadaIndicatorDropdown"></div><section id="indicatorExplorer"></section></div>';
-    const dd=$('canadaIndicatorDropdown');
-    if(dd){
-      // Use StatCan feed indicators if available, otherwise fall back to raw national indicators
-      const scData=_indJsonCache&&_indJsonCache.statcan_latest;
-      const scInds=(scData&&scData.indicators)||[];
-      if(scInds.length){
-        // Categorize StatCan indicators
-        const _catMap=(name)=>{
-          const n=(name||'').toLowerCase();
-          if(n.includes('gdp')||n.includes('capacity'))return 'GDP & Output';
-          if(n.includes('employ')||n.includes('labour')||n.includes('wage')||n.includes('earning')||n.includes('insurance benefic'))return 'Labour Market';
-          if(n.includes('price index')||n.includes('cpi')||n.includes('food')||n.includes('shelter')||n.includes('transportation'))return 'Prices';
-          if(n.includes('housing')||n.includes('building')||n.includes('construction'))return 'Housing & Construction';
-          if(n.includes('export')||n.includes('import')||n.includes('trade')||n.includes('inventory')||n.includes('merchandise')||n.includes('unfilled'))return 'Trade & Manufacturing';
-          if(n.includes('household')||n.includes('saving')||n.includes('debt')||n.includes('net worth')||n.includes('retail')||n.includes('wholesale'))return 'Household & Retail';
-          if(n.includes('tourism')||n.includes('visitor')||n.includes('returning'))return 'Tourism & Travel';
-          if(n.includes('farm')||n.includes('canola')||n.includes('wheat')||n.includes('corn')||n.includes('soy'))return 'Agriculture';
-          if(n.includes('investment')||n.includes('capital')||n.includes('securities')||n.includes('profit')||n.includes('current account')||n.includes('terms of trade'))return 'Investment & Finance';
-          if(n.includes('productivity'))return 'Productivity';
-          return 'Other';
-        };
-        const scFormatted=scInds.map(i=>({
-          name:i.name||'',
-          indicator_name:(i.name||'').toLowerCase().replace(/[^a-z0-9]/g,'_'),
-          value:i.value||'',
-          change:i.change||'',
-          arrow:i.arrow||0,
-          refPer:i.refPer||'',
-          category:_catMap(i.name),
+    cis.innerHTML='<div class="exp-card"><div class="exp-card-title">Statistics Canada \u2014 Key Economic Indicators</div><div class="exp-card-sub">Official economic indicators published by Statistics Canada (<a href="https://www150.statcan.gc.ca/n1/dai-quo/ssi/homepage/ind-econ-eng.htm" target="_blank" rel="noopener noreferrer">source</a>)</div><section id="indicatorExplorer"></section></div>';
+    // Build the StatCan feed groups for the explorer <select>
+    const scData=_indJsonCache&&_indJsonCache.statcan_latest;
+    const scInds=(scData&&scData.indicators)||[];
+    if(scInds.length){
+      const _catMap=(name)=>{
+        const n=(name||'').toLowerCase();
+        if(n.includes('gdp')||n.includes('capacity'))return 'GDP & Output (StatCan feed)';
+        if(n.includes('employ')||n.includes('labour')||n.includes('wage')||n.includes('earning')||n.includes('insurance benefic'))return 'Labour Market (StatCan feed)';
+        if(n.includes('price index')||n.includes('cpi')||n.includes('food')||n.includes('shelter')||n.includes('transportation'))return 'Prices (StatCan feed)';
+        if(n.includes('housing')||n.includes('building')||n.includes('construction'))return 'Housing & Construction (StatCan feed)';
+        if(n.includes('export')||n.includes('import')||n.includes('trade')||n.includes('inventory')||n.includes('merchandise')||n.includes('unfilled'))return 'Trade & Manufacturing (StatCan feed)';
+        if(n.includes('household')||n.includes('saving')||n.includes('debt')||n.includes('net worth')||n.includes('retail')||n.includes('wholesale'))return 'Household & Retail (StatCan feed)';
+        if(n.includes('tourism')||n.includes('visitor')||n.includes('returning'))return 'Tourism & Travel (StatCan feed)';
+        if(n.includes('farm')||n.includes('canola')||n.includes('wheat')||n.includes('corn')||n.includes('soy'))return 'Agriculture (StatCan feed)';
+        if(n.includes('investment')||n.includes('capital')||n.includes('securities')||n.includes('profit')||n.includes('current account')||n.includes('terms of trade'))return 'Investment & Finance (StatCan feed)';
+        if(n.includes('productivity'))return 'Productivity (StatCan feed)';
+        return 'Other (StatCan feed)';
+      };
+      const byGroup={};
+      const seen=new Set();
+      scInds.forEach(i=>{
+        const nm=i.name||'';
+        if(!nm)return;
+        const id='sc_'+nm.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,80);
+        if(seen.has(id))return;
+        seen.add(id);
+        const cat=_catMap(nm);
+        if(!byGroup[cat])byGroup[cat]=[];
+        byGroup[cat].push({
+          id:id,
+          label:nm,
+          unit:'',
           source:'Statistics Canada',
-          tableUrl:i.tableUrl||'',
-          frequency:i.frequency||''
-        }));
-        dd.innerHTML=renderIndicatorDropdown(scFormatted,'Statistics Canada Indicators ('+scFormatted.length+')','_canada');
-      }else{
-        const natInds=indicators.filter(ind=>{
-          const p=(ind.province||'').toLowerCase();
-          return !p||p==='national'||p==='canada';
+          url:i.tableUrl||'',
+          prov:false,
+          statcan:true
         });
-        dd.innerHTML=renderIndicatorDropdown(natInds,'All National Indicators ('+natInds.length+')','_canada');
-      }
+      });
+      _statcanExplorerGroups=Object.keys(byGroup).sort().map(k=>({group:k,items:byGroup[k]}));
+    }else{
+      _statcanExplorerGroups=[];
     }
     renderIndicatorExplorer();
   }
-
-  // Provincial Indicator Explorer (like national but with province selector)
-  _renderProvExplorer();
 
   // Ontario Economic Accounts (OEA) section
   _renderOeaSection();
 
   // Quebec ISQ section
   _renderIsqSection();
-
-  // Provincial indicator dropdown (raw list)
-  const pis=$('provIndicatorSection');
-  if(pis){
-    const prov=PROVS.find(p=>p.code===selectedProvince)||PROVS[0];
-    const provInds=indicators.filter(ind=>{
-      const p=(ind.province||'').toLowerCase();
-      return p===prov.code.toLowerCase()||p===prov.name.toLowerCase();
-    });
-    pis.innerHTML='<div class="exp-card"><div class="exp-card-title">'+prov.name+' Raw Indicators</div><div class="exp-card-sub">All indicator records for '+prov.name+'</div>'+
-      renderIndicatorDropdown(provInds,prov.name+' Indicators ('+provInds.length+')','_prov')+'</div>';
-  }
 }
 
 /* Provincial Indicator Explorer — like the national one but with province selector */
@@ -6179,7 +6296,7 @@ async function _loadProvExpData(){
   const canvas=$('provExpCanvas');if(!canvas)return;
   if(charts._provExp)charts._provExp.destroy();
   if(!pts.length)return;
-  charts._provExp=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',borderWidth:2,pointRadius:pts.length>40?0:3,pointBackgroundColor:'#2563EB',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Inter',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5},ticks:{font:{family:'Inter',size:10},color:'#636363',callback:v=>fmtNum(v)}}}}});
+  charts._provExp=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#003153',backgroundColor:'transparent',borderWidth:2.8,pointRadius:0,pointHoverRadius:5,pointBackgroundColor:'#003153',pointBorderColor:'#ffffff',pointBorderWidth:2,fill:false,tension:0.35}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#cbd5e1',bodyColor:'#ffffff',padding:10,cornerRadius:4,titleFont:{family:'Inter',size:10,weight:'400'},bodyFont:{family:'Inter',size:13,weight:'700'},displayColors:false}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Inter',size:11},color:'#4a5568'}},y:{position:'right',grid:{color:'#e8ecf0',lineWidth:1,drawBorder:false},ticks:{font:{family:'Inter',size:11},color:'#4a5568',callback:v=>fmtNum(v)}}}}});
 }
 
 /* Ontario Economic Accounts (OEA) Section */
@@ -6274,7 +6391,7 @@ async function _loadOeaData(){
   const canvas=$('oeaCanvas');if(!canvas)return;
   if(charts._oea)charts._oea.destroy();
   if(!pts.length)return;
-  charts._oea=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',borderWidth:2,pointRadius:pts.length>30?0:4,pointBackgroundColor:'#2563EB',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Inter',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5},ticks:{font:{family:'Inter',size:10},color:'#636363',callback:v=>fmtNum(v)}}}}});
+  charts._oea=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#003153',backgroundColor:'transparent',borderWidth:2.8,pointRadius:0,pointHoverRadius:5,pointBackgroundColor:'#003153',pointBorderColor:'#ffffff',pointBorderWidth:2,fill:false,tension:0.35}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#cbd5e1',bodyColor:'#ffffff',padding:10,cornerRadius:4,titleFont:{family:'Inter',size:10,weight:'400'},bodyFont:{family:'Inter',size:13,weight:'700'},displayColors:false}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Inter',size:11},color:'#4a5568'}},y:{position:'right',grid:{color:'#e8ecf0',lineWidth:1,drawBorder:false},ticks:{font:{family:'Inter',size:11},color:'#4a5568',callback:v=>fmtNum(v)}}}}});
 }
 
 /* Quebec ISQ Section */
@@ -6378,7 +6495,7 @@ async function _loadIsqData(){
   const canvas=$('isqCanvas');if(!canvas)return;
   if(charts._isq)charts._isq.destroy();
   if(!pts.length)return;
-  charts._isq=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#2563EB',backgroundColor:'rgba(37,99,235,0.08)',borderWidth:2,pointRadius:pts.length>30?0:4,pointBackgroundColor:'#2563EB',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(15,23,42,0.92)',titleColor:'#fff',bodyColor:'#CBD5E1',padding:10,cornerRadius:8}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Inter',size:10},color:'#636363'}},y:{grid:{color:'rgba(0,0,0,0.05)',lineWidth:0.5},ticks:{font:{family:'Inter',size:10},color:'#636363',callback:v=>fmtNum(v)}}}}});
+  charts._isq=new Chart(canvas,{type:'line',data:{labels:pts.map(p=>p.date),datasets:[{data:pts.map(p=>p.value),borderColor:'#003153',backgroundColor:'transparent',borderWidth:2.8,pointRadius:0,pointHoverRadius:5,pointBackgroundColor:'#003153',pointBorderColor:'#ffffff',pointBorderWidth:2,fill:false,tension:0.35}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#cbd5e1',bodyColor:'#ffffff',padding:10,cornerRadius:4,titleFont:{family:'Inter',size:10,weight:'400'},bodyFont:{family:'Inter',size:13,weight:'700'},displayColors:false}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{family:'Inter',size:11},color:'#4a5568'}},y:{position:'right',grid:{color:'#e8ecf0',lineWidth:1,drawBorder:false},ticks:{font:{family:'Inter',size:11},color:'#4a5568',callback:v=>fmtNum(v)}}}}});
 }
 
 /* Full (unsliced) search that bypasses the 25-result cap in searchVCodes so pagination
@@ -6417,6 +6534,12 @@ window._doVcodeSearch=function(cat){
   _expRenderVcodeResults();
 };
 
+window._toggleVcodeOnly=function(){
+  _expVcodeOnly=!_expVcodeOnly;
+  _expSearchPage=1;
+  if(_expLastQuery)_expRenderVcodeResults();
+};
+
 function _expRenderVcodeResults(){
   const resEl=$('explorerResults');
   const metaEl=$('expSearchMeta');
@@ -6427,9 +6550,13 @@ function _expRenderVcodeResults(){
     if(metaEl)metaEl.textContent='';
     return;
   }
-  const results=_expSearchAll(q);
+  let results=_expSearchAll(q);
+  if(_expVcodeOnly){
+    results=results.filter(r=>r.vcode&&r.vcode!=='\u2014');
+  }
   if(!results.length){
-    resEl.innerHTML='<div class="exp-empty">No tables found for "'+_expEscapeHtml(q)+'". Try different keywords.</div>';
+    const suffix=_expVcodeOnly?' (V-codes only filter is on)':'';
+    resEl.innerHTML='<div class="exp-empty">No tables found for "'+_expEscapeHtml(q)+'"'+suffix+'. Try different keywords.</div>';
     if(metaEl)metaEl.textContent='0 results';
     return;
   }
@@ -6440,13 +6567,14 @@ function _expRenderVcodeResults(){
   const pageRows=results.slice(startIdx,startIdx+EXP_PAGE_SIZE);
   let html='<div class="exp-vcode-table-wrap"><table class="exp-vcode-table"><thead><tr><th class="exp-col-vcode">V-Code</th><th class="exp-col-table">Table</th><th>Title</th><th class="exp-col-category">Category</th><th class="exp-col-link">Link</th></tr></thead><tbody>';
   pageRows.forEach(r=>{
-    const _pidRaw=String(r.table||'').replace(/-/g,'');
+    const tableId=_normalizeStatcanTable(r.table);
+    const _pidRaw=String(tableId||'').replace(/-/g,'');
     const _pid=_pidRaw.length===8?_pidRaw+'01':_pidRaw;
-    const tableUrl=r.table&&r.table.includes('BoC')?'https://www.bankofcanada.ca/rates/':('https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+_pid);
+    const tableUrl=tableId&&tableId.indexOf('BoC')>=0?'https://www.bankofcanada.ca/rates/':('https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+_pid);
     const meta=_expEscapeHtml([r.freq,r.geo].filter(Boolean).join(' \u00b7 '));
     html+='<tr>';
     html+='<td><span class="exp-vcode-code">'+_expEscapeHtml(r.vcode||'\u2014')+'</span></td>';
-    html+='<td><span class="exp-vcode-tbl">'+_expEscapeHtml(r.table||'')+'</span></td>';
+    html+='<td><span class="exp-vcode-tbl">'+_expEscapeHtml(tableId||'')+'</span></td>';
     html+='<td><span class="exp-vcode-title">'+_expEscapeHtml(r.title||'')+'</span>'+(meta?'<span class="exp-vcode-meta">'+meta+'</span>':'')+'</td>';
     html+='<td><span class="exp-vcode-cat">'+_expEscapeHtml(r.category||'')+'</span></td>';
     html+='<td class="exp-col-link"><a href="'+tableUrl+'" target="_blank" rel="noopener noreferrer" title="View on StatCan">\u2197</a></td>';

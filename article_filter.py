@@ -621,11 +621,25 @@ def filter_articles(
         for art in articles:
             art.pop('_l1_strength', None)
 
-    # Layer 7: NIM Rerank — score and filter by relevance (optional)
-    RERANK_TOP_N = int(os.environ.get('RERANK_TOP_N', '50'))
+    # Layer 7: NIM Rerank — relevance FILTER, not a top-N cap.
+    #
+    # D-11 fix (2026-06-08 audit): the previous implementation passed
+    # top_n=min(50, N) and nim_client truncated to the first 512 passages, so a
+    # 25k-article discovery batch was scored only for its first 512 entries and
+    # then capped to the top 50 — dropping ~99% of articles as "L7" and starving
+    # extraction. Rerank must DROP clearly-irrelevant articles, never impose a
+    # fixed survivor count. We now:
+    #   1. Score EVERY article, chunked in <=RERANK_MAX_PASSAGES batches.
+    #   2. Keep everything at/above RERANK_MIN_LOGIT (unscored => fail-open keep).
+    #   3. Apply a SANITY GUARD: if rerank would keep < RERANK_SANITY_KEEP_FRAC of
+    #      the L6 set, distrust it (API fault / wrong threshold) and keep L6 whole.
     RERANK_MIN_LOGIT = float(os.environ.get('RERANK_MIN_LOGIT', '-2.0'))
+    RERANK_CHUNK = int(os.environ.get('RERANK_MAX_PASSAGES', '512'))
+    RERANK_MIN_BATCH = int(os.environ.get('RERANK_MIN_BATCH', '50'))   # don't bother below this
+    RERANK_SANITY_KEEP_FRAC = float(os.environ.get('RERANK_SANITY_KEEP_FRAC', '0.2'))
     nim_rerank_enabled = os.environ.get('NIM_RERANK_ENABLED', 'true').lower() == 'true'
-    if nim_rerank_enabled and len(articles) > RERANK_TOP_N:
+    passed_l6_count = len(articles)
+    if nim_rerank_enabled and len(articles) > RERANK_MIN_BATCH:
         try:
             nim = get_nim_client()
             rerank_query = (
@@ -636,25 +650,47 @@ def filter_articles(
                 f"{a.get('title', '')} — {(a.get('summary', '') or '')[:200]}"
                 for a in articles
             ]
-            ranked = nim.rerank_sync(
-                query=rerank_query,
-                passages=passages,
-                top_n=min(RERANK_TOP_N, len(articles)),
-            )
-            if ranked:
-                keep_indices = set()
-                for r in ranked:
+            # Score every article (chunked). logits[i] stays None if the API never
+            # returned a score for it (then it is kept, fail-open).
+            logits = [None] * len(articles)
+            n_chunks = (len(passages) + RERANK_CHUNK - 1) // RERANK_CHUNK
+            for ci in range(n_chunks):
+                lo = ci * RERANK_CHUNK
+                hi = min(lo + RERANK_CHUNK, len(passages))
+                chunk = passages[lo:hi]
+                ranked = nim.rerank_sync(query=rerank_query, passages=chunk, top_n=len(chunk))
+                for r in (ranked or []):
                     idx = r.get("index", -1)
-                    logit = r.get("logit", 0.0)
-                    if 0 <= idx < len(articles) and logit >= RERANK_MIN_LOGIT:
-                        keep_indices.add(idx)
-                rerank_cut = len(articles) - len(keep_indices)
+                    if 0 <= idx < len(chunk):
+                        logits[lo + idx] = r.get("logit", None)
+                if n_chunks > 1:
+                    print(f"  [Filter L7] reranked chunk {ci + 1}/{n_chunks} ({hi}/{len(passages)})")
+            scored = [v for v in logits if v is not None]
+            if scored:
+                srt = sorted(scored)
+                def _pct(p):
+                    return srt[min(len(srt) - 1, int(p * len(srt)))]
+                print(f"  [Filter L7] logit dist min/p25/p50/p75/max = "
+                      f"{srt[0]:.2f}/{_pct(.25):.2f}/{_pct(.5):.2f}/{_pct(.75):.2f}/{srt[-1]:.2f} "
+                      f"(scored {len(scored)}/{len(articles)})")
+            keep_indices = {i for i, v in enumerate(logits)
+                            if v is None or v >= RERANK_MIN_LOGIT}
+            kept_n = len(keep_indices)
+            sanity_floor = max(1, int(RERANK_SANITY_KEEP_FRAC * passed_l6_count))
+            if scored and kept_n < sanity_floor:
+                # Rerank is almost certainly faulty (silent empty/zero scores or a
+                # mis-tuned threshold). Keep the L6 set rather than ship ~nothing.
+                print(f"  [Filter L7 DEGRADED] rerank kept {kept_n}/{passed_l6_count} "
+                      f"(< {RERANK_SANITY_KEEP_FRAC:.0%} floor {sanity_floor}); "
+                      f"distrusting rerank, keeping full L6 set")
+            else:
+                rerank_cut = len(articles) - kept_n
                 if rerank_cut > 0:
                     for i, art in enumerate(articles):
                         if i not in keep_indices:
                             filtered_out.append(('L7', art))
                     articles = [articles[i] for i in sorted(keep_indices)]
-                    print(f"  [Filter L7] NIM Rerank: kept {len(articles)}, dropped {rerank_cut}")
+                print(f"  [Filter L7] NIM Rerank: kept {len(articles)}, dropped {rerank_cut}")
         except Exception as e:
             print(f"  [Filter L7] NIM Rerank failed (non-fatal): {type(e).__name__}: {e}")
 

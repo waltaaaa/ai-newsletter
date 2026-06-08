@@ -184,6 +184,29 @@ def _project_for_export(proj_dict: dict) -> dict:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
+# Non-project DOCUMENT types that EA registries emit as rows (Forest Management
+# Plans, reports, EIS, terms of reference, RFPs, public notices). These are not
+# capital projects and were flooding the MB/NL provincial counts (discovery audit:
+# MB 2,037 rows / ~50 with a real value; NL 1,554 / ~48). Dropped from the
+# PUBLISHED export only when they have no confirmed capex value — rows stay in the
+# DB, so the additive-only invariant is preserved.
+_NON_PROJECT_DOCTYPE_RE = re.compile(
+    r"\b(forest management plan|"
+    r"annual report|monitoring report|status report|background report|"
+    r"environmental impact statement|"
+    r"terms of reference|"
+    r"discussion paper|"
+    r"request for (proposal|comment|information|qualification)|"
+    r"public (comment|notice|consultation)|"
+    r"notice of (commencement|determination))\b",
+    re.IGNORECASE,
+)
+
+
+def _is_non_project_doctype(name: str) -> bool:
+    return bool(name and _NON_PROJECT_DOCTYPE_RE.search(name))
+
+
 def export_province_projects(conn, province_name: str, threshold_val: int, output_dir: str) -> str:
     """Export projects for a single province, filtered by GDP threshold.
 
@@ -191,13 +214,17 @@ def export_province_projects(conn, province_name: str, threshold_val: int, outpu
     - value is None (Not disclosed / unparseable) → include with value_confirmed=false
     - value >= threshold_val → include with value_confirmed=true
     - value < threshold_val → EXCLUDE
+    - structurally-invalid name (nav item / date string) → EXCLUDE (DI-1 export gate)
+    - non-project document type with no confirmed value → EXCLUDE (provincial over-count)
 
     Returns the path of the written file.
     """
-    from db import get_projects
+    from db import get_projects, _is_non_project_name
 
     raw_projects = get_projects(conn, province=province_name)
     included = []
+    dropped_junk = 0
+    dropped_doctype = 0
 
     for raw in raw_projects:
         # sqlite3.Row → plain dict
@@ -206,7 +233,19 @@ def export_province_projects(conn, province_name: str, threshold_val: int, outpu
         else:
             proj = raw
 
+        name = proj.get("name") or ""
         parsed_value = _parse_value(proj.get("value"))
+
+        # DI-1 (defense-in-depth): never PUBLISH structurally-invalid names
+        # (nav items, date strings, fragments) even if upstream regresses.
+        if _is_non_project_name(name):
+            dropped_junk += 1
+            continue
+
+        # Provincial over-count: drop valueless non-project document filings.
+        if parsed_value is None and _is_non_project_doctype(name):
+            dropped_doctype += 1
+            continue
 
         # Exclusion rule: known value below threshold
         if parsed_value is not None and parsed_value < threshold_val:
@@ -214,6 +253,10 @@ def export_province_projects(conn, province_name: str, threshold_val: int, outpu
 
         shaped = _project_for_export(proj)
         included.append(shaped)
+
+    if dropped_junk or dropped_doctype:
+        print(f"  [export {province_name}] dropped {dropped_junk} junk-name + "
+              f"{dropped_doctype} non-project-doctype rows from publish")
 
     slug = province_name.lower().replace(" ", "_")
     out_path = os.path.join(output_dir, f"projects_{slug}.json")
@@ -573,22 +616,53 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
     with open(latest_path, "w", encoding="utf-8") as f:
         json.dump(latest, f, ensure_ascii=False, indent=2)
 
-    # Archive — metadata only (no full sections to keep file small)
+    # Archive — metadata only (no full sections to keep file small).
+    #
+    # D-16/M-2 (2026-06-08 audit): the archive MUST be additive. It was previously
+    # rebuilt wholesale from the weekly_briefings table, which the conductor never
+    # populated (NEW-2) — so a clean export collapsed the edition dropdown from 8
+    # entries to 1 (it survived only via a manual git restore). We now UNION the
+    # DB-derived archive with the existing on-disk archive (keyed by week_of) and
+    # refuse to write a smaller archive than what is already published.
+    archive_path = os.path.join(output_dir, "briefing_archive.json")
+    by_week = {}
+    try:
+        with open(archive_path, "r", encoding="utf-8") as f:
+            for entry in (json.load(f) or []):
+                wk = (entry or {}).get("week_of", "")
+                if wk:
+                    by_week[wk] = {
+                        "week_of": wk,
+                        "headline": entry.get("headline", ""),
+                        "word_count": entry.get("word_count", 0),
+                        "generated_at": entry.get("generated_at", ""),
+                    }
+    except (FileNotFoundError, json.JSONDecodeError, TypeError, ValueError):
+        pass
+    prior_count = len(by_week)
+
     archive_raw = get_briefing_archive(conn, limit=52)
-    archive = []
     for entry in archive_raw:
         if hasattr(entry, "keys"):
             entry = dict(entry)
-        archive.append(
-            {
-                "week_of": entry.get("week_of", ""),
-                "headline": entry.get("headline", ""),
-                "word_count": entry.get("word_count", 0),
-                "generated_at": entry.get("generated_at", ""),
-            }
-        )
+        wk = entry.get("week_of", "")
+        if not wk:
+            continue
+        existing = by_week.get(wk, {})
+        by_week[wk] = {
+            "week_of": wk,
+            "headline": entry.get("headline", "") or existing.get("headline", ""),
+            "word_count": entry.get("word_count", 0) or existing.get("word_count", 0),
+            "generated_at": entry.get("generated_at", "") or existing.get("generated_at", ""),
+        }
 
-    archive_path = os.path.join(output_dir, "briefing_archive.json")
+    archive = sorted(by_week.values(), key=lambda e: e.get("week_of", ""), reverse=True)
+    if len(archive) < prior_count:
+        # Union can only grow, so this is defensive — never publish a shrunk archive.
+        print(f"  [export_briefings] WARNING archive would shrink "
+              f"{prior_count} -> {len(archive)}; keeping prior on-disk archive")
+        return latest_path, archive_path
+
     with open(archive_path, "w", encoding="utf-8") as f:
         json.dump(archive, f, ensure_ascii=False, indent=2)
 
@@ -674,9 +748,20 @@ def export_indicators(conn, output_dir: str) -> str:
             # Flag indicators that failed validation
             failed_key = (name, row.get("province", "National"))
             if failed_key in failed_indicators:
+                # D-15 (2026-06-08 audit): a failed indicator must NOT ship its
+                # wrong/stale value as if current (e.g. agri_exports frozen at 2003,
+                # Ontario CPI 6.8% from a bad vector). Blank the headline value and
+                # flag _stale so the frontend renders an em-dash; keep the raw value
+                # under value_raw for diagnostics. (Charts use the separate history
+                # array below, so nulling the headline value does not blank charts.)
                 row["validation_status"] = "under_review"
+                row["_stale"] = True
+                if row.get("value") is not None:
+                    row["value_raw"] = row.get("value")
+                    row["value"] = None
             else:
                 row["validation_status"] = "passed"
+                row["_stale"] = False
             # Normalize province and dedupe on (name, normalized_province)
             raw_prov = row.get("province", "National")
             norm_prov = _PROV_NORMALIZE.get(raw_prov, raw_prov)
@@ -1032,7 +1117,10 @@ def export_all_projects(conn, output_dir: str) -> str:
     Returns the path of the written file.
     """
     # Order featured → registry → archive, then most-recently-seen first, so
-    # the frontend's default view leads with material projects.
+    # the frontend's default view leads with material projects. norm_key is the
+    # stable final tiebreaker (NEW-3: lastSeen alone has too few distinct values,
+    # so ties resolved by physical/VACUUM order and the file churned every run).
+    from db import _is_non_project_name
     rows = conn.execute(
         """
         SELECT * FROM projects
@@ -1041,18 +1129,28 @@ def export_all_projects(conn, output_dir: str) -> str:
                    WHEN 'registry' THEN 1
                    WHEN 'archive'  THEN 2
                    ELSE 3 END,
-                 lastSeen DESC
+                 lastSeen DESC,
+                 norm_key ASC
         """
     ).fetchall()
 
     included = []
+    dropped = 0
     for raw in rows:
         if hasattr(raw, "keys"):
             proj = dict(raw)
         else:
             proj = raw
+        # DI-1 (defense-in-depth): keep structurally-invalid names (nav items,
+        # date strings) out of the published projects_all.json.
+        if _is_non_project_name(proj.get("name") or ""):
+            dropped += 1
+            continue
         shaped = _project_for_export_slim(proj)
         included.append(shaped)
+
+    if dropped:
+        print(f"  [export projects_all] dropped {dropped} junk-name rows from publish")
 
     out_path = os.path.join(output_dir, "projects_all.json")
     with open(out_path, "w", encoding="utf-8") as f:
@@ -1537,6 +1635,15 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
     # Canadian commodity indicators
     path = export_commodities(conn, output_dir)
     files_written.append(os.path.basename(path))
+
+    # Under the Microscope (export_microscope existed but was never wired into
+    # export_all — microscope.json, read directly by the frontend, was therefore
+    # never refreshed by a standard export run). 2026-06-08 audit export-coverage fix.
+    try:
+        path = export_microscope(conn, output_dir)
+        files_written.append(os.path.basename(path))
+    except Exception as e:
+        logger.warning("Export %s failed: %s", "export_microscope", e)
 
     # Signal data (jobs, procurement, IAAC)
     for export_fn in (export_jobs, export_procurement, export_iaac, export_signals):

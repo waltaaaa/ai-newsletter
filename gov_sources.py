@@ -15,6 +15,11 @@ import time
 import requests
 from datetime import date
 
+# patch-1.2: shared HTTP client (browser UA, certifi TLS, per-host retry).
+# Routing all scraper fetches through this clears the uniform 403 bot-blocks
+# and the Windows CERTIFICATE_VERIFY_FAILED errors (D-7/D-8/D-9).
+import http_client
+
 try:
     from pipeline_store import cache as _cache
 except ImportError:
@@ -111,11 +116,14 @@ def fetch_statcan_indicators() -> list[dict]:
             return cached
 
     try:
-        resp = requests.get(
-            _STATCAN_IND_URL, timeout=20,
-            headers={'User-Agent': 'Mozilla/5.0 (compatible; EconF/1.0)'}
-        )
-        resp.raise_for_status()
+        # patch-1.2: route through shared http_client (browser UA + certifi TLS)
+        resp = http_client.get(_STATCAN_IND_URL, timeout=20)
+        if resp is None:
+            print(f"  [StatCan][TIER 1] FAILED status=network from {_STATCAN_IND_URL[:60]}")
+            return []
+        if resp.status_code >= 400:
+            print(f"  [StatCan][TIER 1] FAILED status={resp.status_code} from {_STATCAN_IND_URL[:60]}")
+            return []
         raw_all = resp.json().get('results', {}).get('indicators', [])
 
         # Step 1: keep only national (geo_code == 0) records
@@ -249,14 +257,19 @@ _HEADERS = {
 
 
 def _get_html(url: str, timeout: int = 20) -> str | None:
-    """Fetch HTML from URL. Returns None on failure."""
-    try:
-        resp = requests.get(url, timeout=timeout, headers=_HEADERS)
-        resp.raise_for_status()
-        return resp.text
-    except Exception as e:
-        print(f"  [Registry] GET {url[:60]} failed: {type(e).__name__}: {e}")
+    """Fetch HTML from URL. Returns None on failure.
+
+    patch-1.2: routes through http_client (browser UA, certifi TLS, retry).
+    Emits a structured per-source FAILED line on >=400 / network error.
+    """
+    resp = http_client.get(url, timeout=timeout)
+    if resp is None:
+        print(f"  [Registry] GET {url[:60]} FAILED status=network")
         return None
+    if resp.status_code >= 400:
+        print(f"  [Registry] GET {url[:60]} FAILED status={resp.status_code}")
+        return None
+    return resp.text
 
 
 def _soup(html: str):
@@ -312,15 +325,15 @@ def _scrape_iaac(tavily_client=None) -> list[dict]:
     Fetches the exploration page with browser-like headers and parses article cards.
     Returns list of project dicts with discovery_source='iaac_registry'.
     """
-    try:
-        resp = requests.get(_IAAC_URL, timeout=20, headers=_IAAC_HEADERS)
-        if resp.status_code != 200:
-            print(f"  [IAAC] HTTP {resp.status_code} from {_IAAC_URL}")
-            return []
-        html = resp.text
-    except Exception as e:
-        print(f"  [IAAC] GET failed: {type(e).__name__}: {e}")
+    # patch-1.2: route through shared http_client (browser UA + certifi TLS + retry)
+    resp = http_client.get(_IAAC_URL, timeout=20)
+    if resp is None:
+        print(f"  [IAAC][TIER 1] FAILED status=network from {_IAAC_URL}")
         return []
+    if resp.status_code != 200:
+        print(f"  [IAAC][TIER 1] FAILED status={resp.status_code} from {_IAAC_URL}")
+        return []
+    html = resp.text
 
     projects = []
     try:
@@ -395,7 +408,19 @@ def _scrape_iaac(tavily_client=None) -> list[dict]:
 
 # ── BC Environmental Assessment Office ───────────────────────────────────────
 
-_BC_EAO_API = "https://www.projects.eao.gov.bc.ca/api/v2/projects?&fields=name,eacDecision,status,proponent,sector,region,description&pageSize=200"
+# patch-1.2 (D-7): the old URL had a malformed querystring — it led with '&'
+# ('?&fields=...') so the path was broken even before the host went stale. The
+# leading '&' is removed below. The host www.projects.eao.gov.bc.ca returns 404;
+# the EAO migrated its public API to the 'api-public.' subdomain with a new path.
+# TODO(patch-1.2 live-verify): confirm the corrected endpoint resolves and the
+#   JSON shape still matches the parser below (searchResults / eacDecision keys).
+#   Candidate: https://api-public.eao.gov.bc.ca/api/projects?fields=...&pageSize=200
+_BC_EAO_API = "https://www.projects.eao.gov.bc.ca/api/v2/projects?fields=name,eacDecision,status,proponent,sector,region,description&pageSize=200"
+
+# Candidate corrected host (NEEDS LIVE VERIFICATION — see SOURCE_ENDPOINTS_*.md).
+# Kept as a documented fallback, not yet active, because it cannot be confirmed
+# offline. Once verified, swap _BC_EAO_API to this value.
+_BC_EAO_API_CANDIDATE = "https://api-public.eao.gov.bc.ca/api/projects?fields=name,eacDecision,status,proponent,sector,region,description&pageSize=200"
 
 def _scrape_bc_eao(tavily_client=None) -> list[dict]:
     """
@@ -403,8 +428,14 @@ def _scrape_bc_eao(tavily_client=None) -> list[dict]:
     Returns list of project dicts with discovery_source='provincial_ea'.
     """
     try:
-        resp = requests.get(_BC_EAO_API, timeout=20, headers=_HEADERS)
-        resp.raise_for_status()
+        # patch-1.2: route through shared http_client (browser UA + certifi TLS)
+        resp = http_client.get(_BC_EAO_API, timeout=20)
+        if resp is None:
+            print("  [BC EAO][TIER 1] FAILED status=network")
+            return []
+        if resp.status_code >= 400:
+            print(f"  [BC EAO][TIER 1] FAILED status={resp.status_code} from {_BC_EAO_API[:70]}")
+            return []
         data = resp.json()
 
         # Response is [{"searchResults": [...], "meta": [...]}]
@@ -502,8 +533,14 @@ def _scrape_infrastructure_canada(tavily_client=None) -> list[dict]:
     Uses the official JSON export from infrastructure.gc.ca.
     """
     try:
-        resp = requests.get(_INFRA_CANADA_API, timeout=30, headers=_HEADERS)
-        resp.raise_for_status()
+        # patch-1.2: route through shared http_client (browser UA + certifi TLS)
+        resp = http_client.get(_INFRA_CANADA_API, timeout=30)
+        if resp is None:
+            print("  [Infrastructure Canada][TIER 1] FAILED status=network")
+            return []
+        if resp.status_code >= 400:
+            print(f"  [Infrastructure Canada][TIER 1] FAILED status={resp.status_code}")
+            return []
         data = None
         try:
             data = resp.json()
@@ -645,8 +682,15 @@ def _scrape_buyandsell(tavily_client=None) -> list[dict]:
     Downloads the open-data CSV and filters for contracts >= $5M.
     """
     try:
-        resp = requests.get(_CANADABUYS_CSV, timeout=60, headers=_HEADERS, stream=True)
-        resp.raise_for_status()
+        # patch-1.2: route through shared http_client (browser UA + certifi TLS).
+        # stream=True flows through to requests; we still cap the download below.
+        resp = http_client.get(_CANADABUYS_CSV, timeout=60, stream=True)
+        if resp is None:
+            print("  [CanadaBuys][TIER 1] FAILED status=network")
+            return []
+        if resp.status_code >= 400:
+            print(f"  [CanadaBuys][TIER 1] FAILED status={resp.status_code}")
+            return []
 
         import csv, io
         # Read first 2 MB to avoid downloading the full multi-GB file
@@ -871,13 +915,17 @@ def _scrape_ontario_ero(tavily_client=None) -> list[dict]:
     projects = []
     seen_urls = set()
     try:
-        resp = requests.get(
+        # patch-1.2: route through shared http_client (browser UA + certifi TLS)
+        resp = http_client.get(
             _ERO_SEARCH_URL,
             params={'status': 'open', 'sort': 'posted_desc'},
-            timeout=20, headers=_HEADERS,
+            timeout=20,
         )
+        if resp is None:
+            print("  [Ontario ERO][TIER 1] FAILED status=network")
+            return []
         if resp.status_code != 200:
-            print(f"  [Ontario ERO] HTTP {resp.status_code}")
+            print(f"  [Ontario ERO][TIER 1] FAILED status={resp.status_code}")
             return []
 
         soup = _soup(resp.text)
@@ -1334,6 +1382,10 @@ def _scrape_nova_scotia_ea(tavily_client=None) -> list[dict]:
 
 # ── New Brunswick Environmental Impact Assessment ────────────────────────────
 
+# TODO(patch-1.2 live-verify): NB EIA landing page anchors are dead (404). GNB
+#   digital services moved the EA tracker; candidate path uses an underscore
+#   variant 'environmental_impact_assessment.html'. Verify live and re-resolve
+#   the sub-page anchors (determination / comprehensive review).
 _NB_EIA_URL = "https://www2.gnb.ca/content/gnb/en/departments/elg/environment/content/environmental_impactassessment.html"
 
 def _scrape_nb_ea(tavily_client=None) -> list[dict]:
@@ -1657,9 +1709,11 @@ def _scrape_metrolinx(tavily_client=None) -> list[dict]:
     """
     projects = []
     try:
-        resp = requests.get(_METROLINX_URL, timeout=25, headers=_IAAC_HEADERS)
-        if resp.status_code != 200:
-            print(f"  [Metrolinx] HTTP {resp.status_code}")
+        # patch-1.2: route through shared http_client (browser UA + certifi TLS)
+        resp = http_client.get(_METROLINX_URL, timeout=25)
+        if resp is None or resp.status_code != 200:
+            status = 'network' if resp is None else resp.status_code
+            print(f"  [Metrolinx][TIER 7] FAILED status={status}")
             if tavily_client:
                 text = _extract_with_tavily(_METROLINX_URL, tavily_client)
                 if text:
@@ -1865,15 +1919,29 @@ def fetch_registry_projects(tavily_client=None) -> list[dict]:
         ("Metrolinx",             _scrape_metrolinx),
     ]
 
+    # patch-1.2: track per-source counts so a dead source is distinguishable
+    # from a quiet week, and so the tier-level DEGRADE line is accurate.
+    per_source: dict[str, int] = {}
     for label, fn in scrapers:
         try:
             results = fn(tavily_client=tavily_client)
+            per_source[label] = len(results)
             all_projects.extend(results)
         except Exception as e:
-            print(f"  [{label}] Scraper error: {e}", file=sys.stderr)
+            per_source[label] = 0
+            print(f"  [{label}][TIER 1] FAILED status=exception {type(e).__name__}: {e}",
+                  file=sys.stderr)
         time.sleep(1)
 
     all_projects = [p for p in all_projects if p.get('name') and len(p['name']) > 5]
+
+    # patch-1.2: min-yield DEGRADE logging. A whole-tier zero means a dead source,
+    # not a quiet week. Also surface any individual source that produced zero.
+    zero_sources = [lbl for lbl, n in per_source.items() if n == 0]
+    if zero_sources:
+        print(f"  [Registries] Sources returning 0 this run: {', '.join(zero_sources)}")
+    if not all_projects:
+        print("  [TIER 1 DEGRADED] 0 items — all government registries returned zero")
 
     # Record documents for fetch tracking
     try:

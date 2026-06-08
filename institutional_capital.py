@@ -15,8 +15,21 @@ from datetime import date
 
 import requests
 
+# patch-1.2 (D-8): route every institutional fetch through the shared HTTP
+# client. Its browser User-Agent clears the uniform 403 bot-blocks on
+# airport/port/transit sites, and certifi-backed TLS verification fixes the
+# CERTIFICATE_VERIFY_FAILED error on IWK Health (www.iwk.nshealth.ca) and other
+# hosts whose intermediate CAs are missing from the Windows OpenSSL store.
+import http_client
+
 logger = logging.getLogger(__name__)
 
+# TODO(patch-1.2 live-verify): the airport/port/transit media URLs below split
+#   between bot-blocks (now cleared by the browser UA) and stale paths that 404
+#   (per D-8 run-log: Vancouver/Calgary/Ottawa/Winnipeg/Halifax airports, several
+#   ports, Edmonton Transit). With the new client, re-probe each; for the 404s
+#   resolve the current 'capital projects'/'media'/'news' path per authority.
+#   See SOURCE_ENDPOINTS_NEEDS_LIVE_VERIFICATION.md.
 UNIVERSITY_SOURCES = [
     # ── U15 research-intensive universities ──────────────────────────────────
     {"name": "University of Toronto", "province": "ON", "cma": "Toronto",
@@ -194,13 +207,13 @@ def scrape_institutional_capital() -> list[dict]:
 
     for source in UNIVERSITY_SOURCES:
         try:
-            resp = requests.get(
-                source["url"],
-                timeout=20,
-                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) CAN-Macro-Dashboard/1.0"},
-            )
+            # patch-1.2: shared http_client (browser UA + certifi TLS + retry).
+            resp = http_client.get(source["url"], timeout=20)
+            if resp is None:
+                logger.warning(f"  [TIER 14][{source['name']}] FAILED status=network")
+                continue
             if resp.status_code != 200:
-                logger.warning(f"  {source['name']}: HTTP {resp.status_code}")
+                logger.warning(f"  [TIER 14][{source['name']}] FAILED status={resp.status_code}")
                 continue
 
             soup = BeautifulSoup(resp.text, "html.parser")
@@ -210,9 +223,12 @@ def scrape_institutional_capital() -> list[dict]:
                 logger.info(f"  {source['name']}: {len(projects)} capital projects found")
 
         except Exception as e:
-            logger.warning(f"  {source['name']} failed: {e}")
+            logger.warning(f"  [TIER 14][{source['name']}] FAILED status=exception {type(e).__name__}: {e}")
 
     logger.info(f"Institutional scraping complete: {len(all_projects)} total projects")
+    # patch-1.2: min-yield DEGRADE log (0 items != green run).
+    if not all_projects:
+        print("[TIER 14 DEGRADED] 0 items — no institutional capital projects returned")
     return all_projects
 
 

@@ -12,7 +12,11 @@ from compound_queries import (
 
 def test_query_count():
     queries = load_queries()
-    assert len(queries) == 759, f"Expected 759, got {len(queries)}"
+    # NEW-8 (2026-06-08 audit): the query set is additive-only and has grown well
+    # past the original 759 instruction-style queries (now ~2,649 incl. short
+    # keyword RSS queries). Assert a floor, not an exact count, so the additive
+    # invariant doesn't break the test on every expansion.
+    assert len(queries) >= 759, f"Expected >= 759, got {len(queries)}"
 
 
 def test_free_tier_compliance():
@@ -23,15 +27,26 @@ def test_free_tier_compliance():
 
 
 def test_lookback_window():
-    """Every query must include 4-week lookback language."""
+    """Every instruction-style (agent) query must embed 4-week lookback language.
+
+    NEW-8 (2026-06-08 audit): the query set now contains two classes —
+    long agent-instruction queries (>=150 chars) that embed their own time window
+    in the prompt text, and short keyword RSS strings (<=91 chars) whose 4-week
+    window is applied at FETCH time via the Google News `when:` parameter (not in
+    text). This test enforces lookback on the class that carries it in text; the
+    keyword class is exercised by the fetch layer (see E-4). The two classes are
+    cleanly separated by length (lookback queries are all >=250 chars).
+    """
     missing = []
     for q in load_queries():
+        if len(q["query"]) < 150:
+            continue  # short keyword query — windowed at fetch time, not in text
         text = q["query"].lower()
         has_en = "four weeks" in text or "past 4 weeks" in text or "4 weeks" in text
         has_fr = "quatre" in text and "semaines" in text
         if not (has_en or has_fr):
             missing.append(q["query"][:80])
-    assert not missing, f"Missing lookback in {len(missing)} queries, first: {missing[0]}"
+    assert not missing, f"Missing lookback in {len(missing)} instruction queries, first: {missing[0]}"
 
 
 def test_french_coverage():

@@ -10,6 +10,7 @@ Run with: python test_brownfield_discovery.py
 import asyncio
 import os
 import sys
+import pytest
 from compound_queries import load_queries
 
 # Known brownfield projects that MUST be discoverable
@@ -27,6 +28,9 @@ KNOWN_PROJECTS = [
 ]
 
 
+@pytest.mark.skip(reason="NEW-8: compound_discovery removed (STEP_2Q); live network "
+                         "test must be rewritten for google_news_rss_search. Skipped "
+                         "cleanly instead of failing collection as an unrunnable async test.")
 async def test_known_project_discovery():
     """Test that known brownfield projects are found by relevant compound queries."""
     import aiohttp

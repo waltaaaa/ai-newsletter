@@ -21,6 +21,13 @@ import re
 from datetime import datetime, timedelta
 import logging
 
+# patch-1.2 (D-9): route every procurement fetch through the shared HTTP client.
+# All four sources were dark — same root cause as D-8 (stale URLs + default
+# python-requests User-Agent tripping bot-blocks on the CKAN portals). The
+# browser UA + certifi TLS clears the bot-blocks; stale CKAN ids / migrated
+# hosts are flagged with TODO(patch-1.2 live-verify) below.
+import http_client
+
 logger = logging.getLogger(__name__)
 
 # Minimum contract value to track (filter out small purchases)
@@ -55,12 +62,18 @@ def fetch_open_canada_contracts(days_back=30):
 
     try:
         # Proactive Disclosure — Contracts over $10K
+        # TODO(patch-1.2 live-verify): CKAN package id 'proactive-disclosure-contracts'
+        #   returns 404 (D-9). The dataset was renamed/migrated. Candidate: the new
+        #   contracts search API at https://search.open.canada.ca/contracts/ (verify
+        #   the JSON/CSV download endpoint), or re-resolve the current CKAN package id
+        #   via https://open.canada.ca/data/api/3/action/package_search?q=proactive+disclosure+contracts
         url = "https://open.canada.ca/data/api/3/action/package_show"
         params = {"id": "proactive-disclosure-contracts"}
 
-        resp = requests.get(url, params=params, timeout=15)
-        if resp.status_code != 200:
-            print(f"[PROCUREMENT] Open Canada API returned {resp.status_code}")
+        resp = http_client.get(url, params=params, timeout=15)
+        if resp is None or resp.status_code != 200:
+            status = 'network' if resp is None else resp.status_code
+            print(f"[PROCUREMENT][open_canada] FAILED status={status}")
             return []
 
         data = resp.json()
@@ -75,7 +88,11 @@ def fetch_open_canada_contracts(days_back=30):
         # Download and parse the most recent CSV
         csv_url = csv_resources[-1].get("url")
         if csv_url:
-            csv_resp = requests.get(csv_url, timeout=30)
+            csv_resp = http_client.get(csv_url, timeout=30)
+            if csv_resp is None or csv_resp.status_code >= 400:
+                status = 'network' if csv_resp is None else csv_resp.status_code
+                print(f"[PROCUREMENT][open_canada] CSV download FAILED status={status}")
+                return []
             reader = csv.DictReader(io.StringIO(csv_resp.text))
 
             cutoff = datetime.now() - timedelta(days=days_back)
@@ -118,13 +135,27 @@ def fetch_buyandsell_rss():
     """
     tenders = []
 
+    # TODO(patch-1.2 live-verify): buyandsell.gc.ca migrated to
+    #   canadabuys.canada.ca (D-9). The old RSS path likely 404s. Re-resolve the
+    #   current tender-notices feed under canadabuys.canada.ca (candidate:
+    #   https://canadabuys.canada.ca/en/tender-opportunities/rss or the open-data
+    #   tenders CSV). The old URL is kept (additive) until the new one is confirmed.
     rss_urls = [
         "https://buyandsell.gc.ca/procurement-data/feed/rss",
     ]
 
     for url in rss_urls:
         try:
-            feed = feedparser.parse(url)
+            # patch-1.2: fetch with browser UA via http_client, then hand the
+            # bytes to feedparser (feedparser.parse(url) uses its own default UA
+            # which is bot-blocked). Falls back to feedparser-direct on None.
+            resp = http_client.get(url, timeout=20)
+            if resp is None or resp.status_code >= 400:
+                status = 'network' if resp is None else resp.status_code
+                print(f"[PROCUREMENT][buyandsell] FAILED status={status}")
+                feed = feedparser.parse(url)
+            else:
+                feed = feedparser.parse(resp.content)
             for entry in feed.entries:
                 title = entry.get("title", "").lower()
                 summary = entry.get("summary", "").lower()
@@ -158,18 +189,29 @@ def fetch_ontario_bps():
 
     try:
         # Ontario data catalogue — BPS procurement
+        # TODO(patch-1.2 live-verify): confirm CKAN package id
+        #   'broader-public-sector-business-document-plan' still resolves on
+        #   data.ontario.ca (D-9 reported Ontario BPS zero). If renamed, re-resolve
+        #   via data.ontario.ca/api/3/action/package_search?q=broader+public+sector+procurement
         url = "https://data.ontario.ca/api/3/action/package_show"
         params = {"id": "broader-public-sector-business-document-plan"}
 
-        resp = requests.get(url, params=params, timeout=15)
-        if resp.status_code == 200:
+        resp = http_client.get(url, params=params, timeout=15)
+        if resp is None or resp.status_code != 200:
+            status = 'network' if resp is None else resp.status_code
+            print(f"[PROCUREMENT][ontario_bps] FAILED status={status}")
+        else:
             data = resp.json()
             resources = data.get("result", {}).get("resources", [])
 
             csv_resources = [r for r in resources if r.get("format", "").upper() == "CSV"]
             if csv_resources:
                 csv_url = csv_resources[-1].get("url")
-                csv_resp = requests.get(csv_url, timeout=30)
+                csv_resp = http_client.get(csv_url, timeout=30)
+                if csv_resp is None or csv_resp.status_code >= 400:
+                    status = 'network' if csv_resp is None else csv_resp.status_code
+                    print(f"[PROCUREMENT][ontario_bps] CSV download FAILED status={status}")
+                    return []
                 reader = csv.DictReader(io.StringIO(csv_resp.text))
 
                 for row in reader:
@@ -202,8 +244,20 @@ def fetch_bc_bid():
 
     try:
         # BC Bid RSS feed for construction category
+        # TODO(patch-1.2 live-verify): confirm the BC Bid RSS endpoint. The legacy
+        #   open.dll/RSSFeed path may have been retired with the BC Bid platform
+        #   refresh (D-9 reported BC Bid zero). Candidate: the current bcbid.gov.bc.ca
+        #   public opportunities feed/API. Old URL kept (additive) until confirmed.
         url = "https://www.bcbid.gov.bc.ca/open.dll/RSSFeed?Feed=Construction"
-        feed = feedparser.parse(url)
+        # patch-1.2: fetch with browser UA via http_client, then parse the bytes
+        # with feedparser. Falls back to feedparser-direct if the fetch fails.
+        resp = http_client.get(url, timeout=20)
+        if resp is None or resp.status_code >= 400:
+            status = 'network' if resp is None else resp.status_code
+            print(f"[PROCUREMENT][bc_bid] FAILED status={status}")
+            feed = feedparser.parse(url)
+        else:
+            feed = feedparser.parse(resp.content)
 
         for entry in feed.entries:
             title = entry.get("title", "")
@@ -351,6 +405,11 @@ def run_procurement_monitor(conn, days_back=30):
     all_contracts.extend(fetch_bc_bid())
 
     print(f"[PROCUREMENT] Total: {len(all_contracts)} relevant contracts across all sources")
+
+    # patch-1.2: min-yield DEGRADE log. All four procurement sources were dark
+    # (D-9); a whole-run zero means dead endpoints, not a quiet week.
+    if not all_contracts:
+        print("[PROCUREMENT DEGRADED] 0 items — all procurement sources returned zero")
 
     # Link to existing projects
     linked = link_contracts_to_projects(all_contracts, conn)

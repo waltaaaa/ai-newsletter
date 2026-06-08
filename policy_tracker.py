@@ -22,7 +22,23 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 import logging
 
+# patch-1.2 (D-10): shared HTTP client for fetching RSS with a browser UA
+# (feedparser's default UA is bot-blocked by several gov feeds), plus
+# government_bypass so configured government policy feeds pass through without
+# keyword classification (per CLAUDE.md RSS-filter Layer 1).
+import http_client
+
 logger = logging.getLogger(__name__)
+
+# patch-1.2: default cap on items sent to keyword classification. All FEDERAL_FEEDS
+# and PROVINCIAL_FEEDS are government sources, so they bypass classification
+# entirely (government_bypass); this cap only bounds any non-government items
+# (e.g. researcher-found) and is parameterised so callers can widen it.
+DEFAULT_MAX_CLASSIFY_BATCH = 50
+
+# Levels considered "government source" for the Layer-1 bypass. Every feed in
+# FEDERAL_FEEDS / PROVINCIAL_FEEDS carries level 'federal' or 'provincial'.
+_GOVERNMENT_LEVELS = frozenset({"federal", "provincial"})
 
 
 # ── Federal Legislative Sources ──
@@ -248,12 +264,27 @@ def fetch_all_policy_feeds():
     all_items = []
     feeds = {**FEDERAL_FEEDS, **PROVINCIAL_FEEDS}
 
+    # patch-1.2 (D-10): track per-feed item counts so a dead feed is
+    # distinguishable from a quiet week. All feeds here are government sources.
+    per_feed: dict[str, int] = {}
+
     for feed_id, feed_config in feeds.items():
+        feed_count = 0
         try:
-            feed = feedparser.parse(feed_config["url"])
+            # patch-1.2: fetch with browser UA via http_client, then hand bytes
+            # to feedparser (feedparser.parse(url) uses its own UA that several
+            # gov feeds bot-block). Falls back to feedparser-direct on failure.
+            resp = http_client.get(feed_config["url"], timeout=20)
+            if resp is None or resp.status_code >= 400:
+                status = 'network' if resp is None else resp.status_code
+                print(f"[POLICY][{feed_id}] FAILED status={status}")
+                feed = feedparser.parse(feed_config["url"])
+            else:
+                feed = feedparser.parse(resp.content)
 
             if feed.bozo and not feed.entries:
                 logger.debug(f"[POLICY] Feed failed: {feed_id} — {feed_config['url']}")
+                per_feed[feed_id] = 0
                 continue
 
             for entry in feed.entries[:20]:  # Limit per feed
@@ -267,46 +298,87 @@ def fetch_all_policy_feeds():
                     "url": entry.get("link", ""),
                     "date": entry.get("published", entry.get("updated", "")),
                     "source_description": feed_config["description"],
+                    # patch-1.2: mark configured gov feeds for Layer-1 bypass.
+                    "government_bypass": feed_config["level"] in _GOVERNMENT_LEVELS,
                 }
                 all_items.append(item)
+                feed_count += 1
+
+            per_feed[feed_id] = feed_count
 
         except Exception as e:
+            per_feed[feed_id] = 0
             print(f"[WARN] Policy feed {feed_id} failed: {e}")
 
     print(f"[POLICY] Fetched {len(all_items)} items from {len(feeds)} feeds")
+    # patch-1.2: per-feed counts (sorted, zero feeds flagged) so operators can
+    # see which feeds produced items vs which are dark.
+    counts_str = ", ".join(f"{fid}={n}" for fid, n in sorted(per_feed.items()))
+    print(f"[POLICY] Per-feed counts: {counts_str}")
+    zero_feeds = [fid for fid, n in per_feed.items() if n == 0]
+    if zero_feeds:
+        print(f"[POLICY] Feeds returning 0 this run: {', '.join(zero_feeds)}")
     return all_items
 
 
-def classify_policy_items(items):
+def classify_policy_items(items, max_batch=DEFAULT_MAX_CLASSIFY_BATCH):
     """
     Classify policy items by policy category and affected sectors.
     Adds 'policy_categories' and 'affected_sectors' fields.
-    """
-    classified = 0
 
-    for item in items:
-        text = f"{item['title']} {item['summary']}".lower()
+    patch-1.2 (D-10): government_bypass — items from configured government feeds
+    (level federal/provincial, flagged 'government_bypass') skip keyword
+    classification and count as relevant, per CLAUDE.md RSS-filter Layer 1 (all
+    policy feeds are government sources). Keyword classification still runs to
+    enrich category/sector tags where it fires, but a government item with no
+    keyword hit is no longer dropped. ``max_batch`` bounds the keyword pass over
+    non-government (e.g. researcher-found) items.
+
+    Args:
+        items: list of policy item dicts.
+        max_batch: cap on the number of items the keyword classifier scans
+            (additive — government items always pass regardless of this cap).
+    """
+    classified = 0      # items with at least one keyword-derived category
+    bypassed = 0        # government items passed through Layer 1
+
+    for idx, item in enumerate(items):
+        text = f"{item.get('title', '')} {item.get('summary', '')}".lower()
 
         categories = []
         sectors = set()
 
-        for category, config in INVESTMENT_POLICY_KEYWORDS.items():
-            for kw in config["keywords"]:
-                if kw in text:
-                    categories.append(category)
-                    sectors.update(config["sectors"])
-                    break
+        # Keyword pass (enrichment). Bounded by max_batch for non-gov items, but
+        # government items are always scanned too so they still get category tags.
+        is_gov = bool(item.get("government_bypass")) or \
+            item.get("level") in _GOVERNMENT_LEVELS
+        if is_gov or idx < max_batch:
+            for category, config in INVESTMENT_POLICY_KEYWORDS.items():
+                for kw in config["keywords"]:
+                    if kw in text:
+                        categories.append(category)
+                        sectors.update(config["sectors"])
+                        break
 
-        item["policy_categories"] = categories
         item["affected_sectors"] = list(sectors)
 
         if categories:
             classified += 1
+        elif is_gov:
+            # Government source with no keyword hit: bypass classification and
+            # tag with a generic government category so downstream linking and
+            # the relevance filter retain it.
+            categories = ["government_policy"]
+            item["government_bypass"] = True
+            bypassed += 1
 
-    # Filter to only investment-relevant items
+        item["policy_categories"] = categories
+
+    # Filter to only investment-relevant items (gov-bypassed items now retained).
     relevant = [i for i in items if i["policy_categories"]]
 
-    print(f"[POLICY] {classified}/{len(items)} items classified as investment-relevant")
+    print(f"[POLICY] {classified}/{len(items)} keyword-classified, "
+          f"{bypassed} government-bypassed -> {len(relevant)} relevant")
     return relevant
 
 
@@ -565,6 +637,12 @@ def run_policy_tracker(conn, research_paths=None):
 
     # Classify by policy category and affected sectors
     relevant = classify_policy_items(all_items)
+
+    # patch-1.2 (D-10): min-yield DEGRADE log. With government_bypass, a zero
+    # relevant count now means feeds are dark, not over-strict classification.
+    if not relevant:
+        print("[POLICY DEGRADED] 0 items — no relevant policy developments "
+              "(check per-feed counts above for dark feeds)")
 
     # Detect new developments vs. previous week
     new_items = detect_policy_changes(relevant, conn)

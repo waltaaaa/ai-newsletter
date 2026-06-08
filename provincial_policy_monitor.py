@@ -21,7 +21,15 @@ from datetime import datetime, timedelta
 import feedparser
 import requests
 
+# patch-1.2 (D-10): shared HTTP client — browser UA + certifi TLS clears the
+# bot-blocks / cert failures that left several provincial finance feeds dark.
+import http_client
+
 logger = logging.getLogger(__name__)
+
+# patch-1.2: default keyword/LLM classification batch size (was hardcoded 30 at
+# the classify_policy_articles call site). Parameterised so callers can widen it.
+DEFAULT_MAX_BATCH = 50
 
 # ── Policy RSS feeds ─────────────────────────────────────────────────
 
@@ -149,11 +157,13 @@ def _fetch_feed(feed_id, feed_info, since_days=7):
     cutoff = datetime.utcnow() - timedelta(days=since_days)
     articles = []
     try:
-        resp = requests.get(url, timeout=15, headers={
-            "User-Agent": "CAN-Macro-Dashboard/1.0"
-        })
-        if resp.status_code != 200:
-            logger.debug(f"Policy feed {feed_id}: HTTP {resp.status_code}")
+        # patch-1.2: route through shared http_client (browser UA + certifi TLS
+        # + retry) instead of the thin 'CAN-Macro-Dashboard/1.0' UA that several
+        # provincial finance feeds bot-blocked.
+        resp = http_client.get(url, timeout=15)
+        if resp is None or resp.status_code != 200:
+            status = 'network' if resp is None else resp.status_code
+            print(f"[POLICY][{feed_id}] FAILED status={status}")
             return []
         parsed = feedparser.parse(resp.content)
         for entry in parsed.entries[:20]:
@@ -178,6 +188,9 @@ def _fetch_feed(feed_id, feed_info, since_days=7):
                 "snippet": getattr(entry, "summary", "")[:500],
                 "url": getattr(entry, "link", ""),
                 "published": published.isoformat() if published else None,
+                # patch-1.2: every POLICY_FEEDS source is a government feed →
+                # eligible for Layer-1 government_bypass during classification.
+                "government_bypass": True,
             })
     except Exception as e:
         logger.debug(f"Policy feed {feed_id} failed: {e}")
@@ -187,28 +200,51 @@ def _fetch_feed(feed_id, feed_info, since_days=7):
 def fetch_all_policy_feeds(since_days=7):
     """Fetch all policy RSS feeds, return combined article list."""
     all_articles = []
+    # patch-1.2 (D-10): per-feed counts so a dark feed is distinguishable from a
+    # quiet week.
+    per_feed = {}
     for feed_id, info in POLICY_FEEDS.items():
         articles = _fetch_feed(feed_id, info, since_days)
+        per_feed[feed_id] = len(articles)
         all_articles.extend(articles)
     logger.info(f"Policy feeds: {len(all_articles)} articles from "
                 f"{len(POLICY_FEEDS)} feeds")
+    counts_str = ", ".join(f"{fid}={n}" for fid, n in sorted(per_feed.items()))
+    print(f"[POLICY] Per-feed counts: {counts_str}")
+    zero_feeds = [fid for fid, n in per_feed.items() if n == 0]
+    if zero_feeds:
+        print(f"[POLICY] Feeds returning 0 this run: {', '.join(zero_feeds)}")
     return all_articles
 
 
-def classify_policy_articles(articles, max_batch=30):
+def classify_policy_articles(articles, max_batch=DEFAULT_MAX_BATCH):
     """Classify articles using Groq LLaMA 3.3 70B (replaces Gemini Flash).
 
     Returns list of policy-relevant articles with category.
+
+    patch-1.2 (D-10): government_bypass — articles flagged 'government_bypass'
+    (every POLICY_FEEDS source is a government feed) are retained as relevant
+    even when the LLM does not surface them, per CLAUDE.md RSS-filter Layer 1.
+    The LLM pass still runs to assign categories where it can; ``max_batch``
+    (default DEFAULT_MAX_BATCH, was a hardcoded 30) bounds the LLM batch size.
+    On LLM failure, government items still pass through (fail-open).
     """
     if not articles:
         return []
 
     from groq_client import generate as groq_generate
 
+    batch = articles[:max_batch]
+
+    # Index of government items so they can be retained regardless of the LLM.
+    gov_indices = {i for i, a in enumerate(batch) if a.get("government_bypass")}
+
+    relevant_by_idx = {}
+
     # Format articles for classification
     batch_text = "\n\n".join(
         f"[{i}] {a['headline']}\n{a['snippet'][:200]}"
-        for i, a in enumerate(articles[:max_batch])
+        for i, a in enumerate(batch)
     )
 
     prompt = POLICY_CLASSIFICATION_PROMPT.format(articles=batch_text)
@@ -216,28 +252,39 @@ def classify_policy_articles(articles, max_batch=30):
 
     try:
         text = groq_generate(system, prompt)
-        if not text:
-            return []
+        if text:
+            # Parse JSON response
+            import re
+            text = re.sub(r'```json\s*', '', text)
+            text = re.sub(r'```\s*', '', text).strip()
 
-        # Parse JSON response
-        import re
-        text = re.sub(r'```json\s*', '', text)
-        text = re.sub(r'```\s*', '', text).strip()
-
-        classified = json.loads(text)
-        relevant = []
-        for item in classified:
-            idx = item.get("index", -1)
-            if 0 <= idx < len(articles):
-                article = articles[idx].copy()
-                article["category"] = item.get("category", "unknown")
-                article["classification"] = "POLICY_RELEVANT"
-                relevant.append(article)
-        return relevant
-
+            classified = json.loads(text)
+            for item in classified:
+                idx = item.get("index", -1)
+                if 0 <= idx < len(batch):
+                    article = batch[idx].copy()
+                    article["category"] = item.get("category", "unknown")
+                    article["classification"] = "POLICY_RELEVANT"
+                    relevant_by_idx[idx] = article
     except Exception as e:
         logger.warning(f"Policy classification failed: {e}")
-        return []
+        # Fail-open for government sources only (handled by the bypass below).
+
+    # Government_bypass: retain any government article the LLM did not surface.
+    bypassed = 0
+    for idx in gov_indices:
+        if idx not in relevant_by_idx:
+            article = batch[idx].copy()
+            article["category"] = article.get("topic", "government_policy")
+            article["classification"] = "POLICY_RELEVANT"
+            article["government_bypass"] = True
+            relevant_by_idx[idx] = article
+            bypassed += 1
+
+    relevant = [relevant_by_idx[i] for i in sorted(relevant_by_idx)]
+    if bypassed:
+        print(f"[POLICY] {bypassed} government items retained via government_bypass")
+    return relevant
 
 
 async def assess_policy_impact(policy_article, affected_projects,
@@ -286,13 +333,15 @@ Assess the economic impact. Structure as:
     )
 
 
-def process_policy_feeds(conn=None, since_days=7, db=None):
+def process_policy_feeds(conn=None, since_days=7, db=None,
+                         max_batch=DEFAULT_MAX_BATCH):
     """Main entry point: fetch, classify, and store policy developments.
 
     Args:
         conn: sqlite3.Connection from db.py (preferred)
         since_days: how many days back to fetch articles
         db: deprecated Firestore client; ignored (kept for backward compatibility)
+        max_batch: classification batch size (patch-1.2: was hardcoded 30).
 
     Returns list of policy-relevant articles with classifications.
     """
@@ -302,11 +351,16 @@ def process_policy_feeds(conn=None, since_days=7, db=None):
     articles = fetch_all_policy_feeds(since_days)
     if not articles:
         print("  [POLICY] No articles from feeds")
+        # patch-1.2 (D-10): min-yield DEGRADE log — all feeds dark this run.
+        print("[POLICY DEGRADED] 0 items — no articles from any provincial/federal feed")
         return []
 
-    # 2. Classify
-    relevant = classify_policy_articles(articles)
+    # 2. Classify (government_bypass retains gov items even if LLM misses them)
+    relevant = classify_policy_articles(articles, max_batch=max_batch)
     print(f"  [POLICY] {len(relevant)}/{len(articles)} articles policy-relevant")
+    if not relevant:
+        print("[POLICY DEGRADED] 0 items — 0 relevant of "
+              f"{len(articles)} fetched (check per-feed counts above)")
 
     # 3. Store in SQLite
     if relevant and conn and hasattr(conn, 'execute'):

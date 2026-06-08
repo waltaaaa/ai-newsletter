@@ -591,6 +591,11 @@ def init_db(path: str | None = None) -> sqlite3.Connection:
         conn.commit()
 
     # Verification & cost-finding migration: add columns needed by Phase 8
+    # NEW-1 (2026-06-08 audit): quality_tier is read by tools/export_dashboard.py
+    #   (export_all_projects ORDER BY CASE quality_tier) and written by
+    #   tools/cleanup_projects.py, but was never in the canonical schema — so a
+    #   fresh/empty DB crashed export and broke 5 pytest cases. Create it here so
+    #   the column always exists; cleanup_projects.py still refines per-row values.
     for col, typedef in [
         ("value_millions", "REAL DEFAULT NULL"),
         ("urls_checked_at", "TEXT DEFAULT ''"),
@@ -601,6 +606,7 @@ def init_db(path: str | None = None) -> sqlite3.Connection:
         ("verification_status", "TEXT DEFAULT ''"),
         ("value_notes", "TEXT DEFAULT ''"),
         ("value_low_millions", "REAL DEFAULT NULL"),
+        ("quality_tier", "TEXT DEFAULT 'registry'"),
     ]:
         try:
             conn.execute(f"SELECT {col} FROM projects LIMIT 1")
@@ -900,6 +906,13 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
             discovery_sources = _from_json(
                 _to_json(project_dict.get("discovery_sources", [])), []
             )
+            # DI-3 (2026-06-08 audit): callers almost always pass only the scalar
+            # `discovery_source`, leaving discovery_sources[] empty (96.6% of rows).
+            # Seed the array from the scalar so per-project provenance is tracked
+            # (prerequisite for D-3 additive-confidence and E-1 merge provenance).
+            _ds_scalar = (project_dict.get("discovery_source", "") or "").strip()
+            if _ds_scalar and _ds_scalar not in discovery_sources:
+                discovery_sources.append(_ds_scalar)
             status_history = _from_json(
                 _to_json(project_dict.get("statusHistory", [])), []
             )
@@ -979,6 +992,19 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
             if isinstance(new_ds, str):
                 new_ds = _from_json(new_ds, [])
             merged_ds = _merge_list(existing_ds, new_ds)
+            # DI-3: fold the scalar discovery_source into the array on every
+            # rediscovery so provenance accumulates across tiers/weeks.
+            _ds_scalar = (project_dict.get("discovery_source", "") or "").strip()
+            if _ds_scalar and _ds_scalar not in merged_ds:
+                merged_ds = merged_ds + [_ds_scalar]
+
+            # D-3 diagnostic (opt-in via LI_MERGE_DEBUG=1): reveals whether
+            # rediscovery actually adds evidence. ~91% of projects sit at exactly
+            # one evidence item; this line shows if merges are happening at all.
+            if os.environ.get("LI_MERGE_DEBUG") == "1":
+                _added = len(merged_evidence) - len(existing_evidence)
+                print(f"  [MERGE] {name[:60]} evidence {len(existing_evidence)}->"
+                      f"{len(merged_evidence)} (+{_added}); ds {len(existing_ds)}->{len(merged_ds)}")
 
             # 3. Status non-regression
             existing_status = existing_dict.get("status", "Proposed")
@@ -1089,6 +1115,12 @@ def get_projects(conn: sqlite3.Connection, province: str | None = None,
     if conditions:
         query += " WHERE " + " AND ".join(conditions)
 
+    # NEW-3 (2026-06-08 audit): deterministic order. Without ORDER BY the result
+    # set follows physical row order, which the per-run VACUUM reshuffles — so the
+    # exported province/all-projects JSON churned every run even when nothing
+    # changed (and LIMIT could silently drop different rows). norm_key is a stable,
+    # VACUUM-proof tiebreaker (derived from name+province, unique per project).
+    query += " ORDER BY lastSeen DESC, norm_key ASC"
     query += f" LIMIT {int(limit)}"
 
     rows = conn.execute(query, params).fetchall()

@@ -255,7 +255,9 @@ def update_dashboard(deep_sweep: bool = False):
             import traceback
             print(f"\n[CRITICAL] {phase_name} failed: {e}")
             traceback.print_exc()
-            run_log.log_error(phase_name, e, recovered=False)
+            # M-1/NEW-7: a phase that raised (recovered=False) is run-halting, not a
+            # warn-level scraper flake — tag critical so the run is demoted honestly.
+            run_log.log_error(phase_name, e, recovered=False, severity="critical")
             _phase_status = "error"
             # M-8: emit PHASE_END before bailing on conductor failure
             _phase_end = _time.time()

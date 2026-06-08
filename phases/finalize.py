@@ -402,8 +402,26 @@ def run(conn, context, logger):
             except Exception:
                 pass
 
-            save_dashboard_state(conn, 'newsletter_latest', final_payload)
-            save_dashboard_state(conn, f'newsletter_{dated_id}', final_payload)
+            # NEW-4 (2026-06-08 audit): never overwrite a good edition with an
+            # empty/soft-failed payload. A conductor soft-failure can leave
+            # final_payload effectively empty; writing it blanked newsletter_latest
+            # (and the entire live site) until the next successful run. Preserve the
+            # prior edition and demote the run to critical instead.
+            _payload_ok = bool(
+                final_payload.get('executive_summary')
+                or final_payload.get('sections')
+                or final_payload.get('headline')
+            )
+            if _payload_ok:
+                save_dashboard_state(conn, 'newsletter_latest', final_payload)
+                save_dashboard_state(conn, f'newsletter_{dated_id}', final_payload)
+            else:
+                print("[ERROR] final_payload is empty/incomplete — PRESERVING prior "
+                      "newsletter_latest (NEW-4 guard); not overwriting with a blank edition.")
+                logger.log_error(
+                    "finalize_empty_payload",
+                    RuntimeError("empty final_payload; prior edition preserved"),
+                    recovered=True, severity="critical")
 
             # M-2 — sync weekly_briefings archive table. Pointer-only
             # (newsletter_latest) wasn't enough: the table fell 3+ weeks behind
@@ -421,7 +439,9 @@ def run(conn, context, logger):
         except Exception as e:
             print(f"[ERROR] Step 7 (SQLite export) failed: {type(e).__name__}: {e}")
             traceback.print_exc()
-            logger.log_error("step_7_export", e, recovered=False)
+            # M-1/NEW-7: a failed final SQLite push means no briefing was persisted —
+            # this is run-halting, not a recoverable scraper warning.
+            logger.log_error("step_7_export", e, recovered=False, severity="critical")
 
         # Tavily usage logging
         try:

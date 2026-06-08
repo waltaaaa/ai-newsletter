@@ -15,11 +15,27 @@ Priority order:
 import asyncio
 import logging
 import re
+import ssl
 from datetime import datetime, date
 
 import aiohttp
 
+# patch-1.2 (D-8): reuse the shared browser-like header set so the async
+# municipal scrapers stop getting bot-blocked (HTTP 403) on the default
+# aiohttp User-Agent, and verify TLS against certifi's CA bundle (fixes
+# CERTIFICATE_VERIFY_FAILED on Windows OpenSSL stores).
+import http_client
+
+try:
+    import certifi
+    _SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
+except Exception:  # pragma: no cover
+    _SSL_CONTEXT = None
+
 logger = logging.getLogger(__name__)
+
+# Browser-like headers shared with http_client (single source of truth for UA).
+_BROWSER_HEADERS = dict(http_client.DEFAULT_HEADERS)
 
 # GDP-proportional thresholds (millions CAD) for filtering permits
 GDP_THRESHOLDS = {
@@ -27,6 +43,12 @@ GDP_THRESHOLDS = {
     'NS': 25, 'NB': 20, 'NL': 17, 'PE': 5, 'YT': 3, 'NT': 3, 'NU': 3,
 }
 
+# TODO(patch-1.2 live-verify): several HTML-portal and ArcGIS '/explore' URLs
+#   below point at human-facing viewer pages, not data endpoints, and some
+#   returned 404 (Edmonton transit-adjacent pages) or 403 pre-patch. With the
+#   browser UA now applied, re-probe each city; for the 404s (e.g. kitchener
+#   ArcGIS download, london_on/victoria '/explore') resolve the actual CSV/JSON
+#   API path. See SOURCE_ENDPOINTS_NEEDS_LIVE_VERIFICATION.md.
 MUNICIPAL_SOURCES = {
     # ── Open Data API cities ─────────────────────────────────────────────────
     "vancouver": {
@@ -345,11 +367,11 @@ async def _fetch_socrata(session: aiohttp.ClientSession, source: dict,
             timeout=aiohttp.ClientTimeout(total=30),
         ) as resp:
             if resp.status != 200:
-                logger.warning(f"  Socrata {source['name']}: HTTP {resp.status}")
+                logger.warning(f"  [TIER 13][{source['name']}] FAILED status={resp.status} (socrata)")
                 return []
             records = await resp.json()
     except Exception as e:
-        logger.warning(f"  Socrata {source['name']}: {e}")
+        logger.warning(f"  [TIER 13][{source['name']}] FAILED status=exception (socrata) {type(e).__name__}: {e}")
         return []
 
     projects = []
@@ -372,11 +394,11 @@ async def _fetch_ckan(session: aiohttp.ClientSession, source: dict,
             timeout=aiohttp.ClientTimeout(total=30),
         ) as resp:
             if resp.status != 200:
-                logger.warning(f"  CKAN {source['name']}: HTTP {resp.status}")
+                logger.warning(f"  [TIER 13][{source['name']}] FAILED status={resp.status} (ckan)")
                 return []
             data = await resp.json()
     except Exception as e:
-        logger.warning(f"  CKAN {source['name']}: {e}")
+        logger.warning(f"  [TIER 13][{source['name']}] FAILED status=exception (ckan) {type(e).__name__}: {e}")
         return []
 
     # CKAN v2.1 wraps results in "results" key
@@ -407,17 +429,19 @@ async def _scrape_html_portal(session: aiohttp.ClientSession, source: dict,
         return []
 
     try:
+        # patch-1.2: rely on the session's shared browser headers (set in
+        # scrape_municipal_applications) instead of the old thin UA that got
+        # 403-blocked.
         async with session.get(
             source["url"],
             timeout=aiohttp.ClientTimeout(total=30),
-            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) CAN-Macro-Dashboard/1.0"},
         ) as resp:
             if resp.status != 200:
-                logger.warning(f"  HTML {source['name']}: HTTP {resp.status}")
+                logger.warning(f"  [TIER 13][{source['name']}] FAILED status={resp.status}")
                 return []
             html = await resp.text()
     except Exception as e:
-        logger.warning(f"  HTML {source['name']}: {e}")
+        logger.warning(f"  [TIER 13][{source['name']}] FAILED status=exception {type(e).__name__}: {e}")
         return []
 
     soup = BeautifulSoup(html, "html.parser")
@@ -476,10 +500,10 @@ async def _scrape_html_portal(session: aiohttp.ClientSession, source: dict,
 async def _health_check(session: aiohttp.ClientSession, url: str) -> bool:
     """HEAD request with 5-second timeout to verify endpoint is reachable."""
     try:
+        # patch-1.2: use session browser headers (set on the ClientSession).
         async with session.head(
             url,
             timeout=aiohttp.ClientTimeout(total=5),
-            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) CAN-Macro-Dashboard/1.0"},
             allow_redirects=True,
         ) as resp:
             return resp.status < 500
@@ -496,7 +520,11 @@ async def scrape_municipal_applications() -> list[dict]:
     cities_skipped = 0
     cities_total = len(MUNICIPAL_SOURCES)
 
-    async with aiohttp.ClientSession() as session:
+    # patch-1.2: browser headers on the session (clears 403 bot-blocks) +
+    # certifi-backed TLS via a connector (clears CERTIFICATE_VERIFY_FAILED).
+    connector = aiohttp.TCPConnector(ssl=_SSL_CONTEXT) if _SSL_CONTEXT else None
+    async with aiohttp.ClientSession(headers=_BROWSER_HEADERS,
+                                     connector=connector) as session:
         for city_key, source in MUNICIPAL_SOURCES.items():
             try:
                 # Health check: verify endpoint is reachable before full scrape
@@ -528,6 +556,11 @@ async def scrape_municipal_applications() -> list[dict]:
     else:
         logger.info(f"Municipal scraping complete: {len(all_projects)} total projects "
                      f"({cities_skipped}/{cities_total} cities skipped)")
+    # patch-1.2: min-yield DEGRADE log so a dead tier is distinguishable from a
+    # quiet week (0 items != green run). Printed (not just logged) so it surfaces
+    # in the pipeline run output alongside the other tiers.
+    if not all_projects:
+        print("[TIER 13 DEGRADED] 0 items — no municipal development applications returned")
     return all_projects
 
 
