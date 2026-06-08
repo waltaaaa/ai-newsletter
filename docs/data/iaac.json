@@ -1,5 +1,775 @@
 [
   {
+    "name": "Installation of a Permeable Adsorptive Barrier (PAB) at 22 Wing North Bay",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-05-15",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "O'Chiese First Nation Road Landslide Remediation Project",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-05-19",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Edith Cavell Road KM 1.6 Slope Stabilization",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Infrastructure",
+    "value": null,
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Warkworth Institution – Fuel Storage Tank System Replacements and Removals (8)",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Infield Concourse Hardstands & Taxiway Connections",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Pasqua First Nation Solid Waste Transfer Station",
+    "status": "Under Review",
+    "province": "SK",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Petit-Gaspé Bridge embankment riprap rehabilitation",
+    "status": "Under Review",
+    "province": "QC",
+    "sector": "Energy",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Piapot First Nation Commercial Office Building",
+    "status": "Under Review",
+    "province": "SK",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "OS-6891 Authorization to Construct and Operate a Surface Lease",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "OS-6908 Authorization to Construct and Operate a Surface Lease",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Kwikwasut'inuxw Haxwa'mis First Nation - Seawall and Bioengineered Slope Construction",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Cascade Creek Restoration Large Woody Debris Installation",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Flowerpot Marl Bed Trail Restoration",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Transit & Rail",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Bonaventure Expressway, Section 10: Box girder replacement, paving and repair of structural elements",
+    "status": "Under Review",
+    "province": "QC",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Stillwater Creek Floodplain Wetland Restoration – Moodie Drive, Ottawa",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Water & Wastewater",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "The Greenbank Municipal Transformer Station Project - Hydro Ottawa",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Clean Energy",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Redevelopment of Building 430 at 1740 Woodroffe Avenue (Area X.O)",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Collins Bay Institution – Fuel Storage Tank Replacements (4)",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "New Fibre Installation - Gulf Islands",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Telecommunications",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Parks Canada Agency Sulphur Mountain Boardwalk Repairs",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Mortier Bay Marine Terminal Project",
+    "status": "Under Review",
+    "province": "NL",
+    "sector": "Ports & Logistics",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Spring Creek Triple Box Culvert Relief Pipe",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Mount Helmcken telecommunications tower replacement",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Telecommunications",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Gatineau Promenade Culvert Rehabilitation (P8)",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Saddle Lake Cree Nation Pathway to Learning",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Development of artificial nesting sites for turtles",
+    "status": "Under Review",
+    "province": "QC",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Bell AI Fabric Data Centre Project",
+    "status": "Under Review",
+    "province": "SK",
+    "sector": "Technology & Data",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Fire Hall 27 Demolition",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Rideau Canal Wall Repairs",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "River Cree Golf and Games Recreational Facility",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "False Creek Small Craft Harbour Limited Sediment Remediation and Tidal Boat Grid Removal",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Expansion of shed 43, Laurier terminal - Port of Montreal",
+    "status": "Cancelled",
+    "province": "QC",
+    "sector": "Ports & Logistics",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Cancelled",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Fording River Extension Project",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Raising the seabed at Quay 01 at the Contrecoeur Marine Terminal, Port of Montreal",
+    "status": "Under Review",
+    "province": "QC",
+    "sector": "Ports & Logistics",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Twinning of the Trans-Canada Highway in Manitoba",
+    "status": "Under Review",
+    "province": "MB",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Port of Quebec International Container Terminal Project",
+    "status": "Under Review",
+    "province": "QC",
+    "sector": "Ports & Logistics",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Sidney Operations Centre Fuel System and Dock Replacement",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Construction of Parking Lot and Sidewalk for the Edmonton Garrison Dog Park",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Town of Banff 25DP108 Banff Trail Riders Visitor Interpretation Centre and Riding Arena",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Transit & Rail",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Parks Canada Agency Brazeau Lake Bridge Replacement",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Telus Communications Tower - Skeetchestn First Nation",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Marten Falls Community Access Road Project",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Maintenance dredging - 10619 Timberland Road",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Infrastructure",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Geotechnical investigation – BC Hydro Second Narrows tower",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Clean Energy",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "GCT Deltaport Expansion - Berth Four Project",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Ports & Logistics",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      },
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Suncor Base Mine Extension Project",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "Mining",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Construction of Accommodation Buildings - Canadian Forces Base Valcartier",
+    "status": "Under Review",
+    "province": "QC",
+    "sector": "Defence",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Lynn Lake Gold Project",
+    "status": "Under Review",
+    "province": "MB",
+    "sector": "Mining",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Fredericton Farm Services Building Replacement Project",
+    "status": "Under Review",
+    "province": "NB",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Recapitalize Parking Lot Fort Frontenac North – CFB Kingston",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Dredging and Riprap Installation - Victoria Harbour",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Other",
+    "value": "—",
+    "lastSeen": "2026-06-08",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
     "name": "Muscowpetung Saulteaux Nation - Solid Waste Transfer Station",
     "status": "Under Review",
     "province": "SK",
@@ -435,21 +1205,6 @@
     ]
   },
   {
-    "name": "Installation of a Permeable Adsorptive Barrier (PAB) at 22 Wing North Bay",
-    "status": "Under Review",
-    "province": "ON",
-    "sector": "Other",
-    "value": "—",
-    "lastSeen": "2026-05-19",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-05-15",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
     "name": "Repairs and Upgrades for Albert Head Float - Canadian Forces Base (CFB) Esquimalt",
     "status": "Under Review",
     "province": "BC",
@@ -660,21 +1415,6 @@
     ]
   },
   {
-    "name": "O'Chiese First Nation Road Landslide Remediation Project",
-    "status": "Under Review",
-    "province": "AB",
-    "sector": "Infrastructure",
-    "value": "—",
-    "lastSeen": "2026-05-19",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-05-19",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
     "name": "Wharf Reconstruction at the Bay Fortune Small Craft Harbour, Prince Edward Island",
     "status": "Under Review",
     "province": "PE",
@@ -694,21 +1434,6 @@
     "status": "Under Review",
     "province": "BC",
     "sector": "Ports & Logistics",
-    "value": "—",
-    "lastSeen": "2026-05-19",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-05-19",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Rook I Project",
-    "status": "Under Review",
-    "province": "SK",
-    "sector": "Other",
     "value": "—",
     "lastSeen": "2026-05-19",
     "status_history": [

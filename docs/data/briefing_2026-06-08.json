@@ -1,6 +1,6 @@
 {
   "headline": "BoC Set to Hold at 2.25% on June 10 as May Employment Rebounds 88,000 and Q1 GDP Slips to Flat",
-  "edition": "EDITION: JUN 01 – JUN 08 // STATUS: AI-SYNTHESIZED",
+  "edition": "EDITION: June 8 — June 14 // STATUS: AI-SYNTHESIZED",
   "week_of": "2026-06-08",
   "generated_at": "2026-06-08T17:12:55.182942Z",
   "updated_at": "2026-06-08",
@@ -9401,709 +9401,835 @@
   "yieldCurveCommentary": "<p><span class=\"lead-sentence\"><strong>The Government of Canada yield curve held a normal positive slope at a 2s10s spread of 58 basis points</strong></span>, 12 basis points flatter than the prior edition's 70-basis-point spread, as the 10-year eased 10 basis points from the May 19 baseline to 3.45% while the 2-year settled at 2.87% from June 4 to 5 WebSearch prints<sup>40</sup><sup>37</sup>. The flattening was driven by long-end demand into the U.S. payroll surprise and parallel position-squaring ahead of the June 10 Bank of Canada decision<sup>55</sup><sup>64</sup><sup>63</sup>. Versus year-ago, the 2-year sits 24 basis points higher than 2.63% a year ago and the 10-year is 16 basis points above the year-ago 3.29%, reflecting the BoC's hold pattern since April after the cutting cycle ended<sup>55</sup>. The 5-year reads 3.20% versus 2.88% a year ago and a 3.36% May 19 baseline, while the 3M to 18M short-end prints (2.65 to 2.85%) are extrapolated from the 2.25% overnight slope and flagged for the charts agent<sup>55</sup>. The Signal Dispatch cross-reference engine links the 5-year fixed mortgage benchmark to 231 active residential projects worth $36.27 billion. If yields hold at current levels into the June 10 BoC decision, the 231 tracked residential projects worth $36 billion would face mortgage qualification pricing consistent with the May 19 baseline, while 164 LNG and natural gas projects worth $167 billion would carry financing costs anchored to the 10-year tenor<sup>40</sup>.</p>",
   "sources": [
     {
-      "url": "https://agriculture.canada.ca/en/agricultural-production/weather/canadian-drought-monitor",
+      "id": 1,
       "title": "Agriculture and Agri-Food Canada — Canadian Drought Monitor (2026-05-21)",
-      "archive_url": ""
+      "url": "https://agriculture.canada.ca/en/agricultural-production/weather/canadian-drought-monitor"
     },
     {
-      "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/chap1-en.html",
+      "id": 2,
       "title": "Spring Economic Update 2026 — Chapter 1",
-      "archive_url": ""
+      "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/chap1-en.html",
+      "publisher": "Department of Finance Canada",
+      "date": "2026-04-27"
     },
     {
-      "url": "https://budget.ontario.ca/2026/",
+      "id": 3,
       "title": "Ontario Fall Economic Statement",
-      "archive_url": ""
+      "url": "https://budget.ontario.ca/2026/"
     },
     {
-      "url": "https://budget.ontario.ca/2026/chapter-1b-services.html",
+      "id": 4,
       "title": "Ontario 2026 Budget - Chapter 1B Services",
-      "archive_url": ""
+      "url": "https://budget.ontario.ca/2026/chapter-1b-services.html"
     },
     {
-      "url": "https://budget.ontario.ca/2026/foreword.html",
+      "id": 5,
       "title": "Ontario Health Infrastructure Capital Plan",
-      "archive_url": ""
+      "url": "https://budget.ontario.ca/2026/foreword.html"
     },
     {
-      "url": "https://budget.ontario.ca/2026/highlights.html",
+      "id": 6,
       "title": "Ontario 2026 Budget",
-      "archive_url": ""
+      "url": "https://budget.ontario.ca/2026/highlights.html"
     },
     {
-      "url": "https://ca.investing.com/news/economy-news/canadas-april-inflation-surges-28-as-iran-war-drives-gasoline-costs-up-4648443",
+      "id": 7,
       "title": "Reuters via Investing.com — CPI Iran-war pump prices",
-      "archive_url": ""
+      "url": "https://ca.investing.com/news/economy-news/canadas-april-inflation-surges-28-as-iran-war-drives-gasoline-costs-up-4648443",
+      "publisher": "Reuters / Investing.com",
+      "date": "2026-05-19"
     },
     {
-      "url": "https://canada.constructconnect.com/dcn/news/economic/2026/04/new-brunswick-sets-goal-of-boosting-economy-by-10-per-cent-by-2030",
+      "id": 8,
       "title": "NB 2025-2030 Economic Strategy",
-      "archive_url": ""
+      "url": "https://canada.constructconnect.com/dcn/news/economic/2026/04/new-brunswick-sets-goal-of-boosting-economy-by-10-per-cent-by-2030"
     },
     {
-      "url": "https://canada.constructconnect.com/dcn/news/economic/2026/06/housing-starts-held-back-by-regulatory-conditions-structural-factors-cmhc",
+      "id": 9,
       "title": "CMHC Housing Market Outlook 2026 (via Construct Connect)",
-      "archive_url": ""
+      "url": "https://canada.constructconnect.com/dcn/news/economic/2026/06/housing-starts-held-back-by-regulatory-conditions-structural-factors-cmhc"
     },
     {
-      "url": "https://canada.constructconnect.com/dcn/news/projects",
+      "id": 10,
       "title": "Construct Connect / Daily Commercial News — South Niagara, Burnaby, Royal Columbian, Dawson Creek hospital build status",
-      "archive_url": ""
+      "url": "https://canada.constructconnect.com/dcn/news/projects"
     },
     {
-      "url": "https://capital.com/en-int/market-updates/crude-oil-price-forecast-19-05-2026",
+      "id": 11,
       "title": "Capital.com — Crude Oil Forecast May 19 2026",
-      "archive_url": ""
+      "url": "https://capital.com/en-int/market-updates/crude-oil-price-forecast-19-05-2026",
+      "publisher": "Capital.com",
+      "date": "2026-05-19"
     },
     {
-      "url": "https://cib-bic.ca/en/medias/articles/cib-supporting-first-nations-in-bringing-clean-power-to-new-brunswick-and-nova-scotia/",
+      "id": 12,
       "title": "CIB First Nations Clean Energy — NB/NS",
-      "archive_url": ""
+      "url": "https://cib-bic.ca/en/medias/articles/cib-supporting-first-nations-in-bringing-clean-power-to-new-brunswick-and-nova-scotia/"
     },
     {
-      "url": "https://economics.td.com/ca-employment",
+      "id": 13,
       "title": "TD Economics — Canadian Employment May 2026",
-      "archive_url": ""
+      "url": "https://economics.td.com/ca-employment",
+      "publisher": "TD Economics",
+      "date": "2026-06-06"
     },
     {
-      "url": "https://economics.td.com/ca-real-gdp",
+      "id": 14,
       "title": "TD Economics — Canadian Quarterly GDP Q1 2026",
-      "archive_url": ""
+      "url": "https://economics.td.com/ca-real-gdp",
+      "publisher": "TD Economics",
+      "date": "2026-05-29"
     },
     {
-      "url": "https://economics.td.com/ca-retail-sales",
+      "id": 15,
       "title": "TD Economics - Canadian Retail Sales (Feb 2026)",
-      "archive_url": ""
+      "url": "https://economics.td.com/ca-retail-sales"
     },
     {
-      "url": "https://energynow.ca/2026/05/oil-sands-alliance-statement-on-canada-and-alberta-agreement/",
+      "id": 16,
       "title": "Canada-Alberta Industrial Carbon Tax Implementation",
-      "archive_url": ""
+      "url": "https://energynow.ca/2026/05/oil-sands-alliance-statement-on-canada-and-alberta-agreement/"
     },
     {
-      "url": "https://english.www.gov.cn/archive/statistics/202605/31/content_WS6a1be28bc6d00ca5f9a0b582.html",
+      "id": 17,
       "title": "China NBS via gov.cn — Manufacturing PMI May 2026",
-      "archive_url": ""
+      "url": "https://english.www.gov.cn/archive/statistics/202605/31/content_WS6a1be28bc6d00ca5f9a0b582.html",
+      "publisher": "National Bureau of Statistics of China",
+      "date": "2026-05-31"
     },
     {
-      "url": "https://globalnews.ca/news/11854990/consumer-price-index-april-2026/",
+      "id": 18,
       "title": "Global News — Consumer Price Index April 2026 coverage",
-      "archive_url": ""
+      "url": "https://globalnews.ca/news/11854990/consumer-price-index-april-2026/",
+      "publisher": "Global News",
+      "date": "2026-05-19"
     },
     {
-      "url": "https://iaac-aeic.gc.ca/050/evaluations",
+      "id": 19,
       "title": "Federal Impact Assessment Registry",
-      "archive_url": ""
+      "url": "https://iaac-aeic.gc.ca/050/evaluations"
     },
     {
-      "url": "https://ised-isde.canada.ca/site/canadian-industry-statistics/en/industry/71",
+      "id": 20,
       "title": "ISED - Canadian Industry Statistics, NAICS 71",
-      "archive_url": ""
+      "url": "https://ised-isde.canada.ca/site/canadian-industry-statistics/en/industry/71"
     },
     {
-      "url": "https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres",
+      "id": 21,
       "title": "ISED - Enabling Large-Scale Sovereign AI Data Centres",
-      "archive_url": ""
+      "url": "https://ised-isde.canada.ca/site/ised/en/enabling-large-scale-sovereign-ai-data-centres"
     },
     {
-      "url": "https://itif.org/publications/",
+      "id": 22,
       "title": "ITIF - Canadian Business Dynamism (May 25, 2026)",
-      "archive_url": ""
+      "url": "https://itif.org/publications/"
     },
     {
-      "url": "https://layoffscanada.com/",
+      "id": 23,
       "title": "LayoffsCanada - Consulting Sector Tracker",
-      "archive_url": ""
+      "url": "https://layoffscanada.com/"
     },
     {
-      "url": "https://livingoceans.org/media/releases/pivotal-provincial-priority-one-year-bc-launched-its-coastal-marine-strategy",
+      "id": 24,
       "title": "Coastal Marine Strategy implementation milestones",
-      "archive_url": ""
+      "url": "https://livingoceans.org/media/releases/pivotal-provincial-priority-one-year-bc-launched-its-coastal-marine-strategy"
     },
     {
-      "url": "https://mcmillan.ca/insights/publications/change-order-canadas-spring-economic-update-2026-sets-a-new-federal-infrastructure-agenda",
+      "id": 25,
       "title": "McMillan — Canada's Spring Economic Update 2026 Sets a New Federal Infrastructure Agenda",
-      "archive_url": ""
+      "url": "https://mcmillan.ca/insights/publications/change-order-canadas-spring-economic-update-2026-sets-a-new-federal-infrastructure-agenda",
+      "publisher": "McMillan",
+      "date": "2026-04-30"
     },
     {
-      "url": "https://news.cgtn.com/news/2026-05-31/China-s-composite-PMI-for-May-rises-to-50-5-1NAMiaQvq5q/share_amp.html",
+      "id": 26,
       "title": "CGTN — China Composite PMI May 50.5",
-      "archive_url": ""
+      "url": "https://news.cgtn.com/news/2026-05-31/China-s-composite-PMI-for-May-rises-to-50-5-1NAMiaQvq5q/share_amp.html",
+      "publisher": "CGTN",
+      "date": "2026-05-31"
     },
     {
-      "url": "https://news.gov.bc.ca/ministries/health",
+      "id": 27,
       "title": "BC Health - Capital Construction Updates",
-      "archive_url": ""
+      "url": "https://news.gov.bc.ca/ministries/health"
     },
     {
-      "url": "https://news.gov.bc.ca/releases/2026MCM0002-000070",
+      "id": 28,
       "title": "Western Canadian Critical Minerals Strategy — YT signatory",
-      "archive_url": ""
+      "url": "https://news.gov.bc.ca/releases/2026MCM0002-000070"
     },
     {
-      "url": "https://news.gov.bc.ca/releases/2026WLRS0023-000465",
+      "id": 29,
       "title": "BC Coastal Marine Strategy — 2026 stewardship tranche",
-      "archive_url": ""
+      "url": "https://news.gov.bc.ca/releases/2026WLRS0023-000465"
     },
     {
-      "url": "https://news.microsoft.com/source/canada/",
+      "id": 30,
       "title": "Microsoft - Canada AI Investment (Apr 7, 2026)",
-      "archive_url": ""
+      "url": "https://news.microsoft.com/source/canada/"
     },
     {
-      "url": "https://news.ontario.ca/en/release/1007034/ontario-investing-64-billion-to-support-postsecondary-sectors-long-term-success-and-sustainability",
+      "id": 31,
       "title": "Ontario - $6.4B Postsecondary Investment",
-      "archive_url": ""
+      "url": "https://news.ontario.ca/en/release/1007034/ontario-investing-64-billion-to-support-postsecondary-sectors-long-term-success-and-sustainability"
     },
     {
-      "url": "https://novascotia.ca/budget/",
+      "id": 32,
       "title": "Nova Scotia 2026 Budget",
-      "archive_url": ""
+      "url": "https://novascotia.ca/budget/"
     },
     {
-      "url": "https://polymarket.com/event/what-price-will-wti-hit-in-june-2026",
+      "id": 33,
       "title": "Polymarket — WTI June 2026 Price Bands",
-      "archive_url": ""
+      "url": "https://polymarket.com/event/what-price-will-wti-hit-in-june-2026",
+      "publisher": "Polymarket",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://retail-insider.com/retail-insider/2026/05/",
+      "id": 34,
       "title": "Retail Insider - Retail/Hospitality Employment (May 2026)",
-      "archive_url": ""
+      "url": "https://retail-insider.com/retail-insider/2026/05/"
     },
     {
-      "url": "https://robinhood.com/us/en/prediction-markets/economics/events/european-central-bank-rate-decision-in-june-jun-11-2026/",
+      "id": 35,
       "title": "Robinhood Prediction Markets — ECB June 11 Decision",
-      "archive_url": ""
+      "url": "https://robinhood.com/us/en/prediction-markets/economics/events/european-central-bank-rate-decision-in-june-jun-11-2026/",
+      "publisher": "Robinhood Prediction Markets",
+      "date": "2026-06-07"
     },
     {
-      "url": "https://thehub.ca/2026/05/12/canadas-112000-jobs-lost-in-private-sector-in-2026-more-pronounced-as-government-cuts-employment-and-hiring-too/",
+      "id": 36,
       "title": "The Hub — 112K Private-Sector Job Losses YTD 2026",
-      "archive_url": ""
+      "url": "https://thehub.ca/2026/05/12/canadas-112000-jobs-lost-in-private-sector-in-2026-more-pronounced-as-government-cuts-employment-and-hiring-too/",
+      "publisher": "The Hub",
+      "date": "2026-05-12"
     },
     {
-      "url": "https://tradingeconomics.com/canada/2-year-note-yield",
+      "id": 37,
       "title": "Trading Economics — Canada 2Y Note Yield",
-      "archive_url": ""
+      "url": "https://tradingeconomics.com/canada/2-year-note-yield",
+      "publisher": "Trading Economics",
+      "date": "2026-06-04"
     },
     {
-      "url": "https://tradingeconomics.com/canada/consumer-confidence",
+      "id": 38,
       "title": "Trading Economics — Consumer Confidence Canada",
-      "archive_url": ""
+      "url": "https://tradingeconomics.com/canada/consumer-confidence",
+      "publisher": "Trading Economics",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://tradingeconomics.com/canada/currency",
+      "id": 39,
       "title": "Trading Economics — Canadian Dollar",
-      "archive_url": ""
+      "url": "https://tradingeconomics.com/canada/currency",
+      "publisher": "Trading Economics",
+      "date": "2026-06-07"
     },
     {
-      "url": "https://tradingeconomics.com/canada/government-bond-yield",
+      "id": 40,
       "title": "Trading Economics — Canada 10Y Bond Yield",
-      "archive_url": ""
+      "url": "https://tradingeconomics.com/canada/government-bond-yield",
+      "publisher": "Trading Economics",
+      "date": "2026-06-04"
     },
     {
-      "url": "https://tradingeconomics.com/canada/stock-market",
+      "id": 41,
       "title": "Trading Economics — TSX",
-      "archive_url": ""
+      "url": "https://tradingeconomics.com/canada/stock-market",
+      "publisher": "Trading Economics",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://tradingeconomics.com/commodity/copper",
+      "id": 42,
       "title": "Trading Economics — Copper",
-      "archive_url": ""
+      "url": "https://tradingeconomics.com/commodity/copper",
+      "publisher": "Trading Economics",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://tradingeconomics.com/commodity/crude-oil",
+      "id": 43,
       "title": "Trading Economics — Crude Oil",
-      "archive_url": ""
+      "url": "https://tradingeconomics.com/commodity/crude-oil",
+      "publisher": "Trading Economics",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://tradingeconomics.com/commodity/gold",
+      "id": 44,
       "title": "Trading Economics — Gold",
-      "archive_url": ""
+      "url": "https://tradingeconomics.com/commodity/gold",
+      "publisher": "Trading Economics",
+      "date": "2026-06-07"
     },
     {
-      "url": "https://waltaaaa.github.io/ai-newsletter/data/commodities.json",
+      "id": 45,
       "title": "The Lagging Indicator — commodities feed (tsx_infrastructure, sprott_uranium, cameco_uranium)",
-      "archive_url": ""
+      "url": "https://waltaaaa.github.io/ai-newsletter/data/commodities.json"
     },
     {
-      "url": "https://waltaaaa.github.io/ai-newsletter/data/projects_all.json",
+      "id": 46,
       "title": "The Lagging Indicator — Construction & Infrastructure Project Database",
-      "archive_url": ""
+      "url": "https://waltaaaa.github.io/ai-newsletter/data/projects_all.json"
     },
     {
-      "url": "https://walterbolduc.github.io/CanMacroStrategicDashboard/",
+      "id": 47,
       "title": "Lagging Indicator - Sector Research Audit",
-      "archive_url": ""
+      "url": "https://walterbolduc.github.io/CanMacroStrategicDashboard/"
     },
     {
-      "url": "https://walterbolduc.github.io/CanMacroStrategicDashboard/data/commodities.json",
+      "id": 48,
       "title": "Lagging Indicator - TSX Infrastructure proxy (commodities.json)",
-      "archive_url": ""
+      "url": "https://walterbolduc.github.io/CanMacroStrategicDashboard/data/commodities.json"
     },
     {
-      "url": "https://walterbolduc.github.io/CanMacroStrategicDashboard/data/projects_all.json",
+      "id": 49,
       "title": "Lagging Indicator - Projects (Residential, Housing, Commercial_Mixed)",
-      "archive_url": ""
+      "url": "https://walterbolduc.github.io/CanMacroStrategicDashboard/data/projects_all.json"
     },
     {
-      "url": "https://wealthnorth.ca/mortgages/housing-market/housing-affordability-canada/",
+      "id": 50,
       "title": "WealthNorth — Canada Housing Affordability 2026",
-      "archive_url": ""
+      "url": "https://wealthnorth.ca/mortgages/housing-market/housing-affordability-canada/",
+      "publisher": "WealthNorth",
+      "date": "2026-06-01"
     },
     {
-      "url": "https://wowa.ca/bank-of-canada-interest-rate",
+      "id": 51,
       "title": "WOWA — Bank of Canada Interest Rate History",
-      "archive_url": ""
+      "url": "https://wowa.ca/bank-of-canada-interest-rate",
+      "publisher": "WOWA",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://www.aljazeera.com/economy/2026/6/2/canada-seeks-usmca-renewal-for-16-years-sector-tariff-discussions",
+      "id": 52,
       "title": "Al Jazeera — Canada Seeks USMCA 16-Year Renewal",
-      "archive_url": ""
+      "url": "https://www.aljazeera.com/economy/2026/6/2/canada-seeks-usmca-renewal-for-16-years-sector-tariff-discussions",
+      "publisher": "Al Jazeera",
+      "date": "2026-06-02"
     },
     {
-      "url": "https://www.axios.com/2026/04/29/trump-trade-tariffs-canada",
+      "id": 53,
       "title": "Axios — Trump Trade Tariffs Canada April 29",
-      "archive_url": ""
+      "url": "https://www.axios.com/2026/04/29/trump-trade-tariffs-canada",
+      "publisher": "Axios",
+      "date": "2026-04-29"
     },
     {
-      "url": "https://www.bankofcanada.ca/2025/08/bank-canada-publishes-2026-schedule-policy-interest-rate-announcements-other-major-publications/",
+      "id": 54,
       "title": "Bank of Canada — 2026 Schedule of Policy Interest Rate Announcements",
-      "archive_url": ""
+      "url": "https://www.bankofcanada.ca/2025/08/bank-canada-publishes-2026-schedule-policy-interest-rate-announcements-other-major-publications/",
+      "publisher": "Bank of Canada",
+      "date": "2025-08-01"
     },
     {
-      "url": "https://www.bankofcanada.ca/2026/04/fad-press-release-2026-04-29/",
+      "id": 55,
       "title": "Bank of Canada — April 29 2026 Rate Decision (FAD Press Release)",
-      "archive_url": ""
+      "url": "https://www.bankofcanada.ca/2026/04/fad-press-release-2026-04-29/",
+      "publisher": "Bank of Canada",
+      "date": "2026-04-29"
     },
     {
-      "url": "https://www.bankofcanada.ca/press/upcoming-events/",
+      "id": 56,
       "title": "Bank of Canada — Upcoming Events",
-      "archive_url": ""
+      "url": "https://www.bankofcanada.ca/press/upcoming-events/",
+      "publisher": "Bank of Canada",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://www.bankofcanada.ca/rates/price-indexes/cpi/",
+      "id": 57,
       "title": "Bank of Canada — CPI Series",
-      "archive_url": ""
+      "url": "https://www.bankofcanada.ca/rates/price-indexes/cpi/",
+      "publisher": "Bank of Canada",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/april-2026",
+      "id": 58,
       "title": "Bank of England — April 2026 MPC Summary and Minutes",
-      "archive_url": ""
+      "url": "https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes/2026/april-2026",
+      "publisher": "Bank of England",
+      "date": "2026-04-30"
     },
     {
-      "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
+      "id": 59,
       "title": "Bank of England — Upcoming MPC Dates",
-      "archive_url": ""
+      "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
+      "publisher": "Bank of England",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://www.bbntimes.com/financial/toronto-stock-exchange-today-s-p-tsx-composite-drops-2-28-to-34-413-as-global-tech-rout-and-jobs-shock-hit-canada-s-markets",
+      "id": 60,
       "title": "BBN Times — TSX June 5 Close (-2.28% to 34,413)",
-      "archive_url": ""
+      "url": "https://www.bbntimes.com/financial/toronto-stock-exchange-today-s-p-tsx-composite-drops-2-28-to-34-413-as-global-tech-rout-and-jobs-shock-hit-canada-s-markets",
+      "publisher": "BBN Times",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://www.blakes.com/insights/spring-economic-update-2026-key-initiatives-for-the-infrastructure-industry/",
+      "id": 61,
       "title": "Blakes — SEU 2026 Infrastructure Measures",
-      "archive_url": ""
+      "url": "https://www.blakes.com/insights/spring-economic-update-2026-key-initiatives-for-the-infrastructure-industry/",
+      "publisher": "Blakes",
+      "date": "2026-04-30"
     },
     {
-      "url": "https://www.blakes.com/insights/us-canada-tariffs-timeline-of-key-dates-and-documents/",
+      "id": 62,
       "title": "Blakes — US-Canada tariffs timeline (auto/steel/aluminum remission extension to 2026-06-30)",
-      "archive_url": ""
+      "url": "https://www.blakes.com/insights/us-canada-tariffs-timeline-of-key-dates-and-documents/"
     },
     {
-      "url": "https://www.bloomberg.com/news/articles/2026-06-05/us-adds-172-000-jobs-in-may-beating-all-economists-estimates",
+      "id": 63,
       "title": "Bloomberg — US May Jobs +172K Beats All Estimates",
-      "archive_url": ""
+      "url": "https://www.bloomberg.com/news/articles/2026-06-05/us-adds-172-000-jobs-in-may-beating-all-economists-estimates",
+      "publisher": "Bloomberg",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://www.bls.gov/news.release/empsit.nr0.htm",
+      "id": 64,
       "title": "U.S. Bureau of Labor Statistics — May 2026 Employment Situation",
-      "archive_url": ""
+      "url": "https://www.bls.gov/news.release/empsit.nr0.htm",
+      "publisher": "U.S. Bureau of Labor Statistics",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://www.bnnbloomberg.ca/business/economics/2026/05/",
+      "id": 65,
       "title": "BNN Bloomberg - Public-Sector Job Losses 2026",
-      "archive_url": ""
+      "url": "https://www.bnnbloomberg.ca/business/economics/2026/05/"
     },
     {
-      "url": "https://www.bnnbloomberg.ca/business/economics/2026/05/29/canada-slips-into-technical-recession-as-economy-stalls-in-q1-statcan/",
+      "id": 66,
       "title": "BNN Bloomberg — Q1 GDP Technical Recession Coverage",
-      "archive_url": ""
+      "url": "https://www.bnnbloomberg.ca/business/economics/2026/05/29/canada-slips-into-technical-recession-as-economy-stalls-in-q1-statcan/",
+      "publisher": "BNN Bloomberg",
+      "date": "2026-05-29"
     },
     {
-      "url": "https://www.canada.ca/en/department-finance/news/2026/04/government-of-canada-releases-2026-spring-economic-update-canada-strong-for-all.html",
+      "id": 67,
       "title": "Department of Finance Canada — Spring Economic Update 2026 release",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/department-finance/news/2026/04/government-of-canada-releases-2026-spring-economic-update-canada-strong-for-all.html",
+      "publisher": "Department of Finance Canada",
+      "date": "2026-04-27"
     },
     {
-      "url": "https://www.canada.ca/en/employment-social-development/news/2026/03/government-of-canada-extends-financial-supports-for-post-secondary-students.html",
+      "id": 68,
       "title": "Canada.ca - Extended Post-Secondary Student Supports",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/employment-social-development/news/2026/03/government-of-canada-extends-financial-supports-for-post-secondary-students.html"
     },
     {
-      "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/06/canada-and-northwest-territories-mark-national-accessability-week-with-upgrades-to-the-prince-of-wales-northern-heritage-centre.html",
+      "id": 69,
       "title": "Federal-NWT Accessibility Infrastructure Announcement",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/06/canada-and-northwest-territories-mark-national-accessability-week-with-upgrades-to-the-prince-of-wales-northern-heritage-centre.html"
     },
     {
-      "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital0.html",
+      "id": 70,
       "title": "Natural Resources Canada — 30 critical minerals partnerships, $12.1B unlocked",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital0.html"
     },
     {
-      "url": "https://www.canada.ca/en/prairies-economic-development/news/2026/02/government-of-canada-launches-market-sounding-study-to-strengthen-growth-at-the-port-of-churchill.html",
+      "id": 71,
       "title": "Port of Churchill Market Sounding Study",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/prairies-economic-development/news/2026/02/government-of-canada-launches-market-sounding-study-to-strengthen-growth-at-the-port-of-churchill.html"
     },
     {
-      "url": "https://www.canada.ca/en/privy-council/news/2026/05/government-of-canada-british-columbia-and-lng-canada-agree-to-enhanced-investment-co-operation.html",
+      "id": 72,
       "title": "Government of Canada — LNG Canada Phase 2 national-interest designation (2026-05-14)",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/privy-council/news/2026/05/government-of-canada-british-columbia-and-lng-canada-agree-to-enhanced-investment-co-operation.html"
     },
     {
-      "url": "https://www.canada.ca/en/transport-canada/news/2026/05/minister-mackinnon-to-make-infrastructure-and-supply-chain-announcement-in-prince-edward-island.html",
+      "id": 73,
       "title": "Federal Transport Infrastructure Announcement — P.E.I.",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/transport-canada/news/2026/05/minister-mackinnon-to-make-infrastructure-and-supply-chain-announcement-in-prince-edward-island.html"
     },
     {
-      "url": "https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending/government-expenditure-plan-main-estimates/2026-27-estimates.html",
+      "id": 74,
       "title": "Treasury Board - 2026-27 Main Estimates",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/treasury-board-secretariat/services/planned-government-spending/government-expenditure-plan-main-estimates/2026-27-estimates.html"
     },
     {
-      "url": "https://www.canadalnggroup.com/natural-gas-prices-weekly-update-jkm-ttf-and-henry-hub-1-june-2026",
+      "id": 75,
       "title": "Canada LNG Group — Henry Hub June 1 Update",
-      "archive_url": ""
+      "url": "https://www.canadalnggroup.com/natural-gas-prices-weekly-update-jkm-ttf-and-henry-hub-1-june-2026",
+      "publisher": "Canada LNG Group",
+      "date": "2026-06-01"
     },
     {
-      "url": "https://www.caoec.ca/news/caoec-releases-2026-drilling-forecast",
+      "id": 76,
       "title": "Canadian Association of Energy Contractors — 2026 Drilling Forecast",
-      "archive_url": ""
+      "url": "https://www.caoec.ca/news/caoec-releases-2026-drilling-forecast"
     },
     {
-      "url": "https://www.cbc.ca/news/business",
+      "id": 77,
       "title": "CBC - Technical Recession Coverage (May 2026)",
-      "archive_url": ""
+      "url": "https://www.cbc.ca/news/business"
     },
     {
-      "url": "https://www.cbc.ca/news/canada/calgary/alberta-regulator-projects-growth-oilsands-production-1.7244744",
+      "id": 78,
       "title": "AER annual oilsands forecast update",
-      "archive_url": ""
+      "url": "https://www.cbc.ca/news/canada/calgary/alberta-regulator-projects-growth-oilsands-production-1.7244744"
     },
     {
-      "url": "https://www.cbc.ca/news/canada/manitoba/sio-silica-churchill-9.7217053",
+      "id": 79,
       "title": "Sio Silica licence decision",
-      "archive_url": ""
+      "url": "https://www.cbc.ca/news/canada/manitoba/sio-silica-churchill-9.7217053"
     },
     {
-      "url": "https://www.cbc.ca/news/canada/montreal/quebec-hospital-projects-doctors-staff-react-9.7138974",
+      "id": 80,
       "title": "CBC - Quebec Hospital Plan 2026-27",
-      "archive_url": ""
+      "url": "https://www.cbc.ca/news/canada/montreal/quebec-hospital-projects-doctors-staff-react-9.7138974"
     },
     {
-      "url": "https://www.cbc.ca/news/canada/north/nunavut-land-use-plan-mining-rush-9.7136841",
+      "id": 81,
       "title": "Nunavut Land Use Plan negotiations",
-      "archive_url": ""
+      "url": "https://www.cbc.ca/news/canada/north/nunavut-land-use-plan-mining-rush-9.7136841"
     },
     {
-      "url": "https://www.cbc.ca/news/world/cusma-usmca-canada-us-mexico-trade-agreement-9.7219102",
+      "id": 82,
       "title": "CBC — CUSMA Renewal Request Coverage",
-      "archive_url": ""
+      "url": "https://www.cbc.ca/news/world/cusma-usmca-canada-us-mexico-trade-agreement-9.7219102",
+      "publisher": "CBC",
+      "date": "2026-06-02"
     },
     {
-      "url": "https://www.claimsjournal.com/news/national/2026/06/05/338010.htm",
+      "id": 83,
       "title": "Claims Journal — US/MX/CA Expected to Miss July USMCA Date",
-      "archive_url": ""
+      "url": "https://www.claimsjournal.com/news/national/2026/06/05/338010.htm",
+      "publisher": "Claims Journal",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html",
+      "id": 84,
       "title": "CME — FedWatch Tool",
-      "archive_url": ""
+      "url": "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html",
+      "publisher": "CME Group",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-april-2026",
+      "id": 85,
       "title": "CMHC — Housing Starts April 2026 release",
-      "archive_url": ""
+      "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/housing-starts-april-2026",
+      "publisher": "CMHC",
+      "date": "2026-05-15"
     },
     {
-      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables",
+      "id": 86,
       "title": "CMHC — Monthly Housing Starts, April 2026 (SAAR 279,317)",
-      "archive_url": ""
+      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables"
     },
     {
-      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/news-releases-reports-calendar",
+      "id": 87,
       "title": "CMHC — Reports Calendar",
-      "archive_url": ""
+      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/news-releases-reports-calendar",
+      "publisher": "CMHC",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://www.cnbc.com/2026/06/01/chinas-factory-activity-beats-forecasts-in-may-private-survey-shows-despite-softer-official-data.html",
+      "id": 88,
       "title": "CNBC — China Factory Activity May 2026 Private Survey",
-      "archive_url": ""
+      "url": "https://www.cnbc.com/2026/06/01/chinas-factory-activity-beats-forecasts-in-may-private-survey-shows-despite-softer-official-data.html",
+      "publisher": "CNBC",
+      "date": "2026-06-01"
     },
     {
-      "url": "https://www.conferenceboard.ca/insights/confidence-continues-its-upward-climb/",
+      "id": 89,
       "title": "Conference Board of Canada — Confidence Climb Commentary",
-      "archive_url": ""
+      "url": "https://www.conferenceboard.ca/insights/confidence-continues-its-upward-climb/",
+      "publisher": "Conference Board of Canada",
+      "date": "2026-05-30"
     },
     {
-      "url": "https://www.cushmanwakefield.com/en/canada/insights/canada-marketbeats",
+      "id": 90,
       "title": "Cushman & Wakefield - Canadian Office MarketBeat Q1 2026",
-      "archive_url": ""
+      "url": "https://www.cushmanwakefield.com/en/canada/insights/canada-marketbeats"
     },
     {
-      "url": "https://www.deeded.ca/blog/is-2026-best-year-housing-affordability-canada",
+      "id": 91,
       "title": "Deeded — Is 2026 the Best Year for Housing Affordability in Canada",
-      "archive_url": ""
+      "url": "https://www.deeded.ca/blog/is-2026-best-year-housing-affordability-canada",
+      "publisher": "Deeded",
+      "date": "2026-06-01"
     },
     {
-      "url": "https://www.desjardins.com/en/savings-investment/economic-studies/canada-real-gdp-29-may-2026.html",
+      "id": 92,
       "title": "Desjardins — Canada GDP Q1 2026 Commentary",
-      "archive_url": ""
+      "url": "https://www.desjardins.com/en/savings-investment/economic-studies/canada-real-gdp-29-may-2026.html",
+      "publisher": "Desjardins",
+      "date": "2026-05-29"
     },
     {
-      "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260430~81b7179e6f.en.html",
+      "id": 93,
       "title": "European Central Bank — April 30 2026 Monetary Policy Decisions",
-      "archive_url": ""
+      "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260430~81b7179e6f.en.html",
+      "publisher": "European Central Bank",
+      "date": "2026-04-30"
     },
     {
-      "url": "https://www.exchangerates.org.uk/news/46138/2026-06-07-us-to-canadian-dollar-forecast-2026-2028-june-survey-sees-usd-cad-easing-from-1-39.html",
+      "id": 94,
       "title": "Exchange Rates UK — USD/CAD June 2026 Survey",
-      "archive_url": ""
+      "url": "https://www.exchangerates.org.uk/news/46138/2026-06-07-us-to-canadian-dollar-forecast-2026-2028-june-survey-sees-usd-cad-easing-from-1-39.html",
+      "publisher": "Exchange Rates UK",
+      "date": "2026-06-07"
     },
     {
-      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "id": 95,
       "title": "Federal Reserve — FOMC Calendar",
-      "archive_url": ""
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "publisher": "Federal Reserve",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260429a.htm",
+      "id": 96,
       "title": "Federal Reserve — April 29 2026 FOMC Statement",
-      "archive_url": ""
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260429a.htm",
+      "publisher": "Federal Reserve",
+      "date": "2026-04-29"
     },
     {
-      "url": "https://www.globalgovernmentforum.com/details-emerge-of-canadian-public-service-job-cuts-as-thousands-receive-layoff-notices/",
+      "id": 97,
       "title": "Global Government Forum - Canadian Public Service Cuts",
-      "archive_url": ""
+      "url": "https://www.globalgovernmentforum.com/details-emerge-of-canadian-public-service-job-cuts-as-thousands-receive-layoff-notices/"
     },
     {
-      "url": "https://www.globenewswire.com/news-release/2026/06/04/3307136/0/en/Arctic-Gateway-Group-and-Aecon-sign-collaboration-agreement-to-support-Port-of-Churchill-infrastructure-advancement-in-Manitoba.html",
+      "id": 98,
       "title": "Port of Churchill engineering milestones",
-      "archive_url": ""
+      "url": "https://www.globenewswire.com/news-release/2026/06/04/3307136/0/en/Arctic-Gateway-Group-and-Aecon-sign-collaboration-agreement-to-support-Port-of-Churchill-infrastructure-advancement-in-Manitoba.html"
     },
     {
-      "url": "https://www.globenewswire.com/news-release/2026/06/05/3307568/0/en/CN-to-Support-BHP-s-Jansen-Potash-Mine-with-Rail-Service-Connecting-Saskatchewan-Production-to-Global-Markets.html",
+      "id": 99,
       "title": "Jansen Stage 1 commissioning",
-      "archive_url": ""
+      "url": "https://www.globenewswire.com/news-release/2026/06/05/3307568/0/en/CN-to-Support-BHP-s-Jansen-Potash-Mine-with-Rail-Service-Connecting-Saskatchewan-Production-to-Global-Markets.html"
     },
     {
-      "url": "https://www.gov.nl.ca/releases/2026/exec/0519n01/",
+      "id": 100,
       "title": "Independent Churchill River Review Committee Report",
-      "archive_url": ""
+      "url": "https://www.gov.nl.ca/releases/2026/exec/0519n01/"
     },
     {
-      "url": "https://www.heygotrade.com/en/news/gold-price-safe-haven-middle-east-tension/",
+      "id": 101,
       "title": "HeyGoTrade — Gold Safe-Haven Middle East Tension",
-      "archive_url": ""
+      "url": "https://www.heygotrade.com/en/news/gold-price-safe-haven-middle-east-tension/",
+      "publisher": "HeyGoTrade",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://www.hiringlab.org/en-ca/2026/06/05/may-2026-labour-force-survey-sigh-of-relief/",
+      "id": 102,
       "title": "Indeed Hiring Lab — May 2026 LFS Commentary",
-      "archive_url": ""
+      "url": "https://www.hiringlab.org/en-ca/2026/06/05/may-2026-labour-force-survey-sigh-of-relief/",
+      "publisher": "Indeed Hiring Lab",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://www.insidelogistics.ca/transportation/prince-rupert-corridor-complete-140455/",
+      "id": 103,
       "title": "Inside Logistics - Prince Rupert Corridor Complete",
-      "archive_url": ""
+      "url": "https://www.insidelogistics.ca/transportation/prince-rupert-corridor-complete-140455/"
     },
     {
-      "url": "https://www.jpmorgan.com/insights/global-research/commodities/gold-prices",
+      "id": 104,
       "title": "JP Morgan — Gold H2 2026 Forecast",
-      "archive_url": ""
+      "url": "https://www.jpmorgan.com/insights/global-research/commodities/gold-prices",
+      "publisher": "JP Morgan",
+      "date": "2026-06-01"
     },
     {
-      "url": "https://www.miningnewsnorth.com/story/2026/06/05/news/yukon-launches-mining-permit-tracker/9709.html",
+      "id": 105,
       "title": "Yukon PermitFlow Launch",
-      "archive_url": ""
+      "url": "https://www.miningnewsnorth.com/story/2026/06/05/news/yukon-launches-mining-permit-tracker/9709.html"
     },
     {
-      "url": "https://www.nationalobserver.com/2026/06/05/news/quebec-health-minister-set-table-bill-protect-teens-energy-drinks",
+      "id": 106,
       "title": "Quebec Teen Energy Drinks Bill",
-      "archive_url": ""
+      "url": "https://www.nationalobserver.com/2026/06/05/news/quebec-health-minister-set-table-bill-protect-teens-energy-drinks"
     },
     {
-      "url": "https://www.nerdwallet.com/ca/p/best/mortgages/current-mortgage-rates",
+      "id": 107,
       "title": "NerdWallet Canada — Mortgage Rates June 5 2026",
-      "archive_url": ""
+      "url": "https://www.nerdwallet.com/ca/p/best/mortgages/current-mortgage-rates",
+      "publisher": "NerdWallet Canada",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://www.opg.com/projects-services/projects/nuclear/smr/darlington-smr/",
+      "id": 108,
       "title": "OPG — Darlington SMR project page (financing detail)",
-      "archive_url": ""
+      "url": "https://www.opg.com/projects-services/projects/nuclear/smr/darlington-smr/"
     },
     {
-      "url": "https://www.osler.com/en/insights/updates/canada-shifts-gears-2026-auto-strategy-manufacturers-evs-trade/",
+      "id": 109,
       "title": "Osler — Canada shifts gears: 2026 auto strategy (Strategic Response Fund)",
-      "archive_url": ""
+      "url": "https://www.osler.com/en/insights/updates/canada-shifts-gears-2026-auto-strategy-manufacturers-evs-trade/"
     },
     {
-      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/03/27/canada-and-nova-scotia-sign-new-agreement-get-major-projects-built",
+      "id": 110,
       "title": "Canada-Nova Scotia Major Projects Agreement",
-      "archive_url": ""
+      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/03/27/canada-and-nova-scotia-sign-new-agreement-get-major-projects-built"
     },
     {
-      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/14/canada-and-manitoba-sign-new-agreement-get-major-projects-built",
+      "id": 111,
       "title": "Canada-Manitoba Major Projects Cooperation Agreement",
-      "archive_url": ""
+      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/14/canada-and-manitoba-sign-new-agreement-get-major-projects-built"
     },
     {
-      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/27/prime-minister-carney-announces-canada-strong-fund-canadas-first",
+      "id": 112,
       "title": "Prime Minister's Office — Canada Strong Fund announcement",
-      "archive_url": ""
+      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/04/27/prime-minister-carney-announces-canada-strong-fund-canadas-first",
+      "publisher": "Prime Minister's Office",
+      "date": "2026-04-27"
     },
     {
-      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/06/02/canada-and-quebec-forge-new-partnership-build-strong-new-local",
+      "id": 113,
       "title": "Canada-Quebec Infrastructure Partnership",
-      "archive_url": ""
+      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/06/02/canada-and-quebec-forge-new-partnership-build-strong-new-local"
     },
     {
-      "url": "https://www.princeedwardisland.ca/en/information/finance-and-affordability/budget-address-2026",
+      "id": 114,
       "title": "P.E.I. 2026 Budget",
-      "archive_url": ""
+      "url": "https://www.princeedwardisland.ca/en/information/finance-and-affordability/budget-address-2026"
     },
     {
-      "url": "https://www.rbc.com/investor-relations/quarterly-results.html",
+      "id": 115,
       "title": "RBC - Q2 2026 Earnings Release",
-      "archive_url": ""
+      "url": "https://www.rbc.com/investor-relations/quarterly-results.html"
     },
     {
-      "url": "https://www.renewcanada.net/ontario-budget-2026-includes-infrastructure-spending-but-few-details/",
+      "id": 116,
       "title": "Ring of Fire All-Season Road Acceleration",
-      "archive_url": ""
+      "url": "https://www.renewcanada.net/ontario-budget-2026-includes-infrastructure-spending-but-few-details/"
     },
     {
-      "url": "https://www.rtands.com/ports/canadian-infrastructure-bank-supports-montreal-port-authority-expansion-with-1-6-billion-loan/",
+      "id": 117,
       "title": "Railway Track & Structures - CIB Backs Montreal Port",
-      "archive_url": ""
+      "url": "https://www.rtands.com/ports/canadian-infrastructure-bank-supports-montreal-port-authority-expansion-with-1-6-billion-loan/"
     },
     {
-      "url": "https://www.scrapmonster.com/news/weekly-metal-price-report/precious-metal-scrap-prices-weekly-market-report-may-29-june-4-2026-2026-6-5/99293",
+      "id": 118,
       "title": "ScrapMonster — Precious Metal Scrap Weekly Report May 29-June 4 2026",
-      "archive_url": ""
+      "url": "https://www.scrapmonster.com/news/weekly-metal-price-report/precious-metal-scrap-prices-weekly-market-report-may-29-june-4-2026-2026-6-5/99293",
+      "publisher": "ScrapMonster",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://www.statcan.gc.ca/en/subjects-start/prices_and_price_indexes/consumer_price_indexes",
+      "id": 119,
       "title": "Statistics Canada — CPI Portal",
-      "archive_url": ""
+      "url": "https://www.statcan.gc.ca/en/subjects-start/prices_and_price_indexes/consumer_price_indexes",
+      "publisher": "Statistics Canada",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://www.td.com/ca/en/about-td/for-investors/investor-relations/financial-information/quarterly-results",
+      "id": 120,
       "title": "TD Bank Group - Q2 2026 Earnings Release",
-      "archive_url": ""
+      "url": "https://www.td.com/ca/en/about-td/for-investors/investor-relations/financial-information/quarterly-results"
     },
     {
-      "url": "https://www.telus.com/en/about/news-and-events",
+      "id": 121,
       "title": "TELUS - Sovereign AI Data Centres (May 2026)",
-      "archive_url": ""
+      "url": "https://www.telus.com/en/about/news-and-events"
     },
     {
-      "url": "https://www.theglobeandmail.com/business/article-canadian-office-vacancy/",
+      "id": 122,
       "title": "Globe and Mail - Canadian Office Vacancy Q1 2026",
-      "archive_url": ""
+      "url": "https://www.theglobeandmail.com/business/article-canadian-office-vacancy/"
     },
     {
-      "url": "https://www.theglobeandmail.com/business/economy/",
+      "id": 123,
       "title": "Globe and Mail - Canada 2026 In Charts (Labour)",
-      "archive_url": ""
+      "url": "https://www.theglobeandmail.com/business/economy/"
     },
     {
-      "url": "https://www.theglobeandmail.com/business/industry-news/article-canadian-auto-production/",
+      "id": 124,
       "title": "Globe and Mail — U.S. 25% auto tariff and Canadian auto production volume",
-      "archive_url": ""
+      "url": "https://www.theglobeandmail.com/business/industry-news/article-canadian-auto-production/"
     },
     {
-      "url": "https://www.travelandtourworld.com/news/article/banff-canmore-housing-staffing/",
+      "id": 125,
       "title": "Travel And Tour World - Banff/Canmore Staffing Crisis",
-      "archive_url": ""
+      "url": "https://www.travelandtourworld.com/news/article/banff-canmore-housing-staffing/"
     },
     {
-      "url": "https://www.world-nuclear-news.org/articles/canadian-smr-project-shortlisted-for-federal-fast-track",
+      "id": 126,
       "title": "World Nuclear News — Canadian SMR project shortlisted for federal fast-track",
-      "archive_url": ""
+      "url": "https://www.world-nuclear-news.org/articles/canadian-smr-project-shortlisted-for-federal-fast-track"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/dai-quo/cal2-eng.htm",
+      "id": 127,
       "title": "Statistics Canada — Daily Release Schedule",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/dai-quo/cal2-eng.htm",
+      "publisher": "Statistics Canada",
+      "date": "2026-06-08"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260423/dq260423b-eng.htm",
+      "id": 128,
       "title": "Statistics Canada — Principal field crop areas, 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260423/dq260423b-eng.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260505/dq260505a-eng.htm",
+      "id": 129,
       "title": "Statistics Canada — Merchandise Trade March 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260505/dq260505a-eng.htm",
+      "publisher": "Statistics Canada",
+      "date": "2026-05-05"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260514/dq260514a-eng.htm",
+      "id": 130,
       "title": "StatCan - Wholesale Trade, March 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260514/dq260514a-eng.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260519/dq260519a-eng.htm",
+      "id": 131,
       "title": "Statistics Canada — Consumer Price Index April 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260519/dq260519a-eng.htm",
+      "publisher": "Statistics Canada",
+      "date": "2026-05-19"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260520/dq260520a-eng.htm",
+      "id": 132,
       "title": "StatCan - Canadian Business Conditions Summer Outlook 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260520/dq260520a-eng.htm"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260529/dq260529a-eng.htm",
+      "id": 133,
       "title": "Statistics Canada — Real GDP Q1 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260529/dq260529a-eng.htm",
+      "publisher": "Statistics Canada",
+      "date": "2026-05-29"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260529/dq260529b-eng.htm",
+      "id": 134,
       "title": "Statistics Canada — GDP by Industry March 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260529/dq260529b-eng.htm",
+      "publisher": "Statistics Canada",
+      "date": "2026-05-29"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260605/dq260605a-eng.htm",
+      "id": 135,
       "title": "Statistics Canada — Labour Force Survey, May 2026",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260605/dq260605a-eng.htm",
+      "publisher": "Statistics Canada",
+      "date": "2026-06-05"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=14100287",
+      "id": 136,
       "title": "StatCan Table 14-10-0287 (LFS)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=14100287"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004",
+      "id": 137,
       "title": "StatCan Table 18-10-0004 (CPI)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=36100222",
+      "id": 138,
       "title": "StatCan Table 36-10-0222 (GDP)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=36100222"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401",
+      "id": 139,
       "title": "Statistics Canada — GDP by industry (Table 36-10-0434), March 2026 print",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402",
+      "id": 140,
       "title": "StatCan - Industry GDP by Industry (March 2026)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"
     },
     {
-      "url": "https://ycharts.com/indicators/canada_arts_entertainment_real_gdp",
+      "id": 141,
       "title": "YCharts - NAICS 71 Real GDP Series",
-      "archive_url": ""
+      "url": "https://ycharts.com/indicators/canada_arts_entertainment_real_gdp"
     }
   ],
   "marketCommentary": "<p><span class=\"lead-sentence\">Canadian markets recorded broad declines in the week ending June 5, 2026</span> — the S&P/TSX Composite fell <strong>2.28%</strong> to <strong>34,413</strong><sup>60</sup>, tracking a US tech-led pullback that took the Nasdaq down <strong>4.18%</strong> and the Dow down <strong>1.35%</strong> on the same session<sup>60</sup>. The Canadian dollar weakened <strong>1.7%</strong> on the week, with USD/CAD reaching an 8-week high of <strong>1.3949</strong> against a Bank of Canada policy rate held at <strong>2.25%</strong><sup>94</sup><sup>55</sup>. The 2s10s yield curve flattened to <strong>58 basis points</strong>, down <strong>12 bps</strong> from the prior edition, with the 10Y at <strong>3.45%</strong><sup>40</sup>.</p><p><span class=\"lead-sentence\">The pipeline's exposure to the week's moves split across rates, energy, and metals</span> — the database tracks <strong>231 active residential projects ($36.27B)</strong> tied to the yield-curve financing channel, plus <strong>35 active oil and gas projects ($56.53B)</strong> and <strong>164 LNG, pipeline, and natural-gas-linked projects ($167.51B)</strong> tied to the <strong>10.7%</strong> weekly drop in WTI to <strong>$92/bbl</strong><sup>43</sup>. Metals-linked projects include <strong>96 gold projects ($54.17B)</strong> and <strong>36 copper projects ($22.05B)</strong> after gold fell <strong>3.6%</strong> to <strong>$4,336.78/oz</strong> and copper fell <strong>6%</strong> over three sessions to <strong>$6.30/lb</strong><sup>44</sup><sup>42</sup>.</p>",

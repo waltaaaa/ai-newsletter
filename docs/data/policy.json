@@ -1,6 +1,56 @@
 {
   "weeks": [
     {
+      "week_of": "2026-06-08",
+      "summary": {
+        "total_items": 2,
+        "by_category": {
+          "capital_investment": 2
+        },
+        "by_province": {
+          "BC": 1
+        },
+        "by_level": {
+          "federal": 1,
+          "provincial": 1
+        },
+        "top_developments": [
+          {
+            "title": "S-212 (45-1) - National Strategy for Children and Youth Act",
+            "source_type": "legislation",
+            "categories": [
+              "capital_investment"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Placed in the Order of Precedence on March 12, 2026 (House of Commons)",
+            "date": "Thu, 12 Mar 2026 08:49:25 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-212"
+          },
+          {
+            "title": "Supporting coastal marine health in B.C. with new stewardship projects",
+            "source_type": "policy_announcement",
+            "categories": [
+              "capital_investment"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": "BC",
+            "level": "provincial",
+            "summary": "More First Nations-led projects further B.C.’s first ever Coastal Marine Strategy",
+            "date": "Fri, 05 Jun 2026 08:00:00 -0700",
+            "source_description": "BC Government News",
+            "url": "https://news.gov.bc.ca/releases/2026WLRS0023-000465"
+          }
+        ]
+      }
+    },
+    {
       "week_of": "2026-05-19",
       "summary": {
         "total_items": 3,
@@ -457,5 +507,5 @@
       }
     }
   ],
-  "last_updated": "2026-05-19T16:46:05.627347+00:00"
+  "last_updated": "2026-06-08T17:47:12.590232+00:00"
 }

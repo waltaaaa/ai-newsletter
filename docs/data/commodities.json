@@ -1,21 +1,174 @@
 {
   "indicators": {
+    "uranium_spot": {
+      "description": "Uranium spot price proxy (Sprott Physical Uranium Trust)",
+      "current": 26.68,
+      "week_ago": 27.18,
+      "month_ago": 27.51,
+      "year_ago": 23.11,
+      "pct_1w": -1.8,
+      "pct_1m": -3.0,
+      "pct_1y": 15.4,
+      "affected_sectors": [
+        "Mining & O&G",
+        "Utilities"
+      ],
+      "affected_provinces": [
+        "SK",
+        "ON",
+        "NB"
+      ],
+      "relevance": "Determines Saskatchewan uranium mine expansion viability and SMR project economics."
+    },
+    "nickel": {
+      "description": "Nickel price proxy",
+      "current": 41.22,
+      "week_ago": 43.52,
+      "month_ago": 33.02,
+      "year_ago": 21.51,
+      "pct_1w": -5.3,
+      "pct_1m": 24.8,
+      "pct_1y": 91.6,
+      "affected_sectors": [
+        "Mining & O&G"
+      ],
+      "affected_provinces": [
+        "ON",
+        "QC",
+        "NL",
+        "MB"
+      ],
+      "relevance": "Affects Ontario and Quebec nickel mine projects and EV battery supply chain."
+    },
+    "iron_ore": {
+      "description": "Iron ore price proxy (Vale SA)",
+      "current": 15.01,
+      "week_ago": 16.3,
+      "month_ago": 16.19,
+      "year_ago": 8.79,
+      "pct_1w": -7.9,
+      "pct_1m": -7.3,
+      "pct_1y": 70.6,
+      "affected_sectors": [
+        "Mining & O&G",
+        "Construction"
+      ],
+      "affected_provinces": [
+        "QC",
+        "NL"
+      ],
+      "relevance": "Vale is the world's largest iron ore producer. Affects steel input costs for infrastructure and manufacturing projects."
+    },
+    "steel": {
+      "description": "Steel price proxy (SLX ETF)",
+      "current": 106.83,
+      "week_ago": 111.63,
+      "month_ago": 106.48,
+      "year_ago": 64.73,
+      "pct_1w": -4.3,
+      "pct_1m": 0.3,
+      "pct_1y": 65.0,
+      "affected_sectors": [
+        "Construction",
+        "Transportation"
+      ],
+      "affected_provinces": [],
+      "relevance": "Major input cost for infrastructure and building construction."
+    },
+    "lumber": {
+      "description": "Lumber futures",
+      "current": 611.0,
+      "week_ago": 587.5,
+      "month_ago": 576.5,
+      "year_ago": 604.0,
+      "pct_1w": 4.0,
+      "pct_1m": 6.0,
+      "pct_1y": 1.2,
+      "affected_sectors": [
+        "Construction",
+        "Real Estate"
+      ],
+      "affected_provinces": [
+        "BC",
+        "QC",
+        "ON"
+      ],
+      "relevance": "Key input for residential construction. BC forestry sector bellwether."
+    },
     "tsx_infrastructure": {
       "description": "Canadian infrastructure companies basket",
-      "current": 56.68,
-      "week_ago": 54.73,
-      "month_ago": 54.31,
-      "year_ago": 43.6,
-      "pct_1w": 3.6,
-      "pct_1m": 4.4,
-      "pct_1y": 30.0,
+      "current": 58.03,
+      "week_ago": 56.71,
+      "month_ago": 54.07,
+      "year_ago": 43.54,
+      "pct_1w": 2.3,
+      "pct_1m": 7.3,
+      "pct_1y": 33.3,
       "affected_sectors": [
         "Utilities",
         "Transportation"
       ],
       "affected_provinces": [],
       "relevance": "Market valuation of infrastructure companies signals investment appetite."
+    },
+    "potash_nutrien": {
+      "description": "Nutrien Ltd (potash/fertilizer)",
+      "current": 94.69,
+      "week_ago": 96.35,
+      "month_ago": 93.29,
+      "year_ago": 79.97,
+      "pct_1w": -1.7,
+      "pct_1m": 1.5,
+      "pct_1y": 18.4,
+      "affected_sectors": [
+        "Mining & O&G",
+        "Agriculture"
+      ],
+      "affected_provinces": [
+        "SK",
+        "AB"
+      ],
+      "relevance": "World's largest potash producer. Saskatchewan economy proxy. Fertilizer prices affect agriculture project economics."
+    },
+    "cameco_uranium": {
+      "description": "Cameco Corp (uranium mining)",
+      "current": 148.96,
+      "week_ago": 155.84,
+      "month_ago": 162.16,
+      "year_ago": 91.42,
+      "pct_1w": -4.4,
+      "pct_1m": -8.1,
+      "pct_1y": 62.9,
+      "affected_sectors": [
+        "Mining & O&G",
+        "Utilities"
+      ],
+      "affected_provinces": [
+        "SK",
+        "ON"
+      ],
+      "relevance": "Largest Canadian uranium producer. Proxy for uranium sector activity and SMR supply chain."
+    },
+    "sprott_uranium": {
+      "description": "Sprott Physical Uranium Trust (spot price proxy)",
+      "current": 26.68,
+      "week_ago": 27.18,
+      "month_ago": 27.51,
+      "year_ago": 23.11,
+      "pct_1w": -1.8,
+      "pct_1m": -3.0,
+      "pct_1y": 15.4,
+      "affected_sectors": [
+        "Mining & O&G",
+        "Utilities"
+      ],
+      "affected_provinces": [
+        "SK",
+        "ON",
+        "NB"
+      ],
+      "relevance": "Closest free proxy for uranium spot price. TSX-listed. Tracks physical uranium holdings."
     }
   },
-  "updated_at": "2026-05-19T15:53:16.485536"
+  "updated_at": "2026-06-08T16:09:05.507330"
 }
