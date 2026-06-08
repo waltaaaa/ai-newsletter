@@ -661,20 +661,59 @@ function _tldrBuildWeeklyDataTable(){
   </div>`;
 }
 
+/* ── Editorial prose (Demo style): bold first-sentence lead-in + em dash, and
+   strip the writer's scattered inline <strong> so only the lead-in is bold.
+   Tag-aware so it works on live prose that has inline <a> citations / <strong>
+   figures in the first sentence (the old [^<] regex bailed on those, leaving most
+   paragraphs un-styled with random inline bold). ── */
+function _editorialProse(html){
+  if(!html) return html;
+  return html.replace(/<p>([\s\S]*?)<\/p>/g,function(m,inner){
+    var s=inner.trim().replace(/<\/?strong>/gi,'');                  // drop scattered inline bold
+    if(/^<span class="(?:tldr-)?lead-sentence"/.test(s)) return '<p>'+s+'</p>'; // data already styled
+    // Find the first sentence-ending . ! ? that is not inside a tag and not a
+    // decimal. A boundary is a period followed by whitespace, a tag (citation),
+    // or end-of-paragraph.
+    var depth=0,idx=-1;
+    for(var i=0;i<s.length;i++){
+      var c=s[i];
+      if(c==='<'){depth++;continue;}
+      if(c==='>'){if(depth>0)depth--;continue;}
+      if(depth>0)continue;
+      if(c==='.'||c==='!'||c==='?'){
+        var prev=s[i-1]||'',next=s[i+1]||'';
+        if(c==='.'&&/[0-9]/.test(prev)&&/[0-9]/.test(next))continue; // decimal e.g. 2.25
+        if(next&&!/\s/.test(next)&&next!=='<')continue;              // end = whitespace, tag, or EOL
+        idx=i;break;
+      }
+    }
+    if(idx<0) return '<p>'+s+'</p>';
+    var lead=s.slice(0,idx).trim();
+    if(lead.replace(/<[^>]*>/g,'').trim().length<12) return '<p>'+s+'</p>';
+    // Keep citation tags that immediately follow the sentence attached to the lead.
+    var after=s.slice(idx+1);
+    var mc=after.match(/^\s*(?:<a\b[^>]*>[\s\S]*?<\/a>\s*)+/);
+    var cites=mc?mc[0].trim():'';
+    var rest=after.slice(mc?mc[0].length:0).replace(/^\s+/,'');
+    var out='<span class="lead-sentence">'+lead+'</span>'+(cites?cites:'')+(rest?' — '+rest:'');
+    return '<p>'+out+'</p>';
+  });
+}
+
 /* ── TL;DR: Weekly Briefing narrative ── */
 function _tldrBuildBriefing(){
   const raw=D.executive_summary||'';
   const sources=D.sources||[];
   let html=bulletsToParas(san(linkFootnotes(raw,sources)));
 
-  // Merge short header paragraphs into the following content paragraph.
-  // Demo format: bold lead-off, then em dash OUTSIDE the bold, then the rest.
+  // Merge a standalone bold header paragraph into the following paragraph as a
+  // lead-in (Demo style: bold lead-off + em dash + body).
   html=html.replace(/<p>\s*<strong>([^<]{3,60})<\/strong>\s*<\/p>\s*<p>/gi,function(m,heading){
-    return '<p><span class="tldr-lead-sentence">'+heading.replace(/&amp;/g,'&')+'</span> \u2014 ';
+    return '<p><span class="lead-sentence">'+heading.replace(/&amp;/g,'&')+'</span> \u2014 ';
   });
-  // For remaining content paragraphs without a lead-sentence, auto-wrap the
-  // first sentence in bold and follow it with an em dash (demo style).
-  html=html.replace(/<p>(?!<span class="tldr-lead-sentence")([^<]{20,}?[.!?])\s/g,function(m,first){return'<p><span class="tldr-lead-sentence">'+first+'</span> \u2014 '});
+  // Apply the editorial lead-in treatment to every remaining paragraph and strip
+  // the writer's scattered inline <strong> so only the lead-in is bold (matches Demo).
+  html=_editorialProse(html);
 
   // Build callout boxes with inline charts from D.insightCharts
   const ic=D.insightCharts||D.insight_charts||[];
@@ -3262,11 +3301,7 @@ async function _renderProvContent(){
   const shNarrative=provData.sectorHighlights||'';
   // Auto-wrap first sentence of each <p> in lead-sentence span with em dash
   function addLeads(htmlStr){
-    return htmlStr.replace(/<p>(?!<span class="lead-sentence)([\s\S]*?[.!?])(<sup>[\s\S]*?<\/sup>)?\s/g,function(m,first,sup){
-      if(first.replace(/&amp;/g,'&').length<25)return m;
-      var afterSup=sup||'';
-      return'<p><span class="lead-sentence">'+first+afterSup+'</span> \u2014 ';
-    });
+    return _editorialProse(htmlStr);  // Demo-style lead-in + strip scattered inline bold (unified)
   }
   const allSrc=provSources.length?provSources:(D&&D.sources||[]);
   html+='<div class="section-block">';
@@ -4271,11 +4306,7 @@ async function _renderIndContent(){
   var pipelineValueDisplay=pipelineValueNum>=1000?'$'+(pipelineValueNum/1000).toFixed(1)+'B':(pipelineValueNum?'$'+fmtNum(pipelineValueNum)+'M':'\u2014');
 
   function addLeads(htmlStr){
-    return htmlStr.replace(/<p>(?!<span class="lead-sentence)([\s\S]*?[.!?])(<sup>[\s\S]*?<\/sup>)?\s/g,function(m,first,sup){
-      if(first.replace(/&amp;/g,'&').length<25)return m;
-      var afterSup=sup||'';
-      return'<p><span class="lead-sentence">'+first+afterSup+'</span> \u2014 ';
-    });
+    return _editorialProse(htmlStr);  // Demo-style lead-in + strip scattered inline bold (unified)
   }
 
   // Pre-fetch timeseries.json so Key Indicators rows can resolve commodity data synchronously
@@ -4918,7 +4949,7 @@ function _buildMktCommentary(fm){
   var summary=(fm.summary||fm.commentary||(D&&(D.marketCommentary||D.market_commentary)))||'';
   if(!summary)return '';
   var h='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Market Commentary</h3><span class="section-meta"></span></div>';
-  h+='<div class="narrative">'+san(summary)+'</div>';
+  h+='<div class="narrative">'+_editorialProse(san(summary))+'</div>';
   // Market callout box — pipeline cross-reference data (project counts + dollar values)
   var calloutData=(fm.callout||(D&&D.marketCommentaryCallout))||null;
   if(calloutData&&calloutData.title&&Array.isArray(calloutData.items)&&calloutData.items.length){
