@@ -1,7 +1,7 @@
 {
-  "exported_at": "2026-06-08T17:47:12.687540+00:00",
+  "exported_at": "2026-06-08T21:15:49.902915+00:00",
   "province_count": 13,
-  "file_count": 29,
+  "file_count": 30,
   "file_list": [
     "briefing_archive.json",
     "briefing_latest.json",
@@ -11,6 +11,7 @@
     "iaac.json",
     "indicators.json",
     "jobs.json",
+    "microscope.json",
     "pipeline_status.json",
     "policy.json",
     "procurement.json",

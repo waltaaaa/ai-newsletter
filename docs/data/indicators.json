@@ -5,7 +5,7 @@
       "indicator_name": "agri_exports",
       "category": "Trade",
       "province": "national",
-      "value": 32098.0,
+      "value": null,
       "period": "2003-01-01",
       "previous_value": null,
       "change": null,
@@ -26,7 +26,9 @@
         }
       },
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 32098.0
     },
     {
       "id": 18679,
@@ -51,7 +53,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19074,
@@ -76,7 +79,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18675,
@@ -101,7 +105,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18769,
@@ -126,7 +131,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19060,
@@ -151,7 +157,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19069,
@@ -176,7 +183,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19068,
@@ -201,14 +209,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18706,
       "indicator_name": "commercial_building_investment",
       "category": "Investment",
       "province": "national",
-      "value": 3215.9,
+      "value": null,
       "period": "2023-10-01",
       "previous_value": 3237.6,
       "change": "-0.7%",
@@ -229,7 +238,9 @@
         }
       },
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 3215.9
     },
     {
       "id": 18709,
@@ -257,14 +268,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19100,
       "indicator_name": "construction_employment",
       "category": "Employment",
       "province": "national",
-      "value": 2008.5,
+      "value": null,
       "period": "2026-05-01",
       "previous_value": 1998.5,
       "change": "+0.5%",
@@ -285,7 +297,9 @@
         }
       },
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 2008.5
     },
     {
       "id": 19065,
@@ -310,7 +324,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19066,
@@ -335,7 +350,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19071,
@@ -360,7 +376,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18940,
@@ -385,7 +402,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18957,
@@ -410,7 +428,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18906,
@@ -435,7 +454,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18858,
@@ -460,7 +480,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18807,
@@ -485,7 +506,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18841,
@@ -510,14 +532,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18889,
       "indicator_name": "cpi",
       "category": "",
       "province": "ON",
-      "value": "+6.8%",
+      "value": null,
       "period": "2026-06-08",
       "previous_value": null,
       "change": null,
@@ -535,7 +558,9 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": "+6.8%"
     },
     {
       "id": 18824,
@@ -560,7 +585,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18875,
@@ -585,7 +611,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18923,
@@ -610,7 +637,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18798,
@@ -635,7 +663,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18767,
@@ -660,7 +689,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19055,
@@ -685,7 +715,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19076,
@@ -710,7 +741,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18943,
@@ -735,7 +767,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18960,
@@ -760,7 +793,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18909,
@@ -785,7 +819,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18861,
@@ -810,7 +845,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18810,
@@ -835,7 +871,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18983,
@@ -860,7 +897,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18844,
@@ -885,7 +923,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18992,
@@ -910,7 +949,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18892,
@@ -935,7 +975,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18827,
@@ -960,7 +1001,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18878,
@@ -985,7 +1027,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18926,
@@ -1010,7 +1053,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18974,
@@ -1035,7 +1079,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18800,
@@ -1060,7 +1105,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19075,
@@ -1085,7 +1131,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19057,
@@ -1110,14 +1157,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18716,
       "indicator_name": "forestry_exports",
       "category": "Trade",
       "province": "national",
-      "value": 4413.0,
+      "value": null,
       "period": "2003-01-01",
       "previous_value": null,
       "change": null,
@@ -1138,7 +1186,9 @@
         }
       },
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 4413.0
     },
     {
       "id": 19056,
@@ -1163,7 +1213,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18949,
@@ -1188,7 +1239,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18966,
@@ -1213,7 +1265,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18915,
@@ -1238,7 +1291,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18867,
@@ -1263,7 +1317,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18816,
@@ -1288,7 +1343,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 14681,
@@ -1307,7 +1363,8 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18850,
@@ -1332,7 +1389,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 14683,
@@ -1351,7 +1409,8 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18898,
@@ -1376,7 +1435,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18833,
@@ -1401,7 +1461,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18884,
@@ -1426,7 +1487,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18932,
@@ -1451,7 +1513,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 14679,
@@ -1470,7 +1533,8 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19010,
@@ -1496,7 +1560,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19002,
@@ -1522,7 +1587,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19006,
@@ -1548,7 +1614,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18999,
@@ -1574,7 +1641,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19009,
@@ -1600,7 +1668,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19004,
@@ -1626,7 +1695,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19008,
@@ -1652,7 +1722,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19000,
@@ -1678,7 +1749,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19012,
@@ -1704,7 +1776,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19001,
@@ -1730,7 +1803,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19005,
@@ -1756,7 +1830,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18749,
@@ -1782,7 +1857,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19011,
@@ -1808,7 +1884,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19003,
@@ -1834,7 +1911,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19007,
@@ -1860,7 +1938,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18998,
@@ -1886,7 +1965,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19081,
@@ -1911,7 +1991,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19077,
@@ -1936,7 +2017,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19078,
@@ -1961,7 +2043,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19079,
@@ -1986,7 +2069,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19080,
@@ -2011,7 +2095,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19082,
@@ -2036,7 +2121,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19061,
@@ -2061,7 +2147,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18951,
@@ -2086,7 +2173,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18968,
@@ -2111,7 +2199,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18917,
@@ -2136,7 +2225,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18869,
@@ -2161,7 +2251,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18818,
@@ -2186,7 +2277,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18852,
@@ -2211,7 +2303,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18900,
@@ -2236,7 +2329,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18835,
@@ -2261,7 +2355,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16179,
@@ -2280,7 +2375,8 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18934,
@@ -2305,7 +2401,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18802,
@@ -2330,7 +2427,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19107,
@@ -2358,7 +2456,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19106,
@@ -2386,7 +2485,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19105,
@@ -2414,7 +2514,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19090,
@@ -2439,7 +2540,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19089,
@@ -2464,14 +2566,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18705,
       "indicator_name": "industrial_building_investment",
       "category": "Investment",
       "province": "national",
-      "value": 1245.9,
+      "value": null,
       "period": "2023-10-01",
       "previous_value": 1234.0,
       "change": "+1.0%",
@@ -2492,7 +2595,9 @@
         }
       },
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 1245.9
     },
     {
       "id": 19013,
@@ -2518,7 +2623,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19015,
@@ -2544,7 +2650,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19017,
@@ -2570,7 +2677,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19019,
@@ -2596,7 +2704,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19021,
@@ -2622,7 +2731,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19023,
@@ -2648,7 +2758,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19025,
@@ -2674,7 +2785,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19027,
@@ -2700,7 +2812,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19029,
@@ -2726,7 +2839,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19031,
@@ -2752,7 +2866,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19033,
@@ -2778,7 +2893,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19035,
@@ -2804,7 +2920,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19037,
@@ -2830,7 +2947,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19039,
@@ -2856,7 +2974,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19041,
@@ -2882,7 +3001,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19043,
@@ -2908,7 +3028,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19045,
@@ -2934,7 +3055,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19047,
@@ -2960,7 +3082,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19049,
@@ -2986,7 +3109,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19051,
@@ -3012,7 +3136,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19014,
@@ -3038,7 +3163,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19016,
@@ -3064,7 +3190,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19018,
@@ -3090,7 +3217,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19020,
@@ -3116,7 +3244,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19022,
@@ -3142,7 +3271,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19024,
@@ -3168,7 +3298,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19026,
@@ -3194,7 +3325,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19028,
@@ -3220,7 +3352,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19030,
@@ -3246,7 +3379,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19032,
@@ -3272,7 +3406,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19034,
@@ -3298,7 +3433,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19036,
@@ -3324,7 +3460,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19038,
@@ -3350,7 +3487,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19040,
@@ -3376,7 +3514,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19042,
@@ -3402,7 +3541,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19044,
@@ -3428,7 +3568,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19046,
@@ -3454,7 +3595,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19048,
@@ -3480,7 +3622,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19050,
@@ -3506,7 +3649,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19052,
@@ -3532,14 +3676,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18707,
       "indicator_name": "institutional_building_investment",
       "category": "Investment",
       "province": "national",
-      "value": 1563.3,
+      "value": null,
       "period": "2023-10-01",
       "previous_value": 1553.1,
       "change": "+0.7%",
@@ -3560,7 +3705,9 @@
         }
       },
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 1563.3
     },
     {
       "id": 19083,
@@ -3585,7 +3732,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19087,
@@ -3610,7 +3758,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19088,
@@ -3635,14 +3784,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 4936,
       "indicator_name": "lumber",
       "category": "",
       "province": "national",
-      "value": 339.0,
+      "value": null,
       "period": "2023-05-12",
       "previous_value": null,
       "change": null,
@@ -3654,7 +3804,9 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 339.0
     },
     {
       "id": 18710,
@@ -3682,7 +3834,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19101,
@@ -3710,14 +3863,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18715,
       "indicator_name": "mineral_exports",
       "category": "Trade",
       "province": "national",
-      "value": 100.0,
+      "value": null,
       "period": "2003-01-01",
       "previous_value": null,
       "change": null,
@@ -3738,7 +3892,9 @@
         }
       },
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 100.0
     },
     {
       "id": 19099,
@@ -3766,7 +3922,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19054,
@@ -3791,7 +3948,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19059,
@@ -3816,7 +3974,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19108,
@@ -3844,7 +4003,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19084,
@@ -3869,7 +4029,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18768,
@@ -3894,14 +4055,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18704,
       "indicator_name": "non_residential_building_investment",
       "category": "Investment",
       "province": "national",
-      "value": 6025.1,
+      "value": null,
       "period": "2023-10-01",
       "previous_value": 6024.7,
       "change": "+0.0%",
@@ -3922,7 +4084,9 @@
         }
       },
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 6025.1
     },
     {
       "id": 16390,
@@ -3941,7 +4105,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16330,
@@ -3960,7 +4125,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16410,
@@ -3979,7 +4145,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16450,
@@ -3998,7 +4165,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16490,
@@ -4017,7 +4185,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16510,
@@ -4036,7 +4205,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16370,
@@ -4055,7 +4225,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16350,
@@ -4074,7 +4245,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16430,
@@ -4093,7 +4265,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16470,
@@ -4112,7 +4285,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16310,
@@ -4131,7 +4305,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16250,
@@ -4150,7 +4325,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16290,
@@ -4169,7 +4345,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16270,
@@ -4188,7 +4365,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 10874,
@@ -4207,7 +4385,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19064,
@@ -4232,7 +4411,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18946,
@@ -4257,7 +4437,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18963,
@@ -4282,7 +4463,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18912,
@@ -4307,7 +4489,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18864,
@@ -4332,7 +4515,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18813,
@@ -4357,7 +4541,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18986,
@@ -4382,7 +4567,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18847,
@@ -4407,7 +4593,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18995,
@@ -4432,7 +4619,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18895,
@@ -4457,7 +4645,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18830,
@@ -4482,7 +4671,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18881,
@@ -4507,7 +4697,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18929,
@@ -4532,7 +4723,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18977,
@@ -4557,7 +4749,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18801,
@@ -4582,7 +4775,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19063,
@@ -4607,7 +4801,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 10868,
@@ -4626,7 +4821,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16770,
@@ -4645,7 +4841,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16761,
@@ -4664,7 +4861,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16566,
@@ -4683,7 +4881,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16692,
@@ -4702,7 +4901,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16622,
@@ -4721,7 +4921,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17761,
@@ -4740,7 +4941,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17702,
@@ -4759,7 +4961,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17712,
@@ -4778,7 +4981,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17722,
@@ -4797,7 +5001,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17752,
@@ -4816,7 +5021,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16580,
@@ -4835,7 +5041,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16706,
@@ -4854,7 +5061,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16552,
@@ -4873,7 +5081,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16678,
@@ -4892,7 +5101,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16538,
@@ -4911,7 +5121,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16664,
@@ -4930,7 +5141,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16636,
@@ -4949,7 +5161,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17633,
@@ -4968,7 +5181,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16594,
@@ -4987,7 +5201,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16720,
@@ -5006,7 +5221,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17616,
@@ -5025,7 +5241,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17624,
@@ -5044,7 +5261,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17692,
@@ -5063,7 +5281,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18308,
@@ -5082,7 +5301,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17608,
@@ -5101,7 +5321,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16608,
@@ -5120,7 +5341,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17742,
@@ -5139,7 +5361,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16524,
@@ -5158,7 +5381,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16650,
@@ -5177,7 +5401,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17674,
@@ -5196,7 +5421,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17732,
@@ -5215,7 +5441,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17682,
@@ -5234,7 +5461,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 17666,
@@ -5253,7 +5481,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18803,
@@ -5278,14 +5507,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18703,
       "indicator_name": "residential_building_investment",
       "category": "Investment",
       "province": "national",
-      "value": 13388.1,
+      "value": null,
       "period": "2023-10-01",
       "previous_value": 12885.3,
       "change": "+3.9%",
@@ -5306,14 +5536,16 @@
         }
       },
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 13388.1
     },
     {
       "id": 16218,
       "indicator_name": "rice",
       "category": "",
       "province": "national",
-      "value": 1109.0,
+      "value": null,
       "period": "2026-03-30",
       "previous_value": null,
       "change": null,
@@ -5325,7 +5557,9 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 1109.0
     },
     {
       "id": 19062,
@@ -5350,7 +5584,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19073,
@@ -5375,7 +5610,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19072,
@@ -5400,7 +5636,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19067,
@@ -5425,7 +5662,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19053,
@@ -5450,7 +5688,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19070,
@@ -5475,7 +5714,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19086,
@@ -5500,7 +5740,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18708,
@@ -5528,7 +5769,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 10852,
@@ -5547,7 +5789,8 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18937,
@@ -5572,7 +5815,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18954,
@@ -5597,7 +5841,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18903,
@@ -5622,7 +5867,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18855,
@@ -5647,7 +5893,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18804,
@@ -5672,7 +5919,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18980,
@@ -5697,7 +5945,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18838,
@@ -5722,7 +5971,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18989,
@@ -5747,7 +5997,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18886,
@@ -5772,7 +6023,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18821,
@@ -5797,7 +6049,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18872,
@@ -5822,7 +6075,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18920,
@@ -5847,7 +6101,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18971,
@@ -5872,7 +6127,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18799,
@@ -5897,7 +6153,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18771,
@@ -5922,7 +6179,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19058,
@@ -5947,7 +6205,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 14726,
@@ -5966,7 +6225,8 @@
       "backfilled": 0,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 18778,
@@ -5991,7 +6251,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 16934,
@@ -6016,14 +6277,15 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 10870,
       "indicator_name": "wti_oil",
       "category": "",
       "province": "national",
-      "value": 74.66,
+      "value": null,
       "period": "2026-03-04",
       "previous_value": null,
       "change": null,
@@ -6035,7 +6297,9 @@
       "backfilled": 1,
       "metadata": {},
       "_rn": 1,
-      "validation_status": "under_review"
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 74.66
     },
     {
       "id": 18797,
@@ -6060,7 +6324,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     },
     {
       "id": 19085,
@@ -6085,7 +6350,8 @@
         }
       },
       "_rn": 1,
-      "validation_status": "passed"
+      "validation_status": "passed",
+      "_stale": false
     }
   ],
   "history": [
@@ -116251,7 +116517,7 @@
     ]
   },
   "validation": {
-    "failed_count": 20,
+    "failed_count": 21,
     "failed_indicators": [
       {
         "indicator": "agri_exports",
@@ -116268,6 +116534,10 @@
       {
         "indicator": "copper",
         "province": "global"
+      },
+      {
+        "indicator": "cpi",
+        "province": "Ontario"
       },
       {
         "indicator": "cpi_national",
