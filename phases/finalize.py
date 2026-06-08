@@ -5,6 +5,117 @@ import pytz
 from datetime import date, datetime, timedelta
 
 
+def _sync_weekly_briefings(conn, final_payload: dict) -> None:
+    """M-2 — keep `weekly_briefings` table in lock-step with on-disk briefings.
+
+    Per audit: `weekly_briefings.week_of` last updated 2026-03-30 but on-disk
+    briefings exist through 2026-05-19. The dashboard pointer
+    (`dashboard_state.newsletter_latest`) is updated; the weekly_briefings
+    archive is not. Anything downstream that reads "most recent briefing" from
+    the table (cohort comparisons, sector_trends WoW deltas) sees stale data.
+
+    This function upserts a row keyed on week_of using INSERT OR REPLACE. The
+    full briefing JSON is stored in a `briefing_json` TEXT column (added via
+    ALTER TABLE if missing — defensive). Idempotent.
+
+    Schema (see migrations/002_weekly_briefings_schema.sql):
+        weekly_briefings(
+            id INTEGER PK,
+            week_of TEXT UNIQUE NOT NULL,
+            headline TEXT,
+            edition TEXT,
+            briefing_json TEXT,
+            generated_at TEXT,
+            ... (legacy columns kept for backward compat)
+        )
+    """
+    try:
+        # Defensive: ensure the table exists (db.py creates it on init_db, but
+        # this lets the function work even if called from a script that didn't
+        # init the full schema).
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS weekly_briefings (
+                id           INTEGER PRIMARY KEY AUTOINCREMENT,
+                week_of      TEXT NOT NULL,
+                headline     TEXT DEFAULT '',
+                sections     TEXT DEFAULT '{}',
+                word_count   INTEGER DEFAULT 0,
+                generated_at TEXT DEFAULT '',
+                pdf_url      TEXT DEFAULT '',
+                docx_url     TEXT DEFAULT ''
+            )
+        """)
+
+        # Defensive: add new columns if missing (ALTER TABLE ADD COLUMN is
+        # idempotent only via try/except in SQLite).
+        existing_cols = {row[1] for row in conn.execute("PRAGMA table_info(weekly_briefings)").fetchall()}
+        if 'briefing_json' not in existing_cols:
+            try:
+                conn.execute("ALTER TABLE weekly_briefings ADD COLUMN briefing_json TEXT DEFAULT ''")
+            except Exception:
+                pass
+        if 'edition' not in existing_cols:
+            try:
+                conn.execute("ALTER TABLE weekly_briefings ADD COLUMN edition TEXT DEFAULT ''")
+            except Exception:
+                pass
+        # week_of unique index so INSERT OR REPLACE works as upsert
+        try:
+            conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_weekly_briefings_week_of ON weekly_briefings(week_of)")
+        except Exception:
+            pass
+
+        week_of = (final_payload.get('week_of') or final_payload.get('updated_at')
+                   or date.today().isoformat())
+        headline = final_payload.get('headline', '') or ''
+        edition = final_payload.get('edition', '') or ''
+        generated_at = (final_payload.get('generated_at')
+                        or datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'))
+        try:
+            briefing_json = json.dumps(final_payload, ensure_ascii=False)
+        except (TypeError, ValueError) as e:
+            print(f"  [FINALIZE] weekly_briefings JSON serialize failed: {e}")
+            return
+
+        sections = final_payload.get('sections', {}) or {}
+        try:
+            sections_json = json.dumps(sections, ensure_ascii=False)
+        except (TypeError, ValueError):
+            sections_json = '{}'
+
+        word_count = 0
+        try:
+            exec_summary = final_payload.get('executive_summary', '') or ''
+            word_count = len(exec_summary.split())
+        except Exception:
+            pass
+
+        # INSERT OR REPLACE keyed on week_of (idempotent upsert)
+        with conn:
+            conn.execute(
+                """INSERT INTO weekly_briefings
+                       (week_of, headline, edition, sections, word_count,
+                        generated_at, briefing_json)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)
+                   ON CONFLICT(week_of) DO UPDATE SET
+                       headline      = excluded.headline,
+                       edition       = excluded.edition,
+                       sections      = excluded.sections,
+                       word_count    = excluded.word_count,
+                       generated_at  = excluded.generated_at,
+                       briefing_json = excluded.briefing_json
+                """,
+                (week_of, headline, edition, sections_json, word_count,
+                 generated_at, briefing_json),
+            )
+        print(f"  [FINALIZE] weekly_briefings synced for week_of={week_of}")
+    except Exception as e:
+        # Non-critical — the on-disk briefing is still produced; this is just
+        # an archive sync.
+        print(f"  [FINALIZE] weekly_briefings sync failed (non-critical): "
+              f"{type(e).__name__}: {e}")
+
+
 def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate: str):
     """
     Append one data point per tracked variable to the timeseries table in SQLite.
@@ -117,6 +228,49 @@ def run(conn, context, logger):
         all_verified_sources = context.get("all_verified_sources",
                                             final_payload.get("_all_verified_sources",
                                             final_payload.get("sources", [])))
+
+        # M-4 — apply confidence decay BEFORE the export. Per audit, 2,398
+        # projects (31%) have not been re-seen in 30+ days but no project in
+        # the DB has is_stale=1 or needs_review=1. confidence_decay.py exists
+        # but was never wired into any phase.
+        try:
+            from confidence_decay import apply_confidence_decay
+            decayed = apply_confidence_decay(conn) or {}
+            print(f"  [DECAY] {decayed.get('decayed', 0)} projects decayed, "
+                  f"{decayed.get('stale', 0)} flagged stale, "
+                  f"{decayed.get('needs_review', 0)} need review")
+            logger.log_metric("decay", "decayed_count", decayed.get('decayed', 0))
+            logger.log_metric("decay", "stale_count",   decayed.get('stale', 0))
+            logger.log_metric("decay", "review_count",  decayed.get('needs_review', 0))
+        except Exception as e:
+            print(f"  [DECAY] Decay step failed (non-critical): {e}")
+            try:
+                logger.log_error("confidence_decay", e)
+            except Exception:
+                pass
+
+        # M-3 — every weekly run, ensure Under Construction projects carry
+        # an alert. The existing monthly check (project_alert_tracker.is_
+        # first_week_of_month gate) only fires on day 1-7 of the month —
+        # this priority sweep runs unconditionally because UC milestones
+        # don't wait for the calendar.
+        try:
+            from project_alert_tracker import prioritize_alerts
+            alert_stats = prioritize_alerts(conn) or {}
+            logger.log_metric("alerts", "under_constr_total",
+                              alert_stats.get("under_constr_total", 0))
+            logger.log_metric("alerts", "under_constr_with_alerts",
+                              alert_stats.get("under_constr_with_alerts", 0))
+            logger.log_metric("alerts", "alerts_created",
+                              alert_stats.get("alerts_created", 0))
+            logger.log_metric("alerts", "alerts_reactivated",
+                              alert_stats.get("alerts_reactivated", 0))
+        except Exception as e:
+            print(f"  [ALERTS] prioritize_alerts failed (non-critical): {e}")
+            try:
+                logger.log_error("prioritize_alerts", e)
+            except Exception:
+                pass
 
         # StatCan indicators snapshot
         try:
@@ -250,6 +404,15 @@ def run(conn, context, logger):
 
             save_dashboard_state(conn, 'newsletter_latest', final_payload)
             save_dashboard_state(conn, f'newsletter_{dated_id}', final_payload)
+
+            # M-2 — sync weekly_briefings archive table. Pointer-only
+            # (newsletter_latest) wasn't enough: the table fell 3+ weeks behind
+            # the on-disk briefings.
+            try:
+                _sync_weekly_briefings(conn, final_payload)
+            except Exception as _e:
+                print(f"  [FINALIZE] weekly_briefings sync raised: {_e}")
+
             if final_payload.get('_analysis_incomplete'):
                 print("[WARN] Dashboard updated with INCOMPLETE analysis — Claude calls failed.")
             else:

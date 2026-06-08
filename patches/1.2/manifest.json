@@ -1,0 +1,42 @@
+{
+  "patch_version": "1.2",
+  "name": "audit fixes — discovery boundary hardening + monitoring gap closures",
+  "applied_at": "",
+  "depends_on": [],
+  "files_modified": [
+    "backend/project_sync.py",
+    "backend/project_schema.py",
+    "backend/phases/finalize.py",
+    "backend/project_alert_tracker.py",
+    "backend/rss_monitor.py",
+    "backend/update_dashboard.py",
+    "backend/semantic_article_dedup.py",
+    "backend/service_health.py"
+  ],
+  "files_added": [
+    "backend/rss_feed_health.py",
+    "backend/patches/README.md",
+    "backend/patches/apply_patch.py",
+    "backend/patches/PATCH_TEMPLATE/PATCH_NOTES.md.tmpl",
+    "backend/patches/PATCH_TEMPLATE/manifest.json.tmpl",
+    "backend/patches/PATCH_TEMPLATE/rollback.md.tmpl",
+    "backend/patches/1.2/PATCH_NOTES.md",
+    "backend/patches/1.2/manifest.json",
+    "backend/patches/1.2/rollback.md",
+    "backend/patches/1.2/migrations/001_backfill_status_enum.sql",
+    "backend/patches/1.2/migrations/002_weekly_briefings_schema.sql",
+    "backend/patches/1.2/migrations/003_alerts_health.sql",
+    "backend/patches/1.2/migrations/004_rss_feed_health.sql",
+    "backend/patches/1.2/migrations/005_service_health_history.sql"
+  ],
+  "migrations": [
+    "001_backfill_status_enum.sql",
+    "002_weekly_briefings_schema.sql",
+    "003_alerts_health.sql",
+    "004_rss_feed_health.sql",
+    "005_service_health_history.sql"
+  ],
+  "rollback_commit": "72beb2b7930a7cdd75810b05cf70fc1dd5d49375",
+  "audit_refs": ["D-2", "D-4", "M-2", "M-3", "M-4", "M-5", "M-7", "M-8", "M-9"],
+  "tests": []
+}

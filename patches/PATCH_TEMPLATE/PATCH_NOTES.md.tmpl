@@ -1,0 +1,67 @@
+# Patch X.Y — <short title>
+
+**Status:** Drafted | Applied | Rolled back
+**Branch:** `patch-X.Y`
+**Author:** <name or agent ID>
+**Date drafted:** YYYY-MM-DD
+**Audit references:** D-?, M-?, E-?
+
+---
+
+## Summary
+
+One paragraph: what this patch fixes and why.
+
+## Why (audit linkage)
+
+Per `PIPELINE_AUDIT.md`:
+
+- **<audit ref>** — <one-line problem statement> → addressed by **Fix N**.
+- **<audit ref>** — <one-line problem statement> → addressed by **Fix N**.
+
+## What changed
+
+### Fix 1 — <short label> (audit: <ref>)
+
+- File(s): `backend/<path>`
+- Change: <2-3 sentences>
+- Commit: `<sha>`
+
+### Fix 2 — <short label> (audit: <ref>)
+
+- ...
+
+## Migrations to apply
+
+Run these against `backend/dashboard.db` after merging the patch. **The
+pipeline does not run them automatically.**
+
+```bash
+sqlite3 backend/dashboard.db < backend/patches/X.Y/migrations/001_*.sql
+sqlite3 backend/dashboard.db < backend/patches/X.Y/migrations/002_*.sql
+```
+
+Each `.sql` is annotated with the failure mode it addresses.
+
+## Verification
+
+After applying:
+
+- [ ] `python -m py_compile backend/<each touched file>` exits 0
+- [ ] <Fix 1 verification — e.g. "log shows new `[UPSERT]` rejection breakdown">
+- [ ] <Fix 2 verification>
+
+## Rollback
+
+See `rollback.md` in this folder.
+
+Code revert is `git revert -m 1 <merge-sha>`. Data-side rollback per fix is
+spelled out in `rollback.md`.
+
+## Open follow-ups
+
+Things this patch deliberately left undone — typically because they require
+work beyond a single patch, are blocked on external input, or were de-scoped
+to keep the change small.
+
+- **<follow-up>** — why it was deferred and where the TODO marker lives.

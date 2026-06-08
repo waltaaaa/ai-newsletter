@@ -735,6 +735,30 @@ def fetch_all_feeds(
     # Persist feed health to DB for monitoring
     _persist_feed_health(feed_results)
 
+    # M-7: also persist into the normalized rss_feed_health table so the
+    # dashboard ops page can SELECT dead/dormant candidates rather than
+    # parse the dashboard_state JSON blob.
+    try:
+        from db import get_db
+        import rss_feed_health as _feed_health
+        _conn = get_db()
+        try:
+            for fid, result in feed_results.items():
+                meta = feeds.get(fid, {})
+                feed_url = meta.get('url', '')
+                if not feed_url:
+                    continue
+                items_count = int(result.get('items', 0) or 0)
+                # We don't track HTTP status in feed_results today — _fetch_one
+                # returns [] on any exception. status=0 == "unknown". Future
+                # patch can wire the real status code through.
+                status = 200 if items_count > 0 else 0
+                _feed_health.record_fetch(_conn, feed_url, status, items_count)
+        finally:
+            _conn.close()
+    except Exception:
+        pass  # M-7 telemetry is non-critical
+
     # Record documents for fetch tracking
     try:
         from db import get_db, insert_document

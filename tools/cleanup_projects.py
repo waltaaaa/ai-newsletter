@@ -257,6 +257,142 @@ def pick_keeper(group):
     return max(group, key=score)
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Pollution sweep (D-1, D-14)
+# ──────────────────────────────────────────────────────────────────────────────
+
+# These constants intentionally mirror the gate in backend/db.py
+# (_is_non_project_name). Keep them in sync if you change one.
+_DATE_NAME_RE = re.compile(
+    r'^\s*(?:January|February|March|April|May|June|July|August|September|October|November|December|'
+    r'Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\s+\d{1,2},?\s+\d{4}\s*$',
+    re.IGNORECASE
+)
+_ISO_DATE_RE = re.compile(r'^\s*\d{4}-\d{2}-\d{2}\s*$')
+
+_NAV_ITEM_NAMES = {
+    'open data', 'press room', 'sign-up to discover', 'instagram',
+    'subscribe for updates', 'find a document', 'onboarding', 'accessibility',
+    'metrolinx newsletter', 'staff portal', 'body-worn camera program',
+    'travel & hospitality expenses', 'latest stories', 'sign-up for updates',
+    'manage your experience', 'subscription configuration',
+    'region and project preferences', 'detailed expense report',
+    'contact us', 'about us', 'about', 'home', 'sitemap', 'privacy',
+    'privacy policy', 'terms of use', 'terms and conditions', 'careers',
+    'jobs', 'newsletter', 'news', 'news releases', 'media', 'media room',
+    'media centre', 'media center', 'login', 'log in', 'sign in', 'sign up',
+    'register', 'subscribe', 'unsubscribe', 'search', 'menu', 'help',
+    'faq', 'faqs', 'frequently asked questions', 'rss', 'rss feed',
+    'twitter', 'facebook', 'linkedin', 'youtube', 'tiktok',
+    'follow us', 'share', 'social media', 'language selection',
+    'change language', 'français', 'english', 'en français',
+    'projects', 'project', 'document', 'documents', 'resources',
+    'publications', 'reports', 'links', 'related links', 'quick links',
+    'top of page', 'back to top', 'skip to content', 'skip to main content',
+}
+
+_MD_HEADER_PREFIXES = ('#', '**', '- ')
+_MIN_ALPHA_CHARS = 4
+
+
+def _name_is_pollution(name):
+    """Same predicate as backend/db.py:_is_non_project_name. Returns True for junk."""
+    if not name:
+        return True
+    s = name.strip()
+    if not s:
+        return True
+    if _DATE_NAME_RE.match(s):
+        return True
+    if _ISO_DATE_RE.match(s):
+        return True
+    if s.startswith(_MD_HEADER_PREFIXES):
+        return True
+    if s.lower() in _NAV_ITEM_NAMES:
+        return True
+    if s.replace(',', '').replace('.', '').replace(' ', '').isdigit():
+        return True
+    if not any(c.isalnum() for c in s):
+        return True
+    alpha_count = sum(1 for c in s if c.isalpha())
+    if alpha_count < _MIN_ALPHA_CHARS:
+        return True
+    return False
+
+
+def cleanup_pollution(conn, apply=False):
+    """Find and (optionally) delete existing pollution rows in the projects table.
+
+    Pollution = rows whose `name` matches the same structural patterns we now
+    reject at upsert time:
+      - date strings (D-14)
+      - nav-item exact matches (D-1)
+      - markdown header fragments
+      - all-numeric, all-punctuation, < 4 alpha chars
+
+    In dry-run (apply=False), prints what would be deleted but does not modify
+    the DB. In apply=True, deletes rows. THIS FUNCTION IS NOT WIRED INTO ANY
+    PIPELINE PHASE — operator-only.
+
+    Args:
+        conn: sqlite3.Connection to dashboard.db. The caller is responsible
+              for taking a backup before passing apply=True.
+        apply: If False (default), dry-run. If True, actually delete.
+
+    Returns:
+        dict {'matched': N, 'deleted': M, 'samples': [(rowid, name, prov), ...]}
+    """
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(
+        "SELECT rowid, name, province, discovery_source FROM projects"
+    ).fetchall()
+
+    matched = []
+    for r in rows:
+        if _name_is_pollution(r["name"]):
+            matched.append(r)
+
+    print(f"[cleanup_pollution] scanned {len(rows)} rows, {len(matched)} match pollution patterns")
+
+    # Categorize for visibility
+    cat_date, cat_nav, cat_md, cat_short, cat_numeric = 0, 0, 0, 0, 0
+    for r in matched:
+        s = (r["name"] or "").strip()
+        if _DATE_NAME_RE.match(s) or _ISO_DATE_RE.match(s):
+            cat_date += 1
+        elif s.lower() in _NAV_ITEM_NAMES:
+            cat_nav += 1
+        elif s.startswith(_MD_HEADER_PREFIXES):
+            cat_md += 1
+        elif s.replace(',', '').replace('.', '').replace(' ', '').isdigit():
+            cat_numeric += 1
+        else:
+            cat_short += 1
+    print(f"  by category: date={cat_date} nav={cat_nav} md={cat_md} "
+          f"numeric={cat_numeric} short/other={cat_short}")
+
+    # Show up to 30 samples
+    samples = []
+    for r in matched[:30]:
+        samples.append((r["rowid"], (r["name"] or "")[:60], r["province"],
+                        r["discovery_source"]))
+        print(f"  rowid={r['rowid']:<6} prov={r['province']:<5} "
+              f"src={(r['discovery_source'] or '')[:20]:<20} name={(r['name'] or '')[:60]!r}")
+
+    if not apply:
+        print(f"\n(DRY-RUN — would delete {len(matched)} rows. "
+              "Pass apply=True to commit.)")
+        return {"matched": len(matched), "deleted": 0, "samples": samples}
+
+    deleted = 0
+    for r in matched:
+        conn.execute("DELETE FROM projects WHERE rowid=?", (r["rowid"],))
+        deleted += 1
+    conn.commit()
+    print(f"[cleanup_pollution] deleted {deleted} pollution rows")
+    return {"matched": len(matched), "deleted": deleted, "samples": samples}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true",

@@ -47,6 +47,8 @@ class PipelineRunLogger:
         self._started_at = None
         self._steps_completed = []
         self._errors = []
+        # M-1: severity-aware error buckets. Only _errors_critical demotes the run.
+        self._errors_critical = []
         self._discovery = {
             "articles_found": 0,
             "projects_added": 0,
@@ -81,6 +83,7 @@ class PipelineRunLogger:
         self._started_at = datetime.utcnow()
         self._steps_completed = []
         self._errors = []
+        self._errors_critical = []
         self._discovery = {
             "articles_found": 0,
             "projects_added": 0,
@@ -122,7 +125,9 @@ class PipelineRunLogger:
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Context manager exit — guarantees finalize() is called."""
         if exc_type is not None:
-            self.log_error("pipeline", exc_val or Exception("unknown"), recovered=False)
+            # Uncaught exception escaped the with-block → pipeline-halting
+            self.log_error("pipeline", exc_val or Exception("unknown"),
+                           recovered=False, severity="critical")
             self.finalize("error")
         elif not self._run_id:
             pass  # start() failed, nothing to finalize
@@ -149,26 +154,40 @@ class PipelineRunLogger:
             except Exception as e:
                 logger.warning(f"Failed to log step {step_name}: {e}")
 
-    def log_error(self, step, exception, recovered=True):
+    def log_error(self, step, exception, recovered=True, severity="warn"):
         """Record an error that occurred during a step.
 
         Args:
             step: Pipeline step name where the error occurred.
             exception: The exception instance.
             recovered: Whether the pipeline recovered and continued.
+            severity: One of "info", "warn", "critical". Only "critical" demotes
+                a run to "partial" at finalize time. "warn" results in
+                "degraded" (M-1). Defaults to "warn" to preserve old behavior
+                of getting visibility without blocking.
         """
+        if severity not in ("info", "warn", "critical"):
+            logger.warning(f"log_error: unknown severity {severity!r}; treating as 'warn'")
+            severity = "warn"
         error_entry = {
             "step": step,
             "error_type": type(exception).__name__,
             "message": str(exception)[:500],
             "recovered": recovered,
+            "severity": severity,
             "timestamp": datetime.utcnow().isoformat(),
         }
-        self._errors.append(error_entry)
+        if severity == "critical":
+            self._errors_critical.append(error_entry)
+        else:
+            self._errors.append(error_entry)
         if self._active and self._run_id is not None:
             try:
+                # Persist both buckets via the existing 'errors' column.
+                # Critical first so a reader sees blockers up top.
+                combined = self._errors_critical + self._errors
                 update_pipeline_run(self._conn, self._run_id, {
-                    "errors": json.dumps(self._errors),
+                    "errors": json.dumps(combined),
                 })
             except Exception as e:
                 logger.warning(f"Failed to log error for {step}: {e}")
@@ -229,7 +248,7 @@ class PipelineRunLogger:
         """Finalize the run log with completion data.
 
         Args:
-            status: "success", "error", or "partial"
+            status: "success", "error", "partial", "degraded", or "crashed".
         """
         completed_at = datetime.utcnow()
         duration = (
@@ -237,10 +256,16 @@ class PipelineRunLogger:
             if self._started_at else 0
         )
 
-        # If we had errors but some steps completed, mark as partial
-        if status == "success" and self._errors:
+        # M-1: severity-aware demotion.
+        # CRITICAL errors → partial (true pipeline-blockers; conductor died,
+        # validator FAIL, etc.).
+        if status == "success" and self._errors_critical:
             status = "partial"
+        # WARN errors → degraded (scraper 404s, SSL flakes; briefing still ships)
+        if status == "success" and self._errors:
+            status = "degraded"
 
+        total_err = len(self._errors_critical) + len(self._errors)
         if self._active and self._run_id is not None:
             try:
                 update_pipeline_run(self._conn, self._run_id, {
@@ -250,12 +275,16 @@ class PipelineRunLogger:
                 })
                 print(
                     f"  [LOG] Run finalized: {status} ({int(duration)}s, "
-                    f"{len(self._steps_completed)} steps, {len(self._errors)} errors)"
+                    f"{len(self._steps_completed)} steps, "
+                    f"{len(self._errors_critical)} critical / "
+                    f"{len(self._errors)} warn)"
                 )
             except Exception as e:
                 logger.warning(f"Failed to finalize run log: {e}")
         else:
             print(
                 f"  [LOG] Run complete (no SQLite): {status} ({int(duration)}s, "
-                f"{len(self._steps_completed)} steps, {len(self._errors)} errors)"
+                f"{len(self._steps_completed)} steps, "
+                f"{len(self._errors_critical)} critical / "
+                f"{len(self._errors)} warn)"
             )

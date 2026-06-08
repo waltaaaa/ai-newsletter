@@ -322,8 +322,10 @@ def run(conn, context: dict, run_log) -> dict:
 
         if not success:
             print("\n  [WARN] Conductor failed — briefing may be incomplete")
+            # Conductor produces the briefing; its failure means the run cannot
+            # ship a complete edition → critical (M-1).
             run_log.log_error(step_name, Exception("Conductor invocation failed"),
-                              recovered=True)
+                              recovered=True, severity="critical")
 
         # Step 4: Read conductor output
         print("  [Step 4] Reading conductor output...")
@@ -344,5 +346,6 @@ def run(conn, context: dict, run_log) -> dict:
         import traceback
         print(f"\n[ERROR] Conductor phase failed: {e}")
         traceback.print_exc()
-        run_log.log_error(step_name, e, recovered=True)
+        # Whole conductor phase exception → pipeline cannot produce a briefing.
+        run_log.log_error(step_name, e, recovered=True, severity="critical")
         return {}

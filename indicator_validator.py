@@ -444,6 +444,134 @@ def check_unit(result: ValidationResult, stored_unit: str, expected_unit: str | 
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# CROSS-PROVINCE CPI OUTLIER (Rule 8 — D-12)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Provinces (and territories) treated as "provincial scope" for the cross-province
+# CPI comparison. Anything not in this set is considered national/global and
+# excluded from the median.
+_PROVINCIAL_SCOPES = {
+    "alberta", "british columbia", "manitoba", "new brunswick",
+    "newfoundland and labrador", "nova scotia", "ontario",
+    "prince edward island", "quebec", "saskatchewan",
+    "yukon", "northwest territories", "nunavut",
+    # Code variants — some rows store the 2-letter code
+    "ab", "bc", "mb", "nb", "nl", "ns", "on", "pe", "qc", "sk",
+    "yt", "nt", "nu",
+}
+
+# Province prefixes used for indicator names like "qc_cpi", "on_cpi"
+_PROVINCE_CODE_PREFIXES = {
+    "ab_", "bc_", "mb_", "nb_", "nl_", "ns_", "on_", "pe_", "qc_", "sk_",
+    "yt_", "nt_", "nu_",
+}
+
+
+def _is_provincial_cpi(name: str, province: str) -> bool:
+    """Return True if (name, province) represents a provincial CPI series."""
+    n = (name or "").lower().strip()
+    p = (province or "").lower().strip()
+    if not n.endswith("_cpi") and n != "cpi":
+        return False
+    # Name has province prefix → provincial regardless of province field
+    for pfx in _PROVINCE_CODE_PREFIXES:
+        if n.startswith(pfx):
+            return True
+    # Name is "cpi" and province field is one of the provinces/territories
+    if n == "cpi" and p in _PROVINCIAL_SCOPES:
+        return True
+    return False
+
+
+def _is_national_cpi(name: str, province: str) -> bool:
+    """Return True if (name, province) represents the national CPI series."""
+    n = (name or "").lower().strip()
+    p = (province or "").lower().strip()
+    if n == "cpi_national":
+        return True
+    if n == "cpi" and p in ("national", "canada", ""):
+        return True
+    return False
+
+
+def check_cross_province_cpi_outliers(results: list[ValidationResult],
+                                       rows: list[dict]):
+    """Rule 8 (D-12): Flag provincial CPI values that are wildly out of band.
+
+    Catches the Ontario CPI 6.8% case from 2026-06-08 where Ontario's vector
+    almost certainly pointed at a single component (Energy / Owned-accommodation)
+    instead of All-items CPI.
+
+    For each (name, province) row that looks like a provincial CPI:
+      - Compute the provincial median for the same period.
+      - Compute the national CPI for the same period (if present).
+      - Emit a FAIL if value > 3.0 × |national| OR value > 2.5 × |provincial_median|.
+
+    Per audit instructions this rule does NOT change validator exit codes —
+    it only surfaces FAILs so the operator can see the issue.
+    """
+    # Group by (suffix-name, period) — the suffix-name is the indicator after
+    # stripping any province prefix (so "qc_cpi" and "cpi" with province=Quebec
+    # cluster together).
+    def suffix(n: str) -> str:
+        nl = (n or "").lower()
+        for pfx in _PROVINCE_CODE_PREFIXES:
+            if nl.startswith(pfx):
+                return nl[len(pfx):]
+        return nl
+
+    # Build per-(period, suffix) provincial value list and national lookup
+    prov_values: dict[tuple[str, str], list[tuple[str, str, float]]] = {}
+    national_values: dict[tuple[str, str], float] = {}
+    for row in rows:
+        nm = row.get("indicator_name", "") or ""
+        pv = row.get("province", "") or ""
+        per = row.get("period", "") or ""
+        val = _safe_float(row.get("value"))
+        if val is None:
+            continue
+        key = (suffix(nm), per)
+        if _is_provincial_cpi(nm, pv):
+            prov_values.setdefault(key, []).append((nm, pv, val))
+        elif _is_national_cpi(nm, pv):
+            national_values[key] = val
+
+    # Index ValidationResult by (indicator_name, province) for quick lookup
+    result_index: dict[tuple[str, str], ValidationResult] = {}
+    for r in results:
+        result_index[(r.indicator_name, r.province)] = r
+
+    for (sfx, per), items in prov_values.items():
+        if len(items) < 2:
+            continue  # need at least 2 provinces to compute a median
+        vals = sorted(v for _, _, v in items)
+        n = len(vals)
+        median = vals[n // 2] if n % 2 == 1 else (vals[n // 2 - 1] + vals[n // 2]) / 2
+        national = national_values.get((sfx, per))
+        for nm, pv, val in items:
+            # Skip values whose absolute magnitude is tiny — relative ratios
+            # explode and false-positive on rounding noise.
+            if abs(median) < 0.5 and abs(val) < 0.5:
+                continue
+            outlier_reason = None
+            if national is not None and abs(national) >= 0.1 and abs(val) > 3.0 * abs(national):
+                outlier_reason = (
+                    f"value={val:.1f}% vs national={national:.1f}% "
+                    f"vs provincial_median={median:.1f}%"
+                )
+            elif abs(median) >= 0.1 and abs(val) > 2.5 * abs(median):
+                nat_str = f"{national:.1f}%" if national is not None else "n/a"
+                outlier_reason = (
+                    f"value={val:.1f}% vs national={nat_str} "
+                    f"vs provincial_median={median:.1f}%"
+                )
+            if outlier_reason:
+                r = result_index.get((nm, pv))
+                if r is not None:
+                    r.fail("CROSS_PROVINCE_OUTLIER", outlier_reason)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # DUPLICATE DETECTION (Rule 6)
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -587,6 +715,9 @@ def validate_indicators(conn) -> list[ValidationResult]:
 
     # Rule 6: Duplicate detection (cross-indicator)
     check_duplicates(results, row_dicts)
+
+    # Rule 8 (D-12): Cross-province CPI outlier check
+    check_cross_province_cpi_outliers(results, row_dicts)
 
     return results
 

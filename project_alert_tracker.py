@@ -138,7 +138,7 @@ def deactivate_terminal_projects(conn) -> int:
         """UPDATE project_alerts SET active = 0
            WHERE active = 1 AND norm_key IN (
                SELECT norm_key FROM projects
-               WHERE status IN ('Cancelled', 'Complete')
+               WHERE status IN ('Cancelled', 'Complete', 'Completed')
            )"""
     )
     conn.commit()
@@ -146,6 +146,97 @@ def deactivate_terminal_projects(conn) -> int:
     if count:
         logger.info(f"Deactivated {count} project alerts (terminal status)")
     return count
+
+
+# ── M-3: per-status alert prioritization ─────────────────────────────
+#
+# Audit found only 194/1,055 (18%) of Under Construction projects carry an
+# alert, yet UC projects are the most likely to change status (construction
+# milestones, delays, completion). prioritize_alerts() guarantees every UC
+# project has an active alert. Runs every weekly run (independent of the
+# is_first_week_of_month() gate for the monthly fetch).
+
+def prioritize_alerts(conn) -> dict:
+    """Ensure every Under Construction project carries an active alert.
+
+    Iterates the projects table looking for status='Under Construction'
+    rows that either have no project_alerts entry or have one with
+    active=0, and reactivates / registers them.
+
+    Idempotent. Safe to call every weekly run.
+
+    Returns:
+        dict with keys:
+          - under_constr_total:        count of UC projects in projects table
+          - under_constr_with_alerts:  count with active project_alerts row
+          - alerts_created:            new alerts registered this call
+          - alerts_reactivated:        alerts flipped from active=0 to active=1
+    """
+    try:
+        rows = conn.execute(
+            """SELECT p.norm_key,
+                      COALESCE(pa.active, -1) AS alert_active
+               FROM projects p
+               LEFT JOIN project_alerts pa ON pa.norm_key = p.norm_key
+               WHERE p.status = 'Under Construction'"""
+        ).fetchall()
+    except Exception as e:
+        logger.warning(f"prioritize_alerts query failed: {e}")
+        return {
+            "under_constr_total": 0,
+            "under_constr_with_alerts": 0,
+            "alerts_created": 0,
+            "alerts_reactivated": 0,
+        }
+
+    total = len(rows)
+    with_alerts = 0
+    created = 0
+    reactivated = 0
+
+    for row in rows:
+        norm_key = row[0] if not hasattr(row, 'keys') else row['norm_key']
+        alert_active = row[1] if not hasattr(row, 'keys') else row['alert_active']
+
+        if alert_active == 1:
+            with_alerts += 1
+            continue
+        if alert_active == 0:
+            # alert exists but is deactivated — reactivate
+            try:
+                conn.execute(
+                    "UPDATE project_alerts SET active = 1 WHERE norm_key = ?",
+                    (norm_key,),
+                )
+                reactivated += 1
+                with_alerts += 1
+            except Exception as e:
+                logger.warning(f"Reactivate alert {norm_key} failed: {e}")
+        else:
+            # alert_active == -1 means no alert row exists yet — register
+            try:
+                if register_new_project_alert(conn, norm_key):
+                    created += 1
+                    with_alerts += 1
+            except Exception as e:
+                logger.warning(f"Register alert {norm_key} failed: {e}")
+
+    try:
+        conn.commit()
+    except Exception:
+        pass
+
+    print(
+        f"  [ALERTS] {with_alerts}/{total} Under Construction projects have alerts "
+        f"({created} created, {reactivated} reactivated)"
+    )
+
+    return {
+        "under_constr_total": total,
+        "under_constr_with_alerts": with_alerts,
+        "alerts_created": created,
+        "alerts_reactivated": reactivated,
+    }
 
 
 # ── Monthly check logic ──────────────────────────────────────────────

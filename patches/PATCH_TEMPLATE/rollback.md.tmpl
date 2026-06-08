@@ -1,0 +1,38 @@
+# Patch X.Y — Rollback procedure
+
+## Code rollback
+
+```bash
+# 1. Find the merge commit for patch-X.Y on main
+git log --merges --oneline | grep "patch-X.Y"
+# → <sha> Merge branch 'patch-X.Y'
+
+# 2. Revert it on main
+git revert -m 1 <sha>
+```
+
+This restores the source tree to the pre-patch state. Any patches that
+depend on this one (`depends_on` chain) must be rolled back FIRST.
+
+## Data rollback
+
+Most migrations in this patch are additive (new columns, new tables) and
+do not need explicit rollback. The list below documents whether each
+migration is reversible and, if so, how:
+
+| Migration                  | Reversible? | Rollback SQL                                |
+|----------------------------|-------------|---------------------------------------------|
+| `001_*.sql`                | Yes / No    | <SQL or "leave columns; harmless">          |
+| `002_*.sql`                | Yes / No    | <SQL>                                       |
+
+**Hard rule:** if a migration drops a column or rewrites historical data
+(`UPDATE` that replaces values), capture a `.sql.bak` of the affected
+rows BEFORE running it. The framework does not do this for you.
+
+## After rollback — verification
+
+- [ ] `python -m py_compile` on each touched file
+- [ ] Pipeline runs without erroring on the removed feature
+- [ ] Any monitoring that was added is gracefully absent (not crashing)
+- [ ] Edit `backend/patches/X.Y/manifest.json`: set `applied_at` to `""`
+- [ ] Commit `chore(patch-X.Y): rolled back on YYYY-MM-DD`

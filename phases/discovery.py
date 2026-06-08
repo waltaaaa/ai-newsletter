@@ -67,34 +67,34 @@ def run(conn, context, logger):
                 registry_projects = f_tier1.result()
             except Exception as e:
                 print(f"  [TIER 1] Registry fetch failed: {type(e).__name__}: {e}")
-                logger.log_error("tier_1_registries", e)
+                logger.log_error("tier_1_registries", e, severity="warn")
 
             try:
                 municipal_projects = f_tier13.result()
                 print(f"  [TIER 13] {len(municipal_projects)} municipal projects found")
             except Exception as e:
                 print(f"  [TIER 13] Municipal scrape failed: {type(e).__name__}: {e}")
-                logger.log_error("tier_13_municipal", e)
+                logger.log_error("tier_13_municipal", e, severity="warn")
 
             try:
                 institutional_projects = f_tier14.result()
                 print(f"  [TIER 14] {len(institutional_projects)} institutional projects found")
             except Exception as e:
                 print(f"  [TIER 14] Institutional scrape failed: {type(e).__name__}: {e}")
-                logger.log_error("tier_14_institutional", e)
+                logger.log_error("tier_14_institutional", e, severity="warn")
 
             try:
                 news_articles = f_news.result() or []
             except Exception as e:
                 print(f"  [TIER 2] Google News RSS failed: {type(e).__name__}: {e}")
-                logger.log_error("tier_2_google_news", e)
+                logger.log_error("tier_2_google_news", e, severity="warn")
 
             try:
                 bing_articles = f_bing.result() or []
                 print(f"  [TIER 2b] Bing News RSS: {len(bing_articles)} articles")
             except Exception as e:
                 print(f"  [TIER 2b] Bing News RSS failed: {type(e).__name__}: {e}")
-                logger.log_error("tier_2b_bing_news", e)
+                logger.log_error("tier_2b_bing_news", e, severity="warn")
 
         # Merge Bing into news_articles, deduping by URL. Even though each
         # source dedupes internally, the same article can surface via both
@@ -132,7 +132,7 @@ def run(conn, context, logger):
             print("[WARN] iaac_status not available, skipping IAAC status tracking")
         except Exception as e:
             print(f"[WARN] IAAC status tracking failed: {type(e).__name__}: {e}")
-            logger.log_error("iaac_status_tracker", e)
+            logger.log_error("iaac_status_tracker", e, severity="warn")
 
         # Procurement monitor
         try:
@@ -144,7 +144,7 @@ def run(conn, context, logger):
             print("[WARN] procurement_monitor not available, skipping procurement tracking")
         except Exception as e:
             print(f"[WARN] Procurement monitor failed: {type(e).__name__}: {e}")
-            logger.log_error("procurement_monitor", e)
+            logger.log_error("procurement_monitor", e, severity="warn")
 
         # Policy tracker
         try:
@@ -158,7 +158,7 @@ def run(conn, context, logger):
             print("[WARN] policy_tracker not available, skipping policy monitoring")
         except Exception as e:
             print(f"[WARN] Policy tracker failed: {type(e).__name__}: {e}")
-            logger.log_error("policy_tracker", e)
+            logger.log_error("policy_tracker", e, severity="warn")
 
         # ── Project alert tracker (monthly — first week only) ─────────
         alert_articles = []
@@ -177,7 +177,7 @@ def run(conn, context, logger):
             print("[WARN] project_alert_tracker not available")
         except Exception as e:
             print(f"[WARN] Project alert tracker failed: {type(e).__name__}: {e}")
-            logger.log_error("project_alert_tracker", e)
+            logger.log_error("project_alert_tracker", e, severity="warn")
 
         # ── Tavily follow-ups (budget-constrained, must be sequential) ─
         gemini_projects = list(news_articles) + alert_articles
@@ -228,6 +228,8 @@ def run(conn, context, logger):
             "tavily_searches_count": tavily_searches_count,
         }
     except Exception as e:
-        logger.log_error(step_name, e)
+        # Whole-phase exception: discovery is empty, pipeline must continue but
+        # downstream phases are starved → critical.
+        logger.log_error(step_name, e, severity="critical")
         traceback.print_exc()
         return {}

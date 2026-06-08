@@ -10,9 +10,11 @@ import rss_monitor
 
 # Parallel workers for the per-province chunked extraction loop. Canada alone
 # can produce 60+ chunks (one claude subprocess per chunk); sequential runs
-# blew the 2400s Phase 3 budget. 3 parallel keeps stdin pressure low while
-# cutting Canada's wall-clock by ~3x.
-RSS_EXTRACT_WORKERS = int(os.environ.get('RSS_EXTRACT_WORKERS', '3'))
+# blew the 2400s Phase 3 budget.
+# E-5: bumped default 3 → 6 — Phase 3 does not run the conductor in parallel
+# so we can use the full subscription rate without contending for stdin
+# pressure. Re-cap to 3 in any phase that runs the conductor concurrently.
+RSS_EXTRACT_WORKERS = int(os.environ.get('RSS_EXTRACT_WORKERS', '6'))
 from pipeline_config import SONNET_MODEL
 from project_dedup import deduplicate_projects
 from project_schema import normalize_project_type, is_brownfield
@@ -204,10 +206,39 @@ SOURCE TEXT:
     # ── Claude Code mode (default, $0) ──────────────────────────
     from claude_reasoning import (
         REASONING_AGENT_MODE, _call_claude_code_sync, ALLOW_API_FALLBACK,
+        _ClaudeCodeTimeout,
     )
     if REASONING_AGENT_MODE == 'claude_code':
         full_prompt = f"{system_prompt}\n\n{user_prompt}"
-        raw = _call_claude_code_sync(full_prompt, f"filter-{context_label}")
+        # D-13: retry once on Claude Code timeout. First attempt: 180s.
+        # On TimeoutExpired, retry with a 300s budget. If the retry also
+        # times out, log [CHUNK FAIL] and continue — don't crash the phase.
+        # Per-chunk budget after retry is 480s, still well within the Phase 3
+        # 2400s cap.
+        raw = None
+        try:
+            raw = _call_claude_code_sync(
+                full_prompt, f"filter-{context_label}",
+                timeout=180, raise_on_timeout=True,
+            )
+        except _ClaudeCodeTimeout:
+            print(f"    [Claude Code] {context_label}: 180s timeout — retrying with 300s budget...")
+            try:
+                raw = _call_claude_code_sync(
+                    full_prompt, f"filter-{context_label}-retry",
+                    timeout=300, raise_on_timeout=True,
+                )
+            except _ClaudeCodeTimeout:
+                # context_label already contains "{province} [n/m]"
+                # Count items in prompt body for a best-effort article count.
+                n_articles = max(
+                    user_prompt.count('\n- '),
+                    user_prompt.count('\n* '),
+                    user_prompt.count('\nURL:'),
+                    user_prompt.count('\nTitle:'),
+                )
+                print(f"    [CHUNK FAIL] {context_label} after 2 attempts ({n_articles} articles)")
+                raw = None
         if raw:
             content = raw.strip()
             if content.startswith("```"):

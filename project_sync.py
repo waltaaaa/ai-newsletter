@@ -18,13 +18,51 @@ Usage in update_dashboard.py:
 """
 
 import re
+from collections import Counter
 from datetime import date
 from difflib import SequenceMatcher
-from project_schema import normalize_project_type, is_brownfield
+from project_schema import normalize_project_type, is_brownfield, normalize_status
 from db import (upsert_project, get_project, get_all_projects,
                 insert_evidence, insert_project_event,
                 resolve_organization, link_project_organization,
                 insert_project_identifier)
+
+
+# Province sanity-check used by the upsert boundary (D-2). Anything that
+# survives PROV_NAMES normalization should fall into this set; otherwise the
+# row is rejected before it reaches db.upsert_project. Source of truth is
+# google_news_rss_search.PROV_NAMES but we don't import that here to avoid
+# pulling the RSS module into the upsert path.
+_CANONICAL_PROVINCES = {
+    "Alberta", "British Columbia", "Manitoba", "New Brunswick",
+    "Newfoundland and Labrador", "Northwest Territories", "Nova Scotia",
+    "Nunavut", "Ontario", "Prince Edward Island", "Quebec",
+    "Saskatchewan", "Yukon", "National", "Canada",
+}
+
+
+def _project_has_url(project: dict) -> bool:
+    """D-2 URL hard gate at the flat-upsert boundary.
+
+    Returns True iff at least one URL string is present in `sources` or
+    `evidence`. Counts as a URL: any non-empty string in sources, or any
+    evidence entry whose `url` field is non-empty (and starts with 'http').
+
+    The db.upsert_project gate already enforces this, but it emits silent
+    rejection counts. We pre-check here so we can produce a per-reason
+    rejection breakdown for the operator.
+    """
+    for src in (project.get("sources") or []):
+        if isinstance(src, str) and src.strip():
+            return True
+        if isinstance(src, dict) and (src.get("url") or "").strip():
+            return True
+    for ev in (project.get("evidence") or []):
+        if isinstance(ev, dict) and (ev.get("url") or "").strip():
+            return True
+        if isinstance(ev, str) and ev.strip():
+            return True
+    return False
 
 
 def _get_project_rowid(conn, norm_key: str) -> int | None:
@@ -256,17 +294,41 @@ def upsert_flat_projects(conn, projects: list[dict]):
     Args:
         conn: sqlite3.Connection from db.py
         projects: list of project dicts with 'name' and 'province' required
+
+    Per audit D-2 + D-4, this boundary now:
+      - Hard-gates rows without any URL (no_url bucket)
+      - Normalizes status to canonical enum (D-4) before forwarding
+      - Aggregates rejection reasons in a Counter for operator visibility
     """
     today = date.today().isoformat()
     new_count = 0
     updated_count = 0
     skipped = 0
     new_keys = []
+    rejections_by_reason: Counter = Counter()
 
     for project in projects:
         proj_name = (project.get('name') or '').strip()
         prov_name = (project.get('province') or '').strip()
-        if not proj_name or not prov_name:
+
+        # D-2 hard gates \u2014 checked BEFORE we pay normalization cost.
+        if not proj_name:
+            rejections_by_reason['no_name'] += 1
+            skipped += 1
+            continue
+        if not prov_name:
+            rejections_by_reason['no_province'] += 1
+            skipped += 1
+            continue
+        if prov_name not in _CANONICAL_PROVINCES:
+            # Caller forgot to normalize via PROV_NAMES. Don't silently relabel
+            # it National \u2014 surface the rejection so the upstream scraper can
+            # be fixed.
+            rejections_by_reason['invalid_province'] += 1
+            skipped += 1
+            continue
+        if not _project_has_url(project):
+            rejections_by_reason['no_url'] += 1
             skipped += 1
             continue
 
@@ -280,6 +342,12 @@ def upsert_flat_projects(conn, projects: list[dict]):
             announced = today
 
         ptype = normalize_project_type(project.get('project_type', ''))
+
+        # D-4: canonicalize status at the boundary. Maps Proposed\u2192Announced,
+        # Complete\u2192Completed, On Hold\u2192Paused, In Service\u2192Operational. db.py
+        # may apply its own normalization too; that's fine \u2014 this is idempotent.
+        raw_status = project.get('status') or 'Announced'
+        status = normalize_status(raw_status)
 
         # Check if project already exists to count new vs updated
         key = normalize_key(proj_name, prov_name)
@@ -295,7 +363,7 @@ def upsert_flat_projects(conn, projects: list[dict]):
             'cma':               project.get('cma') or '',
             'tags':              project.get('tags') or [],
             'value':             project.get('value') or '\u2014',
-            'status':            project.get('status') or 'Announced',
+            'status':            status,
             'completionDate':    project.get('completionDate') or '',
             'sources':           project.get('sources') or [],
             'source':            '',
@@ -315,6 +383,13 @@ def upsert_flat_projects(conn, projects: list[dict]):
 
         try:
             norm_key = upsert_project(conn, proj_dict)
+            if norm_key is None:
+                # db.py rejected the row \u2014 most likely province-normalize fail
+                # or value-cap fail. We don't have the specific reason here;
+                # bucket it under db_rejected.
+                rejections_by_reason['db_rejected'] += 1
+                skipped += 1
+                continue
             _sync_evidence_and_org(conn, norm_key, proj_dict, existing)
             if _is_new:
                 new_count += 1
@@ -324,12 +399,20 @@ def upsert_flat_projects(conn, projects: list[dict]):
                 updated_count += 1
         except Exception as e:
             print(f"  [ERROR] Upsert failed for '{proj_name}': {e}")
+            rejections_by_reason['exception'] += 1
             skipped += 1
 
+    n_processed = len(projects)
     print(f"\nFlat project sync complete:")
-    print(f"  Processed:      {len(projects)}")
-    print(f"  New:            {new_count}")
-    print(f"  Updated:        {updated_count}")
-    print(f"  Skipped:        {skipped}")
+    print(f"  [UPSERT] {n_processed} processed, {new_count} new, "
+          f"{updated_count} updated, {skipped} skipped")
+    if rejections_by_reason:
+        print(f"  Rejection reasons: {dict(rejections_by_reason)}")
+    else:
+        print(f"  Rejection reasons: {{}}")
 
-    return {"new": new_count, "updated": updated_count, "skipped": skipped, "new_keys": new_keys}
+    return {
+        "new": new_count, "updated": updated_count, "skipped": skipped,
+        "new_keys": new_keys,
+        "rejections_by_reason": dict(rejections_by_reason),
+    }

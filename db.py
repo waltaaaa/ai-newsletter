@@ -709,6 +709,84 @@ def _should_update_status(existing_status: str, new_status: str) -> bool:
     return new_order > existing_order
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Name-quality gate helpers (D-1, D-14)
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Date string pattern: "January 31, 2025", "Jan 31, 2025", "January 31 2025"
+_DATE_NAME_RE = re.compile(
+    r'^\s*(?:January|February|March|April|May|June|July|August|September|October|November|December|'
+    r'Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\s+\d{1,2},?\s+\d{4}\s*$',
+    re.IGNORECASE
+)
+# Pure ISO date
+_ISO_DATE_RE = re.compile(r'^\s*\d{4}-\d{2}-\d{2}\s*$')
+
+# Nav-item / boilerplate exact-match list. Lower-cased for matching.
+_NAV_ITEM_NAMES = {
+    'open data', 'press room', 'sign-up to discover', 'instagram',
+    'subscribe for updates', 'find a document', 'onboarding', 'accessibility',
+    'metrolinx newsletter', 'staff portal', 'body-worn camera program',
+    'travel & hospitality expenses', 'latest stories', 'sign-up for updates',
+    'manage your experience', 'subscription configuration',
+    'region and project preferences', 'detailed expense report',
+    # Additional generic nav/page items observed in audit
+    'contact us', 'about us', 'about', 'home', 'sitemap', 'privacy',
+    'privacy policy', 'terms of use', 'terms and conditions', 'careers',
+    'jobs', 'newsletter', 'news', 'news releases', 'media', 'media room',
+    'media centre', 'media center', 'login', 'log in', 'sign in', 'sign up',
+    'register', 'subscribe', 'unsubscribe', 'search', 'menu', 'help',
+    'faq', 'faqs', 'frequently asked questions', 'rss', 'rss feed',
+    'twitter', 'facebook', 'linkedin', 'youtube', 'tiktok',
+    'follow us', 'share', 'social media', 'language selection',
+    'change language', 'français', 'english', 'en français',
+    'projects', 'project', 'document', 'documents', 'resources',
+    'publications', 'reports', 'links', 'related links', 'quick links',
+    'top of page', 'back to top', 'skip to content', 'skip to main content',
+}
+
+# Markdown header / fragment prefixes that indicate the "name" is a doc fragment
+_MD_HEADER_PREFIXES = ('#', '**', '- ')
+
+# Minimum alphabetic characters in a real project name
+_MIN_ALPHA_CHARS = 4
+
+
+def _is_non_project_name(name: str) -> bool:
+    """Return True if the name is structurally non-project (nav-item, date, fragment).
+
+    Catches the D-1 (Metrolinx nav-item pollution) and D-14 (Saskatchewan
+    date-string project names) failure modes at the upsert boundary.
+    """
+    if not name:
+        return True
+    stripped = name.strip()
+    if not stripped:
+        return True
+    # Date strings (e.g. "July 31, 2025" or ISO "2025-07-31")
+    if _DATE_NAME_RE.match(stripped):
+        return True
+    if _ISO_DATE_RE.match(stripped):
+        return True
+    # Markdown header fragments
+    if stripped.startswith(_MD_HEADER_PREFIXES):
+        return True
+    # Nav-item exact match (case-insensitive)
+    if stripped.lower() in _NAV_ITEM_NAMES:
+        return True
+    # Entirely numeric (e.g. "12345" or "2025")
+    if stripped.replace(',', '').replace('.', '').replace(' ', '').isdigit():
+        return True
+    # Entirely punctuation/symbols
+    if not any(c.isalnum() for c in stripped):
+        return True
+    # Too few alphabetic characters (< 4)
+    alpha_count = sum(1 for c in stripped if c.isalpha())
+    if alpha_count < _MIN_ALPHA_CHARS:
+        return True
+    return False
+
+
 def _row_to_dict(row) -> dict:
     """Convert a sqlite3.Row to a plain dict, parsing JSON columns."""
     if row is None:
@@ -785,6 +863,14 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
             except (json.JSONDecodeError, TypeError):
                 project_dict["anomalies"] = []
         project_dict["anomalies"].append(f"Original value ${pv/1e9:.1f}B exceeded $50B cap")
+
+    # Name-quality gate: reject structurally non-project names (D-1, D-14)
+    # Catches nav-item pollution (Metrolinx "Open Data", "Press Room", etc.)
+    # and date-string project names (Saskatchewan "July 31, 2025").
+    # Runs BEFORE the URL hard gate so cheap structural checks short-circuit first.
+    if _is_non_project_name(name):
+        print(f"[DB] Rejected project with non-project name: {name!r}")
+        return None
 
     # URL hard gate: reject projects with no evidence URLs
     evidence = project_dict.get("evidence", [])

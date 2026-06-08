@@ -81,11 +81,34 @@ def get_cumulative_cost():
 
 # ── Claude Code subprocess ─────────────────────────────────────────────────────
 
+class _ClaudeCodeTimeout(Exception):
+    """Internal sentinel — raised when the claude -p subprocess times out.
+
+    Lets upstream callers (e.g. phases/filtering.py) detect timeout vs other
+    failure modes (empty stdout, non-zero exit) so they can retry with a
+    longer budget. See D-13.
+    """
+
+
 def _call_claude_code_sync(prompt: str, label: str = "reasoning",
-                           model: str = '') -> str | None:
+                           model: str = '',
+                           timeout: int = 180,
+                           raise_on_timeout: bool = False) -> str | None:
     """Call Claude via Claude Code CLI subprocess. Returns raw text or None.
 
     Uses the user's Claude subscription — $0 API cost.
+
+    Args:
+        prompt: User prompt to pipe to `claude -p` stdin.
+        label: Tag for logging.
+        model: Override REASONING_AGENT_MODEL.
+        timeout: Subprocess timeout in seconds (D-13: callers may bump to 300
+            on retry).
+        raise_on_timeout: When True, raises _ClaudeCodeTimeout instead of
+            returning None on subprocess timeout, letting upstream callers
+            distinguish timeout from other failure modes for retry logic.
+            Default False preserves the historical "swallow everything"
+            behavior for callers that never wanted retry.
     """
     use_model = model or REASONING_AGENT_MODEL
     with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False,
@@ -101,7 +124,7 @@ def _call_claude_code_sync(prompt: str, label: str = "reasoning",
         logger.info(f"  [Claude Code] [{label}] Calling {use_model}...")
         result = subprocess.run(
             cmd, input=prompt, capture_output=True, text=True,
-            timeout=180, encoding='utf-8', env=_CLAUDE_ENV,
+            timeout=timeout, encoding='utf-8', env=_CLAUDE_ENV,
         )
         if result.returncode != 0:
             stderr = (result.stderr or '')[:500]
@@ -114,7 +137,9 @@ def _call_claude_code_sync(prompt: str, label: str = "reasoning",
         logger.info(f"  [Claude Code] [{label}] OK ({len(text)} chars)")
         return text
     except subprocess.TimeoutExpired:
-        logger.warning(f"  [Claude Code] [{label}] Timeout (180s)")
+        logger.warning(f"  [Claude Code] [{label}] Timeout ({timeout}s)")
+        if raise_on_timeout:
+            raise _ClaudeCodeTimeout(f"{label} hit {timeout}s timeout") from None
         return None
     except FileNotFoundError:
         logger.warning(f"  [Claude Code] [{label}] 'claude' CLI not found — falling back to API")
@@ -1140,12 +1165,14 @@ def selective_extraction_sync(documents, flash_extractions=None):
         return []
 
     print(f"  [CLAUDE] Selective extraction: {len(top_docs)} high-signal documents")
-    extracted = []
     today = date.today().isoformat()
 
-    for doc_idx, doc in enumerate(top_docs):
-        if (doc_idx + 1) % 5 == 0 or doc_idx == 0:
-            print(f"  [CLAUDE] Processing {doc_idx + 1}/{len(top_docs)}...")
+    def _process_doc(doc_idx, doc):
+        """Run selective extraction on a single doc; return list[flat-project].
+
+        Each doc is independent of every other — no shared mutable state, just
+        a Claude subprocess and JSON parsing. Embarrassingly parallel (E-6).
+        """
         title = doc.get('title', '')
         url = doc.get('url', '')
         text = doc.get('text') or doc.get('summary', '')
@@ -1175,8 +1202,9 @@ def selective_extraction_sync(documents, flash_extractions=None):
         response = result["text"] if result else None
         data = parse_json_response(response)
 
+        local_extracted = []
         if not data or not data.get("projects"):
-            continue
+            return local_extracted
 
         for project in data["projects"]:
             name = (project.get("name") or "").strip()
@@ -1238,7 +1266,25 @@ def selective_extraction_sync(documents, flash_extractions=None):
                 "announced": today,
                 "official_ids": project.get("official_ids", {}),
             }
-            extracted.append(flat)
+            local_extracted.append(flat)
+        return local_extracted
+
+    # E-6: parallelize selective extraction across 3 workers — each doc is
+    # independent. Matches the RSS chunk-loop pattern in phases/filtering.py.
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    extracted = []
+    completed = 0
+    n = len(top_docs)
+    with ThreadPoolExecutor(max_workers=3) as ex:
+        futures = {ex.submit(_process_doc, i, doc): i for i, doc in enumerate(top_docs)}
+        for fut in as_completed(futures):
+            completed += 1
+            if completed == 1 or completed % 5 == 0 or completed == n:
+                print(f"  [CLAUDE] Processing {completed}/{n}...")
+            try:
+                extracted.extend(fut.result())
+            except Exception as e:
+                print(f"  [CLAUDE] selective doc failed: {type(e).__name__}: {e}")
 
     print(f"  [CLAUDE] Selective extraction: {len(extracted)} projects "
           f"from {len(top_docs)} documents")

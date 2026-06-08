@@ -10,6 +10,7 @@ Government source articles bypass entirely (never dropped).
 
 import logging
 import math
+import time
 
 from nim_client import get_client
 
@@ -78,11 +79,23 @@ def semantic_deduplicate_articles(
 
     embed_to_orig = [idx for idx, _ in texts_to_embed]
 
+    # M-9: progress prints — the O(N^2) cosine loop below can take 20+ minutes
+    # silently. Emit a per-100-article marker so the operator can see whether
+    # the step is making progress or wedged.
+    t0 = time.time()
+    print(f"  [SEMANTIC] processing {len(embeddings)} embeddings "
+          f"(O(N^2) cosine loop)...")
+
     # Greedy dedup: for each embedding, check against all previous kept items
     keep_set = set(gov_indices)
     dropped = set()
 
     for i in range(len(embeddings)):
+        # M-9: periodic progress marker
+        if (i + 1) % 100 == 0:
+            print(f"  [SEMANTIC] processed {i + 1}/{len(embeddings)} comparisons "
+                  f"(t+{time.time() - t0:.0f}s)")
+
         orig_i = embed_to_orig[i]
         if orig_i in dropped:
             continue
@@ -105,6 +118,9 @@ def semantic_deduplicate_articles(
                 break
         if not is_dup:
             keep_set.add(orig_i)
+
+    print(f"  [SEMANTIC] dedup loop complete in {time.time() - t0:.0f}s "
+          f"({len(dropped)} dropped, {len(keep_set)} kept)")
 
     # Also keep articles too short for embedding
     for i in range(len(articles)):

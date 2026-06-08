@@ -172,7 +172,15 @@ def update_dashboard(deep_sweep: bool = False):
     run_date = date.today().isoformat()
     cache_prefix = f"phase_cache_{run_date}"
 
+    import time as _time
+
     for phase_name, phase_module in phases:
+        # M-8: machine-readable phase boundary marker (BEGIN). Pairs with
+        # PHASE_END below. Lets log greppers find "what crashed at 47min"
+        # without staring at the human-readable header.
+        _phase_start = _time.time()
+        print(f"[PHASE_BEGIN {phase_name} t={int(_phase_start)}]")
+
         print(f"\n{'='*60}")
         print(f"  {phase_name}")
         print(f"{'='*60}")
@@ -192,11 +200,15 @@ def update_dashboard(deep_sweep: bool = False):
                 if cached and isinstance(cached, dict) and cached.get("_completed"):
                     print(f"  [CACHE HIT] Skipping — completed earlier today")
                     context.update({k: v for k, v in cached.items() if not k.startswith("_")})
+                    _phase_end = _time.time()
+                    print(f"[PHASE_END {phase_name} t={int(_phase_end)} "
+                          f"dt={int(_phase_end - _phase_start)} status=cached]")
                     continue
             except Exception:
                 pass
 
         timeout = PHASE_TIMEOUTS.get(phase_name, 300)
+        _phase_status = "ok"
         try:
             import signal as _signal
             import threading
@@ -218,7 +230,9 @@ def update_dashboard(deep_sweep: bool = False):
             if t.is_alive():
                 print(f"\n[TIMEOUT] {phase_name} exceeded {timeout}s — continuing with partial results")
                 run_log.log_error(phase_name, Exception(f"Timeout after {timeout}s"), recovered=True)
+                _phase_status = "timeout"
             elif error_container[0]:
+                _phase_status = "error"
                 raise error_container[0]
             else:
                 result = result_container[0]
@@ -242,12 +256,30 @@ def update_dashboard(deep_sweep: bool = False):
             print(f"\n[CRITICAL] {phase_name} failed: {e}")
             traceback.print_exc()
             run_log.log_error(phase_name, e, recovered=False)
+            _phase_status = "error"
+            # M-8: emit PHASE_END before bailing on conductor failure
+            _phase_end = _time.time()
+            print(f"[PHASE_END {phase_name} t={int(_phase_end)} "
+                  f"dt={int(_phase_end - _phase_start)} status={_phase_status}]")
             # Conductor failure is critical — skip remaining phases
             if phase_module is conductor:
                 run_log.finalize("error")
                 return
+            continue
+
+        # M-8: emit PHASE_END marker on the happy / timeout paths
+        _phase_end = _time.time()
+        print(f"[PHASE_END {phase_name} t={int(_phase_end)} "
+              f"dt={int(_phase_end - _phase_start)} status={_phase_status}]")
 
     # ── Service health summary ─────────────────────────────────────
+    # M-5: persist the run's service-health snapshot BEFORE the get_status
+    # print so the operator dashboard has the row even if logging fails.
+    try:
+        health.persist(conn, getattr(run_log, '_run_id', None))
+    except Exception as _e:
+        print(f"[SERVICE HEALTH] persist raised (non-critical): {_e}")
+
     health_status = health.get_status()
     if health_status["dead"]:
         print(f"\n[SERVICE HEALTH] Dead services: {health_status['dead']}")
