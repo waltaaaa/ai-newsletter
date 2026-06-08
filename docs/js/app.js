@@ -4923,13 +4923,13 @@ function _buildMktCommentary(fm){
   var calloutData=(fm.callout||(D&&D.marketCommentaryCallout))||null;
   if(calloutData&&calloutData.title&&Array.isArray(calloutData.items)&&calloutData.items.length){
     h+='<div class="inner-card" style="margin-top:16px;padding:16px 20px;border-left:3px solid #003153">';
-    h+='<div style="font-family:DM Sans,sans-serif;font-weight:700;font-size:15px;color:#1a2744;margin-bottom:10px">'+san(calloutData.title)+'</div>';
+    h+='<div style="font-family:Inter,sans-serif;font-weight:700;font-size:15px;color:#1a2744;margin-bottom:10px">'+san(calloutData.title)+'</div>';
     h+='<div style="display:flex;flex-wrap:wrap;gap:20px">';
     calloutData.items.forEach(function(ci){
       h+='<div style="flex:1;min-width:140px">';
-      h+='<div style="font-family:DM Sans,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:#64748B;margin-bottom:4px">'+san(ci.label||'')+'</div>';
-      h+='<div style="font-family:DM Sans,sans-serif;font-size:22px;font-weight:700;color:#1a2744;line-height:1.2">'+san(ci.value||'')+'</div>';
-      if(ci.amount)h+='<div style="font-family:DM Sans,sans-serif;font-size:13px;color:#003153;margin-top:2px">'+san(ci.amount)+'</div>';
+      h+='<div style="font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:#64748B;margin-bottom:4px">'+san(ci.label||'')+'</div>';
+      h+='<div style="font-family:Inter,sans-serif;font-size:22px;font-weight:700;color:#1a2744;line-height:1.2">'+san(ci.value||'')+'</div>';
+      if(ci.amount)h+='<div style="font-family:Inter,sans-serif;font-size:13px;color:#003153;margin-top:2px">'+san(ci.amount)+'</div>';
       h+='</div>';
     });
     h+='</div></div>';
