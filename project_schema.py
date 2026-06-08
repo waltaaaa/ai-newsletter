@@ -67,78 +67,47 @@ STATUS_PROGRESSION = {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Status enum (D-4 — single source of truth for canonical project statuses)
+# Status enum — single source of truth is normalize.normalize_status (DI-5).
 # ─────────────────────────────────────────────────────────────────────────────
-# CLAUDE.md documents the canonical set. Audit found DB drift: 'Proposed' (2698),
-# 'Under Review' (2664), 'Complete' (510), 'On Hold' (31), 'In Service' (sparse)
-# — all non-canonical. normalize_status() folds them into the canonical set.
-# Migration 001_backfill_status_enum.sql does a one-time DB-side backfill so
-# historical rows match new writes.
+# DI-5 / D-4 (2026-06-08 consolidated audit): there were THREE conflicting status
+# vocabularies — CLAUDE.md prose (Announced/Operational/Completed/Paused),
+# this module's earlier patch-1.2 draft (same), and normalize.py + db.py
+# (Proposed/Under Review/Approved/Under Construction/Partially Complete/Complete/
+# Cancelled/On Hold). The DB's 7,661 rows are SELF-CONSISTENT with normalize.py's
+# canon — i.e. normalize.py is the authority. The earlier draft mapped the OPPOSITE
+# direction (Proposed -> Announced); applying it at the upsert boundary would have
+# split the vocabulary on every write (new rows 'Announced', historical 'Proposed')
+# and any DB-side Proposed->Announced backfill would corrupt 2,698 correct rows.
+#
+# Fix: this module now DELEGATES to normalize.normalize_status so the upsert boundary
+# canonicalizes to the SAME set the existing rows use. CANONICAL_STATUSES mirrors
+# normalize.py. Do NOT reintroduce a competing alias map here, and do NOT run a
+# Proposed->Announced backfill (migration 001 is neutralized for this reason).
 
+# Mirror of normalize.CANONICAL_STATUSES (the authority). Kept as a literal to
+# avoid an import cycle at module load; a runtime check below keeps them in sync.
 CANONICAL_STATUSES = {
-    'Announced',
+    'Proposed',
+    'Under Review',
     'Approved',
     'Under Construction',
-    'Operational',
-    'Completed',
+    'Partially Complete',
+    'Complete',
     'Cancelled',
-    'Paused',
-    'Under Review',
-}
-
-STATUS_ALIASES = {
-    # Drift observed in the DB (2026-06-08 audit) → canonical mapping
-    'Proposed':       'Announced',
-    'Complete':       'Completed',
-    'In Service':     'Operational',
-    'On Hold':        'Paused',
-    'Rumoured':       'Announced',
-    'Rumored':        'Announced',
-    # Common scraper outputs that don't match documented set
-    'proposed':       'Announced',
-    'complete':       'Completed',
-    'completed':      'Completed',
-    'announced':      'Announced',
-    'approved':       'Approved',
-    'cancelled':      'Cancelled',
-    'canceled':       'Cancelled',
-    'paused':         'Paused',
-    'on hold':        'Paused',
-    'on-hold':        'Paused',
-    'in service':     'Operational',
-    'operational':    'Operational',
-    'under review':   'Under Review',
-    'under construction': 'Under Construction',
-    'in construction': 'Under Construction',
-    'construction':   'Under Construction',
+    'On Hold',
 }
 
 
 def normalize_status(raw):
     """Fold any incoming status string into the canonical set.
 
-    Args:
-        raw: Status string from any source (scraper, classifier, manual edit).
-             None or empty input → safe default 'Announced'.
-
-    Returns:
-        Member of CANONICAL_STATUSES. Never returns None.
+    Single source of truth: normalize.normalize_status (DI-5). Delegated via a lazy
+    import to avoid an import cycle. Returns a member of CANONICAL_STATUSES; an
+    unrecognizable/empty value yields 'Proposed' (the canonical low-confidence
+    default), never None and never a higher-confidence label.
     """
-    if not raw:
-        return 'Announced'
-    s = str(raw).strip()
-    if s in CANONICAL_STATUSES:
-        return s
-    if s in STATUS_ALIASES:
-        return STATUS_ALIASES[s]
-    # Case-insensitive lookup as last resort
-    lower = s.lower()
-    if lower in STATUS_ALIASES:
-        return STATUS_ALIASES[lower]
-    # Unknown values default to Announced (safest — lowest in STATUS_PROGRESSION
-    # except Cancelled). This means a typo gets a low-confidence label, never a
-    # higher-confidence one.
-    return 'Announced'
+    from normalize import normalize_status as _canonical_normalize_status
+    return _canonical_normalize_status(raw)
 
 
 def is_brownfield(project_type):

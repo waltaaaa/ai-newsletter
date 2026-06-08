@@ -17,7 +17,7 @@ from datetime import date, datetime
 logger = logging.getLogger(__name__)
 
 # Terminal states that trigger alert deactivation
-_DEACTIVATE_STATUSES = {"Cancelled", "Complete"}
+_DEACTIVATE_STATUSES = {"Cancelled", "Complete", "Completed"}  # M-3: include 'Completed' variant
 
 
 # ── Query construction ───────────────────────────────────────────────

@@ -1,60 +1,32 @@
--- Patch 1.2 — migration 001
--- audit ref: D-4 (status enum drift)
+-- Patch 1.2 — migration 001  (NEUTRALIZED — DO NOT RUN THE OLD REMAP)
+-- audit ref: D-4 / DI-5 (status vocabulary reconciliation)
 --
--- One-time backfill of historical projects to the canonical status enum.
--- The application code already normalizes on every upsert (D-4 commit), so
--- this only catches rows written before the fix.
+-- ─────────────────────────────────────────────────────────────────────────────
+-- WHY THIS IS A NO-OP
+-- ─────────────────────────────────────────────────────────────────────────────
+-- The 2026-06-08 CONSOLIDATED audit REFUTED the original D-4 "status drift" claim
+-- as a data-integrity bug. Every status in dashboard.db is already a member of the
+-- canonical set defined by normalize.py (the operational single source of truth):
 --
--- Counts before backfill (per 2026-06-08 audit):
---   Proposed:           2,698
---   Under Review:       2,664   (already canonical — kept)
---   Under Construction: 1,055   (already canonical — kept)
---   Approved:             596   (already canonical — kept)
---   Complete:             510
---   Cancelled:            163   (already canonical — kept)
---   On Hold:               31
+--     Proposed · Under Review · Approved · Under Construction ·
+--     Partially Complete · Complete · Cancelled · On Hold
 --
--- Run manually:
---   sqlite3 backend/dashboard.db < backend/patches/1.2/migrations/001_backfill_status_enum.sql
+-- The DB is SELF-CONSISTENT. The earlier draft of this migration mapped the
+-- OPPOSITE direction (Proposed -> Announced, Complete -> Completed, On Hold ->
+-- Paused) toward a *different* documented vocabulary. Running it would have:
+--   * relabelled 2,698 correct 'Proposed' rows to 'Announced',
+--   * relabelled 510 'Complete' -> 'Completed', 31 'On Hold' -> 'Paused', and
+--   * (via the old catch-all) risked collapsing other legitimate tiers,
+-- splitting the vocabulary against normalize.py and the live code path, which then
+-- re-drifts every run. See DI-5 in PROJECT_AUDIT_2026-06-08_consolidated.md.
 --
--- This script is idempotent — re-running it is a no-op.
-
-BEGIN TRANSACTION;
-
-UPDATE projects SET status='Completed'   WHERE status='Complete';
-UPDATE projects SET status='Announced'   WHERE status='Proposed';
-UPDATE projects SET status='Paused'      WHERE status='On Hold';
-UPDATE projects SET status='Operational' WHERE status='In Service';
-UPDATE projects SET status='Announced'   WHERE status='Rumoured';
-UPDATE projects SET status='Announced'   WHERE status='Rumored';
-
--- Catch any case-variant drift
-UPDATE projects SET status='Announced'         WHERE status IN ('announced', 'proposed');
-UPDATE projects SET status='Completed'         WHERE status IN ('complete', 'completed');
-UPDATE projects SET status='Approved'          WHERE status='approved';
-UPDATE projects SET status='Cancelled'         WHERE status IN ('cancelled', 'canceled');
-UPDATE projects SET status='Paused'            WHERE status IN ('paused', 'on hold', 'on-hold');
-UPDATE projects SET status='Operational'       WHERE status IN ('operational', 'in service');
-UPDATE projects SET status='Under Construction' WHERE status IN ('under construction', 'in construction', 'construction');
-UPDATE projects SET status='Under Review'      WHERE status='under review';
-
--- Catchall: anything still outside the canonical set becomes Announced.
--- This is a safety net; if the count is non-zero after the explicit maps
--- above, the operator should review BEFORE running this line. To audit,
--- comment out the UPDATE and run:
---   SELECT status, COUNT(*) FROM projects
---   WHERE status NOT IN ('Announced','Approved','Under Construction',
---                        'Operational','Completed','Cancelled','Paused',
---                        'Under Review')
---   GROUP BY status;
-UPDATE projects SET status='Announced'
-WHERE status NOT IN (
-    'Announced', 'Approved', 'Under Construction', 'Operational',
-    'Completed',  'Cancelled', 'Paused', 'Under Review'
-);
-
-COMMIT;
-
--- Post-migration sanity check (run separately, not part of the BEGIN/COMMIT):
+-- FIX (code, not data): project_schema.normalize_status now DELEGATES to
+-- normalize.normalize_status, so the upsert boundary canonicalizes to the SAME
+-- vocabulary the existing rows use. No DB backfill is required or wanted.
+--
+-- If you ever need to AUDIT (not change) status values, run read-only:
 --   SELECT status, COUNT(*) FROM projects GROUP BY status ORDER BY 2 DESC;
--- Expected: only the eight canonical statuses appear.
+-- Expected: only the eight normalize.py-canonical statuses above.
+
+-- Intentionally no UPDATE statements. This migration performs no changes.
+SELECT 'migration 001 is a no-op (DI-5): DB already canonical per normalize.py' AS note;
