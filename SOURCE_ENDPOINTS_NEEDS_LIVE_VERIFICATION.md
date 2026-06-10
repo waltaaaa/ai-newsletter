@@ -57,3 +57,43 @@ scramble produces individually-plausible but swapped values).
 
 Code-only fixes were already in patch-1.2. The per-feed zero-count review still
 needs a full pipeline run (`[POLICY] Per-feed counts:` lines) — unchanged.
+
+# quality-pass-1.4 — G3/G4 new-source probes (2026-06-10)
+
+Every endpoint below was live-probed through the shared `http_client` (or
+`requests` with the browser UA for POST) on 2026-06-10 before any scraper was
+written.
+
+## G3 — Northern & Indigenous registries
+
+| Source | Probe result | Verdict |
+|--------|--------------|---------|
+| **NIRB (Nunavut)** | `nirb.ca` is server-rendered Drupal (200). `/project-search` and `/active-reviews` 404. Public registry is an iframe to `/portal/registry-search.php` (PHP, server-side). **POST** `/portal/registry-search-results.php` with `{lang:en, action:search, whattosearchfor:project, searchonlyactive:on}` returns 200 (~10.7 MB) embedding a `geometry_layer = eval('([...])')` JS array with `application_id`, `nirb_file_number`, `application_date`, `project_name`, `proponent_name`, `activity_type` — fully parseable without JS. Project URL pattern `https://www.nirb.ca/project/{application_id}` (200). | **WORKING (POST + embedded JSON)** |
+| **MVLWB (NWT)** | `mvlwb.com/registry` 200, server-rendered Drupal table (50 rows/page): Company / Activity / File Number / Start Date / Expiry Date, row links `https://mvlwb.com/registry/{file}`. Default sort is oldest-first; `?search_api_views_fulltext=&order=date_start&sort=desc` returns the 50 most recent authorizations (verified: May 2026 permits for GNWT-INF, Teck Metals, Fortune Minerals, Rackla Metals). | **WORKING (GET, sorted desc)** |
+| **ISC Indigenous Community Infrastructure** | open.canada.ca CKAN dataset `62155d6f-9167-4972-b77c-b90734b628dc` ("Indigenous Community Infrastructure", org `isc-sac`). The earlier candidate "National First Nations infrastructure investment plan" (`66566638-...`) is HTML/PDF-only from 2015-16 — useless. The real resource is `Indigenous_Community_Infrastructure_CSV.zip` on `data.sac-isc.gc.ca` (200, application/zip, 1.65 MB, 28,974 rows). Columns: Province/Territory, Community, Internal Project Number, Infrastructure Category, Project Name, Description, Project Status (Ongoing 12,451 / Completed 16,523), ISC Departmental Investment (dollar values only on ~half the rows, essentially never on Ongoing rows — value-floor filtering is impossible; keyword+category filtering used instead). | **WORKING (CSV-in-zip via CKAN)** |
+
+### G3 — Indigenous development corporation newsrooms (watchlist probes)
+
+Verified 200 with substantive HTML: Inuvialuit (`inuvialuit.com/news`), Nunasi
+(`nunasi.com/news/`), Athabasca Basin (`athabascabasin.ca/news/`), Des Nedhe
+(`desnedhe.com/news/`), Fort McKay Group (`fortmckaygroup.com/news/`),
+Membertou (`membertoucorporate.ca/news`), Nch'ḵay̓ (`www.nchkay.com/news/` —
+apex host has a hostname-mismatched cert, www works), Haisla
+(`haisla.ca/news/` — `haisea.ca` is DNS-dead), Six Nations of the Grand River
+(`sndevcorp.ca/news/`), Whitecap (`whitecapdevcorp.com/news/`), Tłı̨chǫ
+(`tlicho.ca/news` — `tlichoinvestment.com` DNS-dead), Penticton Indian Band
+(`pibdc.ca/news/`), Makivik → rebranded **Makivvik**: `makivvik.ca/news` 200
+(`makivik.org/news/` and all news paths 404), Miawpukek Horizon — own domain
+503 on every path; parent venture newsroom `horizonmaritime.com/news` 200.
+**Osoyoos Indian Band Development Corp**: root `oibdc.ca` 200 but no
+news/media path exists (404) — entry added with `newsroom_url: null`
+(Google News RSS site-search coverage only).
+
+## G4 — Procurement remainder
+
+| Source | Probe result | Verdict |
+|--------|--------------|---------|
+| **SEAO (Québec)** | Données Québec CKAN: `package_show?id=systeme-electronique-dappel-doffres-seao` (200). Resources are weekly `hebdo_YYYYMMDD_YYYYMMDD.json` + monthly `mensuel_*.json` files in **OCDS** (Open Contracting Data Standard) format. Download URL = resource `url` + `download/{name}` (verified 200). Latest weekly file: 5,767 releases, 4,205 with awards; `tender.mainProcurementCategory` distribution works=1,460 / services=2,512 / goods=1,537. Each release carries `tender.title` (French), `buyer.name`, `awards[].value.amount` (CAD) and `awards[].suppliers[].name`. | **WORKING (OCDS JSON weekly files)** |
+| **DCC (Defence Construction Canada)** | `dcc-cdc.gc.ca` 200; `/industry/contract-awards` 404 (JSON backend error page). Real listing: "Contract Activity" page links a PDF on the corporate MFT share: `https://dccmft.dcc-cdc.gc.ca/?u=contracts_public&p=public&path=/Recently_Awarded_Contracts.pdf` — 200, application/pdf, ~140 KB, 9 pages, regenerated continuously (probe copy dated 2026-06-10). Tabular text extracts cleanly with PyMuPDF (`fitz`, already in the venv): Project Number / Contract Number / MERX Number / Description / Location / Award Date / Award Amount / Contractor / City / Province. | **WORKING (PDF via fitz — no HTML/CSV alternative exists)** |
+| **SaskTenders** | `sasktenders.ca` apex times out (25 s); `www.sasktenders.ca/content/public/Search.aspx` 200 but it is a 1.7 MB ASP.NET WebForms page — results require `__VIEWSTATE` postbacks, no RSS, no open-data export. | **DARK — rely on CanadaBuys SK delivery rows** (documented inline like ontario_bps) |
+| **Alberta Purchasing Connection** | `purchasingconnection.ca` 200 but serves an Angular SPA shell (`data-beasties-container`, empty body); no public API or RSS discovered. | **DARK — rely on CanadaBuys AB delivery rows** (documented inline like ontario_bps) |

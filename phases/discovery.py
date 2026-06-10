@@ -181,19 +181,22 @@ def run(conn, context, logger):
             print(f"[WARN] Policy tracker failed: {type(e).__name__}: {e}")
             logger.log_error("policy_tracker", e, severity="warn")
 
-        # ── Project alert tracker (monthly — first week only) ─────────
+        # ── Project alert tracker (G5: due-based, every weekly run) ───
+        # quality-pass-1.4: the first-week-of-month gate is replaced by
+        # tier-based due selection inside the tracker (weekly / monthly /
+        # quarterly cadences, value-ranked hard cap). The due-set check now
+        # runs on EVERY weekly run; an empty due set is a cheap no-op.
         alert_articles = []
         try:
-            from project_alert_tracker import is_first_week_of_month, run_monthly_alert_check_sync
-            if is_first_week_of_month():
-                print("\n[ALERT-TRACKER] Monthly project alert check (first week of month)...")
-                alert_result = run_monthly_alert_check_sync(conn)
-                alert_articles = alert_result.get("articles", [])
-                print(f"  [ALERT-TRACKER] {alert_result.get('alerts_checked', 0)} alerts checked, "
-                      f"{len(alert_articles)} articles found, "
-                      f"{alert_result.get('deactivated', 0)} alerts deactivated")
-            else:
-                print("\n[ALERT-TRACKER] Skipped (not first week of month)")
+            from project_alert_tracker import run_monthly_alert_check_sync
+            print("\n[ALERT-TRACKER] Due-based project alert check (tiered cadence)...")
+            alert_result = run_monthly_alert_check_sync(conn)
+            alert_articles = alert_result.get("articles", [])
+            print(f"  [ALERT-TRACKER] {alert_result.get('alerts_checked', 0)} alerts checked "
+                  f"({alert_result.get('due_total', 0)} due, "
+                  f"{alert_result.get('overflow', 0)} deferred), "
+                  f"{len(alert_articles)} articles found, "
+                  f"{alert_result.get('deactivated', 0)} alerts deactivated")
         except ImportError:
             print("[WARN] project_alert_tracker not available")
         except Exception as e:

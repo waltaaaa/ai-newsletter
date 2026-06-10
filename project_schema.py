@@ -236,7 +236,14 @@ def build_project_document(extracted):
             "cma": (location.get("cma") if isinstance(location, dict) else None),
         },
         "value_millions": extracted.get("value_millions") or extracted.get("value_numeric"),
-        "currency": extracted.get("currency", "CAD"),
+        # G7 value semantics: currency defaults to CAD when absent; range bounds
+        # (in millions) stay None unless the source stated an explicit range —
+        # a point value does NOT fabricate low/high. Scope distinguishes a
+        # phase cost from a program envelope ('phase' | 'program' | '').
+        "currency": extracted.get("currency") or "CAD",
+        "value_low": extracted.get("value_low"),
+        "value_high": extracted.get("value_high"),
+        "value_scope": extracted.get("value_scope") or "",
         "status": extracted.get("status", "Proposed"),
         "project_type": ptype,
         "is_brownfield": is_brownfield(ptype),

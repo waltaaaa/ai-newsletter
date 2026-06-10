@@ -65,9 +65,87 @@ def above_threshold(rec):
     return v is not None and v >= THRESHOLDS.get(rec.get("province",""), 9e9)
 
 def lincoln_petersen(n_a, n_b, n_both):
-    """Capture-recapture population estimate (Chapman correction)."""
+    """Capture-recapture population LOWER BOUND (Chapman correction).
+
+    Systems A and B share sources and discovery channels, so their captures
+    are positively correlated. Under positive capture correlation the
+    Lincoln-Petersen estimator UNDERSTATES the true population — treat the
+    output as a lower bound on the discoverable project population, not an
+    estimate of it. Recall figures computed against it are therefore upper
+    bounds on true recall.
+    """
     if n_both == 0: return None
     return round(((n_a + 1) * (n_b + 1)) / (n_both + 1) - 1)
+
+
+def chao1_curve(weekly_first_discovery_counts):
+    """Chao1-style richness estimate + saturation signal from the weekly
+    first-discovery accumulation curve. Stdlib only.
+
+    Input: list[int] — count of NEVER-BEFORE-SEEN projects first discovered in
+    each successive week (the increments of the accumulation curve).
+
+    Classic Chao1 needs abundance frequencies (f1 = species seen once,
+    f2 = seen twice). A weekly accumulation curve doesn't carry those, so we
+    use the standard curve-based proxy: the most recent week's new-discovery
+    count stands in for f1 (projects so rare the process only just found
+    them) and the prior week's count for f2. This is a heuristic richness
+    floor, documented as such — read `assumption` in the output.
+
+      S_obs = sum(counts)
+      chao1 = S_obs + f1^2 / (2 * f2)          (f2 > 0)
+              S_obs + f1 * (f1 - 1) / 2        (f2 == 0, bias-corrected form)
+
+    Saturation signal: discovery is saturating when the recent discovery rate
+    (mean of the last ceil(n/4) weeks) has fallen below 10% of the peak
+    weekly rate, or the last week adds under 2% of the cumulative total.
+
+    Returns a dict:
+      {S_obs, f1_proxy, f2_proxy, chao1_estimate, pct_of_chao1_found,
+       weeks, weekly_counts, recent_rate, peak_rate,
+       last_week_pct_of_cumulative, is_saturating, assumption}
+    """
+    counts = [int(c) for c in (weekly_first_discovery_counts or []) if c is not None]
+    if not counts:
+        return {"S_obs": 0, "f1_proxy": 0, "f2_proxy": 0,
+                "chao1_estimate": None, "pct_of_chao1_found": None,
+                "weeks": 0, "weekly_counts": [], "recent_rate": None,
+                "peak_rate": None, "last_week_pct_of_cumulative": None,
+                "is_saturating": False,
+                "assumption": "empty input - no estimate"}
+    s_obs = sum(counts)
+    f1 = counts[-1]
+    f2 = counts[-2] if len(counts) >= 2 else 0
+    if f2 > 0:
+        chao1 = s_obs + (f1 * f1) / (2.0 * f2)
+    else:
+        chao1 = s_obs + (f1 * (f1 - 1)) / 2.0
+    chao1 = round(chao1, 1)
+
+    recent_n = max(1, -(-len(counts) // 4))  # ceil(n/4)
+    recent_rate = sum(counts[-recent_n:]) / recent_n
+    peak_rate = max(counts)
+    last_pct = (counts[-1] / s_obs) if s_obs else 0.0
+    is_saturating = bool(
+        len(counts) >= 4
+        and (recent_rate <= 0.10 * peak_rate or last_pct < 0.02)
+    )
+    return {
+        "S_obs": s_obs,
+        "f1_proxy": f1,
+        "f2_proxy": f2,
+        "chao1_estimate": chao1,
+        "pct_of_chao1_found": round(s_obs / chao1, 3) if chao1 else None,
+        "weeks": len(counts),
+        "weekly_counts": counts,
+        "recent_rate": round(recent_rate, 2),
+        "peak_rate": peak_rate,
+        "last_week_pct_of_cumulative": round(last_pct, 3),
+        "is_saturating": is_saturating,
+        "assumption": ("f1/f2 proxied from the last two weekly first-discovery "
+                       "counts (true Chao1 needs abundance frequencies); treat "
+                       "chao1_estimate as a heuristic richness floor"),
+    }
 
 def scorecard(week, a_path, b_path, ref_path=None, outdir="ab_results"):
     A, B = load(a_path), load(b_path)
@@ -78,14 +156,16 @@ def scorecard(week, a_path, b_path, ref_path=None, outdir="ab_results"):
     only_a, only_b = set(A) - matched_a, set(B) - matched_b
 
     # --- Coverage metrics ---
+    # LP under positive capture correlation is a LOWER bound on population,
+    # so the recall fields are UPPER bounds on true recall.
     est = lincoln_petersen(len(A), len(B), len(exact) + len(fuzzy))
     cov = {
         "A_total": len(A), "B_total": len(B),
         "overlap": len(exact) + len(fuzzy),
         "unique_to_A": len(only_a), "unique_to_B": len(only_b),
-        "est_population_LP": est,
-        "A_est_recall": round(len(A)/est, 3) if est else None,
-        "B_est_recall": round(len(B)/est, 3) if est else None,
+        "est_population_LP_lower_bound": est,
+        "A_recall_vs_LP_lower_bound": round(len(A)/est, 3) if est else None,
+        "B_recall_vs_LP_lower_bound": round(len(B)/est, 3) if est else None,
     }
 
     # --- Enumerable-reference recall (the hard invariant) ---
@@ -163,11 +243,20 @@ def cutover_verdict(outdir="ab_results", min_weeks=4):
     if len(cards) < min_weeks:
         return {"verdict": "INSUFFICIENT_DATA", "weeks": len(cards), "needed": min_weeks}
     data = [json.loads(c.read_text()) for c in cards]
+
+    def _recall(cov, system):
+        # New key first; fall back to the pre-rename key so scorecards
+        # written before the LP-lower-bound rename still count.
+        v = cov.get(f"{system}_recall_vs_LP_lower_bound")
+        if v is None:
+            v = cov.get(f"{system}_est_recall")
+        return v or 0
+
     checks = {
         "B_zero_reference_misses": all((d["reference_recall"] or {}).get("B_recall", 0) == 1.0
                                        for d in data if d["reference_recall"]),
-        "B_recall_geq_A": sum(d["coverage"]["B_est_recall"] or 0 for d in data)
-                          >= sum(d["coverage"]["A_est_recall"] or 0 for d in data),
+        "B_recall_geq_A": sum(_recall(d["coverage"], "B") for d in data)
+                          >= sum(_recall(d["coverage"], "A") for d in data),
         "B_more_unique_finds": sum(d["coverage"]["unique_to_B"] for d in data)
                                > sum(d["coverage"]["unique_to_A"] for d in data),
         "B_field_quality_geq_A": all(

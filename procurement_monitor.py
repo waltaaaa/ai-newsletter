@@ -7,8 +7,14 @@ Sources (all free, structured data):
 2. BuyAndSell.gc.ca RSS — federal tender notices (enhances existing Tier 1)
 3. Ontario BPS Supply Chain — Broader Public Sector procurement
 4. BC Bid — BC provincial procurement
-5. SEAO (Québec) — public procurement (Système électronique d'appels d'offres)
-6. Alberta Purchasing Connection — provincial RFPs
+5. SEAO (Québec) — public procurement via Données Québec OCDS files
+   (implemented quality-pass-1.4, live-verified 2026-06-10)
+6. Alberta Purchasing Connection — provincial RFPs (DARK: Angular SPA, no
+   structured data — AB coverage via CanadaBuys delivery-region rows)
+7. Defence Construction Canada — recently awarded contracts PDF
+   (implemented quality-pass-1.4, live-verified 2026-06-10)
+8. SaskTenders — DARK: ASP.NET WebForms, no RSS/open data — SK coverage via
+   CanadaBuys delivery-region rows
 
 All sources are free. No API keys required for public procurement data.
 """
@@ -52,6 +58,22 @@ CONSTRUCTION_KEYWORDS = [
     "hospital", "school", "university", "airport", "port", "rail",
     "pipeline", "refinery", "mine", "processing plant", "data centre",
 ]
+
+# quality-pass-1.4 G4/G9: French construction keywords (ADDITIVE — required
+# for SEAO, whose tender titles are French). English list above is unchanged.
+CONSTRUCTION_KEYWORDS_FR = [
+    "réfection", "refection", "rénovation", "renovation",
+    "agrandissement", "réhabilitation", "rehabilitation",
+    "pont", "autoroute", "viaduc", "chaussée", "chaussee",
+    "aqueduc", "égout", "egout", "eaux usées", "eaux usees",
+    "usine de traitement", "usine d'épuration",
+    "hôpital", "hopital", "école", "ecole", "cégep", "cegep",
+    "aéroport", "aeroport", "chantier", "travaux de construction",
+    "bâtiment", "batiment", "centrale", "ligne de transport",
+    "caserne", "bibliothèque", "bibliotheque", "aréna", "arena",
+]
+CONSTRUCTION_KEYWORDS.extend(
+    kw for kw in CONSTRUCTION_KEYWORDS_FR if kw not in CONSTRUCTION_KEYWORDS)
 
 
 def fetch_open_canada_contracts(days_back=30):
@@ -413,6 +435,231 @@ def fetch_bc_bid():
     return opportunities
 
 
+# ── SEAO (Québec) via Données Québec — quality-pass-1.4 G4 ───────────────────
+# Live-verified 2026-06-10: SEAO open data is republished on donneesquebec.ca
+# (CKAN dataset 'systeme-electronique-dappel-doffres-seao') as weekly
+# hebdo_YYYYMMDD_YYYYMMDD.json files in OCDS (Open Contracting Data Standard)
+# format. Each release carries tender.title (French), buyer.name,
+# awards[].value.amount (CAD), awards[].suppliers[].name. Download URL is
+# the resource URL + 'download/{filename}'.
+
+_SEAO_PACKAGE_URL = ("https://www.donneesquebec.ca/recherche/api/3/action/"
+                     "package_show?id=systeme-electronique-dappel-doffres-seao")
+_SEAO_MAX_WEEKLY_FILES = 4   # ~1 month of weekly OCDS files per run
+
+
+def fetch_seao(days_back=30):
+    """
+    Fetch Québec SEAO construction awards from the Données Québec OCDS files.
+    Returns list of contract dicts (source='seao', province='QC').
+    """
+    contracts = []
+    try:
+        resp = http_client.get(_SEAO_PACKAGE_URL, timeout=30)
+        if resp is None or resp.status_code != 200:
+            status = 'network' if resp is None else resp.status_code
+            print(f"[PROCUREMENT][seao] package_show FAILED status={status}")
+            return []
+
+        resources = resp.json().get("result", {}).get("resources", [])
+        # Weekly files, newest first (names sort chronologically: hebdo_YYYYMMDD_…)
+        weekly = sorted(
+            (r for r in resources
+             if (r.get("name") or "").lower().startswith("hebdo_")),
+            key=lambda r: r.get("name", ""), reverse=True,
+        )
+        n_files = max(1, min(_SEAO_MAX_WEEKLY_FILES, (days_back + 6) // 7))
+        seen_ocids = set()
+
+        for res in weekly[:n_files]:
+            name = res.get("name", "")
+            base = (res.get("url") or "").rstrip("/")
+            if not base:
+                continue
+            # CKAN resource URLs are usually already the full download link
+            # (".../resource/{id}/download/{file}"); only append the download
+            # suffix when it is missing (live-verified both shapes 2026-06-10).
+            dl_url = base if "/download/" in base else f"{base}/download/{name}"
+            file_resp = http_client.get(dl_url, timeout=60)
+            if file_resp is None or file_resp.status_code != 200:
+                status = 'network' if file_resp is None else file_resp.status_code
+                print(f"[PROCUREMENT][seao] FAILED status={status} {name}")
+                continue
+            try:
+                releases = file_resp.json().get("releases", [])
+            except ValueError as e:
+                print(f"[PROCUREMENT][seao] JSON parse failed for {name}: {e}")
+                continue
+
+            for rel in releases:
+                try:
+                    ocid = rel.get("ocid") or rel.get("id")
+                    if ocid in seen_ocids:
+                        continue
+                    awards = rel.get("awards") or []
+                    if not awards:
+                        continue
+                    tender = rel.get("tender") or {}
+                    title = tender.get("title") or ""
+                    category = tender.get("mainProcurementCategory") or ""
+                    text = title.lower()
+                    # 'works' = construction in OCDS; otherwise keyword match
+                    # (CONSTRUCTION_KEYWORDS includes the French additions).
+                    if category != "works" and not any(
+                            kw in text for kw in CONSTRUCTION_KEYWORDS):
+                        continue
+                    for award in awards:
+                        value = float((award.get("value") or {}).get("amount") or 0)
+                        if value < MIN_CONTRACT_VALUE:
+                            continue
+                        suppliers = [s.get("name", "") for s in
+                                     (award.get("suppliers") or [])]
+                        seen_ocids.add(ocid)
+                        contracts.append({
+                            "source": "seao",
+                            "title": title,
+                            "description": tender.get("description", "") or title,
+                            "vendor": suppliers[0] if suppliers else "Unknown",
+                            "organization": (rel.get("buyer") or {}).get("name", ""),
+                            "value": value,
+                            "award_date": str(award.get("date") or "")[:10],
+                            "province": "QC",
+                            "url": "https://www.donneesquebec.ca/recherche/dataset/systeme-electronique-dappel-doffres-seao",
+                        })
+                except Exception as e:
+                    logger.debug(f"[PROCUREMENT] Skipped SEAO release: {e}")
+
+        print(f"[PROCUREMENT] SEAO: {len(contracts)} relevant contracts "
+              f"(>=${MIN_CONTRACT_VALUE:,})")
+    except Exception as e:
+        print(f"[WARN] SEAO fetch failed: {e}")
+
+    return contracts
+
+
+# ── Defence Construction Canada — quality-pass-1.4 G4 ────────────────────────
+# Live-verified 2026-06-10: DCC publishes recently awarded contracts ONLY as a
+# PDF on its MFT share (no HTML table, CSV, or feed exists — the
+# /industry/contract-awards path 404s). The PDF is tabular and extracts
+# cleanly with PyMuPDF (fitz), which is already a project dependency.
+
+_DCC_AWARDS_PDF = ("https://dccmft.dcc-cdc.gc.ca/"
+                   "?u=contracts_public&p=public&path=/Recently_Awarded_Contracts.pdf")
+
+_DCC_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+_DCC_AMOUNT_RE = re.compile(r"^\$[\d,]+(?:\.\d{2})?$")
+# DCC project numbers look like CH260003 / PA000417
+_DCC_PROJECT_NO_RE = re.compile(r"^[A-Z]{2,4}\d{5,8}$")
+
+
+def fetch_dcc():
+    """
+    Fetch Defence Construction Canada recently awarded contracts (PDF).
+    All DCC contracts are defence construction; the MIN_CONTRACT_VALUE
+    floor still applies for consistency with the other sources.
+    Returns list of contract dicts (source='dcc').
+    """
+    contracts = []
+    try:
+        try:
+            import fitz  # PyMuPDF
+        except ImportError:
+            print("[PROCUREMENT][dcc] PyMuPDF (fitz) not installed — skipping")
+            return []
+
+        resp = http_client.get(_DCC_AWARDS_PDF, timeout=40)
+        if resp is None or resp.status_code != 200:
+            status = 'network' if resp is None else resp.status_code
+            print(f"[PROCUREMENT][dcc] FAILED status={status}")
+            return []
+        if not (resp.content or b"").startswith(b"%PDF"):
+            print("[PROCUREMENT][dcc] response is not a PDF — skipping")
+            return []
+
+        doc = fitz.open(stream=resp.content, filetype="pdf")
+        lines = []
+        for page in doc:
+            lines.extend(page.get_text().split("\n"))
+
+        # Rows are anchored by an award date line followed (within a few
+        # lines) by a $ amount line. Description/location are the lines
+        # between the project-number anchor and the date.
+        i = 0
+        n = len(lines)
+        while i < n:
+            line = lines[i].strip()
+            if _DCC_DATE_RE.match(line):
+                award_date = line
+                # amount: next 1-3 lines
+                amount = None
+                j = i + 1
+                while j < min(i + 4, n):
+                    if _DCC_AMOUNT_RE.match(lines[j].strip()):
+                        amount = _parse_value(lines[j].strip())
+                        break
+                    j += 1
+                # description/location: walk back to the project-number anchor
+                desc_parts = []
+                k = i - 1
+                while k >= 0 and len(desc_parts) < 12:
+                    back = lines[k].strip()
+                    if _DCC_PROJECT_NO_RE.match(back) or _DCC_DATE_RE.match(back) \
+                            or _DCC_AMOUNT_RE.match(back):
+                        break
+                    if back and not back.isdigit():
+                        desc_parts.insert(0, back)
+                    k -= 1
+                # contractor: lines after the amount until next project number
+                contractor_parts = []
+                m = j + 1
+                while m < min(j + 5, n):
+                    fwd = lines[m].strip()
+                    if (_DCC_PROJECT_NO_RE.match(fwd) or _DCC_DATE_RE.match(fwd)
+                            or not fwd):
+                        break
+                    contractor_parts.append(fwd)
+                    m += 1
+
+                description = " ".join(desc_parts).strip()
+                if amount is not None and description:
+                    contracts.append({
+                        "source": "dcc",
+                        "title": description[:200],
+                        "description": description,
+                        "vendor": " ".join(contractor_parts)[:120] or "Unknown",
+                        "value": amount,
+                        "award_date": award_date,
+                        "province": _extract_province_from_text(description),
+                        "url": _DCC_AWARDS_PDF,
+                    })
+                i = j + 1
+            i += 1
+
+        # Apply the house value floor after parsing (DCC awards are mostly
+        # small; the floor keeps semantics consistent across sources).
+        total_parsed = len(contracts)
+        contracts = [c for c in contracts if (c.get("value") or 0) >= MIN_CONTRACT_VALUE]
+        print(f"[PROCUREMENT] DCC: {len(contracts)} relevant contracts "
+              f"(parsed {total_parsed} awards, floor ${MIN_CONTRACT_VALUE:,})")
+    except Exception as e:
+        print(f"[WARN] DCC fetch failed: {e}")
+
+    return contracts
+
+
+# ── SaskTenders / Alberta Purchasing Connection — dark sources ───────────────
+# Live-verified DARK 2026-06-10 (quality-pass-1.4 G4), same precedent as
+# ontario_bps above:
+#   - SaskTenders: apex sasktenders.ca times out; www.sasktenders.ca serves a
+#     1.7 MB ASP.NET WebForms Search.aspx that requires __VIEWSTATE postbacks.
+#     No RSS feed and no open-data export exist.
+#   - Alberta Purchasing Connection (purchasingconnection.ca): Angular SPA —
+#     every path returns the same JS app shell. No public API or RSS found.
+# Neither exposes structured data, so no fetcher is implemented; SK and AB
+# coverage flows from the CanadaBuys CSV rows whose delivery region is
+# Saskatchewan / Alberta (see fetch_buyandsell_rss / _province_from_cb_row).
+
+
 def _parse_value(value_str):
     """Parse a dollar value string into float."""
     if not value_str:
@@ -535,6 +782,19 @@ def run_procurement_monitor(conn, days_back=30):
     # Provincial sources
     all_contracts.extend(fetch_ontario_bps())
     all_contracts.extend(fetch_bc_bid())
+
+    # quality-pass-1.4 G4: Québec SEAO (Données Québec OCDS) and Defence
+    # Construction Canada — error-isolated like the sources above (each
+    # fetcher already catches internally; the belt-and-braces try keeps a
+    # pathological failure from killing the whole monitor run).
+    try:
+        all_contracts.extend(fetch_seao(days_back))
+    except Exception as e:
+        print(f"[WARN] SEAO source failed (isolated): {e}")
+    try:
+        all_contracts.extend(fetch_dcc())
+    except Exception as e:
+        print(f"[WARN] DCC source failed (isolated): {e}")
 
     print(f"[PROCUREMENT] Total: {len(all_contracts)} relevant contracts across all sources")
 

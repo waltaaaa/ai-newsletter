@@ -627,12 +627,33 @@ def init_db(path: str | None = None) -> sqlite3.Connection:
         ("value_notes", "TEXT DEFAULT ''"),
         ("value_low_millions", "REAL DEFAULT NULL"),
         ("quality_tier", "TEXT DEFAULT 'registry'"),
+        # G7 (quality-pass-1.4): value semantics — currency ISO code, stated
+        # range bounds (in millions), and scope ('phase'|'program'|'').
+        # Old rows stay NULL/default; no backfill.
+        ("currency", "TEXT DEFAULT 'CAD'"),
+        ("value_low", "REAL DEFAULT NULL"),
+        ("value_high", "REAL DEFAULT NULL"),
+        ("value_scope", "TEXT DEFAULT ''"),
+        # G8 (quality-pass-1.4): count of distinct triangulation axes with
+        # >=1 observation (regulatory / financial_disclosure / commercial /
+        # pre_public / media). Computed in upsert_project via triangulation.py.
+        ("axes_satisfied", "INTEGER DEFAULT 0"),
     ]:
         try:
             conn.execute(f"SELECT {col} FROM projects LIMIT 1")
         except sqlite3.OperationalError:
             conn.execute(f"ALTER TABLE projects ADD COLUMN {col} {typedef}")
             conn.commit()
+
+    # G12 (quality-pass-1.4): republication tracking on the evidence table.
+    # republication_of references the evidence rowid of the original row with
+    # the same content_hash within the same project. Republications contribute
+    # zero weight to confidence; URLs are never dropped.
+    try:
+        conn.execute("SELECT republication_of FROM evidence LIMIT 1")
+    except sqlite3.OperationalError:
+        conn.execute("ALTER TABLE evidence ADD COLUMN republication_of INTEGER")
+        conn.commit()
 
     logger.info(f"Database initialized: {path or _DEFAULT_DB_PATH}")
     return conn
@@ -647,6 +668,24 @@ def _norm_key(name: str, province: str) -> str:
     n = re.sub(r"[^a-z0-9]", "", name.lower())
     p = re.sub(r"[^a-z0-9]", "", province.lower())
     return f"{n}__{p}"
+
+
+def _has_real_value(v) -> bool:
+    """G7: True if a value string carries actual information (not a placeholder)."""
+    if v is None:
+        return False
+    s = str(v).strip().lower()
+    return s not in ("", "—", "-", "not disclosed", "n/a", "unknown", "null", "none")
+
+
+def _axes_satisfied_safe(evidence, discovery_sources) -> int:
+    """G8: triangulation axes count; never raises (returns 0 on any failure)."""
+    try:
+        from triangulation import axes_satisfied
+        return axes_satisfied(evidence or [], discovery_sources or [])
+    except Exception as e:
+        logger.debug(f"axes_satisfied failed (non-fatal): {e}")
+        return 0
 
 
 def _to_json(v) -> str:
@@ -1146,7 +1185,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     evidence, discovery_sources, statusHistory, sources, tags,
                     discovery_source, source_url_quality,
                     has_government_source, has_known_source, evidence_count,
-                    announcement_date, start_date, parsed_value, provinces_additional
+                    announcement_date, start_date, parsed_value, provinces_additional,
+                    currency, value_low, value_high, value_scope, axes_satisfied
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?,
                     ?, ?, ?, ?, ?,
@@ -1155,7 +1195,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     ?, ?, ?, ?, ?,
                     ?, ?,
                     ?, ?, ?,
-                    ?, ?, ?, ?
+                    ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?
                 )
             """, (
                 key, name, province,
@@ -1190,6 +1231,14 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                 project_dict.get("start_date", ""),
                 project_dict.get("parsed_value"),
                 project_dict.get("provinces_additional", ""),
+                # G7: value semantics — currency defaults CAD; range bounds stay
+                # NULL unless a range was explicitly stated (never fabricated).
+                project_dict.get("currency") or "CAD",
+                project_dict.get("value_low"),
+                project_dict.get("value_high"),
+                project_dict.get("value_scope") or "",
+                # G8: triangulation axes satisfied by evidence + provenance
+                _axes_satisfied_safe(evidence, discovery_sources),
             ))
         else:
             # UPDATE existing project
@@ -1256,12 +1305,48 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
 
             # 6. Update scalar fields if provided
             description = project_dict.get("description") or existing_dict.get("description", "")
-            value = project_dict.get("value") or existing_dict.get("value", "Not disclosed")
+
+            # G7: value precedence — a value backed by government/registry
+            # authority beats a media-sourced value REGARDLESS of recency.
+            # Ties (both gov or both media) keep existing behavior: incoming
+            # non-empty value wins. Value-semantics fields (currency, range,
+            # scope) follow whichever value won.
+            incoming_value = project_dict.get("value")
+            existing_value = existing_dict.get("value", "Not disclosed")
+            incoming_gov = bool(project_dict.get("has_government_source")) or any(
+                isinstance(e, dict) and e.get("authority") == "government"
+                for e in (new_evidence or [])
+            )
+            existing_gov = bool(existing_dict.get("has_government_source"))
+            # Existing gov-backed value is kept against ANY non-gov incoming
+            # value (real, placeholder, or absent) — recency does not matter.
+            keep_existing_value = (
+                _has_real_value(existing_value)
+                and existing_gov and not incoming_gov
+            )
+            if keep_existing_value:
+                value = existing_value
+                pv = existing_dict.get("parsed_value")
+                currency = existing_dict.get("currency") or "CAD"
+                value_low = existing_dict.get("value_low")
+                value_high = existing_dict.get("value_high")
+                value_scope = existing_dict.get("value_scope") or ""
+            else:
+                value = incoming_value or existing_value
+                pv = project_dict.get("parsed_value") or existing_dict.get("parsed_value")
+                currency = project_dict.get("currency") or existing_dict.get("currency") or "CAD"
+                value_low = project_dict.get("value_low")
+                if value_low is None:
+                    value_low = existing_dict.get("value_low")
+                value_high = project_dict.get("value_high")
+                if value_high is None:
+                    value_high = existing_dict.get("value_high")
+                value_scope = project_dict.get("value_scope") or existing_dict.get("value_scope") or ""
+
             completion = project_dict.get("completionDate") or existing_dict.get("completionDate", "")
             proponent = project_dict.get("proponent") or existing_dict.get("proponent", "")
             announcement = project_dict.get("announcement_date") or existing_dict.get("announcement_date", "")
             start = project_dict.get("start_date") or existing_dict.get("start_date", "")
-            pv = project_dict.get("parsed_value") or existing_dict.get("parsed_value")
             prov_add = project_dict.get("provinces_additional") or existing_dict.get("provinces_additional", "")
 
             conn.execute("""
@@ -1284,6 +1369,11 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     start_date = ?,
                     parsed_value = ?,
                     provinces_additional = ?,
+                    currency = ?,
+                    value_low = ?,
+                    value_high = ?,
+                    value_scope = ?,
+                    axes_satisfied = ?,
                     source_url_quality = ?
                 WHERE norm_key = ?
             """, (
@@ -1305,6 +1395,13 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                 start,
                 pv,
                 prov_add,
+                currency,
+                value_low,
+                value_high,
+                value_scope,
+                # G8: recompute axes from merged evidence + provenance (merged
+                # data only grows, so the count never regresses)
+                _axes_satisfied_safe(merged_evidence, merged_ds),
                 # S2: re-classify link quality from the merged evidence (S4-lite:
                 # quality reflects the best link now on the project)
                 _best_link_quality(merged_evidence),
@@ -2190,10 +2287,30 @@ def _classify_source_type(url: str, discovery_source: str = '') -> str:
     return 'aggregator'
 
 
+def _evidence_content_hash(title: str = '', snippet: str = '') -> str | None:
+    """G12: sha256 of normalized title+snippet (lowercase, whitespace-collapsed).
+
+    Returns None when there is no content to hash — an empty-content hash would
+    make every contentless evidence row within a project 'collide'.
+    """
+    import hashlib
+    content = re.sub(r'\s+', ' ', f"{title or ''} {snippet or ''}".lower()).strip()
+    if not content:
+        return None
+    return hashlib.sha256(content.encode('utf-8')).hexdigest()
+
+
 def insert_evidence(conn: sqlite3.Connection, project_id: int, url: str,
                     discovery_source: str = '', field_claimed: str = 'general',
-                    extracted_value: str = '', published_date: str = '') -> int | None:
-    """Insert a single evidence row. Returns row id or None on conflict."""
+                    extracted_value: str = '', published_date: str = '',
+                    title: str = '', snippet: str = '') -> int | None:
+    """Insert a single evidence row. Returns row id or None on conflict.
+
+    G12 (quality-pass-1.4): populates content_hash from normalized
+    title+snippet. On a hash collision within the same project, the new row's
+    republication_of is set to the original evidence rowid — republications
+    contribute zero weight to confidence scoring but the URL is kept.
+    """
     from url_utils import normalize_url
     norm = normalize_url(url)
     if not norm:
@@ -2201,18 +2318,33 @@ def insert_evidence(conn: sqlite3.Connection, project_id: int, url: str,
 
     source_type = _classify_source_type(url, discovery_source)
     weight = SOURCE_WEIGHT.get(source_type, 0.5)
+    content_hash = _evidence_content_hash(title, snippet)
 
     try:
         with conn:
             cur = conn.execute("""
                 INSERT INTO evidence (
                     project_id, url, url_normalized, source_type, source_weight,
-                    field_claimed, extracted_value, extraction_date, published_date
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), ?)
+                    field_claimed, extracted_value, extraction_date, published_date,
+                    content_hash
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?)
                 ON CONFLICT(project_id, url_normalized, field_claimed) DO NOTHING
             """, (project_id, url, norm, source_type, weight,
-                  field_claimed, extracted_value, published_date))
-        return cur.lastrowid if cur.rowcount > 0 else None
+                  field_claimed, extracted_value, published_date, content_hash))
+            new_id = cur.lastrowid if cur.rowcount > 0 else None
+
+            # G12: same content already on this project -> mark republication
+            if new_id and content_hash:
+                orig = conn.execute("""
+                    SELECT id FROM evidence
+                    WHERE project_id = ? AND content_hash = ? AND id < ?
+                    ORDER BY id LIMIT 1
+                """, (project_id, content_hash, new_id)).fetchone()
+                if orig:
+                    conn.execute(
+                        "UPDATE evidence SET republication_of = ? WHERE id = ?",
+                        (orig[0], new_id))
+        return new_id
     except Exception as e:
         logger.debug(f"Evidence insert skipped for {url}: {e}")
         return None

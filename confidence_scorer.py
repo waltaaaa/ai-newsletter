@@ -151,11 +151,48 @@ def _best_source_weight(project: dict) -> tuple[float, str]:
     return best_weight, best_type
 
 
+def _distinct_evidence_count(evidence: list) -> int:
+    """G12 (quality-pass-1.4): count evidence entries with distinct content.
+
+    Works off the projects.evidence JSON array (this scorer runs pre-upsert,
+    before the evidence table exists for the project). An entry is a
+    republication — and contributes ZERO to corroboration — when its
+    normalized URL was already seen, or its normalized title/snippet content
+    matches an earlier entry. URLs are never dropped; they just don't double-count.
+    """
+    seen_urls: set[str] = set()
+    seen_content: set[str] = set()
+    distinct = 0
+    for ev in evidence or []:
+        if isinstance(ev, str):
+            url, content = ev.strip().lower(), ""
+        elif isinstance(ev, dict):
+            url = (ev.get("url_normalized") or ev.get("url") or "").strip().lower()
+            title = (ev.get("title") or ev.get("name") or "")
+            snippet = (ev.get("snippet") or ev.get("summary") or "")
+            content = re.sub(r"\s+", " ", f"{title} {snippet}".lower()).strip()
+        else:
+            continue
+        is_dup = (bool(url) and url in seen_urls) or \
+                 (bool(content) and content in seen_content)
+        if url:
+            seen_urls.add(url)
+        if content:
+            seen_content.add(content)
+        if not is_dup:
+            distinct += 1
+    return distinct
+
+
 def _corroboration_score(project: dict) -> float:
-    """Score based on number of independent sources."""
+    """Score based on number of independent sources.
+
+    G12: republished/duplicate-content evidence counts zero — only distinct
+    URLs/content corroborate.
+    """
     evidence = project.get("evidence", [])
     sources = project.get("discovery_sources", [])
-    count = max(len(evidence), len(sources), 1)
+    count = max(_distinct_evidence_count(evidence), len({str(s) for s in sources}), 1)
 
     if count >= 5:
         return 0.20

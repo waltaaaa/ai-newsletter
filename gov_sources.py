@@ -1709,6 +1709,296 @@ def _scrape_nwt_mvrb(tavily_client=None) -> list[dict]:
     return projects
 
 
+# ── Nunavut Impact Review Board (NIRB) ───────────────────────────────────────
+# Live-probed 2026-06-10 (quality-pass-1.4 G3): nirb.ca is server-rendered
+# Drupal; the public registry search is a PHP portal. POSTing
+# registry-search-results.php with whattosearchfor=project +
+# searchonlyactive=on returns a page that embeds a `geometry_layer`
+# JS array carrying application_id / nirb_file_number / project_name /
+# proponent_name / activity_type — parseable without any JS execution.
+
+_NIRB_URL = "https://www.nirb.ca/"
+_NIRB_SEARCH_URL = "https://www.nirb.ca/portal/registry-search-results.php"
+
+_NIRB_GEOMETRY_RE = re.compile(
+    r"geometry_layer\s*=\s*eval\('\((\[.*?\])\)'\)", re.DOTALL)
+
+
+def _scrape_nunavut_nirb(tavily_client=None) -> list[dict]:
+    """
+    Scrape the NIRB public registry for active Nunavut assessments.
+    POST search (server-side PHP) — Live-verified 2026-06-10.
+    Returns list of project dicts with discovery_source='provincial_ea'.
+    """
+    import json as _json
+    projects = []
+    try:
+        payload = {
+            'lang': 'en', 'action': 'search',
+            'polygonpoints': '', 'searchpolygon': '',
+            'whattosearchfor': 'project',
+            'searchkeywords': '',
+            'searchonlyactive': 'on',
+        }
+        resp = requests.post(
+            _NIRB_SEARCH_URL, data=payload, timeout=60,
+            headers={'User-Agent': http_client.USER_AGENT})
+        if resp.status_code != 200:
+            print(f"  [NIRB][TIER 1] FAILED status={resp.status_code}")
+            raise RuntimeError(f"status {resp.status_code}")
+
+        m = _NIRB_GEOMETRY_RE.search(resp.text)
+        if not m:
+            print("  [NIRB] geometry_layer block not found in results page")
+            raise RuntimeError("no geometry_layer")
+
+        entries = _json.loads(m.group(1))
+        seen_ids = set()
+        for entry in entries:
+            app_id = str(entry.get('application_id') or '')
+            name = (entry.get('project_name') or '').strip()
+            if not app_id or app_id in seen_ids or len(name) < 4:
+                continue
+            seen_ids.add(app_id)
+            activity = (entry.get('activity_type') or '').strip()
+            if _skip_non_project_filing(name):
+                continue
+            sector = _infer_sector_from_name(f"{name} {activity}")
+            projects.append({
+                'name':             name[:200],
+                'province':         'Nunavut',
+                'status':           'Under Review',
+                'proponent':        (entry.get('proponent_name') or '')[:120],
+                'source_url':       f"https://www.nirb.ca/project/{app_id}",
+                'discovery_source': 'provincial_ea',
+                'sector':           sector if sector != 'Other' else 'Infrastructure',
+            })
+            if len(projects) >= 200:
+                break
+
+    except Exception as e:
+        print(f"  [NIRB] Failed: {type(e).__name__}: {e}")
+        # Tavily fallback, same pattern as YESAB
+        if not projects and tavily_client:
+            try:
+                text = _extract_with_tavily(_NIRB_URL, tavily_client)
+                if text:
+                    projects = _parse_text_for_projects(
+                        text, 'Nunavut', 'provincial_ea', _NIRB_URL)
+            except Exception:
+                pass
+
+    print(f"  [NIRB] {len(projects)} projects from registry")
+    return projects
+
+
+# ── Mackenzie Valley Land and Water Board (NWT) ──────────────────────────────
+# Live-probed 2026-06-10 (quality-pass-1.4 G3): mvlwb.com/registry is a
+# server-rendered Drupal table (Company / Activity / File Number / Start Date /
+# Expiry Date, 50 rows per page). The water licence / land use permit registry
+# is an EARLIER signal than the MVRB review board (permits precede EAs).
+# Sorting by start date desc surfaces the most recent authorizations.
+
+_MVLWB_URL = ("https://mvlwb.com/registry"
+              "?search_api_views_fulltext=&order=date_start&sort=desc")
+
+def _scrape_nwt_mvlwb(tavily_client=None) -> list[dict]:
+    """
+    Scrape Mackenzie Valley Land and Water Board permit registry (most
+    recent authorizations first). Live-verified 2026-06-10.
+    Returns list of project dicts with discovery_source='provincial_ea'.
+    """
+    projects = []
+    try:
+        html = _get_html(_MVLWB_URL, timeout=40)
+        if not html:
+            if tavily_client:
+                text = _extract_with_tavily(_MVLWB_URL, tavily_client)
+                if text:
+                    return _parse_text_for_projects(
+                        text, 'Northwest Territories', 'provincial_ea', _MVLWB_URL)
+            return []
+
+        soup = _soup(html)
+        if not soup:
+            return []
+
+        seen = set()
+        for row in soup.select('table tr'):
+            cells = row.select('td')
+            if len(cells) < 4:
+                continue
+            company = cells[0].get_text(strip=True)
+            activity = cells[1].get_text(strip=True)
+            file_cell = cells[2]
+            file_no = file_cell.get_text(strip=True)
+            if not file_no or file_no.lower() in seen:
+                continue
+            # Skip ancient/blank-proponent rows — not actionable discoveries
+            if not company or company.upper() == '(NONE)':
+                continue
+            seen.add(file_no.lower())
+            link = file_cell.select_one('a') or row.select_one('a[href*="/registry/"]')
+            href = link.get('href', '') if link else ''
+            url = (href if href.startswith('http')
+                   else f"https://mvlwb.com{href}") if href else _MVLWB_URL
+            name = f"{company} — {activity} ({file_no})"
+            sector = _infer_sector_from_name(f"{company} {activity}")
+            projects.append({
+                'name':             name[:200],
+                'province':         'Northwest Territories',
+                'status':           'Approved',   # registry lists issued authorizations
+                'proponent':        company[:120],
+                'source_url':       url,
+                'discovery_source': 'provincial_ea',
+                'sector':           sector if sector != 'Other' else 'Infrastructure',
+            })
+            if len(projects) >= 50:
+                break
+
+    except Exception as e:
+        print(f"  [MVLWB] Failed: {type(e).__name__}: {e}")
+
+    print(f"  [MVLWB] {len(projects)} permits from registry")
+    return projects
+
+
+# ── ISC Indigenous Community Infrastructure (federal) ────────────────────────
+# Live-probed 2026-06-10 (quality-pass-1.4 G3): open.canada.ca CKAN dataset
+# 62155d6f-9167-4972-b77c-b90734b628dc (org isc-sac) — "Indigenous Community
+# Infrastructure". The machine-readable resource is a CSV inside a zip on
+# data.sac-isc.gc.ca (28,974 rows). Ongoing rows carry no dollar values
+# (verified: zero Ongoing rows have investment >= $1M populated), so the
+# filter is category + construction-keyword based, capped per run.
+
+_ISC_INFRA_CSV_ZIP = (
+    "https://data.sac-isc.gc.ca/geomatics/rest/directories/arcgisoutput/"
+    "DonneesOuvertes_OpenData/Infrastructure_communaute_autochtone_"
+    "Indigenous_community_infrastructure/Indigenous_Community_Infrastructure_CSV.zip"
+)
+_ISC_DATASET_URL = ("https://open.canada.ca/data/en/dataset/"
+                    "62155d6f-9167-4972-b77c-b90734b628dc")
+
+# Capital infrastructure categories (excludes Housing — 10,932 rows of
+# band-level micro-grants — and admin/program categories).
+_ISC_CAPITAL_CATEGORIES = frozenset({
+    'Water and wastewater', 'Health infrastructure', 'Education infrastructure',
+    'Roads and bridges', 'Energy systems', 'Structural mitigation',
+    'Urban infrastructure', 'Band administrative buildings',
+    'Culture and recreation', 'Fire protection on reserves', 'Connectivity',
+})
+
+_ISC_CONSTRUCTION_RE = re.compile(
+    r'construction|new |build|expansion|upgrade|replacement|renovation'
+    r'|subdivision|treatment plant|school|health centre|health center'
+    r'|water plant|lagoon|retrofit|addition', re.IGNORECASE)
+
+# Program/study/equipment rows that are not capital projects
+_ISC_SKIP_RE = re.compile(
+    r'^(capacity enhancement|feasibility|study|training|workshop'
+    r'|asset management|operation and maintenance|acquisition|purchase)',
+    re.IGNORECASE)
+
+_ISC_MAX_PROJECTS = 400
+
+# ISC CSV uses non-breaking spaces in some province names
+def _isc_norm_province(raw: str) -> str:
+    return (raw or '').replace('\xa0', ' ').strip()
+
+_ISC_SECTOR_BY_CATEGORY = {
+    'Water and wastewater':          'Water & Wastewater',
+    'Health infrastructure':         'Healthcare',
+    'Education infrastructure':      'Education',
+    'Roads and bridges':             'Infrastructure',
+    'Energy systems':                'Clean Energy',
+    'Structural mitigation':         'Infrastructure',
+    'Urban infrastructure':          'Infrastructure',
+    'Band administrative buildings': 'Infrastructure',
+    'Culture and recreation':        'Infrastructure',
+    'Fire protection on reserves':   'Infrastructure',
+    'Connectivity':                  'Telecommunications',
+}
+
+
+def _fetch_isc_infrastructure(tavily_client=None) -> list[dict]:
+    """
+    Fetch Indigenous Services Canada community infrastructure projects
+    (national CSV, all provinces/territories). Live-verified 2026-06-10.
+    Returns list of project dicts with discovery_source='federal_registry'.
+    """
+    import csv as _csv
+    import io as _io
+    import zipfile as _zipfile
+
+    projects = []
+    try:
+        resp = http_client.get(_ISC_INFRA_CSV_ZIP, timeout=90)
+        if resp is None or resp.status_code != 200:
+            status = 'network' if resp is None else resp.status_code
+            print(f"  [ISC Infrastructure][TIER 1] FAILED status={status}")
+            return []
+
+        content = resp.content
+        if content[:2] == b'PK':
+            zf = _zipfile.ZipFile(_io.BytesIO(content))
+            csv_names = [n for n in zf.namelist() if n.lower().endswith('.csv')]
+            if not csv_names:
+                print("  [ISC Infrastructure] zip contains no CSV")
+                return []
+            text = zf.read(csv_names[0]).decode('utf-8-sig', errors='replace')
+        else:
+            text = content.decode('utf-8-sig', errors='replace')
+
+        seen = set()
+        territory_rows, other_rows = [], []
+        for row in _csv.DictReader(_io.StringIO(text)):
+            if (row.get('Project Status') or '').strip() != 'Ongoing':
+                continue
+            category = (row.get('Infrastructure Category') or '').strip()
+            if category not in _ISC_CAPITAL_CATEGORIES:
+                continue
+            name = (row.get('Project Name') or '').strip()
+            descr = (row.get('Description') or '').strip()
+            if len(name) < 6 or _ISC_SKIP_RE.search(name):
+                continue
+            if not _ISC_CONSTRUCTION_RE.search(f"{name} {descr}"):
+                continue
+            proj_no = (row.get('Internal Project Number') or '').strip()
+            community = (row.get('Community') or '').strip()
+            dedup_key = proj_no or f"{community}|{name}".lower()
+            if dedup_key in seen:
+                continue
+            seen.add(dedup_key)
+            province = _isc_norm_province(row.get('Province/Territory'))
+            display_name = f"{community} — {name}" if community else name
+            project = {
+                'name':             display_name[:200],
+                'province':         province,
+                'status':           'Under Construction',  # Ongoing in ISC terms
+                'proponent':        community[:120],
+                'source_url':       _ISC_DATASET_URL,
+                'discovery_source': 'federal_registry',
+                'sector':           _ISC_SECTOR_BY_CATEGORY.get(category, 'Infrastructure'),
+                'description':      descr[:300],
+            }
+            inv = (row.get('ISC Departmental Investment') or '').strip()
+            if inv and inv.lower() != 'not available':
+                project['value'] = inv
+            # Northern coverage first: territories get queue priority
+            if province in ('Nunavut', 'Northwest Territories', 'Yukon'):
+                territory_rows.append(project)
+            else:
+                other_rows.append(project)
+
+        projects = (territory_rows + other_rows)[:_ISC_MAX_PROJECTS]
+
+    except Exception as e:
+        print(f"  [ISC Infrastructure] Failed: {type(e).__name__}: {e}")
+
+    print(f"  [ISC Infrastructure] {len(projects)} projects from ISC dataset")
+    return projects
+
+
 # ── SEDAR+ Securities Filings ────────────────────────────────────────────────
 
 _SEDAR_URL = "https://www.sedarplus.ca/csa-party/records/record.html?lang=en"
@@ -1993,6 +2283,10 @@ def fetch_registry_projects(tavily_client=None) -> list[dict]:
         ("NL EA",                 _scrape_nl_ea),
         ("YESAB",                 _scrape_yukon_yesab),
         ("MVRB",                  _scrape_nwt_mvrb),
+        # quality-pass-1.4 G3: Northern & Indigenous coverage (live-verified 2026-06-10)
+        ("NIRB",                  _scrape_nunavut_nirb),
+        ("MVLWB",                 _scrape_nwt_mvlwb),
+        ("ISC Infrastructure",    _fetch_isc_infrastructure),
         # STEP 2G: Structured databases
         # SEDAR+ disabled — scraper targets login portal, returns 0 results. Needs endpoint audit.
         # ("SEDAR+",                _scrape_sedar),

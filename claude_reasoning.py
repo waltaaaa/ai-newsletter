@@ -559,6 +559,10 @@ For each project found, return JSON:
       "province": "Full province name",
       "city": "City name if known",
       "value_millions": null or number,
+      "currency": "ISO currency code of the stated value (CAD unless the text says otherwise, e.g. USD)",
+      "value_low": null or number — low end of a stated cost RANGE, in millions (null if no range stated),
+      "value_high": null or number — high end of a stated cost RANGE, in millions (null if no range stated),
+      "value_scope": "'phase' if the value covers a single phase, 'program' if it is a multi-project program envelope, '' if the text does not distinguish",
       "status": "Proposed|Approved|Under Construction|Completed|Delayed|Cancelled",
       "sector": "sector description",
       "description": "1-2 sentences describing what the project is, who is building/operating it, and its scope or purpose",
@@ -645,6 +649,11 @@ def recover_failed_extractions_sync(failed_articles):
                     "cma": project.get("city", ""),
                     "sector": project.get("sector", "Other"),
                     "value": value_str,
+                    # G7 value semantics — passthrough, never fabricated
+                    "currency": project.get("currency") or "CAD",
+                    "value_low": project.get("value_low"),
+                    "value_high": project.get("value_high"),
+                    "value_scope": project.get("value_scope") or "",
                     "status": project.get("status", "Proposed"),
                     "proponent": project.get("proponent", ""),
                     "description": project.get("description", ""),
@@ -1080,6 +1089,7 @@ Return JSON:
       "capex_low": null,
       "capex_high": null,
       "capex_currency": "CAD",
+      "value_scope": "'phase' if the cost covers a single phase, 'program' if it is a multi-project program envelope, '' if the text does not distinguish",
       "status": "Proposed|Approved|Under Construction|Completed|Cancelled|Paused",
       "event_type": "announcement|approval|construction_start|completion|cancellation|update",
       "date_announced": "",
@@ -1241,12 +1251,24 @@ def selective_extraction_sync(documents, flash_extractions=None):
                     confidence = 0.6
                     confidence_note = "claude_selective_conflict"
 
+            # G7 value semantics: capex_low/high are raw dollars (same unit as
+            # capex_exact above) — convert to millions; never fabricate a range
+            # from a point value.
+            def _to_millions(v):
+                if isinstance(v, (int, float)) and v > 0:
+                    return round(v / 1e6, 3)
+                return None
+
             flat = {
                 "name": name,
                 "province": project.get("province", ""),
                 "cma": project.get("cma") or project.get("municipality", ""),
                 "sector": project.get("sector", "Other"),
                 "value": value_str,
+                "currency": project.get("capex_currency") or "CAD",
+                "value_low": _to_millions(project.get("capex_low")),
+                "value_high": _to_millions(project.get("capex_high")),
+                "value_scope": project.get("value_scope") or "",
                 "status": project.get("status", "Proposed"),
                 "proponent": project.get("proponent", ""),
                 "description": project.get("evidence_snippet", ""),

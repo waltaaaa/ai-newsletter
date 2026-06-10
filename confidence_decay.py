@@ -71,6 +71,12 @@ def compute_confidence(project_id, conn):
     """
     from db import get_evidence_for_project
     evidence_rows = get_evidence_for_project(conn, project_id)
+
+    # G12 (quality-pass-1.4): republications contribute ZERO weight — only
+    # rows with distinct content count toward the score and agreement bonus.
+    # The republished rows (and their URLs) stay in the evidence table.
+    evidence_rows = [r for r in evidence_rows if not r.get('republication_of')]
+
     if not evidence_rows:
         return 0.3  # legacy default — no evidence yet
 
@@ -219,6 +225,28 @@ def apply_confidence_decay(conn):
                     )
             except Exception as e:
                 logger.warning(f"[DECAY] Update failed for {norm_key}: {e}")
+
+            # A6 (quality-pass-1.4): log a confidence_decay event so decay is
+            # auditable instead of silent. One event per project per decay run,
+            # and only when the displayed value actually changed — repeated
+            # daily runs within the same decay bucket write nothing.
+            old_display = data.get("display_confidence")
+            if (result["decay_applied"] > 0 and project_rowid
+                    and result["display_confidence"] != old_display):
+                try:
+                    from db import insert_project_event
+                    insert_project_event(
+                        conn, project_rowid, 'confidence_decay',
+                        summary=(
+                            f"Confidence decay: display "
+                            f"{old_display if old_display is not None else base_conf} "
+                            f"-> {result['display_confidence']} "
+                            f"(base {base_conf}, {result['days_stale']} days since "
+                            f"last seen, bucket -{result['decay_applied']})"
+                        ),
+                    )
+                except Exception as e:
+                    logger.debug(f"[DECAY] Event log failed for {norm_key}: {e}")
 
             total += 1
 

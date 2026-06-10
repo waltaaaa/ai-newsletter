@@ -132,11 +132,21 @@ def _sync_evidence_and_org(conn, norm_key: str, project_dict: dict, existing: di
             evidence = []
     discovery_source = project_dict.get('discovery_source', '')
     for ev in evidence:
+        if isinstance(ev, str):
+            if ev.strip():
+                insert_evidence(conn, project_id, ev,
+                                discovery_source=discovery_source)
+            continue
+        if not isinstance(ev, dict):
+            continue
         url = ev.get('url', '')
         if url:
             insert_evidence(conn, project_id, url,
                             discovery_source=ev.get('source', discovery_source),
-                            published_date=ev.get('date', ''))
+                            published_date=ev.get('date', ''),
+                            # G12: content for republication detection
+                            title=ev.get('title') or ev.get('name') or '',
+                            snippet=ev.get('snippet') or ev.get('summary') or '')
 
     # Also add sources list as evidence
     for src_url in (project_dict.get('sources') or []):
@@ -440,6 +450,12 @@ def upsert_flat_projects(conn, projects: list[dict]):
             'proponent':         project.get('proponent') or '',
             'tags':              project.get('tags') or [],
             'value':             project.get('value') or '\u2014',
+            # G7 value semantics \u2014 passthrough; db.upsert_project defaults
+            # currency to CAD and leaves range bounds NULL (never fabricated).
+            'currency':          project.get('currency') or 'CAD',
+            'value_low':         project.get('value_low'),
+            'value_high':        project.get('value_high'),
+            'value_scope':       project.get('value_scope') or '',
             'status':            status,
             'completionDate':    project.get('completionDate') or '',
             'sources':           project.get('sources') or [],

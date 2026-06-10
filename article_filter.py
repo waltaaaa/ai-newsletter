@@ -118,6 +118,26 @@ _CAT_B = frozenset({
     'infrastructure bank', 'p3', 'public-private', 'ppp',
 })
 
+# quality-pass-1.4 G9: French Category B (economic signal) — ADDITIVE.
+# Cat A and Cat C already carry French vocabulary (Phase 3) but Cat B was
+# anglo-only, so French articles with a clear economic signal failed the
+# A ∩ (B ∪ C) co-occurrence unless a Cat C status word happened to appear.
+# Both apostrophe variants (' and ') are included for "appel d'offres" /
+# "étude de faisabilité"-style phrases copied from different encodings.
+_CAT_B_FR = frozenset({
+    'financement', 'contrat', 'coût', 'cout', 'budget', 'subvention',
+    "appel d'offres", 'appel d’offres', 'milliards', 'millions',
+    'investissement', 'retombées', 'retombees', 'chantier', 'travaux',
+    'mise en service', 'étude de faisabilité', 'etude de faisabilite',
+    'étude de faisabilité', 'dépenses', 'depenses',
+    'immobilisations', 'enveloppe budgétaire', 'enveloppe budgetaire',
+    'octroi', 'adjudication', 'soumission', 'devis',
+})
+
+# Combined Cat B used everywhere Cat B is checked (additive only — the
+# original _CAT_B is never reduced).
+_CAT_B_ALL = _CAT_B | _CAT_B_FR
+
 # Category C: status signal
 _CAT_C = frozenset({
     'proposed', 'approved', 'under construction', 'under review',
@@ -210,8 +230,9 @@ def _compile_keyword_re(keywords: frozenset) -> re.Pattern:
 
 
 # Pre-compiled keyword patterns (built once at import time)
+# G9: Cat B compiles the combined EN+FR set.
 _CAT_A_RE = _compile_keyword_re(_CAT_A)
-_CAT_B_RE = _compile_keyword_re(_CAT_B)
+_CAT_B_RE = _compile_keyword_re(_CAT_B_ALL)
 _CAT_C_RE = _compile_keyword_re(_CAT_C)
 
 
@@ -262,10 +283,10 @@ def layer1_keyword_check(title: str, summary: str = '') -> bool:
     if _has_any_dollar_mention(text) and _mentions_canadian_location(text):
         return True
 
-    # L4: Keyword co-occurrence
+    # L4: Keyword co-occurrence (Cat B includes the French additions, G9)
     if not _has_any(text, _CAT_A, _CAT_A_RE):
         return False
-    return _has_any(text, _CAT_B, _CAT_B_RE) or _has_any(text, _CAT_C, _CAT_C_RE)
+    return _has_any(text, _CAT_B_ALL, _CAT_B_RE) or _has_any(text, _CAT_C, _CAT_C_RE)
 
 
 def layer1_strength(title: str, summary: str = '') -> str:
@@ -277,7 +298,7 @@ def layer1_strength(title: str, summary: str = '') -> str:
     """
     text = (title + ' ' + summary).lower()
     has_a = _has_any(text, _CAT_A, _CAT_A_RE)
-    has_bc = _has_any(text, _CAT_B, _CAT_B_RE) or _has_any(text, _CAT_C, _CAT_C_RE)
+    has_bc = _has_any(text, _CAT_B_ALL, _CAT_B_RE) or _has_any(text, _CAT_C, _CAT_C_RE)
     if has_a and has_bc:
         return "strong"
     if _has_dollar_value(text):
@@ -444,6 +465,42 @@ Example:
 3.R"""
 
 
+def _degraded_keyword_pass(article: dict) -> bool:
+    """quality-pass-1.4 G6: tightened keyword bar for full-chain L6 failure.
+
+    When BOTH free classifier tiers (NIM and Groq) are down, instead of
+    passing every borderline article we keep only those that clear a
+    tightened bar:
+      - a dollar-value regex match (reuses _DOLLAR_RE), OR
+      - triple keyword co-occurrence: Cat A AND Cat B AND Cat C.
+
+    Government-bypass articles never reach L6 (skip_layer1 feeds leave them
+    with no _l1_strength, which defaults to 'strong' and skips L6 entirely),
+    and dollar-bypass articles satisfy the dollar-regex arm by construction —
+    so everything that arrived via a bypass invariant still passes.
+    """
+    text = (f"{article.get('title', '')} "
+            f"{article.get('summary', '') or ''}").lower()
+    if _DOLLAR_RE.search(text):
+        return True
+    return (_has_any(text, _CAT_A, _CAT_A_RE)
+            and _has_any(text, _CAT_B_ALL, _CAT_B_RE)
+            and _has_any(text, _CAT_C, _CAT_C_RE))
+
+
+def _record_l6_fail_open(reason: str):
+    """Record a fail-open event on the l6_classifier service (best-effort)."""
+    try:
+        import service_health
+        service_health.get().record_failure('l6_classifier', reason)
+    except Exception:
+        pass
+
+
+# Fail-open passes exceeding this fraction of L6 input triggers a WARN.
+_L6_FAIL_OPEN_WARN_FRAC = 0.10
+
+
 def layer3_gemini_prescreen(
     articles: list[dict],
     batch_size: int = 20,
@@ -452,7 +509,8 @@ def layer3_gemini_prescreen(
 ) -> list[int]:
     """
     Layer 6: LLM batch classification.
-    Fallback chain: NIM Nemotron Super 120B → Groq LLaMA 3.3 70B → fail-open.
+    Fallback chain: NIM Nemotron Super 120B → Groq LLaMA 3.3 70B →
+    degraded keyword-only mode (G6: tightened bar, NOT pass-everything).
     Returns list of indices (from the input list) that are RELEVANT.
     """
     if not articles:
@@ -462,6 +520,7 @@ def layer3_gemini_prescreen(
     try:
         nim = get_nim_client()
         relevant_indices = []
+        fail_open_passes = 0  # G6: missing-verdict passes
         for batch_start in range(0, len(articles), batch_size):
             batch = articles[batch_start:batch_start + batch_size]
             batch_text = "\n".join(
@@ -481,10 +540,20 @@ def layer3_gemini_prescreen(
             verdicts = re.findall(r'(\d+)\.([RI])', resp, re.IGNORECASE)
             result_map = {int(num): v.upper() for num, v in verdicts}
             for j in range(len(batch)):
+                if (j + 1) not in result_map:
+                    fail_open_passes += 1  # fail-open: missing verdict = R
                 v = result_map.get(j + 1, "R")  # fail-open if missing
                 if v == "R":
                     relevant_indices.append(batch_start + j)
         print(f"  [Filter L6] NIM Nemotron: {len(relevant_indices)}/{len(articles)} relevant")
+        # G6: fail-open rate alerting (normal per-verdict fail-open stays
+        # untouched — this only surfaces an abnormal rate).
+        if fail_open_passes > _L6_FAIL_OPEN_WARN_FRAC * len(articles):
+            print(f"  [Filter L6 WARN] fail-open passes {fail_open_passes}/"
+                  f"{len(articles)} exceed {_L6_FAIL_OPEN_WARN_FRAC:.0%} of L6 input "
+                  f"(missing verdicts defaulted to RELEVANT)")
+            _record_l6_fail_open(
+                f"missing-verdict fail-open {fail_open_passes}/{len(articles)}")
         return relevant_indices
     except Exception as e:
         print(f"  [Filter L6] NIM failed, falling back to Groq: {e}")
@@ -501,14 +570,44 @@ def layer3_gemini_prescreen(
     except Exception as e:
         print(f"  [Filter L6] Groq failed: {type(e).__name__}: {e}")
 
-    # Fail-open: no classifier available — pass everything through
-    print(f"  [Filter L6] No classifier available — passing all {len(articles)} articles through")
-    return list(range(len(articles)))
+    # G6 DEGRADED MODE: both free tiers are down. Previously this branch
+    # passed ALL articles through; now only articles clearing the tightened
+    # keyword bar (dollar regex OR Cat A+B+C triple co-occurrence) survive.
+    # Everything kept here is a fail-open pass — counted and alerted.
+    kept = [i for i, art in enumerate(articles) if _degraded_keyword_pass(art)]
+    print(f"  [Filter L6 DEGRADED] keyword-only mode: kept {len(kept)} of "
+          f"{len(articles)} (NIM and Groq both unavailable)")
+    if len(kept) > _L6_FAIL_OPEN_WARN_FRAC * len(articles):
+        print(f"  [Filter L6 WARN] fail-open passes {len(kept)}/{len(articles)} "
+              f"exceed {_L6_FAIL_OPEN_WARN_FRAC:.0%} of L6 input "
+              f"(full classifier-chain failure)")
+    _record_l6_fail_open(
+        f"full-chain failure: keyword-only kept {len(kept)}/{len(articles)}")
+    return kept
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # COMBINED FILTER
 # ══════════════════════════════════════════════════════════════════════════════
+
+def _article_language(art: dict) -> str:
+    """quality-pass-1.4 G9: best-effort language hint for an article.
+
+    Sources of truth, in priority order:
+      1. `_language` (Google/Bing News RSS search articles)
+      2. `language` (some feed dicts)
+      3. feed-category metadata (rss_monitor items carry `category`,
+         e.g. 'regional_media_fr' → French)
+    Defaults to 'en'.
+    """
+    lang = art.get('_language') or art.get('language')
+    if lang:
+        return 'fr' if str(lang).lower().startswith('fr') else 'en'
+    cat = str(art.get('category') or art.get('_feed_category') or '').lower()
+    if cat.endswith('_fr') or cat == 'fr':
+        return 'fr'
+    return 'en'
+
 
 def filter_articles(
     articles: list[dict],
@@ -712,6 +811,21 @@ def filter_articles(
     l7_cut = sum(1 for layer, _ in filtered_out if layer == 'L7')
     print(f"  [Filter] {initial_count} -> {len(articles)} "
           f"(L1: -{l1_cut}, L2: -{l2_cut}, L6: -{l6_cut}, L7: -{l7_cut})")
+
+    # G9: per-language pass/reject counts in the run summary. French
+    # articles failing at an outsized rate is the signal this surfaces.
+    lang_stats: dict[str, list[int]] = {}
+    for art in articles:
+        lang = _article_language(art)
+        lang_stats.setdefault(lang, [0, 0])[0] += 1
+    for _layer, art in filtered_out:
+        lang = _article_language(art)
+        lang_stats.setdefault(lang, [0, 0])[1] += 1
+    if lang_stats:
+        summary = "; ".join(
+            f"{lang}: {p} passed / {r} rejected"
+            for lang, (p, r) in sorted(lang_stats.items()))
+        print(f"  [Filter lang] {summary}")
 
     # Doc-cache recording (E-4/E-9): persist every article that COMPLETED
     # L6/L7 classification — survivors AND L6/L7 rejects — so re-fetches are

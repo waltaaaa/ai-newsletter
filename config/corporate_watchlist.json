@@ -1,9 +1,9 @@
 {
   "_meta": {
     "description": "Corporate watchlist — top Canadian companies that build major capital projects",
-    "last_updated": "2026-03-13",
-    "total_companies": 65,
-    "notes": "Companies with discoverable RSS feeds also appear in rss_feeds.json under corporate_ir category. Others tracked via Google News RSS site-search."
+    "last_updated": "2026-06-10",
+    "total_companies": 80,
+    "notes": "Companies with discoverable RSS feeds also appear in rss_feeds.json under corporate_ir category. Others tracked via Google News RSS site-search. Indigenous development corporations added quality-pass-1.4 G3 (newsroom URLs live-probed 2026-06-10; null = no working newsroom path found, Google News coverage only)."
   },
   "companies": [
     {"name": "Suncor Energy", "ticker": "SU.TO", "sector": "oil_gas", "hq_province": "AB", "newsroom_url": "https://www.suncor.com/newsroom"},
@@ -70,6 +70,21 @@
     {"name": "Canadian Utilities", "ticker": "CU.TO", "sector": "power_energy", "hq_province": "AB", "newsroom_url": "https://www.canadianutilities.com/news-and-events/"},
     {"name": "SaskPower", "ticker": null, "sector": "power_energy", "hq_province": "SK", "newsroom_url": "https://www.saskpower.com/about-us/media-information"},
     {"name": "Manitoba Hydro", "ticker": null, "sector": "power_energy", "hq_province": "MB", "newsroom_url": "https://www.hydro.mb.ca/corporate/news/"},
-    {"name": "Volkswagen Group Canada", "ticker": null, "sector": "manufacturing", "hq_province": "ON", "newsroom_url": "https://media.vw.com/en-ca/releases"}
+    {"name": "Volkswagen Group Canada", "ticker": null, "sector": "manufacturing", "hq_province": "ON", "newsroom_url": "https://media.vw.com/en-ca/releases"},
+    {"name": "Inuvialuit Development Corporation", "ticker": null, "sector": "indigenous", "hq_province": "NT", "newsroom_url": "https://www.inuvialuit.com/news"},
+    {"name": "Makivvik Corporation", "ticker": null, "sector": "indigenous", "hq_province": "QC", "newsroom_url": "https://www.makivvik.ca/news"},
+    {"name": "Nunasi Corporation", "ticker": null, "sector": "indigenous", "hq_province": "NU", "newsroom_url": "https://nunasi.com/news/"},
+    {"name": "Athabasca Basin Development", "ticker": null, "sector": "indigenous", "hq_province": "SK", "newsroom_url": "https://www.athabascabasin.ca/news/"},
+    {"name": "Des Nedhe Group", "ticker": null, "sector": "indigenous", "hq_province": "SK", "newsroom_url": "https://desnedhe.com/news/"},
+    {"name": "Fort McKay Group of Companies", "ticker": null, "sector": "indigenous", "hq_province": "AB", "newsroom_url": "https://fortmckaygroup.com/news/"},
+    {"name": "Membertou Development Corporation", "ticker": null, "sector": "indigenous", "hq_province": "NS", "newsroom_url": "https://www.membertoucorporate.ca/news"},
+    {"name": "Nch'kay Development Corporation", "ticker": null, "sector": "indigenous", "hq_province": "BC", "newsroom_url": "https://www.nchkay.com/news/"},
+    {"name": "Haisla Nation / HaiSea Marine", "ticker": null, "sector": "indigenous", "hq_province": "BC", "newsroom_url": "https://www.haisla.ca/news/"},
+    {"name": "Six Nations of the Grand River Development Corporation", "ticker": null, "sector": "indigenous", "hq_province": "ON", "newsroom_url": "https://www.sndevcorp.ca/news/"},
+    {"name": "Whitecap Development Corporation", "ticker": null, "sector": "indigenous", "hq_province": "SK", "newsroom_url": "https://whitecapdevcorp.com/news/"},
+    {"name": "Miawpukek Horizon Maritime", "ticker": null, "sector": "indigenous", "hq_province": "NL", "newsroom_url": "https://www.horizonmaritime.com/news"},
+    {"name": "Tlicho Investment Corporation", "ticker": null, "sector": "indigenous", "hq_province": "NT", "newsroom_url": "https://www.tlicho.ca/news"},
+    {"name": "Penticton Indian Band Development Corporation", "ticker": null, "sector": "indigenous", "hq_province": "BC", "newsroom_url": "https://pibdc.ca/news/"},
+    {"name": "Osoyoos Indian Band Development Corporation", "ticker": null, "sector": "indigenous", "hq_province": "BC", "newsroom_url": null}
   ]
 }
