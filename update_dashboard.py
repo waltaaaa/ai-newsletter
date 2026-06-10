@@ -630,6 +630,10 @@ if __name__ == "__main__":
         from known_project_sweep import seed_known_projects, run_known_project_sweep_sync
         seed_known_projects(conn)
         result = run_known_project_sweep_sync(conn)
+        # R4: stamp the sweep date so the weekly overdue check resets
+        from datetime import date as _date
+        from db import save_dashboard_state
+        save_dashboard_state(conn, "last_known_sweep_date", _date.today().isoformat())
         print(f"\n[KNOWN-SWEEP] Complete: {result}")
     elif args.audit_archetypes:
         from archetype_audit import run_archetype_audit

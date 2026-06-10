@@ -134,6 +134,70 @@ def normalize_url(url):
         return url
 
 
+# Listing/inventory-page URL patterns. A "listing" URL points at a multi-project
+# index (registry search page, Major Projects Inventory PDF, budget document) —
+# it satisfies the URL hard gate but is NOT a project-specific deep link, and it
+# must never be used as a shared-URL dedup signal (hundreds of distinct projects
+# legitimately share one inventory URL). Canonical copy — tools/dedup_projects_fuzzy.py
+# imports this and keeps a local fallback for standalone use.
+_LISTING_URL_PATTERNS = (
+    '/major-projects-inventory',
+    '/major_projects_inventory',
+    '/projects-list',
+    '/project-list',
+    '/projects.aspx',
+    '/registry/projects',
+    '/inventory.pdf',
+    '/mpi-',
+    '/budget-',
+    '/budget2',
+    '/page=',
+    '?search=',
+)
+
+
+def is_listing_url(url):
+    """True if the URL is clearly a multi-project listing page, not a specific project page."""
+    if not url:
+        return True
+    u_low = url.lower()
+    return any(p in u_low for p in _LISTING_URL_PATTERNS)
+
+
+def classify_url_quality(url):
+    """Classify a single URL as 'deep' | 'listing' | 'homepage' (S2, 2026-06-08 audit).
+
+    - homepage: no meaningful path (e.g. https://example.com/)
+    - listing:  matches a known multi-project listing/inventory pattern
+    - deep:     anything else — a path that plausibly identifies one resource
+    """
+    if not url:
+        return ''
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return ''
+    path = (parsed.path or '').strip('/')
+    if not path and not parsed.query:
+        return 'homepage'
+    if is_listing_url(url):
+        return 'listing'
+    return 'deep'
+
+
+def best_link_quality(urls):
+    """Best quality across a set of URLs: deep > listing > homepage > ''. """
+    rank = {'deep': 3, 'listing': 2, 'homepage': 1, '': 0}
+    best = ''
+    for u in urls or []:
+        q = classify_url_quality(u)
+        if rank[q] > rank[best]:
+            best = q
+        if best == 'deep':
+            break
+    return best
+
+
 def classify_source_authority(url):
     """Classify a source URL by authority level for confidence scoring.
 

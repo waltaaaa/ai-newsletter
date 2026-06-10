@@ -43,6 +43,7 @@ import logging
 import os
 import re
 import sqlite3
+from collections import Counter
 from datetime import datetime
 
 from normalize import normalize_province, normalize_status, parse_value
@@ -68,8 +69,27 @@ STATUS_ORDER = {
     "Paused": -1,
 }
 
-# Terminal states that always override forward states
-_TERMINAL_STATES = {"Cancelled", "On Hold", "Suspended", "Paused"}
+# Terminal states that always override forward states.
+# C5 (2026-06-08 audit): hold states are no longer unconditional — a media
+# article saying "delayed" was flipping Under Construction projects to On Hold
+# through this set. Only Cancelled remains always-apply; holds are gated in
+# _should_update_status (require an explicit/government-backed signal).
+_TERMINAL_STATES = {"Cancelled"}
+_HOLD_STATES = {"On Hold", "Suspended", "Paused"}
+
+# E6 (2026-06-08 audit): per-reason rejection counters. upsert_project prints
+# and returns None on rejection, so callers only ever see an undifferentiated
+# "skipped" count. These module-level counters let the orchestration layer log
+# a breakdown (rejected_no_url / non_project_name / invalid_province / …).
+REJECTION_COUNTERS: Counter = Counter()
+
+
+def get_rejection_counters(reset: bool = False) -> dict:
+    """Return (and optionally reset) the per-reason upsert rejection counters."""
+    snapshot = dict(REJECTION_COUNTERS)
+    if reset:
+        REJECTION_COUNTERS.clear()
+    return snapshot
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -701,18 +721,43 @@ def _merge_list(existing: list, incoming: list) -> list:
     return result
 
 
-def _should_update_status(existing_status: str, new_status: str) -> bool:
+def _should_update_status(existing_status: str, new_status: str,
+                          explicit_hold: bool = False) -> bool:
     """Return True if new_status should replace existing_status.
 
     Rules:
-    - Terminal states (Cancelled, On Hold, Suspended, Paused) always apply.
+    - Cancelled always applies (true terminal state).
+    - Hold states (On Hold / Suspended / Paused) apply ONLY when the signal is
+      explicit (regulatory stop-work / government source) — C5: previously they
+      were unconditional, so any media mention of "delayed" regressed an
+      Under Construction project to On Hold.
     - Otherwise: only update if new status order > existing status order.
     """
     if new_status in _TERMINAL_STATES:
         return True
+    if new_status in _HOLD_STATES:
+        return explicit_hold
     existing_order = STATUS_ORDER.get(existing_status, 0)
     new_order = STATUS_ORDER.get(new_status, -2)
     return new_order > existing_order
+
+
+def _has_explicit_hold_signal(project_dict: dict) -> bool:
+    """True if an incoming hold status is backed by an explicit signal.
+
+    Accepted signals: an explicit caller flag (regulatory stop-work orders,
+    IAAC suspensions set explicit_hold=True), or government-authority evidence
+    on the incoming record itself.
+    """
+    if project_dict.get("explicit_hold") or project_dict.get("regulatory_signal"):
+        return True
+    if project_dict.get("has_government_source"):
+        return True
+    evidence = project_dict.get("evidence") or []
+    if isinstance(evidence, str):
+        evidence = _from_json(evidence, [])
+    return any(isinstance(e, dict) and e.get("authority") == "government"
+               for e in evidence)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -793,6 +838,107 @@ def _is_non_project_name(name: str) -> bool:
     return False
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# C1 — fuzzy rediscovery fallback (2026-06-08 audit)
+# ──────────────────────────────────────────────────────────────────────────────
+# The live upsert matched only on the exact name+province slug, so a project
+# re-found with ANY name variation ("Site C" vs "Site C Hydroelectric Dam")
+# wrote a brand-new row — measured result: 90.8% of projects carried exactly one
+# evidence item and 96.6% had empty multi-tier provenance. After an exact-key
+# miss we now run a blocked fuzzy lookup that reuses the STRICT guarded matcher
+# from tools/dedup_projects_fuzzy (series-identifier, proponent, CMA and
+# value-ratio contradiction kills — biased toward false-negative, so "Surmont
+# (ConocoPhillips)" vs "Surmont (MEG)" stay distinct). Disable: LI_FUZZY_UPSERT=0.
+
+_FUZZY_STOPWORDS = {
+    'project', 'projects', 'expansion', 'phase', 'stage', 'the', 'and', 'of',
+    'in', 'at', 'on', 'for', 'to', 'a', 'an', 'redevelopment', 'development',
+    'plant', 'facility', 'centre', 'center', 'building', 'mine', 'plan',
+    'corp', 'inc', 'ltd', 'ltee', 'limited',
+}
+
+# Observability: fuzzy-merge hits per process (read via get_merge_counters)
+MERGE_COUNTERS: Counter = Counter()
+
+
+def get_merge_counters(reset: bool = False) -> dict:
+    """Return (and optionally reset) the fuzzy-merge counters."""
+    snapshot = dict(MERGE_COUNTERS)
+    if reset:
+        MERGE_COUNTERS.clear()
+    return snapshot
+
+
+def _fuzzy_find_existing(conn: sqlite3.Connection, name: str, province: str,
+                         project_dict: dict) -> str | None:
+    """Blocked fuzzy lookup for an existing duplicate row after an exact-key miss.
+
+    Blocking: same province + name LIKE on up to 3 longest distinctive (≥4-char)
+    tokens. Matching: tools/dedup_projects_fuzzy.is_duplicate_pair — the same
+    guarded matcher the offline consolidation tool uses (C6: listing URLs are
+    excluded from the shared-URL signal). Returns the matched norm_key or None.
+    """
+    try:
+        from tools.dedup_projects_fuzzy import (
+            normalize_name, is_duplicate_pair, url_set)
+        from url_utils import is_listing_url
+    except ImportError:
+        return None
+
+    n1 = normalize_name(name)
+    if not n1:
+        return None
+    block_tokens = sorted(
+        (t for t in set(n1.split()) if len(t) >= 4 and t not in _FUZZY_STOPWORDS),
+        key=len, reverse=True)[:3]
+    if not block_tokens:
+        return None
+
+    clauses = " OR ".join(["name LIKE ?"] * len(block_tokens))
+    rows = conn.execute(
+        f"SELECT norm_key, name, cma, proponent, parsed_value, evidence, sources "
+        f"FROM projects WHERE province = ? AND ({clauses})",
+        (province, *[f"%{t}%" for t in block_tokens]),
+    ).fetchall()
+    if not rows:
+        return None
+
+    urls1 = {u for u in (url_set(project_dict.get('evidence'))
+                         | url_set(project_dict.get('sources')))
+             if not is_listing_url(u)}
+    p1 = {
+        'cma': project_dict.get('cma', ''),
+        'proponent': project_dict.get('proponent', ''),
+        'parsed_value': project_dict.get('parsed_value'),
+    }
+    for r in rows:
+        n2 = normalize_name(r['name'])
+        if not n2:
+            continue
+        urls2 = {u for u in (url_set(r['evidence']) | url_set(r['sources']))
+                 if not is_listing_url(u)}
+        p2 = {'cma': r['cma'], 'proponent': r['proponent'],
+              'parsed_value': r['parsed_value']}
+        if is_duplicate_pair(p1, p2, n1, n2, urls1, urls2, threshold=0.85):
+            return r['norm_key']
+    return None
+
+
+def _best_link_quality(evidence: list) -> str:
+    """S2: classify the best link on a project as deep/listing/homepage."""
+    try:
+        from url_utils import best_link_quality
+    except ImportError:
+        return ""
+    urls = []
+    for e in evidence or []:
+        if isinstance(e, dict) and e.get("url"):
+            urls.append(e["url"])
+        elif isinstance(e, str):
+            urls.append(e)
+    return best_link_quality(urls)
+
+
 def _row_to_dict(row) -> dict:
     """Convert a sqlite3.Row to a plain dict, parsing JSON columns."""
     if row is None:
@@ -838,6 +984,7 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
     primary_prov, additional_prov = normalize_province(province)
     if primary_prov is None:
         print(f"[DB] Rejected project with invalid province: {name} ({province!r})")
+        REJECTION_COUNTERS["invalid_province"] += 1
         return None
     province = primary_prov
     project_dict["province"] = province
@@ -876,6 +1023,7 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
     # Runs BEFORE the URL hard gate so cheap structural checks short-circuit first.
     if _is_non_project_name(name):
         print(f"[DB] Rejected project with non-project name: {name!r}")
+        REJECTION_COUNTERS["non_project_name"] += 1
         return None
 
     # URL hard gate: reject projects with no evidence URLs
@@ -887,6 +1035,7 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
             evidence = []
     if not evidence or len(evidence) == 0:
         print(f"[DB] Rejected project with no evidence URL: {name}")
+        REJECTION_COUNTERS["no_url"] += 1
         return None
 
     key = _norm_key(name, province)
@@ -897,6 +1046,27 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
         existing = conn.execute(
             "SELECT * FROM projects WHERE norm_key = ?", (key,)
         ).fetchone()
+
+        # C1: fuzzy rediscovery fallback. On an exact-key miss, look for a
+        # guarded duplicate (same province, blocked token lookup, strict
+        # contradiction-checked matcher) and merge into it instead of writing
+        # a near-duplicate row. Fail-safe: any error falls back to INSERT.
+        if existing is None and os.environ.get("LI_FUZZY_UPSERT", "1") != "0":
+            try:
+                fuzzy_key = _fuzzy_find_existing(conn, name, province, project_dict)
+            except Exception as _e:
+                fuzzy_key = None
+                logger.warning(f"[DB] Fuzzy fallback failed (non-fatal): {_e}")
+            if fuzzy_key:
+                row = conn.execute(
+                    "SELECT * FROM projects WHERE norm_key = ?", (fuzzy_key,)
+                ).fetchone()
+                if row is not None:
+                    existing = row
+                    key = fuzzy_key
+                    MERGE_COUNTERS["fuzzy_merged"] += 1
+                    print(f"  [DB FUZZY-MERGE] '{name}' ({province}) -> existing "
+                          f"'{row['name']}' [{fuzzy_key}]")
 
         if existing is None:
             # INSERT new project
@@ -967,7 +1137,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                 json.dumps(project_dict.get("sources", []), ensure_ascii=False),
                 json.dumps(project_dict.get("tags", []), ensure_ascii=False),
                 project_dict.get("discovery_source", ""),
-                project_dict.get("source_url_quality", ""),
+                # S2: stamp link quality (deep/listing/homepage) at write time
+                project_dict.get("source_url_quality") or _best_link_quality(evidence),
                 1 if project_dict.get("has_government_source") else 0,
                 1 if project_dict.get("has_known_source") else 0,
                 len(evidence),
@@ -1010,11 +1181,20 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
             existing_status = existing_dict.get("status", "Proposed")
             new_status = project_dict.get("status", existing_status)
             status_changed = False
-            if new_status and new_status != existing_status and _should_update_status(existing_status, new_status):
+            explicit_hold = (new_status in _HOLD_STATES
+                             and _has_explicit_hold_signal(project_dict))
+            if new_status and new_status != existing_status and _should_update_status(existing_status, new_status, explicit_hold):
                 resolved_status = new_status
                 status_changed = True
             else:
                 resolved_status = existing_status
+                # C5 observability: a hold signal that was NOT applied is worth
+                # a log line — the project may genuinely be paused, but media
+                # "delayed" mentions alone don't regress status anymore.
+                if (new_status in _HOLD_STATES and new_status != existing_status
+                        and not explicit_hold):
+                    print(f"  [DB] Hold signal on '{name}' not applied "
+                          f"({existing_status} kept; no explicit/government signal)")
 
             # 4. Confidence floor
             existing_conf = float(existing_dict.get("confidence", 0.3))
@@ -1059,7 +1239,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     announcement_date = ?,
                     start_date = ?,
                     parsed_value = ?,
-                    provinces_additional = ?
+                    provinces_additional = ?,
+                    source_url_quality = ?
                 WHERE norm_key = ?
             """, (
                 resolved_status,
@@ -1080,6 +1261,9 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                 start,
                 pv,
                 prov_add,
+                # S2: re-classify link quality from the merged evidence (S4-lite:
+                # quality reflects the best link now on the project)
+                _best_link_quality(merged_evidence),
                 key,
             ))
 

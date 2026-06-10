@@ -40,12 +40,23 @@ from difflib import SequenceMatcher
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 # ── Constants ────────────────────────────────────────────────────────────────
+# C4 (2026-06-08 audit): aligned with the live canonical statuses from
+# normalize.py CANONICAL_STATUSES (Proposed / Under Review / Approved /
+# Under Construction / Partially Complete / Complete / Cancelled / On Hold).
+# Legacy aliases (Announced, Operational, Completed, …) are kept additively so
+# the tool still ranks rows written before normalize.py became the single
+# source of truth. Hold states rank with Under Construction (a paused build is
+# not less advanced than one under construction) — merge precedence should
+# never pick a hold over the same project's more advanced sibling row.
 STATUS_ORDER = {
     'Cancelled': -1,
+    'Rumoured': 0,
     'Proposed': 0, 'Announced': 0,
     'Under Review': 1,
     'Approved': 2,
     'Under Construction': 3, 'Paused': 3, 'Expansion': 3,
+    'On Hold': 3, 'Suspended': 3,
+    'Partially Complete': 4,
     'Operational': 4, 'In Service': 4,
     'Completed': 5, 'Complete': 5,
 }
@@ -237,7 +248,18 @@ def distinctive_tokens(s: str) -> set:
 
 
 def is_listing_url(u: str) -> bool:
-    """Detect URLs that are clearly multi-project listing pages, not specific project pages."""
+    """Detect URLs that are clearly multi-project listing pages, not specific project pages.
+
+    C6: url_utils.is_listing_url is the canonical copy (shared with the live
+    upsert's fuzzy fallback in db.py). The inline pattern list below is a
+    fallback so this tool still runs standalone (python tools/dedup_projects_fuzzy.py
+    from any cwd, where the backend root may not be on sys.path).
+    """
+    try:
+        from url_utils import is_listing_url as _canonical
+        return _canonical(u)
+    except ImportError:
+        pass
     if not u:
         return True
     u_low = u.lower()

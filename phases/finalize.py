@@ -249,6 +249,36 @@ def run(conn, context, logger):
             except Exception:
                 pass
 
+        # C2 (2026-06-08 audit) — weekly fuzzy-dedup REPORT pass. Dry-run only:
+        # finds residual duplicate clusters (the live C1 fuzzy upsert prevents
+        # new ones; this surfaces the backlog) and writes dedup_report_weekly.md
+        # for operator review. Merging stays operator-gated via
+        #   python tools/dedup_projects_fuzzy.py --merge
+        # — never auto-applied here.
+        try:
+            import subprocess
+            import sys as _sys
+            from pathlib import Path as _Path
+            _root = _Path(__file__).resolve().parent.parent
+            _tool = _root / "tools" / "dedup_projects_fuzzy.py"
+            if _tool.exists():
+                r = subprocess.run(
+                    [_sys.executable, str(_tool), "--report",
+                     str(_root / "dedup_report_weekly.md")],
+                    capture_output=True, text=True, timeout=600, cwd=str(_root),
+                )
+                tail = [ln for ln in (r.stdout or "").splitlines() if ln.strip()][-4:]
+                for ln in tail:
+                    print(f"  [DEDUP-REPORT] {ln}")
+                if r.returncode != 0:
+                    print(f"  [DEDUP-REPORT] tool exited {r.returncode} (non-critical)")
+        except Exception as e:
+            print(f"  [DEDUP-REPORT] weekly dedup report failed (non-critical): {e}")
+            try:
+                logger.log_error("dedup_report", e)
+            except Exception:
+                pass
+
         # M-3 — every weekly run, ensure Under Construction projects carry
         # an alert. The existing monthly check (project_alert_tracker.is_
         # first_week_of_month gate) only fires on day 1-7 of the month —

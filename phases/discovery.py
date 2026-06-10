@@ -217,6 +217,60 @@ def run(conn, context, logger):
         except Exception as e:
             print(f"  [FOLLOWUP] Failed: {type(e).__name__}: {e}")
 
+        # ── R3 (2026-06-08 audit): snowball discovery — previously built but
+        # never called from anywhere. Multi-pass follow-up discovery is query-
+        # heavy (Pass 1 alone is a 421-query sweep), so it runs only in
+        # deep-sweep mode and only when SNOWBALL_DISCOVERY_ENABLED.
+        if context.get("mode") == "deep-sweep":
+            try:
+                from pipeline_config import SNOWBALL_DISCOVERY_ENABLED
+                if SNOWBALL_DISCOVERY_ENABLED:
+                    from snowball_discovery import run_snowball_sweep
+                    print("\n[SNOWBALL] Multi-pass snowball discovery (deep-sweep mode)...")
+                    snowball_projects = run_snowball_sweep(conn) or []
+                    for p in snowball_projects:
+                        p.setdefault("discovery_source", "snowball_discovery")
+                    registry_projects = list(registry_projects) + snowball_projects
+                    print(f"  [SNOWBALL] {len(snowball_projects)} projects from snowball sweep")
+                else:
+                    print("\n[SNOWBALL] Disabled (SNOWBALL_DISCOVERY_ENABLED=false)")
+            except ImportError as e:
+                print(f"[WARN] snowball_discovery unavailable: {e}")
+            except Exception as e:
+                print(f"[WARN] Snowball discovery failed: {type(e).__name__}: {e}")
+                logger.log_error("snowball_discovery", e, severity="warn")
+
+        # ── R4 (2026-06-08 audit): known-project sweep cadence. The sweep
+        # (~190 instruction-style queries) re-confirms the known-project
+        # universe so evidence accrues — it previously ran only when the
+        # operator remembered `--known-sweep`. It runs in deep-sweep mode and
+        # stamps dashboard_state; weekly runs log loudly once it is overdue
+        # (>35 days) instead of silently letting evidence go stale.
+        try:
+            from datetime import date as _date
+            from db import get_dashboard_state, save_dashboard_state
+            _stamp = get_dashboard_state(conn, "last_known_sweep_date")
+            _days_since = None
+            if _stamp:
+                try:
+                    _days_since = (_date.today() - _date.fromisoformat(str(_stamp)[:10])).days
+                except ValueError:
+                    _days_since = None
+            if context.get("mode") == "deep-sweep":
+                from known_project_sweep import run_known_project_sweep_sync
+                print("\n[KNOWN-SWEEP] Known-project sweep (deep-sweep mode)...")
+                _ks = run_known_project_sweep_sync(conn)
+                save_dashboard_state(conn, "last_known_sweep_date", _date.today().isoformat())
+                print(f"  [KNOWN-SWEEP] {_ks}")
+            elif _days_since is None or _days_since > 35:
+                _ago = f"{_days_since} days ago" if _days_since is not None else "never"
+                print(f"\n[KNOWN-SWEEP OVERDUE] Last known-project sweep: {_ago}. "
+                      f"Run `python update_dashboard.py --deep-sweep` (or --known-sweep) "
+                      f"— evidence counts decay without periodic re-confirmation.")
+        except Exception as e:
+            print(f"[WARN] Known-sweep cadence check failed: {type(e).__name__}: {e}")
+            logger.log_error("known_project_sweep", e, severity="warn")
+
         logger.log_step("tier_2_google_news")
         logger.log_step(step_name)
 
