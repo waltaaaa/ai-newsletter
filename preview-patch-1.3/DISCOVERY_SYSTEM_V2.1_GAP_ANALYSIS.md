@@ -126,3 +126,56 @@ Observations are already append-only; make lifecycle transitions and confidence 
 5. **Then:** flat-sweep bootstrap weeks (G1) → scheduler activation → pilots (A3, A4) → cutover per harness verdict.
 
 Cost position after revisions: **$30/month** (Tavily Project plan), $20/month headroom, all other additions free.
+
+---
+
+## Part 5 — 2026-06-10 implementation addendum (quality-pass-1.4)
+
+Status of this document's items after the quality pass landed on branch
+`quality-pass-1.4` (everything below is in the CURRENT production codebase,
+not the future v2.1 system, unless marked DESIGN-ONLY):
+
+**Implemented:** G2 (canary set `config/canary_projects.json`, 55 projects,
+first live run 92.7% recall; LP outputs relabeled `*_lower_bound`; Chao1
+curve in the harness) · G3 (NIRB + MVLWB + ISC scrapers live-verified;
+15 Indigenous dev corps in the watchlist) · G4 (SEAO OCDS + DCC PDF
+fetchers; SaskTenders and Alberta Purchasing Connection are dark — WebForms
+/SPA, no open data; CanadaBuys delivery-region rows cover SK/AB) · G5
+(tiered alert polling, 1,200-poll cap, jitter) · G6 (keyword-only degraded
+mode applies to the CURRENT NIM→Groq chain — the Gemini framing in Part 1
+is obsolete; fail-open rate alerting via service_health) · G7 (currency /
+value_low / value_high / value_scope columns + extraction prompts + the
+registry-beats-media precedence rule) · G8 (5 axes in `triangulation.py`,
+`projects.axes_satisfied` persisted; scorers intentionally untouched) ·
+G9 partial (French Cat B keywords + per-language filter stats; canaries
+include QC French-discoverable projects) · G12 partial (evidence
+content_hash + republication_of, zero-weighted in both confidence paths) ·
+A1 (`corporate_newsroom_diff.py`) · A2 (`tools/wikidata_alias_harvest.py`)
+· A3 (pilot: Ottawa + Windsor + Mississauga — Toronto TMMIS is
+Akamai-blocked; no candidate CMA runs Legistar/CivicWeb, so the
+three-distinct-platforms criterion was relaxed to two families, documented
+in `council_agenda_monitor.py`) · G11 (StatsCan 2021 GAF → 5,028 CSD
+centroids in `config/geo_municipalities.json`, offline `geo_lookup.py`).
+
+**DESIGN-ONLY (no code, by decision):**
+- **G1 (scheduler cold-start):** no yield-weighted scheduler exists in
+  production — `capacity_scheduler.py` uses fixed TIER_BUDGETS. When the
+  v2.1 stratified sweep is built, bootstrap stratum yields from the
+  `feedback` table and `learning_engine.optimize_queries()` per-query hit
+  rates (both already accumulate today), and run 4 flat-sweep shadow weeks
+  before activation.
+- **G10 (adjudication continuity):** no manifest/adjudication queue exists
+  in production (`precision_audit_manifest.json` is a preview artifact;
+  `claude_checkpoints` is crash-resume). Policy when built: items carry
+  over with age-based priority boost; >2 weeks auto-resolve to the
+  conservative heuristic with an `auto_resolved` flag; skipped sessions
+  excluded from second-window counting.
+- **G9 centroids:** no centroid-based semantic filter layer exists to
+  retrofit — moot until v2.1 adds one.
+- **G12 raw-text pruning:** raw article text is not stored in the DB
+  (`documents` is metadata-only) — moot.
+- **A4 GDELT:** excluded — banned by CLAUDE.md.
+- **A5 Tavily $30/month:** NOT adopted. A one-month 2,000-credit exception
+  was approved for the 2026-06 cost-finding batch only; the standing budget
+  remains the 1,000/month free tier. The "Cost position: $30/month" line in
+  Part 4 does NOT reflect an approved spend.

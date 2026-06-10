@@ -335,7 +335,10 @@ def run_validate(args):
                if r.get("candidate_millions") and r["norm_key"] not in validated]
     print(f"{len(validated)} validated | {len(pending)} candidates pending")
 
-    batch_size = 15
+    # Empirically, claude -p on this host fails (exit 1, empty stderr) once the
+    # piped prompt grows past ~4-7KB — batches of 8 with 600-char snippets stay
+    # safely under that.
+    batch_size = 8
     for i in range(0, len(pending), batch_size):
         batch = pending[i:i + batch_size]
         blocks = []
@@ -344,7 +347,7 @@ def run_validate(args):
                 "norm_key": r["norm_key"], "name": r["name"],
                 "province": r["province"],
                 "candidate_millions": r["candidate_millions"],
-                "snippet": r["snippet"],
+                "snippet": (r["snippet"] or "")[:600],
             }, ensure_ascii=False))
         prompt = VALIDATE_PROMPT + "\n".join(blocks)
 
