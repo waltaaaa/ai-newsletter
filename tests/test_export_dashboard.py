@@ -384,5 +384,178 @@ class TestPipelineIntegration(unittest.TestCase):
             shutil.rmtree(tmpdir, ignore_errors=True)
 
 
+class TestQualityPass14ExportFields(unittest.TestCase):
+    """quality-pass-1.4 R7/E9: needs_value, is_stale, display_confidence."""
+
+    def test_needs_value_true_when_unpriced(self):
+        from tools.export_dashboard import _project_for_export
+        shaped = _project_for_export({"name": "X", "value": "Not disclosed"})
+        self.assertTrue(shaped["needs_value"])
+        self.assertFalse(shaped["value_confirmed"])
+
+    def test_needs_value_false_when_priced(self):
+        from tools.export_dashboard import _project_for_export
+        shaped = _project_for_export({"name": "X", "value": "$600M"})
+        self.assertFalse(shaped["needs_value"])
+        self.assertTrue(shaped["value_confirmed"])
+
+    def test_is_stale_and_display_confidence_exported(self):
+        from tools.export_dashboard import _project_for_export
+        shaped = _project_for_export({
+            "name": "X", "value": "$600M",
+            "is_stale": 1, "display_confidence": 0.45,
+        })
+        self.assertIs(shaped["is_stale"], True)
+        self.assertEqual(shaped["display_confidence"], 0.45)
+
+    def test_is_stale_defaults_false(self):
+        from tools.export_dashboard import _project_for_export
+        shaped = _project_for_export({"name": "X", "value": "$600M"})
+        self.assertIs(shaped["is_stale"], False)
+
+    def test_db_round_trip_includes_new_fields(self):
+        conn = init_db(":memory:")
+        tmpdir = tempfile.mkdtemp()
+        try:
+            from tools.export_dashboard import export_province_projects
+            upsert_project(conn, _make_ontario_project("$600M"))
+            export_province_projects(conn, "Ontario", 500_000_000, tmpdir)
+            with open(os.path.join(tmpdir, "projects_ontario.json"),
+                      encoding="utf-8") as f:
+                projects = json.load(f)
+            self.assertGreater(len(projects), 0)
+            proj = projects[0]
+            self.assertIn("needs_value", proj)
+            self.assertIn("is_stale", proj)
+            self.assertIn("display_confidence", proj)
+        finally:
+            conn.close()
+            import shutil
+            shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+class TestExportProvinceCounts(unittest.TestCase):
+    """quality-pass-1.4 P3: per-province accuracy counters."""
+
+    def setUp(self):
+        self.conn = init_db(":memory:")
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        self.conn.close()
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _seed_mb(self, name, value):
+        upsert_project(self.conn, {
+            "name": name,
+            "province": "Manitoba",
+            "status": "Proposed",
+            "value": value,
+            "evidence": [{"url": f"https://example.gov.mb.ca/{name.replace(' ', '-').lower()}"}],
+            "discovery_source": "provincial_ea",
+        })
+
+    def test_province_counts_math(self):
+        """MB threshold $40M: 2 priced-above, 1 priced-below, 3 unpriced,
+        1 stale → qualifying:2, tracked_unpriced:3, stale:1."""
+        from tools.export_dashboard import export_province_counts
+
+        # 2 priced above threshold
+        self._seed_mb("Winnipeg Transit Garage Replacement", "$50M")
+        self._seed_mb("Selkirk Steel Recycling Complex", "$100M")
+        # 1 priced below threshold
+        self._seed_mb("Brandon Pumphouse Refurbishment", "$10M")
+        # 3 unpriced
+        self._seed_mb("Churchill Port Modernization Initiative", "Not disclosed")
+        self._seed_mb("Portage Diversion Upgrade Program", "Not disclosed")
+        self._seed_mb("Thompson Mining Access Corridor", "Not disclosed")
+        # 1 stale (priced above threshold but flagged stale)
+        self._seed_mb("Dauphin Regional Health Campus", "$60M")
+        self.conn.execute(
+            "UPDATE projects SET is_stale = 1 WHERE name = ?",
+            ("Dauphin Regional Health Campus",))
+        self.conn.commit()
+
+        path = export_province_counts(self.conn, self.tmpdir)
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+
+        mb = data["provinces"]["MB"]
+        self.assertEqual(mb["qualifying"], 2)
+        self.assertAlmostEqual(mb["qualifying_value"], 150_000_000.0)
+        self.assertEqual(mb["tracked_unpriced"], 3)
+        self.assertEqual(mb["stale"], 1)
+        self.assertEqual(mb["threshold"], 40_000_000)
+        # All 13 provinces present
+        self.assertEqual(len(data["provinces"]), 13)
+
+    def test_wired_into_export_all(self):
+        from tools.export_dashboard import export_all
+        result = export_all(conn=self.conn, output_dir=self.tmpdir)
+        self.assertIn("province_counts.json", result["files_written"])
+        self.assertIn("discovery_summary.json", result["files_written"])
+
+
+class TestExportDiscoverySummary(unittest.TestCase):
+    """quality-pass-1.4 E8: weekly discovery summary."""
+
+    def setUp(self):
+        self.conn = init_db(":memory:")
+        self.tmpdir = tempfile.mkdtemp()
+        from datetime import date, timedelta
+        today = date.today()
+        self.week_start = (today - timedelta(days=today.weekday())).isoformat()
+
+    def tearDown(self):
+        self.conn.close()
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _seed(self, name, first_tracked, last_seen):
+        upsert_project(self.conn, {
+            "name": name, "province": "Alberta", "status": "Proposed",
+            "value": "$300M",
+            "evidence": [{"url": f"https://example.ca/{name.replace(' ', '-').lower()}"}],
+        })
+        self.conn.execute(
+            "UPDATE projects SET firstTracked = ?, lastSeen = ? WHERE name = ?",
+            (first_tracked, last_seen, name))
+        self.conn.commit()
+
+    def test_discovery_summary_counts(self):
+        from tools.export_dashboard import export_discovery_summary
+
+        # New this week: firstTracked >= week start
+        self._seed("Calgary Hydrogen Production Hub",
+                   self.week_start, self.week_start)
+        # Rediscovered: tracked before this week, seen this week
+        self._seed("Edmonton Petrochemical Upgrader Expansion",
+                   "2026-01-15", self.week_start)
+        # Untouched this week: counted in neither bucket
+        self._seed("Fort McMurray Bitumen Terminal",
+                   "2026-01-15", "2026-02-01")
+        # Status change rows this week (one status, one cost — only status counts)
+        self.conn.execute(
+            "INSERT INTO project_changes (project_id, change_date, change_type, "
+            "field, old_value, new_value) VALUES (1, ?, 'status', 'status', "
+            "'Proposed', 'Approved')", (self.week_start,))
+        self.conn.execute(
+            "INSERT INTO project_changes (project_id, change_date, change_type, "
+            "field, old_value, new_value) VALUES (1, ?, 'cost', 'value', "
+            "'$300M', '$350M')", (self.week_start,))
+        self.conn.commit()
+
+        path = export_discovery_summary(self.conn, self.tmpdir)
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+
+        self.assertEqual(data["week_of"], self.week_start)
+        self.assertEqual(data["new"], 1)
+        self.assertEqual(data["rediscovered"], 1)
+        self.assertEqual(data["status_changes"], 1)
+        self.assertIn("fuzzy_merges", data)
+
+
 if __name__ == "__main__":
     unittest.main()

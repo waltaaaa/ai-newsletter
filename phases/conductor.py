@@ -150,6 +150,40 @@ def _export_data_files(conn, context):
 
 # ── Conductor invocation ──────────────────────────────────────────────────────
 
+def _summarize_accuracy_files() -> str:
+    """One factual DATA STATUS line for province_counts.json and
+    discovery_summary.json (quality-pass-1.4), or '' if neither exists."""
+    parts = []
+    try:
+        pc_path = os.path.join(DATA_DIR, 'province_counts.json')
+        if os.path.exists(pc_path):
+            with open(pc_path, encoding='utf-8') as f:
+                provs = (json.load(f) or {}).get('provinces', {}) or {}
+            qualifying = sum(v.get('qualifying', 0) for v in provs.values())
+            unpriced = sum(v.get('tracked_unpriced', 0) for v in provs.values())
+            stale = sum(v.get('stale', 0) for v in provs.values())
+            parts.append(
+                f"province_counts.json — {qualifying} qualifying, "
+                f"{unpriced} tracked-unpriced, {stale} stale projects "
+                f"across {len(provs)} provinces")
+    except Exception:
+        pass
+    try:
+        ds_path = os.path.join(DATA_DIR, 'discovery_summary.json')
+        if os.path.exists(ds_path):
+            with open(ds_path, encoding='utf-8') as f:
+                ds = json.load(f) or {}
+            parts.append(
+                f"discovery_summary.json — week of {ds.get('week_of', '?')}: "
+                f"{ds.get('new', 0)} new, {ds.get('rediscovered', 0)} rediscovered, "
+                f"{ds.get('status_changes', 0)} status changes")
+    except Exception:
+        pass
+    if not parts:
+        return ""
+    return "\n- " + "; ".join(parts)
+
+
 def _build_conductor_prompt(today_str: str) -> str:
     """Build the prompt that triggers the conductor's briefing track."""
     return f"""Run the briefing track for "The Lagging Indicator" weekly briefing.
@@ -162,7 +196,7 @@ DATA STATUS: The Python pipeline has already completed all data collection:
 - jobs.json — hiring spike data by CMA and sector (from job_monitor)
 - procurement.json — government contract awards >=5M (from procurement_monitor)
 - iaac.json — federal impact assessment projects with status history
-- signals.json — combined signal summary (jobs, procurement, IAAC counts)
+- signals.json — combined signal summary (jobs, procurement, IAAC counts){_summarize_accuracy_files()}
 - dashboard.db is up to date with this week's discoveries, filtering, and signals
 - Trend computation and cross-references are stored in SQLite
 

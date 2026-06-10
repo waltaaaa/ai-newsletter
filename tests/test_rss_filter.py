@@ -284,6 +284,140 @@ def test_filter_pipeline_skip_layers():
     return failures
 
 
+# ================================================================
+# quality-pass-1.4 — R6 metadata tagging on news-search articles
+# ================================================================
+
+def _gn_article(**overrides):
+    """A Google-News-shaped article dict (as built by fetch_rss_feed)."""
+    art = {
+        "title": "Quarterly results released by producer",
+        "link": "https://example-news.ca/articles/quarterly-results",
+        "url": "https://example-news.ca/articles/quarterly-results",
+        "published": "Mon, 08 Jun 2026 12:00:00 GMT",
+        "source": "Example News",
+        "summary": "The company reported quarterly results.",
+        "_province": "SK",
+        "_sector": "mining",
+        "_language": "en",
+        "_discovery_tier": "google_news_rss",
+        "_query": "mining mine mineral project Saskatchewan 2026",
+    }
+    art.update(overrides)
+    return art
+
+
+def test_r6_tag_news_articles_seeds_meta_sectors():
+    """R6: _tag_news_articles seeds meta_sectors from the article's _sector
+    compound-query metadata (no network, no DB)."""
+    from google_news_rss_search import _tag_news_articles
+
+    arts = _tag_news_articles([_gn_article()])
+    assert "mining" in arts[0]["meta_sectors"]
+    assert "SK" in arts[0]["meta_provinces"]
+
+
+def test_r6_invalid_sector_not_seeded():
+    """Sectors outside the 18-sector taxonomy must not be seeded."""
+    from google_news_rss_search import _tag_news_articles
+
+    arts = _tag_news_articles([_gn_article(_sector="Energy", _province="ZZ")])
+    assert "Energy" not in arts[0]["meta_sectors"]
+    assert "ZZ" not in arts[0]["meta_provinces"]
+
+
+def test_r6_full_province_name_mapped_to_code():
+    from google_news_rss_search import _tag_news_articles
+
+    arts = _tag_news_articles([_gn_article(_province="British Columbia")])
+    assert "BC" in arts[0]["meta_provinces"]
+
+
+def test_r6_metadata_boost_passes_l1(monkeypatch):
+    """An article with meta_sectors bypasses the L1 keyword check."""
+    import article_filter
+
+    # No network: stub the L6 prescreen to pass everything through
+    monkeypatch.setattr(article_filter, "layer3_gemini_prescreen",
+                        lambda articles, **kw: list(range(len(articles))))
+
+    art = _gn_article(meta_sectors=["mining"])
+    # Title/summary intentionally have NO L1 keywords
+    art["title"] = "Quarterly results released by producer"
+    art["summary"] = "The company reported quarterly results."
+    result = article_filter.filter_articles(
+        [art], skip_layer1=False, skip_layer2=True, log_filtered=False)
+    assert len(result) == 1
+
+
+# ================================================================
+# quality-pass-1.4 — doc-cache wiring (E-4/E-9): L0 skip with conn
+# ================================================================
+
+def test_l0_skip_already_processed_with_conn():
+    """A seeded documents row causes the L0 already-processed skip when a
+    conn is passed to filter_articles."""
+    from db import init_db, insert_document
+
+    conn = init_db(":memory:")
+    try:
+        url = "https://example-news.ca/articles/hospital-expansion"
+        insert_document(conn, url, title="Hospital expansion",
+                        source_tier="tier_2", source_type="google_news")
+        art = {"title": "$200M hospital expansion approved",
+               "summary": "New wing construction", "url": url, "link": url}
+        result = filter_articles(
+            [art], skip_layer1=False, skip_layer2=False,
+            log_filtered=False, conn=conn)
+        assert result == []
+
+        # Without conn the same article passes (strong L1 match, L6 skipped)
+        result_no_conn = filter_articles(
+            [dict(art)], skip_layer1=False, skip_layer2=False,
+            log_filtered=False)
+        assert len(result_no_conn) == 1
+    finally:
+        conn.close()
+
+
+def test_record_documents_records_survivors_and_l6_rejects(monkeypatch):
+    """record_documents=True records survivors AND L6 rejects, but never
+    deterministic L1/L2 cuts."""
+    import article_filter
+    from db import init_db, is_already_processed
+
+    # Stub L6 so the only borderline article is rejected (no network)
+    monkeypatch.setattr(article_filter, "layer3_gemini_prescreen",
+                        lambda articles, **kw: [])
+
+    conn = init_db(":memory:")
+    try:
+        survivor = {"title": "$200M hospital expansion approved",
+                    "summary": "New wing construction",
+                    "url": "https://example.ca/survivor",
+                    "link": "https://example.ca/survivor"}
+        l6_reject = {"title": "Quarterly results released",
+                     "summary": "Earnings report only.",
+                     "url": "https://example.ca/l6-reject",
+                     "link": "https://example.ca/l6-reject",
+                     "meta_sectors": ["mining"]}  # borderline → goes to L6
+        l1_cut = {"title": "Local festival draws record crowds",
+                  "summary": "Music and food downtown.",
+                  "url": "https://example.ca/l1-cut",
+                  "link": "https://example.ca/l1-cut"}
+        article_filter.filter_articles(
+            [survivor, l6_reject, l1_cut],
+            skip_layer1=False, skip_layer2=True, log_filtered=False,
+            conn=conn, record_documents=True, doc_source_type="google_news")
+
+        assert is_already_processed(conn, "https://example.ca/survivor")[0]
+        assert is_already_processed(conn, "https://example.ca/l6-reject")[0]
+        # L1 cut must remain rescuable — NOT recorded
+        assert not is_already_processed(conn, "https://example.ca/l1-cut")[0]
+    finally:
+        conn.close()
+
+
 if __name__ == "__main__":
     total = 0
     total += test_must_pass_l1()

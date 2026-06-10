@@ -74,6 +74,43 @@ DOMAIN_SECTOR_MAP = {
     "prnewswire.com": [],
 }
 
+# ── Province domain mapping ──
+# Government / provincial-news domains identify the province with high
+# confidence regardless of headline wording (P5: domain signal is NOT gated
+# behind project-context tokens).
+PROVINCE_DOMAIN_MAP = {
+    "ontario.ca": "ON",        # covers news.ontario.ca
+    "gov.on.ca": "ON",
+    "quebec.ca": "QC",
+    "gouv.qc.ca": "QC",
+    "alberta.ca": "AB",
+    "gov.ab.ca": "AB",
+    "gov.bc.ca": "BC",
+    "saskatchewan.ca": "SK",
+    "gov.sk.ca": "SK",
+    "gov.mb.ca": "MB",
+    "manitoba.ca": "MB",
+    "novascotia.ca": "NS",
+    "gnb.ca": "NB",
+    "gov.nl.ca": "NL",
+    "princeedwardisland.ca": "PE",
+    "yukon.ca": "YT",
+    "gov.yk.ca": "YT",
+    "gov.nt.ca": "NT",
+    "gov.nu.ca": "NU",
+}
+
+# ── Project-context tokens (P5) ──
+# A province mention in headline/snippet text only becomes a hard
+# `meta_provinces` tag when one of these project-ish tokens co-occurs in the
+# same text; otherwise the mention is recorded in `meta_provinces_weak`.
+# Additive list — extend, never remove.
+PROJECT_CONTEXT_TOKENS = [
+    "project", "construction", "plant", "mine", "facility", "expansion",
+    "announce", "announced", "build", "building", "invest", "investment",
+    "development", "infrastructure", "funding", "contract",
+]
+
 # ── Province detection ──
 # Maps keywords to province codes. Includes major cities and CMAs.
 PROVINCE_KEYWORDS = {
@@ -161,11 +198,14 @@ def tag_article(article, feed_metadata=None):
                        (e.g. {'sector': 'mining', 'source_type': 'industry_trade'})
 
     Returns:
-        article dict with added 'meta_sectors' and 'meta_provinces' fields.
-        Each is a list of strings (NAICS keys for sectors, province codes for geography).
+        article dict with added 'meta_sectors', 'meta_provinces', and
+        'meta_provinces_weak' fields. Each is a list of strings (NAICS keys
+        for sectors, province codes for geography). Weak provinces are
+        headline/snippet mentions that lacked a project-context token (P5).
     """
     sectors = []
     provinces = []
+    provinces_weak = []
 
     url = article.get("link") or article.get("url") or ""
     title = (article.get("title") or article.get("headline") or "").lower()
@@ -179,6 +219,13 @@ def tag_article(article, feed_metadata=None):
         for mapped_domain, mapped_sectors in DOMAIN_SECTOR_MAP.items():
             if domain.endswith(mapped_domain):
                 sectors.extend(mapped_sectors)
+                break
+        # Province from government domain — ungated by P5 (domain signal
+        # identifies the province regardless of headline wording).
+        for mapped_domain, prov_code in PROVINCE_DOMAIN_MAP.items():
+            if domain == mapped_domain or domain.endswith("." + mapped_domain):
+                if prov_code not in provinces:
+                    provinces.append(prov_code)
                 break
     except Exception:
         pass
@@ -210,12 +257,19 @@ def tag_article(article, feed_metadata=None):
     except Exception:
         pass
 
-    # Signal 5: Geographic mentions in headline + snippet
+    # Signal 5: Geographic mentions in headline + snippet.
+    # P5 gating: a text mention only becomes a hard tag when a project-ish
+    # token co-occurs in the same text; otherwise it is recorded as weak.
+    # Domain/feed/URL-path signals above are unchanged by this gate.
+    has_project_context = any(tok in text for tok in PROJECT_CONTEXT_TOKENS)
     for prov_code, keywords in PROVINCE_KEYWORDS.items():
         for kw in keywords:
             if kw in text:
-                if prov_code not in provinces:
-                    provinces.append(prov_code)
+                if has_project_context:
+                    if prov_code not in provinces:
+                        provinces.append(prov_code)
+                elif prov_code not in provinces and prov_code not in provinces_weak:
+                    provinces_weak.append(prov_code)
                 break
 
     # Signal 6: Sector keywords in headline + snippet (lowest confidence, additive)
@@ -228,6 +282,7 @@ def tag_article(article, feed_metadata=None):
 
     article["meta_sectors"] = sectors
     article["meta_provinces"] = provinces
+    article["meta_provinces_weak"] = provinces_weak
     return article
 
 

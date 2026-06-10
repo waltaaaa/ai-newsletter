@@ -205,15 +205,87 @@ async def run_bing_news_discovery(json_path=None):
     return all_articles
 
 
-def run_bing_news_search():
-    """Synchronous wrapper. Returns list of article dicts ready for the
-    standard 3-layer article filter (same shape as Google News output)."""
+def run_bing_news_search(gemini_client=None, conn=None):
+    """Synchronous wrapper mirroring run_google_news_search().
+
+    Fetches Bing News RSS for all compound + NAICS queries, enhances short
+    snippets, metadata-tags (R6), and runs the standard article filter so the
+    Bing path matches the Google path layer-for-layer (previously raw Bing
+    articles bypassed the filter entirely).
+
+    Args:
+        gemini_client: Gemini client for the L6 prescreen (optional).
+        conn: Optional SQLite connection (from the discovery phase). Enables
+            the L0 already-processed skip and classified-document recording.
+            Kill switch: GN_DOC_CACHE=0 disables both.
+
+    Returns:
+        list of article dicts that passed the filter.
+    """
+    from article_filter import filter_articles
+    from google_news_rss_search import _tag_news_articles, _doc_cache_enabled
+
     try:
         loop = asyncio.get_event_loop()
         if loop.is_running():
             import nest_asyncio
             nest_asyncio.apply()
-            return loop.run_until_complete(run_bing_news_discovery())
-        return asyncio.run(run_bing_news_discovery())
+            articles = loop.run_until_complete(run_bing_news_discovery())
+        else:
+            articles = asyncio.run(run_bing_news_discovery())
     except RuntimeError:
-        return asyncio.run(run_bing_news_discovery())
+        articles = asyncio.run(run_bing_news_discovery())
+
+    if not articles:
+        print("  [BING-NEWS] No articles found")
+        return []
+
+    # Pre-filter: enhance short/missing snippets (zero API cost)
+    try:
+        from snippet_enhancer import enhance_batch
+        articles = enhance_batch(
+            articles, url_key="link", snippet_key="summary",
+            max_enhance=30, skip_gov=False,
+        )
+    except ImportError:
+        print("  [WARN] sumy not installed, skipping snippet enhancement")
+    except Exception as e:
+        print(f"  [WARN] Snippet enhancement failed for Bing News results: {e}")
+
+    # R6: metadata tagging + compound-query sector/province seeds
+    articles = _tag_news_articles(articles)
+
+    # Doc cache (E-4/E-9) — same kill switch as the Google path
+    doc_cache = _doc_cache_enabled()
+    conn_owned = False
+    if doc_cache and conn is None:
+        try:
+            from db import get_db
+            conn = get_db()
+            conn_owned = True
+        except Exception:
+            conn = None
+
+    filtered = filter_articles(
+        articles,
+        gemini_client=gemini_client,
+        skip_layer1=False,
+        skip_layer2=False,
+        conn=conn if doc_cache else None,
+        record_documents=doc_cache,
+        doc_source_type='bing_news',
+    )
+
+    if conn_owned:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+    print(f"  [BING-NEWS] {len(articles)} articles → {len(filtered)} passed filter")
+
+    for art in filtered:
+        art["_discovery_tier"] = "bing_news_rss"
+        art["discovery_source"] = "bing_news_rss"
+
+    return filtered

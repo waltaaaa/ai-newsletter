@@ -63,6 +63,75 @@ PROV_NAMES = {
 }
 
 
+# R6: valid targets for seeding metadata tags from compound-query metadata.
+# Sector keys are the 18-sector taxonomy (same keys as SECTOR_KEYWORDS).
+_VALID_META_SECTORS = frozenset(SECTOR_KEYWORDS)
+_VALID_PROVINCE_CODES = frozenset((
+    "ON", "QC", "AB", "BC", "SK", "MB", "NS",
+    "NB", "NL", "PE", "YT", "NT", "NU",
+))
+_PROV_NAME_TO_CODE = {
+    "ontario": "ON", "quebec": "QC", "québec": "QC", "alberta": "AB",
+    "british columbia": "BC", "saskatchewan": "SK", "manitoba": "MB",
+    "nova scotia": "NS", "new brunswick": "NB",
+    "newfoundland": "NL", "newfoundland and labrador": "NL",
+    "prince edward island": "PE", "pei": "PE",
+    "yukon": "YT", "northwest territories": "NT", "nunavut": "NU",
+}
+
+
+def _tag_news_articles(articles):
+    """R6: metadata-tag news articles before the 6-layer filter.
+
+    1. Runs metadata_tagger.tag_batch (domain / category / URL-path /
+       headline signals — zero API cost).
+    2. Seeds `meta_sectors` from each article's `_sector` compound-query
+       metadata (validated against the 18-sector taxonomy) and
+       `meta_provinces` from `_province` (2-letter codes; full names mapped).
+
+    Pure function over the article dicts — no network, no DB. Returns the
+    same list with metadata fields populated, so the L1 metadata boost in
+    article_filter.filter_articles can fire for news-search articles.
+    """
+    if not articles:
+        return articles
+    try:
+        from metadata_tagger import tag_batch
+        tag_batch(articles)
+    except Exception as e:
+        print(f"  [WARN] Metadata tagging failed for news articles: {e}")
+
+    seeded = 0
+    for art in articles:
+        sectors = art.setdefault("meta_sectors", [])
+        sector = (art.get("_sector") or "").strip()
+        if sector in _VALID_META_SECTORS and sector not in sectors:
+            sectors.append(sector)
+            seeded += 1
+
+        provinces = art.setdefault("meta_provinces", [])
+        prov_raw = (art.get("_province") or "").strip()
+        prov = ""
+        if len(prov_raw) == 2 and prov_raw.upper() in _VALID_PROVINCE_CODES:
+            prov = prov_raw.upper()
+        else:
+            prov = _PROV_NAME_TO_CODE.get(prov_raw.lower(), "")
+        if prov and prov not in provinces:
+            provinces.append(prov)
+    if seeded:
+        print(f"  [METADATA] Seeded meta_sectors from query metadata on {seeded} articles")
+    return articles
+
+
+def _doc_cache_enabled():
+    """Kill switch for the documents cache (E-4/E-9).
+
+    GN_DOC_CACHE=0 disables BOTH the L0 already-processed skip and the
+    classified-document recording. Default on.
+    """
+    return os.environ.get("GN_DOC_CACHE", "1") != "0"
+
+
 def build_google_news_url(query_text, language="en"):
     """Convert a search query to a Google News RSS URL."""
     params = {
@@ -397,7 +466,7 @@ async def run_google_news_discovery(json_path=None):
     return all_articles
 
 
-def run_google_news_search(gemini_client=None):
+def run_google_news_search(gemini_client=None, conn=None):
     """Synchronous wrapper matching run_compound_search() interface.
 
     1. Fetches Google News RSS for all compound queries (deduped by URL)
@@ -407,6 +476,9 @@ def run_google_news_search(gemini_client=None):
 
     Args:
         gemini_client: Gemini client for Layer 3 prescreen (optional)
+        conn: Optional SQLite connection (from the discovery phase). Enables
+            the L0 already-processed skip and classified-document recording
+            in filter_articles. Kill switch: GN_DOC_CACHE=0 disables both.
 
     Returns:
         list of article dicts that passed the filter
@@ -446,13 +518,38 @@ def run_google_news_search(gemini_client=None):
     except Exception as e:
         print(f"  [WARN] Snippet enhancement failed for Google News results: {e}")
 
+    # R6: metadata tagging (domain/headline signals + compound-query seeds)
+    # so the L1 metadata boost fires for Google News articles.
+    articles = _tag_news_articles(articles)
+
+    # Doc cache (E-4/E-9): use the caller's conn when given; open our own for
+    # standalone runs. GN_DOC_CACHE=0 disables both L0 skip and recording.
+    doc_cache = _doc_cache_enabled()
+    conn_owned = False
+    if doc_cache and conn is None:
+        try:
+            from db import get_db
+            conn = get_db()
+            conn_owned = True
+        except Exception:
+            conn = None
+
     # Run through 3-layer filter
     filtered = filter_articles(
         articles,
         gemini_client=gemini_client,
         skip_layer1=False,
         skip_layer2=False,
+        conn=conn if doc_cache else None,
+        record_documents=doc_cache,
+        doc_source_type='google_news',
     )
+
+    if conn_owned:
+        try:
+            conn.close()
+        except Exception:
+            pass
 
     print(
         f"  [GOOGLE-NEWS] {len(articles)} articles → "
@@ -463,18 +560,5 @@ def run_google_news_search(gemini_client=None):
     for art in filtered:
         art["_discovery_tier"] = "google_news_rss"
         art["discovery_source"] = "google_news_rss"
-
-    # Record documents for fetch tracking
-    try:
-        from db import get_db, insert_document
-        conn = get_db()
-        for art in filtered:
-            insert_document(conn, art.get('url') or art.get('link', ''),
-                            title=art.get('title', ''),
-                            source_tier='tier_2', source_type='google_news',
-                            published_date=art.get('published', ''))
-        conn.close()
-    except Exception:
-        pass
 
     return filtered

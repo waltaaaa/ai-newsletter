@@ -517,6 +517,8 @@ def filter_articles(
     skip_layer2: bool = False,
     log_filtered: bool = True,
     conn=None,
+    record_documents: bool = False,
+    doc_source_type: str = 'news',
 ) -> list[dict]:
     """
     Run articles through the three-layer filter stack.
@@ -529,6 +531,12 @@ def filter_articles(
                      (for infrastructure/procurement government feeds).
         log_filtered: If True, log rejected articles to filtered_{date}.txt.
         conn: Optional SQLite connection for document dedup check.
+        record_documents: If True (and conn given), record documents for every
+            article that COMPLETED L6/L7 classification — both survivors and
+            L6/L7 rejects. Deterministic L1/L2 cuts are intentionally NOT
+            recorded so a keyword added next week can still rescue them.
+        doc_source_type: source_type stamped on recorded documents
+            (e.g. 'google_news', 'bing_news').
 
     Returns:
         List of articles that passed all layers.
@@ -558,11 +566,13 @@ def filter_articles(
     # Also track L1 strength to skip L3 for strong keyword matches.
     if not skip_layer1:
         passed_l1 = []
+        meta_boost_passed = 0
         for art in articles:
             # Metadata boost: articles pre-tagged with sector by domain or feed
             # bypass L1 keyword check (still go through L2 negative + L3 LLM)
             if art.get('meta_sectors'):
                 art['_l1_strength'] = 'meta'
+                meta_boost_passed += 1
                 passed_l1.append(art)
             elif layer1_keyword_check(art.get('title', ''), art.get('summary', '')):
                 art['_l1_strength'] = layer1_strength(
@@ -571,6 +581,8 @@ def filter_articles(
             else:
                 filtered_out.append(('L1', art))
         articles = passed_l1
+        if meta_boost_passed:
+            print(f"  [Filter L1] metadata-boost passed {meta_boost_passed}")
 
     # Layer 2: Negative keyword exclusion
     if not skip_layer2:
@@ -700,6 +712,33 @@ def filter_articles(
     l7_cut = sum(1 for layer, _ in filtered_out if layer == 'L7')
     print(f"  [Filter] {initial_count} -> {len(articles)} "
           f"(L1: -{l1_cut}, L2: -{l2_cut}, L6: -{l6_cut}, L7: -{l7_cut})")
+
+    # Doc-cache recording (E-4/E-9): persist every article that COMPLETED
+    # L6/L7 classification — survivors AND L6/L7 rejects — so re-fetches are
+    # skipped at L0 next run. Deterministic L1/L2 cuts are NOT recorded: a
+    # keyword added next week must still be able to rescue them.
+    if conn is not None and record_documents:
+        try:
+            from db import insert_document, update_document_classification
+            recorded = 0
+            for art, relevant in (
+                [(a, True) for a in articles]
+                + [(a, False) for layer, a in filtered_out if layer in ('L6', 'L7')]
+            ):
+                url = art.get('url') or art.get('link', '')
+                if not url:
+                    continue
+                insert_document(conn, url,
+                                title=art.get('title', ''),
+                                source_tier='tier_2',
+                                source_type=doc_source_type,
+                                published_date=art.get('published', ''))
+                update_document_classification(conn, url, relevant)
+                recorded += 1
+            if recorded:
+                print(f"  [Filter] recorded {recorded} classified documents (doc cache)")
+        except Exception as e:
+            print(f"  [Filter] document recording failed (non-fatal): {type(e).__name__}: {e}")
 
     # Log filtered articles for review
     if log_filtered and filtered_out:

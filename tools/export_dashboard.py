@@ -154,8 +154,13 @@ def _project_for_export(proj_dict: dict) -> dict:
         "naics_name": proj_dict.get("naics_name", ""),
         "value": proj_dict.get("value", "Not disclosed"),
         "value_confirmed": value_confirmed,
+        # R7: explicit flag for tracked-but-unpriced projects
+        "needs_value": parsed_value is None,
         "status": proj_dict.get("status", ""),
         "confidence": proj_dict.get("confidence", 0.0),
+        # E9: surface confidence-decay state (columns written by confidence_decay.py)
+        "is_stale": bool(proj_dict.get("is_stale", 0)),
+        "display_confidence": proj_dict.get("display_confidence"),
         "project_type": proj_dict.get("project_type", ""),
         "is_brownfield": bool(proj_dict.get("is_brownfield", False)),
         "proponent": proj_dict.get("proponent", ""),
@@ -190,17 +195,24 @@ def _project_for_export(proj_dict: dict) -> dict:
 # MB 2,037 rows / ~50 with a real value; NL 1,554 / ~48). Dropped from the
 # PUBLISHED export only when they have no confirmed capex value — rows stay in the
 # DB, so the additive-only invariant is preserved.
-_NON_PROJECT_DOCTYPE_RE = re.compile(
-    r"\b(forest management plan|"
-    r"annual report|monitoring report|status report|background report|"
-    r"environmental impact statement|"
-    r"terms of reference|"
-    r"discussion paper|"
-    r"request for (proposal|comment|information|qualification)|"
-    r"public (comment|notice|consultation)|"
-    r"notice of (commencement|determination))\b",
-    re.IGNORECASE,
-)
+#
+# P1 (quality-pass-1.4): the regex now lives in db.py (NON_PROJECT_DOCTYPE_RE)
+# so gov_sources can apply it at ingestion too. Local fallback retained for
+# standalone use of this module.
+try:
+    from db import NON_PROJECT_DOCTYPE_RE as _NON_PROJECT_DOCTYPE_RE
+except ImportError:
+    _NON_PROJECT_DOCTYPE_RE = re.compile(
+        r"\b(forest management plan|"
+        r"annual report|monitoring report|status report|background report|"
+        r"environmental impact statement|"
+        r"terms of reference|"
+        r"discussion paper|"
+        r"request for (proposal|comment|information|qualification)|"
+        r"public (comment|notice|consultation)|"
+        r"notice of (commencement|determination))\b",
+        re.IGNORECASE,
+    )
 
 
 def _is_non_project_doctype(name: str) -> bool:
@@ -1268,6 +1280,121 @@ def export_pipeline_status(conn, output_dir: str) -> str:
     return out_path
 
 
+def export_province_counts(conn, output_dir: str) -> str:
+    """P3: Export province_counts.json — per-province accuracy counters.
+
+    For each province:
+      qualifying       — parsed value >= province GDP threshold AND not stale
+      qualifying_value — summed parsed value of qualifying projects (dollars)
+      tracked_unpriced — no parsed value AND not stale
+      stale            — is_stale flag set (confidence decay, 120+ days unseen)
+
+    Thresholds come from pipeline_config.PROVINCES — the same table
+    export_province_projects / export_all_projects use.
+    """
+    from db import get_projects
+    from pipeline_config import PROVINCES
+
+    name_to_code = {
+        "Ontario": "ON", "Quebec": "QC", "Alberta": "AB", "British Columbia": "BC",
+        "Saskatchewan": "SK", "Manitoba": "MB", "Nova Scotia": "NS",
+        "New Brunswick": "NB", "Newfoundland and Labrador": "NL",
+        "Prince Edward Island": "PE", "Yukon": "YT",
+        "Northwest Territories": "NT", "Nunavut": "NU",
+    }
+
+    provinces = {}
+    for prov in PROVINCES:
+        threshold = prov["threshold_val"]
+        code = name_to_code.get(prov["name"], prov["name"])
+        qualifying = 0
+        qualifying_value = 0.0
+        tracked_unpriced = 0
+        stale = 0
+        for raw in get_projects(conn, province=prov["name"]):
+            proj = dict(raw) if hasattr(raw, "keys") else raw
+            parsed_value = proj.get("parsed_value")
+            if parsed_value is None:
+                parsed_value = _parse_value(proj.get("value"))
+            if proj.get("is_stale"):
+                stale += 1
+                continue
+            if parsed_value is None:
+                tracked_unpriced += 1
+            elif parsed_value >= threshold:
+                qualifying += 1
+                qualifying_value += parsed_value
+        provinces[code] = {
+            "name": prov["name"],
+            "threshold": threshold,
+            "qualifying": qualifying,
+            "qualifying_value": qualifying_value,
+            "tracked_unpriced": tracked_unpriced,
+            "stale": stale,
+        }
+
+    output = {
+        "provinces": provinces,
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+    }
+    out_path = os.path.join(output_dir, "province_counts.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
+def export_discovery_summary(conn, output_dir: str) -> str:
+    """E8: Export discovery_summary.json — this week's discovery activity.
+
+    week_of        — ISO date of the most recent Monday
+    new            — projects with firstTracked >= week start
+    rediscovered   — projects seen this week that were tracked before it
+    status_changes — project_changes rows (change_type='status') this week
+    fuzzy_merges   — in-process fuzzy-merge counter (db.get_merge_counters,
+                     read without reset)
+    """
+    from datetime import date as _date, timedelta as _timedelta
+    from db import get_merge_counters
+
+    today = _date.today()
+    week_start = (today - _timedelta(days=today.weekday())).isoformat()
+
+    def _count(sql, params=()):
+        try:
+            return conn.execute(sql, params).fetchone()[0]
+        except Exception:
+            return 0
+
+    new = _count(
+        "SELECT COUNT(*) FROM projects WHERE substr(firstTracked, 1, 10) >= ?",
+        (week_start,))
+    rediscovered = _count(
+        "SELECT COUNT(*) FROM projects WHERE substr(lastSeen, 1, 10) >= ? "
+        "AND firstTracked != '' AND substr(firstTracked, 1, 10) < ?",
+        (week_start, week_start))
+    status_changes = _count(
+        "SELECT COUNT(*) FROM project_changes "
+        "WHERE change_type = 'status' AND substr(change_date, 1, 10) >= ?",
+        (week_start,))
+    try:
+        fuzzy_merges = int(get_merge_counters().get("fuzzy_merged", 0))
+    except Exception:
+        fuzzy_merges = 0
+
+    output = {
+        "week_of": week_start,
+        "new": new,
+        "rediscovered": rediscovered,
+        "status_changes": status_changes,
+        "fuzzy_merges": fuzzy_merges,
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+    }
+    out_path = os.path.join(output_dir, "discovery_summary.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # SIGNAL EXPORTS — Job spikes, procurement, IAAC changes
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1676,6 +1803,15 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
 
     # Signal data (jobs, procurement, IAAC)
     for export_fn in (export_jobs, export_procurement, export_iaac, export_signals):
+        try:
+            path = export_fn(conn, output_dir)
+            files_written.append(os.path.basename(path))
+        except Exception as e:
+            logger.warning("Export %s failed: %s", export_fn.__name__, e)
+
+    # Accuracy layer (quality-pass-1.4): per-province counters (P3) and
+    # weekly discovery summary (E8)
+    for export_fn in (export_province_counts, export_discovery_summary):
         try:
             path = export_fn(conn, output_dir)
             files_written.append(os.path.basename(path))

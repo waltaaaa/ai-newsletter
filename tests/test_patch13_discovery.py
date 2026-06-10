@@ -229,6 +229,50 @@ def test_live_fuzzy_generic_name_not_merged(conn):
     assert k1 != k2
 
 
+# ── quality-pass-1.4 S4: evidence merge deep-link ordering ───────────────────
+# After the union (URLs are NEVER dropped), _merge_evidence stable-sorts by
+# link quality so evidence[0] is the most project-specific deep link (the
+# frontend's SOURCE column links evidence[0]; firstTracked is a separate
+# column, so nothing keys off evidence[0] as "earliest").
+
+from db import _merge_evidence  # noqa: E402
+
+
+def test_s4_deep_link_sorted_first_both_survive():
+    existing = [{"url": "https://www.ontario.ca/major-projects-inventory.pdf",
+                 "source": "provincial_listing"}]
+    incoming = [{"url": "https://example-news.ca/site-c-dam-milestone",
+                 "source": "google_news_rss"}]
+    merged = _merge_evidence(existing, incoming)
+    assert len(merged) == 2, "merge must NEVER lose URLs"
+    assert merged[0]["url"].endswith("site-c-dam-milestone")
+    assert merged[1]["url"].endswith("major-projects-inventory.pdf")
+
+
+def test_s4_two_deep_links_keep_original_order():
+    existing = [{"url": "https://a.example.ca/projects/deep-one"},
+                {"url": "https://b.example.ca/projects/deep-two"}]
+    incoming = [{"url": "https://c.example.ca/projects/deep-three"}]
+    merged = _merge_evidence(existing, incoming)
+    assert [e["url"] for e in merged] == [
+        "https://a.example.ca/projects/deep-one",
+        "https://b.example.ca/projects/deep-two",
+        "https://c.example.ca/projects/deep-three",
+    ]
+
+
+def test_s4_quality_rank_deep_listing_homepage():
+    existing = [{"url": "https://example.ca/"},                       # homepage
+                {"url": "https://example.ca/major-projects-inventory.pdf"}]  # listing
+    incoming = [{"url": "https://example.ca/projects/deep-page"}]     # deep
+    merged = _merge_evidence(existing, incoming)
+    assert [e["url"] for e in merged] == [
+        "https://example.ca/projects/deep-page",
+        "https://example.ca/major-projects-inventory.pdf",
+        "https://example.ca/",
+    ]
+
+
 def test_live_fuzzy_generic_name_with_same_proponent_merges(conn):
     k1 = upsert_project(conn, {
         "name": "Hog Barn", "province": "Manitoba",

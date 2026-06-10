@@ -22,13 +22,13 @@ def _run_tier14():
     return scrape_institutional_capital()
 
 
-def _run_google_news(gemini_client):
+def _run_google_news(gemini_client, conn=None):
     """Tier 2: Google News RSS discovery."""
     from google_news_rss_search import run_google_news_search
-    return run_google_news_search(gemini_client=gemini_client)
+    return run_google_news_search(gemini_client=gemini_client, conn=conn)
 
 
-def _run_bing_news():
+def _run_bing_news(gemini_client=None, conn=None):
     """Tier 2b: Bing News RSS discovery (parallel coverage source).
 
     Same compound + NAICS queries as Google. Resilient when Google soft-bans
@@ -37,7 +37,7 @@ def _run_bing_news():
     always appear in Google News.
     """
     from bing_news_rss_search import run_bing_news_search
-    return run_bing_news_search()
+    return run_bing_news_search(gemini_client=gemini_client, conn=conn)
 
 
 def run(conn, context, logger):
@@ -56,11 +56,15 @@ def run(conn, context, logger):
         bing_articles = []
 
         with ThreadPoolExecutor(max_workers=5) as executor:
+            # conn is shared with the news threads for the documents cache
+            # (L0 skip + classified-doc recording). db.get_db() opens with
+            # check_same_thread=False and busy_timeout, and all document
+            # writes are wrapped in their own try/except.
             f_tier1  = executor.submit(_run_tier1, tavily_client)
             f_tier13 = executor.submit(_run_tier13)
             f_tier14 = executor.submit(_run_tier14)
-            f_news   = executor.submit(_run_google_news, gemini_client)
-            f_bing   = executor.submit(_run_bing_news)
+            f_news   = executor.submit(_run_google_news, gemini_client, conn)
+            f_bing   = executor.submit(_run_bing_news, gemini_client, conn)
 
             # Collect results inside the with-block (executor waits on exit)
             try:
@@ -114,6 +118,23 @@ def run(conn, context, logger):
                     added += 1
             print(f"  [TIER 2/2b] Merged: {added} unique Bing articles added "
                   f"(news_articles total: {len(news_articles)})")
+
+        # ── R8: per-query yield audit (rolling 8-week history) ─────────
+        # Articles carry `_query` (the shortened RSS query). Aggregate counts
+        # and append to dashboard_state; queries zero-yield 4+ consecutive
+        # weeks get a deprioritization suggestion in pipeline_improvements.
+        # Flag only — NOTHING is ever removed from config (additive-only).
+        try:
+            from query_yield_audit import record_week
+            query_counts = {}
+            for art in news_articles:
+                q = art.get("_query")
+                if q:
+                    query_counts[q] = query_counts.get(q, 0) + 1
+            record_week(conn, query_counts)
+        except Exception as e:
+            print(f"[WARN] Query yield audit failed: {type(e).__name__}: {e}")
+            logger.log_error("query_yield_audit", e, severity="info")
 
         logger.log_step("tier_1_registries")
 
@@ -272,6 +293,39 @@ def run(conn, context, logger):
             logger.log_error("known_project_sweep", e, severity="warn")
 
         logger.log_step("tier_2_google_news")
+
+        # ── E7: per-tier yield history (weekly runs only) ──────────────
+        # Rolling 8-run per-tier counts in dashboard_state; a tier with 2+
+        # consecutive zero-yield runs is logged loudly as DEGRADED.
+        if context.get("mode") == "weekly":
+            try:
+                from db import get_dashboard_state, save_dashboard_state
+                from query_yield_audit import update_tier_history
+                this_run = {
+                    "tier1_registries": len(registry_projects),
+                    "tier2_news_search": len(news_articles),
+                    "tier2b_bing_news": len(bing_articles),
+                    "tier13_municipal": len(municipal_projects),
+                    "tier14_institutional": len(institutional_projects),
+                    "iaac_status": (len(context.get("iaac_status_changes") or [])
+                                    + len(context.get("iaac_new_discoveries") or [])),
+                    "procurement": len(context.get("procurement_contracts") or []),
+                    "policy": len(context.get("policy_items") or []),
+                }
+                tier_history = get_dashboard_state(conn, "tier_yield_history") or {}
+                tier_history, degraded = update_tier_history(tier_history, this_run)
+                save_dashboard_state(conn, "tier_yield_history", tier_history)
+                for tier_name, zero_runs in degraded:
+                    print(f"  [TIER {tier_name} DEGRADED] zero yield "
+                          f"{zero_runs} consecutive runs")
+                    logger.log_error(
+                        f"tier_yield_{tier_name}",
+                        RuntimeError(f"zero yield {zero_runs} consecutive runs"),
+                        severity="warn")
+            except Exception as e:
+                print(f"[WARN] Tier yield history failed: {type(e).__name__}: {e}")
+                logger.log_error("tier_yield_history", e, severity="info")
+
         logger.log_step(step_name)
 
         return {

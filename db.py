@@ -678,6 +678,13 @@ def _merge_evidence(existing: list, incoming: list) -> list:
     """Merge two evidence arrays without losing URLs or duplicating them.
 
     Uses normalize_url to detect near-duplicate URLs.
+
+    S4 (quality-pass-1.4): after the union, the merged array is stable-sorted
+    by link quality (deep > listing > homepage > unknown, ties keep original
+    position) so evidence[0] is the most project-specific deep link — the
+    frontend's SOURCE column links evidence[0]. firstTracked is a separate
+    column, so nothing keys off evidence[0] as "earliest". The union itself
+    is unchanged: URLs are NEVER dropped.
     """
     try:
         from url_utils import normalize_url
@@ -706,6 +713,15 @@ def _merge_evidence(existing: list, incoming: list) -> list:
         if url not in seen_urls:
             seen_urls.add(url)
             merged.append(ev)
+
+    # S4: deep links first (stable sort — original order is the tiebreaker)
+    try:
+        from url_utils import classify_url_quality
+        _quality_rank = {"deep": 3, "listing": 2, "homepage": 1}
+        merged.sort(key=lambda ev: -_quality_rank.get(
+            classify_url_quality((ev or {}).get("url", "")), 0))
+    except ImportError:
+        pass
 
     return merged
 
@@ -836,6 +852,34 @@ def _is_non_project_name(name: str) -> bool:
     if alpha_count < _MIN_ALPHA_CHARS:
         return True
     return False
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# P1 — non-project DOCUMENT-type filter (promoted from tools/export_dashboard)
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Non-project DOCUMENT types that EA registries emit as rows (Forest Management
+# Plans, reports, EIS, terms of reference, RFPs, public notices). These are not
+# capital projects and were flooding the MB/NL provincial counts (discovery
+# audit: MB 2,037 rows / ~50 with a real value; NL 1,554 / ~48). Applied at
+# INGESTION (gov_sources scrapers, value-less rows only) and at EXPORT
+# (tools/export_dashboard, which imports this with a local fallback).
+NON_PROJECT_DOCTYPE_RE = re.compile(
+    r"\b(forest management plan|"
+    r"annual report|monitoring report|status report|background report|"
+    r"environmental impact statement|"
+    r"terms of reference|"
+    r"discussion paper|"
+    r"request for (proposal|comment|information|qualification)|"
+    r"public (comment|notice|consultation)|"
+    r"notice of (commencement|determination))\b",
+    re.IGNORECASE,
+)
+
+
+def is_non_project_doctype(name) -> bool:
+    """True if `name` looks like a registry DOCUMENT filing, not a capital project."""
+    return bool(name and NON_PROJECT_DOCTYPE_RE.search(name))
 
 
 # ──────────────────────────────────────────────────────────────────────────────

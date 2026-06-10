@@ -33,6 +33,29 @@ except ImportError:
     _HAS_BS4 = False
     print("[gov_sources] beautifulsoup4 not installed — HTML parsing will be limited")
 
+# P1 (quality-pass-1.4): non-project DOCUMENT-type filter at ingestion.
+# EA registries emit rows that are filings (Forest Management Plans, EIS,
+# terms of reference, public notices), not capital projects. Rows whose name
+# matches AND that carry no dollar value are skipped before they ever reach
+# the upsert. The regex lives in db.py so export and ingestion stay in sync.
+try:
+    from db import is_non_project_doctype
+except ImportError:
+    def is_non_project_doctype(name):  # fallback: filter disabled
+        return False
+
+# Dollar amount embedded in a registry row name (e.g. "... $120M expansion")
+_NAME_DOLLAR_RE = re.compile(r'\$\s*\d')
+
+
+def _skip_non_project_filing(name: str, value=None) -> bool:
+    """True if this registry row is a document filing with no dollar value."""
+    if value:
+        return False
+    if _NAME_DOLLAR_RE.search(name or ''):
+        return False
+    return is_non_project_doctype(name)
+
 # ── StatCan indicators ────────────────────────────────────────────────────────
 
 _STATCAN_IND_URL = "https://www150.statcan.gc.ca/n1/dai-quo/ssi/homepage/ind-econ.json"
@@ -1249,6 +1272,7 @@ def _scrape_manitoba_ea(tavily_client=None) -> list[dict]:
     Returns list of project dicts with discovery_source='provincial_ea'.
     """
     projects = []
+    skipped_doctype = 0
     try:
         html = _get_html(_MB_EA_URL, timeout=25)
         if not html:
@@ -1285,6 +1309,11 @@ def _scrape_manitoba_ea(tavily_client=None) -> list[dict]:
                     continue
                 seen.add(name.lower())
 
+                # P1: skip value-less document filings (FMPs, EIS, notices)
+                if _skip_non_project_filing(name):
+                    skipped_doctype += 1
+                    continue
+
                 # Try to get link
                 link = row.select_one('a')
                 url = ''
@@ -1320,6 +1349,8 @@ def _scrape_manitoba_ea(tavily_client=None) -> list[dict]:
     except Exception as e:
         print(f"  [MB EA] Failed: {type(e).__name__}: {e}")
 
+    if skipped_doctype:
+        print(f"  [MB EA] skipped {skipped_doctype} non-project filings")
     print(f"  [MB EA] {len(projects)} projects from registry")
     return projects
 
@@ -1512,6 +1543,7 @@ def _scrape_nl_ea(tavily_client=None) -> list[dict]:
     Returns list of project dicts with discovery_source='provincial_ea'.
     """
     projects = []
+    skipped_doctype = 0
     try:
         html = _get_html(_NL_EA_URL, timeout=25)
         if not html:
@@ -1544,6 +1576,11 @@ def _scrape_nl_ea(tavily_client=None) -> list[dict]:
             if not name or len(name) < 8 or name.lower() in seen:
                 continue
 
+            # P1: skip value-less document filings (FMPs, EIS, notices)
+            if _skip_non_project_filing(name):
+                skipped_doctype += 1
+                continue
+
             # Extract proponent if embedded (often "Proponent: CompanyName")
             proponent = ''
             name_text = name_cell.get_text('\n', strip=True)
@@ -1571,6 +1608,8 @@ def _scrape_nl_ea(tavily_client=None) -> list[dict]:
     except Exception as e:
         print(f"  [NL EA] Failed: {type(e).__name__}: {e}")
 
+    if skipped_doctype:
+        print(f"  [NL EA] skipped {skipped_doctype} non-project filings")
     print(f"  [NL EA] {len(projects)} projects from registry")
     return projects
 
@@ -1829,6 +1868,7 @@ def _parse_text_for_projects(text: str, province: str, discovery_source: str,
     """Parse plain text (from Tavily extraction) for project-like entries."""
     projects = []
     seen = set()
+    skipped_doctype = 0
     for line in text.split('\n'):
         line = line.strip()
         if len(line) < 15 or len(line) > 250:
@@ -1838,6 +1878,12 @@ def _parse_text_for_projects(text: str, province: str, discovery_source: str,
         if any(skip in ll for skip in ('cookie', 'privacy', 'copyright', 'sign in',
                                         'login', 'menu', 'navigation', 'footer',
                                         'header', 'skip to', 'toggle')):
+            continue
+        # P1: skip value-less document filings (FMPs, EIS, terms of reference)
+        # — this helper is shared by several scrapers, the filter is doctype-
+        # based so gating here covers them all.
+        if _skip_non_project_filing(line):
+            skipped_doctype += 1
             continue
         sector = _infer_sector_from_name(line)
         if sector != 'Other' or any(kw in ll for kw in
@@ -1856,6 +1902,8 @@ def _parse_text_for_projects(text: str, province: str, discovery_source: str,
                 })
                 if len(projects) >= 30:
                     break
+    if skipped_doctype:
+        print(f"  [{province} EA] skipped {skipped_doctype} non-project filings")
     return projects
 
 
