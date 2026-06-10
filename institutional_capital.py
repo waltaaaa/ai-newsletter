@@ -46,20 +46,27 @@ UNIVERSITY_SOURCES = [
      "url": "https://www.ucalgary.ca/facilities/"},
     {"name": "McMaster University", "province": "ON", "cma": "Hamilton",
      "url": "https://facilities.mcmaster.ca/"},
+    # Live-verified 2026-06-09: facilities moved under about-us; the
+    # /major-projects sub-path 403s to non-browser clients — use the parent
     {"name": "University of Ottawa", "province": "ON", "cma": "Ottawa-Gatineau",
-     "url": "https://www.uottawa.ca/facilities/"},
+     "url": "https://www.uottawa.ca/about-us/administration-services/facilities/projects-construction"},
     {"name": "Université Laval", "province": "QC", "cma": "Quebec City",
      "url": "https://www.ulaval.ca/"},
+    # Live-verified 2026-06-09: PPS renamed to Facilities
     {"name": "Queen's University", "province": "ON", "cma": "Kingston",
-     "url": "https://www.queensu.ca/pps/"},
+     "url": "https://www.queensu.ca/facilities/"},
+    # Live-verified 2026-06-09: physical-plant renamed to facilities
     {"name": "University of Manitoba", "province": "MB", "cma": "Winnipeg",
-     "url": "https://umanitoba.ca/physical-plant/"},
+     "url": "https://umanitoba.ca/facilities/"},
+    # Live-verified 2026-06-09: campus-development page lists capital projects
+    # (much of the old facilities-management content moved to internal myDal)
     {"name": "Dalhousie University", "province": "NS", "cma": "Halifax",
-     "url": "https://www.dal.ca/dept/facilities-management.html"},
+     "url": "https://www.dal.ca/dept/facilities/campus-development.html"},
     {"name": "University of Saskatchewan", "province": "SK", "cma": "Saskatoon",
      "url": "https://facilities.usask.ca/"},
+    # Live-verified 2026-06-09: facilities lives under /fm/
     {"name": "Western University", "province": "ON", "cma": "London",
-     "url": "https://www.uwo.ca/facilities/"},
+     "url": "https://uwo.ca/fm/index.html"},
     {"name": "University of Waterloo", "province": "ON", "cma": "Kitchener-Cambridge-Waterloo",
      "url": "https://uwaterloo.ca/plant-operations/"},
     # ── Major polytechnics ───────────────────────────────────────────────────
@@ -67,27 +74,42 @@ UNIVERSITY_SOURCES = [
      "url": "https://www.bcit.ca/about/"},
     {"name": "SAIT", "province": "AB", "cma": "Calgary",
      "url": "https://www.sait.ca/about-sait"},
+    # 2026-06-09: entire georgebrown.ca is behind Akamai bot-blocking (403 on
+    # every path incl. robots.txt, even with full browser headers). No
+    # unblocked official path exists; kept additive-only. George Brown capital
+    # news reaches the pipeline via Google News RSS instead.
     {"name": "George Brown College", "province": "ON", "cma": "Toronto",
      "url": "https://www.georgebrown.ca/about"},
     # ── Additional polytechnics ──────────────────────────────────────────────
+    # Live-verified 2026-06-09: media page moved under news-and-events
     {"name": "Seneca Polytechnic", "province": "ON", "cma": "Toronto",
-     "url": "https://www.senecapolytechnic.ca/about/media.html"},
+     "url": "https://www.senecapolytechnic.ca/news-and-events/media-releases.html"},
+    # Live-verified 2026-06-09: news moved to Humber Today media releases
     {"name": "Humber College", "province": "ON", "cma": "Toronto",
-     "url": "https://humber.ca/about/news.html"},
+     "url": "https://humber.ca/today/media-releases"},
     {"name": "Algonquin College", "province": "ON", "cma": "Ottawa-Gatineau",
      "url": "https://www.algonquincollege.com/public-relations/"},
     {"name": "Fanshawe College", "province": "ON", "cma": "London",
      "url": "https://www.fanshawec.ca/about-fanshawe/news"},
+    # Live-verified 2026-06-09: media-room replaced by /about/news
     {"name": "Mohawk College", "province": "ON", "cma": "Hamilton",
-     "url": "https://www.mohawkcollege.ca/about-mohawk/media-room"},
+     "url": "https://www.mohawkcollege.ca/about/news"},
+    # 2026-06-09: news moved to the blogs1 subdomain (old /about/news 404s).
+    # blogs1 serves an INCOMPLETE TLS chain (missing intermediate) so it fails
+    # certifi verification from this client even though browsers load it —
+    # same server-side class of failure as the old IWK host. URL is correct;
+    # will stay dark in health logs until the college fixes its cert chain.
     {"name": "Conestoga College", "province": "ON", "cma": "Kitchener-Cambridge-Waterloo",
-     "url": "https://www.conestogac.on.ca/about/news"},
+     "url": "https://blogs1.conestogac.on.ca/news/"},
     {"name": "Red River College Polytechnic", "province": "MB", "cma": "Winnipeg",
      "url": "https://www.rrc.ca/news/"},
     {"name": "Saskatchewan Polytechnic", "province": "SK", "cma": "Saskatoon",
      "url": "https://saskpolytech.ca/about/news/"},
+    # Live-verified 2026-06-09: news-events renamed to newsroom. The article
+    # list is JS-rendered (HTML shell only) — release pages live under this
+    # path, so dollar-value extraction from the listing itself may be thin.
     {"name": "NAIT", "province": "AB", "cma": "Edmonton",
-     "url": "https://www.nait.ca/nait/about/news-events"},
+     "url": "https://www.nait.ca/nait/about/newsroom"},
     # ── Healthcare institutions ────────────────────────────────────────────
     {"name": "SickKids Hospital — Project Horizon", "province": "ON", "cma": "Toronto",
      "url": "https://www.sickkids.ca/en/about/project-horizon/"},
@@ -95,20 +117,25 @@ UNIVERSITY_SOURCES = [
      "url": "https://muhc.ca/"},
     {"name": "University Health Network", "province": "ON", "cma": "Toronto",
      "url": "https://www.uhn.ca/corporate/News/"},
+    # Live-verified 2026-06-09: /media/ superseded by /newsroom/
     {"name": "Sunnybrook Health Sciences Centre", "province": "ON", "cma": "Toronto",
-     "url": "https://sunnybrook.ca/media/"},
+     "url": "https://sunnybrook.ca/newsroom/"},
     {"name": "Hamilton Health Sciences", "province": "ON", "cma": "Hamilton",
      "url": "https://www.hamiltonhealthsciences.ca/news/"},
     {"name": "CHUM (Centre hospitalier de l'Université de Montréal)", "province": "QC", "cma": "Montreal",
      "url": "https://www.chumontreal.qc.ca/nouvelles"},
+    # Live-verified 2026-06-09: site restructured; current-projects page lists
+    # capital work directly (news page: /about-us/news-and-features)
     {"name": "BC Children's Hospital", "province": "BC", "cma": "Vancouver",
-     "url": "https://www.bcchildrens.ca/about/news-stories"},
+     "url": "https://www.bcchildrens.ca/about-us/current-projects"},
     {"name": "Alberta Health Services", "province": "AB", "cma": "Calgary",
      "url": "https://www.albertahealthservices.ca/news/"},
+    # Live-verified 2026-06-09: news moved under /news-events/
     {"name": "Saskatchewan Health Authority", "province": "SK", "cma": "Saskatoon",
-     "url": "https://www.saskhealthauthority.ca/news/"},
-    {"name": "Eastern Health (NL)", "province": "NL", "cma": "St. John's",
-     "url": "https://www.easternhealth.ca/news/"},
+     "url": "https://www.saskhealthauthority.ca/news-events/news"},
+    # Live-verified 2026-06-09: Eastern Health merged into NL Health Services
+    {"name": "NL Health Services (formerly Eastern Health)", "province": "NL", "cma": "St. John's",
+     "url": "https://nlhealthservices.ca/news-centre/"},
     # Live-verified 2026-06-09: IWK moved to iwkhealth.ca (200). The old
     # www.iwk.nshealth.ca host serves a broken TLS chain even with certifi,
     # and www.iwkhealth.ca has a hostname-mismatched cert — apex only.
