@@ -53,7 +53,10 @@ DEFAULT_HEADERS = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,"
               "application/json;q=0.9,*/*;q=0.8",
     "Accept-Language": "en-CA,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
+    # No "br": requests can only decode brotli if the optional brotli package
+    # is installed; advertising it without the decoder turns ArcGIS Online
+    # (and any other brotli-preferring host) responses into undecodable bytes.
+    "Accept-Encoding": "gzip, deflate",
     "Connection": "keep-alive",
 }
 

@@ -2007,10 +2007,10 @@ def run(conn, context, logger):
                     'period':  _fmt_period(raw.get('participationRate_date', '')),
                     'obsDate': raw.get('participationRate_date', ''),
                 },
-                # Wired but data-pending: StatCan vectors for these are
-                # CI-research TODOs (_PROV_BUILDING_PERMITS_VIDS / _PROV_WAGE_VIDS
-                # in data_collection.py). raw.get(...) stays '' until confirmed,
-                # so these render as N/A rather than wrong numbers.
+                # Fed by _PROV_BUILDING_PERMITS_VIDS / _PROV_WAGE_VIDS in
+                # data_collection.py (vectors live-verified 2026-06-09 from
+                # Tables 34-10-0292-01 and 14-10-0063-01). raw.get(...) is ''
+                # only if the fetch fails, rendering N/A rather than wrong numbers.
                 'buildingPermits': {
                     'prev':    raw.get('buildingPermits_prev', ''),
                     'change':  _calc_change(raw.get('buildingPermits', ''), raw.get('buildingPermits_prev', '')),

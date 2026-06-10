@@ -721,18 +721,44 @@ _PROV_GDP_VIDS = {
     "British Columbia":          62467264,
 }
 
-# Provincial building permits & average wage — StatCan WDS vectors are
-# UNCONFIRMED and intentionally empty. These must be resolved during a CI run
-# (StatCan WDS is unreachable from the dev machine) via getCubeMetadata on:
-#   - building permits: StatCan Table 34-10-0066-01 (building permits, by
-#     province, total value, SA)
-#   - average wage:      StatCan Table 14-10-0063-01 (avg hourly/weekly wage,
-#     employees, by province)
-# DO NOT hardcode guessed vector IDs — wrong financial figures are worse than
-# N/A. While empty, get_provincial_indicators logs a research hint and these
-# indicators stay N/A (frontend already handles N/A gracefully).
-_PROV_BUILDING_PERMITS_VIDS: dict[str, int] = {}
-_PROV_WAGE_VIDS: dict[str, int] = {}
+# Provincial building permits — StatCan Table 34-10-0292-01 (PID 34100292),
+# the ACTIVE successor cube (34-10-0066 ended 2023-10; 34-10-0285 ended
+# 2025-03 — both archived). Coordinate: Total residential and non-residential /
+# Types of work, total / Value of permits / Seasonally adjusted, current.
+# Values are thousands of dollars, monthly.
+# Vectors resolved + validated live 2026-06-09 via getSeriesInfoFromCubePidCoord
+# (latest refPer 2026-03; ON $4.87B, QC $2.58B, BC $3.05B — plausible).
+_PROV_BUILDING_PERMITS_VIDS: dict[str, int] = {
+    "Newfoundland and Labrador": 1675119653,
+    "Prince Edward Island":      1675119661,
+    "Nova Scotia":               1675119669,
+    "New Brunswick":             1675119677,
+    "Quebec":                    1675119685,
+    "Ontario":                   1675119693,
+    "Manitoba":                  1675119701,
+    "Saskatchewan":              1675119709,
+    "Alberta":                   1675119717,
+    "British Columbia":          1675119725,
+}
+
+# Provincial average hourly wage — StatCan Table 14-10-0063-01 (PID 14100063),
+# active (end 2026-05). Coordinate: Average hourly wage rate / Both full- and
+# part-time employees / Total employees, all industries / Total - Gender /
+# 15 years and over. Dollars per hour, monthly, unadjusted.
+# Vectors resolved + validated live 2026-06-09 (latest refPer 2026-05;
+# ON $38.22/h, AB $38.53/h — plausible). Surfaced as wageGrowth = YoY %.
+_PROV_WAGE_VIDS: dict[str, int] = {
+    "Newfoundland and Labrador": 2135999,
+    "Prince Edward Island":      2139419,
+    "Nova Scotia":               2142839,
+    "New Brunswick":             2146259,
+    "Quebec":                    2149679,
+    "Ontario":                   2153099,
+    "Manitoba":                  2156519,
+    "Saskatchewan":              2159939,
+    "Alberta":                   2163359,
+    "British Columbia":          2166779,
+}
 
 # Provincial employment rate — StatCan WDS vector IDs
 # Table 14-10-0287-01 (PID 14100287): Employment rate, both sexes, 15 years+, SA
@@ -803,20 +829,10 @@ def get_provincial_indicators() -> dict:
     all_vids = (list(_PROV_UNEMP_VIDS.values()) + list(_PROV_CPI_VIDS.values())
                 + list(_PROV_EMPRATE_VIDS.values()) + list(_PROV_PARTRATE_VIDS.values())
                 + list(_TERR_UNEMP_VIDS.values()) + list(_TERR_PARTRATE_VIDS.values())
-                + list(_TERR_EMPRATE_VIDS.values()))
+                + list(_TERR_EMPRATE_VIDS.values())
+                + list(_PROV_BUILDING_PERMITS_VIDS.values())
+                + list(_PROV_WAGE_VIDS.values()))
     data = _statcan_wds(all_vids, n=14)
-
-    # Research hint (CI): building permits / wage growth need StatCan vectors
-    # confirmed from a CI run before they can be fetched. Until then they
-    # remain N/A rather than risk wrong figures from guessed vector IDs.
-    if not _PROV_BUILDING_PERMITS_VIDS:
-        print("  [STATCAN-RESEARCH] provincial building permits: vectors UNCONFIRMED "
-              "— resolve StatCan Table 34-10-0066-01 in CI, then populate "
-              "_PROV_BUILDING_PERMITS_VIDS. Emitting N/A for now.")
-    if not _PROV_WAGE_VIDS:
-        print("  [STATCAN-RESEARCH] provincial wage growth: vectors UNCONFIRMED "
-              "— resolve StatCan Table 14-10-0063-01 in CI, then populate "
-              "_PROV_WAGE_VIDS. Emitting N/A for now.")
 
     # Batch 2: provincial annual real GDP (10) — n=2 for current + prior year Y/Y
     gdp_data = _statcan_wds(list(_PROV_GDP_VIDS.values()), n=2)
@@ -903,6 +919,60 @@ def get_provincial_indicators() -> dict:
                     result.setdefault(prov, {}).update(updates)
             except Exception as e:
                 print(f"  [WARN] Provincial participation rate ({prov}): {e}")
+
+    # Building permits — monthly total value, SA (Table 34-10-0292-01).
+    # Vector values are thousands of dollars; rendered as $M / $B.
+    def _fmt_permits(thousands: float) -> str:
+        dollars = thousands * 1_000
+        if dollars >= 1_000_000_000:
+            return f"${dollars / 1_000_000_000:.2f}B"
+        return f"${dollars / 1_000_000:.0f}M"
+
+    for prov, vid in _PROV_BUILDING_PERMITS_VIDS.items():
+        obs = data.get(vid, [])
+        if obs:
+            try:
+                val = float(obs[-1]['value'])
+                # sanity: monthly provincial totals between $1M and $20B
+                if 1_000 <= val <= 20_000_000:
+                    updates = {
+                        'buildingPermits':      _fmt_permits(val),
+                        'buildingPermits_src':  'StatCan',
+                        'buildingPermits_date': obs[-1].get('refPer', ''),
+                    }
+                    if len(obs) >= 2:
+                        prev_val = float(obs[-2]['value'])
+                        if 1_000 <= prev_val <= 20_000_000:
+                            updates['buildingPermits_prev'] = _fmt_permits(prev_val)
+                    result.setdefault(prov, {}).update(updates)
+            except Exception as e:
+                print(f"  [WARN] Provincial building permits ({prov}): {e}")
+
+    # Wage growth — YoY % from average hourly wage levels (Table 14-10-0063-01),
+    # obs[-1] vs obs[-13] = 12 months apart (same construction as CPI above).
+    for prov, vid in _PROV_WAGE_VIDS.items():
+        obs = data.get(vid, [])
+        if len(obs) >= 13:
+            try:
+                latest   = float(obs[-1]['value'])
+                year_ago = float(obs[-13]['value'])
+                # sanity: hourly wages between $15 and $80
+                if 15.0 <= latest <= 80.0 and 15.0 <= year_ago <= 80.0:
+                    yoy = ((latest - year_ago) / year_ago) * 100
+                    updates = {
+                        'wageGrowth':      f"+{yoy:.1f}%" if yoy >= 0 else f"{yoy:.1f}%",
+                        'wageGrowth_src':  'StatCan',
+                        'wageGrowth_date': obs[-1].get('refPer', ''),
+                    }
+                    if len(obs) >= 14:
+                        prev_latest   = float(obs[-2]['value'])
+                        prev_year_ago = float(obs[-14]['value'])
+                        if 15.0 <= prev_latest <= 80.0 and 15.0 <= prev_year_ago <= 80.0:
+                            prev_yoy = ((prev_latest - prev_year_ago) / prev_year_ago) * 100
+                            updates['wageGrowth_prev'] = f"+{prev_yoy:.1f}%" if prev_yoy >= 0 else f"{prev_yoy:.1f}%"
+                    result.setdefault(prov, {}).update(updates)
+            except Exception as e:
+                print(f"  [WARN] Provincial wage growth ({prov}): {e}")
 
     # Territorial labour force (YT / NT / NU) — 3-month moving average from
     # Table 14-10-0292-01. Same downstream shape as provincial rows, different

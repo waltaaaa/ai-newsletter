@@ -43,12 +43,14 @@ GDP_THRESHOLDS = {
     'NS': 25, 'NB': 20, 'NL': 17, 'PE': 5, 'YT': 3, 'NT': 3, 'NU': 3,
 }
 
-# TODO(patch-1.2 live-verify): several HTML-portal and ArcGIS '/explore' URLs
-#   below point at human-facing viewer pages, not data endpoints, and some
-#   returned 404 (Edmonton transit-adjacent pages) or 403 pre-patch. With the
-#   browser UA now applied, re-probe each city; for the 404s (e.g. kitchener
-#   ArcGIS download, london_on/victoria '/explore') resolve the actual CSV/JSON
-#   API path. See SOURCE_ENDPOINTS_NEEDS_LIVE_VERIFICATION.md.
+# Live-verified 2026-06-09 (D-8): every city probed; moved pages re-resolved
+# (see per-entry comments). Kitchener now uses its ArcGIS FeatureServer layer
+# (the old CSV-download item id was retired). London/Victoria machine endpoints
+# exist (maps.london.ca Planning_Application_Sites; maps.victoria.ca
+# OpenData_PlanningAndDevelopment layer 18) but carry NO dollar-value fields,
+# so they cannot pass the value gate — their HTML viewer pages are kept as the
+# listed source instead. Hamilton/St. Catharines ArcGIS layers likewise lack
+# value fields. Kelowna remains bot-blocked (403) to non-browser clients.
 MUNICIPAL_SOURCES = {
     # ── Open Data API cities ─────────────────────────────────────────────────
     "vancouver": {
@@ -153,7 +155,8 @@ MUNICIPAL_SOURCES = {
         "name": "Hamilton Planning Applications",
         "province": "ON",
         "cma": "Hamilton",
-        "url": "https://www.hamilton.ca/develop-property/planning-applications",
+        # 2026-06-09: /develop-property/ section renamed /build-invest-grow/
+        "url": "https://www.hamilton.ca/build-invest-grow/planning-development/planning-applications",
         "approach": "html_scrape",
     },
     "halifax": {
@@ -167,51 +170,76 @@ MUNICIPAL_SOURCES = {
         "name": "Ville de Québec Permits",
         "province": "QC",
         "cma": "Quebec City",
-        "url": "https://www.ville.quebec.qc.ca/citoyens/permis/",
+        # 2026-06-09: /citoyens/permis/ 404s; current page is reglements_permis.
+        # A weekly CKAN permits CSV exists on donneesquebec.ca (vdq-permis.csv)
+        # but has no value column, so it cannot pass the value gate.
+        "url": "https://www.ville.quebec.qc.ca/citoyens/reglements_permis/index.aspx",
         "approach": "html_scrape",
     },
     "saskatoon": {
         "name": "Saskatoon Development Permits",
         "province": "SK",
         "cma": "Saskatoon",
-        "url": "https://www.saskatoon.ca/business-development/planning/development-permits",
+        # 2026-06-09: planning section restructured under development-regulation
+        "url": "https://www.saskatoon.ca/business-development/development-regulation/developers-homebuilders/land-use-applications",
         "approach": "html_scrape",
     },
     "regina": {
         "name": "Regina Building Permits",
         "province": "SK",
         "cma": "Regina",
-        "url": "https://www.regina.ca/business-development/building-property-maintenance/building-permits/",
+        # 2026-06-09: permits page moved under land-property-development/planning
+        "url": "https://www.regina.ca/business-development/land-property-development/planning/proposed-development/",
         "approach": "html_scrape",
     },
     "st_johns": {
         "name": "St. John's Development Applications",
         "province": "NL",
         "cma": "St. John's",
-        "url": "https://www.stjohns.ca/en/business-investment/development-applications.aspx",
+        # 2026-06-09: site dropped /en/ + .aspx; new business-development path
+        "url": "https://www.stjohns.ca/business-development/planning-and-development/development-planning-applications/",
         "approach": "html_scrape",
     },
     "fredericton": {
         "name": "Fredericton Development Permits",
         "province": "NB",
         "cma": "Fredericton",
-        "url": "https://www.fredericton.ca/en/building-renovating",
+        # 2026-06-09: moved under business-development/planning-development
+        "url": "https://www.fredericton.ca/en/business-development/planning-development/development-applications",
         "approach": "html_scrape",
     },
     "charlottetown": {
         "name": "Charlottetown Building Permits",
         "province": "PE",
         "cma": "Charlottetown",
-        "url": "https://www.charlottetown.ca/departments/planning-and-heritage",
+        # 2026-06-09: department page retired; weekly permit-approval summaries
+        "url": "https://www.charlottetown.ca/resident_services/permits_applications/building_permit_approvals",
         "approach": "html_scrape",
     },
     # ── Phase 7 CMA additions ─────────────────────────────────────────────
     "kitchener": {
-        "name": "Kitchener Development Applications",
+        "name": "Kitchener Building Permits",
         "province": "ON",
         "cma": "Kitchener-Cambridge-Waterloo",
-        "url": "https://open-kitchenergis.opendata.arcgis.com/api/download/v1/items/3ee5ccb0b6f4488e858522d858e3e508/csv?layers=0",
-        "approach": "html_scrape",
+        # 2026-06-09: old open-data CSV item retired (HTTP 400); current source
+        # is the Building_Permits FeatureServer (updated daily, carries
+        # CONSTRUCTION_VALUE). where-clause pre-filters at the ON threshold.
+        "url": "https://services1.arcgis.com/qAo1OsXi67t7XgmS/arcgis/rest/services/Building_Permits/FeatureServer/0/query",
+        "approach": "arcgis",
+        "params": {
+            "where": "CONSTRUCTION_VALUE > 500000000",
+            "outFields": "PERMIT_DESCRIPTION,CONSTRUCTION_VALUE,FOLDERNAME,WORK_TYPE,ISSUE_DATE,PERMIT_STATUS",
+            "orderByFields": "ISSUE_DATE DESC",
+            "resultRecordCount": 100,
+            "f": "json",
+        },
+        "field_map": {
+            "name": "PERMIT_DESCRIPTION",
+            "value": "CONSTRUCTION_VALUE",
+            "address": "FOLDERNAME",
+            "type": "WORK_TYPE",
+            "date": "ISSUE_DATE",
+        },
     },
     "london_on": {
         "name": "London ON Building Permits",
@@ -224,14 +252,16 @@ MUNICIPAL_SOURCES = {
         "name": "Oshawa Planning Applications",
         "province": "ON",
         "cma": "Oshawa",
-        "url": "https://www.oshawa.ca/en/building-and-development/planning-applications.aspx",
+        # 2026-06-09: site dropped /en/ + .aspx
+        "url": "https://www.oshawa.ca/business-development/planning-and-development/development-applications/",
         "approach": "html_scrape",
     },
     "st_catharines": {
         "name": "St. Catharines Development Applications",
         "province": "ON",
         "cma": "St. Catharines-Niagara",
-        "url": "https://www.stcatharines.ca/en/build-and-renovate/planning-applications.aspx",
+        # 2026-06-09: /build-and-renovate/ renamed /planning-and-development/
+        "url": "https://www.stcatharines.ca/en/planning-and-development/development-applications.aspx",
         "approach": "html_scrape",
     },
     "victoria": {
@@ -252,14 +282,17 @@ MUNICIPAL_SOURCES = {
         "name": "Kelowna Development Applications",
         "province": "BC",
         "cma": "Kelowna",
-        "url": "https://www.kelowna.ca/homes-building/building-permits-inspections/development-applications",
+        # 2026-06-09: page moved under property-development; host still
+        # bot-blocks non-browser clients (403) — kept for when the WAF relaxes
+        "url": "https://www.kelowna.ca/homes-building/property-development/current-development-applications",
         "approach": "html_scrape",
     },
     "barrie": {
         "name": "Barrie Development Applications",
         "province": "ON",
         "cma": "Barrie",
-        "url": "https://www.barrie.ca/planning-and-development/planning-applications",
+        # 2026-06-09: renamed to proposed-developments under a new section
+        "url": "https://www.barrie.ca/planning-building-infrastructure/development/proposed-developments",
         "approach": "html_scrape",
     },
     "guelph": {
@@ -273,7 +306,8 @@ MUNICIPAL_SOURCES = {
         "name": "Abbotsford Development Applications",
         "province": "BC",
         "cma": "Abbotsford-Mission",
-        "url": "https://www.abbotsford.ca/business-development/planning-development/development-applications",
+        # 2026-06-09: renamed to instream-development-applications
+        "url": "https://www.abbotsford.ca/business-development/development-planning/instream-development-applications",
         "approach": "html_scrape",
     },
 }
@@ -414,6 +448,45 @@ async def _fetch_ckan(session: aiohttp.ClientSession, source: dict,
     return projects
 
 
+async def _fetch_arcgis(session: aiohttp.ClientSession, source: dict,
+                        threshold_millions: float) -> list[dict]:
+    """Fetch permits from an ArcGIS REST FeatureServer/MapServer query endpoint.
+
+    Response shape: {"features": [{"attributes": {...}}, ...]} — the attributes
+    dicts feed _build_project exactly like Socrata records. Added 2026-06-09
+    when Kitchener's open-data CSV download item was retired in favour of a
+    FeatureServer layer carrying CONSTRUCTION_VALUE.
+    """
+    params = dict(source.get("params", {}))
+    params.setdefault("f", "json")
+    field_map = source.get("field_map", {})
+
+    try:
+        async with session.get(
+            source["url"], params=params,
+            timeout=aiohttp.ClientTimeout(total=30),
+        ) as resp:
+            if resp.status != 200:
+                logger.warning(f"  [TIER 13][{source['name']}] FAILED status={resp.status} (arcgis)")
+                return []
+            data = await resp.json(content_type=None)
+    except Exception as e:
+        logger.warning(f"  [TIER 13][{source['name']}] FAILED status=exception (arcgis) {type(e).__name__}: {e}")
+        return []
+
+    if isinstance(data, dict) and data.get("error"):
+        logger.warning(f"  [TIER 13][{source['name']}] FAILED (arcgis) {str(data['error'])[:120]}")
+        return []
+
+    projects = []
+    for feat in (data.get("features", []) if isinstance(data, dict) else []):
+        rec = feat.get("attributes", {})
+        proj = _build_project(rec, source, field_map)
+        if proj and (proj.get("value_millions") or 0) >= threshold_millions:
+            projects.append(proj)
+    return projects
+
+
 async def _scrape_html_portal(session: aiohttp.ClientSession, source: dict,
                               threshold_millions: float) -> list[dict]:
     """Scrape an HTML development application portal.
@@ -541,6 +614,8 @@ async def scrape_municipal_applications() -> list[dict]:
                     projects = await _fetch_socrata(session, source, threshold)
                 elif approach in ("ckan_v2", "ckan"):
                     projects = await _fetch_ckan(session, source, threshold)
+                elif approach == "arcgis":
+                    projects = await _fetch_arcgis(session, source, threshold)
                 else:
                     projects = await _scrape_html_portal(session, source, threshold)
 

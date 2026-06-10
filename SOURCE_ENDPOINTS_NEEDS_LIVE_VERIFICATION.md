@@ -1,97 +1,58 @@
-# Source endpoints needing live re-verification — patch v1.2
+# Source endpoints — live verification COMPLETED 2026-06-09
 
-The structural fixes in patch v1.2 (shared `http_client.py` with a browser
-User-Agent + certifi TLS + per-host retry, BC EAO querystring repair,
-government_bypass, per-source/per-feed counts, and tier DEGRADE logging) clear
-the **systemic** root causes of the silent-zero scrapers (uniform 403 bot-blocks
-and `CERTIFICATE_VERIFY_FAILED`).
+The live-verification pass this document called for was executed on 2026-06-09
+from a network-connected session. Every endpoint below was probed through the
+shared `http_client`; dead endpoints were re-resolved (WebSearch + re-probe)
+and the code updated. The in-code `TODO(patch-1.2 live-verify)` markers have
+been replaced with `Live-verified 2026-06-09` comments at each fix site.
 
-The endpoints below cannot be confirmed from this offline environment. Each is
-flagged in-code with `# TODO(patch-1.2 live-verify): ...`. An operator with
-network access must re-resolve and confirm them. **Do not mark an endpoint
-"fixed" until a live probe returns a 2xx with the expected body shape.**
+Systemic fix found during the pass: `http_client` advertised
+`Accept-Encoding: br` without a brotli decoder installed, which made every
+brotli-preferring host (notably ArcGIS Online) return undecodable bytes.
+`br` removed from the header.
 
-How to test (all from `C:/AI_newsletter/backend`):
+## D-7 — Provincial EA registries: RESOLVED
 
-```
-# Quick status + content-type probe using the shared client:
-./.venv/Scripts/python.exe -c "import http_client; r=http_client.get('<URL>'); print(r.status_code, r.headers.get('content-type'), len(r.content))"
+| Source | Outcome |
+|--------|---------|
+| **BC EAO** | Old `/api/v2/projects` 404; suspected `api-public.` host is DNS-dead. **Fixed:** EPIC public-search API `https://projects.eao.gov.bc.ca/api/public/search?dataset=Project&pageNum=0&pageSize=1000` returns the exact `[{searchResults, meta}]` shape the parser expects. Live yield: **358 projects** (133 Approved / 119 Under Review / 74 Cancelled / 32 Completed). |
+| **NB EIA** | GNB migrated to `www.gnb.ca` under `/en/topic/environment-resources/`; relative links 404 on the old `www2` host (root cause of the dead anchors). **Fixed:** scraper now targets `projects/current.html` (one `<h2>` per project) with a scoped landing-page crawl as fallback; sub-links resolve via `urljoin`. Live yield: 1 project (NB Power ARC SMR) — NB genuinely has one current EA review. The underscore-variant URL guess from the audit is the one that 404s. |
+| **IWK Health** (Tier 14) | TLS still fails on `www.iwk.nshealth.ca` (broken chain server-side, certifi can't fix) AND `www.iwkhealth.ca` (hostname-mismatched cert). **Fixed:** org moved to apex `https://iwkhealth.ca/news` — 200. |
 
-# JSON endpoints — confirm the parsed shape:
-./.venv/Scripts/python.exe -c "import http_client,json; d=http_client.get_json('<URL>'); print(type(d), (list(d)[:5] if isinstance(d,dict) else len(d)))"
-```
+## D-8 — Tiers 13/14: RESOLVED (2 hosts remain bot-blocked)
 
-When confirmed: swap the `_*` URL constant to the verified value (keep the old
-one as a commented fallback — CLAUDE.md is additive-only, never delete a source)
-and remove the corresponding `TODO(patch-1.2 live-verify)` comment.
+Browser-UA cleared most 403s as predicted. The 404s were genuine page moves,
+all re-resolved and verified 200 through `http_client` (see per-entry comments
+in `institutional_capital.py` / `municipal_dev_apps.py`):
 
----
+- **Airports:** YYC `/en-us/media-centre/news-releases`; YOW `/en/corporate/media-centre/press-releases`; Winnipeg moved domains `waa.ca → ywg.ca/en/newsroom/`; Halifax Stanfield `/news-releases/`; YVR newsroom moved to `https://news.yvr.ca/` (no bot block).
+- **Ports:** Thunder Bay TLD `.com → .ca`; Vancouver Fraser `/about/news`; Montreal nested `/en/the-port-of-montreal/news/news` — **still 403 to all non-browser clients (TLS fingerprinting)**; Halifax moved domains to `porthalifax.ca/media-centre/` — **also still 403 (aggressive WAF, even Wayback is blocked)**. Both URLs are correct and kept; health logs will show the 403s until their WAFs relax.
+- **Transit:** Edmonton `/ets/transit-news`.
+- **Municipal:** Hamilton, Oshawa, Regina, Saskatoon, St. Catharines, St. John's, Fredericton, Charlottetown, Barrie, Abbotsford, Quebec City page moves applied. **Kitchener** now uses its ArcGIS `Building_Permits` FeatureServer (carries `CONSTRUCTION_VALUE`; new `arcgis` approach added). Kelowna remains bot-blocked (403). London/Victoria machine endpoints exist but carry **no dollar-value fields**, so they cannot pass the value gate — HTML viewer pages kept.
 
-## D-7 — Provincial EA registries (`gov_sources.py`)
+## D-9 — Procurement monitor: RESOLVED (all four sources)
 
-| Source | Current URL (in code) | Suspected correct URL | How to verify |
-|--------|-----------------------|-----------------------|---------------|
-| **BC EAO** | `https://www.projects.eao.gov.bc.ca/api/v2/projects?fields=...&pageSize=200` (leading `&` bug already fixed) | `https://api-public.eao.gov.bc.ca/api/projects?fields=...&pageSize=200` — kept in code as `_BC_EAO_API_CANDIDATE` | GET the candidate; expect HTTP 200 JSON with `searchResults[]` and per-project `eacDecision`/`proponent` keys. If shape matches, set `_BC_EAO_API = _BC_EAO_API_CANDIDATE`. |
-| **NB EIA** | `https://www2.gnb.ca/content/gnb/en/departments/elg/environment/content/environmental_impactassessment.html` | underscore variant `.../environmental_impact_assessment.html` (per D-7 audit), then re-resolve the sub-page anchors (determination / comprehensive review) | GET the landing page; confirm 200 and that the determination/comprehensive-review sub-page links resolve (not 404). Update `_NB_EIA_URL` + anchor-matching keywords if the page structure changed. |
-| **IWK Health** (Tier 14, `institutional_capital.py`) | `https://www.iwk.nshealth.ca/news` | same URL — the failure was TLS (`CERTIFICATE_VERIFY_FAILED`), now fixed by certifi verification in `http_client` | GET via `http_client`; expect 200 with no SSL error. If it now succeeds, no URL change needed — just confirm. |
+| Source | Outcome |
+|--------|---------|
+| **Open Canada** | Old CKAN package id gone; dataset is `d8f85d91-7dec-4fd1-8055-483b77225d8b`, but its full CSV is **627 MB**. **Fixed:** queries the active CKAN **datastore API** (resource `fac950c0-...`, 1.29M rows) paginated `sort=contract_date desc` with a junk-future-date guard. `datastore_search_sql` is disabled (400) — filtering stays client-side. Proactive disclosure publishes **quarterly**, so the scan uses `max(days_back, 90)`. Live yield: 2 construction contracts ≥$5M (2026-03). |
+| **BuyAndSell** | `buyandsell.gc.ca` is DNS-dead; CanadaBuys has **no tender RSS**. **Fixed:** CanadaBuys open-data CSVs (`newTenderNotice-…csv` / `openTenderNotice-…csv`, both 200, stable bilingual headers, province via `regionsOfDelivery`). Old RSS kept as fallback (additive). No award-notice CSV exists under any probed name. |
+| **Ontario BPS** | CKAN package **removed upstream**; `package_search` finds no open-data successor (Ontario tenders moved to the closed Jaggaer portal). Attempt kept (cheap; in case it returns); ON coverage flows from CanadaBuys Ontario-delivery rows. |
+| **BC Bid** | Legacy `open.dll/RSSFeed` retired; new Ivalua platform has no public feed (every path returns the JS app shell). **Fixed:** falls back to CanadaBuys open-tenders CSV filtered to British Columbia delivery. Live yield: 56 BC construction opportunities. |
 
----
+## D-5 / D-15 — StatCan vectors: RESOLVED
 
-## D-8 — Tiers 13/14 airport / port / transit (403/404)
+| Series | Outcome |
+|--------|---------|
+| Provincial building permits | Audit pointed at Table 34-10-0066 — **inactive since 2023-10** (and successor 34-10-0285 archived 2025-03). Resolved against the active **34-10-0292** (value of permits, total structure+work, SA current, $ thousands). 10 vectors populated in `_PROV_BUILDING_PERMITS_VIDS`, validated (refPer 2026-03; ON $4.87B/mo). Fetch + format loop added to `get_provincial_indicators` (renders `$X.XXB`/`$XM`). |
+| Provincial wage growth | Resolved against **14-10-0063** (avg hourly wage, both FT/PT, all industries, total gender, 15+; active to 2026-05). 10 vectors in `_PROV_WAGE_VIDS`, validated. Surfaced as YoY % (same construction as CPI). |
+| `agri_exports` frozen at 2003 (+ energy/mineral/forestry) | Root cause found: the old vectors pointed at Table 12-10-0129 = "Canadian domestic export **concentration**" (ratios/indexes ending 2003) — wrong cube entirely. Re-resolved against the active **12-10-0163** (merchandise trade by commodity, BoP, SA, $M). All four new vectors validated (refPer 2026-04: energy $19.9B, agri $5.3B, forestry $3.6B, mineral $2.4B) and all fit the `indicator_validator` ranges. |
 
-403s were uniform bot-blocks — the browser UA in `http_client` should clear
-them. 404s are stale paths and need manual re-resolution.
+Gotcha recorded for future vector work: `getSeriesInfoFromCubePidCoord`
+responses are **not returned in request order** — always match results back by
+the echoed `coordinate`, or province/commodity vectors get scrambled (the
+scramble produces individually-plausible but swapped values).
 
-### Tier 14 institutional (`institutional_capital.py`, `UNIVERSITY_SOURCES`)
+## D-10 — Policy feeds
 
-| Source | Current URL | Failure (pre-patch) | How to verify / re-resolve |
-|--------|-------------|---------------------|----------------------------|
-| Vancouver Airport Authority (YVR) | `https://www.yvr.ca/en/media` | 403 | Re-probe with browser UA; if still non-200, find current media/news path on yvr.ca |
-| Calgary Airport Authority (YYC) | `https://www.yyc.com/en/media` | 404 | Re-resolve current media/news URL on yyc.com |
-| Ottawa International Airport (YOW) | `https://yow.ca/en/corporate/media` | 404 | Re-resolve current media path on yow.ca |
-| Winnipeg Airport Authority | `https://www.waa.ca/media` | 404 | Re-resolve current news/media path on waa.ca |
-| Halifax Stanfield International Airport | `https://halifaxstanfield.ca/news` | 404 | Re-resolve current news path |
-| Vancouver Fraser Port Authority | `https://www.portvancouver.com/news-and-media/` | 403 | Re-probe with browser UA; re-resolve if still failing |
-| Port of Montreal | `https://www.port-montreal.com/en/news` | 403 | Re-probe with browser UA |
-| Port of Halifax | `https://www.portofhalifax.ca/news/` | 403 | Re-probe with browser UA |
-| Port of Thunder Bay | `https://www.portofthunderbay.com/news/` | 404 | Re-resolve current news path |
-| Edmonton Transit Service | `https://www.edmonton.ca/ets/ets-news` | 404 | Re-resolve current ETS news path on edmonton.ca |
-
-> All other airport/port/transit/university/healthcare URLs in
-> `UNIVERSITY_SOURCES` should be re-probed once with the new browser UA; any
-> that still return >=400 need the same per-authority path re-resolution.
-
-### Tier 13 municipal (`municipal_dev_apps.py`, `MUNICIPAL_SOURCES`)
-
-| Source | Current URL | Issue | How to verify / re-resolve |
-|--------|-------------|-------|----------------------------|
-| Kitchener | `https://open-kitchenergis.opendata.arcgis.com/api/download/v1/items/3ee5...e508/csv?layers=0` | ArcGIS download URL — confirm item id + that it returns CSV (not 404/HTML) | GET; expect `text/csv`. Re-resolve the ArcGIS item id if 404. |
-| London ON | `https://opendata.london.ca/datasets/building-permits/explore` | `/explore` is a human viewer page, not a data API | Find the dataset's GeoJSON/CSV API endpoint (ArcGIS `query?f=json` or download URL). |
-| Victoria | `https://opendata.victoria.ca/datasets/development-tracker/explore` | `/explore` viewer page, not data API | Same as London — resolve the underlying ArcGIS/Socrata data endpoint. |
-| HTML-portal cities (Toronto, Ottawa, Montreal OCPM, Hamilton, Halifax, Quebec City, Saskatoon, Regina, St. John's, Fredericton, Charlottetown, Oshawa, St. Catharines, Moncton, Kelowna, Barrie, Guelph, Abbotsford) | see `MUNICIPAL_SOURCES` | mix of 403 (now likely cleared by browser UA) and generic HTML scraping that may not match the live page structure | Re-probe each with the new UA; for any that 404, re-resolve the current planning/development-applications path; spot-check that `_scrape_html_portal` still extracts dollar values from the live markup. |
-
----
-
-## D-9 — Procurement monitor (`procurement_monitor.py`)
-
-| Source | Current URL / id | Issue | Suspected correct endpoint | How to verify |
-|--------|------------------|-------|----------------------------|---------------|
-| **Open Canada** | CKAN `package_show?id=proactive-disclosure-contracts` | 404 — package id dead/renamed | new contracts search API `https://search.open.canada.ca/contracts/` (resolve JSON/CSV download), or re-resolve CKAN id via `package_search?q=proactive+disclosure+contracts` | Run `package_search` to find the live id; confirm a CSV resource downloads and has `contract_value`/`description_en` columns. |
-| **BuyAndSell** | `https://buyandsell.gc.ca/procurement-data/feed/rss` | migrated to `canadabuys.canada.ca` | candidate tender feed under `https://canadabuys.canada.ca/en/tender-opportunities/rss`, or the canadabuys open-data tenders CSV | GET candidate; confirm it parses as RSS/Atom (feedparser `entries` non-empty) or valid CSV. |
-| **Ontario BPS** | CKAN `package_show?id=broader-public-sector-business-document-plan` on `data.ontario.ca` | zero rows — confirm id still valid | re-resolve via `data.ontario.ca/api/3/action/package_search?q=broader+public+sector+procurement` | Confirm package resolves and exposes a CSV with `estimated_value`/`procurement_description`. |
-| **BC Bid** | `https://www.bcbid.gov.bc.ca/open.dll/RSSFeed?Feed=Construction` | legacy `open.dll` path likely retired with BC Bid platform refresh | current bcbid.gov.bc.ca public opportunities feed/API | GET; confirm RSS/Atom parses with non-empty `entries`. |
-
----
-
-## D-10 — Policy classifier (`policy_tracker.py`, `provincial_policy_monitor.py`)
-
-No URL re-resolution required for the classifier change itself — the
-government_bypass + per-feed counts + parameterised batch are code-only fixes.
-However, the per-feed count logging will now reveal which **policy RSS feeds**
-are dark. After the first live run, review the `[POLICY] Per-feed counts:` and
-`[POLICY] Feeds returning 0 this run:` lines and re-resolve any zero feeds (the
-same browser-UA fix may already have revived several). Feeds to watch (reported
-empty pre-patch): provincial finance feeds in `provincial_policy_monitor.py`
-(`on_finance`, `qc_finance`, `ab_finance`, `mb_finance`, `sk_finance`,
-`ns_finance`, `nb_finance`, `nl_finance`) and `federal_budget`
-(`https://budget.canada.ca/rss`).
+Code-only fixes were already in patch-1.2. The per-feed zero-count review still
+needs a full pipeline run (`[POLICY] Per-feed counts:` lines) — unchanged.

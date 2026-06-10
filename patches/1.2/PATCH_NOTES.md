@@ -114,11 +114,19 @@ Do not apply while a pipeline run holds a write lock.
   JS parse (brace/paren/bracket balance verified OK; static server returns HTTP 200).
   Visually check the Brief / National / Industries / Markets / Explorer tabs and the
   SVG charts/tooltips before deploy.
-- WARN **External endpoints need operator live-verification** — see
-  `SOURCE_ENDPOINTS_NEEDS_LIVE_VERIFICATION.md` (BC EAO host, NB EIA, airports/ports/
-  transit URLs, all 4 procurement endpoints) and the dead StatCan vectors for D-5/D-15.
-  The systemic code fixes (UA/headers/certifi/health/fallbacks) are in; the specific
-  URL/vector re-resolutions require a network the build environment cannot reach.
+- DONE **External endpoints live-verified 2026-06-09** — see
+  `SOURCE_ENDPOINTS_NEEDS_LIVE_VERIFICATION.md` for the full resolution log.
+  Highlights: BC EAO re-pointed at the EPIC search API (0 → 358 projects);
+  NB EIA migrated to www.gnb.ca and re-scoped; all 4 procurement sources
+  restored (Open Canada via CKAN datastore, BuyAndSell → CanadaBuys CSVs,
+  BC Bid → CanadaBuys BC fallback; Ontario BPS confirmed removed upstream);
+  ~25 Tier-13/14 URLs re-resolved; D-5/D-15 StatCan vectors resolved against
+  the ACTIVE cubes (34-10-0292 permits, 14-10-0063 wages, 12-10-0163 exports —
+  the old agri_exports vector pointed at a wrong, 2003-frozen cube) with fetch
+  loops added for provincial buildingPermits/wageGrowth; http_client no longer
+  advertises brotli it cannot decode (was corrupting ArcGIS Online responses).
+  Still dark (correct URLs, server-side blocks): Port of Montreal, Port of
+  Halifax, Kelowna (WAF/TLS fingerprinting).
 
 ---
 

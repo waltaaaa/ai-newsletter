@@ -115,16 +115,23 @@ JOB_VACANCIES = {
 
 # ── Trade ─────────────────────────────────────────────────────────────────────
 
-# Table 12-10-0129-01: Merchandise exports by commodity, monthly
-# Domestic exports, current dollars, SA
+# Table 12-10-0163-01: International merchandise trade by commodity, monthly
+# Exports, balance of payments basis, seasonally adjusted, current $M.
+# Re-resolved 2026-06-09 (D-15): the old vectors pointed at Table 12-10-0129,
+# which is actually "Canadian domestic export CONCENTRATION" (ratios/indexes)
+# and ended in 2003 — the root cause of agri_exports being frozen at 2003.
+# 12-10-0121 (the prior commodity-trade cube) is archived (ended 2023-09);
+# 12-10-0163 is its active successor (latest refPer 2026-04 at verification).
+# NAPCS sections: Farm/fishing/intermediate food; Energy products; Metal ores
+# and non-metallic minerals; Forestry products and building/packaging materials.
 MERCHANDISE_EXPORTS = {
-    "table": "12-10-0129",
+    "table": "12-10-0163",
     "frequency": "monthly",
     "vectors": {
-        "energy_exports":    (21837355, "$M", "Trade"),
-        "mineral_exports":   (21837395, "$M", "Trade"),
-        "forestry_exports":  (21837439, "$M", "Trade"),
-        "agri_exports":      (21837343, "$M", "Trade"),
+        "energy_exports":    (1566911351, "$M", "Trade"),
+        "mineral_exports":   (1566911365, "$M", "Trade"),
+        "forestry_exports":  (1566911406, "$M", "Trade"),
+        "agri_exports":      (1566911339, "$M", "Trade"),
     },
 }
 
