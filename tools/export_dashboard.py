@@ -1109,9 +1109,15 @@ def _project_for_export_slim(proj_dict: dict) -> dict:
 
 
 def export_all_projects(conn, output_dir: str) -> str:
-    """Export projects_all.json — all projects across all provinces, no threshold filter.
+    """Export projects_all.json — all projects across all provinces.
 
-    Sorts by lastSeen desc, no row limit (exports all projects).
+    Threshold rule (mirrors export_province_projects): rows whose confirmed
+    parsed_value falls below their province GDP threshold are excluded from
+    publish. Rows with no confirmed value are kept (value unknown, not
+    sub-threshold) — the frontend's Above Threshold toggle handles those.
+    The database itself is never touched by this filter.
+
+    Sorts by lastSeen desc, no row limit.
     Uses slim export shape to keep file size manageable.
 
     Returns the path of the written file.
@@ -1121,6 +1127,20 @@ def export_all_projects(conn, output_dir: str) -> str:
     # stable final tiebreaker (NEW-3: lastSeen alone has too few distinct values,
     # so ties resolved by physical/VACUUM order and the file churned every run).
     from db import _is_non_project_name
+    from pipeline_config import PROVINCES
+
+    name_to_code = {
+        "Ontario": "ON", "Quebec": "QC", "Alberta": "AB", "British Columbia": "BC",
+        "Saskatchewan": "SK", "Manitoba": "MB", "Nova Scotia": "NS",
+        "New Brunswick": "NB", "Newfoundland and Labrador": "NL",
+        "Prince Edward Island": "PE", "Yukon": "YT",
+        "Northwest Territories": "NT", "Nunavut": "NU",
+    }
+    code_threshold = {
+        name_to_code[p["name"]]: p["threshold_val"]
+        for p in PROVINCES if p["name"] in name_to_code
+    }
+
     rows = conn.execute(
         """
         SELECT * FROM projects
@@ -1136,6 +1156,7 @@ def export_all_projects(conn, output_dir: str) -> str:
 
     included = []
     dropped = 0
+    dropped_threshold = 0
     for raw in rows:
         if hasattr(raw, "keys"):
             proj = dict(raw)
@@ -1146,11 +1167,19 @@ def export_all_projects(conn, output_dir: str) -> str:
         if _is_non_project_name(proj.get("name") or ""):
             dropped += 1
             continue
+        # Threshold gate: confirmed value below the province threshold → exclude
+        pv = proj.get("parsed_value")
+        thr = code_threshold.get((proj.get("province") or "").strip().upper())
+        if pv is not None and thr is not None and pv < thr:
+            dropped_threshold += 1
+            continue
         shaped = _project_for_export_slim(proj)
         included.append(shaped)
 
     if dropped:
         print(f"  [export projects_all] dropped {dropped} junk-name rows from publish")
+    if dropped_threshold:
+        print(f"  [export projects_all] dropped {dropped_threshold} below-threshold rows from publish")
 
     out_path = os.path.join(output_dir, "projects_all.json")
     with open(out_path, "w", encoding="utf-8") as f:

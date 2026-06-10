@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-05-15T00:00:00Z",
+  "generated_at": "2026-06-09",
   "searches_run": 12,
-  "new_projects_found": 11,
+  "new_projects_found": 25,
   "projects": [
     {
       "name": "Drake Meat Processors Saskatoon Processing Plant",
@@ -258,27 +258,411 @@
       "discovered_at": "2026-05-15"
     },
     {
-      "name": "Upper Afton Wind Project",
-      "province": "NS",
-      "cma": "",
-      "sector": "power_energy",
-      "naics_code": "2211",
+      "name": "Marinvest Energy Baie-Comeau LNG Export Project",
+      "province": "QC",
+      "cma": "Baie-Comeau",
+      "sector": "oil_gas",
+      "naics_code": "",
       "value": "",
-      "status": "approved",
-      "confidence": 0.45,
+      "status": "proposed",
+      "confidence": 0.5,
       "project_type": "greenfield",
-      "proponent": "Government of Nova Scotia (environmental assessment approved)",
-      "description": "A wind farm to be built in Antigonish and Guysborough counties, Nova Scotia, with up to 28 eight-megawatt turbines. Received environmental assessment approval on April 22, 2026; construction expected to begin in 2027.",
+      "proponent": "Marinvest Energy AS (Marinvest Energy Canada)",
+      "description": "Norwegian company Marinvest Energy proposes an LNG export facility at Baie-Comeau, Quebec, with capacity of approximately 10 million tonnes per year, plus a new pipeline through northern Ontario and Quebec connecting to western Canadian gas supply. The project is in pre-planning; Marinvest registered to lobby federally in May 2025 and no formal project description had been filed as of March 2026.",
       "evidence": [
         {
-          "url": "https://news.novascotia.ca/en/2026/04/22/upper-afton-wind-project-receives-environmental-assessment-approval",
-          "title": "Upper Afton Wind Project Receives Environmental Assessment Approval",
-          "date": "2026-04-22",
-          "snippet": "The Upper Afton Wind Project, to be built in Antigonish and Guysborough counties, received its environmental assessment approval on April 22, with up to 28 eight-megawatt turbines."
+          "url": "https://thenarwhal.ca/lng-export-project-baie-comeau-quebec/",
+          "title": "The secretive, foreign-owned LNG export project in Quebec, explained",
+          "date": "2026-03-09",
+          "snippet": "Marinvest Energy AS, a Norwegian company with subsidiary Marinvest Energy Canada, proposes an approximately 10-million-tonne-per-year LNG export facility at Baie-Comeau, with a new pipeline through northern Ontario and Quebec. Marinvest registered to lobby federally in May 2025."
+        },
+        {
+          "url": "https://www.theglobeandmail.com/business/article-norways-marinvest-energy-pitches-lng-project-in-quebec/",
+          "title": "Norway's Marinvest Energy pitches LNG project in Quebec",
+          "date": "",
+          "snippet": "The mega-project would build a nearly 1,000-km gas pipeline in Quebec, an LNG production plant and a maritime terminal for exporting natural gas from western Canada. The plan is to produce at least 10 million tons annually."
         }
       ],
       "discovery_source": "cowork_discovery",
-      "discovered_at": "2026-05-15"
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "CFB Trenton Strategic Tanker Transport Capability Infrastructure (MOB-East)",
+      "province": "ON",
+      "cma": "Quinte West",
+      "sector": "defence",
+      "naics_code": "2362",
+      "value": "$850M",
+      "status": "under_construction",
+      "confidence": 0.5,
+      "project_type": "expansion",
+      "proponent": "Department of National Defence / Defence Construction Canada",
+      "description": "An $850M infrastructure program at CFB Trenton supporting the Strategic Tanker Transport Capability, including a new two-bay hangar, fuel depot, training and simulation facility, ramp extension, and runway/taxiway resurfacing to host up to seven CC-330 Husky aircraft. Construction began in spring 2025 with completion expected by 2033; the project is part of NORAD modernization.",
+      "evidence": [
+        {
+          "url": "https://canada.constructconnect.com/dcn/news/infrastructure/2025/12/construction-army-descends-on-cfb-trenton-to-carry-out-850m-upgrades",
+          "title": "Construction army descends on CFB Trenton to carry out $850M upgrades",
+          "date": "2025-12-12",
+          "snippet": "New two-bay hangar, fuel depot, apron area, ramp extension, airfield modifications, training and simulation facility at CFB Trenton; ongoing since spring 2025, expected completion by 2033; managed by Defence Construction Canada."
+        },
+        {
+          "url": "https://www.canada.ca/en/department-national-defence/news/2025/07/breaking-ground-on-cfb-trentons-new-strategic-tanker-transport-capability.html",
+          "title": "Breaking ground on CFB Trenton's new Strategic Tanker Transport Capability",
+          "date": "",
+          "snippet": "DND announced construction of $850 million in upgrades and additional infrastructure for Main Operating Base – East at CFB Trenton, July 2025."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Endayaan Omaa Housing Development — Treaty One Nations (Naawi-Oodena)",
+      "province": "MB",
+      "cma": "Winnipeg",
+      "sector": "indigenous",
+      "naics_code": "2361",
+      "value": "$90.8M",
+      "status": "under_construction",
+      "confidence": 0.45,
+      "project_type": "greenfield",
+      "proponent": "Treaty One Nations (with Bockstael Construction)",
+      "description": "A 260-unit housing development led by Treaty One Nations on the Naawi-Oodena site (former Kapyong Barracks lands) in Winnipeg, with 109 units at affordable rents. Funding announced March 18, 2026 includes $90.8 million from the federal Affordable Housing Fund plus contributions from Treaty One Nations, the Housing Accelerator Fund, and Efficiency Manitoba; the project is under construction with a 60 percent Indigenous workforce and expected completion in 2028.",
+      "evidence": [
+        {
+          "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/canada-announces-funding-treaty-one-nations-build-260-homes-naawi-oodena",
+          "title": "Canada announces funding for Treaty One Nations to build 260 homes on Naawi-Oodena",
+          "date": "2026-03-18",
+          "snippet": "Endayaan Omaa, a 260-unit T1N-led housing project on the Naawi-Oodena site in Winnipeg; $90.8M from the Affordable Housing Fund; under construction with expected completion in 2028."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Shoal Lake 40 First Nation Housing Development — 2675 Portage Avenue, Winnipeg",
+      "province": "MB",
+      "cma": "Winnipeg",
+      "sector": "indigenous",
+      "naics_code": "2361",
+      "value": "$51M",
+      "status": "approved",
+      "confidence": 0.45,
+      "project_type": "greenfield",
+      "proponent": "Shoal Lake 40 First Nation",
+      "description": "Shoal Lake 40 First Nation's first housing development in Winnipeg: 150 apartment-style homes (mix of 1, 2 and 3-bedroom units) at 2675 Portage Avenue. Over $51 million in combined funding announced April 7, 2026, including $43.5 million from the federal Affordable Housing Fund, $2 million from the Housing Accelerator Fund, $1.6 million in First Nation equity, $1.5 million from Manitoba Housing, and $4.4 million in City of Winnipeg tax incremental financing.",
+      "evidence": [
+        {
+          "url": "https://www.cmhc-schl.gc.ca/media-newsroom/news-releases/2026/canada-shoal-lake-40-first-nation-manitoba-winnipeg-announce-funding-150-new-homes-winnipeg",
+          "title": "Canada, Shoal Lake 40 First Nation, Manitoba and Winnipeg announce funding of 150 new homes in Winnipeg",
+          "date": "2026-04-07",
+          "snippet": "Over $51 million in combined funding for 150 apartment-style homes at 2675 Portage Avenue, Winnipeg, developed by Shoal Lake 40 First Nation."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Semiahmoo First Nation Community Infrastructure and Housing Development",
+      "province": "BC",
+      "cma": "Surrey",
+      "sector": "indigenous",
+      "naics_code": "2371",
+      "value": "$6M",
+      "status": "approved",
+      "confidence": 0.5,
+      "project_type": "greenfield",
+      "proponent": "Semiahmoo First Nation",
+      "description": "A $6 million federal investment announced January 15, 2026 funds core infrastructure on Semiahmoo Indian Reserve No. 1 in the South Surrey-White Rock area — site servicing, water and wastewater services including a Beach Road watermain and fire hydrants, road access, and electrical upgrades — to enable a planned 32-unit housing development backed by $24.9 million from BC Housing. Infrastructure work was scheduled to begin March 2026, housing construction in 2027, and completion in 2028.",
+      "evidence": [
+        {
+          "url": "https://peacearchnews.com/2026/01/15/semiahmoo-first-nation-receives-6m-from-feds-for-infrastructure/",
+          "title": "Semiahmoo First Nation receives $6M from feds for infrastructure",
+          "date": "2026-01-15",
+          "snippet": "$6 million federal investment for water and wastewater services, road access and site servicing to support a 32-unit BC Housing-funded development; infrastructure work to begin March 2026, completion expected 2028."
+        },
+        {
+          "url": "https://www.canada.ca/en/indigenous-services-canada/news/2026/01/semiahmoo-first-nation-advances-community-infrastructure-to-support-future-housing.html",
+          "title": "Semiahmoo First Nation advances community infrastructure to support future housing",
+          "date": "2026-01-15",
+          "snippet": "Indigenous Services Canada announcement of $6 million investment in community infrastructure to support future housing at Semiahmoo First Nation."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Related Digital–TowerBrook–Ascent Cambridge Hyperscale Data Centre Expansion",
+      "province": "ON",
+      "cma": "Cambridge",
+      "sector": "telecom",
+      "naics_code": "5182",
+      "value": "",
+      "status": "under_construction",
+      "confidence": 0.45,
+      "project_type": "expansion",
+      "proponent": "Related Digital / TowerBrook Capital Partners / Ascent",
+      "description": "A 54 MW hyperscale expansion of a data centre in Cambridge, Ontario, developed as a joint venture between Related Digital, TowerBrook Capital Partners and Ascent. CPP Investments committed C$225 million as a 50% interest in the construction loan alongside Deutsche Bank Private Credit & Infrastructure; the facility is pre-leased on a long-term basis to a GPU-focused AI cloud compute provider.",
+      "evidence": [
+        {
+          "url": "https://www.newswire.ca/news-releases/cpp-investments-commits-to-225-million-in-construction-financing-for-ontario-data-centre-886540216.html",
+          "title": "CPP Investments Commits to $225 Million in Construction Financing for Ontario Data Centre",
+          "date": "2025-07-31",
+          "snippet": "CPP Investments is providing C$225 million via a 50% interest in a construction loan, with Deutsche Bank Private Credit & Infrastructure funding the remaining 50%, for a 54 MW hyperscale expansion in Cambridge, Ontario, developed by Related Digital, TowerBrook Capital Partners and Ascent."
+        },
+        {
+          "url": "https://canada.constructconnect.com/dcn/news/projects/2025/08/cpp-investments-to-provide-225-million-in-funding-for-ontario-data-centre",
+          "title": "CPP Investments to provide $225 million in funding for Ontario data centre",
+          "date": "2025-08-07",
+          "snippet": "CPP Investments is investing $225 million for a 50% interest in a construction loan for a Cambridge, Ontario data centre expansion pre-leased to an AI cloud computing provider on a long-term basis."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Vantage Data Centers QC24 — Quebec City Campus Build-Out",
+      "province": "QC",
+      "cma": "Quebec City",
+      "sector": "telecom",
+      "naics_code": "5182",
+      "value": "$500.0M",
+      "status": "under_construction",
+      "confidence": 0.5,
+      "project_type": "expansion",
+      "proponent": "Vantage Data Centers",
+      "description": "Vantage Data Centers is investing $500 million to build QC24, the fourth and final data centre at its 30-acre Quebec City campus, adding 32 MW of capacity and bringing the campus total to 86 MW across 925,000 square feet. Quebec-based Pomerleau Inc. is handling construction, with operations expected to begin in early 2027.",
+      "evidence": [
+        {
+          "url": "https://renx.ca/vantage-commits-500m-to-build-out-major-quebec-data-centre-complex",
+          "title": "Vantage invests $500M to build out Quebec data centre complex",
+          "date": "2025-02-28",
+          "snippet": "Vantage Data Centers is investing $500 million to develop QC24, the fourth and final data centre at its Quebec City campus, adding 32 MW and bringing the campus total to 86 MW; construction by Pomerleau, operations expected early 2027."
+        },
+        {
+          "url": "https://renx.ca/cdpq-invests-103m-in-quebec-city-vantage-data-centers-expansion",
+          "title": "CDPQ invests $103M in Vantage Data Centers' Quebec City expansion",
+          "date": "",
+          "snippet": "CDPQ invested $103 million in Vantage Data Centers' Quebec City campus expansion."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Amazon Barrhaven Fulfillment Centre — 99 Bill Leathem Drive, Ottawa",
+      "province": "ON",
+      "cma": "Ottawa",
+      "sector": "commercial_mixed",
+      "naics_code": "4931",
+      "value": "",
+      "status": "under_construction",
+      "confidence": 0.5,
+      "project_type": "greenfield",
+      "proponent": "Amazon (developer: Broccolini)",
+      "description": "Amazon is constructing a 3.1-million-square-foot, five-level fulfillment centre at 99 Bill Leathem Drive in Barrhaven, south Ottawa, on a 75-plus-acre site acquired from developer Broccolini in 2024 for $109.1 million. On completion, expected in 2026, it would be Amazon's largest Canadian distribution centre, with 59 loading docks and trailer space for 482 trucks.",
+      "evidence": [
+        {
+          "url": "https://renx.ca/amazon-building-massive-new-31m-sq-ft-ottawa-facility",
+          "title": "Amazon building massive 3.1M-sq.-ft. Ottawa distribution centre",
+          "date": "",
+          "snippet": "Amazon is building a 3.1-million-square-foot, five-level distribution centre at 99 Bill Leathem Dr. in Barrhaven, its fifth Ottawa fulfillment facility, on land acquired from Broccolini for $109.1 million, with completion expected in 2026."
+        },
+        {
+          "url": "https://www.ctvnews.ca/ottawa/article/amazon-dismantling-portions-of-new-distribution-centre-under-construction-in-barrhaven/",
+          "title": "Amazon dismantling portions of new distribution centre under construction in Barrhaven",
+          "date": "",
+          "snippet": "Amazon dismantled and rebuilt portions of the new Barrhaven distribution centre during construction."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Loblaw Caledon Automated Distribution Centre",
+      "province": "ON",
+      "cma": "Toronto",
+      "sector": "commercial_mixed",
+      "naics_code": "4931",
+      "value": "",
+      "status": "under_construction",
+      "confidence": 0.4,
+      "project_type": "greenfield",
+      "proponent": "Loblaw Companies Ltd.",
+      "description": "Loblaw is continuing construction of an approximately 1.2-million-square-foot automated distribution centre in Caledon, Ontario, as part of its $2.4-billion capital investment plan for 2026 within a $10-billion commitment through the end of the decade. The plan also includes two additional automated facilities planned for Southern Ontario.",
+      "evidence": [
+        {
+          "url": "https://ontarioconstructionnews.com/loblaw-to-invest-2-4-billion-in-2026-expansion-adding-70-new-stores",
+          "title": "Loblaw to invest $2.4 billion in 2026 expansion, adding 70 new stores",
+          "date": "2026-02-25",
+          "snippet": "Loblaw's $2.4-billion 2026 capital plan includes continuing construction on a roughly 1.2-million-sq.-ft. automated distribution centre in Caledon, Ont., plus two additional automated facilities planned for Southern Ontario."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Jack Garland Airport PFAS Remediation",
+      "province": "ON",
+      "cma": "North Bay",
+      "sector": "environment",
+      "naics_code": "5629",
+      "value": "$120.0M",
+      "status": "under_construction",
+      "confidence": 0.55,
+      "project_type": "remediation",
+      "proponent": "Department of National Defence / City of North Bay",
+      "description": "DND announced in December 2025 an amended contribution agreement raising total funding to approximately $120 million for PFAS remediation at Jack Garland Airport in North Bay, contamination originating from firefighting foam used from the 1970s to mid-1990s. A first phase moved 26,000 tonnes of contaminated soil; the amended 16-year agreement funds about 97% of planned airport remediation work, plus a separate $8.25 million agreement for drinking water treatment plant PFAS pilot upgrades.",
+      "evidence": [
+        {
+          "url": "https://www.watercanada.net/department-of-national-defence-announces-funding-for-remediation-and-water-treatment-in-north-bay/",
+          "title": "Department of National Defence announces funding for remediation and water treatment in North Bay - Water Canada",
+          "date": "2025-12-12",
+          "snippet": "$100 million for airport remediation; $8.25 million for water treatment design and pilot project; airport remediation will span 16 years, addressing PFAS contamination from firefighting foams used at the military base between the 1970s and mid-1990s."
+        },
+        {
+          "url": "https://www.canada.ca/en/department-national-defence/news/2025/12/department-of-national-defence-announces-funding-for-remediation-and-water-treatment-in-north-bay.html",
+          "title": "Department of National Defence announces funding for remediation and water treatment in North Bay - Canada.ca",
+          "date": "2025-12-12",
+          "snippet": "DND announced an amendment increasing total funding to approximately $120 million, providing $100 million in additional federal funding over a 16-year period for remediation at Jack Garland Airport."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "IMT Precision 155mm Artillery Shell Manufacturing Facility",
+      "province": "ON",
+      "cma": "",
+      "sector": "defence",
+      "naics_code": "3329",
+      "value": "$306.4M",
+      "status": "proposed",
+      "confidence": 0.5,
+      "project_type": "greenfield",
+      "proponent": "IMT Precision",
+      "description": "On March 18, 2026, the federal government announced up to $306.4 million under the Canadian Defence Industry Resilience Program for IMT Precision to build a new manufacturing plant producing metal shells for 155-millimetre artillery projectiles, expected to create at least 300 full-time positions. Site selection for the new facility was under review at announcement; IMT's existing operations are in Ingersoll, Ontario.",
+      "evidence": [
+        {
+          "url": "https://www.bnnbloomberg.ca/business/2026/03/18/14-billion-investment-for-ammunition-production-in-southwestern-ontario-and-quebec/",
+          "title": "Federal investment fuels Ingersoll, Ont. manufacturer, bolstering Canadian ammunition production",
+          "date": "2026-03-18",
+          "snippet": "Defence Minister David McGuinty announced up to $306.4 million for IMT Precision to build a new manufacturing plant for 155-mm artillery shell metal parts; site selection under review; part of the $1.4B Canadian Defence Industry Resilience Program."
+        },
+        {
+          "url": "https://www.cbc.ca/news/canada/london/munitions-factory-in-ingersoll-ont-given-multimillion-dollar-defence-contract-9.7132882",
+          "title": "Munitions factory in Ingersoll, Ont., given multimillion-dollar defence contract",
+          "date": "",
+          "snippet": "IMT Precision will receive up to $306.3 million to help build a facility that makes metal shells for 155-millimetre artillery projectiles; about 300 new jobs at the new facility."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Saint-Hyacinthe Wastewater Treatment Plant Modernization",
+      "province": "QC",
+      "cma": "Saint-Hyacinthe",
+      "sector": "environment",
+      "naics_code": "2213",
+      "value": "$49.9M",
+      "status": "under_construction",
+      "confidence": 0.55,
+      "project_type": "modernization",
+      "proponent": "City of Saint-Hyacinthe",
+      "description": "The governments of Canada and Quebec increased their combined funding for the upgrade of Saint-Hyacinthe's 1980s-era wastewater treatment plant to $49.85 million ($24.9 million each), announced November 25, 2025. The modernization includes primary settling tank mechanical upgrades, main building roof repairs, and automation system modernization; the city targets a treatment capacity increase of at least 50% with construction running approximately two years from winter 2025.",
+      "evidence": [
+        {
+          "url": "https://rimq.qc.ca/article/municipal/categorie/infrastructure/15/1172561/les-gouvernements-du-canada-et-du-quebec-augmentent-leur-investissement-pour-la-mise-a-niveau-de-la-station-d-epuration-des-eaux-usees-de-saint-hyacinthe.html",
+          "title": "Les gouvernements du Canada et du Québec augmentent leur investissement pour la mise à niveau de la station d'épuration des eaux usées de Saint-Hyacinthe",
+          "date": "2025-11-25",
+          "snippet": "Canada and Quebec increase funding to $24,926,551 each, total $49,853,102, for the upgrade of the Saint-Hyacinthe wastewater treatment plant."
+        },
+        {
+          "url": "https://www.noovo.info/nouvelle/des-travaux-dimportance-a-lusine-depuration-de-st-hyacinthe-des-lhiver-prochain.html",
+          "title": "Des travaux d'importance à l'usine d'épuration de St-Hyacinthe, dès l'hiver prochain",
+          "date": "2024-06-07",
+          "snippet": "The city will upgrade its 1980s-era wastewater treatment facility to meet current environmental standards, increasing treatment capacity by at least 50% while reducing odor emissions; approximately two-year construction duration."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Mont-Tremblant Downtown Wastewater Treatment Plant Expansion and Modernization",
+      "province": "QC",
+      "cma": "Mont-Tremblant",
+      "sector": "environment",
+      "naics_code": "2213",
+      "value": "$36.5M",
+      "status": "approved",
+      "confidence": 0.4,
+      "project_type": "expansion",
+      "proponent": "City of Mont-Tremblant",
+      "description": "Mont-Tremblant is investing $36.5 million, financed through a 30-year loan bylaw, to expand and modernize its downtown wastewater treatment plant, adding a second clarifier, renovating existing facilities, and adding redundancy equipment. The tender process is underway with contract award expected by end of spring 2026 and construction beginning summer 2026 over two years, to meet Quebec environmental standards taking effect by December 2030.",
+      "evidence": [
+        {
+          "url": "https://infodunordtremblant.ca/article/actualites/mont-tremblant-investit-365-m-dans-son-usine-de-traitement-des-eaux-usees/",
+          "title": "Mont-Tremblant investit 36,5 M$ dans son usine de traitement des eaux usées - L'info du Nord Mont-Tremblant",
+          "date": "2026-03-11",
+          "snippet": "Construction begins summer 2026; two-year project. The initiative involves constructing a second clarifier, renovating existing facilities, and adding redundancy equipment to accommodate population growth and meet Quebec's new environmental standards."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Edmonton Water Treatment Plants Flood Mitigation",
+      "province": "AB",
+      "cma": "Edmonton",
+      "sector": "environment",
+      "naics_code": "2379",
+      "value": "$65.0M",
+      "status": "under_construction",
+      "confidence": 0.45,
+      "project_type": "retrofit",
+      "proponent": "EPCOR",
+      "description": "EPCOR is building concrete walls and berms around its Rossdale and E.L. Smith water treatment plants along the North Saskatchewan River in Edmonton to protect the region's water supply from flooding. The project has a $65 million budget, with approximately $22 million funded by the federal and provincial governments, and is listed as under construction on a 2024-2027 schedule.",
+      "evidence": [
+        {
+          "url": "https://majorprojects.alberta.ca/details/Edmonton-water-treatment-plants-flood-mitigation/10964",
+          "title": "Edmonton Water Treatment Plants Flood Mitigation - Alberta Major Projects",
+          "date": "",
+          "snippet": "EPCOR will build concrete walls and berms around its water treatment plants at Rossdale and E.L. Smith along the North Saskatchewan River to prevent flooding; $65.0 million total budget; 2024-2027; currently under construction."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
+    },
+    {
+      "name": "Arthur Wastewater Treatment Plant Expansion",
+      "province": "ON",
+      "cma": "",
+      "sector": "environment",
+      "naics_code": "2213",
+      "value": "$26.1M",
+      "status": "approved",
+      "confidence": 0.45,
+      "project_type": "expansion",
+      "proponent": "Township of Wellington North",
+      "description": "Ontario awarded the Township of Wellington North $26.1 million under the Municipal Housing Infrastructure Program Health and Safety Water Stream to expand the Arthur Wastewater Treatment Plant, upgrade the associated forcemain, and replace and expand the Drayton Sewage Pumping Station in Mapleton. The funded works serve approximately 2,330 homes.",
+      "evidence": [
+        {
+          "url": "https://ontarioconstructionnews.com/ontario-invests-nearly-29-million-to-upgrade-rural-water-systems-in-perth-and-wellington-counties",
+          "title": "Ontario invests nearly $29 million to upgrade rural water systems in Perth and Wellington counties - Ontario Construction News",
+          "date": "2026-03-30",
+          "snippet": "Township of Wellington North — $26.1 million: Arthur Wastewater Treatment Plant expansion, associated forcemain upgrade, and Drayton Sewage Pumping Station replacement and expansion in Mapleton, serving approximately 2,330 homes."
+        },
+        {
+          "url": "https://www.stratfordtoday.ca/local-news/ontario-to-invest-nearly-29-million-in-rural-water-and-wastewater-upgrades-12025441",
+          "title": "Ontario to invest nearly $29 million in rural water and wastewater upgrades - StratfordToday.ca",
+          "date": "",
+          "snippet": "Ontario investing nearly $29 million in rural water and wastewater upgrades in Perth and Wellington counties under the $875-million Municipal Housing Infrastructure Program."
+        }
+      ],
+      "discovery_source": "cowork_discovery",
+      "discovered_at": "2026-06-09"
     }
-  ]
+  ],
+  "ingested_at": "2026-06-09",
+  "note": "All 25 staged projects ingested into dashboard.db on 2026-06-09, plus 22 more from the same-day second sweep (ingested directly)."
 }
