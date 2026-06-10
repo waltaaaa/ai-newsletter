@@ -109,8 +109,11 @@ UNIVERSITY_SOURCES = [
      "url": "https://www.saskhealthauthority.ca/news/"},
     {"name": "Eastern Health (NL)", "province": "NL", "cma": "St. John's",
      "url": "https://www.easternhealth.ca/news/"},
+    # Live-verified 2026-06-09: IWK moved to iwkhealth.ca (200). The old
+    # www.iwk.nshealth.ca host serves a broken TLS chain even with certifi,
+    # and www.iwkhealth.ca has a hostname-mismatched cert — apex only.
     {"name": "IWK Health Centre", "province": "NS", "cma": "Halifax",
-     "url": "https://www.iwk.nshealth.ca/news"},
+     "url": "https://iwkhealth.ca/news"},
     # ── Transit agencies ───────────────────────────────────────────────────
     {"name": "Metrolinx", "province": "ON", "cma": "Toronto",
      "url": "https://www.metrolinx.com/en/news"},
@@ -122,40 +125,54 @@ UNIVERSITY_SOURCES = [
      "url": "https://www.octranspo.com/en/news/"},
     {"name": "Calgary Transit", "province": "AB", "cma": "Calgary",
      "url": "https://www.calgarytransit.com/content/transit/en/home/news.html"},
+    # Live-verified 2026-06-09: /ets/ets-news renamed to /ets/transit-news
     {"name": "Edmonton Transit Service", "province": "AB", "cma": "Edmonton",
-     "url": "https://www.edmonton.ca/ets/ets-news"},
+     "url": "https://www.edmonton.ca/ets/transit-news"},
     {"name": "Winnipeg Transit", "province": "MB", "cma": "Winnipeg",
      "url": "https://info.winnipegtransit.com/en/"},
     # ── Airport authorities ────────────────────────────────────────────────
     {"name": "Greater Toronto Airports Authority", "province": "ON", "cma": "Toronto",
      "url": "https://www.torontopearson.com/en/corporate/media"},
+    # Live-verified 2026-06-09: yvr.ca/en/media is bot-blocked (403); the
+    # newsroom moved to a dedicated subdomain with no bot block.
     {"name": "Vancouver Airport Authority", "province": "BC", "cma": "Vancouver",
-     "url": "https://www.yvr.ca/en/media"},
+     "url": "https://news.yvr.ca/"},
     {"name": "Aéroports de Montréal", "province": "QC", "cma": "Montreal",
      "url": "https://www.admtl.com/en/news"},
+    # Live-verified 2026-06-09: site restructured to /en-us/media-centre/
     {"name": "Calgary Airport Authority", "province": "AB", "cma": "Calgary",
-     "url": "https://www.yyc.com/en/media"},
+     "url": "https://www.yyc.com/en-us/media-centre/news-releases"},
     {"name": "Edmonton International Airport", "province": "AB", "cma": "Edmonton",
      "url": "https://flyeia.com/corporate/media"},
+    # Live-verified 2026-06-09: media page moved under /media-centre/
     {"name": "Ottawa International Airport", "province": "ON", "cma": "Ottawa-Gatineau",
-     "url": "https://yow.ca/en/corporate/media"},
+     "url": "https://www.yow.ca/en/corporate/media-centre/press-releases"},
+    # Live-verified 2026-06-09: domain moved waa.ca -> ywg.ca
     {"name": "Winnipeg Airport Authority", "province": "MB", "cma": "Winnipeg",
-     "url": "https://www.waa.ca/media"},
+     "url": "https://www.ywg.ca/en/newsroom/"},
+    # Live-verified 2026-06-09: /news renamed to /news-releases/
     {"name": "Halifax Stanfield International Airport", "province": "NS", "cma": "Halifax",
-     "url": "https://halifaxstanfield.ca/news"},
+     "url": "https://halifaxstanfield.ca/news-releases/"},
     # ── Port authorities ───────────────────────────────────────────────────
+    # Live-verified 2026-06-09: /news-and-media/ replaced by /about/news
     {"name": "Vancouver Fraser Port Authority", "province": "BC", "cma": "Vancouver",
-     "url": "https://www.portvancouver.com/news-and-media/"},
+     "url": "https://www.portvancouver.com/about/news"},
+    # Live-verified 2026-06-09: /en/news replaced by the nested news path
     {"name": "Port of Montreal", "province": "QC", "cma": "Montreal",
-     "url": "https://www.port-montreal.com/en/news"},
+     "url": "https://www.port-montreal.com/en/the-port-of-montreal/news/news"},
+    # 2026-06-09: org migrated to porthalifax.ca; BOTH domains aggressively
+    # bot-block all non-interactive clients (403 even with full browser
+    # headers). New URL is correct but may keep failing in health logs until
+    # the port relaxes its WAF — revisit rather than delete (additive-only).
     {"name": "Port of Halifax", "province": "NS", "cma": "Halifax",
-     "url": "https://www.portofhalifax.ca/news/"},
+     "url": "https://www.porthalifax.ca/media-centre/"},
     {"name": "Port of Saint John", "province": "NB", "cma": "Saint John",
      "url": "https://www.sjport.com/news"},
     {"name": "Port of Hamilton-Oshawa", "province": "ON", "cma": "Hamilton",
      "url": "https://www.hopaports.ca/news/"},
+    # Live-verified 2026-06-09: TLD changed .com -> .ca, same path
     {"name": "Port of Thunder Bay", "province": "ON", "cma": "Thunder Bay",
-     "url": "https://www.portofthunderbay.com/news/"},
+     "url": "https://www.portofthunderbay.ca/news/"},
     {"name": "Port of Prince Rupert", "province": "BC", "cma": "Prince Rupert",
      "url": "https://www.rupertport.com/news/"},
 ]

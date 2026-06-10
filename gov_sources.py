@@ -12,6 +12,7 @@ Provides:
 import re
 import sys
 import time
+import urllib.parse
 import requests
 from datetime import date
 
@@ -408,19 +409,18 @@ def _scrape_iaac(tavily_client=None) -> list[dict]:
 
 # ── BC Environmental Assessment Office ───────────────────────────────────────
 
-# patch-1.2 (D-7): the old URL had a malformed querystring — it led with '&'
-# ('?&fields=...') so the path was broken even before the host went stale. The
-# leading '&' is removed below. The host www.projects.eao.gov.bc.ca returns 404;
-# the EAO migrated its public API to the 'api-public.' subdomain with a new path.
-# TODO(patch-1.2 live-verify): confirm the corrected endpoint resolves and the
-#   JSON shape still matches the parser below (searchResults / eacDecision keys).
-#   Candidate: https://api-public.eao.gov.bc.ca/api/projects?fields=...&pageSize=200
-_BC_EAO_API = "https://www.projects.eao.gov.bc.ca/api/v2/projects?fields=name,eacDecision,status,proponent,sector,region,description&pageSize=200"
+# Live-verified 2026-06-09 (D-7): the EAO's EPIC public-search API returns
+# HTTP 200 JSON in exactly the shape the parser expects —
+# [{"searchResults": [...], "meta": [...]}] with per-project name/eacDecision/
+# proponent/currentPhaseName keys (eacDecision and proponent are objects, which
+# the parser already handles). The old /api/v2/projects path 404s and the
+# previously suspected api-public.eao.gov.bc.ca host does not resolve in DNS.
+_BC_EAO_API = "https://projects.eao.gov.bc.ca/api/public/search?dataset=Project&pageNum=0&pageSize=1000"
 
-# Candidate corrected host (NEEDS LIVE VERIFICATION — see SOURCE_ENDPOINTS_*.md).
-# Kept as a documented fallback, not yet active, because it cannot be confirmed
-# offline. Once verified, swap _BC_EAO_API to this value.
-_BC_EAO_API_CANDIDATE = "https://api-public.eao.gov.bc.ca/api/projects?fields=name,eacDecision,status,proponent,sector,region,description&pageSize=200"
+# Retired endpoints (additive-only — kept for the record, do not reuse):
+#   https://www.projects.eao.gov.bc.ca/api/v2/projects?fields=...&pageSize=200  (404)
+#   https://api-public.eao.gov.bc.ca/api/projects?fields=...&pageSize=200       (DNS-dead)
+_BC_EAO_API_CANDIDATE = _BC_EAO_API  # superseded; the live endpoint is verified
 
 def _scrape_bc_eao(tavily_client=None) -> list[dict]:
     """
@@ -1292,10 +1292,25 @@ def _scrape_manitoba_ea(tavily_client=None) -> list[dict]:
                     href = link.get('href', '')
                     url = href if href.startswith('http') else f"https://www.gov.mb.ca{href}"
 
+                # P2 (2026-06-08 audit): pull status from the registry row
+                # where it states one, instead of blanket-stamping every
+                # filing 'Under Review' (1,952/2,037 MB rows were stuck
+                # there). Default stays Under Review — a filed Environment
+                # Act proposal IS under review when the row says nothing.
+                row_status = 'Under Review'
+                for cell in cells[3:]:
+                    cell_text = cell.get_text(strip=True)
+                    if cell_text and re.search(
+                            r'(?i)\b(approv|licen[cs]e|issued|construction|'
+                            r'complete|operational|cancel|withdraw|refus|'
+                            r'suspend|on hold|deferred)\w*', cell_text):
+                        row_status = _map_status(cell_text)
+                        break
+
                 projects.append({
                     'name':             name[:200],
                     'province':         'Manitoba',
-                    'status':           'Under Review',
+                    'status':           row_status,
                     'proponent':        proponent,
                     'source_url':       url or _MB_EA_URL,
                     'discovery_source': 'provincial_ea',
@@ -1382,85 +1397,102 @@ def _scrape_nova_scotia_ea(tavily_client=None) -> list[dict]:
 
 # ── New Brunswick Environmental Impact Assessment ────────────────────────────
 
-# TODO(patch-1.2 live-verify): NB EIA landing page anchors are dead (404). GNB
-#   digital services moved the EA tracker; candidate path uses an underscore
-#   variant 'environmental_impact_assessment.html'. Verify live and re-resolve
-#   the sub-page anchors (determination / comprehensive review).
-_NB_EIA_URL = "https://www2.gnb.ca/content/gnb/en/departments/elg/environment/content/environmental_impactassessment.html"
+# Live-verified 2026-06-09 (D-7): GNB migrated the EA program to www.gnb.ca
+# under /en/topic/environment-resources/. The new landing page links to
+# 'projects.html' (current EA projects) and 'registered-eia.html' (registry),
+# both confirmed 200. The old www2.gnb.ca landing page still serves 200, but
+# its relative /en/topic/... links resolve only on www.gnb.ca — which is why
+# sub-page scraping returned 404s when prefixed with the old host. Sub-links
+# are now resolved against the landing page's own host via urljoin.
+# Retired (additive-only, kept for the record):
+#   https://www2.gnb.ca/content/gnb/en/departments/elg/environment/content/environmental_impactassessment.html
+#   (the underscore variant 'environmental_impact_assessment.html' 404s)
+_NB_EIA_URL = "https://www.gnb.ca/en/topic/environment-resources/environmental-assessment.html"
+# Current EA projects are listed as <h2> sections on this page (one heading per
+# project, e.g. "NB Power — ARC Clean Technology — Advanced Small Modular
+# Reactor"). registered-eia.html is only an explainer, not a registry listing.
+_NB_EIA_CURRENT_PROJECTS_URL = ("https://www.gnb.ca/en/topic/environment-resources/"
+                                "environmental-assessment/projects/current.html")
+
+# Page-chrome headings on GNB pages that are not project names.
+_NB_BOILERPLATE = frozenset({
+    'on this page', 'get help', 'overview', 'related links', 'contact',
+    'example 1', 'example 2', 'example 3',
+})
+
 
 def _scrape_nb_ea(tavily_client=None) -> list[dict]:
     """
-    Scrape New Brunswick EIA registry page for project listings.
-    Landing page links to sub-pages with projects under determination/comprehensive review.
+    Scrape New Brunswick EIA current-projects page for project listings.
+    Falls back to crawling EA-section links off the landing page if the
+    current-projects page yields nothing (page structure drift guard).
     Returns list of project dicts with discovery_source='provincial_ea'.
     """
     projects = []
+    seen = set()
+
+    def _add(name: str, url: str):
+        key = name.lower()
+        if len(name) < 10 or key in seen or key in _NB_BOILERPLATE or '(pdf' in key:
+            return
+        seen.add(key)
+        projects.append({
+            'name':             name[:200],
+            'province':         'New Brunswick',
+            'status':           'Under Review',
+            'source_url':       url,
+            'discovery_source': 'provincial_ea',
+            'sector':           _infer_sector_from_name(name),
+        })
+
     try:
-        html = _get_html(_NB_EIA_URL, timeout=25)
-        if not html:
-            return []
+        # Primary: the current-projects page — one <h2> per project.
+        html = _get_html(_NB_EIA_CURRENT_PROJECTS_URL, timeout=25)
+        if html:
+            soup = _soup(html)
+            if soup:
+                main = soup.select_one('main') or soup
+                for h in main.select('h2, h3'):
+                    _add(h.get_text(strip=True), _NB_EIA_CURRENT_PROJECTS_URL)
 
-        soup = _soup(html)
-        if not soup:
-            return []
-
-        seen = set()
-        # Find links to sub-pages (determination review, comprehensive review)
-        sub_urls = []
-        for link in soup.select('a'):
-            href = link.get('href', '')
-            text = link.get_text(strip=True).lower()
-            if any(kw in text for kw in ('determination', 'comprehensive', 'registration', 'project')):
-                full = href if href.startswith('http') else f"https://www2.gnb.ca{href}"
-                if full not in sub_urls and full != _NB_EIA_URL:
-                    sub_urls.append(full)
-
-        # Scrape sub-pages for project listings
-        for sub_url in sub_urls[:4]:
-            try:
-                sub_html = _get_html(sub_url, timeout=20)
-                if not sub_html:
-                    continue
-                sub_soup = _soup(sub_html)
-                if not sub_soup:
-                    continue
-
-                # Look for project names in tables, lists, or headings
-                for el in sub_soup.select('table tr td a, ul li a, h3 a, h4 a'):
-                    name = el.get_text(strip=True)
-                    if not name or len(name) < 10 or name.lower() in seen:
+        if not projects:
+            # Fallback: crawl EA-section sub-pages linked off the landing page.
+            # Restrict to hrefs inside the environmental-assessment section so
+            # GNB's site-wide nav links don't pollute the project list (the
+            # generic crawl previously ingested "Business and economy" etc.).
+            html = _get_html(_NB_EIA_URL, timeout=25)
+            soup = _soup(html) if html else None
+            sub_urls = []
+            if soup:
+                for link in soup.select('a'):
+                    href = link.get('href', '')
+                    text = link.get_text(strip=True).lower()
+                    if 'environmental-assessment' not in href:
                         continue
-                    seen.add(name.lower())
-                    href = el.get('href', '')
-                    url = href if href.startswith('http') else f"https://www2.gnb.ca{href}"
-                    projects.append({
-                        'name':             name,
-                        'province':         'New Brunswick',
-                        'status':           'Under Review',
-                        'source_url':       url,
-                        'discovery_source': 'provincial_ea',
-                        'sector':           _infer_sector_from_name(name),
-                    })
+                    if any(kw in text for kw in ('determination', 'comprehensive',
+                                                 'registration', 'registered', 'project')):
+                        # Resolve relative links against the landing page's own
+                        # host (paths 404 on the old www2.gnb.ca host).
+                        full = href if href.startswith('http') else urllib.parse.urljoin(_NB_EIA_URL, href)
+                        if full not in sub_urls and full != _NB_EIA_URL:
+                            sub_urls.append(full)
 
-                # Also try table rows
-                for row in sub_soup.select('table tr'):
-                    cells = row.select('td')
-                    if len(cells) >= 2:
-                        name = cells[0].get_text(strip=True)
-                        if name and len(name) > 10 and name.lower() not in seen:
-                            seen.add(name.lower())
-                            projects.append({
-                                'name':             name[:200],
-                                'province':         'New Brunswick',
-                                'status':           'Under Review',
-                                'source_url':       sub_url,
-                                'discovery_source': 'provincial_ea',
-                                'sector':           _infer_sector_from_name(name),
-                            })
-
-                time.sleep(0.5)
-            except Exception:
-                pass
+            for sub_url in sub_urls[:4]:
+                try:
+                    sub_html = _get_html(sub_url, timeout=20)
+                    sub_soup = _soup(sub_html) if sub_html else None
+                    if not sub_soup:
+                        continue
+                    main = sub_soup.select_one('main') or sub_soup
+                    for el in main.select('h2, h3, table tr td a, ul li a'):
+                        name = el.get_text(strip=True)
+                        href = el.get('href', '') if el.name == 'a' else ''
+                        url = (href if href.startswith('http')
+                               else urllib.parse.urljoin(sub_url, href)) if href else sub_url
+                        _add(name, url)
+                    time.sleep(0.5)
+                except Exception:
+                    pass
 
     except Exception as e:
         print(f"  [NB EIA] Failed: {type(e).__name__}: {e}")

@@ -24,8 +24,11 @@ import logging
 # patch-1.2 (D-9): route every procurement fetch through the shared HTTP client.
 # All four sources were dark — same root cause as D-8 (stale URLs + default
 # python-requests User-Agent tripping bot-blocks on the CKAN portals). The
-# browser UA + certifi TLS clears the bot-blocks; stale CKAN ids / migrated
-# hosts are flagged with TODO(patch-1.2 live-verify) below.
+# browser UA + certifi TLS clears the bot-blocks. Endpoints live-verified
+# 2026-06-09: Open Canada now queried via the CKAN datastore API (full CSV is
+# ~627 MB); BuyAndSell replaced by the CanadaBuys open-data tender CSVs;
+# Ontario BPS dataset removed upstream (no open-data successor); BC Bid legacy
+# RSS retired (CanadaBuys BC-delivery rows used as fallback).
 import http_client
 
 logger = logging.getLogger(__name__)
@@ -61,64 +64,87 @@ def fetch_open_canada_contracts(days_back=30):
     contracts = []
 
     try:
-        # Proactive Disclosure — Contracts over $10K
-        # TODO(patch-1.2 live-verify): CKAN package id 'proactive-disclosure-contracts'
-        #   returns 404 (D-9). The dataset was renamed/migrated. Candidate: the new
-        #   contracts search API at https://search.open.canada.ca/contracts/ (verify
-        #   the JSON/CSV download endpoint), or re-resolve the current CKAN package id
-        #   via https://open.canada.ca/data/api/3/action/package_search?q=proactive+disclosure+contracts
-        url = "https://open.canada.ca/data/api/3/action/package_show"
-        params = {"id": "proactive-disclosure-contracts"}
+        # Live-verified 2026-06-09 (D-9): the old CKAN package id
+        # 'proactive-disclosure-contracts' is gone; the dataset moved to
+        # 'd8f85d91-7dec-4fd1-8055-483b77225d8b' ("Proactive Publication -
+        # Contracts"). Its full CSV is ~627 MB so we no longer download it;
+        # the resource has an active CKAN datastore (1.29M rows), queried here
+        # page-by-page sorted by contract_date desc until the lookback cutoff.
+        # datastore_search_sql is disabled on open.canada.ca (verified 400),
+        # so filtering on value/keywords stays client-side.
+        url = "https://open.canada.ca/data/api/3/action/datastore_search"
+        resource_id = "fac950c0-00d5-4ec1-a4d3-9cbebf98a305"  # Contracts over $10,000
 
-        resp = http_client.get(url, params=params, timeout=15)
-        if resp is None or resp.status_code != 200:
-            status = 'network' if resp is None else resp.status_code
-            print(f"[PROCUREMENT][open_canada] FAILED status={status}")
-            return []
+        # Proactive disclosure is published QUARTERLY with a reporting lag
+        # (verified 2026-06-09: in June the freshest bulk month was March), so
+        # a strict 30-day window would be empty most weeks. Scan at least one
+        # quarter back; award_date is carried on every row so downstream
+        # consumers can still distinguish genuinely-new awards.
+        effective_days = max(days_back, 90)
+        cutoff = datetime.now() - timedelta(days=effective_days)
+        # Rows with garbage future dates (e.g. 2029) sort first; anything more
+        # than ~13 months out is treated as junk and never ends the scan.
+        junk_horizon = datetime.now() + timedelta(days=400)
+        max_pages = 20  # hard stop: 20 x 1000 rows
 
-        data = resp.json()
-        resources = data.get("result", {}).get("resources", [])
+        reached_cutoff = False
+        for page in range(max_pages):
+            params = {
+                "resource_id": resource_id,
+                "limit": 1000,
+                "offset": page * 1000,
+                "sort": "contract_date desc",
+            }
+            resp = http_client.get(url, params=params, timeout=30)
+            if resp is None or resp.status_code != 200:
+                status = 'network' if resp is None else resp.status_code
+                print(f"[PROCUREMENT][open_canada] FAILED status={status} (page {page})")
+                break
 
-        # Find the most recent CSV resource
-        csv_resources = [r for r in resources if r.get("format", "").upper() == "CSV"]
-        if not csv_resources:
-            print("[PROCUREMENT] No CSV resources found in Open Canada contracts")
-            return []
+            records = resp.json().get("result", {}).get("records", [])
+            if not records:
+                break
 
-        # Download and parse the most recent CSV
-        csv_url = csv_resources[-1].get("url")
-        if csv_url:
-            csv_resp = http_client.get(csv_url, timeout=30)
-            if csv_resp is None or csv_resp.status_code >= 400:
-                status = 'network' if csv_resp is None else csv_resp.status_code
-                print(f"[PROCUREMENT][open_canada] CSV download FAILED status={status}")
-                return []
-            reader = csv.DictReader(io.StringIO(csv_resp.text))
-
-            cutoff = datetime.now() - timedelta(days=days_back)
-
-            for row in reader:
+            for row in records:
                 try:
+                    row_date = None
+                    raw_date = str(row.get("contract_date") or "")[:10]
+                    try:
+                        row_date = datetime.strptime(raw_date, "%Y-%m-%d")
+                    except ValueError:
+                        pass
+
+                    # Sorted desc: a valid date older than the cutoff means
+                    # every later row is older still.
+                    if row_date is not None and row_date < cutoff:
+                        reached_cutoff = True
+                        break
+                    if row_date is None or row_date > junk_horizon:
+                        continue
+
                     value = _parse_value(row.get("contract_value", "0"))
                     if value < MIN_CONTRACT_VALUE:
                         continue
 
-                    description = row.get("description_en", "").lower()
+                    description = str(row.get("description_en") or "").lower()
                     if not any(kw in description for kw in CONSTRUCTION_KEYWORDS):
                         continue
 
                     contracts.append({
                         "source": "open_canada",
                         "vendor": row.get("vendor_name", "Unknown"),
-                        "department": row.get("owner_org", ""),
+                        "department": row.get("owner_org_title") or row.get("owner_org", ""),
                         "description": row.get("description_en", ""),
                         "value": value,
-                        "award_date": row.get("contract_date", ""),
+                        "award_date": raw_date,
                         "province": _infer_province(row),
-                        "url": f"https://open.canada.ca/data/en/dataset/proactive-disclosure-contracts",
+                        "url": "https://search.open.canada.ca/contracts/",
                     })
                 except Exception as e:
                     logger.debug(f"[PROCUREMENT] Skipped row: {e}")
+
+            if reached_cutoff:
+                break
 
         print(f"[PROCUREMENT] Open Canada: {len(contracts)} relevant contracts (>=${MIN_CONTRACT_VALUE:,})")
 
@@ -128,18 +154,93 @@ def fetch_open_canada_contracts(days_back=30):
     return contracts
 
 
+# Live-verified 2026-06-09 (D-9): buyandsell.gc.ca no longer resolves in DNS
+# and canadabuys.canada.ca has no tender RSS feed (/en/tender-opportunities/rss
+# is 404). CanadaBuys publishes open-data tender CSVs instead — both confirmed
+# 200 with a stable bilingual-header schema.
+_CANADABUYS_NEW_TENDERS_CSV = "https://canadabuys.canada.ca/opendata/pub/newTenderNotice-nouvelAvisAppelOffres.csv"
+_CANADABUYS_OPEN_TENDERS_CSV = "https://canadabuys.canada.ca/opendata/pub/openTenderNotice-ouvertAvisAppelOffres.csv"
+
+# Per-run cache so the BC Bid fallback doesn't re-download the same CSV.
+_canadabuys_cache = {}
+
+_REGION_PROVINCE = {
+    "british columbia": "BC", "colombie-britannique": "BC",
+    "alberta": "AB", "saskatchewan": "SK", "manitoba": "MB",
+    "ontario": "ON", "national capital region": "ON", "ottawa": "ON",
+    "quebec": "QC", "québec": "QC",
+    "nova scotia": "NS", "nouvelle-écosse": "NS",
+    "new brunswick": "NB", "nouveau-brunswick": "NB",
+    "newfoundland": "NL", "terre-neuve": "NL",
+    "prince edward island": "PE", "yukon": "YT",
+    "northwest territories": "NT", "nunavut": "NU",
+}
+
+
+def _fetch_canadabuys_rows(url):
+    """Download and parse a CanadaBuys open-data tender CSV (cached per run)."""
+    if url in _canadabuys_cache:
+        return _canadabuys_cache[url]
+    resp = http_client.get(url, timeout=40)
+    if resp is None or resp.status_code >= 400:
+        status = 'network' if resp is None else resp.status_code
+        print(f"[PROCUREMENT][canadabuys] FAILED status={status} {url[:80]}")
+        return []
+    try:
+        rows = list(csv.DictReader(io.StringIO(resp.content.decode("utf-8-sig", errors="replace"))))
+    except Exception as e:
+        print(f"[PROCUREMENT][canadabuys] CSV parse failed: {e}")
+        return []
+    _canadabuys_cache[url] = rows
+    return rows
+
+
+def _province_from_cb_row(row):
+    """Province code from a CanadaBuys row's delivery region, else from text."""
+    region = (row.get("regionsOfDelivery-regionsLivraison-eng") or "").lower()
+    for keyword, code in _REGION_PROVINCE.items():
+        if keyword in region:
+            return code
+    return _extract_province_from_text(
+        f"{row.get('title-titre-eng', '')} {row.get('tenderDescription-descriptionAppelOffres-eng', '')}"
+    )
+
+
 def fetch_buyandsell_rss():
     """
-    Fetch recent federal tender notices from BuyAndSell.gc.ca RSS.
+    Fetch recent federal tender notices. Primary: CanadaBuys open-data CSV
+    (new tender notices). The legacy BuyAndSell RSS attempt is retained as a
+    fallback per the additive-only rule, though its domain is DNS-dead.
     Filters for construction and infrastructure categories.
     """
     tenders = []
 
-    # TODO(patch-1.2 live-verify): buyandsell.gc.ca migrated to
-    #   canadabuys.canada.ca (D-9). The old RSS path likely 404s. Re-resolve the
-    #   current tender-notices feed under canadabuys.canada.ca (candidate:
-    #   https://canadabuys.canada.ca/en/tender-opportunities/rss or the open-data
-    #   tenders CSV). The old URL is kept (additive) until the new one is confirmed.
+    for row in _fetch_canadabuys_rows(_CANADABUYS_NEW_TENDERS_CSV):
+        try:
+            title = row.get("title-titre-eng", "")
+            summary = row.get("tenderDescription-descriptionAppelOffres-eng", "")
+            text = f"{title} {summary}".lower()
+
+            if any(kw in text for kw in CONSTRUCTION_KEYWORDS):
+                value = _extract_value_from_text(text)
+                if value and value >= MIN_CONTRACT_VALUE:
+                    tenders.append({
+                        "source": "canadabuys",
+                        "title": title,
+                        "description": summary,
+                        "value": value,
+                        "date": row.get("publicationDate-datePublication", ""),
+                        "url": row.get("noticeURL-URLavis-eng", ""),
+                        "province": _province_from_cb_row(row),
+                    })
+        except Exception as e:
+            logger.debug(f"[PROCUREMENT] Skipped CanadaBuys row: {e}")
+
+    if tenders:
+        print(f"[PROCUREMENT] CanadaBuys: {len(tenders)} relevant tenders")
+        return tenders
+
+    # Legacy fallback (additive-only; buyandsell.gc.ca DNS-dead as of 2026-06-09)
     rss_urls = [
         "https://buyandsell.gc.ca/procurement-data/feed/rss",
     ]
@@ -189,17 +290,21 @@ def fetch_ontario_bps():
 
     try:
         # Ontario data catalogue — BPS procurement
-        # TODO(patch-1.2 live-verify): confirm CKAN package id
-        #   'broader-public-sector-business-document-plan' still resolves on
-        #   data.ontario.ca (D-9 reported Ontario BPS zero). If renamed, re-resolve
-        #   via data.ontario.ca/api/3/action/package_search?q=broader+public+sector+procurement
+        # Live-verified DEAD 2026-06-09 (D-9): the CKAN package
+        # 'broader-public-sector-business-document-plan' was removed from
+        # data.ontario.ca and package_search found no open-data successor
+        # (Ontario tenders moved to the closed Ontario Tenders Portal/Jaggaer).
+        # The attempt is kept (additive-only, cheap, in case Ontario restores
+        # it); Ontario coverage meanwhile flows from the CanadaBuys CSV rows
+        # whose delivery region is Ontario.
         url = "https://data.ontario.ca/api/3/action/package_show"
         params = {"id": "broader-public-sector-business-document-plan"}
 
         resp = http_client.get(url, params=params, timeout=15)
         if resp is None or resp.status_code != 200:
             status = 'network' if resp is None else resp.status_code
-            print(f"[PROCUREMENT][ontario_bps] FAILED status={status}")
+            print(f"[PROCUREMENT][ontario_bps] dataset removed upstream (status={status}; "
+                  f"verified dead 2026-06-09) — ON coverage via CanadaBuys")
         else:
             data = resp.json()
             resources = data.get("result", {}).get("resources", [])
@@ -244,17 +349,19 @@ def fetch_bc_bid():
 
     try:
         # BC Bid RSS feed for construction category
-        # TODO(patch-1.2 live-verify): confirm the BC Bid RSS endpoint. The legacy
-        #   open.dll/RSSFeed path may have been retired with the BC Bid platform
-        #   refresh (D-9 reported BC Bid zero). Candidate: the current bcbid.gov.bc.ca
-        #   public opportunities feed/API. Old URL kept (additive) until confirmed.
+        # Live-verified DEAD 2026-06-09 (D-9): the legacy open.dll/RSSFeed path
+        # 404s and the refreshed BC Bid platform (Ivalua) exposes no public RSS
+        # (every page.aspx path returns the same JS app shell). The old attempt
+        # is kept (additive-only); on failure, BC coverage falls back to the
+        # CanadaBuys open-tenders CSV filtered to British Columbia delivery.
         url = "https://www.bcbid.gov.bc.ca/open.dll/RSSFeed?Feed=Construction"
         # patch-1.2: fetch with browser UA via http_client, then parse the bytes
         # with feedparser. Falls back to feedparser-direct if the fetch fails.
         resp = http_client.get(url, timeout=20)
         if resp is None or resp.status_code >= 400:
             status = 'network' if resp is None else resp.status_code
-            print(f"[PROCUREMENT][bc_bid] FAILED status={status}")
+            print(f"[PROCUREMENT][bc_bid] legacy feed retired (status={status}; "
+                  f"verified dead 2026-06-09) — falling back to CanadaBuys BC rows")
             feed = feedparser.parse(url)
         else:
             feed = feedparser.parse(resp.content)
@@ -273,6 +380,31 @@ def fetch_bc_bid():
                 "url": entry.get("link", ""),
                 "date": entry.get("published", ""),
             })
+
+        if not opportunities:
+            # CanadaBuys fallback: open tenders delivered in BC that match the
+            # construction keyword filter (same semantics as the old BC feed —
+            # no minimum-value requirement).
+            for row in _fetch_canadabuys_rows(_CANADABUYS_OPEN_TENDERS_CSV):
+                try:
+                    if _province_from_cb_row(row) != "BC":
+                        continue
+                    title = row.get("title-titre-eng", "")
+                    summary = row.get("tenderDescription-descriptionAppelOffres-eng", "")
+                    text = f"{title} {summary}".lower()
+                    if not any(kw in text for kw in CONSTRUCTION_KEYWORDS):
+                        continue
+                    opportunities.append({
+                        "source": "canadabuys_bc",
+                        "title": title,
+                        "description": summary,
+                        "value": _extract_value_from_text(text),
+                        "province": "BC",
+                        "url": row.get("noticeURL-URLavis-eng", ""),
+                        "date": row.get("publicationDate-datePublication", ""),
+                    })
+                except Exception as e:
+                    logger.debug(f"[PROCUREMENT] Skipped CanadaBuys BC row: {e}")
 
         print(f"[PROCUREMENT] BC Bid: {len(opportunities)} construction opportunities")
     except Exception as e:
