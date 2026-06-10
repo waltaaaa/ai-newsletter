@@ -24,7 +24,9 @@
   --shadow-sm:0 1px 3px rgba(0,0,0,.06);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.6;
+/* Body text matches the newsletter narrative (.tldr-narrative p in docs/index.html):
+   Inter 16px / 1.7 line-height / #1a1a1a. UI labels keep their explicit sizes. */
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.7;
   -webkit-font-smoothing:antialiased}
 .wrap{max-width:1280px;margin:0 auto;padding:28px 40px 60px}
 @media(max-width:899px){.wrap{padding:20px 16px 48px}}
