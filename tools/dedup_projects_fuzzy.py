@@ -247,6 +247,64 @@ def distinctive_tokens(s: str) -> set:
     return toks
 
 
+# Generic facility vocabulary: names made only of these (plus stopwords) describe
+# a KIND of project, not a specific one. Provincial EA registries emit many rows
+# literally named "Wastewater Treatment Plant" or "Manufacturing Facility" —
+# identical names that are different real-world projects.
+GENERIC_FACILITY_TERMS = {
+    'wastewater', 'water', 'sewage', 'treatment', 'lagoon', 'sewer', 'storm',
+    'manufacturing', 'processing', 'production', 'industrial',
+    'subdivision', 'residential', 'housing', 'apartment', 'condo',
+    'gravel', 'sand', 'quarry', 'pit', 'aggregate', 'extraction',
+    'school', 'elementary', 'secondary', 'high',
+    'bridge', 'highway', 'road', 'street', 'interchange', 'overpass',
+    'hog', 'dairy', 'poultry', 'barn', 'feedlot', 'livestock', 'swine',
+    'drainage', 'ditching', 'ditch', 'culvert', 'dyke', 'dike',
+    'well', 'landfill', 'waste', 'transfer', 'station', 'recycling',
+    'solar', 'wind', 'farm', 'energy', 'power', 'substation', 'transmission',
+    'warehouse', 'storage', 'distribution', 'terminal',
+    'hospital', 'clinic', 'care', 'health',
+    'upgrades', 'improvements', 'rehabilitation', 'replacement', 'renovation',
+    'new', 'proposed', 'municipal', 'regional', 'community',
+}
+
+
+def is_generic_name(norm_name: str) -> bool:
+    """True when a normalized name has no token that could identify a specific
+    project — every distinctive token is generic facility vocabulary (or there
+    are no distinctive tokens at all). Such names must not merge on name alone."""
+    toks = distinctive_tokens(norm_name)
+    if not toks:
+        return True
+    return all(t in GENERIC_FACILITY_TERMS for t in toks)
+
+
+def has_corroboration(p1: dict, p2: dict, urls1: set = None, urls2: set = None) -> bool:
+    """A second identity signal beyond the (generic) name: same proponent,
+    same CMA, parsed values within 1.5x, or a shared non-listing evidence URL.
+
+    urls1/urls2: pre-extracted (listing-filtered) URL sets when the caller has
+    them — the live upsert path passes stripped project dicts without evidence,
+    so deriving from p1/p2 alone would silently drop the URL signal there."""
+    pr1 = (p1.get('proponent') or '').strip().lower()
+    pr2 = (p2.get('proponent') or '').strip().lower()
+    if pr1 and pr1 == pr2:
+        return True
+    cma1 = (p1.get('cma') or '').strip().lower()
+    cma2 = (p2.get('cma') or '').strip().lower()
+    if cma1 and cma1 == cma2:
+        return True
+    v1 = p1.get('parsed_value') or 0
+    v2 = p2.get('parsed_value') or 0
+    if v1 and v2 and max(v1, v2) / max(1, min(v1, v2)) <= 1.5:
+        return True
+    if urls1 is None:
+        urls1 = {u for u in url_set(p1.get('evidence')) if not is_listing_url(u)}
+    if urls2 is None:
+        urls2 = {u for u in url_set(p2.get('evidence')) if not is_listing_url(u)}
+    return bool(urls1 & urls2)
+
+
 def is_listing_url(u: str) -> bool:
     """Detect URLs that are clearly multi-project listing pages, not specific project pages.
 
@@ -337,10 +395,17 @@ def is_duplicate_pair(p1: dict, p2: dict, n1: str, n2: str,
          AND fuzzy ratio >= max(threshold, 0.92).
       C) Shared specific evidence/source URL AND Jaccard >= 0.7
          AND not contradicting on (proponent, value, CMA, series identifier).
+
+    Generic-name gate: when the name carries no project-identifying token
+    ("Wastewater Treatment Plant", "Manufacturing Facility"), name agreement —
+    even exact — is not identity. Paths A and B then additionally require
+    corroboration (same proponent/CMA, compatible values, or shared URL).
     """
     if not n1 or not n2:
         return False
     if n1 == n2:
+        if is_generic_name(n1):
+            return has_corroboration(p1, p2, urls1, urls2)
         return True
 
     # Series-identifier guard catches "Zone 5" vs "Zone 8" type pairs
@@ -362,8 +427,12 @@ def is_duplicate_pair(p1: dict, p2: dict, n1: str, n2: str,
 
     # B path — high token + char overlap
     path_b = jacc >= 0.85 and r >= max(threshold, 0.92)
+    # Generic names can clear B on vocabulary alone — require a second signal.
+    if path_b and is_generic_name(n1) and is_generic_name(n2):
+        path_b = has_corroboration(p1, p2, urls1, urls2)
 
     # C path — shared specific URL with moderate name overlap
+    # (the shared non-listing URL is itself the corroborating signal)
     path_c = has_shared_url and jacc >= 0.7
 
     if not (path_b or path_c):
@@ -434,11 +503,19 @@ def find_clusters(projects, fuzzy_threshold=0.85):
         if norm:
             by_norm[(prov, norm)].append(i)
 
-    # Pass 1 — exact normalized name within province (safe: exact match)
-    for key, idxs in by_norm.items():
+    # Pass 1 — exact normalized name within province. Exact match is safe ONLY
+    # for names with an identifying token; generic registry names ("Wastewater
+    # Treatment Plant" x N in MB) go through the full pairwise test, which
+    # requires corroboration for them.
+    for (prov, norm), idxs in by_norm.items():
         if len(idxs) > 1:
             base = idxs[0]
+            generic = is_generic_name(norm)
             for j in idxs[1:]:
+                if generic and not is_duplicate_pair(
+                        projects[base], projects[j], norm, norm,
+                        url_cache[base], url_cache[j], fuzzy_threshold):
+                    continue
                 union(base, j)
 
     # Pass 2 — STRICT pairwise (no transitive chaining).

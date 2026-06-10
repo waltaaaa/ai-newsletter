@@ -162,3 +162,84 @@ def test_new_vs_updated_precheck_uses_db_key(conn):
     assert first["new"] == 1
     assert second["new"] == 0
     assert second["updated"] == 1
+
+
+# ── quality-pass-1.4: generic-name dedup gate ────────────────────────────────
+# Provincial EA registries emit rows literally named "Wastewater Treatment
+# Plant" (MB has several) — identical names that are DIFFERENT projects.
+# Name agreement alone must not merge them; a corroborating signal
+# (proponent / CMA / compatible value / shared URL) is required.
+
+from tools.dedup_projects_fuzzy import (  # noqa: E402
+    is_generic_name, has_corroboration, is_duplicate_pair, normalize_name)
+
+
+def test_generic_name_detection():
+    assert is_generic_name(normalize_name("Wastewater Treatment Plant"))
+    assert is_generic_name(normalize_name("Manufacturing Facility"))
+    assert is_generic_name(normalize_name("Hog Barn"))
+    # Identifying token present -> not generic
+    assert not is_generic_name(normalize_name("Portage Place Redevelopment"))
+    assert not is_generic_name(normalize_name("Site C Hydroelectric Dam"))
+    assert not is_generic_name(normalize_name("Brandon Wastewater Treatment Plant"))
+
+
+def test_generic_exact_name_requires_corroboration():
+    n = normalize_name("Wastewater Treatment Plant")
+    p1 = {"proponent": "Town of Altona", "cma": "", "parsed_value": None}
+    p2 = {"proponent": "RM of Springfield", "cma": "", "parsed_value": None}
+    assert not is_duplicate_pair(p1, p2, n, n, set(), set(), threshold=0.85)
+    # Same proponent corroborates the identical generic name
+    p3 = {"proponent": "Town of Altona", "cma": "", "parsed_value": None}
+    assert is_duplicate_pair(p1, p3, n, n, set(), set(), threshold=0.85)
+    # Shared specific URL corroborates too
+    shared = {"https://www.gov.mb.ca/sd/eal/registries/5678-altona.html"}
+    assert is_duplicate_pair(p1, p2, n, n, shared, shared, threshold=0.85)
+
+
+def test_distinctive_exact_name_still_merges():
+    n = normalize_name("Portage Place Redevelopment")
+    assert is_duplicate_pair({}, {}, n, n, set(), set(), threshold=0.85)
+
+
+def test_has_corroboration_value_band():
+    p1 = {"proponent": "", "cma": "", "parsed_value": 100_000_000}
+    p2 = {"proponent": "", "cma": "", "parsed_value": 120_000_000}
+    p3 = {"proponent": "", "cma": "", "parsed_value": 900_000_000}
+    assert has_corroboration(p1, p2)          # within 1.5x
+    assert not has_corroboration(p1, p3)      # 9x apart
+
+
+def test_live_fuzzy_generic_name_not_merged(conn):
+    """Two MB hog barns from different proponents: the '... Facility' variant
+    normalizes to the same name as the existing row, but the generic-name gate
+    must keep them distinct in the live upsert fuzzy fallback."""
+    k1 = upsert_project(conn, {
+        "name": "Hog Barn", "province": "Manitoba",
+        "status": "Under Review", "proponent": "HyLife Foods",
+        "evidence": [{"url": "https://www.gov.mb.ca/sd/eal/registries/111-hylife.html"}],
+        "discovery_source": "provincial_ea",
+    })
+    k2 = upsert_project(conn, {
+        "name": "Hog Barn Facility", "province": "Manitoba",
+        "status": "Under Review", "proponent": "Topigs Norsvin",
+        "evidence": [{"url": "https://www.gov.mb.ca/sd/eal/registries/222-topigs.html"}],
+        "discovery_source": "provincial_ea",
+    })
+    assert k1 != k2
+
+
+def test_live_fuzzy_generic_name_with_same_proponent_merges(conn):
+    k1 = upsert_project(conn, {
+        "name": "Hog Barn", "province": "Manitoba",
+        "status": "Under Review", "proponent": "HyLife Foods",
+        "evidence": [{"url": "https://www.gov.mb.ca/sd/eal/registries/111-hylife.html"}],
+        "discovery_source": "provincial_ea",
+    })
+    k2 = upsert_project(conn, {
+        "name": "Hog Barn Facility", "province": "Manitoba",
+        "status": "Under Review", "proponent": "HyLife Foods",
+        "evidence": [{"url": "https://news.example.ca/hylife-barn-approved"}],
+        "discovery_source": "google_news_rss",
+    })
+    assert k1 == k2

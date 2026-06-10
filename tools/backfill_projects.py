@@ -721,7 +721,7 @@ REVIEW_FIELDS = [
     "name", "province", "provinces_additional", "sector", "value", "parsed_value",
     "status", "proponent", "cma", "description",
     "announcement_date", "start_date", "completionDate",
-    "confidence", "source", "evidence_count",
+    "confidence", "source", "source_url", "evidence_count",
 ]
 
 
@@ -732,6 +732,10 @@ def write_review_csv(projects, filepath=REVIEW_CSV):
         writer.writeheader()
         for p in sorted(projects, key=lambda x: (x["province"], -(x.get("parsed_value") or 0))):
             p["evidence_count"] = len(p.get("evidence", []))
+            # Carry the parser's per-project URL through the review round-trip —
+            # without it, --load reconstructs evidence from bare domain roots.
+            if not p.get("source_url") and p.get("evidence"):
+                p["source_url"] = p["evidence"][0].get("url", "")
             writer.writerow(p)
     logger.info(f"Review CSV written: {filepath} ({len(projects)} projects)")
 
@@ -835,17 +839,20 @@ def main():
         with open(REVIEW_CSV, encoding="utf-8-sig") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                # Reconstruct evidence from source name
+                # Rebuild evidence from the round-tripped per-project URL when present;
+                # fall back to the source's actual inventory page (never a bare domain root).
                 source = row.get("source", "Government")
-                row["evidence"] = [_build_evidence(
-                    "https://www.infrastructure.gc.ca" if "Infrastructure Canada" in source
-                    else "https://natural-resources.canada.ca" if "NRCan" in source
-                    else "https://www.ontario.ca/page/ontario-builds" if "Ontario" in source
-                    else "https://www2.gov.bc.ca" if "BC" in source
-                    else "https://majorprojects.alberta.ca" if "Alberta" in source
-                    else "https://www.quebec.ca",
-                    source
-                )]
+                source_url = (row.get("source_url") or "").strip()
+                if not source_url.startswith("http"):
+                    source_url = (
+                        "https://www.infrastructure.gc.ca/gmap-gcarte/index-eng.html" if "Infrastructure Canada" in source
+                        else "https://natural-resources.canada.ca/energy/energy-sources-distribution/canadian-energy-resource-development/major-projects-inventory/18702" if "NRCan" in source
+                        else "https://www.ontario.ca/page/ontario-builds" if "Ontario" in source
+                        else "https://www2.gov.bc.ca/gov/content/employment-business/economic-development/industry/bc-major-projects-inventory" if "BC" in source
+                        else "https://majorprojects.alberta.ca/" if "Alberta" in source
+                        else "https://www.quebec.ca/gouvernement/politiques-orientations/plan-quebecois-infrastructures"
+                    )
+                row["evidence"] = [_build_evidence(source_url, source)]
                 row["has_government_source"] = 1
                 row["discovery_source"] = "government_backfill"
                 # Parse numeric fields
