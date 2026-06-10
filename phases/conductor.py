@@ -35,7 +35,11 @@ DATA_DIR = os.path.join(PROJECT_ROOT, 'docs', 'data')
 
 CONDUCTOR_TIMEOUT = int(os.environ.get('CONDUCTOR_TIMEOUT', '7200'))  # 2 hours
 CONDUCTOR_MAX_TURNS = int(os.environ.get('CONDUCTOR_MAX_TURNS', '200'))
-CONDUCTOR_MODEL = os.environ.get('CONDUCTOR_MODEL', 'opus')
+# NEW-5: pin the conductor to the concrete Opus model id from pipeline_config
+# instead of the floating 'opus' CLI alias — a freshly-installed CLI resolving
+# 'opus' to a newer model caused run-to-run prose/quality drift + cost mismatch.
+from pipeline_config import OPUS_MODEL as _PINNED_OPUS_MODEL
+CONDUCTOR_MODEL = os.environ.get('CONDUCTOR_MODEL') or _PINNED_OPUS_MODEL
 
 
 # ── Pre-conductor: Python data enrichment ─────────────────────────────────────

@@ -950,6 +950,63 @@ def export_commodities(conn, output_dir: str) -> str:
     return out_path
 
 
+# NEW-9: series whose latest data point is older than this many days are
+# reported as stale (env override TIMESERIES_STALE_DAYS, default 540).
+TIMESERIES_STALE_DAYS_DEFAULT = 540
+
+
+def _timeseries_stale_days() -> int:
+    """Stale threshold in days (env: TIMESERIES_STALE_DAYS)."""
+    raw = os.environ.get("TIMESERIES_STALE_DAYS", "")
+    try:
+        val = int(raw)
+        if val > 0:
+            return val
+    except (TypeError, ValueError):
+        pass
+    return TIMESERIES_STALE_DAYS_DEFAULT
+
+
+def _series_latest_date(series) -> str:
+    """Latest 'date' string in a timeseries value ('' when none found).
+
+    Accepts the two shapes timeseries.json carries: a list of point dicts,
+    or a dict wrapping such a list under 'history' / 'points' / 'data'.
+    ISO-style date strings compare correctly as strings.
+    """
+    points = series
+    if isinstance(series, dict):
+        for sub in ("history", "points", "data"):
+            if isinstance(series.get(sub), list):
+                points = series[sub]
+                break
+    if not isinstance(points, list):
+        return ""
+    latest = ""
+    for p in points:
+        if isinstance(p, dict):
+            d = str(p.get("date") or p.get("period") or "")
+            if d > latest:
+                latest = d
+    return latest
+
+
+def _find_stale_series(merged: dict, stale_days: int, today=None) -> dict:
+    """Return {series_key: latest_date} for series older than stale_days.
+
+    Series with no parseable date are skipped (can't prove staleness).
+    """
+    from datetime import date as _date, timedelta as _timedelta
+    today = today or _date.today()
+    cutoff = (today - _timedelta(days=stale_days)).isoformat()
+    stale = {}
+    for key, series in merged.items():
+        latest = _series_latest_date(series)
+        if latest and latest[:10] < cutoff:
+            stale[key] = latest
+    return stale
+
+
 def export_timeseries(conn, output_dir: str) -> str:
     """Export timeseries.json as a single bundled object keyed by series_name."""
     from db import get_timeseries
@@ -1084,6 +1141,32 @@ def export_timeseries(conn, output_dir: str) -> str:
     print(f"  [timeseries] merge: {added} added, {overwritten} refreshed, "
           f"{preserved} preserved (DB pull thinner than file), "
           f"{len(merged)} total series")
+
+    # NEW-9: stale-series report (warn-first). Series whose latest data point
+    # is older than TIMESERIES_STALE_DAYS are logged and listed in
+    # timeseries_stale_report.json. Actual removal happens ONLY under
+    # TIMESERIES_PRUNE=1 — the validator cross-references insightCharts
+    # dataKeys against timeseries, so pruning a referenced series would FAIL
+    # the deploy gate. Default is report-only.
+    stale_days = _timeseries_stale_days()
+    stale = _find_stale_series(merged, stale_days)
+    for key in sorted(stale):
+        print(f"  [timeseries] STALE series: {key} (latest {stale[key]})")
+    report_path = os.path.join(output_dir, "timeseries_stale_report.json")
+    try:
+        with open(report_path, "w", encoding="utf-8") as f:
+            json.dump({
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "stale_days_threshold": stale_days,
+                "pruned": os.environ.get("TIMESERIES_PRUNE") == "1",
+                "stale_series": {k: stale[k] for k in sorted(stale)},
+            }, f, ensure_ascii=False, indent=2)
+    except OSError as e:
+        print(f"  [timeseries] WARN: could not write stale report: {e}")
+    if stale and os.environ.get("TIMESERIES_PRUNE") == "1":
+        for key in stale:
+            merged.pop(key, None)
+        print(f"  [timeseries] TIMESERIES_PRUNE=1 — removed {len(stale)} stale series")
 
     with open(out_path, "w", encoding="utf-8") as f:
         # Compact for potentially large commodity data

@@ -23,6 +23,7 @@ Usage:
 
 import json
 import logging
+import os
 from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
@@ -36,6 +37,56 @@ DEFAULT_TTL = {
     "ocr": 90,
     "query_result": 0,  # never cached
 }
+
+
+# ── Phase-level cache helpers (E-2) ───────────────────────────────────────────
+#
+# update_dashboard.py used to embed date.today() in the phase cache key, so a
+# next-day retry re-ran every phase from scratch. These helpers give it a
+# stable per-phase key plus a freshness check against a `_completed_at` UTC
+# ISO timestamp stored inside the cached payload. Pure functions — importable
+# by tests without update_dashboard's heavy module init.
+
+PHASE_CACHE_TTL_HOURS_DEFAULT = 24
+
+
+def phase_cache_ttl_hours() -> float:
+    """TTL in hours for phase-level cache entries (env: PHASE_CACHE_TTL_HOURS)."""
+    raw = os.environ.get("PHASE_CACHE_TTL_HOURS", "")
+    try:
+        val = float(raw)
+        if val > 0:
+            return val
+    except (TypeError, ValueError):
+        pass
+    return PHASE_CACHE_TTL_HOURS_DEFAULT
+
+
+def phase_cache_key(phase: str) -> str:
+    """Stable (date-independent) dashboard_state key for a pipeline phase."""
+    return f"phase_cache_{phase.replace(' ', '_')}"
+
+
+def phase_cache_fresh(cached_dict, ttl_hours: float = None) -> bool:
+    """True when a cached phase payload is complete and within TTL.
+
+    Requires a `_completed` flag and a parseable `_completed_at` UTC ISO
+    timestamp; a payload missing either is rejected (forces a re-run).
+    """
+    if not isinstance(cached_dict, dict) or not cached_dict.get("_completed"):
+        return False
+    completed_at = cached_dict.get("_completed_at")
+    if not completed_at:
+        return False
+    try:
+        ts = datetime.fromisoformat(str(completed_at).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return False
+    if ts.tzinfo is not None:
+        ts = ts.replace(tzinfo=None) - ts.utcoffset()
+    if ttl_hours is None:
+        ttl_hours = phase_cache_ttl_hours()
+    return datetime.utcnow() - ts < timedelta(hours=ttl_hours)
 
 
 class PipelineCache:

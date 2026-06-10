@@ -782,6 +782,7 @@ def fetch_and_filter(
     include_media: bool = True,
     gemini_client=None,
     prefetched_items: list = None,
+    conn=None,
 ) -> list[dict]:
     """
     Fetch all feeds (or reuse prefetched_items), then run three-layer relevance filter.
@@ -793,6 +794,9 @@ def fetch_and_filter(
     Args:
         prefetched_items: If provided, skip the fetch step and filter these items
                           directly. Avoids double-fetching when Phase 1 already fetched.
+        conn: Optional SQLite connection — enables the persistent pipeline cache
+              (E-7: page-text cache for snippet enhancement + embedding cache for
+              semantic dedup). Both degrade gracefully when absent.
 
     Returns:
         List of filtered news items likely to describe capital projects.
@@ -818,7 +822,7 @@ def fetch_and_filter(
         from snippet_enhancer import enhance_batch
         all_items = enhance_batch(
             all_items, url_key="url", snippet_key="summary",
-            max_enhance=50, skip_gov=True,
+            max_enhance=50, skip_gov=True, conn=conn,
         )
     except ImportError:
         print("[WARN] sumy not installed, skipping snippet enhancement")
@@ -844,7 +848,7 @@ def fetch_and_filter(
         try:
             from semantic_article_dedup import semantic_deduplicate_articles
             pre_sem = len(all_items)
-            all_items, sem_dropped = semantic_deduplicate_articles(all_items)
+            all_items, sem_dropped = semantic_deduplicate_articles(all_items, conn=conn)
             if sem_dropped:
                 print(f"  [RSS] Semantic article dedup: {pre_sem} -> {len(all_items)} "
                       f"(dropped {sem_dropped} semantic duplicates)")

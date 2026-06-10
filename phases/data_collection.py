@@ -1588,31 +1588,101 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
     print(f"  [HISTORY] Archived {count} indicator values to indicator_history")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# D-6: commodity poison filter (module-level so it's testable)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Plausibility bounds per indicator. These are looser than the validator's
+# RANGE rules because they're a poison filter, not a validation — the goal
+# is to catch yfinance batch-download column scrambles (e.g., wti=1079.5,
+# platinum=67, soybean_oil=4761.9) before they land in indicator_history
+# and get picked as "latest" by the exporter. Any value outside these
+# bounds is almost certainly a yfinance DataFrame column swap.
+_POISON_BOUNDS = {
+    'wti':          (10.0, 200.0),   'brent':        (10.0, 220.0),
+    'natural_gas':  (0.5, 20.0),     'coal':         (20.0, 500.0),
+    'gold':         (800.0, 8000.0), 'silver':       (5.0, 150.0),
+    'platinum':     (300.0, 3000.0), 'palladium':    (200.0, 4000.0),
+    'copper':       (1.0, 10.0),     'aluminum':     (800.0, 6000.0),
+    'wheat':        (200.0, 1500.0), 'corn':         (150.0, 1200.0),
+    'rice':         (5.0, 50.0),     'soybeans':     (500.0, 2500.0),
+    'coffee':       (50.0, 600.0),   'cocoa':        (500.0, 15000.0),
+    'sugar':        (5.0, 50.0),     'cotton':       (40.0, 250.0),
+    'soybean_oil':  (10.0, 120.0),   'soybean_meal': (150.0, 700.0),
+    'lumber':       (100.0, 2500.0), 'propane':      (0.2, 5.0),
+    'canola':       (400.0, 1500.0),
+}
+
+# Indicator name → yfinance ticker, for the one-shot individual retry after a
+# poison trip. Mirrors TICKER_MAP in get_live_commodities(); names without a
+# yfinance ticker (lumber, propane, canola — non-yfinance sources) can't be
+# retried and go straight to skip + service_health failure.
+_POISON_RETRY_TICKERS = {
+    'wti': 'CL=F', 'brent': 'BZ=F', 'natural_gas': 'NG=F', 'coal': 'MTF=F',
+    'gold': 'GC=F', 'silver': 'SI=F', 'platinum': 'PL=F', 'palladium': 'PA=F',
+    'copper': 'HG=F', 'aluminum': 'ALI=F',
+    'wheat': 'ZW=F', 'corn': 'ZC=F', 'rice': 'ZR=F', 'soybeans': 'ZS=F',
+    'coffee': 'KC=F', 'cocoa': 'CC=F', 'sugar': 'SB=F', 'cotton': 'CT=F',
+    'soybean_oil': 'ZL=F', 'soybean_meal': 'ZM=F',
+}
+
+
+def _within_poison_bounds(name, value) -> bool:
+    """True when value is plausible for the named indicator.
+
+    Names without bounds always pass (the poison filter only covers
+    commodities with known plausible ranges). Unparseable values fail.
+    """
+    bounds = _POISON_BOUNDS.get(name)
+    if not bounds:
+        return True
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return False
+    return bounds[0] <= v <= bounds[1]
+
+
+def _poison_retry_value(name, fetcher=None):
+    """D-6: retry ONE individual download after a poison trip.
+
+    Mirrors the individual-fallback pattern in get_live_commodities()._get_ticker_series:
+    a single-ticker yf.download avoids the batch DataFrame column scramble that
+    poisons values in the first place.
+
+    Args:
+        name: indicator name (e.g. 'wti')
+        fetcher: optional callable(ticker) -> float|None, injectable for tests.
+
+    Returns:
+        An in-bounds float, or None when no ticker is known, the fetch fails,
+        or the retried value is still out of bounds.
+    """
+    ticker = _POISON_RETRY_TICKERS.get(name)
+    if not ticker:
+        return None
+
+    if fetcher is None:
+        def fetcher(tkr):
+            import yfinance as yf
+            col = _yf_close(yf.download(tkr, period="5d", progress=False)['Close'])
+            if col is None or len(col) == 0:
+                return None
+            return float(col.iloc[-1])
+
+    try:
+        val = fetcher(ticker)
+    except Exception:
+        return None
+    if val is None or not _within_poison_bounds(name, val):
+        return None
+    return float(val)
+
+
 def _archive_market_data_to_history(conn, financial_markets: dict, commodity_data: dict, yield_data: dict) -> None:
     """Save financial market data to indicator_history so it exports to indicators.json."""
     today_str = date.today().isoformat()
     count = 0
-
-    # Plausibility bounds per indicator. These are looser than the validator's
-    # RANGE rules because they're a poison filter, not a validation — the goal
-    # is to catch yfinance batch-download column scrambles (e.g., wti=1079.5,
-    # platinum=67, soybean_oil=4761.9) before they land in indicator_history
-    # and get picked as "latest" by the exporter. Any value outside these
-    # bounds is almost certainly a yfinance DataFrame column swap.
-    _POISON_BOUNDS = {
-        'wti':          (10.0, 200.0),   'brent':        (10.0, 220.0),
-        'natural_gas':  (0.5, 20.0),     'coal':         (20.0, 500.0),
-        'gold':         (800.0, 8000.0), 'silver':       (5.0, 150.0),
-        'platinum':     (300.0, 3000.0), 'palladium':    (200.0, 4000.0),
-        'copper':       (1.0, 10.0),     'aluminum':     (800.0, 6000.0),
-        'wheat':        (200.0, 1500.0), 'corn':         (150.0, 1200.0),
-        'rice':         (5.0, 50.0),     'soybeans':     (500.0, 2500.0),
-        'coffee':       (50.0, 600.0),   'cocoa':        (500.0, 15000.0),
-        'sugar':        (5.0, 50.0),     'cotton':       (40.0, 250.0),
-        'soybean_oil':  (10.0, 120.0),   'soybean_meal': (150.0, 700.0),
-        'lumber':       (100.0, 2500.0), 'propane':      (0.2, 5.0),
-        'canola':       (400.0, 1500.0),
-    }
 
     def _save(name, value_str, unit='', source='Yahoo Finance'):
         nonlocal count
@@ -1623,10 +1693,26 @@ def _archive_market_data_to_history(conn, financial_markets: dict, commodity_dat
             fnum = float(val)
         except (ValueError, TypeError):
             return
-        bounds = _POISON_BOUNDS.get(name)
-        if bounds and not (bounds[0] <= fnum <= bounds[1]):
-            print(f"  [POISON-FILTER] Skipping {name}={fnum} (outside {bounds})")
-            return
+        if name in _POISON_BOUNDS and not _within_poison_bounds(name, fnum):
+            print(f"  [POISON-FILTER] {name}={fnum} outside "
+                  f"{_POISON_BOUNDS.get(name)} — retrying individual download")
+            # D-6: one individual-ticker retry before giving up.
+            retry = _poison_retry_value(name)
+            if retry is None:
+                # Skip the write — the previous good indicator_history row
+                # holds over as "latest" for the exporter.
+                print(f"  [POISON-FILTER] Skipping {name} (retry failed or "
+                      f"still out of bounds)")
+                try:
+                    import service_health
+                    service_health.get().record_failure(
+                        'yfinance', f'poison:{name}')
+                except Exception:
+                    pass  # health bookkeeping must never block the archive
+                return
+            print(f"  [POISON-FILTER] Retry recovered {name}={retry}")
+            fnum = retry
+            val = str(retry)
         save_indicator(conn, {
             'indicator': name,
             'province': 'national',

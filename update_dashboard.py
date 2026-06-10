@@ -168,9 +168,11 @@ def update_dashboard(deep_sweep: bool = False):
         "Phase 6: Finalize": 300,
     }
 
-    # Phase-level caching: check for run_id-based cache key
-    run_date = date.today().isoformat()
-    cache_prefix = f"phase_cache_{run_date}"
+    # Phase-level caching (E-2): stable per-phase keys + TTL freshness check.
+    # The key no longer embeds the run date — a next-day retry reuses any
+    # phase completed within PHASE_CACHE_TTL_HOURS (default 24h).
+    from pipeline_cache import phase_cache_key, phase_cache_fresh, phase_cache_ttl_hours
+    _phase_ttl_hours = phase_cache_ttl_hours()
 
     import time as _time
 
@@ -190,15 +192,16 @@ def update_dashboard(deep_sweep: bool = False):
         # whatever `final_payload` Phase 5 produced this run. Caching it caused
         # a critical bug where a fresh conductor briefing was orphaned because
         # a morning run had already cached Phase 6 with the previous payload.
-        cache_key = f"{cache_prefix}_{phase_name.replace(' ', '_')}"
+        cache_key = phase_cache_key(phase_name)
         if phase_name == "Phase 6: Finalize":
             cached = None
         else:
             try:
                 from db import get_dashboard_state
                 cached = get_dashboard_state(conn, cache_key)
-                if cached and isinstance(cached, dict) and cached.get("_completed"):
-                    print(f"  [CACHE HIT] Skipping — completed earlier today")
+                if phase_cache_fresh(cached, _phase_ttl_hours):
+                    print(f"  [CACHE HIT] Skipping — completed within the "
+                          f"last {_phase_ttl_hours:g}h")
                     context.update({k: v for k, v in cached.items() if not k.startswith("_")})
                     _phase_end = _time.time()
                     print(f"[PHASE_END {phase_name} t={int(_phase_end)} "
@@ -210,10 +213,10 @@ def update_dashboard(deep_sweep: bool = False):
         timeout = PHASE_TIMEOUTS.get(phase_name, 300)
         _phase_status = "ok"
         try:
-            import signal as _signal
             import threading
 
-            # Use threading timeout (cross-platform)
+            # Use threading timeout (cross-platform). daemon=True (E-10) so a
+            # hung phase thread can never keep the process alive after main exits.
             result_container = [None]
             error_container = [None]
 
@@ -223,7 +226,7 @@ def update_dashboard(deep_sweep: bool = False):
                 except Exception as e:
                     error_container[0] = e
 
-            t = threading.Thread(target=_run_phase)
+            t = threading.Thread(target=_run_phase, daemon=True)
             t.start()
             t.join(timeout=timeout)
 
@@ -243,10 +246,14 @@ def update_dashboard(deep_sweep: bool = False):
                     # Skip Phase 6 — it's non-cacheable by design (see cache-check above).
                     if phase_name != "Phase 6: Finalize":
                         try:
+                            from datetime import datetime, timezone
                             from db import save_dashboard_state
                             cache_data = {k: v for k, v in result.items()
                                           if isinstance(v, (str, int, float, bool, list, dict, type(None)))}
                             cache_data["_completed"] = True
+                            # E-2: UTC ISO completion stamp — phase_cache_fresh()
+                            # rejects entries older than PHASE_CACHE_TTL_HOURS.
+                            cache_data["_completed_at"] = datetime.now(timezone.utc).isoformat()
                             save_dashboard_state(conn, cache_key, cache_data)
                         except Exception:
                             pass  # caching is best-effort

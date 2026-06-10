@@ -511,7 +511,7 @@ def run_google_news_search(gemini_client=None, conn=None):
         from snippet_enhancer import enhance_batch
         articles = enhance_batch(
             articles, url_key="link", snippet_key="summary",
-            max_enhance=30, skip_gov=False,
+            max_enhance=30, skip_gov=False, conn=conn,
         )
     except ImportError:
         print("  [WARN] sumy not installed, skipping snippet enhancement")

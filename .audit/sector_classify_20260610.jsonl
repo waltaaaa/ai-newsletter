@@ -1,0 +1,1300 @@
+{"rowid": 36430, "name": "Installation of an Electrical Vehicle Charging System - Warner Building", "province": "ON", "sector": "power_energy", "confidence": 0.72}
+{"rowid": 36455, "name": "Field Electrical Centres", "province": "ON", "sector": "power_energy", "confidence": 0.45}
+{"rowid": 36464, "name": "Replace roof of building at 4200 Labelle Street, Ottawa", "province": "ON", "sector": "government", "confidence": 0.78}
+{"rowid": 36619, "name": "delete this is a duplicate", "province": "BC", "sector": "Other", "confidence": 0.0}
+{"rowid": 36652, "name": "RoutesProjet de contournement du noyau urbain de Sainte-Julienne par la route 125En cours", "province": "QC", "sector": "infrastructure", "confidence": 0.97}
+{"rowid": 36653, "name": "Matières résiduelles et dangereusesProjet d’agrandissement du lieu d’enfouissement technique d’Hébertville-Station", "province": "QC", "sector": "environment", "confidence": 0.95}
+{"rowid": 36654, "name": "AutresProjet de construction d’une ferme piscicole terrestre à Baie-Trinité", "province": "QC", "sector": "agriculture", "confidence": 0.88}
+{"rowid": 36664, "name": "Popular topics:", "province": "AB", "sector": "Other", "confidence": 0.0}
+{"rowid": 36672, "name": "Suncor Energy Inc. – Mildred Lake Extension Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36675, "name": "Coal Valley Resources Inc. – Robb Trend Project", "province": "AB", "sector": "mining", "confidence": 0.98}
+{"rowid": 36679, "name": "Bow City Power Ltd. – Power Project", "province": "AB", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 36681, "name": "Suncor Energy Inc. – Lewis Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36682, "name": "Canadian Natural Resources Limited (formerly Devon Canada Corporation) – Pike 2 Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36683, "name": "Suncor Energy Inc. – Meadow Creek West Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36684, "name": "MEG Energy Corp. – May River Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36686, "name": "ConocoPhillips Canada Resources Corp. – Surmont 3 Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36688, "name": "Value Creation Inc – Advance TriStar Project", "province": "AB", "sector": "oil_gas", "confidence": 0.97}
+{"rowid": 36689, "name": "Pengrowth Energy Corporation – Lindbergh SAGD Expansion", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36694, "name": "Strathcona Resources Ltd. – Sepiko Kesik", "province": "AB", "sector": "oil_gas", "confidence": 0.97}
+{"rowid": 36695, "name": "MEG Energy Corporation – Surmont Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36696, "name": "Cenovus FCCL Ltd. – Foster Creek Thermal Project – Phase J Expansion", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36697, "name": "Cenovus Energy Inc. – Telephone Lake In-Situ Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36698, "name": "BlackPearl Resources Inc. – Blackrod Commercial SAGD Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36699, "name": "Devon NEC Corporation – Pike 1 Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36700, "name": "Laricina Energy Ltd. – Germain Project Expansion", "province": "AB", "sector": "oil_gas", "confidence": 0.98}
+{"rowid": 36702, "name": "Cenovus Energy Inc. – Pelican Lake Grand Rapids", "province": "AB", "sector": "oil_gas", "confidence": 0.98}
+{"rowid": 36703, "name": "Southern Pacific Resource Corp. – STP McKay Thermal Project – Phase 2", "province": "AB", "sector": "oil_gas", "confidence": 0.98}
+{"rowid": 36707, "name": "Dover Operating Corp. – Commercial Project", "province": "AB", "sector": "oil_gas", "confidence": 0.9}
+{"rowid": 36710, "name": "Cenovus FCCL Ltd. – Narrows Lake Project", "province": "AB", "sector": "oil_gas", "confidence": 0.98}
+{"rowid": 36712, "name": "Devon NEC Corp. – Jackfish 3 Project", "province": "AB", "sector": "oil_gas", "confidence": 0.98}
+{"rowid": 36713, "name": "MacKay Operating Corp. – MacKay River Commercial Project", "province": "AB", "sector": "oil_gas", "confidence": 0.97}
+{"rowid": 36714, "name": "Cenovus FCCL Ltd. – Christina Lake In-Situ Thermal Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36716, "name": "MEG Energy Corp. – Christina Lake Regional Project Phase 3", "province": "AB", "sector": "oil_gas", "confidence": 0.98}
+{"rowid": 36718, "name": "Shell Canada Ltd. – Carmon Creek Project", "province": "AB", "sector": "oil_gas", "confidence": 0.97}
+{"rowid": 36719, "name": "Nexin Inc./ OPTI Canada Inc. – Long Lake Phase 2 SAGD Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36720, "name": "Devon ARL Corp. – Jackfish 2 SAGD Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36721, "name": "Petro-Canada – MacKay River SAGD Expansion Project", "province": "AB", "sector": "oil_gas", "confidence": 0.99}
+{"rowid": 36722, "name": "Value Chain Solutions Inc. – VCS-Heartland Complex Expansion", "province": "AB", "sector": "oil_gas", "confidence": 0.82}
+{"rowid": 36723, "name": "Canadian Natural Resources Limited – Horizon North Pit Extension", "province": "AB", "sector": "oil_gas", "confidence": 0.95}
+{"rowid": 36729, "name": "Syncrude Canada Ltd. – South West Sand Storage Conversion Project", "province": "AB", "sector": "oil_gas", "confidence": 0.96}
+{"rowid": 36730, "name": "Total E & P Canada Ltd – Upgrader Project", "province": "AB", "sector": "oil_gas", "confidence": 0.97}
+{"rowid": 36731, "name": "Shell Canada Ltd. – Scotford Upgrader 2 Project", "province": "AB", "sector": "oil_gas", "confidence": 0.98}
+{"rowid": 36734, "name": "Synenco Energy Inc. – Northern Lights Upgrader Project", "province": "AB", "sector": "oil_gas", "confidence": 0.97}
+{"rowid": 36736, "name": "Petro-Canada – Fort Hills Sturgeon Upgrader Project", "province": "AB", "sector": "oil_gas", "confidence": 0.97}
+{"rowid": 36740, "name": "Town of Canmore – Cougar Creek Flood Retention Structure Project", "province": "AB", "sector": "infrastructure", "confidence": 0.97}
+{"rowid": 36743, "name": "Sasol Canada Holdings Ltd. – Canada GTL (CGTL)", "province": "AB", "sector": "oil_gas", "confidence": 0.88}
+{"rowid": 36746, "name": "MAXIM Power Corp. – HR Milner Expansion", "province": "AB", "sector": "power_energy", "confidence": 0.96}
+{"rowid": 36748, "name": "Beaver Hills Processing GP Inc. – Condensate Processing Project", "province": "AB", "sector": "oil_gas", "confidence": 0.95}
+{"rowid": 36749, "name": "Birch Mountain Resources Ltd. – Hammerstone Project", "province": "AB", "sector": "mining", "confidence": 0.93}
+{"rowid": 36751, "name": "Arclin – Sexsmith Formaldehyde Plant Project", "province": "AB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 36753, "name": "Alberta Silica Corporation - Peace River Silica Sand Operations Project", "province": "AB", "sector": "mining", "confidence": 0.95}
+{"rowid": 36754, "name": "Government Publications", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36755, "name": "March 16, 2026", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36756, "name": "February 18, 2026", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36757, "name": "February 14, 2026", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36758, "name": "January 29, 2026", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36759, "name": "January 28, 2026", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36760, "name": "January 10, 2026", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36761, "name": "December 13, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36762, "name": "November 12, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36763, "name": "October 25, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36764, "name": "October 9, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36765, "name": "September 30, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36766, "name": "September 23, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36767, "name": "September 11, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36768, "name": "August 2, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36769, "name": "July 31, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36770, "name": "July 18, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36771, "name": "July 5, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36772, "name": "June 24, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36773, "name": "June 23, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36774, "name": "June 14, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36775, "name": "May 27, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36776, "name": "May 10, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36777, "name": "May 3, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36778, "name": "April 9, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36779, "name": "April 1, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36780, "name": "March 29, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36781, "name": "March 27, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36782, "name": "March 20, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36783, "name": "March 14, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36784, "name": "February 6, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36785, "name": "February 5, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36786, "name": "February 3, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36787, "name": "January 11, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36788, "name": "January 10, 2025", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36789, "name": "December 5, 2024", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36790, "name": "November 23, 2024", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36791, "name": "November 9, 2024", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36792, "name": "November 2, 2024", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36793, "name": "October 3, 2024", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36794, "name": "April 24, 2024", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36795, "name": "April 8, 2024", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36796, "name": "April 5, 2024", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36797, "name": "January 9, 2024", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36798, "name": "Projects Under Review", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36799, "name": "Completed Projects", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 36800, "name": "February 18, 2026– Paladin Canada Inc. (formerly Fission Uranium Corporation) Patterson Lake South Project", "province": "SK", "sector": "mining", "confidence": 0.98}
+{"rowid": 36802, "name": "November 12, 2025– Mosaic Belle Plaine Cluster Site 45", "province": "SK", "sector": "mining", "confidence": 0.98}
+{"rowid": 36804, "name": "September 23, 2025– Cameco Cigar Lake Production Increase", "province": "SK", "sector": "mining", "confidence": 0.99}
+{"rowid": 36806, "name": "July 18, 2025– NexGen Energy Ltd. Change to Rook I Camp Location", "province": "SK", "sector": "mining", "confidence": 0.95}
+{"rowid": 36811, "name": "April 1, 2025–  Mosaic Belle Plaine Cluster 44", "province": "SK", "sector": "mining", "confidence": 0.95}
+{"rowid": 36813, "name": "March 20, 2025– Invenergy Lajord Renewable Energy Centre", "province": "SK", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 36814, "name": "March 14, 2025– SaskPower Southwest Power Pool to SaskPower Interconnection", "province": "SK", "sector": "power_energy", "confidence": 0.96}
+{"rowid": 36815, "name": "February 6, 2025– FCL Co-op Renewable Diesel Complex", "province": "SK", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 36819, "name": "December 5, 2024– Strathcona Resources Ltd. Meota Central SAGD Project", "province": "SK", "sector": "oil_gas", "confidence": 0.98}
+{"rowid": 36820, "name": "October 3, 2024– Big Bear Camp Aerodrome Project", "province": "SK", "sector": "transport_logistics", "confidence": 0.93}
+{"rowid": 36822, "name": "April 8, 2024– Low Carbon ECO2 Energy Estevan Biomass Energy Project", "province": "SK", "sector": "power_energy", "confidence": 0.9}
+{"rowid": 36823, "name": "April 5, 2024– Low Carbon ECO2 Energy Clavet Biomass Energy Project", "province": "SK", "sector": "power_energy", "confidence": 0.9}
+{"rowid": 36824, "name": "January 9, 2024– SaskPower Aspen Power Station Project", "province": "SK", "sector": "power_energy", "confidence": 0.98}
+{"rowid": 36832, "name": "Hazardous Waste Transfer Facility", "province": "MB", "sector": "environment", "confidence": 0.94}
+{"rowid": 36833, "name": "Regional Cumulative Effects Assessment", "province": "MB", "sector": "environment", "confidence": 0.6}
+{"rowid": 36835, "name": "Lake Winnipeg East System Improvement Transmission Project", "province": "MB", "sector": "power_energy", "confidence": 0.97}
+{"rowid": 36838, "name": "Oriented Strand Board Plant", "province": "MB", "sector": "forestry", "confidence": 0.88}
+{"rowid": 36843, "name": "Red River Floodway Expansion", "province": "MB", "sector": "infrastructure", "confidence": 0.97}
+{"rowid": 36848, "name": "Bipole III Transmission Project", "province": "MB", "sector": "power_energy", "confidence": 0.98}
+{"rowid": 36849, "name": "Minago Project", "province": "MB", "sector": "mining", "confidence": 0.9}
+{"rowid": 36850, "name": "Pointe du Bois Spillway Replacement Project", "province": "MB", "sector": "power_energy", "confidence": 0.91}
+{"rowid": 36851, "name": "Rettie Boat Access Channel", "province": "MB", "sector": "infrastructure", "confidence": 0.55}
+{"rowid": 36852, "name": "Youth Leadership Camp", "province": "MB", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 36857, "name": "Organic Waste Facility", "province": "MB", "sector": "environment", "confidence": 0.92}
+{"rowid": 36860, "name": "Keeyask Generation Project", "province": "MB", "sector": "power_energy", "confidence": 0.98}
+{"rowid": 36865, "name": "Keeyask Transmission Project", "province": "MB", "sector": "power_energy", "confidence": 0.98}
+{"rowid": 36867, "name": "Greenwald Biomass Pelletizing Plant", "province": "MB", "sector": "forestry", "confidence": 0.75}
+{"rowid": 36874, "name": "Wood Coatings Facility, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 36884, "name": "Composting Facility, R.M. of DeSalaberry", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36885, "name": "Concrete Batch Plant, City of Steinbach", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 36888, "name": "Composting Facility", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36889, "name": "Industrial Facility", "province": "MB", "sector": "Other", "confidence": 0.2}
+{"rowid": 36897, "name": "Composting Facility, R.M. of Lorne", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36899, "name": "Construction and Demolition Waste Recycling and Composting Facility", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36918, "name": "Hazardous Waste Transfer Station, Logan Avenue, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36919, "name": "Waste Lead Acid Battery Transfer Facility, Messier Street, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36920, "name": "Hazardous Waste Transfer Facility, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36922, "name": "Waste Lead Battery Transfer Facility, Selkirk", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36923, "name": "Waste Lead Acid Battery Facility", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36942, "name": "PTH #101", "province": "MB", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 36947, "name": "Steel Foundry, Town of Selkirk", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 36952, "name": "Boat Channel Networ, R.M. of Eriksdale", "province": "MB", "sector": "infrastructure", "confidence": 0.55}
+{"rowid": 36958, "name": "Scrap Metal Processing and Auto Wrecking Facility, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 36965, "name": "Waste Lead Acid Battery Transfer Facility, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36967, "name": "Hazardous Waste Collection Facility, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36969, "name": "Agricultural Chemical Formulating Plant, 945 Marion Street, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 36970, "name": "Composting Facility, R.M. of Elton", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36989, "name": "Waste lead battery transfer facility, City of Brandon", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 36997, "name": "Waste Battery Facility, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37008, "name": "MacDonald, R.M. Of", "province": "MB", "sector": "Other", "confidence": 0.1}
+{"rowid": 37011, "name": "Transmission project, R.M. of Springfield", "province": "MB", "sector": "power_energy", "confidence": 0.9}
+{"rowid": 37020, "name": "Concrete Batch Plant, R.M. of St. Clements", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 37041, "name": "Liquid Carbon Dioxide Production Facility, City of Brandon", "province": "MB", "sector": "manufacturing", "confidence": 0.88}
+{"rowid": 37055, "name": "Flare system", "province": "MB", "sector": "manufacturing", "confidence": 0.5}
+{"rowid": 37059, "name": "Sodium Chlorate Chemical Production Plant, City of Brandon", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 37060, "name": "Pelican Lake Enhancement Project", "province": "MB", "sector": "environment", "confidence": 0.72}
+{"rowid": 37066, "name": "Scrap Metal Processing and Auto Wrecking, R.M. of St. Andrews", "province": "MB", "sector": "environment", "confidence": 0.82}
+{"rowid": 37068, "name": "Cryogenic Air Separation Plant, City of Selkirk", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 37071, "name": "Lime Kiln Plant, R.M. of Grahamdale", "province": "MB", "sector": "manufacturing", "confidence": 0.87}
+{"rowid": 37130, "name": "Hazardous Waste Transfer Facility, 55 Trottier Bay, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.93}
+{"rowid": 37145, "name": "Drifting River Ford Crossing", "province": "MB", "sector": "infrastructure", "confidence": 0.88}
+{"rowid": 37146, "name": "Dauphin Lake Basin Stream Rehabilitation - 1996 Riffle Construction Program, R.M. of Dauphin", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37150, "name": "Upgrading of the Falcon Ski Area, Whiteshell Provincial Park", "province": "MB", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 37175, "name": "Concrete Batch Plant and Bulk Materials Handling Facility (recycling), RM. of Springfield", "province": "MB", "sector": "manufacturing", "confidence": 0.82}
+{"rowid": 37176, "name": "Boat Channel, Willow Creek, RM of Gimli", "province": "MB", "sector": "infrastructure", "confidence": 0.65}
+{"rowid": 37187, "name": "Boat Channel, Dauphin Lake", "province": "MB", "sector": "infrastructure", "confidence": 0.65}
+{"rowid": 37195, "name": "Class 1 Waste Disposal Ground, City of Steinbach", "province": "MB", "sector": "environment", "confidence": 0.92}
+{"rowid": 37200, "name": "Concrete Batch Plant, R.M. of Ritchot", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 37211, "name": "Platinum Electoplating/Laser Welding and Fluoride Icon Cleaning Facility , City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 37215, "name": "The Pas Operations", "province": "MB", "sector": "forestry", "confidence": 0.48}
+{"rowid": 37216, "name": "Concrete Batch Plant, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 37235, "name": "Pelican Lake Shoreline Enhancement", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 37236, "name": "Little Saskatchewan River Riffle Construction, R.M. of Minto-Odanah", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37253, "name": "Waste Disposal Ground", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37256, "name": "Waste Disposal Ground, R.M. of Stanley", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37261, "name": "1997 Annual Harvest and Renewal Plan (formerly Repap Manitoba Inc. & Tolko Manitoba Inc.)", "province": "MB", "sector": "forestry", "confidence": 0.95}
+{"rowid": 37275, "name": "Hazardous Waste Transfer Facility, 1 Terracon Place, Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.93}
+{"rowid": 37286, "name": "Maskwa Mill Project, Nopiming Provincial Park", "province": "MB", "sector": "forestry", "confidence": 0.75}
+{"rowid": 37294, "name": "Pyrolytic Facility, Town of Selkirk", "province": "MB", "sector": "environment", "confidence": 0.65}
+{"rowid": 37296, "name": "Southside Golf Centre, 18 hole, R.M. of Ritchot", "province": "MB", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 37305, "name": "Little Saskatchewan River Riffle Construction", "province": "MB", "sector": "environment", "confidence": 0.72}
+{"rowid": 37323, "name": "(formerly Gromor International Corporation) - Beaver Point Peat Moss Development, R.M. of Bifrost", "province": "MB", "sector": "mining", "confidence": 0.68}
+{"rowid": 37325, "name": "(formerly Pine Falls Paper Company Limited) - Pine Falls Pulp and Paper Mill", "province": "MB", "sector": "forestry", "confidence": 0.98}
+{"rowid": 37336, "name": "Spray Paint Facility, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 37351, "name": "Scrap Metal Processing, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.7}
+{"rowid": 37352, "name": "Concrete Batch Plant, R.M. of West St. Paul", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 37360, "name": "PTH 10, R.M. of Elton", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 37361, "name": "Commercial Deer-hide Tannery, R.M. of Thompson", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 37363, "name": "Printing & Allied Operations Facility, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 37366, "name": "Brandon Combustion Turbine Plant, City of Brandon", "province": "MB", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 37374, "name": "Metal Blade Production Facility, City of Steinbach", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 37382, "name": "Jackson Creek Downey Project, R.M. of Arthur", "province": "MB", "sector": "infrastructure", "confidence": 0.52}
+{"rowid": 37388, "name": "Expansion to the Perlite Production Process, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 37393, "name": "Proposed Extension of PTH 110 (Brandon Eastern Access) from Richmond Ave. to PTH 10 South", "province": "MB", "sector": "infrastructure", "confidence": 0.98}
+{"rowid": 37397, "name": "Metal Foundry Facility, Pierson, R.M. of Edward", "province": "MB", "sector": "manufacturing", "confidence": 0.93}
+{"rowid": 37399, "name": "Isobord Particle Board Manufacting Plant, R.M. of Cartier", "province": "MB", "sector": "manufacturing", "confidence": 0.82}
+{"rowid": 37416, "name": "Minnedosa Lake Silt Removal", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 37437, "name": "Biosolids and Sludge Solids Removal, R.M. of Dauphin", "province": "MB", "sector": "infrastructure", "confidence": 0.7}
+{"rowid": 37441, "name": "Peat Moss Development, Unorganized Division #1", "province": "MB", "sector": "mining", "confidence": 0.68}
+{"rowid": 37443, "name": "Energy Production, R.M. of Minto-Odanah", "province": "MB", "sector": "power_energy", "confidence": 0.72}
+{"rowid": 37444, "name": "Energy Production, R.M. 's of Pipestone and Albert", "province": "MB", "sector": "power_energy", "confidence": 0.72}
+{"rowid": 37469, "name": "Ski Hill, Asessippi Provincial Park", "province": "MB", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 37484, "name": "Hazardous Waste Collection Facility, R.M. of Macdonald", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37510, "name": "Wuskwatim Generation Project - Generation Station, Located on the Burntwood River at Wuskwatim Lake", "province": "MB", "sector": "power_energy", "confidence": 0.97}
+{"rowid": 37515, "name": "Concrete Batch Facility, R.M. of Stanley", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 37517, "name": "Bulk Materials Handling Facility, R.M. of Macdonald", "province": "MB", "sector": "transport_logistics", "confidence": 0.72}
+{"rowid": 37521, "name": "Meat Processing and Slaughter Plant, R.M. of Dauphin", "province": "MB", "sector": "manufacturing", "confidence": 0.93}
+{"rowid": 37529, "name": "Waste Liquid Organics Disposal Facility, R.M. of Gimli", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37557, "name": "Brandon Hills Estates Mobile Home Park", "province": "MB", "sector": "residential", "confidence": 0.95}
+{"rowid": 37563, "name": "Lalor Concentrator", "province": "MB", "sector": "mining", "confidence": 0.93}
+{"rowid": 37564, "name": "CCW Concrete Batch Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 37566, "name": "Fork River Crossing Replacement", "province": "MB", "sector": "infrastructure", "confidence": 0.92}
+{"rowid": 37570, "name": "Tritech Batch Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 37584, "name": "Flax Mill/Bulk Seed Storage and Distribution Facility", "province": "MB", "sector": "agriculture", "confidence": 0.68}
+{"rowid": 37590, "name": "Transformer Station, Community of Ilford", "province": "MB", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 37591, "name": "Transformer Station, R.M. of Rockwood", "province": "MB", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 37594, "name": "Biosolids Disposal, Town of Neepawa", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 37599, "name": "Municipal Drain, R.M. of Stuartburn and R.M. of Franklin", "province": "MB", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 37606, "name": "Waste Lead Acid Battery Transfer Station, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37607, "name": "Heat Cleaning Oven, R.M. of Gimli", "province": "MB", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 37609, "name": "Hazardous Waste Storage, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.92}
+{"rowid": 37612, "name": "Seed Cleaning Facility, Plum Coulee", "province": "MB", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 37618, "name": "Flin Flon Area Improvements Project, Upgrade Transmissions Lines and Stations", "province": "MB", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 37620, "name": "Assiniboine River Dyke Repairs", "province": "MB", "sector": "infrastructure", "confidence": 0.92}
+{"rowid": 37622, "name": "Netley Creek Enhancement Project, R.M. of St. Andrews", "province": "MB", "sector": "environment", "confidence": 0.8}
+{"rowid": 37632, "name": "(formerly Phillips & Temro Industries Ltd.) - Wiring Harnesses for Automotive and Truck Building Industry, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 37640, "name": "Pulp and Paper Mill, the Pas", "province": "MB", "sector": "forestry", "confidence": 0.97}
+{"rowid": 37645, "name": "Heat Clean Oven Facility, City of Selkirk", "province": "MB", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 37647, "name": "Hazardous Waste Transfer Facility, R.M. of St. Andrews", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37658, "name": "Land Disposal of Sludge", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37659, "name": "Recycling and Waste-to-Energy Facility, R.M. of St. Andrews", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37660, "name": "Feedmill, R.M. of Turtle Mountain", "province": "MB", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 37662, "name": "Biosolids Disposal Program", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37665, "name": "Swan River By-Pass, Town of Swan River", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 37666, "name": "Proposed Upgrading of PR 305, West Dike Extension", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 37670, "name": "Bulk Material Handling Facility, City of Winnipeg", "province": "MB", "sector": "transport_logistics", "confidence": 0.62}
+{"rowid": 37681, "name": "Feedmill, R.M. of Miniota", "province": "MB", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 37686, "name": "Red River Drive Slope Stabilization and Realignment", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 37700, "name": "Heat Clean Oven Facility, City of Brandon", "province": "MB", "sector": "environment", "confidence": 0.68}
+{"rowid": 37701, "name": "Waste Lead Acid Batteries Transfer Facility, R.M. of La Broquerie", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37702, "name": "Waste Lead Acid Batteries Transfer Facility, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37703, "name": "Hazardous Waste Disposal Facility, R.M. of Grahamdale", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37718, "name": "Remanufacture of Engine Cylinder Bores, R.M. of Rockwood", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 37722, "name": "Construction and Demolition Waste Recycling and Recovery Operation, R.M. of", "province": "MB", "sector": "environment", "confidence": 0.92}
+{"rowid": 37723, "name": "Manufacture of Haying Equipment, Village of Crystal City", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 37724, "name": "Flour Mill, Elie, R.M. of Cartier", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 37727, "name": "Flax Straw Processing Mill, R.M. of Dufferin", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 37733, "name": "Dennis Lake Controlled Outlet", "province": "MB", "sector": "infrastructure", "confidence": 0.85}
+{"rowid": 37739, "name": "Waste Lead Acid Batteries Transfer Facility, 1126-18th Street, Brandon", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37741, "name": "Waste Flammables Transfer Facility, City of Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37742, "name": "Waste Lead Acid Batteries Transfer Facility, Roland", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37764, "name": "Manufacture of Hydraulic Cylinders and Pumps, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 37766, "name": "Morris, Town of", "province": "MB", "sector": "Other", "confidence": 0.1}
+{"rowid": 37767, "name": "Manufacture of Motor Coaches, 1475 & 1499 Clarence Avenue, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 37771, "name": "Galvanizing Plant, R.M. of Springfield", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 37779, "name": "PTH 16 Upgrade, Minnedosa to Neepawa", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 37780, "name": "PTH 17 Upgrade, R.M.'s of Armstrong and Rockwood", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 37785, "name": "Industrial Waste Treatment and Disposal Facility", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37786, "name": "Heat Cleaning Oven, 1475 Clarence Avenue, Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 37787, "name": "Waste Lead Acid Battery Transfer Facility, 3-2073 Logan Avenue, Winnipeg", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37796, "name": "Waste Disposal Ground, R.M. of Minto-Odanah", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37809, "name": "(Western Harvest Flour) - Flour Mill, R.M. of Blanshard", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 37819, "name": "Energy Production, R.M.'s of Lorne and Pembina", "province": "MB", "sector": "power_energy", "confidence": 0.85}
+{"rowid": 37825, "name": "Coffee Roasting & Packaging Facility, 2-1725 St. James Street, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 37828, "name": "Heat Cleaning Oven, City of Winnipeg", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 37849, "name": "Transformer Station, Town of Gillam", "province": "MB", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 37859, "name": "Sludge Drying Bed, 11 & 12-112-7W", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 37870, "name": "East St. Paul Facility", "province": "MB", "sector": "Other", "confidence": 0.15}
+{"rowid": 37871, "name": "Waskada Sales Line", "province": "MB", "sector": "oil_gas", "confidence": 0.8}
+{"rowid": 37873, "name": "Aluminum Foundry", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 37876, "name": "Waste Battery Transfer Facility", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37888, "name": "Liquid/Granular Storage and Handling Facility, R. M. of Macdonald", "province": "MB", "sector": "agriculture", "confidence": 0.55}
+{"rowid": 37890, "name": "Realignment of PR 392 and Decommissioning of PR 393, Town of Snow Lake", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 37892, "name": "Project West", "province": "MB", "sector": "Other", "confidence": 0.1}
+{"rowid": 37897, "name": "Crown Pillar Mitigation Project", "province": "MB", "sector": "mining", "confidence": 0.8}
+{"rowid": 37901, "name": "Metallics Raw Materials Transfer Facility", "province": "MB", "sector": "manufacturing", "confidence": 0.65}
+{"rowid": 37905, "name": "Waste Lead Acid Battery Transfer Station", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37915, "name": "Murray Industrial Park Complex", "province": "MB", "sector": "commercial_mixed", "confidence": 0.6}
+{"rowid": 37916, "name": "Hazardous Waste Treatment and Transfer Facility", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 37924, "name": "Tyndall Distribution Supply Centre", "province": "MB", "sector": "transport_logistics", "confidence": 0.85}
+{"rowid": 37933, "name": "Paint System Equipment", "province": "MB", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 37935, "name": "Plant for the rendering of inedible animal materials", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 37942, "name": "Industrial Laundry Facility", "province": "MB", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 37950, "name": "Pointe du Bois Transmission Project", "province": "MB", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 37951, "name": "Rocket Propellant Production Plant", "province": "MB", "sector": "defence", "confidence": 0.92}
+{"rowid": 37953, "name": "LGM Graphics - Printing Operation", "province": "MB", "sector": "manufacturing", "confidence": 0.88}
+{"rowid": 37954, "name": "St. Vital Transmission Complex", "province": "MB", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 37957, "name": "Upgrading Of Provincial Trunk", "province": "MB", "sector": "infrastructure", "confidence": 0.85}
+{"rowid": 37960, "name": "Tires To Energy Facility", "province": "MB", "sector": "environment", "confidence": 0.82}
+{"rowid": 37961, "name": "Fish Spawning Enchancement", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 37962, "name": "Rock Groin And Fish Screen Upstream", "province": "MB", "sector": "environment", "confidence": 0.88}
+{"rowid": 37966, "name": "Nile Hole Expansion", "province": "MB", "sector": "mining", "confidence": 0.65}
+{"rowid": 37968, "name": "Franklin, R.M. Of", "province": "MB", "sector": "Other", "confidence": 0.1}
+{"rowid": 37972, "name": "Fishway On A Gradient Control Structure", "province": "MB", "sector": "environment", "confidence": 0.88}
+{"rowid": 37981, "name": "Construction, Operation And Maintenance Of The Development Known As ST2", "province": "MB", "sector": "Other", "confidence": 0.15}
+{"rowid": 37989, "name": "Stream Rehabilation Works On Stream In The Dauphin Lake Basin", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 38001, "name": "Construction, Operation and Maintenance of the Development known as the Winnipeg-Neepawa", "province": "MB", "sector": "infrastructure", "confidence": 0.5}
+{"rowid": 38005, "name": "Sandblasting Facility Located at 1995 Logan Ave.", "province": "MB", "sector": "manufacturing", "confidence": 0.78}
+{"rowid": 38011, "name": "Automobile Shredder Residue (ASR) and Plastics Recycling Plant", "province": "MB", "sector": "environment", "confidence": 0.92}
+{"rowid": 38018, "name": "Construction of Riverbank Stabilization Works", "province": "MB", "sector": "infrastructure", "confidence": 0.85}
+{"rowid": 38019, "name": "Rockfill Outlet Control Structure at the Outlet of Turnbull Lake", "province": "MB", "sector": "infrastructure", "confidence": 0.82}
+{"rowid": 38029, "name": "Concrete Batching Facility, Including All Related Activities", "province": "MB", "sector": "manufacturing", "confidence": 0.88}
+{"rowid": 38050, "name": "Biosolids Application", "province": "MB", "sector": "environment", "confidence": 0.8}
+{"rowid": 38060, "name": "Auto/Truck Parts Resale Facility", "province": "MB", "sector": "commercial_mixed", "confidence": 0.7}
+{"rowid": 38063, "name": "Cleanout And Repair Of The South Buffalo Channel", "province": "MB", "sector": "infrastructure", "confidence": 0.85}
+{"rowid": 38065, "name": "Household Hazardous Waste Collection and Transfer Facility", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 38076, "name": "St. Adolphe Ring Dike Expansion", "province": "MB", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 38079, "name": "Screen Printing Company", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38081, "name": "Sludge, Pen Manure And Paunch Manune", "province": "MB", "sector": "environment", "confidence": 0.6}
+{"rowid": 38085, "name": "Conrete Bathing Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 38086, "name": "Existing Seed Cleaning Plant And Proposed Seed Mill", "province": "MB", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 38090, "name": "Powerhouse With Associated Emissions To The Atmosphere", "province": "MB", "sector": "power_energy", "confidence": 0.75}
+{"rowid": 38098, "name": "Sedimentation Pond (Neepawa)", "province": "MB", "sector": "environment", "confidence": 0.65}
+{"rowid": 38100, "name": "Roll off rental facility", "province": "MB", "sector": "environment", "confidence": 0.65}
+{"rowid": 38107, "name": "Non-Ferrous Metal Foundry", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 38108, "name": "Seed Cleaning Plant With Particulate Emissions To The Atmosphere", "province": "MB", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 38109, "name": "Distillery For The Manufacture Of Distilled Liquor Products", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38114, "name": "Discharge Of Emissions To The Air Providing These Installations", "province": "MB", "sector": "Other", "confidence": 0.15}
+{"rowid": 38115, "name": "Discharge Of Contaminants Into The Air", "province": "MB", "sector": "Other", "confidence": 0.15}
+{"rowid": 38121, "name": "To Discharge Wastes Or Contaminants Into The Air From The Steam Plant", "province": "MB", "sector": "power_energy", "confidence": 0.6}
+{"rowid": 38122, "name": "To Discharge Wastes Or Contaminants Into The Air From The Operation Of A Class 2A Incinerator", "province": "MB", "sector": "environment", "confidence": 0.8}
+{"rowid": 38124, "name": "To Discharge Contaminants And Wastes Into The Air", "province": "MB", "sector": "Other", "confidence": 0.1}
+{"rowid": 38126, "name": "To Discharge Contaminants or Wastes Arising From The Operation Of Piggery", "province": "MB", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 38137, "name": "Waste Lead Acid Battery Tranfer Facility", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38139, "name": "Waste Wood Burner On Their Property", "province": "MB", "sector": "environment", "confidence": 0.7}
+{"rowid": 38141, "name": "Public Stock Yard", "province": "MB", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 38143, "name": "Inedible Rendering Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 38146, "name": "Brake Shoe Debonding Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 38148, "name": "Animal Food Processing and Freezing Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 38151, "name": "Incinator", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 38153, "name": "Limestone Crushing And Grading Plant", "province": "MB", "sector": "mining", "confidence": 0.85}
+{"rowid": 38154, "name": "Crematorium", "province": "MB", "sector": "Other", "confidence": 0.35}
+{"rowid": 38155, "name": "Ferrous Foundry And Ancillary Processes", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 38156, "name": "Incinerator", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 38158, "name": "Cupola Furnace And Related Foundry Process", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 38161, "name": "Pet Boarding Kennel", "province": "MB", "sector": "commercial_mixed", "confidence": 0.5}
+{"rowid": 38162, "name": "To Authorize An Abatement Project", "province": "MB", "sector": "environment", "confidence": 0.72}
+{"rowid": 38163, "name": "Gympsum And A Lime Hydrating Plant", "province": "MB", "sector": "mining", "confidence": 0.7}
+{"rowid": 38165, "name": "Electric Induction Furnace And Related Foundry Process", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 38167, "name": "For The Production Of Resin Coated Sand", "province": "MB", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 38169, "name": "Industry", "province": "MB", "sector": "Other", "confidence": 0.1}
+{"rowid": 38172, "name": "Incinetor Located On The Premises Of The Steinbach", "province": "MB", "sector": "environment", "confidence": 0.7}
+{"rowid": 38175, "name": "Operation Involving The Removal, Drying And Bagging Of Peat Moss From A Peat Bog", "province": "MB", "sector": "mining", "confidence": 0.68}
+{"rowid": 38176, "name": "An Incinerator", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 38178, "name": "Heat-Set Webb Lithographic Equipment", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 38179, "name": "Incinerator, Reclamation Furnace And Heating Oven", "province": "MB", "sector": "environment", "confidence": 0.65}
+{"rowid": 38184, "name": "Pet Kennel", "province": "MB", "sector": "commercial_mixed", "confidence": 0.5}
+{"rowid": 38186, "name": "An Operation Involving Bentonite Processing", "province": "MB", "sector": "mining", "confidence": 0.87}
+{"rowid": 38188, "name": "Wigwam Wood Waste Burner", "province": "MB", "sector": "forestry", "confidence": 0.82}
+{"rowid": 38190, "name": "3/8 Mile Dirt Oval Truck For Automobile Racing And Snowmobile Racing With Ancillary Facilities", "province": "MB", "sector": "tourism_culture", "confidence": 0.88}
+{"rowid": 38193, "name": "Plant Concerned With The Manufacture", "province": "MB", "sector": "manufacturing", "confidence": 0.5}
+{"rowid": 38195, "name": "The Storage And Mixing Of Concrete Ingredients", "province": "MB", "sector": "manufacturing", "confidence": 0.87}
+{"rowid": 38196, "name": "A Plant For The Inedible Rendering Of Feathers", "province": "MB", "sector": "manufacturing", "confidence": 0.78}
+{"rowid": 38202, "name": "Plant Engaged In The Processing Of Food Products", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38211, "name": "Concrete Batching Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 38213, "name": "Existing Plant For The Manufacture Of Scientific Research Equipment", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38216, "name": "Plant For The Manufacture Of Electrical Appliances", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 38218, "name": "Metal Casting And Fabricating Plants", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 38222, "name": "The Storing, Cutting, Sorting And Handling Of Scrap Metal", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 38223, "name": "Existing Iron Foundry", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 38225, "name": "Steel Foundry And Ancillary Processes", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 38226, "name": "Stockyard And Cattle Auction Mart", "province": "MB", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 38230, "name": "Derelict Vehicle And Waste Metal Compund", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38231, "name": "Plant For The Manufacture Of Zinc And Aluminum Castings", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 38232, "name": "The Collection, Storage And Stripping Of Unserviceable Automobiles", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38235, "name": "Concrete Batching Plant And Gravel Supply Yard", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38237, "name": "An Abatement Project", "province": "MB", "sector": "environment", "confidence": 0.8}
+{"rowid": 38238, "name": "Seed Cleaning Plant With Reluctant Particulate Air Emissions", "province": "MB", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 38239, "name": "Program For The Control Of Forest Tent Caterpillars And Fall Cankerworms", "province": "MB", "sector": "forestry", "confidence": 0.85}
+{"rowid": 38240, "name": "Feed Mill", "province": "MB", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 38242, "name": "The Abatement, Control Cleaning Or Restoration", "province": "MB", "sector": "environment", "confidence": 0.8}
+{"rowid": 38243, "name": "Plant For The Preparation, Smoking and Cooking Of Sausages And Meat Products", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38250, "name": "Existing Feed Mill", "province": "MB", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 38252, "name": "Incinerator For The Burning Of Type 1 Waste", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 38253, "name": "Incinerator For The Burning Of Type 2 Waste", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 38254, "name": "Incinerator For The Burning Of Type 0 Waste", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 38259, "name": "Motorcycle Racing Track", "province": "MB", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 38260, "name": "An Incinerator For The Burning Of Type 4 Waste", "province": "MB", "sector": "environment", "confidence": 0.95}
+{"rowid": 38263, "name": "Beet Sugar Factory", "province": "MB", "sector": "manufacturing", "confidence": 0.88}
+{"rowid": 38264, "name": "Rolling Mills Discharging", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38266, "name": "Wandlyn Birchwood Inn, Emissions To The Air", "province": "MB", "sector": "commercial_mixed", "confidence": 0.9}
+{"rowid": 38269, "name": "Seed cleaning plant", "province": "MB", "sector": "agriculture", "confidence": 0.88}
+{"rowid": 38270, "name": "Expanded seed cleaning plant", "province": "MB", "sector": "agriculture", "confidence": 0.88}
+{"rowid": 38272, "name": "A & J Salvage", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 38273, "name": "Smokehouse", "province": "MB", "sector": "manufacturing", "confidence": 0.78}
+{"rowid": 38274, "name": "Alfalfa feed pelletizing plant", "province": "MB", "sector": "agriculture", "confidence": 0.87}
+{"rowid": 38277, "name": "Automobile dismantling operation", "province": "MB", "sector": "environment", "confidence": 0.8}
+{"rowid": 38279, "name": "Abatement project", "province": "MB", "sector": "environment", "confidence": 0.6}
+{"rowid": 38284, "name": "Manufacture of Plaster Wallboard and hydrated lime", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38294, "name": "Scrap and car shredding operation", "province": "MB", "sector": "environment", "confidence": 0.82}
+{"rowid": 38296, "name": "Manufacture of flour and oat cereal", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38298, "name": "Facility for the loading of cement , sand and aggregate into mobile mixers", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38299, "name": "Production of plastic-covered stationary binders and lacquered display materials", "province": "MB", "sector": "manufacturing", "confidence": 0.88}
+{"rowid": 38304, "name": "Alfalfa dehydrating plant", "province": "MB", "sector": "agriculture", "confidence": 0.87}
+{"rowid": 38310, "name": "Manifacture of wooden furniture", "province": "MB", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 38311, "name": "Custom woodworking plant", "province": "MB", "sector": "manufacturing", "confidence": 0.88}
+{"rowid": 38312, "name": "Reclamation and remanufacture of electrical equipment", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 38316, "name": "Agricultural Machinery test facility", "province": "MB", "sector": "manufacturing", "confidence": 0.65}
+{"rowid": 38317, "name": "Recovery and Recycling of industrial solvents", "province": "MB", "sector": "environment", "confidence": 0.88}
+{"rowid": 38318, "name": "Foundry", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 38320, "name": "Manufacture of liquid oxygen by extraction from the atmosphere", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38321, "name": "Existing seed cleaning and feed mill plant", "province": "MB", "sector": "agriculture", "confidence": 0.87}
+{"rowid": 38325, "name": "Meat Processing and slaughter plant", "province": "MB", "sector": "manufacturing", "confidence": 0.88}
+{"rowid": 38330, "name": "Shooting range", "province": "MB", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 38331, "name": "Smelting of aluminum by pyrolysis furnace", "province": "MB", "sector": "mining", "confidence": 0.75}
+{"rowid": 38334, "name": "Plant for roasting of edible nuts and seeds", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 38335, "name": "Steel Foundry", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38340, "name": "Creamery", "province": "MB", "sector": "manufacturing", "confidence": 0.65}
+{"rowid": 38342, "name": "City of Winnipeg", "province": "MB", "sector": "Other", "confidence": 0.1}
+{"rowid": 38350, "name": "Publishing plant", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 38353, "name": "Printing plant", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38354, "name": "Production of lacquered display materials and plastic covered stationary binders", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38357, "name": "Non-Ferrous foundry", "province": "MB", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 38358, "name": "Metallurgical complex", "province": "MB", "sector": "mining", "confidence": 0.7}
+{"rowid": 38359, "name": "Non-ferrous metal smelting and refining plant", "province": "MB", "sector": "mining", "confidence": 0.85}
+{"rowid": 38363, "name": "Hard Chrome platinf and finishing of locomotive crankshafts", "province": "MB", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 38367, "name": "Swimming pool", "province": "MB", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 38368, "name": "Lime and soda ash settling ponds", "province": "MB", "sector": "environment", "confidence": 0.6}
+{"rowid": 38370, "name": "Commercial Linen Laundry", "province": "MB", "sector": "manufacturing", "confidence": 0.5}
+{"rowid": 38372, "name": "Recycling transfer station", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 38378, "name": "Sandblasting operation", "province": "MB", "sector": "manufacturing", "confidence": 0.65}
+{"rowid": 38381, "name": "Precision investment casting foundry", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38382, "name": "Autobody spray paint booth", "province": "MB", "sector": "manufacturing", "confidence": 0.55}
+{"rowid": 38383, "name": "Auto Wrecking facility", "province": "MB", "sector": "environment", "confidence": 0.65}
+{"rowid": 38387, "name": "Peanut processing operation", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 38392, "name": "Solid Waste Transfer station", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 38393, "name": "Nine hole expansion", "province": "MB", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 38394, "name": "Barrier Marsh", "province": "MB", "sector": "environment", "confidence": 0.7}
+{"rowid": 38396, "name": "Fish Screen", "province": "MB", "sector": "environment", "confidence": 0.55}
+{"rowid": 38398, "name": "Rendering plant", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38402, "name": "Modification and management of Big Swan Lake", "province": "MB", "sector": "environment", "confidence": 0.7}
+{"rowid": 38403, "name": "Modification and management of the Lower Burnt Lake Drain", "province": "MB", "sector": "infrastructure", "confidence": 0.65}
+{"rowid": 38404, "name": "Trout Hatchery and associated rearing ponds", "province": "MB", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 38405, "name": "Multi-use Alpine and Nordic Ski Area", "province": "MB", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 38413, "name": "Modification and management of Jackson Creek", "province": "MB", "sector": "environment", "confidence": 0.7}
+{"rowid": 38414, "name": "Modification and management of Graham Creek", "province": "MB", "sector": "environment", "confidence": 0.7}
+{"rowid": 38415, "name": "Modification and management of an intermittent creek, tributary to Assiniboine river", "province": "MB", "sector": "environment", "confidence": 0.7}
+{"rowid": 38420, "name": "Custom meat cutting and wrapping business", "province": "MB", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 38427, "name": "Modification and management of Bosshill creek", "province": "MB", "sector": "environment", "confidence": 0.7}
+{"rowid": 38428, "name": "Dugout settling pond", "province": "MB", "sector": "agriculture", "confidence": 0.55}
+{"rowid": 38429, "name": "Fish Hatchery - Manitoba Aquafarms", "province": "MB", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 38432, "name": "Twinning of P.T.H. 75 between P.R. 243 to 1.6km south of P.T.H. 14", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38436, "name": "Twinning of P.T.H. 75 from the United States border to the vicinity of P.R. 243", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38440, "name": "Steam Plant", "province": "MB", "sector": "power_energy", "confidence": 0.6}
+{"rowid": 38445, "name": "Cross Lake Weir Remedial control structure", "province": "MB", "sector": "infrastructure", "confidence": 0.65}
+{"rowid": 38448, "name": "Structural components of proposed development", "province": "MB", "sector": "Other", "confidence": 0.1}
+{"rowid": 38451, "name": "Sandblasting and painting project", "province": "MB", "sector": "Other", "confidence": 0.1}
+{"rowid": 38454, "name": "Fish hatchery", "province": "MB", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 38455, "name": "Yard and garden waste", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38459, "name": "Twinning of P.T.H. No 1 from Oak Lake to Routledge", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38461, "name": "Twinning of P.T.H. 75", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38465, "name": "Twinning of P.T.H.  3/P.T.H.  14", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38469, "name": "Modernization and Environmental Improvement", "province": "MB", "sector": "Other", "confidence": 0.15}
+{"rowid": 38474, "name": "Garden Supplies facility", "province": "MB", "sector": "commercial_mixed", "confidence": 0.4}
+{"rowid": 38479, "name": "Construction and Operation of a Silicon Products Pilot Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38491, "name": "Upgrade of P.T.H #83", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38493, "name": "Operation of a Slag Reprocessing Project", "province": "MB", "sector": "environment", "confidence": 0.65}
+{"rowid": 38496, "name": "Operation of a Concrete Batch Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38497, "name": "Operation of an Autobody Shop", "province": "MB", "sector": "commercial_mixed", "confidence": 0.55}
+{"rowid": 38498, "name": "Scrap Processing and Auto Recycling Operation", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38502, "name": "Constuction and Operation of the Development Being an Automobile Dismantling and Parts Storage Facility", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 38506, "name": "Four Laning of P.T.H. #1 from Routledge", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38507, "name": "Four Laning of 8 Kilometres of P.T.H. #75", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38508, "name": "Upgrading of P.T.H. #75", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38509, "name": "Constuction and Management of a Single-Celled Marsh", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38513, "name": "Construction of a Permanent Year-Round Cruise Ship Facility", "province": "MB", "sector": "transport_logistics", "confidence": 0.85}
+{"rowid": 38520, "name": "Twinning P.T.H. #52", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38527, "name": "Operation of a Rubber Tire Recycling Plant", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 38529, "name": "Construction and Operation of a 9-hole expansion to the Existing Golf Facilities", "province": "MB", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 38533, "name": "Construction of Flow Deflectors, Trout Cover Structures and Other Channel Modifications", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38536, "name": "Operation of a Compost Site", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 38537, "name": "Construction and Operation of an Auto Wrecking Facility", "province": "MB", "sector": "environment", "confidence": 0.8}
+{"rowid": 38541, "name": "Operation of a Furniture Restoration Facility", "province": "MB", "sector": "manufacturing", "confidence": 0.45}
+{"rowid": 38542, "name": "Construction and Management of a Four-Celled Impoundment", "province": "MB", "sector": "environment", "confidence": 0.5}
+{"rowid": 38543, "name": "Operation of a Metal Machining Plant and Associated Facilities", "province": "MB", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 38544, "name": "Operation of a Steel Mill", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 38560, "name": "Construction and Operation of a Riffle Pool", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38561, "name": "Operation of a Custom Meat Cutting and Wrapping Business and Smoke House", "province": "MB", "sector": "agriculture", "confidence": 0.6}
+{"rowid": 38565, "name": "Construction and Rehabilitation of the Upgrade of P.T.H. #10", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38581, "name": "Construction and Operation of a New Primary Cell and the Conversion of the Existing Primary Cell to a Secondary Cell", "province": "MB", "sector": "environment", "confidence": 0.75}
+{"rowid": 38593, "name": "Construction and Operation of a Composter", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 38597, "name": "Wellman Lake Spawning Reef Enhancement Project", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38601, "name": "Split Lake Transmission Complex", "province": "MB", "sector": "power_energy", "confidence": 0.92}
+{"rowid": 38603, "name": "Stream Channel Changes", "province": "MB", "sector": "environment", "confidence": 0.55}
+{"rowid": 38605, "name": "Disease Control Centre", "province": "MB", "sector": "healthcare", "confidence": 0.65}
+{"rowid": 38615, "name": "Concrete Batch Plant Facility", "province": "MB", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 38616, "name": "Carrying out of Scientific Research and Associated Activities", "province": "MB", "sector": "Other", "confidence": 0.2}
+{"rowid": 38627, "name": "Stabilization of the East Bank of the Red River", "province": "MB", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 38635, "name": "Auto Body Repair Facility", "province": "MB", "sector": "commercial_mixed", "confidence": 0.7}
+{"rowid": 38636, "name": "Upgrading of PTH no. 16", "province": "MB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 38641, "name": "Riverbank Stabilization Project", "province": "MB", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 38648, "name": "Public use boat launch facility", "province": "MB", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 38650, "name": "Thermal destruction treatment system", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38651, "name": "Use of a controlled burn", "province": "MB", "sector": "environment", "confidence": 0.55}
+{"rowid": 38682, "name": "Demonstration stream rehabilitation works", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38685, "name": "Fish spawning enhancement project", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38696, "name": "North Central Transmission Project", "province": "MB", "sector": "power_energy", "confidence": 0.92}
+{"rowid": 38705, "name": "Fish Spawning Enhancement Weir", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38724, "name": "Low level crossing on Minnedosa river (Little Saskatchewan River)", "province": "MB", "sector": "infrastructure", "confidence": 0.85}
+{"rowid": 38725, "name": "Stream rehabilitation project", "province": "MB", "sector": "environment", "confidence": 0.85}
+{"rowid": 38728, "name": "Automobile dismantling and parts storage facility", "province": "MB", "sector": "environment", "confidence": 0.65}
+{"rowid": 38731, "name": "Fishway", "province": "MB", "sector": "environment", "confidence": 0.8}
+{"rowid": 38732, "name": "Relocated structure", "province": "MB", "sector": "Other", "confidence": 0.15}
+{"rowid": 38741, "name": "Low level stream crossing of Ochre River", "province": "MB", "sector": "infrastructure", "confidence": 0.8}
+{"rowid": 38748, "name": "Harrow Station to Bishop Grandin Blvd Transmission Project", "province": "MB", "sector": "power_energy", "confidence": 0.92}
+{"rowid": 38754, "name": "Waste Lead Acid Battery Transfer Facility", "province": "MB", "sector": "environment", "confidence": 0.88}
+{"rowid": 38756, "name": "Bulk Materials Handling", "province": "MB", "sector": "Other", "confidence": 0.3}
+{"rowid": 38774, "name": "Food Production Facility", "province": "MB", "sector": "manufacturing", "confidence": 0.82}
+{"rowid": 38779, "name": "Pacific Avenue Resource Manangement", "province": "MB", "sector": "environment", "confidence": 0.48}
+{"rowid": 38780, "name": "Stephanchuck Concrete Bulk Materials Handling Facility", "province": "MB", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 38783, "name": "Headingley Bulk Storage Facility and Recycling Depot", "province": "MB", "sector": "environment", "confidence": 0.82}
+{"rowid": 38788, "name": "New Stewardship Plans for review", "province": "MB", "sector": "Other", "confidence": 0.25}
+{"rowid": 38791, "name": "Biosolids Land Application", "province": "MB", "sector": "environment", "confidence": 0.88}
+{"rowid": 38794, "name": "Household Hazardous Waste", "province": "MB", "sector": "environment", "confidence": 0.92}
+{"rowid": 38795, "name": "Cement Plant", "province": "MB", "sector": "manufacturing", "confidence": 0.95}
+{"rowid": 38796, "name": "NorMac Waste Disposal Ground", "province": "MB", "sector": "environment", "confidence": 0.9}
+{"rowid": 38800, "name": "Mill Transformation and Effluent Treatment Facility", "province": "NS", "sector": "forestry", "confidence": 0.72}
+{"rowid": 38803, "name": "Little River Pumping and Transmission System Project", "province": "NS", "sector": "infrastructure", "confidence": 0.85}
+{"rowid": 38807, "name": "Nova Sustainable Fuels Renewable Energy Park Project", "province": "NS", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 38813, "name": "Nictaux Sand Pit Expansion Project", "province": "NS", "sector": "mining", "confidence": 0.9}
+{"rowid": 38821, "name": "Aerotech Waste Handling Facility, Halifax County", "province": "NS", "sector": "environment", "confidence": 0.8}
+{"rowid": 38822, "name": "Antrim Gypsum Project, Halifax County", "province": "NS", "sector": "mining", "confidence": 0.9}
+{"rowid": 38825, "name": "Pit No. 4 Extension Project", "province": "NS", "sector": "mining", "confidence": 0.85}
+{"rowid": 38828, "name": "Six Mile Brook Pit Expansion and Reclamation of Historic Workings Project", "province": "NS", "sector": "mining", "confidence": 0.85}
+{"rowid": 38829, "name": "Temporary Material Staging Facility Project", "province": "NS", "sector": "Other", "confidence": 0.3}
+{"rowid": 38832, "name": "NS-NB Reliability Intertie Project", "province": "NS", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 38835, "name": "Middle River Pit Expansion Project, Victoria County", "province": "NS", "sector": "mining", "confidence": 0.9}
+{"rowid": 38858, "name": "Replacement Effluent Treatment Facility Project", "province": "NS", "sector": "environment", "confidence": 0.68}
+{"rowid": 38865, "name": "Waste Dangerous and Non-Dangerous Goods Temporary Storage Facility", "province": "NS", "sector": "environment", "confidence": 0.92}
+{"rowid": 38869, "name": "Asbestos Waste Disposal Cell Project", "province": "NS", "sector": "environment", "confidence": 0.97}
+{"rowid": 38873, "name": "Asbestos Disposal Facility", "province": "NS", "sector": "environment", "confidence": 0.97}
+{"rowid": 38874, "name": "Pyrolysis Plant Project", "province": "NS", "sector": "environment", "confidence": 0.78}
+{"rowid": 38878, "name": "Glenholme Pit No. 4 Aggregate Extraction Project", "province": "NS", "sector": "mining", "confidence": 0.95}
+{"rowid": 38880, "name": "Asbestos Waste Disposal Facility Project", "province": "NS", "sector": "environment", "confidence": 0.97}
+{"rowid": 38881, "name": "Lower Carbon Fuel: Tire Derived Fuel (TDF) System", "province": "NS", "sector": "environment", "confidence": 0.82}
+{"rowid": 38890, "name": "Auldâs Cove Transmission Project", "province": "NS", "sector": "power_energy", "confidence": 0.93}
+{"rowid": 38906, "name": "Coldbrook Sand Pit Expansion Project", "province": "NS", "sector": "mining", "confidence": 0.95}
+{"rowid": 38932, "name": "Maritime Link", "province": "NS", "sector": "power_energy", "confidence": 0.97}
+{"rowid": 38940, "name": "Torbrook Disposal of Waste Dangerous Goods Facility (Asbestos)", "province": "NS", "sector": "environment", "confidence": 0.97}
+{"rowid": 38951, "name": "ScoZinc Operations Southwest Expansion", "province": "NS", "sector": "mining", "confidence": 0.97}
+{"rowid": 38953, "name": "Asbestos Transfer / Bulking Facility", "province": "NS", "sector": "environment", "confidence": 0.96}
+{"rowid": 38962, "name": "Waste Dangerous Goods Handling Facility Relocation", "province": "NS", "sector": "environment", "confidence": 0.92}
+{"rowid": 38966, "name": "Fundy Tidal Energy Demonstration Project", "province": "NS", "sector": "power_energy", "confidence": 0.97}
+{"rowid": 38969, "name": "Tufts Cove 6 Waste Heat Recovery Project", "province": "NS", "sector": "power_energy", "confidence": 0.92}
+{"rowid": 38972, "name": "Donkin Underground Exploration Project", "province": "NS", "sector": "mining", "confidence": 0.95}
+{"rowid": 38983, "name": "MacLeod's Settlement Pit Development", "province": "NS", "sector": "mining", "confidence": 0.9}
+{"rowid": 39005, "name": "Yarmouth Wal-Mart Development", "province": "NS", "sector": "commercial_mixed", "confidence": 0.97}
+{"rowid": 39015, "name": "Combustion Turbine Project", "province": "NS", "sector": "power_energy", "confidence": 0.93}
+{"rowid": 39016, "name": "Grinding Plant", "province": "NS", "sector": "mining", "confidence": 0.65}
+{"rowid": 39020, "name": "Waste Dangerous Goods Drum Storage Facility", "province": "NS", "sector": "environment", "confidence": 0.92}
+{"rowid": 39024, "name": "Dangerous Goods Bulk Storage and Handling Facility", "province": "NS", "sector": "environment", "confidence": 0.88}
+{"rowid": 39026, "name": "Tufts Cove #4", "province": "NS", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 39029, "name": "Short-term Abestos Storage Area", "province": "NS", "sector": "environment", "confidence": 0.96}
+{"rowid": 39030, "name": "Glycol Concentration Facility", "province": "NS", "sector": "oil_gas", "confidence": 0.55}
+{"rowid": 39034, "name": "Beaver Bank Bypass", "province": "NS", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 39035, "name": "Evironmental Assessments : Pre Year 2000", "province": "NS", "sector": "Other", "confidence": 0.1}
+{"rowid": 39036, "name": "Departments", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39037, "name": "Agriculture, Aquaculture and Fisheries", "province": "NB", "sector": "agriculture", "confidence": 0.55}
+{"rowid": 39038, "name": "Education and Early Childhood Development", "province": "NB", "sector": "education", "confidence": 0.7}
+{"rowid": 39039, "name": "Environment and Local Government", "province": "NB", "sector": "environment", "confidence": 0.5}
+{"rowid": 39041, "name": "Finance and Treasury Board", "province": "NB", "sector": "government", "confidence": 0.85}
+{"rowid": 39042, "name": "Indigenous Affairs", "province": "NB", "sector": "indigenous", "confidence": 0.55}
+{"rowid": 39043, "name": "Intergovernmental Affairs", "province": "NB", "sector": "government", "confidence": 0.85}
+{"rowid": 39044, "name": "Justice and Public Safety", "province": "NB", "sector": "government", "confidence": 0.85}
+{"rowid": 39045, "name": "Natural Resources and Energy Development", "province": "NB", "sector": "Other", "confidence": 0.15}
+{"rowid": 39047, "name": "Post-Secondary Education, Training and Labour", "province": "NB", "sector": "education", "confidence": 0.7}
+{"rowid": 39048, "name": "Regional  Development Corporation", "province": "NB", "sector": "government", "confidence": 0.75}
+{"rowid": 39049, "name": "Service New Brunswick", "province": "NB", "sector": "government", "confidence": 0.85}
+{"rowid": 39050, "name": "Social Development", "province": "NB", "sector": "government", "confidence": 0.75}
+{"rowid": 39051, "name": "Tourism, Heritage and Culture", "province": "NB", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 39054, "name": "Legislature", "province": "NB", "sector": "government", "confidence": 0.9}
+{"rowid": 39055, "name": "Auditor General of New Brunswick", "province": "NB", "sector": "government", "confidence": 0.85}
+{"rowid": 39057, "name": "Commissioner of Official Languages", "province": "NB", "sector": "government", "confidence": 0.85}
+{"rowid": 39059, "name": "Consumer Advocate for Insurance", "province": "NB", "sector": "government", "confidence": 0.8}
+{"rowid": 39060, "name": "Elections New Brunswick", "province": "NB", "sector": "government", "confidence": 0.85}
+{"rowid": 39061, "name": "Legislative Assembly", "province": "NB", "sector": "government", "confidence": 0.9}
+{"rowid": 39062, "name": "Lieutenant Governor", "province": "NB", "sector": "government", "confidence": 0.85}
+{"rowid": 39063, "name": "Government Websites", "province": "NB", "sector": "government", "confidence": 0.65}
+{"rowid": 39064, "name": "Basic Needs", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39065, "name": "Community and Culture", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39066, "name": "Driving and Vehicles", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39067, "name": "Employment", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39068, "name": "Environment and Land Planning", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39069, "name": "Identification", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39070, "name": "Land and Property", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39072, "name": "Safety and Courts", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39073, "name": "Your Government", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39074, "name": "Minister of Environment and Climate Change", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39075, "name": "Minister of Local Government", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39076, "name": "Contact Us", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39077, "name": "Agencies, Boards and Commissions", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39078, "name": "Acts and Regulations", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39079, "name": "Publications", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39080, "name": "Environment", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39081, "name": "Local Government", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39082, "name": "Assessment andPlanning Appeal Tribunal", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39084, "name": "Guidance on (b) all electric power generating facilities with a production rating of three megawatts or more", "province": "NB", "sector": "power_energy", "confidence": 0.35}
+{"rowid": 39087, "name": "Guidance on (e) all linear communications transmission systems exceeding five kilometres in length", "province": "NB", "sector": "telecom", "confidence": 0.35}
+{"rowid": 39088, "name": "Guidance on (f) all commercial extraction or processing of combustible energy-yielding materials except fuel wood", "province": "NB", "sector": "oil_gas", "confidence": 0.35}
+{"rowid": 39094, "name": "Guidance on (l) all programs or commercial ventures involving the introduction into New Brunswick of plant or animal species which are not indigenous to New Brunswick", "province": "NB", "sector": "environment", "confidence": 0.25}
+{"rowid": 39095, "name": "Guidance on (m) all waste disposal facilities or systems", "province": "NB", "sector": "environment", "confidence": 0.4}
+{"rowid": 39096, "name": "Guidance on (m.1) all disposal, destruction, recycling, reprocessing or storage of waste that originates outside New Brunswick and all facilities or systems for the disposal, destruction, recycling, reprocessing or storage of such waste", "province": "NB", "sector": "environment", "confidence": 0.4}
+{"rowid": 39098, "name": "Guidance on (o) all provincial or national parks", "province": "NB", "sector": "tourism_culture", "confidence": 0.3}
+{"rowid": 39099, "name": "Guidance on (p) all major recreational or tourism developments, including developments which consist of changing the use of land so that it is used for recreational or tourism purposes", "province": "NB", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 39104, "name": "Guidance on (u) all enterprises, activities, projects, structures, works or programs affecting any unique, rare or endangered feature of the environment", "province": "NB", "sector": "environment", "confidence": 0.6}
+{"rowid": 39106, "name": "Guidance on (w) all facilities for the processing of radioactive materials", "province": "NB", "sector": "power_energy", "confidence": 0.45}
+{"rowid": 39107, "name": "commercial extraction", "province": "NB", "sector": "Other", "confidence": 0.15}
+{"rowid": 39108, "name": "processing", "province": "NB", "sector": "Other", "confidence": 0.1}
+{"rowid": 39110, "name": "electric power generating facilities", "province": "NB", "sector": "power_energy", "confidence": 0.9}
+{"rowid": 39111, "name": "production rating", "province": "NB", "sector": "Other", "confidence": 0.1}
+{"rowid": 39113, "name": "storage capacity", "province": "NB", "sector": "Other", "confidence": 0.1}
+{"rowid": 39115, "name": "linear communications transmission systems", "province": "NB", "sector": "telecom", "confidence": 0.75}
+{"rowid": 39116, "name": "combustible energy-yielding materials", "province": "NB", "sector": "Other", "confidence": 0.15}
+{"rowid": 39118, "name": "Pipe Line Act", "province": "NB", "sector": "oil_gas", "confidence": 0.72}
+{"rowid": 39119, "name": "significant length", "province": "NB", "sector": "Other", "confidence": 0.1}
+{"rowid": 39121, "name": "upgrading or widening", "province": "NB", "sector": "infrastructure", "confidence": 0.5}
+{"rowid": 39122, "name": "classification", "province": "NB", "sector": "Other", "confidence": 0.1}
+{"rowid": 39124, "name": "not indigenous to New Brunswick", "province": "NB", "sector": "environment", "confidence": 0.3}
+{"rowid": 39125, "name": "gallinaceous", "province": "NB", "sector": "agriculture", "confidence": 0.4}
+{"rowid": 39126, "name": "construction and demolition debris", "province": "NB", "sector": "environment", "confidence": 0.65}
+{"rowid": 39127, "name": "destruction", "province": "NB", "sector": "Other", "confidence": 0.1}
+{"rowid": 39128, "name": "reprocessing", "province": "NB", "sector": "environment", "confidence": 0.3}
+{"rowid": 39129, "name": "originates outside New Brunswick", "province": "NB", "sector": "Other", "confidence": 0.1}
+{"rowid": 39130, "name": "provincial", "province": "NB", "sector": "Other", "confidence": 0.1}
+{"rowid": 39131, "name": "major recreational or tourism developments", "province": "NB", "sector": "tourism_culture", "confidence": 0.82}
+{"rowid": 39135, "name": "endangered", "province": "NB", "sector": "environment", "confidence": 0.4}
+{"rowid": 39136, "name": "feature of the environment", "province": "NB", "sector": "environment", "confidence": 0.4}
+{"rowid": 39137, "name": "affecting two hectares or more", "province": "NB", "sector": "Other", "confidence": 0.1}
+{"rowid": 39139, "name": "processing of radioactive materials", "province": "NB", "sector": "environment", "confidence": 0.45}
+{"rowid": 39140, "name": "Social Media", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39141, "name": "Disclaimer", "province": "NB", "sector": "Other", "confidence": 0.05}
+{"rowid": 39147, "name": "St. John’s Dockyard Upgrades", "province": "NL", "sector": "defence", "confidence": 0.72}
+{"rowid": 39148, "name": "Holyrood Shingle Recycling Facility", "province": "NL", "sector": "environment", "confidence": 0.9}
+{"rowid": 39161, "name": "Indian Brook Remote Cottage", "province": "NL", "sector": "tourism_culture", "confidence": 0.5}
+{"rowid": 39164, "name": "Salmonier Line Camp St. George Expansion", "province": "NL", "sector": "tourism_culture", "confidence": 0.55}
+{"rowid": 39165, "name": "St. John’s Shingle Recycling Facility", "province": "NL", "sector": "environment", "confidence": 0.9}
+{"rowid": 39167, "name": "Pasadena RV Park and Recreational Camps", "province": "NL", "sector": "tourism_culture", "confidence": 0.92}
+{"rowid": 39170, "name": "Toqlukuti’k Avalon Isthmus Green Energy Project", "province": "NL", "sector": "indigenous", "confidence": 0.62}
+{"rowid": 39175, "name": "Avalon Isthmus North Atlantic Refining Corp. Green Energy Project", "province": "NL", "sector": "power_energy", "confidence": 0.72}
+{"rowid": 39176, "name": "Northeast Arm Former US Recreation Camp Demolition", "province": "NL", "sector": "environment", "confidence": 0.6}
+{"rowid": 39177, "name": "Steady Brook Villas", "province": "NL", "sector": "tourism_culture", "confidence": 0.55}
+{"rowid": 39181, "name": "Upper Humber Remote Cabin", "province": "NL", "sector": "tourism_culture", "confidence": 0.5}
+{"rowid": 39188, "name": "150 MW (Nominal) Avalon (Holyrood) Combustion Turbine Project", "province": "NL", "sector": "power_energy", "confidence": 0.96}
+{"rowid": 39195, "name": "Garia River Crossing", "province": "NL", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 39198, "name": "Burnt Berry Agricultural Development", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 39200, "name": "Brian’s Feeder River Crossing", "province": "NL", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 39210, "name": "Botwood and Area EVREC Green Energy Project", "province": "NL", "sector": "power_energy", "confidence": 0.88}
+{"rowid": 39217, "name": "Torbaymans Pond Concrete Batch Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 39218, "name": "Flat Bay Brook Cottage", "province": "NL", "sector": "tourism_culture", "confidence": 0.48}
+{"rowid": 39219, "name": "Argentia Renewables Project", "province": "NL", "sector": "power_energy", "confidence": 0.9}
+{"rowid": 39225, "name": "Kings Point Storage and Repair Garage", "province": "NL", "sector": "transport_logistics", "confidence": 0.5}
+{"rowid": 39235, "name": "Red Cross Lake River Crossing", "province": "NL", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 39241, "name": "Gander Agricultural Development", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 39243, "name": "Paddy’s Pond Concrete Batch Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 39245, "name": "Crown Zone 3 Five-Year Operating Plan  District 4 Amendment (2022-2026)", "province": "NL", "sector": "forestry", "confidence": 0.78}
+{"rowid": 39247, "name": "Lumsden Microbrewery, Taproom and Cottages", "province": "NL", "sector": "tourism_culture", "confidence": 0.72}
+{"rowid": 39251, "name": "Pinchgut Lake to George’s Lake Distribution Line Upgrade", "province": "NL", "sector": "power_energy", "confidence": 0.82}
+{"rowid": 39269, "name": "Humber Village Forage Production", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 39284, "name": "Salvage Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 39286, "name": "Glovertown Concrete Batch Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 39288, "name": "Northwest Brook Remote Recreational Cottage", "province": "NL", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 39296, "name": "Crown Zone 8 Five-Year Operating Plan Amendment (2023-2027)", "province": "NL", "sector": "forestry", "confidence": 0.78}
+{"rowid": 39297, "name": "Bonavista Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 39301, "name": "Stanhope Equipment Storage Yard", "province": "NL", "sector": "transport_logistics", "confidence": 0.52}
+{"rowid": 39304, "name": "Steady Brook Residence", "province": "NL", "sector": "residential", "confidence": 0.9}
+{"rowid": 39306, "name": "Crown Zone 3 Five-Year Operating Plan Amendment (2022-2026)", "province": "NL", "sector": "forestry", "confidence": 0.78}
+{"rowid": 39307, "name": "Torbay Powder Coating Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.9}
+{"rowid": 39309, "name": "Gosling Lake RV Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 39319, "name": "Springdale Junction Agriculture Development", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 39329, "name": "Holyrood Pond RV and Day Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 39334, "name": "Lower Terra Nova Fishway Refurbishment", "province": "NL", "sector": "environment", "confidence": 0.82}
+{"rowid": 39340, "name": "Middle Brook Fishway Refurbishment", "province": "NL", "sector": "environment", "confidence": 0.82}
+{"rowid": 39343, "name": "Cormack Agriculture Land Development", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 39345, "name": "Exploits River Geodesic Domes", "province": "NL", "sector": "tourism_culture", "confidence": 0.73}
+{"rowid": 39350, "name": "St. John’s Long Pond Flood Control Structure", "province": "NL", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 39353, "name": "Pinware River Cottage", "province": "NL", "sector": "tourism_culture", "confidence": 0.62}
+{"rowid": 39356, "name": "Lomond River Wiltondale Fishway Reconstruction", "province": "NL", "sector": "environment", "confidence": 0.82}
+{"rowid": 39360, "name": "Cormack Agriculture Area of Interest #40 Land Clearing", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 39362, "name": "Middle Barachois Brook Enhancement Project", "province": "NL", "sector": "environment", "confidence": 0.7}
+{"rowid": 39364, "name": "Paradise Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 39371, "name": "Bay de Verde Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 39373, "name": "Cormack Forage Production", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 39378, "name": "Deer Lake Pedestrian Underpass", "province": "NL", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 39384, "name": "Trinity Bay North Cannabis Production Facility", "province": "NL", "sector": "agriculture", "confidence": 0.65}
+{"rowid": 39387, "name": "CBPP Zone 7 (Districts 9 and 16) Five-Year Operating Plan (2022-2026)", "province": "NL", "sector": "forestry", "confidence": 0.75}
+{"rowid": 39388, "name": "Highland Forage Production", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 39389, "name": "Joyce Lake Direct Shipping Iron Ore Project", "province": "NL", "sector": "mining", "confidence": 0.95}
+{"rowid": 39390, "name": "IOC Smallwood North Extension Project", "province": "NL", "sector": "mining", "confidence": 0.95}
+{"rowid": 39392, "name": "Northern Peninsula Spruce Budworm Control Test", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 39394, "name": "Wooddale Area Vegetable and Forage Production", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 39399, "name": "Pinware River Cabin (Rowsell)", "province": "NL", "sector": "tourism_culture", "confidence": 0.55}
+{"rowid": 39400, "name": "Pinware River Cabin (O’Brien)", "province": "NL", "sector": "tourism_culture", "confidence": 0.55}
+{"rowid": 39402, "name": "Pinware River Cabin", "province": "NL", "sector": "tourism_culture", "confidence": 0.55}
+{"rowid": 39407, "name": "Humber Village Apple Orchard", "province": "NL", "sector": "agriculture", "confidence": 0.92}
+{"rowid": 39408, "name": "Humber Village Apple U-Pick", "province": "NL", "sector": "agriculture", "confidence": 0.88}
+{"rowid": 39412, "name": "Springdale Indian River Fishway Reconstruction", "province": "NL", "sector": "environment", "confidence": 0.78}
+{"rowid": 39418, "name": "Labrador City Humphrey South Iron Ore Extension", "province": "NL", "sector": "mining", "confidence": 0.95}
+{"rowid": 39439, "name": "CBPP Zone 5, District 10 Five-Year Operating Plan", "province": "NL", "sector": "forestry", "confidence": 0.75}
+{"rowid": 39445, "name": "Piper’s Hole Sand & Gravel Quarries", "province": "NL", "sector": "mining", "confidence": 0.95}
+{"rowid": 39456, "name": "Upper Humber Fish Ladder Repairs at Birchy Basin", "province": "NL", "sector": "environment", "confidence": 0.78}
+{"rowid": 39465, "name": "Crown 5 Yr Forest Plan (Bonavista North)", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39474, "name": "Charlottetown Diesel Generating Plant Extension", "province": "NL", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 39478, "name": "Labrador Straits (Forteau) Vegetable Peat Bog Pilot Project", "province": "NL", "sector": "agriculture", "confidence": 0.7}
+{"rowid": 39479, "name": "Amendment to 5 Yr Forest Plan, South Coast-Bay D’Espoir", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39480, "name": "2001 Neemix 4.5 Forest Spray Program for Sawfly", "province": "NL", "sector": "forestry", "confidence": 0.93}
+{"rowid": 39481, "name": "2001 Mimic Forest Spray Program for Hemlock Looper", "province": "NL", "sector": "forestry", "confidence": 0.93}
+{"rowid": 39483, "name": "Avondale Automobile Drag Racing", "province": "NL", "sector": "tourism_culture", "confidence": 0.88}
+{"rowid": 39485, "name": "Dist. 18, Five Yr.  Plan (Amendment) Great Northern Peninsula – Dept. Forest Resources & Agrifoods", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39489, "name": "Foxtrap Commercial Salvage Yard", "province": "NL", "sector": "environment", "confidence": 0.8}
+{"rowid": 39491, "name": "Special Waste Transfer Station, Donovans Industrial Pk, Mt. Pearl", "province": "NL", "sector": "environment", "confidence": 0.95}
+{"rowid": 39493, "name": "Roddickton Underground Salmon Pool Viewing", "province": "NL", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 39497, "name": "Deer Lake North Shore Recreation Area – Department of Government Services and Lands", "province": "NL", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 39499, "name": "Amendment to Five Year Forest Operating Plan, District 1, (Salmonier Line)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39501, "name": "Amendment to 5 Yr. Forest Plan, Dist. 16 (Hinds L. & Snowy L.)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39502, "name": "Clarenville Marine Recreation Facility", "province": "NL", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 39503, "name": "5 Yr Forest Plan, District 17 (2002 – 2006), (Bellburns to Castor River North)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39515, "name": "Bears Cove (Bay Roberts) Cod Hatchery", "province": "NL", "sector": "agriculture", "confidence": 0.82}
+{"rowid": 39516, "name": "Amendment to 5 Year Forest Plan, Dist. 16 (Taylors Pd)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39518, "name": "Amendment to 5 Yr Forest Plan, Dist. 1 (Mahers/Middle Gull Pd)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39524, "name": "Amendment to 5 Yr Forest Plan, Dist 14 (Barachois Pond)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39526, "name": "Amendment to 5 Yr Forest Plan D. 16 (Patricks Pd/Buchans Jct)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39527, "name": "Milltown Slipway Extension (Phase III)", "province": "NL", "sector": "transport_logistics", "confidence": 0.72}
+{"rowid": 39528, "name": "Garden Hill Drilling and Production Program – Stage 1", "province": "NL", "sector": "oil_gas", "confidence": 0.92}
+{"rowid": 39537, "name": "Five Year Forest Operating Plan, Dist 16, (Lower Great Northern Pen.)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39538, "name": "Abitibi Consolidated District 9 Five Year Operating Plan (Sheffield Lake)", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39540, "name": "Abitibi Consolidated District 14 Five Year Operating Plan", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39541, "name": "Abitibi Consolidated District 13 Five Year Operating Plan", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39542, "name": "Abitibi Consolidated District 6 Five-Year Plan (Glenwood)", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39543, "name": "Abitibi Consolidated District 5 Five-Year Plan (Bonavista North)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39547, "name": "Abitibi District 16 5 Yr Forest Plan (Lower Great Northern Pen.)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39550, "name": "Crown District 16 5-Year Operating Plan (Jackson’s Arm Area)", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39551, "name": "Use of Updated Practice Laser-Guided Munitions 5 Wing Goose", "province": "NL", "sector": "defence", "confidence": 0.97}
+{"rowid": 39552, "name": "Springdale Fuel Storage Bulk Facility", "province": "NL", "sector": "oil_gas", "confidence": 0.75}
+{"rowid": 39555, "name": "Crown Five Year Forest Plan Dist 18 (Roddickton) 2002-2007", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39557, "name": "Foxtrap Storage Facility for Natural Occurring Radioactive Material", "province": "NL", "sector": "environment", "confidence": 0.78}
+{"rowid": 39559, "name": "Amend. to Abitibi Consol. Operating Plan, Dist. 12, Badger Area", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39561, "name": "Crown Dist. 14 (St. George’s Area) 5 Yr Forest Plan (2002-07)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39564, "name": "PCB Storage Facility, Happy Valley – Goose Bay", "province": "NL", "sector": "environment", "confidence": 0.92}
+{"rowid": 39567, "name": "Bayd’Espoir Forest Mgt. District 7 Five Year Plan (Amend.)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39568, "name": "2002 Mimic Forest Spray Program For Hemlock Looper", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39570, "name": "Middle Trout Rv/Governor’s Pd, FMD 15 5-Yr Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.93}
+{"rowid": 39573, "name": "2002 Neemix 4.5 Spray Program For Balsam Fir Sawfly", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39580, "name": "South Dildo Seal Pelt Tannery", "province": "NL", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 39581, "name": "2002 Balsam Fir Sawfly Spray Program Using NPV", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39582, "name": "CBPP District 5 and 6 Five Year Operating Plan", "province": "NL", "sector": "forestry", "confidence": 0.92}
+{"rowid": 39584, "name": "Labrador City Special Waste Transfer Facility", "province": "NL", "sector": "environment", "confidence": 0.92}
+{"rowid": 39586, "name": "CBPP 5-Year Forest Mgmt Plan Dist 15 (Corner Brook) 2003-07", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39587, "name": "Service Installation Crossing Western Brook, Pistolet Bay", "province": "NL", "sector": "infrastructure", "confidence": 0.6}
+{"rowid": 39590, "name": "Crown District 18 (Roddickton) 5-Year Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39591, "name": "Crown District 17 Five Year Operating Plan Amendmen", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39595, "name": "Extension of Distribution Line Hampden, White Bay", "province": "NL", "sector": "power_energy", "confidence": 0.88}
+{"rowid": 39596, "name": "Crown Forest District 2 (Burgoyne’s Cove) Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.93}
+{"rowid": 39600, "name": "Cape St. George Snowmobile Race Track & Sliding/Tube Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.92}
+{"rowid": 39602, "name": "Mount Pearl Drilling Mud Plant", "province": "NL", "sector": "oil_gas", "confidence": 0.85}
+{"rowid": 39604, "name": "Crown Five Year Forest Mgmt Plan Dist 23 (Postville) 2003-2007", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39614, "name": "Goodyears Cove Park Enhancement, Halls Bay", "province": "NL", "sector": "tourism_culture", "confidence": 0.92}
+{"rowid": 39619, "name": "Bay D’Espoir (Crown) 5 Yr. Operating Plan District 7", "province": "NL", "sector": "forestry", "confidence": 0.75}
+{"rowid": 39623, "name": "District 12 (Abitibi) Five-Year Operating Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39625, "name": "2003 Mimic Forest Spray Program For Hemlock Looper", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39626, "name": "Abitibi-Consolidated District 11 Five-Year Operating Plan Amend.", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39635, "name": "2003 Balsam Fir Sawfly Experimental Spray Program Using NeabNPV", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39649, "name": "Corner Brook Communication Tower", "province": "NL", "sector": "telecom", "confidence": 0.96}
+{"rowid": 39655, "name": "Corner Brook Pulp and Paper Ltd. FMD 14 (St. George’s) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.98}
+{"rowid": 39661, "name": "Abitibi-Consolidated District 10 Joes Lake Amendment", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39667, "name": "Abitibi-Consolidated District 12 Warfords NW and SW Amendment", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39676, "name": "Abitibi-Consolidated District 12 Harpoon Branch North Amendment", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39678, "name": "Crown Forest Mgmt. Dist 18 (Roddickton-Plum Point) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39680, "name": "District 9 (Sops Lake/Black Ridge) Five-Year Forest Amend", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39683, "name": "Marystown Area Sludge Treatment Facility – Multi-Environmental Services Limited", "province": "NL", "sector": "environment", "confidence": 0.88}
+{"rowid": 39686, "name": "Comfort Cove – Newstead SalvageYard", "province": "NL", "sector": "environment", "confidence": 0.7}
+{"rowid": 39687, "name": "Corner Brook Fur Tannery", "province": "NL", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 39689, "name": "2004 Balsam Fir Sawfly Experimental Spray Program Using NeabNPV", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39696, "name": "Experimental Spray Using Spinosad Against Balsam Fir Sawfly", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39698, "name": "Abitibi-Consolidated District 12 Warfords Additional Harvest", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39701, "name": "Pasadena Mult-Seasonal Recreation Facility – Western Sno-Riders Snowmobile Club Inc.", "province": "NL", "sector": "tourism_culture", "confidence": 0.94}
+{"rowid": 39711, "name": "Glenwood Composting Facility", "province": "NL", "sector": "environment", "confidence": 0.93}
+{"rowid": 39715, "name": "Crown Five Year Forest Mgt Plan Dist 20 (Sandwich Bay) 2005-09", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39725, "name": "Crown Forest Mgt District 16 (Faulkner’s Pond) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.97}
+{"rowid": 39727, "name": "Embree Salvage Yard", "province": "NL", "sector": "environment", "confidence": 0.75}
+{"rowid": 39728, "name": "CBPP Forest Mgt. District 9 (Three Corner Pond) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39745, "name": "District 18 CBPP 5-Yr Plan Amendment (Salmon Pond)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39749, "name": "Hay Lake (Labrador West) Reclamation Project", "province": "NL", "sector": "environment", "confidence": 0.8}
+{"rowid": 39752, "name": "2005 Balsam Fir Sawfly Experimental Spray Using NeabNPV", "province": "NL", "sector": "forestry", "confidence": 0.85}
+{"rowid": 39754, "name": "Crown District 15 Five-Year Plan Amendment (Kennedy Lake)", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39756, "name": "Wabush PCB Storage Facility", "province": "NL", "sector": "environment", "confidence": 0.85}
+{"rowid": 39759, "name": "Abitibi District 12 Five Year Plan Amendment (Denny’s Pond)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39762, "name": "Lower Churchill River Exploration Project", "province": "NL", "sector": "mining", "confidence": 0.55}
+{"rowid": 39763, "name": "Bauline Line Auto Salvage and Recycling", "province": "NL", "sector": "environment", "confidence": 0.85}
+{"rowid": 39775, "name": "District 5 (Gambo-Gander) Forest Mgt. Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39777, "name": "Grand River Snowmobile Drag Race Track and Rally Area", "province": "NL", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 39781, "name": "Abitibi Dist 12 Forest Mgt Plan Amend (Catamaran Brk)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39796, "name": "Dunville Healey’s Pond Amusement/RV Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 39801, "name": "Carbonear Seal Tannery", "province": "NL", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 39818, "name": "2006 Balsam Fir Sawfly Spray Program Using NeabNPV", "province": "NL", "sector": "forestry", "confidence": 0.85}
+{"rowid": 39819, "name": "Abitibi Forest District 12 (Grindstone/Joe Globes Areas) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39823, "name": "Crown District 4 Five Year Operating Plan Southwest Gander Amendment – NF & Lab. Forest Service", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39824, "name": "Juniper Stump, Makinsons, Scrap Yard", "province": "NL", "sector": "environment", "confidence": 0.75}
+{"rowid": 39826, "name": "Crown Dist 8. (Upper Scissors Pond) Forest Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39835, "name": "Abitibi District 10 (Peterview Ridge) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39839, "name": "Abitibi Dist.12 (Captain Storms Brook) Forest Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39840, "name": "Stephenville Paper Mill Site Decommissioning", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 39854, "name": "CBPP Dist. 5 & 6 Five Year Operating Plan (2007-11) – Corner Brook Pulp & Paper", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39858, "name": "Shallop Cove Peatland Development", "province": "NL", "sector": "Other", "confidence": 0.35}
+{"rowid": 39860, "name": "Newfoundland and Labrador Refining Corporation", "province": "NL", "sector": "oil_gas", "confidence": 0.95}
+{"rowid": 39871, "name": "Clarenville Chitin Plant – Barry Group", "province": "NL", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 39874, "name": "Crown Forest  Dist. 17 & 18 Five-year Plan Amend.", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39876, "name": "Wabush Region Scrap Metal/Solid Waste Storage Facility – Mobile 1 Press Metal Limited", "province": "NL", "sector": "environment", "confidence": 0.85}
+{"rowid": 39878, "name": "CBPP Forest Mgt Dist 15 Five-Year Plan (2003-07) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39880, "name": "Abitibi-Consolidated District 11 (Mill Pond) Five Year Amend.", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39881, "name": "Abitibi District 12 (Harpoon) Forest Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39882, "name": "2007 Hemlock Looper Spray Program Using Mimic", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39883, "name": "2007 Balsam Fir Sawfly Spray Program Using Avietiv", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 39885, "name": "Crown Cape Caribou River District 19a Five Year Plan Amend.", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39886, "name": "Chapel Arm Industrial Coatings and Linings Installation", "province": "NL", "sector": "manufacturing", "confidence": 0.55}
+{"rowid": 39887, "name": "Crown District 9/16 Five Year Plan (2007-2011) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39889, "name": "St. Veronica’s Salmon/Trout Hatchery", "province": "NL", "sector": "agriculture", "confidence": 0.8}
+{"rowid": 39892, "name": "Abitibi Dist 11 (Noel Paul Brook) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39900, "name": "Marble Mountain/Steady Brook Zip Tours", "province": "NL", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 39906, "name": "CBPP Dist 17 (Northern Peninsula) Five Year Forest Operating Plan (08-12)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39907, "name": "Crown District 7 (Bay d’Espoir) Five Year Operating Plan (08-12)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39908, "name": "Crown District 17 and 18 (N. Pen.) Five Year Forest Plan (08-12)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39909, "name": "The Wilds Golf Complex Additions", "province": "NL", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 39910, "name": "Crown District 19A (Goose Bay) Five Year Forest Plan (08-12)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39911, "name": "Point of Bay Pressure Treating Facility", "province": "NL", "sector": "forestry", "confidence": 0.65}
+{"rowid": 39915, "name": "Crown District 9 (Baie Verte) Five-Year Plan (2007-11) Amend.", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39919, "name": "Corner Brook Area Emulsion Blasting Agent Man. Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 39920, "name": "Crown District 1 Five-Year Forest Plan (2007-11) Amend.", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 39921, "name": "Main Brook Tourism Infrastructure Development", "province": "NL", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 39927, "name": "Come By Chance Industrial Coatings and Linings Installation", "province": "NL", "sector": "oil_gas", "confidence": 0.8}
+{"rowid": 39929, "name": "Garden Hill Drilling and Production Program Amendment", "province": "NL", "sector": "oil_gas", "confidence": 0.92}
+{"rowid": 39936, "name": "Old Perlican Chitin Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.65}
+{"rowid": 39939, "name": "Glovertown Marine Vessel Maintenance/Repair Facility", "province": "NL", "sector": "transport_logistics", "confidence": 0.8}
+{"rowid": 39940, "name": "District 11 Five-Year Plan 2008-12 (Lemottes Area) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.72}
+{"rowid": 39941, "name": "2008 Balsam Fir Sawfly Program in Western NL", "province": "NL", "sector": "forestry", "confidence": 0.92}
+{"rowid": 39944, "name": "Marystown Maine Industrial Park Development", "province": "NL", "sector": "commercial_mixed", "confidence": 0.55}
+{"rowid": 39948, "name": "CBPPL Districts 14 and 15 Five-Year Operating Plan 2009-2013", "province": "NL", "sector": "forestry", "confidence": 0.88}
+{"rowid": 39951, "name": "Baie Verte Marine Industrial Repair Facility", "province": "NL", "sector": "transport_logistics", "confidence": 0.78}
+{"rowid": 39953, "name": "Crown Districts 14 and 15 Five-Year Operating Plan 2009-2013", "province": "NL", "sector": "forestry", "confidence": 0.88}
+{"rowid": 39954, "name": "Stephenville Shooting Range", "province": "NL", "sector": "tourism_culture", "confidence": 0.6}
+{"rowid": 39955, "name": "5 Wing Goose Bay Supersonic Flight Training", "province": "NL", "sector": "defence", "confidence": 0.97}
+{"rowid": 39956, "name": "Marystown Northwest Cottages Development", "province": "NL", "sector": "residential", "confidence": 0.85}
+{"rowid": 39959, "name": "Labrador – Island Transmission Link", "province": "NL", "sector": "power_energy", "confidence": 0.97}
+{"rowid": 39960, "name": "Makinsons Area Grenade Range", "province": "NL", "sector": "defence", "confidence": 0.93}
+{"rowid": 39963, "name": "Harcourt, Bonavista Peninsula, Forage Production (Crown Land #132960)", "province": "NL", "sector": "agriculture", "confidence": 0.92}
+{"rowid": 39964, "name": "Harcourt, Bonavista Peninsula, Forage Production (C L #132763)", "province": "NL", "sector": "agriculture", "confidence": 0.92}
+{"rowid": 39965, "name": "Crown District 21 Five Year Operating Plan (2007-11) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.82}
+{"rowid": 39967, "name": "Crown District 19A (Goose Bay) Five-Year Operating Plan 2008-2012", "province": "NL", "sector": "forestry", "confidence": 0.85}
+{"rowid": 39970, "name": "Big Cook’s (Corner Brook) Cottage Dev. Plan", "province": "NL", "sector": "residential", "confidence": 0.85}
+{"rowid": 39973, "name": "2009 Balsam Fir Sawfly Program in Western Newfoundland", "province": "NL", "sector": "forestry", "confidence": 0.92}
+{"rowid": 39977, "name": "Southern Bonavista Peninsula Forage Land", "province": "NL", "sector": "agriculture", "confidence": 0.87}
+{"rowid": 39978, "name": "Crook’s Lake, Labrador Service Depot", "province": "NL", "sector": "Other", "confidence": 0.3}
+{"rowid": 39995, "name": "Goose Arm, Deer Lake Forage Production", "province": "NL", "sector": "agriculture", "confidence": 0.87}
+{"rowid": 40003, "name": "St. Alban’s Salmon Hatchery", "province": "NL", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 40004, "name": "Crown Districts 4, 5, 6, & 8 Amendment to the Five Year Operating Plan 2007-11", "province": "NL", "sector": "forestry", "confidence": 0.75}
+{"rowid": 40006, "name": "Bay Bulls Metal Recycling, Processing and Storage", "province": "NL", "sector": "environment", "confidence": 0.75}
+{"rowid": 40011, "name": "Northwest Arm Crown Districts 4/5/6/8 5-Year Operating Plan Amendment (2007-2011)", "province": "NL", "sector": "forestry", "confidence": 0.75}
+{"rowid": 40017, "name": "Joan Lake Direct-Shipping Ore Project (Phase Two)", "province": "NL", "sector": "mining", "confidence": 0.95}
+{"rowid": 40023, "name": "Crown District 20 Five-Year Operating Plan (2010-2014)", "province": "NL", "sector": "forestry", "confidence": 0.75}
+{"rowid": 40024, "name": "Crown District 17 & 18 Five-Year Operating Plan (2008-2012) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.75}
+{"rowid": 40027, "name": "Jewer’s Brook, Wooddale, Cranberry and Forage Op.", "province": "NL", "sector": "agriculture", "confidence": 0.65}
+{"rowid": 40034, "name": "Labrador, Hutton Garnet Beaches – South Beach Bulk Sampling", "province": "NL", "sector": "mining", "confidence": 0.85}
+{"rowid": 40035, "name": "Roddickton Pellet Plant", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 40040, "name": "Microbial Fermentation Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.6}
+{"rowid": 40043, "name": "Rocky Hr. Cottage Dev. Plan Amend. 4", "province": "NL", "sector": "residential", "confidence": 0.6}
+{"rowid": 40050, "name": "Red Indian Lake Cabin Development, Millertown", "province": "NL", "sector": "residential", "confidence": 0.6}
+{"rowid": 40051, "name": "Mount Pearl Industrial Services Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.55}
+{"rowid": 40054, "name": "Mount Pearl Microbial Fermentation Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.6}
+{"rowid": 40057, "name": "Forest District 2 – Five Year Operating Plan Amendment (2007-2011)", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 40062, "name": "Pinchgut Lake Cabin Area Electrical Distribution Line", "province": "NL", "sector": "power_energy", "confidence": 0.8}
+{"rowid": 40067, "name": "5 Wing Labrador Practice Training Area Landing Strip", "province": "NL", "sector": "defence", "confidence": 0.95}
+{"rowid": 40071, "name": "Crown Forest District 1 – Five Year Operating Plan (2007-2011) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.9}
+{"rowid": 40075, "name": "Debottlenecking Project – North Atlantic Refining Limited", "province": "NL", "sector": "oil_gas", "confidence": 0.95}
+{"rowid": 40076, "name": "Fischell’s Brook Forage Production", "province": "NL", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 40082, "name": "Twillingate Shrimp Shell Waste Processing", "province": "NL", "sector": "environment", "confidence": 0.6}
+{"rowid": 40085, "name": "Corner Brook Pulp & Paper Tire Derived Fuel (TDF) Co-Firing Trial Project", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 40088, "name": "Stephenville Indian Head Salmon Hatchery", "province": "NL", "sector": "agriculture", "confidence": 0.75}
+{"rowid": 40089, "name": "Fischell’s Brook Forage Production (Resubmission)", "province": "NL", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 40090, "name": "Crown Districts 17 & 18 Five Year Operating Plan (2008-2012) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.75}
+{"rowid": 40093, "name": "Stephenville Indian Head Salmon Hatchery Revised", "province": "NL", "sector": "agriculture", "confidence": 0.65}
+{"rowid": 40108, "name": "Crown Districts 9 & 16 – Five-Year Operating Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.65}
+{"rowid": 40118, "name": "Forteau Municipal Park, Forteau River", "province": "NL", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 40125, "name": "Bay de Verde Chitin Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 40129, "name": "Pirate’s Haven (Robinsons River) ATV Friendly RV Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 40132, "name": "Gander Bay Agriculture Development", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 40134, "name": "Crabbes River West Forage Production", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 40141, "name": "Snows Pond/Ocean Pond Agriculture Forage Land", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 40144, "name": "Labrador West (Block 103) Iron Exploration Project", "province": "NL", "sector": "mining", "confidence": 0.9}
+{"rowid": 40148, "name": "Mount Pearl Commercial Spray Painting Booth", "province": "NL", "sector": "manufacturing", "confidence": 0.6}
+{"rowid": 40149, "name": "GFI Composites Ltd. Foxtrap Facility Expansion", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40153, "name": "City Concrete Ltd Batch Plant in Paradise", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40155, "name": "Reidville Regional Exhibition Grounds and Community Gardens", "province": "NL", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 40160, "name": "Kami Iron Ore Project", "province": "NL", "sector": "mining", "confidence": 0.95}
+{"rowid": 40161, "name": "Muskrat Falls-Grand River Ironsands Sampling Program", "province": "NL", "sector": "mining", "confidence": 0.85}
+{"rowid": 40166, "name": "Maritime Transmission Link", "province": "NL", "sector": "power_energy", "confidence": 0.85}
+{"rowid": 40173, "name": "Crown Districts 9 and 16 Five-Year Operating Plan", "province": "NL", "sector": "forestry", "confidence": 0.65}
+{"rowid": 40182, "name": "Happy Valley-Goose Bay Shooting Range", "province": "NL", "sector": "tourism_culture", "confidence": 0.55}
+{"rowid": 40184, "name": "Loch Leven Forage Production", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 40194, "name": "Poole Cove Marine Industrial Park", "province": "NL", "sector": "transport_logistics", "confidence": 0.6}
+{"rowid": 40197, "name": "Cliffs Resources Emulsion Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 40199, "name": "West Pond – Lakewood Chalets Development", "province": "NL", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 40204, "name": "Humber Village – River Bank Stabilization", "province": "NL", "sector": "infrastructure", "confidence": 0.85}
+{"rowid": 40208, "name": "IOC Explosives Facility", "province": "NL", "sector": "mining", "confidence": 0.7}
+{"rowid": 40209, "name": "Third Pond ATV Trial", "province": "NL", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 40210, "name": "Argentia Wellhead Platform for White Rose Extension", "province": "NL", "sector": "oil_gas", "confidence": 0.97}
+{"rowid": 40211, "name": "District 7 Crown Five-Year Operating Plan (2013-2017)", "province": "NL", "sector": "forestry", "confidence": 0.88}
+{"rowid": 40217, "name": "Loch Leven Forage Production (Resubmission)", "province": "NL", "sector": "agriculture", "confidence": 0.93}
+{"rowid": 40224, "name": "Crown District 19A Five-Year Operating Plan (2013 – 2017)", "province": "NL", "sector": "forestry", "confidence": 0.88}
+{"rowid": 40225, "name": "Crown Districts 9 & 16 (Jackson’s Arm) Five-Year Plan Amendment", "province": "NL", "sector": "forestry", "confidence": 0.88}
+{"rowid": 40226, "name": "Happy Valley-Goose Bay Storage/Scrapyard", "province": "NL", "sector": "environment", "confidence": 0.65}
+{"rowid": 40229, "name": "Crown Districts 17 & 18 Five-Year Operating Plan (2013-2017)", "province": "NL", "sector": "forestry", "confidence": 0.88}
+{"rowid": 40234, "name": "Labrador West Beneficiation Plant", "province": "NL", "sector": "mining", "confidence": 0.96}
+{"rowid": 40241, "name": "Mount Pearl NORM Decontamination and Temporary Storage Facility", "province": "NL", "sector": "environment", "confidence": 0.95}
+{"rowid": 40253, "name": "Foxtrap On-site Centrifuge Process for Offshore Drilling Mud", "province": "NL", "sector": "oil_gas", "confidence": 0.92}
+{"rowid": 40258, "name": "Tors Cove Brown Rabbit RV Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 40262, "name": "Harvest Amendment – Crown Five Year Operating Plan FMD 2,5,7,9, & 14", "province": "NL", "sector": "forestry", "confidence": 0.93}
+{"rowid": 40263, "name": "Crown Five-Year Operating Plan FMD 4, 5, 6, and 8 (2012-2016) – Amendment", "province": "NL", "sector": "forestry", "confidence": 0.93}
+{"rowid": 40273, "name": "Crown Districts 14 and 15 Five Year Operating Plan", "province": "NL", "sector": "forestry", "confidence": 0.88}
+{"rowid": 40277, "name": "Bellevue RV Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 40278, "name": "Paradise – ACAN Pre-fabricated Paint Booth", "province": "NL", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 40279, "name": "District 2 – Crown Five-Year Operating Plan (2012-2016) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.88}
+{"rowid": 40281, "name": "Brien’s Pond RV Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 40283, "name": "Crown Five-Year Operating Plan FMD 7 (2013-2017)", "province": "NL", "sector": "forestry", "confidence": 0.93}
+{"rowid": 40284, "name": "Amendment to Crown Five-Year Operating Plan FM District 1 (2012-2016)", "province": "NL", "sector": "forestry", "confidence": 0.93}
+{"rowid": 40287, "name": "Newfoundland Transshipment Hebron Expansion Project", "province": "NL", "sector": "oil_gas", "confidence": 0.95}
+{"rowid": 40289, "name": "St. John’s Aquaponics Project", "province": "NL", "sector": "agriculture", "confidence": 0.88}
+{"rowid": 40290, "name": "Whitbourne Waste Recovery Facility", "province": "NL", "sector": "environment", "confidence": 0.95}
+{"rowid": 40291, "name": "Crown District 18 Five-Year Operating Plan (2013-2017) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.88}
+{"rowid": 40295, "name": "100 MW (Nominal) Holyrood Combustion Turbine Project", "province": "NL", "sector": "power_energy", "confidence": 0.97}
+{"rowid": 40297, "name": "Colinet-Rocky River Zip Line and Adventure Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 40298, "name": "Buchans Barite Harvesting and Processing Operations", "province": "NL", "sector": "mining", "confidence": 0.95}
+{"rowid": 40304, "name": "Stoneville Shellfish Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 40305, "name": "Southern Labrador Waste Disposal Facility", "province": "NL", "sector": "environment", "confidence": 0.95}
+{"rowid": 40308, "name": "Hughes Brook Agriculture Fruit Orchard", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 40313, "name": "District 20 Five-Year Operating Plan (2015-2019)", "province": "NL", "sector": "forestry", "confidence": 0.75}
+{"rowid": 40314, "name": "L’Anse au Loup Diesel Plant Upgrades", "province": "NL", "sector": "power_energy", "confidence": 0.9}
+{"rowid": 40316, "name": "Extension to Robert E. Howlett Memorial Drive", "province": "NL", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 40317, "name": "Twin Falls Oasis RV Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.95}
+{"rowid": 40318, "name": "Mount Pearl/Donovan’s Spray Painting Booth", "province": "NL", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 40319, "name": "Big Brook Junction Quarries", "province": "NL", "sector": "mining", "confidence": 0.95}
+{"rowid": 40322, "name": "Emerillon Lake (Lab West) Slaughter House", "province": "NL", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 40323, "name": "Long Pond Weir", "province": "NL", "sector": "infrastructure", "confidence": 0.7}
+{"rowid": 40338, "name": "FMD 9/16 Five-Year Plan Amendment – Beaches Domestic Harvesting", "province": "NL", "sector": "forestry", "confidence": 0.82}
+{"rowid": 40346, "name": "Bay de Verde Shell By-Product Drying Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.72}
+{"rowid": 40353, "name": "Marystown Atlantic Salmon Hatchery", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 40354, "name": "Conception Bay South Concrete Batch Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.92}
+{"rowid": 40355, "name": "St. John’s Waste Drilling Mud Treatment", "province": "NL", "sector": "environment", "confidence": 0.85}
+{"rowid": 40357, "name": "Crown District Five Year Operating Plan FMD 17/18 (2013-2017) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.85}
+{"rowid": 40360, "name": "Fleur de Lys Seal Processing and Tannery", "province": "NL", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 40373, "name": "Placentia Bay Atlantic Salmon Aquaculture Project", "province": "NL", "sector": "agriculture", "confidence": 0.92}
+{"rowid": 40374, "name": "Holyrood Industrial Composting Facility", "province": "NL", "sector": "environment", "confidence": 0.92}
+{"rowid": 40386, "name": "Mount Pearl Paint Booth", "province": "NL", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 40388, "name": "Commercial Spray Painting Booth in Donovans Industrial Park", "province": "NL", "sector": "manufacturing", "confidence": 0.82}
+{"rowid": 40390, "name": "Crown District 19 Five Year Operating Plan (2013-2017) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.85}
+{"rowid": 40392, "name": "Bishop’s Falls Exploits River Tourism Development", "province": "NL", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 40395, "name": "Crown Forest Mgt. Amendment Zone 8 (Districts 17 & 18)", "province": "NL", "sector": "forestry", "confidence": 0.95}
+{"rowid": 40397, "name": "Pasadena Craft Beer Nano Brewery", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40400, "name": "Stephenville Septage Treatment Facility", "province": "NL", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 40403, "name": "Crown 5-Year Operating Plan for Zone 2 (2017-2021)", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 40404, "name": "Crown 5-Year Operating Plan for Zone 3 (2017-2021)", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 40405, "name": "Crown 5-Year Operating Plan for Zone 1 (2017-2021)", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 40409, "name": "Crown Five-Year Operating Plan for Zone 7 (2017-2021)", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 40414, "name": "Come By Chance Bulk Storage Tank Expansion", "province": "NL", "sector": "oil_gas", "confidence": 0.9}
+{"rowid": 40417, "name": "Roaches Line Agriculture Development", "province": "NL", "sector": "agriculture", "confidence": 0.9}
+{"rowid": 40424, "name": "Cartwright Suborbital Flight Range", "province": "NL", "sector": "Other", "confidence": 0.4}
+{"rowid": 40432, "name": "Twillingate Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40433, "name": "Mount Pearl Drilling Liquid Mud Plant", "province": "NL", "sector": "oil_gas", "confidence": 0.85}
+{"rowid": 40434, "name": "Holyrood Thermal Station Diesel Generator Modifications", "province": "NL", "sector": "power_energy", "confidence": 0.95}
+{"rowid": 40435, "name": "Secret Cove Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40436, "name": "Gander Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40438, "name": "Crown District 2 Five Year Operating Plan (2017-2021) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 40439, "name": "Corner Brook Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40444, "name": "Springdale Junction Agriculture Forage and Pasture Land", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 40447, "name": "Cormack Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40452, "name": "Sherwood North Pit", "province": "NL", "sector": "mining", "confidence": 0.75}
+{"rowid": 40453, "name": "Crown Zone 5 Five-Year Operating Plan Amendment (2016-2020)", "province": "NL", "sector": "forestry", "confidence": 0.8}
+{"rowid": 40454, "name": "Milton Cidery and Orchard", "province": "NL", "sector": "agriculture", "confidence": 0.7}
+{"rowid": 40455, "name": "Corner Brook Microbrewery and Tap Room", "province": "NL", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 40456, "name": "Burin Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40459, "name": "PESG Chapel Arm Services Facility", "province": "NL", "sector": "oil_gas", "confidence": 0.55}
+{"rowid": 40461, "name": "Dildo Pond Agricultural Development Area", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 40462, "name": "Secret Cove Microbrewery and The Well Taproom", "province": "NL", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 40464, "name": "Bay Roberts Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 40466, "name": "Crown Zone 5 Five -Year Operating Plan Lake Ambrose North Amendment  (2016-2020)", "province": "NL", "sector": "forestry", "confidence": 0.85}
+{"rowid": 40468, "name": "Conception Bay South Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 40475, "name": "Northern Arm Forage and Pasture Land Development", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 40478, "name": "Labrador City Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 40479, "name": "Mount Pearl Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 40480, "name": "Magy Pit Extension", "province": "NL", "sector": "mining", "confidence": 0.75}
+{"rowid": 40483, "name": "Argentia Cannabis Production Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 40486, "name": "Crown Zone 7 (District 9) Five Year Operating Plan (2017-2021) Amendment", "province": "NL", "sector": "forestry", "confidence": 0.85}
+{"rowid": 40496, "name": "Glenburnie Drydock", "province": "NL", "sector": "transport_logistics", "confidence": 0.6}
+{"rowid": 40498, "name": "White Hills (St. John’s) Cannabis Production Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 40500, "name": "Clarenville Cannabis Production Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 40503, "name": "Mount Pearl Casing and Tubing Service Centre", "province": "NL", "sector": "oil_gas", "confidence": 0.82}
+{"rowid": 40505, "name": "Pinchgut Lake Aircraft Hangar", "province": "NL", "sector": "transport_logistics", "confidence": 0.7}
+{"rowid": 40506, "name": "Goobies EWS Nursery and Laydown Area", "province": "NL", "sector": "power_energy", "confidence": 0.38}
+{"rowid": 40508, "name": "Burin Cannabis Production Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 40510, "name": "St. John’s (Sugarloaf Place) Cannabis Production Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 40512, "name": "Indian Head Hatchery Expansion Project", "province": "NL", "sector": "agriculture", "confidence": 0.85}
+{"rowid": 40513, "name": "Northern Brook Forage and Pasture Land", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 40516, "name": "St. Anthony Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.75}
+{"rowid": 40519, "name": "Smallwood North Pit Extension", "province": "NL", "sector": "mining", "confidence": 0.75}
+{"rowid": 40521, "name": "Corner Brook Cannabis Production Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.7}
+{"rowid": 40529, "name": "Mount Pearl Cannabis Production Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40530, "name": "Labrador City Microbrewery and Taproom", "province": "NL", "sector": "manufacturing", "confidence": 0.8}
+{"rowid": 40532, "name": "Hickey’s Piper’s Hole Quarries", "province": "NL", "sector": "mining", "confidence": 0.95}
+{"rowid": 40536, "name": "Lochleven Grazing and Hay Field", "province": "NL", "sector": "agriculture", "confidence": 0.92}
+{"rowid": 40540, "name": "Deer Lake Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.82}
+{"rowid": 40543, "name": "Cottage on the Upper Humber River-North Branch River Junction", "province": "NL", "sector": "residential", "confidence": 0.88}
+{"rowid": 40544, "name": "Baie Verte Microbrewery", "province": "NL", "sector": "manufacturing", "confidence": 0.82}
+{"rowid": 40550, "name": "South Brook Cottage", "province": "NL", "sector": "residential", "confidence": 0.9}
+{"rowid": 40551, "name": "Indian River RV Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.88}
+{"rowid": 40555, "name": "Springdale Forage Production Agriculture", "province": "NL", "sector": "agriculture", "confidence": 0.95}
+{"rowid": 40556, "name": "Barachois Brook Cannabis Production Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40562, "name": "Labrador City Metal Recycling Facility", "province": "NL", "sector": "environment", "confidence": 0.88}
+{"rowid": 40564, "name": "Northeast River Placentia Fishway Reconstruction", "province": "NL", "sector": "environment", "confidence": 0.82}
+{"rowid": 40569, "name": "Carmanville Amusement Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.92}
+{"rowid": 40579, "name": "Stephenville Range Complex", "province": "NL", "sector": "defence", "confidence": 0.65}
+{"rowid": 40582, "name": "Upper Humber River Remote Cottage", "province": "NL", "sector": "residential", "confidence": 0.9}
+{"rowid": 40584, "name": "Petit Forte Distribution Line", "province": "NL", "sector": "power_energy", "confidence": 0.9}
+{"rowid": 40586, "name": "George’s Brook-Milton Cannabis Production Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40589, "name": "Goobies South Cottage", "province": "NL", "sector": "residential", "confidence": 0.9}
+{"rowid": 40594, "name": "Cape Broyle Jet Perforating Gun Assembly Facility", "province": "NL", "sector": "manufacturing", "confidence": 0.85}
+{"rowid": 40597, "name": "Mount Pearl Phase Separation of Spent Drilling Mud Fluids", "province": "NL", "sector": "environment", "confidence": 0.72}
+{"rowid": 40598, "name": "Upper Humber River Cottage", "province": "NL", "sector": "residential", "confidence": 0.9}
+{"rowid": 40599, "name": "Carmanville Sea Urchin Aquaculture Facility", "province": "NL", "sector": "agriculture", "confidence": 0.8}
+{"rowid": 40601, "name": "Milltown-Head of Bay d’Espoir RV Park", "province": "NL", "sector": "tourism_culture", "confidence": 0.88}
+{"rowid": 40602, "name": "Jackson’s Arm Cannabis Nursery", "province": "NL", "sector": "agriculture", "confidence": 0.68}
+{"rowid": 40604, "name": "Preliminary Screening", "province": "NT", "sector": "Other", "confidence": 0.0}
+{"rowid": 40605, "name": "Download this mini website guide for a visual step by step walk through", "province": "NT", "sector": "Other", "confidence": 0.0}
+{"rowid": 40606, "name": "Search for Projects", "province": "NT", "sector": "Other", "confidence": 0.0}
+{"rowid": 40607, "name": "Search for Documents", "province": "NT", "sector": "Other", "confidence": 0.0}
+{"rowid": 40608, "name": "Project Timelines", "province": "NT", "sector": "Other", "confidence": 0.0}
+{"rowid": 40609, "name": "Closure and Reclamation - Imperial's Norman Wells Facilities - EA2526-01", "province": "NT", "sector": "oil_gas", "confidence": 0.85}
+{"rowid": 40615, "name": "Depositing Processed Kimberlite in Pits and Underground - EA1819-01", "province": "NT", "sector": "mining", "confidence": 0.92}
+{"rowid": 40619, "name": "Jay Project  - EA1314-01", "province": "NT", "sector": "mining", "confidence": 0.85}
+{"rowid": 40620, "name": "Diamond Exploration - EA1112-001", "province": "NT", "sector": "mining", "confidence": 0.95}
+{"rowid": 40621, "name": "Moose Property  - EA1011-002", "province": "NT", "sector": "mining", "confidence": 0.65}
+{"rowid": 40622, "name": "Nechalacho Rare Earth Element Project - EA1011-001", "province": "NT", "sector": "mining", "confidence": 0.97}
+{"rowid": 40623, "name": "NICO Project - EA0809-004", "province": "NT", "sector": "mining", "confidence": 0.9}
+{"rowid": 40627, "name": "Pine Point Pilot Project - EA0607-002", "province": "NT", "sector": "mining", "confidence": 0.9}
+{"rowid": 40628, "name": "Screech Lake - EA0607-003", "province": "NT", "sector": "mining", "confidence": 0.6}
+{"rowid": 40630, "name": "SDL 8 2-D Geophysical Program - EA0506-007", "province": "NT", "sector": "oil_gas", "confidence": 0.55}
+{"rowid": 40632, "name": "Cameron Hills Extension Project - EA03-005", "province": "NT", "sector": "oil_gas", "confidence": 0.9}
+{"rowid": 40633, "name": "Dehcho Geotechnical  Survey - EA03-009", "province": "NT", "sector": "Other", "confidence": 0.35}
+{"rowid": 40636, "name": "Drybones Bay Preliminary Exploration - EA03-002", "province": "NT", "sector": "mining", "confidence": 0.65}
+{"rowid": 40639, "name": "Summit Creek Exploration Well - EA03-001", "province": "NT", "sector": "oil_gas", "confidence": 0.92}
+{"rowid": 40641, "name": "Mackenzie River 2D Seismic Program - EA02-002", "province": "NT", "sector": "oil_gas", "confidence": 0.9}
+{"rowid": 40642, "name": "Cameron Hills Gathering System - EA01-005", "province": "NT", "sector": "oil_gas", "confidence": 0.92}
+{"rowid": 40646, "name": "Underground Decline and Pilot Plant - EA01-002", "province": "NT", "sector": "mining", "confidence": 0.85}
+{"rowid": 40647, "name": "Cameron Hills Exploratory Drilling Project - EA00-004", "province": "NT", "sector": "oil_gas", "confidence": 0.92}
+{"rowid": 40648, "name": "Fuel Cache Retrieval and Clean-up development - EA00-002", "province": "NT", "sector": "environment", "confidence": 0.85}
+{"rowid": 40650, "name": "Liard Seismic survey - EA00-001", "province": "NT", "sector": "oil_gas", "confidence": 0.9}
+{"rowid": 40652, "name": "Ekati - Sable, Pigeon and Beartooth Pipes expansion - EA99-004", "province": "NT", "sector": "mining", "confidence": 0.95}
+{"rowid": 40657, "name": "Norman Wells Operations Closure and Reclamation  - OBD24/25-01", "province": "NT", "sector": "environment", "confidence": 0.8}
+{"rowid": 40658, "name": "Robertson Headframe Demolition - OBD16/17-01", "province": "NT", "sector": "environment", "confidence": 0.65}
+{"rowid": 40659, "name": "Black Bear Baiting - OBD0910-001", "province": "NT", "sector": "Other", "confidence": 0.2}
+{"rowid": 40660, "name": "Great Bear Lake Exploration Project - OBD0708-001", "province": "NT", "sector": "mining", "confidence": 0.75}
+{"rowid": 40662, "name": "Hay River Biotreatment Pad - OBD0405-002", "province": "NT", "sector": "environment", "confidence": 0.85}
+{"rowid": 40663, "name": "Abandonment and Restoration Project - OBD03-002", "province": "NT", "sector": "environment", "confidence": 0.55}
+{"rowid": 40673, "name": "Uranium Exploration, MacInnis Lake - EA0506-001", "province": "NT", "sector": "mining", "confidence": 0.95}
+{"rowid": 40676, "name": "Keele River Airstrip - EA0405-004", "province": "NT", "sector": "transport_logistics", "confidence": 0.85}
+{"rowid": 40677, "name": "Beta Seismic - EA01-006", "province": "NT", "sector": "oil_gas", "confidence": 0.8}
+{"rowid": 40682, "name": "Line 490 Replacement Project - EA2425-01", "province": "NT", "sector": "oil_gas", "confidence": 0.75}
+{"rowid": 40683, "name": "Norman Wells Operations - EA2425-02", "province": "NT", "sector": "oil_gas", "confidence": 0.9}
+{"rowid": 40684, "name": "Waste Facility - Norman Wells - EA2223-01", "province": "NT", "sector": "environment", "confidence": 0.8}
+{"rowid": 40689, "name": "Uranium Exploration Thelon Basin (Screech Lake) - EA0506-003", "province": "NT", "sector": "mining", "confidence": 0.95}
+{"rowid": 40692, "name": "South Nahanni and Liard Rivers Seismic Development - EA02-001", "province": "NT", "sector": "oil_gas", "confidence": 0.8}
+{"rowid": 40799, "name": "Muscowpetung Saulteaux Nation - Solid Waste Transfer Station", "province": "SK", "sector": "environment", "confidence": 0.8}
+{"rowid": 40800, "name": "Kainai Interconnect Project", "province": "AB", "sector": "power_energy", "confidence": 0.7}
+{"rowid": 40811, "name": "Amrize Coquitlam Depots Maintenance Dredge", "province": "BC", "sector": "transport_logistics", "confidence": 0.6}
+{"rowid": 40815, "name": "Bearspaw South Feeder Main Replacement Project — Stage B", "province": "AB", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 40838, "name": "Boulevard des Mille-Îles Bank Stabilization", "province": "QC", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 40839, "name": "Sunset Community Centre Expansion", "province": "BC", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 40864, "name": "Banff 200-Block Redevelopment", "province": "AB", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 40874, "name": "NAIT Advanced Skills Centre Expansion", "province": "AB", "sector": "education", "confidence": 0.95}
+{"rowid": 40895, "name": "David Crombie Park Revitalization", "province": "ON", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 40917, "name": "Chief Leonard George Building", "province": "BC", "sector": "indigenous", "confidence": 0.8}
+{"rowid": 40937, "name": "La Ronge RCMP Build", "province": "SK", "sector": "government", "confidence": 0.95}
+{"rowid": 40955, "name": "Pickering City Centre Park", "province": "ON", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 40973, "name": "Blanket Permit - SaskEnergy - Northern Lights Indian Reserve No. 220", "province": "SK", "sector": "oil_gas", "confidence": 0.65}
+{"rowid": 40976, "name": "2026 Airfield Improvements Project", "province": "MB", "sector": "transport_logistics", "confidence": 0.9}
+{"rowid": 40982, "name": "Main Beach Armour Stone", "province": "NL", "sector": "infrastructure", "confidence": 0.7}
+{"rowid": 40990, "name": "Installation of a Permeable Adsorptive Barrier (PAB) at 22 Wing North Bay", "province": "ON", "sector": "environment", "confidence": 0.65}
+{"rowid": 40998, "name": "Toronto - Build Boat Shed – HMCS Star", "province": "ON", "sector": "defence", "confidence": 0.95}
+{"rowid": 41002, "name": "Expansion of Storage Courtyard - Warner Building", "province": "ON", "sector": "government", "confidence": 0.4}
+{"rowid": 41004, "name": "City of Ottawa Eccolands Boat Launch Rehabilitation", "province": "ON", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 41007, "name": "Prince Albert Convention & Cultural Event Centre", "province": "SK", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 41008, "name": "Prince County Innovation & Learning Centre", "province": "PE", "sector": "education", "confidence": 0.75}
+{"rowid": 41010, "name": "Mayflower Curling Club: Delivering the Future of Curling", "province": "NS", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 41012, "name": "Consolidation of Farnham community services in a sustainable building", "province": "QC", "sector": "government", "confidence": 0.6}
+{"rowid": 41013, "name": "PCSP AWH Community Hub: Green, Inclusive and Accessible", "province": "NL", "sector": "government", "confidence": 0.45}
+{"rowid": 41014, "name": "Tors Cove Hall Retrofit project", "province": "NL", "sector": "government", "confidence": 0.5}
+{"rowid": 41018, "name": "Regional SPCA St. Johns Community Engagement Centre", "province": "NL", "sector": "tourism_culture", "confidence": 0.5}
+{"rowid": 41023, "name": "Burwash Landing Boat Launch", "province": "YT", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 41025, "name": "Watson Lake Infrastructure Upgrades  Phase 1C Construction", "province": "YT", "sector": "infrastructure", "confidence": 0.85}
+{"rowid": 41026, "name": "Lytton Fire and Emergency Services Centre", "province": "BC", "sector": "government", "confidence": 0.85}
+{"rowid": 41027, "name": "Construction of electrical infrastructure and a bus charging shelter at the Vieux-Longueuil Operations Center", "province": "QC", "sector": "transport_logistics", "confidence": 0.85}
+{"rowid": 41028, "name": "Phase 1 Planning for the Construction of the Saint-Hubert Operations Center", "province": "QC", "sector": "transport_logistics", "confidence": 0.6}
+{"rowid": 41029, "name": "Renovation of the Charles Robin Historic Barn (built in 1780) into the Percé Community Arts Centre", "province": "QC", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 41030, "name": "WTC Communication Center GHG Reduction & Energy Efficiency Upgrades", "province": "ON", "sector": "telecom", "confidence": 0.5}
+{"rowid": 41032, "name": "Isabel Turner Library Renovation", "province": "ON", "sector": "education", "confidence": 0.55}
+{"rowid": 41033, "name": "YMCA Bridletowne Neighbourhood Centre", "province": "ON", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 41034, "name": "Terra Centre 146 Street Renovation", "province": "AB", "sector": "government", "confidence": 0.5}
+{"rowid": 41035, "name": "Kilbride Lions Community Centre: Deep Energy Retrofit & Renewal Project", "province": "NL", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 41036, "name": "RICC (Rothesay Intergenerational Community Complex)", "province": "NB", "sector": "tourism_culture", "confidence": 0.6}
+{"rowid": 41038, "name": "North Surrey Indigenous Learning Centre", "province": "BC", "sector": "indigenous", "confidence": 0.7}
+{"rowid": 41041, "name": "Amperes Community STEAM Space", "province": "ON", "sector": "education", "confidence": 0.7}
+{"rowid": 41042, "name": "Quad Gymnasium at RBJ Schlegel Park", "province": "ON", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 41043, "name": "The Next Chapter - Vineland Library", "province": "ON", "sector": "government", "confidence": 0.7}
+{"rowid": 41045, "name": "Oshawa YMCA energy infrastructure retrofit", "province": "ON", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 41046, "name": "Aseniwuche Winewack Nation of Canada (AWN) Tawow Centre Retrofit", "province": "AB", "sector": "indigenous", "confidence": 0.9}
+{"rowid": 41047, "name": "High Prairie Friendship Centre Retrofit", "province": "AB", "sector": "indigenous", "confidence": 0.85}
+{"rowid": 41049, "name": "Unlocking Energy Efficiency Potential for Blood Tribe Employment and Skills Training (BTEST) Building", "province": "AB", "sector": "indigenous", "confidence": 0.85}
+{"rowid": 41050, "name": "Breaking Barriers", "province": "ON", "sector": "Other", "confidence": 0.1}
+{"rowid": 41054, "name": "Johnson Township Community Centre Green Efficiency Updates", "province": "ON", "sector": "government", "confidence": 0.65}
+{"rowid": 41055, "name": "L'Oasis in Transformation: Together for an inclusive and sustainable environment for families in our community", "province": "QC", "sector": "government", "confidence": 0.45}
+{"rowid": 41056, "name": "Wellness Centre Renovation and Expansion", "province": "NU", "sector": "healthcare", "confidence": 0.65}
+{"rowid": 41057, "name": "Avonmore Community League - Hall Building - Stepped Pathway to Net Zero", "province": "AB", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 41058, "name": "Domaine Juliette-Huot Renovation", "province": "QC", "sector": "residential", "confidence": 0.45}
+{"rowid": 41059, "name": "Ritchie Community Hall Replacement Project", "province": "AB", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 41060, "name": "Carolyn Strand Civic Centre Energy Retrofit Improvements", "province": "AB", "sector": "government", "confidence": 0.75}
+{"rowid": 41061, "name": "The Green Ice Initiative:  Accessible and Sustainable Upgrades to the North Hastings Community Centre", "province": "ON", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 41062, "name": "Crestwood Hall HVAC and Envelope Upgrades", "province": "AB", "sector": "tourism_culture", "confidence": 0.65}
+{"rowid": 41064, "name": "Olds Mens Shed and Community Arts Hub: Activating the former Town of Olds Operations Shop", "province": "AB", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41066, "name": "Energy renovation and remodelling of the old Presbytery", "province": "QC", "sector": "tourism_culture", "confidence": 0.6}
+{"rowid": 41067, "name": "John Rhodes Community Centre Energy Retrofit and Accessibility Project", "province": "ON", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 41069, "name": "Ivor MacDonald Deep Energy Retrofit Project", "province": "NS", "sector": "tourism_culture", "confidence": 0.65}
+{"rowid": 41073, "name": "Westend YMCA energy retrofit", "province": "ON", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41075, "name": "Science North Thunder Bay:  A Net Zero Attraction and Home for Science in Northwestern Ontario", "province": "ON", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41077, "name": "MSCC Energy and Accessibility Retrofit", "province": "ON", "sector": "tourism_culture", "confidence": 0.55}
+{"rowid": 41079, "name": "55+ - Feasibility Study / HVAC Upgrades & Interior Renovations", "province": "ON", "sector": "tourism_culture", "confidence": 0.55}
+{"rowid": 41080, "name": "Ravensong Aquatic Centre Expansion Project", "province": "BC", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 41081, "name": "North Glenora Community League - Net Zero Retrofit", "province": "AB", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41086, "name": "Seine River Community Centre Renovations", "province": "ON", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41087, "name": "Central YMCA energy infrastructure retrofit", "province": "ON", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41091, "name": "Comprehensive Green Energy Retrofit: Interior & Exterior", "province": "MB", "sector": "Other", "confidence": 0.25}
+{"rowid": 41092, "name": "Moving Towards a Green Future - Revitalizing Community Spaces", "province": "NL", "sector": "tourism_culture", "confidence": 0.55}
+{"rowid": 41093, "name": "Low Carbon Electric Heating Retrofits and Building Automation System Expansion at Caledon East Community Complex", "province": "ON", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 41094, "name": "MARSA Expansions", "province": "NS", "sector": "Other", "confidence": 0.2}
+{"rowid": 41096, "name": "Geothermal energy and climate resilience upgrades", "province": "QC", "sector": "Other", "confidence": 0.3}
+{"rowid": 41118, "name": "Going Green in 2023", "province": "NS", "sector": "Other", "confidence": 0.1}
+{"rowid": 41119, "name": "Skyway Community Centre and Park", "province": "ON", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41122, "name": "Conversion of the St-Omer Garage to Electric Propulsion", "province": "QC", "sector": "transport_logistics", "confidence": 0.7}
+{"rowid": 41125, "name": "Expansion of Cabana Operations Center", "province": "QC", "sector": "transport_logistics", "confidence": 0.55}
+{"rowid": 41127, "name": "Functional and Technical Program and Studies for the Lebourgneuf Centre", "province": "QC", "sector": "Other", "confidence": 0.3}
+{"rowid": 41130, "name": "Feasibility Study for the County of Lambton, ON.", "province": "ON", "sector": "Other", "confidence": 0.1}
+{"rowid": 41132, "name": "Feasibility Study for Athabasca County, AB", "province": "AB", "sector": "Other", "confidence": 0.1}
+{"rowid": 41136, "name": "Conversion of the Lachute United Church to redeploy the services of the Jean-Marc Belzile Library", "province": "QC", "sector": "government", "confidence": 0.7}
+{"rowid": 41140, "name": "Sydney Curling Club - Capital Build Project", "province": "NS", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 41141, "name": "TBDC Skills Training Centre", "province": "ON", "sector": "education", "confidence": 0.8}
+{"rowid": 41142, "name": "Ronald McDonald House BC & Yukon, Willow House", "province": "BC", "sector": "healthcare", "confidence": 0.85}
+{"rowid": 41143, "name": "Banook Canoe Club Revitalization", "province": "NS", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 41144, "name": "Conversion of a former area into a multifunctioning centre and community centre renovation", "province": "QC", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 41145, "name": "Somali Centre for Culture and Recreation", "province": "ON", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41148, "name": "Bird's Eye View Park", "province": "ON", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41149, "name": "Moodyville Park Invasive Species Management and Restoration Project", "province": "BC", "sector": "environment", "confidence": 0.85}
+{"rowid": 41150, "name": "City of Moncton Tree Planting in Low Street Tree Density Neighbourhoods", "province": "NB", "sector": "environment", "confidence": 0.8}
+{"rowid": 41152, "name": "Green Infrastructure Retrofit of Peel Regions 7120 Hurontario Street Property", "province": "ON", "sector": "environment", "confidence": 0.72}
+{"rowid": 41153, "name": "Rocky Ridge and Royal Oak Urban Forest", "province": "AB", "sector": "environment", "confidence": 0.8}
+{"rowid": 41154, "name": "District of West Vancouver Urban Forest Enhancements", "province": "BC", "sector": "environment", "confidence": 0.8}
+{"rowid": 41155, "name": "Meadowbrook Natural Space", "province": "AB", "sector": "environment", "confidence": 0.75}
+{"rowid": 41156, "name": "Natural Infrastructure at the Nanton Visitor Information Centre", "province": "AB", "sector": "environment", "confidence": 0.6}
+{"rowid": 41158, "name": "Improved access and revitalization of Rotary Park", "province": "NB", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41159, "name": "City of Vancouver Canyon Creek Daylighting at Spanish Banks Beach Park", "province": "BC", "sector": "environment", "confidence": 0.75}
+{"rowid": 41160, "name": "Ch'iyá¿mesh forest and rain gardens project at Cheakamus Centre", "province": "BC", "sector": "environment", "confidence": 0.68}
+{"rowid": 41162, "name": "Edmonton Valley Zoo Aspen Parkland Restoration and Protection", "province": "AB", "sector": "environment", "confidence": 0.65}
+{"rowid": 41163, "name": "KESKUS International Estonian Centre Green Roof", "province": "ON", "sector": "environment", "confidence": 0.65}
+{"rowid": 41165, "name": "Urban Tree Project", "province": "NB", "sector": "environment", "confidence": 0.8}
+{"rowid": 41167, "name": "Nelson McIntyre Collegiate Backyard Revitalization Project", "province": "MB", "sector": "environment", "confidence": 0.62}
+{"rowid": 41176, "name": "Replace the Tracadie-Sheila Curling Club's current electrical and mechanical systems with a modern, energy-efficient system", "province": "NB", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41177, "name": "Lytton Community Hub", "province": "BC", "sector": "tourism_culture", "confidence": 0.68}
+{"rowid": 41205, "name": "Needs Assessment and Feasibility Study for Westlock County, AB", "province": "AB", "sector": "Other", "confidence": 0.2}
+{"rowid": 41210, "name": "Feasibility Study for the City of Dawson Creek, BC", "province": "BC", "sector": "Other", "confidence": 0.2}
+{"rowid": 41213, "name": "Biathlon Yukon New Building", "province": "YT", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41216, "name": "Sugarcane Active Community Planning", "province": "BC", "sector": "indigenous", "confidence": 0.7}
+{"rowid": 41217, "name": "Equitable Access for Skuppah Band", "province": "BC", "sector": "indigenous", "confidence": 0.75}
+{"rowid": 41225, "name": "DASCH Centre", "province": "MB", "sector": "healthcare", "confidence": 0.68}
+{"rowid": 41226, "name": "Oxford Community Centre Association  - New Community Centre Build", "province": "NS", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41228, "name": "Sade Initiative", "province": "YT", "sector": "Other", "confidence": 0.1}
+{"rowid": 41230, "name": "Sussex Region Flood Risk Mitigation Project", "province": "NB", "sector": "infrastructure", "confidence": 0.92}
+{"rowid": 41235, "name": "Cobourg Shoreline Protection Repair", "province": "ON", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 41238, "name": "Raisin River Structure Upgrade", "province": "ON", "sector": "infrastructure", "confidence": 0.85}
+{"rowid": 41239, "name": "Charlotte Street Flood Reduction Project", "province": "ON", "sector": "infrastructure", "confidence": 0.92}
+{"rowid": 41243, "name": "Wildfire Hazard Mitigation Project in Southern Yukon", "province": "YT", "sector": "environment", "confidence": 0.8}
+{"rowid": 41245, "name": "Dyke Rehabilitation", "province": "ON", "sector": "infrastructure", "confidence": 0.92}
+{"rowid": 41248, "name": "Watson Lake Municipal Buildings HVAC Upgrades", "province": "YT", "sector": "government", "confidence": 0.85}
+{"rowid": 41257, "name": "Shelter and Station Improvements", "province": "ON", "sector": "transport_logistics", "confidence": 0.8}
+{"rowid": 41258, "name": "Bus Barn Lighting", "province": "ON", "sector": "transport_logistics", "confidence": 0.88}
+{"rowid": 41264, "name": "Tsleil-Waututh Nation- Shoreline Protection & Climate Resilience Project", "province": "BC", "sector": "indigenous", "confidence": 0.78}
+{"rowid": 41266, "name": "Recreation and Community Centre", "province": "QC", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 41267, "name": "Vivre l'Entraide - Ensemble mutual aid project: Construction of a new mutual aid service wing and integration into our existing building", "province": "QC", "sector": "tourism_culture", "confidence": 0.72}
+{"rowid": 41268, "name": "Cap Aux Os Arts Centre", "province": "QC", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 41269, "name": "For its 25th anniversary, the Carrefour Jeunesse des Îles youth centre is thinking big for youth!", "province": "QC", "sector": "tourism_culture", "confidence": 0.88}
+{"rowid": 41270, "name": "Centre dart Battat  CAB", "province": "QC", "sector": "tourism_culture", "confidence": 0.88}
+{"rowid": 41271, "name": "Laval Community Complex", "province": "QC", "sector": "tourism_culture", "confidence": 0.88}
+{"rowid": 41273, "name": "Saint-Michel Community House", "province": "QC", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41274, "name": "A New Home for Afrique au Féminin- Developing a Better Centre to Serve the Parc-Extension Community", "province": "QC", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 41275, "name": "Carrefour dinnovation sociale (centre dentrepreneuriat social)", "province": "QC", "sector": "tourism_culture", "confidence": 0.68}
+{"rowid": 41276, "name": "Mont Saint Patrice convent:  Energy, Environment and Accessibility", "province": "QC", "sector": "tourism_culture", "confidence": 0.65}
+{"rowid": 41277, "name": "Nanonetwork of Maison Eurêka, ressource dhébergement en dépendance", "province": "QC", "sector": "healthcare", "confidence": 0.75}
+{"rowid": 41278, "name": "The Old Border Theatre", "province": "QC", "sector": "tourism_culture", "confidence": 0.92}
+{"rowid": 41279, "name": "Expansion of Child Advocacy Centre Services in Manitoba through the Renovation of 710 Assiniboine Park Drive", "province": "MB", "sector": "healthcare", "confidence": 0.78}
+{"rowid": 41281, "name": "Multidisciplinary Disability and Community Arts Hub (MDCAH)", "province": "AB", "sector": "tourism_culture", "confidence": 0.65}
+{"rowid": 41282, "name": "okimaw peyesew kamik - King Thunderbird Centre", "province": "AB", "sector": "indigenous", "confidence": 0.75}
+{"rowid": 41284, "name": "Canora Community League Net Zero Retrofit", "province": "AB", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 41285, "name": "Langley Performance Centre", "province": "BC", "sector": "tourism_culture", "confidence": 0.82}
+{"rowid": 41286, "name": "Clayoquot Sound Biosphere Centre", "province": "BC", "sector": "environment", "confidence": 0.58}
+{"rowid": 41287, "name": "Sunshine Coast Community Services Hub", "province": "BC", "sector": "government", "confidence": 0.52}
+{"rowid": 41288, "name": "Science World Green & Accessible Building Critical Infrastructure Project", "province": "BC", "sector": "tourism_culture", "confidence": 0.88}
+{"rowid": 41292, "name": "Building Rehabilitation, Extension & Accessibility Upgrades", "province": "NL", "sector": "Other", "confidence": 0.15}
+{"rowid": 41294, "name": "Wolfville Curling Club Revitalization Project 2022-24", "province": "NS", "sector": "tourism_culture", "confidence": 0.92}
+{"rowid": 41295, "name": "LWF Community Centre (LWF Hall) Renovation", "province": "NS", "sector": "tourism_culture", "confidence": 0.87}
+{"rowid": 41296, "name": "Stellarton Memorial Community Centre", "province": "NS", "sector": "tourism_culture", "confidence": 0.87}
+{"rowid": 41301, "name": "BCC Phase 2 Capital Project", "province": "ON", "sector": "Other", "confidence": 0.1}
+{"rowid": 41303, "name": "The New MIFO: Construction of a Cultural and Recreational Community Centre", "province": "ON", "sector": "tourism_culture", "confidence": 0.96}
+{"rowid": 41304, "name": "Baker District  Guelph Public Library", "province": "ON", "sector": "education", "confidence": 0.72}
+{"rowid": 41307, "name": "Bronson Centre - A 2050 Community Hub", "province": "ON", "sector": "tourism_culture", "confidence": 0.62}
+{"rowid": 41309, "name": "Hope Blooms: Global Kitchen for Social Change  Retrofit", "province": "NS", "sector": "commercial_mixed", "confidence": 0.45}
+{"rowid": 41310, "name": "Community Hall and Program Space Retrofitting Project", "province": "ON", "sector": "tourism_culture", "confidence": 0.87}
+{"rowid": 41311, "name": "The Corleck Building Rehabilitation", "province": "ON", "sector": "Other", "confidence": 0.18}
+{"rowid": 41312, "name": "McMichael Now", "province": "ON", "sector": "tourism_culture", "confidence": 0.88}
+{"rowid": 41333, "name": "City of Vernon 43rd Street Crossing Replacement", "province": "BC", "sector": "infrastructure", "confidence": 0.92}
+{"rowid": 41347, "name": "Princeton - Well #4 Upgrades for Climate Change", "province": "BC", "sector": "infrastructure", "confidence": 0.92}
+{"rowid": 41348, "name": "Surrey - Nicomekl River Dyke Rehabilitation between 16900 Blk and 184 St", "province": "BC", "sector": "infrastructure", "confidence": 0.92}
+{"rowid": 41349, "name": "Squamish-Lillooet Regional District - Catiline Creek Debris Flow Mitigation Project - SLRD Electoral Area C", "province": "BC", "sector": "infrastructure", "confidence": 0.88}
+{"rowid": 41351, "name": "City of Regina - Geothermal Heating Facility", "province": "SK", "sector": "power_energy", "confidence": 0.82}
+{"rowid": 41356, "name": "City of Cranbrook Phillips UV Disinfection Facility", "province": "BC", "sector": "infrastructure", "confidence": 0.93}
+{"rowid": 41362, "name": "Lil'wat Nation - Grandmother Slough Climate Adaptation Project", "province": "BC", "sector": "indigenous", "confidence": 0.72}
+{"rowid": 41364, "name": "Invermere - Toby Creek Dike Improvements", "province": "BC", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 41365, "name": "Squamish River Dike Raising - Upper Jimmy Jimmy (Judd) Slough", "province": "BC", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 41367, "name": "McKenzie/Colwood Bus-on-Shoulder", "province": "BC", "sector": "transport_logistics", "confidence": 0.9}
+{"rowid": 41369, "name": "Carrefour St-Pierre Community Centre (Maison St-Pierre)", "province": "QC", "sector": "government", "confidence": 0.65}
+{"rowid": 41370, "name": "Creation of a new production kitchen and development of administrative and utility areas", "province": "QC", "sector": "Other", "confidence": 0.2}
+{"rowid": 41375, "name": "Comox Valley Exchanges", "province": "BC", "sector": "transport_logistics", "confidence": 0.82}
+{"rowid": 41393, "name": "Bus Shelter and Stop Improvements", "province": "ON", "sector": "transport_logistics", "confidence": 0.97}
+{"rowid": 41394, "name": "Conventional Bus  Refurbishment", "province": "ON", "sector": "transport_logistics", "confidence": 0.97}
+{"rowid": 41395, "name": "New Secondary Access to Maintenance Facility and Upgrades", "province": "ON", "sector": "transport_logistics", "confidence": 0.82}
+{"rowid": 41396, "name": "Signalized Bus Priority", "province": "ON", "sector": "transport_logistics", "confidence": 0.97}
+{"rowid": 41397, "name": "Regional Municipality of Niagara Bus Fleet Replacement", "province": "ON", "sector": "transport_logistics", "confidence": 0.97}
+{"rowid": 41398, "name": "Facility, Strategic Asset and Service Network Review and Facility Capital Investments", "province": "ON", "sector": "transport_logistics", "confidence": 0.58}
+{"rowid": 41400, "name": "Bus Wash Facility Rehabilitation", "province": "ON", "sector": "transport_logistics", "confidence": 0.95}
+{"rowid": 41403, "name": "Specialized Fleet Replacement", "province": "ON", "sector": "transport_logistics", "confidence": 0.82}
+{"rowid": 41422, "name": "Charging Infrastructure--HC", "province": "BC", "sector": "transport_logistics", "confidence": 0.75}
+{"rowid": 41424, "name": "Kelowna Exchanges", "province": "BC", "sector": "transport_logistics", "confidence": 0.85}
+{"rowid": 41431, "name": "Rose Avenue Reconstruction", "province": "NL", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 41438, "name": "Paving Program - Blackburn Street", "province": "NL", "sector": "infrastructure", "confidence": 0.95}
+{"rowid": 41466, "name": "O&M Facility Upgrades -- VTC & LTC", "province": "BC", "sector": "transport_logistics", "confidence": 0.8}
+{"rowid": 41486, "name": "AutresProjet d’implantation d’une ferme aquacole terrestre en recirculation intensive dans la MRC de Pontiac par SamonixEn cours", "province": "QC", "sector": "agriculture", "confidence": 0.92}
+{"rowid": 41487, "name": "Environmental Assessment", "province": "SK", "sector": "Other", "confidence": 0.05}
+{"rowid": 41488, "name": "May 16, 2026", "province": "SK", "sector": "Other", "confidence": 0.05}
+{"rowid": 41489, "name": "March 31, 2026", "province": "SK", "sector": "Other", "confidence": 0.05}
+{"rowid": 41545, "name": "Toronto Federal Infrastructure Upgrades", "province": "ON", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 41546, "name": "Iqaluit Northern Infrastructure Projects", "province": "NU", "sector": "infrastructure", "confidence": 0.5}
+{"rowid": 41547, "name": "Hay River Northern Infrastructure Projects", "province": "NT", "sector": "infrastructure", "confidence": 0.5}
+{"rowid": 41548, "name": "Whitehorse Northern Infrastructure Projects", "province": "YT", "sector": "infrastructure", "confidence": 0.5}
+{"rowid": 41572, "name": "LaSalle Vollmer Complex Expansion", "province": "ON", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41607, "name": "Sunset Seniors Centre Expansion", "province": "BC", "sector": "tourism_culture", "confidence": 0.65}
+{"rowid": 41622, "name": "Northern Communities Infrastructure Fund — Iqaluit, Hay River, Whitehorse", "province": "NU", "sector": "infrastructure", "confidence": 0.5}
+{"rowid": 41663, "name": "Parc du Mont-Sainte-Anne — Annonce gouvernementale", "province": "QC", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 41676, "name": "Parking Lot Repaving at the Canada Post Mail Facility, Etobicoke, ON", "province": "ON", "sector": "transport_logistics", "confidence": 0.7}
+{"rowid": 41678, "name": "Grand Passage Lifeboat Station, Digby County, NS", "province": "NS", "sector": "government", "confidence": 0.75}
+{"rowid": 41697, "name": "CDF Glycol Storage Structural Rehabilitation", "province": "ON", "sector": "Other", "confidence": 0.3}
+{"rowid": 41718, "name": "New Brunswick Amphibious Aircraft Acquisition", "province": "NB", "sector": "government", "confidence": 0.6}
+{"rowid": 41732, "name": "NSCSC Trades Exhibition Hall Cape Breton", "province": "NS", "sector": "education", "confidence": 0.85}
+{"rowid": 41756, "name": "Banff Park Facility (International Design Competition)", "province": "AB", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41771, "name": "Nunavut Infrastructure and Economic Development Projects", "province": "NU", "sector": "infrastructure", "confidence": 0.5}
+{"rowid": 41786, "name": "Wakaw Sarcan Depot Expansion", "province": "SK", "sector": "environment", "confidence": 0.85}
+{"rowid": 41790, "name": "Renforcement des infrastructures et équipements du Parc du Mont-Sainte-Anne", "province": "QC", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41805, "name": "Nipigon Park Redevelopment", "province": "ON", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41813, "name": "Agricola Street Repaving and Maintenance", "province": "NS", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 41897, "name": "Banff Park Facility Design (Paul Raff Studio / Kengo Kuma & Associates)", "province": "AB", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41928, "name": "Niagara-on-the-Lake Community Centre Upgrades", "province": "ON", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41929, "name": "Nipigon Park Redevelopment, Oshawa", "province": "ON", "sector": "tourism_culture", "confidence": 0.75}
+{"rowid": 41935, "name": "Warkworth Institution – Fuel Storage Tank System Replacements and Removals (8)", "province": "ON", "sector": "government", "confidence": 0.85}
+{"rowid": 41936, "name": "Infield Concourse Hardstands & Taxiway Connections", "province": "ON", "sector": "transport_logistics", "confidence": 0.85}
+{"rowid": 41940, "name": "OS-6891 Authorization to Construct and Operate a Surface Lease", "province": "AB", "sector": "oil_gas", "confidence": 0.6}
+{"rowid": 41941, "name": "OS-6908 Authorization to Construct and Operate a Surface Lease", "province": "AB", "sector": "oil_gas", "confidence": 0.6}
+{"rowid": 41943, "name": "Cascade Creek Restoration Large Woody Debris Installation", "province": "AB", "sector": "environment", "confidence": 0.85}
+{"rowid": 41952, "name": "Montreal Inclusive Community Hub", "province": "QC", "sector": "government", "confidence": 0.6}
+{"rowid": 41958, "name": "P.E.I. Provincial Parks Upgrades — Five-Year Strategy", "province": "PE", "sector": "tourism_culture", "confidence": 0.85}
+{"rowid": 41959, "name": "Aecon–Arctic Gateway Northern Manitoba Infrastructure", "province": "MB", "sector": "infrastructure", "confidence": 0.55}
+{"rowid": 41960, "name": "Canada–Quebec Federal Infrastructure Funding Transfer", "province": "QC", "sector": "government", "confidence": 0.65}
+{"rowid": 41967, "name": "Northern Manitoba Infrastructure — Aecon / Arctic Gateway Collaboration", "province": "MB", "sector": "infrastructure", "confidence": 0.55}
+{"rowid": 41979, "name": "Spaceport Nova Scotia", "province": "NS", "sector": "transport_logistics", "confidence": 0.5}
+{"rowid": 41989, "name": "Canada-Québec Infrastructure Investment Partnership", "province": "QC", "sector": "government", "confidence": 0.65}
+{"rowid": 42010, "name": "Hydro-Québec Headquarters Building Renovation", "province": "QC", "sector": "commercial_mixed", "confidence": 0.7}
+{"rowid": 42025, "name": "Fort Erie Travel Centre Redevelopment", "province": "ON", "sector": "commercial_mixed", "confidence": 0.75}
+{"rowid": 42029, "name": "Row Street Field Refurbishment, Glace Bay", "province": "NS", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 42030, "name": "Cameron Bowl Refurbishment, Glace Bay", "province": "NS", "sector": "tourism_culture", "confidence": 0.9}
+{"rowid": 42033, "name": "Redevelopment of Building 430 at 1740 Woodroffe Avenue (Area X.O)", "province": "ON", "sector": "commercial_mixed", "confidence": 0.55}
+{"rowid": 42034, "name": "Collins Bay Institution – Fuel Storage Tank Replacements (4)", "province": "ON", "sector": "government", "confidence": 0.9}
+{"rowid": 42036, "name": "Parks Canada Agency Sulphur Mountain Boardwalk Repairs", "province": "AB", "sector": "tourism_culture", "confidence": 0.8}
+{"rowid": 42042, "name": "Development of artificial nesting sites for turtles", "province": "QC", "sector": "environment", "confidence": 0.9}
+{"rowid": 42045, "name": "Rideau Canal Wall Repairs", "province": "ON", "sector": "infrastructure", "confidence": 0.75}
+{"rowid": 42049, "name": "Fording River Extension Project", "province": "BC", "sector": "mining", "confidence": 0.85}
+{"rowid": 42068, "name": "Beaubassin Research Centre Energy Upgrades", "province": "NB", "sector": "government", "confidence": 0.6}
+{"rowid": 42071, "name": "Blue Dot Stewards Forest Garden Programme in Milton", "province": "ON", "sector": "environment", "confidence": 0.7}
+{"rowid": 42073, "name": "Old Days Pond Increased Access to Nature", "province": "NL", "sector": "tourism_culture", "confidence": 0.7}
+{"rowid": 42077, "name": "Community Service Center", "province": "QC", "sector": "government", "confidence": 0.5}
+{"rowid": 42095, "name": "EauProjet de réfection du mur de soutènement en amont du barrage Simon-Sicard à MontréalEn cours", "province": "QC", "sector": "infrastructure", "confidence": 0.9}
+{"rowid": 42096, "name": "May 23, 2026", "province": "SK", "sector": "Other", "confidence": 0.0}
+{"rowid": 42097, "name": "Baie Verte Concrete Batch Plant", "province": "NL", "sector": "manufacturing", "confidence": 0.85}

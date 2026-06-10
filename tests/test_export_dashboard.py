@@ -557,5 +557,88 @@ class TestExportDiscoverySummary(unittest.TestCase):
         self.assertIn("fuzzy_merges", data)
 
 
+class TestTimeseriesStaleReport(unittest.TestCase):
+    """NEW-9: timeseries stale-series report (warn-first, prune only on env)."""
+
+    def setUp(self):
+        from datetime import date, timedelta
+        self.conn = init_db(":memory:")
+        self.tmpdir = tempfile.mkdtemp()
+        self.fresh_date = date.today().isoformat()
+        self.stale_date = (date.today() - timedelta(days=600)).isoformat()
+        # Pre-seed an existing timeseries.json the preserve-merge will keep
+        self.existing = {
+            "stale_series": [
+                {"date": self.stale_date, "value": "1.0", "unit": "", "source": "test"},
+            ],
+            "fresh_series": [
+                {"date": self.fresh_date, "value": "2.0", "unit": "", "source": "test"},
+            ],
+        }
+        with open(os.path.join(self.tmpdir, "timeseries.json"), "w",
+                  encoding="utf-8") as f:
+            json.dump(self.existing, f)
+        self._saved_env = {
+            k: os.environ.pop(k, None)
+            for k in ("TIMESERIES_PRUNE", "TIMESERIES_STALE_DAYS")
+        }
+
+    def tearDown(self):
+        for k, v in self._saved_env.items():
+            if v is not None:
+                os.environ[k] = v
+            else:
+                os.environ.pop(k, None)
+        self.conn.close()
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _run_export(self):
+        from tools.export_dashboard import export_timeseries
+        out_path = export_timeseries(self.conn, self.tmpdir)
+        with open(out_path, encoding="utf-8") as f:
+            merged = json.load(f)
+        report_path = os.path.join(self.tmpdir, "timeseries_stale_report.json")
+        with open(report_path, encoding="utf-8") as f:
+            report = json.load(f)
+        return merged, report
+
+    def test_find_stale_series_helper(self):
+        from tools.export_dashboard import _find_stale_series
+        stale = _find_stale_series(self.existing, stale_days=540)
+        self.assertEqual(stale, {"stale_series": self.stale_date})
+
+    def test_stale_series_appears_in_report_not_pruned(self):
+        merged, report = self._run_export()
+        self.assertIn("stale_series", report["stale_series"])
+        self.assertEqual(report["stale_series"]["stale_series"], self.stale_date)
+        self.assertFalse(report["pruned"])
+        # Default is warn-first: the stale key is still exported
+        self.assertIn("stale_series", merged)
+        self.assertIn("fresh_series", merged)
+
+    def test_prune_env_removes_stale_series(self):
+        os.environ["TIMESERIES_PRUNE"] = "1"
+        merged, report = self._run_export()
+        self.assertTrue(report["pruned"])
+        self.assertIn("stale_series", report["stale_series"])
+        self.assertNotIn("stale_series", merged)
+        # Fresh series untouched
+        self.assertIn("fresh_series", merged)
+        self.assertEqual(merged["fresh_series"], self.existing["fresh_series"])
+
+    def test_fresh_series_not_reported(self):
+        _, report = self._run_export()
+        self.assertNotIn("fresh_series", report["stale_series"])
+
+    def test_stale_days_env_override(self):
+        # With a huge threshold nothing is stale
+        os.environ["TIMESERIES_STALE_DAYS"] = "100000"
+        merged, report = self._run_export()
+        self.assertEqual(report["stale_series"], {})
+        self.assertEqual(report["stale_days_threshold"], 100000)
+        self.assertIn("stale_series", merged)
+
+
 if __name__ == "__main__":
     unittest.main()

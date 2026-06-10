@@ -493,6 +493,7 @@ def run(conn, context, logger):
             include_media=True,
             gemini_client=gemini_client,
             prefetched_items=rss_items if rss_items else None,
+            conn=conn,  # E-7: enables page-text + embedding caches
         )
 
         # ── POST-EXTRACTION: Deduplicate & upsert all discovered projects ──

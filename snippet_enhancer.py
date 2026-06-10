@@ -8,6 +8,10 @@ Fallback extractor: BeautifulSoup paragraph extraction (if trafilatura unavailab
 
 Used as a pre-step before RSS filtering — gives L4 and L6 more text to work with.
 Falls back gracefully: if fetch fails or sumy fails, returns the original snippet.
+
+E-7: extracted page text is cached in the SQLite `cache` table (category
+'page_text', key = normalized URL, 14-day TTL) when a DB connection is
+supplied — a cache hit avoids re-fetching the page. No-op when no conn.
 """
 import logging
 
@@ -47,6 +51,26 @@ def _get_summarizer():
     if _summarizer is None:
         _summarizer = LexRankSummarizer()
     return _summarizer
+
+
+def _page_text_cache_key(url):
+    """E-7: stable cache key for a fetched page — normalized URL."""
+    try:
+        from url_utils import normalize_url
+        return normalize_url(url) or url
+    except Exception:
+        return url
+
+
+def _get_pipeline_cache(conn):
+    """Best-effort PipelineCache over the supplied conn. None when unavailable."""
+    if conn is None:
+        return None
+    try:
+        from pipeline_cache import PipelineCache
+        return PipelineCache(conn)
+    except Exception:
+        return None
 
 
 def _fetch_article_text_trafilatura(url, timeout=FETCH_TIMEOUT):
@@ -93,18 +117,43 @@ def _fetch_article_text_bs4(url, timeout=FETCH_TIMEOUT):
     return text.strip()
 
 
-def _fetch_article_text(url, timeout=FETCH_TIMEOUT):
-    """Fetch article text — trafilatura primary, BS4 fallback."""
+def _fetch_article_text(url, timeout=FETCH_TIMEOUT, cache=None):
+    """Fetch article text — trafilatura primary, BS4 fallback.
+
+    E-7: when a PipelineCache is supplied, extracted text is served from /
+    stored to the 'page_text' cache (14-day TTL, key = normalized URL).
+    """
+    cache_key = None
+    if cache is not None:
+        cache_key = _page_text_cache_key(url)
+        try:
+            cached = cache.get(cache_key, "page_text")
+        except Exception:
+            cached = None
+        if isinstance(cached, str) and cached:
+            return cached
+
     if _HAS_TRAFILATURA:
         text = _fetch_article_text_trafilatura(url, timeout=timeout)
         if text and len(text) >= 100:
+            if cache is not None:
+                try:
+                    cache.set(cache_key, text, "page_text")
+                except Exception:
+                    pass  # caching is best-effort
             return text
         # trafilatura returned nothing useful — fall through to BS4
 
-    return _fetch_article_text_bs4(url, timeout=timeout)
+    text = _fetch_article_text_bs4(url, timeout=timeout)
+    if cache is not None and text:
+        try:
+            cache.set(cache_key, text, "page_text")
+        except Exception:
+            pass  # caching is best-effort
+    return text
 
 
-def enhance_snippet(url, existing_snippet="", timeout=FETCH_TIMEOUT):
+def enhance_snippet(url, existing_snippet="", timeout=FETCH_TIMEOUT, cache=None):
     """
     If existing_snippet is too short, fetch the article page and extract
     key sentences via LexRank. Returns the enhanced snippet or the original
@@ -114,6 +163,8 @@ def enhance_snippet(url, existing_snippet="", timeout=FETCH_TIMEOUT):
         url: Article URL to fetch
         existing_snippet: Current snippet/description (may be empty or truncated)
         timeout: HTTP fetch timeout in seconds
+        cache: optional PipelineCache — enables the persistent page-text
+            cache (E-7). Degrades gracefully to a direct fetch when absent.
 
     Returns:
         str: Enhanced snippet (2-3 sentences) or original snippet on failure
@@ -123,7 +174,7 @@ def enhance_snippet(url, existing_snippet="", timeout=FETCH_TIMEOUT):
         return existing_snippet
 
     try:
-        text = _fetch_article_text(url, timeout=timeout)
+        text = _fetch_article_text(url, timeout=timeout, cache=cache)
         if not text or len(text) < 100:
             return existing_snippet or ""
 
@@ -142,7 +193,7 @@ def enhance_snippet(url, existing_snippet="", timeout=FETCH_TIMEOUT):
 
 
 def enhance_batch(articles, url_key="url", snippet_key="snippet",
-                  max_enhance=50, skip_gov=True):
+                  max_enhance=50, skip_gov=True, conn=None):
     """
     Enhance snippets for a batch of articles. Only processes articles with
     short or missing snippets, up to max_enhance to avoid stalling the pipeline.
@@ -153,6 +204,8 @@ def enhance_batch(articles, url_key="url", snippet_key="snippet",
         snippet_key: Key for the snippet/description field
         max_enhance: Maximum number of articles to enhance per batch
         skip_gov: If True, skip government-sourced articles (they bypass filters anyway)
+        conn: optional SQLite connection — enables the persistent page-text
+            cache (E-7). Callers without a DB connection keep working.
 
     Returns:
         List of articles with enhanced snippets (modifies in place and returns)
@@ -160,6 +213,7 @@ def enhance_batch(articles, url_key="url", snippet_key="snippet",
     enhanced_count = 0
     skipped_count = 0
     extractor = "trafilatura" if _HAS_TRAFILATURA else "bs4"
+    cache = _get_pipeline_cache(conn)
 
     for article in articles:
         if enhanced_count >= max_enhance:
@@ -182,7 +236,7 @@ def enhance_batch(articles, url_key="url", snippet_key="snippet",
                 skipped_count += 1
                 continue
 
-        result = enhance_snippet(url, snippet)
+        result = enhance_snippet(url, snippet, cache=cache)
         if result != snippet:
             article[snippet_key] = result
             enhanced_count += 1
