@@ -92,7 +92,20 @@ YF_SERIES = [
     ("soybean_meal", "ZM=F", "13mo", "Soybean Meal futures"),
     # Dry-bulk shipping proxy (was single-point; no FRED BDI series exists)
     ("dry_bulk_shipping", "BDRY", "13mo", "Breakwave Dry Bulk Shipping ETF"),
+    # Agriculture livestock + uranium proxy — referenced by the industry
+    # Key Indicators tables (IND_KEY_INDICATORS in docs/js/app.js) but never
+    # fetched until 2026-06-11, so their rows silently dropped.
+    ("live_cattle", "LE=F", "13mo", "Live Cattle futures (USD/lb)"),
+    ("lean_hogs", "HE=F", "13mo", "Lean Hogs futures (USD/lb)"),
+    ("cameco_uranium", "CCJ", "13mo", "Cameco Corp (NYSE) — uranium proxy"),
 ]
+
+# CME livestock futures quote in US cents/lb; the frontend labels these rows
+# USD/lb, so convert at fetch time. Keys not listed here are stored as quoted.
+YF_SCALE = {
+    "live_cattle": 0.01,
+    "lean_hogs": 0.01,
+}
 
 # FRED series (no API key — public CSV endpoint). Covers base metals, credit
 # spreads, and the 10y-2y curve that have no usable yfinance ticker. NOTE:
@@ -268,6 +281,11 @@ def main():
         if not pts:
             failed.append((key, f"yfinance {ticker}: no rows"))
             continue
+        scale = YF_SCALE.get(key)
+        if scale:
+            for p in pts:
+                if p.get("value") is not None:
+                    p["value"] = round(p["value"] * scale, 4)
         prev_pts = len(ts.get(key, []) or [])
         merged = _merge_points(ts.get(key, []), pts)
         ts[key] = merged
