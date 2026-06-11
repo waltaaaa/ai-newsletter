@@ -282,6 +282,8 @@ def deduplicate_projects(raw_projects):
         key = generate_dedup_key(project)
         buckets[key].append(project)
 
+    buckets = _union_buckets_by_shared_url(buckets)
+
     merged = []
     for key, group in buckets.items():
         if len(group) == 1:
@@ -305,6 +307,91 @@ def deduplicate_projects(raw_projects):
             merged.append(base)
 
     return merged
+
+
+def _collect_project_urls(project) -> set:
+    """All specific (non-listing) URLs attached to a raw flat project."""
+    try:
+        from tools.dedup_projects_fuzzy import url_set, is_listing_url
+    except ImportError:
+        return set()
+    urls = set()
+    for arr in (project.get('_evidence'), project.get('evidence'), project.get('sources')):
+        urls |= url_set(arr)
+    su = project.get('source_url')
+    if su and isinstance(su, str):
+        urls.add(su.strip())
+    return {u for u in urls if u and not is_listing_url(u)}
+
+
+def _union_buckets_by_shared_url(buckets):
+    """Second dedup pass: union exact-key buckets that cite the same article.
+
+    One article extracted twice (within a run, or by the selective and RSS
+    extractors) routinely yields name re-phrasings — "Deep Sky Carbon Removal
+    Facility" vs "Deep Sky Carbon Removal — ENGIE Partnership" — that land in
+    different exact-key buckets and become duplicate DB rows. A shared specific
+    URL plus the strict guarded pair test (is_duplicate_pair: token overlap,
+    contradiction checks on CMA/proponent/value/series-identifier) merges them
+    here instead.
+    """
+    try:
+        from tools.dedup_projects_fuzzy import (
+            is_duplicate_pair, normalize_name)
+    except ImportError:
+        return buckets
+
+    keys = list(buckets.keys())
+    if len(keys) < 2:
+        return buckets
+
+    parent = {k: k for k in keys}
+
+    def find(k):
+        while parent[k] != k:
+            parent[k] = parent[parent[k]]
+            k = parent[k]
+        return k
+
+    bucket_urls = {k: _collect_project_urls(buckets[k][0]) for k in keys}
+    url_to_keys = defaultdict(list)
+    for k in keys:
+        prov = k.split(':', 1)[0]
+        for u in bucket_urls[k]:
+            url_to_keys[(prov, u)].append(k)
+
+    for (_prov, _u), shared_keys in url_to_keys.items():
+        if len(shared_keys) < 2:
+            continue
+        # Frequency guard: one article legitimately yields a handful of
+        # extraction variants — a URL spanning many distinct-name buckets is
+        # a roundup/listing page, not an identity signal.
+        if len(shared_keys) > 6:
+            continue
+        for i in range(len(shared_keys)):
+            for j in range(i + 1, len(shared_keys)):
+                a, b = shared_keys[i], shared_keys[j]
+                ra, rb = find(a), find(b)
+                if ra == rb:
+                    continue
+                p1, p2 = buckets[a][0], buckets[b][0]
+                n1 = normalize_name(p1.get('name', ''))
+                n2 = normalize_name(p2.get('name', ''))
+                if is_duplicate_pair(p1, p2, n1, n2,
+                                     bucket_urls[a], bucket_urls[b],
+                                     threshold=0.85):
+                    parent[ra] = rb
+
+    out = defaultdict(list)
+    merged_away = 0
+    for k in keys:
+        root = find(k)
+        if root != k:
+            merged_away += 1
+        out[root].extend(buckets[k])
+    if merged_away:
+        print(f"  [DEDUP] shared-URL pass merged {merged_away} same-article name variants")
+    return out
 
 
 def _ensure_evidence(project):

@@ -152,15 +152,19 @@ def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate:
         if term and yval:
             _upsert(f'yield_{term.lower()}', '%', yval.replace('%', ''))
 
+    def _vv(d):
+        """Market item value: conductor briefings write 'val', legacy 'value'."""
+        return str(d.get('value') or d.get('val') or '').replace(',', '')
+
     # CAD/USD
     for fx in financial_markets.get('fx', []):
         if 'CAD/USD' in fx.get('name', '') or 'CADUSD' in fx.get('name', ''):
-            _upsert('cadusd', 'USD', fx.get('value', '').replace(',', ''))
+            _upsert('cadusd', 'USD', _vv(fx))
 
     # TSX Composite
     for idx in financial_markets.get('indices', []):
         if 'TSX' in idx.get('name', ''):
-            _upsert('tsx_composite', 'pts', idx.get('value', '').replace(',', ''))
+            _upsert('tsx_composite', 'pts', _vv(idx))
 
     # Commodities — use canonical keys that match the yfinance backfill
     # (idx_*/comm_* prefixed variants were stale duplicates of the same data
@@ -176,14 +180,27 @@ def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate:
         'Soybean Oil': 'soybean_oil', 'Soybean Meal': 'soybean_meal',
         'Coal (Newcastle)': 'coal', 'Propane': 'propane',
         'Lumber': 'lumber',
+        # Audit H9 (2026-06-11): Canadian commodities the chart agent reads
+        # via canonical keys but which nothing appended weekly.
+        'Uranium': 'uranium', 'Canola': 'canola', 'Nickel': 'nickel',
+        'Potash (Nutrien)': 'potash_nutrien', 'Silver': 'silver',
     }
+    # The conductor-era briefing carries a FLAT commodities list
+    # ([{name, val, unit, ...}]); the legacy shape was categorized
+    # ([{items: [...]}]). Handle both — the categorized iteration silently
+    # appended nothing for every conductor briefing (audit H9).
+    _comm_items = []
     for cat in payload.get('commodities', []):
-        for item in (cat.get('items', []) if isinstance(cat, dict) else []):
-            name = item.get('name', '')
-            series_id = COMM_ID_MAP.get(name)
-            if series_id:
-                _upsert(series_id, item.get('unit', ''),
-                        item.get('val', '').replace('$', '').replace(',', ''))
+        if isinstance(cat, dict) and isinstance(cat.get('items'), list):
+            _comm_items.extend(cat['items'])
+        elif isinstance(cat, dict) and cat.get('name'):
+            _comm_items.append(cat)
+    for item in _comm_items:
+        name = item.get('name', '')
+        series_id = COMM_ID_MAP.get(name)
+        if series_id:
+            _upsert(series_id, item.get('unit', ''),
+                    str(item.get('val', '') or '').replace('$', '').replace(',', ''))
 
     # Other equity indices — canonical keys (sp500/djia/nasdaq/ftse100/dax/
     # nikkei225). Hang Seng and Shanghai have no non-prefixed canonical in the
@@ -197,7 +214,7 @@ def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate:
         name = idx.get('name', '')
         series_id = IDX_ID_MAP.get(name)
         if series_id:
-            _upsert(series_id, 'pts', idx.get('value', '').replace(',', ''))
+            _upsert(series_id, 'pts', _vv(idx))
 
     # Other FX pairs
     FX_ID_MAP = {
@@ -208,7 +225,7 @@ def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate:
         name = fx_item.get('name', '')
         series_id = FX_ID_MAP.get(name)
         if series_id:
-            _upsert(series_id, '', fx_item.get('value', '').replace(',', ''))
+            _upsert(series_id, '', _vv(fx_item))
 
     print("  Timeseries update complete.")
 
@@ -279,6 +296,27 @@ def run(conn, context, logger):
             except Exception:
                 pass
 
+        # Recall instruments — benchmark coverage audit + typed miss
+        # classification. This existed as an operator tool only; the 2026-06-10
+        # miss diagnosis (Portage Place sat on the benchmark list while
+        # miss_audit_results stayed empty) showed it must run every pipeline
+        # run so recall failures are loud, not latent.
+        try:
+            from tools.coverage_audit import run_coverage_audit, run_miss_classification
+            from db import get_all_projects as _get_all_projects
+            _cov = run_coverage_audit(_get_all_projects(conn))
+            logger.log_metric("coverage", "benchmark_found", _cov.get("found", 0))
+            logger.log_metric("coverage", "benchmark_total", _cov.get("total", 0))
+            logger.log_metric("coverage", "benchmark_missing", len(_cov.get("missing", [])))
+            if _cov.get("missing"):
+                run_miss_classification(conn)
+        except Exception as e:
+            print(f"  [COVERAGE] benchmark audit failed (non-critical): {e}")
+            try:
+                logger.log_error("coverage_audit", e)
+            except Exception:
+                pass
+
         # M-3 — every weekly run, ensure Under Construction projects carry
         # an alert. The existing monthly check (project_alert_tracker.is_
         # first_week_of_month gate) only fires on day 1-7 of the month —
@@ -325,6 +363,30 @@ def run(conn, context, logger):
             f"EDITION: {last_week.strftime('%b %d').upper()} – "
             f"{today.strftime('%b %d').upper()} // STATUS: AI-SYNTHESIZED"
         )
+
+        # Audit M3: top-level aliases. The assembler emits bocRate /
+        # pipeline_value / project_count as literal null; the frontend uses
+        # them as fallbacks (app.js reads D.bocRate, D.pipeline_value,
+        # D.project_count). Backfill from metrics + the projects table so the
+        # validator aliases are real values, not nulls.
+        try:
+            _m = final_payload.get('metrics') or {}
+            if not final_payload.get('bocRate'):
+                final_payload['bocRate'] = (_m.get('bocRate')
+                                            or boc_data.get('rate') or '')
+            if (not final_payload.get('pipeline_value')
+                    or not final_payload.get('project_count')):
+                _row = conn.execute(
+                    "SELECT COUNT(*), COALESCE(SUM(value_millions), 0) "
+                    "FROM projects WHERE status NOT IN "
+                    "('Cancelled', 'Complete', 'Completed')").fetchone()
+                if not final_payload.get('project_count'):
+                    final_payload['project_count'] = int(_row[0] or 0)
+                if not final_payload.get('pipeline_value'):
+                    final_payload['pipeline_value'] = (
+                        f"${(_row[1] or 0) / 1000:.1f}B")
+        except Exception as e:
+            print(f"  [WARN] Top-level alias backfill failed (non-critical): {e}")
 
         # Consumer sentiment to DB
         sentiment_result = hard_data.get('_sentiment_result')

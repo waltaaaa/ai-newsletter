@@ -155,6 +155,15 @@ _LISTING_URL_PATTERNS = (
     '/budget2',
     '/page=',
     '?search=',
+    # Provincial capital-plan listing pages — one URL shared by hundreds of
+    # backfilled rows; treating it as project-specific made the shared-URL
+    # dedup signal merge unrelated QC school projects (2026-06-10 red team).
+    'plan-quebecois-infrastructures',
+    '/capital-plan',
+    '/infrastructure-plan',
+    '/gmap-gcarte',
+    '/ontario-builds',
+    'environmental-impact-assessments-historical-projects',
 )
 
 

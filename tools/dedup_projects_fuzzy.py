@@ -33,7 +33,7 @@ import argparse
 import json
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime
 from difflib import SequenceMatcher
 
@@ -236,6 +236,14 @@ _STOPWORDS = {
     'in', 'at', 'on', 'for', 'to', 'a', 'an', 'redevelopment', 'development',
     'plant', 'facility', 'centre', 'center', 'building', 'mine', 'plan',
     'corp', 'inc', 'ltd', 'ltee', 'limited',
+    # Announcement-framing words: they describe how a story was told, not which
+    # project it is. "Deep Sky Carbon Removal Facility" vs "Deep Sky Carbon
+    # Removal — ENGIE Partnership" (same article) must not be split by them.
+    'partnership', 'agreement', 'announcement', 'deal', 'initiative',
+    'investment', 'proposal',
+    # Work-stage words: "X — structural phase" / "X construction" are the same
+    # project at a construction milestone, not a different project.
+    'construction', 'structural', 'preliminary', 'work', 'works',
 }
 
 
@@ -259,6 +267,7 @@ GENERIC_FACILITY_TERMS = {
     'school', 'elementary', 'secondary', 'high',
     'bridge', 'highway', 'road', 'street', 'interchange', 'overpass',
     'hog', 'dairy', 'poultry', 'barn', 'feedlot', 'livestock', 'swine',
+    'meat', 'food', 'grain', 'transit',
     'drainage', 'ditching', 'ditch', 'culvert', 'dyke', 'dike',
     'well', 'landfill', 'waste', 'transfer', 'station', 'recycling',
     'collection', 'forcemain', 'supply', 'system', 'systems', 'rural',
@@ -269,6 +278,15 @@ GENERIC_FACILITY_TERMS = {
     'hospital', 'clinic', 'care', 'health',
     'upgrades', 'improvements', 'rehabilitation', 'replacement', 'renovation',
     'new', 'proposed', 'municipal', 'regional', 'community',
+    # French registry vocabulary (QC PQI backfill) — "école primaire du centre
+    # de services scolaire de X" is a KIND of project; without these the QC
+    # school rows look brand-named and merge across arrondissements.
+    'école', 'ecole', 'primaire', 'secondaire', 'scolaire', 'services',
+    'hôpital', 'hopital', 'maison', 'aînés', 'aines', 'agrandissement',
+    'reconstruction', 'réfection', 'refection', 'réaménagement',
+    'reamenagement', 'rénovation', 'usine', 'eau', 'eaux', 'pont', 'route',
+    'autoroute', 'gare', 'aménagement', 'amenagement', 'bonification',
+    'modernisation', 'ajout', 'espaces', 'travaux',
 }
 
 
@@ -282,6 +300,35 @@ def is_generic_name(norm_name: str) -> bool:
     return all(t in GENERIC_FACILITY_TERMS for t in toks)
 
 
+_CORP_SUFFIX_RE = re.compile(
+    r'\b(inc|incorporated|ltd|ltee|limited|llc|llp|ulc|corp|corporation|'
+    r'company|co|plc|sa|ag|gmbh)\b\.?', re.IGNORECASE)
+
+
+def norm_proponent(p: str) -> str:
+    """Normalize a proponent for identity comparison: lowercase, strip
+    punctuation and corporate suffixes ('Alamos Gold' == 'Alamos Gold Inc.')."""
+    s = _PUNCT_RE.sub(' ', (p or '').lower())
+    s = _CORP_SUFFIX_RE.sub('', s)
+    return _WS_RE.sub(' ', s).strip()
+
+
+def proponents_match(p1: str, p2: str) -> bool:
+    """True when both non-empty and the same org after normalization
+    (containment counts: 'alamos gold' vs 'alamos gold mining division')."""
+    a, b = norm_proponent(p1), norm_proponent(p2)
+    return bool(a and b and (a == b or a in b or b in a))
+
+
+def proponents_contradict(p1: str, p2: str) -> bool:
+    """True when both non-empty and clearly different orgs. Corporate-suffix
+    variants ('Alamos Gold' vs 'Alamos Gold Inc.') are NOT a contradiction."""
+    a, b = norm_proponent(p1), norm_proponent(p2)
+    if not a or not b:
+        return False
+    return not (a == b or a in b or b in a)
+
+
 def has_corroboration(p1: dict, p2: dict, urls1: set = None, urls2: set = None) -> bool:
     """A second identity signal beyond the (generic) name: same proponent,
     same CMA, parsed values within 1.5x, or a shared non-listing evidence URL.
@@ -289,9 +336,7 @@ def has_corroboration(p1: dict, p2: dict, urls1: set = None, urls2: set = None) 
     urls1/urls2: pre-extracted (listing-filtered) URL sets when the caller has
     them — the live upsert path passes stripped project dicts without evidence,
     so deriving from p1/p2 alone would silently drop the URL signal there."""
-    pr1 = (p1.get('proponent') or '').strip().lower()
-    pr2 = (p2.get('proponent') or '').strip().lower()
-    if pr1 and pr1 == pr2:
+    if proponents_match(p1.get('proponent'), p2.get('proponent')):
         return True
     cma1 = (p1.get('cma') or '').strip().lower()
     cma2 = (p2.get('cma') or '').strip().lower()
@@ -338,6 +383,12 @@ def is_listing_url(u: str) -> bool:
         '/budget2',
         '/page=',
         '?search=',
+        'plan-quebecois-infrastructures',
+        '/capital-plan',
+        '/infrastructure-plan',
+        '/gmap-gcarte',
+        '/ontario-builds',
+        'environmental-impact-assessments-historical-projects',
     ))
 
 
@@ -346,7 +397,7 @@ _NUM_RE = re.compile(r'\b\d+\b')
 _SERIES_PRECURSORS = {
     'zone', 'district', 'line', 'phase', 'stage', 'route', 'ward', 'subdivision',
     'block', 'parcel', 'lot', 'unit', 'sector', 'campus', 'building',
-    'arrondissement', 'borough',
+    'arrondissement', 'borough', 'secteur', 'édifice', 'edifice', 'site',
 }
 
 
@@ -396,7 +447,8 @@ def is_duplicate_pair(p1: dict, p2: dict, n1: str, n2: str,
       A) Identical normalized names.
       B) Normalized names with Jaccard token overlap (distinctive tokens) >= 0.85
          AND fuzzy ratio >= max(threshold, 0.92).
-      C) Shared specific evidence/source URL AND Jaccard >= 0.7
+      C) Shared specific evidence/source URL AND >=2 shared distinctive tokens
+         AND Jaccard >= 0.6
          AND not contradicting on (proponent, value, CMA, series identifier).
 
     Generic-name gate: when the name carries no project-identifying token
@@ -406,6 +458,16 @@ def is_duplicate_pair(p1: dict, p2: dict, n1: str, n2: str,
     """
     if not n1 or not n2:
         return False
+
+    # Series-identifier guard on the RAW names first: normalize_name strips
+    # "Phase N" as decoration, so "Highway 3 Twinning Phase 2" and "... Phase 4"
+    # collapse to identical normalized names and would merge via the exact-name
+    # path. The raw names still carry the differing identifiers.
+    raw1 = _WS_RE.sub(' ', _PUNCT_RE.sub(' ', (p1.get('name') or '').lower())).strip()
+    raw2 = _WS_RE.sub(' ', _PUNCT_RE.sub(' ', (p2.get('name') or '').lower())).strip()
+    if raw1 and raw2 and differing_series_identifier(raw1, raw2):
+        return False
+
     if n1 == n2:
         if is_generic_name(n1):
             return has_corroboration(p1, p2, urls1, urls2)
@@ -427,16 +489,51 @@ def is_duplicate_pair(p1: dict, p2: dict, n1: str, n2: str,
 
     r = fuzzy_match(n1, n2)
     has_shared_url = bool(urls1 & urls2)
+    # Containment needs >=2 identifying tokens on BOTH sides — a single shared
+    # token ({transit} <= {transit} after stopwords) is not identity.
+    contained_sets = ((t1 <= t2) or (t2 <= t1)) and min(len(t1), len(t2)) >= 2
 
-    # B path — high token + char overlap
-    path_b = jacc >= 0.85 and r >= max(threshold, 0.92)
+    # B path — high token overlap, then EITHER high char overlap OR token
+    # containment. The char-ratio alternative matters for milestone re-phrasings
+    # with no shared URL: "Deep Sky Manitoba Carbon Removal Facility" vs
+    # "... Facility Construction" has jacc 1.0 but char ratio 0.91 — same
+    # project, different article. Contradiction checks below still apply.
+    path_b = jacc >= 0.85 and (r >= max(threshold, 0.92) or contained_sets)
     # Generic names can clear B on vocabulary alone — require a second signal.
     if path_b and is_generic_name(n1) and is_generic_name(n2):
         path_b = has_corroboration(p1, p2, urls1, urls2)
 
     # C path — shared specific URL with moderate name overlap
-    # (the shared non-listing URL is itself the corroborating signal)
-    path_c = has_shared_url and jacc >= 0.7
+    # (the shared non-listing URL is itself the corroborating signal).
+    # Threshold 0.6 with >=2 shared distinctive tokens: two extractions of the
+    # SAME article that disagree this much on the name are re-phrasings of one
+    # project, not two projects in one story — the contradiction checks below
+    # (CMA, proponent, value ratio, series identifier) still kill real splits.
+    # Token containment covers extension-style re-phrasings ("Portage Place
+    # Redevelopment" vs "Portage Place Mall Redevelopment — True North Health
+    # Campus"): the shorter name's identifying tokens all inside the longer's.
+    contained = (t1 <= t2) or (t2 <= t1)
+    path_c = has_shared_url and len(shared) >= 2 and (jacc >= 0.6 or contained)
+
+    # C2 path — shared URL + identical leading identifier bigram. Project
+    # names lead with their identifier ("Deep Sky …", "Portage Place …"), so
+    # the same article + the same two leading tokens is identity even when the
+    # rest of the phrasing diverges entirely ("… direct air capture facility"
+    # vs "… carbon removal facility"). BOTH leading tokens must be non-generic:
+    # "école primaire …" / "regional hospital …" pairs never ride this path.
+    def _lead(n):
+        toks = [t for t in n.split() if t not in _STOPWORDS and len(t) > 2]
+        return tuple(toks[:2])
+    # Beyond the bigram, at least one more shared token is required —
+    # place-prefixed names ("Prince Albert Leisure Centre" vs "Prince Albert
+    # Road Rehabilitation") share a city-news URL and a leading bigram while
+    # being different projects; a third shared token ("manitoba" in the Deep
+    # Sky pair) separates re-phrasings from coincidental prefixes.
+    if has_shared_url and not path_c:
+        lead1, lead2 = _lead(n1), _lead(n2)
+        path_c = (len(lead1) == 2 and lead1 == lead2
+                  and len(shared) >= 3
+                  and not any(t in GENERIC_FACILITY_TERMS for t in lead1))
 
     if not (path_b or path_c):
         return False
@@ -446,9 +543,7 @@ def is_duplicate_pair(p1: dict, p2: dict, n1: str, n2: str,
     cma2 = (p2.get('cma') or '').strip().lower()
     if cma1 and cma2 and cma1 != cma2:
         return False
-    pr1 = (p1.get('proponent') or '').strip().lower()
-    pr2 = (p2.get('proponent') or '').strip().lower()
-    if pr1 and pr2 and pr1 != pr2 and r < 0.95:
+    if proponents_contradict(p1.get('proponent'), p2.get('proponent')) and r < 0.95:
         return False
     # Same project should not span very different parsed_values
     v1 = p1.get('parsed_value') or 0
@@ -505,6 +600,18 @@ def find_clusters(projects, fuzzy_threshold=0.85):
         by_prov[prov].append(i)
         if norm:
             by_norm[(prov, norm)].append(i)
+
+    # Frequency guard (2026-06-10 red team): the listing-pattern list always
+    # lags reality — ontario-builds, gmap-gcarte, and the QC PQI page each
+    # carried hundreds of unrelated projects and merged Shell Quest with
+    # Shell Jackpine. A URL attached to >10 projects is a listing page by
+    # definition, whatever its path looks like.
+    _url_freq = Counter()
+    for urls in url_cache:
+        _url_freq.update(urls)
+    _bulk_urls = {u for u, n in _url_freq.items() if n > 10}
+    if _bulk_urls:
+        url_cache = [{u for u in urls if u not in _bulk_urls} for urls in url_cache]
 
     # Pass 1 — exact normalized name within province. Exact match is safe ONLY
     # for names with an identifying token; generic registry names ("Wastewater
@@ -709,7 +816,14 @@ def serialize_for_db(p: dict) -> dict:
 
 
 def write_back(conn, primary: dict, secondary_norm_keys: list[str]):
-    """UPDATE primary row, DELETE secondary rows."""
+    """UPDATE primary row, re-point FK children, DELETE secondary rows.
+
+    Child tables (evidence, project_events, project_organizations,
+    project_identifiers) reference projects.rowid. Re-pointing them to the
+    keeper BEFORE deleting the loser preserves the "evidence merge never
+    loses URLs" invariant at the relational level too — and avoids the FK
+    failure when the caller's connection has PRAGMA foreign_keys=ON.
+    """
     serialized = serialize_for_db(primary)
     cols = [
         'name', 'province', 'cma', 'sector', 'naics_code', 'naics_name',
@@ -723,13 +837,34 @@ def write_back(conn, primary: dict, secondary_norm_keys: list[str]):
     ]
     set_clause = ', '.join(f'{c} = ?' for c in cols)
     values = [serialized.get(c) for c in cols] + [primary['norm_key']]
+    _CHILD_TABLES = ('evidence', 'project_events', 'project_organizations',
+                     'project_identifiers')
     with conn:
         conn.execute(
             f"UPDATE projects SET {set_clause} WHERE norm_key = ?", values
         )
+        keep_row = conn.execute(
+            "SELECT rowid FROM projects WHERE norm_key = ?",
+            (primary['norm_key'],)).fetchone()
+        keep_rowid = keep_row[0] if keep_row else None
         for k in secondary_norm_keys:
-            if k and k != primary['norm_key']:
-                conn.execute("DELETE FROM projects WHERE norm_key = ?", (k,))
+            if not k or k == primary['norm_key']:
+                continue
+            drop_row = conn.execute(
+                "SELECT rowid FROM projects WHERE norm_key = ?", (k,)).fetchone()
+            if drop_row and keep_rowid is not None:
+                drop_rowid = drop_row[0]
+                for child in _CHILD_TABLES:
+                    try:
+                        conn.execute(
+                            f"UPDATE OR IGNORE {child} SET project_id = ? "
+                            f"WHERE project_id = ?", (keep_rowid, drop_rowid))
+                        conn.execute(
+                            f"DELETE FROM {child} WHERE project_id = ?",
+                            (drop_rowid,))
+                    except Exception:
+                        pass  # table may not exist in older DBs
+            conn.execute("DELETE FROM projects WHERE norm_key = ?", (k,))
 
 
 def run(args):

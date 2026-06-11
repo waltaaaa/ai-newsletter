@@ -315,6 +315,84 @@ SOURCE TEXT:
     return []
 
 
+# ── Extraction backlog (carryover across runs) ──────────────────────────────
+# Phase 3 has a hard wall-clock budget; when it fires, whatever hasn't been
+# extracted yet used to vanish silently — including marquee stories that
+# happened to sit late in the queue. The backlog persists the unprocessed
+# tail in dashboard_state so the next run picks it up first.
+EXTRACTION_BACKLOG_KEY = 'extraction_backlog'
+EXTRACTION_BACKLOG_CAP = int(os.environ.get('EXTRACTION_BACKLOG_CAP', '400'))
+EXTRACTION_BACKLOG_MAX_ATTEMPTS = 3
+
+
+def _item_priority(item) -> float:
+    """Extraction priority: carryover first, then rerank relevance, then rest."""
+    if item.get('_carryover'):
+        return 100.0
+    logit = item.get('_rerank_logit')
+    return float(logit) if logit is not None else 0.0
+
+
+def _item_lite(item) -> dict:
+    """Slim, JSON-safe snapshot of an article for the persisted backlog."""
+    return {
+        'title': item.get('title', ''),
+        'summary': (item.get('summary', '') or '')[:500],
+        'url': item.get('url') or item.get('link') or '',
+        'source_name': item.get('source_name', ''),
+        'source_level': item.get('source_level', ''),
+        'province': item.get('province', ''),
+        'published': item.get('published', ''),
+        '_rerank_logit': item.get('_rerank_logit'),
+        'attempts': int(item.get('attempts', 0)),
+    }
+
+
+def merge_extraction_backlog(conn, items):
+    """Prepend last run's unprocessed articles (deduped by URL, attempt-capped)."""
+    try:
+        from db import get_dashboard_state
+        backlog = get_dashboard_state(conn, EXTRACTION_BACKLOG_KEY) or []
+    except Exception:
+        backlog = []
+    if not backlog:
+        return list(items)
+    current_urls = {(i.get('url') or i.get('link') or '') for i in items}
+    carried, expired = [], 0
+    for b in backlog:
+        u = b.get('url') or ''
+        if not u or u in current_urls:
+            continue
+        b['attempts'] = int(b.get('attempts', 0)) + 1
+        if b['attempts'] >= EXTRACTION_BACKLOG_MAX_ATTEMPTS:
+            expired += 1
+            continue
+        b['_carryover'] = True
+        carried.append(b)
+    if carried or expired:
+        print(f"  [BACKLOG] {len(carried)} unprocessed articles carried over from "
+              f"previous run ({expired} expired after {EXTRACTION_BACKLOG_MAX_ATTEMPTS} attempts)")
+    return carried + list(items)
+
+
+def _flush_backlog(remaining_by_url: dict):
+    """Persist the not-yet-extracted articles. Opens its own connection — runs
+    from extraction worker context, possibly after the phase deadline."""
+    try:
+        from db import get_db, save_dashboard_state
+        items = sorted(remaining_by_url.values(),
+                       key=lambda b: (b.get('_rerank_logit') or 0.0), reverse=True)
+        conn = get_db()
+        try:
+            save_dashboard_state(conn, EXTRACTION_BACKLOG_KEY,
+                                 items[:EXTRACTION_BACKLOG_CAP])
+            conn.commit()
+        finally:
+            conn.close()
+    except Exception as e:
+        print(f"  [BACKLOG] flush failed (non-fatal): {type(e).__name__}: {e}")
+
+
 def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=None, cost_state=None):
     """
     Extract structured capital project data directly from RSS news items
@@ -324,10 +402,20 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
     _parse_projects_with_sonnet() on each group.  Returns a tuple of
     (flat project list, failed article list for Pro recovery).
     """
-    proj_items = rss_monitor.filter_project_relevant(rss_items)
+    # Items that already cleared the 6-layer remediated filter (stamped
+    # '_l6_passed' in run()) skip the crude keyword cut — the L1/L2 bypasses
+    # (government source, dollar value) exist precisely because keyword
+    # matching misses them.
+    pre_filtered = [i for i in rss_items if i.get('_l6_passed') or i.get('_carryover')]
+    rest = [i for i in rss_items if not (i.get('_l6_passed') or i.get('_carryover'))]
+    proj_items = pre_filtered + rss_monitor.filter_project_relevant(rest)
     if not proj_items:
         print("  [RSS PROJECTS] No project-relevant items found in RSS feeds.")
         return [], []
+
+    # Highest-relevance first: a phase timeout must only ever cost us the
+    # low-signal tail, never the week's marquee story.
+    proj_items.sort(key=_item_priority, reverse=True)
 
     print(f"\n  [RSS PROJECTS] Extracting from {len(proj_items)} relevant RSS items...")
 
@@ -397,19 +485,53 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
         for chunk_idx, chunk in enumerate(chunks):
             work.append((province, chunk_idx, len(chunks), chunk))
 
+    # Dispatch highest-priority chunks first — worker submission order is the
+    # processing order, so a phase timeout drops only the low-relevance tail.
+    work.sort(key=lambda w: max((_item_priority(i) for i in w[3]), default=0.0),
+              reverse=True)
+
+    # Persist the full queue up front, then peel off completed chunks. If the
+    # phase deadline abandons this thread mid-flight, whatever wasn't flushed
+    # as done is still in dashboard_state for the next run to carry over.
+    remaining_by_url = {}
+    for _, _, _, chunk in work:
+        for it in chunk:
+            u = it.get('url') or it.get('link') or ''
+            if u:
+                remaining_by_url[u] = _item_lite(it)
+    _flush_backlog(remaining_by_url)
+
     province_projects: dict[str, list] = {p: [] for p in by_province}
     if work:
+        completed_since_flush = 0
         with ThreadPoolExecutor(max_workers=RSS_EXTRACT_WORKERS) as ex:
             futs = {ex.submit(_process_chunk, *w): w for w in work}
             for fut in as_completed(futs):
                 province = futs[fut][0]
+                chunk = futs[fut][3]
                 try:
                     projects, failed = fut.result()
                 except Exception as e:
-                    print(f"    [RSS PROJECTS] {province} chunk failed: {type(e).__name__}: {e}")
+                    # Chunk raised (subprocess crash, etc.) — leave its articles
+                    # in remaining_by_url so the backlog carries them to the
+                    # next run instead of silently dropping them (audit C2).
+                    print(f"    [RSS PROJECTS] {province} chunk failed: {type(e).__name__}: {e} "
+                          f"— {len(chunk)} articles kept in backlog")
+                    completed_since_flush += 1
+                    if completed_since_flush >= 5:
+                        _flush_backlog(remaining_by_url)
+                        completed_since_flush = 0
                     continue
+                # Only a chunk that actually returned is removed from the backlog.
+                for it in chunk:
+                    remaining_by_url.pop(it.get('url') or it.get('link') or '', None)
+                completed_since_flush += 1
+                if completed_since_flush >= 5:
+                    _flush_backlog(remaining_by_url)
+                    completed_since_flush = 0
                 province_projects[province].extend(projects)
                 failed_articles.extend(failed)
+        _flush_backlog(remaining_by_url)
 
     for province, projs in province_projects.items():
         if projs:
@@ -496,6 +618,21 @@ def run(conn, context, logger):
             conn=conn,  # E-7: enables page-text + embedding caches
         )
 
+        # The remediated 6-layer set (gov bypass + dollar bypass + L6 LLM
+        # classification + L7 rerank) IS the extraction queue. It used to be
+        # computed and then dropped on the floor while extraction re-cut the
+        # raw items with a crude keyword filter — missing every article that
+        # only survived via a bypass, and ignoring the rerank relevance
+        # signal entirely. Stamp items so extract_projects_from_rss() trusts
+        # them, and prepend last run's unprocessed backlog.
+        if rss_filtered:
+            for _it in rss_filtered:
+                _it['_l6_passed'] = True
+            extraction_items = rss_filtered
+        else:
+            extraction_items = rss_items
+        extraction_items = merge_extraction_backlog(conn, extraction_items)
+
         # ── POST-EXTRACTION: Deduplicate & upsert all discovered projects ──
         print("\n[POST-EXTRACTION] Collecting all discovered projects...")
 
@@ -529,9 +666,10 @@ def run(conn, context, logger):
                     '_source_query_sector': gp.get('_section', ''),
                 })
 
-        # Tier 4: RSS project extraction
+        # Tier 4: RSS project extraction (remediated filter output + backlog,
+        # highest rerank relevance first)
         rss_projects, rss_failed_articles = extract_projects_from_rss(
-            rss_items,
+            extraction_items,
             anthropic_client=anthropic_client,
             claude_model=claude_model,
             cost_state=cost_state,
@@ -627,6 +765,7 @@ def run(conn, context, logger):
             if sync_result:
                 logger.log_metric("discovery", "projects_added", sync_result.get("new", 0))
                 logger.log_metric("discovery", "projects_updated", sync_result.get("updated", 0))
+                logger.log_metric("discovery", "fuzzy_merges", sync_result.get("fuzzy_merged", 0))
                 # Register newly discovered projects for alert tracking
                 try:
                     from project_alert_tracker import register_batch

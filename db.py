@@ -354,6 +354,14 @@ CREATE INDEX IF NOT EXISTS idx_evidence_project ON evidence(project_id);
 CREATE INDEX IF NOT EXISTS idx_evidence_url ON evidence(url_normalized);
 CREATE INDEX IF NOT EXISTS idx_evidence_source_type ON evidence(source_type);
 
+-- Audit M4 (2026-06-11): hot-query indexes on the projects table. Export,
+-- province filters, status counters, and stale detection all scan these
+-- columns on a 6k+ row table.
+CREATE INDEX IF NOT EXISTS idx_projects_province ON projects(province);
+CREATE INDEX IF NOT EXISTS idx_projects_status ON projects(status);
+CREATE INDEX IF NOT EXISTS idx_projects_sector ON projects(sector);
+CREATE INDEX IF NOT EXISTS idx_projects_lastseen ON projects(lastSeen);
+
 -- 16. Documents (URL fetch/classification tracking)
 CREATE TABLE IF NOT EXISTS documents (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -938,6 +946,10 @@ _FUZZY_STOPWORDS = {
     'in', 'at', 'on', 'for', 'to', 'a', 'an', 'redevelopment', 'development',
     'plant', 'facility', 'centre', 'center', 'building', 'mine', 'plan',
     'corp', 'inc', 'ltd', 'ltee', 'limited',
+    # Keep in sync with tools/dedup_projects_fuzzy._STOPWORDS — announcement-
+    # framing words make poor blocking tokens (they match half the table).
+    'partnership', 'agreement', 'announcement', 'deal', 'initiative',
+    'investment', 'proposal',
 }
 
 # Observability: fuzzy-merge hits per process (read via get_merge_counters)
@@ -971,25 +983,47 @@ def _fuzzy_find_existing(conn: sqlite3.Connection, name: str, province: str,
     n1 = normalize_name(name)
     if not n1:
         return None
-    block_tokens = sorted(
-        (t for t in set(n1.split()) if len(t) >= 4 and t not in _FUZZY_STOPWORDS),
-        key=len, reverse=True)[:3]
-    if not block_tokens:
-        return None
-
-    clauses = " OR ".join(["name LIKE ?"] * len(block_tokens))
-    rows = conn.execute(
-        f"SELECT norm_key, name, cma, proponent, parsed_value, evidence, sources "
-        f"FROM projects WHERE province = ? AND ({clauses})",
-        (province, *[f"%{t}%" for t in block_tokens]),
-    ).fetchall()
-    if not rows:
-        return None
 
     urls1 = {u for u in (url_set(project_dict.get('evidence'))
                          | url_set(project_dict.get('sources')))
              if not is_listing_url(u)}
+
+    rows = []
+
+    # URL-first candidate lookup: an incoming article URL already attached to
+    # a project (evidence table) is the strongest rediscovery signal there is.
+    # Re-extractions of the same story across runs land here directly, even
+    # when the LLM re-phrased the project name beyond fuzzy-blocking reach.
+    if urls1:
+        try:
+            from url_utils import normalize_url as _norm_url
+            norm_urls = [u2 for u2 in (_norm_url(u) for u in urls1) if u2]
+            if norm_urls:
+                ph = ",".join("?" * len(norm_urls))
+                rows.extend(conn.execute(
+                    f"SELECT DISTINCT p.norm_key, p.name, p.cma, p.proponent, "
+                    f"p.parsed_value, p.evidence, p.sources "
+                    f"FROM evidence e JOIN projects p ON p.rowid = e.project_id "
+                    f"WHERE p.province = ? AND e.url_normalized IN ({ph})",
+                    (province, *norm_urls),
+                ).fetchall())
+        except Exception as _e:
+            logger.warning(f"[DB] URL-first rediscovery lookup failed (non-fatal): {_e}")
+
+    block_tokens = sorted(
+        (t for t in set(n1.split()) if len(t) >= 4 and t not in _FUZZY_STOPWORDS),
+        key=len, reverse=True)[:3]
+    if block_tokens:
+        clauses = " OR ".join(["name LIKE ?"] * len(block_tokens))
+        rows.extend(conn.execute(
+            f"SELECT norm_key, name, cma, proponent, parsed_value, evidence, sources "
+            f"FROM projects WHERE province = ? AND ({clauses})",
+            (province, *[f"%{t}%" for t in block_tokens]),
+        ).fetchall())
+    if not rows:
+        return None
     p1 = {
+        'name': name,
         'cma': project_dict.get('cma', ''),
         'proponent': project_dict.get('proponent', ''),
         'parsed_value': project_dict.get('parsed_value'),
@@ -1000,7 +1034,7 @@ def _fuzzy_find_existing(conn: sqlite3.Connection, name: str, province: str,
             continue
         urls2 = {u for u in (url_set(r['evidence']) | url_set(r['sources']))
                  if not is_listing_url(u)}
-        p2 = {'cma': r['cma'], 'proponent': r['proponent'],
+        p2 = {'name': r['name'], 'cma': r['cma'], 'proponent': r['proponent'],
               'parsed_value': r['parsed_value']}
         if is_duplicate_pair(p1, p2, n1, n2, urls1, urls2, threshold=0.85):
             return r['norm_key']
@@ -1043,6 +1077,31 @@ def _row_to_dict(row) -> dict:
 # PROJECTS
 # ══════════════════════════════════════════════════════════════════════════════
 
+_TIER_RANK = {'featured': 2, 'registry': 1, 'archive': 0}
+
+
+def _quality_tier_safe(project_dict: dict) -> str:
+    """Tier a project at write time using the canonical rules from
+    tools/cleanup_projects.compute_tier.
+
+    The quality_tier column was added by ALTER TABLE with no DEFAULT, so rows
+    inserted by the pipeline carried NULL — and the exporter's ORDER BY CASE
+    sorts NULL after 'archive'. Every new discovery (including marquee
+    projects) was buried below the registry backfill until an operator re-ran
+    the cleanup tool. Assigning the tier here closes that gap.
+    """
+    try:
+        from tools.cleanup_projects import compute_tier
+        return compute_tier({
+            'parsed_value': project_dict.get('parsed_value'),
+            'province': project_dict.get('province'),
+            'discovery_source': project_dict.get('discovery_source', ''),
+            'confidence': project_dict.get('confidence', 0.0),
+        })
+    except Exception:
+        return 'registry'
+
+
 def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
     """Insert or update a project, enforcing all business rules.
 
@@ -1083,6 +1142,12 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
         raw_value = project_dict.get("value")
         if raw_value:
             project_dict["parsed_value"] = parse_value(raw_value)
+
+    # Keep value_millions in lockstep with parsed_value — ranking surfaces
+    # (microscope candidate sort, briefing value rollups) read value_millions,
+    # so a NULL here makes a priced project rank as $0.
+    if project_dict.get("value_millions") is None and project_dict.get("parsed_value"):
+        project_dict["value_millions"] = round(project_dict["parsed_value"] / 1_000_000, 3)
 
     # Value reasonableness gate: flag projects > $50B as suspicious
     pv = project_dict.get("parsed_value")
@@ -1186,7 +1251,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     discovery_source, source_url_quality,
                     has_government_source, has_known_source, evidence_count,
                     announcement_date, start_date, parsed_value, provinces_additional,
-                    currency, value_low, value_high, value_scope, axes_satisfied
+                    currency, value_low, value_high, value_scope, axes_satisfied,
+                    value_millions, quality_tier
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?,
                     ?, ?, ?, ?, ?,
@@ -1196,7 +1262,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     ?, ?,
                     ?, ?, ?,
                     ?, ?, ?, ?,
-                    ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?,
+                    ?, ?
                 )
             """, (
                 key, name, province,
@@ -1239,6 +1306,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                 project_dict.get("value_scope") or "",
                 # G8: triangulation axes satisfied by evidence + provenance
                 _axes_satisfied_safe(evidence, discovery_sources),
+                project_dict.get("value_millions"),
+                project_dict.get("quality_tier") or _quality_tier_safe(project_dict),
             ))
         else:
             # UPDATE existing project
@@ -1345,6 +1414,22 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
 
             completion = project_dict.get("completionDate") or existing_dict.get("completionDate", "")
             proponent = project_dict.get("proponent") or existing_dict.get("proponent", "")
+
+            # Re-tier from the merged state (a value arriving later can promote
+            # registry -> featured). Never downgrade: a curated/hand-promoted
+            # tier survives any recompute.
+            recomputed_tier = _quality_tier_safe({
+                'parsed_value': pv,
+                'province': existing_dict.get('province'),
+                'discovery_source': (project_dict.get('discovery_source')
+                                     or existing_dict.get('discovery_source', '')),
+                'confidence': resolved_conf,
+            })
+            existing_tier = existing_dict.get('quality_tier') or ''
+            if _TIER_RANK.get(existing_tier, -1) >= _TIER_RANK.get(recomputed_tier, 0):
+                resolved_tier = existing_tier
+            else:
+                resolved_tier = recomputed_tier
             announcement = project_dict.get("announcement_date") or existing_dict.get("announcement_date", "")
             start = project_dict.get("start_date") or existing_dict.get("start_date", "")
             prov_add = project_dict.get("provinces_additional") or existing_dict.get("provinces_additional", "")
@@ -1368,6 +1453,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                     announcement_date = ?,
                     start_date = ?,
                     parsed_value = ?,
+                    value_millions = COALESCE(?, value_millions),
+                    quality_tier = ?,
                     provinces_additional = ?,
                     currency = ?,
                     value_low = ?,
@@ -1394,6 +1481,8 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
                 announcement,
                 start,
                 pv,
+                (round(pv / 1_000_000, 3) if pv else None),
+                resolved_tier,
                 prov_add,
                 currency,
                 value_low,

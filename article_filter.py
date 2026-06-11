@@ -776,6 +776,12 @@ def filter_articles(
                         logits[lo + idx] = r.get("logit", None)
                 if n_chunks > 1:
                     print(f"  [Filter L7] reranked chunk {ci + 1}/{n_chunks} ({hi}/{len(passages)})")
+            # Stamp the relevance score on each article — Phase 3 uses it to
+            # order the extraction queue so the highest-signal stories extract
+            # first and a phase timeout only ever drops the low-relevance tail.
+            for _i, _art in enumerate(articles):
+                if logits[_i] is not None:
+                    _art['_rerank_logit'] = logits[_i]
             scored = [v for v in logits if v is not None]
             if scored:
                 srt = sorted(scored)

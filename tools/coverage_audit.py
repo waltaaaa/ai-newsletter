@@ -18,6 +18,10 @@ import os
 import json
 from urllib.parse import urlparse
 
+# Allow standalone execution from backend/ (python tools/coverage_audit.py):
+# db.py lives in the parent directory.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # Miss-type classification taxonomy
 MISS_TYPES = {
     'source_gap':     'No feed or registry covers this source',
@@ -52,6 +56,11 @@ BENCHMARK_PROJECTS = [
     {"name": "Zibi", "province": "ON", "value_millions": 1500, "type": "redevelopment", "sector": "commercial_mixed"},
     {"name": "The Well", "province": "ON", "value_millions": 3000, "type": "redevelopment", "sector": "commercial_mixed"},
     {"name": "Sugar Wharf", "province": "ON", "value_millions": 2000, "type": "redevelopment", "sector": "residential"},
+    # 2026-06-10 miss diagnosis additions — highly-reported projects the
+    # pipeline failed to surface despite saturation coverage
+    {"name": "Lynn Lake Gold Project", "province": "MB", "value_millions": 937, "type": "greenfield", "sector": "mining"},
+    {"name": "Deep Sky Manitoba Carbon Removal Facility", "province": "MB", "value_millions": 500, "type": "greenfield", "sector": "environment"},
+    {"name": "Alto High-Speed Rail", "province": "ON", "value_millions": 3900, "type": "greenfield", "sector": "infrastructure"},
 ]
 
 # RSS feed domains we monitor (subset for domain matching)

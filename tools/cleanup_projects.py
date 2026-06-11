@@ -386,6 +386,13 @@ def cleanup_pollution(conn, apply=False):
 
     deleted = 0
     for r in matched:
+        for child in ("evidence", "project_events",
+                      "project_organizations", "project_identifiers"):
+            try:
+                conn.execute(f"DELETE FROM {child} WHERE project_id=?",
+                             (r["rowid"],))
+            except sqlite3.OperationalError:
+                pass
         conn.execute("DELETE FROM projects WHERE rowid=?", (r["rowid"],))
         deleted += 1
     conn.commit()
@@ -458,6 +465,19 @@ def main():
                     merged = _merge_json_field(keep[fld], loser[fld])
                     conn.execute(f"UPDATE projects SET {fld}=? WHERE rowid=?",
                                  (merged, keep["rowid"]))
+                # Re-point FK children to the keeper before deleting the loser
+                # (raw connections run with foreign_keys OFF, so a bare DELETE
+                # silently strands evidence/event rows).
+                for child in ("evidence", "project_events",
+                              "project_organizations", "project_identifiers"):
+                    try:
+                        conn.execute(
+                            f"UPDATE OR IGNORE {child} SET project_id=? "
+                            f"WHERE project_id=?", (keep["rowid"], loser["rowid"]))
+                        conn.execute(f"DELETE FROM {child} WHERE project_id=?",
+                                     (loser["rowid"],))
+                    except sqlite3.OperationalError:
+                        pass
                 conn.execute("DELETE FROM projects WHERE rowid=?",
                              (loser["rowid"],))
                 removed += 1
