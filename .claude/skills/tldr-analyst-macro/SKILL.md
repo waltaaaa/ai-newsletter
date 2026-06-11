@@ -210,6 +210,20 @@ Structure the macro-level analytical data:
       // split), Merchandise Trade (12-10-0011). Carry forward from
       // briefing_latest.json if the current week's data is unchanged.
       //
+      // BEFORE emitting "N/A": check docs/data/indicators.json →
+      // statcan_latest.indicators (the StatCan Daily release feed). It
+      // carries several of these series every week under these names:
+      //   "Shelter"                          → shelter_cpi (12-month chg)
+      //   "Food purchased from stores"       → food_cpi (12-month chg)
+      //   "Energy" / "Gasoline"              → energy_cpi
+      //   "Building permits"                 → building_permits
+      //   "Merchandise exports" / "imports"  → merchandise_exports/_imports
+      //   "Residential building permits"     → residential_permits
+      // Format as a short print, e.g. Shelter change "1.8%" (12-month)
+      // becomes "+1.8% y/y (Apr)". The validator (check 8.6) WARNs when a
+      // key is "N/A" while the Daily feed carries the series — "N/A" is
+      // only for series absent from BOTH the dossier AND statcan_latest.
+      //
       // HARD FORMAT CONTRACT (validator FAILs the deploy gate on breach):
       // every value renders inside a NARROW numeric table cell on the
       // frontend. It must be a short data point — <=48 chars, containing

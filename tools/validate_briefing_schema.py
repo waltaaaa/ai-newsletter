@@ -2191,6 +2191,45 @@ def validate(briefing_path):
             fails += 1
 
     # ============================================================
+    # 8.6 ENRICHMENT CONNECTABILITY (2026-06-11): "N/A" is only legitimate
+    # when the series is genuinely unavailable. The StatCan Daily feed
+    # (indicators.json statcan_latest) ships several enrichment series the
+    # WDS pipeline doesn't fetch — if the Daily feed carries a value for a
+    # key the producer left at "N/A", the data existed and wasn't connected.
+    # The frontend (_renderNatEnrichmentCards) now falls back to
+    # statcan_latest itself, so this is a WARN (producer hygiene), not a
+    # FAIL (nothing renders blank either way).
+    # ============================================================
+    _ENRICH_DAILY_NAMES = {
+        "shelter_cpi": ("Shelter",),
+        "food_cpi": ("Food purchased from stores",),
+        "energy_cpi": ("Energy", "Gasoline"),
+        "merchandise_exports": ("Merchandise exports",),
+        "merchandise_imports": ("Merchandise imports",),
+        "residential_permits": ("Residential building permits",),
+        "nonresidential_permits": ("Non-residential building permits",),
+    }
+    _briefing_dir = os.path.dirname(os.path.abspath(briefing_path))
+    try:
+        with open(os.path.join(_briefing_dir, "indicators.json"), encoding="utf-8") as fh:
+            _sc_daily = (json.load(fh).get("statcan_latest") or {}).get("indicators") or []
+    except Exception:
+        _sc_daily = []
+    _daily_by_name = {str(r.get("name", "")).strip().lower(): r for r in _sc_daily}
+    for key, names in _ENRICH_DAILY_NAMES.items():
+        if str(m.get(key, "")).strip() != "N/A":
+            continue
+        hit = next((n for n in names
+                    if (_daily_by_name.get(n.lower(), {}).get("value")
+                        or _daily_by_name.get(n.lower(), {}).get("change"))), None)
+        if not warn(results, f"metrics.{key}_connectable",
+                    hit is None,
+                    f"metrics.{key} is 'N/A' but the StatCan Daily feed "
+                    f"(indicators.json statcan_latest entry {hit!r}) carries this "
+                    f"series — producer should source it instead of emitting 'N/A'"):
+            warns += 1
+
+    # ============================================================
     # 9. PROVINCE COMPLETENESS (Cluster 2 — provincial contract)
     # Frontend `_renderProvContent` (app.js L3177-3665) reads, per province:
     #   .analysis              (L3369, Provincial Analysis section HTML)

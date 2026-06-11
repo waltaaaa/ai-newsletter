@@ -121,6 +121,8 @@ Owner: tldr-analyst-macro emits to `dossier_macro.national_analysis_package.metr
 
 Also required `_chg` companions per `indicatorMeta[key]`: `metrics.<key>_chg` (WARN).
 
+`"N/A"` is only legitimate when the series is absent from BOTH the dossier AND `docs/data/indicators.json → statcan_latest.indicators` (the StatCan Daily feed, which carries Shelter / Food / Energy CPI components, Building permits, and Merchandise trade most weeks). Validator check 8.6 WARNs on `"N/A"` for a series the Daily feed carries. The frontend (`_renderNatEnrichmentCards`) resolves each card row through a fallback chain (briefing metrics → indicators.json national record → statcan_latest Daily entry) and drops rows that resolve nowhere — an `"N/A"` never renders as a blank cell, but a sourced value is always better than a dropped row.
+
 ## `insightCharts[*]` (top-level, per-province, per-industry)
 
 Every chart spec at every tier must include:

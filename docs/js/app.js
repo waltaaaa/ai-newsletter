@@ -93,6 +93,30 @@ function computeChange(indName,prov){
   const pct=prev!==0?((diff/Math.abs(prev))*100):0;
   return (pct>=0?'+':'')+pct.toFixed(1)+'%';
 }
+// StatCan Daily release lookup (indicators.json statcan_latest) — shared by
+// the Canada Key Indicators table and the national enrichment cards. The
+// Daily feed carries series the WDS pipeline doesn't fetch (CPI components,
+// building permits, construction investment, merchandise trade).
+function _scDailyRec(re,list){
+  list=list||(_indJsonCache&&_indJsonCache.statcan_latest&&_indJsonCache.statcan_latest.indicators)||[];
+  for(var i=0;i<list.length;i++){
+    var r=list[i];if(!re.test(r.name||''))continue;
+    var val=hasVal(r.value)?String(r.value).trim():'';
+    var chg=hasVal(r.change)?String(r.change).trim():'';
+    if(!val&&!chg)continue;
+    var det=String(r.changeDetail||'');
+    var basis=/12-month|year-over-year/i.test(det)?' y/y':(/monthly/i.test(det)?' m/m':'');
+    // Up-arrow releases publish unsigned changes — sign them so the
+    // change column colours correctly
+    if(chg&&!/^[+\-−]/.test(chg)&&/^\d/.test(chg)&&String(r.arrow)==='1')chg='+'+chg;
+    // CPI-component releases publish only the change — promote it to the
+    // value cell with its basis so the cell is never blank
+    if(!val){val=(/^[+\-−]/.test(chg)?chg:'+'+chg)+basis;chg=''}
+    else if(chg)chg=chg+basis;
+    return {value:val,change:chg,period:r.refPer||'',source:'Statistics Canada'};
+  }
+  return null;
+}
 
 /* ── State ── */
 let D=null,indicators=[],allProjects=[],filteredProjects=[],projectPage=0,selectedProvince='ON',tsCache={},charts={},tabRendered={};
@@ -2436,27 +2460,38 @@ async function _renderCanadaSubtab(){
   function indMeta(name){return(im&&im[name])||{}}
   function chg(metaKey,indName){return pick(indMeta(metaKey).change,computeChange(indName||metaKey,'national'))}
   var _rBoc=indRec('overnight_rate','national'),_rGdp=indRec('realGdp','national'),_rCpi=indRec('cpi','national'),_rUnemp=indRec('unemployment','national'),_rHs=indRec('housingStarts','national'),_rCad=indRec('cad_usd','national')||indRec('cadusd','national');
-  var natPart=indicators.find(function(x){return x.indicator_name==='participationRate'&&(x.province||'').toLowerCase()==='national'});
 
-  // Build indicator rows from indicatorMeta (pipeline-curated each week) + metrics as value source
-  // This approach keeps data dynamic: pipeline updates indicatorMeta and metrics each run
+  // Build indicator rows from indicatorMeta (pipeline-curated each week) + metrics as value source.
+  // Fallback chain per row: metrics -> indicators.json national record ->
+  // StatCan Daily feed -> indicatorMeta.prev. Rows resolving nowhere are
+  // dropped below — an 'N/A' must never render in the Value column.
   var im=D.indicatorMeta||{};
-  function metaRow(label,metaKey,valKeys,freq,fallbackSrc){
+  function metaRow(label,metaKey,valKeys,freq,fallbackSrc,indNames,daily){
     var meta=im[metaKey]||{};
-    var val=pick.apply(null,valKeys.map(function(k){return m[k]}).concat([meta.prev]));
-    return{label:label,value:val,change:meta.change||computeChange(metaKey,'national'),
-      source:meta.source||fallbackSrc,period:meta.period||'',freq:freq};
+    var val='',chg=meta.change||'',src=meta.source||fallbackSrc,per=meta.period||'';
+    for(var i=0;i<valKeys.length;i++){if(hasVal(m[valKeys[i]])){val=String(m[valKeys[i]]);break}}
+    if(!val&&indNames){
+      for(var i=0;i<indNames.length;i++){
+        var name=indNames[i];
+        var r=indicators.find(function(x){return x.indicator_name===name&&_matchProv(x.province,null)&&hasVal(x.value)&&String(x.value)!=='None'});
+        if(r){val=String(r.value);chg=chg||((hasVal(r.change)&&String(r.change)!=='None')?String(r.change):'');per=per||r.period||'';src=src||r.source;break}
+      }
+    }
+    if(!val&&daily){var dr=_scDailyRec(daily);if(dr){val=dr.value;chg=chg||dr.change;per=per||dr.period}}
+    if(!val&&hasVal(meta.prev))val=String(meta.prev);
+    return{label:label,value:val,change:chg||computeChange(metaKey,'national'),
+      source:src,period:per,freq:freq};
   }
   var natIndicators=[
-    metaRow('BoC Rate','bocRate',['bocRate','boc_rate'],'8x/yr','Bank of Canada'),
-    metaRow('Real GDP','realGdp',['realGdp','gdp'],'Monthly','Statistics Canada'),
-    metaRow('CPI Inflation','cpi',['cpi'],'Monthly','Statistics Canada'),
-    metaRow('Unemployment Rate','unemployment',['unemployment'],'Monthly','Statistics Canada'),
+    metaRow('BoC Rate','bocRate',['bocRate','boc_rate'],'8x/yr','Bank of Canada',['overnight_rate']),
+    metaRow('Real GDP','realGdp',['realGdp','gdp'],'Monthly','Statistics Canada',['realGdp']),
+    metaRow('CPI Inflation','cpi',['cpi'],'Monthly','Statistics Canada',['cpi'],/^Consumer Price Index$/i),
+    metaRow('Unemployment Rate','unemployment',['unemployment'],'Monthly','Statistics Canada',['unemployment'],/^Unemployment rate$/i),
     metaRow('Employment Change','employmentChange',['employmentChange','employment_change'],'Monthly','Statistics Canada'),
-    metaRow('Participation Rate','participation',['participation'],'Monthly','Statistics Canada'),
-    metaRow('Housing Starts','housingStarts',['housingStarts','housing_starts'],'Monthly','CMHC'),
-    metaRow('Building Permits','buildingPermits',['building_permits'],'Monthly','Statistics Canada')
-  ];
+    metaRow('Participation Rate','participation',['participation','participationRate'],'Monthly','Statistics Canada',['participationRate']),
+    metaRow('Housing Starts','housingStarts',['housingStarts','housing_starts'],'Monthly','CMHC',['housingStarts','housing_starts_total']),
+    metaRow('Building Permits','buildingPermits',['building_permits','buildingPermits'],'Monthly','Statistics Canada',['national_building_permits_total'],/^Building permits$/i)
+  ].filter(function(r){return hasVal(r.value)});
   var natProjects=[];
   try{var d=await fetchJSON('projects_all.json');natProjects=Array.isArray(d)?d:[]}catch(e){}
   var projTotal=natProjects.length||allProjects.length||0;
@@ -2543,54 +2578,99 @@ async function _renderNatPolicySection(){
 async function _renderNatEnrichmentCards(projects){
   var el=$('natEnrichmentCards');if(!el)return;var m=(D&&D.metrics)||{};
   var comms={};try{var cd=await fetchJSON('commodities.json');if(cd&&cd.indicators)comms=cd.indicators;else if(cd&&typeof cd==='object')comms=cd}catch(e){}
+  var indJson=_indJsonCache;if(!indJson){try{indJson=await fetchJSON('indicators.json')}catch(e){indJson=null}}
+
+  // A metrics value must be a short data point. Writers emit the 'N/A'
+  // sentinel when a series is missing, and have shipped deferral prose
+  // ("See CPI April 2026 detail...") — both used to render as blank or
+  // wrapped cells. Reject both so the fallback chain below takes over.
+  function mVal(v){
+    if(!hasVal(v))return'';
+    var s=String(v).trim();
+    if(s.length>48)return'';
+    if(/\b(see|pending|per statcan|release|detail|dossier|awaiting|tbd)\b/i.test(s))return'';
+    if(!/\d/.test(s)&&!/^(little changed|unchanged|flat|held)/i.test(s))return'';
+    return s;
+  }
+  // Freshest national record from the pipeline's indicators.json across
+  // candidate series names (SQLite export uses the string 'None' for null)
+  function indRec(names){
+    var best=null,bestName='';
+    for(var i=0;i<names.length;i++){
+      for(var j=0;j<indicators.length;j++){
+        var x=indicators[j];
+        if(x.indicator_name===names[i]&&_matchProv(x.province,null)&&hasVal(x.value)&&String(x.value)!=='None'){
+          if(!best||String(x.period||'')>String(best.period||'')){best=x;bestName=names[i]}
+        }
+      }
+    }
+    if(!best)return null;
+    var chg=(hasVal(best.change)&&String(best.change)!=='None')?String(best.change):(computeChange(bestName,null)||'');
+    return {value:String(best.value),change:chg,source:best.source||'',period:best.period||''};
+  }
+  // StatCan Daily release feed — shared lookup in _scDailyRec; pass the
+  // locally fetched list so this works even before loadIndicators() ran
+  var scDaily=(indJson&&indJson.statcan_latest&&indJson.statcan_latest.indicators)||[];
+  function dailyRec(re){return _scDailyRec(re,scDaily)}
 
   function enrichTable(title,rows,chgLabel){
     var indRows=[];
     rows.forEach(function(r){
-      var val=r.val!==undefined?r.val:(r.computed?r.computed():pick(m[r.key],r.alt?m[r.alt]:null));
-      if(!hasVal(val))val='';
-      // Look up change from metrics using key_chg pattern
+      // Resolution chain: explicit val -> briefing metrics (snake/alt/camel)
+      // -> indicators.json national record -> StatCan Daily release feed.
+      // A row that resolves nowhere is dropped — never render a blank cell.
+      var val=(r.val!==undefined&&hasVal(r.val))?String(r.val):'';
+      var src=r.source||'',per='';
+      if(!val)val=mVal(m[r.key])||mVal(r.alt&&m[r.alt])||mVal(r.camel&&m[r.camel]);
       var chgKey=r.chgKey||(r.key?r.key+'_chg':'');
-      var rawChg=chgKey?m[chgKey]:null;
-      var chg=r.change||(hasVal(rawChg)?rawChg:'')||'';
-      indRows.push({label:r.label,value:val,change:chg,source:r.source||'',period:r.period||'',freq:r.freq||''});
+      var chg=mVal(chgKey&&m[chgKey])||mVal(r.alt&&m[r.alt+'_chg'])||'';
+      if(!val&&r.ind){var ir=indRec(r.ind);if(ir){val=ir.value;chg=chg||ir.change;per=fmtPeriod(ir.period);src=src||ir.source}}
+      if(!val&&r.daily){var dr=dailyRec(r.daily);if(dr){val=dr.value;chg=chg||dr.change;per=dr.period;src=src||dr.source}}
+      if(!val)return;
+      if(!chg&&r.ind){for(var i=0;i<r.ind.length;i++){chg=computeChange(r.ind[i],null)||'';if(chg)break}}
+      if(r.fmt)val=r.fmt(val);
+      indRows.push({label:r.label,value:val,change:chg,source:src||'Statistics Canada',period:per||r.period||'',freq:r.freq||''});
     });
-    if(!indRows.some(function(r){return hasVal(r.value)}))return'';
+    if(!indRows.length)return'';
     // Use custom change header label
     return _natIndTable('',title,indRows,'',chgLabel);
   }
 
-  var wtiVal=comms.wti?comms.wti.current:pick(m.wti,m.wti_crude);
-  var cadVal=pick(m.cadUsd,m.cad_usd);
-  var resProjCount=projects.filter(function(p){return(p.sector||'').toLowerCase()==='residential'}).length;
+  var wtiSpot=comms.wti&&comms.wti.current!=null?comms.wti.current:(mVal(m.wti)||mVal(m.wti_crude));
+  function fmtUsd(suffix){return function(v){var n=parseFloat(String(v).replace(/[^\d.\-]/g,''));return isNaN(n)?String(v):'US$'+n.toFixed(2)+suffix}}
 
   var html='';
   html+=enrichTable('Labour Market',[
     {label:'Employment Change',key:'employmentChange',alt:'employment_change',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Full-time',key:'fulltime_change',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Part-time',key:'parttime_change',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Private Sector',key:'private_sector_change',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Public Sector',key:'public_sector_change',freq:'Monthly',source:'Statistics Canada'}
+    {label:'Employment Level',daily:/^Employment level$/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Full-time',key:'fulltime_change',camel:'fulltimeChange',freq:'Monthly',source:'Statistics Canada'},
+    {label:'Part-time',key:'parttime_change',camel:'parttimeChange',freq:'Monthly',source:'Statistics Canada'},
+    {label:'Private Sector',key:'private_sector_change',camel:'privateSectorChange',freq:'Monthly',source:'Statistics Canada'},
+    {label:'Public Sector',key:'public_sector_change',camel:'publicSectorChange',freq:'Monthly',source:'Statistics Canada'},
+    {label:'Avg Weekly Earnings',daily:/^Average weekly earnings$/i,freq:'Monthly',source:'Statistics Canada'}
   ],'Change (M/M)');
   html+=enrichTable('Consumer Pulse',[
-    {label:'CPI (All-items)',key:'cpi',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Core CPI (Median)',key:'core_cpi_median',alt:'coreCpi',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Shelter',key:'shelter_cpi',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Food',key:'food_cpi',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Energy',key:'energy_cpi',freq:'Monthly',source:'Statistics Canada'}
+    {label:'CPI (All-items)',key:'cpi',ind:['cpi'],daily:/^Consumer Price Index$/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Core CPI (Median)',key:'core_cpi_median',alt:'coreCpi',camel:'coreCpiMedian',freq:'Monthly',source:'Statistics Canada'},
+    {label:'Shelter',key:'shelter_cpi',camel:'shelterCpi',daily:/^Shelter$/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Food',key:'food_cpi',camel:'foodCpi',daily:/^Food purchased from stores$/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Energy',key:'energy_cpi',camel:'energyCpi',daily:/^(Energy|Gasoline)$/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Retail Sales',daily:/^Retail sales$/i,freq:'Monthly',source:'Statistics Canada'}
   ],'Change (M/M)');
   html+=enrichTable('Housing & Construction',[
-    {label:'Housing Starts (SAAR)',key:'housingStarts',alt:'housing_starts',freq:'Monthly',source:'CMHC'},
-    {label:'Building Permits',key:'building_permits',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Residential Permits',key:'residential_permits',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Non-Residential Permits',key:'nonresidential_permits',freq:'Monthly',source:'Statistics Canada'}
+    {label:'Housing Starts (SAAR)',key:'housingStarts',alt:'housing_starts',ind:['housingStarts','housing_starts_total'],freq:'Monthly',source:'CMHC'},
+    {label:'Building Permits',key:'building_permits',camel:'buildingPermits',daily:/^Building permits$/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Residential Permits',key:'residential_permits',camel:'residentialPermits',daily:/^Residential building permits/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Non-Residential Permits',key:'nonresidential_permits',camel:'nonresidentialPermits',daily:/^Non-residential building permits/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Building Construction Investment',daily:/^Total investment in building construction$/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'New Housing Price Index',ind:['new_housing_price_index'],freq:'Monthly',source:'Statistics Canada'}
   ],'Change (M/M)');
   html+=enrichTable('Trade & Commodities',[
-    {label:'Merchandise Exports',key:'merchandise_exports',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Merchandise Imports',key:'merchandise_imports',freq:'Monthly',source:'Statistics Canada'},
-    {label:'Trade Balance',key:'tradeBalance',alt:'trade_balance',freq:'Monthly',source:'Statistics Canada'},
-    {label:'WTI Crude',val:wtiVal,chgKey:'wti_chg',freq:'Daily',source:'yfinance'},
-    {label:'CAD/USD',val:cadVal,chgKey:'cadUsd_chg',freq:'Daily',source:'yfinance'}
+    {label:'Merchandise Exports',key:'merchandise_exports',camel:'merchandiseExports',daily:/^Merchandise exports$/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Merchandise Imports',key:'merchandise_imports',camel:'merchandiseImports',daily:/^Merchandise imports$/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'Trade Balance',key:'tradeBalance',alt:'trade_balance',daily:/^Merchandise trade balance/i,freq:'Monthly',source:'Statistics Canada'},
+    {label:'WTI Crude',val:wtiSpot||undefined,ind:['wti','wti_oil'],chgKey:'wti_chg',fmt:fmtUsd('/bbl'),freq:'Daily',source:'yfinance'},
+    {label:'CAD/USD',key:'cadUsd',alt:'cad_usd',ind:['cadusd'],chgKey:'cadUsd_chg',fmt:fmtUsd(''),freq:'Daily',source:'yfinance'}
   ],'Change (M/M)');
 
   // Hiring Signals - keep as narrative card
