@@ -209,8 +209,19 @@ Structure the macro-level analytical data:
       // (18-10-0004 components), Building Permits (34-10-0066 residential
       // split), Merchandise Trade (12-10-0011). Carry forward from
       // briefing_latest.json if the current week's data is unchanged.
-      // Use short strings formatted as in briefing ("+1.5%", "$66.3B",
-      // "little changed (Mar)"). Validator warns on missing/empty.
+      //
+      // HARD FORMAT CONTRACT (validator FAILs the deploy gate on breach):
+      // every value renders inside a NARROW numeric table cell on the
+      // frontend. It must be a short data point — <=48 chars, containing
+      // a number ("+1.5%", "$66.3B", "+28.6% gasoline YoY (April)") or a
+      // recognized qualitative print ("little changed (Mar)") — or be
+      // EXACTLY "N/A" when the series is not in the dossier or research.
+      // NEVER write deferral/reference prose into a value: no "See CPI
+      // April 2026 detail (StatCan 18-10-0004); category data pending in
+      // dossier", no "per StatCan 14-10-0287", no "see ... release".
+      // The 2026-06-08 edition shipped exactly that and each cell wrapped
+      // across ~10 lines in production. If you don't have the number,
+      // the value is "N/A" — full stop. Do not explain inside the value.
       "fulltime_change": "little changed (Mar)",
       "parttime_change": "little changed (Mar)",
       "private_sector_change": "+0.2% (Mar)",

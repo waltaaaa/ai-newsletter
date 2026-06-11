@@ -2149,6 +2149,18 @@ def validate(briefing_path):
         # Trade & Commodities card
         "merchandise_exports", "merchandise_imports",
     )
+    # Format gate (2026-06-11): these values render inside narrow numeric
+    # table cells. The 2026-06-08 edition shipped deferral prose ("See CPI
+    # April 2026 detail (StatCan 18-10-0004); category data pending in
+    # dossier") which wrapped across ~10 lines per cell in production.
+    # A value must LOOK like a data point: exactly "N/A" when the series
+    # isn't available, or a short string (<=48 chars) containing a digit
+    # (or a recognized qualitative print like "little changed (Apr)"),
+    # with no deferral/reference language.
+    _ENRICH_PROSE_RE = re.compile(
+        r"(?i)\b(see|pending|per\s+statcan|release|detail|dossier|cited|"
+        r"documented|narrative|awaiting|forthcoming|tbd)\b")
+    _ENRICH_QUALITATIVE_RE = re.compile(r"(?i)^(little changed|unchanged|flat)\b")
     for key in ENRICHMENT_METRICS:
         val = m.get(key)
         present = isinstance(val, str) and bool(val.strip())
@@ -2157,6 +2169,20 @@ def validate(briefing_path):
                      f"Enrichment card metric missing/empty — producer tldr-analyst-macro "
                      f"(dossier_macro.national_analysis_package.metrics.{key}); "
                      f"renders em-dash fallback in _renderNatEnrichmentCards"):
+            fails += 1
+            continue
+        v = val.strip()
+        looks_like_data = v == "N/A" or (
+            len(v) <= 48
+            and not _ENRICH_PROSE_RE.search(v)
+            and (re.search(r"\d", v) or _ENRICH_QUALITATIVE_RE.match(v))
+        )
+        if not check(results, f"metrics.{key}_format",
+                     bool(looks_like_data),
+                     f"Enrichment metric is prose/deferral text, not a data point "
+                     f"({v[:70]!r}) — must be a short value like '+1.5%', "
+                     f"'$8.2B (Feb)', or exactly 'N/A' when unavailable; it renders "
+                     f"in a narrow table cell and prose wraps across many lines"):
             fails += 1
 
     # ============================================================
