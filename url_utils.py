@@ -34,6 +34,8 @@ KNOWN_GOOD_DOMAINS = {
 # Domain patterns for government sources (match subdomains)
 GOV_DOMAIN_PATTERNS = [
     r'\.gc\.ca$', r'\.gov\.\w{2}\.ca$',
+    # Anchored so 'radio-canada.ca' / 'notcanada.ca' don't match
+    r'(^|\.)canada\.ca$',
     r'news\.ontario\.ca', r'quebec\.ca', r'alberta\.ca', r'gov\.bc\.ca',
     r'saskatchewan\.ca', r'gov\.mb\.ca', r'novascotia\.ca', r'gnb\.ca',
     r'gov\.nl\.ca', r'princeedwardisland\.ca', r'yukon\.ca',
