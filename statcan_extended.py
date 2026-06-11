@@ -161,82 +161,154 @@ HOUSING_PRICE_INDEX = {
     },
 }
 
-# ── National LFS Aggregates (added 2026-04-19) ───────────────────────────────
+# ── Metadata-resolved national & sector series (2026-06-11) ──────────────────
 #
-# Added to close gaps identified in the 2026-04-18 schema audit. The pipeline
-# currently tracks employment rate, participation rate, and wage growth per
-# province but not at the national level, which leaves 7 national series blank
-# on the frontend. Building permits, trade balance, manufacturing sales, and
-# retail sales national totals are also missing from timeseries.json.
+# Replaces the dormant 2026-04-19 "NATIONAL_* placeholder" groups that sat
+# behind _NATIONAL_LFS_VERIFIED=False waiting for hand-verified vector IDs.
+# (National LFS rates and wage growth are NOT duplicated here — Phase 1
+# data_collection.py already fetches participationRate / employmentRate /
+# unemployment / wageGrowth at province='national'.)
 #
-# Vector IDs below MUST be verified via StatCan WDS coordinate lookup before
-# enabling. See statcan_permits.py for the coordinate lookup pattern
-# (getSeriesInfoFromCubePidCoord). Until verified, this group is NOT included
-# in ALL_TABLE_GROUPS — activation requires setting _NATIONAL_LFS_VERIFIED=True
-# after confirming each vector returns data with a recent refPer.
+# These series are resolved AT RUNTIME from cube metadata instead of
+# hardcoded vectors: getCubeMetadata → match dimension members BY NAME →
+# getDataFromCubePidCoordAndLatestNPeriods. Every observation must then pass
+# (a) a plausibility range for the series and (b) the freshness gate before
+# being saved. A renamed member, archived cube, or wrong match fails loudly
+# and saves nothing — the failure mode that froze agri_exports at 2003 data
+# (D-15) cannot recur silently through this path.
+#
+# indicator_name keys deliberately match what the frontend Key Indicators
+# tables (IND_KEY_INDICATORS in docs/js/app.js) already reference.
+#
+# Per-series spec: members = name patterns (exact match preferred, then
+# prefix, case-insensitive — one per cube dimension; unmatched dimensions
+# abort the series), unit, category, range = inclusive plausibility bounds
+# AFTER scalar normalization ($-series are normalized to $M).
 
-_NATIONAL_LFS_VERIFIED = False  # flip to True after vector coordinate lookup
+_LFS_COMMON = ["Canada", "Employment", "Both sexes", "Total - Gender", "15 years and over"]
 
-# Table 14-10-0287-01: Labour force characteristics, monthly, seasonally adjusted
-# Geography=Canada, both sexes, 15 years and over
-NATIONAL_LFS_AGGREGATES = {
-    "table": "14-10-0287",
-    "frequency": "monthly",
-    "vectors": {
-        # TODO(vector-verify): run WDS coordinate lookup before enabling
-        "national_employment_rate":     (0, "%", "Labour"),          # coord [1,2,5,1,1]
-        "national_participation_rate":  (0, "%", "Labour"),          # coord [1,2,4,1,1]
+META_RESOLVED_GROUPS = [
+    {
+        # LFS employment by industry — extends the 3 hardcoded sectors in
+        # EMPLOYMENT_INDUSTRY to the sectors the frontend tables reference.
+        # (Finance, real estate, information, and admin/support are LFS
+        # aggregates with no standalone series at this granularity — the
+        # frontend intentionally omits or footnotes those.)
+        "table": "14-10-0022",
+        "frequency": "monthly",
+        "series": {
+            "ag_employment":                 {"members": _LFS_COMMON + ["Agriculture"], "unit": "thousands", "category": "Employment", "range": (100, 450)},
+            "utilities_employment":          {"members": _LFS_COMMON + ["Utilities"], "unit": "thousands", "category": "Employment", "range": (60, 300)},
+            "wholesale_employment":          {"members": _LFS_COMMON + ["Wholesale trade"], "unit": "thousands", "category": "Employment", "range": (300, 1000)},
+            "retail_employment":             {"members": _LFS_COMMON + ["Retail trade"], "unit": "thousands", "category": "Employment", "range": (1600, 3100)},
+            "transportation_employment":     {"members": _LFS_COMMON + ["Transportation and warehousing"], "unit": "thousands", "category": "Employment", "range": (600, 1700)},
+            "professional_employment":       {"members": _LFS_COMMON + ["Professional, scientific and technical services"], "unit": "thousands", "category": "Employment", "range": (1200, 2800)},
+            "education_employment":          {"members": _LFS_COMMON + ["Educational services"], "unit": "thousands", "category": "Employment", "range": (1000, 2300)},
+            "healthcare_employment":         {"members": _LFS_COMMON + ["Health care and social assistance"], "unit": "thousands", "category": "Employment", "range": (1900, 3900)},
+            "accommodation_food_employment": {"members": _LFS_COMMON + ["Accommodation and food services"], "unit": "thousands", "category": "Employment", "range": (700, 1800)},
+            "other_services_employment":     {"members": _LFS_COMMON + ["Other services"], "unit": "thousands", "category": "Employment", "range": (450, 1300)},
+            "public_admin_employment":       {"members": _LFS_COMMON + ["Public administration"], "unit": "thousands", "category": "Employment", "range": (800, 1900)},
+        },
     },
-}
-
-# Table 14-10-0064-01: Employee wages by industry, annual
-# (Or table 14-10-0222 for monthly average hourly wages.) National totals.
-NATIONAL_WAGE_GROWTH = {
-    "table": "14-10-0222",
-    "frequency": "monthly",
-    "vectors": {
-        "national_wage_growth_yoy":    (0, "%", "Labour"),  # TODO(vector-verify)
+    {
+        # Average hourly wage, all industries — national level (provincial
+        # equivalents already fetched via hardcoded vectors in Phase 1).
+        "table": "14-10-0063",
+        "frequency": "monthly",
+        "series": {
+            "nat_avg_hourly_wage": {
+                "members": ["Canada", "Average hourly wage rate",
+                            "Both full- and part-time employees",
+                            "Total employees, all industries",
+                            "Total - Gender", "Both sexes", "15 years and over"],
+                "unit": "$/hr", "category": "Labour", "range": (25, 70),
+            },
+        },
     },
-}
-
-# Table 34-10-0066-01: Building permits, value, monthly, SA — national total
-NATIONAL_BUILDING_PERMITS = {
-    "table": "34-10-0066",
-    "frequency": "monthly",
-    "vectors": {
-        "national_building_permits_total":    (0, "$M", "Housing"),  # TODO(vector-verify)
+    {
+        # Job vacancies, monthly SA (SEPH-based) — the table the frontend
+        # cites (14-10-0372), not the quarterly JVWS sector cube (14-10-0326)
+        # already covered above.
+        "table": "14-10-0372",
+        "frequency": "monthly",
+        "series": {
+            "job_vacancies_total": {
+                "members": ["Canada", "Job vacancies"],
+                "unit": "units", "category": "Employment", "range": (200_000, 1_500_000),
+            },
+        },
     },
-}
-
-# Table 12-10-0011-01: Merchandise trade, exports and imports, monthly, SA
-# National total trade balance = exports - imports (can compute from two vectors).
-NATIONAL_TRADE_BALANCE = {
-    "table": "12-10-0011",
-    "frequency": "monthly",
-    "vectors": {
-        "national_total_exports":    (0, "$M", "Trade"),  # TODO(vector-verify)
-        "national_total_imports":    (0, "$M", "Trade"),  # TODO(vector-verify)
-        # Downstream: trade_balance = national_total_exports - national_total_imports
+    {
+        # Manufacturers' sales, SA, Canada total.
+        "table": "16-10-0047",
+        "frequency": "monthly",
+        "series": {
+            "manufacturing_sales_national": {
+                "members": ["Canada", "Sales of goods manufactured",
+                            "Seasonally adjusted", "Total, manufacturing", "Manufacturing"],
+                "unit": "$M", "category": "Manufacturing", "range": (40_000, 110_000),
+            },
+        },
     },
-}
-
-# Table 16-10-0048-01: Manufacturing sales, monthly, SA — Canada total
-NATIONAL_MANUFACTURING_SALES = {
-    "table": "16-10-0048",
-    "frequency": "monthly",
-    "vectors": {
-        "national_manufacturing_sales":    (0, "$M", "Manufacturing"),  # TODO(vector-verify)
+    {
+        # Retail trade sales, SA, Canada total.
+        "table": "20-10-0008",
+        "frequency": "monthly",
+        "series": {
+            "retail_sales_national": {
+                "members": ["Canada", "Retail trade", "Seasonally adjusted"],
+                "unit": "$M", "category": "Retail", "range": (40_000, 120_000),
+            },
+        },
     },
-}
-
-# Table 20-10-0008-01: Retail trade, sales, monthly, SA — Canada total
-NATIONAL_RETAIL_SALES = {
-    "table": "20-10-0008",
-    "frequency": "monthly",
-    "vectors": {
-        "national_retail_sales":    (0, "$M", "Retail"),  # TODO(vector-verify)
+    {
+        # Wholesale trade sales, SA, Canada total.
+        "table": "20-10-0074",
+        "frequency": "monthly",
+        "series": {
+            "wholesale_sales_national": {
+                "members": ["Canada", "Wholesale trade", "Seasonally adjusted"],
+                "unit": "$M", "category": "Wholesale", "range": (40_000, 140_000),
+            },
+        },
     },
-}
+    {
+        # Building permits value, Canada, SA — same active cube (34-10-0292)
+        # whose provincial vectors were resolved + validated live 2026-06-09
+        # in phases/data_collection.py.
+        "table": "34-10-0292",
+        "frequency": "monthly",
+        "series": {
+            "bldg_permits_res_national": {
+                "members": ["Canada", "Total residential", "Types of work, total",
+                            "Value of permits", "Seasonally adjusted"],
+                "unit": "$M", "category": "Housing", "range": (2_000, 18_000),
+            },
+            "bldg_permits_nonres_national": {
+                "members": ["Canada", "Total non-residential", "Types of work, total",
+                            "Value of permits", "Seasonally adjusted"],
+                "unit": "$M", "category": "Housing", "range": (1_000, 12_000),
+            },
+        },
+    },
+    {
+        # Household sector accounts, quarterly (income at SAAR).
+        "table": "36-10-0112",
+        "frequency": "quarterly",
+        "series": {
+            "household_disposable_income_national": {
+                "members": ["Canada", "Household disposable income",
+                            "Seasonally adjusted at annual rates", "Seasonally adjusted"],
+                "unit": "$M", "category": "Household", "range": (250_000, 3_000_000),
+            },
+            "household_savings_rate_national": {
+                "members": ["Canada", "Household saving rate",
+                            "Seasonally adjusted at annual rates", "Seasonally adjusted"],
+                "unit": "%", "category": "Household", "range": (-10, 35),
+            },
+        },
+    },
+]
 
 # ── All table groups ──────────────────────────────────────────────────────────
 # Vectors refreshed 2026-03-31 via WDS getSeriesInfoFromCubePidCoord.
@@ -266,26 +338,37 @@ ALL_TABLE_GROUPS = [
     HOUSING_PRICE_INDEX,
 ]
 
-# National aggregates — appended only after vector IDs are verified. See the
-# NATIONAL_* groups above for the 7 series that close the 2026-04-18 audit gap.
-if _NATIONAL_LFS_VERIFIED:
-    ALL_TABLE_GROUPS.extend([
-        NATIONAL_LFS_AGGREGATES,
-        NATIONAL_WAGE_GROWTH,
-        NATIONAL_BUILDING_PERMITS,
-        NATIONAL_TRADE_BALANCE,
-        NATIONAL_MANUFACTURING_SALES,
-        NATIONAL_RETAIL_SALES,
-    ])
+# National aggregates and the wider sector-employment set live in
+# META_RESOLVED_GROUPS above — resolved at runtime from cube metadata and
+# gated by range + freshness, fetched by run_extended_statcan after the
+# vector groups.
 
 # Frequency classification for mode-aware skipping
 _MONTHLY_TABLES = {
-    "14-10-0022", "12-10-0129", "34-10-0143", "18-10-0205",
-    "14-10-0287", "14-10-0222", "34-10-0066",
-    "12-10-0011", "16-10-0048", "20-10-0008",
+    "14-10-0022", "12-10-0129", "12-10-0163", "34-10-0143", "18-10-0205",
+    "14-10-0287", "14-10-0222", "14-10-0063", "14-10-0372", "34-10-0066",
+    "12-10-0011", "16-10-0047", "16-10-0048", "20-10-0008", "20-10-0074",
+    "34-10-0292",
 }
-_QUARTERLY_TABLES = {"34-10-0175", "18-10-0135", "14-10-0326"}
+_QUARTERLY_TABLES = {"34-10-0175", "18-10-0135", "14-10-0326", "36-10-0112"}
 _ANNUAL_TABLES = {"34-10-0035"}
+
+# ── Freshness gate ────────────────────────────────────────────────────────────
+# Maximum acceptable age (days) of the LATEST observation by frequency. An
+# observation older than this means the vector/cube is stale, archived, or
+# wrong (the agri_exports-frozen-at-2003 failure mode) — it is NOT saved, and
+# the skip is logged loudly so the run output shows exactly what went dark.
+_MAX_OBS_AGE_DAYS = {"monthly": 120, "quarterly": 300, "annual": 730}
+
+
+def _is_fresh(ref_per: str, frequency: str) -> bool:
+    """True when the observation date is within the freshness window."""
+    try:
+        obs_date = datetime.strptime(ref_per[:10], "%Y-%m-%d")
+    except (ValueError, TypeError):
+        return False
+    max_age = _MAX_OBS_AGE_DAYS.get(frequency, 120)
+    return (datetime.now() - obs_date).days <= max_age
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -387,6 +470,12 @@ def _fetch_table_group(conn, group: dict) -> tuple[int, int]:
         if value is None:
             continue
 
+        if not _is_fresh(ref_per, frequency):
+            print(f"  [STATCAN-EXT][STALE] {indicator_name} (v{vid}, {table_pid}): "
+                  f"latest obs {ref_per} exceeds the {frequency} freshness window "
+                  f"— NOT saved. Vector may be terminated or cube archived.")
+            continue
+
         # Convert raw dollars to millions if needed
         if raw_dollars and unit == "$M":
             value = round(value / 1_000_000, 1)
@@ -427,6 +516,236 @@ def _fetch_table_group(conn, group: dict) -> tuple[int, int]:
             saved += 1
         except Exception as e:
             logger.debug(f"[STATCAN-EXT] Failed to save {indicator_name}: {e}")
+
+    return fetched, saved
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Metadata-resolved fetch — coordinate resolution by dimension-member name
+# ─────────────────────────────────────────────────────────────────────────────
+
+_WDS_CUBE_META_URL = "https://www150.statcan.gc.ca/t1/wds/rest/getCubeMetadata"
+_WDS_COORD_DATA_URL = "https://www150.statcan.gc.ca/t1/wds/rest/getDataFromCubePidCoordAndLatestNPeriods"
+
+
+def _get_cube_metadata(pid: int) -> dict | None:
+    """Fetch cube metadata (dimensions + members) for a product ID."""
+    for attempt in range(3):
+        try:
+            resp = requests.post(
+                _WDS_CUBE_META_URL, json=[{"productId": pid}],
+                timeout=_WDS_TIMEOUT, headers=_WDS_HEADERS,
+            )
+            resp.raise_for_status()
+            body = resp.json()
+            if body and body[0].get("status") == "SUCCESS":
+                return body[0].get("object", {})
+            return None
+        except Exception as e:
+            if attempt < 2:
+                time.sleep(_WDS_BACKOFF[attempt])
+            else:
+                logger.warning(f"[STATCAN-EXT] getCubeMetadata({pid}) failed: {e}")
+    return None
+
+
+def _resolve_coordinate(cube_meta: dict, patterns: list) -> tuple[str | None, list]:
+    """Match one member per cube dimension against the name patterns.
+
+    Matching is case-insensitive: an exact name match anywhere in the pattern
+    list wins; otherwise the first pattern that is a prefix of a member name.
+    Each pattern is consumed at most once. Unused patterns are fine (they let
+    one spec cover naming variants across cubes, e.g. 'Both sexes' vs
+    'Total - Gender'); an UNMATCHED DIMENSION is not — the series aborts.
+
+    Returns (coordinate_string, unmatched_dimension_names). The coordinate is
+    None unless every dimension matched.
+    """
+    dims = cube_meta.get("dimension", []) or []
+    pats = [(p, p.strip().lower()) for p in patterns]
+    used = set()
+    coord = []
+    unmatched = []
+    for dim in dims:
+        members = dim.get("member", []) or []
+        chosen = None
+        # Pass 1: exact name match
+        for orig, pl in pats:
+            if orig in used:
+                continue
+            for m in members:
+                if (m.get("memberNameEn") or "").strip().lower() == pl:
+                    chosen = m
+                    used.add(orig)
+                    break
+            if chosen:
+                break
+        # Pass 2: prefix match
+        if chosen is None:
+            for orig, pl in pats:
+                if orig in used:
+                    continue
+                for m in members:
+                    if (m.get("memberNameEn") or "").strip().lower().startswith(pl):
+                        chosen = m
+                        used.add(orig)
+                        break
+                if chosen:
+                    break
+        if chosen is None:
+            unmatched.append(dim.get("dimensionNameEn", "?"))
+            coord.append(None)
+        else:
+            coord.append(int(chosen["memberId"]))
+    if unmatched or not coord:
+        return None, unmatched
+    # WDS coordinates are always 10 dotted positions, zero-padded
+    parts = [str(c) for c in coord] + ["0"] * (10 - len(coord))
+    return ".".join(parts[:10]), []
+
+
+def _normalize_obs_value(raw: float, scalar_code, unit: str) -> float:
+    """Normalize a WDS observation to the unit the spec declares.
+
+    scalarFactorCode is a power of ten (0=units, 3=thousands, 6=millions).
+    $-series normalize to $M; 'thousands' (persons) to thousands; 'units' to
+    raw count. Rates/index/$-per-hour values pass through unscaled.
+    """
+    try:
+        factor = 10 ** int(scalar_code or 0)
+    except (ValueError, TypeError):
+        factor = 1
+    if unit == "$M":
+        return raw * factor / 1_000_000
+    if unit == "thousands":
+        return raw * factor / 1_000
+    if unit == "units":
+        return raw * factor
+    return raw
+
+
+def _fetch_meta_group(conn, group: dict) -> tuple[int, int]:
+    """Fetch a metadata-resolved table group. Returns (fetched, saved).
+
+    Each series resolves its coordinate from cube metadata by member name,
+    then must pass the plausibility range and freshness gate before saving.
+    All failure modes are loud skips — wrong data is never written quietly.
+    """
+    table_pid = group["table"]
+    frequency = group["frequency"]
+    pid = int(table_pid.replace("-", ""))
+
+    cube_meta = _get_cube_metadata(pid)
+    if not cube_meta:
+        print(f"  [STATCAN-EXT][META] {table_pid}: cube metadata unavailable — skipped")
+        return 0, 0
+
+    # Resolve all coordinates first, then batch the data request
+    resolved = {}  # coordinate -> indicator_name
+    specs = {}
+    for indicator_name, spec in group["series"].items():
+        coord, unmatched = _resolve_coordinate(cube_meta, spec["members"])
+        if coord is None:
+            print(f"  [STATCAN-EXT][META] {table_pid} {indicator_name}: unmatched "
+                  f"dimension(s) {unmatched} — series skipped (amend member patterns)")
+            continue
+        resolved[coord] = indicator_name
+        specs[indicator_name] = spec
+
+    if not resolved:
+        return 0, 0
+
+    n = 14 if frequency == "monthly" else 8 if frequency == "quarterly" else 4
+    payload = [{"productId": pid, "coordinate": coord, "latestN": n}
+               for coord in resolved]
+    data = None
+    for attempt in range(3):
+        try:
+            resp = requests.post(
+                _WDS_COORD_DATA_URL, json=payload,
+                timeout=_WDS_TIMEOUT, headers=_WDS_HEADERS,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            break
+        except Exception as e:
+            if attempt < 2:
+                time.sleep(_WDS_BACKOFF[attempt])
+            else:
+                print(f"  [STATCAN-EXT][META] {table_pid}: data fetch failed: {e}")
+    if not data:
+        return 0, 0
+
+    fetched = 0
+    saved = 0
+    for item in data:
+        if item.get("status") != "SUCCESS":
+            continue
+        obj = item.get("object", {})
+        coord = obj.get("coordinate", "")
+        indicator_name = resolved.get(coord)
+        if not indicator_name:
+            continue
+        spec = specs[indicator_name]
+        unit = spec["unit"]
+        points = sorted(
+            [p for p in obj.get("vectorDataPoint", []) if p.get("value") is not None],
+            key=lambda x: x.get("refPer", ""),
+        )
+        if not points:
+            print(f"  [STATCAN-EXT][META] {table_pid} {indicator_name}: no observations")
+            continue
+        latest = points[-1]
+        ref_per = (latest.get("refPer") or "")[:10]
+        value = _normalize_obs_value(float(latest["value"]),
+                                     latest.get("scalarFactorCode"), unit)
+        fetched += 1
+
+        lo, hi = spec["range"]
+        if not (lo <= value <= hi):
+            print(f"  [STATCAN-EXT][META][RANGE] {table_pid} {indicator_name}: "
+                  f"{value} outside plausibility [{lo}, {hi}] — NOT saved "
+                  f"(member match may be wrong)")
+            continue
+        if not _is_fresh(ref_per, frequency):
+            print(f"  [STATCAN-EXT][META][STALE] {table_pid} {indicator_name}: "
+                  f"latest obs {ref_per} exceeds the {frequency} freshness window — NOT saved")
+            continue
+
+        prev_value = None
+        change = None
+        if len(points) >= 2:
+            prev_value = _normalize_obs_value(float(points[-2]["value"]),
+                                              points[-2].get("scalarFactorCode"), unit)
+            if prev_value and prev_value != 0:
+                change = f"{((value - prev_value) / abs(prev_value)) * 100:+.1f}%"
+
+        value = round(value, 4)
+        try:
+            save_indicator(conn, {
+                'indicator': indicator_name,
+                'province': 'National',
+                'date': ref_per,
+                'value': str(value),
+                'previous_value': str(round(prev_value, 4)) if prev_value is not None else None,
+                'change': change,
+                'unit': unit,
+                'source': f'StatCan {table_pid}',
+                'frequency': frequency,
+                'category': spec["category"],
+                'backfilled': False,
+                'source_meta': {
+                    'authority': 'Statistics Canada',
+                    'reference_period': ref_per,
+                    'source_url': f'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid={table_pid.replace("-", "")}01',
+                    'table_id': table_pid,
+                    'coordinate': coord,
+                    'vector_id': obj.get('vectorId'),
+                },
+            })
+            saved += 1
+        except Exception as e:
+            logger.debug(f"[STATCAN-EXT][META] Failed to save {indicator_name}: {e}")
 
     return fetched, saved
 
@@ -477,6 +796,31 @@ def run_extended_statcan(conn, mode: str = "weekly") -> dict:
             print(f"    {table_pid}: failed — {e}")
 
         # Rate-limit: 1-second delay between table fetches
+        time.sleep(1)
+
+    # Metadata-resolved groups (coordinate resolution by member name + range
+    # and freshness gates — see META_RESOLVED_GROUPS)
+    for group in META_RESOLVED_GROUPS:
+        table_pid = group["table"]
+
+        if mode == "indicators-only":
+            if table_pid in _ANNUAL_TABLES or table_pid in _QUARTERLY_TABLES:
+                continue
+
+        try:
+            fetched, saved = _fetch_meta_group(conn, group)
+            if fetched > 0:
+                tables_succeeded += 1
+                total_fetched += fetched
+                total_saved += saved
+                print(f"    {table_pid} (meta): {fetched} indicators fetched, {saved} saved")
+            else:
+                tables_failed += 1
+                print(f"    {table_pid} (meta): no data returned")
+        except Exception as e:
+            tables_failed += 1
+            print(f"    {table_pid} (meta): failed — {e}")
+
         time.sleep(1)
 
     print(f"  [STATCAN-EXT] Done: {tables_succeeded} tables OK, "

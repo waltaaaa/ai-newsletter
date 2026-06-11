@@ -4087,6 +4087,20 @@ function _indFmtPeriod(period){
   return(MONTHS[mo-1]||m[2])+' '+m[1];
 }
 
+// Legacy spec keys \u2192 canonical exported indicator names. The exporter
+// (tools/export_dashboard.py _SKIP_INDICATORS) deliberately drops the old
+// nat_* / cpi_national naming in favour of indicator + province='national',
+// so specs written against the old names must be translated here or their
+// rows silently vanish (2026-06-11: participation rate "shows nothing").
+// Optional unit override: canonical cpi is a YoY % string, not an index level.
+var _IND_KEY_ALIASES={
+  nat_unemployment:{name:'unemployment'},
+  nat_employment_rate:{name:'employmentRate'},
+  nat_participation_rate:{name:'participationRate'},
+  cpi_national:{name:'cpi',unit:'%'},
+  boc_rate:{name:'overnight_rate'}
+};
+
 // Resolves a single IND_KEY_INDICATORS spec into a table row: {label, period, valDisplay, change, chgCls, srcLabel, srcUrl}
 // Returns null if data is missing or period is older than 36 months (stale).
 function _indResolveKeyRow(spec,tsData){
@@ -4095,11 +4109,14 @@ function _indResolveKeyRow(spec,tsData){
   // Staleness cutoff: 18 months. Rows with a latest period older than this are dropped.
   var staleCutoff=new Date(now.getFullYear(),now.getMonth()-18,1);
   if(spec.source==='indicators'){
+    var alias=_IND_KEY_ALIASES[spec.key];
+    var indName=alias?alias.name:spec.key;
+    var indUnit=(alias&&alias.unit)||spec.unit;
     // Prefer the non-provincial / national entry for current value
     var rec=null;
     for(var i=0;i<indicators.length;i++){
       var r=indicators[i];
-      if(r.indicator_name!==spec.key)continue;
+      if(r.indicator_name!==indName)continue;
       if(r.value==null||r.value==='')continue;
       var prov=(r.province||'').toLowerCase();
       if(prov&&prov!=='national'&&prov!=='canada'&&prov!=='')continue;
@@ -4111,8 +4128,8 @@ function _indResolveKeyRow(spec,tsData){
     if(perDate&&!isNaN(perDate)&&perDate<staleCutoff)return null;
     var val=parseFloat(rec.value);if(isNaN(val))return null;
     out.period=_indFmtPeriod(per);
-    out.valDisplay=_indFmtKeyValue(val,spec.unit);
-    var chg=computeChange(spec.key,'national');
+    out.valDisplay=_indFmtKeyValue(val,indUnit);
+    var chg=computeChange(indName,'national');
     // For wage levels (unit "$/hr"), computeChange misdetects as "rate" because values are <100
     // and returns an absolute-difference "pp" value. Force percent-change mode by recomputing manually.
     if(spec.unit==='$/hr'){
@@ -4120,7 +4137,7 @@ function _indResolveKeyRow(spec,tsData){
       var _byM={};
       for(var _i=0;_i<_wh.length;_i++){
         var _r=_wh[_i];
-        if(_r.indicator_name!==spec.key||_r.value==null)continue;
+        if(_r.indicator_name!==indName||_r.value==null)continue;
         var _ym=String(_r.period||'').slice(0,7);
         if(!/^\d{4}-\d{2}$/.test(_ym))continue;
         var _v=parseFloat(_r.value);
@@ -4191,6 +4208,7 @@ function _indResolveKeyRow(spec,tsData){
 // Resolves a single dataKey to an array of {label, value} points for the given window.
 // dataSource: "indicators" reads indicators.json history; caller handles "timeseries" async.
 function _indResolveIndicatorsSeries(key,windowMonths){
+  var _a=_IND_KEY_ALIASES[key];if(_a)key=_a.name;
   var hist=_getHistory()||[];
   var byMonth={};
   hist.forEach(function(r){

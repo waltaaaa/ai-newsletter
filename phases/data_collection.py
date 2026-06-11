@@ -1448,55 +1448,107 @@ def fetch_primary_indicators() -> dict:
 # Archive to indicator_history
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _norm_ref_period(raw: str | None) -> str | None:
+    """Normalize a StatCan refPer ('YYYY-MM-DD' or 'YYYY-MM') to YYYY-MM-DD.
+
+    Returns None when the string is missing/unparseable so callers fall back
+    to today's date explicitly rather than silently mis-stamping.
+    """
+    s = (raw or '').strip()[:10]
+    if re.match(r'^\d{4}-\d{2}-\d{2}$', s):
+        return s
+    if re.match(r'^\d{4}-\d{2}$', s):
+        return f"{s}-01"
+    return None
+
+
+def _fmt_indicator_change(cur, prev) -> str | None:
+    """Period-over-period change string mirroring the frontend convention:
+    rate-like values (<100 abs) get a pp difference, levels get a % change."""
+    def _num(v):
+        try:
+            return float(str(v).replace(',', '').replace('%', '').replace('+', '').strip())
+        except (ValueError, TypeError, AttributeError):
+            return None
+    c, p = _num(cur), _num(prev)
+    if c is None or p is None:
+        return None
+    if abs(c) < 100 and abs(p) < 100:
+        return f"{c - p:+.1f}pp"
+    if p == 0:
+        return None
+    return f"{((c - p) / abs(p)) * 100:+.1f}%"
+
+
 def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
     """Write each indicator value to the indicator_history table for trend tracking.
 
     Schema per record: {indicator_name, province, period, value, unit, source, frequency, backfilled}
+
+    Periods are stamped with the StatCan REFERENCE period (obs_dates national,
+    <field>_date provincial) — not the fetch date. Before 2026-06-11 every row
+    was stamped with the run date, so a May LFS print fetched in June landed in
+    a 2026-06 history bucket, daily runs created one bogus row per run date,
+    and previous_value/change never reached the export.
     """
     today_str = date.today().isoformat()
     count = 0
 
     # National indicators
-    nat_vals = primary_ind.get('national', {}).get('values', {})
-    nat_srcs = primary_ind.get('national', {}).get('sources', {})
+    nat = primary_ind.get('national', {})
+    nat_vals = nat.get('values', {})
+    nat_srcs = nat.get('sources', {})
+    nat_prevs = nat.get('prev_values', {})
+    nat_dates = nat.get('obs_dates', {})
     for field, value in nat_vals.items():
         if not value or value == 'N/A':
             continue
         source_label = nat_srcs.get(field, '')
+        ref_period = _norm_ref_period(nat_dates.get(field)) or today_str
+        prev_value = nat_prevs.get(field)
         save_indicator(conn, {
             'indicator': field,
             'province': 'national',
-            'date': today_str,
+            'date': ref_period,
             'value': str(value),
+            'previous_value': str(prev_value) if prev_value not in (None, '', 'N/A') else None,
+            'change': _fmt_indicator_change(value, prev_value),
             'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'gdp', 'unemployment']) else '',
             'source': source_label,
             'frequency': 'monthly',
             'backfilled': False,
             'source_meta': {
                 'authority': source_label or 'StatCan',
-                'reference_period': today_str,
+                'reference_period': ref_period,
             },
         })
         count += 1
 
-    # Provincial indicators
+    # Provincial indicators. <field>_src/_date/_prev companions are metadata —
+    # they feed period/previous_value here and must NOT be saved as indicators
+    # (they used to leak in as fake series; see _SKIP_INDICATORS in the export).
+    _META_SUFFIXES = ('_src', '_date', '_prev')
     for province, prov_data in primary_ind.get('provinces', {}).items():
         for field, value in prov_data.items():
-            if field.endswith('_src') or not value or value == 'N/A':
+            if field.endswith(_META_SUFFIXES) or not value or value == 'N/A':
                 continue
             source_label = prov_data.get(f'{field}_src', '')
+            ref_period = _norm_ref_period(prov_data.get(f'{field}_date')) or today_str
+            prev_value = prov_data.get(f'{field}_prev')
             save_indicator(conn, {
                 'indicator': field,
                 'province': province,
-                'date': today_str,
+                'date': ref_period,
                 'value': str(value),
+                'previous_value': str(prev_value) if prev_value not in (None, '', 'N/A') else None,
+                'change': _fmt_indicator_change(value, prev_value),
                 'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'unemployment']) else '',
                 'source': source_label,
                 'frequency': 'monthly',
                 'backfilled': False,
                 'source_meta': {
                     'authority': source_label or 'StatCan',
-                    'reference_period': today_str,
+                    'reference_period': ref_period,
                 },
             })
             count += 1
