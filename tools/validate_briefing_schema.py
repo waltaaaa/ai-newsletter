@@ -1414,6 +1414,103 @@ def _validate_global_chart_cfg(data_dir, results, briefing):
     return (fails, warns)
 
 
+def _validate_briefing_archive(data_dir, results, briefing):
+    """Validate docs/data/briefing_archive.json — the previous-editions dropdown.
+
+    Frontend read path (docs/js/app.js L199): loadEditionList() renders one
+    dropdown item per entry; switchEdition() loads briefing_<file_date>.json
+    (falling back to briefing_<week_of>.json for legacy entries).
+
+    HISTORY: on 2026-06-08 a wholesale rebuild collapsed the archive from
+    7 entries to 1 (restored by hand in commit 3409046). The exporter now
+    union-merges and refuses to shrink, but nothing gated the published file
+    itself — these checks make edition loss a deploy-blocking FAIL:
+
+      - FAIL: file missing / invalid / not a list / empty
+      - FAIL: entry missing week_of
+      - FAIL: an entry's dated briefing file (file_date, else week_of) does
+              not exist — that dropdown item would 404 in production
+      - FAIL: SHRINK GUARD — any week_of present in git HEAD's version of
+              this file is missing from the working copy (editions are
+              append-only; never overwritten down to one week). Skipped
+              gracefully when git/HEAD-version is unavailable.
+      - WARN: the current briefing's week_of has no archive entry
+
+    Returns (fails_added, warns_added).
+    """
+    import subprocess
+    fails = 0
+    warns = 0
+    path = os.path.join(data_dir, "briefing_archive.json")
+    prefix = "data.briefing_archive"
+
+    if not check(results, f"{prefix}.exists", os.path.exists(path),
+                 f"File missing: {path} — edition dropdown will be empty"):
+        return (1, 0)
+    try:
+        d = _load_json_tolerant(path)
+    except (OSError, json.JSONDecodeError) as e:
+        check(results, f"{prefix}.valid_json", False, f"Parse error: {e}")
+        return (1, 0)
+    check(results, f"{prefix}.valid_json", True, "")
+
+    if not check(results, f"{prefix}.is_list", isinstance(d, list),
+                 f"Expected list, got {type(d).__name__}"):
+        return (fails + 1, warns)
+    if not check(results, f"{prefix}.non_empty", len(d) > 0,
+                 "Archive is empty — every previous edition has been lost"):
+        return (fails + 1, warns)
+
+    weeks = set()
+    missing_files = []
+    for i, e in enumerate(d):
+        wk = (e or {}).get("week_of", "")
+        if not check(results, f"{prefix}[{i}].week_of", bool(wk),
+                     "Entry missing week_of — dropdown item unloadable"):
+            fails += 1
+            continue
+        weeks.add(wk)
+        fd = e.get("file_date") or wk
+        dated = os.path.join(data_dir, f"briefing_{fd}.json")
+        if not os.path.exists(dated):
+            missing_files.append(f"{wk} -> briefing_{fd}.json")
+    if not check(results, f"{prefix}.dated_files_exist", not missing_files,
+                 f"{len(missing_files)} archive entr(ies) point at missing briefing "
+                 f"files (dropdown 404s): {missing_files[:5]}"):
+        fails += 1
+
+    # Shrink guard vs last published state (git HEAD). Editions are
+    # append-only: anything published before must still be present.
+    head_weeks = set()
+    try:
+        r = subprocess.run(
+            ["git", "show", "HEAD:./briefing_archive.json"],
+            capture_output=True, cwd=data_dir, timeout=15)
+        if r.returncode == 0 and r.stdout:
+            for e in json.loads(r.stdout.decode("utf-8", errors="replace")) or []:
+                wk = (e or {}).get("week_of", "")
+                if wk:
+                    head_weeks.add(wk)
+    except (OSError, subprocess.SubprocessError, json.JSONDecodeError,
+            ValueError, TypeError):
+        head_weeks = set()
+    if head_weeks:
+        lost = sorted(head_weeks - weeks)
+        if not check(results, f"{prefix}.no_lost_editions", not lost,
+                     f"Editions present in the last published archive are GONE "
+                     f"from the working copy: {lost} — archive is append-only"):
+            fails += 1
+
+    cur_week = (briefing or {}).get("week_of", "")
+    if cur_week:
+        if not warn(results, f"{prefix}.has_current_week", cur_week in weeks,
+                    f"Current briefing week_of {cur_week} has no archive entry "
+                    f"yet (expected after export step)"):
+            warns += 1
+
+    return (fails, warns)
+
+
 def _validate_data_dir(briefing_path, results, briefing):
     """Phase 2: validate external JSON dependencies in the same directory
     as the briefing.
@@ -1437,6 +1534,7 @@ def _validate_data_dir(briefing_path, results, briefing):
         _validate_events_json,
         _validate_events_global_json,
         _validate_global_chart_cfg,
+        _validate_briefing_archive,
     ):
         f, w = fn(data_dir, results, briefing)
         total_f += f

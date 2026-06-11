@@ -645,6 +645,10 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
                 if wk:
                     by_week[wk] = {
                         "week_of": wk,
+                        # file_date points the dropdown at the actual dated
+                        # briefing_<file_date>.json when it differs from week_of
+                        # (off-day manual runs) — it must survive the merge.
+                        "file_date": entry.get("file_date") or wk,
                         "headline": entry.get("headline", ""),
                         "word_count": entry.get("word_count", 0),
                         "generated_at": entry.get("generated_at", ""),
@@ -663,6 +667,7 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
         existing = by_week.get(wk, {})
         by_week[wk] = {
             "week_of": wk,
+            "file_date": existing.get("file_date") or wk,
             "headline": entry.get("headline", "") or existing.get("headline", ""),
             "word_count": entry.get("word_count", 0) or existing.get("word_count", 0),
             "generated_at": entry.get("generated_at", "") or existing.get("generated_at", ""),

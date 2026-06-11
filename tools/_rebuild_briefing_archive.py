@@ -52,6 +52,8 @@ def summarize(path):
 
 
 def main():
+    force = "--force" in sys.argv
+
     files = tracked_dated_briefings()
     print(f"tracked dated briefings: {len(files)}")
     entries = []
@@ -63,16 +65,37 @@ def main():
             entries.append(summarize(full))
         except Exception as e:
             print(f"  skip {rel}: {e}")
-    # Sort newest first by week_of
-    entries.sort(key=lambda e: e.get("week_of") or "", reverse=True)
 
+    # Editions are APPEND-ONLY (the 2026-06-08 incident collapsed the dropdown
+    # to one entry). Merge with the existing archive so entries that can't be
+    # re-derived from dated files are preserved, and refuse to shrink the
+    # archive without --force.
     out = os.path.join(DATA, "briefing_archive.json")
-    with open(out, "w", encoding="utf-8") as f:
-        json.dump(entries, f, indent=2, ensure_ascii=False)
+    by_week = {e["week_of"]: e for e in entries if e.get("week_of")}
+    prior = []
+    try:
+        with open(out, "r", encoding="utf-8") as f:
+            prior = json.load(f) or []
+    except (FileNotFoundError, json.JSONDecodeError, ValueError):
+        prior = []
+    for e in prior:
+        wk = (e or {}).get("week_of", "")
+        if wk and wk not in by_week:
+            print(f"  preserving existing entry not re-derivable from files: {wk}")
+            by_week[wk] = e
 
-    print(f"\nwrote {out} with {len(entries)} entries:")
-    for e in entries:
-        print(f"  {e['week_of']} — {e['headline'][:70]!r} ({e['word_count']}w)")
+    merged = sorted(by_week.values(), key=lambda e: e.get("week_of") or "", reverse=True)
+    if len(merged) < len(prior) and not force:
+        print(f"REFUSING to shrink archive {len(prior)} -> {len(merged)} "
+              f"(pass --force to override)")
+        sys.exit(1)
+
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump(merged, f, indent=2, ensure_ascii=False)
+
+    print(f"\nwrote {out} with {len(merged)} entries:")
+    for e in merged:
+        print(f"  {e['week_of']} — {(e.get('headline') or '')[:70]!r} ({e.get('word_count', 0)}w)")
 
 
 if __name__ == "__main__":
