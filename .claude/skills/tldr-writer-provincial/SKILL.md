@@ -28,7 +28,7 @@ See `.claude/skills/references/editorial_rules.md` — banned words (validator F
 **WRONG (editorial):** "Alberta's energy sector is struggling due to weak oil prices. The sector faces headwinds."
 
 **RIGHT (wire-service):**
-> WTI crude oil fell <strong>$4.80</strong> to <strong>US$67.20/bbl</strong> this week<sup>1</sup>, extending an eight-week decline as global production increases and demand growth moderates. Alberta's unemployment rate held steady at <strong>7.0%</strong><sup>2</sup>, but employment in mining and oil extraction fell <strong>2.3%</strong> year-over-year. The project database contains <strong>47 Alberta energy projects ($28.4B)</strong><sup>3</sup>, of which <strong>8 have proposed status and estimated breakeven costs between $65-70/bbl</strong> — all are currently underwater at the current WTI price.
+> <span class="lead-sentence">WTI crude oil fell $4.80 to US$67.20/bbl this week, extending an eight-week decline</span> — global production increases and moderating demand growth drove the move<sup>1</sup>. Alberta's unemployment rate held steady at 7.0%<sup>2</sup>, but employment in mining and oil extraction fell 2.3% year-over-year. The project database contains 47 Alberta energy projects ($28.4B)<sup>3</sup>, of which 8 have proposed status and estimated breakeven costs between $65-70/bbl — all are currently underwater at the current WTI price.
 
 More examples: see `.claude/skills/references/editorial_rules.md#examples`.
 
@@ -76,16 +76,16 @@ For each province:
 4. Link to database (sectors, project counts, stages)
 5. Note upcoming events / policy
 
-Format as HTML `<p>` + `<sup>N</sup>` + `<strong>` for numbers. Example for Ontario:
+Format as HTML `<p>` + `<sup>N</sup>`. Every narrative paragraph MUST open with `<span class="lead-sentence">Lead-in sentence stating the paragraph's single core fact</span> — ` (no terminal period inside the span; space, em-dash, space after `</span>`; continuation starts lowercase unless it begins with a proper noun). Never emit `<strong>` or `<b>` — the lead-in's bolding comes from frontend CSS (`.lead-sentence{font-weight:600}`). Numbers stay specific but unbolded. Example for Ontario:
 
 ```html
-<p>Ontario's labour market weakened in March as unemployment rose <strong>0.2 percentage points</strong>
-to <strong>5.9%</strong><sup>1</sup>, marking the third consecutive month of job losses in retail and
-accommodation services. The province shed <strong>2,500 net positions</strong>...</p>
+<p><span class="lead-sentence">Ontario's labour market weakened in March as unemployment rose 0.2 percentage points
+to 5.9%</span> — the increase<sup>1</sup> marked the third consecutive month of job losses in retail and
+accommodation services. The province shed 2,500 net positions...</p>
 
-<p>Ontario's residential real estate market continued to contract. Housing starts fell to <strong>89,200
-units</strong> (annualized) in March<sup>2</sup>... The project database tracks <strong>412 Ontario
-residential projects ($23.4B)</strong>, of which <strong>142 are in proposed or planning stages</strong><sup>4</sup>.
+<p><span class="lead-sentence">Ontario's residential real estate market continued to contract</span> — housing starts fell to 89,200
+units (annualized) in March<sup>2</sup>... The project database tracks 412 Ontario
+residential projects ($23.4B), of which 142 are in proposed or planning stages<sup>4</sup>.
 If mortgage rates decline from current levels, these early-stage projects would be the first to advance...</p>
 ```
 
@@ -231,6 +231,7 @@ The deploy gate runs `tools/validate_briefing_schema.py`. Any FAIL here blocks t
 4. Don't break citations — every `<sup>N</sup>` must match a source ID.
 5. Don't round hard data — write 5.9%, not "approximately 6%."
 6. Don't emit placeholder strings to satisfy shape — raise a loud error instead.
+7. Don't drop the lead-in pattern — every narrative paragraph must open with `<span class="lead-sentence">...</span> — ` (em-dash delimiter), and `<strong>`/`<b>` must NOT appear anywhere in prose.
 
 ## Encoding rule
 

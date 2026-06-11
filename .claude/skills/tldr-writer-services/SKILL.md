@@ -52,7 +52,14 @@ should, must, hopefully, unfortunately, worrying, promising, encouraging, welcom
 
 - Write in third person, present tense for current data, past tense for events
 - Paragraphs should be 3-4 sentences
-- Use `<strong>` for key numbers and percentages
+- **Lead-in + em-dash structure (mandatory for EVERY narrative paragraph):** each `<p>` opens with a lead-in sentence wrapped in `<span class="lead-sentence">...</span>`, followed by ` — ` (space, em-dash, space) and the rest of the paragraph:
+
+  ```html
+  <p><span class="lead-sentence">Lead-in sentence stating the paragraph's single core fact</span> — supporting detail, context, and cross-references with citations.<sup>N</sup></p>
+  ```
+
+  The lead-in span carries no terminal period; ` — ` immediately follows `</span>`; the continuation starts lowercase unless it begins with a proper noun. A sector-name lead variant is also valid: `<span class="lead-sentence">Professional Services — Output increased 1.4% month-over-month, propelled by infrastructure engineering demand</span> — ...`
+- **Never emit `<strong>` or `<b>` tags anywhere in prose.** The lead-in is the only bold text the reader sees, and its bolding comes from frontend CSS (`.lead-sentence{font-weight:600}`). Numbers stay specific but unbolded.
 - Use `<sup>N</sup>` for every sourced claim
 - Lead each industry with its primary driver (labour, demand, policy, or rates)
 - Quantify project exposure explicitly
@@ -71,18 +78,19 @@ The project database has retail projects. The sector is struggling.
 
 **AFTER (wire-service reporting):**
 ```
-Retail trade output declined <strong>0.8%</strong> month-over-month in January<sup>1</sup>, extending
-a five-month downtrend as consumer spending on discretionary goods remained subdued. Statistics Canada's
-retail sales index fell <strong>1.2%</strong> excluding autos<sup>2</sup>, driven by apparel and home
-furnishings retailers citing customer caution. Retail trade employment fell <strong>2.3%</strong>
+<p><span class="lead-sentence">Retail trade output declined 0.8% month-over-month in January, extending
+a five-month downtrend</span> — consumer spending on discretionary goods remained subdued<sup>1</sup>, and
+Statistics Canada's retail sales index fell 1.2% excluding autos<sup>2</sup>, driven by apparel and home
+furnishings retailers citing customer caution. Retail trade employment fell 2.3%
 year-over-year<sup>3</sup>, the largest sector-wide decline since February 2023. The project database tracks
-<strong>142 retail and hospitality projects ($2.8B)</strong>, of which <strong>28 are in proposed or planning
-stages</strong><sup>4</sup>. If consumer confidence recovers and mortgage rates decline, enabling housing
-formation, these early-stage projects would advance through planning and construction phases.
+142 retail and hospitality projects ($2.8B), of which 28 are in proposed or planning
+stages<sup>4</sup>. If consumer confidence recovers and mortgage rates decline, enabling housing
+formation, these early-stage projects would advance through planning and construction phases.</p>
 ```
 
 **Why it's better:**
-- Opens with sector output + trend
+- Opens with the `lead-sentence` span stating the core fact (sector output + trend), em-dash, then lowercase continuation
+- No `<strong>`/`<b>` tags — the lead-in's bolding comes from frontend CSS
 - Specifies what fell (discretionary goods, not overall)
 - Cites labour data: specific sector, specific %-decline
 - Links to database with stage breakdown
@@ -102,20 +110,21 @@ is positive as rates hold steady.
 
 **AFTER (wire-service reporting):**
 ```
-Finance and insurance sector GDP expanded <strong>0.4%</strong> month-over-month in January<sup>1</sup>,
-the sector's strongest gain since September 2025, as mortgage origination volumes rose following the Bank
-of Canada's cumulative <strong>150 basis points</strong> of rate cuts since June 2024<sup>2</sup>. The policy
-rate held at <strong>2.25%</strong>, and the 5-year mortgage rate averaged <strong>5.89%</strong>, down from
-<strong>6.15%</strong> the prior week<sup>3</sup>. The project database contains <strong>89 financial sector
-projects ($4.2B)</strong>, concentrated in data centre construction (<strong>34 projects</strong>) and branch
-network modernization (<strong>18 projects</strong>)<sup>4</sup>. TD Bank's <strong>$1.8 billion</strong>
+<p><span class="lead-sentence">Finance and insurance sector GDP expanded 0.4% month-over-month in January,
+the sector's strongest gain since September 2025</span> — mortgage origination volumes rose<sup>1</sup> following the Bank
+of Canada's cumulative 150 basis points of rate cuts since June 2024<sup>2</sup>. The policy
+rate held at 2.25%, and the 5-year mortgage rate averaged 5.89%, down from
+6.15% the prior week<sup>3</sup>. The project database contains 89 financial sector
+projects ($4.2B), concentrated in data centre construction (34 projects) and branch
+network modernization (18 projects)<sup>4</sup>. TD Bank's $1.8 billion
 technology hub in Toronto's East Harbour district advanced to approved status in March<sup>5</sup>. If mortgage
 rate declines continue, residential real estate projects would accelerate, supporting property management and
-title services employment.
+title services employment.</p>
 ```
 
 **Why it's better:**
-- Opens with sector output + context (rate cut cycle)
+- Opens with the `lead-sentence` span (sector output + context) followed by the em-dash continuation
+- No `<strong>`/`<b>` tags — numbers stay specific but unbolded
 - Specifies drivers: rate level, mortgage rate, BoC policy
 - Quantifies project exposure by type and value
 - Names a specific large project with status
@@ -135,20 +144,21 @@ in healthcare. The sector is improving. Many healthcare projects are needed.
 
 **AFTER (wire-service reporting):**
 ```
-Health care and social assistance sector output expanded <strong>2.1%</strong> year-over-year<sup>1</sup>,
-the fastest growth rate of any sector, as Canada's population aged 8.3% to a median age of <strong>41.6
-years</strong><sup>2</sup>. Employment in healthcare rose <strong>3.2%</strong> year-over-year, concentrated
-in home care (<strong>+4.8%</strong>) and long-term residential care (<strong>+2.9%</strong>)<sup>3</sup>.
-However, wage growth in nursing and care support roles (averaging <strong>4.1%</strong> annually) exceeded
-inflation, indicating tight labour supply<sup>4</sup>. The project database tracks <strong>847 healthcare
-projects ($23.4B)</strong> across Canada<sup>5</sup>, of which <strong>312 are in proposed or planning
-stages</strong>. Federal and provincial governments allocated <strong>$4.2 billion</strong> in the March
+<p><span class="lead-sentence">Health care and social assistance sector output expanded 2.1% year-over-year,
+the fastest growth rate of any sector</span> — Canada's population aged 8.3% to a median age of 41.6
+years<sup>1</sup><sup>2</sup>. Employment in healthcare rose 3.2% year-over-year, concentrated
+in home care (+4.8%) and long-term residential care (+2.9%)<sup>3</sup>.
+However, wage growth in nursing and care support roles (averaging 4.1% annually) exceeded
+inflation, indicating tight labour supply<sup>4</sup>. The project database tracks 847 healthcare
+projects ($23.4B) across Canada<sup>5</sup>, of which 312 are in proposed or planning
+stages. Federal and provincial governments allocated $4.2 billion in the March
 2026 budget toward long-term care infrastructure and home support expansions<sup>6</sup>, which are expected
-to unlock <strong>~80 projects</strong> currently in planning stages pending funding confirmation.
+to unlock ~80 projects currently in planning stages pending funding confirmation.</p>
 ```
 
 **Why it's better:**
-- Opens with sector output growth + demographic driver
+- Opens with the `lead-sentence` span (sector output growth + demographic driver) and em-dash continuation
+- No `<strong>`/`<b>` tags anywhere in the prose
 - Specifies subsectors with growth rates
 - Cites labour tension (wage growth exceeding inflation)
 - Quantifies project exposure with stage breakdown
@@ -168,20 +178,21 @@ The database has professional services projects. Growth is steady. More projects
 
 **AFTER (wire-service reporting):**
 ```
-Professional, scientific and technical services sector output increased <strong>1.4%</strong>
-month-over-month in January<sup>1</sup>, propelled by management and technical consulting demand from
-infrastructure projects and energy sector feasibility reviews. Employment in the sector grew <strong>2.8%</strong>
-year-over-year<sup>2</sup>, with the largest gains in engineering services (<strong>+3.9%</strong>) and
-environmental consulting (<strong>+3.1%</sup>). Billing rates for senior consultants rose <strong>2.3%</strong>
-year-over-year, indicating sustained demand strength<sup>3</sup>. The project database tracks <strong>234
-professional services projects ($8.7B)</strong>, distributed across engineering (<strong>89 projects</strong>),
-environmental consulting (<strong>67 projects</strong>), and legal/compliance (<strong>78 projects</strong>)<sup>4</sup>.
+<p><span class="lead-sentence">Professional, scientific and technical services sector output increased 1.4%
+month-over-month in January, propelled by consulting demand</span> — management and technical consulting drew demand from
+infrastructure projects and energy sector feasibility reviews<sup>1</sup>. Employment in the sector grew 2.8%
+year-over-year<sup>2</sup>, with the largest gains in engineering services (+3.9%) and
+environmental consulting (+3.1%). Billing rates for senior consultants rose 2.3%
+year-over-year, indicating sustained demand strength<sup>3</sup>. The project database tracks 234
+professional services projects ($8.7B), distributed across engineering (89 projects),
+environmental consulting (67 projects), and legal/compliance (78 projects)<sup>4</sup>.
 These projects are typically early-stage (engineering assessment, permitting support), making them sensitive to
-upstream infrastructure and energy project approval rates.
+upstream infrastructure and energy project approval rates.</p>
 ```
 
 **Why it's better:**
-- Opens with sector output + specific driver (infrastructure demand)
+- Opens with the `lead-sentence` span (sector output + specific driver) and em-dash continuation
+- No `<strong>`/`<b>` tags anywhere in the prose
 - Breaks down employment by subsector with growth rates
 - Cites pricing power (billing rates rising)
 - Quantifies project exposure by service type
@@ -236,64 +247,64 @@ For EACH services industry, open with its primary driver:
 
 **Retail Trade (44-45):**
 ```html
-<p>Retail trade output declined <strong>0.8%</strong> month-over-month in January<sup>1</sup>, extending
-a five-month downtrend as consumer spending on discretionary goods remained subdued. Statistics Canada's retail
-sales index fell <strong>1.2%</strong> excluding autos<sup>2</sup>, driven by apparel and home furnishings
-retailers. Consumer confidence remains fragile: Google Trends searches for "mortgage qualification Canada"
-rose <strong>34%</strong> week-over-week, and Reddit personal finance discussions centered on debt management
-rose <strong>23%</strong><sup>3</sup>. Retail trade employment fell <strong>2.3%</strong> year-over-year<sup>4</sup>.
-The project database tracks <strong>142 retail and hospitality projects ($2.8B)</strong>, of which
-<strong>28 are in proposed or planning stages</strong><sup>5</sup>.</p>
+<p><span class="lead-sentence">Retail trade output declined 0.8% month-over-month in January, extending
+a five-month downtrend</span> — consumer spending on discretionary goods remained subdued<sup>1</sup>, and
+Statistics Canada's retail sales index fell 1.2% excluding autos<sup>2</sup>, driven by apparel and home
+furnishings retailers. Consumer confidence remains fragile: Google Trends searches for "mortgage qualification
+Canada" rose 34% week-over-week, and Reddit personal finance discussions centered on debt management
+rose 23%<sup>3</sup>. Retail trade employment fell 2.3% year-over-year<sup>4</sup>.
+The project database tracks 142 retail and hospitality projects ($2.8B), of which
+28 are in proposed or planning stages<sup>5</sup>.</p>
 ```
 
 **Finance & Insurance (52):**
 ```html
-<p>Finance and insurance sector GDP expanded <strong>0.4%</strong> month-over-month in January<sup>1</sup>,
-the sector's strongest gain since September 2025, as mortgage origination volumes rose following the Bank of
-Canada's cumulative <strong>150 basis points</strong> of rate cuts since June 2024<sup>2</sup>. The policy rate
-held at <strong>2.25%</strong>, and the 5-year mortgage rate averaged <strong>5.89%</strong>, down
-<strong>26 basis points</strong> from the prior week<sup>3</sup>. TD Bank's <strong>$1.8 billion</strong>
+<p><span class="lead-sentence">Finance and insurance sector GDP expanded 0.4% month-over-month in January,
+the sector's strongest gain since September 2025</span> — mortgage origination volumes rose<sup>1</sup> following the Bank of
+Canada's cumulative 150 basis points of rate cuts since June 2024<sup>2</sup>. The policy rate
+held at 2.25%, and the 5-year mortgage rate averaged 5.89%, down
+26 basis points from the prior week<sup>3</sup>. TD Bank's $1.8 billion
 technology hub in Toronto's East Harbour district advanced to approved status in March<sup>4</sup>. The project
-database contains <strong>89 financial sector projects ($4.2B)</strong>, concentrated in data centre construction
-(<strong>34 projects</strong>) and branch network modernization (<strong>18 projects</strong>)<sup>5</sup>.</p>
+database contains 89 financial sector projects ($4.2B), concentrated in data centre construction
+(34 projects) and branch network modernization (18 projects)<sup>5</sup>.</p>
 ```
 
 **Health Care (62):**
 ```html
-<p>Health care and social assistance sector output expanded <strong>2.1%</strong> year-over-year<sup>1</sup>,
-the fastest growth rate of any sector, as Canada's population aged 8.3% to a median age of <strong>41.6
-years</strong><sup>2</sup>. Employment in healthcare rose <strong>3.2%</strong> year-over-year, concentrated in
-home care (<strong>+4.8%</strong>) and long-term residential care (<strong>+2.9%</strong>)<sup>3</sup>. Wage
-growth in nursing and care support roles averaged <strong>4.1%</strong> annually, exceeding inflation and
-indicating tight labour supply<sup>4</sup>. The project database tracks <strong>847 healthcare projects
-($23.4B)</strong>, of which <strong>312 are in proposed or planning stages</strong><sup>5</sup>. Federal and
-provincial governments allocated <strong>$4.2 billion</strong> in the March 2026 budget toward long-term care
+<p><span class="lead-sentence">Health care and social assistance sector output expanded 2.1% year-over-year,
+the fastest growth rate of any sector</span> — Canada's population aged 8.3% to a median age of 41.6
+years<sup>1</sup><sup>2</sup>. Employment in healthcare rose 3.2% year-over-year, concentrated in
+home care (+4.8%) and long-term residential care (+2.9%)<sup>3</sup>. Wage
+growth in nursing and care support roles averaged 4.1% annually, exceeding inflation and
+indicating tight labour supply<sup>4</sup>. The project database tracks 847 healthcare projects
+($23.4B), of which 312 are in proposed or planning stages<sup>5</sup>. Federal and
+provincial governments allocated $4.2 billion in the March 2026 budget toward long-term care
 infrastructure and home support expansions<sup>6</sup>.</p>
 ```
 
 **Real Estate (53):**
 ```html
-<p>Real estate sector activity declined as mortgage qualification remained constrained by the high-rate
-environment. The 5-year fixed mortgage rate averaged <strong>5.89%</strong>, holding at <strong>364 basis
-points</strong> above the BoC policy rate of <strong>2.25%</strong><sup>1</sup>. Housing starts fell
-<strong>15.2%</strong> month-over-month to <strong>173,800 units</strong> (annualized)<sup>2</sup>, and home
-sales volumes in major CMAs fell <strong>12.1%</strong> month-over-month<sup>3</sup>. However, net immigration
-flows to Canada remain strong at <strong>168,000 persons</strong> in the latest quarter<sup>4</sup>, supporting
-medium-term housing demand. The project database tracks <strong>234 real estate development projects ($28.1B)</strong>,
-of which <strong>89 are in proposed or planning stages</strong><sup>5</sup>. If mortgage rates decline materially,
+<p><span class="lead-sentence">Real estate sector activity declined as mortgage qualification remained
+constrained by the high-rate environment</span> — the 5-year fixed mortgage rate averaged 5.89%, holding at 364 basis
+points above the BoC policy rate of 2.25%<sup>1</sup>. Housing starts fell
+15.2% month-over-month to 173,800 units (annualized)<sup>2</sup>, and home
+sales volumes in major CMAs fell 12.1% month-over-month<sup>3</sup>. However, net immigration
+flows to Canada remain strong at 168,000 persons in the latest quarter<sup>4</sup>, supporting
+medium-term housing demand. The project database tracks 234 real estate development projects ($28.1B),
+of which 89 are in proposed or planning stages<sup>5</sup>. If mortgage rates decline materially,
 these early-stage projects would advance through zoning approvals and environmental assessment.</p>
 ```
 
 **Education (61):**
 ```html
-<p>Education sector output grew <strong>1.8%</strong> year-over-year<sup>1</sup>, driven by demographic
-expansion and internationalization. K-12 enrolment rose <strong>2.3%</strong> year-over-year nationally<sup>2</sup>,
+<p><span class="lead-sentence">Education sector output grew 1.8% year-over-year, driven by demographic
+expansion and internationalization</span> — K-12 enrolment rose 2.3% year-over-year nationally<sup>1</sup><sup>2</sup>,
 with the largest gains in Alberta and British Columbia reflecting interprovincial migration patterns. Post-secondary
-international student enrolment fell <strong>3.1%</strong> year-over-year nationally<sup>3</sup>, following
+international student enrolment fell 3.1% year-over-year nationally<sup>3</sup>, following
 government immigration policy tightening, though several provinces (Ontario, Quebec) reported stability. The project
-database tracks <strong>123 education projects ($4.8B)</strong>, including K-12 classroom expansions, post-secondary
-research facilities, and workforce training centres<sup>4</sup>. Provincial governments allocated <strong>$2.1
-billion</strong> in education capital spending in their 2026 budgets, expected to unlock <strong>~30 projects</strong>
+database tracks 123 education projects ($4.8B), including K-12 classroom expansions, post-secondary
+research facilities, and workforce training centres<sup>4</sup>. Provincial governments allocated $2.1
+billion in education capital spending in their 2026 budgets, expected to unlock ~30 projects
 currently in planning stages.</p>
 ```
 
@@ -311,17 +322,17 @@ For each industry, weave 2-3 subsector data points into the narrative prose (no 
 Combine driver context, subsector data, and project linkage:
 
 ```html
-<p>Professional, scientific and technical services sector output increased <strong>1.4%</strong>
-month-over-month in January, propelled by management and technical consulting demand from infrastructure projects
-and energy sector feasibility reviews. Employment in the sector grew <strong>2.8%</strong> year-over-year, with the
+<p><span class="lead-sentence">Professional, scientific and technical services sector output increased 1.4%
+month-over-month in January, propelled by consulting demand</span> — management and technical consulting drew demand from infrastructure projects
+and energy sector feasibility reviews. Employment in the sector grew 2.8% year-over-year, with the
 largest gains in engineering services (+3.9%) and environmental consulting (+3.1%). Billing rates for senior
 consultants rose 2.3% year-over-year, indicating sustained demand strength.</p>
 
-<p>Engineering services led the gains with employment up 3.9% YoY, driven by infrastructure assessment and energy transition projects, while environmental consulting grew 3.1% on provincial regulatory assessments supporting mining and utilities projects.<sup>3,4</sup> Management consulting employment rose 2.3% YoY on demand from supply chain optimization and digital transformation initiatives.<sup>5</sup></p>
+<p><span class="lead-sentence">Engineering services led the gains with employment up 3.9% YoY</span> — infrastructure assessment and energy transition projects drove hiring, while environmental consulting grew 3.1% on provincial regulatory assessments supporting mining and utilities projects.<sup>3,4</sup> Management consulting employment rose 2.3% YoY on demand from supply chain optimization and digital transformation initiatives.<sup>5</sup></p>
 
-<p>The project database tracks <strong>234 professional services projects ($8.7B)</strong>, distributed across engineering
-(<strong>89 projects</strong>), environmental consulting (<strong>67 projects</strong>), and legal/compliance (<strong>78
-projects</strong>). These projects are typically early-stage (engineering assessment, permitting support), making them
+<p><span class="lead-sentence">The project database tracks 234 professional services projects ($8.7B)</span> — these are distributed across engineering
+(89 projects), environmental consulting (67 projects), and legal/compliance (78
+projects). The projects are typically early-stage (engineering assessment, permitting support), making them
 sensitive to upstream infrastructure and energy project approval rates.</p>
 ```
 
@@ -435,6 +446,14 @@ orphaned = sup_refs - source_ids
 if orphaned:
     print(f"FAIL — ORPHANED CITATIONS: {orphaned}")
 
+# ── FORMAT CHECK (lead-in + no bold) ──
+if re.search(r'<(strong|b)\b', all_html, re.IGNORECASE):
+    print("FAIL — BANNED TAG: <strong>/<b> found in prose (bolding comes from .lead-sentence CSS only)")
+for ind in data.get('servicesIndustries', []):
+    for para in re.findall(r'<p>(.*?)</p>', ind.get('analysis', ''), re.S):
+        if not para.lstrip().startswith('<span class="lead-sentence">'):
+            print(f"FAIL — MISSING LEAD-IN: a paragraph in {ind.get('name','?')} does not open with <span class=\"lead-sentence\">...</span> — ")
+
 # ── EDITORIAL CHECK ──
 banned = ['should', 'must', 'hopefully', 'unfortunately', 'worrying',
           'promising', 'encouraging', 'welcome', 'bullish', 'bearish',
@@ -512,6 +531,8 @@ Ready for merging by Agent 3E (Assembler).
 6. **Don't forget subsectors.** Include at least 2-3 subsector performance data points.
 7. **Don't break citations.** Every `<sup>N</sup>` must match a source ID in `industrySources[]`.
 8. **Don't ignore demographic or policy trends.** Services sectors are especially sensitive to government budgets, demographics, and interest rates — cite these explicitly.
+9. **Don't skip the lead-in.** Every narrative paragraph must open with `<span class="lead-sentence">...</span> — ` (lead-in sentence, no terminal period, then space-em-dash-space and a lowercase continuation unless it starts with a proper noun).
+10. **Don't emit `<strong>` or `<b>` — they are banned everywhere in prose.** The lead-in's bolding comes from frontend CSS (`.lead-sentence{font-weight:600}`). Numbers stay specific but unbolded.
 
 ---
 

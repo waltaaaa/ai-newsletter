@@ -60,7 +60,11 @@ EDITORIAL_RULES = (
     "'hopefully', 'unfortunately', 'worrying', 'promising', 'encouraging'. "
     "Never recommend policy, investment, or business decisions. Use conditional "
     "language for projections. NEVER forecast or use 'looking ahead', 'expected "
-    "to', 'is likely to', 'outlook', 'going forward'."
+    "to', 'is likely to', 'outlook', 'going forward'. "
+    "PROSE STYLE: Every narrative paragraph opens with a lead-in sentence wrapped in "
+    "<span class=\"lead-sentence\">...</span> followed by ' — ' (space, em-dash, space) "
+    "and the supporting detail. NEVER use <strong> or <b> tags — the lead-in is the only "
+    "bold text (styled by frontend CSS); numbers stay specific but unbolded."
 )
 
 
@@ -181,7 +185,10 @@ Write an EXECUTIVE SUMMARY (4-6 short paragraphs, 350-450 words).
 Format as HTML paragraphs: <p>paragraph text</p>
 This is a TL;DR — be concise and direct. Every sentence must carry a specific data point.
 No throat-clearing ("This week saw...") — lead with the fact.
-Each paragraph is 2-3 sentences max. Use <strong> on key figures. Use <sup>N</sup> citations.
+Each paragraph is 2-3 sentences max. Use <sup>N</sup> citations.
+Every paragraph opens with a lead-in sentence wrapped in <span class="lead-sentence">...</span>
+followed by " — " (space, em-dash, space) and the supporting detail.
+NEVER use <strong> or <b> — the lead-in is the only bold text (styled by frontend CSS).
 Structure: Lead with week's biggest story. Second paragraph: next 2-3 data points.
 Third: notable provincial developments with project names and values.
 Fourth: federal/provincial policy actions. Fifth (optional): cross-cutting theme.
@@ -411,7 +418,7 @@ BEFORE (wrong — bullets):
 <ul class="list-disc list-inside space-y-2 text-slate-600 text-xs"><li>Mining & Energy GDP declined 1.2% month-over-month<sup>1</sup></li><li>WTI crude traded below $70/bbl for the third week<sup>2</sup></li></ul>
 
 AFTER (correct — narrative prose with em dash lead):
-<p><span class="lead-sentence">Mining & Energy — GDP contracted 1.2% month-over-month as WTI crude traded below $70/bbl for the third consecutive week</span>, affecting 12 Alberta oil sands projects ($18.2B) with breakeven costs above the current price.<sup>1,2</sup> Gold rose 1.8% to $3,042/oz, supporting 23 mining projects in BC and Ontario ($6.4B) linked to precious metal prices.<sup>3</sup></p>
+<p><span class="lead-sentence">Mining & Energy — GDP contracted 1.2% month-over-month as WTI crude traded below $70/bbl for the third consecutive week</span> — the decline affects 12 Alberta oil sands projects ($18.2B) with breakeven costs above the current price.<sup>1,2</sup> Gold rose 1.8% to $3,042/oz, supporting 23 mining projects in BC and Ontario ($6.4B) linked to precious metal prices.<sup>3</sup></p>
 
 Also provide: sources, subsectors (2-3 with code/name), isNegative (based on M/M).
 

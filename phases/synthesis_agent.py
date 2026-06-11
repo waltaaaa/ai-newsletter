@@ -34,7 +34,11 @@ EDITORIAL_RULES = (
     "EDITORIAL RULES: REPORT ONLY — no editorializing. State what happened, "
     "what the data shows, what is connected. Never say 'should', 'must', "
     "'hopefully', 'unfortunately', 'worrying', 'promising', 'encouraging'. "
-    "Never recommend policy, investment, or business decisions."
+    "Never recommend policy, investment, or business decisions. "
+    "PROSE STYLE: Every narrative paragraph opens with a lead-in sentence wrapped in "
+    "<span class=\"lead-sentence\">...</span> followed by ' — ' (space, em-dash, space) "
+    "and the supporting detail. NEVER use <strong> or <b> tags — the lead-in is the only "
+    "bold text (styled by frontend CSS); numbers stay specific but unbolded."
 )
 
 

@@ -32,7 +32,7 @@ See `.claude/skills/references/editorial_rules.md` — banned words, cardinal ru
 > "The labour market continued to weaken in March. Unemployment rose to 6.5%. Employment fell by 8,000 positions."
 
 **RIGHT (wire-service reporting):**
-> Statistics Canada's Labour Force Survey recorded unemployment at <strong>6.5%</strong><sup>1</sup> in March, up <strong>0.3 percentage points</strong> from February, as the economy shed <strong>8,000 positions</strong> concentrated in retail trade and accommodation services. The project database tracks <strong>412 retail and hospitality projects ($2.1B)</strong><sup>2</sup> in proposed or planning stages, representing potential future employment in those sectors.
+> <span class="lead-sentence">Statistics Canada's Labour Force Survey recorded unemployment at 6.5% in March, up 0.3 percentage points from February</span> — the economy shed 8,000 positions<sup>1</sup> concentrated in retail trade and accommodation services. The project database tracks 412 retail and hospitality projects ($2.1B)<sup>2</sup> in proposed or planning stages, representing potential future employment in those sectors.
 
 More examples: see `.claude/skills/references/editorial_rules.md#examples`.
 
@@ -48,7 +48,7 @@ Fields this skill owns (validator-gated FAIL unless marked otherwise):
 | `edition` | string, format: `EDITION: Mon DD – Mon DD // STATUS: AI-SYNTHESIZED` |
 | `week_of` | ISO date (Monday of briefing week) |
 | `generated_at`, `updated_at` | ISO datetime / date |
-| `executive_summary` | HTML, 300–500 words, `<p>` + `<sup>N</sup>` + `<strong>` |
+| `executive_summary` | HTML, 300–500 words, `<p>` + `<sup>N</sup>` + `<span class="lead-sentence">` lead-in openings (no `<strong>`/`<b>`) |
 | `national.analysis` | HTML, 400–600 words (validator min 500 chars), no banned words |
 | `national.sources` | array, >=3 items, each `{id, title, url or archive_url}` |
 | `consumer_pulse` | HTML, 200–300 words |
@@ -56,7 +56,7 @@ Fields this skill owns (validator-gated FAIL unless marked otherwise):
 | `globalVectors` | object `{us, china, eu}` (1–2 factual sentences each) |
 | `indicatorContextLines` | object `{bocRate, cpi, unemployment, housingStarts, realGdp}` each a 1-sentence plain-English context |
 | `watchlist` | watchlist package with descriptions written here |
-| `metrics` | pass-through from dossier `national_analysis_package.metrics.*` — 12 enrichment keys (fulltime_change, parttime_change, private_sector_change, public_sector_change, core_cpi_median, shelter_cpi, food_cpi, energy_cpi, residential_permits, nonresidential_permits, merchandise_exports, merchandise_imports) — all non-empty strings (validator-gated) |
+| `metrics` | pass-through from dossier `national_analysis_package.metrics.*` — 12 enrichment keys (fulltime_change, parttime_change, private_sector_change, public_sector_change, core_cpi_median, shelter_cpi, food_cpi, energy_cpi, residential_permits, nonresidential_permits, merchandise_exports, merchandise_imports) — all non-empty strings (validator-gated). FORMAT: each value is a short data point (<=48 chars, contains a digit, e.g. "+1.5%", "$8.2B (Feb)") or exactly "N/A" — NEVER deferral prose like "See CPI April 2026 detail…" (renders in a narrow table cell; validator FAILs the deploy gate) |
 | `indicatorMeta`, `indicatorSources`, `key_indicators`, `word_cloud_topics`, `discovery_stats` | pass-through from dossier |
 | `sources` | from dossier.sources_registry |
 
@@ -77,18 +77,18 @@ Structure:
 2. Body paragraphs (2–3): cover the next 3–5 most significant developments; connect each indicator to real projects or policy from the dossier's cross-references.
 3. Closing paragraph: upcoming events that will affect the picture next week.
 
-Format as `<p>` HTML with `<sup>N</sup>` citations and `<strong>` number wrapping.
+Format as `<p>` HTML with `<sup>N</sup>` citations. Every narrative paragraph MUST open with `<span class="lead-sentence">Lead-in sentence stating the paragraph's single core fact</span> — ` (no terminal period inside the span; space, em-dash, space after `</span>`; continuation starts lowercase unless it begins with a proper noun). Never emit `<strong>` or `<b>` — the lead-in's bolding comes from frontend CSS (`.lead-sentence{font-weight:600}`). Numbers stay specific but unbolded.
 
 ### Step 3: Write the national analysis (400–600 words)
 
 Cover the headline macro figure, industry GDP movements (cite StatCan tables + NAICS), labour market (employment, unemployment, participation, wages), trade, housing, notable sector developments. Opening example:
 
 ```html
-<p>Canada's real GDP contracted at an annualized rate of <strong>-0.6%</strong> in the
-fourth quarter, marking the second consecutive quarter of decline and meeting technical
-recession criteria, according to Statistics Canada.<sup>1</sup> The contraction was broad-based,
-with goods-producing sectors declining <strong>1.2%</strong> and services-producing sectors
-down <strong>0.3%</strong>...</p>
+<p><span class="lead-sentence">Canada's real GDP contracted at an annualized rate of -0.6% in the
+fourth quarter, marking the second consecutive quarter of decline</span> — the contraction met
+technical recession criteria, according to Statistics Canada.<sup>1</sup> The decline was broad-based,
+with goods-producing sectors declining 1.2% and services-producing sectors
+down 0.3%...</p>
 ```
 
 ### Step 4: [REMOVED — Financial Markets]
@@ -178,14 +178,24 @@ for g in data['global']:
     srcs = g.get('sources') or []
     assert len(srcs) >= 1, f"{g['region']}.sources < 1"
 
-# 12 enrichment metrics — non-empty strings
+# 12 enrichment metrics — non-empty strings that LOOK like data points.
+# These render in narrow numeric table cells: a value is <=48 chars with a
+# digit (or "little changed (Apr)"-style), or exactly "N/A" when the series
+# isn't in the dossier. Deferral prose ("See CPI April 2026 detail...;
+# pending in dossier") is a contract breach — it wraps across ~10 lines in
+# production and the schema validator FAILs the deploy gate on it.
 enrichment = ['fulltime_change', 'parttime_change', 'private_sector_change', 'public_sector_change',
               'core_cpi_median', 'shelter_cpi', 'food_cpi', 'energy_cpi',
               'residential_permits', 'nonresidential_permits',
               'merchandise_exports', 'merchandise_imports']
+prose_re = re.compile(r'(?i)\b(see|pending|per\s+statcan|release|detail|dossier|cited|documented|narrative|awaiting|forthcoming|tbd)\b')
 for k in enrichment:
     v = data['metrics'].get(k)
     assert isinstance(v, str) and v.strip(), f"metrics.{k} empty — enrichment card renders em-dash"
+    vv = v.strip()
+    assert vv == 'N/A' or (len(vv) <= 48 and not prose_re.search(vv)
+                           and (re.search(r'\d', vv) or re.match(r'(?i)^(little changed|unchanged|flat)\b', vv))), \
+        f"metrics.{k} is prose/deferral text, not a data point: {vv!r} — use a short value or exactly 'N/A'"
 
 # Word counts
 def wc(html): return len(re.sub(r'<[^>]+>', '', html).split())
@@ -232,7 +242,7 @@ The deploy gate runs `tools/validate_briefing_schema.py`. Any FAIL blocks the we
 
 1. Don't invent data — if the dossier doesn't have a number, carry forward or leave the field empty.
 2. Don't round hard data — BoC rate 2.25% is 2.25%, not "approximately 2.3%."
-3. Don't forget `<strong>` number wrapping or `<sup>N</sup>` citation wrapping.
+3. Don't drop the lead-in pattern — every narrative paragraph must open with `<span class="lead-sentence">...</span> — ` (em-dash delimiter), and `<strong>`/`<b>` must NOT appear anywhere in prose. Don't forget `<sup>N</sup>` citation wrapping.
 4. Don't editorialize — banned words list is non-negotiable.
 5. Don't break JSON — always validate before save.
 6. Don't cite vague sources — every `<sup>N</sup>` must resolve.

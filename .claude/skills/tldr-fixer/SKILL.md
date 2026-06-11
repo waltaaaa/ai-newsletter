@@ -144,14 +144,50 @@ Every banned word or editorializing pattern must be surgically rewritten.
 **For each violation the Auditor found:**
 1. Locate the exact sentence in the HTML
 2. Rewrite it using only factual, data-grounded language
-3. Ensure the rewrite preserves any `<sup>` citations and `<strong>` formatting
+3. Ensure the rewrite preserves any `<sup>` citations and the paragraph's `<span class="lead-sentence">` structure — never introduce `<strong>` or `<b>` tags
 4. Verify the replacement doesn't introduce new violations
 
 ```python
 # Example: fix a banned word in executive_summary
 original = 'This promising development in manufacturing output'
-fixed = 'Manufacturing output rose <strong>+1.2%</strong> month-over-month<sup>3</sup>'
+fixed = 'Manufacturing output rose +1.2% month-over-month<sup>3</sup>'
 briefing['executive_summary'] = briefing['executive_summary'].replace(original, fixed)
+```
+
+### Priority 3a: Prose Structure Violations (formatting warnings)
+
+The Auditor flags two prose-structure issues: paragraphs missing the lead-sentence + em-dash opening, and banned `<strong>`/`<b>` tags. Every narrative paragraph must follow the canonical pattern (see `references/editorial_rules.md`):
+
+```html
+<p><span class="lead-sentence">Lead-in sentence stating the paragraph's single core fact</span> — supporting detail with citations.<sup>N</sup></p>
+```
+
+The lead-in span is followed immediately by ` — ` (space, em-dash, space). The lead-in's bold comes from frontend CSS (`.lead-sentence{font-weight:600}`) — the only bold text a reader sees is the lead-in sentence.
+
+**Missing lead-sentence structure** (a `<p>` does not open with `<span class="lead-sentence">`, or the closing `</span>` is not followed by ` — `):
+1. Read the paragraph and identify its single core fact
+2. Compose a lead-in sentence stating that core fact
+3. Wrap it in `<span class="lead-sentence">...</span>`, follow with ` — ` and the remaining prose
+4. Keep all facts, numbers, and `<sup>` citations unchanged — this is a restructure, not a rewrite
+
+**Banned `<strong>`/`<b>` tags** anywhere in a prose field:
+1. Unwrap the tags — keep the text, delete only the `<strong>`/`</strong>` and `<b>`/`</b>` markup
+2. Citations and numbers stay exactly as they were
+
+```python
+import re
+
+# Example: restructure a paragraph that lacks the lead-sentence pattern
+original = ('<p>Statistics Canada reported that manufacturing output rose <strong>+1.2%</strong> '
+            'month-over-month in March<sup>3</sup>, the third consecutive monthly increase.</p>')
+fixed = ('<p><span class="lead-sentence">Manufacturing output rose +1.2% month-over-month in March, '
+         'the third consecutive increase</span> — Statistics Canada\'s monthly GDP release recorded '
+         'the gain<sup>3</sup>.</p>')
+briefing['executive_summary'] = briefing['executive_summary'].replace(original, fixed)
+
+# Unwrap all remaining <strong>/<b> tags in every prose field (keep text, drop markup)
+def unwrap_bold(html):
+    return re.sub(r'</?(?:strong|b)>', '', html)
 ```
 
 ### Priority 3b: Missing Industries or Provinces (Test 5 failures)
@@ -161,7 +197,7 @@ If the Auditor found fewer than 5 goods or 15 services industries:
 1. Load the Analyst's dossier to get the data for missing industries
 2. For each missing industry, write a minimal factual analysis:
    - Look up the industry's mm and yy GDP values from the dossier's industry_package
-   - Write: "<p>NAICS [code] ([name]) recorded <strong>[mm]%</strong> month-over-month and <strong>[yy]%</strong> year-over-year GDP change.<sup>N</sup></p>"
+   - Write: `<p><span class="lead-sentence">NAICS [code] ([name]) recorded [mm]% month-over-month GDP change</span> — the sector posted [yy]% year-over-year.<sup>N</sup></p>`
    - Build the full industry object with code, name, mm, yy, analysis, industrySources, isNegative, subsectors, indicatorSrc
 3. Insert the missing industry into the correct position (goods are ordered 11, 21, 22, 23, 31-33; services are 41 through 91)
 
@@ -353,8 +389,15 @@ banned = ['should', 'must', 'hopefully', 'unfortunately', 'worrying',
           'troubling', 'reassuring']
 found_banned = [w for w in banned if w.lower() in all_html.lower()]
 
-if missing or orphaned or found_banned:
-    print(f"STILL FAILING: missing={missing}, orphaned={orphaned}, banned={found_banned}")
+# ── Prose structure ──
+bold_tags = re.findall(r'<(?:strong|b)\b', all_html)
+bad_paragraphs = [p for p in re.findall(r'<p>.*?</p>', all_html, re.DOTALL)
+                  if not re.match(r'<p>\s*<span class="lead-sentence">', p)
+                  or not re.search(r'</span>\s*—\s', p)]
+
+if missing or orphaned or found_banned or bold_tags or bad_paragraphs:
+    print(f"STILL FAILING: missing={missing}, orphaned={orphaned}, banned={found_banned}, "
+          f"bold_tags={len(bold_tags)}, paragraphs_without_lead_sentence={len(bad_paragraphs)}")
     print("Running another fix pass...")
     # Loop back and fix remaining issues
 else:

@@ -52,7 +52,14 @@ should, must, hopefully, unfortunately, worrying, promising, encouraging, welcom
 
 - Write in third person, present tense for current data, past tense for events
 - Paragraphs should be 3-4 sentences
-- Use `<strong>` for key numbers and commodity prices
+- **Lead-in + em-dash structure (mandatory for EVERY narrative paragraph):** each `<p>` opens with a lead-in sentence wrapped in `<span class="lead-sentence">...</span>`, followed by ` — ` (space, em-dash, space) and the rest of the paragraph:
+
+  ```html
+  <p><span class="lead-sentence">Lead-in sentence stating the paragraph's single core fact</span> — supporting detail, context, and cross-references with citations.<sup>N</sup></p>
+  ```
+
+  The lead-in span carries no terminal period; ` — ` immediately follows `</span>`; the continuation starts lowercase unless it begins with a proper noun. A sector-name lead variant is also valid: `<span class="lead-sentence">Manufacturing — Output increased 1.1% month-over-month, led by automotive suppliers</span> — ...`
+- **Never emit `<strong>` or `<b>` tags anywhere in prose.** The lead-in is the only bold text the reader sees, and its bolding comes from frontend CSS (`.lead-sentence{font-weight:600}`). Numbers stay specific but unbolded.
 - Use `<sup>N</sup>` for every sourced claim
 - Lead each industry with its driving commodity or input cost
 - Quantify project exposure explicitly
@@ -71,18 +78,19 @@ The database tracks many energy projects. The downturn is concerning for the sec
 
 **AFTER (wire-service reporting):**
 ```
-Mining and energy sector GDP contracted <strong>1.2%</strong> month-over-month in January<sup>1</sup>,
-extending a three-month downtrend as WTI crude averaged <strong>US$68.40/bbl</strong> during the period,
-down from <strong>$74.20</strong> in October<sup>2</sup>. The project database contains <strong>312 mining
-and energy projects ($87.4B)</strong>, of which <strong>23 have proposed status and estimated breakeven
-costs above current spot prices</strong><sup>3</sup>. These stalled projects are concentrated in Alberta oil
+<p><span class="lead-sentence">Mining and energy sector GDP contracted 1.2% month-over-month in January,
+extending a three-month downtrend</span> — the decline<sup>1</sup> came as WTI crude averaged US$68.40/bbl
+during the period, down from $74.20 in October<sup>2</sup>. The project database contains 312 mining
+and energy projects ($87.4B), of which 23 have proposed status and estimated breakeven
+costs above current spot prices<sup>3</sup>. These stalled projects are concentrated in Alberta oil
 sands (+$65/bbl breakeven) and Saskatchewan potash (facing softer fertilizer demand). Saskatchewan's potash
-sector recorded an exception, with production volumes up <strong>4.1%</strong> year-over-year as global
-fertilizer demand remained firm<sup>4</sup>.
+sector recorded an exception, with production volumes up 4.1% year-over-year as global
+fertilizer demand remained firm<sup>4</sup>.</p>
 ```
 
 **Why it's better:**
-- Opens with sector GDP + time frame
+- Opens with the `lead-sentence` span stating the core fact (sector GDP + time frame), em-dash, then lowercase continuation
+- No `<strong>`/`<b>` tags — the lead-in's bolding comes from frontend CSS
 - Specifies the commodity driver (WTI) with exact prices
 - Quantifies project exposure: count, $ value, and cost structure
 - Names specific subsectors affected
@@ -101,19 +109,20 @@ rising material costs. The outlook is uncertain. Many projects are on hold.
 
 **AFTER (wire-service reporting):**
 ```
-Canadian construction sector output fell <strong>0.4%</strong> month-over-month in January, extending
-a six-month decline as housing starts plummeted <strong>15.2%</strong> to <strong>173,800 units</strong>
-(annualized)<sup>1</sup>. Lumber prices fell <strong>12.1%</strong> this week to <strong>US$450/mfbm</strong>,
+<p><span class="lead-sentence">Canadian construction sector output fell 0.4% month-over-month in January,
+extending a six-month decline</span> — housing starts fell 15.2% to 173,800 units
+(annualized)<sup>1</sup>, while lumber prices fell 12.1% this week to US$450/mfbm,
 a 38-week low, reducing input pressures for residential framers<sup>2</sup>. However, mortgage rate friction
-persists: the 5-year fixed rate averaged <strong>5.89%</strong> this week, up <strong>8 basis points</strong>
-from the prior week, dampening buyer qualification<sup>3</sup>. The project database tracks <strong>312
-Canadian construction projects ($54.1B)</strong>, of which <strong>89 are in proposed or planning
-stages</strong><sup>4</sup>. If residential mortgage rates decline from current levels, these early-stage
-projects would advance first through environmental assessment and permitting.
+persists: the 5-year fixed rate averaged 5.89% this week, up 8 basis points
+from the prior week, dampening buyer qualification<sup>3</sup>. The project database tracks 312
+Canadian construction projects ($54.1B), of which 89 are in proposed or planning
+stages<sup>4</sup>. If residential mortgage rates decline from current levels, these early-stage
+projects would advance first through environmental assessment and permitting.</p>
 ```
 
 **Why it's better:**
-- Opens with sector output + trend
+- Opens with the `lead-sentence` span (sector output + trend) followed by the em-dash continuation
+- No `<strong>`/`<b>` tags — numbers stay specific but unbolded
 - Cites leading indicator (housing starts) with specific number
 - Connects to input costs (lumber) with exact price move
 - Adds interest rate context (mortgage rate friction)
@@ -133,20 +142,21 @@ Employment is rising. The sector is improving. Many projects are in progress.
 
 **AFTER (wire-service reporting):**
 ```
-Canadian manufacturing sector output increased <strong>1.1%</strong> month-over-month in January<sup>1</sup>,
-driven by automotive suppliers as North American vehicle production ramped to fill dealer inventory following
-the 2024 supply chain disruptions<sup>2</sup>. Primary metals production rose <strong>0.8%</strong>, propelled
+<p><span class="lead-sentence">Canadian manufacturing sector output increased 1.1% month-over-month in January,
+driven by automotive suppliers</span> — North American vehicle production ramped to fill dealer inventory following
+the 2024 supply chain disruptions<sup>1</sup><sup>2</sup>. Primary metals production rose 0.8%, propelled
 by copper demand from grid electrification projects and lithium-ion battery manufacturing. Employment in
-manufacturing grew <strong>2.1%</strong> year-over-year<sup>3</sup>. However, tariff uncertainty under new US
-trade policy created caution: executives reporting expansion plans declined <strong>12%</strong> in March
-surveys, the largest monthly drop since June 2024<sup>4</sup>. The project database tracks <strong>418
-Canadian manufacturing projects ($31.2B)</strong>, of which <strong>62 are proposed or planning stage</strong>
+manufacturing grew 2.1% year-over-year<sup>3</sup>. However, tariff uncertainty under new US
+trade policy created caution: executives reporting expansion plans declined 12% in March
+surveys, the largest monthly drop since June 2024<sup>4</sup>. The project database tracks 418
+Canadian manufacturing projects ($31.2B), of which 62 are proposed or planning stage
 and majority are concentrated in Ontario and Quebec<sup>5</sup>. If tariff negotiations stabilize, these
-early-stage projects would proceed through engineering and permitting phases.
+early-stage projects would proceed through engineering and permitting phases.</p>
 ```
 
 **Why it's better:**
-- Opens with sector output trend + specific driver (auto)
+- Opens with the `lead-sentence` span (sector output trend + specific driver) and em-dash continuation
+- No `<strong>`/`<b>` tags anywhere in the prose
 - Adds subsector context (primary metals, batteries)
 - Cites labour data with growth rate
 - Acknowledges headwind (tariff uncertainty) with quantified impact
@@ -206,60 +216,61 @@ For EACH goods industry, open with the relevant commodity/input driver(s):
 
 **Agriculture:**
 ```html
-<p>Agriculture sector GDP grew <strong>0.3%</strong> month-over-month in January<sup>1</sup>, as global
-grain markets firmed. Wheat prices rose <strong>2.3%</strong> on the week to <strong>CAD$7.41/bu</strong>,
-reflecting global supply concerns and improved US export demand<sup>2</sup>. Canola futures gained
-<strong>1.8%</strong> to <strong>CAD$611/MT</strong>, supported by Asian crush demand<sup>3</sup>. Potash
-prices (a key Canadian export) fell <strong>3.2%</strong> to <strong>US$295/MT</strong> on softer global
-fertilizer demand<sup>4</sup>. The project database tracks <strong>47 agricultural projects ($2.1B)</strong>,
+<p><span class="lead-sentence">Agriculture sector GDP grew 0.3% month-over-month in January as global
+grain markets firmed</span> — the monthly gain<sup>1</sup> coincided with wheat prices rising 2.3% on the
+week to CAD$7.41/bu, reflecting global supply concerns and improved US export demand<sup>2</sup>. Canola
+futures gained 1.8% to CAD$611/MT, supported by Asian crush demand<sup>3</sup>. Potash
+prices (a key Canadian export) fell 3.2% to US$295/MT on softer global
+fertilizer demand<sup>4</sup>. The project database tracks 47 agricultural projects ($2.1B),
 primarily grain storage and processing infrastructure in the Prairie provinces.</p>
 ```
 
 **Mining & Energy:**
 ```html
-<p>Mining and energy sector GDP contracted <strong>1.2%</strong> month-over-month in January<sup>1</sup>,
-extending a three-month downtrend as WTI crude averaged <strong>US$68.40/bbl</strong> during the period,
-down from <strong>$74.20</strong> in October<sup>2</sup>. The project database contains <strong>312 mining
-and energy projects ($87.4B)</strong>, of which <strong>23 have proposed status and estimated breakeven
-costs above current spot prices</strong><sup>3</sup>. These stalled projects are concentrated in Alberta
-oil sands (+$65/bbl breakeven) and Saskatchewan heavy oil. Gold prices rose <strong>1.2%</strong> to
-<strong>US$2,145/oz</strong> on safe-haven demand<sup>4</sup>, supporting Canadian mining projects focused
+<p><span class="lead-sentence">Mining and energy sector GDP contracted 1.2% month-over-month in January,
+extending a three-month downtrend</span> — the decline<sup>1</sup> came as WTI crude averaged US$68.40/bbl
+during the period, down from $74.20 in October<sup>2</sup>. The project database contains 312 mining
+and energy projects ($87.4B), of which 23 have proposed status and estimated breakeven
+costs above current spot prices<sup>3</sup>. These stalled projects are concentrated in Alberta
+oil sands (+$65/bbl breakeven) and Saskatchewan heavy oil. Gold prices rose 1.2% to
+US$2,145/oz on safe-haven demand<sup>4</sup>, supporting Canadian mining projects focused
 on precious metals.</p>
 ```
 
 **Utilities:**
 ```html
-<p>Utilities sector output increased <strong>0.2%</strong> month-over-month in January<sup>1</sup>, as
-electricity demand from AI data centre construction and grid upgrades offset seasonal weakness. Natural gas
-prices (NYMEX) fell <strong>8.4%</strong> to <strong>US$2.31/mmBtu</strong><sup>2</sup>, reducing operational
+<p><span class="lead-sentence">Utilities sector output increased 0.2% month-over-month in January as data
+centre and grid demand offset seasonal weakness</span> — electricity demand from AI data centre construction
+and grid upgrades drove the gain<sup>1</sup>. Natural gas
+prices (NYMEX) fell 8.4% to US$2.31/mmBtu<sup>2</sup>, reducing operational
 costs for gas-fired generation but also reducing incentives for new gas plant investment. The project database
-tracks <strong>89 Canadian utilities projects ($18.4B)</strong>, concentrated in renewable energy (wind, solar)
+tracks 89 Canadian utilities projects ($18.4B), concentrated in renewable energy (wind, solar)
 and grid transmission upgrades to support electrification. Capital cost inflation for utility-scale projects
-has moderated: steel prices fell <strong>2.1%</strong> week-over-week<sup>3</sup>, easing input pressures.</p>
+has moderated: steel prices fell 2.1% week-over-week<sup>3</sup>, easing input pressures.</p>
 ```
 
 **Construction:**
 ```html
-<p>Construction sector output fell <strong>0.4%</strong> month-over-month in January, extending a six-month
-decline as housing starts fell <strong>15.2%</strong> to <strong>173,800 units</strong> (annualized)<sup>1</sup>.
-Lumber prices fell <strong>12.1%</strong> to <strong>US$450/mfbm</strong>, a 38-week low, reducing input
+<p><span class="lead-sentence">Construction sector output fell 0.4% month-over-month in January, extending a
+six-month decline</span> — housing starts fell 15.2% to 173,800 units (annualized)<sup>1</sup>,
+while lumber prices fell 12.1% to US$450/mfbm, a 38-week low, reducing input
 pressures<sup>2</sup>. However, residential mortgage rates persisted at elevated levels: the 5-year fixed
-rate averaged <strong>5.89%</strong>, holding <strong>240 basis points</strong> above the BoC policy rate<sup>3</sup>.
-The project database tracks <strong>312 Canadian construction projects ($54.1B)</strong>, of which <strong>89 are
-in proposed or planning stages</strong><sup>4</sup>. If mortgage rates fall materially, these early-stage
+rate averaged 5.89%, holding 240 basis points above the BoC policy rate<sup>3</sup>.
+The project database tracks 312 Canadian construction projects ($54.1B), of which 89 are
+in proposed or planning stages<sup>4</sup>. If mortgage rates fall materially, these early-stage
 projects would advance through permitting and construction.</p>
 ```
 
 **Manufacturing:**
 ```html
-<p>Manufacturing sector output increased <strong>1.1%</strong> month-over-month in January<sup>1</sup>, driven
-by automotive suppliers as North American vehicle production ramped to fill inventory following 2024 supply
-disruptions<sup>2</sup>. Primary metals production rose <strong>0.8%</strong>, propelled by copper and lithium
+<p><span class="lead-sentence">Manufacturing sector output increased 1.1% month-over-month in January, driven
+by automotive suppliers</span> — North American vehicle production ramped to fill inventory following 2024 supply
+disruptions<sup>1</sup><sup>2</sup>. Primary metals production rose 0.8%, propelled by copper and lithium
 demand from grid electrification and battery manufacturing<sup>3</sup>. Tariff uncertainty under new US trade
-policy created caution: executives reporting expansion plans declined <strong>12%</strong> in March surveys, the
-largest monthly drop since June 2024<sup>4</sup>. The project database tracks <strong>418 Canadian manufacturing
-projects ($31.2B)</strong>, with <strong>62 in proposed or planning stages</strong><sup>5</sup>, concentrated
-in Ontario and Quebec. Steel input costs fell <strong>2.1%</strong> week-over-week, providing near-term margin
+policy created caution: executives reporting expansion plans declined 12% in March surveys, the
+largest monthly drop since June 2024<sup>4</sup>. The project database tracks 418 Canadian manufacturing
+projects ($31.2B), with 62 in proposed or planning stages<sup>5</sup>, concentrated
+in Ontario and Quebec. Steel input costs fell 2.1% week-over-week, providing near-term margin
 relief.</p>
 ```
 
@@ -277,16 +288,16 @@ For each industry, weave 2-3 subsector data points into the narrative prose (no 
 Combine commodity context, subsector data, and project linkage into a complete analysis:
 
 ```html
-<p>Mining and energy sector GDP contracted <strong>1.2%</strong> month-over-month in January, extending a
-three-month downtrend as WTI crude averaged <strong>US$68.40/bbl</strong> during the period, down from
-<strong>$74.20</strong> in October. The project database contains <strong>312 mining and energy projects
-($87.4B)</strong>, of which <strong>23 have proposed status and estimated breakeven costs above current spot
-prices</strong>. These stalled projects are concentrated in Alberta oil sands (+$65/bbl breakeven) and
+<p><span class="lead-sentence">Mining and energy sector GDP contracted 1.2% month-over-month in January,
+extending a three-month downtrend</span> — WTI crude averaged US$68.40/bbl during the period, down from
+$74.20 in October. The project database contains 312 mining and energy projects
+($87.4B), of which 23 have proposed status and estimated breakeven costs above current spot
+prices. These stalled projects are concentrated in Alberta oil sands (+$65/bbl breakeven) and
 Saskatchewan heavy oil.</p>
 
-<p>Oil sands production held steady at 3.4M bbl/day, though three proposed expansions paused engineering pending cost reviews.<sup>4</sup> Saskatchewan potash recorded an exception — production rose 4.1% YoY on firm global fertilizer demand, even as prices fell 3.2%.<sup>5</sup> Gold advanced 1.2% to US$2,145/oz on safe-haven demand, supporting junior mining projects in BC and Ontario.<sup>6</sup></p>
+<p><span class="lead-sentence">Oil sands production held steady at 3.4M bbl/day, though three proposed expansions paused engineering pending cost reviews</span> — Saskatchewan potash recorded an exception, with production up 4.1% YoY on firm global fertilizer demand even as prices fell 3.2%.<sup>4</sup><sup>5</sup> Gold advanced 1.2% to US$2,145/oz on safe-haven demand, supporting junior mining projects in BC and Ontario.<sup>6</sup></p>
 
-<p>Capital expenditure commitments in the sector fell <strong>8.3%</strong> year-over-year, reflecting cautious
+<p><span class="lead-sentence">Capital expenditure commitments in the sector fell 8.3% year-over-year</span> — the decline reflects cautious
 operator sentiment on commodity price stability. The federal government's Critical Minerals Strategy (targeting
 lithium, cobalt, nickel) has increased exploration funding, supporting early-stage projects in Alberta, BC, and
 Ontario.</p>
@@ -392,6 +403,14 @@ orphaned = sup_refs - source_ids
 if orphaned:
     print(f"FAIL — ORPHANED CITATIONS: {orphaned}")
 
+# ── FORMAT CHECK (lead-in + no bold) ──
+if re.search(r'<(strong|b)\b', all_html, re.IGNORECASE):
+    print("FAIL — BANNED TAG: <strong>/<b> found in prose (bolding comes from .lead-sentence CSS only)")
+for ind in data.get('goodsIndustries', []):
+    for para in re.findall(r'<p>(.*?)</p>', ind.get('analysis', ''), re.S):
+        if not para.lstrip().startswith('<span class="lead-sentence">'):
+            print(f"FAIL — MISSING LEAD-IN: a paragraph in {ind.get('name','?')} does not open with <span class=\"lead-sentence\">...</span> — ")
+
 # ── EDITORIAL CHECK ──
 banned = ['should', 'must', 'hopefully', 'unfortunately', 'worrying',
           'promising', 'encouraging', 'welcome', 'bullish', 'bearish',
@@ -469,6 +488,8 @@ Ready for merging by Agent 3E (Assembler).
 6. **Don't forget subsectors.** Include at least 2-3 subsector performance data points per industry.
 7. **Don't write generic analyses.** Connect sector trends to specific commodities, costs, or trade flows.
 8. **Don't break citations.** Every `<sup>N</sup>` must match a source ID in `industrySources[]`.
+9. **Don't skip the lead-in.** Every narrative paragraph must open with `<span class="lead-sentence">...</span> — ` (lead-in sentence, no terminal period, then space-em-dash-space and a lowercase continuation unless it starts with a proper noun).
+10. **Don't emit `<strong>` or `<b>` — they are banned everywhere in prose.** The lead-in's bolding comes from frontend CSS (`.lead-sentence{font-weight:600}`). Numbers stay specific but unbolded.
 
 ---
 

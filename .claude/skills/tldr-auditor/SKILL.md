@@ -190,6 +190,39 @@ for pattern in editorial_patterns:
         violations.append(f"EDITORIAL PATTERN: {pattern} → found {len(matches)} matches")
 ```
 
+**Prose structure check (WARNING-level formatting findings — the Fixer must remediate):**
+
+Every narrative paragraph in every briefing prose field MUST follow the canonical pattern from `references/editorial_rules.md`:
+
+```html
+<p><span class="lead-sentence">Lead-in sentence stating the paragraph's single core fact</span> — supporting detail with citations.<sup>N</sup></p>
+```
+
+Two checks, run on every narrative HTML field (executive_summary, national.analysis, consumer_pulse, industry_executive_summary, every industry analysis, every province analysis, every global region analysis, and all markets prose):
+
+1. **Lead-sentence + em-dash opening:** every `<p>` opens with `<span class="lead-sentence">` and the closing `</span>` is followed immediately by ` — ` (space, em-dash, space)
+2. **Banned bold tags:** zero `<strong>` or `<b>` tags anywhere in prose — the lead-in's bold comes from frontend CSS (`.lead-sentence{font-weight:600}`); the only bold text a reader sees is the lead-in sentence
+
+```python
+# Prose structure check — WARN-level formatting findings for the Fixer
+formatting_warnings = []
+for field_name, html in html_fields:
+    paragraphs = re.findall(r'<p>.*?</p>', html, re.DOTALL)
+    for p in paragraphs:
+        if not re.match(r'<p>\s*<span class="lead-sentence">', p):
+            formatting_warnings.append(
+                f"WARN [{field_name}]: paragraph missing lead-sentence span: \"{re.sub(r'<[^>]+>', '', p)[:80]}...\"")
+        elif not re.search(r'</span>\s*—\s', p):
+            formatting_warnings.append(
+                f"WARN [{field_name}]: lead-sentence span not followed by ' — ' (space, em-dash, space)")
+    bold_tags = re.findall(r'<(strong|b)\b', html)
+    if bold_tags:
+        formatting_warnings.append(
+            f"WARN [{field_name}]: {len(bold_tags)} banned <strong>/<b> tag(s) — bold comes only from .lead-sentence CSS")
+```
+
+Report these as WARNING-level formatting findings (non-blocking on their own, but listed for the Fixer to remediate). Banned-word and editorializing-pattern violations remain FAIL-level as before.
+
 **Ask yourself:**
 - If I remove all the numbers, does the text still make sense? Or does it become vague opinion?
 - Could someone read this and tell which way the author thinks the economy is heading? (If yes, it's editorializing)
@@ -447,6 +480,7 @@ Briefing file: briefing_{date}.json
 
 ### Test 3: Editorial Compliance
 [Every violation with the offending sentence and suggested fix]
+[Prose structure warnings: paragraphs missing `<span class="lead-sentence">` + em-dash openings, any `<strong>`/`<b>` tags found — listed for the Fixer]
 
 ### Test 4: Logic & Consistency
 [Every contradiction, causal leap, or timeframe mismatch found]
