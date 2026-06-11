@@ -48,7 +48,7 @@
     "name": "Warkworth Institution – Fuel Storage Tank System Replacements and Removals (8)",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
+    "sector": "government",
     "value": "—",
     "lastSeen": "2026-06-08",
     "status_history": [
@@ -63,7 +63,7 @@
     "name": "Infield Concourse Hardstands & Taxiway Connections",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
+    "sector": "transport_logistics",
     "value": "—",
     "lastSeen": "2026-06-08",
     "status_history": [
@@ -168,7 +168,7 @@
     "name": "Cascade Creek Restoration Large Woody Debris Installation",
     "status": "Under Review",
     "province": "AB",
-    "sector": "Other",
+    "sector": "environment",
     "value": "—",
     "lastSeen": "2026-06-08",
     "status_history": [
@@ -258,7 +258,7 @@
     "name": "Collins Bay Institution – Fuel Storage Tank Replacements (4)",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
+    "sector": "government",
     "value": "—",
     "lastSeen": "2026-06-08",
     "status_history": [
@@ -288,7 +288,7 @@
     "name": "Parks Canada Agency Sulphur Mountain Boardwalk Repairs",
     "status": "Under Review",
     "province": "AB",
-    "sector": "Other",
+    "sector": "tourism_culture",
     "value": "—",
     "lastSeen": "2026-06-08",
     "status_history": [
@@ -378,7 +378,7 @@
     "name": "Development of artificial nesting sites for turtles",
     "status": "Under Review",
     "province": "QC",
-    "sector": "Other",
+    "sector": "environment",
     "value": "—",
     "lastSeen": "2026-06-08",
     "status_history": [
@@ -423,7 +423,7 @@
     "name": "Rideau Canal Wall Repairs",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
+    "sector": "infrastructure",
     "value": "—",
     "lastSeen": "2026-06-08",
     "status_history": [
@@ -483,7 +483,7 @@
     "name": "Fording River Extension Project",
     "status": "Under Review",
     "province": "BC",
-    "sector": "Other",
+    "sector": "mining",
     "value": "—",
     "lastSeen": "2026-06-08",
     "status_history": [
@@ -773,7 +773,7 @@
     "name": "Muscowpetung Saulteaux Nation - Solid Waste Transfer Station",
     "status": "Under Review",
     "province": "SK",
-    "sector": "Other",
+    "sector": "environment",
     "value": "—",
     "lastSeen": "2026-05-19",
     "status_history": [
@@ -788,7 +788,7 @@
     "name": "Kainai Interconnect Project",
     "status": "Under Review",
     "province": "AB",
-    "sector": "Other",
+    "sector": "power_energy",
     "value": "—",
     "lastSeen": "2026-05-19",
     "status_history": [
@@ -998,7 +998,7 @@
     "name": "2026 Airfield Improvements Project",
     "status": "Under Review",
     "province": "MB",
-    "sector": "Other",
+    "sector": "transport_logistics",
     "value": "—",
     "lastSeen": "2026-05-19",
     "status_history": [
@@ -1088,7 +1088,7 @@
     "name": "Main Beach Armour Stone",
     "status": "Under Review",
     "province": "NL",
-    "sector": "Other",
+    "sector": "infrastructure",
     "value": "—",
     "lastSeen": "2026-05-19",
     "status_history": [
@@ -1283,7 +1283,7 @@
     "name": "Toronto - Build Boat Shed – HMCS Star",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
+    "sector": "defence",
     "value": "—",
     "lastSeen": "2026-05-19",
     "status_history": [
@@ -1313,7 +1313,7 @@
     "name": "Parking Lot Repaving at the Canada Post Mail Facility, Etobicoke, ON",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
+    "sector": "transport_logistics",
     "value": "—",
     "lastSeen": "2026-05-19",
     "status_history": [
@@ -1343,7 +1343,7 @@
     "name": "Grand Passage Lifeboat Station, Digby County, NS",
     "status": "Under Review",
     "province": "NS",
-    "sector": "Other",
+    "sector": "government",
     "value": "—",
     "lastSeen": "2026-05-19",
     "status_history": [
@@ -1648,7 +1648,7 @@
     "name": "City of Ottawa Eccolands Boat Launch Rehabilitation",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
+    "sector": "tourism_culture",
     "value": "—",
     "lastSeen": "2026-05-15",
     "status_history": [
@@ -1708,7 +1708,7 @@
     "name": "Installation of an Electrical Vehicle Charging System - Warner Building",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
+    "sector": "power_energy",
     "value": "—",
     "lastSeen": "2026-03-30",
     "status_history": [
@@ -2218,7 +2218,7 @@
     "name": "Replace roof of building at 4200 Labelle Street, Ottawa",
     "status": "Under Review",
     "province": "ON",
-    "sector": "Other",
+    "sector": "government",
     "value": "—",
     "lastSeen": "2026-03-30",
     "status_history": [

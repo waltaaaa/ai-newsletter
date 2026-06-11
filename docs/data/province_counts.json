@@ -1,0 +1,109 @@
+{
+  "provinces": {
+    "ON": {
+      "name": "Ontario",
+      "threshold": 500000000,
+      "qualifying": 87,
+      "qualifying_value": 287247804723.13,
+      "tracked_unpriced": 566,
+      "stale": 0
+    },
+    "QC": {
+      "name": "Quebec",
+      "threshold": 250000000,
+      "qualifying": 91,
+      "qualifying_value": 114841321307.38,
+      "tracked_unpriced": 383,
+      "stale": 0
+    },
+    "AB": {
+      "name": "Alberta",
+      "threshold": 200000000,
+      "qualifying": 176,
+      "qualifying_value": 416845248782.64,
+      "tracked_unpriced": 495,
+      "stale": 0
+    },
+    "BC": {
+      "name": "British Columbia",
+      "threshold": 175000000,
+      "qualifying": 310,
+      "qualifying_value": 488520955110.55,
+      "tracked_unpriced": 303,
+      "stale": 0
+    },
+    "SK": {
+      "name": "Saskatchewan",
+      "threshold": 45000000,
+      "qualifying": 46,
+      "qualifying_value": 38907058169.98,
+      "tracked_unpriced": 115,
+      "stale": 0
+    },
+    "MB": {
+      "name": "Manitoba",
+      "threshold": 40000000,
+      "qualifying": 87,
+      "qualifying_value": 24422919684.76,
+      "tracked_unpriced": 1867,
+      "stale": 0
+    },
+    "NS": {
+      "name": "Nova Scotia",
+      "threshold": 25000000,
+      "qualifying": 56,
+      "qualifying_value": 13941312434.2,
+      "tracked_unpriced": 258,
+      "stale": 0
+    },
+    "NB": {
+      "name": "New Brunswick",
+      "threshold": 20000000,
+      "qualifying": 59,
+      "qualifying_value": 8344539530.0,
+      "tracked_unpriced": 113,
+      "stale": 0
+    },
+    "NL": {
+      "name": "Newfoundland and Labrador",
+      "threshold": 17000000,
+      "qualifying": 68,
+      "qualifying_value": 88518326385.16998,
+      "tracked_unpriced": 1441,
+      "stale": 0
+    },
+    "PE": {
+      "name": "Prince Edward Island",
+      "threshold": 5000000,
+      "qualifying": 80,
+      "qualifying_value": 1876744983.2599998,
+      "tracked_unpriced": 3,
+      "stale": 0
+    },
+    "YT": {
+      "name": "Yukon",
+      "threshold": 3000000,
+      "qualifying": 105,
+      "qualifying_value": 46387580687.35001,
+      "tracked_unpriced": 5,
+      "stale": 0
+    },
+    "NT": {
+      "name": "Northwest Territories",
+      "threshold": 3000000,
+      "qualifying": 87,
+      "qualifying_value": 44266999947.57001,
+      "tracked_unpriced": 124,
+      "stale": 0
+    },
+    "NU": {
+      "name": "Nunavut",
+      "threshold": 3000000,
+      "qualifying": 42,
+      "qualifying_value": 1991590808.38,
+      "tracked_unpriced": 7,
+      "stale": 0
+    }
+  },
+  "exported_at": "2026-06-11T01:18:07.806713+00:00"
+}

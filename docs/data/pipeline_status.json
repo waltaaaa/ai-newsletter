@@ -21,7 +21,7 @@
   },
   "analysis_incomplete": false,
   "tavily": {
-    "used": 11,
+    "used": 2000,
     "month": "2026-06"
   },
   "claude_tokens": {
