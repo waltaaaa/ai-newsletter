@@ -1083,7 +1083,12 @@ def export_timeseries(conn, output_dir: str) -> str:
 
     bundle = {}
     for series_name in _TIMESERIES_NAMES:
-        rows = get_timeseries(conn, series_name, limit=52)
+        # Red-team F8: exclude writer-emitted points (source='briefing_print',
+        # appended by phases/finalize.py). The exported timeseries.json is the
+        # validator's fact-check ground truth — a briefing's own prints must
+        # never become the baseline that validates the next briefing.
+        rows = get_timeseries(conn, series_name, limit=52,
+                              include_briefing_prints=False)
         points = []
         for row in rows:
             if hasattr(row, "keys"):
@@ -1106,7 +1111,9 @@ def export_timeseries(conn, output_dir: str) -> str:
         'ig_spread', 'hy_spread', 'yield_curve_10y2y',
         # New: crypto, shipping, Canadian mining/agriculture
         'bitcoin', 'ethereum', 'dry_bulk_shipping',
-        'potash_nutrien', 'cameco_uranium', 'sprott_uranium', 'canola',
+        # 2026-06-11 red-team: cameco_uranium/sprott_uranium NEVER existed in
+        # indicator_history — replaced with the canonical 'uranium' key.
+        'potash_nutrien', 'uranium', 'canola',
         'coal', 'propane', 'rice', 'soybean_oil', 'soybean_meal',
         # GoC yield curve — rich history in indicator_history for core tenors.
         # 3M/6M/1Y/30Y sparse until BoC Valet fetcher added.

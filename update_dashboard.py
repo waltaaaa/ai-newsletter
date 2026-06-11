@@ -131,8 +131,11 @@ def _rotate_weekly_db_backups(keep: int = 4):
     """
     import glob as _glob
     here = os.path.dirname(os.path.abspath(__file__))
+    # Red-team F7: sort by FILENAME (the date is in the name), not mtime —
+    # PowerShell Copy-Item preserves the source LastWriteTime, so after a
+    # restore-from-older-backup the newest copy can sort oldest and be deleted.
     backups = sorted(_glob.glob(os.path.join(here, "dashboard.db.pre-weekly-*")),
-                     key=os.path.getmtime, reverse=True)
+                     reverse=True)
     for old in backups[keep:]:
         try:
             os.unlink(old)
@@ -389,6 +392,11 @@ def _print_operator_summary(conn, run_log, health_status, context):
         if zeros:
             print(f"  [!] ZERO-YIELD TIERS: {', '.join(zeros)} — dead source or quiet week; "
                   f"check per-source FAILED lines above")
+        if not parts and not zeros:
+            # Red-team F10: silent absence reads as "nothing to report" —
+            # say explicitly that the instrument has no data yet.
+            print("  Tier yields: no history yet (tier_yield_history empty — "
+                  "first run, or query_yield_audit did not record this run)")
     except Exception as e:
         print(f"  Tier yields: unavailable ({e})")
 

@@ -36,8 +36,8 @@ Specifically extract:
 - `sources_registry` — numbered sources
 
 Also read for reference:
-- `docs/data/briefing_latest.json` — last week's output, as structural template
-- `docs/data/briefing_market_commentary.json` — previous market commentary (if exists)
+- `docs/data/briefing_latest.json` — last week's output, as structural template ONLY
+- `docs/data/briefing_market_commentary.json` — previous market commentary (if exists), ONLY to avoid repeating last edition's framing verbatim. NEVER carry forward a price, percentage, level, or directional claim from either file — every number comes from dossier_macro.json (Rule 7). Prior editions are structure/anti-rehash references, not data sources (2026-06-11 red-team 2.9).
 
 ---
 
@@ -50,7 +50,7 @@ Also read for reference:
 3. **Use specific numbers.** Not "markets fell" but "TSX Composite fell 1.2% to 24,150."
 4. **Attribution over assertion.** Write "the database tracks X rate-sensitive projects" not "X projects are at risk."
 5. **Conditional language.** Write "If commodity prices hold below $70, X projects would face..." not "X projects will struggle."
-6. **Em dash lead sentences.** Open each paragraph with a bold lead sentence using the `<span class="lead-sentence">` pattern.
+6. **Em dash lead sentences.** Open each paragraph with the canonical pattern: `<p><span class="lead-sentence">Lead-in sentence stating the paragraph's single core fact</span> — supporting detail with citations.<sup>N</sup></p>`. The lead-in span has no terminal period, ` — ` immediately follows `</span>`, and the continuation starts lowercase unless it begins with a proper noun.
 7. **Pipeline data is the ONLY source for prices (validator-enforced).** Every price, yield, FX rate, and index level must come from `dossier_macro.json` (built from `timeseries.json`) — never from WebSearch, memory, or a prior edition. `tools/validate_briefing_schema.py` reconciles structured prints against `timeseries.json` and hard-FAILs the deploy on >5% divergence for a fresh edition. If a dossier value looks wrong, mark it N/A and report it — do not source a replacement from the web.
 8. **"On the week" means 7 days.** A move measured against the prior edition's baseline (typically 1–3 weeks old) must say "since the last edition" — never "on the week" or "weekly."
 
@@ -62,7 +62,7 @@ should, must, hopefully, unfortunately, worrying, promising, encouraging, welcom
 
 - Write in third person, present tense for current data, past tense for events
 - Paragraphs should be 3-5 sentences
-- Use `<strong>` for key numbers: `<strong>-1.2%</strong>`
+- Never emit `<strong>` or `<b>`. The lead-in sentence is the only bold text the reader sees, and its bolding comes from frontend CSS (`.lead-sentence{font-weight:600}`). Numbers stay specific but unbolded.
 - Use `<sup>N</sup>` for every sourced claim
 - Em dash (—) connects lead fact to supporting context
 - No bullet points — flowing prose only
@@ -84,23 +84,23 @@ rose, which is concerning for rate-sensitive sectors.
 **AFTER (wire-service reporting with cross-reference):**
 ```html
 <p><span class="lead-sentence">Canadian financial markets recorded broad-based declines
-in the week ending March 28</span> — the S&P/TSX Composite fell <strong>2.1%</strong>
-to <strong>24,150</strong><sup>1</sup>, with energy and materials sectors leading losses
-as WTI crude dropped <strong>$4.80</strong> to <strong>US$67.20/bbl</strong><sup>2</sup>.
-The Canadian dollar weakened <strong>0.3%</strong> against the US dollar to
-<strong>0.7198 CAD/USD</strong><sup>3</sup>, reflecting the 125-basis-point spread between
-the Federal Reserve's target and the Bank of Canada's <strong>2.25%</strong> policy rate.
-The project database tracks <strong>$312 billion</strong> in active and proposed capital
+in the week ending March 28</span> — the S&P/TSX Composite fell 2.1%
+to 24,150<sup>1</sup>, with energy and materials sectors leading losses
+as WTI crude dropped $4.80 to US$67.20/bbl<sup>2</sup>.
+The Canadian dollar weakened 0.3% against the US dollar to
+0.7198 CAD/USD<sup>3</sup>, reflecting the 125-basis-point spread between
+the Federal Reserve's target and the Bank of Canada's 2.25% policy rate.
+The project database tracks $312 billion in active and proposed capital
 projects across Canada<sup>4</sup>.</p>
 
 <p><span class="lead-sentence">Rate-sensitive sectors dominated the cross-reference
-picture</span> — the database contains <strong>847 residential projects ($23.4 billion)</strong>
-and <strong>312 commercial real estate projects ($18.1 billion)</strong> in proposed or
+picture</span> — the database contains 847 residential projects ($23.4 billion)
+and 312 commercial real estate projects ($18.1 billion) in proposed or
 planning stages<sup>4</sup>, all of which carry financing cost exposure to the yield curve.
-The 10-year Government of Canada bond yield rose <strong>12 basis points</strong> to
-<strong>3.58%</strong><sup>5</sup>, widening the 2-10 year spread to <strong>63 basis points</strong>.
-Energy-sector projects face a separate pressure: <strong>23 oil sands projects</strong> with
-estimated breakeven costs above the current WTI price represent <strong>$8.2 billion</strong>
+The 10-year Government of Canada bond yield rose 12 basis points to
+3.58%<sup>5</sup>, widening the 2-10 year spread to 63 basis points.
+Energy-sector projects face a separate pressure: 23 oil sands projects with
+estimated breakeven costs above the current WTI price represent $8.2 billion
 in proposed capital expenditure<sup>4</sup>.</p>
 ```
 
@@ -126,20 +126,20 @@ The outlook remains cautious.
 **AFTER (wire-service reporting):**
 ```html
 <p><span class="lead-sentence">Canadian markets diverged along sector lines in the week
-ending April 4</span> — the S&P/TSX Composite gained <strong>0.8%</strong> to
-<strong>24,590</strong><sup>1</sup>, propelled by a <strong>3.2%</strong> advance in the
-materials sub-index as gold reached <strong>US$2,280/oz</strong><sup>2</sup>. The energy
-sub-index fell <strong>1.4%</strong> as WTI settled at <strong>US$69.10/bbl</strong>,
-below the <strong>$70</strong> threshold that marks the estimated breakeven for
-<strong>18 Alberta oil sands projects ($6.8 billion)</strong> in the database<sup>3</sup>.
-The Bank of Canada held its policy rate at <strong>2.25%</strong><sup>4</sup>.</p>
+ending April 4</span> — the S&P/TSX Composite gained 0.8% to
+24,590<sup>1</sup>, propelled by a 3.2% advance in the
+materials sub-index as gold reached US$2,280/oz<sup>2</sup>. The energy
+sub-index fell 1.4% as WTI settled at US$69.10/bbl,
+below the $70 threshold that marks the estimated breakeven for
+18 Alberta oil sands projects ($6.8 billion) in the database<sup>3</sup>.
+The Bank of Canada held its policy rate at 2.25%<sup>4</sup>.</p>
 
 <p><span class="lead-sentence">The project pipeline's commodity exposure split in two
-directions</span> — the <strong>89 mining projects ($14.2 billion)</strong> that are
+directions</span> — the 89 mining projects ($14.2 billion) that are
 precious-metals-linked recorded their highest commodity price environment since
-September 2025<sup>5</sup>, while the <strong>312 energy projects ($87.4 billion)</strong>
+September 2025<sup>5</sup>, while the 312 energy projects ($87.4 billion)
 faced a third consecutive week of sub-$70 WTI pricing<sup>3</sup>. The Canadian dollar
-traded at <strong>0.7215 CAD/USD</strong>, largely unchanged from the prior week, as
+traded at 0.7215 CAD/USD, largely unchanged from the prior week, as
 offsetting commodity flows neutralized FX pressure<sup>6</sup>.</p>
 ```
 
@@ -178,7 +178,7 @@ Structure:
 2. **Supporting data:** 2-3 specific market data points with sources
 3. **Pipeline connection:** One sentence linking to overall project database size/value
 
-Use `<span class="lead-sentence">` for the opening phrase, `<strong>` for numbers, `<sup>N</sup>` for sources.
+Use `<span class="lead-sentence">` for the opening phrase (no terminal period inside the span, ` — ` immediately after `</span>`) and `<sup>N</sup>` for sources. Never wrap numbers in `<strong>` or `<b>` — the frontend CSS bolds the lead sentence.
 
 ### Step 4: Write Paragraph 2 — Cross-Reference (75-100 words)
 
@@ -256,6 +256,10 @@ if wc > 200:
 if '<span class="lead-sentence">' not in html:
     print("FAIL — Missing em dash lead sentence (<span class='lead-sentence'>)")
 
+# ── BOLD BAN CHECK ──
+if '<strong>' in html or '<b>' in html:
+    print("FAIL — <strong>/<b> is banned; only the lead-sentence is bold (frontend CSS)")
+
 # ── JSON VALIDITY ──
 try:
     json.dumps(data, ensure_ascii=False)
@@ -304,6 +308,7 @@ Ready for merging by Agent 3E (Assembler).
 6. **Don't skip the em dash lead sentences.** Both paragraphs must open with `<span class="lead-sentence">`.
 7. **Don't use bullet points.** Flowing prose only.
 8. **Don't duplicate the commodities agent's work.** Mention commodity headlines here, but leave per-commodity detail to Agent 3I.
+9. **Don't emit `<strong>` or `<b>`.** They are banned everywhere in prose output. The lead-in sentence is the only bold text the reader sees, via frontend CSS.
 
 ---
 

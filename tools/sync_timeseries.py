@@ -81,11 +81,22 @@ def load_json(path):
         return json.load(f)
 
 
+# History entries whose source marks them as WebSearch-derived (written by the
+# tldr-data-refresh agent in sandbox runs). Red-team 2.7 (2026-06-11): folding
+# these into timeseries.json makes WebSearch numbers the validator's fact-check
+# ground truth — the gate would then "verify" writer prints against other
+# web prints instead of pipeline data. Excluded from sync.
+_EXCLUDED_SOURCES = {'web_search', 'websearch', 'websearch_refresh',
+                     'tldr_data_refresh', 'data_refresh_agent'}
+
+
 def build_series(history, indicator_name, province_filter=None):
     """Extract timeseries from indicators.json history for a given indicator."""
     pts = []
     for h in history:
         if h.get('indicator_name') != indicator_name:
+            continue
+        if str(h.get('source', '')).lower().replace('-', '_') in _EXCLUDED_SOURCES:
             continue
         prov = (h.get('province', '') or '').lower()
         if province_filter is not None:

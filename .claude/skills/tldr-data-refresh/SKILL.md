@@ -18,6 +18,8 @@ You are the data refresh agent for "The Lagging Indicator" Canadian economic int
 
 You exist because the Cowork sandbox blocks direct HTTP API calls (yfinance, StatCan WDS, etc.), but WebSearch works. You bridge that gap so the briefing agents always have fresh data to work with.
 
+**PROVENANCE — NON-NEGOTIABLE (2026-06-11 red-team 2.7).** Every indicator history record or snapshot entry you write MUST carry `"source": "web_search"`. WebSearch values are working data for the writers, NOT verification ground truth: `tools/sync_timeseries.py` excludes `web_search`-tagged records when folding indicators.json into timeseries.json, because timeseries.json is what `tools/validate_briefing_schema.py` fact-checks briefing prints against. If your values entered that file untagged, the validator would "verify" web prints against other web prints and the fact-check gate would be circular. Never omit or rename the tag, and never write directly into timeseries.json.
+
 ## When to Run
 
 - Every Monday before the briefing pipeline (Agents 1-5)
@@ -243,13 +245,19 @@ inds_data = json.load(open('docs/data/indicators.json'))
 indicators = inds_data.get('indicators', [])
 
 def update_indicator(indicators, name, province, new_value, new_period, source):
-    """Update an indicator record. Matches on indicator_name + province."""
+    """Update an indicator record. Matches on indicator_name + province.
+
+    PROVENANCE (red-team 2.7): source MUST be 'web_search' for every record
+    this agent touches — sync_timeseries.py excludes web_search-tagged records
+    from the validator's fact-check ground truth (see banner at top).
+    """
     for ind in indicators:
         if ind.get('indicator_name') == name and ind.get('province') == province:
             ind['previous_value'] = ind.get('value')
             ind['value'] = new_value
             ind['period'] = new_period
-            ind['source'] = source
+            ind['source'] = 'web_search'  # NOT the publication name — provenance tag
+            ind['source_detail'] = source  # the publication/URL goes here instead
             ind['fetched_at'] = datetime.utcnow().isoformat() + 'Z'
             return True
     return False

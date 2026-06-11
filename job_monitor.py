@@ -25,7 +25,9 @@ Does NOT track individual postings — aggregates by employer + geography.
 import feedparser
 import json
 import logging
+import os
 import re
+import time
 import unicodedata
 from collections import defaultdict
 from datetime import datetime
@@ -138,6 +140,13 @@ CMA_REGIONS = {
 # of their average over the past 4 weeks
 SPIKE_THRESHOLD = 3.0
 
+# Total wall-clock budget for one job-monitor run (red-team A#14: a full run
+# issues up to ~270 sequential fetches x 30s timeout with no budget — a slow
+# Job Bank day added unbounded wall-clock to Phase 4). Cached URLs are free;
+# only live fetches burn budget. When exceeded, remaining fetches are skipped
+# with a loud log line so a truncated week is visible, not silent.
+JOB_MONITOR_BUDGET_SECONDS = int(os.getenv("JOB_MONITOR_BUDGET_SECONDS", "480"))
+
 
 def _normalize_place(text):
     """Lowercase and strip accents for place-name comparison (Montréal == Montreal)."""
@@ -167,6 +176,15 @@ def _fetch_feed(url):
     else:
         # Fallback: let feedparser fetch directly (no custom UA control over redirects)
         feed = feedparser.parse(url, request_headers=_HTTP_HEADERS)
+
+    # Red-team A#14: an HTTP-200 error/HTML page parses as a bozo feed with no
+    # entries and used to be cached and consumed as a legitimate empty result.
+    # Still cache it (refetching a broken URL for every CMA in the province is
+    # worse), but log loudly so "0 postings" is distinguishable from "feed broken".
+    if getattr(feed, "bozo", 0) and not feed.entries:
+        print(f"[JOBS WARN] non-feed response cached for {url} "
+              f"(bozo: {getattr(feed, 'bozo_exception', 'unknown')}) — "
+              f"treating as 0 postings this run")
 
     _FEED_CACHE[url] = feed
     return feed
@@ -200,6 +218,10 @@ def fetch_job_postings(sector_key, cma_name, source="job_bank"):
     # Indeed-style phrases for any sector not yet mapped.
     terms = JOB_BANK_SECTOR_TERMS.get(sector_key) or SECTOR_SEARCH_TERMS.get(sector_key, [])
     all_postings = []
+    # Red-team A#12: the same posting routinely appears in two of a sector's
+    # term feeds ("construction" + "heavy equipment operator") and double-counted
+    # toward the >=5 spike trigger. Dedup by posting URL across this sector+CMA.
+    seen_urls = set()
 
     for term in terms[:3]:  # Limit to 3 terms per sector to control fetch volume
         try:
@@ -211,10 +233,15 @@ def fetch_job_postings(sector_key, cma_name, source="job_bank"):
 
             matched = 0
             for entry in feed.entries:
+                link = entry.get("link", "")
+                if link and link in seen_urls:
+                    continue
                 location_norm = _normalize_place(_entry_location(entry))
                 # Province feed contains all cities — keep only this CMA's postings
                 if not any(c in location_norm for c in cities_norm):
                     continue
+                if link:
+                    seen_urls.add(link)
                 posting = {
                     "title": entry.get("title", ""),
                     "employer": _extract_employer(entry),
@@ -293,14 +320,17 @@ def detect_hiring_spikes(current_counts, historical_counts):
             # "{N}.0x normal volume" claim is fabrication — there is no
             # "normal" yet. Keep the spike, but multiplier is None and the
             # signal says so explicitly.
+            # Red-team A#12: Job Bank entries carry no published dates — counts
+            # measure presence in the feed's newest-100 window, not weekly
+            # posting volume. "posted N jobs" overstated; say what is measured.
             if avg == 0:
                 multiplier = None
-                signal = (f"{employer} posted {count} jobs in {location} "
+                signal = (f"{employer} has {count} active postings in {location} "
                           f"({sector}) (first tracked week — no prior baseline)")
             else:
                 multiplier = round(count / max(avg, 1), 1)
-                signal = (f"{employer} posted {count} jobs in {location} "
-                          f"({sector}) — {multiplier}x normal volume")
+                signal = (f"{employer} has {count} active postings in {location} "
+                          f"({sector}) — {multiplier}x its tracked average")
             spikes.append({
                 "employer": employer,
                 "location": location,
@@ -464,11 +494,22 @@ def run_job_monitor(conn, sectors=None, cmas=None):
     cmas = cmas or list(CMA_REGIONS.keys())
 
     all_postings = []
+    start = time.monotonic()
+    budget_hit = False
 
     for sector in sectors:
         for cma in cmas:
+            if time.monotonic() - start > JOB_MONITOR_BUDGET_SECONDS:
+                budget_hit = True
+                break
             postings = fetch_job_postings(sector, cma, source="job_bank")
             all_postings.extend(postings)
+        if budget_hit:
+            print(f"[JOBS WARN] time budget {JOB_MONITOR_BUDGET_SECONDS}s exhausted "
+                  f"at sector '{sector}' — remaining sector/CMA combinations skipped "
+                  f"this run (counts are partial; raise JOB_MONITOR_BUDGET_SECONDS "
+                  f"if this recurs)")
+            break
 
     print(f"[JOBS] Fetched {len(all_postings)} postings across {len(sectors)} sectors, {len(cmas)} CMAs")
 

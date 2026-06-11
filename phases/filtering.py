@@ -15,6 +15,21 @@ import rss_monitor
 # so we can use the full subscription rate without contending for stdin
 # pressure. Re-cap to 3 in any phase that runs the conductor concurrently.
 RSS_EXTRACT_WORKERS = int(os.environ.get('RSS_EXTRACT_WORKERS', '6'))
+
+# Red-team F5 (2026-06-11): when Phase 3 soft-times-out, the abandoned daemon
+# thread used to keep extracting every queued chunk and then write the DB on
+# the shared connection concurrently with Phases 4-6. A cooperative deadline
+# makes the worker loop stop STARTING new claude calls once the phase budget
+# is nearly spent — queued chunks drain instantly into the backlog and the
+# thread ends before (not hours after) the join timeout. Default = Phase 3
+# join (4200s) minus a 300s margin for L6/L7/dedup teardown.
+PHASE3_SOFT_DEADLINE_SECONDS = int(os.environ.get('PHASE3_SOFT_DEADLINE_SECONDS', '3900'))
+_PHASE_DEADLINE = None  # set by run() at phase start
+
+
+class _DeadlineSkip(Exception):
+    """Raised by a chunk worker when the phase deadline has passed — the chunk
+    was never sent to claude and stays in the extraction backlog."""
 from pipeline_config import SONNET_MODEL
 from project_dedup import deduplicate_projects
 from project_schema import normalize_project_type, is_brownfield
@@ -436,6 +451,11 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
 
     def _process_chunk(province, chunk_idx, chunk_count, chunk):
         """Run one (province, chunk) extraction. Returns (projects, failed_items)."""
+        # Cooperative deadline (red-team F5): once the phase budget is nearly
+        # spent, stop starting new claude calls — the chunk stays in the
+        # backlog and is carried over at top priority next run.
+        if _PHASE_DEADLINE is not None and time.monotonic() > _PHASE_DEADLINE:
+            raise _DeadlineSkip()
         text = rss_monitor.format_for_context(chunk, max_items=BATCH_ITEM_CAP)
         if not text.strip():
             return [], []
@@ -504,6 +524,7 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
     province_projects: dict[str, list] = {p: [] for p in by_province}
     if work:
         completed_since_flush = 0
+        deadline_skipped = 0
         with ThreadPoolExecutor(max_workers=RSS_EXTRACT_WORKERS) as ex:
             futs = {ex.submit(_process_chunk, *w): w for w in work}
             for fut in as_completed(futs):
@@ -511,6 +532,12 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
                 chunk = futs[fut][3]
                 try:
                     projects, failed = fut.result()
+                except _DeadlineSkip:
+                    # Phase deadline passed before this chunk started — it was
+                    # never sent to claude; it stays in the backlog for the
+                    # next run. One summary line at the end, not one per chunk.
+                    deadline_skipped += 1
+                    continue
                 except Exception as e:
                     # Chunk raised (subprocess crash, etc.) — leave its articles
                     # in remaining_by_url so the backlog carries them to the
@@ -531,6 +558,10 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
                     completed_since_flush = 0
                 province_projects[province].extend(projects)
                 failed_articles.extend(failed)
+        if deadline_skipped:
+            print(f"    [RSS PROJECTS DEADLINE] phase budget reached — "
+                  f"{deadline_skipped} chunk(s) never started; their articles "
+                  f"stay in the extraction backlog for the next run")
         _flush_backlog(remaining_by_url)
 
     for province, projs in province_projects.items():
@@ -573,6 +604,8 @@ def _normalize_extracted_project(p):
 def run(conn, context, logger):
     """Run RSS filtering, project extraction, dedup, and URL hard gate."""
     step_name = "Phase 3: Filtering"
+    global _PHASE_DEADLINE
+    _PHASE_DEADLINE = time.monotonic() + PHASE3_SOFT_DEADLINE_SECONDS
     try:
         gemini_client = context.get("gemini_client")
         anthropic_client = context.get("anthropic_client")

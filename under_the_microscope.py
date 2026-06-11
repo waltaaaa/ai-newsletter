@@ -330,23 +330,60 @@ async def generate_microscope_analysis(topic_context, project_data, indicator_da
             f"ONLY on genuinely new developments. Do not repeat earlier analysis."
         )
 
-    user_prompt = f"""TOPIC: {topic_context.get('topic', '')}
-DESCRIPTION: {topic_context.get('description', '')}
+    # Red-team F3 (2026-06-11): this prompt is sent through `claude -p`, which
+    # on this host fails (exit 1, empty stderr) on prompts over ~4KB. The old
+    # build (15 full project dicts + indicators, both indent=2) ran 4-7KB and
+    # silently no-op'd the whole microscope step. Compact every block, keep
+    # only the project fields the analysis cites, and shrink until under budget.
+    def _slim_project(p):
+        return {k: p.get(k) for k in
+                ("name", "province", "value", "status", "sector") if p.get(k)}
+
+    def _build_prompt(n_projects, n_titles, title_len, desc_len, ind_len):
+        projects_block = (
+            json.dumps([_slim_project(p) for p in project_data[:n_projects]],
+                       separators=(",", ":"))
+            if project_data else "No matching projects identified.")
+        indicators_block = (
+            json.dumps(indicator_data, separators=(",", ":"))[:ind_len]
+            if indicator_data else "No significant indicator changes.")
+        titles_block = json.dumps(
+            [a.get('title', '')[:title_len]
+             for a in topic_context.get('related_articles', [])[:n_titles]],
+            separators=(",", ":"))
+        return f"""TOPIC: {topic_context.get('topic', '')[:200]}
+DESCRIPTION: {topic_context.get('description', '')[:desc_len]}
 
 RECENT ARTICLES ON THIS TOPIC:
-{json.dumps([a.get('title', '') for a in topic_context.get('related_articles', [])[:10]], indent=2)}
+{titles_block}
 
 AFFECTED SECTORS: {', '.join(topic_context.get('affected_sectors', []))}
 AFFECTED PROVINCES: {', '.join(topic_context.get('affected_provinces', []))}
 
-PROJECTS IN OUR DATABASE THAT MAY BE AFFECTED:
-{json.dumps(project_data[:15], indent=2) if project_data else 'No matching projects identified.'}
+PROJECTS IN OUR DATABASE THAT MAY BE AFFECTED (name/province/value/status/sector):
+{projects_block}
 
 RELEVANT INDICATOR MOVEMENTS:
-{json.dumps(indicator_data, indent=2) if indicator_data else 'No significant indicator changes.'}
+{indicators_block}
 {continuity_note}
 
 Generate the Under the Microscope analysis (200-300 words)."""
+
+    # MICROSCOPE_SYSTEM is ~1.4KB; keep the user prompt under ~2.4KB so the
+    # combined claude -p payload stays clear of the ~4KB failure threshold.
+    # Every block scales down per attempt — shrinking only the project list
+    # was not enough when titles/indicators were themselves bloated.
+    user_prompt = None
+    for params in ((8, 8, 120, 500, 1200),
+                   (5, 6, 100, 400, 700),
+                   (3, 4, 80, 250, 400),
+                   (1, 2, 60, 150, 200)):
+        user_prompt = _build_prompt(*params)
+        if len(user_prompt) <= 2400:
+            break
+    if len(user_prompt) > 2400:
+        logger.warning(f"Microscope prompt still {len(user_prompt)} chars after "
+                       f"trimming — claude -p may fail on the ~4KB host limit")
 
     try:
         from claude_reasoning import OPUS_WRITING_MODEL

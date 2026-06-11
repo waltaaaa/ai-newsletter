@@ -124,9 +124,11 @@ timeseries = json.load(open('docs/data/timeseries.json'))
 expected_commodities = [
     'wti', 'brent', 'natural_gas', 'coal', 'gold', 'silver', 'platinum',
     'palladium', 'copper', 'aluminum', 'nickel', 'zinc', 'lumber',
-    'potash_nutrien', 'sprott_uranium', 'wheat', 'corn', 'soybeans',
+    'potash_nutrien', 'uranium', 'wheat', 'corn', 'soybeans',
     'iron_ore', 'dry_bulk_shipping'
 ]
+# 2026-06-11: 'sprott_uranium' removed from this list — the key never existed
+# in timeseries.json; the canonical key is 'uranium'.
 
 stale_commodities = []
 

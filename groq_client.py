@@ -91,7 +91,11 @@ def batch_classify(articles, system_prompt, batch_size=20):
         logger.warning("[GROQ] openai package not installed — passing all articles through")
         return list(range(len(articles)))
 
-    client = OpenAI(api_key=GROQ_API_KEY, base_url=GROQ_BASE_URL)
+    # Red-team F2 (2026-06-11): the OpenAI client defaults to a 600s timeout x
+    # 2 retries — a hung connection could eat ~30 min of the conductor's phase
+    # budget. Groq normally answers in seconds; fail fast and fall through.
+    client = OpenAI(api_key=GROQ_API_KEY, base_url=GROQ_BASE_URL,
+                    timeout=120, max_retries=1)
     relevant_indices = []
 
     for batch_start in range(0, len(articles), batch_size):
@@ -176,7 +180,10 @@ def generate(system_prompt, user_prompt, max_tokens=2048, temperature=0.1):
     except ImportError:
         return None
 
-    client = OpenAI(api_key=GROQ_API_KEY, base_url=GROQ_BASE_URL)
+    # Red-team F2: explicit timeout — default 600s x 2 retries could stall the
+    # microscope/conductor pre-steps for ~30 min on a hung connection.
+    client = OpenAI(api_key=GROQ_API_KEY, base_url=GROQ_BASE_URL,
+                    timeout=120, max_retries=1)
 
     try:
         response = client.chat.completions.create(

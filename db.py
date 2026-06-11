@@ -2281,20 +2281,28 @@ def save_timeseries_point(conn: sqlite3.Connection, series_name: str, date_str: 
         """, (series_name, date_str, value, unit, source))
 
 
-def get_timeseries(conn: sqlite3.Connection, series_name: str, limit: int = 52) -> list[dict]:
+def get_timeseries(conn: sqlite3.Connection, series_name: str, limit: int = 52,
+                   include_briefing_prints: bool = True) -> list[dict]:
     """Return timeseries points for a named series, most recent first.
 
     Args:
         conn: SQLite connection.
         series_name: Identifier for the series.
         limit: Maximum number of results.
+        include_briefing_prints: when False, rows tagged source='briefing_print'
+            (writer-emitted values appended by phases/finalize.py) are excluded.
+            Red-team F8 (2026-06-11): the exporter must pass False — a briefing's
+            own prints must never become the fact-check baseline that validates
+            the next briefing.
 
     Returns:
         List of dicts with date, value, unit, source.
     """
+    source_filter = "" if include_briefing_prints else \
+        "AND COALESCE(source, '') != 'briefing_print' "
     rows = conn.execute(
         "SELECT date, value, unit, source FROM timeseries "
-        "WHERE series_name = ? ORDER BY date DESC LIMIT ?",
+        f"WHERE series_name = ? {source_filter}ORDER BY date DESC LIMIT ?",
         (series_name, limit)
     ).fetchall()
     return [dict(row) for row in rows]

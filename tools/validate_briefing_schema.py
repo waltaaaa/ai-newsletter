@@ -1589,6 +1589,7 @@ FX_TS_MAP = {
     "CAD/USD": ("cadusd", False),
     "USD/CAD": ("cadusd", True),
     "EUR/USD": ("eurusd", False),
+    "GBP/USD": ("fx_gbpusd", False),  # fed by refresh_timeseries_commodity (2026-06-11)
     "USD/JPY": ("usdjpy", False),
     "USD/CNY": ("usdcny", False),
 }
@@ -1770,13 +1771,17 @@ def _validate_market_facts(data_dir, results, briefing):
         else:
             check(results, f"fact.{label}", True, "")
 
-    # Commodities
+    # Commodities — 'val' first, fall through to 'value' when 'val' is
+    # unparseable (red-team F5: "N/A" in val must not shadow a real value;
+    # same fallthrough as indices below)
     for c in briefing.get("commodities") or []:
         name = c.get("name", "?")
         ts_key = COMMODITY_TS_MAP.get(name)
         if not ts_key:
             continue
         claimed = _parse_print(c.get("val"))
+        if claimed is None:
+            claimed = _parse_print(c.get("value"))
         if claimed is None:
             continue
         _compare(f"commodity.{name}", claimed, ts_key)

@@ -45,7 +45,7 @@ From `dossier_macro.json` extract the `financial_markets_package` subset and the
 3. **Use specific numbers.** Not "markets fell" but "the TSX Composite fell 1.2% to 24,150."
 4. **Attribution over assertion.** "The database tracks X projects" not "X projects are at risk."
 5. **Conditional language for projections.** "If WTI holds below $70, X projects would..." not "X projects will..."
-6. **Em dash lead sentences** where the skill specifies.
+6. **Em dash lead sentences** where the skill specifies, using the canonical pattern: `<p><span class="lead-sentence">Lead-in sentence stating the paragraph's single core fact</span> — supporting detail with citations.<sup>N</sup></p>`. The lead-in span has no terminal period, ` — ` immediately follows `</span>`, and the continuation starts lowercase unless it begins with a proper noun. Never emit `<strong>` or `<b>`. The lead-in sentence is the only bold text the reader sees, and its bolding comes from frontend CSS (`.lead-sentence{font-weight:600}`). Numbers stay specific but unbolded.
 7. **Basis points for yield moves.** "Rose 12 basis points to 3.58%" not "rose 0.12%."
 8. **Units on every price.** US$/bbl, US$/oz, US$/lb, CAD$/bu, CAD$/MT, US$/MT, US$/mfbm, US$/MMBtu. Emit the unit both inside the price string AND as a separate `unit` field on every market item (frontend reads both).
 9. **Cross-reference the project database.** Every sub-section must connect market data to specific project pipeline counts and dollar values from the dossier.
@@ -284,8 +284,8 @@ Output file: `docs/data/briefing_market_commodities.json`
 Each commodity uses this em dash pattern (HTML goes into the `context` field):
 
 ```html
-<p><strong>{Name}:</strong> <strong>{val with units}</strong>
-(<strong>{day}</strong> week-over-week) — {causal driver +
+<p><span class="lead-sentence">{Name} settled at {val with units}
+({day} week-over-week)</span> — {causal driver +
 1-2 sentences of Canadian project cross-reference}<sup>N</sup>.
 {historical context or conditional framing}<sup>N</sup>.</p>
 ```
@@ -366,7 +366,10 @@ BANNED = ['should', 'must', 'hopefully', 'unfortunately', 'worrying',
 
 TAXONOMY_LEAK = re.compile(r'\b\w+_\w+\b')
 DRIVERS = re.compile(r'\bas\s+(?:the|reports|news|concerns|announcements|data|US|OPEC)|\bdriven by|\breflecting|\bfollowing\s+(?:the|reports|news|a|an)|\bon\s+(?:reports|news|concerns|the announcement|expectations)|\bamid\s+(?:the|reports|news)|\bafter\s+(?:the|reports|news)|\bin response to', re.IGNORECASE)
-CONDITIONALS = re.compile(r'\b(?:if|should|were)\s+(?:the|WTI|gold|rates|yields|the CAD|the loonie|the dollar|commodity|commodities)[^.]{20,200}would', re.IGNORECASE)
+# 2026-06-11 red-team 2.9: "should" removed from this alternation — it is a
+# BANNED word above, so a writer following "Should the BoC..." phrasing
+# self-failed the banned-words check. Use "if" or "were" inversions only.
+CONDITIONALS = re.compile(r'\b(?:if|were)\s+(?:the|WTI|gold|rates|yields|the CAD|the loonie|the dollar|commodity|commodities)[^.]{20,200}would', re.IGNORECASE)
 BENCHMARKS = re.compile(r'since \w+ \d{4}|since (?:January|February|March|April|May|June|July|August|September|October|November|December)|highest[^.]{0,40}\d|lowest[^.]{0,40}\d|first[^.]{0,40}since|largest[^.]{0,40}since|steepest[^.]{0,40}since|52-week (?:high|low)|year-over-year[^.]{0,60}from|contract inception|record\b', re.IGNORECASE)
 
 def check_banned(html):
@@ -458,6 +461,11 @@ benchmarks = len(BENCHMARKS.findall(re.sub(r'<[^>]+>','',all_three)))
 print(f"\nTotal historical benchmarks across triad: {benchmarks}")
 assert benchmarks >= 9, f"FAIL need >=9 benchmarks across triad, got {benchmarks}"
 
+# ── Bold ban across triad ──
+if '<strong>' in all_three or '<b>' in all_three:
+    print("FAIL — <strong>/<b> is banned; only the lead-sentence is bold (frontend CSS)")
+assert '<strong>' not in all_three and '<b>' not in all_three
+
 print("\n✓ Triad validated.")
 ```
 
@@ -497,3 +505,4 @@ Ready for merging by Agent 3E (Assembler).
 5. **Don't leak taxonomy keys.** Validator catches `oil_gas`, `power_energy`, etc.
 6. **Don't skip historical benchmarks.** Need ≥9 across the triad.
 7. **Don't skip conditional framing.** The FX and yield curve cross-references must use "If X, then Y would".
+8. **Don't emit `<strong>` or `<b>`.** They are banned everywhere in prose output. The lead-in sentence is the only bold text the reader sees, via frontend CSS. Open per-commodity and per-index narratives with `<span class="lead-sentence">` instead of bolded names or numbers.

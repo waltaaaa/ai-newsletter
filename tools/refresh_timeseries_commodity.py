@@ -67,6 +67,10 @@ YF_SERIES = [
     ("tsx_composite", "^GSPTSE", "14mo", "S&P/TSX Composite"),
     ("usdjpy", "JPY=X", "14mo", "USD/JPY spot rate"),
     ("cadusd", "CADUSD=X", "14mo", "CAD/USD spot rate"),
+    # GBP/USD — red-team 2.9 (2026-06-11): the triad's required pair mapped to
+    # fx_gbpusd, which never existed in timeseries.json (weekly N/A or
+    # unverifiable web print). Independent yfinance feed closes the gap.
+    ("fx_gbpusd", "GBPUSD=X", "14mo", "GBP/USD spot rate"),
     # Commodities — previously stale
     ("brent", "BZ=F", "13mo", "Brent Crude Oil futures"),
     ("natural_gas", "NG=F", "13mo", "Henry Hub Natural Gas futures"),
