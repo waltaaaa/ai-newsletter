@@ -634,8 +634,8 @@ This ensures no collision even when multiple charts appear on the same page.
 ### Other
 - `hy_spread`, `ig_spread` (credit spreads)
 - `dry_bulk_shipping`
-- `cameco_uranium`, `sprott_uranium`
 - `bitcoin`, `ethereum`
+- (2026-06-11: `cameco_uranium`/`sprott_uranium` removed — those keys never existed in timeseries.json; the canonical `uranium` key has <2 points, do not chart it)
 
 Use the non-prefixed versions (e.g., `wti` not `comm_wti`).
 

@@ -135,7 +135,11 @@ def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate:
             val_f = float(str(raw_value).replace('%', '').replace('$', '').replace(',', '').strip())
         except Exception:
             return
-        save_timeseries_point(conn, series_name, today_str, val_f, unit=unit)
+        # Red-team F8: tag briefing-derived points so exporters/fact-checkers
+        # can distinguish them from independently-fetched data (a writer's
+        # own print must never become next week's verification baseline).
+        save_timeseries_point(conn, series_name, today_str, val_f, unit=unit,
+                              source='briefing_print')
 
     # BoC Rate
     _upsert('boc_rate', '%', boc_rate.replace('%', ''))
@@ -180,10 +184,12 @@ def append_to_timeseries(conn, payload: dict, financial_markets: dict, boc_rate:
         'Soybean Oil': 'soybean_oil', 'Soybean Meal': 'soybean_meal',
         'Coal (Newcastle)': 'coal', 'Propane': 'propane',
         'Lumber': 'lumber',
-        # Audit H9 (2026-06-11): Canadian commodities the chart agent reads
-        # via canonical keys but which nothing appended weekly.
-        'Uranium': 'uranium', 'Canola': 'canola', 'Nickel': 'nickel',
-        'Potash (Nutrien)': 'potash_nutrien', 'Silver': 'silver',
+        # Red-team F8/2.5 (2026-06-11): do NOT add the thin proxy series
+        # (Uranium/Canola/Nickel/Potash) here. Appending writer-emitted
+        # prints into a thin series makes the briefing its own fact-check
+        # baseline next week (circular), and the Sprott/NTR proxies are in
+        # different units than the prints. Those series need independent
+        # fetchers (canola: StatCan vector — chip spawned 2026-06-11).
     }
     # The conductor-era briefing carries a FLAT commodities list
     # ([{name, val, unit, ...}]); the legacy shape was categorized

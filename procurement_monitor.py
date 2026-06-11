@@ -32,6 +32,7 @@ All sources are free. No API keys required for public procurement data.
 """
 import json
 import csv
+import hashlib
 import io
 import re
 from datetime import datetime, timedelta
@@ -392,11 +393,17 @@ def fetch_bc_bid():
                 value = _extract_value_from_text(text)
                 if value and value >= MIN_CONTRACT_VALUE:
                     val_pass += 1
+                # 2026-06-11 red-team fix: most BC tender notices carry no
+                # extractable dollar value. Emitting "value": None crashed
+                # every consumer doing `c.get('value', 0) >= threshold`
+                # (the key EXISTS, so the default never applies). Emit a
+                # numeric 0 and keep the raw extraction separately.
                 opportunities.append({
                     "source": "canadabuys_bc",
                     "title": title,
                     "description": summary,
-                    "value": value,
+                    "value": value or 0,
+                    "value_extracted": value,
                     "province": "BC",
                     "url": row.get("noticeURL-URLavis-eng", ""),
                     "date": row.get("publicationDate-datePublication", ""),
@@ -405,10 +412,10 @@ def fetch_bc_bid():
                 logger.debug(f"[PROCUREMENT] Skipped CanadaBuys BC row: {e}")
 
         print(f"[PROCUREMENT] bc_bid: fetched {len(rows)} rows ({bc_rows} BC "
-              f"delivery), {len(opportunities)} after keyword filter, "
-              f"{val_pass} >= ${MIN_CONTRACT_VALUE:,} -> "
-              f"{len(opportunities)} final (no value floor on BC tender "
-              f"notices — parity with retired BC Bid feed)")
+              f"delivery), {len(opportunities)} kept (no value floor on BC "
+              f"tender notices — parity with retired BC Bid feed; "
+              f"{val_pass} of them have extractable values >= "
+              f"${MIN_CONTRACT_VALUE:,})")
     except Exception as e:
         print(f"[PROCUREMENT] bc_bid FAILED: {e}")
 
@@ -513,6 +520,7 @@ def fetch_seao(days_back=30):
                         seen_ocids.add(ocid)
                         contracts.append({
                             "source": "seao",
+                            "ocid": ocid,
                             "title": title,
                             "description": tender.get("description", "") or title,
                             "vendor": suppliers[0] if suppliers else "Unknown",
@@ -679,21 +687,22 @@ def _parse_value(value_str):
 
 
 def _extract_value_from_text(text):
-    """Extract dollar values from free text."""
+    """Extract dollar values from free text.
+
+    2026-06-11 red-team fix: the multiplier is bound to WHICH pattern matched
+    instead of re-checking 'B'/'M' case-sensitively after the fact — callers
+    lowercase their text first, so "$5m" / "$5 million" used to parse as 5.0
+    dollars. Suffix matching is now fully case-insensitive.
+    """
     patterns = [
-        r'\$\s*([\d,]+(?:\.\d+)?)\s*(?:billion|B)',
-        r'\$\s*([\d,]+(?:\.\d+)?)\s*(?:million|M)',
-        r'\$\s*([\d,]+(?:\.\d+)?)',
+        (r'\$\s*([\d,]+(?:\.\d+)?)\s*(?:billion|bn|b)\b', 1_000_000_000),
+        (r'\$\s*([\d,]+(?:\.\d+)?)\s*(?:million|m)\b', 1_000_000),
+        (r'\$\s*([\d,]+(?:\.\d+)?)', 1),
     ]
-    for pattern in patterns:
+    for pattern, multiplier in patterns:
         match = re.search(pattern, text, re.IGNORECASE)
         if match:
-            value = float(match.group(1).replace(',', ''))
-            if 'billion' in text[match.start():match.end()+10].lower() or 'B' in text[match.start():match.end()+3]:
-                value *= 1_000_000_000
-            elif 'million' in text[match.start():match.end()+10].lower() or 'M' in text[match.start():match.end()+3]:
-                value *= 1_000_000
-            return value
+            return float(match.group(1).replace(',', '')) * multiplier
     return None
 
 
@@ -728,10 +737,53 @@ def _infer_province(row):
     )
 
 
+# 2026-06-11 red-team fix: vendor names whose normalized form is one of these
+# generic words must never be used as a project-match key — "Les" matched 172
+# QC projects, "Construction" 35+, spraying false linked_projects into the
+# briefing (editorial fabrication).
+_GENERIC_VENDOR_WORDS = {
+    "construction", "les", "groupe", "gestion", "canada", "inc",
+    "ltd", "ltee", "ltée", "limited", "corp", "corporation", "company",
+    "compagnie", "services", "enterprises", "entreprises", "group",
+}
+
+# Corporate suffixes stripped from the tail of vendor names before matching.
+_VENDOR_SUFFIXES = {
+    "inc", "ltd", "ltee", "ltée", "limited", "corp", "corporation",
+    "co", "cie", "llp", "llc", "lp", "plc", "sa", "senc", "sencrl",
+}
+
+
+def _normalize_vendor(vendor):
+    """
+    Normalize a vendor name into a full-name match key.
+
+    Strips punctuation and trailing corporate suffixes. Returns '' when the
+    remainder is shorter than 6 characters or is a generic word — callers
+    must NOT link on such names (false links are editorial fabrication;
+    linking less is fine).
+    """
+    name = re.sub(r"[.,;:()\[\]]", " ", str(vendor or ""))
+    words = [w for w in name.split() if w]
+    while words and words[-1].lower() in _VENDOR_SUFFIXES:
+        words.pop()
+    normalized = " ".join(words).strip()
+    if len(normalized) < 6:
+        return ""
+    if normalized.lower() in _GENERIC_VENDOR_WORDS:
+        return ""
+    return normalized
+
+
 def link_contracts_to_projects(contracts, conn):
     """
-    Match procurement contracts to existing projects by vendor name,
-    description keywords, and province.
+    Match procurement contracts to existing projects by vendor name
+    and province.
+
+    2026-06-11 red-team fix: the old second LIKE clause matched on the FIRST
+    WORD of the vendor name ("Les", "Construction", ...), linking dozens of
+    unrelated projects. Now only the full normalized vendor name is matched,
+    against the project name OR proponent field.
     """
     cursor = conn.cursor()
     linked = []
@@ -743,17 +795,25 @@ def link_contracts_to_projects(contracts, conn):
         if not vendor or vendor == "Unknown":
             continue
 
+        vendor_norm = _normalize_vendor(vendor)
+        if not vendor_norm:
+            # Too short/generic to match safely — keep the contract but
+            # never fabricate links from it.
+            contract["linked_projects"] = []
+            linked.append(contract)
+            continue
+
         try:
             cursor.execute("""
                 SELECT name, province, value, status, sector
                 FROM projects
-                WHERE (name LIKE ? OR name LIKE ?)
+                WHERE (name LIKE ? OR proponent LIKE ?)
                 AND (province = ? OR ? IS NULL)
                 ORDER BY value DESC
                 LIMIT 3
             """, (
-                f"%{vendor}%",
-                f"%{vendor.split()[0]}%",
+                f"%{vendor_norm}%",
+                f"%{vendor_norm}%",
                 province, province,
             ))
 
@@ -772,6 +832,72 @@ def link_contracts_to_projects(contracts, conn):
             logger.debug(f"[PROCUREMENT] Project linking failed: {e}")
 
     return linked
+
+
+# Cross-run dedup state (2026-06-11 red-team fix): SEAO refetches the last 4
+# weekly OCDS files every run and the snapshot stored the whole 30-day window
+# weekly, so the same award was re-reported as fresh for up to 5 weeks.
+_SEEN_OCIDS_STATE_KEY = "procurement_seen_ocids"
+_SEEN_OCIDS_CAP = 5000  # FIFO cap on the persisted identity set
+
+
+def _contract_dedup_key(contract):
+    """
+    Stable cross-run identity key for a contract.
+
+    SEAO rows carry an OCDS ocid — use it directly. Rows from sources without
+    one (open_canada / dcc / canadabuys) are keyed by a stable hash of
+    (vendor, value, description[:80]).
+    """
+    ocid = contract.get("ocid")
+    if ocid:
+        return f"ocid:{ocid}"
+    basis = "|".join([
+        str(contract.get("vendor") or contract.get("organization") or ""),
+        str(contract.get("value") or 0),
+        str(contract.get("description") or contract.get("title") or "")[:80],
+    ])
+    return "h:" + hashlib.sha256(basis.encode("utf-8", "replace")).hexdigest()[:32]
+
+
+def _filter_first_seen(conn, contracts):
+    """
+    Mark each contract dict with "first_seen" (bool) against the persisted
+    identity set in dashboard_state, return the first-seen subset, and persist
+    the updated set (FIFO-capped at _SEEN_OCIDS_CAP).
+
+    Persistence failures degrade gracefully (everything treated as first-seen)
+    so a missing dashboard_state table can't kill the monitor.
+    """
+    import db as _db
+
+    try:
+        seen_list = _db.get_dashboard_state(conn, _SEEN_OCIDS_STATE_KEY) or []
+        if not isinstance(seen_list, list):
+            seen_list = []
+    except Exception as e:
+        logger.debug(f"[PROCUREMENT] seen-OCID state load failed: {e}")
+        seen_list = []
+    seen_set = set(seen_list)
+
+    new_contracts = []
+    for c in contracts:
+        key = _contract_dedup_key(c)
+        first = key not in seen_set
+        c["first_seen"] = first
+        if first:
+            new_contracts.append(c)
+            seen_set.add(key)
+            seen_list.append(key)
+
+    if len(seen_list) > _SEEN_OCIDS_CAP:
+        seen_list = seen_list[-_SEEN_OCIDS_CAP:]
+    try:
+        _db.save_dashboard_state(conn, _SEEN_OCIDS_STATE_KEY, seen_list)
+    except Exception as e:
+        logger.debug(f"[PROCUREMENT] seen-OCID state save failed: {e}")
+
+    return new_contracts
 
 
 def run_procurement_monitor(conn, days_back=30):
@@ -814,19 +940,28 @@ def run_procurement_monitor(conn, days_back=30):
               "returned zero (see per-source lines above: FAILED = dead "
               "fetch, otherwise counts show keyword/value drops)")
 
-    # Link to existing projects
-    linked = link_contracts_to_projects(all_contracts, conn)
+    # Cross-run dedup (2026-06-11 red-team fix): only contracts never seen in
+    # a previous run flow to the snapshot and briefing context; the full fetch
+    # window is still returned under procurement_contracts_all.
+    new_contracts = _filter_first_seen(conn, all_contracts)
+    print(f"[PROCUREMENT] Cross-run dedup: {len(new_contracts)} first-seen of "
+          f"{len(all_contracts)} fetched "
+          f"({len(all_contracts) - len(new_contracts)} repeats suppressed)")
+
+    # Link to existing projects (first-seen only — these feed the briefing)
+    linked = link_contracts_to_projects(new_contracts, conn)
     linked_count = sum(1 for c in linked if c.get("linked_projects"))
     print(f"[PROCUREMENT] Linked {linked_count}/{len(linked)} contracts to existing projects")
 
-    # Save snapshot
-    save_procurement_snapshot(conn, all_contracts)
+    # Save snapshot (first-seen only — no re-reporting old awards as fresh)
+    save_procurement_snapshot(conn, new_contracts)
 
     return {
-        "procurement_contracts": all_contracts,
+        "procurement_contracts": new_contracts,
+        "procurement_contracts_all": all_contracts,
         "procurement_linked": linked,
-        "procurement_total_value": sum(c.get("value", 0) for c in all_contracts if c.get("value")),
-        "procurement_sources": list(set(c["source"] for c in all_contracts)),
+        "procurement_total_value": sum(c.get("value", 0) for c in new_contracts if c.get("value")),
+        "procurement_sources": list(set(c["source"] for c in new_contracts)),
     }
 
 

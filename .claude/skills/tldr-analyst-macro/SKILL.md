@@ -36,7 +36,7 @@ Read these JSON files from `docs/data/`:
 
 | File | What you extract |
 |------|-----------------|
-| `briefing_latest.json` | Last week's structure as template; carry forward hard data for metrics, indicatorMeta, indicatorSources, financialMarkets, commodities, yieldCurve |
+| `briefing_latest.json` | Last week's STRUCTURE as template, plus metrics/indicatorMeta/indicatorSources continuity. **NEVER carry forward financialMarkets, commodities, or yieldCurve values from it** — those are the PRIOR edition's prints and must be rebuilt from timeseries.json every week (Rule 8 below; the 2026-06-08 edition shipped the prior edition's potash price through exactly this path) |
 | `indicators.json` | National indicators (BoC rate, GDP, CPI, unemployment, housing starts, etc.) with historical values for context |
 | `projects_all.json` | Project counts by sector/status, total pipeline value — for cross-referencing |
 | `events.json` | Event calendar for the watchlist |
@@ -146,10 +146,11 @@ Build the `key_indicators` array. **Always include these in order:**
 8. TSX (if significant move, e.g., "+2.1%")
 
 For EACH indicator:
-- Pull the **exact value** from hard data (indicators.json, briefing_latest.json, commodities.json)
+- Pull the **exact value** from hard data: indicators.json for economic indicators; **timeseries.json (latest point) for ALL market values** — WTI, CAD/USD, TSX. briefing_latest.json is the PRIOR edition: never use it as the source of a market value (Rule 8). commodities.json is acceptable for commodity context fields only.
 - Include `change` field ONLY if you have verified period-over-period comparison
 - Never estimate or round hard data values
 - Include `period` (e.g., "Current", "Mar 2026")
+- NOTE: key_indicators market values are NOT covered by the validator's structured fact-check — get them right here; the masthead is the most visible spot in the product.
 
 ```json
 "key_indicators": [
@@ -364,11 +365,11 @@ Carry forward structure from briefing_latest.json, but the commodities array MUS
 | 5 | Gold | `gold` | US$/oz | — |
 | 6 | Silver | `silver` | US$/oz | — |
 | 7 | Copper | `copper` | US$/lb | — |
-| 8 | Uranium | `sprott_uranium` (preferred) or `cameco_uranium` | US$/lb (Sprott) or CAD$ (Cameco proxy) | — |
-| 9 | Nickel | `nickel` | US$/t | **If latest date > 90 days old, mark `"price": "N/A"` with stale-data note.** Do not publish stale values as current. |
+| 8 | Uranium | `uranium` (U3O8 spot; the `sprott_uranium`/`cameco_uranium` keys DO NOT EXIST in timeseries.json — corrected 2026-06-11) | US$/lb | **If latest date > 90 days old, mark `"price": "N/A"` with stale-data note** (the spot series currently has a single stale point — expect N/A until a feed is wired). |
+| 9 | Nickel | `nickel` | US$/t | **If latest date > 90 days old, mark `"price": "N/A"` with stale-data note.** Do not publish stale values as current. Note the series is a FRED MONTHLY AVERAGE — label any published value "monthly average", never "spot". |
 | 10 | Wheat | `wheat` | US¢/bu | — |
-| 11 | Canola | `canola` | CAD$/t | **If latest date > 90 days old, mark `"price": "N/A"` with stale-data note.** |
-| 12 | Potash | `potash_nutrien` (proxy) | US$ (stock price) | — |
+| 11 | Canola | `canola` | CAD$/t | **If latest date > 90 days old, mark `"price": "N/A"` with stale-data note.** (StatCan farm-price feed wired 2026-06-11 — monthly values; label "farm price (monthly)", never "futures"/"spot".) |
+| 12 | Potash | `potash_nutrien` (proxy) | **CAD$ — NTR.TO TSX stock price, NOT a US$ potash price.** Label it "Nutrien (NTR.TO) share price proxy, CAD$" — emitting it with a US$ unit is a factual error (2026-06-11 red team). | — |
 | 13 | Lumber | `lumber` | US$/mfbm | — |
 
 #### Output shape
@@ -399,10 +400,10 @@ Carry forward structure from briefing_latest.json, but the commodities array MUS
       {"name": "Gold", "value": "$4,782.60/oz", "weekly_pct": "+0.4%", "source": "timeseries.json:gold"},
       {"name": "Silver", "value": "$75.46/oz", "weekly_pct": "+0.1%", "source": "timeseries.json:silver"},
       {"name": "Copper", "value": "$5.75/lb", "weekly_pct": "-0.1%", "source": "timeseries.json:copper"},
-      {"name": "Uranium", "value": "$50.93/lb (Sprott proxy)", "weekly_pct": "+3.39%", "source": "timeseries.json:sprott_uranium"},
-      {"name": "Nickel", "value": "N/A", "note": "timeseries.json:nickel has not updated since 2015-07-01; mark stale. Do not publish.", "source": "unavailable"},
+      {"name": "Uranium", "value": "N/A", "note": "timeseries.json:uranium currently has a single stale point — apply the >90d rule. Do NOT cite sprott_uranium/cameco_uranium (keys do not exist).", "source": "unavailable"},
+      {"name": "Nickel", "value": "$16,840/t (FRED monthly average)", "weekly_pct": "N/A", "note": "monthly-average series — no weekly change computable", "source": "timeseries.json:nickel"},
       {"name": "Wheat", "value": "$573.50/bu", "weekly_pct": "...", "source": "timeseries.json:wheat"},
-      {"name": "Canola", "value": "N/A", "note": "timeseries.json:canola has not updated since 2001-02-01; mark stale. Do not publish.", "source": "unavailable"},
+      {"name": "Canola", "value": "$725.10/t (StatCan farm price, monthly)", "weekly_pct": "N/A", "note": "monthly farm-price series — label accordingly", "source": "timeseries.json:canola"},
       {"name": "Potash", "value": "$72.78 (Nutrien proxy)", "weekly_pct": "-2.39%", "source": "timeseries.json:potash_nutrien"},
       {"name": "Lumber", "value": "$579.50/mfbm", "weekly_pct": "...", "source": "timeseries.json:lumber"}
     ],
@@ -529,7 +530,7 @@ Yield curve current vs. last year:
 }
 ```
 
-Extract from harddata (briefing_latest.json) or timeseries.json. Six points represent: 2-year, 3-year, 5-year, 10-year, 20-year, 30-year yields.
+Extract from **timeseries.json ONLY** (keys `goc_2y_yield`, `goc_3y_yield`, `goc_5y_yield`, `goc_7y_yield`, `goc_10y_yield`, `goc_long_yield`) — never from briefing_latest.json, which carries the PRIOR edition's curve (Rule 8). Six points represent: 2Y, 3Y, 5Y, 7Y, 10Y, Long.
 
 ### Step 13: Build Infographic Directives (5 minutes)
 
@@ -594,7 +595,7 @@ Global impact summaries:
 Verify before writing the dossier:
 
 1. **Hard data verification:**
-   - Every metric value matches indicators.json, briefing_latest.json, or commodities.json
+   - Every economic-indicator value matches indicators.json; every MARKET value (commodities, fx, indices, yields, key_indicators market rows) matches **timeseries.json** — briefing_latest.json is the prior edition and is NOT a verification source for market values (Rule 8)
    - Project counts match projects_all.json
    - No made-up numbers
 

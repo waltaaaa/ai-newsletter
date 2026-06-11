@@ -75,7 +75,7 @@ Rules:
 13. Industry trade RSS (~15 feeds)
 14. University/institutional capital plans
 Plus: Key people RSS feeds (processed through government bypass)
-Plus: Procurement monitor — federal/provincial contract awards and tenders (Open Canada, BuyAndSell, Ontario BPS, BC Bid). Filters for construction/infrastructure >=5M. Links awards to existing projects. Zero cost.
+Plus: Procurement monitor — federal/provincial contract awards and tenders. Live sources (2026-06-11): Open Canada proactive disclosure, CanadaBuys CSVs (federal; replaced DNS-dead BuyAndSell), SEAO OCDS (Quebec), DCC awards PDF (defence). Dead/dark, skipped with logged reasons: BuyAndSell (DNS-dead), Ontario BPS (CKAN package removed), BC Bid legacy RSS (retired to Ivalua), SaskTenders/Alberta Purchasing (no public API) — ON/BC coverage via CanadaBuys delivery-region rows. Filters for construction/infrastructure >=$5M EXCEPT BC tender notices (no value floor — most carry no stated value). Links awards to existing projects. Zero cost.
 Plus: Corporate newswires — 12 RSS feeds from GlobeNewswire, Canada Newswire, and Cision covering mining, energy, real estate, construction, manufacturing, transport, and government press releases. Pre-filtered for Canadian relevance before entering the 6-layer RSS filter. Zero cost.
 Plus: IAAC status tracker — monitors federal Impact Assessment Registry for status transitions (planning, public comment, panel review, decision). Updates project statuses and detects new IAAC projects. Zero cost.
 Plus: Regulatory feeds — 10 CanLII RSS feeds covering Federal Court, CER, Ontario LPAT, Ontario/BC/Alberta environmental tribunals, BC/Alberta utilities commissions, Quebec TAQ, and Saskatchewan Municipal Board. Pre-filtered for project relevance (>=2 keyword matches). Regulatory decisions carry status signals: approvals, denials, compliance orders, and stop-work orders map to project status updates. Tagged as government sources — bypass RSS keyword filter (L1). Zero cost.
@@ -202,7 +202,7 @@ The briefing integrates data from: indicator history, project database, discover
 - Discovery: `google_news_rss_search.py`, `rss_filter.py`, `gov_sources.py`, `municipal_dev_apps.py`, `snippet_enhancer.py`, `metadata_tagger.py`, `iaac_status.py`
 - Procurement: `procurement_monitor.py` (federal + provincial contract awards — Open Canada, BuyAndSell, Ontario BPS, BC Bid)
 - Policy: `policy_tracker.py` (LEGISinfo, Canada Gazette, ministry feeds — legislative/regulatory tracking)
-- Signals: `job_monitor.py` (hiring spike detection — 15 CMAs, 9 sectors, Indeed/Job Bank RSS)
+- Signals: `job_monitor.py` (hiring spike detection — 15 CMAs, 9 sectors, Job Bank Atom feed ONLY: `jobsearch/feed/jobSearchRSSfeed?searchstring=&fprov=`. Indeed RSS was removed 2026-06-11 — Indeed discontinued public RSS ~2018; do NOT re-add it)
 - StatCan Extended: `statcan_extended.py` (8 additional WDS tables — investment, employment, trade, housing)
 - Regulatory: `article_filter.py` contains `is_regulatory_relevant()` pre-filter and `extract_regulatory_signal()` for CanLII feeds (10 feeds in `rss_feeds.json` `regulatory` category)
 - Alert Tracking: `project_alert_tracker.py` (per-project Google News RSS alerts, monthly check, auto-deactivate on Cancelled/Complete)
@@ -212,7 +212,7 @@ The briefing integrates data from: indicator history, project database, discover
 - Frontend: `docs/index.html` (GitHub Pages root)
 - Quality instruments (quality-pass-1.4): `query_yield_audit.py` (per-query/per-tier yield history), `triangulation.py` (5-axis evidence classification: regulatory / financial_disclosure / commercial / pre_public / media), `corporate_newsroom_diff.py` (weekly sitemap/newsroom diffing over the corporate watchlist — diff state is the `documents` table's url_normalized UNIQUE), `council_agenda_monitor.py` (3-CMA pilot: Ottawa/Windsor/Mississauga; adopt if ≥5 unique-first projects/month over 4 weeks), `geo_lookup.py` (offline municipality→centroid lookup; CSD → CMA → province fallback, no runtime network)
 - Operator tools (quality-pass-1.4): `tools/classify_other_sectors.py`, `tools/prune_evidence_pollution.py`, `tools/fix_backfill_evidence_urls.py`, `tools/tavily_cost_batch.py` (staged: --search → --validate → --apply), `tools/canary_recall_check.py` (weekly recall scorecard vs `config/canary_projects.json`), `tools/wikidata_alias_harvest.py` (monthly, 1 req/s), `tools/build_geo_lookup.py` (one-time StatsCan GAF builder)
-- New config (quality-pass-1.4): `config/canary_projects.json` (55 curated known-real projects — periodic operator curation), `config/geo_municipalities.json` (5,028 CSD centroids from StatsCan 2021 GAF), `config/aliases.json` (Wikidata alias snapshot)
+- New config (quality-pass-1.4): `config/canary_projects.json` (59 curated known-real projects as of 2026-06-11 — periodic operator curation), `config/geo_municipalities.json` (5,028 CSD centroids from StatsCan 2021 GAF), `config/aliases.json` (Wikidata alias snapshot)
 - New docs/data exports (quality-pass-1.4): `province_counts.json` (qualifying vs tracked_unpriced vs stale per province), `discovery_summary.json` (new vs rediscovered vs status changes per week), `timeseries_stale_report.json` (series >540d stale; pruning only under TIMESERIES_PRUNE=1)
 
 ## StatCan Extended Indicators

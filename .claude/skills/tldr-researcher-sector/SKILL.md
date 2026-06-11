@@ -1,4 +1,4 @@
----
+﻿---
 name: tldr-researcher-sector
 description: >
   Sector and industry researcher for "The Lagging Indicator" dashboard. Covers all 20 NAICS
@@ -494,7 +494,7 @@ Search waves: Wave 4 (18 project sectors) + Wave 4b (12 NAICS industries) + Wave
 
 7. **Commodity data:** Use reliable sources (NYMEX, ICE, Statistics Canada, natural resources ministries). Always record price, date, and source URL.
 
-8. **Labour market:** Use Statistics Canada Labour Force Survey and industry employment data where available. Supplement with Indeed, Job Bank, LinkedIn, and other job posting monitors for trends.
+8. **Labour market:** Use Statistics Canada Labour Force Survey and industry employment data where available. Supplement with Job Bank, LinkedIn, and other job posting monitors for trends (NOT Indeed — its public feeds were discontinued years ago and the pipeline removed it 2026-06-11).
 
 9. **Project announcements:** Link to official press releases or government registry entries (IAAC, provincial EA). Include estimated value if available.
 

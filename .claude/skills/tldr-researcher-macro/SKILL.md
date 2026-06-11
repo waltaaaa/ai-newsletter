@@ -227,8 +227,9 @@ For each major index and commodity tracked:
 
 **HARD RULE — prints vs context (audit P5, 2026-06-11):** For any series the
 pipeline already tracks in `docs/data/timeseries.json` (WTI, Brent, natural
-gas, gold, silver, copper, wheat, lumber, potash, uranium, TSX, S&P 500,
-Dow, NASDAQ, CAD/USD, EUR/USD, USD/JPY, USD/CNY, GoC yields), the pipeline
+gas, gold, silver, copper, wheat, lumber, potash, uranium, canola, nickel,
+TSX, S&P 500, Dow, NASDAQ, CAD/USD, EUR/USD, USD/JPY, USD/CNY, GoC yields),
+the pipeline
 value IS the print. WebSearch results for those series are CONTEXT ONLY —
 drivers, events, analyst framing — never replacement numbers. When your
 web-searched price disagrees with timeseries.json by more than ~2%, report

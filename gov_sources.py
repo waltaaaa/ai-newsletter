@@ -1636,6 +1636,87 @@ _YESAB_URL = "https://yesabregistry.ca/projects"
 _YESAB_API_SEARCH = "https://yesabregistry.ca/api/projects/search"
 _YESAB_API_STAGES = "https://yesabregistry.ca/api/projects/stages"
 
+# Red-team fix 2026-06-11: the raw search API returns ~207 ACTIVE assessments,
+# most of which are not capital projects — individual placer-mining
+# operations, guided hiking / rafting / hunting concessions, and wildlife
+# research permits. Unfiltered, they would inject ~200 unpriced rows into YT
+# (threshold $3M) and inflate the briefing's "new projects" count. The filter
+# below keeps only capital-relevant assessments.
+
+# Titles that indicate recreation / research / placer activity — excluded.
+_YESAB_EXCLUDE_TITLE_RE = re.compile(
+    r"(?i)(placer\b|outfitt|hiking|rafting|expeditions?\b|hunting|"
+    r"trapping|tourism\s+concession|research|study|monitoring|survey|"
+    r"harassment|camp\b|trail\b|guided|recreation|filming)")
+
+# Strong capital keywords — a title matching one of these is kept even when
+# the proponent looks like a private individual.
+_YESAB_CAPITAL_TITLE_RE = re.compile(
+    r"(?i)(mine\b|quartz|road\b|bridge|power|hydro|dam\b|subdivision|"
+    r"quarry|airport|pipeline|transmission|wind|solar|sewage|"
+    r"water\s+treatment)")
+
+# Organization tokens — a proponent containing any of these is NOT treated
+# as a private individual.
+_YESAB_ORG_TOKEN_RE = re.compile(
+    r"(?i)\b(corp|inc|ltd|lt[ée]e|mining|energy|resources|government|"
+    r"first\s+nation|corporation|company)\b")
+
+
+def _yesab_is_individual_proponent(proponent: str) -> bool:
+    """Heuristic: proponent looks like a private individual — two or three
+    capitalized words with no organization token (Corp/Inc/Ltd/Mining/...)."""
+    p = (proponent or '').strip()
+    if not p:
+        return False
+    if _YESAB_ORG_TOKEN_RE.search(p):
+        return False
+    words = [w for w in p.split() if w]
+    return (2 <= len(words) <= 3
+            and all(w[:1].isupper() for w in words))
+
+
+# Red-team fix 2026-06-11 (sector labels): _infer_sector_from_name returns
+# non-canonical display labels ('Mining', 'Clean Energy', 'Ports & Logistics')
+# and has substring traps ('Airport' matches 'port'). Other scrapers still
+# call it, so it is left untouched; the YESAB boundary maps its output to the
+# canonical 18 lowercase NAICS keys here, with word-boundary pre-checks for
+# the known traps.
+_YESAB_SECTOR_CANONICAL = {
+    'Mining': 'mining',
+    'Energy': 'power_energy',
+    'Clean Energy': 'power_energy',
+    'Ports & Logistics': 'transport_logistics',
+    'Transit & Rail': 'transport_logistics',
+    'Infrastructure': 'infrastructure',
+    'Housing': 'residential',
+    'Healthcare': 'healthcare',
+    'Education': 'education',
+    'Defence': 'defence',
+    'Water & Wastewater': 'infrastructure',
+    'Telecommunications': 'telecom',
+    'Technology & Data': 'telecom',
+}
+
+
+def _yesab_canonical_sector(name: str) -> str:
+    """Canonical lowercase NAICS sector for a YESAB title."""
+    n = name or ''
+    # Word-boundary pre-checks before the substring-based inferrer:
+    # 'Airport' would otherwise match 'port' → Ports & Logistics.
+    if re.search(r'(?i)\bairports?\b', n):
+        return 'transport_logistics'
+    if re.search(r'(?i)\b(placer|quartz)\b', n):
+        return 'mining'
+    raw = _infer_sector_from_name(n)
+    if raw in _YESAB_SECTOR_CANONICAL:
+        return _YESAB_SECTOR_CANONICAL[raw]
+    # Unknown/'Other' fallback per Yukon reality: most assessments are mineral.
+    if re.search(r'(?i)\bmin(e|es|ing)\b', n):
+        return 'mining'
+    return 'infrastructure'
+
+
 def _scrape_yukon_yesab(tavily_client=None) -> list[dict]:
     """
     Fetch YESAB project registry via its public JSON search API (the
@@ -1669,29 +1750,59 @@ def _scrape_yukon_yesab(tavily_client=None) -> list[dict]:
                 print(f"  [YESAB] stages lookup failed ({type(se).__name__}) "
                       "— defaulting all statuses to Under Review")
 
+            excluded = 0
             for p in rows:
                 name = (p.get('title') or '').strip()
                 if not name or len(name) < 5:
                     continue
+                proponent = (p.get('proponentName') or '').strip()
+
+                # Red-team fix: capital-relevance filter. Recreation /
+                # research / placer titles are excluded outright; private-
+                # individual proponents are excluded unless the title carries
+                # a strong capital keyword.
+                strong_capital = bool(_YESAB_CAPITAL_TITLE_RE.search(name))
+                if _YESAB_EXCLUDE_TITLE_RE.search(name):
+                    excluded += 1
+                    continue
+                if (_yesab_is_individual_proponent(proponent)
+                        and not strong_capital):
+                    excluded += 1
+                    continue
+
                 stage_name, grouping = stage_map.get(p.get('stageId'), ('', ''))
                 sl = f"{stage_name} {grouping}".lower()
                 status_val = 'Under Review'
                 if 'decision document issued' in sl:
                     status_val = 'Approved'
-                elif ('discontinued' in sl or 'not proceeding' in sl
-                        or 'withdrawn' in sl):
+                elif 'not proceeding' in sl or 'withdrawn before screening' in sl:
+                    # Red-team fix: "Project Not Proceeding To Screening" is
+                    # an assessment-track determination, NOT a project
+                    # cancellation — Cancelled is terminal under the status
+                    # non-regression rule. Park these as On Hold.
+                    status_val = 'On Hold'
+                elif 'withdrawn' in sl:
+                    # Explicit withdrawal by the proponent — terminal.
                     status_val = 'Cancelled'
+                elif 'discontinued' in sl:
+                    # "Assessment Discontinued" / "Panel Discontinued" are
+                    # likewise assessment-track outcomes, not confirmed
+                    # project cancellations.
+                    status_val = 'On Hold'
                 pid = p.get('projectId') or ''
                 url = f"https://yesabregistry.ca/projects/{pid}" if pid else _YESAB_URL
                 projects.append({
                     'name':             name[:200],
                     'province':         'Yukon',
                     'status':           status_val,
-                    'proponent':        (p.get('proponentName') or '')[:200],
+                    'proponent':        proponent[:200],
                     'source_url':       url,
                     'discovery_source': 'provincial_ea',
-                    'sector':           _infer_sector_from_name(name),
+                    'sector':           _yesab_canonical_sector(name),
                 })
+            print(f"  [YESAB] {len(rows)} assessments -> {len(projects)} "
+                  f"capital-relevant (excluded {excluded} "
+                  "recreation/research/placer)")
 
         if not projects and tavily_client:
             # Legacy fallback: Tavily extraction of the SPA page.

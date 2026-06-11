@@ -95,7 +95,11 @@ EDITORIAL_RULES = (
     "'hopefully', 'unfortunately', 'worrying', 'promising', 'encouraging'. "
     "Never recommend policy, investment, or business decisions. Use conditional "
     "language for projections. NEVER forecast or use 'looking ahead', 'expected "
-    "to', 'is likely to', 'outlook', 'going forward'."
+    "to', 'is likely to', 'outlook', 'going forward'. "
+    "PROSE STYLE: Every narrative paragraph opens with a lead-in sentence wrapped in "
+    "<span class=\"lead-sentence\">...</span> followed by ' — ' (space, em-dash, space) "
+    "and the supporting detail. NEVER use <strong> or <b> tags — the lead-in is the only "
+    "bold text (styled by frontend CSS); numbers stay specific but unbolded."
 )
 
 # ── Available timeseries keys for agent-driven charts ────────────────────────
@@ -316,14 +320,24 @@ def _build_province_signals_text(abbr: str, signal_context: dict) -> str:
                 f"{s.get('current_count', 0)} postings ({s.get('sector', '')})"
             )
 
-    # Procurement — include description and value
+    # Procurement — include description and value.
+    # 2026-06-11 red-team fix: capped at 8 (sorted by value desc). The
+    # uncapped loop pushed 226 SEAO QC contracts (~45KB) into a claude -p
+    # prompt with a known ~4KB size gotcha.
     prov_proc = [c for c in procurement if (c.get('province') or '').upper() == abbr]
     if prov_proc:
+        prov_proc = sorted(prov_proc, key=lambda c: c.get('value') or 0,
+                           reverse=True)
         lines.append("PROCUREMENT CONTRACTS:")
-        for c in prov_proc:
-            val = c.get('value', '')
+        for c in prov_proc[:8]:
+            val = c.get('value') or 0
             desc = c.get('description', '')[:200]
             lines.append(f"  - {desc} (value: {val or 'undisclosed'})")
+        rest = prov_proc[8:]
+        if rest:
+            rest_total = sum(c.get('value') or 0 for c in rest)
+            lines.append(f"  - ...and {len(rest)} more contracts "
+                         f"(totaling ${rest_total:,.0f})")
 
     # IAAC status changes — include project name, old/new status
     prov_iaac = [i for i in iaac if (i.get('province') or '').upper() == abbr]

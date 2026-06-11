@@ -16,7 +16,8 @@ import asyncio
 import logging
 import re
 import ssl
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+from urllib.parse import quote
 
 import aiohttp
 
@@ -43,6 +44,52 @@ GDP_THRESHOLDS = {
     'NS': 25, 'NB': 20, 'NL': 17, 'PE': 5, 'YT': 3, 'NT': 3, 'NU': 3,
 }
 
+# 2026-06-11 (red-team fix #1): project_sync.upsert_flat_projects gates on
+# _CANONICAL_PROVINCES (full names — "Manitoba", not "MB"). MUNICIPAL_SOURCES
+# keeps 2-letter codes (GDP_THRESHOLDS is keyed on them) but every emitted
+# project dict must carry the canonical full name or the row is rejected at
+# upsert as invalid_province.
+PROVINCE_CODE_TO_NAME = {
+    'AB': 'Alberta', 'BC': 'British Columbia', 'MB': 'Manitoba',
+    'NB': 'New Brunswick', 'NL': 'Newfoundland and Labrador',
+    'NS': 'Nova Scotia', 'NT': 'Northwest Territories', 'NU': 'Nunavut',
+    'ON': 'Ontario', 'PE': 'Prince Edward Island', 'QC': 'Quebec',
+    'SK': 'Saskatchewan', 'YT': 'Yukon',
+}
+
+
+def _province_full_name(code: str) -> str:
+    """Map a 2-letter province code to the canonical full name expected by
+    project_sync._CANONICAL_PROVINCES. Unknown values pass through unchanged
+    (they will be surfaced as invalid_province at upsert, not silently relabeled)."""
+    c = (code or '').strip()
+    return PROVINCE_CODE_TO_NAME.get(c.upper(), c)
+
+
+# 2026-06-11 (red-team fix #2b): Calgary c2es-76ed statuscurrent → canonical
+# pipeline status. Live-verified distinct values 2026-06-11 via
+# $select=distinct statuscurrent (24 values). Anything unrecognized defaults
+# to Proposed (the canonical low-confidence default) — including Expired /
+# File Closed, which are ambiguous (Calgary's vocabulary contains
+# "Re-instated", so lapsed files do come back).
+def _map_permit_status(raw: str) -> str:
+    r = (raw or '').strip().lower()
+    if not r:
+        return 'Proposed'
+    if r in ('refused', 'cancelled'):
+        return 'Cancelled'
+    if r == 'completed':
+        return 'Complete'
+    if r.startswith('issued'):          # "Issued Permit"
+        return 'Approved'
+    if r in ('final phase', 'pre backfill phase', 'pre board phase',
+             'work restarted', 're-instated'):
+        return 'Under Construction'
+    if r.startswith('hold') or r.startswith('suspended'):
+        return 'On Hold'
+    # New / In Review / Application Received / Pending* / unknown
+    return 'Proposed'
+
 # Live-verified 2026-06-09 (D-8): every city probed; moved pages re-resolved
 # (see per-entry comments). Kitchener now uses its ArcGIS FeatureServer layer
 # (the old CSV-download item id was retired). London/Victoria machine endpoints
@@ -66,6 +113,9 @@ MUNICIPAL_SOURCES = {
             "order_by": "issuedate DESC",
             "where": "projectvalue > 175000000",
         },
+        # red-team fix #3: per-record source URL via an explore-v2.1 where
+        # query on the dataset's unique key (live-verified field name).
+        "record_key": {"field": "permitnumber", "style": "ods_where"},
         "field_map": {
             "name": "projectdescription",
             "value": "projectvalue",
@@ -89,8 +139,17 @@ MUNICIPAL_SOURCES = {
         "params": {
             "$limit": 100,
             "$order": "applieddate DESC",
-            "$where": "estprojectcost > 200000000",
+            # red-team fix #2a: without a recency window this query returned
+            # the ALL-TIME set (rows back to 2021, incl. Refused/Completed).
+            # {cutoff_365d} is substituted with (today - 365d) at fetch time
+            # by _fetch_socrata; the value floor is kept.
+            "$where": "estprojectcost > 200000000 AND applieddate >= '{cutoff_365d}'",
         },
+        # red-team fix #2b: map Calgary statuscurrent → canonical pipeline
+        # status instead of hardcoding everything "Proposed".
+        "status_field": "statuscurrent",
+        # red-team fix #3: per-record source URL on the dataset unique key.
+        "record_key": {"field": "permitnum", "style": "socrata"},
         "field_map": {
             "name": "description",
             # description is blank on some large pending permits — fall back
@@ -108,6 +167,9 @@ MUNICIPAL_SOURCES = {
         "cma": "Edmonton",
         "url": "https://data.edmonton.ca/resource/24uj-dj8v.json",
         "approach": "socrata",
+        # red-team fix #3: per-record source URL on the dataset unique key
+        # (live sample row carries row_id, e.g. "1-253374239").
+        "record_key": {"field": "row_id", "style": "socrata"},
         "params": {
             "$limit": 100,
             "$order": "issue_date DESC",
@@ -140,6 +202,12 @@ MUNICIPAL_SOURCES = {
         "url": "https://data.winnipeg.ca/resource/it4w-cpf4.json",
         "approach": "socrata",
         "no_value_field": True,
+        # red-team fix #3: every Winnipeg row previously shared the bare
+        # dataset URL as its "specific" source_url, which feeds db.py's
+        # URL-first fuzzy rediscovery and recreates the known over-merge
+        # failure mode. permit_number is the dataset's unique key (values
+        # contain spaces, e.g. "11-131892 MU" — _record_url percent-encodes).
+        "record_key": {"field": "permit_number", "style": "socrata"},
         "params": {
             "$limit": 100,
             "$order": "issue_date DESC",
@@ -251,9 +319,12 @@ MUNICIPAL_SOURCES = {
         # CONSTRUCTION_VALUE). where-clause pre-filters at the ON threshold.
         "url": "https://services1.arcgis.com/qAo1OsXi67t7XgmS/arcgis/rest/services/Building_Permits/FeatureServer/0/query",
         "approach": "arcgis",
+        # red-team fix #3: per-record source URL via an OBJECTID where-query
+        # (OBJECTID added to outFields below for this purpose).
+        "record_key": {"field": "OBJECTID", "style": "arcgis"},
         "params": {
             "where": "CONSTRUCTION_VALUE > 500000000",
-            "outFields": "PERMIT_DESCRIPTION,CONSTRUCTION_VALUE,FOLDERNAME,WORK_TYPE,ISSUE_DATE,PERMIT_STATUS",
+            "outFields": "OBJECTID,PERMIT_DESCRIPTION,CONSTRUCTION_VALUE,FOLDERNAME,WORK_TYPE,ISSUE_DATE,PERMIT_STATUS",
             "orderByFields": "ISSUE_DATE DESC",
             "resultRecordCount": 100,
             "f": "json",
@@ -367,6 +438,38 @@ def _parse_dollar_value(text: str) -> float | None:
     return None
 
 
+def _record_url(raw: dict, source: dict) -> str:
+    """Build a unique, resolvable per-record source URL (red-team fix #3).
+
+    Without this every record from a source shared the dataset's base URL as
+    its "specific" source_url, which feeds db.py's URL-first fuzzy
+    rediscovery and over-merges unrelated permits into one project.
+
+    Styles (configured per source via "record_key"):
+      socrata   — {base}?{field}={value}        (row-level field equality)
+      ods_where — {base}?where={field}='{value}' (Opendatasoft explore v2.1)
+      arcgis    — {base}?where={field}={value}&outFields=*&f=json
+
+    Falls back to the dataset base URL when the key field is missing.
+    """
+    base = source.get("url", "")
+    rk = source.get("record_key")
+    if not rk:
+        return base
+    field = rk.get("field", "")
+    val = str(raw.get(field, "") or "").strip()
+    if not field or not val:
+        return base
+    style = rk.get("style", "socrata")
+    if style == "ods_where":
+        clause = f"{field}='{val}'"
+        return f"{base}?where={quote(clause, safe='')}"
+    if style == "arcgis":
+        return f"{base}?where={quote(f'{field}={val}', safe='')}&outFields=*&f=json"
+    # socrata default: simple field-equality row query
+    return f"{base}?{rk.get('param', field)}={quote(val, safe='')}"
+
+
 def _build_project(raw: dict, source: dict, field_map: dict) -> dict | None:
     """Convert a raw API record into a standardized project dict."""
     name_field = field_map.get("name", "")
@@ -391,28 +494,40 @@ def _build_project(raw: dict, source: dict, field_map: dict) -> dict | None:
     if address and address.lower() not in name.lower():
         display_name = f"{address} — {name[:80]}"
 
+    # red-team fix #2b: map the source's status field (e.g. Calgary
+    # statuscurrent) to a canonical pipeline status; default Proposed.
+    status = "Proposed"
+    status_field = source.get("status_field")
+    if status_field:
+        status = _map_permit_status(str(raw.get(status_field, "") or ""))
+
+    # red-team fix #3: unique per-record source URL (falls back to base URL).
+    rec_url = _record_url(raw, source)
+
     return {
         "name": display_name,
-        "province": source["province"],
+        # red-team fix #1: full canonical province name ("Manitoba"), not the
+        # 2-letter code — project_sync rejects codes as invalid_province.
+        "province": _province_full_name(source["province"]),
         "cma": source.get("cma", ""),
         "sector": "Other",
         "naics_code": "",
         "tags": [],
         "value": f"${value_millions:.0f}M" if value_millions else "Not disclosed",
         "value_millions": value_millions,
-        "status": "Proposed",
+        "status": status,
         "description": f"{permit_type}: {name}" if permit_type else name,
         "discovery_source": "municipal_dev_app",
-        "source_url": source.get("url", ""),
+        "source_url": rec_url,
         "source_title": source["name"],
-        "sources": [{"id": 1, "title": source["name"], "url": source.get("url", "")}],
+        "sources": [{"id": 1, "title": source["name"], "url": rec_url}],
         "announced": date_str[:10] if date_str else date.today().isoformat(),
         "completionDate": "",
         "_discovery_tier": "municipal_dev_app",
         "_source_type": "government",
         "confidence": 0.7,
         "_evidence": [{
-            "url": source.get("url", ""),
+            "url": rec_url,
             "name": source["name"],
             "source_type": "municipal_permit",
             "authority": "government",
@@ -428,6 +543,14 @@ async def _fetch_socrata(session: aiohttp.ClientSession, source: dict,
     """
     params = dict(source.get("params", {}))
     field_map = source.get("field_map", {})
+
+    # red-team fix #2a: substitute the {cutoff_365d} recency token (Calgary)
+    # with a concrete ISO date at fetch time so the query stops returning the
+    # all-time permit set.
+    where = params.get("$where", "")
+    if "{cutoff_365d}" in where:
+        cutoff = (date.today() - timedelta(days=365)).isoformat()
+        params["$where"] = where.replace("{cutoff_365d}", cutoff)
 
     try:
         async with session.get(
@@ -590,7 +713,8 @@ async def _scrape_html_portal(session: aiohttp.ClientSession, source: dict,
 
             projects.append({
                 "name": title,
-                "province": source["province"],
+                # red-team fix #1: canonical full province name, not the code.
+                "province": _province_full_name(source["province"]),
                 "cma": source.get("cma", ""),
                 "sector": "Other",
                 "naics_code": "",

@@ -134,7 +134,7 @@ For each index/FX pair, extract:
 | 2 | `natural gas Henry Hub price [MONTH] [YEAR] coal price` | natural_gas, coal |
 | 3 | `gold silver platinum palladium price per ounce [DATE]` | gold, silver, platinum, palladium |
 | 4 | `copper aluminum nickel zinc price [DATE] LME` | copper, aluminum, nickel, zinc |
-| 5 | `lumber price [MONTH] [YEAR] potash uranium` | lumber, potash_nutrien, sprott_uranium |
+| 5 | `lumber price [MONTH] [YEAR] potash uranium` | lumber, potash_nutrien, uranium (NOTE 2026-06-11: `sprott_uranium` never existed; write U3O8 SPOT to `uranium` only — never a fund unit price) |
 | 6 | `wheat corn soybeans price [DATE] agricultural commodities` | wheat, corn, soybeans |
 | 7 | `iron ore price [DATE] dry bulk shipping` | iron_ore, dry_bulk_shipping |
 

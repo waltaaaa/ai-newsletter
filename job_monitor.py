@@ -289,41 +289,96 @@ def detect_hiring_spikes(current_counts, historical_counts):
         avg = averages.get(key, 0)
 
         if count >= 5 and (avg == 0 or count >= avg * SPIKE_THRESHOLD):
+            # 2026-06-11 red-team fix: with no prior baseline (avg == 0) a
+            # "{N}.0x normal volume" claim is fabrication — there is no
+            # "normal" yet. Keep the spike, but multiplier is None and the
+            # signal says so explicitly.
+            if avg == 0:
+                multiplier = None
+                signal = (f"{employer} posted {count} jobs in {location} "
+                          f"({sector}) (first tracked week — no prior baseline)")
+            else:
+                multiplier = round(count / max(avg, 1), 1)
+                signal = (f"{employer} posted {count} jobs in {location} "
+                          f"({sector}) — {multiplier}x normal volume")
             spikes.append({
                 "employer": employer,
                 "location": location,
                 "sector": sector,
                 "current_count": count,
                 "average_count": round(avg, 1),
-                "multiplier": round(count / max(avg, 1), 1),
-                "signal": f"{employer} posted {count} jobs in {location} ({sector}) — "
-                          f"{round(count / max(avg, 1), 1)}x normal volume"
+                "multiplier": multiplier,
+                "signal": signal,
             })
 
     return sorted(spikes, key=lambda x: x["current_count"], reverse=True)
+
+
+# CMA name -> two-letter province code, matching what projects.province
+# actually stores (verified read-only 2026-06-11: AB, BC, MB, NB, NL, NS, NT,
+# NU, ON, PE, QC, SK, YT, CA — two-letter codes, never full names or CMA
+# names). 2026-06-11 red-team fix: link_spikes_to_projects used to bind the
+# raw CMA name ("Toronto") to projects.province, so linking could NEVER match.
+CMA_TO_PROVINCE = {
+    "Toronto": "ON", "Ottawa": "ON", "Hamilton": "ON", "Kitchener": "ON",
+    "London": "ON", "Oshawa": "ON", "St. Catharines": "ON", "Barrie": "ON",
+    "Sudbury": "ON",
+    "Montreal": "QC", "Quebec City": "QC",
+    "Vancouver": "BC", "Victoria": "BC", "Kelowna": "BC", "Abbotsford": "BC",
+    "Kitimat": "BC",
+    "Calgary": "AB", "Edmonton": "AB", "Fort McMurray": "AB",
+    "Winnipeg": "MB",
+    "Saskatoon": "SK", "Regina": "SK",
+    "Halifax": "NS",
+    "St. John's": "NL",
+    "Saint John": "NB",
+}
+
+# Employer names whose normalized form is one of these generic words must not
+# be used as a LIKE match key (same false-link guard as procurement_monitor).
+_GENERIC_EMPLOYER_WORDS = {
+    "construction", "les", "groupe", "gestion", "canada", "inc",
+    "ltd", "limited", "corp", "corporation", "company", "services",
+    "group", "unknown",
+}
 
 
 def link_spikes_to_projects(spikes, conn):
     """
     Attempt to match hiring spikes to projects in the database by employer name
     and location/province.
+
+    2026-06-11 red-team fix: the CMA name is mapped to the two-letter province
+    code before binding (the old code bound "Toronto" against province codes —
+    zero matches ever). The first-word LIKE clause was dropped at the same
+    time: only the full employer name (>= 6 chars, not a generic word) is
+    matched, against project name or proponent — false links are editorial
+    fabrication, linking less is fine.
     """
     linked = []
     cursor = conn.cursor()
 
     for spike in spikes:
+        province = CMA_TO_PROVINCE.get(spike.get("location", ""))
+        employer = (spike.get("employer") or "").strip()
+        if (not province or len(employer) < 6
+                or employer.lower() in _GENERIC_EMPLOYER_WORDS):
+            spike["linked_projects"] = []
+            linked.append(spike)
+            continue
+
         try:
             cursor.execute("""
                 SELECT name, province, value, status, sector
                 FROM projects
-                WHERE (name LIKE ? OR name LIKE ?)
+                WHERE (name LIKE ? OR proponent LIKE ?)
                 AND province = ?
                 ORDER BY value DESC
                 LIMIT 3
             """, (
-                f"%{spike['employer']}%",
-                f"%{spike['employer'].split()[0]}%",
-                spike["location"],
+                f"%{employer}%",
+                f"%{employer}%",
+                province,
             ))
 
             matches = cursor.fetchall()

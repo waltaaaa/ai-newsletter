@@ -343,7 +343,7 @@ def check_sources_array(results, label, sources, min_count):
         url = (s.get("url") or s.get("archive_url") or "").strip()
         if not url:
             continue
-        m = re.match(r"https?://[^/]+(/.*)?$", url)
+        m = re.match(r"https?://[^/]+(/.*)?$", url, re.IGNORECASE)
         path = (m.group(1) or "/") if m else "/"
         if path in ("/", "") or re.fullmatch(r"/(en|fr)/?", path):
             generic.append(i)
@@ -1578,6 +1578,12 @@ COMMODITY_TS_MAP = {
     "Lumber": "lumber",
 }
 
+# Red-team F4: series that are PROXIES in a different unit/currency than the
+# briefing print (potash_nutrien = NTR.TO in CAD vs a US$ print; uranium =
+# mixed spot/fund-unit lineage; nickel = FRED monthly average vs spot).
+# Divergence on these is informative but must never hard-FAIL a deploy.
+MARKET_FACT_PROXY_KEYS = {"potash_nutrien", "uranium", "nickel"}
+
 # briefing fx[].name → (timeseries key, invert?)
 FX_TS_MAP = {
     "CAD/USD": ("cadusd", False),
@@ -1598,9 +1604,13 @@ YIELD_TS_MAP = {
 
 
 def _parse_print(val):
-    """Parse a briefing market print like '$4,336.78', '34,413', '0.7169'.
+    """Parse a briefing market print like '$4,336.78', '34,413', '0.7169',
+    '3.45%', 'C$56.01', 'US$92.00/bbl'.
 
     Returns float or None for N/A / unparseable / qualified values ('$3.00+').
+    Red-team F5: the original parser was trivially bypassed by currency
+    prefixes, unit suffixes, and '%' — a wrong print written 'C$56.01'
+    silently escaped the gate entirely.
     """
     if isinstance(val, (int, float)):
         return float(val)
@@ -1611,33 +1621,63 @@ def _parse_print(val):
         return None
     if s.endswith("+"):  # qualified print ('$3.00+') — not a checkable claim
         return None
-    s = s.replace("$", "").replace(",", "").replace("US", "").strip()
+    # Extract the first number, tolerating currency prefixes (US$, C$, CA$),
+    # approximation markers (~), thousands separators, unit suffixes
+    # (/bbl, /oz, bps), and '%'.
+    m = re.search(r"[-+]?\d[\d,]*(?:\.\d+)?", s.replace("~", ""))
+    if not m:
+        return None
     try:
-        return float(s)
+        return float(m.group(0).replace(",", ""))
     except ValueError:
         return None
 
 
-def _ts_value_near(series, target_date, max_age_days=MARKET_FACT_MAX_POINT_AGE):
-    """Latest series value at/before target_date (within max_age_days).
+def _ts_points(raw):
+    """Normalize a timeseries.json entry to a list of {date, value} dicts.
 
-    series: list of {date, value} dicts (timeseries.json shape).
-    Returns (value, date_str) or (None, None).
+    Red-team F1: dict-shaped series ({"unit":..., "history":[...]}) are a
+    legal shape elsewhere in the toolchain and crashed the fact-check with a
+    bare AttributeError (exit 1, no report). Tolerate every shape.
     """
-    best_v, best_d = None, None
-    for pt in series or []:
+    if isinstance(raw, dict):
+        raw = raw.get("history") or raw.get("series") or raw.get("points") or []
+    if not isinstance(raw, list):
+        return []
+    return [pt for pt in raw if isinstance(pt, dict)]
+
+
+def _ts_anchors(series, target_date, max_age_days=MARKET_FACT_MAX_POINT_AGE):
+    """Candidate comparison anchors for a market print dated target_date.
+
+    Returns up to two (value, date_str) tuples: the latest point STRICTLY
+    BEFORE target_date (the prior close a writer legitimately quotes — a
+    Monday-morning intraday bar at week_of must not fail a correct
+    Friday-close print; red-team F3) and the latest point AT/BEFORE
+    target_date. The caller takes the minimum divergence across anchors.
+    """
+    best_le = None   # latest point <= target (date, value)
+    best_lt = None   # latest point <  target
+    for pt in _ts_points(series):
         d = _parse_iso_date(pt.get("date"))
         v = pt.get("value")
         if d is None or v is None or d > target_date:
             continue
-        if best_d is None or d > best_d:
-            best_d, best_v = d, v
-    if best_d is None or (target_date - best_d).days > max_age_days:
-        return None, None
-    try:
-        return float(best_v), best_d.isoformat()
-    except (TypeError, ValueError):
-        return None, None
+        if best_le is None or d > best_le[0]:
+            best_le = (d, v)
+        if d < target_date and (best_lt is None or d > best_lt[0]):
+            best_lt = (d, v)
+    anchors = []
+    for cand in (best_lt, best_le):
+        if cand is None or (target_date - cand[0]).days > max_age_days:
+            continue
+        try:
+            tup = (float(cand[1]), cand[0].isoformat())
+        except (TypeError, ValueError):
+            continue
+        if tup not in anchors:
+            anchors.append(tup)
+    return anchors
 
 
 def _validate_market_facts(data_dir, results, briefing):
@@ -1646,17 +1686,34 @@ def _validate_market_facts(data_dir, results, briefing):
     warns = 0
     ts_path = os.path.join(data_dir, "timeseries.json")
     if not os.path.exists(ts_path):
-        return (0, 0)  # timeseries presence is checked elsewhere
+        # Presence is FAIL-checked elsewhere; still flag that this gate is off.
+        warn(results, "fact.gate.active", False,
+             "timeseries.json missing — market fact-check gate is OFF")
+        return (0, 1)
     try:
         ts = _load_json_tolerant(ts_path)
-    except Exception:
-        return (0, 0)
+    except Exception as e:
+        warn(results, "fact.gate.active", False,
+             f"timeseries.json unparseable ({type(e).__name__}) — market "
+             f"fact-check gate is OFF")
+        return (0, 1)
 
     week_of = _parse_iso_date(briefing.get("week_of"))
     if week_of is None:
-        return (0, 0)
+        # Red-team F10: a self-disabled gate must be visible, not silent.
+        warn(results, "fact.gate.active", False,
+             f"week_of unparseable ({briefing.get('week_of')!r}) — market "
+             f"fact-check gate is OFF for this briefing")
+        return (0, 1)
     from datetime import date as _date
-    fresh = (_date.today() - week_of).days <= MARKET_FACT_FRESH_DAYS
+    # Red-team F2: freshness keys off WHEN THE CONTENT WAS PRODUCED, not
+    # which week it describes — a briefing regenerated/fixed days after its
+    # week_of must still face hard FAILs. generated_at preferred; week_of
+    # fallback.
+    gen = _parse_iso_date(briefing.get("generated_at")
+                          or briefing.get("updated_at") or "")
+    anchor_day = max(d for d in (gen, week_of) if d is not None)
+    fresh = (_date.today() - anchor_day).days <= MARKET_FACT_FRESH_DAYS
     gate = check if fresh else warn
 
     def _compare(label, claimed, ts_key, invert=False, absolute=None):
@@ -1664,40 +1721,51 @@ def _validate_market_facts(data_dir, results, briefing):
         series = ts.get(ts_key)
         if not series:
             return
-        actual, at = _ts_value_near(series, week_of)
-        if actual is None:
+        anchors = _ts_anchors(series, week_of)
+        if not anchors:
             if not warn(results, f"fact.{label}.verifiable", False,
                         f"timeseries '{ts_key}' has no point within "
                         f"{MARKET_FACT_MAX_POINT_AGE}d of week_of — unverifiable"):
                 warns += 1
             return
-        if invert:
-            if actual == 0:
-                return
-            actual = 1.0 / actual
-        if absolute is not None:
-            diff = abs(claimed - actual)
-            bad_fail = diff > MARKET_FACT_YIELD_FAIL
-            bad_warn = diff > MARKET_FACT_YIELD_WARN
-            detail = (f"briefing says {claimed}, timeseries '{ts_key}' = "
-                      f"{actual:.2f} @ {at} (diff {diff:.2f}pp)")
-        else:
-            if actual == 0:
-                return
-            pct = abs(claimed - actual) / abs(actual) * 100.0
-            bad_fail = pct > MARKET_FACT_FAIL_PCT
-            bad_warn = pct > MARKET_FACT_WARN_PCT
-            detail = (f"briefing says {claimed}, timeseries '{ts_key}' = "
-                      f"{actual:.2f} @ {at} (diff {pct:.1f}%)")
-        if bad_fail:
+        # Min divergence across anchors (prior close + at-date point): a
+        # correct Friday-close print must not fail against a Monday bar.
+        best = None
+        for actual, at in anchors:
+            if invert:
+                if actual == 0:
+                    continue
+                actual = 1.0 / actual
+            if absolute is not None:
+                diff = abs(claimed - actual)
+                metric = diff
+                detail = (f"briefing says {claimed}, timeseries '{ts_key}' = "
+                          f"{actual:.2f} @ {at} (diff {diff:.2f}pp)")
+                thresholds = (MARKET_FACT_YIELD_WARN, MARKET_FACT_YIELD_FAIL)
+            else:
+                if actual == 0:
+                    continue
+                pct = abs(claimed - actual) / abs(actual) * 100.0
+                metric = pct
+                detail = (f"briefing says {claimed}, timeseries '{ts_key}' = "
+                          f"{actual:.2f} @ {at} (diff {pct:.1f}%)")
+                thresholds = (MARKET_FACT_WARN_PCT, MARKET_FACT_FAIL_PCT)
+            if best is None or metric < best[0]:
+                best = (metric, detail, thresholds)
+        if best is None:
+            return
+        metric, detail, (warn_t, fail_t) = best
+        proxy = ts_key in MARKET_FACT_PROXY_KEYS
+        if metric > fail_t and not proxy:
             if not gate(results, f"fact.{label}", False,
                         detail + " — writer print contradicts pipeline data"):
                 if fresh:
                     fails += 1
                 else:
                     warns += 1
-        elif bad_warn:
-            if not warn(results, f"fact.{label}", False, detail):
+        elif metric > warn_t:
+            suffix = " (proxy series — unit/currency may differ)" if proxy else ""
+            if not warn(results, f"fact.{label}", False, detail + suffix):
                 warns += 1
         else:
             check(results, f"fact.{label}", True, "")
@@ -1714,14 +1782,16 @@ def _validate_market_facts(data_dir, results, briefing):
         _compare(f"commodity.{name}", claimed, ts_key)
 
     fm = briefing.get("financialMarkets") or {}
-    # Equity indices
+    # Equity indices — try 'val' first, fall through to 'value' when 'val'
+    # is unparseable (red-team F5: "N/A" in val must not shadow a real value)
     for idx in fm.get("indices") or []:
         name = idx.get("name", "?")
         ts_key = EQUITY_NAME_MAP.get(name)
         if not ts_key:
             continue
-        claimed = _parse_print(idx.get("val") if idx.get("val") not in (None, "")
-                               else idx.get("value"))
+        claimed = _parse_print(idx.get("val"))
+        if claimed is None:
+            claimed = _parse_print(idx.get("value"))
         if claimed is None:
             continue
         _compare(f"equity.{name}", claimed, ts_key)
@@ -1732,8 +1802,9 @@ def _validate_market_facts(data_dir, results, briefing):
         if not mapping:
             continue
         ts_key, invert = mapping
-        claimed = _parse_print(fx.get("val") if fx.get("val") not in (None, "")
-                               else fx.get("value"))
+        claimed = _parse_print(fx.get("val"))
+        if claimed is None:
+            claimed = _parse_print(fx.get("value"))
         if claimed is None:
             continue
         _compare(f"fx.{name}", claimed, ts_key, invert=invert)
@@ -1772,10 +1843,15 @@ def _validate_microscope_json(data_dir, results, briefing):
         check(results, "data.microscope.parse", False, f"unparseable: {e}")
         return (1, 0)
     if not (isinstance(m, dict) and isinstance(m.get("topics"), list)):
-        if not check(results, "data.microscope.shape", False,
-                     f"expected {{'topics': [...]}}, got {type(m).__name__} "
-                     f"— export_microscope null-guard regressed"):
-            fails += 1
+        # Red-team F9: WARN, not FAIL — the frontend does not read
+        # microscope.json yet (no fetch in app.js/index.html), so a malformed
+        # file must not block the deploy of features that DO ship. Upgrade to
+        # FAIL when the frontend section is wired.
+        if not warn(results, "data.microscope.shape", False,
+                    f"expected {{'topics': [...]}}, got {type(m).__name__} "
+                    f"— export_microscope null-guard regressed (WARN-only: "
+                    f"frontend does not consume this file yet)"):
+            warns += 1
         return (fails, warns)
     check(results, "data.microscope.shape", True, "")
     if not warn(results, "data.microscope.topics", len(m["topics"]) > 0,

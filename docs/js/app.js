@@ -2463,6 +2463,10 @@ async function _renderCanadaSubtab(){
   var ds=D&&D.discovery_stats||{};
   var newPrj=ds.new_this_week||D&&D.new_projects||0;
   var pipVal=ds.total_value_billions||D&&D.pipeline_value||'';
+  // pipeline_value may arrive pre-formatted ("$1113.4B") from the finalize
+  // alias backfill — strip the wrapper so the template's '$'+pipVal+'B'
+  // doesn't render "$$1113.4BB" (red-team 4.4, 2026-06-11)
+  if(typeof pipVal==='string'){pipVal=pipVal.replace(/^\$/,'').replace(/B$/i,'')}
   var natContent=(D&&D.national&&D.national.analysis)||D&&D.national_analysis||'';
   var natSources=(D&&D.national&&D.national.sources)||[];
   var allSources=natSources.length?natSources:(D&&D.sources||[]);
@@ -2590,18 +2594,25 @@ async function _renderNatEnrichmentCards(projects){
   ],'Change (M/M)');
 
   // Hiring Signals - keep as narrative card
+  // jobs.json is a LIST of weekly snapshots [{week_of, data, spikes}] —
+  // the old read (jobData.spikes) could never match (red-team 4.2, 2026-06-11)
   var jobData=null;try{jobData=await fetchJSON('jobs.json')}catch(e){}
-  if(jobData&&jobData.spikes&&jobData.spikes.length){
-    var spikeTexts=jobData.spikes.slice(0,3).map(function(s){return '<strong>'+(s.sector||s.industry||'')+(s.change?' ('+s.change+')':'')+' </strong>'+(s.cma||s.region||'')});
+  var jobSpikes=Array.isArray(jobData)?((jobData[0]||{}).spikes||[]):((jobData||{}).spikes||[]);
+  if(jobSpikes.length){
+    var spikeTexts=jobSpikes.slice(0,3).map(function(s){return '<strong>'+(s.sector||s.industry||'')+(s.change?' ('+s.change+')':'')+' </strong>'+(s.cma||s.region||s.location||'')});
     html+='<div class="indicator-panel" style="padding:12px 16px"><div class="indicator-panel-header"><div class="indicator-panel-title">Hiring Signals</div></div><p style="font-size:13px;color:#4a5568;margin:8px 0 0">'+spikeTexts.length+' hiring spike'+(spikeTexts.length!==1?'s':'')+' detected: '+spikeTexts.join(', ')+'.</p></div>';
   }
 
-  // Procurement Awards - keep as narrative card
+  // Procurement - keep as narrative card
+  // procurement.json is a LIST of weekly snapshots [{week_of, contracts}] —
+  // the old read (procData.awards) could never match; rows now include QC
+  // SEAO + BC tenders, not only federal awards (red-team 4.3, 2026-06-11)
   var procData=null;try{procData=await fetchJSON('procurement.json')}catch(e){}
-  if(procData&&procData.awards&&procData.awards.length){
-    var totalVal=procData.awards.reduce(function(s,a){return s+(parseNumericValue(a.value)||0)},0);
+  var procRows=Array.isArray(procData)?((procData[0]||{}).contracts||[]):((procData||{}).awards||[]);
+  if(procRows.length){
+    var totalVal=procRows.reduce(function(s,a){return s+(parseNumericValue(a.value)||0)},0);
     var valStr=totalVal>=1e9?'$'+(totalVal/1e9).toFixed(1)+'B':totalVal>=1e6?'$'+(totalVal/1e6).toFixed(0)+'M':'$'+totalVal.toLocaleString();
-    html+='<div class="indicator-panel" style="padding:12px 16px"><div class="indicator-panel-header"><div class="indicator-panel-title">Procurement Awards</div></div><p style="font-size:13px;color:#4a5568;margin:8px 0 0">Federal government awarded <strong>'+valStr+'</strong> across '+procData.awards.length+' award'+(procData.awards.length!==1?'s':'')+'.</p></div>';
+    html+='<div class="indicator-panel" style="padding:12px 16px"><div class="indicator-panel-header"><div class="indicator-panel-title">Government Procurement</div></div><p style="font-size:13px;color:#4a5568;margin:8px 0 0">Federal and provincial procurement recorded <strong>'+valStr+'</strong> across '+procRows.length+' contract'+(procRows.length!==1?'s':'')+' and tender notices this week.</p></div>';
   }
 
   el.innerHTML=html;

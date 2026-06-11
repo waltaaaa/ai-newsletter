@@ -223,7 +223,9 @@ def _format_signal_summary_for_topic(signal_context):
             sectors[sec] = sectors.get(sec, 0) + 1
         parts.append("Hiring spikes: " + ", ".join(f"{v} in {k}" for k, v in sectors.items()))
     contracts = signal_context.get('procurement_contracts', [])
-    big = [c for c in contracts if c.get('value', 0) >= 10_000_000]
+    # (value can be None on tender-notice rows — `or 0` so the comparison
+    # can't TypeError; `.get('value', 0)` returns None when the key exists)
+    big = [c for c in contracts if (c.get('value') or 0) >= 10_000_000]
     if big:
         parts.append(f"Procurement: {len(big)} contracts ≥$10M awarded")
     iaac = signal_context.get('iaac_status_changes', [])

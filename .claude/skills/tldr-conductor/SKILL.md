@@ -236,30 +236,35 @@ Before dispatching researchers, load the Obsidian vault context so researchers f
    - Valid JSON
    - Contains: `headline`, `edition`, `executive_summary` (>200 words), `national.analysis` (>300 words), `consumer_pulse`, `watchlist`, `global` (4 regions), `sources` (each with specific URL)
    - Does NOT contain: `financialMarkets`, `commodities`, `yieldCurve` (these are now handled by Agent 3F and Agent 3-TRIAD)
+   - Prose structure: every `<p>` in `executive_summary`, `national.analysis`, `consumer_pulse`, and each `global[].analysis` opens with `<span class="lead-sentence">...</span>` followed by ` — ` (space, em-dash, space); zero `<strong>` or `<b>` tags in any prose field
    - Editorial spot-check: Read 2–3 sentences from `national.analysis`. Verify wire-service tone (factual, specific, no opinions). Flag any banned words.
 
    **3B (Provincial JSON):**
    - Valid JSON
    - `provinces` = 13 items
    - Each has: `name`, `indicators`, `indicatorMeta`, `analysis` (HTML, non-empty), `sources[]` (specific URLs)
+   - Prose structure: every `<p>` in each province's `analysis` opens with `<span class="lead-sentence">...</span>` followed by ` — `; zero `<strong>` or `<b>` tags
    - Editorial spot-check: 3 random provinces, read 2–3 sentences each. Verify tone, flag banned words.
 
    **3C (Goods JSON):**
    - Valid JSON
    - `goodsIndustries` = 5 items
    - Each has: `code`, `name`, `analysis` (HTML, >100 words), `sources[]`, `trend`, `projectCount`
+   - Prose structure: every `<p>` in each industry's `analysis` opens with `<span class="lead-sentence">...</span>` followed by ` — `; zero `<strong>` or `<b>` tags
    - Editorial spot-check: 2 random industries, read 2–3 sentences. Verify tone.
 
    **3D (Services JSON):**
    - Valid JSON
    - `servicesIndustries` = 15 items
    - Each has: `code`, `name`, `analysis` (HTML, >80 words), `sources[]`, `trend`, `projectCount`
+   - Prose structure: every `<p>` in each industry's `analysis` opens with `<span class="lead-sentence">...</span>` followed by ` — `; zero `<strong>` or `<b>` tags
    - Editorial spot-check: 2 random industries, read 2–3 sentences. Verify tone.
 
    **3F (Market Commentary JSON):**
    - Valid JSON
    - Contains: `market_commentary` (HTML, 150–200 words), `sources[]`
-   - Has `<span class="lead-sentence">` em dash leads in both paragraphs
+   - Has `<span class="lead-sentence">` em dash leads in both paragraphs (` — ` immediately after the closing `</span>`)
+   - Zero `<strong>` or `<b>` tags in prose
    - Cross-references project pipeline counts and dollar values
    - Editorial spot-check: Verify wire-service tone. Flag banned words.
 
@@ -271,7 +276,7 @@ Before dispatching researchers, load the Obsidian vault context so researchers f
    - `equities` array with exactly 4 items (TSX Composite, S&P 500, DJIA, Nasdaq Composite)
    - Each has: `name`, `symbol`, `value`, `weekly_pct`, `ytd_pct`, `yoy_pct`, `high_52w`, `low_52w`, `commentary`
    - Total commentary word count: 380–475 words (new target, +50% over legacy)
-   - Each commentary has `<span class="lead-sentence">` em dash lead
+   - Each commentary has `<span class="lead-sentence">` em dash lead (` — ` immediately after the closing `</span>`)
 
    *briefing_market_fx_yields.json:*
    - Valid JSON
@@ -279,12 +284,12 @@ Before dispatching researchers, load the Obsidian vault context so researchers f
    - `yieldCurve.tenors` — tenor count matches dossier supply (6 or 7 tenors); do not require a fixed count if dossier is partial
    - `yieldCurve.yield_commentary` (175–225 words)
    - `yieldCurve.spread_2_10` and `yieldCurve.curve_shape` present
-   - Both commentaries have em dash leads
+   - Both commentaries have `<span class="lead-sentence">` em dash leads (` — ` immediately after the closing `</span>`)
 
    *briefing_market_commodities.json:*
    - Valid JSON
    - `commodities` array — 1 to 13 items (triad writer may mark missing commodities N/A per Rule 5 no-fabrication)
-   - `commodity_commentary` (170–210 words) with em dash lead
+   - `commodity_commentary` (170–210 words) with `<span class="lead-sentence">` em dash lead
    - `wcs_analysis` present (may be null or all-N/A if dossier did not carry WCS data)
    - Per-commodity total word count: 980–1,210 if all 13 present; scales proportionally for partial coverage
    - WTI `projects_above_breakeven` may be N/A if dossier did not carry breakeven thresholds
@@ -295,6 +300,7 @@ Before dispatching researchers, load the Obsidian vault context so researchers f
    - At least 2 conditional cross-references (`if [trigger]...would...`)
    - Product voice: "The Signal Dispatch cross-reference engine" appears in each file
    - No taxonomy key leakage in prose (no `oil_gas`, `power_energy`, `commercial_mixed`, `transport_logistics` — must be spelled out in natural English)
+   - Prose structure (all three triad files): every narrative `<p>` opens with `<span class="lead-sentence">...</span>` followed by ` — `; zero `<strong>` or `<b>` tags in any prose field
    - Editorial spot-check: Verify tone. Flag banned words.
 
 **Editorial Spot-Check Detail:**
@@ -310,10 +316,25 @@ If found: Report location and word. Ask: Retry writer to remove, or skip check?
 
 If not found and tone is good: Proceed.
 
+**Prose Structure Check Detail (applies to ALL narrative sections — macro/national, executive summary, provinces, goods, services, markets):**
+
+Every narrative paragraph must follow the canonical pattern from `references/editorial_rules.md`:
+
+```html
+<p><span class="lead-sentence">Lead-in sentence stating the paragraph's single core fact</span> — supporting detail with citations.<sup>N</sup></p>
+```
+
+Two checks per writer output:
+1. Every `<p>` opens with `<span class="lead-sentence">` and the closing `</span>` is followed immediately by ` — ` (space, em-dash, space)
+2. Zero `<strong>` or `<b>` tags anywhere in prose — the lead-in's bold comes from frontend CSS (`.lead-sentence{font-weight:600}`); the only bold text a reader sees is the lead-in sentence
+
+If violations found: Report field and paragraph. These are formatting findings the Fixer remediates (restructure to the canonical pattern, unwrap bold tags) — proceed to Fixer rather than retrying the writer unless the output is pervasively malformed.
+
 **On failure:**
 - Invalid JSON: Retry that writer
 - Too short or missing sections: Retry
 - Banned words or bad tone: Ask user to retry or proceed to Fixer
+- Prose structure violations (missing lead-sentence/em-dash openings, `<strong>`/`<b>` tags): Proceed to Fixer for remediation
 
 ---
 
@@ -379,7 +400,7 @@ If not found and tone is good: Proceed.
    python tools/validate_briefing_schema.py docs/data/briefing_YYYY-MM-DD.json
    ```
 2. The validator runs 639 checks covering: canonical field names, metric `_chg` keys, commodity/equity name conformance to `_mktTsMap`, yieldCurve list structure, global 5-key requirement, per-province `marketContext` + `watchlistItems`, banned-word scan, citation integrity.
-3. This is a **hard gate** — exit code != 0 means the briefing does NOT proceed to Phase 4. No "proceed anyway" option.
+3. This is a **hard gate** — exit code **1** (FAIL) means the briefing does NOT proceed to Phase 4. No "proceed anyway" option for FAIL. Exit code **2** (WARN) is publishable and DOES proceed — WARNs are advisory (fact-check drift on non-fresh editions, proxy-series divergence, stale-series notices are expected); only exit 1 blocks. NOTE: fresh-edition `fact.*` FAILs mean a writer print contradicts timeseries.json — remediate by re-deriving the print from the dossier/timeseries, never from web search.
 
 **On failure:**
 - Capture stdout (the failure report)
@@ -484,7 +505,7 @@ if prov_charts and prov_optc / len(prov_charts) < 0.8:
    python tools/validate_briefing_schema.py docs/data/briefing_YYYY-MM-DD.json
    ```
 2. The chart agent can introduce new data (inline series data on chart specs) that may violate the schema. Re-running the validator after Phase 4 catches regressions.
-3. This is a **hard gate** — exit code != 0 means the briefing does NOT proceed to Phase 5.
+3. This is a **hard gate** — exit code **1** (FAIL) means the briefing does NOT proceed to Phase 5. Exit code **2** (WARN) proceeds — only exit 1 blocks.
 
 **On failure:**
 - Capture stdout failures
@@ -525,7 +546,7 @@ if prov_charts and prov_optc / len(prov_charts) < 0.8:
 **Your job:**
 1. Only dispatch if Phase 5 Auditor returned non-PASS
 2. Give agent the audit report and briefing
-3. Agent fixes: banned words, generic/missing URLs, broken citations, duplicates, schema issues
+3. Agent fixes: banned words, generic/missing URLs, broken citations, duplicates, schema issues, prose-structure violations (missing `<span class="lead-sentence">` + em-dash openings, banned `<strong>`/`<b>` tags)
 4. Wait for completion
 5. Validate:
    - Briefing JSON updated

@@ -395,9 +395,12 @@ RECENCY_WINDOWS = {
     'copper': 10, 'aluminum': 10, 'lumber': 10,
     'goc_2y_yield': 10, 'goc_5y_yield': 10, 'goc_10y_yield': 10,
     # Weekly series
-    'boc_rate': 10, 'potash_nutrien': 10, 'cameco_uranium': 10,
-    'sprott_uranium': 10, 'canola': 10, 'nickel': 10, 'zinc': 10,
+    'boc_rate': 10, 'potash_nutrien': 10,
+    'uranium': 90, 'canola': 45, 'nickel': 45, 'zinc': 10,
     'iron_ore': 10, 'dry_bulk_shipping': 10,
+    # 2026-06-11: cameco_uranium/sprott_uranium removed — keys never existed.
+    # canola (StatCan farm price) and nickel (FRED) are MONTHLY series — 45d
+    # freshness; uranium has no live feed yet — 90d.
     # Monthly indicators
     'unemployment': 45, 'cpi': 45, 'employment_rate': 45,
     'participation_rate': 45, 'housing_starts': 45,
@@ -484,7 +487,7 @@ REQUIRED_COMMODITIES = {
     'copper': 'Copper',
     'aluminum': 'Aluminum',
     'lumber': 'Lumber',
-    'uranium': 'Uranium (Sprott/Cameco proxy)',  # sprott_uranium OR cameco_uranium
+    'uranium': 'Uranium',  # canonical 'uranium' key (sprott_uranium/cameco_uranium DO NOT exist — corrected 2026-06-11)
     'nickel': 'Nickel',
     'canola': 'Canola',
     'potash': 'Potash (Nutrien proxy)',  # potash_nutrien
@@ -493,7 +496,7 @@ REQUIRED_COMMODITIES = {
 
 # Map to actual timeseries keys (some have alternate names)
 KEY_MAP = {
-    'uranium': ['sprott_uranium', 'cameco_uranium'],
+    'uranium': ['uranium', 'comm_uranium'],  # corrected 2026-06-11: sprott_uranium/cameco_uranium never existed
     'potash': ['potash_nutrien'],
     'wti': ['wti', 'comm_wti'],
     'brent': ['brent', 'comm_brent'],
@@ -650,7 +653,7 @@ MARKET_INSTRUMENTS = {
     'fx': ['cadusd', 'eurusd', 'usdcny', 'usdjpy'],
     'commodities': ['wti', 'brent', 'natural_gas', 'gold', 'silver', 'copper',
                     'aluminum', 'lumber', 'nickel', 'canola', 'potash_nutrien',
-                    'sprott_uranium', 'iron_ore'],
+                    'iron_ore'],  # sprott_uranium removed 2026-06-11 — key never existed
     'yields': ['goc_2y_yield', 'goc_5y_yield', 'goc_10y_yield'],
 }
 

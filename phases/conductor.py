@@ -276,8 +276,8 @@ TODAY: {today_str}
 DATA STATUS: The Python pipeline has already completed all data collection:
 - indicators.json, projects_all.json, timeseries.json, policy.json, commodities.json, events.json are all current in docs/data/
 - industry_gdp.json — per-NAICS M/M and Y/Y GDP changes from StatCan WDS (20 industries)
-- jobs.json — hiring spike data by CMA and sector (from job_monitor)
-- procurement.json — government contract awards >=5M (from procurement_monitor)
+- jobs.json — hiring spike data by CMA and sector (from job_monitor; Job Bank feed)
+- procurement.json — government contract AWARDS AND TENDER NOTICES: federal (Open Canada/CanadaBuys), Quebec SEAO, defence DCC at >=$5M, plus BC tender notices with NO value floor (most BC rows carry no stated value — never describe BC rows as ">=$5M awards")
 - iaac.json — federal impact assessment projects with status history
 - signals.json — combined signal summary (jobs, procurement, IAAC counts){_summarize_accuracy_files()}
 - dashboard.db is up to date with this week's discoveries, filtering, and signals
@@ -451,12 +451,29 @@ def run(conn, context: dict, run_log) -> dict:
 
         # Step 4: Read conductor output
         print("  [Step 4] Reading conductor output...")
-        briefing = _read_conductor_output()
+        if success:
+            briefing = _read_conductor_output()
+        else:
+            # Red-team F6: on conductor failure, _read_conductor_output falls
+            # back to briefing_latest.json (the PREVIOUS edition) — returning
+            # that here caches a stale briefing as a completed phase for 24h,
+            # so a same-day retry never re-attempts the conductor and ships
+            # last week's edition. Return empty instead: the phase result is
+            # not cached and the retry regenerates.
+            briefing = {}
+            print("  [WARN] Conductor failed — NOT falling back to the "
+                  "previous edition (retry will re-run the conductor)")
 
         if not briefing:
             print("  [WARN] No briefing output — finalize will run with empty payload")
 
         run_log.log_step(step_name)
+
+        if not success:
+            # Return {} so update_dashboard does NOT cache this phase as
+            # completed — a same-day retry must re-run the conductor rather
+            # than cache-hit an empty/stale payload (red-team F6).
+            return {}
 
         return {
             'final_payload': briefing,

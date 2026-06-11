@@ -38,6 +38,52 @@ def _yf_close(obj):
         return None
 
 
+# ── StatCan WDS fetch (canola — no free market feed exists) ──────────
+# Mirrors _fetch_wds() in statcan_extended.py: same endpoint, headers,
+# 3 attempts with backoff. Kept local because this module is otherwise
+# yfinance-only and imports requests lazily.
+
+_STATCAN_WDS_URL = "https://www150.statcan.gc.ca/t1/wds/rest/getDataFromVectorsAndLatestNPeriods"
+_WDS_HEADERS = {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (compatible; CAN-MACRO/1.0)',
+}
+_WDS_BACKOFF = [5, 15]  # seconds between the 3 total attempts
+
+
+def _fetch_statcan_monthly(vector_id, n=14):
+    """Fetch the last N monthly observations for one StatCan vector.
+
+    Returns [{'refPer': 'YYYY-MM-DD', 'value': float}] sorted by date,
+    or [] on failure (logged, never raises).
+    """
+    import time
+    import requests
+
+    payload = [{"vectorId": vector_id, "latestN": n}]
+    for attempt in range(3):
+        try:
+            resp = requests.post(_STATCAN_WDS_URL, json=payload,
+                                 timeout=40, headers=_WDS_HEADERS)
+            resp.raise_for_status()
+            for item in resp.json():
+                if item.get('status') != 'SUCCESS':
+                    continue
+                return sorted(
+                    [{'refPer': p.get('refPer', ''), 'value': float(p['value'])}
+                     for p in item.get('object', {}).get('vectorDataPoint', [])
+                     if p.get('value') is not None],
+                    key=lambda x: x['refPer'])
+            return []
+        except Exception as e:
+            if attempt < 2:
+                time.sleep(_WDS_BACKOFF[attempt])
+            else:
+                logger.warning(
+                    f"StatCan WDS vector {vector_id} failed after 3 attempts: {e}")
+    return []
+
+
 # ── Canadian commodity indicator definitions ─────────────────────────
 
 CANADIAN_COMMODITY_INDICATORS = {
@@ -70,18 +116,21 @@ CANADIAN_COMMODITY_INDICATORS = {
         "tickers": ["FM.TO"],
     },
     "canola": {
-        # Bunge (BG) is a global oilseed-processor STOCK (~$80), not a canola
-        # price (~$600-700/t) — a misleading proxy that the poison filter
-        # silently rejects anyway. Yahoo has no free canola feed (RS=F futures
-        # delisted). Disabled (no ticker) until the real source is wired:
-        # TODO(ci-research): StatCan Table 32-10-0077-01 (farm product prices,
-        # canola) — resolve the vector in a CI run, then fetch via _statcan_wds.
-        # Until then canola is an honest N/A, not a wrong stock figure.
-        "description": "Canola farm price (StatCan — source pending CI research)",
+        # Yahoo has no free canola feed (RS=F futures delisted), so this is
+        # the one indicator sourced from StatCan WDS instead of yfinance.
+        # Table 32-10-0077-01 (farm product prices) has no Canada-level
+        # geography — provincial only — so Saskatchewan, the largest canola
+        # producer, is the benchmark. Vector resolved 2026-06-11 via
+        # getCubeMetadata + getSeriesInfoFromCubePidCoord (coordinate
+        # 8.18.0.0.0.0.0.0.0.0): v31212214 = "Saskatchewan; Canola (including
+        # rapeseed)", $/tonne, monthly, current (latest refPer 2026-04).
+        "description": "Canola farm price, Saskatchewan (StatCan 32-10-0077-01)",
         "relevance": "Canola is Saskatchewan and Alberta's dominant oilseed crop.",
         "affected_sectors": ["Agriculture"],
         "affected_provinces": ["SK", "AB", "MB"],
         "tickers": [],
+        "statcan_vector": 31212214,
+        "unit": "$/tonne",
     },
     "iron_ore": {
         "description": "Iron ore price proxy (Vale SA)",
@@ -155,6 +204,38 @@ def fetch_canadian_commodities():
         compute = info.get("compute", "single")
 
         try:
+            if info.get("statcan_vector"):
+                # StatCan WDS monthly series (canola). Needs >=2 points for a
+                # period-over-period comparison; otherwise honest N/A (skip).
+                pts = _fetch_statcan_monthly(info["statcan_vector"])
+                if len(pts) < 2:
+                    continue
+                vals = [p["value"] for p in pts]
+                current = float(vals[-1])
+                # Monthly series — no weekly resolution. week_ago = current
+                # keeps the dict shape (pct_1w reads 0.0); 'frequency' below
+                # marks the series monthly for downstream consumers.
+                week_ago = current
+                month_ago = float(vals[-2])
+                year_ago = float(vals[-13]) if len(vals) >= 13 else float(vals[0])
+                results[ind_id] = {
+                    "description": info["description"],
+                    "current": round(current, 2),
+                    "week_ago": round(week_ago, 2),
+                    "month_ago": round(month_ago, 2),
+                    "year_ago": round(year_ago, 2),
+                    "pct_1w": 0.0,
+                    "pct_1m": round((current - month_ago) / abs(month_ago) * 100, 1) if month_ago else 0,
+                    "pct_1y": round((current - year_ago) / abs(year_ago) * 100, 1) if year_ago else 0,
+                    "affected_sectors": info.get("affected_sectors", []),
+                    "affected_provinces": info.get("affected_provinces", []),
+                    "relevance": info["relevance"],
+                    "frequency": "monthly",
+                    "unit": info.get("unit", ""),
+                    "monthly_points": pts,
+                }
+                continue
+
             if compute == "basket_avg":
                 # Average of multiple tickers
                 prices = []
@@ -317,15 +398,23 @@ def fetch_and_store_commodities(conn=None, db=None):
                 'wcs_discount':       ('comm_wcs_discount', '$/bbl', 'yfinance (WCS-WTI)'),
                 'tsx_infrastructure': ('comm_tsx_infra',  '$', 'yfinance (basket avg)'),
             }
-            # Audit H9 (2026-06-11): the chart agent reads the CANONICAL
-            # 'uranium' key, which only ever got a one-time backfill point —
-            # every chart built on it was a single dot. Mirror the spot proxy
-            # to the canonical key so it accrues weekly points.
-            if data.get('uranium_spot', {}).get('current') is not None:
+            # Red-team 2.4 (2026-06-11): do NOT mirror U-UN.TO onto the
+            # canonical 'uranium' key. The trust's UNIT PRICE (~$25-35) is a
+            # different quantity than the series' existing U3O8 SPOT point
+            # (~$86/lb) — appending it creates a fake cliff in the series the
+            # validator and chart agent treat as ground truth. The fund price
+            # keeps accruing under 'comm_uranium' (map below); the canonical
+            # 'uranium' key stays empty until a true spot feed is wired.
+
+            # Canola (2026-06-11): StatCan farm-price vector is monthly, so
+            # write each observation under its own refPer date (not today's)
+            # to the CANONICAL 'canola' key the chart agent reads. The upsert
+            # is ON CONFLICT DO NOTHING, so re-appending the last 14 months
+            # every week backfills history once and is idempotent after that.
+            for pt in data.get('canola', {}).get('monthly_points') or []:
                 save_timeseries_point(
-                    conn, 'uranium', today_str,
-                    data['uranium_spot']['current'], 'US$/lb',
-                    'Sprott Physical Uranium Trust (U-UN.TO)')
+                    conn, 'canola', pt['refPer'], pt['value'], '$/tonne',
+                    'StatCan 32-10-0077-01 v31212214 (Saskatchewan canola farm price)')
                 ts_count += 1
 
             for ind_id, (series_name, unit, source) in COMMODITY_TS_MAP.items():

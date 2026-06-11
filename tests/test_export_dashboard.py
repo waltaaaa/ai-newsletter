@@ -535,14 +535,17 @@ class TestExportDiscoverySummary(unittest.TestCase):
         # Untouched this week: counted in neither bucket
         self._seed("Fort McMurray Bitumen Terminal",
                    "2026-01-15", "2026-02-01")
-        # Status change rows this week (one status, one cost — only status counts)
+        # Status change rows this week (one status, one cost — only status
+        # counts). Red-team F1 2026-06-11: the exporter now counts
+        # project_events (the table project_sync actually writes), not the
+        # orphaned project_changes table.
         self.conn.execute(
-            "INSERT INTO project_changes (project_id, change_date, change_type, "
-            "field, old_value, new_value) VALUES (1, ?, 'status', 'status', "
+            "INSERT INTO project_events (project_id, event_type, event_date, "
+            "status_before, status_after) VALUES (1, 'status_change', ?, "
             "'Proposed', 'Approved')", (self.week_start,))
         self.conn.execute(
-            "INSERT INTO project_changes (project_id, change_date, change_type, "
-            "field, old_value, new_value) VALUES (1, ?, 'cost', 'value', "
+            "INSERT INTO project_events (project_id, event_type, event_date, "
+            "cost_before, cost_after) VALUES (1, 'cost_change', ?, "
             "'$300M', '$350M')", (self.week_start,))
         self.conn.commit()
 

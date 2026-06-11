@@ -177,10 +177,6 @@ def update_dashboard(deep_sweep: bool = False):
     ]
 
     # Per-phase timeout limits (seconds). Generous defaults.
-    # Phase 3 raised from 1200s → 2400s to give rehash headroom with 7k+ projects.
-    # Long-term fix is to move rehash to a background async worker (tracked as
-    # follow-up work in HANDOFF_REPAIR_20260411.md); this timeout bump is the
-    # short-term bullet-proofing so runs don't soft-time-out mid-REHASH.
     PHASE_TIMEOUTS = {
         "Phase 1: Data Collection": 600,
         "Phase 2: Discovery": 1200,
@@ -189,8 +185,16 @@ def update_dashboard(deep_sweep: bool = False):
         # overhead) — the 2026-06-08 run timed out with 331 articles unprocessed.
         "Phase 3: Filtering": 4200,
         "Phase 4: Signals": 600,
-        "Phase 5: Conductor": 7200,
-        "Phase 6: Finalize": 300,
+        # Red-team F2: the phase join must exceed CONDUCTOR_TIMEOUT (7200s
+        # subprocess budget) PLUS the pre-steps (trends, microscope, export,
+        # ~10-20 min) — when join == subprocess timeout, a full-budget
+        # conductor is abandoned mid-flight and its claude child runs on as
+        # an orphan racing the deploy.
+        "Phase 5: Conductor": 9000,
+        # Red-team F9: finalize internally runs the fuzzy-dedup report with a
+        # 600s subprocess timeout — a 300s phase join abandoned the phase
+        # while its own subprocess kept running.
+        "Phase 6: Finalize": 900,
     }
 
     # Phase-level caching (E-2): stable per-phase keys + TTL freshness check.
@@ -319,16 +323,21 @@ def update_dashboard(deep_sweep: bool = False):
         print(f"\n[SERVICE HEALTH] Dead services: {health_status['dead']}")
     run_log.log_metric("api_usage", "service_health", health_status)
 
-    # ── Status-change counter (audit H7) ──────────────────────────
-    # project_changes rows written during this run = real Tier-4 activity.
+    # ── Status-change counter (audit H7; red-team F1/F8) ──────────
+    # Real status changes are written to project_events with
+    # event_type='status_change' (project_sync.py) — NOT project_changes,
+    # whose only writer (change_detector) is orphaned. Use the LOCAL date:
+    # event rows carry local dates, and a UTC date from an evening run would
+    # exclude same-evening changes.
     try:
-        _since = run_log._started_at.strftime("%Y-%m-%d") if run_log._started_at else None
-        if _since:
-            _sc = conn.execute(
-                "SELECT COUNT(*) FROM project_changes "
-                "WHERE change_type = 'status' AND change_date >= ?",
-                (_since,)).fetchone()
-            run_log.log_metric("discovery", "status_changes", int(_sc[0] if _sc else 0))
+        from datetime import date as _ld
+        _since = _ld.today().isoformat()
+        _sc = conn.execute(
+            "SELECT COUNT(*) FROM project_events "
+            "WHERE event_type = 'status_change' "
+            "AND COALESCE(NULLIF(event_date, ''), detected_date) >= ?",
+            (_since,)).fetchone()
+        run_log.log_metric("discovery", "status_changes", int(_sc[0] if _sc else 0))
     except Exception as _e:
         print(f"[WARN] status-change counter failed (non-critical): {_e}")
 

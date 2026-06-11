@@ -1,4 +1,4 @@
----
+﻿---
 name: tldr-researcher-provincial
 description: >
   Provincial researcher for "The Lagging Indicator" dashboard. Covers all 13 provinces
@@ -406,4 +406,4 @@ Search waves: Wave 3 (provincial scan) + policy + projects + IAAC + procurement 
 
 8. **Procurement:** Focus on contracts ≥$5M. Include contract award notice link and proponent name.
 
-9. **Labour market:** Use Statistics Canada Labour Force Survey data where available. Supplement with Indeed, Job Bank, and other job posting monitors for hiring trends.
+9. **Labour market:** Use Statistics Canada Labour Force Survey data where available. Supplement with Job Bank and other job posting monitors for hiring trends (NOT Indeed — its public feeds were discontinued years ago and the pipeline removed it 2026-06-11).

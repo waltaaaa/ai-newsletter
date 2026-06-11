@@ -735,10 +735,15 @@ def _build_signal_context_blocks(sig: dict) -> dict:
     if spikes:
         s_lines = []
         for s in spikes:
+            # multiplier is None on a first tracked week (no baseline) —
+            # never format None and never assert a fabricated "Nx normal".
+            mult = s.get('multiplier')
+            mult_str = (f"{mult:.1f}x normal" if mult
+                        else "first tracked week — no prior baseline")
             s_lines.append(
                 f"  - {s.get('employer', '?')} in {s.get('location', '?')} "
                 f"({s.get('sector', '?')}): {s.get('current_count', 0)} postings, "
-                f"{s.get('multiplier', 0):.1f}x normal"
+                f"{mult_str}"
             )
         parts.append(
             "HIRING SIGNALS (employer job posting spikes — possible project mobilization):\n"
@@ -747,11 +752,13 @@ def _build_signal_context_blocks(sig: dict) -> dict:
 
     # Procurement highlights (≥$10M)
     contracts = sig.get('procurement_contracts', [])
-    big_contracts = [c for c in contracts if c.get('value', 0) >= 10_000_000][:10]
+    # (value can be None on tender-notice rows — `or 0` so the comparison
+    # can't TypeError; `.get('value', 0)` returns None when the key exists)
+    big_contracts = [c for c in contracts if (c.get('value') or 0) >= 10_000_000][:10]
     if big_contracts:
         c_lines = []
         for c in big_contracts:
-            val = c.get('value', 0)
+            val = c.get('value') or 0
             val_str = f"${val / 1_000_000:.0f}M" if val else 'undisclosed'
             desc = c.get('description', c.get('title', ''))[:150]
             prov = c.get('province', '')
@@ -807,7 +814,7 @@ def _build_signal_context_blocks(sig: dict) -> dict:
                 'employer': spike.get('employer', ''),
                 'location': spike.get('location', ''),
                 'count': spike.get('current_count', 0),
-                'multiplier': spike.get('multiplier', 0),
+                'multiplier': spike.get('multiplier') or 0,
             })
     for contract in contracts:
         for proj in contract.get('linked_projects', []):
@@ -1047,7 +1054,9 @@ Write:
 1. EXECUTIVE SUMMARY (4-6 short paragraphs, 350-450 words)
 Format as HTML paragraphs: <p>paragraph text</p>
 This is a TL;DR — be concise and direct. Every sentence must carry a specific data point or fact. Cut filler, qualifiers, and scene-setting. No throat-clearing ("This week saw...", "The data revealed...") — lead with the fact.
-Each paragraph is 2-3 sentences max. Use <strong> tags on key figures. Use brief transitions between paragraphs.
+Each paragraph is 2-3 sentences max. Use brief transitions between paragraphs.
+Every paragraph opens with a lead-in sentence wrapped in <span class="lead-sentence">...</span> followed by " — " (space, em-dash, space) and the supporting detail.
+NEVER use <strong> or <b> tags — the lead-in is the only bold text (styled by frontend CSS). Numbers stay specific but unbolded.
 Structure: Lead paragraph states the week's single biggest national story with its key number. Second paragraph covers the next 2-3 most important national data points. Third paragraph covers notable provincial developments — cite specific provinces, project names, and dollar figures where available (e.g. "Ontario approved a $2.1B transit expansion", "Alberta's oil sands investment reached $X"). Fourth paragraph covers federal or provincial policy actions and project developments. Optional fifth paragraph for a genuinely significant cross-cutting theme connecting national and provincial trends.
 Draw from BOTH national indicators AND provincial data/projects when reporting. Provincial stories that carry significant dollar values or affect multiple sectors deserve mention alongside national macro data.
 NO forecasting, NO predictions, NO forward-looking language. Every claim backed by <sup>N</sup> citation.
@@ -1079,7 +1088,7 @@ Derive ENTIRELY from the news articles provided above — identify the dominant 
 
 8. WORD CLOUD TOPICS: Extract 40-60 meaningful economic topics/phrases ONLY from the news articles and verified data provided above. These power a word cloud visualization. Each topic should be 1-3 words, e.g. "tariff threat", "rate cut", "housing affordability", "LNG exports", "auto layoffs", "tech hiring freeze", "lumber prices", "fiscal deficit", "immigration policy". Assign each a sentiment_score (-1.0 to +1.0, negative=bad for Canada, positive=good) and frequency (1-10 importance weight, 10=dominant story of the week based on article coverage volume). Prioritize specificity over generality. BAD: "economy", "growth", "markets". GOOD: "tariff retaliation", "BoC rate hold", "Alberta oil sands", "EV battery plant". Frequency should reflect how many articles covered this topic, not social media mentions.
 
-Style: Wire service / Reuters dispatch quality. ALL sections use short prose paragraphs (<p>) — NO bullet points anywhere. Each paragraph 2-3 sentences. Use transitional phrases between paragraphs for narrative flow. Embed specific figures inline ("grew at an annualized rate of 1.3%", "three straight quarters of businesses cutting back"). REPORT ONLY — no editorializing, no forecasting, no opinions. State what happened, what data showed, what changed. DO NOT use: "is likely to", "would be expected to", "looking ahead", "going forward", "outlook", "expected to", "cautiously optimistic", "remains to be seen", "continues to grow", "markets remain volatile", "positive outlook", "encouraging", "concerning", "worrying", "promising". DO NOT discuss stock market movements, equity index levels, or stock performance (e.g. TSX, S&P 500, Dow, NASDAQ gains/losses). Rate changes, yield changes, FX, and bond markets ARE fair game.
+Style: Wire service / Reuters dispatch quality. ALL sections use short prose paragraphs (<p>) — NO bullet points anywhere. Each paragraph 2-3 sentences. Every paragraph opens with a lead-in sentence wrapped in <span class="lead-sentence">...</span> followed by " — " (space, em-dash, space) and the supporting detail. NEVER use <strong> or <b> tags — the lead-in is the only bold text (styled by frontend CSS); numbers stay specific but unbolded. Use transitional phrases between paragraphs for narrative flow. Embed specific figures inline ("grew at an annualized rate of 1.3%", "three straight quarters of businesses cutting back"). REPORT ONLY — no editorializing, no forecasting, no opinions. State what happened, what data showed, what changed. DO NOT use: "is likely to", "would be expected to", "looking ahead", "going forward", "outlook", "expected to", "cautiously optimistic", "remains to be seen", "continues to grow", "markets remain volatile", "positive outlook", "encouraging", "concerning", "worrying", "promising". DO NOT discuss stock market movements, equity index levels, or stock performance (e.g. TSX, S&P 500, Dow, NASDAQ gains/losses). Rate changes, yield changes, FX, and bond markets ARE fair game.
 
 OUTPUT: Valid JSON only. No markdown. No text outside the JSON.
 
@@ -1090,7 +1099,7 @@ SCHEMA:
         {{"label": "SHORT LABEL", "value": "latest value with unit", "change": "+/- change vs prior period or empty string"}},
         "Pick 5-7 indicators most relevant to THIS WEEK's story. Always include BoC rate, GDP, CPI, unemployment. Fill remaining slots with whichever indicators are most newsworthy this week (e.g. trade balance, housing starts, employment change, wage growth, oil price, CAD/USD, 10Y yield). Labels should be SHORT (1-2 words, uppercase)."
     ],
-    "executive_summary": "<p>Lead paragraph with dominant national story and <strong>key figure</strong>.<sup>1</sup></p><p>Supporting national data points.<sup>2</sup></p><p>Notable provincial developments with specific projects and values.<sup>3</sup></p><p>Policy actions and project developments.<sup>4</sup></p><p>Cross-cutting national-provincial theme.<sup>5</sup></p>",
+    "executive_summary": "<p><span class=\\"lead-sentence\\">Dominant national story with key figure</span> — supporting detail.<sup>1</sup></p><p><span class=\\"lead-sentence\\">Next national data point</span> — supporting national data.<sup>2</sup></p><p><span class=\\"lead-sentence\\">Notable provincial development</span> — specific projects and values.<sup>3</sup></p><p><span class=\\"lead-sentence\\">Policy action</span> — project developments.<sup>4</sup></p><p><span class=\\"lead-sentence\\">Cross-cutting theme</span> — national-provincial connection.<sup>5</sup></p>",
     "metrics": {{
         "realGdp": "", "nomGdp": "", "outputGap": "", "cpi": "", "shelterCpi": "",
         "bocRate": "{hard_data['boc_rate']}", "unemployment": "", "participation": "",

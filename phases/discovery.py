@@ -337,6 +337,17 @@ def run(conn, context, logger):
             "institutional_projects": institutional_projects,
             "gemini_projects": gemini_projects,
             "tavily_searches_count": tavily_searches_count,
+            # Red-team F4: these were only context.update()'d in-place and
+            # never in the return dict, so a crash-retry run that cache-hits
+            # this phase fed the conductor/microscope EMPTY signal lists and
+            # the operator summary printed n/a. Returning them makes them
+            # part of the cached phase result.
+            "policy_items": context.get("policy_items", []),
+            "policy_new_items": context.get("policy_new_items", []),
+            "policy_summary": context.get("policy_summary", {}),
+            "procurement_contracts": context.get("procurement_contracts", []),
+            "iaac_status_changes": context.get("iaac_status_changes", []),
+            "iaac_new_discoveries": context.get("iaac_new_discoveries", []),
         }
     except Exception as e:
         # Whole-phase exception: discovery is empty, pipeline must continue but

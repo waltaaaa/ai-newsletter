@@ -412,7 +412,7 @@ The frontend renders four chart types from the `insightChart` spec:
 - `dry_bulk_shipping`
 
 **Uranium:**
-- `cameco_uranium`, `sprott_uranium`
+- DO NOT CHART (2026-06-11): `cameco_uranium`/`sprott_uranium` do NOT exist in timeseries.json, and the canonical `uranium` key has <2 points — any of these as a dataKey FAILs the validator's chart cross-reference. Skip uranium charts until a real feed lands. ALWAYS verify a candidate dataKey has >=2 points in timeseries.json before emitting it in a spec — the validator hard-FAILs unresolved or <2-point dataKeys.
 
 **Comm-prefixed duplicates** (same data, alternate keys):
 - `comm_wti`, `comm_brent`, `comm_natgas`, `comm_gold`, `comm_copper`, `comm_aluminum`, `comm_coal`, `comm_wheat`, `comm_corn`, `comm_soybeans`, `comm_soymeal`, `comm_soyoil`, `comm_sugar`, `comm_coffee`, `comm_cotton`, `comm_rice`, `comm_silver`, `comm_platinum`, `comm_palladium`, `comm_cocoa`

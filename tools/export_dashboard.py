@@ -39,14 +39,27 @@ from contextlib import contextmanager
 
 @contextmanager
 def _atomic_open(path):
-    tmp_path = path + ".tmp"
+    # Red-team F6: per-writer tmp names (two concurrent exports must not
+    # interleave into one tmp file), and a retry on os.replace — on Windows
+    # a concurrent reader holding the destination open raises PermissionError
+    # where the old truncate-in-place write would have succeeded.
+    import time as _time
+    tmp_path = f"{path}.{os.getpid()}.tmp"
     f = open(tmp_path, "w", encoding="utf-8")
     try:
         yield f
         f.flush()
         os.fsync(f.fileno())
         f.close()
-        os.replace(tmp_path, path)
+        last_err = None
+        for attempt in range(4):
+            try:
+                os.replace(tmp_path, path)
+                return
+            except PermissionError as e:
+                last_err = e
+                _time.sleep(0.1 * (attempt + 1))
+        raise last_err
     except BaseException:
         try:
             f.close()
@@ -1489,7 +1502,9 @@ def export_discovery_summary(conn, output_dir: str) -> str:
     week_of        — ISO date of the most recent Monday
     new            — projects with firstTracked >= week start
     rediscovered   — projects seen this week that were tracked before it
-    status_changes — project_changes rows (change_type='status') this week
+    status_changes — project_events rows (event_type='status_change') this
+                     week (red-team F1: project_changes' only writer is the
+                     orphaned change_detector — it was always 0)
     fuzzy_merges   — in-process fuzzy-merge counter (db.get_merge_counters,
                      read without reset)
     """
@@ -1513,8 +1528,9 @@ def export_discovery_summary(conn, output_dir: str) -> str:
         "AND firstTracked != '' AND substr(firstTracked, 1, 10) < ?",
         (week_start, week_start))
     status_changes = _count(
-        "SELECT COUNT(*) FROM project_changes "
-        "WHERE change_type = 'status' AND substr(change_date, 1, 10) >= ?",
+        "SELECT COUNT(*) FROM project_events "
+        "WHERE event_type = 'status_change' "
+        "AND substr(COALESCE(NULLIF(event_date, ''), detected_date), 1, 10) >= ?",
         (week_start,))
     try:
         fuzzy_merges = int(get_merge_counters().get("fuzzy_merged", 0))

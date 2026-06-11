@@ -98,12 +98,18 @@ def _format_signal_context(signal_context):
     # Hiring spikes
     spikes = signal_context.get('job_spikes', [])[:5]
     if spikes:
-        s_lines = [
-            f"  - {s.get('employer', '?')} in {s.get('location', '?')} "
-            f"({s.get('sector', '?')}): {s.get('current_count', 0)} postings, "
-            f"{s.get('multiplier', 0):.1f}x normal"
-            for s in spikes
-        ]
+        s_lines = []
+        for s in spikes:
+            # multiplier is None on a first tracked week (no baseline) —
+            # never format None and never assert a fabricated "Nx normal".
+            mult = s.get('multiplier')
+            mult_str = (f"{mult:.1f}x normal" if mult
+                        else "first tracked week — no prior baseline")
+            s_lines.append(
+                f"  - {s.get('employer', '?')} in {s.get('location', '?')} "
+                f"({s.get('sector', '?')}): {s.get('current_count', 0)} postings, "
+                f"{mult_str}"
+            )
         parts.append(
             "=== HIRING SIGNALS ===\n"
             "Hiring spikes indicate project mobilization. Include in:\n"
@@ -113,14 +119,16 @@ def _format_signal_context(signal_context):
         )
 
     # Procurement awards ≥$10M
+    # (value can be None on tender-notice rows — `or 0` so the comparison
+    # can't TypeError; `.get('value', 0)` returns None when the key exists)
     contracts = [
         c for c in signal_context.get('procurement_contracts', [])
-        if c.get('value', 0) >= 10_000_000
+        if (c.get('value') or 0) >= 10_000_000
     ][:5]
     if contracts:
         c_lines = []
         for c in contracts:
-            val = c.get('value', 0)
+            val = c.get('value') or 0
             val_str = f"${val / 1_000_000:.0f}M" if val else 'undisclosed'
             desc = c.get('description', c.get('title', ''))[:150]
             prov = c.get('province', '')
