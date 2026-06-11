@@ -1,5 +1,30 @@
 [
   {
+    "name": "Lynn Lake Gold Project",
+    "status": "Under Construction",
+    "province": "MB",
+    "sector": "mining",
+    "value": "$937M",
+    "lastSeen": "2026-06-11",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-03-15",
+        "note": "First tracked"
+      },
+      {
+        "status": "Under Review",
+        "date": "2026-06-08",
+        "note": "First tracked"
+      },
+      {
+        "status": "Under Construction",
+        "date": "2026-06-11",
+        "note": "Status changed from Under Review to Under Construction"
+      }
+    ]
+  },
+  {
     "name": "Installation of a Permeable Adsorptive Barrier (PAB) at 22 Wing North Bay",
     "status": "Under Review",
     "province": "ON",
@@ -699,21 +724,6 @@
     "status": "Under Review",
     "province": "QC",
     "sector": "defence",
-    "value": "—",
-    "lastSeen": "2026-06-08",
-    "status_history": [
-      {
-        "status": "Under Review",
-        "date": "2026-06-08",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Lynn Lake Gold Project",
-    "status": "Under Review",
-    "province": "MB",
-    "sector": "mining",
     "value": "—",
     "lastSeen": "2026-06-08",
     "status_history": [

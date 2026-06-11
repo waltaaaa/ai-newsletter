@@ -3,49 +3,49 @@
     "ON": {
       "name": "Ontario",
       "threshold": 500000000,
-      "qualifying": 87,
-      "qualifying_value": 287247804723.13,
-      "tracked_unpriced": 566,
+      "qualifying": 88,
+      "qualifying_value": 291147804723.13,
+      "tracked_unpriced": 548,
       "stale": 0
     },
     "QC": {
       "name": "Quebec",
       "threshold": 250000000,
-      "qualifying": 91,
+      "qualifying": 90,
       "qualifying_value": 114841321307.38,
-      "tracked_unpriced": 383,
+      "tracked_unpriced": 379,
       "stale": 0
     },
     "AB": {
       "name": "Alberta",
       "threshold": 200000000,
-      "qualifying": 176,
-      "qualifying_value": 416845248782.64,
-      "tracked_unpriced": 495,
+      "qualifying": 174,
+      "qualifying_value": 416345248782.64,
+      "tracked_unpriced": 490,
       "stale": 0
     },
     "BC": {
       "name": "British Columbia",
       "threshold": 175000000,
-      "qualifying": 310,
-      "qualifying_value": 488520955110.55,
-      "tracked_unpriced": 303,
+      "qualifying": 306,
+      "qualifying_value": 480176955110.55,
+      "tracked_unpriced": 296,
       "stale": 0
     },
     "SK": {
       "name": "Saskatchewan",
       "threshold": 45000000,
-      "qualifying": 46,
+      "qualifying": 45,
       "qualifying_value": 38907058169.98,
-      "tracked_unpriced": 115,
+      "tracked_unpriced": 113,
       "stale": 0
     },
     "MB": {
       "name": "Manitoba",
       "threshold": 40000000,
       "qualifying": 87,
-      "qualifying_value": 24422919684.76,
-      "tracked_unpriced": 1867,
+      "qualifying_value": 26014589684.76,
+      "tracked_unpriced": 1859,
       "stale": 0
     },
     "NS": {
@@ -53,14 +53,14 @@
       "threshold": 25000000,
       "qualifying": 56,
       "qualifying_value": 13941312434.2,
-      "tracked_unpriced": 258,
+      "tracked_unpriced": 256,
       "stale": 0
     },
     "NB": {
       "name": "New Brunswick",
       "threshold": 20000000,
-      "qualifying": 59,
-      "qualifying_value": 8344539530.0,
+      "qualifying": 58,
+      "qualifying_value": 7386739530.0,
       "tracked_unpriced": 113,
       "stale": 0
     },
@@ -69,7 +69,7 @@
       "threshold": 17000000,
       "qualifying": 68,
       "qualifying_value": 88518326385.16998,
-      "tracked_unpriced": 1441,
+      "tracked_unpriced": 1432,
       "stale": 0
     },
     "PE": {
@@ -85,7 +85,7 @@
       "threshold": 3000000,
       "qualifying": 105,
       "qualifying_value": 46387580687.35001,
-      "tracked_unpriced": 5,
+      "tracked_unpriced": 4,
       "stale": 0
     },
     "NT": {
@@ -93,17 +93,17 @@
       "threshold": 3000000,
       "qualifying": 87,
       "qualifying_value": 44266999947.57001,
-      "tracked_unpriced": 124,
+      "tracked_unpriced": 123,
       "stale": 0
     },
     "NU": {
       "name": "Nunavut",
       "threshold": 3000000,
-      "qualifying": 42,
-      "qualifying_value": 1991590808.38,
+      "qualifying": 41,
+      "qualifying_value": 1991590958.38,
       "tracked_unpriced": 7,
       "stale": 0
     }
   },
-  "exported_at": "2026-06-11T02:00:31.507143+00:00"
+  "exported_at": "2026-06-11T13:27:59.775151+00:00"
 }
