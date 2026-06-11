@@ -4,22 +4,32 @@ and tender notices for infrastructure, construction, and major capital projects.
 
 Sources (all free, structured data):
 1. Open Canada Proactive Disclosure — awarded contracts with values and vendors
-2. BuyAndSell.gc.ca RSS — federal tender notices (enhances existing Tier 1)
-3. Ontario BPS Supply Chain — Broader Public Sector procurement
-4. BC Bid — BC provincial procurement
+2. CanadaBuys open-data tender CSVs — federal tender notices
+   (replaced BuyAndSell RSS — buyandsell.gc.ca DNS-dead, attempt removed
+   2026-06-11; no fetch is made against the dead domain)
+3. Ontario BPS Supply Chain — DEAD upstream (CKAN package removed 2026);
+   skipped with a logged notice — ON coverage via CanadaBuys delivery-region rows
+4. BC Bid — legacy RSS retired (platform moved to Ivalua, no public feed);
+   skipped with a logged notice — BC coverage via CanadaBuys delivery-region rows
 5. SEAO (Québec) — public procurement via Données Québec OCDS files
-   (implemented quality-pass-1.4, live-verified 2026-06-10)
+   (implemented quality-pass-1.4, live-verified 2026-06-10 and 2026-06-11)
 6. Alberta Purchasing Connection — provincial RFPs (DARK: Angular SPA, no
    structured data — AB coverage via CanadaBuys delivery-region rows)
 7. Defence Construction Canada — recently awarded contracts PDF
-   (implemented quality-pass-1.4, live-verified 2026-06-10)
+   (implemented quality-pass-1.4, live-verified 2026-06-10 and 2026-06-11)
 8. SaskTenders — DARK: ASP.NET WebForms, no RSS/open data — SK coverage via
    CanadaBuys delivery-region rows
 
+Instrumentation contract (2026-06-11 procurement fix): every live source prints
+one "[PROCUREMENT] <source>: fetched N rows, M after keyword filter, K >= $5M"
+line with INDEPENDENT counters (keyword and value predicates are evaluated for
+every row, so neither filter can silently hide the other's drop count), and
+every fetch failure prints "[PROCUREMENT] <source> FAILED: <error>" — the
+exception stays swallowed so the run continues, but dead-source is now
+distinguishable from genuinely-zero rows in the logs.
+
 All sources are free. No API keys required for public procurement data.
 """
-import feedparser
-import requests
 import json
 import csv
 import io
@@ -109,7 +119,16 @@ def fetch_open_canada_contracts(days_back=30):
         junk_horizon = datetime.now() + timedelta(days=400)
         max_pages = 20  # hard stop: 20 x 1000 rows
 
+        # 2026-06-11 instrumentation: keyword and value predicates are
+        # evaluated INDEPENDENTLY for every in-window row (the cheap numeric
+        # value check runs first, but a value-fail no longer hides the keyword
+        # count and vice versa), so the log shows exactly where rows die.
+        fetched_rows = 0   # rows inside the lookback window
+        kw_pass = 0        # rows matching a construction keyword
+        val_pass = 0       # rows >= MIN_CONTRACT_VALUE
+
         reached_cutoff = False
+        fetch_failed = False
         for page in range(max_pages):
             params = {
                 "resource_id": resource_id,
@@ -120,7 +139,8 @@ def fetch_open_canada_contracts(days_back=30):
             resp = http_client.get(url, params=params, timeout=30)
             if resp is None or resp.status_code != 200:
                 status = 'network' if resp is None else resp.status_code
-                print(f"[PROCUREMENT][open_canada] FAILED status={status} (page {page})")
+                print(f"[PROCUREMENT] open_canada FAILED: status={status} (page {page})")
+                fetch_failed = page == 0  # mid-scan failure still yields partial data
                 break
 
             records = resp.json().get("result", {}).get("records", [])
@@ -144,12 +164,16 @@ def fetch_open_canada_contracts(days_back=30):
                     if row_date is None or row_date > junk_horizon:
                         continue
 
+                    fetched_rows += 1
                     value = _parse_value(row.get("contract_value", "0"))
-                    if value < MIN_CONTRACT_VALUE:
-                        continue
-
+                    val_ok = value >= MIN_CONTRACT_VALUE
                     description = str(row.get("description_en") or "").lower()
-                    if not any(kw in description for kw in CONSTRUCTION_KEYWORDS):
+                    kw_ok = any(kw in description for kw in CONSTRUCTION_KEYWORDS)
+                    if val_ok:
+                        val_pass += 1
+                    if kw_ok:
+                        kw_pass += 1
+                    if not (val_ok and kw_ok):
                         continue
 
                     contracts.append({
@@ -168,10 +192,18 @@ def fetch_open_canada_contracts(days_back=30):
             if reached_cutoff:
                 break
 
-        print(f"[PROCUREMENT] Open Canada: {len(contracts)} relevant contracts (>=${MIN_CONTRACT_VALUE:,})")
+        if fetch_failed:
+            # Already printed the FAILED line above; nothing was scanned.
+            pass
+        else:
+            print(f"[PROCUREMENT] open_canada: fetched {fetched_rows} rows, "
+                  f"{kw_pass} after keyword filter, {val_pass} >= "
+                  f"${MIN_CONTRACT_VALUE:,} -> {len(contracts)} final "
+                  f"({fetched_rows - kw_pass} dropped by keyword, "
+                  f"{kw_pass - len(contracts)} keyword-matched dropped by value)")
 
     except Exception as e:
-        print(f"[WARN] Open Canada procurement fetch failed: {e}")
+        print(f"[PROCUREMENT] open_canada FAILED: {e}")
 
     return contracts
 
@@ -200,19 +232,25 @@ _REGION_PROVINCE = {
 
 
 def _fetch_canadabuys_rows(url):
-    """Download and parse a CanadaBuys open-data tender CSV (cached per run)."""
+    """
+    Download and parse a CanadaBuys open-data tender CSV (cached per run).
+
+    Returns a list of row dicts on success (possibly empty — genuinely no
+    rows), or None on fetch/parse failure so callers can distinguish a dead
+    source from a quiet week (2026-06-11 instrumentation contract).
+    """
     if url in _canadabuys_cache:
         return _canadabuys_cache[url]
     resp = http_client.get(url, timeout=40)
     if resp is None or resp.status_code >= 400:
         status = 'network' if resp is None else resp.status_code
-        print(f"[PROCUREMENT][canadabuys] FAILED status={status} {url[:80]}")
-        return []
+        print(f"[PROCUREMENT] canadabuys FAILED: status={status} {url[:80]}")
+        return None
     try:
         rows = list(csv.DictReader(io.StringIO(resp.content.decode("utf-8-sig", errors="replace"))))
     except Exception as e:
-        print(f"[PROCUREMENT][canadabuys] CSV parse failed: {e}")
-        return []
+        print(f"[PROCUREMENT] canadabuys FAILED: CSV parse error: {e}")
+        return None
     _canadabuys_cache[url] = rows
     return rows
 
@@ -230,207 +268,149 @@ def _province_from_cb_row(row):
 
 def fetch_buyandsell_rss():
     """
-    Fetch recent federal tender notices. Primary: CanadaBuys open-data CSV
-    (new tender notices). The legacy BuyAndSell RSS attempt is retained as a
-    fallback per the additive-only rule, though its domain is DNS-dead.
-    Filters for construction and infrastructure categories.
+    Fetch recent federal tender notices via the CanadaBuys open-data CSV
+    (new tender notices). Filters for construction/infrastructure keywords
+    and the $5M value floor — both predicates are evaluated independently
+    per row so the log shows what each filter dropped.
+
+    Name kept for caller compatibility. The legacy BuyAndSell RSS attempt
+    was REMOVED 2026-06-11: buyandsell.gc.ca no longer resolves in DNS
+    (dead since at least 2026-06-09), so each weekly run burned a DNS
+    timeout fetching it. Federal tender coverage is the CanadaBuys CSV.
     """
     tenders = []
 
-    for row in _fetch_canadabuys_rows(_CANADABUYS_NEW_TENDERS_CSV):
+    # Dead-source skip notice (replaces the removed buyandsell.gc.ca fetch).
+    print("[PROCUREMENT] BuyAndSell RSS skipped — buyandsell.gc.ca DNS-dead "
+          "(removed 2026-06-11); federal tender coverage via CanadaBuys CSV")
+
+    rows = _fetch_canadabuys_rows(_CANADABUYS_NEW_TENDERS_CSV)
+    if rows is None:
+        # _fetch_canadabuys_rows already printed the FAILED line.
+        return tenders
+
+    kw_pass = 0   # rows matching a construction keyword
+    val_pass = 0  # rows with an extractable text value >= $5M
+    for row in rows:
         try:
             title = row.get("title-titre-eng", "")
             summary = row.get("tenderDescription-descriptionAppelOffres-eng", "")
             text = f"{title} {summary}".lower()
 
-            if any(kw in text for kw in CONSTRUCTION_KEYWORDS):
-                value = _extract_value_from_text(text)
-                if value and value >= MIN_CONTRACT_VALUE:
-                    tenders.append({
-                        "source": "canadabuys",
-                        "title": title,
-                        "description": summary,
-                        "value": value,
-                        "date": row.get("publicationDate-datePublication", ""),
-                        "url": row.get("noticeURL-URLavis-eng", ""),
-                        "province": _province_from_cb_row(row),
-                    })
+            # Independent predicates (2026-06-11): the value check is no
+            # longer nested under the keyword check, so a keyword miss can't
+            # hide the value count and vice versa.
+            kw_ok = any(kw in text for kw in CONSTRUCTION_KEYWORDS)
+            value = _extract_value_from_text(text)
+            val_ok = bool(value and value >= MIN_CONTRACT_VALUE)
+            if kw_ok:
+                kw_pass += 1
+            if val_ok:
+                val_pass += 1
+            if kw_ok and val_ok:
+                tenders.append({
+                    "source": "canadabuys",
+                    "title": title,
+                    "description": summary,
+                    "value": value,
+                    "date": row.get("publicationDate-datePublication", ""),
+                    "url": row.get("noticeURL-URLavis-eng", ""),
+                    "province": _province_from_cb_row(row),
+                })
         except Exception as e:
             logger.debug(f"[PROCUREMENT] Skipped CanadaBuys row: {e}")
 
-    if tenders:
-        print(f"[PROCUREMENT] CanadaBuys: {len(tenders)} relevant tenders")
-        return tenders
-
-    # Legacy fallback (additive-only; buyandsell.gc.ca DNS-dead as of 2026-06-09)
-    rss_urls = [
-        "https://buyandsell.gc.ca/procurement-data/feed/rss",
-    ]
-
-    for url in rss_urls:
-        try:
-            # patch-1.2: fetch with browser UA via http_client, then hand the
-            # bytes to feedparser (feedparser.parse(url) uses its own default UA
-            # which is bot-blocked). Falls back to feedparser-direct on None.
-            resp = http_client.get(url, timeout=20)
-            if resp is None or resp.status_code >= 400:
-                status = 'network' if resp is None else resp.status_code
-                print(f"[PROCUREMENT][buyandsell] FAILED status={status}")
-                feed = feedparser.parse(url)
-            else:
-                feed = feedparser.parse(resp.content)
-            for entry in feed.entries:
-                title = entry.get("title", "").lower()
-                summary = entry.get("summary", "").lower()
-                text = f"{title} {summary}"
-
-                if any(kw in text for kw in CONSTRUCTION_KEYWORDS):
-                    value = _extract_value_from_text(text)
-                    if value and value >= MIN_CONTRACT_VALUE:
-                        tenders.append({
-                            "source": "buyandsell",
-                            "title": entry.get("title", ""),
-                            "description": entry.get("summary", ""),
-                            "value": value,
-                            "date": entry.get("published", ""),
-                            "url": entry.get("link", ""),
-                            "province": _extract_province_from_text(text),
-                        })
-        except Exception as e:
-            print(f"[WARN] BuyAndSell RSS fetch failed: {e}")
-
-    print(f"[PROCUREMENT] BuyAndSell: {len(tenders)} relevant tenders")
+    print(f"[PROCUREMENT] canadabuys: fetched {len(rows)} rows, "
+          f"{kw_pass} after keyword filter, {val_pass} >= "
+          f"${MIN_CONTRACT_VALUE:,} -> {len(tenders)} final "
+          f"(tender notices rarely state dollar values in text; "
+          f"{len(rows) - kw_pass} dropped by keyword, "
+          f"{kw_pass - len(tenders)} keyword-matched dropped by value)")
     return tenders
 
 
 def fetch_ontario_bps():
     """
-    Fetch Ontario Broader Public Sector procurement notices.
-    BPS Supply Chain Secretariat publishes large infrastructure contracts.
+    Ontario BPS Supply Chain procurement — DEAD UPSTREAM, fetch removed.
+
+    Live-verified DEAD 2026-06-09 (D-9) and still dead at the 2026-06-11
+    procurement fix: the CKAN package
+    'broader-public-sector-business-document-plan' was removed from
+    data.ontario.ca and package_search found no open-data successor
+    (Ontario tenders moved to the closed Ontario Tenders Portal/Jaggaer).
+    The fetch attempt was removed 2026-06-11 — it cost an HTTP round-trip
+    every weekly run for a guaranteed 404. Ontario coverage flows from the
+    CanadaBuys CSV rows whose delivery region is Ontario (see
+    fetch_buyandsell_rss / _province_from_cb_row). Name and empty-list
+    return kept for caller compatibility.
     """
-    notices = []
-
-    try:
-        # Ontario data catalogue — BPS procurement
-        # Live-verified DEAD 2026-06-09 (D-9): the CKAN package
-        # 'broader-public-sector-business-document-plan' was removed from
-        # data.ontario.ca and package_search found no open-data successor
-        # (Ontario tenders moved to the closed Ontario Tenders Portal/Jaggaer).
-        # The attempt is kept (additive-only, cheap, in case Ontario restores
-        # it); Ontario coverage meanwhile flows from the CanadaBuys CSV rows
-        # whose delivery region is Ontario.
-        url = "https://data.ontario.ca/api/3/action/package_show"
-        params = {"id": "broader-public-sector-business-document-plan"}
-
-        resp = http_client.get(url, params=params, timeout=15)
-        if resp is None or resp.status_code != 200:
-            status = 'network' if resp is None else resp.status_code
-            print(f"[PROCUREMENT][ontario_bps] dataset removed upstream (status={status}; "
-                  f"verified dead 2026-06-09) — ON coverage via CanadaBuys")
-        else:
-            data = resp.json()
-            resources = data.get("result", {}).get("resources", [])
-
-            csv_resources = [r for r in resources if r.get("format", "").upper() == "CSV"]
-            if csv_resources:
-                csv_url = csv_resources[-1].get("url")
-                csv_resp = http_client.get(csv_url, timeout=30)
-                if csv_resp is None or csv_resp.status_code >= 400:
-                    status = 'network' if csv_resp is None else csv_resp.status_code
-                    print(f"[PROCUREMENT][ontario_bps] CSV download FAILED status={status}")
-                    return []
-                reader = csv.DictReader(io.StringIO(csv_resp.text))
-
-                for row in reader:
-                    value = _parse_value(row.get("estimated_value", "0"))
-                    if value >= MIN_CONTRACT_VALUE:
-                        desc = row.get("procurement_description", "").lower()
-                        if any(kw in desc for kw in CONSTRUCTION_KEYWORDS):
-                            notices.append({
-                                "source": "ontario_bps",
-                                "description": row.get("procurement_description", ""),
-                                "organization": row.get("organization_name", ""),
-                                "value": value,
-                                "province": "ON",
-                                "url": "https://data.ontario.ca/dataset/broader-public-sector-business-document-plan",
-                            })
-
-        print(f"[PROCUREMENT] Ontario BPS: {len(notices)} relevant notices")
-    except Exception as e:
-        print(f"[WARN] Ontario BPS fetch failed: {e}")
-
-    return notices
+    print("[PROCUREMENT] Ontario BPS skipped — CKAN package removed upstream "
+          "2026; ON coverage via CanadaBuys delivery-region rows")
+    return []
 
 
 def fetch_bc_bid():
     """
-    Fetch BC Bid procurement opportunities.
-    BC's public procurement portal for provincial contracts.
+    Fetch BC construction tender opportunities.
+
+    The legacy BC Bid RSS fetch was REMOVED 2026-06-11: the
+    open.dll/RSSFeed path 404s and the refreshed BC Bid platform (Ivalua)
+    exposes no public RSS (every page.aspx path returns the same JS app
+    shell — live-verified dead 2026-06-09). BC coverage is the CanadaBuys
+    open-tenders CSV filtered to British Columbia delivery, matching the
+    construction keyword filter. Same semantics as the old BC feed — no
+    minimum-value requirement (tender notices rarely state values), but the
+    >= $5M count is logged for visibility. Name kept for caller compatibility.
     """
     opportunities = []
 
     try:
-        # BC Bid RSS feed for construction category
-        # Live-verified DEAD 2026-06-09 (D-9): the legacy open.dll/RSSFeed path
-        # 404s and the refreshed BC Bid platform (Ivalua) exposes no public RSS
-        # (every page.aspx path returns the same JS app shell). The old attempt
-        # is kept (additive-only); on failure, BC coverage falls back to the
-        # CanadaBuys open-tenders CSV filtered to British Columbia delivery.
-        url = "https://www.bcbid.gov.bc.ca/open.dll/RSSFeed?Feed=Construction"
-        # patch-1.2: fetch with browser UA via http_client, then parse the bytes
-        # with feedparser. Falls back to feedparser-direct if the fetch fails.
-        resp = http_client.get(url, timeout=20)
-        if resp is None or resp.status_code >= 400:
-            status = 'network' if resp is None else resp.status_code
-            print(f"[PROCUREMENT][bc_bid] legacy feed retired (status={status}; "
-                  f"verified dead 2026-06-09) — falling back to CanadaBuys BC rows")
-            feed = feedparser.parse(url)
-        else:
-            feed = feedparser.parse(resp.content)
+        # Dead-source skip notice (replaces the removed legacy RSS fetch).
+        print("[PROCUREMENT] BC Bid legacy RSS skipped — platform retired to "
+              "Ivalua 2026 (no public feed); BC coverage via CanadaBuys "
+              "delivery-region rows")
 
-        for entry in feed.entries:
-            title = entry.get("title", "")
-            summary = entry.get("summary", "")
-            value = _extract_value_from_text(f"{title} {summary}")
+        rows = _fetch_canadabuys_rows(_CANADABUYS_OPEN_TENDERS_CSV)
+        if rows is None:
+            # _fetch_canadabuys_rows already printed the FAILED line.
+            print("[PROCUREMENT] bc_bid FAILED: CanadaBuys open-tenders CSV "
+                  "unavailable — no BC coverage this run")
+            return opportunities
 
-            opportunities.append({
-                "source": "bc_bid",
-                "title": title,
-                "description": summary,
-                "value": value,
-                "province": "BC",
-                "url": entry.get("link", ""),
-                "date": entry.get("published", ""),
-            })
+        bc_rows = 0   # rows whose delivery region is BC
+        val_pass = 0  # kept opportunities with an extractable value >= $5M
+        for row in rows:
+            try:
+                if _province_from_cb_row(row) != "BC":
+                    continue
+                bc_rows += 1
+                title = row.get("title-titre-eng", "")
+                summary = row.get("tenderDescription-descriptionAppelOffres-eng", "")
+                text = f"{title} {summary}".lower()
+                if not any(kw in text for kw in CONSTRUCTION_KEYWORDS):
+                    continue
+                value = _extract_value_from_text(text)
+                if value and value >= MIN_CONTRACT_VALUE:
+                    val_pass += 1
+                opportunities.append({
+                    "source": "canadabuys_bc",
+                    "title": title,
+                    "description": summary,
+                    "value": value,
+                    "province": "BC",
+                    "url": row.get("noticeURL-URLavis-eng", ""),
+                    "date": row.get("publicationDate-datePublication", ""),
+                })
+            except Exception as e:
+                logger.debug(f"[PROCUREMENT] Skipped CanadaBuys BC row: {e}")
 
-        if not opportunities:
-            # CanadaBuys fallback: open tenders delivered in BC that match the
-            # construction keyword filter (same semantics as the old BC feed —
-            # no minimum-value requirement).
-            for row in _fetch_canadabuys_rows(_CANADABUYS_OPEN_TENDERS_CSV):
-                try:
-                    if _province_from_cb_row(row) != "BC":
-                        continue
-                    title = row.get("title-titre-eng", "")
-                    summary = row.get("tenderDescription-descriptionAppelOffres-eng", "")
-                    text = f"{title} {summary}".lower()
-                    if not any(kw in text for kw in CONSTRUCTION_KEYWORDS):
-                        continue
-                    opportunities.append({
-                        "source": "canadabuys_bc",
-                        "title": title,
-                        "description": summary,
-                        "value": _extract_value_from_text(text),
-                        "province": "BC",
-                        "url": row.get("noticeURL-URLavis-eng", ""),
-                        "date": row.get("publicationDate-datePublication", ""),
-                    })
-                except Exception as e:
-                    logger.debug(f"[PROCUREMENT] Skipped CanadaBuys BC row: {e}")
-
-        print(f"[PROCUREMENT] BC Bid: {len(opportunities)} construction opportunities")
+        print(f"[PROCUREMENT] bc_bid: fetched {len(rows)} rows ({bc_rows} BC "
+              f"delivery), {len(opportunities)} after keyword filter, "
+              f"{val_pass} >= ${MIN_CONTRACT_VALUE:,} -> "
+              f"{len(opportunities)} final (no value floor on BC tender "
+              f"notices — parity with retired BC Bid feed)")
     except Exception as e:
-        print(f"[WARN] BC Bid fetch failed: {e}")
+        print(f"[PROCUREMENT] bc_bid FAILED: {e}")
 
     return opportunities
 
@@ -458,7 +438,7 @@ def fetch_seao(days_back=30):
         resp = http_client.get(_SEAO_PACKAGE_URL, timeout=30)
         if resp is None or resp.status_code != 200:
             status = 'network' if resp is None else resp.status_code
-            print(f"[PROCUREMENT][seao] package_show FAILED status={status}")
+            print(f"[PROCUREMENT] seao FAILED: package_show status={status}")
             return []
 
         resources = resp.json().get("result", {}).get("resources", [])
@@ -470,6 +450,13 @@ def fetch_seao(days_back=30):
         )
         n_files = max(1, min(_SEAO_MAX_WEEKLY_FILES, (days_back + 6) // 7))
         seen_ocids = set()
+
+        # 2026-06-11 instrumentation: independent counters across all weekly
+        # files. fetched = releases carrying >= 1 award; keyword and value
+        # predicates evaluated independently per release.
+        fetched_releases = 0
+        kw_pass = 0   # 'works' category or construction keyword (EN+FR)
+        val_pass = 0  # release has >= 1 award >= $5M
 
         for res in weekly[:n_files]:
             name = res.get("name", "")
@@ -483,12 +470,12 @@ def fetch_seao(days_back=30):
             file_resp = http_client.get(dl_url, timeout=60)
             if file_resp is None or file_resp.status_code != 200:
                 status = 'network' if file_resp is None else file_resp.status_code
-                print(f"[PROCUREMENT][seao] FAILED status={status} {name}")
+                print(f"[PROCUREMENT] seao FAILED: status={status} {name}")
                 continue
             try:
                 releases = file_resp.json().get("releases", [])
             except ValueError as e:
-                print(f"[PROCUREMENT][seao] JSON parse failed for {name}: {e}")
+                print(f"[PROCUREMENT] seao FAILED: JSON parse error for {name}: {e}")
                 continue
 
             for rel in releases:
@@ -499,14 +486,23 @@ def fetch_seao(days_back=30):
                     awards = rel.get("awards") or []
                     if not awards:
                         continue
+                    fetched_releases += 1
                     tender = rel.get("tender") or {}
                     title = tender.get("title") or ""
                     category = tender.get("mainProcurementCategory") or ""
                     text = title.lower()
                     # 'works' = construction in OCDS; otherwise keyword match
                     # (CONSTRUCTION_KEYWORDS includes the French additions).
-                    if category != "works" and not any(
-                            kw in text for kw in CONSTRUCTION_KEYWORDS):
+                    kw_ok = category == "works" or any(
+                        kw in text for kw in CONSTRUCTION_KEYWORDS)
+                    val_ok = any(
+                        float((a.get("value") or {}).get("amount") or 0)
+                        >= MIN_CONTRACT_VALUE for a in awards)
+                    if kw_ok:
+                        kw_pass += 1
+                    if val_ok:
+                        val_pass += 1
+                    if not kw_ok:
                         continue
                     for award in awards:
                         value = float((award.get("value") or {}).get("amount") or 0)
@@ -529,10 +525,16 @@ def fetch_seao(days_back=30):
                 except Exception as e:
                     logger.debug(f"[PROCUREMENT] Skipped SEAO release: {e}")
 
-        print(f"[PROCUREMENT] SEAO: {len(contracts)} relevant contracts "
-              f"(>=${MIN_CONTRACT_VALUE:,})")
+        # seen_ocids holds exactly the releases that yielded >= 1 kept award,
+        # so kw_pass - len(seen_ocids) = keyword-matched releases whose every
+        # award fell under the $5M floor.
+        print(f"[PROCUREMENT] seao: fetched {fetched_releases} awarded "
+              f"releases, {kw_pass} after keyword filter, {val_pass} >= "
+              f"${MIN_CONTRACT_VALUE:,} -> {len(contracts)} final "
+              f"({fetched_releases - kw_pass} dropped by keyword, "
+              f"{kw_pass - len(seen_ocids)} keyword-matched dropped by value)")
     except Exception as e:
-        print(f"[WARN] SEAO fetch failed: {e}")
+        print(f"[PROCUREMENT] seao FAILED: {e}")
 
     return contracts
 
@@ -564,16 +566,16 @@ def fetch_dcc():
         try:
             import fitz  # PyMuPDF
         except ImportError:
-            print("[PROCUREMENT][dcc] PyMuPDF (fitz) not installed — skipping")
+            print("[PROCUREMENT] dcc FAILED: PyMuPDF (fitz) not installed")
             return []
 
         resp = http_client.get(_DCC_AWARDS_PDF, timeout=40)
         if resp is None or resp.status_code != 200:
             status = 'network' if resp is None else resp.status_code
-            print(f"[PROCUREMENT][dcc] FAILED status={status}")
+            print(f"[PROCUREMENT] dcc FAILED: status={status}")
             return []
         if not (resp.content or b"").startswith(b"%PDF"):
-            print("[PROCUREMENT][dcc] response is not a PDF — skipping")
+            print("[PROCUREMENT] dcc FAILED: response is not a PDF")
             return []
 
         doc = fitz.open(stream=resp.content, filetype="pdf")
@@ -639,10 +641,15 @@ def fetch_dcc():
         # small; the floor keeps semantics consistent across sources).
         total_parsed = len(contracts)
         contracts = [c for c in contracts if (c.get("value") or 0) >= MIN_CONTRACT_VALUE]
-        print(f"[PROCUREMENT] DCC: {len(contracts)} relevant contracts "
-              f"(parsed {total_parsed} awards, floor ${MIN_CONTRACT_VALUE:,})")
+        # Every DCC award is defence construction by definition, so the
+        # keyword filter is identity here (N after keyword == N fetched).
+        print(f"[PROCUREMENT] dcc: fetched {total_parsed} rows, "
+              f"{total_parsed} after keyword filter (all DCC awards are "
+              f"defence construction), {len(contracts)} >= "
+              f"${MIN_CONTRACT_VALUE:,} -> {len(contracts)} final "
+              f"({total_parsed - len(contracts)} dropped by value)")
     except Exception as e:
-        print(f"[WARN] DCC fetch failed: {e}")
+        print(f"[PROCUREMENT] dcc FAILED: {e}")
 
     return contracts
 
@@ -790,18 +797,22 @@ def run_procurement_monitor(conn, days_back=30):
     try:
         all_contracts.extend(fetch_seao(days_back))
     except Exception as e:
-        print(f"[WARN] SEAO source failed (isolated): {e}")
+        print(f"[PROCUREMENT] seao FAILED (isolated): {e}")
     try:
         all_contracts.extend(fetch_dcc())
     except Exception as e:
-        print(f"[WARN] DCC source failed (isolated): {e}")
+        print(f"[PROCUREMENT] dcc FAILED (isolated): {e}")
 
     print(f"[PROCUREMENT] Total: {len(all_contracts)} relevant contracts across all sources")
 
     # patch-1.2: min-yield DEGRADE log. All four procurement sources were dark
-    # (D-9); a whole-run zero means dead endpoints, not a quiet week.
+    # (D-9); a whole-run zero means dead endpoints, not a quiet week. The
+    # per-source instrumentation lines above (2026-06-11) say whether each
+    # zero was a FAILED fetch or rows genuinely dropped by filters.
     if not all_contracts:
-        print("[PROCUREMENT DEGRADED] 0 items — all procurement sources returned zero")
+        print("[PROCUREMENT DEGRADED] 0 items — all procurement sources "
+              "returned zero (see per-source lines above: FAILED = dead "
+              "fetch, otherwise counts show keyword/value drops)")
 
     # Link to existing projects
     linked = link_contracts_to_projects(all_contracts, conn)

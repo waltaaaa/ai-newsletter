@@ -51,6 +51,8 @@ Also read for reference:
 4. **Attribution over assertion.** Write "the database tracks X rate-sensitive projects" not "X projects are at risk."
 5. **Conditional language.** Write "If commodity prices hold below $70, X projects would face..." not "X projects will struggle."
 6. **Em dash lead sentences.** Open each paragraph with a bold lead sentence using the `<span class="lead-sentence">` pattern.
+7. **Pipeline data is the ONLY source for prices (validator-enforced).** Every price, yield, FX rate, and index level must come from `dossier_macro.json` (built from `timeseries.json`) — never from WebSearch, memory, or a prior edition. `tools/validate_briefing_schema.py` reconciles structured prints against `timeseries.json` and hard-FAILs the deploy on >5% divergence for a fresh edition. If a dossier value looks wrong, mark it N/A and report it — do not source a replacement from the web.
+8. **"On the week" means 7 days.** A move measured against the prior edition's baseline (typically 1–3 weeks old) must say "since the last edition" — never "on the week" or "weekly."
 
 ### Banned Words — Never Use These:
 

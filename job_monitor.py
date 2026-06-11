@@ -2,8 +2,19 @@
 Job posting monitor — detects hiring spikes as leading indicators for project activity.
 
 Sources:
-1. Government of Canada Job Bank RSS (free, structured, reliable)
-2. Indeed RSS feeds by location + sector keywords (free, broader coverage)
+1. Government of Canada Job Bank Atom/RSS feed (free, structured, reliable) — PRIMARY.
+   Verified live 2026-06-11:
+   https://www.jobbank.gc.ca/jobsearch/feed/jobSearchRSSfeed?searchstring={kw}&fprov={PR}&sort=D
+   - `searchstring` filters by keyword (server-side)
+   - `fprov` filters by two-letter province code (server-side; verified with fprov=AB)
+   - CMA-level filtering is NOT supported server-side — done client-side by parsing
+     the "Location: City (PR)" line embedded in each entry's summary HTML.
+   - Employer name is in the summary HTML ("Employer: ..."), not the author field.
+2. Indeed RSS — REMOVED. Indeed discontinued its public RSS endpoint
+   (https://ca.indeed.com/rss) years ago; it now returns an HTML page that
+   feedparser silently parses as an empty feed. This was a dead external
+   endpoint, not an adaptive-learning keyword, so the additive-only rule does
+   not apply. Do not re-add without verifying a live feed exists.
 
 Outputs:
 - Hiring spike alerts linked to projects by employer name + location
@@ -14,16 +25,36 @@ Does NOT track individual postings — aggregates by employer + geography.
 import feedparser
 import json
 import logging
+import re
+import unicodedata
 from collections import defaultdict
 from datetime import datetime
+from urllib.parse import quote_plus
+
+try:
+    import requests
+except ImportError:  # pragma: no cover — requests is a pipeline dependency
+    requests = None
 
 logger = logging.getLogger(__name__)
 
-# Job Bank RSS base URL — supports location and keyword filtering
-JOB_BANK_RSS = "https://www.jobbank.gc.ca/jobsearch/jobsearch?sort=D&frid={region_id}&fkw={keyword}&rss=1"
+# Job Bank Atom/RSS feed — keyword + province filtering server-side (verified live 2026-06-11).
+# The old pattern (/jobsearch/jobsearch?...&rss=1) returns the HTML search page — the
+# rss=1 param is ignored. The real feed endpoint is /jobsearch/feed/jobSearchRSSfeed.
+JOB_BANK_RSS = ("https://www.jobbank.gc.ca/jobsearch/feed/jobSearchRSSfeed"
+                "?searchstring={keyword}&fprov={province}&sort=D")
 
-# Indeed RSS base URL — supports location and query filtering
-INDEED_RSS = "https://ca.indeed.com/rss?q={query}&l={location}&sort=date"
+# Browser User-Agent — Job Bank serves the feed fine to scripted clients, but use a
+# real UA to avoid bot heuristics.
+_HTTP_HEADERS = {
+    "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                   "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"),
+    "Accept": "application/atom+xml, application/rss+xml, application/xml;q=0.9, */*;q=0.8",
+}
+
+# Per-process feed cache — the feed is keyed by (keyword, province), so all CMAs in
+# the same province share one HTTP fetch per search term.
+_FEED_CACHE = {}
 
 # Sector-specific search terms mapped to NAICS keys
 SECTOR_SEARCH_TERMS = {
@@ -40,6 +71,48 @@ SECTOR_SEARCH_TERMS = {
     "manufacturing": ["manufacturing plant setup", "factory construction", "assembly line"],
     "healthcare": ["hospital construction", "healthcare facility", "long-term care construction"],
     "defence": ["military construction", "DND contract", "shipyard"],
+}
+
+# Job Bank-specific search terms (ADDITIVE — SECTOR_SEARCH_TERMS above is preserved
+# unchanged). Job Bank's searchstring matches against job TITLES, so the Indeed-style
+# multi-word phrases above return 0 server-side ("residential construction": 0 entries,
+# verified live 2026-06-11). These occupation-style terms were yield-tested live:
+# construction=100, machine operator=56, carpenter=22, welder=15, electrician=13 (ON);
+# pipeline=9, drilling=1 (AB).
+JOB_BANK_SECTOR_TERMS = {
+    "oil_gas": ["pipeline", "drilling", "rig"],
+    "mining": ["mining", "miner", "geologist"],
+    "infrastructure": ["construction", "civil engineer", "heavy equipment operator"],
+    "power_energy": ["electrician", "power", "wind turbine"],
+    "residential": ["carpenter", "roofer", "plumber"],
+    "commercial_mixed": ["construction manager", "construction estimator", "concrete"],
+    "manufacturing": ["manufacturing", "assembler", "welder"],
+    "healthcare": ["nurse", "long-term care", "hospital"],
+    "defence": ["shipyard", "military", "defence"],
+}
+
+# Job Bank location strings within a CMA — postings list borough/suburb names
+# ("North York (ON)", "Mississauga (ON)"), so the core city name alone misses most of
+# the metro area. Matching is substring + accent-insensitive, scoped to the province
+# feed, so short names cannot collide across provinces.
+JOB_BANK_CMA_CITIES = {
+    "Toronto": ["Toronto", "North York", "Scarborough", "Etobicoke", "East York",
+                "Mississauga", "Brampton", "Vaughan", "Concord", "Woodbridge",
+                "Markham", "Richmond Hill", "Pickering", "Ajax", "Whitby", "Oshawa",
+                "Oakville"],
+    "Montreal": ["Montréal", "Laval", "Longueuil", "Brossard", "Saint-Laurent",
+                 "Dorval", "Anjou", "Terrebonne", "Pointe-Claire", "Boucherville"],
+    "Vancouver": ["Vancouver", "Burnaby", "Surrey", "Richmond", "Coquitlam",
+                  "New Westminster", "Delta", "Langley", "Maple Ridge"],
+    "Calgary": ["Calgary", "Airdrie", "Chestermere", "Cochrane", "Okotoks"],
+    "Edmonton": ["Edmonton", "Sherwood Park", "St. Albert", "Leduc", "Spruce Grove",
+                 "Fort Saskatchewan", "Nisku", "Acheson"],
+    "Ottawa": ["Ottawa", "Kanata", "Nepean", "Orléans", "Gloucester"],
+    "Halifax": ["Halifax", "Dartmouth", "Bedford"],
+    "St. John's": ["St. John's", "Mount Pearl", "Paradise"],
+    "Fort McMurray": ["Fort McMurray", "Wood Buffalo"],
+    "Saint John": ["Saint John", "Rothesay", "Quispamsis"],
+    # Winnipeg, Saskatoon, Regina, Kitimat, Sudbury: core city name suffices
 }
 
 # Major CMAs to monitor — maps to CMA names and Job Bank region IDs
@@ -66,60 +139,116 @@ CMA_REGIONS = {
 SPIKE_THRESHOLD = 3.0
 
 
-def fetch_job_postings(sector_key, cma_name, source="indeed"):
+def _normalize_place(text):
+    """Lowercase and strip accents for place-name comparison (Montréal == Montreal)."""
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(c for c in text if not unicodedata.combining(c))
+    return text.lower().strip()
+
+
+def _entry_location(entry):
+    """Extract 'City (PR)' location string from a Job Bank entry's summary HTML."""
+    m = re.search(r"Location:</strong>\s*([^<]+)", entry.get("summary", ""))
+    return m.group(1).strip() if m else ""
+
+
+def _fetch_feed(url):
+    """
+    Fetch and parse a feed URL with a browser User-Agent, with per-process caching.
+    Returns a feedparser result. Raises on HTTP/network failure so the caller can log it.
+    """
+    if url in _FEED_CACHE:
+        return _FEED_CACHE[url]
+
+    if requests is not None:
+        resp = requests.get(url, headers=_HTTP_HEADERS, timeout=30)
+        resp.raise_for_status()
+        feed = feedparser.parse(resp.text)
+    else:
+        # Fallback: let feedparser fetch directly (no custom UA control over redirects)
+        feed = feedparser.parse(url, request_headers=_HTTP_HEADERS)
+
+    _FEED_CACHE[url] = feed
+    return feed
+
+
+def fetch_job_postings(sector_key, cma_name, source="job_bank"):
     """
     Fetch recent job postings for a sector + CMA combination.
     Returns list of dicts with employer, title, location, date.
+
+    `source` is retained for signature compatibility. "indeed" is dead (Indeed
+    discontinued public RSS) — all values route to Job Bank.
     """
     cma = CMA_REGIONS.get(cma_name)
     if not cma:
         return []
 
-    terms = SECTOR_SEARCH_TERMS.get(sector_key, [])
+    if source == "indeed":
+        # Indeed public RSS was discontinued — silently returning empty feeds since
+        # at least March. Route to Job Bank instead.
+        print(f"[JOBS] source='indeed' is dead (Indeed discontinued public RSS) — using Job Bank for {cma_name}")
+
+    # City names for client-side CMA filtering — CMA alias list when defined,
+    # else the core city from the legacy indeed_location field ("Montréal, QC").
+    cities = JOB_BANK_CMA_CITIES.get(
+        cma_name, [cma["indeed_location"].split(",")[0].strip()]
+    )
+    cities_norm = [_normalize_place(c) for c in cities]
+
+    # Job Bank title-style terms when available; fall back to the legacy
+    # Indeed-style phrases for any sector not yet mapped.
+    terms = JOB_BANK_SECTOR_TERMS.get(sector_key) or SECTOR_SEARCH_TERMS.get(sector_key, [])
     all_postings = []
 
     for term in terms[:3]:  # Limit to 3 terms per sector to control fetch volume
         try:
-            if source == "indeed":
-                url = INDEED_RSS.format(
-                    query=term.replace(" ", "+"),
-                    location=cma["indeed_location"].replace(" ", "+")
-                )
-            else:
-                url = JOB_BANK_RSS.format(
-                    region_id=cma["job_bank_region"],
-                    keyword=term.replace(" ", "+")
-                )
+            url = JOB_BANK_RSS.format(
+                keyword=quote_plus(term),
+                province=cma["province"],
+            )
+            feed = _fetch_feed(url)
 
-            feed = feedparser.parse(url)
-            for entry in feed.entries[:20]:
+            matched = 0
+            for entry in feed.entries:
+                location_norm = _normalize_place(_entry_location(entry))
+                # Province feed contains all cities — keep only this CMA's postings
+                if not any(c in location_norm for c in cities_norm):
+                    continue
                 posting = {
                     "title": entry.get("title", ""),
                     "employer": _extract_employer(entry),
                     "location": cma_name,
                     "province": cma["province"],
                     "sector": sector_key,
-                    "date": entry.get("published", ""),
+                    "date": entry.get("published", "") or entry.get("updated", ""),
                     "url": entry.get("link", ""),
                 }
                 all_postings.append(posting)
+                matched += 1
+                if matched >= 20:  # Cap per term, matching the old per-feed limit
+                    break
 
         except Exception as e:
-            logger.debug(f"[JOBS] Failed to fetch {source} for {term} in {cma_name}: {e}")
+            print(f"[JOBS] Failed to fetch job_bank feed for '{term}' in {cma_name} ({cma['province']}): {e}")
 
     return all_postings
 
 
 def _extract_employer(entry):
     """Extract employer name from a job posting RSS entry."""
-    # Indeed puts employer in the title as "Job Title - Employer"
-    title = entry.get("title", "")
-    if " - " in title:
-        return title.rsplit(" - ", 1)[-1].strip()
-    # Job Bank uses author field
+    # Job Bank puts the employer in the summary HTML: "<strong>Employer:</strong> Name<br/>"
+    m = re.search(r"Employer:</strong>\s*([^<]+)", entry.get("summary", ""))
+    if m:
+        return m.group(1).strip()
+    # Some feeds use the author field
     author = entry.get("author", "")
     if author:
         return author
+    # Legacy Indeed format put employer in the title as "Job Title - Employer"
+    title = entry.get("title", "")
+    if " - " in title:
+        return title.rsplit(" - ", 1)[-1].strip()
     return "Unknown"
 
 
@@ -204,7 +333,7 @@ def link_spikes_to_projects(spikes, conn):
                 for m in matches
             ]
         except Exception as e:
-            logger.debug(f"[JOBS] Project linking failed for {spike['employer']}: {e}")
+            print(f"[JOBS] Project linking failed for {spike['employer']}: {e}")
             spike["linked_projects"] = []
 
         linked.append(spike)
@@ -283,10 +412,13 @@ def run_job_monitor(conn, sectors=None, cmas=None):
 
     for sector in sectors:
         for cma in cmas:
-            postings = fetch_job_postings(sector, cma, source="indeed")
+            postings = fetch_job_postings(sector, cma, source="job_bank")
             all_postings.extend(postings)
 
     print(f"[JOBS] Fetched {len(all_postings)} postings across {len(sectors)} sectors, {len(cmas)} CMAs")
+
+    if not all_postings:
+        print("[JOBS DEGRADED] 0 postings fetched across all sources — feeds dead or blocked; snapshot will be empty")
 
     current_counts = aggregate_by_employer(all_postings)
     historical = get_historical_counts(conn)

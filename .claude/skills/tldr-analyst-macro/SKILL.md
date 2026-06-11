@@ -425,7 +425,8 @@ Carry forward structure from briefing_latest.json, but the commodities array MUS
 6. **Never fabricate.** Never interpolate between two points to fill a missing date. Never use general market knowledge to fill a missing commodity. Never carry forward last week's value as this week's.
 7. **WCS handling:** if no WCS feed is available, set the top-level `wcs_analysis` to `null` and include the WCS entry in commodities with `"price": "N/A"` and a note. The Markets writer will then correctly mark the WCS analysis block as unavailable instead of fabricating a discount.
 
-Other financial market fields (indices, fx, yieldCurve) can still carry forward from briefing_latest.json as today. Never fabricate or estimate financial data for those either.
+8. **Indices, FX, and yieldCurve come from timeseries.json too** — keys `tsx_composite`, `sp500`, `djia`, `nasdaq`, `ftse100`, `dax`, `nikkei225`; `cadusd`, `eurusd`, `usdjpy`, `usdcny`; `goc_2y_yield` … `goc_10y_yield`, `goc_long_yield`. Carrying values forward from briefing_latest.json (the PRIOR edition) is banned for any series timeseries.json carries — the 2026-06-08 edition shipped the previous edition's potash price relabeled as current, and a fabricated 10Y yield, through exactly that path. If a series is missing from timeseries.json, mark the field N/A with a note; never fabricate or estimate.
+9. **Validator enforcement.** `tools/validate_briefing_schema.py` reconciles every structured market print in the final briefing against `timeseries.json` at week_of and hard-FAILs the deploy gate on >5% divergence for a fresh edition. A dossier value that contradicts timeseries.json will be caught downstream — get it right here.
 
 ### Step 9: Build Consumer Pulse Package (8 minutes)
 

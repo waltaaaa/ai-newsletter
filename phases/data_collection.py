@@ -1844,10 +1844,34 @@ def get_goc_yields():
                 hist_val = historical.get(series_id, {}).get('v')
                 historical_vals.append(float(hist_val) if hist_val else None)
 
-        clean_hist = [v for v in historical_vals if v is not None]
+        # Audit M2: the old all-or-nothing condition dropped the ENTIRE
+        # 1-year-ago comparison line whenever a single term had no
+        # observation in the 10-day window. Yield curves are smooth —
+        # interpolate isolated gaps from neighbouring terms, and only give
+        # up when fewer than half the terms have history.
+        n_known = sum(1 for v in historical_vals if v is not None)
+        if historical_vals and n_known >= max(2, len(current_vals) // 2):
+            filled = list(historical_vals)
+            # Pad to current length if the loop appended fewer entries
+            while len(filled) < len(current_vals):
+                filled.append(None)
+            known_idx = [i for i, v in enumerate(filled) if v is not None]
+            for i, v in enumerate(filled):
+                if v is not None:
+                    continue
+                lo = max((k for k in known_idx if k < i), default=None)
+                hi = min((k for k in known_idx if k > i), default=None)
+                if lo is not None and hi is not None:
+                    frac = (i - lo) / (hi - lo)
+                    filled[i] = filled[lo] + (filled[hi] - filled[lo]) * frac
+                else:
+                    filled[i] = filled[lo if lo is not None else hi]
+            hist_line = [round(v, 2) for v in filled]
+        else:
+            hist_line = []
         charts = {
             "yieldCurveCurrent":  current_vals,
-            "yieldCurveLastYear": clean_hist if len(clean_hist) == len(current_vals) else []
+            "yieldCurveLastYear": hist_line,
         }
 
         print(f"  Fetched {len(yield_curve)} GoC yield terms (current + 1-yr prior).")

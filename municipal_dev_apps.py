@@ -61,7 +61,9 @@ MUNICIPAL_SOURCES = {
         "approach": "ckan_v2",
         "params": {
             "limit": 100,
-            "order_by": "issueyear DESC, issuemonth DESC",
+            # 2026-06-11: dataset dropped issueyear/issuemonth (HTTP 400
+            # "Unknown field: issuemonth"); order on issuedate directly.
+            "order_by": "issuedate DESC",
             "where": "projectvalue > 175000000",
         },
         "field_map": {
@@ -73,22 +75,31 @@ MUNICIPAL_SOURCES = {
         },
     },
     "calgary": {
-        "name": "Calgary Development Permits",
+        "name": "Calgary Building Permits",
         "province": "AB",
         "cma": "Calgary",
-        "url": "https://data.calgary.ca/resource/6933-unw5.json",
+        # 2026-06-11: 6933-unw5 (development permits) no longer carries any
+        # cost column (HTTP 400 "No such column: estimatedprojectcost") and
+        # never will — switched to the Building Permits dataset c2es-76ed,
+        # which has estprojectcost. Ordered by applieddate (always populated;
+        # issueddate is NULL for pending permits and Socrata sorts NULLs
+        # first on DESC, which would bury recent rows).
+        "url": "https://data.calgary.ca/resource/c2es-76ed.json",
         "approach": "socrata",
         "params": {
             "$limit": 100,
-            "$order": "issueddate DESC",
-            "$where": "estimatedprojectcost > 200000000",
+            "$order": "applieddate DESC",
+            "$where": "estprojectcost > 200000000",
         },
         "field_map": {
             "name": "description",
-            "value": "estimatedprojectcost",
-            "address": "communityname",
+            # description is blank on some large pending permits — fall back
+            # to the permit class (e.g. "3510 - Recreation Facility").
+            "name_alt": "permitclass",
+            "value": "estprojectcost",
+            "address": "originaladdress",
             "type": "workclassgroup",
-            "date": "issueddate",
+            "date": "applieddate",
         },
     },
     "edmonton": {
@@ -100,11 +111,15 @@ MUNICIPAL_SOURCES = {
         "params": {
             "$limit": 100,
             "$order": "issue_date DESC",
-            "$where": "job_value > 200000000",
+            # 2026-06-11: job_value renamed to construction_value (HTTP 400
+            # "No such column: job_value"); the column is text-typed now, so
+            # cast to number — a raw text compare would silently drop 10-digit
+            # ($1B+) values.
+            "$where": "construction_value::number > 200000000",
         },
         "field_map": {
             "name": "job_description",
-            "value": "job_value",
+            "value": "construction_value",
             "address": "address",
             "type": "permit_type",
             "date": "issue_date",
@@ -114,18 +129,28 @@ MUNICIPAL_SOURCES = {
         "name": "Winnipeg Building Permits",
         "province": "MB",
         "cma": "Winnipeg",
-        "url": "https://data.winnipeg.ca/resource/m4wt-mqkb.json",
+        # 2026-06-11: m4wt-mqkb was rebuilt as a ward/neighbourhood/year
+        # AGGREGATE (HTTP 400 "No such column: total_project_value") — no
+        # per-permit rows. Switched to it4w-cpf4 (Detailed Building Permit
+        # Data, updated weekly). NO Winnipeg permit-level dataset carries a
+        # dollar column anymore, so the value gate cannot apply; instead the
+        # $where pre-filters on the city's own major_project = 'Yes' flag
+        # (Winnipeg's significance designation) and no_value_field admits
+        # the records with value "Not disclosed".
+        "url": "https://data.winnipeg.ca/resource/it4w-cpf4.json",
         "approach": "socrata",
+        "no_value_field": True,
         "params": {
             "$limit": 100,
             "$order": "issue_date DESC",
-            "$where": "total_project_value > 40000000",
+            "$where": "major_project = 'Yes'",
         },
         "field_map": {
-            "name": "work_description",
-            "value": "total_project_value",
+            "name": "permit_type",
+            "name_alt": "work_type",
+            "value": "",
             "address": "address",
-            "type": "permit_type",
+            "type": "work_type",
             "date": "issue_date",
         },
     },
@@ -345,7 +370,13 @@ def _parse_dollar_value(text: str) -> float | None:
 def _build_project(raw: dict, source: dict, field_map: dict) -> dict | None:
     """Convert a raw API record into a standardized project dict."""
     name_field = field_map.get("name", "")
-    name = str(raw.get(name_field, "")).strip()
+    name = str(raw.get(name_field, "") or "").strip()
+    if not name:
+        # 2026-06-11: optional fallback field — e.g. Calgary leaves
+        # description blank on some large pending permits (permitclass used
+        # instead); Winnipeg detail rows have no description at all.
+        alt_field = field_map.get("name_alt", "")
+        name = str(raw.get(alt_field, "") or "").strip() if alt_field else ""
     if not name:
         return None
 
@@ -390,8 +421,11 @@ def _build_project(raw: dict, source: dict, field_map: dict) -> dict | None:
 
 
 async def _fetch_socrata(session: aiohttp.ClientSession, source: dict,
-                         threshold_millions: float) -> list[dict]:
-    """Fetch permits from a Socrata Open Data API."""
+                         threshold_millions: float) -> tuple[list[dict], str | None]:
+    """Fetch permits from a Socrata Open Data API.
+
+    Returns (projects, failure_reason). failure_reason is None on success.
+    """
     params = dict(source.get("params", {}))
     field_map = source.get("field_map", {})
 
@@ -402,23 +436,34 @@ async def _fetch_socrata(session: aiohttp.ClientSession, source: dict,
         ) as resp:
             if resp.status != 200:
                 logger.warning(f"  [TIER 13][{source['name']}] FAILED status={resp.status} (socrata)")
-                return []
+                return [], str(resp.status)
             records = await resp.json()
     except Exception as e:
         logger.warning(f"  [TIER 13][{source['name']}] FAILED status=exception (socrata) {type(e).__name__}: {e}")
-        return []
+        return [], type(e).__name__
+
+    # 2026-06-11: datasets with no dollar column (Winnipeg it4w-cpf4) set
+    # no_value_field — the $where clause already pre-filters significance
+    # (e.g. the city's major_project flag), so the value gate is skipped.
+    skip_value_gate = bool(source.get("no_value_field"))
 
     projects = []
     for rec in records:
         proj = _build_project(rec, source, field_map)
-        if proj and (proj.get("value_millions") or 0) >= threshold_millions:
+        if proj and (skip_value_gate
+                     or (proj.get("value_millions") or 0) >= threshold_millions):
             projects.append(proj)
-    return projects
+    return projects, None
 
 
 async def _fetch_ckan(session: aiohttp.ClientSession, source: dict,
-                      threshold_millions: float) -> list[dict]:
-    """Fetch permits from a CKAN / OpenData v2 API."""
+                      threshold_millions: float) -> tuple[list[dict], str | None]:
+    """Fetch permits from an Opendatasoft explore v2.1 API (e.g. Vancouver).
+
+    Query params are explore-v2.1 style: where / order_by / limit
+    (NOT the legacy q/rows search syntax).
+    Returns (projects, failure_reason). failure_reason is None on success.
+    """
     params = dict(source.get("params", {}))
     field_map = source.get("field_map", {})
 
@@ -429,13 +474,13 @@ async def _fetch_ckan(session: aiohttp.ClientSession, source: dict,
         ) as resp:
             if resp.status != 200:
                 logger.warning(f"  [TIER 13][{source['name']}] FAILED status={resp.status} (ckan)")
-                return []
+                return [], str(resp.status)
             data = await resp.json()
     except Exception as e:
         logger.warning(f"  [TIER 13][{source['name']}] FAILED status=exception (ckan) {type(e).__name__}: {e}")
-        return []
+        return [], type(e).__name__
 
-    # CKAN v2.1 wraps results in "results" key
+    # Opendatasoft explore v2.1 wraps results in "results" key
     records = data.get("results", data) if isinstance(data, dict) else data
     if not isinstance(records, list):
         records = []
@@ -445,17 +490,19 @@ async def _fetch_ckan(session: aiohttp.ClientSession, source: dict,
         proj = _build_project(rec, source, field_map)
         if proj and (proj.get("value_millions") or 0) >= threshold_millions:
             projects.append(proj)
-    return projects
+    return projects, None
 
 
 async def _fetch_arcgis(session: aiohttp.ClientSession, source: dict,
-                        threshold_millions: float) -> list[dict]:
+                        threshold_millions: float) -> tuple[list[dict], str | None]:
     """Fetch permits from an ArcGIS REST FeatureServer/MapServer query endpoint.
 
     Response shape: {"features": [{"attributes": {...}}, ...]} — the attributes
     dicts feed _build_project exactly like Socrata records. Added 2026-06-09
     when Kitchener's open-data CSV download item was retired in favour of a
     FeatureServer layer carrying CONSTRUCTION_VALUE.
+
+    Returns (projects, failure_reason). failure_reason is None on success.
     """
     params = dict(source.get("params", {}))
     params.setdefault("f", "json")
@@ -468,15 +515,15 @@ async def _fetch_arcgis(session: aiohttp.ClientSession, source: dict,
         ) as resp:
             if resp.status != 200:
                 logger.warning(f"  [TIER 13][{source['name']}] FAILED status={resp.status} (arcgis)")
-                return []
+                return [], str(resp.status)
             data = await resp.json(content_type=None)
     except Exception as e:
         logger.warning(f"  [TIER 13][{source['name']}] FAILED status=exception (arcgis) {type(e).__name__}: {e}")
-        return []
+        return [], type(e).__name__
 
     if isinstance(data, dict) and data.get("error"):
         logger.warning(f"  [TIER 13][{source['name']}] FAILED (arcgis) {str(data['error'])[:120]}")
-        return []
+        return [], "arcgis_error"
 
     projects = []
     for feat in (data.get("features", []) if isinstance(data, dict) else []):
@@ -484,22 +531,24 @@ async def _fetch_arcgis(session: aiohttp.ClientSession, source: dict,
         proj = _build_project(rec, source, field_map)
         if proj and (proj.get("value_millions") or 0) >= threshold_millions:
             projects.append(proj)
-    return projects
+    return projects, None
 
 
 async def _scrape_html_portal(session: aiohttp.ClientSession, source: dict,
-                              threshold_millions: float) -> list[dict]:
+                              threshold_millions: float) -> tuple[list[dict], str | None]:
     """Scrape an HTML development application portal.
 
     HTML portals are highly varied in structure. This fetches the listing page
     and attempts to extract project entries. For cities where the structure is
     unknown, returns empty and logs a notice.
+
+    Returns (projects, failure_reason). failure_reason is None on success.
     """
     try:
         from bs4 import BeautifulSoup
     except ImportError:
         logger.info(f"  {source['name']}: BeautifulSoup not installed, skipping HTML scrape")
-        return []
+        return [], "no_bs4"
 
     try:
         # patch-1.2: rely on the session's shared browser headers (set in
@@ -511,11 +560,11 @@ async def _scrape_html_portal(session: aiohttp.ClientSession, source: dict,
         ) as resp:
             if resp.status != 200:
                 logger.warning(f"  [TIER 13][{source['name']}] FAILED status={resp.status}")
-                return []
+                return [], str(resp.status)
             html = await resp.text()
     except Exception as e:
         logger.warning(f"  [TIER 13][{source['name']}] FAILED status=exception {type(e).__name__}: {e}")
-        return []
+        return [], type(e).__name__
 
     soup = BeautifulSoup(html, "html.parser")
     projects = []
@@ -567,7 +616,7 @@ async def _scrape_html_portal(session: aiohttp.ClientSession, source: dict,
                 }],
             })
 
-    return projects
+    return projects, None
 
 
 async def _health_check(session: aiohttp.ClientSession, url: str) -> bool:
@@ -592,6 +641,11 @@ async def scrape_municipal_applications() -> list[dict]:
     all_projects = []
     cities_skipped = 0
     cities_total = len(MUNICIPAL_SOURCES)
+    # 2026-06-11: per-city outcome aggregation — successes as "City N",
+    # failures as "City(reason)" — printed as ONE line at the end of the tier
+    # run so dead cities are visible at a glance in the pipeline output.
+    city_counts: dict[str, int] = {}
+    city_failures: dict[str, str] = {}
 
     # patch-1.2: browser headers on the session (clears 403 bot-blocks) +
     # certifi-backed TLS via a connector (clears CERTIFICATE_VERIFY_FAILED).
@@ -599,11 +653,13 @@ async def scrape_municipal_applications() -> list[dict]:
     async with aiohttp.ClientSession(headers=_BROWSER_HEADERS,
                                      connector=connector) as session:
         for city_key, source in MUNICIPAL_SOURCES.items():
+            city_label = city_key.replace("_", " ").title()
             try:
                 # Health check: verify endpoint is reachable before full scrape
                 if not await _health_check(session, source["url"]):
                     logger.warning(f"  [Municipal] {city_key} skipped — endpoint unreachable")
                     cities_skipped += 1
+                    city_failures[city_label] = "unreachable"
                     continue
 
                 prov = source["province"]
@@ -611,26 +667,37 @@ async def scrape_municipal_applications() -> list[dict]:
                 approach = source.get("approach", "html_scrape")
 
                 if approach == "socrata":
-                    projects = await _fetch_socrata(session, source, threshold)
+                    projects, failure = await _fetch_socrata(session, source, threshold)
                 elif approach in ("ckan_v2", "ckan"):
-                    projects = await _fetch_ckan(session, source, threshold)
+                    projects, failure = await _fetch_ckan(session, source, threshold)
                 elif approach == "arcgis":
-                    projects = await _fetch_arcgis(session, source, threshold)
+                    projects, failure = await _fetch_arcgis(session, source, threshold)
                 else:
-                    projects = await _scrape_html_portal(session, source, threshold)
+                    projects, failure = await _scrape_html_portal(session, source, threshold)
+
+                if failure is not None:
+                    city_failures[city_label] = failure
+                    continue
 
                 all_projects.extend(projects)
+                city_counts[city_label] = len(projects)
                 logger.info(f"  {city_key}: {len(projects)} projects above ${threshold}M")
 
             except Exception as e:
                 logger.warning(f"  {city_key} failed: {e}")
                 cities_skipped += 1
+                city_failures[city_label] = type(e).__name__
 
     if cities_skipped == cities_total:
         logger.warning("[Municipal] All cities failed health check — tier skipped entirely")
     else:
         logger.info(f"Municipal scraping complete: {len(all_projects)} total projects "
                      f"({cities_skipped}/{cities_total} cities skipped)")
+    # 2026-06-11: one-line per-city scoreboard (successes + failures) so a
+    # dead city is visible without scrolling through individual error lines.
+    results_part = ", ".join(f"{c} {n}" for c, n in city_counts.items()) or "none"
+    failed_part = ", ".join(f"{c}({r})" for c, r in city_failures.items()) or "none"
+    print(f"[TIER 13] city results: {results_part} | FAILED: {failed_part}")
     # patch-1.2: min-yield DEGRADE log so a dead tier is distinguishable from a
     # quiet week (0 items != green run). Printed (not just logged) so it surfaces
     # in the pipeline run output alongside the other tiers.

@@ -27,6 +27,37 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 
 logger = logging.getLogger(__name__)
 
+
+# ── Atomic writes (audit M1) ──────────────────────────────────────────────────
+# A crash mid-export used to leave a torn file on disk — the May 2026
+# timeseries.json corruption was exactly this. Write to <path>.tmp, fsync,
+# then os.replace (atomic on Windows + POSIX). On any exception the original
+# file is untouched and the .tmp is removed.
+
+from contextlib import contextmanager
+
+
+@contextmanager
+def _atomic_open(path):
+    tmp_path = path + ".tmp"
+    f = open(tmp_path, "w", encoding="utf-8")
+    try:
+        yield f
+        f.flush()
+        os.fsync(f.fileno())
+        f.close()
+        os.replace(tmp_path, path)
+    except BaseException:
+        try:
+            f.close()
+        except Exception:
+            pass
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
+
 # ── Province slug list (matches PROVINCES in pipeline_config.py) ─────────────
 
 PROVINCE_SLUGS = [
@@ -273,7 +304,7 @@ def export_province_projects(conn, province_name: str, threshold_val: int, outpu
     slug = province_name.lower().replace(" ", "_")
     out_path = os.path.join(output_dir, f"projects_{slug}.json")
 
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         # Compact JSON for province files (can be large)
         json.dump(included, f, ensure_ascii=False, separators=(",", ":"))
 
@@ -625,7 +656,7 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
     _validate_briefing_text(latest)
 
     latest_path = os.path.join(output_dir, "briefing_latest.json")
-    with open(latest_path, "w", encoding="utf-8") as f:
+    with _atomic_open(latest_path) as f:
         json.dump(latest, f, ensure_ascii=False, indent=2)
 
     # Archive — metadata only (no full sections to keep file small).
@@ -680,7 +711,7 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
               f"{prior_count} -> {len(archive)}; keeping prior on-disk archive")
         return latest_path, archive_path
 
-    with open(archive_path, "w", encoding="utf-8") as f:
+    with _atomic_open(archive_path) as f:
         json.dump(archive, f, ensure_ascii=False, indent=2)
 
     return latest_path, archive_path
@@ -842,7 +873,7 @@ def export_indicators(conn, output_dir: str) -> str:
     }
 
     out_path = os.path.join(output_dir, "indicators.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     return out_path
@@ -865,7 +896,7 @@ def export_trends(conn, output_dir: str) -> str:
             snapshots.append(snap)
 
     out_path = os.path.join(output_dir, "trends.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(snapshots, f, ensure_ascii=False, indent=2)
 
     return out_path
@@ -878,20 +909,41 @@ def export_events(conn, output_dir: str) -> str:
     events = get_upcoming_events(conn=conn, days_ahead=30)
 
     out_path = os.path.join(output_dir, "events.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(events, f, ensure_ascii=False, indent=2)
 
     return out_path
 
 
 def export_microscope(conn, output_dir: str) -> str:
-    """Export microscope.json from get_dashboard_state microscope_history."""
+    """Export microscope.json from get_dashboard_state microscope_history.
+
+    Audit C7: production shipped a literal `null` for months because the
+    history key was absent and the raw value was dumped unchecked. Always
+    write a well-formed {"topics": [...]} object; fall back to the
+    microscope_current snapshot if history is missing; warn loudly when
+    everything is empty so the gap is visible in the run log.
+    """
     from db import get_dashboard_state
 
     history = get_dashboard_state(conn, "microscope_history")
+    if not isinstance(history, dict) or not isinstance(history.get("topics"), list):
+        topics = []
+        current = get_dashboard_state(conn, "microscope_current")
+        if isinstance(current, dict) and current.get("text"):
+            topics = [{
+                "topic": current.get("topic", ""),
+                "analysis": current.get("text", ""),
+                "week": current.get("week", ""),
+                "date": (current.get("updated_at") or "")[:10],
+            }]
+        history = {"topics": topics}
+    if not history["topics"]:
+        print("  [EXPORT WARN] microscope.json has no topics — Under the "
+              "Microscope is empty in production (see audit C7)")
 
     out_path = os.path.join(output_dir, "microscope.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(history, f, ensure_ascii=False, indent=2)
 
     return out_path
@@ -934,7 +986,7 @@ def export_policy(conn, output_dir: str) -> str:
         }
 
     out_path = os.path.join(output_dir, "policy.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
     return out_path
@@ -949,7 +1001,7 @@ def export_commodities(conn, output_dir: str) -> str:
         data = {"indicators": {}}
 
     out_path = os.path.join(output_dir, "commodities.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
     return out_path
@@ -1159,7 +1211,7 @@ def export_timeseries(conn, output_dir: str) -> str:
         print(f"  [timeseries] STALE series: {key} (latest {stale[key]})")
     report_path = os.path.join(output_dir, "timeseries_stale_report.json")
     try:
-        with open(report_path, "w", encoding="utf-8") as f:
+        with _atomic_open(report_path) as f:
             json.dump({
                 "generated_at": datetime.now(timezone.utc).isoformat(),
                 "stale_days_threshold": stale_days,
@@ -1173,7 +1225,7 @@ def export_timeseries(conn, output_dir: str) -> str:
             merged.pop(key, None)
         print(f"  [timeseries] TIMESERIES_PRUNE=1 — removed {len(stale)} stale series")
 
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         # Compact for potentially large commodity data
         json.dump(merged, f, ensure_ascii=False, separators=(",", ":"))
 
@@ -1282,7 +1334,7 @@ def export_all_projects(conn, output_dir: str) -> str:
         print(f"  [export projects_all] dropped {dropped_threshold} below-threshold rows from publish")
 
     out_path = os.path.join(output_dir, "projects_all.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         # Compact JSON for potentially large file
         json.dump(included, f, ensure_ascii=False, separators=(",", ":"))
 
@@ -1362,7 +1414,7 @@ def export_pipeline_status(conn, output_dir: str) -> str:
     }
 
     out_path = os.path.join(output_dir, "pipeline_status.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     return out_path
@@ -1426,7 +1478,7 @@ def export_province_counts(conn, output_dir: str) -> str:
         "exported_at": datetime.now(timezone.utc).isoformat(),
     }
     out_path = os.path.join(output_dir, "province_counts.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     return out_path
 
@@ -1478,7 +1530,7 @@ def export_discovery_summary(conn, output_dir: str) -> str:
         "exported_at": datetime.now(timezone.utc).isoformat(),
     }
     out_path = os.path.join(output_dir, "discovery_summary.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     return out_path
 
@@ -1514,7 +1566,7 @@ def export_jobs(conn, output_dir: str) -> str:
         })
 
     out_path = os.path.join(output_dir, "jobs.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(snapshots, f, ensure_ascii=False, indent=2)
     return out_path
 
@@ -1542,7 +1594,7 @@ def export_procurement(conn, output_dir: str) -> str:
         })
 
     out_path = os.path.join(output_dir, "procurement.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(snapshots, f, ensure_ascii=False, indent=2)
     return out_path
 
@@ -1576,7 +1628,7 @@ def export_iaac(conn, output_dir: str) -> str:
         })
 
     out_path = os.path.join(output_dir, "iaac.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(projects, f, ensure_ascii=False, indent=2)
     return out_path
 
@@ -1636,7 +1688,7 @@ def export_signals(conn, output_dir: str) -> str:
         pass
 
     out_path = os.path.join(output_dir, "signals.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(signals, f, ensure_ascii=False, indent=2)
     return out_path
 
@@ -1692,7 +1744,7 @@ def export_events_global(conn, output_dir: str) -> str:
     schedule["_meta"] = meta
 
     out_path = os.path.join(output_dir, "events_global.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(schedule, f, ensure_ascii=False, indent=2)
     return out_path
 
@@ -1776,7 +1828,7 @@ def export_statcan_tables(conn, output_dir: str) -> str:
     # ``raw.filter(r=>!curated.has(r.t))`` directly on the response, so we write
     # a bare top-level array to keep the frontend change surface zero.
     out_path = os.path.join(output_dir, "statcan_tables.json")
-    with open(out_path, "w", encoding="utf-8") as f:
+    with _atomic_open(out_path) as f:
         json.dump(rows_out, f, ensure_ascii=False, separators=(",", ":"))
 
     logger.info(
@@ -1914,7 +1966,7 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
         "file_list": sorted(files_written),
     }
     manifest_path = os.path.join(output_dir, "manifest.json")
-    with open(manifest_path, "w", encoding="utf-8") as f:
+    with _atomic_open(manifest_path) as f:
         json.dump(manifest, f, ensure_ascii=False, indent=2)
     files_written.append("manifest.json")
 

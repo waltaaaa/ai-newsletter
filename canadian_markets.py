@@ -317,6 +317,16 @@ def fetch_and_store_commodities(conn=None, db=None):
                 'wcs_discount':       ('comm_wcs_discount', '$/bbl', 'yfinance (WCS-WTI)'),
                 'tsx_infrastructure': ('comm_tsx_infra',  '$', 'yfinance (basket avg)'),
             }
+            # Audit H9 (2026-06-11): the chart agent reads the CANONICAL
+            # 'uranium' key, which only ever got a one-time backfill point —
+            # every chart built on it was a single dot. Mirror the spot proxy
+            # to the canonical key so it accrues weekly points.
+            if data.get('uranium_spot', {}).get('current') is not None:
+                save_timeseries_point(
+                    conn, 'uranium', today_str,
+                    data['uranium_spot']['current'], 'US$/lb',
+                    'Sprott Physical Uranium Trust (U-UN.TO)')
+                ts_count += 1
 
             for ind_id, (series_name, unit, source) in COMMODITY_TS_MAP.items():
                 if ind_id in data and data[ind_id].get('current') is not None:

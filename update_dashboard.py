@@ -120,12 +120,34 @@ if os.path.exists(_WATCHLIST_PATH):
 # MAIN PIPELINE
 # ══════════════════════════════════════════════════════════════════════════════
 
+def _rotate_weekly_db_backups(keep: int = 4):
+    """Audit M5: enforce the weekly-task backup-rotation rule in code.
+
+    The weekly scheduled task creates dashboard.db.pre-weekly-* before each
+    run; the SKILL.md rule says keep the 4 most recent, but it was never
+    automated and copies accumulated (~110MB each). Only pre-weekly-*
+    backups are rotated — operator-created repair/dedup backups are not
+    touched.
+    """
+    import glob as _glob
+    here = os.path.dirname(os.path.abspath(__file__))
+    backups = sorted(_glob.glob(os.path.join(here, "dashboard.db.pre-weekly-*")),
+                     key=os.path.getmtime, reverse=True)
+    for old in backups[keep:]:
+        try:
+            os.unlink(old)
+            print(f"  [BACKUP ROTATE] removed {os.path.basename(old)}")
+        except OSError as e:
+            print(f"  [BACKUP ROTATE] could not remove {os.path.basename(old)}: {e}")
+
+
 def update_dashboard(deep_sweep: bool = False):
     """Run the full 6-phase pipeline."""
     run_type = "deep_sweep" if deep_sweep else "weekly"
     health = service_health.init()
     run_log = PipelineRunLogger(conn=conn, run_type=run_type)
     run_log.start()
+    _rotate_weekly_db_backups()
 
     # Shared context dict — replaces local variable passing
     context = {
@@ -162,7 +184,10 @@ def update_dashboard(deep_sweep: bool = False):
     PHASE_TIMEOUTS = {
         "Phase 1: Data Collection": 600,
         "Phase 2: Discovery": 1200,
-        "Phase 3: Filtering": 2400,
+        # Audit C2 (2026-06-11): 2400s was below the measured extraction need
+        # (60 chunks x 180-300s / 6 workers ~= 1800-2500s before L6/L7/dedup
+        # overhead) — the 2026-06-08 run timed out with 331 articles unprocessed.
+        "Phase 3: Filtering": 4200,
         "Phase 4: Signals": 600,
         "Phase 5: Conductor": 7200,
         "Phase 6: Finalize": 300,
@@ -294,12 +319,118 @@ def update_dashboard(deep_sweep: bool = False):
         print(f"\n[SERVICE HEALTH] Dead services: {health_status['dead']}")
     run_log.log_metric("api_usage", "service_health", health_status)
 
+    # ── Status-change counter (audit H7) ──────────────────────────
+    # project_changes rows written during this run = real Tier-4 activity.
+    try:
+        _since = run_log._started_at.strftime("%Y-%m-%d") if run_log._started_at else None
+        if _since:
+            _sc = conn.execute(
+                "SELECT COUNT(*) FROM project_changes "
+                "WHERE change_type = 'status' AND change_date >= ?",
+                (_since,)).fetchone()
+            run_log.log_metric("discovery", "status_changes", int(_sc[0] if _sc else 0))
+    except Exception as _e:
+        print(f"[WARN] status-change counter failed (non-critical): {_e}")
+
+    # ── Operator health summary (audit H1) ────────────────────────
+    # One block that makes a dead tier look different from a quiet week.
+    _print_operator_summary(conn, run_log, health_status, context)
+
     # ── Finalize pipeline run log ─────────────────────────────────
     final_payload = context.get("final_payload", {})
     if final_payload.get('_analysis_incomplete'):
         run_log.finalize("partial")
     else:
         run_log.finalize("success")
+
+
+def _print_operator_summary(conn, run_log, health_status, context):
+    """End-of-run operator summary: tier yields, dead feeds, dead services,
+    signal-tier output, and error counts — in one block in the run log.
+
+    A discovery tier or signal feed that is 100% dead must be visually
+    distinct from one that simply had a quiet news week (audit finding H1:
+    jobs + procurement returned zero for 3 months unnoticed).
+    """
+    print("\n" + "=" * 62)
+    print("OPERATOR RUN SUMMARY")
+    print("=" * 62)
+    try:
+        d = run_log._discovery
+        print(f"  Discovery: {d.get('articles_found', 0)} articles | "
+              f"{d.get('projects_added', 0)} new projects | "
+              f"{d.get('projects_updated', 0)} updated | "
+              f"{d.get('fuzzy_merges', 0)} fuzzy-merged | "
+              f"{d.get('status_changes', 0)} status changes")
+    except Exception:
+        pass
+
+    # Per-tier yields this run (zero-yield tiers flagged inline)
+    try:
+        from db import get_dashboard_state
+        hist = get_dashboard_state(conn, "tier_yield_history") or {}
+        parts, zeros = [], []
+        for tier, runs in sorted(hist.items()):
+            if isinstance(runs, list) and runs:
+                last = runs[-1]
+                n = last.get("count", last) if isinstance(last, dict) else last
+                (zeros if not n else parts).append(f"{tier}={n}")
+        if parts:
+            print(f"  Tier yields: {', '.join(parts)}")
+        if zeros:
+            print(f"  [!] ZERO-YIELD TIERS: {', '.join(zeros)} — dead source or quiet week; "
+                  f"check per-source FAILED lines above")
+    except Exception as e:
+        print(f"  Tier yields: unavailable ({e})")
+
+    # Signal tiers: jobs / procurement / policy — chronic-empty alarms
+    try:
+        jobs = context.get("job_spikes")
+        proc = context.get("procurement_contracts")
+        pol = context.get("policy_items")
+        print(f"  Signals: jobs={'n/a' if jobs is None else len(jobs)} spikes | "
+              f"procurement={'n/a' if proc is None else len(proc)} contracts | "
+              f"policy={'n/a' if pol is None else len(pol)} items")
+        for label, val in (("jobs", jobs), ("procurement", proc)):
+            if val is not None and len(val) == 0:
+                print(f"  [!] {label.upper()} returned 0 — verify source health "
+                      f"(this tier was dead for 3 months before 2026-06-11 audit)")
+    except Exception:
+        pass
+
+    # RSS feed health (rolling, from rss_feed_health table)
+    try:
+        from rss_feed_health import get_health_summary
+        fh = get_health_summary(conn)
+        if fh.get("total_feeds"):
+            print(f"  RSS feeds: {fh['active']}/{fh['total_feeds']} active, "
+                  f"{fh['dormant']} dormant (1-7 empty wks), "
+                  f"{fh['dead_candidate']} dead candidates (>=8 empty wks)")
+            if fh["dead_candidate"]:
+                print(f"  [!] {fh['dead_candidate']} feeds look dead — "
+                      f"review rss_feed_health table (additive-only: flag, don't remove)")
+    except Exception:
+        pass
+
+    # Service health
+    try:
+        if health_status.get("dead"):
+            print(f"  [!] DEAD SERVICES: {health_status['dead']}")
+        if health_status.get("degraded"):
+            print(f"  [!] Degraded services: {health_status['degraded']}")
+    except Exception:
+        pass
+
+    # Error rollup
+    try:
+        nc, nw = len(run_log._errors_critical), len(run_log._errors)
+        if nc or nw:
+            print(f"  Errors: {nc} critical, {nw} warn — see [LOG] lines above")
+            for e in run_log._errors_critical[:5]:
+                print(f"    CRITICAL {e.get('step')}: {e.get('message', '')[:120]}")
+    except Exception:
+        pass
+    print("=" * 62)
 
 
 # ══════════════════════════════════════════════════════════════════════════════

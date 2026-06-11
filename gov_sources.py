@@ -1485,6 +1485,9 @@ def _scrape_nb_ea(tavily_client=None) -> list[dict]:
                 main = soup.select_one('main') or soup
                 for h in main.select('h2, h3'):
                     _add(h.get_text(strip=True), _NB_EIA_CURRENT_PROJECTS_URL)
+        else:
+            print(f"  [NB EIA] current-projects page unreachable (404/timeout): "
+                  f"{_NB_EIA_CURRENT_PROJECTS_URL}")
 
         if not projects:
             # Fallback: crawl EA-section sub-pages linked off the landing page.
@@ -1492,6 +1495,8 @@ def _scrape_nb_ea(tavily_client=None) -> list[dict]:
             # GNB's site-wide nav links don't pollute the project list (the
             # generic crawl previously ingested "Business and economy" etc.).
             html = _get_html(_NB_EIA_URL, timeout=25)
+            if not html:
+                print("  [NB EIA] registry endpoint dead (404) — needs manual re-point")
             soup = _soup(html) if html else None
             sub_urls = []
             if soup:
@@ -1616,43 +1621,90 @@ def _scrape_nl_ea(tavily_client=None) -> list[dict]:
 
 # ── Yukon YESAB Registry ────────────────────────────────────────────────────
 
+# Live-verified 2026-06-11: yesabregistry.ca is a React SPA whose /projects
+# page serves only an empty JS shell ("You need to enable JavaScript") — which
+# is why the old HTML scrape returned 0 with no error. The app bundle
+# (main.*.chunk.js) calls a public JSON API:
+#   GET https://yesabregistry.ca/api/projects/search
+#     -> {"projects": [{projectId, projectNumber, title, proponentName,
+#                       stageId, locations, ...}], "districtCount": N}
+#   GET https://yesabregistry.ca/api/projects/stages
+#     -> [{stageId, name, stageGrouping, ...}]  (73 stages across 3 streams)
+# Live yield 2026-06-11: 207 active projects. Project detail pages resolve at
+# https://yesabregistry.ca/projects/{projectId}.
 _YESAB_URL = "https://yesabregistry.ca/projects"
+_YESAB_API_SEARCH = "https://yesabregistry.ca/api/projects/search"
+_YESAB_API_STAGES = "https://yesabregistry.ca/api/projects/stages"
 
 def _scrape_yukon_yesab(tavily_client=None) -> list[dict]:
     """
-    Scrape YESAB project registry. The site is a JS-rendered SPA so we
-    use Tavily extraction as the primary approach.
+    Fetch YESAB project registry via its public JSON search API (the
+    /projects page itself is a JS-rendered SPA shell with no server-side
+    content). Falls back to Tavily extraction of the SPA page if the API
+    fails. Logs HTTP status and parsed counts so failures are never silent.
     Returns list of project dicts with discovery_source='provincial_ea'.
     """
     projects = []
     try:
-        if tavily_client:
+        resp = http_client.get(_YESAB_API_SEARCH, timeout=25)
+        status = 'network' if resp is None else resp.status_code
+        print(f"  [YESAB] API search HTTP status={status}")
+        if resp is not None and resp.status_code < 400:
+            data = resp.json()
+            rows = data.get('projects', []) if isinstance(data, dict) else []
+            print(f"  [YESAB] API returned {len(rows)} raw project rows")
+
+            # Stage map for status mapping (stageId -> name + grouping).
+            # Failure-tolerant: on any error all projects default to Under Review.
+            stage_map = {}
+            try:
+                sresp = http_client.get(_YESAB_API_STAGES, timeout=20)
+                if sresp is not None and sresp.status_code < 400:
+                    for s in sresp.json():
+                        sid = s.get('stageId')
+                        if sid:
+                            stage_map[sid] = (s.get('name') or '',
+                                              s.get('stageGrouping') or '')
+            except Exception as se:
+                print(f"  [YESAB] stages lookup failed ({type(se).__name__}) "
+                      "— defaulting all statuses to Under Review")
+
+            for p in rows:
+                name = (p.get('title') or '').strip()
+                if not name or len(name) < 5:
+                    continue
+                stage_name, grouping = stage_map.get(p.get('stageId'), ('', ''))
+                sl = f"{stage_name} {grouping}".lower()
+                status_val = 'Under Review'
+                if 'decision document issued' in sl:
+                    status_val = 'Approved'
+                elif ('discontinued' in sl or 'not proceeding' in sl
+                        or 'withdrawn' in sl):
+                    status_val = 'Cancelled'
+                pid = p.get('projectId') or ''
+                url = f"https://yesabregistry.ca/projects/{pid}" if pid else _YESAB_URL
+                projects.append({
+                    'name':             name[:200],
+                    'province':         'Yukon',
+                    'status':           status_val,
+                    'proponent':        (p.get('proponentName') or '')[:200],
+                    'source_url':       url,
+                    'discovery_source': 'provincial_ea',
+                    'sector':           _infer_sector_from_name(name),
+                })
+
+        if not projects and tavily_client:
+            # Legacy fallback: Tavily extraction of the SPA page.
+            print("  [YESAB] API yielded 0 — falling back to Tavily extraction")
             text = _extract_with_tavily(_YESAB_URL, tavily_client)
             if text:
                 projects = _parse_text_for_projects(text, 'Yukon', 'provincial_ea', _YESAB_URL)
-        else:
-            # Without Tavily, try fetching (may get empty SPA shell)
-            html = _get_html(_YESAB_URL, timeout=25)
-            if html and 'JavaScript' not in html[:500]:
-                soup = _soup(html)
-                if soup:
-                    for link in soup.select('a[href*="/project"]'):
-                        name = link.get_text(strip=True)
-                        if name and len(name) > 10:
-                            href = link.get('href', '')
-                            url = href if href.startswith('http') else f"https://yesabregistry.ca{href}"
-                            projects.append({
-                                'name':             name,
-                                'province':         'Yukon',
-                                'status':           'Under Review',
-                                'source_url':       url,
-                                'discovery_source': 'provincial_ea',
-                                'sector':           _infer_sector_from_name(name),
-                            })
 
     except Exception as e:
         print(f"  [YESAB] Failed: {type(e).__name__}: {e}")
 
+    if not projects:
+        print("  [YESAB] registry API unreachable or schema drift — needs manual re-point")
     print(f"  [YESAB] {len(projects)} projects from registry")
     return projects
 

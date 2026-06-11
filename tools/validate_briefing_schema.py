@@ -109,6 +109,14 @@ BANNED_WORDS = [
     "tailwind", "thrilled", "feared", "hoped",
 ]
 
+# Audit P9: extended editorial vocabulary from editorial_rules.md. WARN-level
+# (advisory) — these words appear in legitimate quoted statements, so a hard
+# FAIL would block valid attribution. The primary list above stays FAIL.
+EXTENDED_BANNED_WORDS = [
+    "good news", "bad news", "robust", "impressive", "disappointing",
+    "remarkable", "alarming", "optimistic", "pessimistic", "worrisome",
+]
+
 # Bad commodity names (pipeline defaults that don't match frontend)
 BAD_COMMODITY_NAMES = [
     "WTI Crude Oil", "Brent Crude", "Natural Gas (Henry Hub)",
@@ -268,6 +276,12 @@ def check_analysis_prose(results, label, text, min_len):
                  len(hits) == 0,
                  f"Contains banned editorial words: {', '.join(hits)}"):
         fails += 1
+    # 4. Extended editorial vocabulary (audit P9) — advisory WARN only
+    ext_hits = [w for w in EXTENDED_BANNED_WORDS
+                if re.search(r"\b" + re.escape(w) + r"\b", text, re.IGNORECASE)]
+    warn(results, f"{label}.extended_editorial_words",
+         len(ext_hits) == 0,
+         f"Contains extended editorial vocabulary (advisory): {', '.join(ext_hits)}")
     return fails
 
 
@@ -319,6 +333,24 @@ def check_sources_array(results, label, sources, min_count):
                  len(missing_title) == 0,
                  f"{len(missing_title)} item(s) missing title at index {missing_title}"):
         fails += 1
+    # 4. Homepage-grade citations (audit P10) — advisory WARN. A citation
+    # pointing at a domain root or bare language landing page can't be used
+    # to verify the specific claim it backs.
+    generic = []
+    for i, s in enumerate(sources):
+        if not isinstance(s, dict):
+            continue
+        url = (s.get("url") or s.get("archive_url") or "").strip()
+        if not url:
+            continue
+        m = re.match(r"https?://[^/]+(/.*)?$", url)
+        path = (m.group(1) or "/") if m else "/"
+        if path in ("/", "") or re.fullmatch(r"/(en|fr)/?", path):
+            generic.append(i)
+    warn(results, f"{label}.items.url_specificity",
+         len(generic) == 0,
+         f"{len(generic)} citation(s) point at a homepage (unverifiable) "
+         f"at index {generic}")
     return fails
 
 
@@ -1511,6 +1543,248 @@ def _validate_briefing_archive(data_dir, results, briefing):
     return (fails, warns)
 
 
+# ── Audit P5 (2026-06-11): mechanical numeric fact-check ──────────────────
+# The 2026-06-08 edition shipped market prints that contradicted the
+# pipeline's own data (wheat "$671.75 fresh 52-wk high" vs actual ~$581;
+# potash carrying the prior edition's value with the weekly direction
+# inverted; silver off -18%). Writers sourced those numbers from WebSearch
+# instead of the injected timeseries. This gate reconciles every structured
+# market print in the briefing against timeseries.json at the briefing's
+# own week_of date. Severity is freshness-aware: a briefing <= FRESH_DAYS
+# old gets hard FAILs (the conductor's fixer loop remediates before deploy);
+# an older briefing re-validated by the daily run gets WARNs so legitimate
+# mid-week market drift can't block an indicator refresh.
+
+MARKET_FACT_FRESH_DAYS = 2
+MARKET_FACT_WARN_PCT = 1.5     # relative % diff that triggers a WARN
+MARKET_FACT_FAIL_PCT = 5.0     # relative % diff that triggers a FAIL (fresh)
+MARKET_FACT_YIELD_WARN = 0.06  # absolute pp diff for GoC yields → WARN
+MARKET_FACT_YIELD_FAIL = 0.25  # absolute pp diff for GoC yields → FAIL (fresh)
+MARKET_FACT_MAX_POINT_AGE = 14  # skip series whose nearest point is older
+
+# briefing commodities[].name → timeseries.json key
+COMMODITY_TS_MAP = {
+    "Crude Oil (WTI)": "wti",
+    "Crude Oil (Brent)": "brent",
+    "Natural Gas": "natural_gas",
+    "Gold": "gold",
+    "Silver": "silver",
+    "Copper": "copper",
+    "Uranium": "uranium",
+    "Nickel": "nickel",
+    "Wheat": "wheat",
+    "Canola": "canola",
+    "Potash (Nutrien)": "potash_nutrien",
+    "Lumber": "lumber",
+}
+
+# briefing fx[].name → (timeseries key, invert?)
+FX_TS_MAP = {
+    "CAD/USD": ("cadusd", False),
+    "USD/CAD": ("cadusd", True),
+    "EUR/USD": ("eurusd", False),
+    "USD/JPY": ("usdjpy", False),
+    "USD/CNY": ("usdcny", False),
+}
+
+# briefing yieldCurve[].term → timeseries key
+YIELD_TS_MAP = {
+    "2Y": "goc_2y_yield",
+    "3Y": "goc_3y_yield",
+    "5Y": "goc_5y_yield",
+    "7Y": "goc_7y_yield",
+    "10Y": "goc_10y_yield",
+}
+
+
+def _parse_print(val):
+    """Parse a briefing market print like '$4,336.78', '34,413', '0.7169'.
+
+    Returns float or None for N/A / unparseable / qualified values ('$3.00+').
+    """
+    if isinstance(val, (int, float)):
+        return float(val)
+    if not isinstance(val, str):
+        return None
+    s = val.strip()
+    if not s or s.upper() in ("N/A", "NA", "—", "-"):
+        return None
+    if s.endswith("+"):  # qualified print ('$3.00+') — not a checkable claim
+        return None
+    s = s.replace("$", "").replace(",", "").replace("US", "").strip()
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def _ts_value_near(series, target_date, max_age_days=MARKET_FACT_MAX_POINT_AGE):
+    """Latest series value at/before target_date (within max_age_days).
+
+    series: list of {date, value} dicts (timeseries.json shape).
+    Returns (value, date_str) or (None, None).
+    """
+    best_v, best_d = None, None
+    for pt in series or []:
+        d = _parse_iso_date(pt.get("date"))
+        v = pt.get("value")
+        if d is None or v is None or d > target_date:
+            continue
+        if best_d is None or d > best_d:
+            best_d, best_v = d, v
+    if best_d is None or (target_date - best_d).days > max_age_days:
+        return None, None
+    try:
+        return float(best_v), best_d.isoformat()
+    except (TypeError, ValueError):
+        return None, None
+
+
+def _validate_market_facts(data_dir, results, briefing):
+    """Reconcile structured market prints against timeseries.json (audit P5)."""
+    fails = 0
+    warns = 0
+    ts_path = os.path.join(data_dir, "timeseries.json")
+    if not os.path.exists(ts_path):
+        return (0, 0)  # timeseries presence is checked elsewhere
+    try:
+        ts = _load_json_tolerant(ts_path)
+    except Exception:
+        return (0, 0)
+
+    week_of = _parse_iso_date(briefing.get("week_of"))
+    if week_of is None:
+        return (0, 0)
+    from datetime import date as _date
+    fresh = (_date.today() - week_of).days <= MARKET_FACT_FRESH_DAYS
+    gate = check if fresh else warn
+
+    def _compare(label, claimed, ts_key, invert=False, absolute=None):
+        nonlocal fails, warns
+        series = ts.get(ts_key)
+        if not series:
+            return
+        actual, at = _ts_value_near(series, week_of)
+        if actual is None:
+            if not warn(results, f"fact.{label}.verifiable", False,
+                        f"timeseries '{ts_key}' has no point within "
+                        f"{MARKET_FACT_MAX_POINT_AGE}d of week_of — unverifiable"):
+                warns += 1
+            return
+        if invert:
+            if actual == 0:
+                return
+            actual = 1.0 / actual
+        if absolute is not None:
+            diff = abs(claimed - actual)
+            bad_fail = diff > MARKET_FACT_YIELD_FAIL
+            bad_warn = diff > MARKET_FACT_YIELD_WARN
+            detail = (f"briefing says {claimed}, timeseries '{ts_key}' = "
+                      f"{actual:.2f} @ {at} (diff {diff:.2f}pp)")
+        else:
+            if actual == 0:
+                return
+            pct = abs(claimed - actual) / abs(actual) * 100.0
+            bad_fail = pct > MARKET_FACT_FAIL_PCT
+            bad_warn = pct > MARKET_FACT_WARN_PCT
+            detail = (f"briefing says {claimed}, timeseries '{ts_key}' = "
+                      f"{actual:.2f} @ {at} (diff {pct:.1f}%)")
+        if bad_fail:
+            if not gate(results, f"fact.{label}", False,
+                        detail + " — writer print contradicts pipeline data"):
+                if fresh:
+                    fails += 1
+                else:
+                    warns += 1
+        elif bad_warn:
+            if not warn(results, f"fact.{label}", False, detail):
+                warns += 1
+        else:
+            check(results, f"fact.{label}", True, "")
+
+    # Commodities
+    for c in briefing.get("commodities") or []:
+        name = c.get("name", "?")
+        ts_key = COMMODITY_TS_MAP.get(name)
+        if not ts_key:
+            continue
+        claimed = _parse_print(c.get("val"))
+        if claimed is None:
+            continue
+        _compare(f"commodity.{name}", claimed, ts_key)
+
+    fm = briefing.get("financialMarkets") or {}
+    # Equity indices
+    for idx in fm.get("indices") or []:
+        name = idx.get("name", "?")
+        ts_key = EQUITY_NAME_MAP.get(name)
+        if not ts_key:
+            continue
+        claimed = _parse_print(idx.get("val") if idx.get("val") not in (None, "")
+                               else idx.get("value"))
+        if claimed is None:
+            continue
+        _compare(f"equity.{name}", claimed, ts_key)
+    # FX pairs
+    for fx in fm.get("fx") or []:
+        name = fx.get("name", "?")
+        mapping = FX_TS_MAP.get(name)
+        if not mapping:
+            continue
+        ts_key, invert = mapping
+        claimed = _parse_print(fx.get("val") if fx.get("val") not in (None, "")
+                               else fx.get("value"))
+        if claimed is None:
+            continue
+        _compare(f"fx.{name}", claimed, ts_key, invert=invert)
+    # GoC yield curve
+    for y in briefing.get("yieldCurve") or []:
+        term = y.get("term", "?")
+        ts_key = YIELD_TS_MAP.get(term)
+        if not ts_key:
+            continue
+        claimed = _parse_print(y.get("yield"))
+        if claimed is None:
+            continue
+        _compare(f"yield.{term}", claimed, ts_key, absolute=True)
+
+    return (fails, warns)
+
+
+def _validate_microscope_json(data_dir, results, briefing):
+    """microscope.json must be a {"topics": [...]} object, never null (audit C7).
+
+    Production shipped a literal `null` for months. Empty topics is a WARN
+    (a quiet week is legal); a malformed/null file is a FAIL — the exporter
+    now always writes a well-formed object, so null means a broken export.
+    """
+    fails = 0
+    warns = 0
+    path = os.path.join(data_dir, "microscope.json")
+    if not os.path.exists(path):
+        if not warn(results, "data.microscope.present", False,
+                    "microscope.json missing from data dir"):
+            warns += 1
+        return (fails, warns)
+    try:
+        m = _load_json_tolerant(path)
+    except Exception as e:
+        check(results, "data.microscope.parse", False, f"unparseable: {e}")
+        return (1, 0)
+    if not (isinstance(m, dict) and isinstance(m.get("topics"), list)):
+        if not check(results, "data.microscope.shape", False,
+                     f"expected {{'topics': [...]}}, got {type(m).__name__} "
+                     f"— export_microscope null-guard regressed"):
+            fails += 1
+        return (fails, warns)
+    check(results, "data.microscope.shape", True, "")
+    if not warn(results, "data.microscope.topics", len(m["topics"]) > 0,
+                "Under the Microscope has no topics — section empty in "
+                "production (topic selection failed or never ran)"):
+        warns += 1
+    return (fails, warns)
+
+
 def _validate_data_dir(briefing_path, results, briefing):
     """Phase 2: validate external JSON dependencies in the same directory
     as the briefing.
@@ -1535,6 +1809,8 @@ def _validate_data_dir(briefing_path, results, briefing):
         _validate_events_global_json,
         _validate_global_chart_cfg,
         _validate_briefing_archive,
+        _validate_market_facts,
+        _validate_microscope_json,
     ):
         f, w = fn(data_dir, results, briefing)
         total_f += f
@@ -1633,8 +1909,11 @@ def validate(briefing_path):
     for idx in indices:
         name = idx.get("name", "?")
         for field in EQUITY_FIELDS:
-            if not warn(results, f"equity.{name}.{field}",
-                         field in idx and idx[field] not in (None, ""),
+            # H6: the assembler writes 'val'; the frontend reads value||val.
+            # Accept either spelling for the value field.
+            present = (field in idx and idx[field] not in (None, "")) or \
+                      (field == "value" and idx.get("val") not in (None, ""))
+            if not warn(results, f"equity.{name}.{field}", present,
                          f"Missing or empty"):
                 warns += 1
         if name in BAD_COMMODITY_NAMES:
@@ -1648,8 +1927,10 @@ def validate(briefing_path):
     for fx in fm.get("fx", []):
         name = fx.get("name", "?")
         for field in FX_FIELDS:
-            if not warn(results, f"fx.{name}.{field}",
-                         field in fx and fx[field] not in (None, ""),
+            # H6: accept 'val' as an alias for 'value' (frontend reads both)
+            present = (field in fx and fx[field] not in (None, "")) or \
+                      (field == "value" and fx.get("val") not in (None, ""))
+            if not warn(results, f"fx.{name}.{field}", present,
                          f"Missing or empty"):
                 warns += 1
 
