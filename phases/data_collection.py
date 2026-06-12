@@ -1261,32 +1261,47 @@ def get_global_indicators() -> dict:
       EU:  ECB Statistical Data Warehouse
       UK:  BoE IADB (rate) + FRED OECD harmonised series (CPI, unemployment, GDP)
       China: World Bank Open Data API (annual, best available public source)
-    Returns {region: {field: 'X.X%', field_src: 'SOURCE'}}.
+    Returns {region: {field: 'X.X%', field_src: 'SOURCE', field_date: 'YYYY-MM-DD'}}.
+
+    The <field>_date companion is the source's REFERENCE period for the
+    observation (audit D5). _archive_indicators_to_history uses it to stamp
+    indicator_history — rows without it are SKIPPED, never stamped with the
+    fetch date.
     """
-    # Check cache first (24hr TTL — these indicators change slowly)
+    # Check cache first (24hr TTL — these indicators change slowly).
+    # Key is versioned (v2) because pre-D5 cached payloads lack the
+    # <field>_date companions the archiver now requires.
     if _cache:
-        cached = _cache.get("global_indicators")
+        cached = _cache.get("global_indicators_v2")
         if cached:
             print("Fetching global indicators from cache (24hr TTL)...")
             return cached
     print("Fetching global indicators from primary APIs...")
     result = {}
 
+    # Value formatters
+    def _pct2(v):    return f"{v:.2f}%"
+    def _pct1(v):    return f"{v:.1f}%"
+    def _signed1(v): return f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%"
+
+    def _set(d: dict, field: str, obs, fmt, src: str) -> bool:
+        """Assign value + _src + _date companions from a (value, ref_date)
+        observation tuple. Returns True when the value was set."""
+        if not obs or obs[0] is None:
+            return False
+        d[field] = fmt(obs[0])
+        d[f'{field}_src'] = src
+        if obs[1]:
+            d[f'{field}_date'] = obs[1]
+        return True
+
     # ── United States (FRED — BLS/BEA) ────────────────────────────
     print("  US (FRED/BLS/BEA)...", end=" ", flush=True)
     us = {}
-    v = _fred_latest('DFF')              # Fed Funds effective rate (daily, FRED)
-    if v is not None:
-        us['rate'] = f"{v:.2f}%";  us['rate_src'] = 'FRED'
-    v = _fred_latest('UNRATE')           # Unemployment rate (BLS, monthly SA)
-    if v is not None:
-        us['unemployment'] = f"{v:.1f}%";  us['unemployment_src'] = 'FRED/BLS'
-    v = _fred_yoy('CPIAUCSL')            # CPI all urban, YoY (BLS)
-    if v is not None:
-        us['cpi'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  us['cpi_src'] = 'FRED/BLS'
-    v = _fred_latest('A191RL1Q225SBEA')  # Real GDP growth annualised QoQ (BEA)
-    if v is not None:
-        us['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  us['gdp_src'] = 'FRED/BEA'
+    _set(us, 'rate', _fred_latest_obs('DFF'), _pct2, 'FRED')                       # Fed Funds effective rate (daily)
+    _set(us, 'unemployment', _fred_latest_obs('UNRATE'), _pct1, 'FRED/BLS')        # Unemployment rate (BLS, monthly SA)
+    _set(us, 'cpi', _fred_yoy_obs('CPIAUCSL'), _signed1, 'FRED/BLS')               # CPI all urban, YoY (BLS)
+    _set(us, 'gdp', _fred_latest_obs('A191RL1Q225SBEA'), _signed1, 'FRED/BEA')     # Real GDP growth annualised QoQ (BEA)
     result['United States'] = us
     print(f"rate={us.get('rate','—')} unemp={us.get('unemployment','—')} "
           f"cpi={us.get('cpi','—')} gdp={us.get('gdp','—')}")
@@ -1294,31 +1309,18 @@ def get_global_indicators() -> dict:
     # ── European Union (ECB SDW + FRED for GDP) ────────────────────
     print("  EU (ECB SDW + FRED)...", end=" ", flush=True)
     eu = {}
-    v = _ecb_last('FM',   'B.U2.EUR.4F.KR.DFR.LEV')       # ECB deposit facility rate
-    if v is not None:
-        eu['rate'] = f"{v:.2f}%";  eu['rate_src'] = 'ECB'
-    v = _ecb_last('ICP',  'M.U2.N.000000.4.ANR')           # HICP 12-month % change
-    if v is not None:
-        eu['cpi'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  eu['cpi_src'] = 'ECB/Eurostat'
-    v = _ecb_last('LFSI', 'M.I8.S.UNEHRT.TOTAL0.15_74.T') # Euro Area unemployment
-    if v is not None:
-        eu['unemployment'] = f"{v:.1f}%";  eu['unemployment_src'] = 'ECB/Eurostat'
-    if 'unemployment' not in eu:
-        v = _fred_latest('LRHUTTTTEUM156S')  # OECD harmonised EU unemployment via FRED
-        if v is not None:
-            eu['unemployment'] = f"{v:.1f}%";  eu['unemployment_src'] = 'FRED/OECD'
-    if 'unemployment' not in eu:
-        v = _world_bank_latest('EUU', 'SL.UEM.TOTL.ZS')  # World Bank fallback
-        if v is not None:
-            eu['unemployment'] = f"{v:.1f}%";  eu['unemployment_src'] = 'World Bank'
+    _set(eu, 'rate', _ecb_last_obs('FM', 'B.U2.EUR.4F.KR.DFR.LEV'), _pct2, 'ECB')          # ECB deposit facility rate
+    _set(eu, 'cpi', _ecb_last_obs('ICP', 'M.U2.N.000000.4.ANR'), _signed1, 'ECB/Eurostat')  # HICP 12-month % change
+    if not _set(eu, 'unemployment', _ecb_last_obs('LFSI', 'M.I8.S.UNEHRT.TOTAL0.15_74.T'),
+                _pct1, 'ECB/Eurostat'):                                                      # Euro Area unemployment
+        if not _set(eu, 'unemployment', _fred_latest_obs('LRHUTTTTEUM156S'),
+                    _pct1, 'FRED/OECD'):                                                     # OECD harmonised via FRED
+            _set(eu, 'unemployment', _world_bank_latest_obs('EUU', 'SL.UEM.TOTL.ZS'),
+                 _pct1, 'World Bank')                                                        # World Bank fallback
     # EA19 real GDP QoQ — FRED OECD Quarterly National Accounts series
-    v = _fred_qoq('CLVMNACSCAB1GQEA19')
-    if v is not None:
-        eu['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  eu['gdp_src'] = 'FRED/Eurostat'
-    if 'gdp' not in eu:
-        v = _world_bank_latest('EUU', 'NY.GDP.MKTP.KD.ZG')  # World Bank fallback
-        if v is not None:
-            eu['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  eu['gdp_src'] = 'World Bank'
+    if not _set(eu, 'gdp', _fred_qoq_obs('CLVMNACSCAB1GQEA19'), _signed1, 'FRED/Eurostat'):
+        _set(eu, 'gdp', _world_bank_latest_obs('EUU', 'NY.GDP.MKTP.KD.ZG'),
+             _signed1, 'World Bank')                                                         # World Bank fallback
     result['European Union'] = eu
     print(f"rate={eu.get('rate','—')} cpi={eu.get('cpi','—')} "
           f"unemp={eu.get('unemployment','—')} gdp={eu.get('gdp','—')}")
@@ -1327,41 +1329,20 @@ def get_global_indicators() -> dict:
     print("  UK (BoE + FRED/ONS + World Bank)...", end=" ", flush=True)
     uk = {}
     # Rate: BoE IADB → FRED → FRED/OECD 3-month interbank
-    v = _boe_bank_rate()
-    if v is not None:
-        uk['rate'] = f"{v:.2f}%";  uk['rate_src'] = 'BoE'
-    if 'rate' not in uk:
-        v = _fred_latest('IR3TIB01GBM156N')  # UK 3-month interbank rate (OECD via FRED)
-        if v is not None:
-            uk['rate'] = f"{v:.2f}%";  uk['rate_src'] = 'FRED/OECD'
+    if not _set(uk, 'rate', _boe_bank_rate_obs(), _pct2, 'BoE'):
+        _set(uk, 'rate', _fred_latest_obs('IR3TIB01GBM156N'), _pct2, 'FRED/OECD')
     # CPI: FRED/OECD → World Bank
-    v = _fred_yoy('GBRCPIALLMINMEI')
-    if v is not None:
-        uk['cpi'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['cpi_src'] = 'FRED/ONS'
-    if 'cpi' not in uk:
-        v = _world_bank_latest('GBR', 'FP.CPI.TOTL.ZG')
-        if v is not None:
-            uk['cpi'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['cpi_src'] = 'World Bank'
+    if not _set(uk, 'cpi', _fred_yoy_obs('GBRCPIALLMINMEI'), _signed1, 'FRED/ONS'):
+        _set(uk, 'cpi', _world_bank_latest_obs('GBR', 'FP.CPI.TOTL.ZG'), _signed1, 'World Bank')
     # Unemployment: FRED/OECD → World Bank
-    v = _fred_latest('LRHUTTTTGBM156S')
-    if v is not None:
-        uk['unemployment'] = f"{v:.1f}%";  uk['unemployment_src'] = 'FRED/ONS'
-    if 'unemployment' not in uk:
-        v = _world_bank_latest('GBR', 'SL.UEM.TOTL.ZS')
-        if v is not None:
-            uk['unemployment'] = f"{v:.1f}%";  uk['unemployment_src'] = 'World Bank'
+    if not _set(uk, 'unemployment', _fred_latest_obs('LRHUTTTTGBM156S'), _pct1, 'FRED/ONS'):
+        _set(uk, 'unemployment', _world_bank_latest_obs('GBR', 'SL.UEM.TOTL.ZS'),
+             _pct1, 'World Bank')
     # GDP: FRED/OECD QoQ → FRED/OECD YoY → World Bank
-    v = _fred_qoq('CLVMNACSCAB1GQGB')
-    if v is not None:
-        uk['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['gdp_src'] = 'FRED/ONS'
-    if 'gdp' not in uk:
-        v = _fred_latest('NAEXKP01GBQ657S')  # UK GDP growth rate QoQ (OECD via FRED)
-        if v is not None:
-            uk['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['gdp_src'] = 'FRED/OECD'
-    if 'gdp' not in uk:
-        v = _world_bank_latest('GBR', 'NY.GDP.MKTP.KD.ZG')
-        if v is not None:
-            uk['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  uk['gdp_src'] = 'World Bank'
+    if not _set(uk, 'gdp', _fred_qoq_obs('CLVMNACSCAB1GQGB'), _signed1, 'FRED/ONS'):
+        if not _set(uk, 'gdp', _fred_latest_obs('NAEXKP01GBQ657S'), _signed1, 'FRED/OECD'):
+            _set(uk, 'gdp', _world_bank_latest_obs('GBR', 'NY.GDP.MKTP.KD.ZG'),
+                 _signed1, 'World Bank')
     result['United Kingdom'] = uk
     print(f"rate={uk.get('rate','—')} cpi={uk.get('cpi','—')} "
           f"unemp={uk.get('unemployment','—')} gdp={uk.get('gdp','—')}")
@@ -1369,27 +1350,17 @@ def get_global_indicators() -> dict:
     # ── China (World Bank Open Data + FRED/OECD) ──
     print("  China (World Bank + FRED/OECD)...", end=" ", flush=True)
     cn = {}
-    v = _world_bank_latest('CHN', 'NY.GDP.MKTP.KD.ZG')  # GDP growth annual %
-    if v is not None:
-        cn['gdp'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  cn['gdp_src'] = 'World Bank'
-    v = _world_bank_latest('CHN', 'FP.CPI.TOTL.ZG')     # CPI inflation annual %
-    if v is not None:
-        cn['cpi'] = f"+{v:.1f}%" if v >= 0 else f"{v:.1f}%";  cn['cpi_src'] = 'World Bank'
-    # Unemployment: World Bank ILO modelled estimate
-    v = _world_bank_latest('CHN', 'SL.UEM.TOTL.ZS')
-    if v is not None:
-        cn['unemployment'] = f"{v:.1f}%";  cn['unemployment_src'] = 'World Bank/ILO'
-    # Rate: PBoC 1-year LPR not on free APIs — try FRED
-    v = _fred_latest('INTDSRCNM193N')  # China interest rate (IMF via FRED)
-    if v is not None:
-        cn['rate'] = f"{v:.2f}%";  cn['rate_src'] = 'FRED/IMF'
+    _set(cn, 'gdp', _world_bank_latest_obs('CHN', 'NY.GDP.MKTP.KD.ZG'), _signed1, 'World Bank')      # GDP growth annual %
+    _set(cn, 'cpi', _world_bank_latest_obs('CHN', 'FP.CPI.TOTL.ZG'), _signed1, 'World Bank')         # CPI inflation annual %
+    _set(cn, 'unemployment', _world_bank_latest_obs('CHN', 'SL.UEM.TOTL.ZS'), _pct1, 'World Bank/ILO')  # ILO modelled estimate
+    _set(cn, 'rate', _fred_latest_obs('INTDSRCNM193N'), _pct2, 'FRED/IMF')                            # PBoC LPR not on free APIs
     result['China'] = cn
     print(f"gdp={cn.get('gdp','—')} cpi={cn.get('cpi','—')} "
           f"unemp={cn.get('unemployment','—')} rate={cn.get('rate','—')}")
 
     # Cache for 24 hours
     if _cache:
-        _cache.set("global_indicators", result, ttl_hours=24)
+        _cache.set("global_indicators_v2", result, ttl_hours=24)
     return result
 
 
@@ -1414,7 +1385,10 @@ def fetch_industry_indicators() -> dict:
     data = _statcan_wds(all_vectors, n=14)
     result = {}
 
-    # Industry M/M and Y/Y
+    # Industry M/M and Y/Y. 'ref' carries the WDS refPer of the latest
+    # observation — the REFERENCE period the M/M and Y/Y changes describe
+    # (audit D5). The archiver stamps indicator_history with it and skips
+    # the row when it is missing, never falling back to the fetch date.
     for naics_code, vector_id in _INDUSTRY_VECTORS.items():
         obs = data.get(vector_id, [])
         mm, yy = _compute_mm_yy(obs)
@@ -1422,6 +1396,7 @@ def fetch_industry_indicators() -> dict:
             'mm':  (f"+{mm:.1f}%" if mm >= 0 else f"{mm:.1f}%") if mm is not None else 'N/A',
             'yy':  (f"+{yy:.1f}%" if yy >= 0 else f"{yy:.1f}%") if yy is not None else 'N/A',
             'src': 'StatCan' if (mm is not None or yy is not None) else 'N/A',
+            'ref': (obs[-1].get('refPer') or '')[:10] if obs else None,
         }
 
     # National real GDP (quarterly QoQ annualised)
@@ -1495,8 +1470,9 @@ def fetch_primary_indicators() -> dict:
 def _norm_ref_period(raw: str | None) -> str | None:
     """Normalize a StatCan refPer ('YYYY-MM-DD' or 'YYYY-MM') to YYYY-MM-DD.
 
-    Returns None when the string is missing/unparseable so callers fall back
-    to today's date explicitly rather than silently mis-stamping.
+    Returns None when the string is missing/unparseable. Callers must SKIP
+    the row (with a logged warning) in that case — never stamp the fetch
+    date (audit D14; pipeline invariant: stamp the REFERENCE period).
     """
     s = (raw or '').strip()[:10]
     if re.match(r'^\d{4}-\d{2}-\d{2}$', s):
@@ -1506,22 +1482,13 @@ def _norm_ref_period(raw: str | None) -> str | None:
     return None
 
 
-def _fmt_indicator_change(cur, prev) -> str | None:
-    """Period-over-period change string mirroring the frontend convention:
-    rate-like values (<100 abs) get a pp difference, levels get a % change."""
-    def _num(v):
-        try:
-            return float(str(v).replace(',', '').replace('%', '').replace('+', '').strip())
-        except (ValueError, TypeError, AttributeError):
-            return None
-    c, p = _num(cur), _num(prev)
-    if c is None or p is None:
-        return None
-    if abs(c) < 100 and abs(p) < 100:
-        return f"{c - p:+.1f}pp"
-    if p == 0:
-        return None
-    return f"{((c - p) / abs(p)) * 100:+.1f}%"
+def _fmt_indicator_change(cur, prev, unit: str = '',
+                          indicator_name: str = '') -> str | None:
+    """Period-over-period change string. Delegates to the shared UNIT-aware
+    helper in db.py (audit D11): %-natured series get pp differences, level
+    series get relative % change — never decided by value magnitude."""
+    return format_indicator_change(cur, prev, unit=unit,
+                                   indicator_name=indicator_name)
 
 
 def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
@@ -1530,13 +1497,15 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
     Schema per record: {indicator_name, province, period, value, unit, source, frequency, backfilled}
 
     Periods are stamped with the StatCan REFERENCE period (obs_dates national,
-    <field>_date provincial) — not the fetch date. Before 2026-06-11 every row
-    was stamped with the run date, so a May LFS print fetched in June landed in
-    a 2026-06 history bucket, daily runs created one bogus row per run date,
-    and previous_value/change never reached the export.
+    <field>_date provincial/global, 'ref' industry) — not the fetch date.
+    Before 2026-06-11 every row was stamped with the run date, so a May LFS
+    print fetched in June landed in a 2026-06 history bucket, daily runs
+    created one bogus row per run date, and previous_value/change never
+    reached the export. Rows whose reference period cannot be determined are
+    SKIPPED with a logged warning (audit D5/D14) — never stamped with today.
     """
-    today_str = date.today().isoformat()
     count = 0
+    skipped = 0
 
     # National indicators
     nat = primary_ind.get('national', {})
@@ -1548,16 +1517,23 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
         if not value or value == 'N/A':
             continue
         source_label = nat_srcs.get(field, '')
-        ref_period = _norm_ref_period(nat_dates.get(field)) or today_str
+        ref_period = _norm_ref_period(nat_dates.get(field))
+        if ref_period is None:
+            print(f"  [HISTORY][SKIP] national '{field}': no parseable reference "
+                  f"period (obs_date={nat_dates.get(field)!r}) — row NOT archived "
+                  f"(never stamp the fetch date)")
+            skipped += 1
+            continue
         prev_value = nat_prevs.get(field)
+        unit = '%' if any(k in field.lower() for k in ['rate', 'cpi', 'gdp', 'unemployment']) else ''
         save_indicator(conn, {
             'indicator': field,
             'province': 'national',
             'date': ref_period,
             'value': str(value),
             'previous_value': str(prev_value) if prev_value not in (None, '', 'N/A') else None,
-            'change': _fmt_indicator_change(value, prev_value),
-            'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'gdp', 'unemployment']) else '',
+            'change': _fmt_indicator_change(value, prev_value, unit, field),
+            'unit': unit,
             'source': source_label,
             'frequency': 'monthly',
             'backfilled': False,
@@ -1577,16 +1553,23 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
             if field.endswith(_META_SUFFIXES) or not value or value == 'N/A':
                 continue
             source_label = prov_data.get(f'{field}_src', '')
-            ref_period = _norm_ref_period(prov_data.get(f'{field}_date')) or today_str
+            ref_period = _norm_ref_period(prov_data.get(f'{field}_date'))
+            if ref_period is None:
+                print(f"  [HISTORY][SKIP] {province} '{field}': no parseable "
+                      f"reference period (obs_date={prov_data.get(f'{field}_date')!r}) "
+                      f"— row NOT archived (never stamp the fetch date)")
+                skipped += 1
+                continue
             prev_value = prov_data.get(f'{field}_prev')
+            unit = '%' if any(k in field.lower() for k in ['rate', 'cpi', 'unemployment']) else ''
             save_indicator(conn, {
                 'indicator': field,
                 'province': province,
                 'date': ref_period,
                 'value': str(value),
                 'previous_value': str(prev_value) if prev_value not in (None, '', 'N/A') else None,
-                'change': _fmt_indicator_change(value, prev_value),
-                'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'unemployment']) else '',
+                'change': _fmt_indicator_change(value, prev_value, unit, field),
+                'unit': unit,
                 'source': source_label,
                 'frequency': 'monthly',
                 'backfilled': False,
@@ -1616,15 +1599,26 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
         'United Kingdom': 'https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes',
         'UK': 'https://www.bankofengland.co.uk/monetary-policy-summary-and-minutes',
     }
+    # D5: stamp the source's reference period from the <field>_date companion
+    # (FRED/ECB/BoE/World Bank observation dates). Cached pre-D5 payloads and
+    # sources without a machine-readable refPer have no companion — those
+    # rows are SKIPPED loudly, never stamped with the fetch date.
     for region, region_data in primary_ind.get('global', {}).items():
         for field, value in region_data.items():
-            if field.endswith('_src') or not value or value == 'N/A':
+            if field.endswith(('_src', '_date')) or not value or value == 'N/A':
                 continue
             source_label = region_data.get(f'{field}_src', '')
+            ref_period = _norm_ref_period(region_data.get(f'{field}_date'))
+            if ref_period is None:
+                print(f"  [HISTORY][SKIP] global {region} '{field}': source gave no "
+                      f"machine-readable reference period "
+                      f"(date={region_data.get(f'{field}_date')!r}) — row NOT archived")
+                skipped += 1
+                continue
             save_indicator(conn, {
                 'indicator': f'global_{field}',
                 'province': region,
-                'date': today_str,
+                'date': ref_period,
                 'value': str(value),
                 'unit': '%' if any(k in field.lower() for k in ['rate', 'cpi', 'gdp', 'unemployment']) else '',
                 'source': source_label,
@@ -1633,24 +1627,33 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
                 'backfilled': False,
                 'source_meta': {
                     'authority': _GLOBAL_AUTHORITIES.get(region, source_label),
-                    'reference_period': today_str,
+                    'reference_period': ref_period,
                     'source_url': _CANONICAL_URLS.get(region, ''),
                 },
             })
             count += 1
 
-    # Industry GDP (per-NAICS M/M and Y/Y from StatCan WDS)
+    # Industry GDP (per-NAICS M/M and Y/Y from StatCan WDS).
+    # D5: 'ref' is the WDS refPer of the latest observation — the month the
+    # M/M and Y/Y changes describe. Missing refPer → loud skip, never today.
     for naics_code, ind_data in primary_ind.get('industries', {}).items():
         if naics_code.startswith('_'):
             continue
         mm = ind_data.get('mm', 'N/A')
         yy = ind_data.get('yy', 'N/A')
         src = ind_data.get('src', 'StatCan')
+        ref_period = _norm_ref_period(ind_data.get('ref'))
+        if ref_period is None:
+            if (mm and mm != 'N/A') or (yy and yy != 'N/A'):
+                print(f"  [HISTORY][SKIP] industry_gdp NAICS {naics_code}: no WDS "
+                      f"refPer (ref={ind_data.get('ref')!r}) — rows NOT archived")
+                skipped += 1
+            continue
         if mm and mm != 'N/A':
             save_indicator(conn, {
                 'indicator': f'industry_gdp_mm_{naics_code}',
                 'province': 'national',
-                'date': today_str,
+                'date': ref_period,
                 'value': str(mm),
                 'unit': '%',
                 'source': src,
@@ -1658,7 +1661,7 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
                 'backfilled': False,
                 'source_meta': {
                     'authority': 'Statistics Canada',
-                    'reference_period': today_str,
+                    'reference_period': ref_period,
                     'table_id': '36-10-0434',
                 },
             })
@@ -1667,7 +1670,7 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
             save_indicator(conn, {
                 'indicator': f'industry_gdp_yy_{naics_code}',
                 'province': 'national',
-                'date': today_str,
+                'date': ref_period,
                 'value': str(yy),
                 'unit': '%',
                 'source': src,
@@ -1675,13 +1678,14 @@ def _archive_indicators_to_history(conn, primary_ind: dict) -> None:
                 'backfilled': False,
                 'source_meta': {
                     'authority': 'Statistics Canada',
-                    'reference_period': today_str,
+                    'reference_period': ref_period,
                     'table_id': '36-10-0434',
                 },
             })
             count += 1
 
-    print(f"  [HISTORY] Archived {count} indicator values to indicator_history")
+    print(f"  [HISTORY] Archived {count} indicator values to indicator_history"
+          + (f" ({skipped} skipped: no reference period)" if skipped else ""))
 
 
 # ─────────────────────────────────────────────────────────────────────────────

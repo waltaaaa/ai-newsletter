@@ -1846,6 +1846,7 @@ def run(conn, context, logger):
         financial_markets = context.get("financial_markets", {})
         boc_data = context.get("boc_data", {})
         yield_data = context.get("yield_data", {})
+        statcan_inds = context.get("statcan_inds") or []
 
         # Build signal context from Prompts 11-19 data streams
         signal_context = {
@@ -1912,11 +1913,56 @@ def run(conn, context, logger):
             else:
                 m[field]       = 'N/A'
                 nat_src[field] = 'N/A'
-        # shelterCpi is from the same StatCan release as CPI
+        # ── D9: CPI components from the StatCan Daily feed ──────────
+        # The Daily feed publishes CPI components (Shelter, Food purchased
+        # from stores) with an EMPTY `value` and the 12-month change in
+        # `change` (by design — see gov_sources.fetch_statcan_indicators).
+        # Consumers that keyed off `value` alone rendered "N/A"/deferral
+        # prose even when the release carried the figure. Fall back to the
+        # change — signed per arrow direction (1=up, 2=down, the same
+        # convention the frontend uses) and labelled Y/Y, which is what the
+        # validator's enrichment checks expect.
+        _daily_by_name = {str(r.get('name', '')).strip().lower(): r
+                          for r in statcan_inds}
+
+        def _daily_cpi_component(*names):
+            for nm in names:
+                row = _daily_by_name.get(nm.lower())
+                if not row:
+                    continue
+                val = str(row.get('value') or '').strip()
+                if val:
+                    return val
+                chg = str(row.get('change') or '').strip()
+                if chg:
+                    if chg[:1].isdigit():
+                        arrow = row.get('arrow')
+                        chg = ('+' if arrow == 1 else '-' if arrow == 2 else '') + chg
+                    return f"{chg} y/y"
+            return None
+
+        shelter_val = _daily_cpi_component('Shelter')
+        food_val = _daily_cpi_component('Food purchased from stores')
+
+        # shelterCpi is from the same StatCan release as CPI. When CPI data
+        # IS available, inject the actual Shelter component (the old code
+        # only set the source label here, leaving the writer's empty string
+        # in place → deferral prose in the published briefing). API or N/A,
+        # never AI.
         if m.get('cpi') == 'N/A':
             m['shelterCpi'] = 'N/A';  nat_src['shelterCpi'] = 'N/A'
+        elif shelter_val:
+            m['shelterCpi'] = shelter_val;  nat_src['shelterCpi'] = 'StatCan'
         else:
-            nat_src.setdefault('shelterCpi', 'StatCan')
+            m['shelterCpi'] = 'N/A';  nat_src['shelterCpi'] = 'N/A'
+
+        # Snake_case enrichment metrics (validator ENRICHMENT_METRICS): fill
+        # from the primary Daily feed when the producer left them empty/N/A —
+        # never overwrite a real producer-supplied value.
+        for _key, _daily_val in (('shelter_cpi', shelter_val),
+                                 ('food_cpi', food_val)):
+            if _daily_val and str(m.get(_key) or '').strip() in ('', 'N/A'):
+                m[_key] = _daily_val
         # Secondary fields — no real-time primary API; values from Claude analysis only
         for field in ('nomGdp', 'outputGap', 'participation',
                       'wageGrowth', 'currentAccount', 'agCrop', 'farmCash'):
