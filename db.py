@@ -1584,6 +1584,53 @@ def search_projects(conn: sqlite3.Connection, query: str, limit: int = 50) -> li
 # INDICATORS
 # ══════════════════════════════════════════════════════════════════════════════
 
+_PCT_NAME_TOKENS = ("rate", "ratio", "share", "unemployment", "participation", "pct")
+
+
+def format_indicator_change(cur, prev, unit: str = "",
+                            indicator_name: str = "") -> str | None:
+    """Unified period-over-period change formatter (audit D11).
+
+    The change SEMANTICS are decided by UNIT/NAME — never by value magnitude
+    (the old data_collection heuristic printed wages "+0.4pp" because they were
+    < 100, and statcan_extended stored a savings-rate move 3.4→3.5 as "+2.9%"):
+
+      - percentage-natured series (unit contains '%', the value strings
+        themselves carry '%', or the indicator name has a rate/ratio/share
+        token) → percentage-POINT difference, e.g. 3.4 → 3.5 = "+0.1pp"
+      - level series (dollars, counts, indexes, $/hr …) → relative % change,
+        e.g. 100 → 102.9 = "+2.9%"
+
+    Returns None when either value is missing/unparseable or when a relative
+    change is undefined (previous == 0). Historical rows are never rewritten —
+    this applies to new writes only.
+    """
+    def _num(v):
+        try:
+            return float(str(v).replace(",", "").replace("%", "")
+                         .replace("+", "").strip())
+        except (ValueError, TypeError, AttributeError):
+            return None
+
+    c, p = _num(cur), _num(prev)
+    if c is None or p is None:
+        return None
+
+    u = (unit or "").strip().lower()
+    name_tokens = set(re.split(r"[^a-z0-9]+", (indicator_name or "").lower()))
+    pct_natured = (
+        "%" in u
+        or u in ("pp", "percent", "percentage", "percentage points")
+        or "%" in str(cur) or "%" in str(prev)
+        or bool(name_tokens & set(_PCT_NAME_TOKENS))
+    )
+    if pct_natured:
+        return f"{c - p:+.1f}pp"
+    if p == 0:
+        return None
+    return f"{((c - p) / abs(p)) * 100:+.1f}%"
+
+
 def save_indicator(conn: sqlite3.Connection, indicator_dict: dict) -> None:
     """Insert or replace an economic indicator value.
 
@@ -1618,6 +1665,13 @@ def save_indicator(conn: sqlite3.Connection, indicator_dict: dict) -> None:
     indicator_name = d.get("indicator_name", "")
     period = d.get("period", "")
     province = d.get("province", "National")
+    # D10: UNIQUE(indicator_name, period, province) is case-sensitive, and
+    # writers historically disagreed ('National' in statcan_extended vs
+    # 'national' in data_collection/backfill) — splitting one series into two
+    # buckets. Normalize every case-variant of national to lowercase at this
+    # single write chokepoint; all other provinces pass through unchanged.
+    if isinstance(province, str) and province.strip().lower() == "national":
+        province = "national"
     now = _now_iso()
 
     # Build metadata JSON — merge source_meta into existing metadata
@@ -1650,8 +1704,11 @@ def save_indicator(conn: sqlite3.Connection, indicator_dict: dict) -> None:
             ON CONFLICT(indicator_name, period, province)
             DO UPDATE SET
                 value = excluded.value,
-                previous_value = excluded.previous_value,
-                change = excluded.change,
+                -- D13a: a later value-only write (previous_value/change = NULL)
+                -- must not null out previously stored prev/change for the same
+                -- period; an explicit non-NULL incoming value still wins.
+                previous_value = COALESCE(excluded.previous_value, previous_value),
+                change = COALESCE(excluded.change, change),
                 source = excluded.source,
                 fetched_at = excluded.fetched_at,
                 unit = COALESCE(excluded.unit, unit),
@@ -1715,10 +1772,20 @@ def get_indicators(conn: sqlite3.Connection, category: str | None = None,
 def get_latest_indicators(conn: sqlite3.Connection) -> list[dict]:
     """Return the most recent value for each indicator_name+province combination.
 
-    'Most recent' = latest `period` (reference date), with `rowid` as tiebreaker.
-    Picking by period (not by insertion order) is important because old backfill
-    runs can insert rows out-of-order; picking by MAX(rowid) would then shadow
-    the correct current weekly values with stale orphans.
+    Selection order per (indicator_name, province) partition (audit D6):
+      1. Rows whose metadata marks them as reference-period-stamped
+         (metadata.source_meta.reference_period == period) are preferred over
+         rows where it differs — legacy run-date-stamped rows (e.g. a daily
+         run that wrote period=2026-06-08 for a May LFS print) sort AFTER
+         correct reference periods and must not win just because the fetch
+         date is later than the reference date.
+      2. Among equals, latest `period` (reference date) wins.
+      3. `rowid` is the final tiebreaker. Picking by period (not insertion
+         order) matters because old backfill runs insert out-of-order.
+
+    Rows without parseable metadata get the same preference rank as
+    metadata-stamped rows (rank 0 only marks KNOWN run-date stamps), so
+    plain backfilled history is never shadowed by the preference rule.
     """
     old_factory = conn.row_factory
     conn.row_factory = sqlite3.Row
@@ -1727,7 +1794,18 @@ def get_latest_indicators(conn: sqlite3.Connection) -> list[dict]:
             SELECT ih.*,
                    ROW_NUMBER() OVER (
                        PARTITION BY indicator_name, province
-                       ORDER BY period DESC, rowid DESC
+                       ORDER BY
+                           CASE
+                               WHEN metadata IS NOT NULL
+                                    AND json_valid(metadata)
+                                    AND json_extract(metadata,
+                                        '$.source_meta.reference_period') IS NOT NULL
+                                    AND json_extract(metadata,
+                                        '$.source_meta.reference_period') != period
+                               THEN 0  -- known run-date-stamped row: deprioritize
+                               ELSE 1
+                           END DESC,
+                           period DESC, rowid DESC
                    ) AS _rn
             FROM indicator_history ih
         )
@@ -2261,7 +2339,17 @@ def get_trend_snapshots(conn: sqlite3.Connection, limit: int = 12) -> list[dict]
 
 def save_timeseries_point(conn: sqlite3.Connection, series_name: str, date_str: str,
                           value: float | None, unit: str = "", source: str = "") -> None:
-    """Upsert a single timeseries data point. Skips if the date already exists.
+    """Upsert a single timeseries data point.
+
+    D13b: a re-write for an existing (series, date) UPDATES the value — the
+    old DO NOTHING meant a same-day correction (e.g. a fixed yfinance column
+    scramble) could never land. Unit/source keep their stored values unless
+    the incoming write carries non-empty ones.
+
+    Red-team F8 carve-out: writer-emitted points (source='briefing_print')
+    keep insert-only semantics — a briefing's own print must never overwrite
+    (or re-tag) an independently fetched data point for the same date. Real
+    sources still overwrite stale briefing_print rows.
 
     Args:
         conn: SQLite connection.
@@ -2273,11 +2361,22 @@ def save_timeseries_point(conn: sqlite3.Connection, series_name: str, date_str: 
     """
     if value is None:
         return
+    if source == 'briefing_print':
+        with conn:
+            conn.execute("""
+                INSERT INTO timeseries (series_name, date, value, unit, source)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(series_name, date) DO NOTHING
+            """, (series_name, date_str, value, unit, source))
+        return
     with conn:
         conn.execute("""
             INSERT INTO timeseries (series_name, date, value, unit, source)
             VALUES (?, ?, ?, ?, ?)
-            ON CONFLICT(series_name, date) DO NOTHING
+            ON CONFLICT(series_name, date) DO UPDATE SET
+                value = excluded.value,
+                unit = CASE WHEN excluded.unit != '' THEN excluded.unit ELSE unit END,
+                source = CASE WHEN excluded.source != '' THEN excluded.source ELSE source END
         """, (series_name, date_str, value, unit, source))
 
 

@@ -16,7 +16,7 @@ Tables fetched:
   34-10-0035  Capital and repair expenditures by industry (annual)
   14-10-0022  Employment by industry, monthly SA
   14-10-0326  Job vacancies by industry sector (quarterly)
-  12-10-0129  Merchandise exports by commodity (monthly)
+  12-10-0163  Merchandise exports by commodity (monthly)
   34-10-0143  Housing starts by type and province (monthly)
   18-10-0205  New housing price index (monthly)
 
@@ -28,7 +28,7 @@ import time
 import requests
 from datetime import datetime
 
-from db import save_indicator
+from db import save_indicator, format_indicator_change
 
 logger = logging.getLogger(__name__)
 
@@ -325,7 +325,12 @@ META_RESOLVED_GROUPS = [
 # Previously working (unchanged):
 #   EMPLOYMENT_INDUSTRY   — vectors 2057614, 2057606, 2057622
 #   JOB_VACANCIES         — vectors 45169837, 45169829
-#   MERCHANDISE_EXPORTS   — vectors 21837355, 21837395, 21837439, 21837343
+#
+# Re-resolved 2026-06-09 (D-15):
+#   MERCHANDISE_EXPORTS   — now Table 12-10-0163 vectors 1566911339/51/65/406
+#                           (see the MERCHANDISE_EXPORTS block above; the old
+#                           21837xxx vectors pointed at the dead 12-10-0129
+#                           concentration cube frozen at 2003)
 
 ALL_TABLE_GROUPS = [
     INVESTMENT_BUILDING,
@@ -344,8 +349,10 @@ ALL_TABLE_GROUPS = [
 # vector groups.
 
 # Frequency classification for mode-aware skipping
+# (12-10-0129 removed 2026-06-12 — dead concentration cube, no group uses it;
+# its successor 12-10-0163 is listed.)
 _MONTHLY_TABLES = {
-    "14-10-0022", "12-10-0129", "12-10-0163", "34-10-0143", "18-10-0205",
+    "14-10-0022", "12-10-0163", "34-10-0143", "18-10-0205",
     "14-10-0287", "14-10-0222", "14-10-0063", "14-10-0372", "34-10-0066",
     "12-10-0011", "16-10-0047", "16-10-0048", "20-10-0008", "20-10-0074",
     "34-10-0292",
@@ -482,15 +489,18 @@ def _fetch_table_group(conn, group: dict) -> tuple[int, int]:
 
         fetched += 1
 
-        # Compute period-over-period change if enough data
+        # Compute period-over-period change if enough data.
+        # D11: semantics come from the shared UNIT-aware helper — %-unit
+        # series (e.g. household savings rate) get pp differences, levels
+        # get relative % change. Historical rows are not rewritten.
         prev_value = None
         change = None
         if len(points) >= 2:
             prev_value = points[-2].get('value')
             if raw_dollars and unit == "$M" and prev_value is not None:
                 prev_value = round(prev_value / 1_000_000, 1)
-            if prev_value and prev_value != 0:
-                change = f"{((value - prev_value) / abs(prev_value)) * 100:+.1f}%"
+            change = format_indicator_change(value, prev_value, unit=unit,
+                                             indicator_name=indicator_name)
 
         try:
             save_indicator(conn, {
@@ -515,7 +525,9 @@ def _fetch_table_group(conn, group: dict) -> tuple[int, int]:
             })
             saved += 1
         except Exception as e:
-            logger.debug(f"[STATCAN-EXT] Failed to save {indicator_name}: {e}")
+            # D13c: loud failure — this module's doctrine is that wrong/missed
+            # writes must never be quiet.
+            logger.warning(f"[STATCAN-EXT] Failed to save {indicator_name}: {e}")
 
     return fetched, saved
 
@@ -717,8 +729,11 @@ def _fetch_meta_group(conn, group: dict) -> tuple[int, int]:
         if len(points) >= 2:
             prev_value = _normalize_obs_value(float(points[-2]["value"]),
                                               points[-2].get("scalarFactorCode"), unit)
-            if prev_value and prev_value != 0:
-                change = f"{((value - prev_value) / abs(prev_value)) * 100:+.1f}%"
+            # D11: UNIT-aware change semantics (pp for %-series, relative %
+            # for levels) via the shared helper — fixes savings rate
+            # 3.4 → 3.5 being stored as "+2.9%" instead of "+0.1pp".
+            change = format_indicator_change(value, prev_value, unit=unit,
+                                             indicator_name=indicator_name)
 
         value = round(value, 4)
         try:
@@ -745,7 +760,8 @@ def _fetch_meta_group(conn, group: dict) -> tuple[int, int]:
             })
             saved += 1
         except Exception as e:
-            logger.debug(f"[STATCAN-EXT][META] Failed to save {indicator_name}: {e}")
+            # D13c: loud failure over silent debug logging.
+            logger.warning(f"[STATCAN-EXT][META] Failed to save {indicator_name}: {e}")
 
     return fetched, saved
 

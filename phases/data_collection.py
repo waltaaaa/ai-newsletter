@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, date, timedelta
 
 import rss_monitor
-from db import save_indicator
+from db import save_indicator, format_indicator_change
 from gov_sources import fetch_statcan_indicators
 from pipeline_store import cache as _cache
 
@@ -1055,8 +1055,13 @@ def get_provincial_indicators() -> dict:
 # (US: FRED public CSV · EU: ECB SDW API · UK: BoE IADB)
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _fred_latest(series_id: str) -> float | None:
-    """Latest observation from FRED public CSV endpoint (no API key required)."""
+def _fred_latest_obs(series_id: str) -> tuple[float, str | None] | None:
+    """Latest observation from FRED public CSV endpoint (no API key required).
+
+    Returns (value, observation_date 'YYYY-MM-DD') or None. The observation
+    date is the REFERENCE period the value covers — required so indicator
+    history is never stamped with the fetch date (audit D5).
+    """
     try:
         url  = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
         resp = requests.get(url, timeout=45, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
@@ -1064,17 +1069,25 @@ def _fred_latest(series_id: str) -> float | None:
         for line in reversed(resp.text.strip().split('\n')):
             if line.startswith('DATE') or line.startswith('observation'):
                 continue
-            val = line.split(',')[-1].strip()
+            parts = [p.strip() for p in line.split(',')]
+            val = parts[-1]
             if val and val != '.':
-                return float(val)
+                obs_date = parts[0][:10] if parts and re.match(r'^\d{4}-\d{2}-\d{2}', parts[0]) else None
+                return float(val), obs_date
         return None
     except Exception:
         return None
 
 
-def _fred_yoy(series_id: str) -> float | None:
+def _fred_latest(series_id: str) -> float | None:
+    """Back-compat wrapper around _fred_latest_obs (value only)."""
+    r = _fred_latest_obs(series_id)
+    return r[0] if r else None
+
+
+def _fred_yoy_obs(series_id: str) -> tuple[float, str | None] | None:
     """
-    Fetch 14 months from FRED and return YoY % change.
+    Fetch 14 months from FRED and return (YoY % change, latest obs date).
     Used for CPI (index level → need two readings 12 months apart).
     """
     try:
@@ -1087,24 +1100,30 @@ def _fred_yoy(series_id: str) -> float | None:
         for line in resp.text.strip().split('\n'):
             if line.startswith('DATE') or line.startswith('observation'):
                 continue
-            val = line.split(',')[-1].strip()
+            parts = [p.strip() for p in line.split(',')]
+            val = parts[-1]
             if val and val != '.':
                 try:
-                    rows.append(float(val))
+                    rows.append((parts[0][:10], float(val)))
                 except ValueError:
                     pass
         if len(rows) < 13:
             return None
-        latest, year_ago = rows[-1], rows[-13]
+        (latest_date, latest), (_, year_ago) = rows[-1], rows[-13]
         if year_ago == 0:
             return None
-        return ((latest - year_ago) / year_ago) * 100
+        obs_date = latest_date if re.match(r'^\d{4}-\d{2}-\d{2}$', latest_date) else None
+        return ((latest - year_ago) / year_ago) * 100, obs_date
     except Exception:
         return None
 
 
-def _ecb_last(dataflow: str, key: str) -> float | None:
-    """Latest observation from ECB Statistical Data Warehouse REST API."""
+def _ecb_last_obs(dataflow: str, key: str) -> tuple[float, str | None] | None:
+    """Latest observation from ECB Statistical Data Warehouse REST API.
+
+    Returns (value, time_period) — the SDMX TIME_PERIOD id ('YYYY-MM' or
+    'YYYY-MM-DD') of the observation, or None when unavailable.
+    """
     try:
         url  = (f"https://data-api.ecb.europa.eu/service/data/{dataflow}/{key}"
                 f"?format=jsondata&lastNObservations=1")
@@ -1112,20 +1131,37 @@ def _ecb_last(dataflow: str, key: str) -> float | None:
         resp.raise_for_status()
         data   = resp.json()
         series = list(data['dataSets'][0]['series'].values())[0]
-        obs    = list(series['observations'].values())[0]
-        return float(obs[0])
+        obs_key, obs = sorted(series['observations'].items(),
+                              key=lambda kv: int(kv[0]))[-1]
+        ref = None
+        try:
+            time_vals = data['structure']['dimensions']['observation'][0]['values']
+            ref = str(time_vals[int(obs_key)].get('id') or '') or None
+        except Exception:
+            ref = None
+        return float(obs[0]), ref
     except Exception:
         return None
 
 
-def _boe_bank_rate() -> float | None:
+def _boe_bank_rate_obs() -> tuple[float, str | None] | None:
     """Latest Bank of England Bank Rate from BoE public IADB CSV download.
 
-    Falls back to FRED series (BOEBRBA) if BoE endpoint returns HTML instead
-    of CSV (the BoE changed their endpoint format periodically). The UK rate
-    is also available via FRED, so this is non-critical — all UK data is
-    covered by FRED with the 45s timeout.
+    Returns (value, observation_date or None). Falls back to FRED series
+    (BOEBRBA) if BoE endpoint returns HTML instead of CSV (the BoE changed
+    their endpoint format periodically). The UK rate is also available via
+    FRED, so this is non-critical — all UK data is covered by FRED with the
+    45s timeout.
     """
+    def _parse_boe_date(raw: str) -> str | None:
+        raw = (raw or '').strip()
+        for fmt in ('%d %b %Y', '%d %B %Y', '%d/%m/%Y', '%Y-%m-%d'):
+            try:
+                return datetime.strptime(raw, fmt).date().isoformat()
+            except ValueError:
+                continue
+        return None
+
     # Try BoE IADB first
     try:
         url  = ("https://www.bankofengland.co.uk/boeapps/database/fromshowcolumns.asp"
@@ -1145,7 +1181,7 @@ def _boe_bank_rate() -> float | None:
                 val = parts[-1]
                 if val:
                     try:
-                        return float(val)
+                        return float(val), _parse_boe_date(parts[0])
                     except ValueError:
                         pass
         return None
@@ -1154,14 +1190,15 @@ def _boe_bank_rate() -> float | None:
 
     # Fallback: BoE Bank Rate via FRED (series BOEBRBA)
     try:
-        return _fred_latest('BOEBRBA')
+        return _fred_latest_obs('BOEBRBA')
     except Exception:
         return None
 
 
-def _fred_qoq(series_id: str) -> float | None:
+def _fred_qoq_obs(series_id: str) -> tuple[float, str | None] | None:
     """
-    Fetch a quarterly level index from FRED and return the most recent QoQ % change.
+    Fetch a quarterly level index from FRED and return
+    (most recent QoQ % change, latest quarter's observation date).
     Used for EU and UK real GDP (SA, chained volume).
     """
     try:
@@ -1174,24 +1211,29 @@ def _fred_qoq(series_id: str) -> float | None:
         for line in resp.text.strip().split('\n'):
             if line.startswith('DATE') or line.startswith('observation'):
                 continue
-            val = line.split(',')[-1].strip()
+            parts = [p.strip() for p in line.split(',')]
+            val = parts[-1]
             if val and val != '.':
                 try:
-                    rows.append(float(val))
+                    rows.append((parts[0][:10], float(val)))
                 except ValueError:
                     pass
         if len(rows) < 2:
             return None
-        latest, prev = rows[-1], rows[-2]
-        return ((latest / prev) - 1) * 100 if prev else None
+        (latest_date, latest), (_, prev) = rows[-1], rows[-2]
+        if not prev:
+            return None
+        obs_date = latest_date if re.match(r'^\d{4}-\d{2}-\d{2}$', latest_date) else None
+        return ((latest / prev) - 1) * 100, obs_date
     except Exception:
         return None
 
 
-def _world_bank_latest(iso3: str, indicator: str) -> float | None:
+def _world_bank_latest_obs(iso3: str, indicator: str) -> tuple[float, str | None] | None:
     """
-    Most recent non-null value from the World Bank Open Data API (annual frequency).
-    Free, no key required.
+    Most recent non-null (value, reference_date) from the World Bank Open Data
+    API (annual frequency — the 'date' field is the reference YEAR, normalized
+    here to 'YYYY-01-01'). Free, no key required.
     """
     try:
         url  = (f"https://api.worldbank.org/v2/country/{iso3}/indicator/{indicator}"
@@ -1203,7 +1245,9 @@ def _world_bank_latest(iso3: str, indicator: str) -> float | None:
             return None
         for entry in data[1]:
             if entry.get('value') is not None:
-                return float(entry['value'])
+                ref_year = str(entry.get('date') or '').strip()
+                ref = f"{ref_year}-01-01" if re.match(r'^\d{4}$', ref_year) else None
+                return float(entry['value']), ref
         return None
     except Exception:
         return None
