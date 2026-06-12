@@ -4374,16 +4374,23 @@
       "category": "",
       "province": "national",
       "value": 2.25,
-      "period": "2026-03-05",
-      "previous_value": null,
-      "change": null,
-      "source": "Bank of Canada Valet",
-      "fetched_at": "2026-03-10T00:52:01Z",
+      "period": "2026-06-10",
+      "previous_value": 2.25,
+      "change": "0.0pp",
+      "source": "Bank of Canada",
+      "fetched_at": "2026-06-12T20:50:42Z",
       "unit": "%",
       "frequency": "scheduled",
       "description": "",
       "backfilled": 1,
-      "metadata": {},
+      "metadata": {
+        "source_meta": {
+          "authority": "Bank of Canada",
+          "reference_period": "2026-06-10",
+          "source_url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/",
+          "retrieved_at": "2026-06-12T20:50:42Z"
+        }
+      },
       "_rn": 1,
       "validation_status": "passed",
       "_stale": false
@@ -84202,6 +84209,22 @@
       "value": 2.25,
       "unit": "%",
       "source": "Bank of Canada Valet"
+    },
+    {
+      "indicator_name": "overnight_rate",
+      "province": "national",
+      "period": "2026-04-29",
+      "value": 2.25,
+      "unit": "%",
+      "source": "Bank of Canada"
+    },
+    {
+      "indicator_name": "overnight_rate",
+      "province": "national",
+      "period": "2026-06-10",
+      "value": 2.25,
+      "unit": "%",
+      "source": "Bank of Canada"
     },
     {
       "indicator_name": "palladium",
