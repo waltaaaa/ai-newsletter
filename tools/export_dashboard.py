@@ -1772,7 +1772,7 @@ def export_events_global(conn, output_dir: str) -> str:
     return out_path
 
 
-def export_statcan_tables(conn, output_dir: str) -> str:
+def export_statcan_tables(conn, output_dir: str, config_path: str = None) -> str:
     """Export statcan_tables.json — the full StatCan table directory consumed by
     the Data Explorer tab's V-Code search as a fallback index beyond the
     hand-curated ``VCODE_INDEX`` in ``docs/js/app.js``.
@@ -1783,28 +1783,35 @@ def export_statcan_tables(conn, output_dir: str) -> str:
     Coverage | Focus | Subject Codes | Survey Codes | Start Date | End Date |
     Last Release | Status``.
 
-    Filters to ``Status == 'Current'`` (discards archived/discontinued tables)
-    and maps each row to the compact shape the frontend loader expects at
+    Includes ``Status == 'Current'`` and ``Status == 'Archived'`` rows (other
+    status codes are skipped). Archived rows carry ``a: 1`` so the frontend can
+    label and demote them — they remain searchable for historical research.
+    (The registry CSV only contains archived rows when refreshed WITHOUT
+    ``--active-only``; the monthly-refresh workflow does a full pull.)
+    Each row maps to the compact shape the frontend loader expects at
     ``docs/js/app.js`` around line 5625::
 
-        {t, n, k, c, f, g, s}
+        {t, n, k, c, f, g, s, a}
 
     where ``t`` = Table ID, ``n`` = Table Name, ``k`` = keyword blob,
     ``c`` = category (Focus), ``f`` = Frequency, ``g`` = Coverage/geography,
     ``s`` = legacy CANSIM table number (e.g. ``282-0087``; omitted when the
-    registry row has none). The keyword blob also embeds the table ID, the
-    dashless product ID, and the CANSIM number so the explorer's text scorer
-    matches identifier queries without special-casing.
+    registry row has none), ``a`` = 1 for archived tables (omitted when
+    current). The keyword blob also embeds the table ID, the dashless product
+    ID, and the CANSIM number so the explorer's text scorer matches identifier
+    queries without special-casing.
 
     The ``conn`` parameter is accepted for signature compatibility with the
     other exporters but is unused today (everything comes from the CSV).
     """
     import csv as _csv
 
-    # config/ lives at project root, tools/ is one level down
+    # config/ lives at project root, tools/ is one level down.
+    # config_path override exists for tests; production callers omit it.
     here = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(here)
-    config_path = os.path.join(project_root, "config", "statcan_table_registry.csv")
+    if config_path is None:
+        config_path = os.path.join(project_root, "config", "statcan_table_registry.csv")
 
     if not os.path.exists(config_path):
         logger.warning(
@@ -1823,7 +1830,8 @@ def export_statcan_tables(conn, output_dir: str) -> str:
     with open(config_path, encoding="utf-8-sig", newline="") as f:
         reader = _csv.DictReader(f)
         for row in reader:
-            if (row.get("Status") or "").strip() != "Current":
+            status = (row.get("Status") or "").strip()
+            if status not in ("Current", "Archived"):
                 continue
 
             table_id = (row.get("Table ID") or "").strip()
@@ -1859,6 +1867,8 @@ def export_statcan_tables(conn, output_dir: str) -> str:
             }
             if cansim_id:
                 entry["s"] = cansim_id
+            if status == "Archived":
+                entry["a"] = 1
             rows_out.append(entry)
 
     # Frontend loader in app.js:5625 does ``const raw=await resp.json();`` then

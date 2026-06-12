@@ -29,15 +29,15 @@ def exported(tmp_path_factory):
         return json.load(f)
 
 
-def test_row_count_matches_current_registry_rows(exported):
+def test_row_count_matches_registry_rows(exported):
     with open(REGISTRY_CSV, encoding="utf-8-sig", newline="") as f:
-        current = [
+        kept = [
             r for r in csv.DictReader(f)
-            if (r.get("Status") or "").strip() == "Current"
+            if (r.get("Status") or "").strip() in ("Current", "Archived")
             and (r.get("Table ID") or "").strip()
             and (r.get("Table Name") or "").strip()
         ]
-    assert len(exported) == len(current)
+    assert len(exported) == len(kept)
     assert len(exported) > 4000
 
 
@@ -66,4 +66,27 @@ def test_compact_shape_preserved(exported):
     required = {"t", "n", "k", "c", "f", "g"}
     for r in exported[:50]:
         assert required.issubset(r.keys())
-        assert set(r.keys()) <= required | {"s"}
+        assert set(r.keys()) <= required | {"s", "a"}
+
+
+def test_archived_rows_flagged_and_other_statuses_skipped(tmp_path):
+    header = (
+        "Table Name,Table ID,Product ID (raw),CANSIM ID,Link,Frequency,"
+        "Coverage,Focus,Subject Codes,Survey Codes,Start Date,End Date,"
+        "Last Release,Status"
+    )
+    rows = [
+        '"Live table",10-10-0001,10100001,176-0001,x,Monthly,National,Economic accounts,10,1,,,,Current',
+        '"Dead table",10-10-0002,10100002,176-0002,x,Monthly,National,Economic accounts,10,1,,,,Archived',
+        '"Weird table",10-10-0003,10100003,,x,Monthly,National,Economic accounts,10,1,,,,Code 3',
+    ]
+    csv_path = tmp_path / "registry.csv"
+    csv_path.write_text(header + "\n" + "\n".join(rows) + "\n", encoding="utf-8")
+    out = export_statcan_tables(None, str(tmp_path), config_path=str(csv_path))
+    with open(out, encoding="utf-8") as f:
+        data = json.load(f)
+    by_table = {r["t"]: r for r in data}
+    assert set(by_table) == {"10-10-0001", "10-10-0002"}
+    assert "a" not in by_table["10-10-0001"]
+    assert by_table["10-10-0002"]["a"] == 1
+    assert by_table["10-10-0002"]["s"] == "176-0002"

@@ -172,8 +172,9 @@ The briefing integrates data from: indicator history, project database, discover
 - Categories: Labour Market, GDP, Construction, Housing, Prices, Trade, Rates, Energy, Demographics
 - Includes: all 20 NAICS industry GDP, 10 provincial unemployment/employment/participation/CPI/GDP, 10 CMA permits, CPI components, 20 table-only references, ~28 pipeline-verified vectors (harvested from `statcan_extended.py` + `config/statcan_daily_vector_map.json` verified entries — never hand-fabricate vcodes)
 - Identifier search: CANSIM v-codes (`v41690973`), table IDs (`14-10-0287` / `14-10-0287-01`), dashless PIDs (`1410028701`), legacy CANSIM table numbers (`282-0087`). Directory export carries the legacy CANSIM number as field `s`; identifiers are embedded in the `k` keyword blob.
-- V-codes not in the local index resolve live in-browser via StatCan WDS `getSeriesInfoFromVector` (free, no key), with a statcan.gc.ca search-link fallback on failure
-- Expanding the table directory = re-run `python statcan_table_registry.py --csv --active-only` (WDS getAllCubesListLite, free) to refresh `config/statcan_table_registry.csv`, then re-export
+- V-codes not in the local index resolve live in-browser via StatCan WDS `getSeriesInfoFromVector` (free, no key), with a statcan.gc.ca search-link fallback on failure. Bare 5-10 digit queries try table-PID first, then fall back to vector lookup. Table IDs absent from the local snapshot link directly to the StatCan table viewer.
+- Archived tables: export includes `Status == 'Archived'` rows flagged `a:1`; frontend labels them "Archived" and demotes them below current tables in keyword ranking (exact identifier matches unaffected)
+- Auto-refresh: `monthly-refresh.yml` re-pulls the FULL registry (`python statcan_table_registry.py --csv --output config/statcan_table_registry`, no `--active-only` so archived tables are included), re-exports `statcan_tables.json` to docs/data + public/data, and commits. Manual refresh works the same way from any machine with statcan.gc.ca access.
 - StatCan table URL: `https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid={table_no_dashes}`
 - Pipeline fetches national + provincial: unemployment, employment rate, participation rate, CPI, GDP
 

@@ -34,6 +34,15 @@ jobs:
       - name: Run monthly government data refresh
         run: python tools/backfill_projects.py --refresh --export
 
+      # Full pull (no --active-only) so archived tables flow into the Data
+      # Explorer flagged with a:1. WDS getAllCubesListLite — free, no API key.
+      - name: Refresh StatCan table registry and Data Explorer directory
+        continue-on-error: true
+        run: |
+          pip install pandas
+          python statcan_table_registry.py --csv --output config/statcan_table_registry
+          python -c "from tools.export_dashboard import export_statcan_tables as e; e(None,'docs/data'); e(None,'public/data')"
+
       - name: Run coverage monitor
         run: python tools/coverage_monitor.py
         continue-on-error: true
@@ -48,5 +57,5 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/ dashboard.db
+          git add docs/ dashboard.db public/data/statcan_tables.json config/statcan_table_registry.csv config/statcan_table_registry.xlsx
           git diff --staged --quiet || (git commit -m "auto: monthly government data refresh $(date +%Y-%m-%d)" && git push)

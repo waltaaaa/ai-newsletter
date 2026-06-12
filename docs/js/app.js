@@ -6090,7 +6090,7 @@ const FREQ_MAP={M:'Monthly',Q:'Quarterly',A:'Annual',D:'Daily',W:'Weekly',E:'Eve
     raw.forEach(r=>{if(r&&r.s)_tableCansimMap[_normalizeStatcanTable(r.t)]=r.s;});
     _fullTableDir=raw.map(r=>({
       vcode:'\u2014',table:_normalizeStatcanTable(r.t),title:r.n,keywords:r.k,
-      category:r.c,freq:FREQ_MAP[r.f]||r.f,geo:r.g,cansim:r.s||'',_dir:true
+      category:r.c,freq:FREQ_MAP[r.f]||r.f,geo:r.g,cansim:r.s||'',arch:r.a===1,_dir:true
     })).filter(r=>!curated.has(r.table));
     _fullDirLoaded=true;
     if(typeof _expRenderHeroStats==='function')_expRenderHeroStats();
@@ -6206,9 +6206,10 @@ function _expSearchCore(query){
   if(!query||query.length<2)return[];
   const idQ=_expQueryIdType(query);
   if(idQ){
+    /* Exact identifier hits; archived directory tables rank below current ones */
     const curatedHits=VCODE_INDEX.filter(v=>_expIdMatches(v,idQ)).map(v=>({...v,score:105}));
-    const dirHits=_fullTableDir.filter(v=>_expIdMatches(v,idQ)).map(v=>({...v,score:100}));
-    return curatedHits.concat(dirHits);
+    const dirHits=_fullTableDir.filter(v=>_expIdMatches(v,idQ)).map(v=>({...v,score:v.arch?95:100}));
+    return curatedHits.concat(dirHits).sort((a,b)=>b.score-a.score);
   }
   const qRaw=query.toLowerCase().split(/\s+/).filter(w=>w.length>1);
   const q=_expandQuery(qRaw);
@@ -6222,7 +6223,8 @@ function _expSearchCore(query){
       if(v.title.toLowerCase().includes(w))s+=2;
       if(v.keywords&&v.keywords.includes(w))s+=1;
     });
-    return s>0?s+boost:0;
+    /* Archived tables stay findable but never outrank live ones */
+    return s>0?Math.max(0.5,s+boost-(v.arch?2:0)):0;
   };
   const curatedResults=VCODE_INDEX.map(v=>({...v,score:score(v,5)})).filter(v=>v.score>0);
   const dirResults=_fullTableDir.map(v=>({...v,score:score(v,0)})).filter(v=>v.score>0);
@@ -6663,6 +6665,26 @@ function _expRenderVcodeResults(){
       _expRenderWdsLookup(idQ.id,resEl,metaEl);
       return;
     }
+    const bare=String(q).trim().toLowerCase().replace(/\s+/g,'');
+    if(idQ&&idQ.type==='table'&&/^\d{5,10}$/.test(bare)){
+      /* Bare digits are ambiguous: tried as a table PID with no hits — fall
+         through to interpreting them as a vector number (e.g. "41690973"). */
+      _expRenderWdsLookup(bare,resEl,metaEl);
+      return;
+    }
+    if(idQ&&idQ.type==='table'){
+      /* Table ID not in the local snapshot — may be newer than the registry
+         pull. Offer the StatCan table viewer link directly. */
+      const pid=idQ.id.replace(/-/g,'')+'01';
+      resEl.innerHTML='<div class="exp-empty">'+_expEscapeHtml(idQ.id)+' is not in the local directory (it may be newer than the last registry refresh). <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+pid+'" target="_blank" rel="noopener noreferrer">Open table '+_expEscapeHtml(idQ.id)+' on statcan.gc.ca ↗</a></div>';
+      if(metaEl)metaEl.textContent='0 local results';
+      return;
+    }
+    if(idQ&&idQ.type==='cansim'){
+      resEl.innerHTML='<div class="exp-empty">No table with legacy CANSIM number '+_expEscapeHtml(idQ.id)+' in the local directory. <a href="https://www150.statcan.gc.ca/n1/en/type/data?text='+encodeURIComponent(idQ.id)+'" target="_blank" rel="noopener noreferrer">Search '+_expEscapeHtml(idQ.id)+' on statcan.gc.ca ↗</a></div>';
+      if(metaEl)metaEl.textContent='0 local results';
+      return;
+    }
     const suffix=_expVcodeOnly?' (V-codes only filter is on)':'';
     resEl.innerHTML='<div class="exp-empty">No tables found for "'+_expEscapeHtml(q)+'"'+suffix+'. Try different keywords.</div>';
     if(metaEl)metaEl.textContent='0 results';
@@ -6680,7 +6702,7 @@ function _expRenderVcodeResults(){
     const _pid=_pidRaw.length===8?_pidRaw+'01':_pidRaw;
     const tableUrl=tableId&&tableId.indexOf('BoC')>=0?'https://www.bankofcanada.ca/rates/':('https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+_pid);
     const _cansim=_expCansimOf(r);
-    const meta=_expEscapeHtml([r.freq,r.geo,_cansim?('CANSIM '+_cansim):''].filter(Boolean).join(' \u00b7 '));
+    const meta=_expEscapeHtml([r.freq,r.geo,_cansim?('CANSIM '+_cansim):'',r.arch?'Archived':''].filter(Boolean).join(' \u00b7 '));
     html+='<tr>';
     html+='<td><span class="exp-vcode-code">'+_expEscapeHtml(r.vcode||'\u2014')+'</span></td>';
     html+='<td><span class="exp-vcode-tbl">'+_expEscapeHtml(tableId||'')+'</span></td>';
@@ -6721,8 +6743,10 @@ const _expWdsCache={};
 const _WDS_FREQ={1:'Daily',2:'Weekly',4:'Biweekly',6:'Monthly',7:'Every 2 months',9:'Quarterly',11:'Semi-annual',12:'Annual'};
 
 function _expWdsStillCurrent(vnum){
-  const idQ=_expQueryIdType(_expLastQuery);
-  return!!(idQ&&idQ.type==='vector'&&idQ.id===vnum);
+  /* True when the user's current query still targets this vector — accepts
+     both the "v41690973" form and the bare-digit fallback ("41690973"). */
+  const bare=String(_expLastQuery||'').trim().toLowerCase().replace(/\s+/g,'').replace(/^v/,'');
+  return bare===String(vnum);
 }
 
 function _expRenderWdsLookup(vnum,resEl,metaEl){
