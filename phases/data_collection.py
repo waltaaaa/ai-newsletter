@@ -333,11 +333,15 @@ def _boc_series(series_id: str, recent: int = 1) -> str | None:
 # CMHC Housing Starts
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _cmhc_housing_starts() -> float | None:
+def _cmhc_housing_starts() -> tuple[float, str] | None:
     """
     Fetch the latest monthly SAAR of total housing starts for all of Canada
     directly from the CMHC monthly news release page.
     Tries the most recent 4 months to account for publication lag (~11 business days).
+
+    Returns (value, reference_period 'YYYY-MM-01') — the release month IS the
+    reference month the SAAR covers (audit D5: the archiver needs the true
+    reference period, never the fetch date).
     """
     today = date.today()
     for months_back in range(4):
@@ -357,7 +361,7 @@ def _cmhc_housing_starts() -> float | None:
             if m:
                 val = float(m.group(1).replace(',', ''))
                 if 100_000 <= val <= 500_000:
-                    return val
+                    return val, target.strftime('%Y-%m-01')
         except Exception:
             continue
     return None
@@ -660,10 +664,11 @@ def get_national_indicators() -> dict:
             print(f"  [WARN] Participation rate previous value parsing failed: {e}")
 
     # Housing Starts — CMHC SAAR from CMHC monthly news release (direct source)
-    starts = _cmhc_housing_starts()
-    if starts is not None:
-        values['housingStarts']  = f"{starts:,.0f}"
-        sources['housingStarts'] = 'CMHC'
+    starts_obs = _cmhc_housing_starts()
+    if starts_obs is not None:
+        values['housingStarts']    = f"{starts_obs[0]:,.0f}"
+        sources['housingStarts']   = 'CMHC'
+        obs_dates['housingStarts'] = starts_obs[1]
 
     print(f"  CPI={values.get('cpi','N/A')}  Unemployment={values.get('unemployment','N/A')}  "
           f"EmpRate={values.get('employmentRate','N/A')}  PartRate={values.get('participationRate','N/A')}  "
@@ -1411,6 +1416,7 @@ def fetch_industry_indicators() -> dict:
                     f"+{qoq_ann:.1f}%" if qoq_ann >= 0 else f"{qoq_ann:.1f}%"
                 )
                 result['_gdp_quarterly_src'] = 'StatCan'
+                result['_gdp_quarterly_ref'] = (gdp_obs[-1].get('refPer') or '')[:10]
         except Exception as e:
             print(f"  [WARN] Quarterly GDP parsing failed: {e}")
 
@@ -1452,6 +1458,8 @@ def fetch_primary_indicators() -> dict:
     if ind.get('_gdp_quarterly'):
         nat['values']['realGdp']    = ind['_gdp_quarterly']
         nat['sources']['realGdp']   = ind.get('_gdp_quarterly_src', 'StatCan')
+        if ind.get('_gdp_quarterly_ref'):
+            nat['obs_dates']['realGdp'] = ind['_gdp_quarterly_ref']
 
     n_nat  = len(nat['values'])
     n_prov = sum(len([k for k in v if not k.endswith('_src')]) for v in prov.values())

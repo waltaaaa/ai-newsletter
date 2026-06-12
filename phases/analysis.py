@@ -1824,6 +1824,37 @@ def _all_sources(payload):
 # PHASE ENTRY POINT
 # ══════════════════════════════════════════════════════════════════════════════
 
+def _daily_metric_value(statcan_inds: list, *names) -> str | None:
+    """Resolve a metric from the StatCan Daily feed by indicator name (D9).
+
+    The Daily feed publishes CPI components (Shelter, Food purchased from
+    stores) with an EMPTY `value` and the 12-month change in `change` (by
+    design — see gov_sources.fetch_statcan_indicators). Consumers that keyed
+    off `value` alone rendered "N/A"/deferral prose even when the release
+    carried the figure. Fall back to the change — signed per arrow direction
+    (1=up, 2=down, the same convention the frontend uses at app.js L111) and
+    labelled Y/Y, matching what the validator's enrichment checks expect.
+
+    Returns the value string, the labelled change ("+1.8% y/y"), or None.
+    """
+    by_name = {str(r.get('name', '')).strip().lower(): r
+               for r in (statcan_inds or [])}
+    for nm in names:
+        row = by_name.get(nm.lower())
+        if not row:
+            continue
+        val = str(row.get('value') or '').strip()
+        if val:
+            return val
+        chg = str(row.get('change') or '').strip()
+        if chg:
+            if chg[:1].isdigit():
+                arrow = row.get('arrow')
+                chg = ('+' if arrow == 1 else '-' if arrow == 2 else '') + chg
+            return f"{chg} y/y"
+    return None
+
+
 def run(conn, context, logger):
     """Phase 5: Analysis — Claude calls 1-4, hard data override, indicator validation."""
     step_name = "Phase 5: Analysis"
@@ -1914,35 +1945,8 @@ def run(conn, context, logger):
                 m[field]       = 'N/A'
                 nat_src[field] = 'N/A'
         # ── D9: CPI components from the StatCan Daily feed ──────────
-        # The Daily feed publishes CPI components (Shelter, Food purchased
-        # from stores) with an EMPTY `value` and the 12-month change in
-        # `change` (by design — see gov_sources.fetch_statcan_indicators).
-        # Consumers that keyed off `value` alone rendered "N/A"/deferral
-        # prose even when the release carried the figure. Fall back to the
-        # change — signed per arrow direction (1=up, 2=down, the same
-        # convention the frontend uses) and labelled Y/Y, which is what the
-        # validator's enrichment checks expect.
-        _daily_by_name = {str(r.get('name', '')).strip().lower(): r
-                          for r in statcan_inds}
-
-        def _daily_cpi_component(*names):
-            for nm in names:
-                row = _daily_by_name.get(nm.lower())
-                if not row:
-                    continue
-                val = str(row.get('value') or '').strip()
-                if val:
-                    return val
-                chg = str(row.get('change') or '').strip()
-                if chg:
-                    if chg[:1].isdigit():
-                        arrow = row.get('arrow')
-                        chg = ('+' if arrow == 1 else '-' if arrow == 2 else '') + chg
-                    return f"{chg} y/y"
-            return None
-
-        shelter_val = _daily_cpi_component('Shelter')
-        food_val = _daily_cpi_component('Food purchased from stores')
+        shelter_val = _daily_metric_value(statcan_inds, 'Shelter')
+        food_val = _daily_metric_value(statcan_inds, 'Food purchased from stores')
 
         # shelterCpi is from the same StatCan release as CPI. When CPI data
         # IS available, inject the actual Shelter component (the old code
