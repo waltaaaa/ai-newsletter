@@ -3,7 +3,11 @@ const DATA_BASE='data/';
 const _cache={};
 async function fetchJSON(path){
   if(_cache[path])return _cache[path];
-  const resp=await fetch(DATA_BASE+path);
+  // Daily cache-buster so a long-lived tab picks up daily data refreshes
+  // without defeating CDN caching entirely (date-granular, local time).
+  const _bd=new Date();
+  const _bust=''+_bd.getFullYear()+String(_bd.getMonth()+1).padStart(2,'0')+String(_bd.getDate()).padStart(2,'0');
+  const resp=await fetch(DATA_BASE+path+(path.includes('?')?'&':'?')+'t='+_bust);
   if(!resp.ok)throw new Error('Failed to load '+path+': '+resp.status);
   const data=await resp.json();
   _cache[path]=data;
@@ -31,6 +35,8 @@ window.loadSection=loadSection;
 /* ── Helpers ── */
 function hasVal(v){return v!=null&&v!==''&&v!=='N/A'&&v!=='\u2014'&&v!=='—'&&v!=='n/a'}
 function pick(){for(let i=0;i<arguments.length;i++){if(hasVal(arguments[i]))return arguments[i]}return 'N/A'}
+// Local-calendar YYYY-MM-DD (toISOString() serializes in UTC and shifts the day for UTC+ viewers)
+function _localYMD(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function fmtPeriod(dateStr){if(!dateStr)return '';try{const d=new Date(dateStr+'T00:00:00');if(isNaN(d))return dateStr;return d.toLocaleDateString('en-CA',{month:'short',year:'numeric'})}catch(e){return dateStr}}
 function indBasis(rec,metaPeriod,freq){const p=pick(metaPeriod,rec&&rec.period);const dt=hasVal(p)?fmtPeriod(p):'';const f=freq||rec&&rec.frequency||'';const fLabel=f?f.charAt(0).toUpperCase()+f.slice(1):'';return dt||(fLabel||'')}
 function indSource(rec,fallback){return (rec&&rec.source)||fallback||''}
@@ -1184,8 +1190,8 @@ async function _tldrBuildProjects(){
     const dt=new Date(weekOf+'T00:00:00');
     const mon=new Date(dt);mon.setDate(dt.getDate()-dt.getDay()+1);// Monday
     const sun=new Date(mon);sun.setDate(mon.getDate()+6);
-    weekStart=mon.toISOString().slice(0,10);
-    weekEnd=sun.toISOString().slice(0,10);
+    weekStart=_localYMD(mon);
+    weekEnd=_localYMD(sun);
   }
 
   // Load projects and filter for this week's activity
@@ -2519,7 +2525,7 @@ async function _renderCanadaSubtab(){
   if(newPrj||natProjects.length){
     // Separate new projects from existing, sort each by value, new first
     var weekOf=D&&D.week_of||'';var weekStart='',weekEnd='';
-    if(weekOf){var dt=new Date(weekOf+'T00:00:00');var mon=new Date(dt);mon.setDate(dt.getDate()-dt.getDay()+1);var sun=new Date(mon);sun.setDate(mon.getDate()+6);weekStart=mon.toISOString().slice(0,10);weekEnd=sun.toISOString().slice(0,10)}
+    if(weekOf){var dt=new Date(weekOf+'T00:00:00');var mon=new Date(dt);mon.setDate(dt.getDate()-dt.getDay()+1);var sun=new Date(mon);sun.setDate(mon.getDate()+6);weekStart=_localYMD(mon);weekEnd=_localYMD(sun)}
     var newNatProjects=[];var existingNatProjects=[];
     natProjects.filter(meetsProvThreshold).forEach(function(p){
       var tracked=(p.firstTracked||'').slice(0,10);
