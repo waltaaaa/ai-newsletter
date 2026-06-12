@@ -129,7 +129,9 @@ let D=null,indicators=[],allProjects=[],filteredProjects=[],projectPage=0,select
 const PAGE_SIZE=25;
 let _confirmedOnly=true;
 const _MONTHS_SHORT={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
-function parseEvtDate(d){if(!d)return null;if(d.includes('-')&&d.length>=8)return new Date(d+'T00:00:00');const parts=d.trim().split(/\s+/);const yr=new Date().getFullYear();if(parts.length>=2){const m=_MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)];if(m!=null)return new Date(yr,m,parseInt(parts[1])||1)}return null;}
+// Year-less watchlist dates ("June 9") anchor to the briefing week_of's year, not the viewer's clock
+function _evtAnchorYear(){const w=(typeof D!=='undefined'&&D&&D.week_of)||'';const y=parseInt(String(w).slice(0,4),10);return(y>2000&&y<2100)?y:new Date().getFullYear()}
+function parseEvtDate(d){if(!d)return null;if(d.includes('-')&&d.length>=8)return new Date(d+'T00:00:00');const parts=d.trim().split(/\s+/);const yr=_evtAnchorYear();if(parts.length>=2){const m=_MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)];if(m!=null)return new Date(yr,m,parseInt(parts[1])||1)}return null;}
 let _lastLoadedProvince=null,_loadSeq=0;
 const PROVS=[{code:'BC',name:'British Columbia'},{code:'AB',name:'Alberta'},{code:'SK',name:'Saskatchewan'},{code:'MB',name:'Manitoba'},{code:'ON',name:'Ontario'},{code:'QC',name:'Quebec'},{code:'NB',name:'New Brunswick'},{code:'NS',name:'Nova Scotia'},{code:'PE',name:'Prince Edward Island'},{code:'NL',name:'Newfoundland and Labrador'},{code:'YT',name:'Yukon'},{code:'NT',name:'Northwest Territories'},{code:'NU',name:'Nunavut'}];
 const NAME_TO_CODE={};PROVS.forEach(p=>{NAME_TO_CODE[p.name]=p.code;NAME_TO_CODE[p.code]=p.code});NAME_TO_CODE['Newfoundland']='NL';NAME_TO_CODE['PEI']='PE';
@@ -517,23 +519,36 @@ function _tldrBuildIndicatorTable(){
   const ki=D.key_indicators||[];
   const meta=D.indicatorMeta||{};
   const labelMap={'BOC RATE':'bocRate','REAL GDP':'realGdp','CPI':'cpi','UNEMPLOYMENT':'unemployment',
-    'HOUSING STARTS':'housingStarts','TRADE BALANCE':'tradeBalance','RETAIL SALES':'retailSales',
+    'HOUSING STARTS':'housingStarts','TRADE BALANCE':'tradeBalance','MERCHANDISE TRADE':'tradeBalance','RETAIL SALES':'retailSales',
     'CONSUMER CONFIDENCE':'consumerConfidence','PARTICIPATION':'participation','EMPLOYMENT CHANGE':'employmentChange',
     'WAGE GROWTH':'wageGrowth','PARTICIPATION RATE':'participation','EMPLOYMENT':'employmentChange',
-    'WTI CRUDE':'wtiCrude','BRENT CRUDE':'brentCrude','CAD/USD':'cadUsd','TSX':'tsx'};
+    'WTI CRUDE':'wtiCrude','BRENT CRUDE':'brentCrude','CAD/USD':'cadUsd','USD/CAD':'cadUsd','TSX':'tsx',
+    'GOC 10Y YIELD':'goc10y'};
   const freqMap={'bocRate':'8x/year','realGdp':'Monthly','cpi':'Monthly','unemployment':'Monthly',
     'housingStarts':'Monthly','tradeBalance':'Monthly','retailSales':'Monthly','consumerConfidence':'Monthly',
     'participation':'Monthly','employmentChange':'Monthly','wageGrowth':'Monthly',
-    'wtiCrude':'Daily','brentCrude':'Daily','cadUsd':'Daily','tsx':'Daily'};
+    'wtiCrude':'Daily','brentCrude':'Daily','cadUsd':'Daily','tsx':'Daily','goc10y':'Daily'};
   const srcFallback={'bocRate':'Bank of Canada','realGdp':'Statistics Canada','cpi':'Statistics Canada',
     'unemployment':'Statistics Canada','housingStarts':'CMHC','tradeBalance':'Statistics Canada',
     'retailSales':'Statistics Canada','consumerConfidence':'Conference Board','participation':'Statistics Canada',
     'employmentChange':'Statistics Canada','wageGrowth':'Statistics Canada',
-    'wtiCrude':'yfinance','brentCrude':'yfinance','cadUsd':'yfinance','tsx':'yfinance'};
+    'wtiCrude':'yfinance','brentCrude':'yfinance','cadUsd':'yfinance','tsx':'yfinance','goc10y':'Bank of Canada'};
+  // Tolerant label resolution — exact uppercase match first, then longest startsWith/contains
+  // (labels arrive as 'CPI YoY', 'HOUSING STARTS SAAR', 'TSX COMPOSITE', 'GoC 10Y YIELD', etc.)
+  function _kiLabelKey(label){
+    const up=String(label||'').toUpperCase().replace(/\s+/g,' ').trim();
+    if(!up)return'';
+    if(labelMap[up])return labelMap[up];
+    let best='',bestLen=0;
+    for(const k in labelMap){
+      if(k.length>bestLen&&(up.startsWith(k)||up.indexOf(k)!==-1)){best=labelMap[k];bestLen=k.length}
+    }
+    return best;
+  }
   if(!ki.length)return'<div class="tldr-empty">Indicator data pending.</div>';
   let rows='';
   ki.forEach(ind=>{
-    const key=labelMap[(ind.label||'').toUpperCase()]||'';
+    const key=_kiLabelKey(ind.label);
     const m=meta[key]||{};
     const freq=freqMap[key]||'';
     const chgShort=ind.change||m.change||'';
@@ -629,17 +644,18 @@ function _tldrBuildMarketsTable(){
   // Commodities section
   let commItems=[];
   comms.forEach(c=>{
-    commItems.push({name:c.name||c.symbol||'',value:c.val||c.price||c.value||'',change:c.mm||c.day||c.change||'',source:c.source||'yfinance'});
+    // 'day' carries the W/W figure in this export; pick() skips ''/'N/A' placeholders
+    commItems.push({name:c.name||c.symbol||'',value:c.val||c.price||c.value||'',change:pick(c.day,c.wow,c.change,c.mm),source:c.source||'yfinance'});
   });
 
   // Currencies section
   const fxUnits={'CAD/USD':'rate','USD/CAD':'rate','EUR/USD':'rate','GBP/USD':'rate','USD/JPY':'rate'};
   let fxItems=[];
-  if(fm.fx&&fm.fx.length){fm.fx.forEach(f=>{fxItems.push({name:f.name||'',value:f.value||f.val||'',change:f.mm||f.day||f.change||'',source:'yfinance',forceUnit:fxUnits[f.name]||'rate'})})}
+  if(fm.fx&&fm.fx.length){fm.fx.forEach(f=>{fxItems.push({name:f.name||'',value:f.value||f.val||'',change:pick(f.day,f.wow,f.change,f.mm),source:'yfinance',forceUnit:fxUnits[f.name]||'rate'})})}
 
   // Indices section
   let idxItems=[];
-  if(fm.indices&&fm.indices.length){fm.indices.forEach(idx=>{idxItems.push({name:idx.name||'',value:idx.value||idx.val||'',change:idx.mm||idx.day||idx.change||'',source:'yfinance',forceUnit:'pts'})})}
+  if(fm.indices&&fm.indices.length){fm.indices.forEach(idx=>{idxItems.push({name:idx.name||'',value:idx.value||idx.val||'',change:pick(idx.day,idx.wow,idx.change,idx.mm),source:'yfinance',forceUnit:'pts'})})}
 
   if(!commItems.length&&!fxItems.length&&!idxItems.length)return'<div class="tldr-empty">Markets data pending.</div>';
 
@@ -669,7 +685,7 @@ function _tldrBuildWeeklyDataTable(){
     const val=c.val||c.price||c.value||'';
     if(!val)return; // skip rows without values
     const parsed=_parseMarketVal(val);
-    const chg=_normalizeChg(c.mm||c.day||c.change||'');
+    const chg=_normalizeChg(pick(c.day,c.wow,c.change,c.mm));
     let cls='unch';
     if(chg.startsWith('+'))cls='up';
     else if(chg.startsWith('-'))cls='down';
@@ -754,7 +770,9 @@ function _tldrBuildBriefing(){
   var c1Text=(stats.total_projects)?'<strong>Cross-reference:</strong> The database tracks '+(stats.total_projects||0).toLocaleString()+' active projects valued at '+(D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B')+' across Canada.'+(stats.new_this_week?' '+stats.new_this_week+' new projects discovered this week.':''):'';
   if(ic.length>=1){
     var ch=ic[0];
-    c1Text=(ch.reasoning?san(ch.reasoning):c1Text);
+    // The export carries the validator-enforced text in callout (reasoning is null)
+    var c1Spec=ch.callout||ch.reasoning;
+    c1Text=(c1Spec?san(c1Spec):c1Text);
     callouts.push({text:c1Text,chart:ch});
   }else if(c1Text){
     callouts.push({text:c1Text,chart:null});
@@ -763,7 +781,8 @@ function _tldrBuildBriefing(){
   // Second callout: second insight chart
   if(ic.length>=2){
     var ch2=ic[1];
-    callouts.push({text:ch2.reasoning?san(ch2.reasoning):'',chart:ch2});
+    var c2Spec=ch2.callout||ch2.reasoning;
+    callouts.push({text:c2Spec?san(c2Spec):'',chart:ch2});
   }
 
   // Intersperse callouts between paragraphs
@@ -818,34 +837,37 @@ function _tldrCalloutHtml(co,idx){
 /* Render callout SVG charts async after page paint */
 async function _tldrRenderCalloutCharts(){
   var ic=D.insightCharts||D.insight_charts||[];
-  var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
+  // indicators-sourced specs read indicators.json history \u2014 make sure it is loaded first
+  if(ic.some(function(c){return c&&c.dataSource==='indicators'})){
+    try{await fetchJSON('indicators.json');if(_indHistory&&!_indHistory.length)_indHistory=null}catch(e){}
+  }
   for(var idx=0;idx<ic.length&&idx<2;idx++){
     var ch=ic[idx];var keys=ch.dataKeys||[];
     var el=document.getElementById('tldrCalloutSvg_'+idx);
     if(!el||!keys.length)continue;
-    // Load all timeseries for this chart
+    // Resolve series honoring the spec's dataSource (indicators.json history vs timeseries.json)
     var allSeries=[];
-    for(var ki=0;ki<keys.length;ki++){
-      var ts=await loadTimeseries(keys[ki]);
-      if(!ts){ts=await loadTimeseries('comm_'+keys[ki])}
-      var raw=ts&&(ts.series||ts);
-      if(Array.isArray(raw)&&raw.length)allSeries.push({key:keys[ki],data:raw,color:colors[ki%colors.length]});
-    }
-    if(!allSeries.length){el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
+    try{allSeries=await _loadChartSpecSeries(ch)}catch(e){allSeries=[]}
     // Filter to last 5 months (tighter window for the editorial chart)
     var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-5);
     allSeries.forEach(function(s){s.data=s.data.filter(function(p){return new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)})});
-    var chartTitle=ch.title||'';
+    allSeries=allSeries.filter(function(s){return s.data.length>=2});
+    if(!allSeries.length){el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
+    // Title and subtitle must reflect the actual 5-month window
+    var chartTitle=(ch.title||'').replace(/\b\d+([-\s]?[Mm]onth)\b/,'5$1');
     var chartSubtitle=(ch.subtitle||'').replace(/\b\d+[-\s]?month\b/i,'5-month');
     // Pick a sensible source line for the top-level hero. If keys look like crude/brent keep the existing EIA+ICE attribution.
     var src=ch.source;
     if(!src){
-      var ks=keys.map(function(k){return String(k).toLowerCase()}).join(',');
-      if(/\bwti\b|\bbrent\b|\bwcs\b/.test(ks))src='Source: EIA, ICE \u00b7 daily spot close';
-      else if(/\bgold\b|\bsilver\b|\bcopper\b|\bnickel\b|\bzinc\b|\blithium\b/.test(ks))src='Source: LBMA, LME';
-      else if(/\bnatural_gas\b|\bpropane\b|\blng\b/.test(ks))src='Source: EIA, NYMEX';
-      else if(/\bwheat\b|\bcanola\b|\bsoybean\b|\bcorn\b|\bpotash\b/.test(ks))src='Source: CBOT, ICE Futures';
-      else src='Source: The Lagging Indicator';
+      if(ch.dataSource==='indicators')src='Source: Statistics Canada';
+      else{
+        var ks=keys.map(function(k){return String(k).toLowerCase()}).join(',');
+        if(/\bwti\b|\bbrent\b|\bwcs\b/.test(ks))src='Source: EIA, ICE \u00b7 daily spot close';
+        else if(/\bgold\b|\bsilver\b|\bcopper\b|\bnickel\b|\bzinc\b|\blithium\b/.test(ks))src='Source: LBMA, LME';
+        else if(/\bnatural_gas\b|\bpropane\b|\blng\b/.test(ks))src='Source: EIA, NYMEX';
+        else if(/\bwheat\b|\bcanola\b|\bsoybean\b|\bcorn\b|\bpotash\b/.test(ks))src='Source: CBOT, ICE Futures';
+        else src='Source: The Lagging Indicator';
+      }
     }
     el.innerHTML=_svgCalloutChart(allSeries,ch.annotations||[],chartTitle,chartSubtitle,ch.chartType||'line',src);
   }
@@ -1084,7 +1106,7 @@ function _svgCalloutChart(seriesArr,annotations,title,subtitle,chartType,source,
 
 // Resolves a chartSpec ({dataKeys, chartType, window, dataSource, ...}) into a pre-loaded seriesArr
 // suitable for _svgCalloutChart. Handles both timeseries.json (loadTimeseries) and indicators.json history.
-async function _loadChartSpecSeries(spec){
+async function _loadChartSpecSeries(spec,prov){
   var keys=(spec&&spec.dataKeys)||[];
   var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
   var dataSource=spec.dataSource||'timeseries';
@@ -1095,7 +1117,7 @@ async function _loadChartSpecSeries(spec){
 
   if(dataSource==='indicators'){
     for(var ki=0;ki<keys.length;ki++){
-      var pts=_indResolveIndicatorsSeries(keys[ki],windowMonths);
+      var pts=_indResolveIndicatorsSeries(keys[ki],windowMonths,prov);
       if(!pts||pts.length<2)continue;
       out.push({key:keys[ki],data:pts.map(function(p){return{date:p.label+'-01',value:p.value}}),color:colors[ki%colors.length]});
     }
@@ -1800,6 +1822,8 @@ function _splitSentences(text){
 
 // Build rich callout text by combining agent reasoning with additional context from all province narrative fields
 function _buildProvCalloutText(chartSpec,provData,chartIdx){
+  // The validator-enforced spec callout takes precedence over synthesized enrichment (mirrors the industries path)
+  if(hasVal(chartSpec.callout))return san(chartSpec.callout);
   var reasoning=chartSpec.reasoning||'';
   // Strip only the most database-specific phrases, keep the news-driven content
   reasoning=reasoning
@@ -1865,11 +1889,11 @@ function buildAgentInsightStrip(prefix,chartSpec,provData){
   return html;
 }
 
-async function renderAgentInsightChart(prefix,chartSpec){
+async function renderAgentInsightChart(prefix,chartSpec,prov){
   if(!chartSpec||!chartSpec.dataKeys||!chartSpec.dataKeys.length)return;
   var el=document.getElementById(prefix+'AgentInsightSvg');
   if(!el)return;
-  var series=await _loadChartSpecSeries(chartSpec);
+  var series=await _loadChartSpecSeries(chartSpec,prov);
   if(!series.length){
     el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No historical data available</div>';
     return;
@@ -3327,7 +3351,8 @@ async function _renderProvContent(){
         var qPer=qoqRec.period?('Q'+Math.ceil((parseInt(qoqRec.period.substring(5,7)))/3)+' '+qoqRec.period.substring(0,4)):'';
         var qVal=String(qoqRec.value);
         if(!qVal.includes('%'))qVal=(parseFloat(qVal)>=0?'+':'')+qVal+'%';
-        return{label:'Real GDP Growth (QoQ)',freq:'Quarterly',value:qVal,change:'QoQ',period:qPer,source:'Ontario Economic Accounts'};
+        var qSrc=code==='ON'?'Ontario Economic Accounts':code==='QC'?'Institut de la statistique du Québec':code==='BC'?'BC Stats Economic Accounts':code==='AB'?'Alberta Economic Accounts':'Provincial Economic Accounts';
+        return{label:'Real GDP Growth (QoQ)',freq:'Quarterly',value:qVal,change:'QoQ',period:qPer,source:qSrc};
       }
       return{label:'GDP Growth (Real, YoY)',freq:'Annual',value:pick(provInd.gdp,provIndVal('gdp')),change:'YoY',period:'2024',source:'StatCan 36-10-0402'};
     })(),
@@ -3621,7 +3646,7 @@ async function _renderProvContent(){
   await _ensureChartData();
   if(_icArr.length){
     for(var ci=0;ci<_icArr.length;ci++){
-      await renderAgentInsightChart('prov'+ci,_icArr[ci]);
+      await renderAgentInsightChart('prov'+ci,_icArr[ci],code);
     }
   }else{
     await renderInsightCharts('prov',provThemes,provProj,code,provContent);
@@ -3814,7 +3839,7 @@ const IND_KEY_INDICATORS={
     {label:'Nickel',key:'nickel',source:'timeseries',unit:'USD/t',srcLabel:'LME / Yahoo Finance',srcUrl:''},
     {label:'Iron Ore',key:'iron_ore',source:'timeseries',unit:'USD/t',srcLabel:'SGX / Platts',srcUrl:''},
     // Nuclear & fertilizer proxies
-    {label:'Uranium (Cameco)',key:'cameco_uranium',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (CCJ)',srcUrl:'https://finance.yahoo.com/quote/CCJ/'},
+    {label:'Uranium (Cameco)',key:'uranium',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (CCJ)',srcUrl:'https://finance.yahoo.com/quote/CCJ/'},
     {label:'Potash (Nutrien)',key:'potash_nutrien',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (NTR)',srcUrl:'https://finance.yahoo.com/quote/NTR/'},
     {label:'Coal',key:'coal',source:'timeseries',unit:'USD/t',srcLabel:'Yahoo Finance',srcUrl:''},
     // Labour
@@ -3826,7 +3851,7 @@ const IND_KEY_INDICATORS={
     {label:'WTI Crude (Fuel)',key:'wti',source:'timeseries',unit:'USD/bbl',srcLabel:'Yahoo Finance (CL=F)',srcUrl:'https://finance.yahoo.com/quote/CL=F/'},
     {label:'Coal',key:'coal',source:'timeseries',unit:'USD/t',srcLabel:'Yahoo Finance',srcUrl:''},
     {label:'LNG (Asia JKM)',key:'lng_asia',source:'timeseries',unit:'USD/MMBtu',srcLabel:'S&P Platts JKM',srcUrl:''},
-    {label:'Uranium (Cameco)',key:'cameco_uranium',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (CCJ)',srcUrl:'https://finance.yahoo.com/quote/CCJ/'},
+    {label:'Uranium (Cameco)',key:'uranium',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (CCJ)',srcUrl:'https://finance.yahoo.com/quote/CCJ/'},
     // Labour
     {label:'Utilities Employment',key:'utilities_employment',source:'indicators',unit:'thousands',freq:'Monthly',srcLabel:'StatCan 14-10-0022',srcUrl:STATCAN_LFS_URL},
     // Cost of capital & inflation
@@ -4293,13 +4318,23 @@ function _indResolveKeyRow(spec,tsData){
 // ==== Industry insight chart infrastructure ====
 // Resolves a single dataKey to an array of {label, value} points for the given window.
 // dataSource: "indicators" reads indicators.json history; caller handles "timeseries" async.
-function _indResolveIndicatorsSeries(key,windowMonths){
+// prov scopes the history rows (history holds 14 jurisdictions for shared names like
+// "unemployment"): explicit arg wins, else a province key prefix (on_exports_pct), else national.
+function _indResolveIndicatorsSeries(key,windowMonths,prov){
   var _a=_IND_KEY_ALIASES[key];if(_a)key=_a.name;
+  if(prov==null||prov===''){
+    var pm=/^(on|qc|ab|bc|sk|mb|ns|nb|nl|pe|yt|nt|nu)_/i.exec(String(key));
+    prov=pm?pm[1].toUpperCase():'national';
+  }
   var hist=_getHistory()||[];
+  var rows=hist.filter(function(r){return r.indicator_name===key&&r.value!=null&&r.period&&_matchProv(r.province,prov)});
+  // Graceful fallback: single-jurisdiction series stored under a different province label
+  if(!rows.length)rows=hist.filter(function(r){return r.indicator_name===key&&r.value!=null&&r.period});
+  // Drop briefing-snapshot artifact periods (real observations are YYYY-MM-01 / YYYY-MM / YYYY) — mirrors computeChange
+  var clean=rows.filter(function(r){var p=String(r.period);return /^\d{4}-\d{2}-01$/.test(p)||/^\d{4}-\d{2}$/.test(p)||/^\d{4}$/.test(p)});
+  if(clean.length>=2)rows=clean;
   var byMonth={};
-  hist.forEach(function(r){
-    if(r.indicator_name!==key)return;
-    if(r.value==null||!r.period)return;
+  rows.forEach(function(r){
     var ym=String(r.period).slice(0,7);
     if(!/^\d{4}-\d{2}$/.test(ym))return;
     // Prefer later-period duplicates (calendar-month dedupe)
@@ -5090,7 +5125,7 @@ function _buildMktEquities(fm){
     [{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'},{name:'FTSE 100',ind:'ftse100'},{name:'DAX',ind:'dax'},{name:'Nikkei 225',ind:'nikkei225'}].forEach(function(m){var i=indicators.find(function(x){return x.indicator_name===m.ind});if(i&&!indices.find(function(x){return x.name===m.name}))indices.push({name:m.name,value:i.value,change:'',region:''})});
   }
   if(!indices.length)return '';
-  var items=indices.map(function(it){return{name:it.name,value:it.value||'',change:it.change||it.day||'',mm:it.mm||'',yy:it.yy||'',commentary:it.commentary||''}});
+  var items=indices.map(function(it){return{name:it.name,value:it.value||it.val||it.price||'',change:it.change||it.day||'',mm:it.mm||'',yy:it.yy||'',commentary:it.commentary||''}});
   var defaults=[items[0].name];
   _mktState.equities={items:items,active:new Set(defaults),mode:'price',range:3,freq:'all'};
 
@@ -5102,9 +5137,9 @@ function _buildMktEquities(fm){
     h+='<div class="series-pill'+(act?' active':'')+'" data-name="'+it.name+'" data-key="equities" onclick="_mktSelectPill(this)">';
     h+='<div class="pill-name">'+it.name+'</div><div class="pill-value">'+(it.value||'\u2014')+'</div>';
     h+='<div class="pill-changes-row">';
-    if(it.change)h+='<div class="pill-chg-item"><span class="pill-chg-label">1W</span><span class="pill-chg-val '+_chgCls(it.change)+'">'+it.change+'</span></div>';
-    if(it.mm)h+='<div class="pill-chg-item"><span class="pill-chg-label">1M</span><span class="pill-chg-val '+_chgCls(it.mm)+'">'+it.mm+'</span></div>';
-    if(it.yy)h+='<div class="pill-chg-item"><span class="pill-chg-label">1Y</span><span class="pill-chg-val '+_chgCls(it.yy)+'">'+it.yy+'</span></div>';
+    if(hasVal(it.change))h+='<div class="pill-chg-item"><span class="pill-chg-label">1W</span><span class="pill-chg-val '+_chgCls(it.change)+'">'+it.change+'</span></div>';
+    if(hasVal(it.mm))h+='<div class="pill-chg-item"><span class="pill-chg-label">1M</span><span class="pill-chg-val '+_chgCls(it.mm)+'">'+it.mm+'</span></div>';
+    if(hasVal(it.yy))h+='<div class="pill-chg-item"><span class="pill-chg-label">1Y</span><span class="pill-chg-val '+_chgCls(it.yy)+'">'+it.yy+'</span></div>';
     h+='</div></div>';
   });
   h+='</div>';
@@ -5129,7 +5164,7 @@ function _buildMktFx(fm){
     [{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'},{name:'EUR/USD',ind:'eurusd'},{name:'USD/CNY',ind:'usdcny'},{name:'USD/JPY',ind:'usdjpy'}].forEach(function(m){var i=indicators.find(function(x){return x.indicator_name===m.ind});if(i&&!fx.find(function(x){return x.name===m.name}))fx.push({name:m.name,value:i.value})});
   }
   if(!fx.length)return '';
-  var items=fx.map(function(it){return{name:it.name,value:it.value||'',change:it.day||it.change||'',mm:it.mm||'',yy:it.yy||''}});
+  var items=fx.map(function(it){return{name:it.name,value:it.value||it.val||it.price||'',change:it.day||it.change||'',mm:it.mm||'',yy:it.yy||''}});
   var defaults=[items[0].name];
   _mktState.fx={items:items,active:new Set(defaults),mode:'price',range:3,freq:'all'};
 
@@ -5141,9 +5176,9 @@ function _buildMktFx(fm){
     h+='<div class="fx-pill'+(act?' active':'')+'" data-name="'+it.name+'" data-key="fx" onclick="_mktSelectPill(this)">';
     h+='<div class="pill-name">'+it.name+'</div><div class="pill-value">'+(it.value||'\u2014')+'</div>';
     h+='<div class="pill-changes-row">';
-    if(it.change)h+='<div class="pill-chg-item"><span class="pill-chg-label">1W</span><span class="pill-chg-val '+_chgCls(it.change)+'">'+it.change+'</span></div>';
-    if(it.mm)h+='<div class="pill-chg-item"><span class="pill-chg-label">1M</span><span class="pill-chg-val '+_chgCls(it.mm)+'">'+it.mm+'</span></div>';
-    if(it.yy)h+='<div class="pill-chg-item"><span class="pill-chg-label">1Y</span><span class="pill-chg-val '+_chgCls(it.yy)+'">'+it.yy+'</span></div>';
+    if(hasVal(it.change))h+='<div class="pill-chg-item"><span class="pill-chg-label">1W</span><span class="pill-chg-val '+_chgCls(it.change)+'">'+it.change+'</span></div>';
+    if(hasVal(it.mm))h+='<div class="pill-chg-item"><span class="pill-chg-label">1M</span><span class="pill-chg-val '+_chgCls(it.mm)+'">'+it.mm+'</span></div>';
+    if(hasVal(it.yy))h+='<div class="pill-chg-item"><span class="pill-chg-label">1Y</span><span class="pill-chg-val '+_chgCls(it.yy)+'">'+it.yy+'</span></div>';
     h+='</div></div>';
   });
   h+='</div>';
@@ -5621,15 +5656,32 @@ window.exportProjects=function(){
 const CAL_PAGE_SIZE=10;
 let _calMonth=null,_calYear=null,_calEvents=[],_calFilter={impact:'',institution:'',scope:'upcoming',search:''},_calWired=false,_calPage=1;
 async function renderCalendar(){
-  _calEvents=(D&&(D.watchlist||D.events))||[];
-  if(!_calEvents.length){try{_calEvents=await fetchJSON('events.json')||[]}catch(_){_calEvents=[]}}
+  // Union-merge briefing watchlist + events.json + events_global.json, deduped by (date, normalized title)
+  const _evtKey=e=>(e.date||'')+'|'+String(e.event_name||e.event||e.name||'').trim().toLowerCase();
+  _calEvents=((D&&(D.watchlist||D.events))||[]).slice();
+  const seen=new Set(_calEvents.map(_evtKey));
+  try{
+    const evts=await fetchJSON('events.json');
+    const today=_localYMD(new Date());
+    (Array.isArray(evts)?evts:[]).forEach(e=>{
+      const title=String(e.event_name||e.event||e.name||'').trim();
+      // Skip stale search-noise rows: past-dated items with social-media suffixed titles
+      if((e.date||'')<today&&/- (Facebook|YouTube)$/.test(title))return;
+      // events.json carries significance, the renderer reads impact
+      if(!hasVal(e.impact)){
+        const sig=String(e.significance||'').toLowerCase();
+        e.impact=sig==='high'?'high':sig==='medium'?'medium':'low';
+      }
+      const key=_evtKey(e);
+      if(!seen.has(key)){_calEvents.push(e);seen.add(key)}
+    });
+  }catch(_){}
   // Merge US + European institution releases from static bridge file
   try{
     const globalData=await fetchJSON('events_global.json');
     if(globalData&&Array.isArray(globalData.events)){
-      const seen=new Set(_calEvents.map(e=>(e.date||'')+'|'+(e.event_name||e.event||e.name||'')));
       globalData.events.forEach(e=>{
-        const key=(e.date||'')+'|'+(e.event_name||'');
+        const key=_evtKey(e);
         if(!seen.has(key)){_calEvents.push(e);seen.add(key)}
       });
     }
@@ -5703,7 +5755,8 @@ function renderCalendarGrid(){
       eYear=parseInt(d.split('-')[0]);eMonth=parseInt(d.split('-')[1])-1;eDay=parseInt(d.split('-')[2]);
     }else{
       const parts=d.trim().split(/\s+/);
-      if(parts.length>=2){eMonth=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)]??-1;eDay=parseInt(parts[1])||0;}
+      // Year-less dates anchor to the briefing week_of's year, not the displayed grid year
+      if(parts.length>=2){eMonth=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)]??-1;eDay=parseInt(parts[1])||0;eYear=_evtAnchorYear();}
     }
     if(eYear===year&&eMonth===month&&eDay>0){
       if(!eventsByDate[eDay])eventsByDate[eDay]=[];
@@ -5882,7 +5935,14 @@ function _renderPolicyItems(items,maxItems){
     const projCount=a.affected_projects_total||0;
     const projTag=projCount?'<span style="color:#94A3B8;font-size:9px;margin-left:4px">\u00b7 '+projCount+' projects</span>':'';
     const srcDesc=a.source_description||a.source||'';
-    const dateStr=a.date?'<span style="color:#94A3B8;font-size:9px;margin-right:6px">'+a.date.split('T')[0]+'</span>':'';
+    // Policy dates arrive as RFC822 ("Thu, 12 Mar 2026 ...") or date-only strings — splitting on 'T' hits the T in "Thu"
+    let dateDisp='';
+    if(a.date){
+      const rawDate=String(a.date);
+      if(/^\d{4}-\d{2}-\d{2}/.test(rawDate)){dateDisp=rawDate.split('T')[0]}
+      else{const pd=new Date(rawDate);dateDisp=isNaN(pd)?rawDate:pd.toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})}
+    }
+    const dateStr=dateDisp?'<span style="color:#94A3B8;font-size:9px;margin-right:6px">'+san(dateDisp)+'</span>':'';
     const summary=a.summary?'<div style="color:#64748B;font-size:10px;margin-top:2px;line-height:1.4">'+a.summary.substring(0,200)+(a.summary.length>200?'...':'')+'</div>':'';
     listHtml+='<div style="padding:8px 0;border-bottom:1px solid var(--border-light,#e2e8f0)">'+
       '<div style="font-size:var(--text-xs,12px)">'+dateStr+'<a href="'+(a.url||'#')+'" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue,#2563EB);text-decoration:none;font-weight:500">'+(a.title||a.headline||'Untitled')+'</a>'+badge+sectorTag+projTag+'</div>'+
