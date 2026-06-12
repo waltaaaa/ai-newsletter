@@ -227,15 +227,17 @@ class TestArchiveIndicatorsToHistory(unittest.TestCase):
         self.assertEqual(rec["previous_value"], "69.3%")
         self.assertEqual(rec["change"], "-0.2pp")
 
-    def test_missing_obs_date_falls_back_to_today(self):
+    def test_missing_obs_date_skips_row(self):
+        # Invariant: stamp the StatCan REFERENCE period, never the fetch date.
+        # A row with no determinable reference period must be skipped, not
+        # stamped with today (the forbidden run-date mis-stamping).
         saved = self._run_archive({
             "national": {
                 "values": {"housingStarts": "279,317"},
                 "sources": {"housingStarts": "CMHC"},
             },
         })
-        rec = saved[0]
-        self.assertRegex(rec["date"], r"^\d{4}-\d{2}-\d{2}$")
+        self.assertEqual(saved, [])
 
 
 if __name__ == "__main__":

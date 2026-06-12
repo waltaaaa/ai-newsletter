@@ -1380,9 +1380,11 @@ def fetch_industry_indicators() -> dict:
 
     Returns:
         {
-            naics_code: {'mm': '+X.X%', 'yy': '+X.X%', 'src': 'StatCan'},
+            naics_code: {'mm': '+X.X%', 'yy': '+X.X%', 'src': 'StatCan',
+                         'ref': 'YYYY-MM-DD'},  # WDS refPer of latest obs (D5)
             '_gdp_quarterly': '+X.X%',       # QoQ annualised real GDP
             '_gdp_quarterly_src': 'StatCan',
+            '_gdp_quarterly_ref': 'YYYY-MM-DD',
         }
     """
     print("  Fetching industry GDP from StatCan WDS...")
@@ -1476,17 +1478,20 @@ def fetch_primary_indicators() -> dict:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _norm_ref_period(raw: str | None) -> str | None:
-    """Normalize a StatCan refPer ('YYYY-MM-DD' or 'YYYY-MM') to YYYY-MM-DD.
+    """Normalize a reference period ('YYYY-MM-DD', 'YYYY-MM', or bare 'YYYY'
+    for annual series like provincial GDP) to YYYY-MM-DD.
 
     Returns None when the string is missing/unparseable. Callers must SKIP
     the row (with a logged warning) in that case — never stamp the fetch
     date (audit D14; pipeline invariant: stamp the REFERENCE period).
     """
-    s = (raw or '').strip()[:10]
+    s = str(raw or '').strip()[:10]
     if re.match(r'^\d{4}-\d{2}-\d{2}$', s):
         return s
     if re.match(r'^\d{4}-\d{2}$', s):
         return f"{s}-01"
+    if re.match(r'^\d{4}$', s):
+        return f"{s}-01-01"
     return None
 
 
