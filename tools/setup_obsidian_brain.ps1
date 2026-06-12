@@ -161,6 +161,54 @@ New-VaultFile (Join-Path $VaultPath "05-templates\knowledge.md") @'
 - [[...]]
 '@
 
+# ------------------------------------------------- Mind map (Canvas)
+# Obsidian Canvas is a core feature (no plugin). This seeds a starter mind
+# map: central project node with six branches and a link to context.md.
+New-VaultFile (Join-Path $VaultPath "Mind Map.canvas") @"
+{
+	"nodes": [
+		{"id":"center","type":"text","text":"# $ProjectName","x":-150,"y":-50,"width":300,"height":100,"color":"4"},
+		{"id":"goals","type":"text","text":"**Goals & Scope**\n- What done looks like\n- In / out of scope","x":420,"y":-320,"width":300,"height":140,"color":"5"},
+		{"id":"arch","type":"text","text":"**Architecture**\n- Components\n- Data flow\n- Tech choices","x":420,"y":-70,"width":300,"height":140,"color":"5"},
+		{"id":"risks","type":"text","text":"**Risks & Open Questions**\n- Unknowns\n- Blockers","x":420,"y":180,"width":300,"height":140,"color":"2"},
+		{"id":"ideas","type":"text","text":"**Ideas**\n- Braindump here, sort to [[00-inbox]] later","x":-870,"y":-320,"width":300,"height":140,"color":"6"},
+		{"id":"decisions","type":"text","text":"**Decisions**\n- Link ADRs from 03-decisions as they land","x":-870,"y":-70,"width":300,"height":140,"color":"3"},
+		{"id":"knowledge","type":"text","text":"**Knowledge & Resources**\n- Docs, references, 02-knowledge notes","x":-870,"y":180,"width":300,"height":140,"color":"1"},
+		{"id":"context","type":"file","file":"01-projects/$ProjectName/context.md","x":-150,"y":220,"width":300,"height":180}
+	],
+	"edges": [
+		{"id":"e-goals","fromNode":"center","fromSide":"right","toNode":"goals","toSide":"left"},
+		{"id":"e-arch","fromNode":"center","fromSide":"right","toNode":"arch","toSide":"left"},
+		{"id":"e-risks","fromNode":"center","fromSide":"right","toNode":"risks","toSide":"left"},
+		{"id":"e-ideas","fromNode":"center","fromSide":"left","toNode":"ideas","toSide":"right"},
+		{"id":"e-decisions","fromNode":"center","fromSide":"left","toNode":"decisions","toSide":"right"},
+		{"id":"e-knowledge","fromNode":"center","fromSide":"left","toNode":"knowledge","toSide":"right"},
+		{"id":"e-context","fromNode":"center","fromSide":"bottom","toNode":"context","toSide":"top"}
+	]
+}
+"@
+
+New-VaultFile (Join-Path $VaultPath "05-templates\mind-map-outline.md") @'
+# (Topic) — Mind Map Outline
+
+<!--
+Alternative to Canvas: install the community plugin "Mind map" (markmap)
+and open this note with "Mind map: Preview" — headings and bullets render
+as an auto-laid-out mind map. Pure markdown, so it stays readable without
+the plugin too.
+-->
+
+## Branch one
+- point
+  - sub-point
+
+## Branch two
+- point
+
+## Branch three
+- point
+'@
+
 # ------------------------------------- Claude Code skill file (template)
 New-VaultFile (Join-Path $VaultPath "05-templates\claude-skill-template.md") @'
 <!--
@@ -201,6 +249,7 @@ Write-Host ""
 Write-Host "Done. Next steps:"
 Write-Host "  1. Open Obsidian -> 'Open folder as vault' -> `"$VaultPath`""
 Write-Host "  2. Rename 01-projects\$ProjectName to the real project name (if needed)"
+Write-Host "     and open 'Mind Map.canvas' to start mapping the project"
 Write-Host "  3. In the new project's repo, copy 05-templates\claude-skill-template.md"
 Write-Host "     to .claude/skills/second-brain/SKILL.md so Claude Code uses the vault"
 Write-Host "  4. Launch Claude Code with: claude --add-dir `"$VaultPath`""
