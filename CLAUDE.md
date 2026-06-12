@@ -157,15 +157,16 @@ The briefing integrates data from: indicator history, project database, discover
 - **Purpose:** Generates 2 data visualizations per province + 2 for National (28 total per briefing)
 - **Runs after:** Writer agent (Agent 3) completes the briefing narrative
 - **Output:** Adds `insightCharts` array (2 chart specs) to top-level JSON and to each province object
-- **Data source:** `timeseries.json` (102 keys — commodities, provincial indicators, indices, currencies)
+- **Data source:** `timeseries.json` (~90 keys — commodities, provincial indicators, indices, currencies; count grows as provincial `{PROV}_unemployment`/`{PROV}_cpi` series land via the 2026-06-12 export fix)
 - **Chart types:** `line` (trends), `bar` (comparisons), `diverging_bar` (changes)
 - **Design reference:** `.claude/skills/lagging_indicator_charts.md` (10-chart design library)
-- **Frontend rendering:** `buildAgentInsightStripMulti()` and `renderAgentInsightChartMulti()` in `app.js`
+- **Frontend rendering:** `buildAgentInsightStrip()` and `renderAgentInsightChart()` in `app.js`
+- **Global region charts (2026-06-12):** each `global[i]` region object may carry `insightCharts` (same spec shape); the series is chosen weekly to match that region's narrative (e.g., a China PMI week → `copper`). Frontend renders `global[i].insightCharts[0]` and falls back to the legacy hardcoded `GLOBAL_CHART_CFG` keys when absent. dataKeys MUST exist with ≥2 points — verify before emitting.
 - **Backward compatible:** Falls back to single `insightChart` or keyword-based charts if `insightCharts` array is absent
 
 ## Briefing Export
 - PDF via reportlab, DOCX via python-docx
-- Download buttons on frontend: `/api/briefing-download?format=pdf` and `?format=docx`
+- Published as static files in `docs/data/` (e.g. `CAN_Macro_Briefing_<date>.pdf/.docx`) — GitHub Pages is static; there is no `/api/briefing-download` endpoint and no frontend download buttons currently
 
 ## Data Explorer (V-Code Search)
 - Local fuzzy search over curated index (120+ entries across 9 categories)
