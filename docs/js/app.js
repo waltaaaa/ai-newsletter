@@ -14,24 +14,6 @@ async function fetchJSON(path){
   return data;
 }
 
-/* ── loadSection: fetch JSON, show skeleton while loading, error+retry on failure ── */
-async function loadSection(elementId,jsonPath,renderFn){
-  const el=$(elementId);if(!el)return;
-  el.innerHTML='<div class="card">'+skeleton(3)+'</div>';
-  try{
-    const data=await fetchJSON(jsonPath);
-    renderFn(data,el);
-  }catch(e){
-    console.warn('Failed to load '+jsonPath+':',e);
-    el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
-      '<div style="color:var(--status-red);font-size:var(--text-sm);margin-bottom:8px">Could not load data</div>'+
-      '<button onclick="loadSection(\''+elementId+'\',\''+jsonPath+'\','+renderFn.name+')" '+
-      'style="padding:6px 16px;border:1px solid var(--border-light);border-radius:var(--radius-sm);'+
-      'background:var(--bg-subtle);color:var(--text-primary);cursor:pointer;font-size:var(--text-xs)">Retry</button></div>';
-  }
-}
-window.loadSection=loadSection;
-
 /* ── Helpers ── */
 function hasVal(v){return v!=null&&v!==''&&v!=='N/A'&&v!=='\u2014'&&v!=='—'&&v!=='n/a'}
 function pick(){for(let i=0;i<arguments.length;i++){if(hasVal(arguments[i]))return arguments[i]}return 'N/A'}
@@ -329,20 +311,6 @@ async function loadAll(){
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
   $('navMeta').textContent=edStr||((indicators.length)?indicators.length+' indicators loaded':'Data loaded');
   $('footerDate').textContent=D&&D.updated_at?'Last pipeline run: '+fmtDate(D.updated_at):(indicators.length?'Live indicator data loaded':'Awaiting first pipeline run');
-  // Header date badge
-  const heroDate=$('heroDate');
-  if(heroDate){
-    const briefingDate=D&&(D.week_of||D.updated_at||D.date);
-    if(briefingDate){
-      const dt=new Date(briefingDate+'T00:00:00');
-      heroDate.textContent='Week of '+dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    }else{
-      heroDate.textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    }
-  }
-  // Header freshness
-  const freshEl=$('headerFreshness');
-  if(freshEl&&D&&D.updated_at){freshEl.textContent='Data as of '+fmtDate(D.updated_at)}
   loadEditionList();
 }
 /* Edition dropdown toggle */
@@ -1616,91 +1584,6 @@ async function renderInteractiveMap(){
   },100);
 }
 
-/* ── TLDR Word Cloud (theme blues) ── */
-function renderTLDRWordCloud(topics,containerId){
-  const container=document.getElementById(containerId);
-  if(!container||!topics||!topics.length)return;
-  const w=container.clientWidth||300,h=Math.min(Math.round(w*0.8),250);
-  container.innerHTML='';
-  const blues=['#1e40af','#2563EB','#3b82f6','#4B6CB7','#60A5FA','#6B8DD6','#93c5fd'];
-  const maxFreq=Math.max(...topics.map(t=>t.frequency||t.count||1));
-  const sorted=[...topics].sort((a,b)=>(b.frequency||b.count||1)-(a.frequency||a.count||1));
-  const words=sorted.slice(0,35).map((t,i)=>{
-    const freq=t.frequency||t.count||1;
-    return{text:t.topic||t.word||'',size:12+((freq/maxFreq)*30),freq,colorIdx:Math.min(Math.floor(i/5),blues.length-1)};
-  });
-  const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Inter').fontSize(d=>d.size).on('end',drawn);
-  layout.start();
-  function drawn(wds){
-    const svg=d3.select(container).append('svg').attr('width',w).attr('height',h);
-    const g=svg.append('g').attr('transform','translate('+w/2+','+h/2+')');
-    g.selectAll('text').data(wds).enter().append('text')
-      .style('font-size',d=>d.size+'px').style('font-family','Inter')
-      .style('font-weight',d=>d.size>35?'700':d.size>25?'600':'500')
-      .style('fill',d=>blues[d.colorIdx])
-      .style('opacity',d=>0.55+Math.min(d.size/52,0.45))
-      .attr('text-anchor','middle').attr('transform',d=>'translate('+d.x+','+d.y+')')
-      .text(d=>d.text)
-      .append('title').text(d=>d.text+' (frequency: '+d.freq+')');
-  }
-}
-
-/* ── TLDR Financial Markets section ── */
-async function renderTLDRMarkets(){
-  const el=$('tldrMarketsSection');
-  if(!el)return;
-  const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
-  let indices=fm.indices||[];let fx=fm.fx||[];
-  // Build from indicators if needed
-  if(!indices.length&&indicators.length){
-    const idxMap=[{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'}];
-    idxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:''})});
-  }
-  if(!fx.length&&indicators.length){
-    const fxMap=[{name:'CAD/USD',ind:'cadusd'},{name:'CAD/USD',ind:'cad_usd'}];
-    fxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!fx.find(x=>x.name===m.name))fx.push({name:m.name,value:i.value})});
-  }
-  // Add key commodities
-  const commItems=[];
-  const commMap=[{name:'WTI',ind:'wti'},{name:'WTI',ind:'wti_oil'},{name:'Gold',ind:'gold'},{name:'Nat Gas',ind:'natural_gas'}];
-  commMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!commItems.find(x=>x.name===m.name))commItems.push({name:m.name,value:i.value,change:''})});
-
-  const all=[...indices.slice(0,2),...fx.slice(0,1),...commItems.slice(0,3)];
-  if(!all.length){el.innerHTML='<div style="color:#475569;font-size:var(--text-sm)">Markets data pending.</div>';return}
-
-  // Brief narrative
-  const tsx=indices.find(x=>x.name&&x.name.includes('TSX'));
-  const cad=fx.find(x=>x.name&&x.name.includes('CAD'));
-  const wti=commItems.find(x=>x.name==='WTI');
-  let narrative='';
-  if(tsx)narrative+=`The S&P/TSX traded at ${tsx.value||'N/A'}${tsx.change?' ('+tsx.change+')':''}. `;
-  if(cad)narrative+=`The Canadian dollar traded at ${cad.value||'N/A'} against the U.S. dollar. `;
-  if(wti)narrative+=`WTI crude at US$${wti.value||'N/A'}/bbl.`;
-  if(narrative)narrative=`<p style="margin-bottom:12px">${narrative}</p>`;
-
-  // Grid
-  let gridHtml='<div class="ed-markets-grid">';
-  all.forEach(item=>{
-    const chg=item.change||item.day||'';
-    const isNeg=chg.startsWith('-');
-    const cls=isNeg?'change-down':(chg?'change-up':'');
-    gridHtml+=`<div class="ed-markets-item"><div class="ed-markets-ticker">${item.name||''}</div><div class="ed-markets-price">${item.value||'N/A'}</div>${chg?`<div class="ed-markets-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg}</div>`:''}`;
-    gridHtml+='</div>';
-  });
-  gridHtml+='</div>';
-
-  // Commodity movers chart as supporting infographic
-  const chartHtml=`<div class="ed-chart-inline" id="tldrCommodityCard" style="float:none;width:100%;margin:16px 0">
-    <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
-    <div style="height:180px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
-    <div class="ec-source">Yahoo Finance</div>
-  </div>`;
-
-  el.innerHTML=narrative+gridHtml+chartHtml;
-  // Render commodity chart
-  try{await _ensureChartData();_renderCommodityChart('tldrCommodityChart','tldrCommodityCard','tldr')}catch(e){console.warn('Markets chart:',e)}
-}
-
 /* ══ NATIONAL TAB (redesigned: subtabs Canada + Global Players) ══ */
 let _nationalSubRendered={};
 let _activeNationalSub='canada';
@@ -2455,12 +2338,44 @@ async function _initCanadaInsightChart(canvasId){
   }catch(e){console.warn('Canada insight chart:',e)}
 }
 var _globalChartInited={};
-async function _initGlobalInsightChart(countryKey,canvasId){
+// Pull the narrative-driven chart spec (tldr-charts agent) off a briefing global
+// region object: global[i].insightCharts[0]. Same shape as province/industry specs
+// ({chartType,title,subtitle,dataKeys[],dataSource?,callout}). Returns null when
+// absent or missing dataKeys so callers fall back to GLOBAL_CHART_CFG.
+function _globalChartSpec(gData){
+  var arr=gData&&gData.insightCharts;
+  if(!Array.isArray(arr)||!arr.length)return null;
+  var spec=arr[0];
+  if(!spec||!Array.isArray(spec.dataKeys)||!spec.dataKeys.length)return null;
+  return spec;
+}
+async function _initGlobalInsightChart(countryKey,canvasId,spec){
   if(_globalChartInited[countryKey])return;_globalChartInited[countryKey]=true;
-  var cfg=GLOBAL_CHART_CFG[countryKey];if(!cfg)return;
   var canvas=document.getElementById(canvasId);if(!canvas)return;
   var wrapper=canvas.closest('.insight-chart-wrapper')||canvas.parentElement;
   if(!wrapper)return;
+  // 1) Narrative-driven spec from the briefing — variable each week, chosen by the
+  // chart agent to match the region's narrative. Rendered through the shared
+  // spec-driven machinery (_loadChartSpecSeries + _svgCalloutChart). The spec-level
+  // callout takes precedence for the chart strip when the spec renders.
+  if(spec&&spec.dataKeys&&spec.dataKeys.length){
+    try{
+      var specSeries=await _loadChartSpecSeries(spec);
+      if(specSeries.length){
+        var sTitle=spec.title||'Weekly Insight';
+        var sType=spec.chartType||'line';
+        var sSrc=spec.source||_deriveChartSource(spec.dataKeys);
+        var sSvg=_svgCalloutChart(specSeries,spec.annotations||[],sTitle,spec.subtitle||'',sType,sSrc);
+        var sCallout=hasVal(spec.callout)?'<div class="narrative chart-intro"><p>'+san(spec.callout)+'</p></div>':'';
+        wrapper.outerHTML=sCallout+'<div class="tldr-callout"><div class="tldr-callout-chart"><div class="tldr-callout-svg">'+sSvg+'</div></div></div>';
+        return;
+      }
+      console.warn('Global insight spec for '+countryKey+' had unresolvable dataKeys ('+spec.dataKeys.join(',')+') — falling back to GLOBAL_CHART_CFG');
+    }catch(e){console.warn('Global insight spec chart '+countryKey+':',e)}
+  }
+  // 2) Fallback: legacy hardcoded config (graceful "No data" end state preserved)
+  var cfg=GLOBAL_CHART_CFG[countryKey];
+  if(!cfg){wrapper.innerHTML='<div class="tldr-callout"><div class="tldr-callout-chart" style="padding:40px 0;text-align:center;color:#7a8599;font-size:12px">No data</div></div>';return}
   try{
     var allTs=await fetchJSON('timeseries.json').catch(function(){return{}});
     var raw=null;var keys=cfg.tsKeys||[cfg.tsKey];var pickedKey=keys[0];
@@ -2749,14 +2664,25 @@ async function _renderGlobalSubtab(key){
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>'+countryInfo.label+' Analysis</h3></div>';
   if(analysis){html+=_natNarrative(analysis,gData.sources||[])}else{html+='<div class="dash-narrative"><p style="color:#7a8599">Analysis available after next pipeline run.</p></div>'}
   var chartCfg=GLOBAL_CHART_CFG[key];
-  if(chartCfg){var chartId='natChart_'+key;html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">'+chartCfg.title+'</div><div class="insight-chart-subtitle">'+chartCfg.subtitle+'</div><div class="chart-wrap"><canvas id="'+chartId+'"></canvas></div><div class="chart-source">Source: '+chartCfg.source+'</div></div>'}
+  // Narrative-driven spec shipped in the briefing (global[i].insightCharts[0]) takes
+  // precedence over the legacy hardcoded config; unresolvable specs fall back in
+  // _initGlobalInsightChart. The placeholder wrapper title/subtitle/source mirror
+  // whichever path is expected to render.
+  var icSpec=_globalChartSpec(gData);
+  if(chartCfg||icSpec){
+    var chartId='natChart_'+key;
+    var wTitle=icSpec?(icSpec.title||'Weekly Insight'):chartCfg.title;
+    var wSub=icSpec?(icSpec.subtitle||''):chartCfg.subtitle;
+    var wSrc=icSpec?(icSpec.source||_deriveChartSource(icSpec.dataKeys)):('Source: '+chartCfg.source);
+    html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">'+san(wTitle)+'</div><div class="insight-chart-subtitle">'+san(wSub)+'</div><div class="chart-wrap"><canvas id="'+chartId+'"></canvas></div><div class="chart-source">'+san(wSrc)+'</div></div>';
+  }
   html+=_natSourcesSection(gData.sources||[]);
   html+='</div>';
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Key Indicators</h3><span class="section-meta">'+indRows.filter(function(r){return hasVal(r.value)}).length+' indicators</span></div>';
   html+=_natIndTable(countryInfo.flag,countryInfo.label,indRows,'Source: '+(GLOBAL_SRC_MAP[key]||''));
   html+='</div>';
   el.innerHTML=html;
-  if(chartCfg){_initGlobalInsightChart(key,'natChart_'+key)}
+  if(chartCfg||icSpec){_initGlobalInsightChart(key,'natChart_'+key,icSpec)}
 }
 async function _preRenderGlobalSubtabs(){
   var keys=['us','china','eu','uk'];
@@ -6840,22 +6766,26 @@ function renderProvinceComparison(){
   el.innerHTML='<details class="card" style="margin-bottom:0"><summary style="cursor:pointer;padding:12px 16px;font-size:var(--text-sm);font-weight:600;color:#475569;user-select:none">Province Comparison</summary><div style="overflow-x:auto;padding:0 16px 12px"><table style="width:100%;border-collapse:collapse;min-width:700px"><thead><tr style="border-bottom:2px solid #e2e8f0">'+hdr+'</tr></thead><tbody>'+body+'</tbody></table></div></details>';
 }
 
-/* ====== DATA VINTAGE BADGES ====== */
+/* ====== DATA VINTAGE BADGE (national tab) ====== */
 function addDataVintage(){
   if(!D)return;
   const gen=D.generated_at||D.updated_at||'';
   if(!gen)return;
-  const d=gen.split('T')[0];
-  const badge='<span style="display:inline-block;font-size:10px;color:#64748B;background:#f1f5f9;padding:2px 8px;border-radius:4px;margin-left:8px">Data as of '+d+'</span>';
-  // Add to national tab
-  const natEl=$('natAnalysisSection');
-  if(natEl){const existing=natEl.querySelector('.data-vintage');if(!existing){const dv=document.createElement('div');dv.className='data-vintage';dv.style.cssText='text-align:right;padding:4px 0;font-size:10px;color:#94A3B8';dv.innerHTML='Generated: '+gen.replace('T',' ').replace('Z',' UTC');natEl.prepend(dv)}}
+  // renderTab('national') calls renderNational() (which rebuilds #nationalPage
+  // synchronously before its first await) and then this — prepend the vintage
+  // line to the rebuilt national page.
+  const natEl=$('nationalPage');
+  if(!natEl||natEl.querySelector('.data-vintage'))return;
+  const dv=document.createElement('div');
+  dv.className='data-vintage';
+  dv.style.cssText='text-align:right;padding:4px 0;font-size:10px;color:#94A3B8';
+  dv.textContent='Data as of '+gen.split('T')[0]+' · Generated: '+gen.replace('T',' ').replace('Z',' UTC');
+  natEl.prepend(dv);
 }
 
 /* ====== INITIALIZATION ====== */
 // Module scripts are deferred — DOM is already ready, run immediately
 if($('tldrPage'))$('tldrPage').innerHTML=skeleton(6);
-if($('natAnalysisSection'))$('natAnalysisSection').innerHTML='<div class="card">'+skeleton(3)+'</div>';
 // Section-level skeleton placeholders while async sections load
 if($('costMonitor'))$('costMonitor').innerHTML='<div class="card">'+skeleton(2)+'</div>';
 if($('microscopeHistory'))$('microscopeHistory').innerHTML='<div class="card">'+skeleton(2)+'</div>';
