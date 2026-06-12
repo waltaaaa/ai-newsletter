@@ -168,9 +168,12 @@ The briefing integrates data from: indicator history, project database, discover
 - Download buttons on frontend: `/api/briefing-download?format=pdf` and `?format=docx`
 
 ## Data Explorer (V-Code Search)
-- Local fuzzy search over curated index (120+ entries across 9 categories)
+- Local fuzzy search over curated index (155+ entries across 9 categories) + full 4,900-table StatCan directory (`docs/data/statcan_tables.json`, exported from `config/statcan_table_registry.csv` by `export_statcan_tables`)
 - Categories: Labour Market, GDP, Construction, Housing, Prices, Trade, Rates, Energy, Demographics
-- Includes: all 20 NAICS industry GDP, 10 provincial unemployment/employment/participation/CPI/GDP, 10 CMA permits, CPI components, 20 table-only references
+- Includes: all 20 NAICS industry GDP, 10 provincial unemployment/employment/participation/CPI/GDP, 10 CMA permits, CPI components, 20 table-only references, ~28 pipeline-verified vectors (harvested from `statcan_extended.py` + `config/statcan_daily_vector_map.json` verified entries — never hand-fabricate vcodes)
+- Identifier search: CANSIM v-codes (`v41690973`), table IDs (`14-10-0287` / `14-10-0287-01`), dashless PIDs (`1410028701`), legacy CANSIM table numbers (`282-0087`). Directory export carries the legacy CANSIM number as field `s`; identifiers are embedded in the `k` keyword blob.
+- V-codes not in the local index resolve live in-browser via StatCan WDS `getSeriesInfoFromVector` (free, no key), with a statcan.gc.ca search-link fallback on failure
+- Expanding the table directory = re-run `python statcan_table_registry.py --csv --active-only` (WDS getAllCubesListLite, free) to refresh `config/statcan_table_registry.csv`, then re-export
 - StatCan table URL: `https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid={table_no_dashes}`
 - Pipeline fetches national + provincial: unemployment, employment rate, participation rate, CPI, GDP
 

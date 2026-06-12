@@ -1787,10 +1787,14 @@ def export_statcan_tables(conn, output_dir: str) -> str:
     and maps each row to the compact shape the frontend loader expects at
     ``docs/js/app.js`` around line 5625::
 
-        {t, n, k, c, f, g}
+        {t, n, k, c, f, g, s}
 
     where ``t`` = Table ID, ``n`` = Table Name, ``k`` = keyword blob,
-    ``c`` = category (Focus), ``f`` = Frequency, ``g`` = Coverage/geography.
+    ``c`` = category (Focus), ``f`` = Frequency, ``g`` = Coverage/geography,
+    ``s`` = legacy CANSIM table number (e.g. ``282-0087``; omitted when the
+    registry row has none). The keyword blob also embeds the table ID, the
+    dashless product ID, and the CANSIM number so the explorer's text scorer
+    matches identifier queries without special-casing.
 
     The ``conn`` parameter is accepted for signature compatibility with the
     other exporters but is unused today (everything comes from the CSV).
@@ -1831,21 +1835,31 @@ def export_statcan_tables(conn, output_dir: str) -> str:
             subject_codes = (row.get("Subject Codes") or "").strip()
             coverage = (row.get("Coverage") or "").strip()
             frequency = (row.get("Frequency") or "").strip()
+            cansim_id = (row.get("CANSIM ID") or "").strip()
+            product_id = (row.get("Product ID (raw)") or "").strip()
 
             # Keyword blob powers the scorer in searchVCodes(); lowercase so the
-            # substring match in _expandQuery() works without further normalization
+            # substring match in _expandQuery() works without further normalization.
+            # Identifiers (table ID, dashless PID, legacy CANSIM number) are included
+            # so queries like "14-10-0287", "1410028701", or "282-0087" hit directly.
             keyword_blob = " ".join(
-                filter(None, [name.lower(), focus.lower(), subject_codes.lower()])
+                filter(None, [
+                    name.lower(), focus.lower(), subject_codes.lower(),
+                    table_id, product_id, cansim_id,
+                ])
             )
 
-            rows_out.append({
+            entry = {
                 "t": table_id,
                 "n": name,
                 "k": keyword_blob,
                 "c": focus or "Unclassified",
                 "f": frequency or "Occasional",
                 "g": _GEO_NORMALIZE.get(coverage, coverage) or "Canada",
-            })
+            }
+            if cansim_id:
+                entry["s"] = cansim_id
+            rows_out.append(entry)
 
     # Frontend loader in app.js:5625 does ``const raw=await resp.json();`` then
     # ``raw.filter(r=>!curated.has(r.t))`` directly on the response, so we write
