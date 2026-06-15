@@ -5591,6 +5591,12 @@ async function renderCalendar(){
     const today=_localYMD(new Date());
     (Array.isArray(evts)?evts:[]).forEach(e=>{
       const title=String(e.event_name||e.event||e.name||'').trim();
+      // Drop search-result noise: Tavily 'watchlist' hits and low-signal rows
+      // are not scheduled events (2026-06-15 fix; mirrors the export-side gate
+      // in event_calendar.get_upcoming_events). Hardens the calendar against any
+      // already-deployed/stale events.json that still carries the noise.
+      var _typ=String(e.type||'').toLowerCase();var _sig=String(e.significance||'').toLowerCase();
+      if(_typ==='watchlist'||_sig==='low')return;
       // Skip stale search-noise rows: past-dated items with social-media suffixed titles
       if((e.date||'')<today&&/- (Facebook|YouTube)$/.test(title))return;
       // events.json carries significance, the renderer reads impact

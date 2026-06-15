@@ -415,6 +415,85 @@ def _flush_backlog(remaining_by_url: dict):
         print(f"  [BACKLOG] flush failed (non-fatal): {type(e).__name__}: {e}")
 
 
+_EVIDENCE_STOPWORDS = {
+    "the", "of", "and", "for", "project", "facility", "centre", "center",
+    "plant", "development", "new", "construction", "expansion", "program",
+    "phase", "canada", "canadian", "ontario", "quebec", "alberta", "british",
+    "columbia", "national", "federal", "provincial",
+}
+
+
+def _evidence_tokens(text: str) -> set:
+    """Significant lowercase word tokens (len>3, non-stopword) from text."""
+    import re
+    return {w for w in re.findall(r"[a-z0-9]+", (text or "").lower())
+            if len(w) > 3 and w not in _EVIDENCE_STOPWORDS}
+
+
+def _best_chunk_match(project: dict, chunk: list):
+    """The single chunk article that best matches a project by name/proponent
+    token overlap with the article title+summary. Returns None when nothing
+    overlaps by at least 2 tokens (so an unrelated chunk-mate is never attached).
+    """
+    ptoks = _evidence_tokens(project.get("name", "")) | _evidence_tokens(project.get("proponent", ""))
+    if not ptoks:
+        return None
+    best, best_score = None, 0
+    for it in chunk:
+        atoks = _evidence_tokens(it.get("title", "")) | _evidence_tokens(it.get("summary", ""))
+        overlap = len(ptoks & atoks)
+        if overlap > best_score:
+            best, best_score = it, overlap
+    return best if best_score >= 2 else None
+
+
+def _per_project_chunk_evidence(project: dict, chunk_by_url: dict, chunk: list) -> list:
+    """Evidence rows for ONE extracted project.
+
+    Draws from the project's OWN model-returned ``sources`` (recovering rich
+    metadata — government vs news, publish date, source name — where the cited
+    URL matches a fetched chunk article). Falls back to a single best name-token
+    match against the chunk only when the model returned no usable source URL.
+
+    This replaces the prior behaviour that attached EVERY chunk article URL to
+    EVERY project extracted from a province batch, which scrambled evidence
+    across unrelated projects sharing a chunk (the mis-evidenced-links bug:
+    a food-security project inheriting a home-for-sale listing). The model
+    populates per-project ``sources`` reliably (verified 454/460 rss rows).
+    """
+    out, seen = [], set()
+    for s in (project.get("sources") or []):
+        if not isinstance(s, dict):
+            continue
+        u = (s.get("url") or "").strip()
+        if not u.startswith("http") or u in seen:
+            continue
+        meta = chunk_by_url.get(u)
+        if meta:
+            out.append(dict(meta))
+        else:
+            # Model cited a URL that was not among the fetched chunk articles
+            # (e.g. a canonical link). Keep it — it is the project's own citation.
+            out.append({"url": u, "name": s.get("title", ""), "date": "",
+                        "source_type": "rss_news"})
+        seen.add(u)
+    if out:
+        return out
+    # Fallback: no usable per-project source URL. Match to the single best chunk
+    # article rather than attaching all of them.
+    best = _best_chunk_match(project, chunk)
+    if best:
+        u = best.get("url") or best.get("link") or ""
+        if u:
+            return [{
+                "url": u,
+                "name": best.get("source_name", ""),
+                "date": (best.get("published") or "")[:10],
+                "source_type": "rss_government" if best.get("source_level") != "media" else "rss_news",
+            }]
+    return []
+
+
 def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=None, cost_state=None):
     """
     Extract structured capital project data directly from RSS news items
@@ -480,20 +559,30 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
             cost_state=cost_state,
         )
         if projects:
-            rss_urls = [{"url": i.get('url') or i.get('link') or '',
-                         "name": i.get('source_name', ''),
-                         "date": (i.get('published') or '')[:10],
-                         "source_type": "rss_government" if i.get('source_level') != 'media' else "rss_news"}
-                        for i in chunk if (i.get('url') or i.get('link'))]
+            # Index the chunk's fetched articles by URL so per-project evidence
+            # can recover rich metadata (gov vs news, publish date, source name).
+            chunk_by_url = {}
+            for i in chunk:
+                u = i.get('url') or i.get('link') or ''
+                if u and u not in chunk_by_url:
+                    chunk_by_url[u] = {
+                        "url": u,
+                        "name": i.get('source_name', ''),
+                        "date": (i.get('published') or '')[:10],
+                        "source_type": "rss_government" if i.get('source_level') != 'media' else "rss_news",
+                    }
             for p in projects:
                 p.setdefault('_evidence', [])
                 existing = {e.get('url') for e in p['_evidence']}
-                for ru in rss_urls:
-                    if ru['url'] not in existing:
+                # Attach ONLY this project's own cited sources, NOT every URL in
+                # the chunk (fix 2026-06-15 — see _per_project_chunk_evidence).
+                own = _per_project_chunk_evidence(p, chunk_by_url, chunk)
+                for ru in own:
+                    if ru['url'] and ru['url'] not in existing:
                         p['_evidence'].append(ru)
                         existing.add(ru['url'])
-                if not p.get('source_url') and rss_urls:
-                    p['source_url'] = rss_urls[0]['url']
+                if not p.get('source_url') and own:
+                    p['source_url'] = own[0]['url']
             return projects, []
         # Sonnet found no projects — collect articles for Pro recovery
         failed = [{

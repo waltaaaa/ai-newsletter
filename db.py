@@ -866,6 +866,17 @@ _MD_HEADER_PREFIXES = ('#', '**', '- ')
 _MIN_ALPHA_CHARS = 4
 
 
+# Navigation-instruction phrases extracted as bogus "project" names
+# ("Go to the Metrolinx website", "Return to the Metrolinx homepage.",
+# "Download this … guide"). Precise enough not to touch real project names:
+# no capital project name starts with these verbs or ends with "homepage".
+_NAV_PHRASE_RE = re.compile(
+    r"^(go to|return to|visit the|click here|download this)\b|"
+    r"\b(homepage|home page)\.?$",
+    re.IGNORECASE,
+)
+
+
 def _is_non_project_name(name: str) -> bool:
     """Return True if the name is structurally non-project (nav-item, date, fragment).
 
@@ -887,6 +898,9 @@ def _is_non_project_name(name: str) -> bool:
         return True
     # Nav-item exact match (case-insensitive)
     if stripped.lower() in _NAV_ITEM_NAMES:
+        return True
+    # Nav-instruction phrases ("Go to the X website", "Return to X homepage")
+    if _NAV_PHRASE_RE.search(stripped):
         return True
     # Entirely numeric (e.g. "12345" or "2025")
     if stripped.replace(',', '').replace('.', '').replace(' ', '').isdigit():

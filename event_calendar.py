@@ -269,6 +269,35 @@ def get_upcoming_events(conn=None, days_ahead=14, db=None):
         tavily_events = get_cached_province_events(conn, days_ahead)
         events.extend(tavily_events)
 
+    # Curation gate (2026-06-15 fix): events.json must contain only material
+    # *scheduled* events. Two upstream leaks polluted the calendar with run-date-
+    # stamped noise that masqueraded as "upcoming":
+    #   - search_province_events() emits raw Tavily web-search hits as
+    #     type='watchlist' / significance='low' (e.g. "... - Facebook",
+    #     "[PDF] TD Economics - 2026 Alberta Budget"), all stamped date=today.
+    #   - get_pipeline_province_events() emits weekly policy bulletins as
+    #     type='policy' / significance='medium', also stamped date=today (not a
+    #     real future event date).
+    # Keep the curated structural events (BoC rate decisions, StatCan releases,
+    # budgets) regardless of date; drop search-result noise and any remaining
+    # run-date-stamped low-signal rows so only genuine upcoming events show.
+    today_iso = today.isoformat()
+    _SCHEDULED_TYPES = {"rate_decision", "data_release", "budget"}
+
+    def _is_material_event(ev):
+        etype = str(ev.get("type") or "").lower()
+        sig = str(ev.get("significance") or "").lower()
+        if etype == "watchlist":
+            return False                      # Tavily/Google search-result noise
+        if etype in _SCHEDULED_TYPES:
+            return True                       # real BoC / StatCan / budget dates
+        if sig == "low":
+            return False
+        # Remaining rows (e.g. pipeline 'policy') must be genuinely upcoming,
+        # not run-date-stamped current-week news.
+        return str(ev.get("date") or "") > today_iso
+
+    events = [e for e in events if _is_material_event(e)]
     events.sort(key=lambda x: x.get("date", "9999"))
     return events
 
