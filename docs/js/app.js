@@ -1231,7 +1231,7 @@ async function _tldrBuildProjects(){
   const narrativeHtml=`<div class="tldr-update-narrative"><p>${narrativeParts.join(' ')}</p></div>`;
 
   // Filter out projects without assigned values, then combine: new first, then status changes, cap at 12
-  const hasValue=p=>p.value&&p.value!=='N/A'&&p.value!=='Not disclosed'&&p.value!=='—'&&p.value!=='';
+  const hasValue=v=>v!=null&&v!==''&&v!=='N/A'&&v!=='Not disclosed'&&v!=='—';
   const valuedNew=newProjects.filter(p=>hasValue(p.value)&&meetsProvThreshold(p));
   const valuedChanges=statusChanges.filter(p=>hasValue(p.value)&&meetsProvThreshold(p));
   const tableProjects=[...valuedNew.slice(0,6),...valuedChanges.slice(0,12-Math.min(valuedNew.length,6))];
