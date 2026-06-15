@@ -6121,10 +6121,47 @@ const VCODE_INDEX=[
   {vcode:'—',table:'11-10-0065-01',title:'Household sector credit market summary',keywords:'household debt credit mortgage consumer loans',category:'Rates',freq:'Quarterly',geo:'Canada'},
   {vcode:'—',table:'10-10-0006-01',title:'Canadian international transactions in securities',keywords:'securities transactions portfolio investment foreign bonds equities',category:'Trade',freq:'Monthly',geo:'Canada'},
   {vcode:'—',table:'23-10-0067-01',title:'Non-residential building construction price index',keywords:'construction price index non-residential building cost',category:'Construction',freq:'Quarterly',geo:'Canada, CMAs'},
+
+  // ── PIPELINE-VERIFIED VECTORS ──
+  // Harvested from vectors the weekly pipeline fetches live (statcan_extended.py,
+  // config/statcan_daily_vector_map.json "verified" entries) — each resolved via
+  // WDS coordinate lookup against current data, not hand-entered.
+  {vcode:'V1014954064',table:'34-10-0175-01',title:'Investment in building construction, residential',keywords:'investment building construction residential capital spending',category:'Construction',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V1014954170',table:'34-10-0175-01',title:'Investment in building construction, non-residential',keywords:'investment building construction non-residential capital spending',category:'Construction',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V1014954182',table:'34-10-0175-01',title:'Investment in building construction, industrial',keywords:'investment building construction industrial capital spending',category:'Construction',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V1014954234',table:'34-10-0175-01',title:'Investment in building construction, commercial',keywords:'investment building construction commercial capital spending',category:'Construction',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V1014954316',table:'34-10-0175-01',title:'Investment in building construction, institutional',keywords:'investment building construction institutional government capital spending',category:'Construction',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V95923552',table:'34-10-0035-01',title:'Capital and repair expenditures, all industries, total',keywords:'capital repair expenditures capex investment total industries',category:'Construction',freq:'Annual',geo:'Canada'},
+  {vcode:'V95923606',table:'34-10-0035-01',title:'Capital expenditures, non-residential construction',keywords:'capital expenditures capex non-residential construction investment',category:'Construction',freq:'Annual',geo:'Canada'},
+  {vcode:'V95923660',table:'34-10-0035-01',title:'Capital expenditures, machinery and equipment',keywords:'capital expenditures capex machinery equipment investment',category:'Construction',freq:'Annual',geo:'Canada'},
+  {vcode:'V2057614',table:'14-10-0022-01',title:'Employment, construction industry',keywords:'employment construction industry jobs labour lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V2057606',table:'14-10-0022-01',title:'Employment, mining, quarrying and oil and gas extraction',keywords:'employment mining quarrying oil gas extraction jobs labour lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V2057622',table:'14-10-0022-01',title:'Employment, manufacturing industry',keywords:'employment manufacturing industry jobs labour lfs',category:'Labour Market',freq:'Monthly',geo:'Canada'},
+  {vcode:'V45169837',table:'14-10-0326-01',title:'Job vacancies, construction sector',keywords:'job vacancies construction openings hiring labour',category:'Labour Market',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V45169829',table:'14-10-0326-01',title:'Job vacancies, mining, quarrying and oil and gas extraction',keywords:'job vacancies mining quarrying oil gas openings hiring labour',category:'Labour Market',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V1566911351',table:'12-10-0163-01',title:'Merchandise exports, energy products',keywords:'exports energy products oil gas trade merchandise napcs',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'V1566911365',table:'12-10-0163-01',title:'Merchandise exports, metal ores and non-metallic minerals',keywords:'exports metal ores minerals mining trade merchandise napcs',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'V1566911406',table:'12-10-0163-01',title:'Merchandise exports, forestry products and building materials',keywords:'exports forestry lumber building packaging materials trade merchandise napcs',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'V1566911339',table:'12-10-0163-01',title:'Merchandise exports, farm, fishing and intermediate food products',keywords:'exports farm fishing food agriculture trade merchandise napcs',category:'Trade',freq:'Monthly',geo:'Canada'},
+  {vcode:'V729949',table:'34-10-0143-01',title:'Housing starts, total, all areas',keywords:'housing starts total cmhc residential new construction',category:'Housing',freq:'Monthly',geo:'Canada'},
+  {vcode:'V729996',table:'34-10-0143-01',title:'Housing starts, single-detached',keywords:'housing starts single detached cmhc residential new construction',category:'Housing',freq:'Monthly',geo:'Canada'},
+  {vcode:'V13946611',table:'34-10-0143-01',title:'Housing starts, multi-unit',keywords:'housing starts multi unit apartment cmhc residential new construction',category:'Housing',freq:'Monthly',geo:'Canada'},
+  {vcode:'V111955442',table:'18-10-0205-01',title:'New housing price index, total (house and land)',keywords:'new housing price index nhpi house land',category:'Housing',freq:'Monthly',geo:'Canada'},
+  {vcode:'V4331081',table:'16-10-0109-01',title:'Industrial capacity utilization rate',keywords:'industrial capacity utilization use rate manufacturing',category:'GDP',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V65201210',table:'36-10-0434-01',title:'Real GDP at basic prices, all industries',keywords:'real gdp basic prices all industries monthly output economy',category:'GDP',freq:'Monthly',geo:'Canada'},
+  {vcode:'V62305984',table:'36-10-0112-01',title:'Household saving rate',keywords:'household saving rate savings income consumer',category:'GDP',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V61992664',table:'36-10-0105-01',title:'Terms of trade, goods and services',keywords:'terms of trade export import prices goods services',category:'Trade',freq:'Quarterly',geo:'Canada'},
+  {vcode:'V41691230',table:'18-10-0004-01',title:'CPI Food purchased from stores',keywords:'cpi food purchased stores grocery prices inflation',category:'Prices',freq:'Monthly',geo:'Canada'},
+  {vcode:'V8620',table:'32-10-0052-01',title:'Realized net farm income',keywords:'realized net farm income agriculture farming',category:'Agriculture',freq:'Annual',geo:'Canada, provinces'},
+  {vcode:'V170955',table:'32-10-0049-01',title:'Farm operating expenses',keywords:'farm operating expenses costs agriculture farming',category:'Agriculture',freq:'Annual',geo:'Canada, provinces'},
 ];
 
 /* Full StatCan table directory (loaded async from JSON) */
 let _fullTableDir=[];
+/* Normalized table ID → legacy CANSIM table number (e.g. '14-10-0287-01' → '282-0087').
+   Built from the raw directory BEFORE curated-overlap filtering so legacy CANSIM
+   searches also resolve tables that only exist as curated VCODE_INDEX entries. */
+const _tableCansimMap={};
 let _fullDirRawLength=0;
 let _fullDirLoaded=false;
 let _expSearchPage=1;
@@ -6140,9 +6177,10 @@ const FREQ_MAP={M:'Monthly',Q:'Quarterly',A:'Annual',D:'Daily',W:'Weekly',E:'Eve
     _fullDirRawLength=Array.isArray(raw)?raw.length:0;
     /* Build a Set of normalized table IDs already in curated index (all canonical -01 form) */
     const curated=new Set(VCODE_INDEX.map(v=>_normalizeStatcanTable(v.table)));
+    raw.forEach(r=>{if(r&&r.s)_tableCansimMap[_normalizeStatcanTable(r.t)]=r.s;});
     _fullTableDir=raw.map(r=>({
       vcode:'\u2014',table:_normalizeStatcanTable(r.t),title:r.n,keywords:r.k,
-      category:r.c,freq:FREQ_MAP[r.f]||r.f,geo:r.g,_dir:true
+      category:r.c,freq:FREQ_MAP[r.f]||r.f,geo:r.g,cansim:r.s||'',arch:r.a===1,_dir:true
     })).filter(r=>!curated.has(r.table));
     _fullDirLoaded=true;
     if(typeof _expRenderHeroStats==='function')_expRenderHeroStats();
@@ -6227,24 +6265,64 @@ function _expandQuery(words){
   return Array.from(expanded);
 }
 
-function searchVCodes(query){
+/* ── Identifier-aware query detection ──
+   Recognizes CANSIM vector codes ("v41690973"), current table IDs ("14-10-0287"
+   or "14-10-0287-01"), dashless product IDs ("14100287" / "1410028701"), and
+   legacy CANSIM table numbers ("282-0087"). Returns null for keyword queries. */
+function _expQueryIdType(query){
+  const s=String(query||'').trim().toLowerCase().replace(/\s+/g,'');
+  if(/^v\d{1,10}$/.test(s))return{type:'vector',id:s.slice(1)};
+  if(/^\d{2}-\d{2}-\d{4}(-\d{2})?$/.test(s))return{type:'table',id:s.slice(0,10)};
+  if(/^\d{8}(\d{2})?$/.test(s))return{type:'table',id:s.slice(0,2)+'-'+s.slice(2,4)+'-'+s.slice(4,8)};
+  if(/^\d{3}-\d{4}$/.test(s))return{type:'cansim',id:s};
+  return null;
+}
+
+function _expCansimOf(v){
+  return v.cansim||_tableCansimMap[_normalizeStatcanTable(v.table)]||'';
+}
+
+function _expIdMatches(v,idQ){
+  if(idQ.type==='vector')return!!v.vcode&&v.vcode!=='—'&&String(v.vcode).toLowerCase().replace(/^v/,'')===idQ.id;
+  if(idQ.type==='table')return _normalizeStatcanTable(v.table).slice(0,10)===idQ.id;
+  if(idQ.type==='cansim')return _expCansimOf(v)===idQ.id;
+  return false;
+}
+
+/* Core search shared by searchVCodes (capped 25) and _expSearchAll (uncapped).
+   Identifier queries match exactly against vcode / table ID / legacy CANSIM
+   number; everything else goes through the synonym-expanded keyword scorer. */
+function _expSearchCore(query){
   if(!query||query.length<2)return[];
+  const idQ=_expQueryIdType(query);
+  if(idQ){
+    /* Exact identifier hits; archived directory tables rank below current ones */
+    const curatedHits=VCODE_INDEX.filter(v=>_expIdMatches(v,idQ)).map(v=>({...v,score:105}));
+    const dirHits=_fullTableDir.filter(v=>_expIdMatches(v,idQ)).map(v=>({...v,score:v.arch?95:100}));
+    return curatedHits.concat(dirHits).sort((a,b)=>b.score-a.score);
+  }
   const qRaw=query.toLowerCase().split(/\s+/).filter(w=>w.length>1);
   const q=_expandQuery(qRaw);
-  /* Search curated entries (boosted) then full directory */
+  /* Search curated entries (boosted) then full directory. Identifiers are part
+     of the scored text so partial vcode/table fragments still surface matches. */
   const score=(v,boost)=>{
-    const text=(v.title+' '+v.keywords+' '+v.category+' '+v.geo).toLowerCase();
+    const text=(v.title+' '+v.keywords+' '+v.category+' '+v.geo+' '+(v.vcode||'')+' '+(v.table||'')+' '+(v.cansim||'')).toLowerCase();
     let s=0;
     q.forEach(w=>{
       if(text.includes(w))s+=1;
       if(v.title.toLowerCase().includes(w))s+=2;
       if(v.keywords&&v.keywords.includes(w))s+=1;
     });
-    return s>0?s+boost:0;
+    /* Archived tables stay findable but never outrank live ones */
+    return s>0?Math.max(0.5,s+boost-(v.arch?2:0)):0;
   };
   const curatedResults=VCODE_INDEX.map(v=>({...v,score:score(v,5)})).filter(v=>v.score>0);
   const dirResults=_fullTableDir.map(v=>({...v,score:score(v,0)})).filter(v=>v.score>0);
-  return curatedResults.concat(dirResults).sort((a,b)=>b.score-a.score).slice(0,25);
+  return curatedResults.concat(dirResults).sort((a,b)=>b.score-a.score);
+}
+
+function searchVCodes(query){
+  return _expSearchCore(query).slice(0,25);
 }
 
 /* Hero stats for the Data Explorer tab — Indicators · V-Codes · StatCan Tables · Updated.
@@ -6286,7 +6364,7 @@ function renderExplorer(){
 
   _expRenderHeroStats();
 
-  searchEl.innerHTML='<div class="exp-search-row"><input type="text" id="vcodeSearch" class="exp-search-input" placeholder="Search StatCan tables (e.g. unemployment, housing, GDP)..." onkeyup="if(event.key===\'Enter\'){_expSearchPage=1;window._doVcodeSearch()}"><button class="exp-search-btn" onclick="_expSearchPage=1;window._doVcodeSearch()">Search</button><label class="exp-toggle-switch" title="Show only entries with a V-Code (curated indicators)"><input type="checkbox" id="expVcodeOnlyBtn" onchange="window._toggleVcodeOnly()"'+(_expVcodeOnly?' checked':'')+'><span class="exp-toggle-slider"></span><span class="exp-toggle-label">V-codes only</span></label></div>';
+  searchEl.innerHTML='<div class="exp-search-row"><input type="text" id="vcodeSearch" class="exp-search-input" placeholder="Search StatCan tables (e.g. unemployment, v41690973, 14-10-0287, 282-0087)..." onkeyup="if(event.key===\'Enter\'){_expSearchPage=1;window._doVcodeSearch()}"><button class="exp-search-btn" onclick="_expSearchPage=1;window._doVcodeSearch()">Search</button><label class="exp-toggle-switch" title="Show only entries with a V-Code (curated indicators)"><input type="checkbox" id="expVcodeOnlyBtn" onchange="window._toggleVcodeOnly()"'+(_expVcodeOnly?' checked':'')+'><span class="exp-toggle-slider"></span><span class="exp-toggle-label">V-codes only</span></label></div>';
 
   const categories=['Labour Market','GDP','Construction','Housing','Prices','Trade','Energy','Manufacturing','Agriculture','Infrastructure','Transportation','Health','Demographics','Tourism'];
   catEl.innerHTML='<div class="exp-cat-row">'+categories.map(c=>'<button class="exp-cat-btn" onclick="_expSearchPage=1;window._doVcodeSearch(\''+c+'\')">'+c+'</button>').join('')+'</div>';
@@ -6633,22 +6711,7 @@ async function _loadIsqData(){
 /* Full (unsliced) search that bypasses the 25-result cap in searchVCodes so pagination
    can walk the complete match set. Returns results sorted by score desc. */
 function _expSearchAll(query){
-  if(!query||query.length<2)return[];
-  const qRaw=query.toLowerCase().split(/\s+/).filter(w=>w.length>1);
-  const q=_expandQuery(qRaw);
-  const score=(v,boost)=>{
-    const text=(v.title+' '+v.keywords+' '+v.category+' '+v.geo).toLowerCase();
-    let s=0;
-    q.forEach(w=>{
-      if(text.includes(w))s+=1;
-      if(v.title.toLowerCase().includes(w))s+=2;
-      if(v.keywords&&v.keywords.includes(w))s+=1;
-    });
-    return s>0?s+boost:0;
-  };
-  const curatedResults=VCODE_INDEX.map(v=>({...v,score:score(v,5)})).filter(v=>v.score>0);
-  const dirResults=_fullTableDir.map(v=>({...v,score:score(v,0)})).filter(v=>v.score>0);
-  return curatedResults.concat(dirResults).sort((a,b)=>b.score-a.score);
+  return _expSearchCore(query);
 }
 
 /* Remembered query so pagination clicks can re-run the search against the current term */
@@ -6687,6 +6750,31 @@ function _expRenderVcodeResults(){
     results=results.filter(r=>r.vcode&&r.vcode!=='\u2014');
   }
   if(!results.length){
+    const idQ=_expQueryIdType(q);
+    if(idQ&&idQ.type==='vector'){
+      _expRenderWdsLookup(idQ.id,resEl,metaEl);
+      return;
+    }
+    const bare=String(q).trim().toLowerCase().replace(/\s+/g,'');
+    if(idQ&&idQ.type==='table'&&/^\d{5,10}$/.test(bare)){
+      /* Bare digits are ambiguous: tried as a table PID with no hits — fall
+         through to interpreting them as a vector number (e.g. "41690973"). */
+      _expRenderWdsLookup(bare,resEl,metaEl);
+      return;
+    }
+    if(idQ&&idQ.type==='table'){
+      /* Table ID not in the local snapshot — may be newer than the registry
+         pull. Offer the StatCan table viewer link directly. */
+      const pid=idQ.id.replace(/-/g,'')+'01';
+      resEl.innerHTML='<div class="exp-empty">'+_expEscapeHtml(idQ.id)+' is not in the local directory (it may be newer than the last registry refresh). <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+pid+'" target="_blank" rel="noopener noreferrer">Open table '+_expEscapeHtml(idQ.id)+' on statcan.gc.ca ↗</a></div>';
+      if(metaEl)metaEl.textContent='0 local results';
+      return;
+    }
+    if(idQ&&idQ.type==='cansim'){
+      resEl.innerHTML='<div class="exp-empty">No table with legacy CANSIM number '+_expEscapeHtml(idQ.id)+' in the local directory. <a href="https://www150.statcan.gc.ca/n1/en/type/data?text='+encodeURIComponent(idQ.id)+'" target="_blank" rel="noopener noreferrer">Search '+_expEscapeHtml(idQ.id)+' on statcan.gc.ca ↗</a></div>';
+      if(metaEl)metaEl.textContent='0 local results';
+      return;
+    }
     const suffix=_expVcodeOnly?' (V-codes only filter is on)':'';
     resEl.innerHTML='<div class="exp-empty">No tables found for "'+_expEscapeHtml(q)+'"'+suffix+'. Try different keywords.</div>';
     if(metaEl)metaEl.textContent='0 results';
@@ -6703,7 +6791,8 @@ function _expRenderVcodeResults(){
     const _pidRaw=String(tableId||'').replace(/-/g,'');
     const _pid=_pidRaw.length===8?_pidRaw+'01':_pidRaw;
     const tableUrl=tableId&&tableId.indexOf('BoC')>=0?'https://www.bankofcanada.ca/rates/':('https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+_pid);
-    const meta=_expEscapeHtml([r.freq,r.geo].filter(Boolean).join(' \u00b7 '));
+    const _cansim=_expCansimOf(r);
+    const meta=_expEscapeHtml([r.freq,r.geo,_cansim?('CANSIM '+_cansim):'',r.arch?'Archived':''].filter(Boolean).join(' \u00b7 '));
     html+='<tr>';
     html+='<td><span class="exp-vcode-code">'+_expEscapeHtml(r.vcode||'\u2014')+'</span></td>';
     html+='<td><span class="exp-vcode-tbl">'+_expEscapeHtml(tableId||'')+'</span></td>';
@@ -6734,6 +6823,65 @@ window._expGoPage=function(n){
   const el=$('explorerResults');
   if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'start'});
 };
+
+/* ── Live vector lookup via StatCan Web Data Service ──
+   Resolves v-codes that aren't in the local index by POSTing to the public WDS
+   getSeriesInfoFromVector endpoint. Falls back to a statcan.gc.ca search link
+   when the request fails (offline, CORS, or WDS outage) — search always degrades
+   gracefully, never breaks. Results are cached per session. */
+const _expWdsCache={};
+const _WDS_FREQ={1:'Daily',2:'Weekly',4:'Biweekly',6:'Monthly',7:'Every 2 months',9:'Quarterly',11:'Semi-annual',12:'Annual'};
+
+function _expWdsStillCurrent(vnum){
+  /* True when the user's current query still targets this vector — accepts
+     both the "v41690973" form and the bare-digit fallback ("41690973"). */
+  const bare=String(_expLastQuery||'').trim().toLowerCase().replace(/\s+/g,'').replace(/^v/,'');
+  return bare===String(vnum);
+}
+
+function _expRenderWdsLookup(vnum,resEl,metaEl){
+  const cached=_expWdsCache[vnum];
+  if(cached){_expRenderWdsResult(vnum,cached,resEl,metaEl);return;}
+  resEl.innerHTML='<div class="exp-empty">v'+_expEscapeHtml(vnum)+' is not in the local index — looking it up on Statistics Canada…</div>';
+  if(metaEl)metaEl.textContent='';
+  fetch('https://www150.statcan.gc.ca/t1/wds/rest/getSeriesInfoFromVector',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify([{vectorId:parseInt(vnum,10)}])
+  }).then(r=>r.ok?r.json():Promise.reject(new Error('http '+r.status)))
+  .then(data=>{
+    const obj=(Array.isArray(data)&&data[0]&&data[0].status==='SUCCESS')?data[0].object:{notFound:true};
+    _expWdsCache[vnum]=obj;
+    if(_expWdsStillCurrent(vnum))_expRenderWdsResult(vnum,obj,resEl,metaEl);
+  })
+  .catch(()=>{
+    if(!_expWdsStillCurrent(vnum))return;
+    resEl.innerHTML='<div class="exp-empty">v'+_expEscapeHtml(vnum)+' is not in the local index and the live Statistics Canada lookup could not be reached. <a href="https://www150.statcan.gc.ca/n1/en/type/data?text=v'+encodeURIComponent(vnum)+'" target="_blank" rel="noopener noreferrer">Search v'+_expEscapeHtml(vnum)+' on statcan.gc.ca ↗</a></div>';
+    if(metaEl)metaEl.textContent='0 local results';
+  });
+}
+
+function _expRenderWdsResult(vnum,obj,resEl,metaEl){
+  if(!obj||obj.notFound){
+    resEl.innerHTML='<div class="exp-empty">Statistics Canada has no series for v'+_expEscapeHtml(vnum)+'. Check the vector number.</div>';
+    if(metaEl)metaEl.textContent='0 results';
+    return;
+  }
+  const pid=String(obj.productId||'');
+  const tableId=pid.length===8?(pid.slice(0,2)+'-'+pid.slice(2,4)+'-'+pid.slice(4,8)+'-01'):'';
+  const tableUrl='https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid='+(pid.length===8?pid+'01':pid);
+  const freq=_WDS_FREQ[obj.frequencyCode]||'';
+  const title=obj.SeriesTitleEn||('Vector v'+vnum);
+  const meta=_expEscapeHtml([freq,obj.terminated===1?'Terminated':''].filter(Boolean).join(' · '));
+  let html='<div class="exp-vcode-table-wrap"><table class="exp-vcode-table"><thead><tr><th class="exp-col-vcode">V-Code</th><th class="exp-col-table">Table</th><th>Title</th><th class="exp-col-category">Category</th><th class="exp-col-link">Link</th></tr></thead><tbody><tr>';
+  html+='<td><span class="exp-vcode-code">V'+_expEscapeHtml(vnum)+'</span></td>';
+  html+='<td><span class="exp-vcode-tbl">'+_expEscapeHtml(tableId)+'</span></td>';
+  html+='<td><span class="exp-vcode-title">'+_expEscapeHtml(title)+'</span>'+(meta?'<span class="exp-vcode-meta">'+meta+'</span>':'')+'</td>';
+  html+='<td><span class="exp-vcode-cat">WDS live lookup</span></td>';
+  html+='<td class="exp-col-link"><a href="'+tableUrl+'" target="_blank" rel="noopener noreferrer" title="View on StatCan">↗</a></td>';
+  html+='</tr></tbody></table></div>';
+  resEl.innerHTML=html;
+  if(metaEl)metaEl.textContent='1 result · resolved live via the StatCan Web Data Service';
+}
 
 /* ====== PROVINCE COMPARISON VIEW ====== */
 function renderProvinceComparison(){
