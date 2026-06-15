@@ -189,6 +189,38 @@ def _project_for_export(proj_dict: dict) -> dict:
     parsed_value = _parse_value(proj_dict.get("value"))
     value_confirmed = parsed_value is not None
 
+    # Order evidence so evidence[0] — the link the frontend surfaces as the
+    # project's SOURCE — is the project's OWN primary citation, not an unrelated
+    # chunk-mate. Fix (2026-06-15): rss_remediated projects are extracted from
+    # province-grouped article chunks; the old pipeline attached every chunk
+    # article URL to every project, so the DB `evidence` array is scrambled (a
+    # food-security project surfaced a Calgary home-for-sale listing). The
+    # per-project `sources` column, however, reliably holds the model's actual
+    # citation (verified: 454/460 rss_remediated rows). So lead with `sources`
+    # (in citation order), then append the remaining DB evidence ranked by
+    # name relevance. Presentation-only and additive — no URLs are dropped.
+    raw_ev = _safe_json_loads(proj_dict.get("evidence"), [])
+    raw_ev = raw_ev if isinstance(raw_ev, list) else []
+    evidence = []
+    _have = set()
+    for s in _safe_json_loads(proj_dict.get("sources"), []):
+        if isinstance(s, dict):
+            u = (s.get("url") or "").strip()
+            if u.startswith("http") and u not in _have:
+                evidence.append({"url": u, "source": s.get("title", ""),
+                                 "name": s.get("title", "")})
+                _have.add(u)
+    rest = [e for e in raw_ev
+            if isinstance(e, dict) and (e.get("url") or "").strip() not in _have]
+    if len(rest) > 1:
+        try:
+            from tools.reorder_evidence_urls import name_tokens, score
+            _nt = name_tokens(proj_dict.get("name", ""))
+            rest = sorted(rest, key=lambda e: -score(e, _nt))
+        except Exception:
+            pass  # fall back to original DB order if the scorer is unavailable
+    evidence.extend(rest)
+
     return {
         "name": proj_dict.get("name", ""),
         "province": proj_dict.get("province", ""),
@@ -213,7 +245,7 @@ def _project_for_export(proj_dict: dict) -> dict:
         "firstTracked": proj_dict.get("firstTracked", ""),
         "lastUpdated": proj_dict.get("lastUpdated", ""),
         "lastSeen": proj_dict.get("lastSeen", ""),
-        "evidence": _safe_json_loads(proj_dict.get("evidence"), []),
+        "evidence": evidence,
         "statusHistory": _safe_json_loads(proj_dict.get("statusHistory"), []),
         "discovery_source": proj_dict.get("discovery_source", ""),
         "evidence_count": proj_dict.get("evidence_count", 0),
@@ -587,6 +619,44 @@ def _build_market_data_from_indicators(conn) -> dict:
     }
 
 
+def _flatten_market_commodities(grouped: list) -> list:
+    """Flatten the grouped {category, items[]} commodity structure produced by
+    _build_market_data_from_indicators into the FLAT per-item shape the briefing
+    and frontend Markets tab use (app.js _buildMktCommodities reads c.val /
+    c.day / c.mm / c.yy on flat items).
+
+    Used to UNION-ENRICH the market writer's narrated commodity list with the
+    full timeseries-backed majors set without changing the rendered shape.
+    """
+    def _pct_str(x):
+        return f"{x:+.1f}%" if isinstance(x, (int, float)) else ""
+
+    flat = []
+    for cat in (grouped or []):
+        if not isinstance(cat, dict):
+            continue
+        category = cat.get("category", "")
+        for it in cat.get("items", []):
+            if not isinstance(it, dict):
+                continue
+            w, m, y = it.get("weekly_pct"), it.get("mom_pct"), it.get("yoy_pct")
+            flat.append({
+                "name": it.get("name", ""),
+                "category": category,
+                "val": it.get("val", ""),
+                "unit": it.get("unit", ""),
+                "day": _pct_str(w),
+                "mm": _pct_str(m),
+                "yy": _pct_str(y),
+                "weekly_pct": w,
+                "mom_pct": m,
+                "yoy_pct": y,
+                "high_52w": it.get("high_52w"),
+                "low_52w": it.get("low_52w"),
+            })
+    return flat
+
+
 def _validate_briefing_text(briefing: dict):
     """Post-generation regex validation for garbled text patterns.
 
@@ -649,15 +719,37 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
                 if briefing.get(key) and not latest.get(key):
                     latest[key] = briefing[key]
 
-    # Merge market data from indicator_history if not already in briefing
-    if not latest.get('financialMarkets') or not latest.get('commodities'):
-        market_data = _build_market_data_from_indicators(conn)
-        if not latest.get('financialMarkets'):
-            latest['financialMarkets'] = market_data['financialMarkets']
-        if not latest.get('commodities'):
-            latest['commodities'] = market_data['commodities']
-        if not latest.get('yieldCurve'):
-            latest['yieldCurve'] = market_data['yieldCurve']
+    # Merge market data from indicator_history. financialMarkets/yieldCurve are
+    # filled only when absent; commodities are UNION-ENRICHED so the Markets tab
+    # carries the full timeseries-backed majors set (Aluminum, Platinum,
+    # Palladium, Corn, Soybeans, Coffee, Cocoa, Sugar, Cotton, Soybean Oil/Meal,
+    # ...). Previously the broad builder was only a fill-if-absent fallback, so a
+    # conductor payload that already carried ~13 narrated commodities capped the
+    # tab at 13 (2026-06-15 fix). Additive only — never removes a commodity the
+    # writer already emitted; comfortably above the >=13 validator floor.
+    market_data = _build_market_data_from_indicators(conn)
+    if not latest.get('financialMarkets'):
+        latest['financialMarkets'] = market_data['financialMarkets']
+    if not latest.get('yieldCurve'):
+        latest['yieldCurve'] = market_data['yieldCurve']
+    existing_comms = latest.get('commodities')
+    if not existing_comms:
+        latest['commodities'] = market_data['commodities']
+    elif isinstance(existing_comms, list) and existing_comms and isinstance(existing_comms[0], dict) and 'items' not in existing_comms[0]:
+        # Flat writer list — append any builder commodity not already present.
+        def _norm_name(n):
+            return str(n or '').strip().lower()
+        have = {_norm_name(c.get('name')) for c in existing_comms if isinstance(c, dict)}
+        added = 0
+        for item in _flatten_market_commodities(market_data['commodities']):
+            if _norm_name(item['name']) and _norm_name(item['name']) not in have:
+                existing_comms.append(item)
+                have.add(_norm_name(item['name']))
+                added += 1
+        if added:
+            print(f"  [export briefings] enriched commodities: +{added} "
+                  f"timeseries-backed majors ({len(existing_comms)} total)")
+        latest['commodities'] = existing_comms
 
     # Merge infographic directives if available
     if not latest.get('infographic_directives'):
@@ -1368,7 +1460,10 @@ def _project_for_export_slim(proj_dict: dict) -> dict:
     Keeps only the first evidence URL and drops full evidence text.
     """
     shaped = _project_for_export(proj_dict)
-    # Trim evidence array: keep only first 2 entries, drop full text
+    # Trim evidence array: keep only the 2 most project-relevant entries.
+    # _project_for_export has already ranked evidence by name relevance (so
+    # evidence[0] is the most on-topic deep link, not an unrelated chunk-mate);
+    # this just slices the top 2 and drops the full text to keep the file small.
     ev = shaped.get("evidence", [])
     shaped["evidence"] = [
         {"url": e.get("url", ""), "source": e.get("source", "")}
