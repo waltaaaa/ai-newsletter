@@ -11,10 +11,14 @@ import rss_monitor
 # Parallel workers for the per-province chunked extraction loop. Canada alone
 # can produce 60+ chunks (one claude subprocess per chunk); sequential runs
 # blew the 2400s Phase 3 budget.
-# E-5: bumped default 3 → 6 — Phase 3 does not run the conductor in parallel
-# so we can use the full subscription rate without contending for stdin
-# pressure. Re-cap to 3 in any phase that runs the conductor concurrently.
-RSS_EXTRACT_WORKERS = int(os.environ.get('RSS_EXTRACT_WORKERS', '6'))
+# 2026-06-15: reverted E-5's 3→6 bump back to 3. On this host 6 concurrent
+# `claude -p` Sonnet extractions overwhelm the machine/subscription concurrency:
+# a single call returns in seconds, but at 6-way load ~17% of chunks blew the
+# 180s timeout and the retry storm (up to 12 near-simultaneous node processes)
+# pushed some to a hard exit-1. 3 matches the conservative posture every other
+# agent phase already uses (writing/research/analysis/province all = 2). Env
+# override preserved for hosts with more headroom.
+RSS_EXTRACT_WORKERS = int(os.environ.get('RSS_EXTRACT_WORKERS', '3'))
 
 # Red-team F5 (2026-06-11): when Phase 3 soft-times-out, the abandoned daemon
 # thread used to keep extracting every queued chunk and then write the DB on
@@ -225,23 +229,26 @@ SOURCE TEXT:
     )
     if REASONING_AGENT_MODE == 'claude_code':
         full_prompt = f"{system_prompt}\n\n{user_prompt}"
-        # D-13: retry once on Claude Code timeout. First attempt: 180s.
-        # On TimeoutExpired, retry with a 300s budget. If the retry also
+        # D-13: retry once on Claude Code timeout. First attempt: 240s
+        # (2026-06-15: raised from 180s — with workers cut 6→3 each call gets
+        # more CPU, but a 240s first window absorbs the remaining variance so
+        # slow-but-healthy calls finish on attempt 1 instead of forcing a retry).
+        # On TimeoutExpired, retry with a 360s budget. If the retry also
         # times out, log [CHUNK FAIL] and continue — don't crash the phase.
-        # Per-chunk budget after retry is 480s, still well within the Phase 3
-        # 2400s cap.
+        # Per-chunk budget after retry is 600s, still well within the Phase 3
+        # join (4200s) / soft deadline (3900s).
         raw = None
         try:
             raw = _call_claude_code_sync(
                 full_prompt, f"filter-{context_label}",
-                timeout=180, raise_on_timeout=True,
+                timeout=240, raise_on_timeout=True,
             )
         except _ClaudeCodeTimeout:
-            print(f"    [Claude Code] {context_label}: 180s timeout — retrying with 300s budget...")
+            print(f"    [Claude Code] {context_label}: 240s timeout — retrying with 360s budget...")
             try:
                 raw = _call_claude_code_sync(
                     full_prompt, f"filter-{context_label}-retry",
-                    timeout=300, raise_on_timeout=True,
+                    timeout=360, raise_on_timeout=True,
                 )
             except _ClaudeCodeTimeout:
                 # context_label already contains "{province} [n/m]"
@@ -447,7 +454,11 @@ def extract_projects_from_rss(rss_items, anthropic_client=None, claude_model=Non
     # budget and exits 1 → API fallback → $0 balance error. Chunk any batch with
     # >BATCH_ITEM_CAP items into sub-batches. Applies to every province for safety,
     # but in practice only Canada hits the cap.
-    BATCH_ITEM_CAP = 20
+    # 2026-06-15: 20 → 12. Smaller chunks make each claude -p prompt shorter and
+    # the extraction generation faster, so chunks finish well inside the 240s
+    # first-attempt window instead of timing out, and stay further under the
+    # stdin-overflow ceiling that triggers the exit-1 failures.
+    BATCH_ITEM_CAP = 12
 
     def _process_chunk(province, chunk_idx, chunk_count, chunk):
         """Run one (province, chunk) extraction. Returns (projects, failed_items)."""
