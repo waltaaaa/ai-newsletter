@@ -49,17 +49,35 @@ _WDS_HEADERS = {
 
 # ── Investment & Capital Expenditure ──────────────────────────────────────────
 
-# Table 34-10-0175-01: Investment in building construction (quarterly)
-# Geography=Canada, seasonally adjusted, current dollars
-# Vectors refreshed 2026-03-31 via WDS coordinate lookup (old vectors returned 2012 data)
-# Note: values are in raw dollars (not $M) — converted to $M in _fetch_table_group
+# Table 34-10-0293-01: Investment in building construction (MONTHLY)
+# Geography=Canada, current dollars. Active successor to the ARCHIVED quarterly
+# cube 34-10-0175 (cubeEndDate 2023-10-01 — its vectors froze residential /
+# non_residential building investment at 2023-Q4). Repointed 2026-06-15:
+#   residential_building_investment      1014954064 -> 1705315946 (coord 1.2.1.3.0.0.0.0.0.0)
+#   non_residential_building_investment  1014954170 -> 1705316166 (coord 1.13.1.3.0.0.0.0.0.0)
+# Live-verified 2026-06-15: latest refPer 2026-03-01 = $15,521.9M / $7,039.5M.
+# The new cube is MONTHLY (old was quarterly); values are still raw CAD → /1e6 for $M.
+INVESTMENT_BUILDING_MONTHLY = {
+    "table": "34-10-0293",
+    "frequency": "monthly",
+    "raw_dollars": True,  # values are in raw CAD, divide by 1e6 for $M
+    "vectors": {
+        "residential_building_investment":      (1705315946, "$M", "Investment"),
+        "non_residential_building_investment":   (1705316166, "$M", "Investment"),
+    },
+}
+
+# Table 34-10-0175-01: Investment in building construction (quarterly) — ARCHIVED.
+# Cube end date 2023-10-01. residential / non_residential were migrated to the
+# active monthly successor 34-10-0293 above (2026-06-15). The remaining three
+# sub-sector vectors have no confirmed successor mapping yet and stay on the
+# archived cube definition (the monthly freshness gate skips their stale obs —
+# their state is unchanged from before the migration; not in scope of this fix).
 INVESTMENT_BUILDING = {
     "table": "34-10-0175",
     "frequency": "quarterly",
     "raw_dollars": True,  # values are in raw CAD, divide by 1e6 for $M
     "vectors": {
-        "residential_building_investment":      (1014954064, "$M", "Investment"),
-        "non_residential_building_investment":   (1014954170, "$M", "Investment"),
         "industrial_building_investment":        (1014954182, "$M", "Investment"),
         "commercial_building_investment":        (1014954234, "$M", "Investment"),
         "institutional_building_investment":     (1014954316, "$M", "Investment"),
@@ -333,6 +351,7 @@ META_RESOLVED_GROUPS = [
 #                           concentration cube frozen at 2003)
 
 ALL_TABLE_GROUPS = [
+    INVESTMENT_BUILDING_MONTHLY,   # 34-10-0293 (active monthly successor to 34-10-0175)
     INVESTMENT_BUILDING,
     # CONSTRUCTION_PRICE_INDEX,   # disabled — table 18-10-0135 discontinued
     CAPITAL_EXPENDITURES,
@@ -355,7 +374,7 @@ _MONTHLY_TABLES = {
     "14-10-0022", "12-10-0163", "34-10-0143", "18-10-0205",
     "14-10-0287", "14-10-0222", "14-10-0063", "14-10-0372", "34-10-0066",
     "12-10-0011", "16-10-0047", "16-10-0048", "20-10-0008", "20-10-0074",
-    "34-10-0292",
+    "34-10-0292", "34-10-0293",
 }
 _QUARTERLY_TABLES = {"34-10-0175", "18-10-0135", "14-10-0326", "36-10-0112"}
 _ANNUAL_TABLES = {"34-10-0035"}

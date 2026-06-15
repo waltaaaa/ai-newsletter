@@ -93,6 +93,9 @@ def get_live_commodities():
         # Base Metals
         ("HG=F",  "Base Metals",                "Copper",            "lb",      lambda x: f"${x:.4f}"),
         ("ALI=F", "Base Metals",                "Aluminum",          "t",       lambda x: f"${x:,.0f}"),
+        # Building Materials — LBR=F is the active Yahoo lumber future (the old
+        # LB=F/LBS=F symbols delisted, which froze `lumber` at 2023-05-12).
+        ("LBR=F", "Building Materials",          "Lumber",            "mbf",     lambda x: f"${x:,.0f}"),
         # Agriculture - Grains
         ("ZW=F",  "Agriculture - Grains",       "Wheat",             "bu",      lambda x: f"${x:.2f}"),
         ("ZC=F",  "Agriculture - Grains",       "Corn",              "bu",      lambda x: f"${x:.2f}"),
@@ -124,6 +127,7 @@ def get_live_commodities():
         "Shipping":                   "text-blue-600",
         "Fertilizers":                "text-teal-600",
         "Livestock":                  "text-rose-500",
+        "Building Materials":         "text-amber-700",
     }
 
     all_tickers = [t[0] for t in TICKER_MAP]
@@ -1737,6 +1741,7 @@ _POISON_RETRY_TICKERS = {
     'wheat': 'ZW=F', 'corn': 'ZC=F', 'rice': 'ZR=F', 'soybeans': 'ZS=F',
     'coffee': 'KC=F', 'cocoa': 'CC=F', 'sugar': 'SB=F', 'cotton': 'CT=F',
     'soybean_oil': 'ZL=F', 'soybean_meal': 'ZM=F',
+    'lumber': 'LBR=F',  # 2026-06-15: active lumber future (old LB=F delisted)
 }
 
 
