@@ -36,7 +36,7 @@ TODAY = date.today().isoformat()
 #   deduplication, status normalization, threshold filtering, assembly, writes.
 
 SONNET_MODEL = os.environ.get('SONNET_MODEL', 'claude-sonnet-4-6')
-OPUS_MODEL = os.environ.get('OPUS_MODEL', 'claude-opus-4-6')
+OPUS_MODEL = os.environ.get('OPUS_MODEL', 'claude-opus-4-8')
 GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')  # legacy fallback only
 
 # Groq — primary classifier (replaces Gemini Flash)
@@ -48,6 +48,7 @@ GROQ_TPD_LIMIT = 500000  # tokens per day (free tier)
 
 # Per-model cost rates (USD per million tokens)
 MODEL_RATES = {
+    'claude-opus-4-8':   {'input': 15.0, 'output': 75.0},
     'claude-opus-4-6':   {'input': 15.0, 'output': 75.0},
     'claude-sonnet-4-6': {'input': 3.0,  'output': 15.0},
 }

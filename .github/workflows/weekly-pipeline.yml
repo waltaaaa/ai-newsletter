@@ -130,7 +130,7 @@ jobs:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           GEMINI_MODEL: gemini-2.5-flash
           SONNET_MODEL: claude-sonnet-4-6
-          OPUS_MODEL: claude-opus-4-6
+          OPUS_MODEL: claude-opus-4-8
           GEMINI_SEARCH_ENABLED: "false"
           LOCAL_MODEL_PATH: models/qwen2.5-3b-instruct-q4_k_m.gguf
         run: python update_dashboard.py
