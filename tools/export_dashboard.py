@@ -1061,6 +1061,48 @@ def _series_latest_date(series) -> str:
     return latest
 
 
+def _series_point_date(p) -> str | None:
+    """Best-effort ISO date string for one series point dict (None if absent)."""
+    if isinstance(p, dict):
+        for k in ("date", "period", "refPer"):
+            v = p.get(k)
+            if v:
+                return str(v)[:10]
+    return None
+
+
+def _merge_series_by_date(on_disk, db_pull):
+    """Point-wise union of two series lists keyed by date; DB wins collisions.
+
+    Fix D7 (2026-06-12): the old preserve-merge kept the entire on-disk series
+    whenever the DB pull had FEWER points. Because DB pulls are capped
+    (limit=52 / LIMIT 260), any on-disk series longer than the cap (boc_rate
+    ~1330 pts, lumber ~291) could never be refreshed from the DB again — fresh
+    points were silently dropped forever. Merging point-wise by date satisfies
+    both invariants: history is never lost (union) and fresher DB data always
+    lands (DB wins on date collision).
+
+    Returns the merged list in ascending chronological order, or None when
+    either side is not a clean list of dated point dicts — the caller then
+    falls back to the old whole-series length comparison (safe for the
+    dict-wrapped {'history': [...]} shapes and undated points).
+    """
+    if not isinstance(on_disk, list) or not isinstance(db_pull, list):
+        return None
+    by_date = {}
+    for p in on_disk:
+        d = _series_point_date(p)
+        if d is None:
+            return None  # undated point — can't merge safely, fall back
+        by_date[d] = p
+    for p in db_pull:
+        d = _series_point_date(p)
+        if d is None:
+            return None
+        by_date[d] = p  # DB wins on collision
+    return [by_date[d] for d in sorted(by_date)]
+
+
 def _find_stale_series(merged: dict, stale_days: int, today=None) -> dict:
     """Return {series_key: latest_date} for series older than stale_days.
 
@@ -1133,21 +1175,74 @@ def export_timeseries(conn, output_dir: str) -> str:
         if rows:
             bundle[name] = [dict(r) for r in rows]
 
+    # Fix D2/D3 (2026-06-12): some canonical series accrue in the SQLite
+    # `timeseries` table, not indicator_history — 'canola' (StatCan farm-price
+    # points written by canadian_markets.fetch_and_store_commodities) and any
+    # genuine 'uranium' U3O8 spot points. The old code read these keys only
+    # from indicator_history, so the points never shipped. When
+    # indicator_history had nothing for an _IH_SERIES key, fall back to the
+    # timeseries table under the SAME name. Deliberately NO comm_* aliasing
+    # here: comm_uranium is the Sprott trust UNIT price (~$26), a different
+    # quantity than U3O8 spot (~$86) — mirroring it onto 'uranium' was
+    # explicitly rejected in the 2026-06-11 red-team.
+    for name in _IH_SERIES:
+        if name in bundle:
+            continue
+        rows = get_timeseries(conn, name, limit=260,
+                              include_briefing_prints=False)
+        if rows:
+            bundle[name] = rows
+
     # Province-level indicator history for theme line charts
-    # Export as {provCode}_{indicator} keys (e.g. AB_unemployment, QC_exports)
-    _PROV_CODES = ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'ON', 'PEI', 'QC', 'SK']
+    # Export as {provCode}_{indicator} keys (e.g. AB_unemployment, QC_cpi).
+    # Fix D1 (2026-06-12): the writer (_archive_indicators_to_history in
+    # phases/data_collection.py) stores provincial rows under FULL province
+    # names ("Alberta", "Quebec", ...), but this query matched only 2-letter
+    # codes — zero rows, so timeseries.json never carried any provincial
+    # unemployment/cpi series even though province agents and the chart
+    # skills reference AB_cpi etc. Query BOTH forms (code + full name) and
+    # dedupe by period. Also fixed: 'PEI' → 'PE' (rest of system uses 'PE').
+    _PROV_NAME_FORMS = {
+        'AB': ('Alberta',), 'BC': ('British Columbia',), 'MB': ('Manitoba',),
+        'NB': ('New Brunswick',),
+        'NL': ('Newfoundland and Labrador', 'Newfoundland'),
+        'NS': ('Nova Scotia',), 'ON': ('Ontario',),
+        'PE': ('Prince Edward Island', 'PEI'),
+        'QC': ('Quebec',), 'SK': ('Saskatchewan',),
+        'YT': ('Yukon',), 'NT': ('Northwest Territories',),
+        'NU': ('Nunavut',),
+    }
     _PROV_INDICATORS = ['unemployment', 'cpi']
-    for prov in _PROV_CODES:
+    for prov, name_forms in _PROV_NAME_FORMS.items():
         for ind in _PROV_INDICATORS:
             key = f"{prov}_{ind}"
-            rows = conn.execute("""
+            forms = (prov,) + name_forms
+            placeholders = ','.join('?' * len(forms))
+            rows = conn.execute(f"""
                 SELECT period AS date, value, unit, source
                 FROM indicator_history
-                WHERE indicator_name = ? AND province = ? AND period IS NOT NULL
+                WHERE indicator_name = ?
+                  AND province IN ({placeholders})
+                  AND period IS NOT NULL
                 ORDER BY period DESC LIMIT 260
-            """, (ind, prov)).fetchall()
-            if rows:
-                bundle[key] = [dict(r) for r in rows]
+            """, (ind, *forms)).fetchall()
+            points = []
+            seen_dates = set()
+            for r in rows:
+                d = dict(r)
+                if d['date'] in seen_dates:
+                    continue  # same period stored under code AND full name
+                seen_dates.add(d['date'])
+                # Values are archived as strings ("6.1%") — coerce numeric
+                # for the chart consumers (same pattern as export_indicators).
+                try:
+                    d['value'] = float(str(d['value']).replace(',', '')
+                                       .replace('%', '').replace('+', ''))
+                except (ValueError, TypeError):
+                    pass
+                points.append(d)
+            if points:
+                bundle[key] = points
 
     # Ontario detailed series (quarterly GDP components)
     for ind in ['on_exports', 'on_imports', 'on_real_capital_investment',
@@ -1202,20 +1297,34 @@ def export_timeseries(conn, output_dir: str) -> str:
                     return len(v[sub])
         return 0
 
+    # Fix D7 (2026-06-12): merge point-wise by date (union, DB wins on date
+    # collision) instead of whole-series keep/replace. The old rule kept the
+    # on-disk series whenever the DB pull had fewer points — and since DB
+    # pulls are capped (limit=52 / LIMIT 260), any series longer than the cap
+    # (boc_rate ~1330 pts) could never receive fresh DB points again. The
+    # union never shrinks a series and always takes fresher data. Series that
+    # aren't clean dated lists fall back to the old length-based rule.
     merged = dict(existing)
     overwritten = 0
     added = 0
     preserved = 0
+    unioned = 0
     for k, new_v in bundle.items():
         if k not in merged:
             merged[k] = new_v
             added += 1
+            continue
+        union = _merge_series_by_date(merged[k], new_v)
+        if union is not None:
+            merged[k] = union
+            unioned += 1
         elif _len(new_v) >= _len(merged[k]):
             merged[k] = new_v
             overwritten += 1
         else:
             preserved += 1
-    print(f"  [timeseries] merge: {added} added, {overwritten} refreshed, "
+    print(f"  [timeseries] merge: {added} added, {unioned} unioned by date, "
+          f"{overwritten} replaced (undated), "
           f"{preserved} preserved (DB pull thinner than file), "
           f"{len(merged)} total series")
 

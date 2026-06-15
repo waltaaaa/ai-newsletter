@@ -204,6 +204,41 @@ The National tab renders additional callout charts OUTSIDE the `insightCharts` a
 - Same length bounds (60–240), same data-citation, cross-reference, banned-words, and fail-loud rules.
 - If the agent cannot produce a qualifying callout for any of these, it MUST raise an explicit error naming the section (`national` or `global[<region>]`) and the missing rule. NEVER emit empty or placeholder.
 
+### 5. Global Region Charts (1 per region — narrative-driven, in addition to the 48-chart gate)
+
+Add an `insightCharts` array (length 1) to EACH of the 4 region objects in `global[]` (`region: "United States" | "China" | "European Union" | "United Kingdom"`). The frontend renders `global[i].insightCharts[0]` on the National tab's global sub-tabs; when the spec is absent or its dataKeys don't resolve, it falls back to a legacy hardcoded config (US: `sp500`, China: `china_pmi` — a key that does NOT exist, so China shows "No data" without a spec, EU: `eurusd`, UK: `ftse100`). Shipping a spec is what makes the China chart render at all.
+
+Unlike the fixed legacy config, the series choice here is **VARIABLE — re-chosen every week to match that region's narrative that week**:
+
+- China PMI week tied to copper/mining exposure → `copper`
+- An energy-demand narrative → `wti` / `brent`
+- A UK rates narrative → `ftse100`, or a GoC-spread-relevant series (`goc_10y_yield`, `dataSource: "indicators"`)
+- A US financial-conditions week → `sp500`, `hy_spread`
+- An FX narrative → `eurusd`, `usdcny`, `cadusd`
+
+Specs use the same shape as every other tier: `{chartType, title, subtitle, dataKeys[], dataSource?, callout}`. Hard constraints:
+
+- Every dataKey MUST exist in `timeseries.json` (or `indicators.json` history when `dataSource: "indicators"`) with **≥2 points — verify before emitting**. An unresolvable key makes the frontend silently fall back to the legacy config and fails the validator's chart cross-reference.
+- `chartType`, `title`, `dataKeys`, and `callout` are required per the chart-spec sub-schema and Callout Quality Contract below (60–240 chars, ≥1 chart data point, ≥1 pipeline-tracked artifact, zero banned editorial words).
+- No editorializing — factual titles, same banned-word list.
+- The spec-level `callout` renders above the chart on the global sub-tab and takes precedence for the chart strip when the spec renders. `global[i].chart_callout` (section 4) is still required independently.
+
+```json
+{
+  "region": "China",
+  "insightCharts": [
+    {
+      "chartType": "line",
+      "dataKeys": ["copper"],
+      "title": "Copper — 12-Month Trend",
+      "subtitle": "12-month trend · USD/lb",
+      "reasoning": "China's PMI contraction is the week's regional story; copper is the tracked series with direct Canadian mining exposure",
+      "callout": "Copper traded at $4.12/lb as China's manufacturing PMI printed below 50 for a third month. The database tracks 31 Canadian mining projects with copper exposure totalling $14.2B."
+    }
+  ]
+}
+```
+
 ## Chart Specification Schema
 
 Each chart object in the `insightCharts` array follows this schema:
@@ -627,13 +662,19 @@ For each of the 20 industries:
    d. Upgrade to `multi_line` only if the narrative ties the sector to a complementary series
    e. Write chart spec — include `reasoning` (internal) AND `callout` (user-facing, references visible chart content, distinct from analysis narrative)
    f. Add `insightCharts` array (length 1) to the industry object
+7b. For **each global region** in `global[]` (US, China, EU, UK):
+   a. Read the region `analysis` narrative
+   b. Choose the ONE series that best matches that region's narrative this week (see section 5 — the choice is variable week to week)
+   c. Verify the dataKey resolves with ≥2 points in its declared dataSource
+   d. Write 1 chart spec with `callout` and add `insightCharts` (length 1) to the region object
 8. Write the updated JSON back to `docs/data/briefing_latest.json`
 9. Also update the dated copy if it exists (e.g., `docs/data/briefing_2026-03-30.json`)
 10. Verify counts:
    - National: 2 charts
    - Provinces: 2 × 13 = 26 charts
    - Industries: 1 × 20 = 20 charts
-   - Total: 48 chart specs
+   - Global regions: 1 × 4 = 4 charts (additive to the 48 gate)
+   - Total: 48 chart specs + 4 global region specs
 
 ## Quality Checks
 
@@ -648,6 +689,7 @@ Before writing the final JSON, verify:
 - [ ] National has exactly 2 charts
 - [ ] Every province has exactly 2 charts
 - [ ] Every industry (20 total) has exactly 1 chart
+- [ ] Every global region (4 total) has exactly 1 chart, its dataKeys resolve with ≥2 points, and the series matches that week's regional narrative
 - [ ] Chart types are appropriate (trend → line or multi_line; M/M change → diverging_bar; category comparison → bar)
 - [ ] `multi_line` charts have 2-4 dataKeys, not 1 (use `line` for single-series)
 - [ ] Window field is one of `6m`, `12m`, `18m`, `24m` — never more than 24 months

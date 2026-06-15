@@ -89,18 +89,34 @@ def _fetch_statcan_monthly(vector_id, n=14):
 CANADIAN_COMMODITY_INDICATORS = {
     # Oil -- Canadian-specific
     "wcs_discount": {
-        "description": "Western Canadian Select discount to WTI",
+        # Fix D4 (2026-06-12): Yahoo Finance has NO WCS ticker — "WCS=F"
+        # never existed, so the old spread fetch (WCS=F − CL=F) failed every
+        # run and the failure was swallowed at debug level. No free WCS feed
+        # is currently wired; do NOT invent one and do NOT add a paid API.
+        # The discount is computed from the SQLite timeseries table instead
+        # (WTI − WCS, positive = discount) when a genuine 'wcs' series
+        # exists — see _wcs_discount_from_timeseries(), called by
+        # fetch_and_store_commodities().
+        "description": "Western Canadian Select discount to WTI (WTI minus WCS, $/bbl)",
         "relevance": "Determines Alberta oil sands profitability. Wide (>$15) makes heavy oil uneconomic. Narrow (<$10) signals strong pipeline capacity.",
         "affected_sectors": ["Mining & O&G"],
         "affected_provinces": ["AB", "SK"],
-        "tickers": ["WCS=F", "CL=F"],  # WCS future vs WTI
-        "compute": "spread",
+        "tickers": [],
+        "compute": "timeseries_wcs_discount",
     },
     "uranium_spot": {
-        # Real physical-uranium proxy: Sprott Physical Uranium Trust holds
-        # physical U3O8, so its unit price tracks the uranium spot price —
-        # far closer to spot than URA (a basket of uranium *equities*).
-        "description": "Uranium spot price proxy (Sprott Physical Uranium Trust)",
+        # Sprott Physical Uranium Trust holds physical U3O8, so its unit
+        # price TRACKS the uranium spot price — far closer to spot than URA
+        # (a basket of uranium *equities*). It is NOT the spot price itself:
+        # the trust unit trades ~$26 while U3O8 spot is ~$86/lb. Never mirror
+        # this onto the canonical 'uranium' timeseries key (red-team 2.4).
+        # The indicator ID 'uranium_spot' is legacy but load-bearing —
+        # phases/province_agents.py and the frontend mining theme reference
+        # it — so it stays even though the value is the trust unit price.
+        # Fix D12 (2026-06-12): the former 'sprott_uranium' entry duplicated
+        # this exact U-UN.TO fetch and shipped the same number twice in
+        # commodities.json; it has been removed.
+        "description": "Uranium proxy — Sprott Physical Uranium Trust unit price (U-UN.TO; tracks but does not equal U3O8 spot)",
         "relevance": "Determines Saskatchewan uranium mine expansion viability and SMR project economics.",
         "affected_sectors": ["Mining & O&G", "Utilities"],
         "affected_provinces": ["SK", "ON", "NB"],
@@ -175,13 +191,10 @@ CANADIAN_COMMODITY_INDICATORS = {
         "affected_provinces": ["SK", "ON"],
         "tickers": ["CCO.TO"],
     },
-    "sprott_uranium": {
-        "description": "Sprott Physical Uranium Trust (spot price proxy)",
-        "relevance": "Closest free proxy for uranium spot price. TSX-listed. Tracks physical uranium holdings.",
-        "affected_sectors": ["Mining & O&G", "Utilities"],
-        "affected_provinces": ["SK", "ON", "NB"],
-        "tickers": ["U-UN.TO"],
-    },
+    # 'sprott_uranium' removed 2026-06-12 (fix D12): it fetched the same
+    # U-UN.TO ticker as 'uranium_spot' above and shipped the identical price
+    # twice as two commodities.json entries. Keep 'uranium_spot' (referenced
+    # by phases/province_agents.py and the frontend mining theme).
 }
 
 
@@ -209,6 +222,10 @@ def fetch_canadian_commodities():
                 # period-over-period comparison; otherwise honest N/A (skip).
                 pts = _fetch_statcan_monthly(info["statcan_vector"])
                 if len(pts) < 2:
+                    logger.warning(
+                        f"Commodity {ind_id}: StatCan vector "
+                        f"{info['statcan_vector']} returned {len(pts)} point(s), "
+                        "need >=2 — skipping")
                     continue
                 vals = [p["value"] for p in pts]
                 current = float(vals[-1])
@@ -236,6 +253,19 @@ def fetch_canadian_commodities():
                 }
                 continue
 
+            if compute == "timeseries_wcs_discount":
+                # Fix D4 (2026-06-12): no free WCS market feed exists on
+                # Yahoo Finance ("WCS=F" is not a real ticker — the old fetch
+                # failed silently on every run). Loud skip here; the discount
+                # is computed from the SQLite timeseries table (WTI − WCS) in
+                # fetch_and_store_commodities() when a 'wcs' series exists.
+                logger.warning(
+                    f"Commodity {ind_id}: no free WCS price source is wired "
+                    "(Yahoo 'WCS=F' does not exist) — skipping yfinance fetch; "
+                    "value comes from the timeseries table only if a 'wcs' "
+                    "series exists")
+                continue
+
             if compute == "basket_avg":
                 # Average of multiple tickers
                 prices = []
@@ -243,11 +273,17 @@ def fetch_canadian_commodities():
                     data = yf.download(ticker, period="1y", progress=False)
                     try:
                         s = _yf_close(data["Close"]) if data is not None and len(data) else None
-                    except Exception:
+                    except Exception as e:
+                        logger.warning(
+                            f"Commodity {ind_id}: basket ticker {ticker} "
+                            f"unusable: {e}")
                         s = None
                     if s is not None and len(s) > 0:
                         prices.append(s)
                 if not prices:
+                    logger.warning(
+                        f"Commodity {ind_id}: no basket tickers returned "
+                        f"usable data ({tickers}) — skipping")
                     continue
                 import pandas as pd
                 combined = pd.concat(prices, axis=1).mean(axis=1).dropna()
@@ -264,9 +300,16 @@ def fetch_canadian_commodities():
                 for ticker in tickers[:2]:
                     closes.append(_yf_close(yf.download(ticker, period="1y", progress=False)["Close"]))
                 if len(closes) < 2 or any(c is None for c in closes):
+                    logger.warning(
+                        f"Commodity {ind_id}: spread needs 2 usable tickers, "
+                        f"got {sum(1 for c in closes if c is not None)} of "
+                        f"{tickers[:2]} — skipping")
                     continue
                 spread = (closes[0] - closes[1]).dropna()
                 if len(spread) == 0:
+                    logger.warning(
+                        f"Commodity {ind_id}: spread series empty after "
+                        f"aligning {tickers[:2]} — skipping")
                     continue
                 current = float(spread.iloc[-1])
                 week_ago = float(spread.iloc[-6]) if len(spread) > 5 else current
@@ -281,6 +324,9 @@ def fetch_canadian_commodities():
                 data = yf.download(ticker, period="1y", progress=False)
                 col = _yf_close(data["Close"]) if data is not None and len(data) else None
                 if col is None or len(col) == 0:
+                    logger.warning(
+                        f"Commodity {ind_id}: no usable close data for "
+                        f"ticker {ticker} — skipping (delisted/renamed?)")
                     continue
                 current = float(col.iloc[-1])
                 week_ago = float(col.iloc[-6]) if len(col) > 5 else current
@@ -302,9 +348,72 @@ def fetch_canadian_commodities():
             }
 
         except Exception as e:
-            logger.debug(f"Commodity {ind_id} fetch failed: {e}")
+            # Fix D13 (2026-06-12): was logger.debug — dead tickers (e.g. the
+            # nonexistent WCS=F) failed invisibly for months. Warning level so
+            # broken sources are visible in pipeline logs.
+            logger.warning(f"Commodity {ind_id} fetch failed: {e}")
 
     return results
+
+
+def _wcs_discount_from_timeseries(conn):
+    """Compute the WCS discount (WTI − WCS, positive = a discount, $/bbl)
+    from the SQLite `timeseries` table, when a genuine 'wcs' series exists.
+
+    Fix D4 (2026-06-12): Yahoo Finance has no WCS ticker, so the discount can
+    only be computed from real stored WCS prices. As of 2026-06-12 no 'wcs'
+    series exists in the timeseries table — this returns None with a loud
+    warning until a real (free) WCS feed is wired. Do NOT fabricate WCS from
+    a fixed differential.
+
+    Returns a commodity-results-style dict, or None.
+    """
+    try:
+        from db import get_timeseries
+        wcs_rows = get_timeseries(conn, 'wcs', limit=400,
+                                  include_briefing_prints=False)
+        if not wcs_rows:
+            logger.warning(
+                "wcs_discount: no 'wcs' series in the timeseries table and no "
+                "free WCS market source is wired (Yahoo 'WCS=F' does not "
+                "exist) — indicator skipped, not fabricated")
+            return None
+        wti_rows = get_timeseries(conn, 'wti', limit=400,
+                                  include_briefing_prints=False)
+        wti_by_date = {r['date']: r['value'] for r in wti_rows
+                       if r.get('value') is not None}
+        # WTI − WCS on matching dates, ascending chronological order
+        spread = sorted(
+            (r['date'], float(wti_by_date[r['date']]) - float(r['value']))
+            for r in wcs_rows
+            if r.get('value') is not None and r['date'] in wti_by_date)
+        if not spread:
+            logger.warning(
+                "wcs_discount: 'wcs' series exists but shares no dates with "
+                "'wti' — skipping")
+            return None
+        values = [v for _, v in spread]
+        current = values[-1]
+        week_ago = values[-6] if len(values) > 5 else current
+        month_ago = values[-22] if len(values) > 21 else current
+        year_ago = values[0] if len(values) > 200 else current
+        info = CANADIAN_COMMODITY_INDICATORS["wcs_discount"]
+        return {
+            "description": info["description"],
+            "current": round(current, 2),
+            "week_ago": round(week_ago, 2),
+            "month_ago": round(month_ago, 2),
+            "year_ago": round(year_ago, 2),
+            "pct_1w": round((current - week_ago) / abs(week_ago) * 100, 1) if week_ago else 0,
+            "pct_1m": round((current - month_ago) / abs(month_ago) * 100, 1) if month_ago else 0,
+            "pct_1y": round((current - year_ago) / abs(year_ago) * 100, 1) if year_ago else 0,
+            "affected_sectors": info.get("affected_sectors", []),
+            "affected_provinces": info.get("affected_provinces", []),
+            "relevance": info["relevance"],
+        }
+    except Exception as e:
+        logger.warning(f"wcs_discount: timeseries computation failed: {e}")
+        return None
 
 
 async def generate_market_commentary(market_data, project_data, policy_context,
@@ -365,6 +474,15 @@ def fetch_and_store_commodities(conn=None, db=None):
     print("\n[MARKETS] Fetching Canadian commodity indicators...")
     data = fetch_canadian_commodities()
 
+    # Fix D4 (2026-06-12): wcs_discount is no longer fetched from yfinance
+    # (Yahoo has no WCS ticker). Compute it from stored 'wcs'/'wti' series in
+    # the timeseries table when available; logs loudly and stays absent when
+    # no genuine WCS data exists.
+    if conn and hasattr(conn, 'execute') and 'wcs_discount' not in data:
+        wcs_entry = _wcs_discount_from_timeseries(conn)
+        if wcs_entry:
+            data['wcs_discount'] = wcs_entry
+
     if not data:
         print("  [MARKETS] No commodity data fetched")
         return {}
@@ -391,11 +509,13 @@ def fetch_and_store_commodities(conn=None, db=None):
 
             # Map canadian_markets indicator IDs to timeseries series names
             COMMODITY_TS_MAP = {
-                'uranium_spot':       ('comm_uranium',    '$', 'Sprott Physical Uranium Trust (U-UN.TO)'),
-                'nickel':             ('comm_nickel',     '$', 'yfinance (JJN ETN)'),
+                'uranium_spot':       ('comm_uranium',    '$', 'Sprott Physical Uranium Trust unit price (U-UN.TO)'),
+                # Fix D12 (2026-06-12): provenance said "JJN ETN" but JJN was
+                # delisted 2026-04-18 and the ticker is FM.TO (First Quantum).
+                'nickel':             ('comm_nickel',     '$', 'yfinance (FM.TO, First Quantum proxy)'),
                 'steel':              ('comm_steel',      '$', 'yfinance (SLX ETF)'),
                 'lumber':             ('comm_lumber',     '$/mbf', 'yfinance (LBR=F)'),
-                'wcs_discount':       ('comm_wcs_discount', '$/bbl', 'yfinance (WCS-WTI)'),
+                'wcs_discount':       ('comm_wcs_discount', '$/bbl', 'timeseries (WTI - WCS)'),
                 'tsx_infrastructure': ('comm_tsx_infra',  '$', 'yfinance (basket avg)'),
             }
             # Red-team 2.4 (2026-06-11): do NOT mirror U-UN.TO onto the

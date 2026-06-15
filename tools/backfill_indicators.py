@@ -3,6 +3,13 @@ backfill_indicators.py — Backfill 5 years of indicator data to indicator_histo
 
 One-time/occasional utility. Run: python tools/backfill_indicators.py
 
+Cleanup migration (audit D6):
+    python tools/backfill_indicators.py --collapse-run-date-rows           # dry-run
+    python tools/backfill_indicators.py --collapse-run-date-rows --apply  # execute
+Collapses legacy run-date-stamped indicator_history rows (period = fetch
+date, metadata.source_meta.reference_period = the true period) onto their
+reference periods. Idempotent; dry-run by default.
+
 Sources (all free APIs, $0 cost):
   - Bank of Canada Valet API: overnight rate, GoC yields, prime rate
   - Statistics Canada WDS: CPI, unemployment, employment, GDP (national + provincial)
@@ -29,6 +36,104 @@ load_dotenv()
 
 import requests
 from db import init_db, save_indicator
+
+
+def collapse_run_date_rows(conn, apply=False):
+    """One-time cleanup migration for legacy run-date-stamped rows (audit D6).
+
+    Before the 2026-06-11 reference-period fix, _archive_indicators_to_history
+    stamped `period` with the RUN date while metadata.source_meta.reference_period
+    carried the true StatCan reference period. Those rows sort after correct
+    reference periods (2026-06-08 > 2026-05-01) and used to win MAX(period)
+    in get_latest_indicators, shipping latest values with null prev/change.
+
+    For every row where metadata.source_meta.reference_period is present and
+    differs from `period`:
+      - if an equivalent row already exists at the true reference period
+        → DELETE the run-date duplicate (its value is already represented);
+      - otherwise → RE-STAMP the row onto the true reference period (UPDATE
+        period + normalize metadata.reference_period), creating the missing
+        reference-period row from the run-date one.
+
+    Idempotent: after a successful --apply, no row matches the predicate any
+    more (reference_period == period everywhere it is present). Dry-run by
+    default — pass apply=True (CLI --apply) to execute.
+
+    Returns {'candidates': n, 'restamped': n, 'deleted': n, 'skipped': n}.
+    """
+    import re as _re
+
+    def _norm_ref(raw):
+        s = str(raw or '').strip()[:10]
+        if _re.match(r'^\d{4}-\d{2}-\d{2}$', s):
+            return s
+        if _re.match(r'^\d{4}-\d{2}$', s):
+            return f"{s}-01"
+        return None
+
+    rows = conn.execute("""
+        SELECT rowid, indicator_name, province, period, fetched_at,
+               json_extract(metadata, '$.source_meta.reference_period') AS ref_period
+        FROM indicator_history
+        WHERE metadata IS NOT NULL
+          AND json_valid(metadata)
+          AND json_extract(metadata, '$.source_meta.reference_period') IS NOT NULL
+          AND json_extract(metadata, '$.source_meta.reference_period') != period
+        ORDER BY fetched_at DESC, rowid DESC
+    """).fetchall()
+
+    mode = "APPLY" if apply else "DRY-RUN"
+    print(f"[COLLAPSE][{mode}] {len(rows)} legacy run-date-stamped row(s) found")
+
+    stats = {'candidates': len(rows), 'restamped': 0, 'deleted': 0, 'skipped': 0}
+    for rowid, name, province, period, fetched_at, ref_raw in rows:
+        target = _norm_ref(ref_raw)
+        if target is None:
+            print(f"  [SKIP] rowid={rowid} {name}/{province} period={period}: "
+                  f"unparseable reference_period {ref_raw!r}")
+            stats['skipped'] += 1
+            continue
+        if target == period:
+            # Only differed by formatting (e.g. 'YYYY-MM' vs 'YYYY-MM-01') —
+            # normalize the metadata so the row stops matching the predicate.
+            print(f"  [NORMALIZE] rowid={rowid} {name}/{province}: metadata "
+                  f"reference_period {ref_raw!r} -> {target!r} (period unchanged)")
+            if apply:
+                conn.execute("""
+                    UPDATE indicator_history
+                    SET metadata = json_set(metadata, '$.source_meta.reference_period', ?)
+                    WHERE rowid = ?
+                """, (target, rowid))
+            stats['restamped'] += 1
+            continue
+        exists = conn.execute("""
+            SELECT 1 FROM indicator_history
+            WHERE indicator_name = ? AND province = ? AND period = ? AND rowid != ?
+        """, (name, province, target, rowid)).fetchone()
+        if exists:
+            print(f"  [DELETE] rowid={rowid} {name}/{province} period={period}: "
+                  f"equivalent row already exists at reference period {target}")
+            if apply:
+                conn.execute("DELETE FROM indicator_history WHERE rowid = ?", (rowid,))
+            stats['deleted'] += 1
+        else:
+            print(f"  [RESTAMP] rowid={rowid} {name}/{province}: "
+                  f"period {period} -> {target}")
+            if apply:
+                conn.execute("""
+                    UPDATE indicator_history
+                    SET period = ?,
+                        metadata = json_set(metadata, '$.source_meta.reference_period', ?)
+                    WHERE rowid = ?
+                """, (target, target, rowid))
+            stats['restamped'] += 1
+
+    if apply:
+        conn.commit()
+    print(f"[COLLAPSE][{mode}] restamped={stats['restamped']} "
+          f"deleted={stats['deleted']} skipped={stats['skipped']}"
+          + ("" if apply else "  (no changes written — pass --apply to execute)"))
+    return stats
 
 
 def backfill_boc(conn, years=5):
@@ -591,6 +696,11 @@ def backfill_isq(conn, years=5):
         (19, 'qc_household_income', '$M'),
     ]
 
+    # D8: per-series latest written observation date — reported per line and
+    # collected so callers (tools/refresh_provincial_oea_isq.py) can detect a
+    # silently-stale ISQ workbook instead of always seeing "success".
+    latest_by_series = {}
+
     for row_idx, indicator_name, unit in quarterly_indicators:
         if row_idx >= len(rows):
             continue
@@ -618,9 +728,13 @@ def backfill_isq(conn, years=5):
                 'backfilled': True,
             })
             count += 1
+            prev = latest_by_series.get(indicator_name)
+            if prev is None or obs_date > prev:
+                latest_by_series[indicator_name] = obs_date
 
         total += count
-        print(f"  [ISQ] {indicator_name}: {count} quarterly observations")
+        print(f"  [ISQ] {indicator_name}: {count} quarterly observations"
+              f" (latest {latest_by_series.get(indicator_name, '—')})")
 
     # Quarterly % changes (rows 52-66 = indices 51-65)
     quarterly_pct = [
@@ -659,9 +773,13 @@ def backfill_isq(conn, years=5):
                 'backfilled': True,
             })
             count += 1
+            prev = latest_by_series.get(indicator_name)
+            if prev is None or obs_date > prev:
+                latest_by_series[indicator_name] = obs_date
 
         total += count
-        print(f"  [ISQ] {indicator_name}: {count} quarterly % observations")
+        print(f"  [ISQ] {indicator_name}: {count} quarterly % observations"
+              f" (latest {latest_by_series.get(indicator_name, '—')})")
 
     # --- MONTHLY SECTION (rows 23-43 = indices 22-42) ---
     month_year_row = rows[22]
@@ -738,11 +856,24 @@ def backfill_isq(conn, years=5):
                 'backfilled': True,
             })
             count += 1
+            prev = latest_by_series.get(indicator_name)
+            if prev is None or obs_date > prev:
+                latest_by_series[indicator_name] = obs_date
 
         total += count
-        print(f"  [ISQ] {indicator_name}: {count} monthly observations")
+        print(f"  [ISQ] {indicator_name}: {count} monthly observations"
+              f" (latest {latest_by_series.get(indicator_name, '—')})")
 
     wb.close()
+
+    # D8: freshest MONTHLY point written this run — the staleness signal the
+    # wrapper checks (monthly ISQ series lagging >100 days means the scrape
+    # is dark or the workbook layout drifted).
+    monthly_names = {n for _, n, _ in monthly_indicators}
+    monthly_latest = max((d for n, d in latest_by_series.items()
+                          if n in monthly_names), default=None)
+    if monthly_latest:
+        print(f"  [ISQ] Freshest monthly observation written: {monthly_latest}")
     print(f"  [ISQ] Total: {total} observations written")
     return total
 
@@ -899,6 +1030,15 @@ def backfill_ecb(conn, years=5):
 
 
 if __name__ == "__main__":
+    # Cleanup migration mode (audit D6) — does NOT run the backfill.
+    if "--collapse-run-date-rows" in sys.argv:
+        conn = init_db()
+        try:
+            collapse_run_date_rows(conn, apply="--apply" in sys.argv)
+        finally:
+            conn.close()
+        sys.exit(0)
+
     print("=" * 60)
     print("INDICATOR HISTORY BACKFILL — 5 years")
     print("=" * 60)

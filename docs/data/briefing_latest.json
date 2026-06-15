@@ -11,8 +11,8 @@
     {
       "label": "BOC RATE",
       "value": "2.25%",
-      "change": "0 bps (held April 29)",
-      "period": "Current; next decision June 10, 2026"
+      "change": "0 bps (held June 10)",
+      "period": "Current; held at 2.25% on June 10, 2026; next decision July 15, 2026"
     },
     {
       "label": "REAL GDP",
@@ -58,8 +58,8 @@
     },
     {
       "label": "WTI CRUDE",
-      "value": "$92.00/bbl",
-      "change": "-10.7% from May 19",
+      "value": "$91.30/bbl",
+      "change": "-15.3% from May 19",
       "period": "June 8, 2026"
     },
     {
@@ -77,7 +77,7 @@
     {
       "label": "GoC 10Y YIELD",
       "value": "3.45%",
-      "change": "-10 bps from May 19",
+      "change": "-25 bps from May 19",
       "period": "June 4, 2026"
     }
   ],
@@ -211,8 +211,8 @@
       {
         "label": "BOC RATE",
         "value": "2.25%",
-        "change": "0 bps (held April 29)",
-        "period": "Current; next decision June 10, 2026",
+        "change": "0 bps (held June 10)",
+        "period": "Current; held at 2.25% on June 10, 2026; next decision July 15, 2026",
         "source": "Bank of Canada"
       },
       {
@@ -352,7 +352,7 @@
         "obsDate": "2026-05-19"
       }
     },
-    "chart_callout": "Canada unemployment at 6.60% after May LFS added 88,000 jobs, with the database tracking 7,170 active projects ($1,306B) sensitive to labour costs and BoC rate path."
+    "chart_callout": "Canada unemployment at 6.60% after May LFS added 88,000 jobs, with the database tracking 6,350 active projects ($1,499.1B) sensitive to labour costs and BoC rate path."
   },
   "global": [
     {
@@ -514,7 +514,19 @@
           "url": "https://tradingeconomics.com/commodity/copper"
         }
       ],
-      "chart_callout": "China NBS Manufacturing PMI 50.0 and Caixin 50.5, both at the expansion threshold. The database tracks 348 mining projects ($237B) tied to Chinese commodity demand."
+      "chart_callout": "China NBS Manufacturing PMI 50.0 and Caixin 50.5, both at the expansion threshold. The database tracks 348 mining projects ($237B) tied to Chinese commodity demand.",
+      "insightCharts": [
+        {
+          "chartType": "line",
+          "title": "Copper Price Through China's May PMI Releases",
+          "subtitle": "Front-month copper, US$/lb, daily close (timeseries: copper)",
+          "dataKeys": [
+            "copper"
+          ],
+          "dataSource": "timeseries",
+          "callout": "Copper closed at US$6.33/lb on June 8 after a June 2 52-week high of US$6.65, alongside the NBS PMI print of 50.0; the database tracks 348 active mining projects ($237.51B), including 36 copper-linked projects ($22.05B)."
+        }
+      ]
     },
     {
       "region": "European Union",
@@ -569,7 +581,7 @@
         "unemployment": "Eurostat (harmonised LFS)",
         "tradeBalance": "Eurostat"
       },
-      "analysis": "<p><span class=\"lead-sentence\">The April 30 ECB decision held the three key rates unchanged on a unanimous vote, although a rate hike was discussed at length per President Lagarde.<sup>93</sup></span> The June 11 Governing Council meeting carries a <strong>99% market-implied probability</strong> of a <strong>+25 bps move</strong> to a <strong>2.25%</strong> deposit rate per prediction-market pricing.<sup>35</sup> Euro area HICP sat at <strong>3.0%</strong> in April, well above the 2% target. Lagarde cited the Iran-war oil price spike — lifting oil to four-year highs — as motivation for the June assessment.<sup>93</sup> The cached DAX closed at <strong>24,630</strong> on May 19 and the FTSE 100 at <strong>10,398</strong> per stale timeseries; current values were not refreshed this week. An ECB hike to 2.25% on June 11 would flatten the ECB-BoC differential to <strong>zero</strong> (both 2.25%) and support EUR versus CAD, with EUR strength against USD potentially easing USD/CAD pressure if the dollar weakens against the euro. The ECB action follows the BoC June 10 decision by one day — sequencing matters for cross-currency positioning across the <strong>$1,306B</strong> in active Canadian project pipeline.</p>",
+      "analysis": "<p><span class=\"lead-sentence\">The April 30 ECB decision held the three key rates unchanged on a unanimous vote, although a rate hike was discussed at length per President Lagarde.<sup>93</sup></span> The June 11 Governing Council meeting carries a <strong>99% market-implied probability</strong> of a <strong>+25 bps move</strong> to a <strong>2.25%</strong> deposit rate per prediction-market pricing.<sup>35</sup> Euro area HICP sat at <strong>3.0%</strong> in April, well above the 2% target. Lagarde cited the Iran-war oil price spike — lifting oil to four-year highs — as motivation for the June assessment.<sup>93</sup> The cached DAX closed at <strong>24,630</strong> on May 19 and the FTSE 100 at <strong>10,398</strong> per stale timeseries; current values were not refreshed this week. An ECB hike to 2.25% on June 11 would flatten the ECB-BoC differential to <strong>zero</strong> (both 2.25%) and support EUR versus CAD, with EUR strength against USD potentially easing USD/CAD pressure if the dollar weakens against the euro. The ECB action follows the BoC June 10 decision by one day — sequencing matters for cross-currency positioning across the <strong>$1,499.1B</strong> in active Canadian project pipeline.</p>",
       "sources": [
         {
           "id": 26,
@@ -637,7 +649,7 @@
         "unemployment": "Office for National Statistics",
         "tradeBalance": "Office for National Statistics"
       },
-      "analysis": "<p><span class=\"lead-sentence\">The April 30 MPC held the Bank Rate at <strong>3.75%</strong> on an <strong>8-1 vote</strong>, with the dissent for <strong>+25 bps</strong>.<sup>58</sup></span> The June 18 decision carries market pricing for a hold at 3.75%; a cut to <strong>3.50%</strong> is conditional on the June 17 CPI print.<sup>59</sup> UK CPI ran <strong>2.8%</strong> in April; the BoE projects <strong>Q2 3.1%</strong>, <strong>Q3 3.3%</strong>, and Q4 rising further before easing.<sup>58</sup> The cached FTSE 100 closed at <strong>10,398</strong> on May 19 in the timeseries baseline; current values were not refreshed this week. The UK is a destination for Canadian uranium and financial-services exports. The BoE June 18 decision sequencing follows the FOMC June 17 — the UK MPC has visibility on US CPI (June 10) and the Fed decision before its meeting, while the BoC June 10 decision precedes all three. The direct trade channel remains limited; the cross-reference engine links uranium pricing — Sprott proxy <strong>$50.93/lb</strong> cited in research — and Cameco share price to the <strong>51 critical-minerals-keyword projects ($15.87B)</strong> and UK reactor build-out signals.</p>",
+      "analysis": "<p><span class=\"lead-sentence\">The April 30 MPC held the Bank Rate at <strong>3.75%</strong> on an <strong>8-1 vote</strong>, with the dissent for <strong>+25 bps</strong>.<sup>58</sup></span> The June 18 decision carries market pricing for a hold at 3.75%; a cut to <strong>3.50%</strong> is conditional on the June 17 CPI print.<sup>59</sup> UK CPI ran <strong>2.8%</strong> in April; the BoE projects <strong>Q2 3.1%</strong>, <strong>Q3 3.3%</strong>, and Q4 rising further before easing.<sup>58</sup> The cached FTSE 100 closed at <strong>10,398</strong> on May 19 in the timeseries baseline; current values were not refreshed this week. The UK is a destination for Canadian uranium and financial-services exports. The BoE June 18 decision sequencing follows the FOMC June 17 — the UK MPC has visibility on US CPI (June 10) and the Fed decision before its meeting, while the BoC June 10 decision precedes all three. The direct trade channel remains limited; the cross-reference engine links uranium pricing — U3O8 spot <strong>$86.25/lb</strong> (TradeTech, May 19) — and Cameco share price to the <strong>51 critical-minerals-keyword projects ($15.87B)</strong> and UK reactor build-out signals.</p>",
       "sources": [
         {
           "id": 28,
@@ -650,7 +662,7 @@
           "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
         }
       ],
-      "chart_callout": "BoE June 18 hold expected with policy rate at 4.25%. The database tracks 7,170 Canadian projects ($1,306B) where UK-pound trade and rate cycles set financing benchmarks."
+      "chart_callout": "BoE June 18 hold expected with policy rate at 4.25%. The database tracks 6,350 Canadian projects ($1,499.1B) where UK-pound trade and rate cycles set financing benchmarks."
     }
   ],
   "globalVectors": {
@@ -7642,11 +7654,11 @@
         "high_52w": "34,915",
         "low_52w": "27,420",
         "unit": "",
-        "context": "<p><span class=\"lead-sentence\"><strong>The S&P/TSX Composite closed at 34,413 on Friday June 5, down 2.28% on the session</strong></span> following the U.S. Bureau of Labor Statistics May payroll print of +172,000 jobs and a parallel tech-led decline on Wall Street<sup>24</sup><sup>25</sup><sup>45</sup>. The index sits roughly 1.4% below its 52-week high of 34,915 and 25.5% above its 52-week low of 27,420, a year-over-year advance of 12.4% reflecting the materials and energy components that dominate the cap-weighted measure<sup>44</sup>. Sub-index drivers diverged on the week as the energy block tracked WTI's 10.7% drop from the May 19 baseline of $103.02 to $92.00 per barrel, while materials drew support from gold at US$4,336.78/oz and copper at US$6.30/lb after a three-session decline<sup>33</sup><sup>36</sup><sup>39</sup>. The Signal Dispatch cross-reference engine links the index composition to 35 active oil and gas projects worth $56.53 billion, 348 active mining projects worth $237.51 billion, and 164 LNG, pipeline and natural gas projects worth $167.51 billion<sup>45</sup>. If WTI holds in the US$90 to US$95 per barrel band into the Bank of Canada's June 10 decision, the 35 tracked Alberta oil and gas projects would maintain netbacks above the US$50 to US$65 per barrel Western Canadian heavy oil greenfield breakeven cohort cited in public filings<sup>33</sup>.</p>",
+        "context": "<p><span class=\"lead-sentence\"><strong>The S&P/TSX Composite closed at 34,413 on Friday June 5, down 2.28% on the session</strong></span> following the U.S. Bureau of Labor Statistics May payroll print of +172,000 jobs and a parallel tech-led decline on Wall Street<sup>24</sup><sup>25</sup><sup>45</sup>. The index sits roughly 1.4% below its 52-week high of 34,915 and 25.5% above its 52-week low of 27,420, a year-over-year advance of 12.4% reflecting the materials and energy components that dominate the cap-weighted measure<sup>44</sup>. Sub-index drivers diverged on the week as the energy block tracked WTI's 15.3% drop from the May 19 baseline of $107.77 to $91.30 per barrel, while materials drew support from gold at US$4,336.78/oz and copper at US$6.30/lb after a three-session decline<sup>33</sup><sup>36</sup><sup>39</sup>. The Signal Dispatch cross-reference engine links the index composition to 35 active oil and gas projects worth $56.53 billion, 348 active mining projects worth $237.51 billion, and 164 LNG, pipeline and natural gas projects worth $167.51 billion<sup>45</sup>. If WTI holds in the US$90 to US$95 per barrel band into the Bank of Canada's June 10 decision, the 35 tracked Alberta oil and gas projects would maintain netbacks above the US$50 to US$65 per barrel Western Canadian heavy oil greenfield breakeven cohort cited in public filings<sup>33</sup>.</p>",
         "price": "34,413",
         "weekly_pct": "-2.28%",
         "yoy_pct": "+12.4%",
-        "commentary": "<p><span class=\"lead-sentence\"><strong>The S&P/TSX Composite closed at 34,413 on Friday June 5, down 2.28% on the session</strong></span> following the U.S. Bureau of Labor Statistics May payroll print of +172,000 jobs and a parallel tech-led decline on Wall Street<sup>24</sup><sup>25</sup><sup>45</sup>. The index sits roughly 1.4% below its 52-week high of 34,915 and 25.5% above its 52-week low of 27,420, a year-over-year advance of 12.4% reflecting the materials and energy components that dominate the cap-weighted measure<sup>44</sup>. Sub-index drivers diverged on the week as the energy block tracked WTI's 10.7% drop from the May 19 baseline of $103.02 to $92.00 per barrel, while materials drew support from gold at US$4,336.78/oz and copper at US$6.30/lb after a three-session decline<sup>33</sup><sup>36</sup><sup>39</sup>. The Signal Dispatch cross-reference engine links the index composition to 35 active oil and gas projects worth $56.53 billion, 348 active mining projects worth $237.51 billion, and 164 LNG, pipeline and natural gas projects worth $167.51 billion<sup>45</sup>. If WTI holds in the US$90 to US$95 per barrel band into the Bank of Canada's June 10 decision, the 35 tracked Alberta oil and gas projects would maintain netbacks above the US$50 to US$65 per barrel Western Canadian heavy oil greenfield breakeven cohort cited in public filings<sup>33</sup>.</p>",
+        "commentary": "<p><span class=\"lead-sentence\"><strong>The S&P/TSX Composite closed at 34,413 on Friday June 5, down 2.28% on the session</strong></span> following the U.S. Bureau of Labor Statistics May payroll print of +172,000 jobs and a parallel tech-led decline on Wall Street<sup>24</sup><sup>25</sup><sup>45</sup>. The index sits roughly 1.4% below its 52-week high of 34,915 and 25.5% above its 52-week low of 27,420, a year-over-year advance of 12.4% reflecting the materials and energy components that dominate the cap-weighted measure<sup>44</sup>. Sub-index drivers diverged on the week as the energy block tracked WTI's 15.3% drop from the May 19 baseline of $107.77 to $91.30 per barrel, while materials drew support from gold at US$4,336.78/oz and copper at US$6.30/lb after a three-session decline<sup>33</sup><sup>36</sup><sup>39</sup>. The Signal Dispatch cross-reference engine links the index composition to 35 active oil and gas projects worth $56.53 billion, 348 active mining projects worth $237.51 billion, and 164 LNG, pipeline and natural gas projects worth $167.51 billion<sup>45</sup>. If WTI holds in the US$90 to US$95 per barrel band into the Bank of Canada's June 10 decision, the 35 tracked Alberta oil and gas projects would maintain netbacks above the US$50 to US$65 per barrel Western Canadian heavy oil greenfield breakeven cohort cited in public filings<sup>33</sup>.</p>",
         "mom_pct": "+1.7%"
       },
       {
@@ -7701,7 +7713,7 @@
         "mom_pct": "N/A"
       }
     ],
-    "summary": "<p><span class=\"lead-sentence\">Canadian markets recorded broad declines in the week ending June 5, 2026</span> — the S&P/TSX Composite fell <strong>2.28%</strong> to <strong>34,413</strong><sup>60</sup>, tracking a US tech-led pullback that took the Nasdaq down <strong>4.18%</strong> and the Dow down <strong>1.35%</strong> on the same session<sup>60</sup>. The Canadian dollar weakened <strong>1.7%</strong> on the week, with USD/CAD reaching an 8-week high of <strong>1.3949</strong> against a Bank of Canada policy rate held at <strong>2.25%</strong><sup>94</sup><sup>55</sup>. The 2s10s yield curve flattened to <strong>58 basis points</strong>, down <strong>12 bps</strong> from the prior edition, with the 10Y at <strong>3.45%</strong><sup>40</sup>.</p><p><span class=\"lead-sentence\">The pipeline's exposure to the week's moves split across rates, energy, and metals</span> — the database tracks <strong>231 active residential projects ($36.27B)</strong> tied to the yield-curve financing channel, plus <strong>35 active oil and gas projects ($56.53B)</strong> and <strong>164 LNG, pipeline, and natural-gas-linked projects ($167.51B)</strong> tied to the <strong>10.7%</strong> weekly drop in WTI to <strong>$92/bbl</strong><sup>43</sup>. Metals-linked projects include <strong>96 gold projects ($54.17B)</strong> and <strong>36 copper projects ($22.05B)</strong> after gold fell <strong>3.6%</strong> to <strong>$4,336.78/oz</strong> and copper fell <strong>6%</strong> over three sessions to <strong>$6.30/lb</strong><sup>44</sup><sup>42</sup>.</p>",
+    "summary": "<p><span class=\"lead-sentence\">Canadian markets recorded broad declines in the week ending June 5, 2026</span> — the S&P/TSX Composite fell <strong>2.28%</strong> to <strong>34,413</strong><sup>60</sup>, tracking a US tech-led pullback that took the Nasdaq down <strong>4.18%</strong> and the Dow down <strong>1.35%</strong> on the same session<sup>60</sup>. The Canadian dollar weakened <strong>1.7%</strong> on the week, with USD/CAD reaching an 8-week high of <strong>1.3949</strong> against a Bank of Canada policy rate held at <strong>2.25%</strong><sup>94</sup><sup>55</sup>. The 2s10s yield curve flattened to <strong>58 basis points</strong>, down <strong>12 bps</strong> from the prior edition, with the 10Y at <strong>3.45%</strong><sup>40</sup>.</p><p><span class=\"lead-sentence\">The pipeline's exposure to the week's moves split across rates, energy, and metals</span> — the database tracks <strong>231 active residential projects ($36.27B)</strong> tied to the yield-curve financing channel, plus <strong>35 active oil and gas projects ($56.53B)</strong> and <strong>164 LNG, pipeline, and natural-gas-linked projects ($167.51B)</strong> tied to the <strong>15.3%</strong> weekly drop in WTI to <strong>$91.30/bbl</strong><sup>43</sup>. Metals-linked projects include <strong>96 gold projects ($54.17B)</strong> and <strong>36 copper projects ($22.05B)</strong> after gold fell <strong>3.6%</strong> to <strong>$4,336.78/oz</strong> and copper fell <strong>6%</strong> over three sessions to <strong>$6.30/lb</strong><sup>44</sup><sup>42</sup>.</p>",
     "callout": {
       "title": "Pipeline Cross-Reference",
       "items": [
@@ -7738,17 +7750,17 @@
       "name": "Crude Oil (WTI)",
       "symbol": "CL=F",
       "category": "Energy",
-      "val": "$92.00",
-      "day": "-10.7%",
-      "mm": "+18%",
-      "yy": "+46.7%",
+      "val": "$91.30",
+      "day": "-15.3%",
+      "mm": "-4.3%",
+      "yy": "+41.4%",
       "unit": "US$/bbl",
-      "context": "<p><strong>Crude Oil (WTI):</strong> <strong>$92.00/bbl</strong> (<strong>-10.7%</strong> week-over-week from the May 19 baseline of $103.02) — driven by easing Middle East risk premia and a parallel U.S. dollar advance following the May payroll print<sup>24</sup><sup>25</sup><sup>33</sup>. The 1-year trailing average sits at $70.25/bbl, with a 52-week range of $55.27 to $112.95/bbl, putting the June 8 print 18.5% below the 52-week high and 46.7% above the year-ago level<sup>33</sup>. The Signal Dispatch cross-reference engine links current pricing to 35 active oil and gas projects worth $56.53 billion and 164 LNG, pipeline and natural-gas-keyword projects worth $167.51 billion in active value<sup>33</sup>. If WTI holds above the $50 to $65/bbl Western Canadian heavy oil greenfield breakeven cohort cited in public filings, the 35 tracked Alberta oil and gas projects would maintain netbacks even with the 10.7% weekly drop<sup>33</sup>. Spring Economic Update 2026 expanded the CCUS Investment Tax Credit to enhanced oil recovery, adding policy support for the cohort<sup>13</sup>.</p>",
-      "price": "$92.00",
-      "weekly_pct": "-10.7%",
-      "yoy_pct": "+46.7%",
-      "commentary": "<p><strong>Crude Oil (WTI):</strong> <strong>$92.00/bbl</strong> (<strong>-10.7%</strong> week-over-week from the May 19 baseline of $103.02) — driven by easing Middle East risk premia and a parallel U.S. dollar advance following the May payroll print<sup>24</sup><sup>25</sup><sup>33</sup>. The 1-year trailing average sits at $70.25/bbl, with a 52-week range of $55.27 to $112.95/bbl, putting the June 8 print 18.5% below the 52-week high and 46.7% above the year-ago level<sup>33</sup>. The Signal Dispatch cross-reference engine links current pricing to 35 active oil and gas projects worth $56.53 billion and 164 LNG, pipeline and natural-gas-keyword projects worth $167.51 billion in active value<sup>33</sup>. If WTI holds above the $50 to $65/bbl Western Canadian heavy oil greenfield breakeven cohort cited in public filings, the 35 tracked Alberta oil and gas projects would maintain netbacks even with the 10.7% weekly drop<sup>33</sup>. Spring Economic Update 2026 expanded the CCUS Investment Tax Credit to enhanced oil recovery, adding policy support for the cohort<sup>13</sup>.</p>",
-      "mom_pct": "+18%"
+      "context": "<p><strong>Crude Oil (WTI):</strong> <strong>$91.30/bbl</strong> (<strong>-15.3%</strong> week-over-week from the May 19 baseline of $107.77) — driven by easing Middle East risk premia and a parallel U.S. dollar advance following the May payroll print<sup>24</sup><sup>25</sup><sup>33</sup>. The 1-year trailing average sits at $71.97/bbl, with a 52-week range of $55.27 to $112.95/bbl, putting the June 8 print 19.2% below the 52-week high and 41.4% above the year-ago level<sup>33</sup>. The Signal Dispatch cross-reference engine links current pricing to 35 active oil and gas projects worth $56.53 billion and 164 LNG, pipeline and natural-gas-keyword projects worth $167.51 billion in active value<sup>33</sup>. If WTI holds above the $50 to $65/bbl Western Canadian heavy oil greenfield breakeven cohort cited in public filings, the 35 tracked Alberta oil and gas projects would maintain netbacks even with the 15.3% weekly drop<sup>33</sup>. Spring Economic Update 2026 expanded the CCUS Investment Tax Credit to enhanced oil recovery, adding policy support for the cohort<sup>13</sup>.</p>",
+      "price": "$91.30",
+      "weekly_pct": "-15.3%",
+      "yoy_pct": "+41.4%",
+      "commentary": "<p><strong>Crude Oil (WTI):</strong> <strong>$91.30/bbl</strong> (<strong>-15.3%</strong> week-over-week from the May 19 baseline of $107.77) — driven by easing Middle East risk premia and a parallel U.S. dollar advance following the May payroll print<sup>24</sup><sup>25</sup><sup>33</sup>. The 1-year trailing average sits at $71.97/bbl, with a 52-week range of $55.27 to $112.95/bbl, putting the June 8 print 19.2% below the 52-week high and 41.4% above the year-ago level<sup>33</sup>. The Signal Dispatch cross-reference engine links current pricing to 35 active oil and gas projects worth $56.53 billion and 164 LNG, pipeline and natural-gas-keyword projects worth $167.51 billion in active value<sup>33</sup>. If WTI holds above the $50 to $65/bbl Western Canadian heavy oil greenfield breakeven cohort cited in public filings, the 35 tracked Alberta oil and gas projects would maintain netbacks even with the 15.3% weekly drop<sup>33</sup>. Spring Economic Update 2026 expanded the CCUS Investment Tax Credit to enhanced oil recovery, adding policy support for the cohort<sup>13</sup>.</p>",
+      "mom_pct": "-4.3%"
     },
     {
       "name": "Western Canadian Select",
@@ -7818,17 +7830,17 @@
       "name": "Silver",
       "symbol": "SI=F",
       "category": "Precious Metals",
-      "val": "$56.01",
-      "day": "+1.8%",
-      "mm": "N/A",
-      "yy": "+73.3%",
+      "val": "$68.43",
+      "day": "-8.8%",
+      "mm": "-14.9%",
+      "yy": "+89.9%",
       "unit": "US$/oz",
-      "context": "<p><strong>Silver:</strong> <strong>$56.01/oz</strong> (<strong>+1.8%</strong> week-over-week) — reflecting continued safe-haven and industrial-demand crossover<sup>40</sup>. The year-over-year advance of 73.3% from $32.31 marks the steepest 12-month move in the precious metals complex, with the print 51.3% below the 52-week high of $115.08/oz<sup>40</sup>.</p>",
-      "price": "$56.01",
-      "weekly_pct": "+1.8%",
-      "yoy_pct": "+73.3%",
-      "commentary": "<p><strong>Silver:</strong> <strong>$56.01/oz</strong> (<strong>+1.8%</strong> week-over-week) — reflecting continued safe-haven and industrial-demand crossover<sup>40</sup>. The year-over-year advance of 73.3% from $32.31 marks the steepest 12-month move in the precious metals complex, with the print 51.3% below the 52-week high of $115.08/oz<sup>40</sup>.</p>",
-      "mom_pct": "N/A"
+      "context": "<p><strong>Silver:</strong> <strong>$68.43/oz</strong> (<strong>-8.8%</strong> week-over-week vs. the June 1 print of $75.01)<sup>40</sup>. The year-over-year advance of 89.9% from $36.03 marks the steepest 12-month move in the precious metals complex, with the print 40.5% below the 52-week high of $115.08/oz<sup>40</sup>.</p>",
+      "price": "$68.43",
+      "weekly_pct": "-8.8%",
+      "yoy_pct": "+89.9%",
+      "commentary": "<p><strong>Silver:</strong> <strong>$68.43/oz</strong> (<strong>-8.8%</strong> week-over-week vs. the June 1 print of $75.01)<sup>40</sup>. The year-over-year advance of 89.9% from $36.03 marks the steepest 12-month move in the precious metals complex, with the print 40.5% below the 52-week high of $115.08/oz<sup>40</sup>.</p>",
+      "mom_pct": "-14.9%"
     },
     {
       "name": "Copper",
@@ -7850,16 +7862,16 @@
       "name": "Uranium",
       "symbol": "U.UN",
       "category": "Energy",
-      "val": "$50.93",
-      "day": "+3.39%",
+      "val": "$86.25",
+      "day": "N/A",
       "mm": "N/A",
-      "yy": "+15.4%",
+      "yy": "N/A",
       "unit": "US$/lb",
-      "context": "<p><strong>Uranium:</strong> <strong>$50.93/lb (Sprott proxy)</strong> (<strong>+3.39%</strong> week-over-week) — reflecting continued reactor-restart and small modular reactor supply-chain demand pull. The cached commodities.json Sprott proxy reads $26.68 with +15.4% year-over-year, a divergent lineage from the WebSearch print carried as the authoritative weekly figure. The Signal Dispatch cross-reference engine ties uranium pricing to 51 critical-minerals-keyword projects worth $15.87 billion, including Saskatchewan uranium mining and small modular reactor supply-chain projects in Ontario and New Brunswick; the Cameco proxy at $148.96 in commodities.json registers a 62.9% year-over-year appreciation.</p>",
-      "price": "$50.93",
-      "weekly_pct": "+3.39%",
-      "yoy_pct": "+15.4%",
-      "commentary": "<p><strong>Uranium:</strong> <strong>$50.93/lb (Sprott proxy)</strong> (<strong>+3.39%</strong> week-over-week) — reflecting continued reactor-restart and small modular reactor supply-chain demand pull. The cached commodities.json Sprott proxy reads $26.68 with +15.4% year-over-year, a divergent lineage from the WebSearch print carried as the authoritative weekly figure. The Signal Dispatch cross-reference engine ties uranium pricing to 51 critical-minerals-keyword projects worth $15.87 billion, including Saskatchewan uranium mining and small modular reactor supply-chain projects in Ontario and New Brunswick; the Cameco proxy at $148.96 in commodities.json registers a 62.9% year-over-year appreciation.</p>",
+      "context": "<p><strong>Uranium:</strong> <strong>$86.25/lb U3O8 spot</strong> (TradeTech, May 19, 2026 — the most recent priced observation in the pipeline timeseries; no fresher weekly print this cycle). Investing News Network's Q1 2026 review places spot U3O8 just above US$80/lb at the start of 2026, at a January 29 high of US$101.41, and at US$83.90 at the end of Q1. The cached commodities.json Sprott proxy reads $26.68, a fund-unit lineage distinct from the U3O8 spot series. The Signal Dispatch cross-reference engine ties uranium pricing to 51 critical-minerals-keyword projects worth $15.87 billion, including Saskatchewan uranium mining and small modular reactor supply-chain projects in Ontario and New Brunswick; the Cameco proxy at $148.96 in commodities.json registers a 62.9% year-over-year appreciation.</p>",
+      "price": "$86.25",
+      "weekly_pct": "N/A",
+      "yoy_pct": "N/A",
+      "commentary": "<p><strong>Uranium:</strong> <strong>$86.25/lb U3O8 spot</strong> (TradeTech, May 19, 2026 — the most recent priced observation in the pipeline timeseries; no fresher weekly print this cycle). Investing News Network's Q1 2026 review places spot U3O8 just above US$80/lb at the start of 2026, at a January 29 high of US$101.41, and at US$83.90 at the end of Q1. The cached commodities.json Sprott proxy reads $26.68, a fund-unit lineage distinct from the U3O8 spot series. The Signal Dispatch cross-reference engine ties uranium pricing to 51 critical-minerals-keyword projects worth $15.87 billion, including Saskatchewan uranium mining and small modular reactor supply-chain projects in Ontario and New Brunswick; the Cameco proxy at $148.96 in commodities.json registers a 62.9% year-over-year appreciation.</p>",
       "mom_pct": "N/A"
     },
     {
@@ -7882,17 +7894,17 @@
       "name": "Wheat",
       "symbol": "ZW=F",
       "category": "Agriculture",
-      "val": "$671.75",
-      "day": "+1.0%",
-      "mm": "+12.5%",
-      "yy": "+27.0%",
+      "val": "$583.25",
+      "day": "-4.2%",
+      "mm": "-4.0%",
+      "yy": "+5.1%",
       "unit": "US$/bu",
-      "context": "<p><strong>Wheat:</strong> <strong>$671.75/bu</strong> (<strong>+1.0%</strong> week-over-week vs. 1-week-prior $665) — printing a fresh 52-week high after a 12.5% month-over-month advance and 27.0% year-over-year gain from $529<sup>40</sup>. The 1-year trailing average sits at $545.06/bu against a 52-week low of $495.00, with the current print 35.7% above the trailing average. The Signal Dispatch cross-reference engine ties this print to Saskatchewan and Prairie wheat production exposure, with the Trade Diversification Corridors Fund announced in Spring Economic Update 2026 relevant to grain export infrastructure<sup>13</sup>.</p>",
-      "price": "$671.75",
-      "weekly_pct": "+1.0%",
-      "yoy_pct": "+27.0%",
-      "commentary": "<p><strong>Wheat:</strong> <strong>$671.75/bu</strong> (<strong>+1.0%</strong> week-over-week vs. 1-week-prior $665) — printing a fresh 52-week high after a 12.5% month-over-month advance and 27.0% year-over-year gain from $529<sup>40</sup>. The 1-year trailing average sits at $545.06/bu against a 52-week low of $495.00, with the current print 35.7% above the trailing average. The Signal Dispatch cross-reference engine ties this print to Saskatchewan and Prairie wheat production exposure, with the Trade Diversification Corridors Fund announced in Spring Economic Update 2026 relevant to grain export infrastructure<sup>13</sup>.</p>",
-      "mom_pct": "+12.5%"
+      "context": "<p><strong>Wheat:</strong> <strong>$583.25/bu</strong> (<strong>-4.2%</strong> week-over-week vs. 1-week-prior $608.75) — sitting 12.6% below the May 19 52-week high of $667.25 after a 4.0% month-over-month decline and a 5.1% year-over-year gain from $554.75<sup>40</sup>. The 1-year trailing average sits at $548.91/bu against a 52-week low of $495.00, with the current print 6.3% above the trailing average. The Signal Dispatch cross-reference engine ties this print to Saskatchewan and Prairie wheat production exposure, with the Trade Diversification Corridors Fund announced in Spring Economic Update 2026 relevant to grain export infrastructure<sup>13</sup>.</p>",
+      "price": "$583.25",
+      "weekly_pct": "-4.2%",
+      "yoy_pct": "+5.1%",
+      "commentary": "<p><strong>Wheat:</strong> <strong>$583.25/bu</strong> (<strong>-4.2%</strong> week-over-week vs. 1-week-prior $608.75) — sitting 12.6% below the May 19 52-week high of $667.25 after a 4.0% month-over-month decline and a 5.1% year-over-year gain from $554.75<sup>40</sup>. The 1-year trailing average sits at $548.91/bu against a 52-week low of $495.00, with the current print 6.3% above the trailing average. The Signal Dispatch cross-reference engine ties this print to Saskatchewan and Prairie wheat production exposure, with the Trade Diversification Corridors Fund announced in Spring Economic Update 2026 relevant to grain export infrastructure<sup>13</sup>.</p>",
+      "mom_pct": "-4.0%"
     },
     {
       "name": "Canola",
@@ -7914,17 +7926,17 @@
       "name": "Potash (Nutrien)",
       "symbol": "NTR",
       "category": "Agriculture",
-      "val": "$98.45",
-      "day": "+5.3%",
-      "mm": "-2.3%",
-      "yy": "+22.7%",
+      "val": "$94.02",
+      "day": "-2.4%",
+      "mm": "+0.6%",
+      "yy": "+14.9%",
       "unit": "US$",
-      "context": "<p><strong>Potash (Nutrien):</strong> <strong>$98.45 (Nutrien proxy)</strong> (<strong>+5.3%</strong> week-over-week vs. 1-week-prior $93.49) — reflecting continued Saskatchewan potash sector activity as the Nutrien share price proxies the cohort. Month-over-month sits at -2.3% and year-over-year at +22.7%, with the commodities.json lineage showing $94.69 at +18.4% year-over-year. The Signal Dispatch cross-reference engine ties potash to 51 critical-minerals-keyword projects worth $15.87 billion. Nutrien share price is a proxy for sector activity, not a direct potash price.</p>",
-      "price": "$98.45",
-      "weekly_pct": "+5.3%",
-      "yoy_pct": "+22.7%",
-      "commentary": "<p><strong>Potash (Nutrien):</strong> <strong>$98.45 (Nutrien proxy)</strong> (<strong>+5.3%</strong> week-over-week vs. 1-week-prior $93.49) — reflecting continued Saskatchewan potash sector activity as the Nutrien share price proxies the cohort. Month-over-month sits at -2.3% and year-over-year at +22.7%, with the commodities.json lineage showing $94.69 at +18.4% year-over-year. The Signal Dispatch cross-reference engine ties potash to 51 critical-minerals-keyword projects worth $15.87 billion. Nutrien share price is a proxy for sector activity, not a direct potash price.</p>",
-      "mom_pct": "-2.3%"
+      "context": "<p><strong>Potash (Nutrien):</strong> <strong>$94.02 (Nutrien proxy)</strong> (<strong>-2.4%</strong> week-over-week vs. 1-week-prior $96.35) — as the Nutrien share price proxies Saskatchewan potash sector activity. Month-over-month sits at +0.6% and year-over-year at +14.9%, with the commodities.json lineage showing $94.69 at +18.4% year-over-year. The Signal Dispatch cross-reference engine ties potash to 51 critical-minerals-keyword projects worth $15.87 billion. Nutrien share price is a proxy for sector activity, not a direct potash price.</p>",
+      "price": "$94.02",
+      "weekly_pct": "-2.4%",
+      "yoy_pct": "+14.9%",
+      "commentary": "<p><strong>Potash (Nutrien):</strong> <strong>$94.02 (Nutrien proxy)</strong> (<strong>-2.4%</strong> week-over-week vs. 1-week-prior $96.35) — as the Nutrien share price proxies Saskatchewan potash sector activity. Month-over-month sits at +0.6% and year-over-year at +14.9%, with the commodities.json lineage showing $94.69 at +18.4% year-over-year. The Signal Dispatch cross-reference engine ties potash to 51 critical-minerals-keyword projects worth $15.87 billion. Nutrien share price is a proxy for sector activity, not a direct potash price.</p>",
+      "mom_pct": "+0.6%"
     },
     {
       "name": "Lumber",
@@ -7943,7 +7955,7 @@
       "mom_pct": "+6.0%"
     }
   ],
-  "commodity_commentary": "<p><span class=\"lead-sentence\"><strong>Commodity markets diverged sharply on the week, with energy retreating and precious metals and agriculture pushing fresh year-over-year extremes.</strong></span> WTI crude fell 10.7% from the May 19 baseline of $103.02 to $92.00 per barrel, and Brent eased roughly 11% from $110.14 to the mid-$90s, both moves driven by easing Middle East risk premia and a stronger U.S. dollar on the back of the May +172,000 payroll print<sup>64</sup><sup>63</sup><sup>43</sup>. Gold settled at US$4,336.78/oz, down 3.6% on the week but holding 32.2% above its year-ago level of $3,280.30 and reflecting safe-haven demand against the energy-led inflation regime<sup>44</sup><sup>101</sup>. Base metals softened, with copper at US$6.30/lb down 6% over three sessions following Chilean production data showing April output at a 23-year low<sup>42</sup>. Agriculture firmed, with wheat at US$671.75/bu, a fresh 52-week high, and the Nutrien potash proxy at $98.45, up 5.3% on the week<sup>118</sup>. Lumber added 4.0% to $611/mfbm. The Signal Dispatch cross-reference engine ties the energy retreat to 35 active oil and gas projects worth $56.53 billion and 164 LNG and natural gas projects worth $167.51 billion, and the metals firmness to 348 active mining projects worth $237.51 billion in tracked capital value. WCS, nickel and canola carried no priced series this cycle and are marked unavailable.</p>",
+  "commodity_commentary": "<p><span class=\"lead-sentence\"><strong>Commodity markets fell broadly on the week, with crude oil retreating and precious metals and agriculture easing from recent highs.</strong></span> WTI crude fell 15.3% from the May 19 baseline of $107.77 to $91.30 per barrel, and Brent eased roughly 11% from $110.14 to the mid-$90s, both moves driven by easing Middle East risk premia and a stronger U.S. dollar on the back of the May +172,000 payroll print<sup>64</sup><sup>63</sup><sup>43</sup>. Gold settled at US$4,336.78/oz, down 3.6% on the week but holding 32.2% above its year-ago level of $3,280.30 and reflecting safe-haven demand against the energy-led inflation regime<sup>44</sup><sup>101</sup>. Base metals softened, with copper at US$6.30/lb down 6% over three sessions following Chilean production data showing April output at a 23-year low<sup>42</sup>. Agriculture eased, with wheat at US$583.25/bu, 12.6% below its May 19 52-week high of $667.25, and the Nutrien potash proxy at $94.02, down 2.4% on the week<sup>118</sup>. Lumber added 4.0% to $611/mfbm. The Signal Dispatch cross-reference engine ties the energy retreat to 35 active oil and gas projects worth $56.53 billion and 164 LNG and natural gas projects worth $167.51 billion, and the metals complex to 348 active mining projects worth $237.51 billion in tracked capital value. WCS, nickel and canola carried no priced series this cycle and are marked unavailable.</p>",
   "wcs_analysis": null,
   "yieldCurve": [
     {
@@ -8451,40 +8463,40 @@
     }
   ],
   "discovery_stats": {
-    "total_projects": 7886,
-    "active_projects": 7170,
-    "active_value_billions": 1306.0,
-    "new_or_updated_this_week": 168,
-    "lastUpdated_this_week": 182,
+    "total_projects": 7007,
+    "active_projects": 6350,
+    "active_value_billions": 1499.1,
+    "new_or_updated_this_week": 123,
+    "lastUpdated_this_week": 294,
     "status_distribution": {
-      "Proposed": 2746,
-      "Under Review": 2736,
-      "Under Construction": 1083,
-      "Approved": 605,
-      "Complete": 518,
-      "Cancelled": 167,
-      "On Hold": 31
+      "Under Review": 2563,
+      "Proposed": 2222,
+      "Under Construction": 1014,
+      "Approved": 521,
+      "Complete": 503,
+      "Cancelled": 154,
+      "On Hold": 30
     },
     "active_by_province": {
-      "MB": 2072,
-      "NL": 1450,
-      "ON": 711,
-      "AB": 683,
-      "BC": 666,
-      "QC": 559,
-      "SK": 231,
-      "NT": 214,
-      "NB": 205,
-      "YT": 122,
-      "NS": 117,
-      "PE": 84,
-      "NU": 51,
-      "CA": 5
+      "MB": 1953,
+      "NL": 1394,
+      "AB": 610,
+      "BC": 571,
+      "ON": 505,
+      "QC": 463,
+      "NT": 203,
+      "NB": 175,
+      "SK": 133,
+      "YT": 112,
+      "NS": 95,
+      "PE": 83,
+      "NU": 49,
+      "CA": 4
     }
   },
-  "project_count": null,
+  "project_count": 7007,
   "new_projects": null,
-  "pipeline_value": null,
+  "pipeline_value": "$1499.1B",
   "_all_verified_sources": [
     {
       "id": 1,
@@ -9334,7 +9346,7 @@
     {
       "type": "line",
       "title": "Crude Oil Drives the Inflation Print",
-      "subtitle": "WTI at US$103.02/bbl (+64.33% YoY) as April gasoline CPI hits a record +28.6% YoY",
+      "subtitle": "WTI at US$107.77/bbl (+71.9% YoY) as April gasoline CPI hits a record +28.6% YoY",
       "data_source": "timeseries",
       "metric": "wti,cpi",
       "unit": "mixed",
@@ -9381,7 +9393,7 @@
       "insertion_point": "after:commodity_commentary",
       "tab": "markets",
       "section": "commodities",
-      "html": "<div class=\"callout-box callout-chart\"><div class=\"callout-chart-header\">WTI Crude vs Western Canadian Heavy Oil Breakeven ($65/bbl Upper Bound)</div><svg viewBox=\"0 0 700 115\" style=\"width:100%;height:auto;\"><defs><linearGradient id=\"grad_wti-heavy-oil-breakeven\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#1a56db\" stop-opacity=\"0.08\"/><stop offset=\"100%\" stop-color=\"#1a56db\" stop-opacity=\"0\"/></linearGradient></defs><line x1=\"40\" y1=\"18\" x2=\"660\" y2=\"18\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"40\" y1=\"38\" x2=\"660\" y2=\"38\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"40\" y1=\"59\" x2=\"660\" y2=\"59\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"40\" y1=\"80\" x2=\"660\" y2=\"80\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"40\" y1=\"93\" x2=\"660\" y2=\"93\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><text x=\"36\" y=\"21\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">$115</text><text x=\"36\" y=\"41\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">$100</text><text x=\"36\" y=\"62\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">$85</text><text x=\"36\" y=\"83\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">$70</text><text x=\"55\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Mar 30</text><text x=\"191\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Apr 13</text><text x=\"327\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Apr 27</text><text x=\"464\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">May 8</text><text x=\"600\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">May 18</text><line x1=\"40\" y1=\"86\" x2=\"660\" y2=\"86\" stroke=\"#c4320a\" stroke-width=\"1\" stroke-dasharray=\"5,3\" opacity=\"0.4\"/><text x=\"655\" y=\"96\" fill=\"#c4320a\" font-size=\"7\" font-weight=\"600\" font-family=\"Inter, sans-serif\" opacity=\"0.7\">$65 Breakeven</text><polygon fill=\"url(#grad_wti-heavy-oil-breakeven)\" points=\"55,35 100,22 146,46 191,40 237,60 282,48 327,43 373,29 418,29 464,45 509,35 554,31 600,27 645,35 645,93 55,93\"/><polyline fill=\"none\" stroke=\"#1a56db\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\" points=\"55,35 100,22 146,46 191,40 237,60 282,48 327,43 373,29 418,29 464,45 509,35 554,31 600,27 645,35\"/><circle cx=\"645\" cy=\"35\" r=\"3\" fill=\"#1a56db\"/><text x=\"653\" y=\"38\" fill=\"#1a56db\" font-size=\"7\" font-weight=\"600\" font-family=\"Inter, sans-serif\">$103.02</text></svg><div class=\"callout-chart-source\">Source: WTI front-month (CL=F) via yfinance, March 30 through May 19, 2026. Breakeven upper bound from public Western Canadian heavy oil greenfield project filings.</div><p class=\"callout-chart-text\">WTI closed at $92.00/bbl on June 8, down 10.7% from the May 19 baseline of $103.02 but still 41.5% above the $65/bbl upper bound of the Western Canadian heavy oil greenfield breakeven cohort. The cross-reference engine links current pricing to 35 active oil and gas projects ($56.53B) and 164 LNG, pipeline, and natural-gas-keyword projects ($167.51B).</p></div>"
+      "html": "<div class=\"callout-box callout-chart\"><div class=\"callout-chart-header\">WTI Crude vs Western Canadian Heavy Oil Breakeven ($65/bbl Upper Bound)</div><svg viewBox=\"0 0 700 115\" style=\"width:100%;height:auto;\"><defs><linearGradient id=\"grad_wti-heavy-oil-breakeven\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#1a56db\" stop-opacity=\"0.08\"/><stop offset=\"100%\" stop-color=\"#1a56db\" stop-opacity=\"0\"/></linearGradient></defs><line x1=\"40\" y1=\"18\" x2=\"660\" y2=\"18\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"40\" y1=\"38\" x2=\"660\" y2=\"38\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"40\" y1=\"59\" x2=\"660\" y2=\"59\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"40\" y1=\"80\" x2=\"660\" y2=\"80\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"40\" y1=\"93\" x2=\"660\" y2=\"93\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><text x=\"36\" y=\"21\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">$115</text><text x=\"36\" y=\"41\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">$100</text><text x=\"36\" y=\"62\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">$85</text><text x=\"36\" y=\"83\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">$70</text><text x=\"55\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Mar 30</text><text x=\"191\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Apr 13</text><text x=\"327\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Apr 27</text><text x=\"464\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">May 8</text><text x=\"600\" y=\"108\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">May 18</text><line x1=\"40\" y1=\"86\" x2=\"660\" y2=\"86\" stroke=\"#c4320a\" stroke-width=\"1\" stroke-dasharray=\"5,3\" opacity=\"0.4\"/><text x=\"655\" y=\"96\" fill=\"#c4320a\" font-size=\"7\" font-weight=\"600\" font-family=\"Inter, sans-serif\" opacity=\"0.7\">$65 Breakeven</text><polygon fill=\"url(#grad_wti-heavy-oil-breakeven)\" points=\"55,35 100,22 146,46 191,40 237,60 282,48 327,43 373,29 418,29 464,45 509,35 554,31 600,27 645,35 645,93 55,93\"/><polyline fill=\"none\" stroke=\"#1a56db\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\" points=\"55,35 100,22 146,46 191,40 237,60 282,48 327,43 373,29 418,29 464,45 509,35 554,31 600,27 645,35\"/><circle cx=\"645\" cy=\"35\" r=\"3\" fill=\"#1a56db\"/><text x=\"653\" y=\"38\" fill=\"#1a56db\" font-size=\"7\" font-weight=\"600\" font-family=\"Inter, sans-serif\">$107.77</text></svg><div class=\"callout-chart-source\">Source: WTI front-month (CL=F) via yfinance, March 30 through May 19, 2026. Breakeven upper bound from public Western Canadian heavy oil greenfield project filings.</div><p class=\"callout-chart-text\">WTI closed at $91.30/bbl on June 8, down 15.3% from the May 19 baseline of $107.77 but still 40.5% above the $65/bbl upper bound of the Western Canadian heavy oil greenfield breakeven cohort. The cross-reference engine links current pricing to 35 active oil and gas projects ($56.53B) and 164 LNG, pipeline, and natural-gas-keyword projects ($167.51B).</p></div>"
     },
     {
       "id": "cadusd-8-week-weakness",
@@ -9398,7 +9410,7 @@
       "html": "<div class=\"callout-box callout-chart\"><div class=\"callout-chart-header\">Government of Canada 2Y vs 10Y Yields — 6 Months Through May 19, 2026</div><div class=\"chart-legend\"><span class=\"chart-legend-item\"><span class=\"chart-legend-dot\" style=\"background:#1a56db;\"></span>GoC 10Y</span><span class=\"chart-legend-item\"><span class=\"chart-legend-dot\" style=\"background:#7c3aed;\"></span>GoC 2Y</span></div><svg viewBox=\"0 0 700 120\" style=\"width:100%;height:auto;\"><line x1=\"45\" y1=\"18\" x2=\"660\" y2=\"18\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"45\" y1=\"33\" x2=\"660\" y2=\"33\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"45\" y1=\"58\" x2=\"660\" y2=\"58\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><line x1=\"45\" y1=\"83\" x2=\"660\" y2=\"83\" stroke=\"#e4e2dd\" stroke-width=\"0.5\"/><text x=\"40\" y=\"21\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">3.80%</text><text x=\"40\" y=\"36\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">3.50%</text><text x=\"40\" y=\"61\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">3.00%</text><text x=\"40\" y=\"86\" text-anchor=\"end\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">2.50%</text><text x=\"55\" y=\"112\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Dec 1</text><text x=\"173\" y=\"112\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Jan 2</text><text x=\"291\" y=\"112\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Feb 2</text><text x=\"409\" y=\"112\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Mar 2</text><text x=\"527\" y=\"112\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">Mar 30</text><text x=\"645\" y=\"112\" text-anchor=\"middle\" fill=\"#aaa\" font-size=\"7\" font-family=\"Inter, sans-serif\">May 19</text><polyline fill=\"none\" stroke=\"#1a56db\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\" points=\"55,46 173,35 291,37 409,47 527,30 645,23\"/><circle cx=\"645\" cy=\"23\" r=\"2.5\" fill=\"#1a56db\"/><text x=\"653\" y=\"26\" fill=\"#1a56db\" font-size=\"7\" font-weight=\"600\" font-family=\"Inter, sans-serif\">3.70%</text><polyline fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\" points=\"55,84 173,78 291,80 409,84 527,59 645,55\"/><circle cx=\"645\" cy=\"55\" r=\"2.5\" fill=\"#7c3aed\"/><text x=\"653\" y=\"58\" fill=\"#7c3aed\" font-size=\"7\" font-weight=\"600\" font-family=\"Inter, sans-serif\">3.07%</text></svg><div class=\"callout-chart-source\">Source: Government of Canada benchmark bond yields, December 1, 2025 through May 19, 2026. 2Y from goc_2y_yield, 10Y from goc_10y_yield (Bank of Canada).</div><p class=\"callout-chart-text\">The GoC 2s10s spread narrowed to 58 bps on May 19 from 70 bps in the prior edition, with the 2Y at 3.07% and the 10Y at 3.70%. The cross-reference engine links the 5-year fixed mortgage benchmark to 231 active residential projects ($36.27B), and the 10-year tenor to 164 LNG and natural gas projects ($167.51B) whose financing costs anchor to long-end yields.</p></div>"
     }
   ],
-  "yieldCurveCommentary": "<p><span class=\"lead-sentence\"><strong>The Government of Canada yield curve held a normal positive slope at a 2s10s spread of 58 basis points</strong></span>, 12 basis points flatter than the prior edition's 70-basis-point spread, as the 10-year eased 10 basis points from the May 19 baseline to 3.45% while the 2-year settled at 2.87% from June 4 to 5 WebSearch prints<sup>40</sup><sup>37</sup>. The flattening was driven by long-end demand into the U.S. payroll surprise and parallel position-squaring ahead of the June 10 Bank of Canada decision<sup>55</sup><sup>64</sup><sup>63</sup>. Versus year-ago, the 2-year sits 24 basis points higher than 2.63% a year ago and the 10-year is 16 basis points above the year-ago 3.29%, reflecting the BoC's hold pattern since April after the cutting cycle ended<sup>55</sup>. The 5-year reads 3.20% versus 2.88% a year ago and a 3.36% May 19 baseline, while the 3M to 18M short-end prints (2.65 to 2.85%) are extrapolated from the 2.25% overnight slope and flagged for the charts agent<sup>55</sup>. The Signal Dispatch cross-reference engine links the 5-year fixed mortgage benchmark to 231 active residential projects worth $36.27 billion. If yields hold at current levels into the June 10 BoC decision, the 231 tracked residential projects worth $36 billion would face mortgage qualification pricing consistent with the May 19 baseline, while 164 LNG and natural gas projects worth $167 billion would carry financing costs anchored to the 10-year tenor<sup>40</sup>.</p>",
+  "yieldCurveCommentary": "<p><span class=\"lead-sentence\"><strong>The Government of Canada yield curve held a normal positive slope at a 2s10s spread of 58 basis points</strong></span>, 12 basis points flatter than the prior edition's 70-basis-point spread, as the 10-year eased 25 basis points from the May 19 baseline of 3.70% to 3.45% while the 2-year settled at 2.87% from June 4 to 5 WebSearch prints<sup>40</sup><sup>37</sup>. The flattening was driven by long-end demand into the U.S. payroll surprise and parallel position-squaring ahead of the June 10 Bank of Canada decision<sup>55</sup><sup>64</sup><sup>63</sup>. Versus year-ago, the 2-year sits 24 basis points higher than 2.63% a year ago and the 10-year is 16 basis points above the year-ago 3.29%, reflecting the BoC's hold pattern since April after the cutting cycle ended<sup>55</sup>. The 5-year reads 3.20% versus 2.88% a year ago and a 3.36% May 19 baseline, while the 3M to 18M short-end prints (2.65 to 2.85%) are extrapolated from the 2.25% overnight slope and flagged for the charts agent<sup>55</sup>. The Signal Dispatch cross-reference engine links the 5-year fixed mortgage benchmark to 231 active residential projects worth $36.27 billion. If yields hold at current levels into the June 10 BoC decision, the 231 tracked residential projects worth $36 billion would face mortgage qualification pricing consistent with the May 19 baseline, while 164 LNG and natural gas projects worth $167 billion would carry financing costs anchored to the 10-year tenor<sup>40</sup>.</p>",
   "sources": [
     {
       "url": "https://agriculture.canada.ca/en/agricultural-production/weather/canadian-drought-monitor",
@@ -10106,7 +10118,7 @@
       "archive_url": ""
     }
   ],
-  "marketCommentary": "<p><span class=\"lead-sentence\">Canadian markets recorded broad declines in the week ending June 5, 2026</span> — the S&P/TSX Composite fell <strong>2.28%</strong> to <strong>34,413</strong><sup>60</sup>, tracking a US tech-led pullback that took the Nasdaq down <strong>4.18%</strong> and the Dow down <strong>1.35%</strong> on the same session<sup>60</sup>. The Canadian dollar weakened <strong>1.7%</strong> on the week, with USD/CAD reaching an 8-week high of <strong>1.3949</strong> against a Bank of Canada policy rate held at <strong>2.25%</strong><sup>94</sup><sup>55</sup>. The 2s10s yield curve flattened to <strong>58 basis points</strong>, down <strong>12 bps</strong> from the prior edition, with the 10Y at <strong>3.45%</strong><sup>40</sup>.</p><p><span class=\"lead-sentence\">The pipeline's exposure to the week's moves split across rates, energy, and metals</span> — the database tracks <strong>231 active residential projects ($36.27B)</strong> tied to the yield-curve financing channel, plus <strong>35 active oil and gas projects ($56.53B)</strong> and <strong>164 LNG, pipeline, and natural-gas-linked projects ($167.51B)</strong> tied to the <strong>10.7%</strong> weekly drop in WTI to <strong>$92/bbl</strong><sup>43</sup>. Metals-linked projects include <strong>96 gold projects ($54.17B)</strong> and <strong>36 copper projects ($22.05B)</strong> after gold fell <strong>3.6%</strong> to <strong>$4,336.78/oz</strong> and copper fell <strong>6%</strong> over three sessions to <strong>$6.30/lb</strong><sup>44</sup><sup>42</sup>.</p>",
+  "marketCommentary": "<p><span class=\"lead-sentence\">Canadian markets recorded broad declines in the week ending June 5, 2026</span> — the S&P/TSX Composite fell <strong>2.28%</strong> to <strong>34,413</strong><sup>60</sup>, tracking a US tech-led pullback that took the Nasdaq down <strong>4.18%</strong> and the Dow down <strong>1.35%</strong> on the same session<sup>60</sup>. The Canadian dollar weakened <strong>1.7%</strong> on the week, with USD/CAD reaching an 8-week high of <strong>1.3949</strong> against a Bank of Canada policy rate held at <strong>2.25%</strong><sup>94</sup><sup>55</sup>. The 2s10s yield curve flattened to <strong>58 basis points</strong>, down <strong>12 bps</strong> from the prior edition, with the 10Y at <strong>3.45%</strong><sup>40</sup>.</p><p><span class=\"lead-sentence\">The pipeline's exposure to the week's moves split across rates, energy, and metals</span> — the database tracks <strong>231 active residential projects ($36.27B)</strong> tied to the yield-curve financing channel, plus <strong>35 active oil and gas projects ($56.53B)</strong> and <strong>164 LNG, pipeline, and natural-gas-linked projects ($167.51B)</strong> tied to the <strong>15.3%</strong> weekly drop in WTI to <strong>$91.30/bbl</strong><sup>43</sup>. Metals-linked projects include <strong>96 gold projects ($54.17B)</strong> and <strong>36 copper projects ($22.05B)</strong> after gold fell <strong>3.6%</strong> to <strong>$4,336.78/oz</strong> and copper fell <strong>6%</strong> over three sessions to <strong>$6.30/lb</strong><sup>44</sup><sup>42</sup>.</p>",
   "insightCharts": [
     {
       "chartType": "line",
@@ -10116,7 +10128,7 @@
         "unemployment"
       ],
       "dataSource": "indicators",
-      "callout": "Unemployment at 6.60% in 2026-06-08 as May LFS added 88,000 jobs. The pipeline tracks 7,170 active projects across all sectors that are sensitive to labour costs and rate decisions.",
+      "callout": "Unemployment at 6.60% in 2026-06-08 as May LFS added 88,000 jobs. The pipeline tracks 6,350 active projects across all sectors that are sensitive to labour costs and rate decisions.",
       "kpis": [
         {
           "label": "Latest",
@@ -10130,8 +10142,8 @@
         },
         {
           "label": "Active Projects",
-          "value": "7,170",
-          "sublabel": "$1,306B pipeline"
+          "value": "6,350",
+          "sublabel": "$1,499.1B pipeline"
         }
       ]
     },
@@ -10144,7 +10156,7 @@
         "goc_10y_yield"
       ],
       "dataSource": "timeseries",
-      "callout": "2Y yield 2.87% vs 10Y 3.45%. The database tracks 7,170 projects whose financing assumptions reference the Canada curve.",
+      "callout": "2Y yield 2.87% vs 10Y 3.45%. The database tracks 6,350 projects whose financing assumptions reference the Canada curve.",
       "kpis": [
         {
           "label": "2Y Yield",
@@ -10163,5 +10175,6 @@
         }
       ]
     }
-  ]
+  ],
+  "bocRate": "2.25%"
 }

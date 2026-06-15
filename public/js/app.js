@@ -3,34 +3,22 @@ const DATA_BASE='data/';
 const _cache={};
 async function fetchJSON(path){
   if(_cache[path])return _cache[path];
-  const resp=await fetch(DATA_BASE+path);
+  // Daily cache-buster so a long-lived tab picks up daily data refreshes
+  // without defeating CDN caching entirely (date-granular, local time).
+  const _bd=new Date();
+  const _bust=''+_bd.getFullYear()+String(_bd.getMonth()+1).padStart(2,'0')+String(_bd.getDate()).padStart(2,'0');
+  const resp=await fetch(DATA_BASE+path+(path.includes('?')?'&':'?')+'t='+_bust);
   if(!resp.ok)throw new Error('Failed to load '+path+': '+resp.status);
   const data=await resp.json();
   _cache[path]=data;
   return data;
 }
 
-/* ── loadSection: fetch JSON, show skeleton while loading, error+retry on failure ── */
-async function loadSection(elementId,jsonPath,renderFn){
-  const el=$(elementId);if(!el)return;
-  el.innerHTML='<div class="card">'+skeleton(3)+'</div>';
-  try{
-    const data=await fetchJSON(jsonPath);
-    renderFn(data,el);
-  }catch(e){
-    console.warn('Failed to load '+jsonPath+':',e);
-    el.innerHTML='<div class="card" style="padding:18px;text-align:center">'+
-      '<div style="color:var(--status-red);font-size:var(--text-sm);margin-bottom:8px">Could not load data</div>'+
-      '<button onclick="loadSection(\''+elementId+'\',\''+jsonPath+'\','+renderFn.name+')" '+
-      'style="padding:6px 16px;border:1px solid var(--border-light);border-radius:var(--radius-sm);'+
-      'background:var(--bg-subtle);color:var(--text-primary);cursor:pointer;font-size:var(--text-xs)">Retry</button></div>';
-  }
-}
-window.loadSection=loadSection;
-
 /* ── Helpers ── */
 function hasVal(v){return v!=null&&v!==''&&v!=='N/A'&&v!=='\u2014'&&v!=='—'&&v!=='n/a'}
 function pick(){for(let i=0;i<arguments.length;i++){if(hasVal(arguments[i]))return arguments[i]}return 'N/A'}
+// Local-calendar YYYY-MM-DD (toISOString() serializes in UTC and shifts the day for UTC+ viewers)
+function _localYMD(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function fmtPeriod(dateStr){if(!dateStr)return '';try{const d=new Date(dateStr+'T00:00:00');if(isNaN(d))return dateStr;return d.toLocaleDateString('en-CA',{month:'short',year:'numeric'})}catch(e){return dateStr}}
 function indBasis(rec,metaPeriod,freq){const p=pick(metaPeriod,rec&&rec.period);const dt=hasVal(p)?fmtPeriod(p):'';const f=freq||rec&&rec.frequency||'';const fLabel=f?f.charAt(0).toUpperCase()+f.slice(1):'';return dt||(fLabel||'')}
 function indSource(rec,fallback){return (rec&&rec.source)||fallback||''}
@@ -123,7 +111,9 @@ let D=null,indicators=[],allProjects=[],filteredProjects=[],projectPage=0,select
 const PAGE_SIZE=25;
 let _confirmedOnly=true;
 const _MONTHS_SHORT={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
-function parseEvtDate(d){if(!d)return null;if(d.includes('-')&&d.length>=8)return new Date(d+'T00:00:00');const parts=d.trim().split(/\s+/);const yr=new Date().getFullYear();if(parts.length>=2){const m=_MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)];if(m!=null)return new Date(yr,m,parseInt(parts[1])||1)}return null;}
+// Year-less watchlist dates ("June 9") anchor to the briefing week_of's year, not the viewer's clock
+function _evtAnchorYear(){const w=(typeof D!=='undefined'&&D&&D.week_of)||'';const y=parseInt(String(w).slice(0,4),10);return(y>2000&&y<2100)?y:new Date().getFullYear()}
+function parseEvtDate(d){if(!d)return null;if(d.includes('-')&&d.length>=8)return new Date(d+'T00:00:00');const parts=d.trim().split(/\s+/);const yr=_evtAnchorYear();if(parts.length>=2){const m=_MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)];if(m!=null)return new Date(yr,m,parseInt(parts[1])||1)}return null;}
 let _lastLoadedProvince=null,_loadSeq=0;
 const PROVS=[{code:'BC',name:'British Columbia'},{code:'AB',name:'Alberta'},{code:'SK',name:'Saskatchewan'},{code:'MB',name:'Manitoba'},{code:'ON',name:'Ontario'},{code:'QC',name:'Quebec'},{code:'NB',name:'New Brunswick'},{code:'NS',name:'Nova Scotia'},{code:'PE',name:'Prince Edward Island'},{code:'NL',name:'Newfoundland and Labrador'},{code:'YT',name:'Yukon'},{code:'NT',name:'Northwest Territories'},{code:'NU',name:'Nunavut'}];
 const NAME_TO_CODE={};PROVS.forEach(p=>{NAME_TO_CODE[p.name]=p.code;NAME_TO_CODE[p.code]=p.code});NAME_TO_CODE['Newfoundland']='NL';NAME_TO_CODE['PEI']='PE';
@@ -321,20 +311,6 @@ async function loadAll(){
   const edStr=D?(D.edition||D.headline||'').replace(/EDITION:\s*/i,'').split('//')[0].trim():'';
   $('navMeta').textContent=edStr||((indicators.length)?indicators.length+' indicators loaded':'Data loaded');
   $('footerDate').textContent=D&&D.updated_at?'Last pipeline run: '+fmtDate(D.updated_at):(indicators.length?'Live indicator data loaded':'Awaiting first pipeline run');
-  // Header date badge
-  const heroDate=$('heroDate');
-  if(heroDate){
-    const briefingDate=D&&(D.week_of||D.updated_at||D.date);
-    if(briefingDate){
-      const dt=new Date(briefingDate+'T00:00:00');
-      heroDate.textContent='Week of '+dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    }else{
-      heroDate.textContent=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    }
-  }
-  // Header freshness
-  const freshEl=$('headerFreshness');
-  if(freshEl&&D&&D.updated_at){freshEl.textContent='Data as of '+fmtDate(D.updated_at)}
   loadEditionList();
 }
 /* Edition dropdown toggle */
@@ -511,23 +487,36 @@ function _tldrBuildIndicatorTable(){
   const ki=D.key_indicators||[];
   const meta=D.indicatorMeta||{};
   const labelMap={'BOC RATE':'bocRate','REAL GDP':'realGdp','CPI':'cpi','UNEMPLOYMENT':'unemployment',
-    'HOUSING STARTS':'housingStarts','TRADE BALANCE':'tradeBalance','RETAIL SALES':'retailSales',
+    'HOUSING STARTS':'housingStarts','TRADE BALANCE':'tradeBalance','MERCHANDISE TRADE':'tradeBalance','RETAIL SALES':'retailSales',
     'CONSUMER CONFIDENCE':'consumerConfidence','PARTICIPATION':'participation','EMPLOYMENT CHANGE':'employmentChange',
     'WAGE GROWTH':'wageGrowth','PARTICIPATION RATE':'participation','EMPLOYMENT':'employmentChange',
-    'WTI CRUDE':'wtiCrude','BRENT CRUDE':'brentCrude','CAD/USD':'cadUsd','TSX':'tsx'};
+    'WTI CRUDE':'wtiCrude','BRENT CRUDE':'brentCrude','CAD/USD':'cadUsd','USD/CAD':'cadUsd','TSX':'tsx',
+    'GOC 10Y YIELD':'goc10y'};
   const freqMap={'bocRate':'8x/year','realGdp':'Monthly','cpi':'Monthly','unemployment':'Monthly',
     'housingStarts':'Monthly','tradeBalance':'Monthly','retailSales':'Monthly','consumerConfidence':'Monthly',
     'participation':'Monthly','employmentChange':'Monthly','wageGrowth':'Monthly',
-    'wtiCrude':'Daily','brentCrude':'Daily','cadUsd':'Daily','tsx':'Daily'};
+    'wtiCrude':'Daily','brentCrude':'Daily','cadUsd':'Daily','tsx':'Daily','goc10y':'Daily'};
   const srcFallback={'bocRate':'Bank of Canada','realGdp':'Statistics Canada','cpi':'Statistics Canada',
     'unemployment':'Statistics Canada','housingStarts':'CMHC','tradeBalance':'Statistics Canada',
     'retailSales':'Statistics Canada','consumerConfidence':'Conference Board','participation':'Statistics Canada',
     'employmentChange':'Statistics Canada','wageGrowth':'Statistics Canada',
-    'wtiCrude':'yfinance','brentCrude':'yfinance','cadUsd':'yfinance','tsx':'yfinance'};
+    'wtiCrude':'yfinance','brentCrude':'yfinance','cadUsd':'yfinance','tsx':'yfinance','goc10y':'Bank of Canada'};
+  // Tolerant label resolution — exact uppercase match first, then longest startsWith/contains
+  // (labels arrive as 'CPI YoY', 'HOUSING STARTS SAAR', 'TSX COMPOSITE', 'GoC 10Y YIELD', etc.)
+  function _kiLabelKey(label){
+    const up=String(label||'').toUpperCase().replace(/\s+/g,' ').trim();
+    if(!up)return'';
+    if(labelMap[up])return labelMap[up];
+    let best='',bestLen=0;
+    for(const k in labelMap){
+      if(k.length>bestLen&&(up.startsWith(k)||up.indexOf(k)!==-1)){best=labelMap[k];bestLen=k.length}
+    }
+    return best;
+  }
   if(!ki.length)return'<div class="tldr-empty">Indicator data pending.</div>';
   let rows='';
   ki.forEach(ind=>{
-    const key=labelMap[(ind.label||'').toUpperCase()]||'';
+    const key=_kiLabelKey(ind.label);
     const m=meta[key]||{};
     const freq=freqMap[key]||'';
     const chgShort=ind.change||m.change||'';
@@ -623,17 +612,18 @@ function _tldrBuildMarketsTable(){
   // Commodities section
   let commItems=[];
   comms.forEach(c=>{
-    commItems.push({name:c.name||c.symbol||'',value:c.val||c.price||c.value||'',change:c.mm||c.day||c.change||'',source:c.source||'yfinance'});
+    // 'day' carries the W/W figure in this export; pick() skips ''/'N/A' placeholders
+    commItems.push({name:c.name||c.symbol||'',value:c.val||c.price||c.value||'',change:pick(c.day,c.wow,c.change,c.mm),source:c.source||'yfinance'});
   });
 
   // Currencies section
   const fxUnits={'CAD/USD':'rate','USD/CAD':'rate','EUR/USD':'rate','GBP/USD':'rate','USD/JPY':'rate'};
   let fxItems=[];
-  if(fm.fx&&fm.fx.length){fm.fx.forEach(f=>{fxItems.push({name:f.name||'',value:f.value||f.val||'',change:f.mm||f.day||f.change||'',source:'yfinance',forceUnit:fxUnits[f.name]||'rate'})})}
+  if(fm.fx&&fm.fx.length){fm.fx.forEach(f=>{fxItems.push({name:f.name||'',value:f.value||f.val||'',change:pick(f.day,f.wow,f.change,f.mm),source:'yfinance',forceUnit:fxUnits[f.name]||'rate'})})}
 
   // Indices section
   let idxItems=[];
-  if(fm.indices&&fm.indices.length){fm.indices.forEach(idx=>{idxItems.push({name:idx.name||'',value:idx.value||idx.val||'',change:idx.mm||idx.day||idx.change||'',source:'yfinance',forceUnit:'pts'})})}
+  if(fm.indices&&fm.indices.length){fm.indices.forEach(idx=>{idxItems.push({name:idx.name||'',value:idx.value||idx.val||'',change:pick(idx.day,idx.wow,idx.change,idx.mm),source:'yfinance',forceUnit:'pts'})})}
 
   if(!commItems.length&&!fxItems.length&&!idxItems.length)return'<div class="tldr-empty">Markets data pending.</div>';
 
@@ -663,7 +653,7 @@ function _tldrBuildWeeklyDataTable(){
     const val=c.val||c.price||c.value||'';
     if(!val)return; // skip rows without values
     const parsed=_parseMarketVal(val);
-    const chg=_normalizeChg(c.mm||c.day||c.change||'');
+    const chg=_normalizeChg(pick(c.day,c.wow,c.change,c.mm));
     let cls='unch';
     if(chg.startsWith('+'))cls='up';
     else if(chg.startsWith('-'))cls='down';
@@ -748,7 +738,9 @@ function _tldrBuildBriefing(){
   var c1Text=(stats.total_projects)?'<strong>Cross-reference:</strong> The database tracks '+(stats.total_projects||0).toLocaleString()+' active projects valued at '+(D.pipeline_value||'$'+((stats.total_value_billions||0).toFixed(1))+'B')+' across Canada.'+(stats.new_this_week?' '+stats.new_this_week+' new projects discovered this week.':''):'';
   if(ic.length>=1){
     var ch=ic[0];
-    c1Text=(ch.reasoning?san(ch.reasoning):c1Text);
+    // The export carries the validator-enforced text in callout (reasoning is null)
+    var c1Spec=ch.callout||ch.reasoning;
+    c1Text=(c1Spec?san(c1Spec):c1Text);
     callouts.push({text:c1Text,chart:ch});
   }else if(c1Text){
     callouts.push({text:c1Text,chart:null});
@@ -757,7 +749,8 @@ function _tldrBuildBriefing(){
   // Second callout: second insight chart
   if(ic.length>=2){
     var ch2=ic[1];
-    callouts.push({text:ch2.reasoning?san(ch2.reasoning):'',chart:ch2});
+    var c2Spec=ch2.callout||ch2.reasoning;
+    callouts.push({text:c2Spec?san(c2Spec):'',chart:ch2});
   }
 
   // Intersperse callouts between paragraphs
@@ -812,34 +805,37 @@ function _tldrCalloutHtml(co,idx){
 /* Render callout SVG charts async after page paint */
 async function _tldrRenderCalloutCharts(){
   var ic=D.insightCharts||D.insight_charts||[];
-  var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
+  // indicators-sourced specs read indicators.json history \u2014 make sure it is loaded first
+  if(ic.some(function(c){return c&&c.dataSource==='indicators'})){
+    try{await fetchJSON('indicators.json');if(_indHistory&&!_indHistory.length)_indHistory=null}catch(e){}
+  }
   for(var idx=0;idx<ic.length&&idx<2;idx++){
     var ch=ic[idx];var keys=ch.dataKeys||[];
     var el=document.getElementById('tldrCalloutSvg_'+idx);
     if(!el||!keys.length)continue;
-    // Load all timeseries for this chart
+    // Resolve series honoring the spec's dataSource (indicators.json history vs timeseries.json)
     var allSeries=[];
-    for(var ki=0;ki<keys.length;ki++){
-      var ts=await loadTimeseries(keys[ki]);
-      if(!ts){ts=await loadTimeseries('comm_'+keys[ki])}
-      var raw=ts&&(ts.series||ts);
-      if(Array.isArray(raw)&&raw.length)allSeries.push({key:keys[ki],data:raw,color:colors[ki%colors.length]});
-    }
-    if(!allSeries.length){el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
+    try{allSeries=await _loadChartSpecSeries(ch)}catch(e){allSeries=[]}
     // Filter to last 5 months (tighter window for the editorial chart)
     var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-5);
     allSeries.forEach(function(s){s.data=s.data.filter(function(p){return new Date(p.date)>=cutoff}).sort(function(a,b){return new Date(a.date)-new Date(b.date)})});
-    var chartTitle=ch.title||'';
+    allSeries=allSeries.filter(function(s){return s.data.length>=2});
+    if(!allSeries.length){el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No timeseries data</div>';continue;}
+    // Title and subtitle must reflect the actual 5-month window
+    var chartTitle=(ch.title||'').replace(/\b\d+([-\s]?[Mm]onth)\b/,'5$1');
     var chartSubtitle=(ch.subtitle||'').replace(/\b\d+[-\s]?month\b/i,'5-month');
     // Pick a sensible source line for the top-level hero. If keys look like crude/brent keep the existing EIA+ICE attribution.
     var src=ch.source;
     if(!src){
-      var ks=keys.map(function(k){return String(k).toLowerCase()}).join(',');
-      if(/\bwti\b|\bbrent\b|\bwcs\b/.test(ks))src='Source: EIA, ICE \u00b7 daily spot close';
-      else if(/\bgold\b|\bsilver\b|\bcopper\b|\bnickel\b|\bzinc\b|\blithium\b/.test(ks))src='Source: LBMA, LME';
-      else if(/\bnatural_gas\b|\bpropane\b|\blng\b/.test(ks))src='Source: EIA, NYMEX';
-      else if(/\bwheat\b|\bcanola\b|\bsoybean\b|\bcorn\b|\bpotash\b/.test(ks))src='Source: CBOT, ICE Futures';
-      else src='Source: The Lagging Indicator';
+      if(ch.dataSource==='indicators')src='Source: Statistics Canada';
+      else{
+        var ks=keys.map(function(k){return String(k).toLowerCase()}).join(',');
+        if(/\bwti\b|\bbrent\b|\bwcs\b/.test(ks))src='Source: EIA, ICE \u00b7 daily spot close';
+        else if(/\bgold\b|\bsilver\b|\bcopper\b|\bnickel\b|\bzinc\b|\blithium\b/.test(ks))src='Source: LBMA, LME';
+        else if(/\bnatural_gas\b|\bpropane\b|\blng\b/.test(ks))src='Source: EIA, NYMEX';
+        else if(/\bwheat\b|\bcanola\b|\bsoybean\b|\bcorn\b|\bpotash\b/.test(ks))src='Source: CBOT, ICE Futures';
+        else src='Source: The Lagging Indicator';
+      }
     }
     el.innerHTML=_svgCalloutChart(allSeries,ch.annotations||[],chartTitle,chartSubtitle,ch.chartType||'line',src);
   }
@@ -1078,7 +1074,7 @@ function _svgCalloutChart(seriesArr,annotations,title,subtitle,chartType,source,
 
 // Resolves a chartSpec ({dataKeys, chartType, window, dataSource, ...}) into a pre-loaded seriesArr
 // suitable for _svgCalloutChart. Handles both timeseries.json (loadTimeseries) and indicators.json history.
-async function _loadChartSpecSeries(spec){
+async function _loadChartSpecSeries(spec,prov){
   var keys=(spec&&spec.dataKeys)||[];
   var colors=['#003153','#7c3aed','#c4320a','#0d7a3f'];
   var dataSource=spec.dataSource||'timeseries';
@@ -1089,7 +1085,7 @@ async function _loadChartSpecSeries(spec){
 
   if(dataSource==='indicators'){
     for(var ki=0;ki<keys.length;ki++){
-      var pts=_indResolveIndicatorsSeries(keys[ki],windowMonths);
+      var pts=_indResolveIndicatorsSeries(keys[ki],windowMonths,prov);
       if(!pts||pts.length<2)continue;
       out.push({key:keys[ki],data:pts.map(function(p){return{date:p.label+'-01',value:p.value}}),color:colors[ki%colors.length]});
     }
@@ -1184,8 +1180,8 @@ async function _tldrBuildProjects(){
     const dt=new Date(weekOf+'T00:00:00');
     const mon=new Date(dt);mon.setDate(dt.getDate()-dt.getDay()+1);// Monday
     const sun=new Date(mon);sun.setDate(mon.getDate()+6);
-    weekStart=mon.toISOString().slice(0,10);
-    weekEnd=sun.toISOString().slice(0,10);
+    weekStart=_localYMD(mon);
+    weekEnd=_localYMD(sun);
   }
 
   // Load projects and filter for this week's activity
@@ -1588,91 +1584,6 @@ async function renderInteractiveMap(){
   },100);
 }
 
-/* ── TLDR Word Cloud (theme blues) ── */
-function renderTLDRWordCloud(topics,containerId){
-  const container=document.getElementById(containerId);
-  if(!container||!topics||!topics.length)return;
-  const w=container.clientWidth||300,h=Math.min(Math.round(w*0.8),250);
-  container.innerHTML='';
-  const blues=['#1e40af','#2563EB','#3b82f6','#4B6CB7','#60A5FA','#6B8DD6','#93c5fd'];
-  const maxFreq=Math.max(...topics.map(t=>t.frequency||t.count||1));
-  const sorted=[...topics].sort((a,b)=>(b.frequency||b.count||1)-(a.frequency||a.count||1));
-  const words=sorted.slice(0,35).map((t,i)=>{
-    const freq=t.frequency||t.count||1;
-    return{text:t.topic||t.word||'',size:12+((freq/maxFreq)*30),freq,colorIdx:Math.min(Math.floor(i/5),blues.length-1)};
-  });
-  const layout=d3.layout.cloud().size([w,h]).words(words).padding(6).rotate(()=>0).font('Inter').fontSize(d=>d.size).on('end',drawn);
-  layout.start();
-  function drawn(wds){
-    const svg=d3.select(container).append('svg').attr('width',w).attr('height',h);
-    const g=svg.append('g').attr('transform','translate('+w/2+','+h/2+')');
-    g.selectAll('text').data(wds).enter().append('text')
-      .style('font-size',d=>d.size+'px').style('font-family','Inter')
-      .style('font-weight',d=>d.size>35?'700':d.size>25?'600':'500')
-      .style('fill',d=>blues[d.colorIdx])
-      .style('opacity',d=>0.55+Math.min(d.size/52,0.45))
-      .attr('text-anchor','middle').attr('transform',d=>'translate('+d.x+','+d.y+')')
-      .text(d=>d.text)
-      .append('title').text(d=>d.text+' (frequency: '+d.freq+')');
-  }
-}
-
-/* ── TLDR Financial Markets section ── */
-async function renderTLDRMarkets(){
-  const el=$('tldrMarketsSection');
-  if(!el)return;
-  const fm=(D&&(D.financialMarkets||D.financial_markets||D.markets))||{};
-  let indices=fm.indices||[];let fx=fm.fx||[];
-  // Build from indicators if needed
-  if(!indices.length&&indicators.length){
-    const idxMap=[{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'}];
-    idxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!indices.find(x=>x.name===m.name))indices.push({name:m.name,value:i.value,change:''})});
-  }
-  if(!fx.length&&indicators.length){
-    const fxMap=[{name:'CAD/USD',ind:'cadusd'},{name:'CAD/USD',ind:'cad_usd'}];
-    fxMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!fx.find(x=>x.name===m.name))fx.push({name:m.name,value:i.value})});
-  }
-  // Add key commodities
-  const commItems=[];
-  const commMap=[{name:'WTI',ind:'wti'},{name:'WTI',ind:'wti_oil'},{name:'Gold',ind:'gold'},{name:'Nat Gas',ind:'natural_gas'}];
-  commMap.forEach(m=>{const i=indicators.find(x=>x.indicator_name===m.ind);if(i&&!commItems.find(x=>x.name===m.name))commItems.push({name:m.name,value:i.value,change:''})});
-
-  const all=[...indices.slice(0,2),...fx.slice(0,1),...commItems.slice(0,3)];
-  if(!all.length){el.innerHTML='<div style="color:#475569;font-size:var(--text-sm)">Markets data pending.</div>';return}
-
-  // Brief narrative
-  const tsx=indices.find(x=>x.name&&x.name.includes('TSX'));
-  const cad=fx.find(x=>x.name&&x.name.includes('CAD'));
-  const wti=commItems.find(x=>x.name==='WTI');
-  let narrative='';
-  if(tsx)narrative+=`The S&P/TSX traded at ${tsx.value||'N/A'}${tsx.change?' ('+tsx.change+')':''}. `;
-  if(cad)narrative+=`The Canadian dollar traded at ${cad.value||'N/A'} against the U.S. dollar. `;
-  if(wti)narrative+=`WTI crude at US$${wti.value||'N/A'}/bbl.`;
-  if(narrative)narrative=`<p style="margin-bottom:12px">${narrative}</p>`;
-
-  // Grid
-  let gridHtml='<div class="ed-markets-grid">';
-  all.forEach(item=>{
-    const chg=item.change||item.day||'';
-    const isNeg=chg.startsWith('-');
-    const cls=isNeg?'change-down':(chg?'change-up':'');
-    gridHtml+=`<div class="ed-markets-item"><div class="ed-markets-ticker">${item.name||''}</div><div class="ed-markets-price">${item.value||'N/A'}</div>${chg?`<div class="ed-markets-change ${cls}">${isNeg?'\u2193':'\u2191'} ${chg}</div>`:''}`;
-    gridHtml+='</div>';
-  });
-  gridHtml+='</div>';
-
-  // Commodity movers chart as supporting infographic
-  const chartHtml=`<div class="ed-chart-inline" id="tldrCommodityCard" style="float:none;width:100%;margin:16px 0">
-    <div class="ec-title">Commodity Movers</div><div class="ec-sub">Biggest weekly price changes</div>
-    <div style="height:180px;position:relative"><canvas id="tldrCommodityChart"></canvas></div>
-    <div class="ec-source">Yahoo Finance</div>
-  </div>`;
-
-  el.innerHTML=narrative+gridHtml+chartHtml;
-  // Render commodity chart
-  try{await _ensureChartData();_renderCommodityChart('tldrCommodityChart','tldrCommodityCard','tldr')}catch(e){console.warn('Markets chart:',e)}
-}
-
 /* ══ NATIONAL TAB (redesigned: subtabs Canada + Global Players) ══ */
 let _nationalSubRendered={};
 let _activeNationalSub='canada';
@@ -1794,6 +1705,8 @@ function _splitSentences(text){
 
 // Build rich callout text by combining agent reasoning with additional context from all province narrative fields
 function _buildProvCalloutText(chartSpec,provData,chartIdx){
+  // The validator-enforced spec callout takes precedence over synthesized enrichment (mirrors the industries path)
+  if(hasVal(chartSpec.callout))return san(chartSpec.callout);
   var reasoning=chartSpec.reasoning||'';
   // Strip only the most database-specific phrases, keep the news-driven content
   reasoning=reasoning
@@ -1859,11 +1772,11 @@ function buildAgentInsightStrip(prefix,chartSpec,provData){
   return html;
 }
 
-async function renderAgentInsightChart(prefix,chartSpec){
+async function renderAgentInsightChart(prefix,chartSpec,prov){
   if(!chartSpec||!chartSpec.dataKeys||!chartSpec.dataKeys.length)return;
   var el=document.getElementById(prefix+'AgentInsightSvg');
   if(!el)return;
-  var series=await _loadChartSpecSeries(chartSpec);
+  var series=await _loadChartSpecSeries(chartSpec,prov);
   if(!series.length){
     el.innerHTML='<div style="height:280px;display:flex;align-items:center;justify-content:center;color:#7a8599;font-size:12px">No historical data available</div>';
     return;
@@ -2425,12 +2338,44 @@ async function _initCanadaInsightChart(canvasId){
   }catch(e){console.warn('Canada insight chart:',e)}
 }
 var _globalChartInited={};
-async function _initGlobalInsightChart(countryKey,canvasId){
+// Pull the narrative-driven chart spec (tldr-charts agent) off a briefing global
+// region object: global[i].insightCharts[0]. Same shape as province/industry specs
+// ({chartType,title,subtitle,dataKeys[],dataSource?,callout}). Returns null when
+// absent or missing dataKeys so callers fall back to GLOBAL_CHART_CFG.
+function _globalChartSpec(gData){
+  var arr=gData&&gData.insightCharts;
+  if(!Array.isArray(arr)||!arr.length)return null;
+  var spec=arr[0];
+  if(!spec||!Array.isArray(spec.dataKeys)||!spec.dataKeys.length)return null;
+  return spec;
+}
+async function _initGlobalInsightChart(countryKey,canvasId,spec){
   if(_globalChartInited[countryKey])return;_globalChartInited[countryKey]=true;
-  var cfg=GLOBAL_CHART_CFG[countryKey];if(!cfg)return;
   var canvas=document.getElementById(canvasId);if(!canvas)return;
   var wrapper=canvas.closest('.insight-chart-wrapper')||canvas.parentElement;
   if(!wrapper)return;
+  // 1) Narrative-driven spec from the briefing — variable each week, chosen by the
+  // chart agent to match the region's narrative. Rendered through the shared
+  // spec-driven machinery (_loadChartSpecSeries + _svgCalloutChart). The spec-level
+  // callout takes precedence for the chart strip when the spec renders.
+  if(spec&&spec.dataKeys&&spec.dataKeys.length){
+    try{
+      var specSeries=await _loadChartSpecSeries(spec);
+      if(specSeries.length){
+        var sTitle=spec.title||'Weekly Insight';
+        var sType=spec.chartType||'line';
+        var sSrc=spec.source||_deriveChartSource(spec.dataKeys);
+        var sSvg=_svgCalloutChart(specSeries,spec.annotations||[],sTitle,spec.subtitle||'',sType,sSrc);
+        var sCallout=hasVal(spec.callout)?'<div class="narrative chart-intro"><p>'+san(spec.callout)+'</p></div>':'';
+        wrapper.outerHTML=sCallout+'<div class="tldr-callout"><div class="tldr-callout-chart"><div class="tldr-callout-svg">'+sSvg+'</div></div></div>';
+        return;
+      }
+      console.warn('Global insight spec for '+countryKey+' had unresolvable dataKeys ('+spec.dataKeys.join(',')+') — falling back to GLOBAL_CHART_CFG');
+    }catch(e){console.warn('Global insight spec chart '+countryKey+':',e)}
+  }
+  // 2) Fallback: legacy hardcoded config (graceful "No data" end state preserved)
+  var cfg=GLOBAL_CHART_CFG[countryKey];
+  if(!cfg){wrapper.innerHTML='<div class="tldr-callout"><div class="tldr-callout-chart" style="padding:40px 0;text-align:center;color:#7a8599;font-size:12px">No data</div></div>';return}
   try{
     var allTs=await fetchJSON('timeseries.json').catch(function(){return{}});
     var raw=null;var keys=cfg.tsKeys||[cfg.tsKey];var pickedKey=keys[0];
@@ -2519,7 +2464,7 @@ async function _renderCanadaSubtab(){
   if(newPrj||natProjects.length){
     // Separate new projects from existing, sort each by value, new first
     var weekOf=D&&D.week_of||'';var weekStart='',weekEnd='';
-    if(weekOf){var dt=new Date(weekOf+'T00:00:00');var mon=new Date(dt);mon.setDate(dt.getDate()-dt.getDay()+1);var sun=new Date(mon);sun.setDate(mon.getDate()+6);weekStart=mon.toISOString().slice(0,10);weekEnd=sun.toISOString().slice(0,10)}
+    if(weekOf){var dt=new Date(weekOf+'T00:00:00');var mon=new Date(dt);mon.setDate(dt.getDate()-dt.getDay()+1);var sun=new Date(mon);sun.setDate(mon.getDate()+6);weekStart=_localYMD(mon);weekEnd=_localYMD(sun)}
     var newNatProjects=[];var existingNatProjects=[];
     natProjects.filter(meetsProvThreshold).forEach(function(p){
       var tracked=(p.firstTracked||'').slice(0,10);
@@ -2719,14 +2664,25 @@ async function _renderGlobalSubtab(key){
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>'+countryInfo.label+' Analysis</h3></div>';
   if(analysis){html+=_natNarrative(analysis,gData.sources||[])}else{html+='<div class="dash-narrative"><p style="color:#7a8599">Analysis available after next pipeline run.</p></div>'}
   var chartCfg=GLOBAL_CHART_CFG[key];
-  if(chartCfg){var chartId='natChart_'+key;html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">'+chartCfg.title+'</div><div class="insight-chart-subtitle">'+chartCfg.subtitle+'</div><div class="chart-wrap"><canvas id="'+chartId+'"></canvas></div><div class="chart-source">Source: '+chartCfg.source+'</div></div>'}
+  // Narrative-driven spec shipped in the briefing (global[i].insightCharts[0]) takes
+  // precedence over the legacy hardcoded config; unresolvable specs fall back in
+  // _initGlobalInsightChart. The placeholder wrapper title/subtitle/source mirror
+  // whichever path is expected to render.
+  var icSpec=_globalChartSpec(gData);
+  if(chartCfg||icSpec){
+    var chartId='natChart_'+key;
+    var wTitle=icSpec?(icSpec.title||'Weekly Insight'):chartCfg.title;
+    var wSub=icSpec?(icSpec.subtitle||''):chartCfg.subtitle;
+    var wSrc=icSpec?(icSpec.source||_deriveChartSource(icSpec.dataKeys)):('Source: '+chartCfg.source);
+    html+='<div class="insight-chart-wrapper"><div class="insight-chart-title">'+san(wTitle)+'</div><div class="insight-chart-subtitle">'+san(wSub)+'</div><div class="chart-wrap"><canvas id="'+chartId+'"></canvas></div><div class="chart-source">'+san(wSrc)+'</div></div>';
+  }
   html+=_natSourcesSection(gData.sources||[]);
   html+='</div>';
   html+='<div class="section-block"><div class="section-header"><div class="accent-bar"></div><h3>Key Indicators</h3><span class="section-meta">'+indRows.filter(function(r){return hasVal(r.value)}).length+' indicators</span></div>';
   html+=_natIndTable(countryInfo.flag,countryInfo.label,indRows,'Source: '+(GLOBAL_SRC_MAP[key]||''));
   html+='</div>';
   el.innerHTML=html;
-  if(chartCfg){_initGlobalInsightChart(key,'natChart_'+key)}
+  if(chartCfg||icSpec){_initGlobalInsightChart(key,'natChart_'+key,icSpec)}
 }
 async function _preRenderGlobalSubtabs(){
   var keys=['us','china','eu','uk'];
@@ -3321,7 +3277,8 @@ async function _renderProvContent(){
         var qPer=qoqRec.period?('Q'+Math.ceil((parseInt(qoqRec.period.substring(5,7)))/3)+' '+qoqRec.period.substring(0,4)):'';
         var qVal=String(qoqRec.value);
         if(!qVal.includes('%'))qVal=(parseFloat(qVal)>=0?'+':'')+qVal+'%';
-        return{label:'Real GDP Growth (QoQ)',freq:'Quarterly',value:qVal,change:'QoQ',period:qPer,source:'Ontario Economic Accounts'};
+        var qSrc=code==='ON'?'Ontario Economic Accounts':code==='QC'?'Institut de la statistique du Québec':code==='BC'?'BC Stats Economic Accounts':code==='AB'?'Alberta Economic Accounts':'Provincial Economic Accounts';
+        return{label:'Real GDP Growth (QoQ)',freq:'Quarterly',value:qVal,change:'QoQ',period:qPer,source:qSrc};
       }
       return{label:'GDP Growth (Real, YoY)',freq:'Annual',value:pick(provInd.gdp,provIndVal('gdp')),change:'YoY',period:'2024',source:'StatCan 36-10-0402'};
     })(),
@@ -3615,7 +3572,7 @@ async function _renderProvContent(){
   await _ensureChartData();
   if(_icArr.length){
     for(var ci=0;ci<_icArr.length;ci++){
-      await renderAgentInsightChart('prov'+ci,_icArr[ci]);
+      await renderAgentInsightChart('prov'+ci,_icArr[ci],code);
     }
   }else{
     await renderInsightCharts('prov',provThemes,provProj,code,provContent);
@@ -3808,7 +3765,7 @@ const IND_KEY_INDICATORS={
     {label:'Nickel',key:'nickel',source:'timeseries',unit:'USD/t',srcLabel:'LME / Yahoo Finance',srcUrl:''},
     {label:'Iron Ore',key:'iron_ore',source:'timeseries',unit:'USD/t',srcLabel:'SGX / Platts',srcUrl:''},
     // Nuclear & fertilizer proxies
-    {label:'Uranium (Cameco)',key:'cameco_uranium',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (CCJ)',srcUrl:'https://finance.yahoo.com/quote/CCJ/'},
+    {label:'Uranium (Cameco)',key:'uranium',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (CCJ)',srcUrl:'https://finance.yahoo.com/quote/CCJ/'},
     {label:'Potash (Nutrien)',key:'potash_nutrien',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (NTR)',srcUrl:'https://finance.yahoo.com/quote/NTR/'},
     {label:'Coal',key:'coal',source:'timeseries',unit:'USD/t',srcLabel:'Yahoo Finance',srcUrl:''},
     // Labour
@@ -3820,7 +3777,7 @@ const IND_KEY_INDICATORS={
     {label:'WTI Crude (Fuel)',key:'wti',source:'timeseries',unit:'USD/bbl',srcLabel:'Yahoo Finance (CL=F)',srcUrl:'https://finance.yahoo.com/quote/CL=F/'},
     {label:'Coal',key:'coal',source:'timeseries',unit:'USD/t',srcLabel:'Yahoo Finance',srcUrl:''},
     {label:'LNG (Asia JKM)',key:'lng_asia',source:'timeseries',unit:'USD/MMBtu',srcLabel:'S&P Platts JKM',srcUrl:''},
-    {label:'Uranium (Cameco)',key:'cameco_uranium',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (CCJ)',srcUrl:'https://finance.yahoo.com/quote/CCJ/'},
+    {label:'Uranium (Cameco)',key:'uranium',source:'timeseries',unit:'USD',srcLabel:'Yahoo Finance (CCJ)',srcUrl:'https://finance.yahoo.com/quote/CCJ/'},
     // Labour
     {label:'Utilities Employment',key:'utilities_employment',source:'indicators',unit:'thousands',freq:'Monthly',srcLabel:'StatCan 14-10-0022',srcUrl:STATCAN_LFS_URL},
     // Cost of capital & inflation
@@ -4287,13 +4244,23 @@ function _indResolveKeyRow(spec,tsData){
 // ==== Industry insight chart infrastructure ====
 // Resolves a single dataKey to an array of {label, value} points for the given window.
 // dataSource: "indicators" reads indicators.json history; caller handles "timeseries" async.
-function _indResolveIndicatorsSeries(key,windowMonths){
+// prov scopes the history rows (history holds 14 jurisdictions for shared names like
+// "unemployment"): explicit arg wins, else a province key prefix (on_exports_pct), else national.
+function _indResolveIndicatorsSeries(key,windowMonths,prov){
   var _a=_IND_KEY_ALIASES[key];if(_a)key=_a.name;
+  if(prov==null||prov===''){
+    var pm=/^(on|qc|ab|bc|sk|mb|ns|nb|nl|pe|yt|nt|nu)_/i.exec(String(key));
+    prov=pm?pm[1].toUpperCase():'national';
+  }
   var hist=_getHistory()||[];
+  var rows=hist.filter(function(r){return r.indicator_name===key&&r.value!=null&&r.period&&_matchProv(r.province,prov)});
+  // Graceful fallback: single-jurisdiction series stored under a different province label
+  if(!rows.length)rows=hist.filter(function(r){return r.indicator_name===key&&r.value!=null&&r.period});
+  // Drop briefing-snapshot artifact periods (real observations are YYYY-MM-01 / YYYY-MM / YYYY) — mirrors computeChange
+  var clean=rows.filter(function(r){var p=String(r.period);return /^\d{4}-\d{2}-01$/.test(p)||/^\d{4}-\d{2}$/.test(p)||/^\d{4}$/.test(p)});
+  if(clean.length>=2)rows=clean;
   var byMonth={};
-  hist.forEach(function(r){
-    if(r.indicator_name!==key)return;
-    if(r.value==null||!r.period)return;
+  rows.forEach(function(r){
     var ym=String(r.period).slice(0,7);
     if(!/^\d{4}-\d{2}$/.test(ym))return;
     // Prefer later-period duplicates (calendar-month dedupe)
@@ -5084,7 +5051,7 @@ function _buildMktEquities(fm){
     [{name:'S&P/TSX',ind:'tsx_composite'},{name:'S&P/TSX',ind:'tsx'},{name:'S&P 500',ind:'sp500'},{name:'Dow Jones',ind:'djia'},{name:'NASDAQ',ind:'nasdaq'},{name:'FTSE 100',ind:'ftse100'},{name:'DAX',ind:'dax'},{name:'Nikkei 225',ind:'nikkei225'}].forEach(function(m){var i=indicators.find(function(x){return x.indicator_name===m.ind});if(i&&!indices.find(function(x){return x.name===m.name}))indices.push({name:m.name,value:i.value,change:'',region:''})});
   }
   if(!indices.length)return '';
-  var items=indices.map(function(it){return{name:it.name,value:it.value||'',change:it.change||it.day||'',mm:it.mm||'',yy:it.yy||'',commentary:it.commentary||''}});
+  var items=indices.map(function(it){return{name:it.name,value:it.value||it.val||it.price||'',change:it.change||it.day||'',mm:it.mm||'',yy:it.yy||'',commentary:it.commentary||''}});
   var defaults=[items[0].name];
   _mktState.equities={items:items,active:new Set(defaults),mode:'price',range:3,freq:'all'};
 
@@ -5096,9 +5063,9 @@ function _buildMktEquities(fm){
     h+='<div class="series-pill'+(act?' active':'')+'" data-name="'+it.name+'" data-key="equities" onclick="_mktSelectPill(this)">';
     h+='<div class="pill-name">'+it.name+'</div><div class="pill-value">'+(it.value||'\u2014')+'</div>';
     h+='<div class="pill-changes-row">';
-    if(it.change)h+='<div class="pill-chg-item"><span class="pill-chg-label">1W</span><span class="pill-chg-val '+_chgCls(it.change)+'">'+it.change+'</span></div>';
-    if(it.mm)h+='<div class="pill-chg-item"><span class="pill-chg-label">1M</span><span class="pill-chg-val '+_chgCls(it.mm)+'">'+it.mm+'</span></div>';
-    if(it.yy)h+='<div class="pill-chg-item"><span class="pill-chg-label">1Y</span><span class="pill-chg-val '+_chgCls(it.yy)+'">'+it.yy+'</span></div>';
+    if(hasVal(it.change))h+='<div class="pill-chg-item"><span class="pill-chg-label">1W</span><span class="pill-chg-val '+_chgCls(it.change)+'">'+it.change+'</span></div>';
+    if(hasVal(it.mm))h+='<div class="pill-chg-item"><span class="pill-chg-label">1M</span><span class="pill-chg-val '+_chgCls(it.mm)+'">'+it.mm+'</span></div>';
+    if(hasVal(it.yy))h+='<div class="pill-chg-item"><span class="pill-chg-label">1Y</span><span class="pill-chg-val '+_chgCls(it.yy)+'">'+it.yy+'</span></div>';
     h+='</div></div>';
   });
   h+='</div>';
@@ -5123,7 +5090,7 @@ function _buildMktFx(fm){
     [{name:'CAD/USD',ind:'cad_usd'},{name:'CAD/USD',ind:'cadusd'},{name:'EUR/USD',ind:'eurusd'},{name:'USD/CNY',ind:'usdcny'},{name:'USD/JPY',ind:'usdjpy'}].forEach(function(m){var i=indicators.find(function(x){return x.indicator_name===m.ind});if(i&&!fx.find(function(x){return x.name===m.name}))fx.push({name:m.name,value:i.value})});
   }
   if(!fx.length)return '';
-  var items=fx.map(function(it){return{name:it.name,value:it.value||'',change:it.day||it.change||'',mm:it.mm||'',yy:it.yy||''}});
+  var items=fx.map(function(it){return{name:it.name,value:it.value||it.val||it.price||'',change:it.day||it.change||'',mm:it.mm||'',yy:it.yy||''}});
   var defaults=[items[0].name];
   _mktState.fx={items:items,active:new Set(defaults),mode:'price',range:3,freq:'all'};
 
@@ -5135,9 +5102,9 @@ function _buildMktFx(fm){
     h+='<div class="fx-pill'+(act?' active':'')+'" data-name="'+it.name+'" data-key="fx" onclick="_mktSelectPill(this)">';
     h+='<div class="pill-name">'+it.name+'</div><div class="pill-value">'+(it.value||'\u2014')+'</div>';
     h+='<div class="pill-changes-row">';
-    if(it.change)h+='<div class="pill-chg-item"><span class="pill-chg-label">1W</span><span class="pill-chg-val '+_chgCls(it.change)+'">'+it.change+'</span></div>';
-    if(it.mm)h+='<div class="pill-chg-item"><span class="pill-chg-label">1M</span><span class="pill-chg-val '+_chgCls(it.mm)+'">'+it.mm+'</span></div>';
-    if(it.yy)h+='<div class="pill-chg-item"><span class="pill-chg-label">1Y</span><span class="pill-chg-val '+_chgCls(it.yy)+'">'+it.yy+'</span></div>';
+    if(hasVal(it.change))h+='<div class="pill-chg-item"><span class="pill-chg-label">1W</span><span class="pill-chg-val '+_chgCls(it.change)+'">'+it.change+'</span></div>';
+    if(hasVal(it.mm))h+='<div class="pill-chg-item"><span class="pill-chg-label">1M</span><span class="pill-chg-val '+_chgCls(it.mm)+'">'+it.mm+'</span></div>';
+    if(hasVal(it.yy))h+='<div class="pill-chg-item"><span class="pill-chg-label">1Y</span><span class="pill-chg-val '+_chgCls(it.yy)+'">'+it.yy+'</span></div>';
     h+='</div></div>';
   });
   h+='</div>';
@@ -5615,15 +5582,32 @@ window.exportProjects=function(){
 const CAL_PAGE_SIZE=10;
 let _calMonth=null,_calYear=null,_calEvents=[],_calFilter={impact:'',institution:'',scope:'upcoming',search:''},_calWired=false,_calPage=1;
 async function renderCalendar(){
-  _calEvents=(D&&(D.watchlist||D.events))||[];
-  if(!_calEvents.length){try{_calEvents=await fetchJSON('events.json')||[]}catch(_){_calEvents=[]}}
+  // Union-merge briefing watchlist + events.json + events_global.json, deduped by (date, normalized title)
+  const _evtKey=e=>(e.date||'')+'|'+String(e.event_name||e.event||e.name||'').trim().toLowerCase();
+  _calEvents=((D&&(D.watchlist||D.events))||[]).slice();
+  const seen=new Set(_calEvents.map(_evtKey));
+  try{
+    const evts=await fetchJSON('events.json');
+    const today=_localYMD(new Date());
+    (Array.isArray(evts)?evts:[]).forEach(e=>{
+      const title=String(e.event_name||e.event||e.name||'').trim();
+      // Skip stale search-noise rows: past-dated items with social-media suffixed titles
+      if((e.date||'')<today&&/- (Facebook|YouTube)$/.test(title))return;
+      // events.json carries significance, the renderer reads impact
+      if(!hasVal(e.impact)){
+        const sig=String(e.significance||'').toLowerCase();
+        e.impact=sig==='high'?'high':sig==='medium'?'medium':'low';
+      }
+      const key=_evtKey(e);
+      if(!seen.has(key)){_calEvents.push(e);seen.add(key)}
+    });
+  }catch(_){}
   // Merge US + European institution releases from static bridge file
   try{
     const globalData=await fetchJSON('events_global.json');
     if(globalData&&Array.isArray(globalData.events)){
-      const seen=new Set(_calEvents.map(e=>(e.date||'')+'|'+(e.event_name||e.event||e.name||'')));
       globalData.events.forEach(e=>{
-        const key=(e.date||'')+'|'+(e.event_name||'');
+        const key=_evtKey(e);
         if(!seen.has(key)){_calEvents.push(e);seen.add(key)}
       });
     }
@@ -5697,7 +5681,8 @@ function renderCalendarGrid(){
       eYear=parseInt(d.split('-')[0]);eMonth=parseInt(d.split('-')[1])-1;eDay=parseInt(d.split('-')[2]);
     }else{
       const parts=d.trim().split(/\s+/);
-      if(parts.length>=2){eMonth=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)]??-1;eDay=parseInt(parts[1])||0;}
+      // Year-less dates anchor to the briefing week_of's year, not the displayed grid year
+      if(parts.length>=2){eMonth=MONTHS_SHORT[(parts[0]||'').toLowerCase().slice(0,3)]??-1;eDay=parseInt(parts[1])||0;eYear=_evtAnchorYear();}
     }
     if(eYear===year&&eMonth===month&&eDay>0){
       if(!eventsByDate[eDay])eventsByDate[eDay]=[];
@@ -5876,7 +5861,14 @@ function _renderPolicyItems(items,maxItems){
     const projCount=a.affected_projects_total||0;
     const projTag=projCount?'<span style="color:#94A3B8;font-size:9px;margin-left:4px">\u00b7 '+projCount+' projects</span>':'';
     const srcDesc=a.source_description||a.source||'';
-    const dateStr=a.date?'<span style="color:#94A3B8;font-size:9px;margin-right:6px">'+a.date.split('T')[0]+'</span>':'';
+    // Policy dates arrive as RFC822 ("Thu, 12 Mar 2026 ...") or date-only strings — splitting on 'T' hits the T in "Thu"
+    let dateDisp='';
+    if(a.date){
+      const rawDate=String(a.date);
+      if(/^\d{4}-\d{2}-\d{2}/.test(rawDate)){dateDisp=rawDate.split('T')[0]}
+      else{const pd=new Date(rawDate);dateDisp=isNaN(pd)?rawDate:pd.toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})}
+    }
+    const dateStr=dateDisp?'<span style="color:#94A3B8;font-size:9px;margin-right:6px">'+san(dateDisp)+'</span>':'';
     const summary=a.summary?'<div style="color:#64748B;font-size:10px;margin-top:2px;line-height:1.4">'+a.summary.substring(0,200)+(a.summary.length>200?'...':'')+'</div>':'';
     listHtml+='<div style="padding:8px 0;border-bottom:1px solid var(--border-light,#e2e8f0)">'+
       '<div style="font-size:var(--text-xs,12px)">'+dateStr+'<a href="'+(a.url||'#')+'" target="_blank" rel="noopener noreferrer" style="color:var(--accent-blue,#2563EB);text-decoration:none;font-weight:500">'+(a.title||a.headline||'Untitled')+'</a>'+badge+sectorTag+projTag+'</div>'+
@@ -6774,22 +6766,26 @@ function renderProvinceComparison(){
   el.innerHTML='<details class="card" style="margin-bottom:0"><summary style="cursor:pointer;padding:12px 16px;font-size:var(--text-sm);font-weight:600;color:#475569;user-select:none">Province Comparison</summary><div style="overflow-x:auto;padding:0 16px 12px"><table style="width:100%;border-collapse:collapse;min-width:700px"><thead><tr style="border-bottom:2px solid #e2e8f0">'+hdr+'</tr></thead><tbody>'+body+'</tbody></table></div></details>';
 }
 
-/* ====== DATA VINTAGE BADGES ====== */
+/* ====== DATA VINTAGE BADGE (national tab) ====== */
 function addDataVintage(){
   if(!D)return;
   const gen=D.generated_at||D.updated_at||'';
   if(!gen)return;
-  const d=gen.split('T')[0];
-  const badge='<span style="display:inline-block;font-size:10px;color:#64748B;background:#f1f5f9;padding:2px 8px;border-radius:4px;margin-left:8px">Data as of '+d+'</span>';
-  // Add to national tab
-  const natEl=$('natAnalysisSection');
-  if(natEl){const existing=natEl.querySelector('.data-vintage');if(!existing){const dv=document.createElement('div');dv.className='data-vintage';dv.style.cssText='text-align:right;padding:4px 0;font-size:10px;color:#94A3B8';dv.innerHTML='Generated: '+gen.replace('T',' ').replace('Z',' UTC');natEl.prepend(dv)}}
+  // renderTab('national') calls renderNational() (which rebuilds #nationalPage
+  // synchronously before its first await) and then this — prepend the vintage
+  // line to the rebuilt national page.
+  const natEl=$('nationalPage');
+  if(!natEl||natEl.querySelector('.data-vintage'))return;
+  const dv=document.createElement('div');
+  dv.className='data-vintage';
+  dv.style.cssText='text-align:right;padding:4px 0;font-size:10px;color:#94A3B8';
+  dv.textContent='Data as of '+gen.split('T')[0]+' · Generated: '+gen.replace('T',' ').replace('Z',' UTC');
+  natEl.prepend(dv);
 }
 
 /* ====== INITIALIZATION ====== */
 // Module scripts are deferred — DOM is already ready, run immediately
 if($('tldrPage'))$('tldrPage').innerHTML=skeleton(6);
-if($('natAnalysisSection'))$('natAnalysisSection').innerHTML='<div class="card">'+skeleton(3)+'</div>';
 // Section-level skeleton placeholders while async sections load
 if($('costMonitor'))$('costMonitor').innerHTML='<div class="card">'+skeleton(2)+'</div>';
 if($('microscopeHistory'))$('microscopeHistory').innerHTML='<div class="card">'+skeleton(2)+'</div>';
