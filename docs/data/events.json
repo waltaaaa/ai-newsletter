@@ -550,14 +550,104 @@
     "relevance": "The budget introduces a new personal income tax bracket at 20% for income over $200,000, effective January 1, 2027, and increases insurance"
   },
   {
-    "date": "2026-06-11",
-    "name": "Capital Investment: Supporting coastal marine health in B.C. with new stewardship projects",
+    "date": "2026-06-15",
+    "name": "Government Policy: Attorney General’s, minister’s statement on the federal Safe Social Media bill",
     "source": "BC Government News",
     "type": "policy",
     "significance": "medium",
     "province": "BC",
-    "url": "https://news.gov.bc.ca/releases/2026WLRS0023-000465",
-    "relevance": "More First Nations-led projects further B.C.’s first ever Coastal Marine Strategy"
+    "url": "https://news.gov.bc.ca/releases/2026AG0039-000696",
+    "relevance": "Niki Sharma, Attorney General, and Rick Glumac, Minister of State for AI and New Technologies, have released the following statements in response to the tabling of Bill C-34, the Safe Social Media Act"
+  },
+  {
+    "date": "2026-06-15",
+    "name": "Government Policy: New drivers in B.C. can now take first knowledge test online",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026AG0036-000674",
+    "relevance": "Updated: Online option offers people more choice and convenience, frees up in-person ICBC appointments"
+  },
+  {
+    "date": "2026-06-15",
+    "name": "Capital Investment: Improving access to skilled trades training in rural, remote communities",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026PSFS0029-000699",
+    "relevance": "B.C. launches Look West Workforce Readiness Initiative to strengthen trades-training opportunities"
+  },
+  {
+    "date": "2026-06-15",
+    "name": "Government Policy: Ministers’, B.C. seniors advocate’s statements on World Elder Abuse Awareness Da",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026HLTH0028-000700",
+    "relevance": "Josie Osborne, Minister of Health; Niki Sharma, Attorney General; and Dan Levitt, B.C. seniors advocate, have released the following statements in recognition of World Elder Abuse Awareness Day on Mon"
+  },
+  {
+    "date": "2026-06-15",
+    "name": "Government Policy: Improving access to primary care for people in the North",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026INF0038-000698",
+    "relevance": "Construction has begun on new primary and community care centre in Vanderhoof"
+  },
+  {
+    "date": "2026-06-15",
+    "name": "Government Policy: Appointing Provincial Court judges for Port Coquitlam, Prince George",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026AG0037-000693",
+    "relevance": "Two new judges will strengthen access to justice in northern B.C., Lower Mainland"
+  },
+  {
+    "date": "2026-06-15",
+    "name": "Government Policy: Temporary closure at Botanical Beach in Juan de Fuca Park",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026ENV0028-000694",
+    "relevance": "Measure supports First Nations traditional shellfish harvest"
+  },
+  {
+    "date": "2026-06-15",
+    "name": "Government Policy: Knowing your rights when buying tickets for summer events",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026AG0038-000695",
+    "relevance": "Event tickets must show certain details under B.C.’s ticket sales law"
+  },
+  {
+    "date": "2026-06-15",
+    "name": "Government Policy: April 2026 saw 119 lives lost due to unregulated-drug toxicity",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026PSSG0050-000684",
+    "relevance": "In April 2026, 119 people in British Columbia lost their lives to suspected unregulated-drug toxicity according to preliminary data reported by the BC Coroners Service, equating to about four deaths p"
+  },
+  {
+    "date": "2026-06-15",
+    "name": "Capital Investment: Expanding skilled-trades training in Okanagan",
+    "source": "BC Government News",
+    "type": "policy",
+    "significance": "medium",
+    "province": "BC",
+    "url": "https://news.gov.bc.ca/releases/2026PREM0028-000691",
+    "relevance": "Okanagan College adds 256 skilled-trades training spots as part of Look West strategy"
   },
   {
     "date": "2026-06-17",
@@ -668,7 +758,7 @@
     "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028701"
   },
   {
-    "date": "2026-07-15",
+    "date": "2026-07-09",
     "name": "Bank of Canada Rate Decision",
     "source": "Bank of Canada",
     "type": "rate_decision",

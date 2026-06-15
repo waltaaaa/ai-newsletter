@@ -3,57 +3,57 @@
     "ON": {
       "name": "Ontario",
       "threshold": 500000000,
-      "qualifying": 88,
-      "qualifying_value": 291147804723.13,
-      "tracked_unpriced": 548,
+      "qualifying": 90,
+      "qualifying_value": 296547804723.13,
+      "tracked_unpriced": 576,
       "stale": 0
     },
     "QC": {
       "name": "Quebec",
       "threshold": 250000000,
-      "qualifying": 90,
-      "qualifying_value": 114841321307.38,
-      "tracked_unpriced": 379,
+      "qualifying": 93,
+      "qualifying_value": 117641321307.38,
+      "tracked_unpriced": 392,
       "stale": 0
     },
     "AB": {
       "name": "Alberta",
       "threshold": 200000000,
-      "qualifying": 174,
-      "qualifying_value": 416345248782.64,
-      "tracked_unpriced": 490,
+      "qualifying": 176,
+      "qualifying_value": 416765248782.64,
+      "tracked_unpriced": 498,
       "stale": 0
     },
     "BC": {
       "name": "British Columbia",
       "threshold": 175000000,
-      "qualifying": 306,
-      "qualifying_value": 480176955110.55,
-      "tracked_unpriced": 296,
+      "qualifying": 307,
+      "qualifying_value": 484876955110.55,
+      "tracked_unpriced": 305,
       "stale": 0
     },
     "SK": {
       "name": "Saskatchewan",
       "threshold": 45000000,
-      "qualifying": 45,
-      "qualifying_value": 38907058169.98,
-      "tracked_unpriced": 113,
+      "qualifying": 46,
+      "qualifying_value": 39071458169.98,
+      "tracked_unpriced": 119,
       "stale": 0
     },
     "MB": {
       "name": "Manitoba",
       "threshold": 40000000,
-      "qualifying": 87,
-      "qualifying_value": 26014589684.76,
-      "tracked_unpriced": 1859,
+      "qualifying": 88,
+      "qualifying_value": 44014589684.76,
+      "tracked_unpriced": 1865,
       "stale": 0
     },
     "NS": {
       "name": "Nova Scotia",
       "threshold": 25000000,
-      "qualifying": 56,
-      "qualifying_value": 13941312434.2,
-      "tracked_unpriced": 256,
+      "qualifying": 57,
+      "qualifying_value": 20241312434.2,
+      "tracked_unpriced": 258,
       "stale": 0
     },
     "NB": {
@@ -61,7 +61,7 @@
       "threshold": 20000000,
       "qualifying": 58,
       "qualifying_value": 7386739530.0,
-      "tracked_unpriced": 113,
+      "tracked_unpriced": 114,
       "stale": 0
     },
     "NL": {
@@ -69,7 +69,7 @@
       "threshold": 17000000,
       "qualifying": 68,
       "qualifying_value": 88518326385.16998,
-      "tracked_unpriced": 1432,
+      "tracked_unpriced": 1437,
       "stale": 0
     },
     "PE": {
@@ -77,7 +77,7 @@
       "threshold": 5000000,
       "qualifying": 80,
       "qualifying_value": 1876744983.2599998,
-      "tracked_unpriced": 3,
+      "tracked_unpriced": 6,
       "stale": 0
     },
     "YT": {
@@ -101,9 +101,9 @@
       "threshold": 3000000,
       "qualifying": 41,
       "qualifying_value": 1991590958.38,
-      "tracked_unpriced": 7,
+      "tracked_unpriced": 10,
       "stale": 0
     }
   },
-  "exported_at": "2026-06-11T13:27:59.775151+00:00"
+  "exported_at": "2026-06-15T19:41:32.041408+00:00"
 }

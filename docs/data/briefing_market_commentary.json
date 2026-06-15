@@ -1,18 +1,17 @@
 {
-  "market_commentary": "<p><span class=\"lead-sentence\">North American equity indices advanced and crude extended its run in the week ending May 14</span> — the S&P/TSX Composite rose <strong>+1.2%</strong> to <strong>34,268</strong><sup>22</sup>, while the S&P 500 gained <strong>+2.2%</strong> to <strong>7,501</strong> and the Nasdaq added <strong>+3.2%</strong> to <strong>26,635</strong>. WTI crude settled at <strong>US$100.16/bbl</strong>, up <strong>+5.0%</strong> on the week and <strong>+60.1%</strong> year over year, with Brent at <strong>US$108.59/bbl</strong> (<strong>+7.2%</strong>) following the Strait of Hormuz supply disruption<sup>19</sup><sup>20</sup>. The Canadian dollar eased <strong>-0.6%</strong> to <strong>0.7276 CAD/USD</strong>. The database tracks <strong>7,480 active and proposed projects</strong> valued at <strong>$1,472.2 billion</strong>.</p><p><span class=\"lead-sentence\">The project pipeline's exposure split between rate-sensitive financing and commodity pricing</span> — the database contains <strong>211 residential projects ($32.2 billion)</strong> and <strong>1,663 infrastructure projects ($210.3 billion)</strong> that carry rate-sensitive financing against the Bank of Canada's <strong>2.25%</strong> policy rate and a <strong>6.09%</strong> prime rate<sup>1</sup>. The 10-year Government of Canada yield stood at <strong>3.56%</strong>, up from <strong>3.06%</strong> a year earlier, with the 2-10 spread at <strong>60 basis points</strong>. The database also tracks <strong>59 oil and gas projects ($97.6 billion)</strong> and <strong>390 mining projects ($227.1 billion)</strong>; if WTI holds above US$100, these energy projects price against a level <strong>+60.1%</strong> above the year-ago benchmark<sup>20</sup>.</p>",
+  "market_commentary": "<p><span class=\"lead-sentence\">Canadian equities advanced as crude oil retreated in the week ending June 12</span> — the S&P/TSX Composite gained 1.52% to 34,937.90<sup>37</sup> while WTI crude fell 11.74% to $80.58/bbl<sup>37</sup>, partially reversing recent supply-shock premium. The S&P 500 rose 0.65% to 7,431.46 and the Nasdaq added 0.70% to 25,888.84<sup>37</sup>. The Canadian dollar slipped 0.40% against the US dollar to 0.7148 CAD/USD<sup>37</sup>, with the Bank of Canada holding its overnight rate at 2.25% on June 10<sup>1</sup>. The project database tracks 6,426 active Canadian capital projects valued at $1,536.5B in aggregate<sup>38</sup>.</p><p><span class=\"lead-sentence\">Pipeline cross-references split along rate and commodity lines</span> — all 6,426 active projects ($1,536.5B) finance against the Government of Canada yield curve anchored by the 2.25% policy rate, with the 5Y benchmark at 3.04% serving as the residential mortgage-renewal anchor for 257 residential projects ($36.2B)<sup>1</sup>. The 2s10s spread sits at 64 basis points after bull-flattening over the past year<sup>37</sup>. If WTI holds below the $74-76 breakeven band cited for Alberta oil-sands records, 89 active oil and gas projects ($63.2B) would face renewed margin pressure<sup>38</sup>, while copper at $6.5085/lb (+35.59% YoY) links to 532 active mining projects ($183.4B)<sup>37</sup>.</p>",
   "market_commentary_callout": {
     "title": "Pipeline Cross-Reference",
     "items": [
-      {"label": "Rate-sensitive residential", "value": "211 projects", "amount": "$32.2B"},
-      {"label": "Rate-sensitive infrastructure", "value": "1,663 projects", "amount": "$210.3B"},
-      {"label": "Oil & gas commodity-linked", "value": "59 projects", "amount": "$97.6B"},
-      {"label": "Mining commodity-linked", "value": "390 projects", "amount": "$227.1B"}
+      {"label": "Total active pipeline", "value": "6,426 projects", "amount": "$1,536.5B"},
+      {"label": "Residential rate-anchored", "value": "257 projects", "amount": "$36.2B"},
+      {"label": "Oil & gas breakeven exposure", "value": "89 projects", "amount": "$63.2B"},
+      {"label": "Mining commodity-linked", "value": "532 projects", "amount": "$183.4B"}
     ]
   },
   "sources": [
-    {"id": 1, "title": "Bank of Canada maintains policy rate at 2.25% (Apr 29, 2026)", "url": "https://www.bankofcanada.ca/2026/04/fad-press-release-2026-04-29/"},
-    {"id": 19, "title": "Oil hovers ~$100 after Trump-Xi Hormuz discussion — CNBC", "url": "https://www.cnbc.com/2026/05/14/oil-prices-today-wti-brent-hormuz-trump-xi-meeting.html"},
-    {"id": 20, "title": "Oil Market Report — May 2026 — IEA", "url": "https://www.iea.org/reports/oil-market-report-may-2026"},
-    {"id": 22, "title": "Canada Stock Market Index (TSX) — Trading Economics", "url": "https://tradingeconomics.com/canada/stock-market"}
+    {"id": 1, "title": "Bank of Canada — Rate Decision press release, June 10, 2026", "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/"},
+    {"id": 37, "title": "Pipeline data — docs/data/timeseries.json (commodity, FX, index, yield spot values)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json"},
+    {"id": 38, "title": "Pipeline data — docs/data/projects_all.json (project counts and aggregate value)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/projects_all.json"}
   ]
 }

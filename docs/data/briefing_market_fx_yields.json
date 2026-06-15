@@ -1,41 +1,40 @@
 {
   "fx": {
     "pairs": [
-      {"name": "CAD/USD", "val": "0.7264", "day": "-0.64%", "mm": "N/A", "yy": "N/A", "unit": ""},
-      {"name": "USD/CAD", "val": "1.3766", "day": "+0.64%", "mm": "N/A", "yy": "N/A", "unit": ""},
-      {"name": "EUR/USD", "val": "1.1623", "day": "-1.34%", "mm": "N/A", "yy": "N/A", "unit": ""},
-      {"name": "GBP/USD", "val": "N/A", "day": "N/A", "mm": "N/A", "yy": "N/A", "unit": "", "note": "source stale or missing — no fx_gbpusd series in timeseries.json this cycle"},
-      {"name": "USD/JPY", "val": "159.11", "day": "+1.20%", "mm": "N/A", "yy": "N/A", "unit": ""},
-      {"name": "USD/CNY", "val": "6.8043", "day": "+0.14%", "mm": "N/A", "yy": "N/A", "unit": ""}
+      {"name": "CAD/USD", "val": "0.7148", "day": "-0.40%", "mm": "-0.40%", "yy": "-2.1%", "unit": ""},
+      {"name": "USD/CAD", "val": "1.3989", "day": "+0.40%", "mm": "+0.40%", "yy": "+2.1%", "unit": ""},
+      {"name": "EUR/USD", "val": "1.1600", "day": "+0.87%", "mm": "+0.87%", "yy": "+0.1%", "unit": ""},
+      {"name": "GBP/USD", "val": "1.3408", "day": "-0.14%", "mm": "-0.14%", "yy": "-1.6%", "unit": ""},
+      {"name": "USD/JPY", "val": "160.1850", "day": "+0.12%", "mm": "+0.12%", "yy": "N/A", "unit": ""},
+      {"name": "USD/CNY", "val": "6.7600", "day": "-0.08%", "mm": "-0.08%", "yy": "-1.8%", "unit": ""}
     ],
     "boc_rate": "2.25%",
-    "fed_rate": "3.50%-3.75%",
-    "rate_differential_bp": 137,
-    "fx_commentary": "<p>The Canadian dollar eased to 0.7264 against the U.S. dollar, down 0.64% on the week, with USD/CAD at 1.3766 — driven by the wide Bank of Canada–Federal Reserve policy gap, which kept the loonie soft even as WTI crude held near US$103.02/bbl<sup>25</sup>. The Bank of Canada's 2.25% policy rate sits roughly 137 basis points below the Federal Reserve's 3.50%-3.75% target midpoint after both central banks held in late April, a differential that continued to favour U.S.-dollar carry over crude-linked Canadian-dollar support<sup>1</sup><sup>16</sup>. EUR/USD fell 1.34% on the week to 1.1623 as Bloomberg-surveyed economists positioned for two ECB quarter-point hikes in 2026 against the energy-driven inflation backdrop, while the ECB held its deposit rate at 2.00% on April 30<sup>22</sup>. USD/JPY rose 1.20% to 159.11 on the persistent U.S.-Japan rate gap, and USD/CNY was little changed at 6.8043. GBP/USD carried no timeseries data this cycle and is reported as not available. The Signal Dispatch cross-reference engine ties the softer loonie to 613 transport and logistics projects valued at $44.13B and the trade-exposed manufacturing pipeline. If the loonie holds near its current level against the greenback through the next BoC decision, those trade-exposed projects would face the import-cost conditions documented after the March merchandise trade surplus of C$1.8B, the first since September 2025<sup>6</sup>.</p>"
+    "fed_rate": "3.50-3.75%",
+    "rate_differential_bp": 125,
+    "fx_commentary": "<p><span class=\"lead-sentence\">The Canadian dollar settled at 0.7148 against the US dollar on June 14, easing 0.40% on the week and 2.1% year-over-year</span> &mdash; the move came as the US ceiling held at 3.75% versus the Bank of Canada overnight rate at 2.25%, widening the Fed-BoC differential to approximately 125 basis points following the June 10 BoC hold.<sup>1</sup><sup>21</sup> Commodity flows added pressure as the WTI benchmark fell 11.74% to US$80.58/bbl, reflecting the partial reversal of recent supply-shock premium.<sup>37</sup> The euro rose to 1.1600 (+0.87%, +0.1% year-over-year) following the European Central Bank's 25 basis point hike of the deposit facility rate to 2.25% effective June 17 &mdash; the first ECB hike since 2023, narrowing the ECB-BoC differential to zero.<sup>26</sup> Sterling traded at 1.3408 (-0.14% on the week, -1.6% year-over-year) after the Bank of England's 8-1 vote on April 30 to hold Bank Rate at 3.75%, ahead of the June 18 MPC meeting.<sup>28</sup> The dollar against the yen sat at 160.1850 (+0.12%) and against the offshore yuan at 6.7600 (-0.08% on the week, -1.8% year-over-year).<sup>37</sup> The Signal Dispatch cross-reference engine ties the CAD/USD level to 358 active Canadian manufacturing projects ($82.5B aggregate) priced against US-denominated capital equipment.<sup>37</sup> If the loonie holds at current levels through the third quarter, the 358 manufacturing projects would face landed-cost pressure on imported machinery inputs flagged in 2025 capex intentions.<sup>11</sup></p>"
   },
   "yieldCurve": {
     "tenors": [
-      {"term": "2Y", "yield": "3.07", "prevYield": "2.53", "highlight": false, "change_bp": 54},
-      {"term": "3Y", "yield": "3.15", "prevYield": "2.65", "highlight": false, "change_bp": 50},
-      {"term": "5Y", "yield": "3.36", "prevYield": "2.77", "highlight": false, "change_bp": 59},
-      {"term": "7Y", "yield": "3.49", "prevYield": "2.97", "highlight": false, "change_bp": 52},
-      {"term": "10Y", "yield": "3.70", "prevYield": "3.17", "highlight": true, "change_bp": 53},
-      {"term": "Long", "yield": "4.02", "prevYield": "3.47", "highlight": false, "change_bp": 55}
+      {"term": "2Y", "yield": "2.76", "prevYield": "2.71", "highlight": false, "change_bp": 5},
+      {"term": "3Y", "yield": "2.86", "prevYield": "2.74", "highlight": false, "change_bp": 12},
+      {"term": "5Y", "yield": "3.04", "prevYield": "2.96", "highlight": false, "change_bp": 8},
+      {"term": "7Y", "yield": "3.18", "prevYield": "3.14", "highlight": false, "change_bp": 4},
+      {"term": "10Y", "yield": "3.40", "prevYield": "3.37", "highlight": true, "change_bp": 3},
+      {"term": "Long", "yield": "3.82", "prevYield": "3.65", "highlight": false, "change_bp": 17}
     ],
-    "spread_2_10": "63 bp",
+    "spread_2_10": "+64 bps",
     "spread_2_10_prior_week": "N/A",
     "curve_shape": "normal",
     "boc_rate": "2.25%",
-    "yield_commentary": "<p>The Government of Canada curve held a normal, upward slope, with the 2Y at 3.07% and the 10Y at 3.70% for a 2s10s spread of about 63 basis points — little changed from the roughly 64 basis points a year ago, with the entire curve well above the 2.25% overnight rate as global term-premium repricing met an energy-driven inflation regime<sup>2</sup>. Prior-week levels were unavailable, so moves are measured against year-ago levels: the 2Y is up about 54 basis points from 2.53% and the 10Y up about 53 basis points from 3.17%, with the Long bond up roughly 55 basis points to 4.02%, the highest level on the curve. The Bank of Canada's fourth consecutive hold at 2.25% on April 29 anchored the front end while ECB tightening expectations and the Bank of England's third consecutive no-cut decision pushed the global long end higher<sup>1</sup><sup>21</sup><sup>23</sup>. The Signal Dispatch cross-reference engine links the rate path to 1,678 infrastructure projects valued at $210.26B and 211 residential projects valued at $32.23B carrying rate-sensitive financing exposure. If the yields tracked here hold near current levels rather than retreating toward the policy rate, those projects, totalling roughly $242.49B in tracked value, would carry financing costs consistent with term yields more than a full point above the held overnight rate rather than the lower yields seen a year earlier<sup>1</sup>.</p>"
+    "yield_commentary": "<p><span class=\"lead-sentence\">The Government of Canada yield curve held a normal slope on June 12 with the 2s10s spread at +64 basis points</span> &mdash; the 10Y benchmark sat at 3.40% versus the 2Y at 2.76%, after the Bank of Canada's June 10 decision to hold the overnight rate at 2.25% for the second consecutive meeting alongside the June Monetary Policy Report.<sup>1</sup> Year-over-year, the 2Y has risen 5 basis points from 2.71%, the 5Y 8 basis points from 2.96% to 3.04%, the 10Y 3 basis points from 3.37%, and the long bond 17 basis points from 3.65% to 3.82%, reflecting greater term-premium pickup at the back end than the front.<sup>37</sup> The 5Y benchmark at 3.04% remains the residential mortgage-renewal anchor cited in the June MPR.<sup>2</sup> The Signal Dispatch cross-reference engine ties the curve to 6,426 active Canadian projects ($1,536.5B aggregate) financed against the GoC term structure, with 257 residential projects ($36.2B) most directly exposed to 5Y pricing for mortgage refinancing.<sup>37</sup> If the 5Y benchmark holds above three percent through the third quarter, the 257 residential projects would face renewal pricing 8 basis points wider than the year-ago benchmark, while the 1,497 active infrastructure projects priced off the 10Y would carry roughly 3 basis points of additional carry versus the same window in 2025.<sup>37</sup></p>"
   },
   "sources": [
-    {"id": 1, "title": "Bank of Canada — Maintains policy rate at 2.25% (April 29, 2026)", "url": "https://www.bankofcanada.ca/2026/04/fad-press-release-2026-04-29/", "archive_url": ""},
-    {"id": 2, "title": "Statistics Canada — Consumer Price Index, April 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260519/dq260519a-eng.htm", "archive_url": ""},
-    {"id": 6, "title": "Statistics Canada — Canadian international merchandise trade, March 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260505/dq260505a-eng.htm", "archive_url": ""},
-    {"id": 16, "title": "CNBC — Fed holds rates steady amid dissent (April 2026)", "url": "https://www.cnbc.com/2026/04/29/fed-interest-rate-decision-april-2026.html", "archive_url": ""},
-    {"id": 21, "title": "European Central Bank — Monetary policy decisions, 30 April 2026", "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260430~81b7179e6f.en.html", "archive_url": ""},
-    {"id": 22, "title": "Bloomberg — ECB to hike rates twice in 2026 as inflation jumps (survey)", "url": "https://www.bloomberg.com/news/articles/2026-05-11/ecb-to-hike-rates-twice-in-2026-as-inflation-jumps-survey-shows", "archive_url": ""},
-    {"id": 23, "title": "Bank of England — Bank Rate held at 3.75%", "url": "https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate", "archive_url": ""},
-    {"id": 25, "title": "Canadian Mortgage Trends — Loonie's weakening ties to oil prices", "url": "https://www.canadianmortgagetrends.com/2026/04/loonies-weakening-ties-to-oil-prices-amplifies-bets-against-it/", "archive_url": ""}
+    {"id": 1, "title": "Bank of Canada — Rate Decision press release, June 10, 2026", "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/"},
+    {"id": 2, "title": "Bank of Canada — Upcoming events / Monetary Policy Report", "url": "https://www.bankofcanada.ca/press/upcoming-events"},
+    {"id": 11, "title": "StatCan 34-10-0035 — Capital and repair expenditure intentions", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410003501"},
+    {"id": 21, "title": "Federal Reserve — FOMC Calendar (June 16-17 SEP meeting)", "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"},
+    {"id": 26, "title": "European Central Bank — Governing Council calendar", "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"},
+    {"id": 28, "title": "Bank of England — Upcoming MPC dates", "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"},
+    {"id": 37, "title": "Pipeline data — docs/data/timeseries.json (commodity, FX, index, yield spot values)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json"}
   ]
 }

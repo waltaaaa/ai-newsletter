@@ -1,6 +1,6 @@
 {
   "headline": "Bank of Canada Holds at 2.25% as May Unemployment Sits at 6.6% and Housing Starts Reach 279,317 SAAR",
-  "edition": "EDITION: JUN 08 – JUN 15 // STATUS: AI-SYNTHESIZED",
+  "edition": "EDITION: Jun 15 – Jun 22 // STATUS: AI-SYNTHESIZED",
   "week_of": "2026-06-15",
   "generated_at": "2026-06-15T18:53:00.673826Z",
   "updated_at": "2026-06-15",
@@ -9504,9 +9504,9 @@
       "indigenous": 25
     }
   },
-  "project_count": 6513,
+  "project_count": null,
   "new_projects": null,
-  "pipeline_value": "$1537.4B",
+  "pipeline_value": null,
   "_all_verified_sources": [
     {
       "id": 1,
@@ -10273,608 +10273,714 @@
   "yieldCurveCommentary": "<p><span class=\"lead-sentence\">The Government of Canada yield curve held a normal slope on June 12 with the 2s10s spread at +64 basis points</span> — the 10Y benchmark sat at 3.40% versus the 2Y at 2.76%, after the Bank of Canada's June 10 decision to hold the overnight rate at 2.25% for the second consecutive meeting alongside the June Monetary Policy Report.<sup>41</sup> Year-over-year, the 2Y has risen 5 basis points from 2.71%, the 5Y 8 basis points from 2.96% to 3.04%, the 10Y 3 basis points from 3.37%, and the long bond 17 basis points from 3.65% to 3.82%, reflecting greater term-premium pickup at the back end than the front.<sup>21</sup> The 5Y benchmark at 3.04% remains the residential mortgage-renewal anchor cited in the June MPR.<sup>42</sup> The Signal Dispatch cross-reference engine ties the curve to 6,426 active Canadian projects ($1,536.5B aggregate) financed against the GoC term structure, with 257 residential projects ($36.2B) most directly exposed to 5Y pricing for mortgage refinancing.<sup>21</sup> If the 5Y benchmark holds above three percent through the third quarter, the 257 residential projects would face renewal pricing 8 basis points wider than the year-ago benchmark, while the 1,497 active infrastructure projects priced off the 10Y would carry roughly 3 basis points of additional carry versus the same window in 2025.<sup>21</sup></p>",
   "sources": [
     {
-      "url": "https://atlasengineeredproducts.com/",
+      "id": 1,
       "title": "Drake Meat Processors Saskatoon + Atlas Engineered Products — projects_all.json",
-      "archive_url": ""
+      "url": "https://atlasengineeredproducts.com/",
+      "url_note": "Corporate root domain retained as attribution anchor for two distinct projects tracked in projects_all.json (Atlas Engineered Products advanced wood manufacturing facility, Clinton ON; Drake Meat Processors Saskatoon processing plant). Specific government and trade-press URLs for each project are recorded in projects_all.json evidence arrays."
     },
     {
-      "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/pdf/update-miseajour2026-eng.pdf",
+      "id": 2,
       "title": "Department of Finance Canada — Spring Economic Update 2026",
+      "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/pdf/update-miseajour2026-eng.pdf",
       "archive_url": ""
     },
     {
-      "url": "https://calgarysun.com/opinion/letters/letters-june-15-2026-canadian-health-care-comes-up-short",
+      "id": 3,
       "title": "Calgary Green Line LRT, Phase 1 - source",
+      "url": "https://calgarysun.com/opinion/letters/letters-june-15-2026-canadian-health-care-comes-up-short",
       "archive_url": ""
     },
     {
+      "id": 4,
+      "title": "CFB Trenton Strategic Tanker Transport Capability Infrastructure (MOB-East) - source",
       "url": "https://canada.constructconnect.com/dcn/news/infrastructure/2025/12/construction-army-descends-on-cfb-trenton-as-construction-of-tanker-base-set-to-start",
-      "title": "CFB Trenton Strategic Tanker Transport Capability Infrastructure (MOB-East) - source",
       "archive_url": ""
     },
     {
+      "id": 5,
+      "title": "CFB Trenton Strategic Tanker Transport Capability Infrastructure (MOB-East) - source",
       "url": "https://canada.constructconnect.com/dcn/news/infrastructure/2025/12/construction-army-descends-on-cfb-trenton-to-carry-out-850m-upgrades",
-      "title": "CFB Trenton Strategic Tanker Transport Capability Infrastructure (MOB-East) - source",
       "archive_url": ""
     },
     {
-      "url": "https://canada.constructconnect.com/joc/news/projects/2026/05/bird-selected-for-massive-bell-canada-ai-data-centre-near-regina",
+      "id": 6,
       "title": "Saskatchewan - top story source",
+      "url": "https://canada.constructconnect.com/joc/news/projects/2026/05/bird-selected-for-massive-bell-canada-ai-data-centre-near-regina",
       "archive_url": ""
     },
     {
-      "url": "https://canada.constructconnect.com/joc/news/projects/2026/05/bird-selected-for-massive-bell-canada-data-centre-build-in-saskatchewan",
+      "id": 7,
       "title": "Bell AI Fabric 300 MW Data Centre - source",
+      "url": "https://canada.constructconnect.com/joc/news/projects/2026/05/bird-selected-for-massive-bell-canada-data-centre-build-in-saskatchewan",
       "archive_url": ""
     },
     {
-      "url": "https://canada.constructconnect.com/joc/news/projects/2026/06/cgc-inc-opens-210m-wallboard-plant-in-wheatland-county",
+      "id": 8,
       "title": "CGC Inc. Wallboard Manufacturing Plant (Wheatland County) - source",
+      "url": "https://canada.constructconnect.com/joc/news/projects/2026/06/cgc-inc-opens-210m-wallboard-plant-in-wheatland-county",
       "archive_url": ""
     },
     {
+      "id": 9,
+      "title": "5 Wing Goose Bay Energy Performance Contract - source",
       "url": "https://canadiandefencereview.com/largest-canadian-defence-investment-in-newfoundland-and-labradors-history/",
-      "title": "5 Wing Goose Bay Energy Performance Contract - source",
       "archive_url": ""
     },
     {
+      "id": 10,
+      "title": "Des Neiges Wind Farm (Secteur Sud and Charlevoix phases) - source",
       "url": "https://constructionreviewonline.com/3-billion-des-neiges-wind-farm-breaks-ground-in-quebec-powering-canadas-clean-energy-race/",
-      "title": "Des Neiges Wind Farm (Secteur Sud and Charlevoix phases) - source",
       "archive_url": ""
     },
     {
+      "id": 11,
+      "title": "General Dynamics OTS Valleyfield Nitrocellulose Production Facility - source",
       "url": "https://defence-industry.eu/canada-invests-1-4-billion-to-expand-domestic-ammunition-production/",
-      "title": "General Dynamics OTS Valleyfield Nitrocellulose Production Facility - source",
       "archive_url": ""
     },
     {
-      "url": "https://ec.europa.eu/eurostat/web/hicp/database",
+      "id": 12,
       "title": "Eurostat — HICP database",
+      "url": "https://ec.europa.eu/eurostat/web/hicp/database",
       "archive_url": ""
     },
     {
-      "url": "https://fao-on.org/en/report/ebo-wi2026",
+      "id": 13,
       "title": "Ontario FAO — Economic and Budget Outlook Winter 2026",
+      "url": "https://fao-on.org/en/report/ebo-wi2026",
       "archive_url": ""
     },
     {
+      "id": 14,
+      "title": "Burin Peninsula EverWind Green Fuels Project - source",
       "url": "https://finance.yahoo.com/news/everwind-registers-environmental-assessment-green-144200416.html",
-      "title": "Burin Peninsula EverWind Green Fuels Project - source",
       "archive_url": ""
     },
     {
-      "url": "https://finance.yahoo.com/quote/CCO.TO/",
+      "id": 15,
       "title": "Cameco Corp (CCO.TO) — uranium equity proxy",
-      "archive_url": ""
+      "url": "https://finance.yahoo.com/quote/CCO.TO/"
     },
     {
-      "url": "https://finance.yahoo.com/quote/NTR/",
+      "id": 16,
       "title": "Nutrien Ltd (NTR) — Potash proxy, commodities.json",
-      "archive_url": ""
+      "url": "https://finance.yahoo.com/quote/NTR/"
     },
     {
-      "url": "https://finance.yahoo.com/quote/U-UN.TO/",
+      "id": 17,
       "title": "Uranium spot (U-UN.TO) — commodities.json",
-      "archive_url": ""
+      "url": "https://finance.yahoo.com/quote/U-UN.TO/"
     },
     {
-      "url": "https://finance.yahoo.com/quote/VALE/",
+      "id": 18,
       "title": "Iron ore (Vale, VALE) — commodities.json",
-      "archive_url": ""
+      "url": "https://finance.yahoo.com/quote/VALE/"
     },
     {
-      "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/indicators.json",
+      "id": 19,
       "title": "Pipeline data — docs/data/indicators.json (national StatCan indicator rows)",
+      "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/indicators.json",
       "archive_url": ""
     },
     {
-      "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/projects_all.json",
+      "id": 20,
       "title": "Pipeline data — docs/data/projects_all.json (project counts and aggregate value)",
-      "archive_url": ""
+      "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/projects_all.json"
     },
     {
-      "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json",
+      "id": 21,
       "title": "Pipeline data — docs/data/timeseries.json (commodity, FX, index, yield spot values)",
+      "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json",
       "archive_url": ""
     },
     {
-      "url": "https://iaac-aeic.gc.ca/050/evaluations/",
+      "id": 22,
       "title": "IAAC - federal Impact Assessment Registry",
+      "url": "https://iaac-aeic.gc.ca/050/evaluations/",
       "archive_url": ""
     },
     {
-      "url": "https://iaac-aeic.gc.ca/050/evaluations/proj/80140",
+      "id": 23,
       "title": "Manitoba - top story source",
+      "url": "https://iaac-aeic.gc.ca/050/evaluations/proj/80140",
       "archive_url": ""
     },
     {
+      "id": 24,
+      "title": "Rook I uranium mine (NexGen Energy) - source",
       "url": "https://iaac-aeic.gc.ca/050/evaluations/proj/80171",
-      "title": "Rook I uranium mine (NexGen Energy) - source",
       "archive_url": ""
     },
     {
-      "url": "https://majorprojects.alberta.ca/details/Calgary-Green-Line-LRT-Phase-1/873",
+      "id": 25,
       "title": "Alberta - top story source",
+      "url": "https://majorprojects.alberta.ca/details/Calgary-Green-Line-LRT-Phase-1/873",
       "archive_url": ""
     },
     {
-      "url": "https://mcmillan.ca/insights/publications/change-order-canadas-spring-economic-update-2026-sets-a-new-federal-infrastructure-agenda",
+      "id": 26,
       "title": "McMillan LLP — Spring Economic Update 2026: Federal Infrastructure Agenda",
+      "url": "https://mcmillan.ca/insights/publications/change-order-canadas-spring-economic-update-2026-sets-a-new-federal-infrastructure-agenda",
       "archive_url": ""
     },
     {
-      "url": "https://natural-resources.canada.ca/energy/energy-sources-distribution/canadian-energy-resource-development/major-projects-inventory/18702",
+      "id": 27,
       "title": "Rook I uranium mine (NexGen Energy) - source",
+      "url": "https://natural-resources.canada.ca/energy/energy-sources-distribution/canadian-energy-resource-development/major-projects-inventory/18702",
       "archive_url": ""
     },
     {
+      "id": 28,
+      "title": "Beaver Dam Mine Project - source",
       "url": "https://novascotia.ca/nse/ea//nse/ea/beaver-dam-mine-project.asp",
-      "title": "Beaver Dam Mine Project - source",
       "archive_url": ""
     },
     {
-      "url": "https://novascotia.ca/nse/ea/signal-gold-goldboro-project",
+      "id": 29,
       "title": "Goldboro Gold (Signal Gold) - source",
+      "url": "https://novascotia.ca/nse/ea/signal-gold-goldboro-project",
       "archive_url": ""
     },
     {
-      "url": "https://portageplace.ca/development-updates/",
+      "id": 30,
       "title": "Portage Place Redevelopment - source",
+      "url": "https://portageplace.ca/development-updates/",
       "archive_url": ""
     },
     {
+      "id": 31,
+      "title": "LNG Canada Phase 2 Expansion - source",
       "url": "https://projects.eao.gov.bc.ca/project/588511e1aaecd9001b8272e7",
-      "title": "LNG Canada Phase 2 Expansion - source",
       "archive_url": ""
     },
     {
-      "url": "https://projects.eao.gov.bc.ca/project/60edc23bc69c5e0023a12539",
+      "id": 32,
       "title": "British Columbia - top story source",
+      "url": "https://projects.eao.gov.bc.ca/project/60edc23bc69c5e0023a12539",
       "archive_url": ""
     },
     {
+      "id": 33,
+      "title": "Enbridge Sunrise Natural Gas Pipeline Expansion - source",
       "url": "https://thelogic.co/commentary/kevin-carmichael-carney-smith-alberta-pipeline-compromise/",
-      "title": "Enbridge Sunrise Natural Gas Pipeline Expansion - source",
       "archive_url": ""
     },
     {
+      "id": 34,
+      "title": "Enbridge Sunrise Natural Gas Pipeline Expansion - source",
       "url": "https://thelogic.co/news/special-report/carbon-price-floor-carney-smith-alberta-pipeline/",
-      "title": "Enbridge Sunrise Natural Gas Pipeline Expansion - source",
       "archive_url": ""
     },
     {
-      "url": "https://walterbolduc.github.io/can-macro-dashboard/data/commodities.json",
+      "id": 35,
       "title": "Commodities snapshot — nickel, iron ore, uranium (commodities.json)",
-      "archive_url": ""
+      "url": "https://walterbolduc.github.io/can-macro-dashboard/data/commodities.json"
     },
     {
-      "url": "https://walterbolduc.github.io/can-macro-dashboard/data/jobs.json",
+      "id": 36,
       "title": "Construction pipeline — 2,005 projects, $288.7B priced + Job Bank Atom postings — jobs.json",
-      "archive_url": ""
+      "url": "https://walterbolduc.github.io/can-macro-dashboard/data/jobs.json"
     },
     {
-      "url": "https://walterbolduc.github.io/can-macro-dashboard/data/pipeline_status.json",
+      "id": 37,
       "title": "Procurement publishing gap — pipeline_status.json (2026-06-15)",
-      "archive_url": ""
+      "url": "https://walterbolduc.github.io/can-macro-dashboard/data/pipeline_status.json"
     },
     {
-      "url": "https://walterbolduc.github.io/can-macro-dashboard/data/projects_all.json",
+      "id": 38,
       "title": "Red Lake Transmission, Des Neiges Wind, Sydney BESS, Brighton Mountain, MB Hydro — projects_all.json",
-      "archive_url": ""
+      "url": "https://walterbolduc.github.io/can-macro-dashboard/data/projects_all.json"
     },
     {
-      "url": "https://www.alamosgold.com/projects/lynn-lake-project/",
+      "id": 39,
       "title": "Lynn Lake Gold Project - source",
+      "url": "https://www.alamosgold.com/projects/lynn-lake-project/",
       "archive_url": ""
     },
     {
-      "url": "https://www.altotrain.ca/en/shaping-canadas-future-high-speed-train",
+      "id": 40,
       "title": "Ontario - top story source",
+      "url": "https://www.altotrain.ca/en/shaping-canadas-future-high-speed-train",
       "archive_url": ""
     },
     {
-      "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/",
+      "id": 41,
       "title": "Bank of Canada — Rate Decision press release, June 10, 2026",
+      "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/",
       "archive_url": ""
     },
     {
-      "url": "https://www.bankofcanada.ca/press/upcoming-events",
+      "id": 42,
       "title": "Bank of Canada — Upcoming events / Monetary Policy Report",
+      "url": "https://www.bankofcanada.ca/press/upcoming-events",
       "archive_url": ""
     },
     {
-      "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
+      "id": 43,
       "title": "Bank of England — Upcoming MPC dates",
+      "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
       "archive_url": ""
     },
     {
-      "url": "https://www.bea.gov/data/income-saving/personal-income",
+      "id": 44,
       "title": "US Bureau of Economic Analysis — Personal Income & Outlays",
+      "url": "https://www.bea.gov/data/income-saving/personal-income",
       "archive_url": ""
     },
     {
-      "url": "https://www.bea.gov/data/intl-trade-investment/international-trade-goods-and-services",
+      "id": 45,
       "title": "US Bureau of Economic Analysis — International Trade in Goods & Services",
+      "url": "https://www.bea.gov/data/intl-trade-investment/international-trade-goods-and-services",
       "archive_url": ""
     },
     {
-      "url": "https://www.bls.gov/cpi/",
+      "id": 46,
       "title": "US Bureau of Labor Statistics — CPI portal",
+      "url": "https://www.bls.gov/cpi/",
       "archive_url": ""
     },
     {
-      "url": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "id": 47,
       "title": "US Bureau of Labor Statistics — Employment Situation schedule",
+      "url": "https://www.bls.gov/schedule/news_release/empsit.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/agriculture-agri-food.html",
+      "id": 48,
       "title": "Canada Food Security Strategy — projects_all.json (Proposed, 2026-06-11)",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/agriculture-agri-food.html"
     },
     {
+      "id": 49,
+      "title": "Iqaluit Nukkiksautiit Hydroelectric Project - source",
       "url": "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs/news/2025/11/iqaluit-nukkiksautiit-hydroelectric-project-referred-to-the-major-projects-office.html",
-      "title": "Iqaluit Nukkiksautiit Hydroelectric Project - source",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs/news/2025/11/iqaluit-nukkiksautiit-hydroelectric.html",
+      "id": 50,
       "title": "Nunavut - top story source",
+      "url": "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs/news/2025/11/iqaluit-nukkiksautiit-hydroelectric.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/department-national-defence/news/2026/01/the-department-of-national-defence.html",
+      "id": 51,
       "title": "Nova Scotia - top story source",
+      "url": "https://www.canada.ca/en/department-national-defence/news/2026/01/the-department-of-national-defence.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/department-national-defence/news/2026/03/minister-mcguinty-announces-investment-of-1-4-billion-into-domestic-ammunition-production.html",
+      "id": 52,
       "title": "General Dynamics OTS Valleyfield Nitrocellulose Production Facility - source",
+      "url": "https://www.canada.ca/en/department-national-defence/news/2026/03/minister-mcguinty-announces-investment-of-1-4-billion-into-domestic-ammunition-production.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/department-national-defence/news/2026/03/minister-mcguinty-announces-investments-in-canadas-defence-industrial-base.html",
+      "id": 53,
       "title": "General Dynamics OTS Le Gardeur 155mm projectile load-assemble-pack facility - source",
+      "url": "https://www.canada.ca/en/department-national-defence/news/2026/03/minister-mcguinty-announces-investments-in-canadas-defence-industrial-base.html",
       "archive_url": ""
     },
     {
+      "id": 54,
+      "title": "CFB Gagetown Range and Training Area Recapitalization - source",
       "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/canada-invests-in-infrastructure-at-canadian-forces-base-gagetown.html",
-      "title": "CFB Gagetown Range and Training Area Recapitalization - source",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/canada-invests-in-infrastructure-at-cfb-gagetown.html",
+      "id": 55,
       "title": "New Brunswick - top story source",
+      "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/canada-invests-in-infrastructure-at-cfb-gagetown.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/minister-thompson-announces-largest-defence-investment-in-newfoundland-and-labradors-history.html",
+      "id": 56,
       "title": "5 Wing Goose Bay Energy Performance Contract - source",
+      "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/minister-thompson-announces-largest-defence-investment-in-newfoundland-and-labradors-history.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/minister-thompson-announces-largest-energy-performance-contract.html",
+      "id": 57,
       "title": "Newfoundland and Labrador - top story source",
+      "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/minister-thompson-announces-largest-energy-performance-contract.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/04/building-canada-strong-by-investing-in-a-new-water-treatment-plant-in-hay-river.html",
+      "id": 58,
       "title": "Hay River Water Treatment Plant - source",
+      "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/04/building-canada-strong-by-investing-in-a-new-water-treatment-plant-in-hay-river.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/04/building-canada-strong-by-investing.html",
+      "id": 59,
       "title": "Northwest Territories - top story source",
+      "url": "https://www.canada.ca/en/housing-infrastructure-communities/news/2026/04/building-canada-strong-by-investing.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/05/government-of-canada-takes-action.html",
+      "id": 60,
       "title": "New Brunswick High-Speed Internet Expansion - source",
+      "url": "https://www.canada.ca/en/innovation-science-economic-development/news/2026/05/government-of-canada-takes-action.html",
       "archive_url": ""
     },
     {
+      "id": 61,
+      "title": "LNG Canada Phase 2 Expansion - source",
       "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/05/enhanced-investment-co-operation-advances-efforts-around-lng-canadas-proposed-phase-2-expansion.html",
-      "title": "LNG Canada Phase 2 Expansion - source",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/privy-council/major-projects-office/projects/other/referred/alto.html",
+      "id": 62,
       "title": "Alto High-Speed Rail - source",
+      "url": "https://www.canada.ca/en/privy-council/major-projects-office/projects/other/referred/alto.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canadianminingjournal.com/news/copper-zinc-development-green-light-given-for-duck-pond",
+      "id": 63,
       "title": "Duck Pond Copper-Zinc Mine - source",
+      "url": "https://www.canadianminingjournal.com/news/copper-zinc-development-green-light-given-for-duck-pond",
       "archive_url": ""
     },
     {
+      "id": 64,
+      "title": "Deep Sky Manitoba Carbon Removal Facility - source",
       "url": "https://www.cbc.ca/news/canada/manitoba/carbon-capture-deep-sky-manitoba-9.6933590",
-      "title": "Deep Sky Manitoba Carbon Removal Facility - source",
       "archive_url": ""
     },
     {
+      "id": 65,
+      "title": "Brighton Mountain Wind Project - source",
       "url": "https://www.cbc.ca/news/canada/new-brunswick/jd-irving-wind-farm-brighton-mountain-1.7192190",
-      "title": "Brighton Mountain Wind Project - source",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbc.ca/news/canada/new-brunswick/ottawa-invests-more-than-1-billion-in-5th-canadian-support-base-gagetown-9.7143352",
+      "id": 66,
       "title": "CFB Gagetown Range and Training Area Recapitalization - source",
+      "url": "https://www.cbc.ca/news/canada/new-brunswick/ottawa-invests-more-than-1-billion-in-5th-canadian-support-base-gagetown-9.7143352",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbc.ca/news/canada/north/iqaluit-hydro-federal-investment-1.7450146",
+      "id": 67,
       "title": "Iqaluit Nukkiksautiit Hydroelectric Project - source",
+      "url": "https://www.cbc.ca/news/canada/north/iqaluit-hydro-federal-investment-1.7450146",
       "archive_url": ""
     },
     {
+      "id": 68,
+      "title": "Charlottetown District Energy Waste Processing Facility (Enwave) - source",
       "url": "https://www.cbc.ca/news/canada/prince-edward-island/pei-clean-energy-waste-processing-plant-1.7630328",
-      "title": "Charlottetown District Energy Waste Processing Facility (Enwave) - source",
       "archive_url": ""
     },
     {
-      "url": "https://www.census.gov/construction/nrc/",
+      "id": 69,
       "title": "US Census Bureau — New Residential Construction (Housing Starts)",
+      "url": "https://www.census.gov/construction/nrc/",
       "archive_url": ""
     },
     {
-      "url": "https://www.census.gov/retail/marts/www/marts_current.pdf",
+      "id": 70,
       "title": "US Census Bureau — Advance Monthly Retail Sales",
+      "url": "https://www.census.gov/retail/marts/www/marts_current.pdf",
       "archive_url": ""
     },
     {
-      "url": "https://www.cer-rec.gc.ca/en/applications-hearings/view-applications-projects/gpml-loop-no-4-valhalla-north-section.html",
+      "id": 71,
       "title": "NOVA Gas Transmission GPML Loop No. 4 (Valhalla North Section) - source",
+      "url": "https://www.cer-rec.gc.ca/en/applications-hearings/view-applications-projects/gpml-loop-no-4-valhalla-north-section.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.cmegroup.com/markets/agriculture/lumber-and-pulp/lumber.html",
+      "id": 72,
       "title": "Lumber futures (LBR) — commodities.json",
-      "archive_url": ""
+      "url": "https://www.cmegroup.com/markets/agriculture/lumber-and-pulp/lumber.html"
     },
     {
-      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data",
+      "id": 73,
       "title": "CMHC Housing Data - provincial housing starts (12-month rolling)",
+      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data",
       "archive_url": ""
     },
     {
-      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables",
+      "id": 74,
       "title": "CMHC — Monthly Housing Starts Construction Data Tables",
+      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables",
       "archive_url": ""
     },
     {
+      "id": 75,
+      "title": "Deep Sky Manitoba Carbon Removal Facility - source",
       "url": "https://www.deepskyclimate.com/blog/deep-sky-to-build-500-000-tonne-carbon-removal-facility---one-of-the-largest-in-the-world---in-manitoba",
-      "title": "Deep Sky Manitoba Carbon Removal Facility - source",
       "archive_url": ""
     },
     {
+      "id": 76,
+      "title": "Deep Sky Manitoba Carbon Removal Facility - source",
       "url": "https://www.deepskyclimate.com/blog/deep-sky-to-build-500-000-tonne-carbon-removal-facility---one-of-the-worlds-largest---in-manitoba-canada",
-      "title": "Deep Sky Manitoba Carbon Removal Facility - source",
       "archive_url": ""
     },
     {
-      "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "id": 77,
       "title": "European Central Bank — Governing Council calendar",
+      "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "id": 78,
       "title": "Federal Reserve — FOMC Calendar (June 16-17 SEP meeting)",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www.federalreserve.gov/releases/g17/",
+      "id": 79,
       "title": "Federal Reserve Board — Industrial Production (G.17)",
+      "url": "https://www.federalreserve.gov/releases/g17/",
       "archive_url": ""
     },
     {
-      "url": "https://www.glencore.ca/en/who-we-are/operations/horne-smelter",
+      "id": 80,
       "title": "Glencore Horne Smelter Emissions Reduction (QC, $300M Proposed) — projects_all.json",
-      "archive_url": ""
+      "url": "https://www.glencore.ca/en/who-we-are/operations/horne-smelter"
     },
     {
-      "url": "https://www.globalxetfs.com/funds/slx/",
+      "id": 81,
       "title": "Steel proxy (SLX ETF) — commodities.json",
-      "archive_url": ""
+      "url": "https://www.globalxetfs.com/funds/slx/"
     },
     {
-      "url": "https://www.gov.nl.ca/eccc/projects/project-2321/",
+      "id": 82,
       "title": "Burin Peninsula EverWind Green Fuels Project - source",
+      "url": "https://www.gov.nl.ca/eccc/projects/project-2321/",
       "archive_url": ""
     },
     {
-      "url": "https://www.hpacmag.com/heating-plumbing-air-conditioning-general/enwave-to-build-prince-edward-island-district-energy",
+      "id": 83,
       "title": "Prince Edward Island - top story source",
+      "url": "https://www.hpacmag.com/heating-plumbing-air-conditioning-general/enwave-to-build-prince-edward-island-district-energy",
       "archive_url": ""
     },
     {
-      "url": "https://www.hpacmag.com/heating-plumbing-air-conditioning-general/enwave-to-build-prince-edward-islands-new-district-energy-waste-processing-facility/1004144804/",
+      "id": 84,
       "title": "Charlottetown District Energy Waste Processing Facility (Enwave) - source",
+      "url": "https://www.hpacmag.com/heating-plumbing-air-conditioning-general/enwave-to-build-prince-edward-islands-new-district-energy-waste-processing-facility/1004144804/",
       "archive_url": ""
     },
     {
-      "url": "https://www.infrastructure.gc.ca/gmap-gcarte/index-eng.html",
+      "id": 85,
       "title": "Arctic Bay Water Treatment Plant Construction Phase - source",
+      "url": "https://www.infrastructure.gc.ca/gmap-gcarte/index-eng.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.lakelandtoday.ca/national-news/construction-work-officially-begins-on-3-billion-wind-farm-in-quebec-government-says-the-largest-project-in-canadian-history",
+      "id": 86,
       "title": "Quebec - top story source",
+      "url": "https://www.lakelandtoday.ca/national-news/construction-work-officially-begins-on-3-billion-wind-farm-in-quebec-government-says-the-largest-project-in-canadian-history",
       "archive_url": ""
     },
     {
-      "url": "https://www.lakelandtoday.ca/national-news/construction-work-officially-begins-on-3-billion-wind-farm-northeast-of-quebec-city-12084476",
+      "id": 87,
       "title": "Des Neiges Wind Farm (Secteur Sud and Charlevoix phases) - source",
+      "url": "https://www.lakelandtoday.ca/national-news/construction-work-officially-begins-on-3-billion-wind-farm-northeast-of-quebec-city-12084476",
       "archive_url": ""
     },
     {
+      "id": 88,
+      "title": "Eglinton Crosstown West Extension - source",
       "url": "https://www.metrolinx.com/projects-and-programs/eglinton-crosstown-west-extension",
-      "title": "Eglinton Crosstown West Extension - source",
       "archive_url": ""
     },
     {
-      "url": "https://www.mining.com/st-barbara-updates-pfs-for-15-mile-beaver-dam-in-nova-scotia",
+      "id": 89,
       "title": "Beaver Dam Mine Project - source",
+      "url": "https://www.mining.com/st-barbara-updates-pfs-for-15-mile-beaver-dam-in-nova-scotia",
       "archive_url": ""
     },
     {
-      "url": "https://www.nationalobserver.com/2026/05/15/news/final-investment-decision-lng-canada-expansion-expected-year-end-says-eby",
+      "id": 90,
       "title": "LNG Canada Phase 2 Expansion - source",
+      "url": "https://www.nationalobserver.com/2026/05/15/news/final-investment-decision-lng-canada-expansion-expected-year-end-says-eby",
       "archive_url": ""
     },
     {
-      "url": "https://www.nbpower.com/en/about-us/news-media-centre/news/2025/nb-power-announces-new-renewable-energy-power-purchase-agreement/",
+      "id": 91,
       "title": "Brighton Mountain Wind Project - source",
+      "url": "https://www.nbpower.com/en/about-us/news-media-centre/news/2025/nb-power-announces-new-renewable-energy-power-purchase-agreement/",
       "archive_url": ""
     },
     {
+      "id": 92,
+      "title": "Berg Copper-Molybdenum-Silver Mine - source",
       "url": "https://www.northernminer.com/news/troilus-drills-shallow-gold-boosts-quebec-satellite-case/1003892050/",
-      "title": "Berg Copper-Molybdenum-Silver Mine - source",
       "archive_url": ""
     },
     {
-      "url": "https://www.ontario.ca/page/ontario-builds",
+      "id": 93,
       "title": "Eglinton Crosstown West Extension - source",
+      "url": "https://www.ontario.ca/page/ontario-builds",
       "archive_url": ""
     },
     {
-      "url": "https://www.oxfordeconomics.com/resource/canada-key-themes-2026-policy-shifts-are-prompting-structural-change",
+      "id": 94,
       "title": "Oxford Economics — Canada Key Themes 2026",
+      "url": "https://www.oxfordeconomics.com/resource/canada-key-themes-2026-policy-shifts-are-prompting-structural-change",
       "archive_url": ""
     },
     {
-      "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-4",
+      "id": 95,
       "title": "Bill S-4 (45-1) — An Act to amend the Energy Efficiency Act",
-      "archive_url": ""
+      "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-4"
     },
     {
-      "url": "https://www.parl.ca/legisinfo/en/bills?parliament=45&session=1",
+      "id": 96,
       "title": "Federal Parliament (LEGISinfo) — 45-1 session bills",
+      "url": "https://www.parl.ca/legisinfo/en/bills?parliament=45&session=1",
       "archive_url": ""
     },
     {
-      "url": "https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/spf-q1-2026",
+      "id": 97,
       "title": "Philadelphia Fed — Survey of Professional Forecasters Q1 2026",
+      "url": "https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/spf-q1-2026",
       "archive_url": ""
     },
     {
-      "url": "https://www.princeedwardisland.ca/en/news/provincial-and-federal-governments-support-next-phase-of-mds-coating",
+      "id": 98,
       "title": "MDS Coating Technologies Facility and Equipment Expansion at Slemon Park - source",
+      "url": "https://www.princeedwardisland.ca/en/news/provincial-and-federal-governments-support-next-phase-of-mds-coating",
       "archive_url": ""
     },
     {
+      "id": 99,
+      "title": "Rose Valley Wind Project - source",
       "url": "https://www.renewcanada.net/canadas-us34-billion-infrastructure-gap-why-spending-alone-wont-be-enough/",
-      "title": "Rose Valley Wind Project - source",
       "archive_url": ""
     },
     {
+      "id": 100,
+      "title": "Rose Valley Wind Project - source",
       "url": "https://www.renewcanada.net/cib-saskatchewan-first-nations-break-ground-on-rose-valley-wind-project/",
-      "title": "Rose Valley Wind Project - source",
       "archive_url": ""
     },
     {
-      "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html",
+      "id": 101,
       "title": "China NBS — May 2026 PMI release",
+      "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/cpi-ipc-eng.htm",
+      "id": 102,
       "title": "StatCan — Consumer Price Index portal & release calendar",
+      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/cpi-ipc-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/index-eng.htm",
+      "id": 103,
       "title": "StatCan — Daily release calendar",
+      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/index-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260515/dq260515a-eng.htm",
+      "id": 104,
       "title": "StatCan Daily — Real GDP by industry, March 2026 (released May 15)",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260515/dq260515a-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm",
+      "id": 105,
       "title": "StatCan Daily — Labour Force Survey, May 2026 (released June 6)",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=12100163",
+      "id": 106,
       "title": "StatCan 12-10-0163 — Merchandise trade by section, April 2026",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=12100163",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002201",
+      "id": 107,
       "title": "StatCan 14-10-0022 — Employment by industry, May 2026",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002201",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410006301",
+      "id": 108,
       "title": "StatCan 14-10-0063 — Average hourly wage, employees by industry",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410006301",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028703",
+      "id": 109,
       "title": "StatCan Table 14-10-0287 - Labour Force Survey provincial monthly rates",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028703",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
+      "id": 110,
       "title": "StatCan 16-10-0047 — Manufacturing sales by industry",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401",
+      "id": 111,
       "title": "StatCan Table 18-10-0004 - Consumer Price Index, monthly, provinces",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810020501",
+      "id": 112,
       "title": "StatCan 18-10-0205 — New housing price index",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810020501",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401",
+      "id": 113,
       "title": "StatCan 20-10-0074 — Wholesale trade sales",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701",
+      "id": 114,
       "title": "StatCan Farm Product Prices — Canola Saskatchewan (Table 32-10-0077-01)",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410003501",
+      "id": 115,
       "title": "StatCan 34-10-0035 — Capital and repair expenditure intentions",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410003501",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410006601",
+      "id": 116,
       "title": "StatCan Table 34-10-0066 - Building permits, monthly, provinces",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410006601",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301",
+      "id": 117,
       "title": "StatCan 34-10-0143 — Housing starts, April 2026 reference",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201",
+      "id": 118,
       "title": "StatCan 34-10-0292 — Building permits, by sector",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610011201",
+      "id": 119,
       "title": "StatCan 36-10-0112 — Household income, consumption, saving, Q1 2026",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610011201",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401",
+      "id": 120,
       "title": "StatCan Industry GDP — NAICS 31-33 (Table 36-10-0434)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
     },
     {
-      "url": "https://www2.gov.bc.ca/gov/content/employment-business/economic-development/industry/bc-major-projects-inventory",
+      "id": 121,
       "title": "Berg Copper-Molybdenum-Silver Mine - source",
+      "url": "https://www2.gov.bc.ca/gov/content/employment-business/economic-development/industry/bc-major-projects-inventory",
       "archive_url": ""
     }
   ],
@@ -10956,7 +11062,5 @@
       "callout": "May Labour Force Survey recorded unemployment at 6.6% with average hourly wages at $37.24, down 1.4% m/m. The pipeline tracks 1,497 infrastructure projects worth $214.0B against the labour read."
     }
   ],
-  "chart_callout": "BoC held the overnight rate at 2.25% on Jun 10, the second consecutive hold. The database tracks 6,426 active Canadian projects with $1,536.5B aggregate value financing against the policy rate.",
-  "bocRate": "2.25%",
-  "word_count": 359
+  "chart_callout": "BoC held the overnight rate at 2.25% on Jun 10, the second consecutive hold. The database tracks 6,426 active Canadian projects with $1,536.5B aggregate value financing against the policy rate."
 }

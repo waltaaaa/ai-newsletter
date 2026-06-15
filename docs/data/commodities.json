@@ -1,14 +1,14 @@
 {
   "indicators": {
     "uranium_spot": {
-      "description": "Uranium spot price proxy (Sprott Physical Uranium Trust)",
-      "current": 26.68,
-      "week_ago": 27.18,
-      "month_ago": 27.51,
-      "year_ago": 23.11,
-      "pct_1w": -1.8,
-      "pct_1m": -3.0,
-      "pct_1y": 15.4,
+      "description": "Uranium proxy — Sprott Physical Uranium Trust unit price (U-UN.TO; tracks but does not equal U3O8 spot)",
+      "current": 27.07,
+      "week_ago": 25.9,
+      "month_ago": 27.22,
+      "year_ago": 23.32,
+      "pct_1w": 4.5,
+      "pct_1m": -0.6,
+      "pct_1y": 16.1,
       "affected_sectors": [
         "Mining & O&G",
         "Utilities"
@@ -22,13 +22,13 @@
     },
     "nickel": {
       "description": "Nickel price proxy",
-      "current": 41.22,
-      "week_ago": 43.52,
-      "month_ago": 33.02,
-      "year_ago": 21.51,
-      "pct_1w": -5.3,
-      "pct_1m": 24.8,
-      "pct_1y": 91.6,
+      "current": 45.41,
+      "week_ago": 40.49,
+      "month_ago": 37.0,
+      "year_ago": 21.46,
+      "pct_1w": 12.2,
+      "pct_1m": 22.7,
+      "pct_1y": 111.6,
       "affected_sectors": [
         "Mining & O&G"
       ],
@@ -40,15 +40,94 @@
       ],
       "relevance": "Affects Ontario and Quebec nickel mine projects and EV battery supply chain."
     },
+    "canola": {
+      "description": "Canola farm price, Saskatchewan (StatCan 32-10-0077-01)",
+      "current": 672.81,
+      "week_ago": 672.81,
+      "month_ago": 660.72,
+      "year_ago": 633.36,
+      "pct_1w": 0.0,
+      "pct_1m": 1.8,
+      "pct_1y": 6.2,
+      "affected_sectors": [
+        "Agriculture"
+      ],
+      "affected_provinces": [
+        "SK",
+        "AB",
+        "MB"
+      ],
+      "relevance": "Canola is Saskatchewan and Alberta's dominant oilseed crop.",
+      "frequency": "monthly",
+      "unit": "$/tonne",
+      "monthly_points": [
+        {
+          "refPer": "2025-03-01",
+          "value": 627.81
+        },
+        {
+          "refPer": "2025-04-01",
+          "value": 633.36
+        },
+        {
+          "refPer": "2025-05-01",
+          "value": 655.12
+        },
+        {
+          "refPer": "2025-06-01",
+          "value": 667.84
+        },
+        {
+          "refPer": "2025-07-01",
+          "value": 679.45
+        },
+        {
+          "refPer": "2025-08-01",
+          "value": 669.44
+        },
+        {
+          "refPer": "2025-09-01",
+          "value": 636.79
+        },
+        {
+          "refPer": "2025-10-01",
+          "value": 616.95
+        },
+        {
+          "refPer": "2025-11-01",
+          "value": 622.17
+        },
+        {
+          "refPer": "2025-12-01",
+          "value": 620.35
+        },
+        {
+          "refPer": "2026-01-01",
+          "value": 619.13
+        },
+        {
+          "refPer": "2026-02-01",
+          "value": 653.6
+        },
+        {
+          "refPer": "2026-03-01",
+          "value": 660.72
+        },
+        {
+          "refPer": "2026-04-01",
+          "value": 672.81
+        }
+      ]
+    },
     "iron_ore": {
       "description": "Iron ore price proxy (Vale SA)",
-      "current": 15.01,
-      "week_ago": 16.3,
-      "month_ago": 16.19,
-      "year_ago": 8.79,
-      "pct_1w": -7.9,
-      "pct_1m": -7.3,
-      "pct_1y": 70.6,
+      "current": 16.15,
+      "week_ago": 14.99,
+      "month_ago": 16.58,
+      "year_ago": 9.02,
+      "pct_1w": 7.7,
+      "pct_1m": -2.6,
+      "pct_1y": 79.1,
       "affected_sectors": [
         "Mining & O&G",
         "Construction"
@@ -61,13 +140,13 @@
     },
     "steel": {
       "description": "Steel price proxy (SLX ETF)",
-      "current": 106.83,
-      "week_ago": 111.63,
-      "month_ago": 106.48,
-      "year_ago": 64.73,
-      "pct_1w": -4.3,
-      "pct_1m": 0.3,
-      "pct_1y": 65.0,
+      "current": 111.39,
+      "week_ago": 106.34,
+      "month_ago": 109.32,
+      "year_ago": 64.26,
+      "pct_1w": 4.7,
+      "pct_1m": 1.9,
+      "pct_1y": 73.4,
       "affected_sectors": [
         "Construction",
         "Transportation"
@@ -77,13 +156,13 @@
     },
     "lumber": {
       "description": "Lumber futures",
-      "current": 611.0,
-      "week_ago": 587.5,
-      "month_ago": 576.5,
-      "year_ago": 604.0,
-      "pct_1w": 4.0,
-      "pct_1m": 6.0,
-      "pct_1y": 1.2,
+      "current": 630.5,
+      "week_ago": 612.0,
+      "month_ago": 584.5,
+      "year_ago": 627.0,
+      "pct_1w": 3.0,
+      "pct_1m": 7.9,
+      "pct_1y": 0.6,
       "affected_sectors": [
         "Construction",
         "Real Estate"
@@ -97,13 +176,13 @@
     },
     "tsx_infrastructure": {
       "description": "Canadian infrastructure companies basket",
-      "current": 58.03,
-      "week_ago": 56.71,
-      "month_ago": 54.07,
-      "year_ago": 43.54,
-      "pct_1w": 2.3,
-      "pct_1m": 7.3,
-      "pct_1y": 33.3,
+      "current": 57.56,
+      "week_ago": 57.71,
+      "month_ago": 55.94,
+      "year_ago": 43.28,
+      "pct_1w": -0.3,
+      "pct_1m": 2.9,
+      "pct_1y": 33.0,
       "affected_sectors": [
         "Utilities",
         "Transportation"
@@ -113,13 +192,13 @@
     },
     "potash_nutrien": {
       "description": "Nutrien Ltd (potash/fertilizer)",
-      "current": 94.69,
-      "week_ago": 96.35,
-      "month_ago": 93.29,
-      "year_ago": 79.97,
-      "pct_1w": -1.7,
-      "pct_1m": 1.5,
-      "pct_1y": 18.4,
+      "current": 92.23,
+      "week_ago": 94.02,
+      "month_ago": 97.34,
+      "year_ago": 82.38,
+      "pct_1w": -1.9,
+      "pct_1m": -5.2,
+      "pct_1y": 12.0,
       "affected_sectors": [
         "Mining & O&G",
         "Agriculture"
@@ -132,13 +211,13 @@
     },
     "cameco_uranium": {
       "description": "Cameco Corp (uranium mining)",
-      "current": 148.96,
-      "week_ago": 155.84,
-      "month_ago": 162.16,
-      "year_ago": 91.42,
-      "pct_1w": -4.4,
-      "pct_1m": -8.1,
-      "pct_1y": 62.9,
+      "current": 149.8,
+      "week_ago": 146.91,
+      "month_ago": 154.29,
+      "year_ago": 93.99,
+      "pct_1w": 2.0,
+      "pct_1m": -2.9,
+      "pct_1y": 59.4,
       "affected_sectors": [
         "Mining & O&G",
         "Utilities"
@@ -148,27 +227,7 @@
         "ON"
       ],
       "relevance": "Largest Canadian uranium producer. Proxy for uranium sector activity and SMR supply chain."
-    },
-    "sprott_uranium": {
-      "description": "Sprott Physical Uranium Trust (spot price proxy)",
-      "current": 26.68,
-      "week_ago": 27.18,
-      "month_ago": 27.51,
-      "year_ago": 23.11,
-      "pct_1w": -1.8,
-      "pct_1m": -3.0,
-      "pct_1y": 15.4,
-      "affected_sectors": [
-        "Mining & O&G",
-        "Utilities"
-      ],
-      "affected_provinces": [
-        "SK",
-        "ON",
-        "NB"
-      ],
-      "relevance": "Closest free proxy for uranium spot price. TSX-listed. Tracks physical uranium holdings."
     }
   },
-  "updated_at": "2026-06-08T16:09:05.507330"
+  "updated_at": "2026-06-15T18:04:50.315129"
 }

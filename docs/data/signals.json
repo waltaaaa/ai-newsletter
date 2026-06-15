@@ -1,15 +1,15 @@
 {
-  "exported_at": "2026-06-11T13:27:59.304124+00:00",
+  "exported_at": "2026-06-15T19:41:31.493351+00:00",
   "job_spikes": {
-    "week_of": "2026-06-08",
+    "week_of": "2026-06-15",
     "spikes": []
   },
   "procurement": {
-    "week_of": "2026-06-08",
+    "week_of": "2026-06-15",
     "contracts": []
   },
   "iaac": {
-    "total_tracked": 155,
-    "seen_this_week": 51
+    "total_tracked": 162,
+    "seen_this_week": 59
   }
 }

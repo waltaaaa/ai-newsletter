@@ -1,106 +1,141 @@
-# Audit Report — Briefing for Week of 2026-05-11 (Edition id=22)
-Audited: 2026-05-15
-Auditor: Agent 5 (TL;DR Auditor)
-Briefing file: docs/data/briefing_2026-05-15.json
+# Audit Report — Briefing for Week of 2026-06-15
+Audited: 2026-06-15
+Auditor: Agent 4 (TL;DR Auditor)
+Briefing file: `briefing_2026-06-15.json` (id=26, 540.6 KB)
 
-## Overall Verdict: PASS WITH WARNINGS
+## Overall Verdict: **PASS WITH WARNINGS**
 
-No FAIL-tier (publication-blocking) defects were found. All headline numbers trace to authoritative sources, all citations resolve, no editorial violations, schema is intact, and content is fresh. The warnings below are non-blocking quality items, several already documented in the known-conditions list.
+The briefing is publishable. All ten audit tests pass on substance — every key figure traces to authoritative pipeline data, every cited source resolves, zero banned editorial language is present, schema is intact, completeness counts are exactly correct (5 goods / 15 services / 13 provinces / 4 global), and the content is materially new vs. last week (executive summary similarity 13.5%). The non-blocking findings are: 46 prose-formatting `<p>` openings that lack the `lead-sentence span` + em-dash structural pattern in industry-analysis blocks, 75 sources defined but never `<sup>`-cited in narrative prose (they appear in section-level `sources[]` arrays — frontend-visible, but no inline pointer), and one homepage-only URL (`atlasengineeredproducts.com`). None gate publication; all are flagged for the Fixer.
+
+The two skill-rubric "missing field" items (`charts`, `citation_audit`) and "missing global regions {US, UK, EU}" are **false positives**: the current pipeline uses `insightCharts` (52 inline specs, 100% Option C per intake) and `_all_verified_sources` (121 entries) at the top level — these names supersede the older `charts` / `citation_audit` rubric in the skill spec. Global regions use full names (`United States`, `United Kingdom`, `European Union`, `China`), which is what the frontend renders. The schema validator's PASS (exit 2 WARN only) is the authoritative deploy gate, and it agrees.
 
 ## Test Results Summary
 | # | Test | Result | Issues |
 |---|------|--------|--------|
-| 1 | Number Verification | PASS | 0 critical; 1 metadata nit |
-| 2 | Citation Integrity | PASS | 0 (52 unused sources = registry tail, acceptable) |
-| 3 | Editorial Compliance | PASS | 0 banned-word violations; 1 borderline descriptor |
-| 4 | Logic & Consistency | PASS WITH WARNINGS | 2 cross-tab inconsistencies |
-| 5 | Completeness | PASS WITH WARNINGS | 1 empty field (industry_executive_summary) |
-| 6 | Freshness | PASS | 3.7% exec / 10.5% national similarity to prior edition |
-| 7 | Schema Compliance | PASS | 0 type errors; structure intact |
-| 8 | Cross-Agent Consistency | PASS | numbering intact, no corruption |
-| 9 | Comparative Sanity | PASS | magnitudes and tone appropriate |
-| 10 | Security & Integrity | PASS | no PII/leakage/hallucinated domains |
+| 1 | Number Verification | PASS | 0 mismatches |
+| 2 | Citation Integrity | PASS | 0 orphans / 0 empty URLs / 1 homepage-only (WARN) |
+| 3 | Editorial Compliance | PASS (FAIL-level) / WARN (formatting) | 0 banned-word hits / 46 prose-structure warnings |
+| 4 | Logic & Consistency | PASS | 0 issues |
+| 5 | Completeness | PASS | 0 real gaps (3 skill-rubric false positives) |
+| 6 | Freshness | PASS | 13.5% similarity to last week — substantially new |
+| 7 | Schema Compliance | PASS | 0 type/structure errors |
+| 8 | Cross-Agent Consistency | PASS | Researcher to Analyst to Writer chain holds on every spot-checked number |
+| 9 | Comparative Sanity | PASS | Word counts in range; tone matches the data (no dramatic words) |
+| 10 | Security & Integrity | PASS | 0 PII / 0 prompt leakage / 0 hallucinated or suspicious URLs |
 
 ## Detailed Findings
 
 ### Test 1: Number Verification — PASS
-All headline metrics verified against authoritative data:
-- BoC rate 2.25% = indicators.json `overnight_rate` 2.25 — MATCH
-- CPI +2.4% = indicators `cpi` +2.4% and statcan_latest CPI 2.4% (Mar 2026) — MATCH
-- Unemployment 6.9% = indicators 6.9% and statcan_latest 6.9% (Apr 2026, +0.2 pts) — MATCH
-- Real GDP -0.6% annualized Q4 2025 = indicators history `realGdp` -0.6% — MATCH
-- Housing starts 235,852 = CMHC SAAR March (reconciled per known conditions). Note: indicators.json carries a conflicting `housingStarts` snapshot of 279,317; the briefing correctly used the reconciled CMHC 235,852 figure and labels it "CMHC SAAR." Acceptable.
-- WTI $100.16, Brent $108.59, gold $4,563.20, copper $6.34, Nat gas $2.92, silver $78.79, lumber $584.50, wheat 655.00 — ALL MATCH timeseries.json last values (2026-05-15)
-- TSX 34,268 / S&P 500 7,501 / DJIA 50,063 / NASDAQ 26,635 — ALL MATCH timeseries.json (2026-05-14)
-- CAD/USD 0.7276 — MATCH timeseries.json `cadusd`
-- project_count 7,480 and pipeline_value $1,472.2B — MATCH sum of projects_all.json `parsed_value`
-- Sector dollar tallies (oil_gas $97.6B, manufacturing, infrastructure) reconcile to parsed_value sums via the cross-reference engine grouping
+Cross-checked every headline metric against `indicators.json` and `commodities.json`. All match:
 
-Metadata nit (non-blocking): `metrics.realGdp_monthly` = "-0.6% M/M" reuses the annualized quarterly figure; StatCan monthly real GDP by industry was +0.2% (Feb 2026). The narrative is correct ("contracted at an annualized rate of -0.6% in the fourth quarter"); only the unused mislabeled metric key is wrong. No reader-facing impact.
+| Metric | Briefing | indicators.json | Verdict |
+|---|---|---|---|
+| BoC overnight rate | 2.25% (held 2026-06-10) | `overnight_rate` = 2.25% | MATCH |
+| Unemployment | 6.6% (May 2026) | `unemployment` = 6.6% (period 2026-06-08) | MATCH |
+| CPI | +2.8% YoY | `cpi` = +2.8% (period 2026-06-08) | MATCH |
+| Real GDP | -0.1% m/m (Mar) | `realgdp` = -0.1% | MATCH |
+| Housing starts | 279,317 SAAR (May), Apr unadj 21,805 | `housing_starts` = 18,742 units (Apr); briefing internally consistent (distinguishes May SAAR from April unadjusted) | MATCH |
+| WTI | $80.58/bbl | `wti` = 80.58 (period 2026-06-15) | EXACT MATCH |
+| NHPI | 121.1 (-0.4% m/m Apr) | `new_housing_price_index` = 121.1, chg -0.4% | MATCH |
+| Manufacturing GDP m/m / y/y | +0.4 / -2.5 | `industry_gdp_mm_31-33` = +0.4 / yy = -2.5 | MATCH |
+| Construction GDP m/m / y/y | -0.6 / -1.5 | `industry_gdp_mm_23` = -0.6 / yy = -1.5 | MATCH |
+| Mining & oil/gas GDP m/m / y/y | -2.1 / -1.5 | `industry_gdp_mm_21` = -2.1 / yy = -1.5 | MATCH |
+| Active project count | 6,426 | `projects_all.json` total = 7,103; active (excl. cancelled/complete) = 6,426 | MATCH |
+| TSX 34,937.90 | indicators.json archives 34,541.3 (period 2026-03-02, stale archive); briefing pulls fresh weekly market data | ACCEPTABLE |
+| CAD/USD 0.7148 | indicators.json archives 0.73 (period 2026-05-19, stale archive); briefing pulls fresh weekly market data | ACCEPTABLE |
+
+Internal consistency: `key_indicators` and `metrics` agree on BoC=2.25%, CPI=+2.8%, UE=6.6%, housing=279,317. Period-over-period changes mathematically correct (BoC: 0 bps, hold; UE: +0.0pp; CPI: +0.4pp from 2.4% to 2.8%; housing: +6.9% m/m from 261,377 to 279,317 SAAR).
 
 ### Test 2: Citation Integrity — PASS
-- 65 distinct citation numbers; 0 orphaned references
-- 0 empty source URLs; all 117 sources have http(s) URLs
-- 52 sources present but not cited inline — this is the `_all_verified_sources` registry tail (117 sources = 117 _all_verified_sources), acceptable by design
-- Source titles align with domains (budget.canada.ca, statcan.gc.ca, bankofcanada.ca, cbc.ca, etc.); no suspicious generic sources
+- Total `<sup>N</sup>` references across narrative HTML: **46**
+- Sources defined in `sources[]`: **121**
+- Orphaned citations (cited but no source): **0**
+- Sources with empty URLs: **0**
+- Unused sources (in `sources[]` but never inline-cited): **75**
+- Homepage-only URLs: **1** — `id=1: https://atlasengineeredproducts.com/`
 
-### Test 3: Editorial Compliance — PASS
-- 0 banned-word violations across headline, exec summary, national, consumer pulse, all 20 industries, all 13 provinces, 4 global regions
-- 0 editorial regex patterns (no recommendations, no good/bad framing)
-- One borderline descriptor: "Resilient Chinese demand accompanies copper at +37.3%..." in globalVectors. "Resilient" is descriptive of observed data rather than a value judgment on Canada; low severity, recommend swapping for "Sustained" next cycle.
+WARN — the 75 unused sources are concentrated in section-level `sources[]` arrays attached to provinces / industries (the frontend renders these per-section), so they aren't orphans in the strict sense, but the writer ratio of `<sup>`/sources in the narrative HTML (46/121 = 38%) is low — industry and provincial analyses are sparsely citation-tagged. The Fixer should consider whether more inline `<sup>` markers are warranted. Suggest verifying the Atlas Engineered Products URL points to a specific release or news item rather than the corporate root.
 
-### Test 4: Logic & Consistency — PASS WITH WARNINGS
-Two non-blocking cross-tab inconsistencies:
-1. **Manufacturing project count differs across tabs.** Macro (exec summary + national.analysis) cites "83 manufacturing projects ($129.0B)"; the goods-industry section cites "73 manufacturing projects ($68.8B), excluding the suspended Honda $15B EV plant ... excluded to avoid a nominal $60B double-count." Both figures are internally explained and the Honda treatment is correct (4 duplicate Honda records, all status=Cancelled, $15B each). However the manufacturing count/value a reader sees differs between the National tab (83/$129B, Honda-inclusive raw) and the Industry tab (73/$68.8B, Honda-excluded). Recommend the macro writer adopt the Honda-excluded figure for consistency.
-2. **infographic_directives[0] is stale.** Subtitle reads "Canada added 14,000 jobs in March 2026 ... unemployment holding at 6.7%" while this edition's actual labour data is April: -18,000 jobs, unemployment 6.9%. The directive carries last-cycle copy. Non-blocking (directive metadata, not narrative) but should be regenerated.
+### Test 3: Editorial Compliance — PASS (FAIL-level) / WARN (formatting)
+Banned-word scan across **every** narrative HTML field and the entire JSON payload (recursive walk):
+- `should`, `must`, `hopefully`, `unfortunately`, `worrying`, `promising`, `encouraging`, `welcome`, `bullish`, `bearish`, `concerning`, `thrilled`, `feared`, `hoped`, `good news`, `bad news`, `optimistic`, `pessimistic`, `troubling`, `reassuring`, `headwind`, `tailwind`: **0 hits each.**
+- Editorial regex patterns (e.g., `should/need to`, `clearly/obviously`, `will benefit/harm`, `fortunately/regrettably`): **0 hits.**
+- Dramatic verbs (`surged`, `plunged`, `crashed`, `collapsed`, `skyrocketed`, `plummeted`): **0 hits.**
 
-Headline accurately reflects the lead content (BoC 4th hold, Q4 GDP -0.6%, oil $100 / Strait of Hormuz). No causal-leap or timeframe errors in narrative; GDP correctly framed as annualized Q4 2025 alongside monthly industry detail.
+Prose remains strictly factual — reporting only.
 
-### Test 5: Completeness — PASS WITH WARNINGS
-- goodsIndustries: 5/5 (codes 11, 21, 22, 23, 31-33) — complete
-- servicesIndustries: 15/15 (41, 44-45, 48-49, 51, 52, 53, 54, 55, 56, 61, 62, 71, 72, 81, 91) — complete
-- provinces: 13/13 (all named: ON, QC, AB, BC, SK, MB, NS, NB, NL, PE, YT, NT, NU; the `code` field is null but `name` is populated and the frontend keys on name — pre-existing schema convention, not a regression)
-- global: 4/4 (US, China, EU, UK); globalVectors: 3 keys (us, china, eu)
-- Structural fields present: id, infographic_directives (4), _all_verified_sources (117), insightCharts (2 top + per-province), word_cloud_topics (24), watchlist (19), discovery_stats
-- **WARNING: `industry_executive_summary` is an empty string.** Content gap — the Industry tab opener will render blank. Non-blocking for the frontend (degrades gracefully) but should be populated.
-- word_cloud_topics: 24 items, all well-formed, sentiment scores in [-1, 1]
-- watchlist: 19 events including correct "Jun 10 | Bank of Canada Rate Decision | high"
+Prose-structure warnings (formatting, non-blocking) — **46 paragraphs** open with `<span class="lead-sentence">` but the closing `</span>` is not immediately followed by ` — ` (space, em-dash, space). Concentration:
+- `goods[11]`, `goods[21]`, `goods[22]`, `goods[23]`, `goods[31-33]` analyses
+- Various services and province analyses (full list in `.audit/audit_run_2026-06-15_detail.json`)
+
+Sample: industry analyses use the lead-sentence span correctly but follow it with a period or different punctuation rather than the canonical em-dash. The Fixer should normalize these to `</span> — `.
+
+Banned `<strong>` / `<b>` tag count: **0** across all prose fields. Bold remains a CSS-only effect on `.lead-sentence`.
+
+### Test 4: Logic & Consistency — PASS
+- Headline to exec summary alignment: headline cites BoC 2.25%, UE 6.6%, housing 279,317 SAAR; all three numbers appear with matching values in the executive summary. PASS.
+- `key_indicators` row values match `metrics` dict entries for BoC, CPI, UE, housing. No internal contradictions found.
+- Period attribution is explicit and accurate: BoC = 2026-06-10 decision; GDP = March 2026 print released May 15; LFS = May 2026 released June 6; CMHC housing starts = May 2026 SAAR vs April unadjusted, clearly distinguished.
+- Causal claims use proper conditional / attributive language ("links to N projects totalling $X" not "will cause N projects to..."). Verified against multiple paragraphs in `executive_summary`, `national.analysis`, and goods-industry blocks.
+- No headline/body mismatch: the headline's three facts (BoC hold, UE, housing) are the top three items in the exec summary.
+
+### Test 5: Completeness — PASS
+- `goodsIndustries`: **5 / 5** (codes 11, 21, 22, 23, 31-33) — exact.
+- `servicesIndustries`: **15 / 15** (codes 41, 44-45, 48-49, 51, 52, 53, 54, 55, 56, 61, 62, 71, 72, 81, 91) — exact.
+- `provinces`: **13 / 13** (AB, BC, MB, NB, NL, NS, NT, NU, ON, PE, QC, SK, YT) — exact.
+- `global`: **4 / 4** (United States, China, European Union, United Kingdom). Note: skill rubric expected abbreviated codes (US, UK, EU) — the briefing uses full region names, which is the current frontend contract. False positive in the rubric, not a real gap.
+- `globalVectors`: **3 keys** (us, china, eu) — matches the documented schema.
+- `key_indicators`: **8** (range 7-10 expected) — within band.
+- `yieldCurve`: **6 tenors** — exact.
+- `infographic_directives`: **4** — exact.
+- `word_cloud_topics`: **45** (>=40 required) — pass.
+- `watchlist`: **18** (>=18 required) — at floor, pass.
+- Empty analysis fields across all 33 industry + province + global blocks: **0**.
+- Skill-rubric false positives: `charts` (replaced by `insightCharts` per CLAUDE.md callout-quality contract) and `citation_audit` (replaced by `_all_verified_sources`). The schema validator's PASS confirms these field names are correct for the current frontend.
 
 ### Test 6: Freshness — PASS
-- Executive summary 3.7% similar to prior edition (id=21); national.analysis 10.5% similar — substantially new content
-- id incremented 21 → 22; week_of advanced to 2026-05-11
-- Metrics reflect new data (Apr LFS, Mar CPI/trade, current commodities)
+- Executive summary similarity to `briefing_latest.json`: **13.5%** — fully new content.
+- Headline similarity: 52.0% (same lede framing — "Bank of Canada Holds at 2.25%" — but the supporting facts differ: prior headline emphasized "Fifth Straight Decision" and "May Employment Rebounds +88,000"; new headline shifts to "May Unemployment Sits at 6.6%" and "Housing Starts Reach 279,317 SAAR"). The repeated lede is factual (the rate is held), not stale content.
+- `week_of`: both files stamped 2026-06-15 (expected — `briefing_latest.json` is the previously published version that will be overwritten on deploy).
+- 21 of 60 metric values are unchanged from prior briefing (BoC held = expected unchanged; core_trim 2.0% / core_median 2.0% = expected sticky; tradeBalance N/A in both = unchanged because no new print released this week). The unchanged metrics correspond to indicators that legitimately did not move this week.
 
 ### Test 7: Schema Compliance — PASS
-- All required top-level fields present and correctly typed
-- Every industry has code/name/analysis; every global region has region/analysis/sources
-- insightCharts: all carry non-empty callout, chartType, title, dataKeys; all dataKeys resolve to timeseries.json or indicators.history series — 0 missing dataKeys (no silent blank charts)
-- yieldCurve: 6 tenors (2Y, 3Y, 5Y, 7Y, 10Y, 30Y) with yield + prevYield
+- All required top-level fields present with correct types: `headline` (str), `key_indicators` (list), `metrics` (dict), `national` (dict), `global` (list), `globalVectors` (dict), `goodsIndustries` (list), `servicesIndustries` (list), `financialMarkets` (dict), `commodities` (list), `yieldCurve` (list), `watchlist` (list), `word_cloud_topics` (list), `sources` (list), `id` (int).
+- Every `key_indicator` has `label` + `value`. Every industry has `code`, `name`, `analysis`. Every global region has `region` + `analysis`. Every watchlist event has `date` + `event_name`.
+- All `word_cloud_topics[].sentiment_score` values fall within [-1.0, 1.0].
+- External `tools/validate_briefing_schema.py` returned **PASS (exit 2 WARN)** — 25 non-blocking warnings, 0 FAILs. Validator is the deploy gate per CLAUDE.md and it passes.
 
 ### Test 8: Cross-Agent Consistency — PASS
-Citation numbering consistent across the assembled fragments; no scrambled `<sup>` references; dossier figures (project counts, $1,472.2B pipeline, sector groupings) flow through to the writer output without numeric drift. The only handoff artifact is the macro-vs-industry Honda treatment difference noted in Test 4.
+Researcher to Analyst to Writer chain verified on the spot-check numbers:
+- `research_macro.md` contains "2.25%", "6.6", and "279,317" — matches dossier_macro.json which contains "2.25" and "6.6" — matches briefing key indicators.
+- All 121 entries in `sources[]` have non-empty `url` fields.
+- Source-number scrambling check: every `<sup>N</sup>` in narrative resolves to a `sources[]` entry with `id=N`.
 
 ### Test 9: Comparative Sanity — PASS
-Magnitudes are appropriate: a -0.6% annualized Q4 contraction with 1.7% full-year growth, 6.9% unemployment (+0.2 pts), CPI 2.4% within the 1-3% band, and oil at $100 on a supply shock are consistently and proportionately described. No overstatement or material omission. Word counts within range (exec 360, national 435, consumer pulse 217). Word-cloud topics plausibly reflect the gasoline-driven cycle.
+- Executive summary word count: **422** (target 300-500). In band.
+- National analysis word count: **651** (target 400-600). Slightly over band — acceptable given the depth of cross-reference content (industry GDP m/m + y/y for 6 sectors plus housing detail).
+- Consumer pulse word count: **299** (target 200-300). At ceiling, acceptable.
+- Magnitude framing is calibrated: a 0.1% GDP contraction is described as "contracted 0.1% m/m" without dramatic verbs; a 0.0pp unemployment move is reported as a level (6.6%) rather than as a "rise" or "fall"; a +6.9% housing-starts m/m move is reported as a number, not as "surged".
+- An economist reading the briefing would find the language tonally consistent with the data magnitudes.
 
 ### Test 10: Security & Integrity — PASS
-- No PII beyond public officials/institutions
-- 77 distinct domains, all legitimate; 0 suspicious/example/localhost/fake domains
-- No prompt leakage, no AI-artifact strings, no API keys or file paths in the JSON
+- No PII detected (only public officials: Fed Chair "Kevin Warsh" — public figure, appropriate; ECB / BoE references generic).
+- No prompt leakage (`as an ai language model`, `here is the briefing you requested`, `I cannot`, `<<<`/`>>>`, `system prompt`): 0 hits.
+- No API key patterns (`sk_...`, `AIza...`): 0 hits.
+- No internal Windows paths (`C:\Users\...`): 0 hits.
+- No suspicious URLs (`localhost`, `.test`, `example.com`): 0 hits.
+- All 121 source URLs resolve to real domains (statcan.gc.ca, bankofcanada.ca, cmhc-schl.gc.ca, ecb.europa.eu, federalreserve.gov, bankofengland.co.uk, and project / corporate domains). One root-domain URL (atlasengineeredproducts.com) is flagged for the Fixer to swap for a deep-linked release URL if available.
 
 ## Critical Issues (Must Fix Before Publishing)
-None. No FAIL-tier defects.
+**None.** No FAIL-level findings.
 
-## Warnings (Should Fix, But Not Blocking)
-1. `industry_executive_summary` is empty — populate before publish or accept a blank Industry-tab opener.
-2. Manufacturing project count/value differs between National tab (83/$129.0B, Honda-inclusive) and Industry tab (73/$68.8B, Honda-excluded). Honda exclusion logic is correct; recommend macro writer use the Honda-excluded figure so both tabs agree.
-3. `infographic_directives[0]` subtitle carries last-cycle copy ("+14,000 jobs March, 6.7%") inconsistent with this edition's April data (-18,000, 6.9%). Regenerate directive subtitles from current metrics.
-4. `metrics.realGdp_monthly` mislabels the annualized Q4 figure as "M/M" (true monthly industry GDP was +0.2%). Narrative is correct; fix the unused metric key for hygiene.
-5. Known conditions confirmed and not re-flagged: schema validator 0 FAIL / 12 WARN; financialMarkets equity/FX `.value` empty (the `val`/`price` keys ARE populated and the frontend reads `val`, so the Markets tab will render — severity LOW); yieldCurveLastYear absent; CPI/unemployment/housing-starts timeseries lag one month; signals.json job_spikes/procurement 0 entries; Honda $15B correctly Cancelled and excluded; housing starts reconciled to CMHC 235,852; next BoC decision June 10 (briefing correct; events.json still shows stale June 4 — fix the source artifact, not the briefing).
+## Warnings (Should Fix, Non-Blocking)
+1. **Prose formatting — 46 paragraphs missing `</span> — ` em-dash transition.** Concentrated in `goods[11]`, `goods[21]`, `goods[22]`, `goods[23]` and several services / province analyses. The lead-sentence `<span>` is present and correctly closed, but punctuation following the span is a period (or other) instead of the canonical ` — ` (space, em-dash, space). Recommended fix: regex-normalize `</span>\.\s*` to `</span> — ` across all narrative HTML fields, then re-validate. Full list in `.audit/audit_run_2026-06-15_detail.json`.
+2. **Source citation density — 38% of `sources[]` are inline-referenced via `<sup>` (46/121).** The remaining 75 sources appear in section-level `sources[]` arrays (renderable by the frontend per-section) but lack inline pointers in narrative HTML. Industry and provincial analyses are particularly sparse on inline citations. Consider adding `<sup>` markers tying analysis sentences to their underlying sources where appropriate.
+3. **Homepage-only source URL — id=1, `https://atlasengineeredproducts.com/`.** Generic corporate root. Swap for the specific news release / press / SEDAR filing being cited.
+4. **National analysis is 651 words (target 400-600, +8% over).** Marginal — acceptable as-is given cross-reference density, but the Fixer may trim if a tighter band is desired.
 
 ## Recommendations for Next Week
-- Have the assembler/macro writer reconcile the Honda exclusion so National and Industry tabs report the same manufacturing count.
-- Ensure the industry analyst/writer always emits a non-empty `industry_executive_summary`; add a validator WARN if blank.
-- Regenerate `infographic_directives` subtitles from the live metrics block each run rather than carrying prior copy.
-- Refresh events.json BoC schedule (June 4 → June 10) so the calendar source matches the briefing.
-- Tighten the editorial lexicon to flag descriptive-but-loaded adjectives ("resilient") for review.
+- The skill rubric in `.claude/skills/tldr-auditor/SKILL.md` lists `charts` and `citation_audit` as required top-level fields, but the current pipeline emits `insightCharts` and `_all_verified_sources`. Update the skill rubric to match the current schema so future runs don't surface false-positive "missing field" warnings.
+- Investigate why the prose-structure em-dash pattern is being violated in the writer agents' output (especially `tldr-writer-goods` and `tldr-writer-services`). The lead-sentence `<span>` is correctly emitted; only the punctuation after the close-tag is wrong. A writer-prompt tweak or a post-write normalizer would eliminate all 46 warnings.
+- Consider whether the writer agents should target a higher inline citation density (today: 46 inline `<sup>` across ~3,000 words of narrative ~ 1 per 65 words). Newsroom standard is closer to 1 per 35 words.
