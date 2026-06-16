@@ -226,6 +226,15 @@ META_RESOLVED_GROUPS = [
             "accommodation_food_employment": {"members": _LFS_COMMON + ["Accommodation and food services"], "unit": "thousands", "category": "Employment", "range": (700, 1800)},
             "other_services_employment":     {"members": _LFS_COMMON + ["Other services"], "unit": "thousands", "category": "Employment", "range": (450, 1300)},
             "public_admin_employment":       {"members": _LFS_COMMON + ["Public administration"], "unit": "thousands", "category": "Employment", "range": (800, 1900)},
+            # C1 (reliability audit 2026-06-15): construction/manufacturing/mining
+            # were previously fetched via the HARDCODED EMPLOYMENT_INDUSTRY group,
+            # whose vectors were WRONG (2057622 = "Newfoundland & Labrador; Total
+            # employed" = 243k shipped mislabelled as Manufacturing and range-
+            # passed). Resolve by member NAME from the same cube instead, so a
+            # member rename fails loudly (skips) rather than shipping garbage.
+            "construction_employment":       {"members": _LFS_COMMON + ["Construction"], "unit": "thousands", "category": "Employment", "range": (1400, 1900)},
+            "manufacturing_employment":      {"members": _LFS_COMMON + ["Manufacturing"], "unit": "thousands", "category": "Employment", "range": (1400, 2000)},
+            "mining_og_employment":          {"members": _LFS_COMMON + ["Forestry, fishing, mining, quarrying, oil and gas"], "unit": "thousands", "category": "Employment", "range": (250, 500)},
         },
     },
     {
@@ -355,7 +364,11 @@ ALL_TABLE_GROUPS = [
     INVESTMENT_BUILDING,
     # CONSTRUCTION_PRICE_INDEX,   # disabled — table 18-10-0135 discontinued
     CAPITAL_EXPENDITURES,
-    EMPLOYMENT_INDUSTRY,
+    # EMPLOYMENT_INDUSTRY removed 2026-06-15 (reliability audit C1): its
+    # hardcoded vectors (2057614/2057606/2057622) were WRONG — manufacturing
+    # resolved to "NL; Total employed" (243k) and shipped range-passed.
+    # construction/manufacturing/mining employment are now name-resolved in
+    # META_RESOLVED_GROUPS (same cube 14-10-0022) so drift fails loudly.
     JOB_VACANCIES,
     MERCHANDISE_EXPORTS,
     HOUSING_STARTS,

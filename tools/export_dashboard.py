@@ -681,7 +681,10 @@ _COMMODITY_REGISTRY = {
     "zinc":           ("Zinc",              "Base Metals", "t"),
     "lead":           ("Lead",              "Base Metals", "t"),
     "tin":            ("Tin",               "Base Metals", "t"),
-    "iron_ore":       ("Iron Ore",          "Base Metals", "t"),
+    # NOTE: iron_ore omitted — its source series is corrupted (two feeds
+    # interleaved on alternating dates: a VALE equity proxy ~15 and a physical
+    # ~111 $/t price), so neither the level nor the change is trustworthy.
+    # Re-add once the data fetch writes a single consistent series.
     "potash_nutrien": ("Potash (Nutrien)",  "Fertilizer", "share"),
     "wheat":          ("Wheat",             "Agriculture - Grains", "bu"),
     "corn":           ("Corn",              "Agriculture - Grains", "bu"),

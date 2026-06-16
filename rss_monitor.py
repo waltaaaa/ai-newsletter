@@ -426,7 +426,11 @@ def _load_media_feeds() -> dict[str, dict]:
                 if category == 'google_alerts':
                     google_alert_total += 1
                     google_alert_placeholder += 1
-                logger.warning(f"  [{fid}] Skipped — placeholder URL not configured")
+                # NOTE: must not reference an undefined `logger` here — this runs
+                # at import (MEDIA_FEEDS = _load_media_feeds()), so a NameError
+                # would kill the entire pipeline the moment any feed still has a
+                # placeholder URL. Use print(), matching this function's style.
+                print(f"  [{fid}] Skipped — placeholder URL not configured")
                 continue
             if category == 'google_alerts':
                 google_alert_total += 1

@@ -1923,6 +1923,25 @@ def validate(briefing_path):
             fails += 1
 
     # ============================================================
+    # 1b. CURRENCY GATE (reliability audit 2026-06-15, Guard #2)
+    # ============================================================
+    # The validator previously checked only that week_of was PRESENT — never
+    # that the edition is current. A conductor failure / API-quota exhaustion /
+    # timeout silently re-publishes LAST week's edition under this week's date,
+    # and that stale-but-valid file passed the deploy gate (exit 0, green CI).
+    # FAIL when the briefing is more than a week old so a silent stale-republish
+    # can never deploy. Anchored on week_of (NOT generated_at, which a re-stamp
+    # would defeat). A negative age (future-dated week_of, e.g. clock skew) is
+    # treated as fresh so it never false-blocks a deploy.
+    _wk = _parse_iso_date(b.get("week_of", ""))
+    if _wk is not None:
+        _age = (datetime.date.today() - _wk).days
+        if not check(results, "freshness.week_of_current", _age <= 7,
+                      f"briefing week_of {b.get('week_of')} is {_age} days old "
+                      "— stale republish? deploy blocked when older than 7 days"):
+            fails += 1
+
+    # ============================================================
     # 2. ARRAY COUNTS
     # ============================================================
     count_checks = [

@@ -9147,20 +9147,6 @@
       "low_52w": 47323.68
     },
     {
-      "name": "Iron Ore",
-      "category": "Base Metals",
-      "unit": "t",
-      "val": "111.65",
-      "day": "+0.0%",
-      "mm": "+3.8%",
-      "yy": "",
-      "weekly_pct": 0.0,
-      "mom_pct": 3.8,
-      "yoy_pct": null,
-      "high_52w": 111.65,
-      "low_52w": 9.06
-    },
-    {
       "name": "Corn",
       "category": "Agriculture - Grains",
       "unit": "bu",

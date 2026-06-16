@@ -271,6 +271,21 @@ def update_dashboard(deep_sweep: bool = False):
                 raise error_container[0]
             else:
                 result = result_container[0]
+                # C3 (reliability audit 2026-06-15): the conductor returns {} on
+                # failure WITHOUT raising (phases/conductor.py), so the except-
+                # clause hard-halt below never fires — the loop would fall through
+                # and Phase 6 would silently re-publish LAST week's edition under
+                # this week's date (exit 0, green CI, no retry). An empty conductor
+                # result means no fresh briefing was produced → hard-fail so the
+                # CI failure-issue + retry fire instead of shipping a stale edition.
+                if phase_module is conductor and not result:
+                    print("\n[CRITICAL] Conductor produced no briefing — halting "
+                          "to avoid a silent stale republish")
+                    run_log.log_error(phase_name,
+                                      Exception("Conductor produced empty result"),
+                                      recovered=False, severity="critical")
+                    run_log.finalize("error")
+                    sys.exit(1)
                 # Merge phase outputs into shared context
                 if result:
                     context.update(result)
@@ -302,10 +317,12 @@ def update_dashboard(deep_sweep: bool = False):
             _phase_end = _time.time()
             print(f"[PHASE_END {phase_name} t={int(_phase_end)} "
                   f"dt={int(_phase_end - _phase_start)} status={_phase_status}]")
-            # Conductor failure is critical — skip remaining phases
+            # Conductor failure is critical — the run cannot ship a briefing.
+            # Exit non-zero (not bare return, which exited 0 and let CI go green)
+            # so the workflow failure-issue + retry fire (reliability audit C3).
             if phase_module is conductor:
                 run_log.finalize("error")
-                return
+                sys.exit(1)
             continue
 
         # M-8: emit PHASE_END marker on the happy / timeout paths

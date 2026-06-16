@@ -141,12 +141,25 @@ def _pt_date(p):
     return p.get("date") or p.get("refPer") or p.get("period") or ""
 
 
-def _merge_points(existing, fresh):
+def _merge_points(existing, fresh, series_name=""):
     """Union existing + fresh point lists by date (fresh wins on conflict).
 
     Preserves deep history — a 13-month yfinance pull must NEVER truncate a
     series that already holds years of data. Returns ascending [{date,value}].
+
+    Guard #1 (reliability audit 2026-06-15): this is the DAILY market-data
+    populator (data-refresh.yml) and writes timeseries.json directly, bypassing
+    the db.save_timeseries_point sanity gate. Apply the same per-series median
+    band here so a bad fetch / contract roll (the dry_bulk_shipping 12→408 class)
+    cannot inject a spike into the chart ground truth. Disable with
+    TIMESERIES_SANITY_GATE=0.
     """
+    import os as _os
+    gate_on = _os.environ.get("TIMESERIES_SANITY_GATE", "1") != "0"
+    ex_vals = sorted(abs(float(p.get("value"))) for p in (existing or [])
+                     if isinstance(p.get("value"), (int, float)))
+    median = ex_vals[len(ex_vals) // 2] if len(ex_vals) >= 5 else None
+
     by_date = {}
     for p in (existing or []):
         d = _pt_date(p)
@@ -154,8 +167,20 @@ def _merge_points(existing, fresh):
             by_date[d[:10]] = {"date": d[:10], "value": p.get("value")}
     for p in (fresh or []):
         d = _pt_date(p)
-        if d and p.get("value") is not None:
-            by_date[d[:10]] = {"date": d[:10], "value": p.get("value")}
+        v = p.get("value")
+        if not (d and v is not None):
+            continue
+        if gate_on and median and median > 1e-6:
+            try:
+                ratio = abs(float(v)) / median
+            except (TypeError, ValueError):
+                ratio = 1.0
+            if ratio > 5 or ratio < 0.2:
+                print(f"  [SANITY] REJECTED {series_name or '?'} {d[:10]}={v} "
+                      f"(median {round(median, 4)}, ratio {round(ratio, 1)}x) — "
+                      "likely a bad fetch / contract roll; point skipped")
+                continue
+        by_date[d[:10]] = {"date": d[:10], "value": v}
     return [by_date[k] for k in sorted(by_date)]
 
 
@@ -287,7 +312,7 @@ def main():
                 if p.get("value") is not None:
                     p["value"] = round(p["value"] * scale, 4)
         prev_pts = len(ts.get(key, []) or [])
-        merged = _merge_points(ts.get(key, []), pts)
+        merged = _merge_points(ts.get(key, []), pts, key)
         ts[key] = merged
         refreshed.append((key, ticker, prev_pts, len(merged),
                           merged[-1]["date"], label))
@@ -305,7 +330,7 @@ def main():
             failed.append((key, f"BoC {series_id}: no rows"))
             continue
         prev_pts = len(ts.get(key, []) or [])
-        merged = _merge_points(ts.get(key, []), pts)
+        merged = _merge_points(ts.get(key, []), pts, key)
         ts[key] = merged
         refreshed.append((key, f"BoC:{series_id}", prev_pts, len(merged),
                           merged[-1]["date"], f"BoC Valet {series_id}"))
@@ -324,7 +349,7 @@ def main():
             failed.append((key, f"FRED {fred_id}: no rows"))
             continue
         prev_pts = len(ts.get(key, []) or [])
-        merged = _merge_points(ts.get(key, []), pts)
+        merged = _merge_points(ts.get(key, []), pts, key)
         ts[key] = merged
         refreshed.append((key, f"FRED:{fred_id}", prev_pts, len(merged),
                           merged[-1]["date"], label))

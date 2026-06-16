@@ -2351,6 +2351,50 @@ def get_trend_snapshots(conn: sqlite3.Connection, limit: int = 12) -> list[dict]
     return result
 
 
+def _timeseries_point_is_sane(conn: sqlite3.Connection, series_name: str, value) -> bool:
+    """Per-series point-sanity gate (reliability audit 2026-06-15, Guard #1).
+
+    Rejects a point whose magnitude is wildly out of line with the SAME series'
+    own recent history — the root-cause guard for the silent commodity/index
+    spikes that shipped to charts unnoticed (dry_bulk_shipping 12→408, rice
+    11→1373, bitcoin 94k→575, iron_ore 15↔111). Deliberately conservative:
+      - judges only when there are >=5 stable prior points (never blocks a new
+        or sparse series),
+      - compares against the series' OWN median (never cross-contaminates
+        unrelated series with different quantities/scales),
+      - skips near-zero series (ratios meaningless),
+      - uses a wide 5x / 0.2x band so legitimate volatility passes; the tighter
+        display-time plausibility cap handles smaller artifacts.
+    Disable with env TIMESERIES_SANITY_GATE=0.
+    """
+    import os
+    if os.environ.get("TIMESERIES_SANITY_GATE", "1") == "0":
+        return True
+    try:
+        rows = conn.execute(
+            "SELECT value FROM timeseries WHERE series_name=? AND value IS NOT NULL "
+            "AND source != 'briefing_print' ORDER BY date DESC LIMIT 20",
+            (series_name,)).fetchall()
+    except Exception:
+        return True  # never block a write because the gate query failed
+    vals = sorted(abs(float(r[0])) for r in rows if r[0] is not None)
+    if len(vals) < 5:
+        return True
+    median = vals[len(vals) // 2]
+    if median < 1e-6:
+        return True
+    try:
+        ratio = abs(float(value)) / median
+    except (TypeError, ValueError):
+        return True
+    if ratio > 5 or ratio < 0.2:
+        print(f"  [SANITY] REJECTED timeseries point {series_name}={value} "
+              f"(series median {round(median, 4)}, ratio {round(ratio, 1)}x) — "
+              "likely a bad fetch / contract roll; point not written")
+        return False
+    return True
+
+
 def save_timeseries_point(conn: sqlite3.Connection, series_name: str, date_str: str,
                           value: float | None, unit: str = "", source: str = "") -> None:
     """Upsert a single timeseries data point.
@@ -2382,6 +2426,10 @@ def save_timeseries_point(conn: sqlite3.Connection, series_name: str, date_str: 
                 VALUES (?, ?, ?, ?, ?)
                 ON CONFLICT(series_name, date) DO NOTHING
             """, (series_name, date_str, value, unit, source))
+        return
+    # Guard #1: reject implausible per-series spikes before they reach the chart
+    # ground truth. Skipped for briefing_print (handled above, insert-only).
+    if not _timeseries_point_is_sane(conn, series_name, value):
         return
     with conn:
         conn.execute("""
