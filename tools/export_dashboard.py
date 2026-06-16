@@ -657,6 +657,173 @@ def _flatten_market_commodities(grouped: list) -> list:
     return flat
 
 
+# Complete commodity registry — every commodity-price series carried in
+# timeseries.json (the published superset), mapped to display name / category /
+# unit. This is the single source of "what commodities the Markets tab shows".
+# Names that overlap the market writer's narrated set ("Crude Oil (WTI)", "Gold",
+# "Nickel", "Canola", "Potash (Nutrien)", "Lumber", …) are written identically so
+# the enrichment de-dupes against them. Uranium/WCS are left to the writer
+# (proxy/computed series). Series with too little history still publish a current
+# price with N/A changes — completeness over omission.
+_COMMODITY_REGISTRY = {
+    "wti":            ("Crude Oil (WTI)",   "Energy", "bbl"),
+    "brent":          ("Crude Oil (Brent)", "Energy", "bbl"),
+    "natural_gas":    ("Natural Gas",       "Energy", "MMBtu"),
+    "coal":           ("Coal (Newcastle)",  "Energy", "t"),
+    "lng_asia":       ("LNG (Asia JKM)",    "Energy", "MMBtu"),
+    "gold":           ("Gold",              "Precious Metals", "troy oz"),
+    "silver":         ("Silver",            "Precious Metals", "troy oz"),
+    "platinum":       ("Platinum",          "Precious Metals", "troy oz"),
+    "palladium":      ("Palladium",         "Precious Metals", "troy oz"),
+    "copper":         ("Copper",            "Base Metals", "lb"),
+    "aluminum":       ("Aluminum",          "Base Metals", "t"),
+    "nickel":         ("Nickel",            "Base Metals", "t"),
+    "zinc":           ("Zinc",              "Base Metals", "t"),
+    "lead":           ("Lead",              "Base Metals", "t"),
+    "tin":            ("Tin",               "Base Metals", "t"),
+    "iron_ore":       ("Iron Ore",          "Base Metals", "t"),
+    "potash_nutrien": ("Potash (Nutrien)",  "Fertilizer", "share"),
+    "wheat":          ("Wheat",             "Agriculture - Grains", "bu"),
+    "corn":           ("Corn",              "Agriculture - Grains", "bu"),
+    "rice":           ("Rice",              "Agriculture - Grains", "cwt"),
+    "soybeans":       ("Soybeans",          "Agriculture - Grains", "bu"),
+    "canola":         ("Canola",            "Agriculture - Oilseeds", "t"),
+    "soybean_oil":    ("Soybean Oil",       "Agriculture - Oilseeds", "lb"),
+    "soybean_meal":   ("Soybean Meal",      "Agriculture - Oilseeds", "ton"),
+    "coffee":         ("Coffee",            "Agriculture - Softs", "lb"),
+    "cocoa":          ("Cocoa",             "Agriculture - Softs", "t"),
+    "sugar":          ("Sugar #11",         "Agriculture - Softs", "lb"),
+    "cotton":         ("Cotton",            "Agriculture - Softs", "lb"),
+    "live_cattle":    ("Live Cattle",       "Agriculture - Livestock", "lb"),
+    "lean_hogs":      ("Lean Hogs",         "Agriculture - Livestock", "lb"),
+    "lumber":         ("Lumber",            "Forest Products", "MBF"),
+    # NOTE: dry_bulk_shipping (Baltic Dry) intentionally omitted — its source
+    # series is broken (current point 408 vs ~12 prior, low_52w 5.5). Re-add
+    # once the data fetch is fixed (see pipeline reliability audit).
+}
+
+
+def _commodity_stats_from_points(points):
+    """current value + wow/mom/yoy % + 52-week high/low from a series' points
+    (list of {date,value}). Returns None when no usable points exist; individual
+    change fields are None when the series lacks a comparison point at that lag.
+    """
+    from datetime import timedelta
+    pairs = []
+    for p in points:
+        if not isinstance(p, dict):
+            continue
+        d = str(p.get("date") or p.get("period") or "")[:10]
+        v = p.get("value")
+        if d and v is not None:
+            try:
+                pairs.append((d, float(v)))
+            except (TypeError, ValueError):
+                pass
+    if not pairs:
+        return None
+    pairs.sort(key=lambda x: x[0])
+    current = pairs[-1][1]
+    as_of = pairs[-1][0]
+    try:
+        as_of_dt = datetime.fromisoformat(as_of).date()
+    except ValueError:
+        as_of_dt = None
+
+    def _val_days_ago(n):
+        if as_of_dt is None:
+            return None
+        target = (as_of_dt - timedelta(days=n)).isoformat()
+        cand = [v for d, v in pairs if d <= target]
+        return cand[-1] if cand else None
+
+    def _pct(old):
+        if old in (None, 0):
+            return None
+        return round((current - old) / abs(old) * 100, 1)
+
+    if as_of_dt is not None:
+        cutoff = (as_of_dt - timedelta(days=365)).isoformat()
+        recent = [v for d, v in pairs if d >= cutoff]
+    else:
+        recent = [v for _, v in pairs]
+
+    wow, mom, yoy = _pct(_val_days_ago(7)), _pct(_val_days_ago(30)), _pct(_val_days_ago(365))
+    # Plausibility guard: a real commodity essentially never moves these
+    # magnitudes over these windows — such a value is a data artifact (a futures
+    # contract roll, or a spurious point in the source series). Emit N/A rather
+    # than publish a misleading number. (The underlying bad points are a
+    # data-fetch concern flagged for the pipeline reliability audit.)
+    if wow is not None and abs(wow) > 50:
+        wow = None
+    if mom is not None and abs(mom) > 100:
+        mom = None
+    if yoy is not None and abs(yoy) > 500:
+        yoy = None
+    return {
+        "current": round(current, 2),
+        "wow": wow, "mom": mom, "yoy": yoy,
+        "high_52w": round(max(recent), 2) if recent else None,
+        "low_52w": round(min(recent), 2) if recent else None,
+        "as_of": as_of,
+    }
+
+
+def _enrich_commodities_from_timeseries_json(existing, ts_path, max_stale_days=60):
+    """Append every _COMMODITY_REGISTRY series present (and fresh) in
+    timeseries.json that isn't already in `existing` (de-dupe by display name).
+    Returns the number of commodities added. Best-effort: returns 0 if the file
+    is missing/unreadable so the caller can fall back to indicator_history.
+    """
+    try:
+        with open(ts_path, encoding="utf-8") as f:
+            ts = json.load(f)
+    except (OSError, ValueError):
+        return 0
+    if not isinstance(ts, dict):
+        return 0
+
+    def _norm(n):
+        return str(n or "").strip().lower()
+
+    def _pct_str(x):
+        return f"{x:+.1f}%" if isinstance(x, (int, float)) else ""
+
+    have = {_norm(c.get("name")) for c in existing if isinstance(c, dict)}
+    today = datetime.utcnow().date()
+    added = 0
+    for key, (name, category, unit) in _COMMODITY_REGISTRY.items():
+        if _norm(name) in have:
+            continue
+        series = ts.get(key)
+        pts = series if isinstance(series, list) else (
+            (series.get("history") or series.get("points") or series.get("data"))
+            if isinstance(series, dict) else None)
+        if not isinstance(pts, list) or not pts:
+            continue
+        stats = _commodity_stats_from_points(pts)
+        if not stats:
+            continue
+        try:
+            age = (today - datetime.fromisoformat(stats["as_of"]).date()).days
+        except (ValueError, TypeError):
+            age = 0
+        if age > max_stale_days:
+            continue  # abandoned series — don't publish a stale price
+        existing.append({
+            "name": name, "category": category, "unit": unit,
+            "val": str(stats["current"]),
+            "day": _pct_str(stats["wow"]),
+            "mm": _pct_str(stats["mom"]),
+            "yy": _pct_str(stats["yoy"]),
+            "weekly_pct": stats["wow"], "mom_pct": stats["mom"], "yoy_pct": stats["yoy"],
+            "high_52w": stats["high_52w"], "low_52w": stats["low_52w"],
+        })
+        have.add(_norm(name))
+        added += 1
+    return added
+
+
 def _validate_briefing_text(briefing: dict):
     """Post-generation regex validation for garbled text patterns.
 
@@ -736,19 +903,24 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
     if not existing_comms:
         latest['commodities'] = market_data['commodities']
     elif isinstance(existing_comms, list) and existing_comms and isinstance(existing_comms[0], dict) and 'items' not in existing_comms[0]:
-        # Flat writer list — append any builder commodity not already present.
-        def _norm_name(n):
-            return str(n or '').strip().lower()
-        have = {_norm_name(c.get('name')) for c in existing_comms if isinstance(c, dict)}
-        added = 0
-        for item in _flatten_market_commodities(market_data['commodities']):
-            if _norm_name(item['name']) and _norm_name(item['name']) not in have:
-                existing_comms.append(item)
-                have.add(_norm_name(item['name']))
-                added += 1
+        # Flat writer list — UNION-ENRICH to the COMPLETE commodity set. Primary
+        # source is timeseries.json (the published superset, ~34 commodity series
+        # via _COMMODITY_REGISTRY); fall back to the indicator_history builder if
+        # that file is unavailable. De-duped by display name; additive only.
+        ts_path = os.path.join(output_dir, "timeseries.json")
+        added = _enrich_commodities_from_timeseries_json(existing_comms, ts_path)
+        if added == 0:
+            def _norm_name(n):
+                return str(n or '').strip().lower()
+            have = {_norm_name(c.get('name')) for c in existing_comms if isinstance(c, dict)}
+            for item in _flatten_market_commodities(market_data['commodities']):
+                if _norm_name(item['name']) and _norm_name(item['name']) not in have:
+                    existing_comms.append(item)
+                    have.add(_norm_name(item['name']))
+                    added += 1
         if added:
             print(f"  [export briefings] enriched commodities: +{added} "
-                  f"timeseries-backed majors ({len(existing_comms)} total)")
+                  f"(complete set, {len(existing_comms)} total)")
         latest['commodities'] = existing_comms
 
     # Merge infographic directives if available
@@ -2128,6 +2300,12 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
         )
         files_written.append(os.path.basename(path))
 
+    # Timeseries — exported BEFORE briefings so export_briefings can read the
+    # fresh timeseries.json to build the complete commodity set for the Markets
+    # tab (D.commodities). Order matters: briefings union-enriches from this file.
+    path = export_timeseries(conn, output_dir)
+    files_written.append(os.path.basename(path))
+
     # Briefings
     latest_path, archive_path = export_briefings(conn, output_dir)
     files_written.extend([
@@ -2162,10 +2340,6 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
             files_written.append(os.path.basename(path))
     except Exception as e:
         logger.warning("Export %s failed: %s", "export_statcan_tables", e)
-
-    # Timeseries
-    path = export_timeseries(conn, output_dir)
-    files_written.append(os.path.basename(path))
 
     # All projects (combined, no threshold)
     path = export_all_projects(conn, output_dir)
