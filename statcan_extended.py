@@ -108,17 +108,13 @@ CAPITAL_EXPENDITURES = {
 
 # ── Employment (leading indicators) ──────────────────────────────────────────
 
-# Table 14-10-0022-01: Employment by industry, monthly, SA
-# Geography=Canada, both sexes, 15 years and over
-EMPLOYMENT_INDUSTRY = {
-    "table": "14-10-0022",
-    "frequency": "monthly",
-    "vectors": {
-        "construction_employment":    (2057614, "thousands", "Employment"),
-        "mining_og_employment":       (2057606, "thousands", "Employment"),
-        "manufacturing_employment":   (2057622, "thousands", "Employment"),
-    },
-}
+# EMPLOYMENT_INDUSTRY (hardcoded-vector group for construction/manufacturing/
+# mining_og employment from Table 14-10-0022) was DELETED 2026-06-19 (dead
+# code). Its vectors were wrong (reliability audit C1: 2057622 resolved to
+# "NL; Total employed" = 243k shipped mislabelled as Manufacturing). The group
+# was already commented out of ALL_TABLE_GROUPS, and its three series are now
+# name-resolved from the same cube in META_RESOLVED_GROUPS (construction_/
+# manufacturing_/mining_og_employment) so a member rename fails loudly.
 
 # Table 14-10-0326-01: Job vacancies by industry sector (quarterly)
 # Geography=Canada, all employee sizes
@@ -335,6 +331,73 @@ META_RESOLVED_GROUPS = [
             },
         },
     },
+    # ── Quebec provincial series (2026-06-19) ────────────────────────────────
+    # Fetched every run via WDS metadata resolution, replacing the dead
+    # out-of-band ISQ Excel scrape that left QC_qc_* monthly series ~138 days
+    # stale (refresh_provincial_oea_isq.py). Each series sets province='QC' so
+    # the saver writes it under that geography and the dashboard exporter
+    # (tools/export_dashboard.py: WHERE province='QC' → key "QC_"+indicator)
+    # picks it up as QC_qc_bldg_permits_res etc. indicator_name therefore has
+    # NO "QC_" prefix — it matches the existing rows (qc_intl_exports, ...) the
+    # export query reads. Geography member is "Quebec" on each cube. If a QC
+    # member name or coordinate cannot be matched at runtime, the resolver +
+    # plausibility/freshness gates SKIP LOUDLY rather than write wrong data
+    # (the intended safe failure — these coordinates are unverified against
+    # live WDS, validated only at runtime).
+    {
+        # QC building permits value, SA — same active cube (34-10-0292) as the
+        # national bldg_permits_*_national entries above, Quebec geography.
+        "table": "34-10-0292",
+        "frequency": "monthly",
+        "series": {
+            "qc_bldg_permits_res": {
+                "members": ["Quebec", "Total residential", "Types of work, total",
+                            "Value of permits", "Seasonally adjusted"],
+                "unit": "$M", "category": "Housing", "range": (200, 4_000),
+                "province": "QC",
+            },
+            "qc_bldg_permits_nonres": {
+                "members": ["Quebec", "Total non-residential", "Types of work, total",
+                            "Value of permits", "Seasonally adjusted"],
+                "unit": "$M", "category": "Housing", "range": (100, 3_000),
+                "province": "QC",
+            },
+        },
+    },
+    {
+        # QC international merchandise trade, Balance of Payments basis, SA —
+        # cube 12-10-0163 (same cube as MERCHANDISE_EXPORTS), Quebec geography,
+        # exports vs imports member.
+        "table": "12-10-0163",
+        "frequency": "monthly",
+        "series": {
+            "qc_intl_exports": {
+                "members": ["Quebec", "Domestic exports", "Export",
+                            "Balance of payments", "Seasonally adjusted"],
+                "unit": "$M", "category": "Trade", "range": (3_000, 20_000),
+                "province": "QC",
+            },
+            "qc_intl_imports": {
+                "members": ["Quebec", "Import",
+                            "Balance of payments", "Seasonally adjusted"],
+                "unit": "$M", "category": "Trade", "range": (3_000, 20_000),
+                "province": "QC",
+            },
+        },
+    },
+    {
+        # QC retail trade sales, SA — cube 20-10-0008 (same cube as
+        # retail_sales_national), Quebec geography.
+        "table": "20-10-0008",
+        "frequency": "monthly",
+        "series": {
+            "qc_retail_sales": {
+                "members": ["Quebec", "Retail trade", "Seasonally adjusted"],
+                "unit": "$M", "category": "Retail", "range": (5_000, 30_000),
+                "province": "QC",
+            },
+        },
+    },
 ]
 
 # ── All table groups ──────────────────────────────────────────────────────────
@@ -350,7 +413,6 @@ META_RESOLVED_GROUPS = [
 #   CONSTRUCTION_PRICE_INDEX — table 18-10-0135 appears discontinued, no active vectors found
 #
 # Previously working (unchanged):
-#   EMPLOYMENT_INDUSTRY   — vectors 2057614, 2057606, 2057622
 #   JOB_VACANCIES         — vectors 45169837, 45169829
 #
 # Re-resolved 2026-06-09 (D-15):
@@ -768,10 +830,15 @@ def _fetch_meta_group(conn, group: dict) -> tuple[int, int]:
                                              indicator_name=indicator_name)
 
         value = round(value, 4)
+        # Province defaults to 'National'; provincial series (e.g. the QC_*
+        # timeseries the dashboard exporter reads via province='QC') set
+        # "province" in their spec so the same metadata-resolved path with its
+        # range + freshness gates can write them under the correct geography.
+        province = spec.get("province", "National")
         try:
             save_indicator(conn, {
                 'indicator': indicator_name,
-                'province': 'National',
+                'province': province,
                 'date': ref_per,
                 'value': str(value),
                 'previous_value': str(round(prev_value, 4)) if prev_value is not None else None,

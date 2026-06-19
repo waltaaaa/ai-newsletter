@@ -1,0 +1,13 @@
+{
+  "updatedAt": "2026-06-19",
+  "summary": {
+    "total_feeds": 330,
+    "active": 157,
+    "dormant": 173,
+    "dead_candidate": 0,
+    "lifetime_items": 4569
+  },
+  "active_ratio": 0.4758,
+  "dead_candidate_count": 0,
+  "dead_sample": []
+}

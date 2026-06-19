@@ -10,7 +10,7 @@ Tables:
   3. indicator_history — economic indicator time series
   4. trend_snapshots   — weekly trend analysis snapshots
   5. weekly_briefings  — generated briefings
-  6. dashboard_state   — key-value store (latest_briefing, microscope_*, tavily_credits, follow_up_queries)
+  6. dashboard_state   — key-value store (latest_briefing, tavily_credits, follow_up_queries)
   7. pipeline_runs     — structured run logs
   8. missed_projects   — user-submitted missing projects
   9. pipeline_improvements — adaptive learning improvements
@@ -1158,7 +1158,7 @@ def upsert_project(conn: sqlite3.Connection, project_dict: dict) -> str:
             project_dict["parsed_value"] = parse_value(raw_value)
 
     # Keep value_millions in lockstep with parsed_value — ranking surfaces
-    # (microscope candidate sort, briefing value rollups) read value_millions,
+    # (briefing value rollups) read value_millions,
     # so a NULL here makes a priced project rank as $0.
     if project_dict.get("value_millions") is None and project_dict.get("parsed_value"):
         project_dict["value_millions"] = round(project_dict["parsed_value"] / 1_000_000, 3)

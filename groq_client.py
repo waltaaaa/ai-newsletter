@@ -181,7 +181,7 @@ def generate(system_prompt, user_prompt, max_tokens=2048, temperature=0.1):
         return None
 
     # Red-team F2: explicit timeout — default 600s x 2 retries could stall the
-    # microscope/conductor pre-steps for ~30 min on a hung connection.
+    # conductor pre-steps for ~30 min on a hung connection.
     client = OpenAI(api_key=GROQ_API_KEY, base_url=GROQ_BASE_URL,
                     timeout=120, max_retries=1)
 

@@ -19,14 +19,6 @@
         "recovered": true,
         "severity": "warn",
         "timestamp": "2026-06-15T17:42:12.217454"
-      },
-      {
-        "step": "microscope",
-        "error_type": "RuntimeError",
-        "message": "no dominant topic identified",
-        "recovered": true,
-        "severity": "warn",
-        "timestamp": "2026-06-15T18:04:50.369474"
       }
     ]
   },

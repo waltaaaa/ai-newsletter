@@ -78,8 +78,8 @@
     "private_sector_change": "N/A",
     "public_sector_change": "N/A",
     "core_cpi_median": "2.0%",
-    "shelter_cpi": "N/A",
-    "food_cpi": "N/A",
+    "shelter_cpi": "+1.8% y/y",
+    "food_cpi": "+3.8% y/y",
     "energy_cpi": "+28.6% (Apr YoY)",
     "residential_permits": "$7.5B (Apr)",
     "nonresidential_permits": "$5.0B (Apr)",
@@ -9042,6 +9042,7 @@
       "day": "+0.0%",
       "mm": "+0.0%",
       "yy": "",
+      "context": "Coal (Newcastle) at 96.0/t (+0.0% w/w; +0.0% m/m). 52-week range 96.0–96.0/t.",
       "weekly_pct": 0.0,
       "mom_pct": 0.0,
       "yoy_pct": null,
@@ -9055,12 +9056,13 @@
       "val": "17.61",
       "day": "+0.0%",
       "mm": "-15.4%",
-      "yy": "",
+      "yy": "+35.8%",
+      "context": "LNG (Asia JKM) at 17.61/MMBtu (+0.0% w/w; -15.4% m/m; +35.8% y/y). 52-week range 9.91–20.81/MMBtu.",
       "weekly_pct": 0.0,
       "mom_pct": -15.4,
-      "yoy_pct": null,
+      "yoy_pct": 35.8,
       "high_52w": 20.81,
-      "low_52w": 17.61
+      "low_52w": 9.91
     },
     {
       "name": "Platinum",
@@ -9070,6 +9072,7 @@
       "day": "+3.5%",
       "mm": "-8.7%",
       "yy": "+49.4%",
+      "context": "Platinum at 1809.0/troy oz (+3.5% w/w; -8.7% m/m; +49.4% y/y). 52-week range 1251.5–2852.4/troy oz.",
       "weekly_pct": 3.5,
       "mom_pct": -8.7,
       "yoy_pct": 49.4,
@@ -9084,6 +9087,7 @@
       "day": "+12.3%",
       "mm": "-5.5%",
       "yy": "+31.1%",
+      "context": "Palladium at 1363.0/troy oz (+12.3% w/w; -5.5% m/m; +31.1% y/y). 52-week range 1036.7–2169.9/troy oz.",
       "weekly_pct": 12.3,
       "mom_pct": -5.5,
       "yoy_pct": 31.1,
@@ -9098,6 +9102,7 @@
       "day": "-14.4%",
       "mm": "-3.5%",
       "yy": "+38.9%",
+      "context": "Aluminum at 3384.75/t (-14.4% w/w; -3.5% m/m; +38.9% y/y). 52-week range 2427.0–4195.0/t.",
       "weekly_pct": -14.4,
       "mom_pct": -3.5,
       "yoy_pct": 38.9,
@@ -9111,12 +9116,13 @@
       "val": "3458.04",
       "day": "+0.0%",
       "mm": "+8.7%",
-      "yy": "",
+      "yy": "+30.3%",
+      "context": "Zinc at 3458.04/t (+0.0% w/w; +8.7% m/m; +30.3% y/y). 52-week range 2762.56–3458.04/t.",
       "weekly_pct": 0.0,
       "mom_pct": 8.7,
-      "yoy_pct": null,
+      "yoy_pct": 30.3,
       "high_52w": 3458.04,
-      "low_52w": 3182.26
+      "low_52w": 2762.56
     },
     {
       "name": "Lead",
@@ -9125,11 +9131,12 @@
       "val": "1984.26",
       "day": "+0.0%",
       "mm": "+5.6%",
-      "yy": "",
+      "yy": "+0.5%",
+      "context": "Lead at 1984.26/t (+0.0% w/w; +5.6% m/m; +0.5% y/y). 52-week range 1878.19–1998.48/t.",
       "weekly_pct": 0.0,
       "mom_pct": 5.6,
-      "yoy_pct": null,
-      "high_52w": 1984.26,
+      "yoy_pct": 0.5,
+      "high_52w": 1998.48,
       "low_52w": 1878.19
     },
     {
@@ -9139,12 +9146,13 @@
       "val": "52913.5",
       "day": "+0.0%",
       "mm": "+11.8%",
-      "yy": "",
+      "yy": "+62.6%",
+      "context": "Tin at 52913.5/t (+0.0% w/w; +11.8% m/m; +62.6% y/y). 52-week range 33610.26–52913.5/t.",
       "weekly_pct": 0.0,
       "mom_pct": 11.8,
-      "yoy_pct": null,
+      "yoy_pct": 62.6,
       "high_52w": 52913.5,
-      "low_52w": 47323.68
+      "low_52w": 33610.26
     },
     {
       "name": "Corn",
@@ -9154,6 +9162,7 @@
       "day": "-1.1%",
       "mm": "-9.5%",
       "yy": "-6.7%",
+      "context": "Corn at 414.75/bu (-1.1% w/w; -9.5% m/m; -6.7% y/y). 52-week range 371.5–478.5/bu.",
       "weekly_pct": -1.1,
       "mom_pct": -9.5,
       "yoy_pct": -6.7,
@@ -9168,6 +9177,7 @@
       "day": "-3.4%",
       "mm": "-4.2%",
       "yy": "-12.6%",
+      "context": "Rice at 12.04/cwt (-3.4% w/w; -4.2% m/m; -12.6% y/y). 52-week range 9.38–1109.0/cwt.",
       "weekly_pct": -3.4,
       "mom_pct": -4.2,
       "yoy_pct": -12.6,
@@ -9182,6 +9192,7 @@
       "day": "+1.1%",
       "mm": "-3.8%",
       "yy": "+5.9%",
+      "context": "Soybeans at 1132.5/bu (+1.1% w/w; -3.8% m/m; +5.9% y/y). 52-week range 961.5–1225.25/bu.",
       "weekly_pct": 1.1,
       "mom_pct": -3.8,
       "yoy_pct": 5.9,
@@ -9196,6 +9207,7 @@
       "day": "-6.1%",
       "mm": "-0.3%",
       "yy": "+44.3%",
+      "context": "Soybean Oil at 73.03/lb (-6.1% w/w; -0.3% m/m; +44.3% y/y). 52-week range 47.9–79.09/lb.",
       "weekly_pct": -6.1,
       "mom_pct": -0.3,
       "yoy_pct": 44.3,
@@ -9210,6 +9222,7 @@
       "day": "-1.2%",
       "mm": "-10.2%",
       "yy": "+3.7%",
+      "context": "Soybean Meal at 302.8/ton (-1.2% w/w; -10.2% m/m; +3.7% y/y). 52-week range 260.7–342.7/ton.",
       "weekly_pct": -1.2,
       "mom_pct": -10.2,
       "yoy_pct": 3.7,
@@ -9221,13 +9234,14 @@
       "category": "Agriculture - Softs",
       "unit": "lb",
       "val": "253.2",
-      "day": "",
+      "day": "+2.7%",
       "mm": "-11.0%",
       "yy": "-27.6%",
-      "weekly_pct": null,
+      "context": "Coffee at 253.2/lb (+2.7% w/w; -11.0% m/m; -27.6% y/y). 52-week range 244.4–432.35/lb.",
+      "weekly_pct": 2.7,
       "mom_pct": -11.0,
       "yoy_pct": -27.6,
-      "high_52w": 588.25,
+      "high_52w": 432.35,
       "low_52w": 244.4
     },
     {
@@ -9238,6 +9252,7 @@
       "day": "-11.5%",
       "mm": "-13.8%",
       "yy": "-64.8%",
+      "context": "Cocoa at 3440.0/t (-11.5% w/w; -13.8% m/m; -64.8% y/y). 52-week range 2798.0–10035.0/t.",
       "weekly_pct": -11.5,
       "mom_pct": -13.8,
       "yoy_pct": -64.8,
@@ -9252,6 +9267,7 @@
       "day": "+1.1%",
       "mm": "-3.1%",
       "yy": "-11.1%",
+      "context": "Sugar #11 at 14.34/lb (+1.1% w/w; -3.1% m/m; -11.1% y/y). 52-week range 13.31–16.94/lb.",
       "weekly_pct": 1.1,
       "mom_pct": -3.1,
       "yoy_pct": -11.1,
@@ -9263,13 +9279,14 @@
       "category": "Agriculture - Softs",
       "unit": "lb",
       "val": "76.42",
-      "day": "",
+      "day": "+3.6%",
       "mm": "-5.7%",
       "yy": "+16.9%",
-      "weekly_pct": null,
+      "context": "Cotton at 76.42/lb (+3.6% w/w; -5.7% m/m; +16.9% y/y). 52-week range 61.06–87.77/lb.",
+      "weekly_pct": 3.6,
       "mom_pct": -5.7,
       "yoy_pct": 16.9,
-      "high_52w": 246.45,
+      "high_52w": 87.77,
       "low_52w": 61.06
     },
     {
@@ -9280,6 +9297,7 @@
       "day": "-3.6%",
       "mm": "-4.6%",
       "yy": "+5.7%",
+      "context": "Live Cattle at 2.41/lb (-3.6% w/w; -4.6% m/m; +5.7% y/y). 52-week range 2.07–2.58/lb.",
       "weekly_pct": -3.6,
       "mom_pct": -4.6,
       "yoy_pct": 5.7,
@@ -9294,6 +9312,7 @@
       "day": "+3.3%",
       "mm": "+7.2%",
       "yy": "-6.0%",
+      "context": "Lean Hogs at 0.97/lb (+3.3% w/w; +7.2% m/m; -6.0% y/y). 52-week range 0.78–1.13/lb.",
       "weekly_pct": 3.3,
       "mom_pct": 7.2,
       "yoy_pct": -6.0,
@@ -11224,5 +11243,32 @@
   ],
   "chart_callout": "BoC held the overnight rate at 2.25% on Jun 10, the second consecutive hold. The database tracks 6,426 active Canadian projects with $1,536.5B aggregate value financing against the policy rate.",
   "bocRate": "2.25%",
-  "word_count": 359
+  "word_count": 359,
+  "marketCommentary": "<p><span class=\"lead-sentence\">Canadian equities advanced as crude oil retreated in the week ending June 12</span> — the S&P/TSX Composite gained 1.52% to 34,937.90<sup>21</sup> while WTI crude fell 11.74% to $80.58/bbl<sup>21</sup>, partially reversing recent supply-shock premium. The S&P 500 rose 0.65% to 7,431.46 and the Nasdaq added 0.70% to 25,888.84<sup>21</sup>. The Canadian dollar slipped 0.40% against the US dollar to 0.7148 CAD/USD<sup>21</sup>, with the Bank of Canada holding its overnight rate at 2.25% on June 10<sup>41</sup>. The project database tracks 6,426 active Canadian capital projects valued at $1,536.5B in aggregate<sup>20</sup>.</p><p><span class=\"lead-sentence\">Pipeline cross-references split along rate and commodity lines</span> — all 6,426 active projects ($1,536.5B) finance against the Government of Canada yield curve anchored by the 2.25% policy rate, with the 5Y benchmark at 3.04% serving as the residential mortgage-renewal anchor for 257 residential projects ($36.2B)<sup>41</sup>. The 2s10s spread sits at 64 basis points after bull-flattening over the past year<sup>21</sup>. If WTI holds below the $74-76 breakeven band cited for Alberta oil-sands records, 89 active oil and gas projects ($63.2B) would face renewed margin pressure<sup>20</sup>, while copper at $6.5085/lb (+35.59% YoY) links to 532 active mining projects ($183.4B)<sup>21</sup>.</p>",
+  "yieldCurveLastYear": [
+    {
+      "term": "2Y",
+      "yield": "2.71"
+    },
+    {
+      "term": "3Y",
+      "yield": "2.74"
+    },
+    {
+      "term": "5Y",
+      "yield": "2.96"
+    },
+    {
+      "term": "7Y",
+      "yield": "3.14"
+    },
+    {
+      "term": "10Y",
+      "yield": "3.37"
+    },
+    {
+      "term": "Long",
+      "yield": "3.65"
+    }
+  ]
 }

@@ -457,11 +457,7 @@ OUTPUT: Valid JSON only.
       "observation": "What doesn't line up",
       "possible_explanations": ["Hypotheses for the divergence"]
     }}
-  ],
-  "microscope_candidate": {{
-    "topic": "Suggested Under the Microscope topic for this week",
-    "rationale": "Why this deserves a deep dive — what makes it the biggest story"
-  }}
+  ]
 }}"""
 
 

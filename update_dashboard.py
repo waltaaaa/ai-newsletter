@@ -189,7 +189,7 @@ def update_dashboard(deep_sweep: bool = False):
         "Phase 3: Filtering": 4200,
         "Phase 4: Signals": 600,
         # Red-team F2: the phase join must exceed CONDUCTOR_TIMEOUT (7200s
-        # subprocess budget) PLUS the pre-steps (trends, microscope, export,
+        # subprocess budget) PLUS the pre-steps (trends, export,
         # ~10-20 min) — when join == subprocess timeout, a full-budget
         # conductor is abandoned mid-flight and its claude child runs on as
         # an orphan racing the deploy.
@@ -425,10 +425,26 @@ def _print_operator_summary(conn, run_log, health_status, context):
         print(f"  Signals: jobs={'n/a' if jobs is None else len(jobs)} spikes | "
               f"procurement={'n/a' if proc is None else len(proc)} contracts | "
               f"policy={'n/a' if pol is None else len(pol)} items")
-        for label, val in (("jobs", jobs), ("procurement", proc)):
-            if val is not None and len(val) == 0:
-                print(f"  [!] {label.upper()} returned 0 — verify source health "
-                      f"(this tier was dead for 3 months before 2026-06-11 audit)")
+        # Jobs: a post-filter zero is still a meaningful chronic-empty alarm.
+        if jobs is not None and len(jobs) == 0:
+            print("  [!] JOBS returned 0 — verify source health "
+                  "(this tier was dead for 3 months before 2026-06-11 audit)")
+        # Procurement (2026-06-19): the sources fetch a ROLLING WINDOW every
+        # run, so ~100% of fetched contracts are repeats and procurement_contracts
+        # is empty MOST weeks BY DESIGN. A post-dedup zero is therefore NOT an
+        # alarm. Gate on whether ANY source returned raw rows pre-dedup this run
+        # (procurement_sources_had_rows from run_procurement_monitor): if sources
+        # returned rows but everything deduped → benign info line; if NO source
+        # returned rows → the sources are dark, raise the alarm.
+        if proc is not None and len(proc) == 0:
+            had_rows = context.get("procurement_sources_had_rows")
+            if had_rows:
+                print("  Procurement: sources healthy, 0 new (all fetched "
+                      "contracts already seen — rolling-window dedup, expected)")
+            else:
+                print("  [!] PROCUREMENT returned 0 raw rows from every source — "
+                      "verify source health (dead endpoints; see per-source "
+                      "FAILED/DARK lines above)")
     except Exception:
         pass
 

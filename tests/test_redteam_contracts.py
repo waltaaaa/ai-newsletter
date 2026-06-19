@@ -7,7 +7,6 @@ Each test pins a behavior the red team found broken or unguarded:
 - Job Bank postings dedup by URL across a sector's term feeds (A#12)
 - Week-1 hiring spikes must not fabricate an "Nx normal volume" multiplier
 - get_timeseries(include_briefing_prints=False) excludes writer-emitted points (V-F8)
-- The microscope generation prompt stays under the ~4KB claude -p host limit (O-F3)
 - The Phase 3 cooperative deadline stops new claude calls once the budget is spent (O-F5)
 """
 import asyncio
@@ -190,48 +189,6 @@ def test_get_timeseries_excludes_briefing_prints():
     assert clean[0]["source"] == "yfinance", (
         "writer-emitted points must never become the fact-check baseline")
     conn.close()
-
-
-# ── microscope prompt stays under the claude -p host limit (red-team O-F3) ──
-
-def test_microscope_prompt_under_4kb_host_limit(monkeypatch):
-    import claude_reasoning
-    import under_the_microscope as utm
-
-    captured = {}
-
-    async def _capture(system, user_prompt, **kwargs):
-        captured["prompt"] = user_prompt
-        return {"text": "analysis", "input_tokens": 0, "output_tokens": 0,
-                "cost_usd": 0.0}
-
-    monkeypatch.setattr(claude_reasoning, "reason_with_claude_tracked", _capture)
-
-    topic_context = {
-        "topic": "Test topic " * 10,
-        "description": "D" * 2000,  # capped to 500 in the prompt
-        "related_articles": [{"title": "T" * 300} for _ in range(20)],
-        "affected_sectors": ["mining", "infrastructure"],
-        "affected_provinces": ["MB", "ON"],
-        "weeks_running": 2,
-    }
-    project_data = [{
-        "name": f"Project {i} " + "N" * 80,
-        "province": "MB", "value": "$1.2B", "status": "Proposed",
-        "sector": "mining", "description": "X" * 400,  # dropped by slimming
-        "evidence": [{"url": "https://example.com"}] * 5,
-    } for i in range(15)]
-    indicator_data = {f"indicator_{i}": {"value": i, "change": "+1.0%",
-                                         "note": "Y" * 50} for i in range(30)}
-
-    result = asyncio.run(utm.generate_microscope_analysis(
-        topic_context, project_data, indicator_data))
-
-    assert result is not None
-    assert "prompt" in captured
-    assert len(captured["prompt"]) <= 2400, (
-        f"microscope prompt is {len(captured['prompt'])} chars — over the "
-        f"budget that keeps system+user under the ~4KB claude -p host limit")
 
 
 # ── Phase 3 cooperative deadline (red-team O-F5) ────────────────────────────

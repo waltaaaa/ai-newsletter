@@ -21,11 +21,10 @@ For full system specification (25 sections, every feature detailed), see `COMPLE
 - **Dependencies:** aiohttp, feedparser, beautifulsoup4, yfinance, reportlab, python-docx, trafilatura
 
 ## Model Stack (DO NOT CHANGE)
-- **Claude Code Agents (subscription, $0 API cost):** ALL writing and reasoning runs via `claude -p` subprocess on user's Claude subscription. Covers: macro/industry writing agents (~30 agents), province writing agents (13 agents), weekly briefing, executive summary, market commentary, policy assessment, pre-event analysis, Under the Microscope, project extraction, gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis, selective extraction, citation audit, context lines, JSON repair fallback.
+- **Claude Code Agents (subscription, $0 API cost):** ALL writing and reasoning runs via `claude -p` subprocess on user's Claude subscription. Covers: macro/industry writing agents (~30 agents), province writing agents (13 agents), weekly briefing, executive summary, market commentary, policy assessment, pre-event analysis, project extraction, gap analysis, extraction recovery, dedup QA, signal investigation, meta-analysis, selective extraction, citation audit, context lines, JSON repair fallback.
 - **Groq LLaMA 3.3 70B:** Fallback classifier — Layer 6 RSS classification, JSON repair, sentiment. FREE TIER (6K TPM / 500K TPD).
 - **NVIDIA NIM (free tier, 40 RPM shared):**
   - Nemotron 3 Super 120B — L6 article classification (primary) + deep extraction + JSON repair + rehash detection
-  - DeepSeek V3.2 — second-opinion on hardest extraction cases
   - Llama Nemotron Rerank 1B v2 — L7 article relevance scoring + search result scoring
   - Llama Nemotron Embed 1B v2 — semantic article dedup + semantic project dedup (26-language support)
   - Nemotron OCR v1 — provincial PDF text extraction
@@ -42,7 +41,7 @@ For full system specification (25 sections, every feature detailed), see `COMPLE
 Claude API costs eliminated by Claude Code agents running on subscription. Do not introduce paid services without explicit approval. Every new API must be free or use existing budgets.
 
 ## Editorial Policy: REPORTING ONLY — NO EDITORIALIZING
-All output — briefings, market commentary, policy assessments, Under the Microscope, pre-event analysis — must be factual reporting. Present data, context, and connections. Never take positions, make recommendations, express opinions, or use language that implies something is good, bad, welcome, worrying, concerning, promising, or encouraging.
+All output — briefings, market commentary, policy assessments, pre-event analysis — must be factual reporting. Present data, context, and connections. Never take positions, make recommendations, express opinions, or use language that implies something is good, bad, welcome, worrying, concerning, promising, or encouraging.
 
 **Wrong:** "Alberta's energy sector faces a worrying decline as WTI drops below $70."
 **Right:** "WTI fell below $70 this week. The database tracks 14 proposed Alberta oil sands projects with breakeven costs above $65, totaling $8.2B."
@@ -136,12 +135,11 @@ oil_gas, mining, infrastructure, power_energy, manufacturing, transport_logistic
 ## Weekly Briefing Structure (8 sections, 1000-1500 words)
 1. Headline — single most significant factual development
 2. Macro Pulse — national indicators with period-over-period changes, sourced
-3. Under the Microscope — factual deep-dive: what happened, what changed, which Canadian sectors/projects are in scope
-4. Provincial Spotlight — one province's data: new projects, value, status changes
-5. Sector Watch — sectors with largest volume/value changes, with numbers
-6. Project Tracker — new projects discovered, status changes recorded, completions confirmed
-7. Markets & Commodities — price movements stated factually, affected project counts from database
-8. Looking Ahead — upcoming scheduled events (BoC dates, StatsCan releases, budget dates) with affected project counts
+3. Provincial Spotlight — one province's data: new projects, value, status changes
+4. Sector Watch — sectors with largest volume/value changes, with numbers
+5. Project Tracker — new projects discovered, status changes recorded, completions confirmed
+6. Markets & Commodities — price movements stated factually, affected project counts from database
+7. Looking Ahead — upcoming scheduled events (BoC dates, StatsCan releases, budget dates) with affected project counts
 
 The briefing integrates data from: indicator history, project database, discovery articles, policy tracker (legislative/regulatory developments), job monitor (hiring spikes), procurement monitor (contract awards), IAAC status changes, and regulatory tribunal decisions. All sources cited factually per editorial policy.
 
@@ -187,7 +185,7 @@ The briefing integrates data from: indicator history, project database, discover
 - `indicator_history` — time series for all economic indicators
 - `trend_snapshots` — weekly trend analysis snapshots
 - `weekly_briefings` — generated briefings
-- `dashboard_state` — frontend state, latest briefing, microscope history/override. Also holds (quality-pass-1.4): `query_yield_history` (rolling 8-week per-query Google News yields — 4+ consecutive zero-yield weeks flags a `pipeline_improvements` suggestion; flag/deprioritize ONLY, never remove), `tier_yield_history` (rolling 8-run per-tier yields — 2+ consecutive zeros logs `[TIER DEGRADED]`), and `canary_recall_<date>` snapshots from `tools/canary_recall_check.py`. Also holds (recall-fix 2026-06-10): `extraction_backlog` — the not-yet-extracted article tail persisted by Phase 3 (capped 400, sorted by rerank relevance, 3-attempt expiry); the next run carries it over at top priority so a phase timeout never silently drops articles.
+- `dashboard_state` — frontend state, latest briefing. Also holds (quality-pass-1.4): `query_yield_history` (rolling 8-week per-query Google News yields — 4+ consecutive zero-yield weeks flags a `pipeline_improvements` suggestion; flag/deprioritize ONLY, never remove), `tier_yield_history` (rolling 8-run per-tier yields — 2+ consecutive zeros logs `[TIER DEGRADED]`), and `canary_recall_<date>` snapshots from `tools/canary_recall_check.py`. Also holds (recall-fix 2026-06-10): `extraction_backlog` — the not-yet-extracted article tail persisted by Phase 3 (capped 400, sorted by rerank relevance, 3-attempt expiry); the next run carries it over at top priority so a phase timeout never silently drops articles.
 - `miss_audit_results` — typed miss classifications from coverage audit (Phase 6). Since recall-fix 2026-06-10 the benchmark coverage audit (`tools/coverage_audit.py`) runs in EVERY Phase 6 finalize and writes here — recall failures must be loud, not latent. Canary set (`config/canary_projects.json`, 59 entries) includes the 2026-06-10 miss-diagnosis projects: Lynn Lake Gold, Portage Place, Deep Sky Manitoba, Alto HSR.
 - `job_snapshots` — weekly job posting aggregates and hiring spike alerts
 - `procurement_snapshots` — weekly government procurement contract snapshots
@@ -254,7 +252,7 @@ Monitors the federal Impact Assessment Registry for status transitions on projec
 - Do not editorialize — no predictions, no recommendations, no "good news/bad news" framing, no "bullish/bearish"
 - Do not enable billing on any Google Cloud project without explicit approval
 - Do not route Opus to extraction tasks (Call 4, gap analysis, dedup QA) — use Sonnet for those.
-- Do not route Sonnet to writing tasks (Calls 1-3, briefing, market, microscope) — use Opus for those.
+- Do not route Sonnet to writing tasks (Calls 1-3, briefing, market) — use Opus for those.
 
 ## graphify
 

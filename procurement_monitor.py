@@ -840,6 +840,20 @@ def link_contracts_to_projects(contracts, conn):
 _SEEN_OCIDS_STATE_KEY = "procurement_seen_ocids"
 _SEEN_OCIDS_CAP = 5000  # FIFO cap on the persisted identity set
 
+# Per-source fetch-health state (2026-06-19 false-alarm fix): the upstream
+# sources fetch a ROLLING WINDOW every run (Open Canada scans >=90 days; SEAO
+# re-reads the last 4 weekly OCDS files; CanadaBuys re-downloads the full CSV),
+# so after the first run ~100% of fetched contracts are repeats and the
+# post-dedup procurement_contracts list is empty MOST weeks even when every
+# source is healthy. The post-dedup zero is therefore NOT a useful alarm. We
+# instead record, per source, the PRE-dedup raw-row count each run and alarm
+# only when a source that has historically yielded rows goes dark (0 raw rows /
+# FAILED fetch) for several consecutive runs. The correct pre-dedup whole-run
+# [PROCUREMENT DEGRADED] signal in run_procurement_monitor is left unchanged.
+_SOURCE_HEALTH_STATE_KEY = "procurement_source_health"
+_SOURCE_HEALTH_CAP = 8  # rolling window of recent runs kept per source
+_SOURCE_DARK_CONSECUTIVE = 3  # consecutive 0-row runs before a source is "dark"
+
 
 def _contract_dedup_key(contract):
     """
@@ -900,6 +914,72 @@ def _filter_first_seen(conn, contracts):
     return new_contracts
 
 
+def _update_source_health(conn, per_source):
+    """
+    Persist a rolling per-source fetch-health record to dashboard_state and
+    return (health, dark_sources, any_rows).
+
+    `per_source` maps source name -> {"fetched_rows": int, "errored": bool} for
+    THIS run (pre-dedup raw rows). For each source we keep the last
+    _SOURCE_HEALTH_CAP runs as a list of {"rows": int, "errored": bool} plus the
+    most recent "fetched_rows". A source is reported "dark" only when it has
+    historically yielded rows (max rows over its window > 0) yet has returned 0
+    raw rows for >= _SOURCE_DARK_CONSECUTIVE consecutive runs — distinguishing a
+    dead endpoint from a healthy-but-all-deduped quiet week.
+
+    Persistence failures degrade gracefully (no alarm state lost beyond this
+    run) so a missing dashboard_state table can't kill the monitor.
+    """
+    import db as _db
+
+    try:
+        health = _db.get_dashboard_state(conn, _SOURCE_HEALTH_STATE_KEY) or {}
+        if not isinstance(health, dict):
+            health = {}
+    except Exception as e:
+        logger.debug(f"[PROCUREMENT] source-health state load failed: {e}")
+        health = {}
+
+    dark_sources = []
+    any_rows = False
+    for source, info in per_source.items():
+        rows = int(info.get("fetched_rows") or 0)
+        errored = bool(info.get("errored"))
+        if rows > 0:
+            any_rows = True
+
+        rec = health.get(source)
+        if not isinstance(rec, dict):
+            rec = {}
+        window = rec.get("runs")
+        if not isinstance(window, list):
+            window = []
+        window.append({"rows": rows, "errored": errored})
+        if len(window) > _SOURCE_HEALTH_CAP:
+            window = window[-_SOURCE_HEALTH_CAP:]
+        rec["runs"] = window
+        rec["fetched_rows"] = rows
+        health[source] = rec
+
+        # "dark" = historically productive but now zero for N consecutive runs.
+        ever_yielded = any((r.get("rows") or 0) > 0 for r in window)
+        consecutive_zero = 0
+        for r in reversed(window):
+            if (r.get("rows") or 0) == 0:
+                consecutive_zero += 1
+            else:
+                break
+        if ever_yielded and consecutive_zero >= _SOURCE_DARK_CONSECUTIVE:
+            dark_sources.append((source, consecutive_zero))
+
+    try:
+        _db.save_dashboard_state(conn, _SOURCE_HEALTH_STATE_KEY, health)
+    except Exception as e:
+        logger.debug(f"[PROCUREMENT] source-health state save failed: {e}")
+
+    return health, dark_sources, any_rows
+
+
 def run_procurement_monitor(conn, days_back=30):
     """
     Main entry point. Fetch from all procurement sources, filter, link to projects.
@@ -908,28 +988,57 @@ def run_procurement_monitor(conn, days_back=30):
     """
     all_contracts = []
 
+    # Per-source raw-row capture (2026-06-19): record how many rows each source
+    # returned PRE-dedup and whether the fetch errored, so the rolling
+    # source-health alarm below can tell "source went dark" from "healthy but
+    # everything deduped". Each fetcher already catches internally and returns a
+    # list; the per-source try here only flags the errored case for the record.
+    per_source = {}
+
+    def _capture(source, fetch_fn):
+        try:
+            rows = fetch_fn() or []
+            per_source[source] = {"fetched_rows": len(rows), "errored": False}
+            all_contracts.extend(rows)
+        except Exception as e:
+            # Mirrors the existing isolated-failure print style below.
+            print(f"[PROCUREMENT] {source} FAILED (isolated): {e}")
+            per_source[source] = {"fetched_rows": 0, "errored": True}
+
     # Federal sources
-    all_contracts.extend(fetch_open_canada_contracts(days_back))
-    all_contracts.extend(fetch_buyandsell_rss())
+    _capture("open_canada", lambda: fetch_open_canada_contracts(days_back))
+    _capture("canadabuys", fetch_buyandsell_rss)
 
     # Provincial sources
-    all_contracts.extend(fetch_ontario_bps())
-    all_contracts.extend(fetch_bc_bid())
+    _capture("ontario_bps", fetch_ontario_bps)
+    _capture("bc_bid", fetch_bc_bid)
 
     # quality-pass-1.4 G4: Québec SEAO (Données Québec OCDS) and Defence
     # Construction Canada — error-isolated like the sources above (each
     # fetcher already catches internally; the belt-and-braces try keeps a
     # pathological failure from killing the whole monitor run).
-    try:
-        all_contracts.extend(fetch_seao(days_back))
-    except Exception as e:
-        print(f"[PROCUREMENT] seao FAILED (isolated): {e}")
-    try:
-        all_contracts.extend(fetch_dcc())
-    except Exception as e:
-        print(f"[PROCUREMENT] dcc FAILED (isolated): {e}")
+    _capture("seao", lambda: fetch_seao(days_back))
+    _capture("dcc", fetch_dcc)
 
     print(f"[PROCUREMENT] Total: {len(all_contracts)} relevant contracts across all sources")
+
+    # Rolling per-source fetch-health record + "source went dark" alarm
+    # (2026-06-19). This is the alarm that should fire on a FAILED/dead fetch —
+    # NOT on a post-dedup zero, which is the intended steady state given the
+    # rolling-window sources. A source is "dark" only when it historically
+    # yielded rows yet has returned 0 raw rows for >= _SOURCE_DARK_CONSECUTIVE
+    # consecutive runs.
+    try:
+        _health, dark_sources, sources_had_rows = _update_source_health(conn, per_source)
+    except Exception as e:
+        logger.debug(f"[PROCUREMENT] source-health update failed: {e}")
+        dark_sources = []
+        sources_had_rows = any(
+            (info.get("fetched_rows") or 0) > 0 for info in per_source.values())
+    for source, streak in dark_sources:
+        print(f"[PROCUREMENT DARK] {source} returned 0 raw rows for {streak} "
+              f"consecutive runs (>= {_SOURCE_DARK_CONSECUTIVE}) after previously "
+              f"yielding rows — likely a dead endpoint, not an all-deduped week")
 
     # patch-1.2: min-yield DEGRADE log. All four procurement sources were dark
     # (D-9); a whole-run zero means dead endpoints, not a quiet week. The
@@ -962,6 +1071,10 @@ def run_procurement_monitor(conn, days_back=30):
         "procurement_linked": linked,
         "procurement_total_value": sum(c.get("value", 0) for c in new_contracts if c.get("value")),
         "procurement_sources": list(set(c["source"] for c in new_contracts)),
+        # 2026-06-19: did ANY source return raw rows pre-dedup this run? The
+        # dashboard gates its procurement alarm on this instead of on
+        # len(procurement_contracts), which is ~0 most weeks by design.
+        "procurement_sources_had_rows": sources_had_rows,
     }
 
 

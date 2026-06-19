@@ -380,6 +380,10 @@ def run(conn, context, logger):
             if not final_payload.get('bocRate'):
                 final_payload['bocRate'] = (_m.get('bocRate')
                                             or boc_data.get('rate') or '')
+            if not final_payload.get('marketCommentary'):
+                _fm = final_payload.get('financialMarkets') or {}
+                final_payload['marketCommentary'] = (_fm.get('summary')
+                                                     or _fm.get('commentary') or '')
             if (not final_payload.get('pipeline_value')
                     or not final_payload.get('project_count')):
                 _row = conn.execute(

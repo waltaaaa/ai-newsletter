@@ -553,7 +553,7 @@ RSS_MAX_ARTICLES         = int(os.environ.get('RSS_MAX_ARTICLES', '100'))
 WAYBACK_MAX_SNAPSHOTS_SEED = int(os.environ.get('WAYBACK_MAX_SNAPSHOTS_SEED', '800'))
 
 # Claude API cost cap per pipeline run (USD).
-# Opus 4.6: $15/MTok input, $75/MTok output (calls 1-3, briefing, market, microscope).
+# Opus 4.6: $15/MTok input, $75/MTok output (calls 1-3, briefing, market).
 # Sonnet 4.6: $3/MTok input, $15/MTok output (call 4, gap analysis, dedup QA).
 # Normal run ≈ $3-5 with Opus writing. Cap prevents runaway costs.
 CLAUDE_COST_CAP_USD = float(os.environ.get('CLAUDE_COST_CAP_USD', '8.00'))
@@ -571,7 +571,8 @@ NIM_RATE_LIMIT_RPM = int(os.environ.get('NIM_RATE_LIMIT_RPM', '40'))
 NIM_CLASSIFY_MODEL = 'nvidia/nemotron-3-super-120b-a12b'    # L6 article classification (was: Ollama Qwen 2.5 3B)
 NIM_EXTRACTION_MODEL = 'nvidia/nemotron-3-super-120b-a12b'  # was: moonshotai/kimi-k2.5
 NIM_EXTRACTION_FALLBACK = 'moonshotai/kimi-k2.6'            # emergency fallback only (was kimi-k2.5, no longer on NIM)
-NIM_HARD_CASE_MODEL = 'deepseek-ai/deepseek-v4-flash'       # second-opinion on incomplete extractions (was: deepseek-v3_2; 284B MoE / 13B active, 1M ctx, fast)
+# Hard-case second-opinion extraction model REMOVED 2026-06-18 (operator: do not use DeepSeek at all).
+# The former constant (deepseek-ai/deepseek-v4-flash) was unreferenced — no code path invoked it. Do not re-add.
 NIM_EMBEDDING_MODEL = 'nvidia/llama-nemotron-embed-1b-v2'    # was: nvidia/nv-embedqa-e5-v5
 NIM_RERANK_MODEL = 'nvidia/llama-nemotron-rerank-1b-v2'      # was: nvidia/llama-3.2-nv-rerankqa-1b-v2
 

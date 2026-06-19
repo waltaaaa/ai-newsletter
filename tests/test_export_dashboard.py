@@ -164,7 +164,6 @@ class TestExportAll(unittest.TestCase):
             "indicators.json",
             "trends.json",
             "events.json",
-            "microscope.json",
             "timeseries.json",
             "manifest.json",
         ]

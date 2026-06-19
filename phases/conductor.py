@@ -132,85 +132,6 @@ def _run_policy_and_events(conn, context):
     return results
 
 
-def _run_microscope(conn, context, trend_results, run_log=None):
-    """Generate the Under the Microscope deep-dive (audit C7).
-
-    This step lived in the retired phases/narrative.py and was orphaned when
-    the conductor replaced it — microscope.json shipped as literal `null` for
-    months. It must run BEFORE _export_data_files so export_microscope picks
-    up the fresh dashboard_state entry. Failure is loud: an empty microscope
-    is a visible product defect, not a silent skip.
-    """
-    import asyncio as _aio
-    from datetime import datetime as _dt
-    try:
-        from under_the_microscope import (
-            select_microscope_topic, generate_microscope_analysis,
-            store_microscope_history, get_affected_projects,
-        )
-        from db import save_dashboard_state
-
-        signal_context = {
-            'policy_summary': context.get('policy_summary', {}),
-            'policy_items': context.get('policy_items', []),
-            'job_spikes': context.get('job_spikes', []),
-            'procurement_contracts': context.get('procurement_contracts', []),
-            'iaac_status_changes': context.get('iaac_status_changes', []),
-            'regulatory_signals': [
-                a for a in context.get('discovered_articles', [])
-                if a.get('regulatory_signal')
-            ][:5],
-        }
-        rss_items = (context.get('rss_items')
-                     or context.get('extracted_articles')
-                     or context.get('gemini_projects')
-                     or [])
-        indicator_data = trend_results.get('indicator_data') or {}
-        xref_data = trend_results.get('xref_data') or {}
-
-        topic_context = _aio.run(select_microscope_topic(
-            conn, rss_items, indicator_data, xref_data,
-            signal_context=signal_context,
-        ))
-        if not (topic_context and topic_context.get('topic')):
-            print("    [MICROSCOPE WARN] No dominant topic identified — "
-                  "microscope.json will reuse last stored history")
-            if run_log:
-                run_log.log_error('microscope',
-                                  RuntimeError('no dominant topic identified'),
-                                  severity='warn')
-            return
-
-        print(f"    [MICROSCOPE] Topic: {topic_context['topic']}")
-        affected = get_affected_projects(conn, topic_context)
-        microscope_result = _aio.run(generate_microscope_analysis(
-            topic_context, affected, indicator_data
-        ))
-        if microscope_result and microscope_result.get('text'):
-            text = microscope_result['text']
-            store_microscope_history(conn, topic_context['topic'], text)
-            save_dashboard_state(conn, 'microscope_current', {
-                'topic': topic_context['topic'],
-                'sectors': topic_context.get('sectors', []),
-                'text': text,
-                'week': _dt.now().strftime('%Y-W%W'),
-                'updated_at': _dt.now().isoformat(),
-            })
-            print(f"    [MICROSCOPE] Generated: {len(text)} chars")
-        else:
-            print("    [MICROSCOPE WARN] Analysis generation returned empty — "
-                  "microscope.json will reuse last stored history")
-            if run_log:
-                run_log.log_error('microscope',
-                                  RuntimeError('analysis generation returned empty'),
-                                  severity='warn')
-    except Exception as e:
-        print(f"    [MICROSCOPE WARN] Failed: {type(e).__name__}: {e} — "
-              f"microscope.json will reuse last stored history")
-        if run_log:
-            run_log.log_error('microscope', e, severity='warn')
-
-
 def _export_data_files(conn, context):
     """Export current data to docs/data/ for conductor agents to read."""
     import json as _json
@@ -427,11 +348,6 @@ def run(conn, context: dict, run_log) -> dict:
         print("\n  [Step 1] Trend computation & data enrichment...")
         trend_results = _run_trend_computation(conn)
         extra_results = _run_policy_and_events(conn, context)
-
-        # Step 1.5: Under the Microscope (audit C7 — restored from the retired
-        # narrative phase; must precede export so microscope.json is fresh)
-        print("  [Step 1.5] Under the Microscope deep-dive...")
-        _run_microscope(conn, context, trend_results, run_log)
 
         # Step 2: Export all data to docs/data/ for conductor agents
         print("  [Step 2] Exporting data files for conductor agents...")

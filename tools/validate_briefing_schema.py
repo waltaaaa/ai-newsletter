@@ -1584,6 +1584,13 @@ COMMODITY_TS_MAP = {
 # Divergence on these is informative but must never hard-FAIL a deploy.
 MARKET_FACT_PROXY_KEYS = {"potash_nutrien", "uranium", "nickel"}
 
+# Series published on a MONTHLY cadence (e.g. canola = StatCan Saskatchewan farm
+# price, $/t, monthly) legitimately have no point within the 14-day daily-market
+# bound. Give them a wider verifiability window so a monthly series isn't flagged
+# "unverifiable" every week (a frequency-bound false positive, not staleness).
+MARKET_FACT_MONTHLY_KEYS = {"canola"}
+MARKET_FACT_MONTHLY_MAX_AGE = 45
+
 # briefing fx[].name → (timeseries key, invert?)
 FX_TS_MAP = {
     "CAD/USD": ("cadusd", False),
@@ -1722,11 +1729,14 @@ def _validate_market_facts(data_dir, results, briefing):
         series = ts.get(ts_key)
         if not series:
             return
-        anchors = _ts_anchors(series, week_of)
+        _max_age = (MARKET_FACT_MONTHLY_MAX_AGE
+                    if ts_key in MARKET_FACT_MONTHLY_KEYS
+                    else MARKET_FACT_MAX_POINT_AGE)
+        anchors = _ts_anchors(series, week_of, max_age_days=_max_age)
         if not anchors:
             if not warn(results, f"fact.{label}.verifiable", False,
                         f"timeseries '{ts_key}' has no point within "
-                        f"{MARKET_FACT_MAX_POINT_AGE}d of week_of — unverifiable"):
+                        f"{_max_age}d of week_of — unverifiable"):
                 warns += 1
             return
         # Min divergence across anchors (prior close + at-date point): a
@@ -1827,41 +1837,38 @@ def _validate_market_facts(data_dir, results, briefing):
     return (fails, warns)
 
 
-def _validate_microscope_json(data_dir, results, briefing):
-    """microscope.json must be a {"topics": [...]} object, never null (audit C7).
-
-    Production shipped a literal `null` for months. Empty topics is a WARN
-    (a quiet week is legal); a malformed/null file is a FAIL — the exporter
-    now always writes a well-formed object, so null means a broken export.
-    """
+def _validate_feed_health(data_dir, results, briefing):
+    """WARN-only RSS feed-health gate (Guard #3). Surfaces fetch degradation at
+    deploy time instead of as a stdout-only print. Tiered to WARN (not FAIL)
+    initially: the 2026-06 audit found 164/333 feeds dead and the _fetch_one
+    timeout widening should recover the slow-but-alive bucket on the next run.
+    Upgrade to FAIL once the active ratio stabilises. Returns (fails, warns)."""
     fails = 0
     warns = 0
-    path = os.path.join(data_dir, "microscope.json")
+    path = os.path.join(data_dir, "feed_health.json")
     if not os.path.exists(path):
-        if not warn(results, "data.microscope.present", False,
-                    "microscope.json missing from data dir"):
-            warns += 1
-        return (fails, warns)
+        return (0, 0)  # producer not yet shipping it — no gate
     try:
-        m = _load_json_tolerant(path)
+        with open(path, encoding="utf-8") as fh:
+            fh_data = json.load(fh)
     except Exception as e:
-        check(results, "data.microscope.parse", False, f"unparseable: {e}")
-        return (1, 0)
-    if not (isinstance(m, dict) and isinstance(m.get("topics"), list)):
-        # Red-team F9: WARN, not FAIL — the frontend does not read
-        # microscope.json yet (no fetch in app.js/index.html), so a malformed
-        # file must not block the deploy of features that DO ship. Upgrade to
-        # FAIL when the frontend section is wired.
-        if not warn(results, "data.microscope.shape", False,
-                    f"expected {{'topics': [...]}}, got {type(m).__name__} "
-                    f"— export_microscope null-guard regressed (WARN-only: "
-                    f"frontend does not consume this file yet)"):
+        if not warn(results, "data.feed_health.parse", False,
+                    f"feed_health.json unparseable: {e}"):
             warns += 1
         return (fails, warns)
-    check(results, "data.microscope.shape", True, "")
-    if not warn(results, "data.microscope.topics", len(m["topics"]) > 0,
-                "Under the Microscope has no topics — section empty in "
-                "production (topic selection failed or never ran)"):
+    if not isinstance(fh_data, dict):
+        return (0, 0)  # unexpected shape — no gate (producer always writes a dict)
+    summary = fh_data.get("summary") or {}
+    total = summary.get("total_feeds", 0) or 0
+    active = summary.get("active", 0) or 0
+    if total <= 0:
+        return (0, 0)  # health table empty/untracked — nothing to gate yet
+    ratio = active / total
+    dead = summary.get("dead_candidate", 0) or 0
+    if not warn(results, "data.feed_health.active_ratio", ratio >= 0.60,
+                f"only {active}/{total} RSS feeds active ({ratio:.0%}); "
+                f"{dead} dead-candidate (>=8 empty runs) — raise _fetch_one "
+                f"timeout / prune truly-dead feeds (WARN-only gate)"):
         warns += 1
     return (fails, warns)
 
@@ -1891,7 +1898,7 @@ def _validate_data_dir(briefing_path, results, briefing):
         _validate_global_chart_cfg,
         _validate_briefing_archive,
         _validate_market_facts,
-        _validate_microscope_json,
+        _validate_feed_health,
     ):
         f, w = fn(data_dir, results, briefing)
         total_f += f

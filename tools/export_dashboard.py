@@ -772,6 +772,24 @@ def _commodity_stats_from_points(points):
     }
 
 
+def _commodity_context_line(name, unit, stats):
+    """Deterministic factual one-liner for export-enriched commodities the
+    market-writer agent did not narrate. Clears the commodity.context WARN with
+    sourced numbers only — no editorial language (CLAUDE.md editorial policy)."""
+    unit_sfx = f"/{unit}" if unit else ""
+    segs = []
+    for label, key in (("w/w", "wow"), ("m/m", "mom"), ("y/y", "yoy")):
+        v = stats.get(key)
+        if isinstance(v, (int, float)):
+            segs.append(f"{v:+.1f}% {label}")
+    tail = f" ({'; '.join(segs)})" if segs else ""
+    base = f"{name} at {stats['current']}{unit_sfx}{tail}."
+    if stats.get("high_52w") is not None and stats.get("low_52w") is not None:
+        base += (f" 52-week range {stats['low_52w']}–"
+                 f"{stats['high_52w']}{unit_sfx}.")
+    return base
+
+
 def _enrich_commodities_from_timeseries_json(existing, ts_path, max_stale_days=60):
     """Append every _COMMODITY_REGISTRY series present (and fresh) in
     timeseries.json that isn't already in `existing` (de-dupe by display name).
@@ -819,6 +837,7 @@ def _enrich_commodities_from_timeseries_json(existing, ts_path, max_stale_days=6
             "day": _pct_str(stats["wow"]),
             "mm": _pct_str(stats["mom"]),
             "yy": _pct_str(stats["yoy"]),
+            "context": _commodity_context_line(name, unit, stats),
             "weekly_pct": stats["wow"], "mom_pct": stats["mom"], "yoy_pct": stats["yoy"],
             "high_52w": stats["high_52w"], "low_52w": stats["low_52w"],
         })
@@ -868,6 +887,29 @@ def _validate_briefing_text(briefing: dict):
         _scan(g.get('analysis', ''), f"global.{g.get('name', '?')}")
 
 
+def _statcan_daily_metric(inds, *names):
+    """D9 parity helper (mirrors phases/analysis._daily_metric_value): resolve a
+    CPI-component metric from the StatCan Daily feed indicators by name. The feed
+    ships an empty `value` and the 12-month change in `change`; fall back to the
+    change, signed per arrow (1=up, 2=down) and labelled y/y."""
+    by_name = {str(r.get('name', '')).strip().lower(): r
+               for r in (inds or []) if isinstance(r, dict)}
+    for nm in names:
+        row = by_name.get(nm.lower())
+        if not row:
+            continue
+        val = str(row.get('value') or '').strip()
+        if val:
+            return val
+        chg = str(row.get('change') or '').strip()
+        if chg:
+            if chg[:1].isdigit():
+                arrow = row.get('arrow')
+                chg = ('+' if arrow == 1 else '-' if arrow == 2 else '') + chg
+            return f"{chg} y/y"
+    return None
+
+
 def export_briefings(conn, output_dir: str) -> tuple[str, str]:
     """Export briefing_latest.json and briefing_archive.json."""
     from db import get_briefing_archive, get_latest_briefing, get_dashboard_state
@@ -900,8 +942,45 @@ def export_briefings(conn, output_dir: str) -> tuple[str, str]:
     market_data = _build_market_data_from_indicators(conn)
     if not latest.get('financialMarkets'):
         latest['financialMarkets'] = market_data['financialMarkets']
+    # Top-level marketCommentary alias (frontend fallback D.marketCommentary,
+    # WARN-tier). The assembler emits the narrative as financialMarkets.summary
+    # but never the alias — mirror finalize.py's M3 backfill so the deployed
+    # artifact carries it even when an out-of-band assembler built the payload.
+    if not latest.get('marketCommentary'):
+        _fm = latest.get('financialMarkets') or {}
+        latest['marketCommentary'] = (_fm.get('summary')
+                                      or _fm.get('commentary') or '')
     if not latest.get('yieldCurve'):
         latest['yieldCurve'] = market_data['yieldCurve']
+    # Derive yieldCurveLastYear (the SVG's 1-year-ago comparison line, read by
+    # app.js _svgYieldCurve as D.yieldCurveLastYear) from the per-tenor prevYield
+    # the assembler already emits — no new data sourcing. Without it the
+    # comparison line is silently dropped.
+    if not latest.get('yieldCurveLastYear'):
+        _yc = latest.get('yieldCurve')
+        if isinstance(_yc, list):
+            _prev = [{'term': t.get('term'), 'yield': t.get('prevYield')}
+                     for t in _yc
+                     if isinstance(t, dict) and t.get('term') and t.get('prevYield')]
+            if _prev:
+                latest['yieldCurveLastYear'] = _prev
+    # D9 parity: when briefing metrics ship 'N/A'/empty for the StatCan Daily CPI
+    # components (an out-of-band assembler path bypassed
+    # analysis._daily_metric_value), source them from the same dashboard_state the
+    # indicators export uses, so the deployed artifact carries the real figure.
+    _metrics = latest.get('metrics')
+    if isinstance(_metrics, dict):
+        _sl = (get_dashboard_state(conn, 'statcan_indicators_latest')
+               or get_dashboard_state(conn, 'statcan_latest') or {})
+        _sc_inds = _sl.get('indicators') if isinstance(_sl, dict) else None
+        if _sc_inds:
+            for _mkey, _names in (('shelter_cpi', ('Shelter',)),
+                                  ('food_cpi', ('Food purchased from stores',)),
+                                  ('energy_cpi', ('Energy', 'Gasoline'))):
+                if str(_metrics.get(_mkey) or '').strip().upper() in ('', 'N/A', 'NA', 'NONE'):
+                    _v = _statcan_daily_metric(_sc_inds, *_names)
+                    if _v:
+                        _metrics[_mkey] = _v
     existing_comms = latest.get('commodities')
     if not existing_comms:
         latest['commodities'] = market_data['commodities']
@@ -1195,40 +1274,6 @@ def export_events(conn, output_dir: str) -> str:
     return out_path
 
 
-def export_microscope(conn, output_dir: str) -> str:
-    """Export microscope.json from get_dashboard_state microscope_history.
-
-    Audit C7: production shipped a literal `null` for months because the
-    history key was absent and the raw value was dumped unchecked. Always
-    write a well-formed {"topics": [...]} object; fall back to the
-    microscope_current snapshot if history is missing; warn loudly when
-    everything is empty so the gap is visible in the run log.
-    """
-    from db import get_dashboard_state
-
-    history = get_dashboard_state(conn, "microscope_history")
-    if not isinstance(history, dict) or not isinstance(history.get("topics"), list):
-        topics = []
-        current = get_dashboard_state(conn, "microscope_current")
-        if isinstance(current, dict) and current.get("text"):
-            topics = [{
-                "topic": current.get("topic", ""),
-                "analysis": current.get("text", ""),
-                "week": current.get("week", ""),
-                "date": (current.get("updated_at") or "")[:10],
-            }]
-        history = {"topics": topics}
-    if not history["topics"]:
-        print("  [EXPORT WARN] microscope.json has no topics — Under the "
-              "Microscope is empty in production (see audit C7)")
-
-    out_path = os.path.join(output_dir, "microscope.json")
-    with _atomic_open(out_path) as f:
-        json.dump(history, f, ensure_ascii=False, indent=2)
-
-    return out_path
-
-
 def export_policy(conn, output_dir: str) -> str:
     """Export policy.json from policy_snapshots table and dashboard_state."""
     from db import get_dashboard_state
@@ -1497,9 +1542,6 @@ def export_timeseries(conn, output_dir: str) -> str:
             seen_dates = set()
             for r in rows:
                 d = dict(r)
-                if d['date'] in seen_dates:
-                    continue  # same period stored under code AND full name
-                seen_dates.add(d['date'])
                 # Values are archived as strings ("6.1%") — coerce numeric
                 # for the chart consumers (same pattern as export_indicators).
                 try:
@@ -1507,6 +1549,20 @@ def export_timeseries(conn, output_dir: str) -> str:
                                        .replace('%', '').replace('+', ''))
                 except (ValueError, TypeError):
                     pass
+                # H5 guard: provincial CPI is published here as a YoY % RATE
+                # (~ -5..15). A stale backfill mixed raw CPI INDEX rows (~80-250)
+                # under the same indicator_name='cpi'; coercing and unioning both
+                # produced an index/rate sawtooth. Drop index-valued points so the
+                # series is a single quantity. Done BEFORE the per-date dedup so an
+                # index row never evicts the legitimate rate row for that month.
+                # (Run-date-stamped duplicate rows are removed by the one-time DB
+                # repair; this band is the durable export-side guard.)
+                if (ind == 'cpi' and isinstance(d['value'], (int, float))
+                        and not (-10.0 <= d['value'] <= 25.0)):
+                    continue
+                if d['date'] in seen_dates:
+                    continue  # same period stored under code AND full name
+                seen_dates.add(d['date'])
                 points.append(d)
             if points:
                 bundle[key] = points
@@ -2266,6 +2322,39 @@ def export_statcan_tables(conn, output_dir: str, config_path: str = None) -> str
     return out_path
 
 
+def export_feed_health(conn, output_dir: str) -> str:
+    """Export feed_health.json — RSS feed-fetch health summary (Guard #3).
+
+    Surfaces the dead/dormant-feed situation (the 2026-06 audit found 164/333
+    feeds dead and silent) so the deploy gate and ops page can SEE fetch
+    degradation instead of it being a stdout-only print. Best-effort: writes
+    zeros if the rss_feed_health table is unavailable (populated by record_fetch).
+    """
+    summary = {"total_feeds": 0, "active": 0, "dormant": 0,
+               "dead_candidate": 0, "lifetime_items": 0}
+    dead = []
+    try:
+        import rss_feed_health
+        summary = rss_feed_health.get_health_summary(conn) or summary
+        dead = rss_feed_health.get_dead_feeds(conn) or []
+    except Exception as e:
+        logger.warning("export_feed_health: health query failed: %s", e)
+    total = summary.get("total_feeds", 0) or 0
+    active = summary.get("active", 0) or 0
+    payload = {
+        "updatedAt": datetime.utcnow().date().isoformat(),
+        "summary": summary,
+        "active_ratio": round(active / total, 4) if total else None,
+        "dead_candidate_count": len(dead),
+        "dead_sample": [str(d.get("url") or d.get("feed_url") or "")
+                        for d in dead[:50] if isinstance(d, dict)],
+    }
+    out_path = os.path.join(output_dir, "feed_health.json")
+    with _atomic_open(out_path) as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # MAIN ENTRY POINT
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -2336,6 +2425,13 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
     except Exception as e:
         logger.warning("Export %s failed: %s", "export_events_global", e)
 
+    # Feed health (Guard #3 — RSS fetch-degradation visibility for the deploy gate)
+    try:
+        path = export_feed_health(conn, output_dir)
+        files_written.append(os.path.basename(path))
+    except Exception as e:
+        logger.warning("Export %s failed: %s", "export_feed_health", e)
+
     # StatCan table directory (Data Explorer V-Code search fallback — from config/)
     try:
         path = export_statcan_tables(conn, output_dir)
@@ -2359,15 +2455,6 @@ def export_all(conn=None, output_dir: str = "docs/data") -> dict:
     # Canadian commodity indicators
     path = export_commodities(conn, output_dir)
     files_written.append(os.path.basename(path))
-
-    # Under the Microscope (export_microscope existed but was never wired into
-    # export_all — microscope.json, read directly by the frontend, was therefore
-    # never refreshed by a standard export run). 2026-06-08 audit export-coverage fix.
-    try:
-        path = export_microscope(conn, output_dir)
-        files_written.append(os.path.basename(path))
-    except Exception as e:
-        logger.warning("Export %s failed: %s", "export_microscope", e)
 
     # Signal data (jobs, procurement, IAAC)
     for export_fn in (export_jobs, export_procurement, export_iaac, export_signals):

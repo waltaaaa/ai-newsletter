@@ -258,8 +258,7 @@ Merge logic: always advance to highest status, never regress
   - Policy impact assessment
   - Market commentary (200-300 words)
   - Pre-event analysis (150-250 words per event)
-  - Weekly briefing synthesis (1000-1500 words, 8 sections)
-  - Under the Microscope deep-dive (200-300 words)
+  - Weekly briefing synthesis (1000-1500 words, 7 sections)
 - **Structured analysis (formerly Gemini Pro, from STEP_2K):**
   - Gap analysis on discovery results
   - Failed extraction recovery
@@ -420,16 +419,15 @@ Beyond standard Yahoo Finance tickers:
 ### 14.1 Structure (1000-1500 words)
 1. **HEADLINE** — single most significant factual development (1-2 sentences, no characterization)
 2. **MACRO PULSE** — national indicators with period-over-period changes, all sourced (150-200 words)
-3. **UNDER THE MICROSCOPE** — factual deep-dive: what happened, what changed, which Canadian sectors/projects are in scope (200-300 words, see Section 15)
-4. **PROVINCIAL SPOTLIGHT** — one province's data: new projects, value totals, status changes (100-150 words)
-5. **SECTOR WATCH** — sectors with largest volume/value changes, stated with numbers (150-200 words)
-6. **PROJECT TRACKER** — new projects discovered, status changes recorded, completions confirmed (150-200 words)
-7. **MARKETS & COMMODITIES** — price movements stated factually, affected project counts from database (100-150 words)
-8. **LOOKING AHEAD** — upcoming scheduled events (BoC dates, StatsCan releases, budget dates) with affected project counts (100-150 words)
+3. **PROVINCIAL SPOTLIGHT** — one province's data: new projects, value totals, status changes (100-150 words)
+4. **SECTOR WATCH** — sectors with largest volume/value changes, stated with numbers (150-200 words)
+5. **PROJECT TRACKER** — new projects discovered, status changes recorded, completions confirmed (150-200 words)
+6. **MARKETS & COMMODITIES** — price movements stated factually, affected project counts from database (100-150 words)
+7. **LOOKING AHEAD** — upcoming scheduled events (BoC dates, StatsCan releases, budget dates) with affected project counts (100-150 words)
 
 ### 14.2 Generation
 - Claude Sonnet system prompt defines a factual reporter persona — NOT an analyst, editor, or advisor
-- Input: project trends, indicator trends, cross-reference data, policy developments, market data, upcoming events, microscope context
+- Input: project trends, indicator trends, cross-reference data, policy developments, market data, upcoming events
 - Every claim must trace to specific data in the provided context
 - No fabrication, no filler phrases, no predictions, no recommendations
 - No characterizing events as good/bad/bullish/bearish/positive/negative
@@ -469,7 +467,7 @@ Beyond standard Yahoo Finance tickers:
 
 ### 16.4 Weekly Briefing Display
 - Displays latest briefing from `dashboard_state/latest_briefing`
-- Formatted 1000-1500 word intelligence report with 8 sections including Under the Microscope
+- Formatted 1000-1500 word intelligence report with 7 sections
 - Date and week number
 - **Download buttons:** "📄 Download PDF" and "📝 Download Word" — trigger direct browser download via `/api/briefing-download?format=pdf` and `?format=docx`
 - Optional `week_date` parameter for downloading historical briefings
@@ -503,44 +501,6 @@ Beyond standard Yahoo Finance tickers:
 
 ### 16.7 SQLite Indexes
 - Composite indexes for filter combinations: province + status, is_brownfield + province, sector + province, project_type + status, province + value DESC
-
----
-
-## 15. UNDER THE MICROSCOPE
-
-### 15.1 Purpose
-A dedicated deep-dive section in the weekly briefing that provides extended analysis of one dominant story, explaining what happened, what changed, new developments, and how it specifically affects Canada's economy and capital investment pipeline. Examples: a war with Iran (defence contracts, energy prices, supply chains), a US trade war (manufacturing projects at risk), a major bank failure (project financing), a natural disaster (reconstruction pipeline), a federal election (policy shift implications).
-
-### 15.2 Topic Selection (Automated)
-- Claude Sonnet selects the topic during briefing generation based on:
-  - Highest-volume news story in the past 7 days from RSS feeds and Gemini results
-  - Story with the largest measurable impact on tracked indicators (biggest commodity/rate move)
-  - Story with the most affected projects in the database (via cross-reference engine)
-  - User override: optional SQLite field `dashboard_state/microscope_override` to force a specific topic
-- Only ONE topic per week — depth over breadth
-
-### 15.3 Analysis Structure (200-300 words within briefing)
-1. **What happened / what changed** — factual summary of the development, sourced
-2. **New developments this week** — what is factually different since last week
-3. **Canadian exposure** — which sectors, provinces, and indicators are directly connected, stated with data:
-   - Affected sectors (with project counts and values from database)
-   - Affected provinces (with specific exposure data)
-   - Commodity/indicator movements (with current numbers)
-4. **Projects in scope** — named projects from the database that fall within affected sectors/provinces (e.g., "The database tracks 14 Alberta oil projects ($18B) with production costs above current WTI")
-5. **Upcoming scheduled events** — dates of decisions, releases, or hearings related to this story
-
-**Tone:** Factual reporting only. State what happened, state what the data shows, state which projects are in scope. Do not predict outcomes, recommend actions, or characterize events as positive/negative.
-
-### 15.4 Generation
-- Uses one additional Claude Sonnet call per week (~$0.20)
-- System prompt defines factual reporter persona — present data and connections, no opinions or recommendations
-- Input: news context from RSS/Gemini, affected projects from cross-reference engine, relevant indicator data
-- Gemini Flash runs 2-3 web searches to get latest context on the selected topic before Claude Sonnet analyzes
-
-### 15.5 Continuity Tracking
-- If the same story dominates multiple consecutive weeks, briefings reference prior coverage: "In its third week under the microscope, the Iran conflict has now..."
-- SQLite `dashboard_state/microscope_history` stores past topics with dates
-- Prevents repetitive analysis — each week must have genuinely new developments to justify continuation
 
 ---
 
@@ -669,7 +629,7 @@ The weekly pipeline's 4-week lookback window only catches projects with recent m
 | indicator_history | Time series for all economic indicators | Backfill + weekly pipeline |
 | trend_snapshots | Weekly trend analysis snapshots | Trend analysis engine |
 | weekly_briefings | Generated weekly intelligence briefings | Briefing generator |
-| dashboard_state | Frontend state (latest briefing, market data, events, microscope override/history) | Various modules |
+| dashboard_state | Frontend state (latest briefing, market data, events) | Various modules |
 
 ---
 
@@ -688,7 +648,7 @@ The weekly pipeline's 4-week lookback window only catches projects with recent m
 | Key people RSS monitoring | $0 |
 | Briefing PDF/DOCX export (reportlab, python-docx) | $0 |
 | Known-project sweep (one-time) | $0 |
-| Claude Sonnet 4.5 (ALL reasoning — briefing, microscope, commentary, gap analysis, dedup QA, ~10 calls/week) | ~$55 |
+| Claude Sonnet 4.5 (ALL reasoning — briefing, commentary, gap analysis, dedup QA, ~10 calls/week) | ~$55 |
 | GitHub Pages + Actions (hosting + scheduling) | $0 |
 | **Total** | **~$55/year** |
 
@@ -758,25 +718,17 @@ The weekly pipeline's 4-week lookback window only catches projects with recent m
     a. Build upcoming events list (14 days)
     b. Claude Sonnet pre-event analyses for high-significance events
 
-12. Under the Microscope:
-    a. Select dominant story (highest news volume + indicator impact + project crossover)
-    b. Check microscope_override in dashboard_state
-    c. Check microscope_history for continuity (same story = reference prior weeks)
-    d. Gemini Flash: 2-3 web searches for latest context on selected topic
-    e. Claude Sonnet: generate 200-300 word deep-dive with Canadian impact analysis
-    f. Store topic in microscope_history
-
-13. Weekly Briefing:
-    a. Claude Sonnet narrative synthesis (1000-1500 words, 8 sections including Under the Microscope)
+12. Weekly Briefing:
+    a. Claude Sonnet narrative synthesis (1000-1500 words, 7 sections)
     b. Store in weekly_briefings collection
     c. Update dashboard_state/latest_briefing
 
-14. Briefing Export:
+13. Briefing Export:
     a. Generate PDF version via reportlab
     b. Generate DOCX version via python-docx
     c. Store both locally for download via GitHub Pages
 
-15. Archive Indicators:
+14. Archive Indicators:
     a. Write current week's indicator values to indicator_history
 ```
 

@@ -46,7 +46,9 @@ TIMESERIES_PATH = os.path.join("docs", "data", "timeseries.json")
 
 # (series_key, yfinance_ticker, period, description)
 YF_SERIES = [
-    ("iron_ore", "VALE", "13mo", "VALE (NYSE) equity proxy — iron ore miner"),
+    # iron_ore re-sourced to FRED PIORECRUSDM ($/t) — see FRED_SERIES below.
+    # The VALE (NYSE) equity proxy (~$15) collided in timeseries.json with the
+    # $/t price (~$110) from indicator_history, producing a chart sawtooth (H1).
     ("potash_nutrien", "NTR.TO", "13mo", "Nutrien Ltd (TSX) — potash producer"),
     ("lumber", "LBR=F", "13mo", "Random Length Lumber futures"),
     ("wti_oil", "CL=F", "13mo", "WTI Crude Oil futures"),
@@ -113,6 +115,7 @@ YF_SCALE = {
 # leaves the existing series untouched (succeeds in CI / unrestricted nets).
 # (series_key, fred_series_id, description)
 FRED_SERIES = [
+    ("iron_ore",          "PIORECRUSDM",  "Global price of Iron Ore (USD/t) — H1 re-source, was VALE equity"),
     ("nickel",            "PNICKUSDM",    "Global price of Nickel (USD/t)"),
     ("zinc",              "PZINCUSDM",    "Global price of Zinc (USD/t)"),
     ("tin",               "PTINUSDM",     "Global price of Tin (USD/t)"),

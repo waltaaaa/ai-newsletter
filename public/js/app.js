@@ -6942,7 +6942,6 @@ function addDataVintage(){
 if($('tldrPage'))$('tldrPage').innerHTML=skeleton(6);
 // Section-level skeleton placeholders while async sections load
 if($('costMonitor'))$('costMonitor').innerHTML='<div class="card">'+skeleton(2)+'</div>';
-if($('microscopeHistory'))$('microscopeHistory').innerHTML='<div class="card">'+skeleton(2)+'</div>';
 $('footerDate').textContent='Loading...';
 // No auth required — data is served as static JSON files
 loadAll();

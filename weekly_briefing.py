@@ -4,15 +4,14 @@ weekly_briefing.py -- Weekly narrative synthesis and storage.
 The crown jewel: combines all data dimensions into a single coherent
 weekly intelligence briefing via Claude Sonnet.
 
-Structure (8 sections, 1100-1600 words):
+Structure (7 sections, 1100-1600 words):
 1. HEADLINE -- single most important development
 2. MACRO PULSE -- national economic conditions
-3. UNDER THE MICROSCOPE -- deep-dive on dominant story (pre-generated)
-4. PROVINCIAL SPOTLIGHT -- one province with notable activity
-5. SECTOR WATCH -- accelerating and decelerating sectors
-6. PROJECT TRACKER -- new projects, status changes, completions
-7. MARKETS & COMMODITIES -- price movements and project implications
-8. LOOKING AHEAD -- upcoming events and what to watch
+3. PROVINCIAL SPOTLIGHT -- one province with notable activity
+4. SECTOR WATCH -- accelerating and decelerating sectors
+5. PROJECT TRACKER -- new projects, status changes, completions
+6. MARKETS & COMMODITIES -- price movements and project implications
+7. LOOKING AHEAD -- upcoming events and what to watch
 """
 
 import json
@@ -43,12 +42,11 @@ REPORTING RULES — STRICTLY ENFORCED:
 Structure:
 1. HEADLINE -- single most important data release or event (1-2 sentences)
 2. MACRO PULSE -- national economic data released this week, period-over-period changes (250-300 words, short paragraphs)
-3. UNDER THE MICROSCOPE -- deep-dive on the dominant story (200-300 words, pre-generated analysis provided below — incorporate it, editing for tone consistency)
-4. PROVINCIAL SPOTLIGHT -- one province with notable data or project activity this week (100-150 words)
-5. SECTOR WATCH -- sectors with largest data changes, with figures (150-200 words)
-6. PROJECT TRACKER -- new projects discovered, status changes recorded, completions confirmed (150-200 words)
-7. MARKETS & COMMODITIES -- price movements stated factually, affected project counts from database (100-150 words)
-8. LOOKING AHEAD -- upcoming scheduled events with dates (BoC decisions, StatCan releases, budget dates) (100-150 words)
+3. PROVINCIAL SPOTLIGHT -- one province with notable data or project activity this week (100-150 words)
+4. SECTOR WATCH -- sectors with largest data changes, with figures (150-200 words)
+5. PROJECT TRACKER -- new projects discovered, status changes recorded, completions confirmed (150-200 words)
+6. MARKETS & COMMODITIES -- price movements stated factually, affected project counts from database (100-150 words)
+7. LOOKING AHEAD -- upcoming scheduled events with dates (BoC decisions, StatCan releases, budget dates) (100-150 words)
 
 Do NOT use generic filler. Every sentence reports a specific fact or data point."""
 
@@ -191,7 +189,6 @@ async def generate_weekly_briefing(
     market_commentary,
     upcoming_events,
     pre_event_analyses,
-    microscope_text=None,
     signal_context=None,
 ):
     """Generate the full weekly intelligence briefing via Claude Sonnet.
@@ -285,12 +282,9 @@ Pipeline health:
 === PRE-EVENT ANALYSES ===
 {json.dumps(pre_event_analyses[:3], indent=2) if pre_event_analyses else 'None generated.'}
 
-=== UNDER THE MICROSCOPE (pre-generated deep-dive — incorporate as section 3) ===
-{microscope_text if microscope_text else 'No microscope analysis available this week. Skip section 3 and proceed with sections 1-2, 4-8.'}
-
 {_format_signal_context(signal_context)}
 
-Generate the weekly briefing following the 8-section structure in your system instructions."""
+Generate the weekly briefing following the 7-section structure in your system instructions."""
 
     from claude_reasoning import OPUS_WRITING_MODEL
     return await reason_with_claude_tracked(

@@ -310,6 +310,12 @@ def run(conn, context, logger):
                     "tier2b_bing_news": len(bing_articles),
                     "tier13_municipal": len(municipal_projects),
                     "tier14_institutional": len(institutional_projects),
+                    # Tier 3/4 RSS (324+ feeds) — populated by Phase 1
+                    # data_collection into context["rss_items"]. Without this
+                    # key the [TIER DEGRADED] path never covered RSS, so a total
+                    # RSS collapse went silent. update_tier_history tracks any
+                    # key present in this_run, so no tier whitelist to update.
+                    "tier3_4_rss": len(context.get("rss_items") or []),
                     "iaac_status": (len(context.get("iaac_status_changes") or [])
                                     + len(context.get("iaac_new_discoveries") or [])),
                     "procurement": len(context.get("procurement_contracts") or []),
@@ -339,7 +345,7 @@ def run(conn, context, logger):
             "tavily_searches_count": tavily_searches_count,
             # Red-team F4: these were only context.update()'d in-place and
             # never in the return dict, so a crash-retry run that cache-hits
-            # this phase fed the conductor/microscope EMPTY signal lists and
+            # this phase fed the conductor EMPTY signal lists and
             # the operator summary printed n/a. Returning them makes them
             # part of the cached phase result.
             "policy_items": context.get("policy_items", []),

@@ -416,7 +416,6 @@ The function `getProvIndicators()` builds a per-province data object:
 | `projects_all.json` | Project count, pipeline value for header stats | Array of project objects with `value`, `status`, `province`, `sector` |
 | `policy.json` | Policy developments referenced in briefing | Array of policy items with `title`, `province`, `sector`, `date` |
 | `events.json` | Upcoming economic events for watchlist | Array of events with `date`, `title`, `institution`, `impact` |
-| `microscope.json` | "Under the Microscope" history sidebar | Array of past deep-dive topics with `title`, `date`, `summary` |
 | `canada-provinces.topo.json` | TopoJSON geometry for interactive map | Standard TopoJSON with province boundaries |
 | `timeseries.json` | Historical time series for sparklines | Per-indicator arrays of `{period, value}` |
 
@@ -529,9 +528,6 @@ TL;DR Tab Display
 7. **Sources Footer**
    - Numbered list from `D.sources[]` with clickable links
    - Archive URLs shown as fallback links
-
-8. **Microscope History Sidebar** (right rail)
-   - Past "Under the Microscope" deep-dives from `microscope.json`
 
 ---
 

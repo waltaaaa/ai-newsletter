@@ -659,28 +659,53 @@ def _persist_feed_health(feed_results: dict):
         pass  # feed health tracking is non-critical
 
 
-def _fetch_one(feed_id: str, meta: dict, days_back: int) -> list[dict]:
+def _fetch_one(feed_id: str, meta: dict, days_back: int) -> tuple[list[dict], int, str]:
     """Fetch a single RSS/Atom feed and return recent items. Never raises.
 
     Uses requests for the HTTP layer (handles SSL certs + User-Agent correctly),
     then passes raw content to feedparser for parsing.
+
+    Returns a (items, status_code, outcome) tuple so downstream telemetry can
+    distinguish "slow-but-alive / raise timeout" from "prune". The items list
+    flows on exactly as before; status/outcome is additive.
+
+      items   — list[dict] of recent items (possibly empty)
+      status  — real HTTP status code; 0 when the request never completed
+                (timeout / connection error)
+      outcome — one of {"ok", "http_error", "timeout", "dns", "parse_empty"}
+
+    Connect/read timeout split (8s connect, 25s read) recovers slow feeds —
+    CBC lineup feeds, ~77 Google-News-proxied feeds, and WordPress /feed/
+    endpoints that exceed the old single 10s budget.
     """
     url = meta['url']
+    status_code = 0
     try:
-        resp = requests.get(url, timeout=10, headers=_HEADERS)
+        resp = requests.get(url, timeout=(8, 25), headers=_HEADERS)
+        status_code = resp.status_code
         resp.raise_for_status()
         content_type = resp.headers.get('content-type', '')
         feed = feedparser.parse(resp.content, response_headers={'content-type': content_type})
         # bozo=True with no entries → truly broken (e.g. non-RSS HTML page)
         if feed.bozo and not feed.entries:
-            return []
-        return [
+            return [], status_code, "parse_empty"
+        items = [
             _entry_to_item(e, meta)
             for e in feed.entries
             if _is_recent(e, days_back)
         ]
+        if not items:
+            # HTTP 200 but no recent entries — empty-but-alive, not a failure.
+            return [], status_code, "parse_empty"
+        return items, status_code, "ok"
+    except requests.exceptions.Timeout:
+        return [], 0, "timeout"
+    except requests.exceptions.ConnectionError:
+        return [], 0, "dns"
+    except requests.exceptions.HTTPError:
+        return [], status_code, "http_error"
     except Exception:
-        return []
+        return [], status_code, "http_error"
 
 
 # ---------------------------------------------------------------------------
@@ -713,26 +738,34 @@ def fetch_all_feeds(
     print(f"  [RSS] Fetching {len(feeds)} {label} feeds (last {days_back}d)...",
           end=' ', flush=True)
 
-    feed_results = {}  # feed_id → {"alive": bool, "items": int}
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as ex:
+    feed_results = {}  # feed_id → {"alive": bool, "items": int, "status": int, "outcome": str}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=24) as ex:
         futures = {
             ex.submit(_fetch_one, fid, meta, days_back): fid
             for fid, meta in feeds.items()
         }
-        for future in concurrent.futures.as_completed(futures, timeout=300):
+        for future in concurrent.futures.as_completed(futures, timeout=600):
             fid = futures[future]
             try:
-                items = future.result(timeout=60)
+                items, status, outcome = future.result(timeout=90)
                 if items:
                     alive += 1
                     all_items.extend(items)
-                    feed_results[fid] = {"alive": True, "items": len(items)}
+                    feed_results[fid] = {"alive": True, "items": len(items),
+                                         "status": status, "outcome": outcome}
                 else:
                     dead += 1
-                    feed_results[fid] = {"alive": False, "items": 0}
-            except (concurrent.futures.TimeoutError, Exception):
+                    feed_results[fid] = {"alive": False, "items": 0,
+                                         "status": status, "outcome": outcome}
+            except concurrent.futures.TimeoutError:
+                # Future itself blew the per-feed budget — treat as a timeout.
                 dead += 1
-                feed_results[fid] = {"alive": False, "items": 0}
+                feed_results[fid] = {"alive": False, "items": 0,
+                                     "status": 0, "outcome": "timeout"}
+            except Exception:
+                dead += 1
+                feed_results[fid] = {"alive": False, "items": 0,
+                                     "status": 0, "outcome": "http_error"}
 
     print(f"{len(all_items)} items from {alive}/{alive + dead} feeds")
 
@@ -753,11 +786,18 @@ def fetch_all_feeds(
                 if not feed_url:
                     continue
                 items_count = int(result.get('items', 0) or 0)
-                # We don't track HTTP status in feed_results today — _fetch_one
-                # returns [] on any exception. status=0 == "unknown". Future
-                # patch can wire the real status code through.
-                status = 200 if items_count > 0 else 0
-                _feed_health.record_fetch(_conn, feed_url, status, items_count)
+                # Real HTTP status + outcome now flow through from _fetch_one
+                # (timeout/dns → 0, http_error → resp.status_code, ok/parse_empty
+                # → 200). This lets downstream gates tell "raise timeout" from
+                # "prune" instead of recording every failure identically.
+                status = int(result.get('status', 0) or 0)
+                outcome = result.get('outcome', '')
+                if outcome == "parse_empty":
+                    # HTTP succeeded but the feed had zero recent entries —
+                    # empty-but-alive, distinct from a 404 / network error.
+                    _feed_health.mark_empty(_conn, feed_url)
+                else:
+                    _feed_health.record_fetch(_conn, feed_url, status, items_count)
         finally:
             _conn.close()
     except Exception:

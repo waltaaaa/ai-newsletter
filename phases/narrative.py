@@ -1,11 +1,11 @@
-"""Phase 7: Narrative — Trends, market commentary, events, microscope, briefing"""
+"""Phase 7: Narrative — Trends, market commentary, events, briefing"""
 import traceback
 import asyncio as _aio
 from datetime import datetime
 
 
 def run(conn, context, logger):
-    """Generate trends, market commentary, microscope, and weekly briefing."""
+    """Generate trends, market commentary, and weekly briefing."""
     step_name = "Phase 7: Narrative"
     try:
         # Sector trend analysis
@@ -145,43 +145,6 @@ def run(conn, context, logger):
             if pre_event_analyses:
                 print(f"  [CALENDAR] {len(pre_event_analyses)} pre-event analyses generated")
 
-            # Under the Microscope
-            microscope_text = None
-            try:
-                from under_the_microscope import (
-                    select_microscope_topic, generate_microscope_analysis,
-                    store_microscope_history, get_affected_projects,
-                )
-                from db import save_dashboard_state
-
-                rss_items = context.get("rss_items", [])
-                topic_context = _aio.run(select_microscope_topic(
-                    conn, rss_items, indicator_data, xref_data,
-                    signal_context=signal_context,
-                ))
-                if topic_context and topic_context.get("topic"):
-                    print(f"  [MICROSCOPE] Topic: {topic_context['topic']}")
-                    affected = get_affected_projects(conn, topic_context)
-                    microscope_result = _aio.run(generate_microscope_analysis(
-                        topic_context, affected, indicator_data
-                    ))
-                    if microscope_result:
-                        microscope_text = microscope_result.get("text", "")
-                        store_microscope_history(conn, topic_context["topic"], microscope_text)
-                        save_dashboard_state(conn, "microscope_current", {
-                            "topic": topic_context["topic"],
-                            "sectors": topic_context.get("sectors", []),
-                            "text": microscope_text,
-                            "week": datetime.now().strftime("%Y-W%W"),
-                            "updated_at": datetime.now().isoformat()
-                        })
-                        cost = microscope_result.get("cost_usd", 0)
-                        print(f"  [MICROSCOPE] Generated: {len(microscope_text)} chars, ${cost:.4f}")
-                else:
-                    print("  [MICROSCOPE] No dominant topic identified")
-            except Exception as e:
-                print(f"  [MICROSCOPE] Failed: {type(e).__name__}: {e}")
-
             # Generate weekly briefing
             print("\n[BRIEFING] Generating weekly intelligence briefing...")
             briefing = _aio.run(generate_weekly_briefing(
@@ -192,7 +155,6 @@ def run(conn, context, logger):
                 market_commentary=market_commentary_text,
                 upcoming_events=upcoming_events,
                 pre_event_analyses=pre_event_analyses,
-                microscope_text=microscope_text,
                 signal_context=signal_context,
             ))
 

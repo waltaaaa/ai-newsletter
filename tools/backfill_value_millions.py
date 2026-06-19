@@ -3,7 +3,7 @@ backfill_value_millions.py — One-time heal: populate value_millions from parse
 
 value_millions was schema-defined but never written by the pipeline (only the
 Tavily cost batch set it), so ranking surfaces that sort by value_millions —
-under_the_microscope candidate selection, briefing value rollups — treated
+briefing value rollups — treated
 priced projects as $0. db.upsert_project now keeps the two columns in lockstep;
 this script heals the existing rows.
 

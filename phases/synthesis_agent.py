@@ -249,12 +249,6 @@ OUTPUT: Valid JSON only.
     }}
   ],
 
-  "microscope_recommendation": {{
-    "topic": "Recommended Under the Microscope topic",
-    "rationale": "Why this is the most significant story deserving a deep dive",
-    "research_points": ["Specific angles and data the deep dive should cover"]
-  }},
-
   "writer_notes": {{
     "tone_guidance": "Any specific tone considerations for this week's edition",
     "data_warnings": ["Any data points that need caveats or context"],
