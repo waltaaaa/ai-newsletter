@@ -5,114 +5,136 @@
       "name": "Agriculture, Forestry, Fishing & Hunting",
       "mm": "-1.1%",
       "yy": "+2.1%",
-      "analysis": "<p><span class=\"lead-sentence\">Agriculture, forestry, fishing and hunting GDP eased 1.1% month-over-month against a +2.1% year-over-year reading for the March reference month</span> &mdash; the monthly softening<sup>1</sup> sits against a backdrop of firmer farm-gate prices, with the Saskatchewan canola farm price at CAD$672.81/t in April, up 6.2% year-over-year and 1.8% month-over-month<sup>2</sup>. Potash proxy Nutrien closed the week at $92.23, up 12.0% year-over-year but down 1.9% week-over-week, easing one input-cost line for Prairie producers while keeping the annual comparison elevated<sup>3</sup>.</p><p><span class=\"lead-sentence\">The Agriculture and Forestry pipeline tracks 733 active projects at $8.2B in priced value, split $3.5B agriculture and $4.7B forestry</span> &mdash; the Canada Food Security Strategy<sup>4</sup>, a $3.2B Ontario-led federal program, was added at Proposed status on 2026-06-11, while Drake Meat Processors entered Under Construction in Saskatoon and Atlas Engineered Products Advanced Wood Manufacturing Facility in Clinton, Ontario, reached Approved status this week<sup>5</sup>.</p><p><span class=\"lead-sentence\">If canola holds above CAD$670/t and the potash month-over-month softening continues, Prairie farm-gate margins would see input relief into Q3</span> &mdash; only 2 of 464 priced Agriculture rows carry stated values, so the directional read is from commodities and named additions rather than aggregate dollars<sup>6</sup>. Procurement.json has been empty for eight consecutive weeks, removing visibility into federal agri-program contract awards<sup>7</sup>.</p>",
+      "trend": "flat",
+      "projectCount": 734,
+      "analysis": "<p><span class=\"lead-sentence\">Agriculture, forestry, fishing and hunting sector GDP fell 1.1% month-over-month in the March 2026 reference period while holding up 2.1% year-over-year</span> — the split reading<sup>1</sup> tracks two sub-sectors moving in opposite directions, with the Saskatchewan farm canola price at $672.81 per tonne, unchanged on the week but up 1.8% month-over-month and 6.2% year-over-year.<sup>2</sup> China cut its combined anti-dumping and countervail tariff on Canadian canola seed to roughly 14.9% effective March 1, 2026, down from a combined level near 84%, restoring access for approximately $4B per year of seed exports after China's 2025 canola imports fell nearly 50% under the prior tariffs.<sup>3</sup></p><p><span class=\"lead-sentence\">Forestry contracted as 21 permanent or indefinite British Columbia and Canada mill closures since 2023 removed roughly 15,000 forest-sector jobs since 2022</span> — Domtar permanently closed its Crofton, BC NBSK pulp facility (about 350 employees), even as lumber futures settled at $633.00, up 2.2% on the week and 6.4% over the month.<sup>4</sup><sup>5</sup> The potash and fertilizer proxy Nutrien traded at $88.73, down 6.2% on the week and 8.4% over the month, a softer input-cost signal for grain growers.<sup>2</sup></p><p><span class=\"lead-sentence\">The project database tracks 734 combined agriculture and forestry records carrying roughly $8.2B in pipeline value</span> — about 269 of those records sit in forestry and hold $4.7B.<sup>6</sup> If China's reduced canola tariff holds through 2026, the roughly $4B per year seed export channel would remain open for Saskatchewan, Alberta, and Manitoba growers.<sup>3</sup></p>",
+      "sources": [
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity prices — canola, Nutrien (dashboard commodities.json)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701"},
+        {"id": 3, "title": "Global Affairs Canada — Renewed market access with China", "url": "https://www.canada.ca/en/global-affairs/news/2026/03/canada-secures-renewed-market-access-with-china-to-boost-exports-and-strengthen-economic-collaboration.html"},
+        {"id": 4, "title": "Domtar — Crofton, BC NBSK pulp facility closure", "url": "https://www.domtar.com/en/news"},
+        {"id": 5, "title": "Lumber futures (dashboard commodities.json)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810020501"},
+        {"id": 6, "title": "Canadian Capital Projects Database — agriculture & forestry", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"}
+      ],
       "industrySources": [
-        {"id": 1, "title": "StatCan Industry GDP — NAICS 11 (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "StatCan Farm Product Prices — Canola Saskatchewan (Table 32-10-0077-01)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701"},
-        {"id": 3, "title": "Nutrien Ltd (NTR) — Potash proxy, commodities.json", "url": "https://finance.yahoo.com/quote/NTR/"},
-        {"id": 4, "title": "Canada Food Security Strategy — projects_all.json (Proposed, 2026-06-11)", "url": "https://www.canada.ca/en/agriculture-agri-food.html"},
-        {"id": 5, "title": "Drake Meat Processors Saskatoon + Atlas Engineered Products — projects_all.json", "url": "https://atlasengineeredproducts.com/"},
-        {"id": 6, "title": "Agriculture priced-pipeline coverage — projects_all.json (2026-06-15)", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/projects_all.json"},
-        {"id": 7, "title": "Procurement publishing gap — pipeline_status.json (2026-06-15)", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/pipeline_status.json"}
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity prices — canola, Nutrien (dashboard commodities.json)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701"},
+        {"id": 3, "title": "Global Affairs Canada — Renewed market access with China", "url": "https://www.canada.ca/en/global-affairs/news/2026/03/canada-secures-renewed-market-access-with-china-to-boost-exports-and-strengthen-economic-collaboration.html"},
+        {"id": 4, "title": "Domtar — Crofton, BC NBSK pulp facility closure", "url": "https://www.domtar.com/en/news"},
+        {"id": 5, "title": "Lumber futures (dashboard commodities.json)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810020501"},
+        {"id": 6, "title": "Canadian Capital Projects Database — agriculture & forestry", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"}
       ],
       "isNegative": false,
       "subsectors": [
         {"code": "111", "name": "Crop Production"},
-        {"code": "112", "name": "Animal Production"},
+        {"code": "112", "name": "Animal Production & Aquaculture"},
         {"code": "113", "name": "Forestry & Logging"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-1.1%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:11"},
-        {"label": "Sector GDP (Y/Y)", "value": "+2.1%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:11"},
-        {"label": "Canola farm price (SK)", "value": "$672.81/t", "delta": "+6.2% Y/Y, +1.8% M/M", "source": "commodities.json:canola"},
-        {"label": "Potash proxy (Nutrien)", "value": "$92.23", "delta": "+12.0% Y/Y, -1.9% W/W", "source": "commodities.json:potash_nutrien"},
-        {"label": "Active Projects (Agri+Forestry)", "value": "733", "delta": "3 new this week (Agri)", "source": "projects_all.json:sector=Agriculture+forestry"},
-        {"label": "Priced Pipeline Value", "value": "$8.2B", "delta": "agri $3.5B / forestry $4.7B", "source": "projects_all.json:parsed_value"}
-      ],
-      "trend": "down",
-      "projectCount": 733
+        {"label": "Sector GDP (M/M)", "value": "-1.1%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:11.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+2.1%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:11.yy"},
+        {"label": "Canola (SK farm price)", "value": "$672.81/tonne", "delta": "+1.8% M/M, +6.2% Y/Y", "source": "commodities.json:canola"},
+        {"label": "Potash/Nutrien proxy", "value": "$88.73", "delta": "-6.2% week, -8.4% month", "source": "commodities.json:potash_nutrien"},
+        {"label": "Lumber futures", "value": "$633.00", "delta": "+2.2% week, +6.4% month", "source": "commodities.json:lumber"},
+        {"label": "Active Projects", "value": "734", "delta": "+1 since 2026-06-13", "source": "projects_all.json:sector=agriculture+forestry"}
+      ]
     },
     {
       "code": "21",
       "name": "Mining, Quarrying & Oil/Gas Extraction",
       "mm": "-2.1%",
       "yy": "-1.5%",
-      "analysis": "<p><span class=\"lead-sentence\">Mining, quarrying and oil and gas extraction GDP contracted 2.1% month-over-month and 1.5% year-over-year in the March reference month, the largest month-over-month decline in the goods table</span> &mdash; the StatCan reading<sup>1</sup> diverges sharply from spot and equity benchmarks for the sector's outputs, with the nickel proxy at 45.41, up 111.6% year-over-year and 12.2% week-over-week, iron ore (Vale) at 16.15, up 79.1% year-over-year, and uranium spot at 27.07, up 16.1% year-over-year<sup>2</sup>. Cameco closed at $149.80, up 59.4% year-over-year, consistent with a supply-side response in uranium markets<sup>3</sup>.</p><p><span class=\"lead-sentence\">The Mining and oil/gas pipeline tracks 778 projects at $248.3B in priced value, split $184.8B mining and $63.5B oil and gas, with 8 mining files now Under Review in the federal Impact Assessment Registry</span> &mdash; new this week: Eranova Metals BC Molybdenum, FireFly Metals Green Bay Copper in Newfoundland and Labrador, and Marinvest Energy Baie-Comeau LNG Export in Quebec<sup>4</sup>. Glencore Horne Smelter Emissions Reduction was filed at $300M proposed in Quebec, sitting at the NAICS 21/31-33 boundary<sup>5</sup>.</p><p><span class=\"lead-sentence\">The divergence between -2.1% month-over-month output and +111.6% year-over-year nickel suggests volume declines and IAAC review pauses are outweighing price-driven revenue gains in the StatCan series</span> &mdash; if nickel and iron ore hold near current levels, breakeven economics for the 651 mining-tagged projects shift, and the Eranova, FireFly, and Glencore Horne files would advance through IAAC and provincial environmental assessment more readily<sup>6</sup>. The empty procurement.json file removes visibility into federal critical-minerals contract awards<sup>7</sup>.</p>",
+      "trend": "down",
+      "projectCount": 812,
+      "analysis": "<p><span class=\"lead-sentence\">Mining, quarrying and oil and gas extraction GDP contracted 2.1% month-over-month and 1.5% year-over-year in the March 2026 reference period</span> — the contraction<sup>1</sup> ran against sharply higher metal prices, with the nickel proxy at $43.01, up 18.6% over the month and 100.3% year-over-year, and the iron ore proxy at $15.42, up 85.4% year-over-year.<sup>2</sup> Cameco traded at $151.07, up 7.1% on the week and 60.5% year-over-year, tracking Saskatchewan uranium expansion and the small modular reactor supply chain.<sup>2</sup></p><p><span class=\"lead-sentence\">The federal government announced 30 critical-minerals partnerships in March 2026 unlocking $12.1B in project capital, plus $3.6B in new programs including a $1.5B First and Last Mile Fund and a $2B Critical Minerals Sovereign Fund</span> — the Major Projects Office prioritized 13 projects, five of which are critical-mineral mines: McIlvenna Bay (copper), Red Chris (copper), Crawford (nickel), Matawinie (graphite), and Sisson (tungsten), with combined economic activity exceeding $60B.<sup>3</sup> New records this period include BHP Jansen Stage 2 potash, Saskatchewan, $6.9B (Approved), and Horne 5 polymetallic, Quebec, $2.4B.<sup>4</sup></p><p><span class=\"lead-sentence\">The project database holds 812 mining and oil and gas records totalling roughly $298.6B, with 32 first tracked since June 13 — the highest new-discovery count of any sector this window</span> — capital commitments precede production, so the pipeline grew even as sector GDP fell.<sup>5</sup> If nickel and uranium prices hold near current levels, the five Major Projects Office critical-mineral mines and Saskatchewan potash and uranium expansions would advance.<sup>3</sup></p>",
+      "sources": [
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity prices — nickel, iron ore, Cameco (dashboard commodities.json)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 3, "title": "Natural Resources Canada — 30 critical minerals partnerships, $12.1B", "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html"},
+        {"id": 4, "title": "Canadian Capital Projects Database — BHP Jansen Stage 2, Horne 5", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 5, "title": "Canadian Capital Projects Database — mining & oil/gas", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"}
+      ],
       "industrySources": [
-        {"id": 1, "title": "StatCan Industry GDP — NAICS 21 (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Commodities snapshot — nickel, iron ore, uranium (commodities.json)", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/commodities.json"},
-        {"id": 3, "title": "Cameco Corp (CCO.TO) — uranium equity proxy", "url": "https://finance.yahoo.com/quote/CCO.TO/"},
-        {"id": 4, "title": "Eranova Metals BC, FireFly Metals Green Bay NL, Marinvest Baie-Comeau LNG — projects_all.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/projects_all.json"},
-        {"id": 5, "title": "Glencore Horne Smelter Emissions Reduction (QC, $300M Proposed) — projects_all.json", "url": "https://www.glencore.ca/en/who-we-are/operations/horne-smelter"},
-        {"id": 6, "title": "Mining pipeline — 651 projects, $184.8B priced — projects_all.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/projects_all.json"},
-        {"id": 7, "title": "Procurement publishing gap — pipeline_status.json (2026-06-15)", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/pipeline_status.json"}
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity prices — nickel, iron ore, Cameco (dashboard commodities.json)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 3, "title": "Natural Resources Canada — 30 critical minerals partnerships, $12.1B", "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html"},
+        {"id": 4, "title": "Canadian Capital Projects Database — BHP Jansen Stage 2, Horne 5", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 5, "title": "Canadian Capital Projects Database — mining & oil/gas", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"}
       ],
       "isNegative": true,
       "subsectors": [
         {"code": "211", "name": "Oil & Gas Extraction"},
-        {"code": "212", "name": "Mining (except Oil & Gas)"},
-        {"code": "213", "name": "Support Activities for Mining"}
+        {"code": "212", "name": "Mining & Quarrying (except Oil & Gas)"},
+        {"code": "213", "name": "Support Activities for Mining & Oil/Gas"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-2.1%", "delta": "largest goods M/M decline", "source": "industry_gdp.json:21"},
-        {"label": "Sector GDP (Y/Y)", "value": "-1.5%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:21"},
-        {"label": "Nickel proxy", "value": "45.41", "delta": "+111.6% Y/Y, +12.2% W/W", "source": "commodities.json:nickel"},
-        {"label": "Iron ore (Vale)", "value": "16.15", "delta": "+79.1% Y/Y, +7.7% W/W", "source": "commodities.json:iron_ore"},
-        {"label": "Uranium spot (U-UN.TO)", "value": "27.07", "delta": "+16.1% Y/Y, +4.5% W/W", "source": "commodities.json:uranium_spot"},
-        {"label": "Cameco Corp", "value": "$149.80", "delta": "+59.4% Y/Y", "source": "commodities.json:cameco_uranium"},
-        {"label": "Active Projects", "value": "778", "delta": "24 new this week", "source": "projects_all.json:sector=mining+oil_gas"},
-        {"label": "Priced Pipeline Value", "value": "$248.3B", "delta": "mining $184.8B + oil_gas $63.5B", "source": "projects_all.json:parsed_value"}
-      ],
-      "trend": "down",
-      "projectCount": 778
+        {"label": "Sector GDP (M/M)", "value": "-2.1%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:21.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-1.5%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:21.yy"},
+        {"label": "Nickel proxy", "value": "$43.01", "delta": "+18.6% month, +100.3% Y/Y", "source": "commodities.json:nickel"},
+        {"label": "Cameco (uranium)", "value": "$151.07", "delta": "+7.1% week, +60.5% Y/Y", "source": "commodities.json:cameco_uranium"},
+        {"label": "Iron ore (Vale proxy)", "value": "$15.42", "delta": "+0.4% week, +85.4% Y/Y", "source": "commodities.json:iron_ore"},
+        {"label": "Active Projects", "value": "812", "delta": "+32 since 2026-06-13", "source": "projects_all.json:sector=mining+oil_gas+Energy"}
+      ]
     },
     {
       "code": "22",
-      "name": "Utilities",
+      "name": "Utilities (Electricity, Gas, Water)",
       "mm": "+0.0%",
       "yy": "-1.6%",
-      "analysis": "<p><span class=\"lead-sentence\">Utilities GDP printed flat month-over-month and -1.6% year-over-year for the March reference month, while the TSX Infrastructure basket closed at 57.56, up 33.0% year-over-year and 2.9% month-over-month</span> &mdash; the StatCan output reading<sup>1</sup> runs counter to equity-market signals for the sector<sup>2</sup>. Uranium spot at 27.07 (+16.1% year-over-year) is the relevant feedstock benchmark for the small modular reactor supply chain that links NAICS 22 generation projects to NAICS 21 mining inputs<sup>3</sup>.</p><p><span class=\"lead-sentence\">Power and energy is the single largest tracked sector by value at 936 active projects and $614.3B in priced pipeline</span> &mdash; new this week: Red Lake Transmission Line in Ontario (Proposed); Des Neiges Wind Farm Secteur Sud and Charlevoix phases at $3.0B (Quebec, Under Construction); Sydney 300MW Hybrid Wind+BESS (Nova Scotia, Proposed); Brighton Mountain Wind (New Brunswick); and Manitoba Large-Scale Hydroelectric Dam<sup>4</sup>. Bill S-4 (45-1), An Act to amend the Energy Efficiency Act, received first reading on 2026-06-05, with equipment-standard implications across NAICS 22, 23, and 31-33<sup>5</sup>.</p><p><span class=\"lead-sentence\">The 33.0% year-over-year gain in the TSX Infrastructure basket alongside the -1.6% year-over-year GDP print indicates equity allocation has run ahead of measured output across the 936 utilities projects</span> &mdash; if Bill S-4 advances past first reading, equipment-standard tightening would pull-forward retrofit demand. If Sydney NS BESS and Red Lake Transmission move from Proposed to Approved, NAICS 22 capex velocity would accelerate, and uranium price strength supports the Saskatchewan uranium-feedstock investment thesis<sup>6</sup>.</p>",
+      "trend": "flat",
+      "projectCount": 936,
+      "analysis": "<p><span class=\"lead-sentence\">Utilities sector GDP was flat month-over-month (+0.0%) and down 1.6% year-over-year in the March 2026 reference period</span> — the reading<sup>1</sup> sits against the single largest tracked project pipeline of any NAICS bucket, 936 power and energy records totalling roughly $614.3B.<sup>2</sup> The uranium proxy traded at $26.86, up 3.9% on the week and 8.7% year-over-year, underpinning small modular reactor economics, while the Canadian infrastructure equity basket eased 0.6% on the week to $57.45 but held up 35.0% year-over-year.<sup>3</sup></p><p><span class=\"lead-sentence\">Ontario Power Generation applied in March 2026 to the Canadian Nuclear Safety Commission for a Licence to Operate the first Darlington small modular reactor</span> — governments committed up to $3B to the first unit within a $20.9B four-reactor program, and the federal nuclear and electricity strategy advancing through 2026 carries Wesleyville (up to 10,000 MW) and Bruce Power (up to 4,800 MW).<sup>4</sup> Rose Valley Wind in Saskatchewan ($164.4M) entered construction this period with Canada Infrastructure Bank and First Nations backing.<sup>2</sup></p><p><span class=\"lead-sentence\">Nuclear and small modular reactor capital is pre-construction and not yet reflected in current utilities GDP</span> — British Columbia's 2025 call for power links to 138 affected projects in the policy tracker.<sup>5</sup> If the Canadian Nuclear Safety Commission licence and the federal electricity strategy proceed on schedule, the reactor programs would convert committed capital into multi-year construction activity.<sup>4</sup></p>",
+      "sources": [
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Canadian Capital Projects Database — power & energy", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 3, "title": "Commodity prices — uranium spot, TSX infrastructure (dashboard commodities.json)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 4, "title": "Ontario Power Generation — Darlington SMR program", "url": "https://www.opg.com/projects-services/projects/nuclear/smr/darlington-smr/"},
+        {"id": 5, "title": "BC Government — 2025 call for power", "url": "https://news.gov.bc.ca/releases/2026ECS0014-000552"}
+      ],
       "industrySources": [
-        {"id": 1, "title": "StatCan Industry GDP — NAICS 22 (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "TSX Infrastructure basket — commodities.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/commodities.json"},
-        {"id": 3, "title": "Uranium spot (U-UN.TO) — commodities.json", "url": "https://finance.yahoo.com/quote/U-UN.TO/"},
-        {"id": 4, "title": "Red Lake Transmission, Des Neiges Wind, Sydney BESS, Brighton Mountain, MB Hydro — projects_all.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/projects_all.json"},
-        {"id": 5, "title": "Bill S-4 (45-1) — An Act to amend the Energy Efficiency Act", "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-4"},
-        {"id": 6, "title": "Power and energy pipeline — 936 projects, $614.3B priced — projects_all.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/projects_all.json"}
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Canadian Capital Projects Database — power & energy", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 3, "title": "Commodity prices — uranium spot, TSX infrastructure (dashboard commodities.json)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 4, "title": "Ontario Power Generation — Darlington SMR program", "url": "https://www.opg.com/projects-services/projects/nuclear/smr/darlington-smr/"},
+        {"id": 5, "title": "BC Government — 2025 call for power", "url": "https://news.gov.bc.ca/releases/2026ECS0014-000552"}
       ],
       "isNegative": true,
       "subsectors": [
-        {"code": "221", "name": "Electric Power Generation, Transmission & Distribution"},
+        {"code": "2211", "name": "Electric Power Generation, Transmission & Distribution"},
         {"code": "2212", "name": "Natural Gas Distribution"},
         {"code": "2213", "name": "Water, Sewage & Other Systems"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "+0.0%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:22"},
-        {"label": "Sector GDP (Y/Y)", "value": "-1.6%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:22"},
-        {"label": "TSX Infrastructure basket", "value": "57.56", "delta": "+33.0% Y/Y, +2.9% M/M", "source": "commodities.json:tsx_infrastructure"},
-        {"label": "Uranium spot (SMR feedstock)", "value": "27.07", "delta": "+16.1% Y/Y", "source": "commodities.json:uranium_spot"},
-        {"label": "Active Projects", "value": "936", "delta": "15+ new this week (power_energy)", "source": "projects_all.json:sector=power_energy"},
-        {"label": "Priced Pipeline Value", "value": "$614.3B", "delta": "largest tracked sector", "source": "projects_all.json:parsed_value"}
-      ],
-      "trend": "flat",
-      "projectCount": 936
+        {"label": "Sector GDP (M/M)", "value": "+0.0%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:22.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-1.6%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:22.yy"},
+        {"label": "Uranium (Sprott proxy)", "value": "$26.86", "delta": "+3.9% week, +8.7% Y/Y", "source": "commodities.json:uranium_spot"},
+        {"label": "TSX infrastructure basket", "value": "$57.45", "delta": "-0.6% week, +35.0% Y/Y", "source": "commodities.json:tsx_infrastructure"},
+        {"label": "Active Projects", "value": "936", "delta": "largest tracked pipeline", "source": "projects_all.json:sector=power_energy+Energy"},
+        {"label": "Tracked Pipeline Value", "value": "$614.27B", "delta": "across 936 records", "source": "projects_all.json:sector=power_energy+Energy"}
+      ]
     },
     {
       "code": "23",
       "name": "Construction",
       "mm": "-0.6%",
       "yy": "-1.5%",
-      "analysis": "<p><span class=\"lead-sentence\">Construction GDP fell 0.6% month-over-month and 1.5% year-over-year for the March reference month, while three of the sector's primary input commodities rose week-over-week</span> &mdash; the SLX steel ETF closed at $111.39, up 73.4% year-over-year and 4.7% week-over-week<sup>1</sup>; iron ore (Vale) at 16.15, up 79.1% year-over-year and 7.7% week-over-week<sup>2</sup>; lumber futures at $630.50, up 7.9% month-over-month and 3.0% week-over-week<sup>3</sup>. The combined steel and iron-ore moves directly compress fixed-price contractor margins on infrastructure bids.</p><p><span class=\"lead-sentence\">The construction pipeline (infrastructure + residential + commercial_mixed) is the broadest by count at 2,005 active projects with $288.7B in priced value, split $223.9B infrastructure, $36.2B residential, and $28.6B commercial mixed-use</span> &mdash; new this week: Alberton Wastewater and Stormwater (Prince Edward Island, Approved); Rideau Canal Wall Repairs (Ontario, Under Review); and Parks Canada Brazeau Lake Bridge Replacement (Alberta, Under Review), with 18 infrastructure rows added in total<sup>4</sup>. Bill S-4 (45-1) building-code amendments received first reading on 2026-06-05 with implications for new construction equipment standards<sup>5</sup>.</p><p><span class=\"lead-sentence\">Job Bank Atom feed postings for 2026-06-15 were concentrated in construction trades — concrete, framing, electrical, roofing, masonry — across Toronto, Vancouver, Calgary, Edmonton, Winnipeg, Regina, and Saint John, indicating labour demand has not retraced with the GDP reading</span> &mdash; if steel and iron ore hold above current levels, fixed-price infrastructure bids would re-price upward on the next tender cycle, and if lumber stabilizes month-over-month, residential builders would see input-cost relief on the 271 residential-tagged projects<sup>6</sup>.</p>",
+      "trend": "down",
+      "projectCount": 1926,
+      "analysis": "<p><span class=\"lead-sentence\">Construction sector GDP fell 0.6% month-over-month and 1.5% year-over-year in the March 2026 reference period</span> — housing starts fell 6% to 261,377 SAAR in May 2026 from 278,380 in April, and building permits totalled $12.5B in April, down 7.6% month-over-month from a January peak of $13.3B.<sup>1</sup> Lumber futures settled at $633.00, up 2.2% on the week and 6.4% over the month, a residential framing input, while the steel proxy eased 3.4% on the week to $105.35 yet remains up 68.3% year-over-year.<sup>2</sup></p><p><span class=\"lead-sentence\">Construction led May employment gains at +27,000 (+1.7%) even as the sector's output and start rate declined</span> — non-residential construction capital expenditure is projected at $274.0B for 2026 (+5.9%) against projected non-residential starts of -7.8% year-over-year.<sup>1</sup> The federal Build Communities Strong Fund ($51B) links to 2,196 affected projects and Ontario's Budget 2026 ten-year capital plan ($210B) links to 412.<sup>3</sup></p><p><span class=\"lead-sentence\">The project database tracks 1,926 infrastructure, residential, and housing records totalling roughly $265.5B, up 14 since June 13</span> — new this period are the Fraser River (George Massey) Tunnel, BC, $4.15B (Approved), and a BC homebuilding fees reduction and condo conversion program, $3.2B (Proposed).<sup>4</sup> If lumber and steel input costs hold near current levels and federal and provincial infrastructure funds disburse, the pipeline would continue absorbing labour despite the start-rate decline.<sup>3</sup></p>",
+      "sources": [
+        {"id": 1, "title": "Statistics Canada — housing starts, building permits, GDP by NAICS", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410015801"},
+        {"id": 2, "title": "Commodity prices — lumber, steel (dashboard commodities.json)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 3, "title": "Infrastructure Canada — Build Communities Strong Fund; Ontario Budget 2026", "url": "https://www.infrastructure.gc.ca/plan/build-communities-strong-eng.html"},
+        {"id": 4, "title": "Canadian Capital Projects Database — infrastructure & residential", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"}
+      ],
       "industrySources": [
-        {"id": 1, "title": "Steel proxy (SLX ETF) — commodities.json", "url": "https://www.globalxetfs.com/funds/slx/"},
-        {"id": 2, "title": "Iron ore (Vale, VALE) — commodities.json", "url": "https://finance.yahoo.com/quote/VALE/"},
-        {"id": 3, "title": "Lumber futures (LBR) — commodities.json", "url": "https://www.cmegroup.com/markets/agriculture/lumber-and-pulp/lumber.html"},
-        {"id": 4, "title": "Alberton Wastewater PE, Rideau Canal ON, Brazeau Lake AB — projects_all.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/projects_all.json"},
-        {"id": 5, "title": "Bill S-4 (45-1) — An Act to amend the Energy Efficiency Act", "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-4"},
-        {"id": 6, "title": "Construction pipeline — 2,005 projects, $288.7B priced + Job Bank Atom postings — jobs.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/jobs.json"}
+        {"id": 1, "title": "Statistics Canada — housing starts, building permits, GDP by NAICS", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410015801"},
+        {"id": 2, "title": "Commodity prices — lumber, steel (dashboard commodities.json)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 3, "title": "Infrastructure Canada — Build Communities Strong Fund; Ontario Budget 2026", "url": "https://www.infrastructure.gc.ca/plan/build-communities-strong-eng.html"},
+        {"id": 4, "title": "Canadian Capital Projects Database — infrastructure & residential", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"}
       ],
       "isNegative": true,
       "subsectors": [
@@ -122,50 +144,51 @@
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-0.6%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:23"},
-        {"label": "Sector GDP (Y/Y)", "value": "-1.5%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:23"},
-        {"label": "Steel proxy (SLX ETF)", "value": "$111.39", "delta": "+73.4% Y/Y, +4.7% W/W", "source": "commodities.json:steel"},
-        {"label": "Iron ore (Vale)", "value": "16.15", "delta": "+79.1% Y/Y, +7.7% W/W", "source": "commodities.json:iron_ore"},
-        {"label": "Lumber futures", "value": "$630.50", "delta": "+7.9% M/M, +3.0% W/W", "source": "commodities.json:lumber"},
-        {"label": "Active Projects", "value": "2,005", "delta": "37+ new this week (infra+resi+commercial)", "source": "projects_all.json:sector=infrastructure+residential+commercial_mixed"},
-        {"label": "Priced Pipeline Value", "value": "$288.7B", "delta": "infra $223.9B + resi $36.2B + commercial $28.6B", "source": "projects_all.json:parsed_value"}
-      ],
-      "trend": "down",
-      "projectCount": 2005
+        {"label": "Sector GDP (M/M)", "value": "-0.6%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:23.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-1.5%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:23.yy"},
+        {"label": "Lumber futures", "value": "$633.00", "delta": "+2.2% week, +6.4% month", "source": "commodities.json:lumber"},
+        {"label": "Steel (SLX proxy)", "value": "$105.35", "delta": "-3.4% week, +68.3% Y/Y", "source": "commodities.json:steel"},
+        {"label": "Construction Employment (May)", "value": "+27,000", "delta": "+1.7% M/M", "source": "research_sectors.md:LFS May 2026"},
+        {"label": "Active Projects", "value": "1,926", "delta": "+14 since 2026-06-13", "source": "projects_all.json:sector=infrastructure+residential+Housing"}
+      ]
     },
     {
       "code": "31-33",
       "name": "Manufacturing",
       "mm": "+0.4%",
       "yy": "-2.5%",
-      "analysis": "<p><span class=\"lead-sentence\">Manufacturing GDP rose 0.4% month-over-month while remaining down 2.5% year-over-year, the largest year-over-year decline in the goods table</span> &mdash; the month-over-month stabilization<sup>1</sup> coincides with sharp moves in the sector's primary input commodities: steel SLX at $111.39, up 73.4% year-over-year<sup>2</sup>; iron ore at 16.15, up 79.1% year-over-year<sup>3</sup>; nickel proxy at 45.41, up 111.6% year-over-year, feeding directly into EV battery cathode economics for the Ontario and Quebec EV supply chain<sup>4</sup>.</p><p><span class=\"lead-sentence\">The manufacturing pipeline tracks 362 active projects at $85.4B in priced value, with 6 rows added this week</span> &mdash; CGC Inc. Wheatland County Wallboard Manufacturing Plant ($210M, Alberta) reached Complete status, and Glencore Horne Smelter Emissions Reduction was filed at $300M proposed in Quebec, the largest new-this-week capex point<sup>5</sup>. Manufacturing job postings concentrated in Toronto (Del Industrial Metals, Powerline Plus, Qualified Metal Fabricators, Fiera Foods), Halifax (IMP Aerospace and Defence), and Montreal<sup>6</sup>.</p><p><span class=\"lead-sentence\">The +0.4% month-over-month against -2.5% year-over-year suggests partial stabilization within a still-contracting annual trajectory</span> &mdash; if the month-over-month direction carries forward and steel and iron-ore prices retrace, the year-over-year gap would narrow into Q3. If nickel strength persists, EV-battery-aligned manufacturing files in Ontario and Quebec gain capex pull, and Bill S-4 (45-1) equipment-standard amendments would land on industrial-process retrofits across the 362 tracked projects<sup>7</sup>.</p>",
+      "trend": "down",
+      "projectCount": 365,
+      "analysis": "<p><span class=\"lead-sentence\">Manufacturing sector GDP rose 0.4% month-over-month but fell 2.5% year-over-year in the March 2026 reference period, the steepest annual goods-sector contraction</span> — the annual decline<sup>1</sup> is concentrated in tariff-exposed metals, with the steel proxy at $105.35, down 3.4% on the week yet up 68.3% year-over-year, and the nickel proxy at $43.01, up 100.3% year-over-year as a battery-cell input.<sup>2</sup> Downstream aluminum manufacturing is down 14% and aluminum output is down about 2% to September under U.S. tariff measures.<sup>3</sup></p><p><span class=\"lead-sentence\">Canada extended its steel and aluminum tariff measures for one year in June 2026, maintaining tariff-rate quotas for non-CUSMA imports with above-quota volumes subject to a 50% tariff</span> — support includes a $5B Strategic Response Fund and $1B in BDC financing.<sup>4</sup> The electric vehicle and battery buildout continues, with Northvolt Six near Montreal expected to begin operations in 2026 (30 GWh, expanding to 60), NextStar (Stellantis and LG) in Windsor at over $5B invested, and Honda Alliston at C$15B.<sup>5</sup></p><p><span class=\"lead-sentence\">The project database tracks 365 manufacturing records totalling roughly $85.4B, up 2 since June 13</span> — primary metal and food manufacturing sit alongside transportation equipment, where the battery buildout concentrates.<sup>5</sup> If U.S. Section 232 tariffs and the extended Canadian measures persist, tariff-exposed metals manufacturing would stay pressured while battery commissioning could add capacity through 2026.<sup>4</sup></p>",
+      "sources": [
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity prices — steel, nickel (dashboard commodities.json)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 3, "title": "Aluminum and downstream manufacturing output under U.S. tariffs", "url": "https://www.canada.ca/en/department-finance.html"},
+        {"id": 4, "title": "Department of Finance Canada — steel & aluminum tariff measures extended", "url": "https://www.canada.ca/en/department-finance/news/2026/06/canada-to-extend-steel-and-aluminum-tariff-measures-to-support-workers-and-businesses.html"},
+        {"id": 5, "title": "Canadian Capital Projects Database — manufacturing (Northvolt, NextStar, Honda)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"}
+      ],
       "industrySources": [
-        {"id": 1, "title": "StatCan Industry GDP — NAICS 31-33 (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Steel proxy (SLX ETF) — commodities.json", "url": "https://www.globalxetfs.com/funds/slx/"},
-        {"id": 3, "title": "Iron ore (Vale, VALE) — commodities.json", "url": "https://finance.yahoo.com/quote/VALE/"},
-        {"id": 4, "title": "Nickel proxy — commodities.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/commodities.json"},
-        {"id": 5, "title": "CGC Wheatland AB Complete + Glencore Horne QC Proposed — projects_all.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/projects_all.json"},
-        {"id": 6, "title": "Manufacturing job postings — Toronto/Halifax/Montreal — jobs.json", "url": "https://walterbolduc.github.io/can-macro-dashboard/data/jobs.json"},
-        {"id": 7, "title": "Bill S-4 (45-1) — equipment standards implications", "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-4"}
+        {"id": 1, "title": "Statistics Canada — Industry GDP by NAICS (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"},
+        {"id": 2, "title": "Commodity prices — steel, nickel (dashboard commodities.json)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"},
+        {"id": 3, "title": "Aluminum and downstream manufacturing output under U.S. tariffs", "url": "https://www.canada.ca/en/department-finance.html"},
+        {"id": 4, "title": "Department of Finance Canada — steel & aluminum tariff measures extended", "url": "https://www.canada.ca/en/department-finance/news/2026/06/canada-to-extend-steel-and-aluminum-tariff-measures-to-support-workers-and-businesses.html"},
+        {"id": 5, "title": "Canadian Capital Projects Database — manufacturing (Northvolt, NextStar, Honda)", "url": "https://walter-bolduc.github.io/can-macro-dashboard/"}
       ],
       "isNegative": true,
       "subsectors": [
         {"code": "311", "name": "Food Manufacturing"},
-        {"code": "326", "name": "Plastics & Rubber Products"},
+        {"code": "331", "name": "Primary Metal Manufacturing"},
         {"code": "336", "name": "Transportation Equipment Manufacturing"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "+0.4%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:31-33"},
-        {"label": "Sector GDP (Y/Y)", "value": "-2.5%", "delta": "largest Y/Y goods decline", "source": "industry_gdp.json:31-33"},
-        {"label": "Steel proxy (SLX ETF)", "value": "$111.39", "delta": "+73.4% Y/Y input cost", "source": "commodities.json:steel"},
-        {"label": "Nickel proxy", "value": "45.41", "delta": "+111.6% Y/Y, EV battery feed", "source": "commodities.json:nickel"},
-        {"label": "Iron ore (Vale)", "value": "16.15", "delta": "+79.1% Y/Y input cost", "source": "commodities.json:iron_ore"},
-        {"label": "Active Projects", "value": "362", "delta": "6 new this week", "source": "projects_all.json:sector=Manufacturing"},
-        {"label": "Priced Pipeline Value", "value": "$85.4B", "delta": "ref 2026-06-15", "source": "projects_all.json:parsed_value"}
-      ],
-      "trend": "down",
-      "projectCount": 362
+        {"label": "Sector GDP (M/M)", "value": "+0.4%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:31-33.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-2.5%", "delta": "largest goods y/y contraction", "source": "industry_gdp.json:31-33.yy"},
+        {"label": "Steel (SLX proxy)", "value": "$105.35", "delta": "-3.4% week, +68.3% Y/Y", "source": "commodities.json:steel"},
+        {"label": "Nickel proxy", "value": "$43.01", "delta": "+18.6% month, +100.3% Y/Y", "source": "commodities.json:nickel"},
+        {"label": "Iron ore (Vale proxy)", "value": "$15.42", "delta": "+85.4% Y/Y", "source": "commodities.json:iron_ore"},
+        {"label": "Active Projects", "value": "365", "delta": "+2 since 2026-06-13", "source": "projects_all.json:sector=manufacturing"}
+      ]
     }
   ]
 }

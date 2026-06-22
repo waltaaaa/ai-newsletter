@@ -3,17 +3,17 @@
     "ON": {
       "name": "Ontario",
       "threshold": 500000000,
-      "qualifying": 90,
-      "qualifying_value": 296547804723.13,
-      "tracked_unpriced": 576,
+      "qualifying": 91,
+      "qualifying_value": 297167804723.13,
+      "tracked_unpriced": 601,
       "stale": 0
     },
     "QC": {
       "name": "Quebec",
       "threshold": 250000000,
-      "qualifying": 93,
-      "qualifying_value": 117641321307.38,
-      "tracked_unpriced": 392,
+      "qualifying": 95,
+      "qualifying_value": 120316321307.38,
+      "tracked_unpriced": 402,
       "stale": 0
     },
     "AB": {
@@ -27,17 +27,17 @@
     "BC": {
       "name": "British Columbia",
       "threshold": 175000000,
-      "qualifying": 307,
-      "qualifying_value": 484876955110.55,
-      "tracked_unpriced": 305,
+      "qualifying": 311,
+      "qualifying_value": 508126955110.55,
+      "tracked_unpriced": 318,
       "stale": 0
     },
     "SK": {
       "name": "Saskatchewan",
       "threshold": 45000000,
-      "qualifying": 46,
-      "qualifying_value": 39071458169.98,
-      "tracked_unpriced": 119,
+      "qualifying": 48,
+      "qualifying_value": 52871458169.98,
+      "tracked_unpriced": 122,
       "stale": 0
     },
     "MB": {
@@ -45,15 +45,15 @@
       "threshold": 40000000,
       "qualifying": 88,
       "qualifying_value": 44014589684.76,
-      "tracked_unpriced": 1865,
+      "tracked_unpriced": 1867,
       "stale": 0
     },
     "NS": {
       "name": "Nova Scotia",
       "threshold": 25000000,
-      "qualifying": 57,
-      "qualifying_value": 20241312434.2,
-      "tracked_unpriced": 258,
+      "qualifying": 58,
+      "qualifying_value": 22741312434.2,
+      "tracked_unpriced": 264,
       "stale": 0
     },
     "NB": {
@@ -61,7 +61,7 @@
       "threshold": 20000000,
       "qualifying": 58,
       "qualifying_value": 7386739530.0,
-      "tracked_unpriced": 114,
+      "tracked_unpriced": 115,
       "stale": 0
     },
     "NL": {
@@ -69,7 +69,7 @@
       "threshold": 17000000,
       "qualifying": 68,
       "qualifying_value": 88518326385.16998,
-      "tracked_unpriced": 1437,
+      "tracked_unpriced": 1444,
       "stale": 0
     },
     "PE": {
@@ -91,8 +91,8 @@
     "NT": {
       "name": "Northwest Territories",
       "threshold": 3000000,
-      "qualifying": 87,
-      "qualifying_value": 44266999947.57001,
+      "qualifying": 88,
+      "qualifying_value": 46766999947.57001,
       "tracked_unpriced": 123,
       "stale": 0
     },
@@ -105,5 +105,5 @@
       "stale": 0
     }
   },
-  "exported_at": "2026-06-15T19:41:32.041408+00:00"
+  "exported_at": "2026-06-22T12:31:35.622881+00:00"
 }

@@ -1,17 +1,15 @@
 {
-  "market_commentary": "<p><span class=\"lead-sentence\">Canadian equities advanced as crude oil retreated in the week ending June 12</span> — the S&P/TSX Composite gained 1.52% to 34,937.90<sup>37</sup> while WTI crude fell 11.74% to $80.58/bbl<sup>37</sup>, partially reversing recent supply-shock premium. The S&P 500 rose 0.65% to 7,431.46 and the Nasdaq added 0.70% to 25,888.84<sup>37</sup>. The Canadian dollar slipped 0.40% against the US dollar to 0.7148 CAD/USD<sup>37</sup>, with the Bank of Canada holding its overnight rate at 2.25% on June 10<sup>1</sup>. The project database tracks 6,426 active Canadian capital projects valued at $1,536.5B in aggregate<sup>38</sup>.</p><p><span class=\"lead-sentence\">Pipeline cross-references split along rate and commodity lines</span> — all 6,426 active projects ($1,536.5B) finance against the Government of Canada yield curve anchored by the 2.25% policy rate, with the 5Y benchmark at 3.04% serving as the residential mortgage-renewal anchor for 257 residential projects ($36.2B)<sup>1</sup>. The 2s10s spread sits at 64 basis points after bull-flattening over the past year<sup>37</sup>. If WTI holds below the $74-76 breakeven band cited for Alberta oil-sands records, 89 active oil and gas projects ($63.2B) would face renewed margin pressure<sup>38</sup>, while copper at $6.5085/lb (+35.59% YoY) links to 532 active mining projects ($183.4B)<sup>37</sup>.</p>",
+  "market_commentary": "<p><span class=\"lead-sentence\">Crude oil retreated into the Canadian oil-sands breakeven band while equities held flat since the last edition</span> — WTI crude fell to $75.43/bbl, down 6.4% from the prior edition's baseline<sup>32</sup>, settling inside the $74-76 breakeven cluster the cross-reference engine cites for 91 active oil and gas projects ($63.2B)<sup>32</sup>. The S&P/TSX Composite traded at 34,969, up 0.1%, and the S&P 500 stood at 7,501, up 0.5% over the same span<sup>32</sup>. The Canadian dollar eased 1.3% to 0.7066 CAD/USD as the Bank of Canada's overnight rate held at 2.25% following its June 10 decision<sup>1</sup>. The database tracks 6,485 active capital projects valued at $1,620.8B<sup>32</sup>.</p><p><span class=\"lead-sentence\">Pipeline exposure splits along rate and commodity lines</span> — 1,862 active rate-sensitive construction projects ($284.2B) finance against the Government of Canada curve, anchored by the 5-year benchmark at 3.04%, the mortgage-renewal reference<sup>1</sup>. If WTI holds at or below the $74-76 band, the 91 oil and gas projects ($63.2B) would sit at the lower edge of their cited breakevens<sup>32</sup>. Copper eased 2.0% since the last edition to $6.38/lb, while remaining 35.6% above its year-ago level, against 551 active mining projects ($199.9B)<sup>32</sup>.</p>",
   "market_commentary_callout": {
     "title": "Pipeline Cross-Reference",
     "items": [
-      {"label": "Total active pipeline", "value": "6,426 projects", "amount": "$1,536.5B"},
-      {"label": "Residential rate-anchored", "value": "257 projects", "amount": "$36.2B"},
-      {"label": "Oil & gas breakeven exposure", "value": "89 projects", "amount": "$63.2B"},
-      {"label": "Mining commodity-linked", "value": "532 projects", "amount": "$183.4B"}
+      {"label": "Rate-sensitive construction", "value": "1,862 projects", "amount": "$284.2B"},
+      {"label": "Oil & gas breakeven exposure", "value": "91 projects", "amount": "$63.2B"},
+      {"label": "Mining commodity-linked", "value": "551 projects", "amount": "$199.9B"}
     ]
   },
   "sources": [
-    {"id": 1, "title": "Bank of Canada — Rate Decision press release, June 10, 2026", "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/"},
-    {"id": 37, "title": "Pipeline data — docs/data/timeseries.json (commodity, FX, index, yield spot values)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json"},
-    {"id": 38, "title": "Pipeline data — docs/data/projects_all.json (project counts and aggregate value)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/projects_all.json"}
+    {"id": 1, "title": "Bank of Canada — Rate Decision press release, June 10 2026", "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/"},
+    {"id": 32, "title": "Pipeline data — docs/data/timeseries.json (commodities, FX, indices, yields) and project counts", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json"}
   ]
 }

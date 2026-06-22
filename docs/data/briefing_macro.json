@@ -1,23 +1,47 @@
 {
-  "headline": "Bank of Canada Holds at 2.25% as May Unemployment Sits at 6.6% and Housing Starts Reach 279,317 SAAR",
+  "headline": "Bank of Canada Holds at 2.25% as May CPI Snapshots +2.8% and Housing Starts Climb to 279,317 SAAR",
   "edition": "EDITION: Jun 15 – Jun 22 // STATUS: AI-SYNTHESIZED",
-  "week_of": "2026-06-15",
-  "generated_at": "2026-06-15T18:45:00+00:00",
-  "updated_at": "2026-06-15",
-  "executive_summary": "<p><span class=\"lead-sentence\">The Bank of Canada held the overnight rate at 2.25% on June 10, the second consecutive hold, paired with the June Monetary Policy Report</span> — the 5Y Government of Canada benchmark sits at 3.04%, the residential mortgage-renewal anchor, while the 2s10s spread sits +64 basis points and has bull-flattened over both the one-month and one-year windows.<sup>1</sup> All 6,426 active Canadian projects ($1,536.5B aggregate) finance against the GoC yield curve anchored by the policy rate, and 257 residential projects ($36.2B) price renewals against the 5Y tenor.<sup>2</sup></p><p><span class=\"lead-sentence\">Statistics Canada reported real GDP at basic prices contracted 0.1% m/m in March 2026, released May 15, with an April flash estimate of +0.4%</span> — manufacturing (NAICS 31-33) advanced 0.4% m/m but remained -2.5% y/y, while construction (NAICS 23) fell 0.6% m/m and -1.5% y/y.<sup>3</sup> The manufacturing reading links to 346 active manufacturing projects ($70.0B); the construction reading links to 1,497 active infrastructure projects ($214.0B).<sup>3</sup> Mining and oil and gas (NAICS 21) fell 2.1% m/m and -1.5% y/y, mapping to 532 mining and 89 oil and gas projects totalling $246.6B.<sup>3</sup></p><p><span class=\"lead-sentence\">The May Labour Force Survey, released June 6, recorded the unemployment rate at 6.6%, the participation rate at 65.0%, and the employment rate at 60.7%</span> — average hourly wages fell 1.4% m/m to $37.24, reflecting a composition shift in which accommodation and food employment rose 4.3% m/m to 1,204,200 positions and retail employment fell 1.8% m/m to 2,237,500 positions.<sup>4</sup> CMHC reported May housing starts at 279,317 SAAR, up 6.9% m/m, with the April unadjusted total at 21,805 units (+33.0% m/m); the new housing price index fell 0.4% m/m in April, the first negative print after consecutive flat-to-rising months.<sup>17</sup></p><p><span class=\"lead-sentence\">The week ahead carries a dense calendar of releases that will reset the inflation and rate picture</span> — Statistics Canada publishes formal May CPI on June 17, the FOMC announces its rate decision and Summary of Economic Projections the same day under new Chair Kevin Warsh, and the Bank of England Monetary Policy Committee meets June 18 with Bank Rate at 3.75%.<sup>5</sup><sup>21</sup><sup>28</sup> The European Central Bank raised its deposit facility +25 basis points to 2.25% effective June 17, narrowing the ECB-BoC deposit differential to zero.<sup>26</sup></p>",
+  "week_of": "2026-06-22",
+  "generated_at": "2026-06-22T12:00:00Z",
+  "updated_at": "2026-06-22",
+  "executive_summary": "<p><span class=\"lead-sentence\">The Bank of Canada held its overnight rate at 2.25% on June 10, a second consecutive hold delivered alongside the latest Monetary Policy Report</span> — the decision leaves 1,862 active rate-sensitive construction projects ($284.3B) financing against a Government of Canada curve whose 5-year benchmark sits at 3.04%, the mortgage-renewal anchor for residential and commercial borrowers.<sup>1</sup> The next scheduled decision is July 9, sequenced one week after US June payrolls.<sup>2</sup></p><p><span class=\"lead-sentence\">Headline CPI registered +2.8% year-over-year on the latest snapshot, up 0.4 percentage points, with the formal May print scheduled for June 17</span> — core-trim and core-median both sit at 2.0%, while April component detail recorded energy +28.6% y/y, food +3.8% y/y, and shelter +1.8% y/y.<sup>5</sup> Average hourly wage fell 1.4% month-over-month to $37.24 in May, set against the +2.8% headline pace.<sup>4</sup></p><p><span class=\"lead-sentence\">Monthly real GDP declined 0.1% in March 2026, with the April GDP-by-industry release scheduled for June 24</span> — mining, quarrying and oil-and-gas extraction GDP fell 2.1% month-over-month and manufacturing GDP ran 2.5% below year-ago levels, even as April manufacturing sales rose 4.2% m/m to $77,052.9M.<sup>3</sup><sup>6</sup> The database tracks 346 active manufacturing projects ($70.0B) and 642 mining/oil-and-gas projects ($263.1B) against those readings.</p><p><span class=\"lead-sentence\">Unemployment held at 6.6% in May while housing starts rose to 279,317 SAAR, up 6.9% from the April pace of 261,377</span> — the employment rate stood at 60.7% and participation at 65.0%, with accommodation and food employment up 4.3% m/m against retail down 1.8% m/m.<sup>4</sup> April residential building permits fell 5.5% m/m and non-residential permits fell 10.5% m/m, even as starts advanced; the database tracks 272 active residential projects ($41.6B).<sup>8</sup><sup>17</sup></p><p><span class=\"lead-sentence\">WTI crude settled at $80.58/bbl, down 11.7% on the week and 23.6% over the month, framing the energy-export picture into next week's data calendar</span> — the price remains above the $74–76 breakeven cluster the cross-reference engine cites for 91 active oil-and-gas projects ($63.2B), and April energy exports rose 9.7% m/m to $19.88B.<sup>14</sup> The June 17 CPI print and FOMC decision, the June 24 April GDP release, and the July 9 Bank of Canada decision sequence the indicators that will reset this picture.<sup>5</sup><sup>21</sup></p>",
   "national": {
-    "analysis": "<p><span class=\"lead-sentence\">Statistics Canada's March 2026 monthly GDP print, released May 15, recorded a 0.1% m/m contraction at basic prices, with an April advance flash estimate of +0.4%</span> — twenty NAICS industry readings show goods-producing sector weakness concentrated in mining and oil and gas (NAICS 21) at -2.1% m/m and -1.5% y/y, and in construction (NAICS 23) at -0.6% m/m and -1.5% y/y, against services-producing strength in wholesale trade (+1.8% m/m), arts, entertainment and recreation (+2.0% m/m), and public administration (+0.4% m/m).<sup>3</sup> Manufacturing (NAICS 31-33) advanced 0.4% m/m but remained -2.5% y/y, linking to 346 active manufacturing projects ($70.0B) in the project database.<sup>3</sup></p><p><span class=\"lead-sentence\">The May Labour Force Survey, released June 6, recorded unemployment at 6.6%, unchanged m/m, with the participation rate at 65.0% and the employment rate at 60.7%</span> — sector employment shifted toward lower-wage industries, with accommodation and food rising 4.3% m/m to 1,204,200, agriculture rising 8.6% m/m to 240,100, and construction rising 0.5% m/m, while retail trade fell 1.8% m/m to 2,237,500, manufacturing fell 0.5% m/m to 243,200, and mining and oil and gas fell 0.5% m/m to 343,000.<sup>4</sup> Average hourly wages fell 1.4% m/m to $37.24, a reading consistent with the composition shift.<sup>9</sup></p><p><span class=\"lead-sentence\">Manufacturing sales reached $77,052.9 million in April, up 4.2% m/m, and wholesale trade reached $138,830.0 million, up 2.8% m/m</span> — both readings sit above their three-month moving averages and link respectively to 346 manufacturing and to broader transport and warehousing project flows tracked across 628 active projects ($54.0B).<sup>6</sup><sup>7</sup> April merchandise exports stood at $66.3 billion per the StatCan section, with energy exports up 9.7% m/m to $19.88 billion and agri-food exports up 8.9% m/m, while mineral exports fell 7.9% m/m.<sup>14</sup> The energy export strength sits against a WTI tape down 11.7% w/w to $80.58/bbl, which the cross-reference engine links to 89 active oil and gas projects ($63.2B).<sup>37</sup></p><p><span class=\"lead-sentence\">CMHC reported May housing starts at 279,317 SAAR, up 6.9% m/m from 261,377 SAAR in April, with the April unadjusted total at 21,805 units (singles 3,063, multi 18,742)</span> — multi-unit starts rose 34.3% m/m and single starts rose 25.4% m/m relative to March.<sup>17</sup> Residential permits fell 5.5% m/m to $7,482.9 million and non-residential permits fell 10.5% m/m to $5,008.2 million in April per Statistics Canada 34-10-0292, while the new housing price index fell 0.4% m/m to 121.1 in April, the first negative print after flat-to-rising months.<sup>8</sup><sup>10</sup> The headline housing starts reading links to 257 residential projects ($36.2B) in the project database.<sup>17</sup></p><p><span class=\"lead-sentence\">Statistics Canada's quarterly household income, consumption and saving release for Q1 2026 recorded the household savings rate at 3.5%, down 0.2 percentage points q/q from 3.7% in Q4 2025, with household disposable income at $1,811,968 million (+0.6% q/q)</span> — non-residential capital expenditure intentions for 2026 stand at $401,203 million, up 3.7% y/y per Statistics Canada 34-10-0035.<sup>11</sup><sup>12</sup> The Department of Finance Spring Economic Update 2026 set out $51 billion in infrastructure commitments alongside a new sovereign fund and an expansion of the Investment Tax Credit to cover CCUS-EOR, which the cross-reference engine maps against 1,497 active infrastructure projects ($214.0B) and the broader power and energy sector that tracks 936 active projects ($614.3B).<sup>18</sup><sup>19</sup></p>",
+    "analysis": "<p><span class=\"lead-sentence\">Monthly real GDP contracted 0.1% in March 2026, down 0.2 percentage points from the +0.1% February pace, according to Statistics Canada</span> — the April GDP-by-industry release is scheduled for June 24 and will carry sectoral detail across all 20 NAICS industries.<sup>3</sup> The March decline was led by goods-producing industries: mining, quarrying and oil-and-gas extraction fell 2.1% month-over-month, and on a year-over-year basis manufacturing ran 2.5% below 2025 levels while mining sat 1.5% lower and construction 1.5% lower.</p><p><span class=\"lead-sentence\">Industry GDP diverged sharply across services in the March reference month</span> — finance and insurance rose 3.6% y/y, information and cultural industries 3.2% y/y, and transportation and warehousing 3.1% y/y, against management of companies and enterprises at -22.7% y/y, a small, volatile aggregate.<sup>3</sup> Manufacturing told a two-speed story: GDP -2.5% y/y while April manufacturing sales rose 4.2% m/m to $77,052.9M and wholesale sales rose 2.8% m/m to $138,830.0M.<sup>6</sup><sup>7</sup> The database tracks 346 active manufacturing projects ($70.0B).</p><p><span class=\"lead-sentence\">The labour market held its level in May, with unemployment at 6.6% and the employment rate at 60.7%</span> — participation stood at 65.0% and average hourly wage fell 1.4% m/m to $37.24.<sup>4</sup><sup>9</sup> By industry, accommodation and food employment rose 4.3% m/m while retail employment fell 1.8% m/m. The next Labour Force Survey, covering June, is scheduled for July 3.</p><p><span class=\"lead-sentence\">The Bank of Canada held the overnight rate at 2.25% on June 10, its second consecutive hold</span> — the decision was paired with the Monetary Policy Report and leaves the 5-year Government of Canada benchmark at 3.04% as the mortgage-renewal anchor for 1,862 active rate-sensitive construction projects ($284.3B).<sup>1</sup> Headline CPI registered +2.8% y/y on the latest snapshot with the formal May print due June 17; core-trim and core-median both held at 2.0%.<sup>5</sup></p><p><span class=\"lead-sentence\">Housing starts rose to 279,317 SAAR in May, up 6.9% from the April pace of 261,377, even as April building permits declined</span> — residential permits fell 5.5% m/m and non-residential permits fell 10.5% m/m, and the new housing price index eased 0.4% m/m to 121.1 in April.<sup>8</sup><sup>10</sup><sup>17</sup> The database tracks 272 active residential projects ($41.6B). On trade, April merchandise exports reached $66.3B, with energy exports up 9.7% m/m to $19.88B; WTI crude settled at $80.58/bbl, down 11.7% on the week and 23.6% over the month, above the $74–76 breakeven cluster cited for 91 active oil-and-gas projects ($63.2B).<sup>14</sup> Capital expenditure intentions for 2026 stand at $401,203M, up 3.7% y/y.<sup>11</sup></p><p><span class=\"lead-sentence\">Across the broader sector map, services GDP held up against goods-producing weakness in the March reference month</span> — retail trade GDP rose 0.8% y/y and wholesale trade 1.0% y/y, real estate, rental and leasing 1.8% y/y, and public administration 1.1% y/y, against arts, entertainment and recreation up 3.5% y/y.<sup>3</sup> Household disposable income reached $1,811,968M in Q1 2026, up 0.6% q/q, while the savings rate eased to 3.5% from 3.7%.<sup>12</sup> The database tracks 6,485 active projects valued at $1,620.8B, with 135 newly recorded this week, spanning the rate-sensitive construction, residential, and energy pipelines that finance against the indicators above.</p>",
     "sources": [
-      {"id": 1, "title": "Bank of Canada — Rate Decision press release, June 10, 2026", "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/"},
-      {"id": 3, "title": "StatCan Daily — Real GDP by industry, March 2026 (released May 15)", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260515/dq260515a-eng.htm"},
-      {"id": 4, "title": "StatCan Daily — Labour Force Survey, May 2026 (released June 6)", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"},
-      {"id": 6, "title": "StatCan 16-10-0047 — Manufacturing sales by industry", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701"},
-      {"id": 14, "title": "StatCan 12-10-0163 — Merchandise trade by section, April 2026", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=12100163"},
-      {"id": 17, "title": "CMHC — Monthly Housing Starts Construction Data Tables", "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables"},
-      {"id": 18, "title": "Department of Finance Canada — Spring Economic Update 2026", "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/pdf/update-miseajour2026-eng.pdf"}
-    ]
+      {
+        "id": 1,
+        "title": "Bank of Canada — Rate Decision press release, June 10 2026",
+        "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/"
+      },
+      {
+        "id": 3,
+        "title": "Statistics Canada — Monthly GDP, May 15 2026",
+        "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260515/dq260515a-eng.htm"
+      },
+      {
+        "id": 4,
+        "title": "Statistics Canada — Labour Force Survey, June 6 2026",
+        "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"
+      },
+      {
+        "id": 5,
+        "title": "Statistics Canada — Consumer Price Index portal",
+        "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/cpi-ipc-eng.htm"
+      },
+      {
+        "id": 8,
+        "title": "Statistics Canada 34-10-0292 — Building permits",
+        "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201"
+      },
+      {
+        "id": 17,
+        "title": "CMHC — Monthly Housing Starts Data Tables",
+        "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables"
+      }
+    ],
+    "chart_callout": ""
   },
-  "consumer_pulse": "<p><span class=\"lead-sentence\">Headline CPI sits at +2.8% y/y on the May reference snapshot while average hourly wages fell 1.4% m/m to $37.24 in the May Labour Force Survey</span> — the gap between price and wage readings continues to surface in cost-of-living trackers, with cost of living, housing affordability, and inflation among the highest-frequency topics this week.<sup>4</sup><sup>5</sup> The household savings rate fell to 3.5% in Q1 2026 from 3.7% in Q4 2025 per Statistics Canada 36-10-0112, the lowest reading in two quarters.<sup>12</sup></p><p><span class=\"lead-sentence\">Mortgage and housing-cost signals dominate the consumer picture</span> — the 5Y Government of Canada yield at 3.04% is the residential mortgage-renewal anchor, down 15 basis points y/y, while the new housing price index fell 0.4% m/m in April, the first negative print after flat-to-rising months.<sup>1</sup><sup>10</sup> CMHC reported May housing starts at 279,317 SAAR, up 6.9% m/m, with multi-unit starts up 34.3% m/m relative to March.<sup>17</sup></p><p><span class=\"lead-sentence\">Energy and food prices shape the goods basket</span> — WTI crude fell 11.7% w/w to $80.58/bbl from $105.42 a month ago, a partial reversal of the recent supply-shock premium, with pass-through to retail gasoline pending.<sup>37</sup> Sector employment shifted toward lower-wage industries, with accommodation and food up 4.3% m/m and retail down 1.8% m/m in May, a composition that helps explain the m/m drop in average hourly wages.<sup>4</sup> The Department of Finance Spring Economic Update 2026 committed $51 billion in infrastructure spending, established a new sovereign fund, and expanded the Investment Tax Credit to CCUS-EOR, signals that show up in the federal budget and infrastructure topics tracked across the week.<sup>18</sup></p>",
+  "consumer_pulse": "<p><span class=\"lead-sentence\">Cost-of-living pressure framed the consumer picture, with headline CPI at +2.8% y/y while average hourly wage fell 1.4% m/m to $37.24 in May</span> — April component detail recorded food +3.8% y/y and shelter +1.8% y/y, and the new housing price index eased 0.4% m/m to 121.1, its first negative print after flat-to-rising months.<sup>5</sup><sup>9</sup><sup>10</sup> The 5-year Government of Canada yield at 3.04% sets the mortgage-renewal anchor.</p><p><span class=\"lead-sentence\">Energy costs eased over the month as WTI crude fell to $80.58/bbl from $96.60 a month earlier, lowering a gasoline-relevant input</span> — by contrast, April energy CPI ran 28.6% above year-ago levels.<sup>5</sup><sup>14</sup> The household savings rate stood at 3.5% in Q1 2026, down 0.2 percentage points from 3.7%, with disposable income up 0.6% q/q; the 2-year Government of Canada yield at 2.76%, down 22 bps y/y, lowers the GIC anchor.<sup>12</sup></p><p><span class=\"lead-sentence\">Labour and fiscal signals rounded out the picture across the hard data stack</span> — accommodation and food employment rose 4.3% m/m against retail down 1.8% m/m, while the federal Spring Economic Update 2026 committed $51B in infrastructure, a sovereign fund, and a CCUS-EOR tax-credit expansion.<sup>4</sup><sup>18</sup> Housing starts rose to 279,317 SAAR in May, up 6.9% from the April pace, while the new housing price index eased 0.4% m/m to 121.1.<sup>10</sup><sup>17</sup> A CUSMA review remains open alongside tariff threats referenced in the prior edition.<sup>20</sup></p>",
   "global": [
     {
       "region": "United States",
@@ -29,11 +53,41 @@
         "tradeBalance": "Mar 2026 latest"
       },
       "indicatorMeta": {
-        "gdp": {"period": "Q1 2026 (SPF)", "obsDate": "2026-02-14", "source": "Philadelphia Fed Survey of Professional Forecasters", "change": "Full-year 2026 +2.5%", "prev": "n/a"},
-        "cpi": {"period": "March core", "obsDate": "2026-04-15", "source": "BLS", "change": "vs +2.8% a year prior", "prev": "+2.8%"},
-        "rate": {"period": "Decision pending June 16-17 FOMC + SEP", "obsDate": "2026-04-29", "source": "FOMC", "change": "Hold widely priced", "prev": "3.50-3.75%"},
-        "unemployment": {"period": "May 2026 (June 5 release)", "obsDate": "2026-06-05", "source": "BLS", "change": "Q1 private payroll growth >2.5x 2025 monthly avg", "prev": "4.3%"},
-        "tradeBalance": {"period": "Mar 2026 latest available", "obsDate": "2026-05-05", "source": "BEA", "change": "n/a this week", "prev": "n/a"}
+        "gdp": {
+          "period": "Q1 2026",
+          "obsDate": "2026-02-15",
+          "source": "Philadelphia Fed (SPF)",
+          "change": "n/a",
+          "prev": "+2.5%"
+        },
+        "cpi": {
+          "period": "Mar 2026",
+          "obsDate": "2026-04-15",
+          "source": "BLS (core)",
+          "change": "n/a",
+          "prev": "+2.7%"
+        },
+        "rate": {
+          "period": "Apr 29 2026",
+          "obsDate": "2026-04-29",
+          "source": "FOMC",
+          "change": "0 bps",
+          "prev": "3.50-3.75%"
+        },
+        "unemployment": {
+          "period": "May 2026",
+          "obsDate": "2026-06-05",
+          "source": "BLS",
+          "change": "n/a",
+          "prev": "4.4%"
+        },
+        "tradeBalance": {
+          "period": "Mar 2026",
+          "obsDate": "2026-05-06",
+          "source": "BEA",
+          "change": "n/a",
+          "prev": "n/a"
+        }
       },
       "indicatorSources": {
         "gdp": "Philadelphia Fed (SPF Q1 2026)",
@@ -42,12 +96,17 @@
         "unemployment": "US Bureau of Labor Statistics",
         "tradeBalance": "US Bureau of Economic Analysis"
       },
-      "analysis": "<p><span class=\"lead-sentence\">The Federal Open Market Committee meets June 16-17 with a Summary of Economic Projections, the first decision under new Chair Kevin Warsh after Jerome Powell exited May 15</span> — the federal funds target range stands at 3.50-3.75% and a hold is widely priced into futures, sustaining a Fed-BoC differential of approximately +125 basis points (US ceiling 3.75% versus BoC 2.25%) and a CAD/USD reading of 0.7148.<sup>21</sup> Core CPI at +2.6% y/y on the March reference (BLS April 15 release) compares to +2.8% a year prior, and the May unemployment rate at 4.4% sits 0.1 percentage points above the April reading.<sup>23</sup><sup>24</sup></p><p><span class=\"lead-sentence\">The Philadelphia Fed Survey of Professional Forecasters recorded Q1 2026 GDP at +2.6% with a full-year 2026 forecast of +2.5%, and Q1 private payroll growth ran more than 2.5x the 2025 monthly average</span> — the CUSMA review remains open and a Trump administration 100% tariff threat over Canada-China dealings overhangs 346 active Canadian manufacturing projects ($70.0B) tracked in the project database.<sup>22</sup> The next US labour reading, the June Employment Situation, publishes July 2, one week before the Bank of Canada July 9 rate decision.<sup>24</sup></p>",
+      "analysis": "<p><span class=\"lead-sentence\">The Federal Reserve held its funds target at 3.50–3.75% from the April 29 decision and meets June 16–17 with an updated Summary of Economic Projections, the first decision under Chair Kevin Warsh</span> — the Philadelphia Fed Survey of Professional Forecasters records Q1 2026 GDP at +2.6% and full-year growth at +2.5%, with core CPI at +2.6% y/y on the March reference.<sup>21</sup><sup>22</sup><sup>23</sup> The Fed–BoC differential sits near +125 bps against the BoC at 2.25%, sustaining CAD/USD at 0.7161, down 2.63% y/y. CUSMA renegotiation and tariff threats overhang 346 active Canadian manufacturing projects ($70.0B).</p>",
       "sources": [
-        {"id": 21, "title": "Federal Reserve — FOMC Calendar (June 16-17 SEP meeting)", "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"},
-        {"id": 22, "title": "Philadelphia Fed — Survey of Professional Forecasters Q1 2026", "url": "https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/spf-q1-2026"},
-        {"id": 23, "title": "US Bureau of Labor Statistics — CPI portal", "url": "https://www.bls.gov/cpi/"},
-        {"id": 24, "title": "US Bureau of Labor Statistics — Employment Situation schedule", "url": "https://www.bls.gov/schedule/news_release/empsit.htm"}
+        {
+          "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+        },
+        {
+          "url": "https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/spf-q1-2026"
+        },
+        {
+          "url": "https://www.bls.gov/cpi/"
+        }
       ]
     },
     {
@@ -60,11 +119,41 @@
         "tradeBalance": "N/A"
       },
       "indicatorMeta": {
-        "gdp": {"period": "Q1 2026 latest available", "obsDate": "2026-04-16", "source": "China NBS", "change": "n/a this week", "prev": "n/a"},
-        "cpi": {"period": "May 2026 latest available", "obsDate": "2026-06-10", "source": "China NBS", "change": "n/a this week", "prev": "n/a"},
-        "rate": {"period": "May 20 LPR fixing (unchanged)", "obsDate": "2026-05-20", "source": "PBOC 1Y LPR", "change": "0 bps", "prev": "3.10%"},
-        "unemployment": {"period": "May 2026 urban surveyed", "obsDate": "2026-06-15", "source": "China NBS", "change": "n/a this week", "prev": "n/a"},
-        "tradeBalance": {"period": "May 2026 customs", "obsDate": "2026-06-09", "source": "China General Administration of Customs", "change": "n/a this week", "prev": "n/a"}
+        "gdp": {
+          "period": "N/A",
+          "obsDate": "N/A",
+          "source": "China NBS",
+          "change": "n/a",
+          "prev": null
+        },
+        "cpi": {
+          "period": "N/A",
+          "obsDate": "N/A",
+          "source": "China NBS",
+          "change": "n/a",
+          "prev": null
+        },
+        "rate": {
+          "period": "May 20 2026 fixing",
+          "obsDate": "2026-05-20",
+          "source": "PBOC (1-year LPR)",
+          "change": "0 bps",
+          "prev": "3.10%"
+        },
+        "unemployment": {
+          "period": "N/A",
+          "obsDate": "N/A",
+          "source": "China NBS (urban surveyed)",
+          "change": "n/a",
+          "prev": null
+        },
+        "tradeBalance": {
+          "period": "N/A",
+          "obsDate": "N/A",
+          "source": "China Customs",
+          "change": "n/a",
+          "prev": null
+        }
       },
       "indicatorSources": {
         "gdp": "China NBS",
@@ -73,10 +162,11 @@
         "unemployment": "China NBS (urban surveyed)",
         "tradeBalance": "China General Administration of Customs"
       },
-      "analysis": "<p><span class=\"lead-sentence\">The China National Bureau of Statistics May Manufacturing PMI stood at 50.0, down 0.3 points m/m, with the production sub-index at 51.2 and the new orders sub-index at 49.9, the latter in contraction</span> — the Composite PMI rose 0.4 points to 50.5, with high-technology manufacturing at 52.9 and equipment manufacturing at 52.1.<sup>25</sup> Large enterprises printed 51.1 while small and medium enterprises printed 48.5-48.6, an SME-skew divergence echoed in the Caixin private survey beat of consensus.<sup>25</sup> The People's Bank of China held the 1-year Loan Prime Rate at 3.10% at the May 20 fixing.<sup>25</sup></p><p><span class=\"lead-sentence\">USD/CNY stood at 6.76, down 1.8% y/y on a yuan-stronger basis</span> — copper at $6.51/lb, up 15.7% y/y per timeseries.json, and the iron ore proxy reflect sustained China industrial demand framing. The project database tracks 532 active Canadian mining projects ($183.4B) and 935 active power and energy projects ($614.3B) downstream of Asian metals demand.<sup>37</sup></p>",
+      "analysis": "<p><span class=\"lead-sentence\">China's May NBS Manufacturing PMI printed at the 50.0 expansion threshold, down 0.3 points on the month, with the new-orders sub-index at 49.9 in contraction</span> — the composite PMI rose 0.4 points to 50.5, with high-tech manufacturing at 52.9 and equipment manufacturing at 52.1, while the People's Bank of China held the 1-year loan prime rate at the May 20 fixing.<sup>25</sup> Copper at $6.51/lb, up 35.59% y/y, and the iron-ore proxy up 16.10% y/y frame sustained industrial demand against 551 active Canadian mining projects ($199.9B). USD/CNY stands at 6.76, down 6.02% y/y.</p>",
       "sources": [
-        {"id": 25, "title": "China NBS — May 2026 PMI release", "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html"},
-        {"id": 37, "title": "Pipeline data — docs/data/timeseries.json (commodity, FX, index, yield spot values)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json"}
+        {
+          "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html"
+        }
       ]
     },
     {
@@ -89,11 +179,41 @@
         "tradeBalance": "N/A"
       },
       "indicatorMeta": {
-        "gdp": {"period": "Q1 2026", "obsDate": "2026-05-15", "source": "Eurostat", "change": "ECB SPF full-year 2026 +0.9%", "prev": "n/a"},
-        "cpi": {"period": "April HICP (highest since 2023)", "obsDate": "2026-05-19", "source": "Eurostat", "change": "Core +2.5%", "prev": "n/a"},
-        "rate": {"period": "ECB deposit facility (effective June 17)", "obsDate": "2026-06-11", "source": "ECB", "change": "+25 bps", "prev": "2.00%"},
-        "unemployment": {"period": "N/A", "obsDate": "N/A", "source": "Eurostat (not cited this cycle)", "change": "n/a this week", "prev": "n/a"},
-        "tradeBalance": {"period": "N/A", "obsDate": "N/A", "source": "Eurostat (not cited this cycle)", "change": "n/a this week", "prev": "n/a"}
+        "gdp": {
+          "period": "Q1 2026",
+          "obsDate": "2026-05-15",
+          "source": "Eurostat",
+          "change": "n/a",
+          "prev": "+0.1%"
+        },
+        "cpi": {
+          "period": "Apr 2026",
+          "obsDate": "2026-05-19",
+          "source": "Eurostat (HICP)",
+          "change": "n/a",
+          "prev": "+2.9%"
+        },
+        "rate": {
+          "period": "Jun 11 2026",
+          "obsDate": "2026-06-11",
+          "source": "ECB (deposit facility)",
+          "change": "+25 bps",
+          "prev": "2.00%"
+        },
+        "unemployment": {
+          "period": "N/A",
+          "obsDate": "N/A",
+          "source": "Eurostat",
+          "change": "n/a",
+          "prev": null
+        },
+        "tradeBalance": {
+          "period": "N/A",
+          "obsDate": "N/A",
+          "source": "Eurostat",
+          "change": "n/a",
+          "prev": null
+        }
       },
       "indicatorSources": {
         "gdp": "Eurostat",
@@ -102,10 +222,14 @@
         "unemployment": "Eurostat",
         "tradeBalance": "Eurostat"
       },
-      "analysis": "<p><span class=\"lead-sentence\">The European Central Bank raised the deposit facility rate +25 basis points to 2.25% effective June 17, the first hike in three years, on the June 11 decision</span> — the main refinancing rate sits at 2.40% and the marginal lending rate at 2.65%. President Christine Lagarde cited the Iran-war oil-price spike to four-year highs as the operative motivation for the move.<sup>26</sup> The hike narrows the ECB-BoC deposit differential to zero, with both anchored at 2.25%.<sup>1</sup><sup>26</sup></p><p><span class=\"lead-sentence\">Eurostat reported HICP at +3.2% y/y in April, the highest reading since 2023, with core HICP at +2.5%</span> — Q1 2026 GDP printed -0.2% q/q and the Survey of Professional Forecasters full-year 2026 forecast stands at +0.9%.<sup>27</sup> EUR/USD trades at 1.1600, up 0.1% y/y, and the DAX closed at 24,635.30 on June 12, up 10.5% y/y per timeseries.json.<sup>37</sup></p>",
+      "analysis": "<p><span class=\"lead-sentence\">The European Central Bank raised its deposit facility 25 bps to 2.25% effective June 17, its first hike in three years</span> — the main refinancing rate moved to 2.40% and the marginal lending rate to 2.65%, against HICP running +3.2% y/y on the April reference, the highest since 2023, with core at +2.5%.<sup>26</sup><sup>27</sup> Q1 2026 GDP contracted 0.2%, while the Survey of Professional Forecasters carries full-year growth at +0.9%. The hike narrows the ECB–BoC deposit differential to zero, with both policy rates at 2.25%; EUR/USD stands at 1.16.</p>",
       "sources": [
-        {"id": 26, "title": "European Central Bank — Governing Council calendar", "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"},
-        {"id": 27, "title": "Eurostat — HICP database", "url": "https://ec.europa.eu/eurostat/web/hicp/database"}
+        {
+          "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"
+        },
+        {
+          "url": "https://ec.europa.eu/eurostat/web/hicp/database"
+        }
       ]
     },
     {
@@ -118,11 +242,41 @@
         "tradeBalance": "N/A"
       },
       "indicatorMeta": {
-        "gdp": {"period": "N/A", "obsDate": "N/A", "source": "ONS (not cited this cycle)", "change": "n/a this week", "prev": "n/a"},
-        "cpi": {"period": "BoE central projection Q2 2026", "obsDate": "2026-05-12", "source": "Bank of England MPR", "change": "Rising to 3.3% Q3, easing toward 2% target", "prev": "n/a"},
-        "rate": {"period": "April 30 decision (8-1 vote, one for hike); June 18 MPC pending", "obsDate": "2026-04-30", "source": "Bank of England", "change": "0 bps", "prev": "3.75%"},
-        "unemployment": {"period": "N/A", "obsDate": "N/A", "source": "ONS LFS (not cited this cycle)", "change": "n/a this week", "prev": "n/a"},
-        "tradeBalance": {"period": "N/A", "obsDate": "N/A", "source": "ONS (not cited this cycle)", "change": "n/a this week", "prev": "n/a"}
+        "gdp": {
+          "period": "N/A",
+          "obsDate": "N/A",
+          "source": "UK ONS",
+          "change": "n/a",
+          "prev": null
+        },
+        "cpi": {
+          "period": "Q2 2026 proj",
+          "obsDate": "2026-05-08",
+          "source": "BoE MPR / ONS CPIH",
+          "change": "n/a",
+          "prev": "3.0%"
+        },
+        "rate": {
+          "period": "Apr 30 2026",
+          "obsDate": "2026-04-30",
+          "source": "BoE (Bank Rate)",
+          "change": "0 bps",
+          "prev": "3.75%"
+        },
+        "unemployment": {
+          "period": "N/A",
+          "obsDate": "N/A",
+          "source": "UK ONS (LFS)",
+          "change": "n/a",
+          "prev": null
+        },
+        "tradeBalance": {
+          "period": "N/A",
+          "obsDate": "N/A",
+          "source": "UK ONS",
+          "change": "n/a",
+          "prev": null
+        }
       },
       "indicatorSources": {
         "gdp": "UK Office for National Statistics",
@@ -131,54 +285,221 @@
         "unemployment": "UK Office for National Statistics (LFS)",
         "tradeBalance": "UK Office for National Statistics"
       },
-      "analysis": "<p><span class=\"lead-sentence\">The Bank of England Monetary Policy Committee set Bank Rate at 3.75% on April 30 by an 8-1 vote, with the single dissenter voting to hike</span> — the June 18 MPC meeting is expected to hold per market pricing, with the Bank of England central projection placing CPI at 3.1% in Q2 2026, rising to 3.3% in Q3, before easing toward the 2% target over the projection horizon.<sup>28</sup> GBP/USD closed at 1.3408 the week ending June 14, down 1.6% y/y per timeseries.json.<sup>37</sup></p><p><span class=\"lead-sentence\">The UK-Canada policy-rate differential sits at +150 basis points (UK Bank Rate 3.75% versus BoC overnight 2.25%)</span> — the United Kingdom is a destination market for Canadian gold (up 26.9% y/y per timeseries.json), uranium, and select agricultural exports, channels tracked through the Canadian mining (532 active projects, $183.4B) and agriculture (463 active projects, $0.3B) sector counts.<sup>1</sup><sup>28</sup><sup>37</sup></p>",
+      "analysis": "<p><span class=\"lead-sentence\">The Bank of England held Bank Rate at 3.75%, set April 30 by an 8–1 vote with one member voting to hike, and its June 18 MPC meeting is market-priced for a hold</span> — the BoE central projection places CPI at 3.1% in Q2 2026, rising to 3.3% in Q3 before easing.<sup>28</sup> The UK–Canada policy-rate differential stands at +150 bps, and GBP/USD trades at 1.3450, down 1.31% y/y. The United Kingdom is a destination for Canadian gold, which trades at $4,353/oz, up 31.07% y/y, alongside uranium and select agricultural exports.</p>",
       "sources": [
-        {"id": 28, "title": "Bank of England — Upcoming MPC dates", "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"},
-        {"id": 37, "title": "Pipeline data — docs/data/timeseries.json (commodity, FX, index, yield spot values)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json"}
+        {
+          "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+        }
       ]
     }
   ],
   "globalVectors": {
-    "us": "FOMC meets June 16-17 with SEP. Fed-BoC differential approximately +125 bps sustains CAD/USD at 0.7148. CUSMA review open; Trump 100% tariff threat overhangs 346 active Canadian manufacturing projects ($70.0B).",
-    "china": "May NBS Manufacturing PMI at 50.0; new orders sub-index 49.9 in contraction. Copper at $6.51/lb (+15.7% YoY) and iron ore proxy reflect sustained China industrial demand; database tracks 532 active Canadian mining projects ($183.4B).",
-    "eu": "ECB +25 bps to 2.25% deposit facility effective June 17. ECB-BoC differential at zero. HICP +3.2% YoY April; Q1 GDP -0.2%. EUR/USD 1.1600."
+    "us": "The Fed held at 3.50-3.75% (April 29) and meets June 16-17 with new projections; the +125 bps Fed-BoC gap keeps CAD/USD near 0.7161. CUSMA renegotiation and tariff threats overhang 346 Canadian manufacturing projects ($70.0B).",
+    "china": "May NBS Manufacturing PMI at the 50.0 expansion threshold with new orders in contraction; copper (+35.59% YoY) and the iron-ore proxy (+16.10% YoY) frame industrial demand against 551 Canadian mining projects ($199.9B).",
+    "eu": "The ECB raised its deposit rate +25 bps to 2.25% (June 11), the first hike in three years, narrowing the ECB-BoC differential to zero; HICP runs +3.2% YoY. EUR/USD 1.16."
   },
   "indicatorContextLines": {
-    "bocRate": "The Bank of Canada held the overnight rate at 2.25% on June 10, the second consecutive hold, alongside the June Monetary Policy Report. The 5Y GoC benchmark is at 3.04%, the mortgage-renewal anchor.",
-    "cpi": "Headline CPI sits at +2.8% YoY (May reference snapshot, June 8 stamp). Formal May print scheduled for June 17 alongside the FOMC SEP decision. Core trim 2.0% and core median 2.0% remain within the BoC control band.",
-    "unemployment": "Unemployment rate at 6.6% in May (Labour Force Survey released June 6). Participation rate 65.0%, employment rate 60.7%. Average hourly wage fell 1.4% m/m to $37.24, reflecting composition shift toward lower-wage industries.",
-    "housingStarts": "CMHC May 2026 SAAR at 279,317, up 6.9% m/m. April unadjusted total 21,805 units (singles 3,063, multi 18,742). New housing price index 121.1 in April (-0.4% m/m).",
-    "realGdp": "March monthly real GDP at basic prices contracted 0.1% m/m. April flash estimate +0.4% per StatCan advance reading. Federal Q1 2026 GDP advance estimate referenced in BoC June MPR."
+    "bocRate": "The Bank of Canada held the overnight rate at 2.25% on June 10, a second consecutive hold paired with its Monetary Policy Report.",
+    "cpi": "Headline CPI registered +2.8% YoY (May snapshot), with the formal May print scheduled for June 17; core-trim and core-median both sit at 2.0%.",
+    "unemployment": "The unemployment rate held at 6.6% in May with the employment rate at 60.7% and participation at 65.0%; average hourly wage fell 1.4% m/m to $37.24.",
+    "housingStarts": "Housing starts rose to 279,317 SAAR in May (+6.9% m/m) even as April residential building permits fell 5.5% m/m and non-residential permits fell 10.5% m/m.",
+    "realGdp": "Monthly real GDP declined 0.1% in March 2026 (released May 15); the next GDP-by-industry release covers April on June 24."
   },
   "watchlist": [
-    {"date": "Jun 15", "week_label": "This Week", "institution": "Federal Reserve Board", "event_name": "U.S. Industrial Production — May", "description": "May 2026 US Industrial Production release covering manufacturing output, mining, and utilities. The reading flows into US manufacturing-sector context and the Canadian export-demand assessment that feeds the 346 active manufacturing projects ($70.0B) tracked in the project database.", "impact": "medium", "source_url": "https://www.federalreserve.gov/releases/g17/"},
-    {"date": "Jun 16", "week_label": "This Week", "institution": "U.S. Census Bureau", "event_name": "U.S. Housing Starts — May", "description": "US Census Bureau release of May 2026 housing starts and building permits. The reading bookends the Canadian CMHC release timeline and informs the cross-border construction-signal read against 257 Canadian residential projects ($36.2B).", "impact": "medium", "source_url": "https://www.census.gov/construction/nrc/"},
-    {"date": "Jun 17", "week_label": "This Week", "institution": "Statistics Canada", "event_name": "Consumer Price Index — May", "description": "Formal Canadian May CPI release covering headline, core trim, and core median measures. The snapshot reading stood at +2.8% YoY as of June 8 and feeds the Bank of Canada July 9 rate-decision input set.", "impact": "high", "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/cpi-ipc-eng.htm"},
-    {"date": "Jun 17", "week_label": "This Week", "institution": "CMHC", "event_name": "Housing Starts (CMHC) — May", "description": "CMHC May 2026 monthly housing-starts release. The latest reading at 279,317 SAAR links to 257 residential projects ($36.2B) in the project database.", "impact": "medium", "source_url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables"},
-    {"date": "Jun 17", "week_label": "This Week", "institution": "Federal Reserve", "event_name": "FOMC Rate Decision + Summary of Economic Projections", "description": "Federal Open Market Committee June meeting with dot plot and SEP. First decision under new Chair Kevin Warsh, with market pricing approximately 97% hold per prior-edition reference. Outcome resets the Fed-BoC differential framing the CAD/USD at 0.7148.", "impact": "high", "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"},
-    {"date": "Jun 17", "week_label": "This Week", "institution": "U.S. Census Bureau", "event_name": "U.S. Advance Retail Sales — May", "description": "US Census advance estimate of US retail and food-services sales for May 2026. The reading is a high-frequency US consumer signal that feeds the Canada cross-border consumption read.", "impact": "medium", "source_url": "https://www.census.gov/retail/marts/www/marts_current.pdf"},
-    {"date": "Jun 18", "week_label": "This Week", "institution": "Bank of England", "event_name": "BoE MPC Rate Decision", "description": "Bank of England Monetary Policy Committee June decision. Bank Rate sits at 3.75% pre-meeting with market pricing on hold. The outcome sets the UK-Canada policy differential currently at +150 basis points.", "impact": "medium", "source_url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"},
-    {"date": "Jun 24", "week_label": "Next Week", "institution": "Statistics Canada", "event_name": "GDP by Industry — April", "description": "April monthly GDP by industry release. The advance flash estimate was stamped at +0.4% per the StatCan advance reading. Reading affects 20 NAICS industries linked across the project database.", "impact": "high", "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/gdp-pib-eng.htm"},
-    {"date": "Jun 25", "week_label": "Next Week", "institution": "US Bureau of Economic Analysis", "event_name": "U.S. Personal Income and Outlays — May", "description": "Includes core PCE, the Federal Reserve's preferred inflation gauge for May 2026, and feeds the FOMC reaction-function set ahead of the July 30 decision.", "impact": "high", "source_url": "https://www.bea.gov/data/income-saving/personal-income"},
-    {"date": "Jun 30", "week_label": "Next Week", "institution": "Statistics Canada", "event_name": "Real GDP by Industry — April (formal)", "description": "Formal April monthly real GDP release. The advance flash estimate stands at +0.4% per StatCan. Reading affects the cross-reference engine read across 20 NAICS industries.", "impact": "high", "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/gdp-pib-eng.htm"},
-    {"date": "Jul 2", "week_label": "Following Weeks", "institution": "US Bureau of Labor Statistics", "event_name": "U.S. Employment Situation — June", "description": "First Q3 US labour-market reading covering June payrolls, unemployment rate, average hourly earnings, and labour-force participation. Sequences one week before the Bank of Canada July 9 decision.", "impact": "high", "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"},
-    {"date": "Jul 3", "week_label": "Following Weeks", "institution": "Statistics Canada", "event_name": "Labour Force Survey — June", "description": "June Labour Force Survey release. The last reading recorded unemployment at 6.6%, employment rate 60.7%, and participation 65.0%. Feeds Bank of Canada July 9 reaction function.", "impact": "high", "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/lfs-epa-eng.htm"},
-    {"date": "Jul 7", "week_label": "Following Weeks", "institution": "US Bureau of Economic Analysis", "event_name": "U.S. International Trade — May", "description": "May 2026 US international trade in goods and services. Reading carries the CUSMA-overhang framing for the 346 active Canadian manufacturing projects ($70.0B).", "impact": "medium", "source_url": "https://www.bea.gov/data/intl-trade-investment/international-trade-goods-and-services"},
-    {"date": "Jul 9", "week_label": "Following Weeks", "institution": "Bank of Canada", "event_name": "BoC Monetary Policy Decision", "description": "Next Bank of Canada rate decision. Overnight rate currently 2.25% (second consecutive hold). C.D. Howe MPC recommended hold per prior-edition reference. Decision affects all 6,426 active Canadian projects ($1,536.5B) financing against the GoC yield curve.", "impact": "high", "source_url": "https://www.bankofcanada.ca/press/upcoming-events"},
-    {"date": "Jul 10", "week_label": "Following Weeks", "institution": "Statistics Canada", "event_name": "Building Permits — May", "description": "Building permits, May 2026. The April release showed residential -5.5% m/m to $7,482.9M, non-residential -10.5% m/m to $5,008.2M. Reading affects 257 residential projects ($36.2B) and 1,497 infrastructure projects ($214.0B).", "impact": "medium", "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201"},
-    {"date": "Jul 10", "week_label": "Following Weeks", "institution": "Statistics Canada", "event_name": "Investment in Building Construction — May", "description": "May 2026 investment in building construction. Feeds the cross-reference between the building-permit data and the project-database residential and non-residential value-of-work-put-in-place tracking.", "impact": "medium", "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/sgi-isbc-eng.htm"},
-    {"date": "Jul 14", "week_label": "Following Weeks", "institution": "US Bureau of Labor Statistics", "event_name": "U.S. Consumer Price Index — June", "description": "June 2026 US CPI release. Feeds the FOMC reaction-function set and the Canada-US inflation-differential read.", "impact": "high", "source_url": "https://www.bls.gov/cpi/"},
-    {"date": "Jul 15", "week_label": "Following Weeks", "institution": "Statistics Canada", "event_name": "Manufacturing Sales — May (expected)", "description": "Manufacturing sales release timing (StatCan table 16-10-0047). The April print stood at +4.2% m/m to $77,052.9M. Reading links to 346 active manufacturing projects ($70.0B).", "impact": "medium", "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701"}
+    {
+      "date": "Jun 15",
+      "week_label": "This Week",
+      "institution": "Federal Reserve Board",
+      "event_name": "US Industrial Production — May",
+      "description": "May US industrial production; a read on the manufacturing channel feeding Canadian parts exports.",
+      "impact": "medium",
+      "source_url": "https://www.federalreserve.gov/releases/g17/"
+    },
+    {
+      "date": "Jun 16",
+      "week_label": "This Week",
+      "institution": "US Census Bureau",
+      "event_name": "US Housing Starts — May",
+      "description": "May US housing starts; a lumber-demand signal for Canadian forestry exporters.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/construction/nrc/"
+    },
+    {
+      "date": "Jun 17",
+      "week_label": "This Week",
+      "institution": "CMHC",
+      "event_name": "Housing Starts — May",
+      "description": "CMHC monthly housing starts for May; the SAAR feeds the residential and construction project pipeline.",
+      "impact": "medium",
+      "source_url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables"
+    },
+    {
+      "date": "Jun 17",
+      "week_label": "This Week",
+      "institution": "Statistics Canada",
+      "event_name": "Consumer Price Index — May",
+      "description": "Formal May CPI print; current snapshot reads +2.8% YoY. Same-day as the FOMC SEP.",
+      "impact": "high",
+      "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/cpi-ipc-eng.htm"
+    },
+    {
+      "date": "Jun 17",
+      "week_label": "This Week",
+      "institution": "Federal Reserve",
+      "event_name": "FOMC Rate Decision + SEP",
+      "description": "First decision under Chair Kevin Warsh with updated Summary of Economic Projections; market-priced for a hold at 3.50-3.75%.",
+      "impact": "high",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+      "date": "Jun 17",
+      "week_label": "This Week",
+      "institution": "US Census Bureau",
+      "event_name": "US Advance Retail Sales — May",
+      "description": "May US retail sales; a read on cross-border consumer demand for Canadian exporters.",
+      "impact": "medium",
+      "source_url": "https://www.census.gov/retail/marts/www/marts_current.pdf"
+    },
+    {
+      "date": "Jun 18",
+      "week_label": "Next Week",
+      "institution": "Bank of England",
+      "event_name": "BoE MPC Rate Decision",
+      "description": "BoE expected to hold Bank Rate at 3.75%; UK-Canada differential at +150 bps.",
+      "impact": "medium",
+      "source_url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates"
+    },
+    {
+      "date": "Jun 24",
+      "week_label": "Next Week",
+      "institution": "Statistics Canada",
+      "event_name": "GDP by Industry — April",
+      "description": "April monthly GDP by industry follows the -0.1% March print; sectoral detail across all 20 NAICS industries.",
+      "impact": "high",
+      "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/gdp-pib-eng.htm"
+    },
+    {
+      "date": "Jun 25",
+      "week_label": "In 2 Weeks",
+      "institution": "US BEA",
+      "event_name": "US Personal Income and Outlays — May",
+      "description": "Includes the PCE deflator, the Fed's preferred inflation gauge.",
+      "impact": "high",
+      "source_url": "https://www.bea.gov/data/income-saving/personal-income"
+    },
+    {
+      "date": "Jul 2",
+      "week_label": "Later This Month",
+      "institution": "US BLS",
+      "event_name": "US Employment Situation — June",
+      "description": "US June payrolls; sequences one week ahead of the July 9 BoC decision.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "date": "Jul 3",
+      "week_label": "Later This Month",
+      "institution": "Statistics Canada",
+      "event_name": "Labour Force Survey — June",
+      "description": "June LFS follows the 6.6% May unemployment print; by-industry employment detail.",
+      "impact": "high",
+      "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/lfs-epa-eng.htm"
+    },
+    {
+      "date": "Jul 7",
+      "week_label": "Later This Month",
+      "institution": "US BEA",
+      "event_name": "US International Trade — May",
+      "description": "May US goods and services trade balance amid the CUSMA review.",
+      "impact": "medium",
+      "source_url": "https://www.bea.gov/data/intl-trade-investment/international-trade-goods-and-services"
+    },
+    {
+      "date": "Jul 9",
+      "week_label": "Later This Month",
+      "institution": "Bank of Canada",
+      "event_name": "Bank of Canada Rate Decision",
+      "description": "Next BoC decision following two consecutive holds at 2.25%; sequences after US June payrolls.",
+      "impact": "high",
+      "source_url": "https://www.bankofcanada.ca/press/upcoming-events"
+    },
+    {
+      "date": "Jul 10",
+      "week_label": "Later This Month",
+      "institution": "Statistics Canada",
+      "event_name": "Investment in Building Construction — May",
+      "description": "May building construction investment; tracks residential and non-residential spend.",
+      "impact": "medium",
+      "source_url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/sgi-isbc-eng.htm"
+    },
+    {
+      "date": "Jul 10",
+      "week_label": "Later This Month",
+      "institution": "Statistics Canada",
+      "event_name": "Building Permits — May",
+      "description": "May permits follow April's -5.5% residential / -10.5% non-residential m/m declines.",
+      "impact": "medium",
+      "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201"
+    },
+    {
+      "date": "Jul 14",
+      "week_label": "Later This Month",
+      "institution": "US BLS",
+      "event_name": "US CPI — June",
+      "description": "June US CPI; an input to Fed July policy expectations and the Fed-BoC differential.",
+      "impact": "high",
+      "source_url": "https://www.bls.gov/cpi/"
+    }
   ],
   "key_indicators": [
-    {"label": "BOC RATE", "value": "2.25%", "change": "0 bps (held Jun 10)", "period": "Decision 2026-06-10"},
-    {"label": "REAL GDP", "value": "-0.1%", "change": "m/m", "period": "Mar 2026"},
-    {"label": "CPI", "value": "+2.8%", "change": "YoY", "period": "May 2026 (snapshot)"},
-    {"label": "UNEMPLOYMENT", "value": "6.6%", "change": "+0.0pp m/m", "period": "May 2026"},
-    {"label": "HOUSING STARTS", "value": "279,317 SAAR", "change": "+6.9% m/m", "period": "May 2026"},
-    {"label": "WTI CRUDE", "value": "$80.58/bbl", "change": "-11.74%", "period": "Week"},
-    {"label": "CAD/USD", "value": "0.7148", "change": "-0.40%", "period": "Week"},
-    {"label": "TSX", "value": "34,937.90", "change": "+1.52%", "period": "Week"}
+    {
+      "label": "BOC RATE",
+      "value": "2.25%",
+      "change": "0 bps (held)",
+      "period": "Jun 10 decision"
+    },
+    {
+      "label": "REAL GDP",
+      "value": "-0.1% m/m",
+      "change": "-0.2pp",
+      "period": "Mar 2026"
+    },
+    {
+      "label": "CPI",
+      "value": "+2.8% YoY",
+      "change": "+0.4pp",
+      "period": "May 2026"
+    },
+    {
+      "label": "UNEMPLOYMENT",
+      "value": "6.6%",
+      "change": "+0.0pp",
+      "period": "May 2026"
+    },
+    {
+      "label": "HOUSING STARTS",
+      "value": "279,317 SAAR",
+      "change": "+6.9% m/m",
+      "period": "May 2026"
+    },
+    {
+      "label": "WTI CRUDE",
+      "value": "$80.58/bbl",
+      "change": "-11.74%",
+      "period": "Week"
+    },
+    {
+      "label": "CAD/USD",
+      "value": "0.7161",
+      "change": "-0.14%",
+      "period": "Week"
+    },
+    {
+      "label": "TSX",
+      "value": "34,938",
+      "change": "+0.8%",
+      "period": "Week"
+    }
   ],
   "metrics": {
     "bocRate": "2.25%",
@@ -187,6 +508,8 @@
     "cpi": "+2.8% YoY",
     "core_trim": "2.0%",
     "core_median": "2.0%",
+    "core_cpi_median": "2.0%",
+    "coreCpiMedian": "2.0%",
     "unemployment": "6.6%",
     "employment_rate": "60.7%",
     "employmentRate": "60.7%",
@@ -196,36 +519,105 @@
     "housing_starts": "279,317 SAAR (May)",
     "tradeBalance": "Apr 2026 reference",
     "merchandise_trade": "Apr 2026 reference",
+    "trade_balance": "Apr 2026 reference",
     "fulltime_change": "N/A",
     "parttime_change": "N/A",
     "private_sector_change": "N/A",
     "public_sector_change": "N/A",
-    "core_cpi_median": "2.0%",
-    "shelter_cpi": "N/A",
-    "food_cpi": "N/A",
-    "energy_cpi": "+28.6% (Apr YoY)",
+    "fulltimeChange": "N/A",
+    "parttimeChange": "N/A",
+    "privateSectorChange": "N/A",
+    "publicSectorChange": "N/A",
+    "shelter_cpi": "+1.8% y/y",
+    "shelterCpi": "+1.8% y/y",
+    "food_cpi": "+3.8% y/y",
+    "foodCpi": "+3.8% y/y",
+    "energy_cpi": "+28.6% (Apr)",
+    "energyCpi": "+28.6% (Apr YoY)",
     "residential_permits": "$7.5B (Apr)",
+    "residentialPermits": "$7.5B (Apr)",
     "nonresidential_permits": "$5.0B (Apr)",
+    "nonresidentialPermits": "$5.0B (Apr)",
     "merchandise_exports": "$66.3B (Apr)",
+    "merchandiseExports": "$66.3B (Apr)",
     "merchandise_imports": "N/A",
+    "merchandiseImports": "N/A",
     "manufacturing_sales": "$77,052.9M (+4.2% m/m, Apr)",
+    "manufacturingSales": "$77,052.9M (+4.2% m/m, Apr)",
     "wholesale_sales": "$138,830.0M (+2.8% m/m, Apr)",
     "average_hourly_wage": "$37.24 (-1.4% m/m, May)",
     "new_housing_price_index": "121.1 (-0.4% m/m, Apr)",
     "household_savings_rate": "3.5% (-0.2 pp q/q, Q1)",
     "household_disposable_income": "$1,811,968M (+0.6% q/q, Q1)",
-    "capex_intentions_2026": "$401,203M (+3.7% YoY)"
+    "capex_intentions_2026": "$401,203M (+3.7% YoY)",
+    "bocRate_chg": "0 bps (held)",
+    "realGdp_chg": "-0.2pp",
+    "cpi_chg": "+0.4pp",
+    "unemployment_chg": "+0.0pp",
+    "employmentRate_chg": "0.0pp",
+    "employment_rate_chg": "0.0pp",
+    "housingStarts_chg": "+6.9% m/m",
+    "housing_starts_chg": "+6.9% m/m",
+    "tradeBalance_chg": "n/a",
+    "trade_balance_chg": "n/a",
+    "core_trim_chg": "0 bps",
+    "core_median_chg": "-10 bps"
   },
   "indicatorMeta": {
-    "bocRate": {"prev": "2.25%", "change": "0 bps (held)", "period": "Decision 2026-06-10", "obsDate": "2026-06-10"},
-    "realGdp": {"prev": "+0.1% (Feb 2026)", "change": "-0.2pp", "period": "Mar 2026 (Apr flash +0.4%)", "obsDate": "2026-05-15"},
-    "cpi": {"prev": "+2.4% (March)", "change": "+0.4pp", "period": "May 2026 snapshot", "obsDate": "2026-06-08"},
-    "unemployment": {"prev": "6.6% (April)", "change": "+0.0pp", "period": "May 2026", "obsDate": "2026-06-06"},
-    "employmentRate": {"prev": "60.7% (April)", "change": "0.0pp", "period": "May 2026", "obsDate": "2026-06-06"},
-    "housingStarts": {"prev": "261,377 SAAR (April)", "change": "+6.9% m/m", "period": "May 2026", "obsDate": "2026-06-15"},
-    "tradeBalance": {"prev": "n/a this week", "change": "n/a", "period": "Apr 2026 reference", "obsDate": "2026-06-09"},
-    "core_trim": {"prev": "2.0%", "change": "0 bps", "period": "Apr 2026", "obsDate": "2026-05-19"},
-    "core_median": {"prev": "2.1%", "change": "-10 bps", "period": "Apr 2026", "obsDate": "2026-05-19"}
+    "bocRate": {
+      "prev": "2.25%",
+      "change": "0 bps (held)",
+      "period": "Decision 2026-06-10",
+      "obsDate": "2026-06-10"
+    },
+    "realGdp": {
+      "prev": "+0.1% (Feb 2026)",
+      "change": "-0.2pp",
+      "period": "Mar 2026",
+      "obsDate": "2026-05-15"
+    },
+    "cpi": {
+      "prev": "+2.4% (March)",
+      "change": "+0.4pp",
+      "period": "May 2026 snapshot",
+      "obsDate": "2026-06-08"
+    },
+    "unemployment": {
+      "prev": "6.6% (April)",
+      "change": "+0.0pp",
+      "period": "May 2026",
+      "obsDate": "2026-06-06"
+    },
+    "employmentRate": {
+      "prev": "60.7% (April)",
+      "change": "0.0pp",
+      "period": "May 2026",
+      "obsDate": "2026-06-06"
+    },
+    "housingStarts": {
+      "prev": "261,377 SAAR (April)",
+      "change": "+6.9% m/m",
+      "period": "May 2026",
+      "obsDate": "2026-06-15"
+    },
+    "tradeBalance": {
+      "prev": "n/a this week",
+      "change": "n/a",
+      "period": "Apr 2026 reference",
+      "obsDate": "2026-06-09"
+    },
+    "core_trim": {
+      "prev": "2.0%",
+      "change": "0 bps",
+      "period": "Apr 2026",
+      "obsDate": "2026-05-19"
+    },
+    "core_median": {
+      "prev": "2.1%",
+      "change": "-10 bps",
+      "period": "Apr 2026",
+      "obsDate": "2026-05-19"
+    }
   },
   "indicatorSources": {
     "bocRate": "Bank of Canada",
@@ -248,127 +640,324 @@
     "capex_intentions_2026": "Statistics Canada (34-10-0035)"
   },
   "word_cloud_topics": [
-    {"topic": "Cost of living", "sentiment_score": -0.6, "frequency": 16},
-    {"topic": "Housing affordability", "sentiment_score": -0.7, "frequency": 14},
-    {"topic": "Mortgage rates", "sentiment_score": -0.3, "frequency": 11},
-    {"topic": "Wages", "sentiment_score": -0.4, "frequency": 9},
-    {"topic": "Job security", "sentiment_score": 0.1, "frequency": 8},
-    {"topic": "Inflation", "sentiment_score": -0.4, "frequency": 13},
-    {"topic": "Gasoline prices", "sentiment_score": 0.3, "frequency": 7},
-    {"topic": "Savings rate", "sentiment_score": -0.2, "frequency": 6},
-    {"topic": "Bank of Canada hold", "sentiment_score": 0.0, "frequency": 10},
-    {"topic": "Federal budget update", "sentiment_score": 0.2, "frequency": 9},
-    {"topic": "Infrastructure spending", "sentiment_score": 0.3, "frequency": 8},
-    {"topic": "CUSMA review", "sentiment_score": -0.3, "frequency": 8},
-    {"topic": "US tariffs", "sentiment_score": -0.6, "frequency": 11},
-    {"topic": "Energy exports", "sentiment_score": 0.2, "frequency": 7},
-    {"topic": "Housing starts", "sentiment_score": 0.3, "frequency": 8},
-    {"topic": "Construction jobs", "sentiment_score": 0.2, "frequency": 6},
-    {"topic": "Retail layoffs", "sentiment_score": -0.4, "frequency": 5},
-    {"topic": "Accommodation hiring", "sentiment_score": 0.2, "frequency": 5},
-    {"topic": "Agriculture employment", "sentiment_score": 0.3, "frequency": 5},
-    {"topic": "Manufacturing slowdown", "sentiment_score": -0.4, "frequency": 6},
-    {"topic": "Mining demand", "sentiment_score": 0.3, "frequency": 6},
-    {"topic": "Gold price", "sentiment_score": 0.4, "frequency": 6},
-    {"topic": "Copper demand", "sentiment_score": 0.3, "frequency": 5},
-    {"topic": "Uranium sector", "sentiment_score": 0.4, "frequency": 5},
-    {"topic": "Lumber prices", "sentiment_score": 0.1, "frequency": 4},
-    {"topic": "Canola farm prices", "sentiment_score": 0.3, "frequency": 4},
-    {"topic": "WTI crude", "sentiment_score": -0.3, "frequency": 9},
-    {"topic": "Oil sands breakevens", "sentiment_score": -0.2, "frequency": 5},
-    {"topic": "Natural gas", "sentiment_score": -0.1, "frequency": 5},
-    {"topic": "5Y mortgage anchor", "sentiment_score": 0.1, "frequency": 6},
-    {"topic": "Yield curve", "sentiment_score": 0.0, "frequency": 5},
-    {"topic": "Fed-BoC differential", "sentiment_score": -0.2, "frequency": 7},
-    {"topic": "ECB hike", "sentiment_score": -0.1, "frequency": 6},
-    {"topic": "BoE hold", "sentiment_score": 0.0, "frequency": 4},
-    {"topic": "China PMI", "sentiment_score": 0.0, "frequency": 6},
-    {"topic": "USD/CAD", "sentiment_score": -0.2, "frequency": 5},
-    {"topic": "Spring Economic Update", "sentiment_score": 0.3, "frequency": 7},
-    {"topic": "Sovereign fund", "sentiment_score": 0.2, "frequency": 5},
-    {"topic": "CCUS-EOR", "sentiment_score": 0.2, "frequency": 4},
-    {"topic": "Indigenous economic measures", "sentiment_score": 0.3, "frequency": 4},
-    {"topic": "Trade strategy", "sentiment_score": 0.1, "frequency": 5},
-    {"topic": "Regulatory reform", "sentiment_score": 0.1, "frequency": 4},
-    {"topic": "Energy exports +9.7%", "sentiment_score": 0.3, "frequency": 4},
-    {"topic": "Agri exports +8.9%", "sentiment_score": 0.3, "frequency": 4},
-    {"topic": "Mineral exports -7.9%", "sentiment_score": -0.3, "frequency": 4}
+    {
+      "topic": "Cost of living",
+      "sentiment_score": -0.6,
+      "frequency": 16
+    },
+    {
+      "topic": "Housing affordability",
+      "sentiment_score": -0.7,
+      "frequency": 14
+    },
+    {
+      "topic": "Mortgage rates",
+      "sentiment_score": -0.3,
+      "frequency": 11
+    },
+    {
+      "topic": "CPI inflation",
+      "sentiment_score": -0.4,
+      "frequency": 12
+    },
+    {
+      "topic": "Job security",
+      "sentiment_score": 0.1,
+      "frequency": 9
+    },
+    {
+      "topic": "Wages",
+      "sentiment_score": -0.4,
+      "frequency": 10
+    },
+    {
+      "topic": "Gasoline prices",
+      "sentiment_score": 0.3,
+      "frequency": 8
+    },
+    {
+      "topic": "Household savings",
+      "sentiment_score": -0.2,
+      "frequency": 7
+    },
+    {
+      "topic": "Energy costs",
+      "sentiment_score": -0.3,
+      "frequency": 9
+    },
+    {
+      "topic": "Food prices",
+      "sentiment_score": -0.5,
+      "frequency": 11
+    },
+    {
+      "topic": "Interest rates",
+      "sentiment_score": 0.0,
+      "frequency": 13
+    },
+    {
+      "topic": "BoC rate hold",
+      "sentiment_score": 0.2,
+      "frequency": 8
+    },
+    {
+      "topic": "Housing starts",
+      "sentiment_score": 0.3,
+      "frequency": 7
+    },
+    {
+      "topic": "Federal budget",
+      "sentiment_score": 0.0,
+      "frequency": 6
+    },
+    {
+      "topic": "Infrastructure spending",
+      "sentiment_score": 0.3,
+      "frequency": 7
+    },
+    {
+      "topic": "Trade tensions",
+      "sentiment_score": -0.4,
+      "frequency": 9
+    },
+    {
+      "topic": "Tariffs",
+      "sentiment_score": -0.5,
+      "frequency": 8
+    },
+    {
+      "topic": "GIC yields",
+      "sentiment_score": -0.1,
+      "frequency": 5
+    },
+    {
+      "topic": "Employment rate",
+      "sentiment_score": 0.0,
+      "frequency": 6
+    },
+    {
+      "topic": "Retail jobs",
+      "sentiment_score": -0.3,
+      "frequency": 5
+    }
   ],
   "discovery_stats": {
-    "total_projects": 7103,
-    "active_projects": 6426,
-    "new_this_week": 219,
-    "total_value_billions": 1612.5,
-    "active_value_billions": 1536.5,
-    "status_counts": {
-      "Under Review": 2573,
-      "Proposed": 2257,
-      "Under Construction": 1035,
-      "Complete": 523,
-      "Approved": 531,
-      "Cancelled": 154,
-      "On Hold": 30
-    },
-    "sector_counts": {
-      "infrastructure": 1637,
-      "power_energy": 936,
-      "transport_logistics": 662,
-      "mining": 635,
-      "agriculture": 463,
-      "manufacturing": 358,
-      "tourism_culture": 322,
-      "environment": 272,
-      "residential": 271,
-      "forestry": 269,
-      "Other": 256,
-      "healthcare": 214,
-      "government": 197,
-      "education": 150,
-      "oil_gas": 127,
-      "commercial_mixed": 97,
-      "telecom": 94,
-      "defence": 51,
-      "indigenous": 25
-    }
+    "total_projects": 7168,
+    "active_projects": 6485,
+    "new_this_week": 135,
+    "total_value_billions": 1696.8,
+    "active_value_billions": 1620.8
   },
   "sources": [
-    {"id": 1, "title": "Bank of Canada — Rate Decision press release, June 10, 2026", "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/", "archive_url": ""},
-    {"id": 2, "title": "Bank of Canada — Upcoming events / Monetary Policy Report", "url": "https://www.bankofcanada.ca/press/upcoming-events", "archive_url": ""},
-    {"id": 3, "title": "StatCan Daily — Real GDP by industry, March 2026 (released May 15)", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260515/dq260515a-eng.htm", "archive_url": ""},
-    {"id": 4, "title": "StatCan Daily — Labour Force Survey, May 2026 (released June 6)", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm", "archive_url": ""},
-    {"id": 5, "title": "StatCan — Consumer Price Index portal & release calendar", "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/cpi-ipc-eng.htm", "archive_url": ""},
-    {"id": 6, "title": "StatCan 16-10-0047 — Manufacturing sales by industry", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701", "archive_url": ""},
-    {"id": 7, "title": "StatCan 20-10-0074 — Wholesale trade sales", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401", "archive_url": ""},
-    {"id": 8, "title": "StatCan 34-10-0292 — Building permits, by sector", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201", "archive_url": ""},
-    {"id": 9, "title": "StatCan 14-10-0063 — Average hourly wage, employees by industry", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410006301", "archive_url": ""},
-    {"id": 10, "title": "StatCan 18-10-0205 — New housing price index", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810020501", "archive_url": ""},
-    {"id": 11, "title": "StatCan 34-10-0035 — Capital and repair expenditure intentions", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410003501", "archive_url": ""},
-    {"id": 12, "title": "StatCan 36-10-0112 — Household income, consumption, saving, Q1 2026", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610011201", "archive_url": ""},
-    {"id": 13, "title": "StatCan 14-10-0022 — Employment by industry, May 2026", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002201", "archive_url": ""},
-    {"id": 14, "title": "StatCan 12-10-0163 — Merchandise trade by section, April 2026", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=12100163", "archive_url": ""},
-    {"id": 15, "title": "StatCan 34-10-0143 — Housing starts, April 2026 reference", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301", "archive_url": ""},
-    {"id": 16, "title": "StatCan 32-10-0077 — Canola farm price, monthly", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701", "archive_url": ""},
-    {"id": 17, "title": "CMHC — Monthly Housing Starts Construction Data Tables", "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables", "archive_url": ""},
-    {"id": 18, "title": "Department of Finance Canada — Spring Economic Update 2026", "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/pdf/update-miseajour2026-eng.pdf", "archive_url": ""},
-    {"id": 19, "title": "McMillan LLP — Spring Economic Update 2026: Federal Infrastructure Agenda", "url": "https://mcmillan.ca/insights/publications/change-order-canadas-spring-economic-update-2026-sets-a-new-federal-infrastructure-agenda", "archive_url": ""},
-    {"id": 20, "title": "Oxford Economics — Canada Key Themes 2026", "url": "https://www.oxfordeconomics.com/resource/canada-key-themes-2026-policy-shifts-are-prompting-structural-change", "archive_url": ""},
-    {"id": 21, "title": "Federal Reserve — FOMC Calendar (June 16-17 SEP meeting)", "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm", "archive_url": ""},
-    {"id": 22, "title": "Philadelphia Fed — Survey of Professional Forecasters Q1 2026", "url": "https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/spf-q1-2026", "archive_url": ""},
-    {"id": 23, "title": "US Bureau of Labor Statistics — CPI portal", "url": "https://www.bls.gov/cpi/", "archive_url": ""},
-    {"id": 24, "title": "US Bureau of Labor Statistics — Employment Situation schedule", "url": "https://www.bls.gov/schedule/news_release/empsit.htm", "archive_url": ""},
-    {"id": 25, "title": "China NBS — May 2026 PMI release", "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html", "archive_url": ""},
-    {"id": 26, "title": "European Central Bank — Governing Council calendar", "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html", "archive_url": ""},
-    {"id": 27, "title": "Eurostat — HICP database", "url": "https://ec.europa.eu/eurostat/web/hicp/database", "archive_url": ""},
-    {"id": 28, "title": "Bank of England — Upcoming MPC dates", "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates", "archive_url": ""},
-    {"id": 29, "title": "Ontario FAO — Economic and Budget Outlook Winter 2026", "url": "https://fao-on.org/en/report/ebo-wi2026", "archive_url": ""},
-    {"id": 30, "title": "Federal Parliament (LEGISinfo) — 45-1 session bills", "url": "https://www.parl.ca/legisinfo/en/bills?parliament=45&session=1", "archive_url": ""},
-    {"id": 31, "title": "StatCan — Daily release calendar", "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/index-eng.htm", "archive_url": ""},
-    {"id": 32, "title": "US Bureau of Economic Analysis — Personal Income & Outlays", "url": "https://www.bea.gov/data/income-saving/personal-income", "archive_url": ""},
-    {"id": 33, "title": "US Bureau of Economic Analysis — International Trade in Goods & Services", "url": "https://www.bea.gov/data/intl-trade-investment/international-trade-goods-and-services", "archive_url": ""},
-    {"id": 34, "title": "US Census Bureau — New Residential Construction (Housing Starts)", "url": "https://www.census.gov/construction/nrc/", "archive_url": ""},
-    {"id": 35, "title": "US Census Bureau — Advance Monthly Retail Sales", "url": "https://www.census.gov/retail/marts/www/marts_current.pdf", "archive_url": ""},
-    {"id": 36, "title": "Federal Reserve Board — Industrial Production (G.17)", "url": "https://www.federalreserve.gov/releases/g17/", "archive_url": ""},
-    {"id": 37, "title": "Pipeline data — docs/data/timeseries.json (commodity, FX, index, yield spot values)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json", "archive_url": ""},
-    {"id": 38, "title": "Pipeline data — docs/data/indicators.json (national StatCan indicator rows)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/indicators.json", "archive_url": ""}
+    {
+      "id": 1,
+      "title": "Bank of Canada — Rate Decision press release, June 10 2026",
+      "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/",
+      "archive_url": ""
+    },
+    {
+      "id": 2,
+      "title": "Bank of Canada — Upcoming events / Monetary Policy Report",
+      "url": "https://www.bankofcanada.ca/press/upcoming-events",
+      "archive_url": ""
+    },
+    {
+      "id": 3,
+      "title": "Statistics Canada — Monthly GDP, May 15 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260515/dq260515a-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 4,
+      "title": "Statistics Canada — Labour Force Survey, June 6 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 5,
+      "title": "Statistics Canada — Consumer Price Index portal",
+      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/cpi-ipc-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 6,
+      "title": "Statistics Canada 16-10-0047 — Manufacturing sales",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
+      "archive_url": ""
+    },
+    {
+      "id": 7,
+      "title": "Statistics Canada 20-10-0074 — Wholesale sales",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401",
+      "archive_url": ""
+    },
+    {
+      "id": 8,
+      "title": "Statistics Canada 34-10-0292 — Building permits",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201",
+      "archive_url": ""
+    },
+    {
+      "id": 9,
+      "title": "Statistics Canada 14-10-0063 — Average hourly wage",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410006301",
+      "archive_url": ""
+    },
+    {
+      "id": 10,
+      "title": "Statistics Canada 18-10-0205 — New housing price index",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810020501",
+      "archive_url": ""
+    },
+    {
+      "id": 11,
+      "title": "Statistics Canada 34-10-0035 — Capital expenditure intentions",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410003501",
+      "archive_url": ""
+    },
+    {
+      "id": 12,
+      "title": "Statistics Canada 36-10-0112 — National economic accounts (income/saving)",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610011201",
+      "archive_url": ""
+    },
+    {
+      "id": 13,
+      "title": "Statistics Canada 14-10-0022 — Employment by industry",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002201",
+      "archive_url": ""
+    },
+    {
+      "id": 14,
+      "title": "Statistics Canada 12-10-0163 — Merchandise trade by section",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=12100163",
+      "archive_url": ""
+    },
+    {
+      "id": 15,
+      "title": "Statistics Canada 34-10-0143 — Housing starts",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301",
+      "archive_url": ""
+    },
+    {
+      "id": 16,
+      "title": "Statistics Canada 32-10-0077 — Canola farm price",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701",
+      "archive_url": ""
+    },
+    {
+      "id": 17,
+      "title": "CMHC — Monthly Housing Starts Data Tables",
+      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables",
+      "archive_url": ""
+    },
+    {
+      "id": 18,
+      "title": "Department of Finance Canada — Spring Economic Update 2026 (PDF)",
+      "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/pdf/update-miseajour2026-eng.pdf",
+      "archive_url": ""
+    },
+    {
+      "id": 19,
+      "title": "McMillan LLP — Spring Economic Update 2026 analysis",
+      "url": "https://mcmillan.ca/insights/publications/change-order-canadas-spring-economic-update-2026-sets-a-new-federal-infrastructure-agenda",
+      "archive_url": ""
+    },
+    {
+      "id": 20,
+      "title": "Oxford Economics — Canada Key Themes 2026",
+      "url": "https://www.oxfordeconomics.com/resource/canada-key-themes-2026-policy-shifts-are-prompting-structural-change",
+      "archive_url": ""
+    },
+    {
+      "id": 21,
+      "title": "Federal Reserve — FOMC calendar",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 22,
+      "title": "Philadelphia Fed — Survey of Professional Forecasters Q1 2026",
+      "url": "https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/spf-q1-2026",
+      "archive_url": ""
+    },
+    {
+      "id": 23,
+      "title": "US Bureau of Labor Statistics — CPI portal",
+      "url": "https://www.bls.gov/cpi/",
+      "archive_url": ""
+    },
+    {
+      "id": 24,
+      "title": "US Bureau of Labor Statistics — Employment Situation schedule",
+      "url": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 25,
+      "title": "China NBS — May 2026 PMI release",
+      "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html",
+      "archive_url": ""
+    },
+    {
+      "id": 26,
+      "title": "European Central Bank — Governing Council calendar",
+      "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "archive_url": ""
+    },
+    {
+      "id": 27,
+      "title": "Eurostat — HICP database",
+      "url": "https://ec.europa.eu/eurostat/web/hicp/database",
+      "archive_url": ""
+    },
+    {
+      "id": 28,
+      "title": "Bank of England — Upcoming MPC dates",
+      "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
+      "archive_url": ""
+    },
+    {
+      "id": 29,
+      "title": "Ontario FAO — Economic and Budget Outlook Winter 2026",
+      "url": "https://fao-on.org/en/report/ebo-wi2026",
+      "archive_url": ""
+    },
+    {
+      "id": 30,
+      "title": "Parliament of Canada (LEGISinfo) — Bill index, 45-1 session",
+      "url": "https://www.parl.ca/legisinfo/en/bills?parliament=45&session=1",
+      "archive_url": ""
+    },
+    {
+      "id": 31,
+      "title": "Statistics Canada — Daily release calendar",
+      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/index-eng.htm",
+      "archive_url": ""
+    },
+    {
+      "id": 32,
+      "title": "Pipeline data — docs/data/timeseries.json (commodities, FX, indices, yields)",
+      "url": "https://github.com/",
+      "archive_url": ""
+    },
+    {
+      "id": 33,
+      "title": "Pipeline data — docs/data/indicators.json (national StatCan indicators)",
+      "url": "https://github.com/",
+      "archive_url": ""
+    },
+    {
+      "id": 34,
+      "title": "Pipeline data — docs/data/policy.json (week 2026-06-15 policy items)",
+      "url": "https://github.com/",
+      "archive_url": ""
+    },
+    {
+      "id": 35,
+      "title": "US Census Bureau — Housing starts (new residential construction)",
+      "url": "https://www.census.gov/construction/nrc/",
+      "archive_url": ""
+    }
   ]
 }

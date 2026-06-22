@@ -1,6 +1,6 @@
 {
   "headline": "Bank of Canada Holds at 2.25% as Latest CPI Snapshot Reads +2.8% and Housing Starts Hold at 279,317 SAAR",
-  "edition": "EDITION: JUN 15 – JUN 22 // STATUS: AI-SYNTHESIZED",
+  "edition": "EDITION: Jun 15 – Jun 22 // STATUS: AI-SYNTHESIZED",
   "week_of": "2026-06-22",
   "generated_at": "2026-06-22T12:04:08.148326Z",
   "updated_at": "2026-06-22",
@@ -6502,291 +6502,6 @@
       "low_52w": "$507.00/mfbm",
       "context": "<p><span class=\"lead-sentence\">Lumber settled at US$633.00 per thousand board feet, up 0.32% on the week and 8.11% over the month</span> &mdash; the year-over-year reading of +2.76% sits near the one-year average of US$585.62 against a 52-week high of US$695.50.<sup>35</sup> The Signal Dispatch cross-reference engine ties lumber to Canadian construction-input demand: Canadian housing starts stood at 279,317 SAAR in the latest snapshot, and the database tracks 272 active residential projects ($41.6B aggregate) drawing on framing lumber.<sup>17</sup></p>",
       "commentary": "<p><span class=\"lead-sentence\">Lumber settled at US$633.00 per thousand board feet, up 0.32% on the week and 8.11% over the month</span> &mdash; the year-over-year reading of +2.76% sits near the one-year average of US$585.62 against a 52-week high of US$695.50.<sup>35</sup> The Signal Dispatch cross-reference engine ties lumber to Canadian construction-input demand: Canadian housing starts stood at 279,317 SAAR in the latest snapshot, and the database tracks 272 active residential projects ($41.6B aggregate) drawing on framing lumber.<sup>17</sup></p>"
-    },
-    {
-      "name": "Coal (Newcastle)",
-      "category": "Energy",
-      "unit": "t",
-      "val": "96.0",
-      "day": "+0.0%",
-      "mm": "+0.0%",
-      "yy": "",
-      "context": "Coal (Newcastle) at 96.0/t (+0.0% w/w; +0.0% m/m). 52-week range 96.0–96.0/t.",
-      "weekly_pct": 0.0,
-      "mom_pct": 0.0,
-      "yoy_pct": null,
-      "high_52w": 96.0,
-      "low_52w": 96.0
-    },
-    {
-      "name": "LNG (Asia JKM)",
-      "category": "Energy",
-      "unit": "MMBtu",
-      "val": "17.61",
-      "day": "+0.0%",
-      "mm": "-15.4%",
-      "yy": "+35.8%",
-      "context": "LNG (Asia JKM) at 17.61/MMBtu (+0.0% w/w; -15.4% m/m; +35.8% y/y). 52-week range 9.91–20.81/MMBtu.",
-      "weekly_pct": 0.0,
-      "mom_pct": -15.4,
-      "yoy_pct": 35.8,
-      "high_52w": 20.81,
-      "low_52w": 9.91
-    },
-    {
-      "name": "Platinum",
-      "category": "Precious Metals",
-      "unit": "troy oz",
-      "val": "1681.1",
-      "day": "-7.1%",
-      "mm": "-13.0%",
-      "yy": "+33.0%",
-      "context": "Platinum at 1681.1/troy oz (-7.1% w/w; -13.0% m/m; +33.0% y/y). 52-week range 1283.4–2852.4/troy oz.",
-      "weekly_pct": -7.1,
-      "mom_pct": -13.0,
-      "yoy_pct": 33.0,
-      "high_52w": 2852.4,
-      "low_52w": 1283.4
-    },
-    {
-      "name": "Palladium",
-      "category": "Precious Metals",
-      "unit": "troy oz",
-      "val": "1264.0",
-      "day": "-7.3%",
-      "mm": "-6.9%",
-      "yy": "+20.1%",
-      "context": "Palladium at 1264.0/troy oz (-7.3% w/w; -6.9% m/m; +20.1% y/y). 52-week range 1065.4–2169.9/troy oz.",
-      "weekly_pct": -7.3,
-      "mom_pct": -6.9,
-      "yoy_pct": 20.1,
-      "high_52w": 2169.9,
-      "low_52w": 1065.4
-    },
-    {
-      "name": "Aluminum",
-      "category": "Base Metals",
-      "unit": "t",
-      "val": "3475.0",
-      "day": "+2.7%",
-      "mm": "-12.3%",
-      "yy": "+40.6%",
-      "context": "Aluminum at 3475.0/t (+2.7% w/w; -12.3% m/m; +40.6% y/y). 52-week range 2427.0–4195.0/t.",
-      "weekly_pct": 2.7,
-      "mom_pct": -12.3,
-      "yoy_pct": 40.6,
-      "high_52w": 4195.0,
-      "low_52w": 2427.0
-    },
-    {
-      "name": "Zinc",
-      "category": "Base Metals",
-      "unit": "t",
-      "val": "3458.04",
-      "day": "+0.0%",
-      "mm": "+8.7%",
-      "yy": "+30.3%",
-      "context": "Zinc at 3458.04/t (+0.0% w/w; +8.7% m/m; +30.3% y/y). 52-week range 2762.56–3458.04/t.",
-      "weekly_pct": 0.0,
-      "mom_pct": 8.7,
-      "yoy_pct": 30.3,
-      "high_52w": 3458.04,
-      "low_52w": 2762.56
-    },
-    {
-      "name": "Lead",
-      "category": "Base Metals",
-      "unit": "t",
-      "val": "1984.26",
-      "day": "+0.0%",
-      "mm": "+5.6%",
-      "yy": "+0.5%",
-      "context": "Lead at 1984.26/t (+0.0% w/w; +5.6% m/m; +0.5% y/y). 52-week range 1878.19–1998.48/t.",
-      "weekly_pct": 0.0,
-      "mom_pct": 5.6,
-      "yoy_pct": 0.5,
-      "high_52w": 1998.48,
-      "low_52w": 1878.19
-    },
-    {
-      "name": "Tin",
-      "category": "Base Metals",
-      "unit": "t",
-      "val": "52913.5",
-      "day": "+0.0%",
-      "mm": "+11.8%",
-      "yy": "+62.6%",
-      "context": "Tin at 52913.5/t (+0.0% w/w; +11.8% m/m; +62.6% y/y). 52-week range 33610.26–52913.5/t.",
-      "weekly_pct": 0.0,
-      "mom_pct": 11.8,
-      "yoy_pct": 62.6,
-      "high_52w": 52913.5,
-      "low_52w": 33610.26
-    },
-    {
-      "name": "Corn",
-      "category": "Agriculture - Grains",
-      "unit": "bu",
-      "val": "415.0",
-      "day": "+0.1%",
-      "mm": "-10.4%",
-      "yy": "-3.2%",
-      "context": "Corn at 415.0/bu (+0.1% w/w; -10.4% m/m; -3.2% y/y). 52-week range 371.5–478.5/bu.",
-      "weekly_pct": 0.1,
-      "mom_pct": -10.4,
-      "yoy_pct": -3.2,
-      "high_52w": 478.5,
-      "low_52w": 371.5
-    },
-    {
-      "name": "Rice",
-      "category": "Agriculture - Grains",
-      "unit": "cwt",
-      "val": "6.38",
-      "day": "-47.0%",
-      "mm": "-50.9%",
-      "yy": "-52.8%",
-      "context": "Rice at 6.38/cwt (-47.0% w/w; -50.9% m/m; -52.8% y/y). 52-week range 6.38–1109.0/cwt.",
-      "weekly_pct": -47.0,
-      "mom_pct": -50.9,
-      "yoy_pct": -52.8,
-      "high_52w": 1109.0,
-      "low_52w": 6.38
-    },
-    {
-      "name": "Soybeans",
-      "category": "Agriculture - Grains",
-      "unit": "bu",
-      "val": "1144.5",
-      "day": "+1.1%",
-      "mm": "-4.3%",
-      "yy": "+7.2%",
-      "context": "Soybeans at 1144.5/bu (+1.1% w/w; -4.3% m/m; +7.2% y/y). 52-week range 961.5–1225.25/bu.",
-      "weekly_pct": 1.1,
-      "mom_pct": -4.3,
-      "yoy_pct": 7.2,
-      "high_52w": 1225.25,
-      "low_52w": 961.5
-    },
-    {
-      "name": "Soybean Oil",
-      "category": "Agriculture - Oilseeds",
-      "unit": "lb",
-      "val": "66.67",
-      "day": "-8.7%",
-      "mm": "-9.9%",
-      "yy": "+22.4%",
-      "context": "Soybean Oil at 66.67/lb (-8.7% w/w; -9.9% m/m; +22.4% y/y). 52-week range 47.9–79.09/lb.",
-      "weekly_pct": -8.7,
-      "mom_pct": -9.9,
-      "yoy_pct": 22.4,
-      "high_52w": 79.09,
-      "low_52w": 47.9
-    },
-    {
-      "name": "Soybean Meal",
-      "category": "Agriculture - Oilseeds",
-      "unit": "ton",
-      "val": "301.6",
-      "day": "-0.4%",
-      "mm": "-9.1%",
-      "yy": "+6.2%",
-      "context": "Soybean Meal at 301.6/ton (-0.4% w/w; -9.1% m/m; +6.2% y/y). 52-week range 260.7–342.7/ton.",
-      "weekly_pct": -0.4,
-      "mom_pct": -9.1,
-      "yoy_pct": 6.2,
-      "high_52w": 342.7,
-      "low_52w": 260.7
-    },
-    {
-      "name": "Coffee",
-      "category": "Agriculture - Softs",
-      "unit": "lb",
-      "val": "264.15",
-      "day": "+4.3%",
-      "mm": "-3.0%",
-      "yy": "-17.2%",
-      "context": "Coffee at 264.15/lb (+4.3% w/w; -3.0% m/m; -17.2% y/y). 52-week range 244.4–432.35/lb.",
-      "weekly_pct": 4.3,
-      "mom_pct": -3.0,
-      "yoy_pct": -17.2,
-      "high_52w": 432.35,
-      "low_52w": 244.4
-    },
-    {
-      "name": "Cocoa",
-      "category": "Agriculture - Softs",
-      "unit": "t",
-      "val": "4380.0",
-      "day": "+27.3%",
-      "mm": "+15.4%",
-      "yy": "-48.2%",
-      "context": "Cocoa at 4380.0/t (+27.3% w/w; +15.4% m/m; -48.2% y/y). 52-week range 2798.0–9436.0/t.",
-      "weekly_pct": 27.3,
-      "mom_pct": 15.4,
-      "yoy_pct": -48.2,
-      "high_52w": 9436.0,
-      "low_52w": 2798.0
-    },
-    {
-      "name": "Sugar #11",
-      "category": "Agriculture - Softs",
-      "unit": "lb",
-      "val": "12.21",
-      "day": "-14.9%",
-      "mm": "-17.0%",
-      "yy": "-24.2%",
-      "context": "Sugar #11 at 12.21/lb (-14.9% w/w; -17.0% m/m; -24.2% y/y). 52-week range 12.21–16.94/lb.",
-      "weekly_pct": -14.9,
-      "mom_pct": -17.0,
-      "yoy_pct": -24.2,
-      "high_52w": 16.94,
-      "low_52w": 12.21
-    },
-    {
-      "name": "Cotton",
-      "category": "Agriculture - Softs",
-      "unit": "lb",
-      "val": "80.12",
-      "day": "+4.8%",
-      "mm": "+3.5%",
-      "yy": "+25.1%",
-      "context": "Cotton at 80.12/lb (+4.8% w/w; +3.5% m/m; +25.1% y/y). 52-week range 61.06–87.77/lb.",
-      "weekly_pct": 4.8,
-      "mom_pct": 3.5,
-      "yoy_pct": 25.1,
-      "high_52w": 87.77,
-      "low_52w": 61.06
-    },
-    {
-      "name": "Live Cattle",
-      "category": "Agriculture - Livestock",
-      "unit": "lb",
-      "val": "2.47",
-      "day": "-1.9%",
-      "mm": "-3.1%",
-      "yy": "+10.0%",
-      "context": "Live Cattle at 2.47/lb (-1.9% w/w; -3.1% m/m; +10.0% y/y). 52-week range 2.07–2.58/lb.",
-      "weekly_pct": -1.9,
-      "mom_pct": -3.1,
-      "yoy_pct": 10.0,
-      "high_52w": 2.58,
-      "low_52w": 2.07
-    },
-    {
-      "name": "Lean Hogs",
-      "category": "Agriculture - Livestock",
-      "unit": "lb",
-      "val": "0.97",
-      "day": "+4.2%",
-      "mm": "-1.2%",
-      "yy": "-13.8%",
-      "context": "Lean Hogs at 0.97/lb (+4.2% w/w; -1.2% m/m; -13.8% y/y). 52-week range 0.78–1.13/lb.",
-      "weekly_pct": 4.2,
-      "mom_pct": -1.2,
-      "yoy_pct": -13.8,
-      "high_52w": 1.13,
-      "low_52w": 0.78
     }
   ],
   "commodity_commentary": "<p><span class=\"lead-sentence\">Commodity markets posted a mixed week as energy fell further while precious and base metals eased from recent highs</span> &mdash; WTI fell 6.39% on the week to US$75.43/bbl and Brent fell 4.75% to US$79.28/bbl, an unwind of the supply-shock premium that had carried crude above US$96/bbl a month earlier, leaving WTI down 21.92% over the month.<sup>9</sup> Precious metals held their annual gains as gold settled at US$4,226.70/oz, up 24.69% year-over-year, and silver at US$66.58/oz, up 85.07% year-over-year — the steepest 52-week percentage advance of any commodity tracked here, against a 52-week low of US$35.70/oz.<sup>9</sup> Base metals were steady with copper at US$6.38/lb, near its 52-week high of US$6.58/lb and up 31.79% year-over-year, on sustained Chinese industrial demand after the May NBS Manufacturing PMI printed 50.0.<sup>59</sup> Prairie staples were mixed: wheat rose to US$609.25/bu (+3.92% on the week, +7.31% year-over-year) while the StatCan canola farm price registered CAD$733.20/t for the May reference, its 52-week high.<sup>77</sup> Lumber rose 0.32% to US$633.00/mfbm, up 8.11% over the month.<sup>9</sup> The Signal Dispatch cross-reference engine ties commodity moves to 551 active Canadian mining projects ($199.9B aggregate) and 91 oil and gas projects ($63.2B).<sup>9</sup></p>",
@@ -7022,9 +6737,9 @@
     "total_value_billions": 1696.8,
     "active_value_billions": 1620.8
   },
-  "project_count": 6599,
+  "project_count": null,
   "new_projects": null,
-  "pipeline_value": "$1622.8B",
+  "pipeline_value": null,
   "_all_verified_sources": [
     {
       "id": 1,
@@ -7578,424 +7293,480 @@
   "yieldCurveCommentary": "<p><span class=\"lead-sentence\">The Government of Canada yield curve held a normal slope with the 2s10s spread at +64 basis points</span> &mdash; the 10Y benchmark sat at 3.40% versus the 2Y at 2.76%, following the Bank of Canada's June 10 decision to hold the overnight rate at 2.25% for the second consecutive meeting alongside the June Monetary Policy Report.<sup>28</sup> Year-over-year the 2Y has risen 5 basis points from 2.71%, the 5Y 8 basis points from 2.96% to 3.04%, the 10Y 3 basis points from 3.37%, and the long bond 17 basis points from 3.65% to 3.82%, a steeper back-end term-premium pickup than at the front.<sup>9</sup> The 5Y benchmark at 3.04% remains the residential mortgage-renewal anchor cited in the June MPR.<sup>29</sup> The Signal Dispatch cross-reference engine ties the curve to 1,862 active rate-sensitive Canadian projects ($284.3B aggregate) financed against the GoC term structure, with 272 residential projects ($41.6B) most directly exposed to 5Y pricing for mortgage refinancing.<sup>9</sup> If the 5Y benchmark holds above three percent through the third quarter, the 272 residential projects would face renewal pricing 8 basis points wider than the year-ago benchmark, while the broader rate-sensitive book priced off the 10Y would carry roughly 3 basis points of additional cost versus the same window in 2025.<sup>9</sup></p>",
   "sources": [
     {
-      "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/intro-en.html",
+      "id": 1,
       "title": "Spring Economic Update 2026 — Department of Finance",
-      "archive_url": ""
+      "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/intro-en.html"
     },
     {
-      "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/pdf/update-miseajour2026-eng.pdf",
+      "id": 2,
       "title": "Department of Finance Canada — Spring Economic Update 2026 (PDF)",
+      "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/pdf/update-miseajour2026-eng.pdf",
       "archive_url": ""
     },
     {
-      "url": "https://budget.ontario.ca/2026/chapter-3.html",
+      "id": 3,
       "title": "2026 Ontario Budget — Infrastructure",
+      "url": "https://budget.ontario.ca/2026/chapter-3.html",
       "archive_url": ""
     },
     {
-      "url": "https://budget.ontario.ca/2026/index.html",
+      "id": 4,
       "title": "Ontario Budget 2026 — Health Infrastructure",
-      "archive_url": ""
+      "url": "https://budget.ontario.ca/2026/index.html"
     },
     {
-      "url": "https://casinomining.com/project/economics/",
+      "id": 5,
       "title": "Casino Mine project economics — Casino Mining",
+      "url": "https://casinomining.com/project/economics/",
       "archive_url": ""
     },
     {
-      "url": "https://ec.europa.eu/eurostat/web/hicp/database",
+      "id": 6,
       "title": "Eurostat — HICP database",
+      "url": "https://ec.europa.eu/eurostat/web/hicp/database",
       "archive_url": ""
     },
     {
-      "url": "https://economics.td.com/new-brunswick-budget",
+      "id": 7,
       "title": "New Brunswick Budget 2026-27 — TD Economics",
+      "url": "https://economics.td.com/new-brunswick-budget",
       "archive_url": ""
     },
     {
-      "url": "https://fao-on.org/en/report/ebo-wi2026",
+      "id": 8,
       "title": "Ontario FAO — Economic and Budget Outlook Winter 2026",
+      "url": "https://fao-on.org/en/report/ebo-wi2026",
       "archive_url": ""
     },
     {
-      "url": "https://github.com/",
+      "id": 9,
       "title": "Pipeline data — docs/data/timeseries.json (commodities, FX, indices, yields)",
+      "url": "https://github.com/",
       "archive_url": ""
     },
     {
-      "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json",
+      "id": 10,
       "title": "Pipeline data — docs/data/timeseries.json (commodities, FX, indices, yields) and project counts",
-      "archive_url": ""
+      "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json"
     },
     {
-      "url": "https://ipolitics.ca/2026/06/11/a-canada-korea-partnership-would-mean-more-than-just-submarines/",
+      "id": 11,
       "title": "Canada-Korea partnership on submarines — iPolitics",
+      "url": "https://ipolitics.ca/2026/06/11/a-canada-korea-partnership-would-mean-more-than-just-submarines/",
       "archive_url": ""
     },
     {
-      "url": "https://ised-isde.canada.ca/site/ai-strategy/en",
+      "id": 12,
       "title": "Canadian Sovereign AI Compute Strategy — ISED",
-      "archive_url": ""
+      "url": "https://ised-isde.canada.ca/site/ai-strategy/en"
     },
     {
-      "url": "https://mcmillan.ca/insights/publications/change-order-canadas-spring-economic-update-2026-sets-a-new-federal-infrastructure-agenda",
+      "id": 13,
       "title": "McMillan LLP — Spring Economic Update 2026 analysis",
+      "url": "https://mcmillan.ca/insights/publications/change-order-canadas-spring-economic-update-2026-sets-a-new-federal-infrastructure-agenda",
       "archive_url": ""
     },
     {
-      "url": "https://moving2canada.com/",
+      "id": 14,
       "title": "Tourism visitor spending forecast 2026 — Moving2Canada",
-      "archive_url": ""
+      "url": "https://moving2canada.com/"
     },
     {
-      "url": "https://natural-resources.canada.ca/energy/energy-sources-distribution/canadian-energy-resource-development/major-projects-inventory/18702",
+      "id": 15,
       "title": "Major Projects Inventory — NRCan",
+      "url": "https://natural-resources.canada.ca/energy/energy-sources-distribution/canadian-energy-resource-development/major-projects-inventory/18702",
       "archive_url": ""
     },
     {
-      "url": "https://news.gov.bc.ca/releases/2026ECS0014-000552",
+      "id": 16,
       "title": "BC Government — 2025 call for power",
-      "archive_url": ""
+      "url": "https://news.gov.bc.ca/releases/2026ECS0014-000552"
     },
     {
-      "url": "https://news.gov.bc.ca/releases/2026PREM0032-000559",
+      "id": 17,
       "title": "Enhanced investment co-operation on LNG Canada Phase 2 — Province of B.C.",
+      "url": "https://news.gov.bc.ca/releases/2026PREM0032-000559",
       "archive_url": ""
     },
     {
-      "url": "https://news.gov.bc.ca/releases/2026PREM0036-000619",
+      "id": 18,
       "title": "'Look West' major-projects strategy — Province of B.C.",
+      "url": "https://news.gov.bc.ca/releases/2026PREM0036-000619",
       "archive_url": ""
     },
     {
-      "url": "https://news.gov.mb.ca/news/index.html?item=73198",
+      "id": 19,
       "title": "Manitoba Budget 2026 — Province of Manitoba",
+      "url": "https://news.gov.mb.ca/news/index.html?item=73198",
       "archive_url": ""
     },
     {
-      "url": "https://news.hydroquebec.com/news/press-releases/all-quebec/hydro-quebec-announces-net-income-dollar1850-million-first-quarter-2026-historic-high-investments.html",
+      "id": 20,
       "title": "Hydro-Quebec Q1 2026 net income — Hydro-Quebec",
+      "url": "https://news.hydroquebec.com/news/press-releases/all-quebec/hydro-quebec-announces-net-income-dollar1850-million-first-quarter-2026-historic-high-investments.html",
       "archive_url": ""
     },
     {
-      "url": "https://novascotia.ca/offshore-wind/",
+      "id": 21,
       "title": "Nova Scotia offshore-wind framework — Government of Nova Scotia",
+      "url": "https://novascotia.ca/offshore-wind/",
       "archive_url": ""
     },
     {
-      "url": "https://tc.canada.ca/en/corporate-services/transparency/corporate-management-reporting/transportation-canada-annual-reports",
+      "id": 22,
       "title": "Transport Canada — freight & logistics, rail investment",
-      "archive_url": ""
+      "url": "https://tc.canada.ca/en/corporate-services/transparency/corporate-management-reporting/transportation-canada-annual-reports"
     },
     {
-      "url": "https://universityaffairs.ca/news/universities-eligible-for-51b-infrastructure-fund/",
+      "id": 23,
       "title": "Federal Provincial-Territorial infrastructure stream — University Affairs",
-      "archive_url": ""
+      "url": "https://universityaffairs.ca/news/universities-eligible-for-51b-infrastructure-fund/"
     },
     {
-      "url": "https://walter-bolduc.github.io/can-macro-dashboard/",
+      "id": 24,
       "title": "Canadian Capital Projects Database — agriculture & forestry",
-      "archive_url": ""
+      "url": "https://walter-bolduc.github.io/can-macro-dashboard/"
     },
     {
-      "url": "https://walter-bolduc.github.io/lagging-indicator/data/discovery_summary.json",
+      "id": 25,
       "title": "Canadian Project Database — discovery_summary.json",
-      "archive_url": ""
+      "url": "https://walter-bolduc.github.io/lagging-indicator/data/discovery_summary.json"
     },
     {
-      "url": "https://walter-bolduc.github.io/lagging-indicator/data/jobs.json",
+      "id": 26,
       "title": "Job Monitor — Saskatchewan Health Authority hiring spike",
-      "archive_url": ""
+      "url": "https://walter-bolduc.github.io/lagging-indicator/data/jobs.json"
     },
     {
-      "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json",
+      "id": 27,
       "title": "Canadian Project Database — projects_all.json",
-      "archive_url": ""
+      "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"
     },
     {
-      "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/",
+      "id": 28,
       "title": "Bank of Canada — Rate Decision press release, June 10 2026",
+      "url": "https://www.bankofcanada.ca/2026/06/fad-press-release-2026-06-10/",
       "archive_url": ""
     },
     {
-      "url": "https://www.bankofcanada.ca/press/upcoming-events",
+      "id": 29,
       "title": "Bank of Canada — Upcoming events / Monetary Policy Report",
+      "url": "https://www.bankofcanada.ca/press/upcoming-events",
       "archive_url": ""
     },
     {
-      "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
+      "id": 30,
       "title": "Bank of England — Upcoming MPC dates",
+      "url": "https://www.bankofengland.co.uk/monetary-policy/upcoming-mpc-dates",
       "archive_url": ""
     },
     {
-      "url": "https://www.bls.gov/cpi/",
+      "id": 31,
       "title": "US Bureau of Labor Statistics — CPI portal",
+      "url": "https://www.bls.gov/cpi/",
       "archive_url": ""
     },
     {
-      "url": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "id": 32,
       "title": "US Bureau of Labor Statistics — Employment Situation schedule",
+      "url": "https://www.bls.gov/schedule/news_release/empsit.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/department-finance.html",
+      "id": 33,
       "title": "Aluminum and downstream manufacturing output under U.S. tariffs",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/department-finance.html"
     },
     {
-      "url": "https://www.canada.ca/en/department-finance/news/2026/06/canada-to-extend-steel-and-aluminum-tariff-measures-to-support-workers-and-businesses.html",
+      "id": 34,
       "title": "Department of Finance Canada — steel & aluminum tariff measures extended",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/department-finance/news/2026/06/canada-to-extend-steel-and-aluminum-tariff-measures-to-support-workers-and-businesses.html"
     },
     {
-      "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/canada-invests-in-infrastructure-at-canadian-forces-base-gagetown.html",
+      "id": 35,
       "title": "Canada invests in infrastructure at CFB Gagetown — DND",
+      "url": "https://www.canada.ca/en/department-national-defence/news/2026/04/canada-invests-in-infrastructure-at-canadian-forces-base-gagetown.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/environment-climate-change/services/federal-contaminated-sites/action-plan.html",
+      "id": 36,
       "title": "Federal Contaminated Sites Action Plan — ECCC",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/environment-climate-change/services/federal-contaminated-sites/action-plan.html"
     },
     {
-      "url": "https://www.canada.ca/en/global-affairs/news/2026/03/canada-secures-renewed-market-access-with-china-to-boost-exports-and-strengthen-economic-collaboration.html",
+      "id": 37,
       "title": "Global Affairs Canada — Renewed market access with China",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/global-affairs/news/2026/03/canada-secures-renewed-market-access-with-china-to-boost-exports-and-strengthen-economic-collaboration.html"
     },
     {
-      "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html",
+      "id": 38,
       "title": "Natural Resources Canada — 30 critical minerals partnerships, $12.1B",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/natural-resources-canada/news/2026/03/canada-secures-30-new-critical-minerals-partnerships-and-unlocks-121-billion-in-mining-project-capital.html"
     },
     {
-      "url": "https://www.canada.ca/en/privy-council/major-projects-office/projects/national/grays-bay.html",
+      "id": 39,
       "title": "Grays Bay Road and Port — Major Projects Office",
+      "url": "https://www.canada.ca/en/privy-council/major-projects-office/projects/national/grays-bay.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.canada.ca/en/radio-television-telecommunications/news/2026/05/crtc-takes-action-to-support-the-creation-and-discoverability-of-canadian-and-indigenous-content.html",
+      "id": 40,
       "title": "CRTC contribution framework, May 2026",
-      "archive_url": ""
+      "url": "https://www.canada.ca/en/radio-television-telecommunications/news/2026/05/crtc-takes-action-to-support-the-creation-and-discoverability-of-canadian-and-indigenous-content.html"
     },
     {
-      "url": "https://www.cbc.ca/news/canada/north/diavik-mine-closes-nwt-9.7143141",
+      "id": 41,
       "title": "Diavik mine closes — CBC News",
+      "url": "https://www.cbc.ca/news/canada/north/diavik-mine-closes-nwt-9.7143141",
       "archive_url": ""
     },
     {
-      "url": "https://www.cbre.ca/insights/books/canada-real-estate-market-outlook-2026",
+      "id": 42,
       "title": "CBRE Canada Real Estate Market Outlook 2026",
-      "archive_url": ""
+      "url": "https://www.cbre.ca/insights/books/canada-real-estate-market-outlook-2026"
     },
     {
-      "url": "https://www.census.gov/construction/nrc/",
+      "id": 43,
       "title": "US Census Bureau — Housing starts (new residential construction)",
+      "url": "https://www.census.gov/construction/nrc/",
       "archive_url": ""
     },
     {
-      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables",
+      "id": 44,
       "title": "CMHC — Monthly Housing Starts Data Tables",
+      "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables",
       "archive_url": ""
     },
     {
-      "url": "https://www.domtar.com/en/news",
+      "id": 45,
       "title": "Domtar — Crofton, BC NBSK pulp facility closure",
-      "archive_url": ""
+      "url": "https://www.domtar.com/en/news"
     },
     {
-      "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "id": 46,
       "title": "European Central Bank — Governing Council calendar",
+      "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "id": 47,
       "title": "Federal Reserve — FOMC calendar",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www.globenewswire.com/news-release/2026/06/05/3307568/0/en/CN-to-Support-BHP-s-Jansen-Potash-Mine-with-Rail-Service-Connecting-Saskatchewan-Production-to-Global-Markets.html",
+      "id": 48,
       "title": "CN to support Jansen with rail service — GlobeNewswire",
+      "url": "https://www.globenewswire.com/news-release/2026/06/05/3307568/0/en/CN-to-Support-BHP-s-Jansen-Potash-Mine-with-Rail-Service-Connecting-Saskatchewan-Production-to-Global-Markets.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.gov.nl.ca/releases/2026/exec/0303n05/",
+      "id": 49,
       "title": "Bay du Nord benefits/royalty/equity agreement — Government of NL",
+      "url": "https://www.gov.nl.ca/releases/2026/exec/0303n05/",
       "archive_url": ""
     },
     {
-      "url": "https://www.infrastructure.gc.ca/gmap-gcarte/index-eng.html",
+      "id": 50,
       "title": "Geomap — Infrastructure Canada",
+      "url": "https://www.infrastructure.gc.ca/gmap-gcarte/index-eng.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.infrastructure.gc.ca/plan/build-communities-strong-eng.html",
+      "id": 51,
       "title": "Infrastructure Canada — Build Communities Strong Fund; Ontario Budget 2026",
-      "archive_url": ""
+      "url": "https://www.infrastructure.gc.ca/plan/build-communities-strong-eng.html"
     },
     {
-      "url": "https://www.mining.com/bhp-takes-2-3b-hit-on-jansen-as-cost-of-potash-mine-swells-again/",
+      "id": 52,
       "title": "BHP takes $2.3B hit on Jansen — MINING.COM",
+      "url": "https://www.mining.com/bhp-takes-2-3b-hit-on-jansen-as-cost-of-potash-mine-swells-again/",
       "archive_url": ""
     },
     {
-      "url": "https://www.mnp.ca/en/insights/directory/prince-edward-island-2026-budget-highlights",
+      "id": 53,
       "title": "Prince Edward Island 2026 Budget highlights — MNP",
+      "url": "https://www.mnp.ca/en/insights/directory/prince-edward-island-2026-budget-highlights",
       "archive_url": ""
     },
     {
-      "url": "https://www.opg.com/projects-services/projects/nuclear/smr/darlington-smr/",
+      "id": 54,
       "title": "Ontario Power Generation — Darlington SMR program",
-      "archive_url": ""
+      "url": "https://www.opg.com/projects-services/projects/nuclear/smr/darlington-smr/"
     },
     {
-      "url": "https://www.oxfordeconomics.com/resource/canada-key-themes-2026-policy-shifts-are-prompting-structural-change",
+      "id": 55,
       "title": "Oxford Economics — Canada Key Themes 2026",
+      "url": "https://www.oxfordeconomics.com/resource/canada-key-themes-2026-policy-shifts-are-prompting-structural-change",
       "archive_url": ""
     },
     {
-      "url": "https://www.parl.ca/legisinfo/en/bills?parliament=45&session=1",
+      "id": 56,
       "title": "Parliament of Canada (LEGISinfo) — Bill index, 45-1 session",
+      "url": "https://www.parl.ca/legisinfo/en/bills?parliament=45&session=1",
       "archive_url": ""
     },
     {
-      "url": "https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/spf-q1-2026",
+      "id": 57,
       "title": "Philadelphia Fed — Survey of Professional Forecasters Q1 2026",
+      "url": "https://www.philadelphiafed.org/surveys-and-data/real-time-data-research/spf-q1-2026",
       "archive_url": ""
     },
     {
-      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/05/15/canada-and-alberta-strike-agreement-diversify-our-exports-reduce",
+      "id": 58,
       "title": "Canada and Alberta strike export/emissions agreement — Prime Minister of Canada",
+      "url": "https://www.pm.gc.ca/en/news/news-releases/2026/05/15/canada-and-alberta-strike-agreement-diversify-our-exports-reduce",
       "archive_url": ""
     },
     {
-      "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html",
+      "id": 59,
       "title": "China NBS — May 2026 PMI release",
+      "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html",
       "archive_url": ""
     },
     {
-      "url": "https://www.thecivilengineer.org/news/prince-edward-island-pei-unveils-10-year-energy-strategy-to-grow-on-island-renewables-and-achieve-net-zero-by-2040",
+      "id": 60,
       "title": "PEI 10-year energy strategy — The Civil Engineer",
+      "url": "https://www.thecivilengineer.org/news/prince-edward-island-pei-unveils-10-year-energy-strategy-to-grow-on-island-renewables-and-achieve-net-zero-by-2040",
       "archive_url": ""
     },
     {
-      "url": "https://www.theglobeandmail.com/business/",
+      "id": 61,
       "title": "Q2 2026 Canadian bank earnings — Globe and Mail",
-      "archive_url": ""
+      "url": "https://www.theglobeandmail.com/business/"
     },
     {
-      "url": "https://www.theglobeandmail.com/business/article-newfoundland-launches-calls-for-bids-on-16-offshore-energy-exploration/",
+      "id": 62,
       "title": "NL launches calls for bids on 16 offshore parcels — Globe and Mail",
+      "url": "https://www.theglobeandmail.com/business/article-newfoundland-launches-calls-for-bids-on-16-offshore-energy-exploration/",
       "archive_url": ""
     },
     {
-      "url": "https://www.thestadiumbusiness.com/",
+      "id": 63,
       "title": "Scotia Place & Canadian venue projects — Stadium Business 2026",
-      "archive_url": ""
+      "url": "https://www.thestadiumbusiness.com/"
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/cpi-ipc-eng.htm",
+      "id": 64,
       "title": "Statistics Canada — Consumer Price Index portal",
+      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/cpi-ipc-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/index-eng.htm",
+      "id": 65,
       "title": "Statistics Canada — Daily release calendar",
+      "url": "https://www150.statcan.gc.ca/n1/dai-quo/ssbr-rbsb/index-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260515/dq260515a-eng.htm",
+      "id": 66,
       "title": "Statistics Canada — Monthly GDP, May 15 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260515/dq260515a-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm",
+      "id": 67,
       "title": "Statistics Canada — Labour Force Survey, June 6 2026",
+      "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=12100163",
+      "id": 68,
       "title": "Statistics Canada 12-10-0163 — Merchandise trade by section",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=12100163",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002201",
+      "id": 69,
       "title": "Statistics Canada 14-10-0022 — Employment by industry",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002201",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410006301",
+      "id": 70,
       "title": "Statistics Canada 14-10-0063 — Average hourly wage",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410006301",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028703",
+      "id": 71,
       "title": "Labour Force Survey, Ontario — Statistics Canada",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410028703",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
+      "id": 72,
       "title": "Statistics Canada 16-10-0047 — Manufacturing sales",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401",
+      "id": 73,
       "title": "Consumer Price Index — Statistics Canada",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810020501",
+      "id": 74,
       "title": "Statistics Canada 18-10-0205 — New housing price index",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810020501",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010005601",
+      "id": 75,
       "title": "StatCan Retail Trade, Table 20-10-0056",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010005601"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401",
+      "id": 76,
       "title": "Statistics Canada 20-10-0074 — Wholesale sales",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701",
+      "id": 77,
       "title": "Statistics Canada 32-10-0077 — Canola farm price",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410003501",
+      "id": 78,
       "title": "Statistics Canada 34-10-0035 — Capital expenditure intentions",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410003501",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301",
+      "id": 79,
       "title": "Statistics Canada 34-10-0143 — Housing starts",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014301",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410015801",
+      "id": 80,
       "title": "Statistics Canada — housing starts, building permits, GDP by NAICS",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410015801"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201",
+      "id": 81,
       "title": "Statistics Canada 34-10-0292 — Building permits",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610011201",
+      "id": 82,
       "title": "Statistics Canada 36-10-0112 — National economic accounts (income/saving)",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610011201",
       "archive_url": ""
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401",
+      "id": 83,
       "title": "StatCan industry GDP at basic prices, Table 36-10-0434",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"
     },
     {
-      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402",
+      "id": 84,
       "title": "Statistics Canada — Industry GDP by NAICS (Table 36-10-0434)",
-      "archive_url": ""
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043402"
     }
   ],
   "insightCharts": [
@@ -8074,35 +7845,6 @@
       ],
       "eyebrow": "Labour Market · Monthly",
       "context": "The May LFS held unemployment at 6.6% while March real GDP contracted 0.1%. The database tracks <strong>1,497 active infrastructure projects</strong> ($214.0B) and 346 manufacturing projects ($70.0B) sensitive to labour-market conditions."
-    }
-  ],
-  "bocRate": "2.25%",
-  "marketCommentary": "<p><span class=\"lead-sentence\">Crude oil retreated into the Canadian oil-sands breakeven band while equities held flat since the last edition</span> — WTI crude fell to $75.43/bbl, down 6.4% from the prior edition's baseline<sup>10</sup>, settling inside the $74-76 breakeven cluster the cross-reference engine cites for 91 active oil and gas projects ($63.2B)<sup>10</sup>. The S&P/TSX Composite traded at 34,969, up 0.1%, and the S&P 500 stood at 7,501, up 0.5% over the same span<sup>10</sup>. The Canadian dollar eased 1.3% to 0.7066 CAD/USD as the Bank of Canada's overnight rate held at 2.25% following its June 10 decision<sup>28</sup>. The database tracks 6,485 active capital projects valued at $1,620.8B<sup>10</sup>.</p><p><span class=\"lead-sentence\">Pipeline exposure splits along rate and commodity lines</span> — 1,862 active rate-sensitive construction projects ($284.2B) finance against the Government of Canada curve, anchored by the 5-year benchmark at 3.04%, the mortgage-renewal reference<sup>28</sup>. If WTI holds at or below the $74-76 band, the 91 oil and gas projects ($63.2B) would sit at the lower edge of their cited breakevens<sup>10</sup>. Copper eased 2.0% since the last edition to $6.38/lb, while remaining 35.6% above its year-ago level, against 551 active mining projects ($199.9B)<sup>10</sup>.</p>",
-  "word_count": 341,
-  "yieldCurveLastYear": [
-    {
-      "term": "2Y",
-      "yield": "2.71"
-    },
-    {
-      "term": "3Y",
-      "yield": "2.74"
-    },
-    {
-      "term": "5Y",
-      "yield": "2.96"
-    },
-    {
-      "term": "7Y",
-      "yield": "3.14"
-    },
-    {
-      "term": "10Y",
-      "yield": "3.37"
-    },
-    {
-      "term": "Long",
-      "yield": "3.65"
     }
   ]
 }

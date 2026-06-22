@@ -1,5 +1,145 @@
 [
   {
+    "name": "YVR DEV5 – Northlands Cargo Warehouse Development",
+    "status": "Under Review",
+    "province": "BC",
+    "sector": "Other",
+    "value": null,
+    "lastSeen": "2026-06-22",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-22",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Peguis First Nation - Recovery Housing 30 Homes & 6-Plex",
+    "status": "Under Review",
+    "province": "MB",
+    "sector": "Housing",
+    "value": null,
+    "lastSeen": "2026-06-22",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-22",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Raphael Bridge Scour Protection Project - 2026",
+    "status": "Under Review",
+    "province": "NB",
+    "sector": "Infrastructure",
+    "value": null,
+    "lastSeen": "2026-06-22",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-22",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Divert Water Runoff from Downspouts - Armco Building",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Water & Wastewater",
+    "value": null,
+    "lastSeen": "2026-06-22",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-22",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Nassau Mills Dam Replacement, Trent-Severn Waterway",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Water & Wastewater",
+    "value": null,
+    "lastSeen": "2026-06-22",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-22",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Carling Cooling Equipment Replacement – Buildings 10 West and Building 10 East",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": null,
+    "lastSeen": "2026-06-22",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-22",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Carling Cooling Equipment Replacement – Buildings 6 and Building 7",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": null,
+    "lastSeen": "2026-06-22",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-22",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Carling Cooling Equipment Replacement – Buildings 8 and Building 9",
+    "status": "Under Review",
+    "province": "ON",
+    "sector": "Other",
+    "value": null,
+    "lastSeen": "2026-06-22",
+    "status_history": [
+      {
+        "status": "Under Review",
+        "date": "2026-06-22",
+        "note": "First tracked"
+      }
+    ]
+  },
+  {
+    "name": "Pathways Alliance CO2 Transportation Network and Storage Hub Project",
+    "status": "Under Review",
+    "province": "AB",
+    "sector": "transport_logistics",
+    "value": "—",
+    "lastSeen": "2026-06-22",
+    "status_history": [
+      {
+        "status": "On Hold",
+        "date": "2026-03-30",
+        "note": "First tracked"
+      },
+      {
+        "status": "Under Review",
+        "date": "2026-06-22",
+        "note": "Status changed from On Hold to Under Review"
+      }
+    ]
+  },
+  {
     "name": "Beardy's and Okemasis Cree Nation Solid Waste Removal and Landfill Decommissioning",
     "status": "Under Review",
     "province": "SK",
@@ -1984,21 +2124,6 @@
     "status_history": [
       {
         "status": "Under Review",
-        "date": "2026-03-30",
-        "note": "First tracked"
-      }
-    ]
-  },
-  {
-    "name": "Pathways Alliance CO2 Transportation Network and Storage Hub Project",
-    "status": "On Hold",
-    "province": "AB",
-    "sector": "transport_logistics",
-    "value": "—",
-    "lastSeen": "2026-03-30",
-    "status_history": [
-      {
-        "status": "On Hold",
         "date": "2026-03-30",
         "note": "First tracked"
       }

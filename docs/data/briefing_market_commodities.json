@@ -1,5 +1,5 @@
 {
-  "commodity_commentary": "<p><span class=\"lead-sentence\">Commodity markets posted a mixed week with energy reversing while precious and base metals advanced</span> &mdash; WTI fell 11.74% on the week to US$80.58/bbl and Brent fell 11.69% to US$83.23/bbl, reflecting the partial unwind of recent supply-shock premium that had carried crude above US$100/bbl a month earlier.<sup>37</sup> Precious metals held firm as gold settled at US$4,353.30/oz (+26.87% year-over-year, monthly average down 4.44%) and silver at US$70.21/oz (+93.53% year-over-year, the steepest 52-week percentage advance of any commodity tracked here).<sup>37</sup> Base metals firmed with copper at US$6.5085/lb (+35.59% year-over-year, within 2 cents of its 52-week high of US$6.6495/lb), driven by sustained Chinese industrial demand following the May NBS Manufacturing PMI reading of 50.0.<sup>25</sup> Agricultural staples held with wheat at 586.25 cents per bushel (+0.51% on the week, +7.82% year-over-year) and the StatCan canola farm price at CAD$733.20 per tonne for the May reference.<sup>16</sup> Lumber rose 2.55% on the week to US$623.50 per thousand board feet, the largest weekly percentage advance among forest products tracked here.<sup>37</sup> The Signal Dispatch cross-reference engine ties commodity moves to 635 active Canadian mining projects ($184.5B aggregate), 89 oil and gas projects ($63.5B), and 269 forestry projects ($4.7B).<sup>37</sup></p>",
+  "commodity_commentary": "<p><span class=\"lead-sentence\">Commodity markets posted a mixed week as energy reversed sharply while precious and base metals advanced</span> &mdash; WTI fell 11.74% on the week to US$80.58/bbl and Brent fell 11.69% to US$83.23/bbl, an unwind of the supply-shock premium that had carried crude above US$100/bbl a month earlier, leaving WTI down 23.56% over the month.<sup>32</sup> Precious metals held firm as gold settled at US$4,353.30/oz, up 31.07% year-over-year, and silver at US$70.22/oz, up 93.53% year-over-year &mdash; the steepest 52-week percentage advance of any commodity tracked here, against a 52-week low of US$35.70/oz.<sup>32</sup> Base metals firmed with copper at US$6.51/lb, near its 52-week high of US$6.58/lb and up 35.59% year-over-year, on sustained Chinese industrial demand after the May NBS Manufacturing PMI printed 50.0.<sup>25</sup> Prairie staples were mixed: wheat held at US$586.25/bu (+0.51% on the week, +7.82% year-over-year) while the StatCan canola farm price registered CAD$733.20/t for the May reference, its 52-week high.<sup>16</sup> Lumber rose 3.10% to US$631.00/mfbm, the firmest weekly move among forest products.<sup>32</sup> The Signal Dispatch cross-reference engine ties commodity moves to 551 active Canadian mining projects ($199.9B aggregate) and 91 oil and gas projects ($63.2B).<sup>32</sup></p>",
   "commodities": [
     {
       "name": "Crude Oil (WTI)",
@@ -16,7 +16,7 @@
       "unit": "US$/bbl",
       "high_52w": "$112.95/bbl",
       "low_52w": "$55.27/bbl",
-      "context": "<p><span class=\"lead-sentence\">WTI crude settled at US$80.58 per barrel on June 15, down 11.74% on the week and 23.56% on the month</span> &mdash; the decline came as the geopolitical premium that had carried crude above US$100 per barrel a month earlier eased, following the Iran-war oil-price spike to four-year highs that the ECB cited as the operative motivation for its June 11 hike.<sup>26</sup> The 52-week range runs US$55.27 to US$112.95 per barrel; WTI's +10.41% year-over-year reading sits above the 1-year average of US$72.33 per barrel.<sup>37</sup> The Signal Dispatch cross-reference engine ties WTI to 89 active Canadian oil and gas projects ($63.5B aggregate). If WTI holds above US$74-76 per barrel, the typical Alberta oil-sands breakeven cluster cited in 2025 securities filings, the 89 oil and gas projects would maintain netbacks above that threshold.<sup>37</sup></p>"
+      "context": "<p><span class=\"lead-sentence\">WTI crude settled at US$80.58 per barrel, down 11.74% on the week and 23.56% over the month</span> &mdash; the decline came as the geopolitical premium that had carried crude above US$100 per barrel a month earlier eased through the week's trade.<sup>32</sup> The 52-week range runs US$55.27 to US$112.95 per barrel, and WTI's +10.41% year-over-year reading sits above the one-year average of US$72.33 per barrel.<sup>32</sup> The Signal Dispatch cross-reference engine ties WTI to 91 active Canadian oil and gas projects ($63.2B aggregate). If WTI holds above US$74-76 per barrel &mdash; the Alberta breakeven cluster the engine cites for those projects &mdash; the 91 oil and gas projects would maintain netbacks above that threshold, even as April energy exports rose 9.7% m/m to $19.88B.<sup>14</sup></p>"
     },
     {
       "name": "Western Canadian Select",
@@ -34,7 +34,7 @@
       "high_52w": "N/A",
       "low_52w": "N/A",
       "context": "Data unavailable for this commodity this week.",
-      "note": "Dossier does not carry WCS pricing this week — no WCS feed available."
+      "note": "Dossier does not carry WCS pricing this week — no wcs_differential series available."
     },
     {
       "name": "Crude Oil (Brent)",
@@ -51,7 +51,7 @@
       "unit": "US$/bbl",
       "high_52w": "$118.35/bbl",
       "low_52w": "$58.92/bbl",
-      "context": "<p><span class=\"lead-sentence\">Brent crude settled at US$83.23 per barrel on June 15, down 11.69% on the week and 22.98% on the month</span> &mdash; the move tracked WTI lower as the same supply-premium unwind played through the global benchmark, against a 52-week high of US$118.35 per barrel and a 1-year average at US$76.58 per barrel.<sup>37</sup></p>"
+      "context": "<p><span class=\"lead-sentence\">Brent crude settled at US$83.23 per barrel, down 11.69% on the week and 22.98% over the month</span> &mdash; the global benchmark tracked WTI lower as the same supply-premium unwind played through, against a 52-week high of US$118.35 per barrel and a one-year average of US$76.58 per barrel.<sup>32</sup></p>"
     },
     {
       "name": "Natural Gas",
@@ -61,14 +61,14 @@
       "price": "$3.08/MMBtu",
       "day": "-1.57%",
       "weekly_pct": "-1.57%",
-      "mm": "+3.89%",
-      "mom_pct": "+3.89%",
+      "mm": "-1.44%",
+      "mom_pct": "-1.44%",
       "yy": "-14.11%",
       "yoy_pct": "-14.11%",
       "unit": "US$/MMBtu",
-      "high_52w": "$7.46/MMBtu",
-      "low_52w": "$2.52/MMBtu",
-      "context": "<p><span class=\"lead-sentence\">Natural gas settled at US$3.08 per million British thermal units on June 15, down 1.57% on the week and up 3.89% on the month</span> &mdash; the year-over-year reading of -14.11% reflecting the easing of 2025 winter pricing, with the 52-week range running US$2.52 to US$7.46 per MMBtu and the 1-year average at US$3.40 per MMBtu.<sup>37</sup> The Signal Dispatch cross-reference engine ties natural gas to 936 active power and energy projects ($614.3B aggregate), including LNG export terminals priced against a Henry Hub differential.<sup>37</sup></p>"
+      "high_52w": "$6.80/MMBtu",
+      "low_52w": "$2.70/MMBtu",
+      "context": "<p><span class=\"lead-sentence\">Natural gas settled at US$3.08 per million British thermal units, down 1.57% on the week and 1.44% over the month</span> &mdash; the year-over-year reading of -14.11% reflects the unwind of 2025 winter pricing, with the 52-week range running US$2.70 to US$6.80 per MMBtu and the one-year average at US$3.52 per MMBtu.<sup>32</sup> The Signal Dispatch cross-reference engine ties Henry Hub to Canadian LNG export economics, with utilities-sector capital spend tracked across 795 active projects ($599.3B aggregate) priced in part against gas-input differentials.<sup>32</sup></p>"
     },
     {
       "name": "Gold",
@@ -78,21 +78,21 @@
       "price": "$4,353.30/oz",
       "day": "+0.05%",
       "weekly_pct": "+0.05%",
-      "mm": "-4.44%",
-      "mom_pct": "-4.44%",
-      "yy": "+26.87%",
-      "yoy_pct": "+26.87%",
+      "mm": "-4.78%",
+      "mom_pct": "-4.78%",
+      "yy": "+31.07%",
+      "yoy_pct": "+31.07%",
       "unit": "US$/oz",
       "high_52w": "$5,318.40/oz",
-      "low_52w": "$3,273.70/oz",
-      "context": "<p><span class=\"lead-sentence\">Gold settled at US$4,353.30 per ounce on June 15, +0.05% on the week and +26.87% year-over-year</span> &mdash; the 1-year advance ranks among the largest annual gains since the post-2020 reflation window, with the 52-week range running US$3,273.70 to US$5,318.40 per ounce.<sup>37</sup> The Signal Dispatch cross-reference engine ties gold to 635 active Canadian mining projects ($184.5B aggregate), including Ontario, Quebec, and British Columbia gold producers whose all-in sustaining costs are cited in 2025 securities filings.<sup>37</sup></p>"
+      "low_52w": "$3,293.20/oz",
+      "context": "<p><span class=\"lead-sentence\">Gold settled at US$4,353.30 per ounce, up 0.05% on the week and 31.07% year-over-year</span> &mdash; the metal eased 4.78% over the month from its 52-week high of US$5,318.40 per ounce, holding above a one-year average of US$4,076.56 per ounce.<sup>32</sup> The Signal Dispatch cross-reference engine ties gold to the database's 551 active Canadian mining projects ($199.9B aggregate). If gold holds above US$4,000 per ounce through the third quarter, those mining projects would retain the cost coverage cited in their public filings, with the metal's +31.07% annual move marking its largest year-over-year gain in the 52-week window.<sup>32</sup></p>"
     },
     {
       "name": "Silver",
       "symbol": "SI=F",
       "category": "Precious Metals",
-      "val": "$70.21/oz",
-      "price": "$70.21/oz",
+      "val": "$70.22/oz",
+      "price": "$70.22/oz",
       "day": "+2.77%",
       "weekly_pct": "+2.77%",
       "mm": "-9.00%",
@@ -102,14 +102,14 @@
       "unit": "US$/oz",
       "high_52w": "$115.08/oz",
       "low_52w": "$35.70/oz",
-      "context": "<p><span class=\"lead-sentence\">Silver settled at US$70.21 per ounce on June 15, +2.77% on the week and +93.53% year-over-year</span> &mdash; the year-over-year reading is the steepest 52-week percentage advance of any tracked commodity, against a 52-week high of US$115.08 per ounce and a 52-week low of US$35.70 per ounce.<sup>37</sup></p>"
+      "context": "<p><span class=\"lead-sentence\">Silver settled at US$70.22 per ounce, up 2.77% on the week and 93.53% year-over-year</span> &mdash; the annual move is the steepest 52-week percentage advance of any tracked commodity, against a 52-week high of US$115.08 per ounce and a 52-week low of US$35.70 per ounce.<sup>32</sup></p>"
     },
     {
       "name": "Copper",
       "symbol": "HG=F",
       "category": "Base Metals",
-      "val": "$6.5085/lb",
-      "price": "$6.5085/lb",
+      "val": "$6.51/lb",
+      "price": "$6.51/lb",
       "day": "+2.12%",
       "weekly_pct": "+2.12%",
       "mm": "+2.98%",
@@ -117,9 +117,9 @@
       "yy": "+35.59%",
       "yoy_pct": "+35.59%",
       "unit": "US$/lb",
-      "high_52w": "$6.6495/lb",
-      "low_52w": "$4.3300/lb",
-      "context": "<p><span class=\"lead-sentence\">Copper settled at US$6.5085 per pound on June 15, +2.12% on the week and +35.59% year-over-year</span> &mdash; the advance came as the May NBS Manufacturing PMI reading of 50.0 and the equipment manufacturing sub-index at 52.1 reflected sustained Chinese industrial demand, with the 52-week range running US$4.3300 to US$6.6495 per pound.<sup>25</sup> The current print sits within 2 cents of the 52-week high.<sup>37</sup></p>"
+      "high_52w": "$6.58/lb",
+      "low_52w": "$4.33/lb",
+      "context": "<p><span class=\"lead-sentence\">Copper settled at US$6.51 per pound, up 2.12% on the week and 35.59% year-over-year</span> &mdash; the advance came as the May NBS Manufacturing PMI reading of 50.0 and the equipment-manufacturing sub-index at 52.1 reflected sustained Chinese industrial demand, with the print sitting at its highest in the 52-week window against a range of US$4.33 to US$6.58 per pound.<sup>25</sup></p>"
     },
     {
       "name": "Uranium",
@@ -136,8 +136,8 @@
       "unit": "US$/lb",
       "high_52w": "N/A",
       "low_52w": "N/A",
-      "context": "<p><span class=\"lead-sentence\">Pipeline data does not carry a current U3O8 spot reading</span> &mdash; the timeseries.json uranium key holds a single stale point from May 19. Sector signals proxy via Cameco at CAD$100.96 on June 12 and the Sprott Physical Uranium Trust U-UN.TO unit at CAD$27.07, both equity proxies rather than spot U3O8.<sup>37</sup></p>",
-      "note": "timeseries.json:uranium has single stale point. Equity proxies used as sector signal only."
+      "context": "Data unavailable for this commodity this week.",
+      "note": "timeseries.json:uranium has a single stale point (2026-05-19, n=1) — spot N/A. Cameco equity proxy noted in dossier as sector signal only; not cited as a spot price."
     },
     {
       "name": "Nickel",
@@ -149,30 +149,30 @@
       "weekly_pct": "N/A",
       "mm": "+10.56%",
       "mom_pct": "+10.56%",
-      "yy": "N/A",
-      "yoy_pct": "N/A",
+      "yy": "+25.84%",
+      "yoy_pct": "+25.84%",
       "unit": "US$/t (FRED monthly average)",
-      "high_52w": "N/A",
-      "low_52w": "N/A",
-      "context": "<p><span class=\"lead-sentence\">Nickel registered a FRED monthly-average reading of US$18,879.23 per tonne, up 10.56% on the month</span> &mdash; the monthly series is the only nickel signal available in pipeline data, as no spot-tracking series is currently active.<sup>37</sup> The Signal Dispatch cross-reference engine ties nickel to the Ontario and Quebec battery materials supply chain, with 635 mining projects in the database carrying base-metal exposure.<sup>37</sup></p>",
-      "note": "FRED monthly-average series (n=5 points). Label as monthly average, never spot."
+      "high_52w": "$18,879.23/t",
+      "low_52w": "$14,670.77/t",
+      "context": "<p><span class=\"lead-sentence\">Nickel registered a monthly-average reading of US$18,879.23 per tonne, up 10.56% over the month and 25.84% year-over-year</span> &mdash; the FRED monthly series is the only nickel signal in pipeline data, with no spot quote computable, and the latest print sits at its 52-week high.<sup>32</sup> The Signal Dispatch cross-reference engine ties nickel to the Ontario and Quebec battery-materials supply chain feeding the database's 551 active mining projects ($199.9B aggregate).<sup>32</sup></p>",
+      "note": "FRED monthly-average series — labelled monthly average, never spot. No weekly change computable."
     },
     {
       "name": "Wheat",
       "symbol": "ZW=F",
       "category": "Agriculture",
-      "val": "586.25¢/bu",
-      "price": "586.25¢/bu",
+      "val": "$586.25/bu",
+      "price": "$586.25/bu",
       "day": "+0.51%",
       "weekly_pct": "+0.51%",
       "mm": "-8.00%",
       "mom_pct": "-8.00%",
       "yy": "+7.82%",
       "yoy_pct": "+7.82%",
-      "unit": "¢/bu",
-      "high_52w": "668.25¢/bu",
-      "low_52w": "495.00¢/bu",
-      "context": "<p><span class=\"lead-sentence\">Wheat settled at 586.25 cents per bushel on June 15, +0.51% on the week, -8.00% on the month, and +7.82% year-over-year</span> &mdash; the 52-week high of 668.25 cents per bushel and 52-week low of 495.00 cents per bushel bracket a 1-year average of 549.95 cents per bushel.<sup>37</sup></p>"
+      "unit": "US$/bu",
+      "high_52w": "$668.25/bu",
+      "low_52w": "$495.00/bu",
+      "context": "<p><span class=\"lead-sentence\">Wheat settled at US$586.25 per bushel, up 0.51% on the week and 7.82% year-over-year</span> &mdash; the contract eased 8.00% over the month, with the 52-week high of US$668.25 and low of US$495.00 bracketing a one-year average of US$549.95 per bushel.<sup>32</sup></p>"
     },
     {
       "name": "Canola",
@@ -182,57 +182,59 @@
       "price": "$733.20/t",
       "day": "N/A",
       "weekly_pct": "N/A",
-      "mm": "N/A",
-      "mom_pct": "N/A",
-      "yy": "N/A",
-      "yoy_pct": "N/A",
+      "mm": "+8.98%",
+      "mom_pct": "+8.98%",
+      "yy": "+11.92%",
+      "yoy_pct": "+11.92%",
       "unit": "CAD$/t (StatCan farm price, monthly)",
-      "high_52w": "N/A",
-      "low_52w": "N/A",
-      "context": "<p><span class=\"lead-sentence\">Canola registered a StatCan farm-price reading of CAD$733.20 per tonne for the May 2026 reference</span> &mdash; this is the StatCan 32-10-0077 monthly farm-price series, not a futures or spot quote, and feeds Prairie agricultural producer revenue calculations.<sup>16</sup></p>",
-      "note": "StatCan 32-10-0077 farm price — monthly. Label farm price (monthly), never futures or spot."
+      "high_52w": "$733.20/t",
+      "low_52w": "$616.95/t",
+      "context": "<p><span class=\"lead-sentence\">Canola registered a StatCan farm-price reading of CAD$733.20 per tonne for the May 2026 reference</span> &mdash; the 32-10-0077 monthly farm-price series, not a futures or spot quote, stands up 8.98% over the month and 11.92% year-over-year at its 52-week high, feeding Prairie oilseed producer revenue.<sup>16</sup></p>",
+      "note": "StatCan 32-10-0077 farm price — monthly. Labelled farm price (monthly), never futures or spot."
     },
     {
       "name": "Potash (Nutrien)",
       "symbol": "NTR.TO",
       "category": "Agriculture",
-      "val": "$94.61",
-      "price": "$94.61",
-      "day": "+1.05%",
-      "weekly_pct": "+1.05%",
-      "mm": "-3.18%",
-      "mom_pct": "-3.18%",
-      "yy": "+14.97%",
-      "yoy_pct": "+14.97%",
+      "val": "$92.68",
+      "price": "$92.68",
+      "day": "-1.43%",
+      "weekly_pct": "-1.43%",
+      "mm": "-5.86%",
+      "mom_pct": "-5.86%",
+      "yy": "+8.50%",
+      "yoy_pct": "+8.50%",
       "unit": "CAD$ (Nutrien NTR.TO share-price proxy)",
       "high_52w": "$114.41",
       "low_52w": "$75.58",
-      "context": "<p><span class=\"lead-sentence\">The Nutrien share-price proxy closed at CAD$94.61 on June 12, +1.05% on the week and +14.97% year-over-year</span> &mdash; this is the NTR.TO equity price used as the potash sector proxy, not a US$-denominated potash spot price, with the 52-week range running CAD$75.58 to CAD$114.41.<sup>37</sup></p>",
-      "note": "Nutrien (NTR.TO) share price proxy, CAD$ — NOT a US$ potash spot price."
+      "context": "<p><span class=\"lead-sentence\">The Nutrien share-price proxy closed at CAD$92.68, down 1.43% on the week and up 8.50% year-over-year</span> &mdash; the NTR.TO equity price stands in for the Saskatchewan potash sector, not a US$-denominated spot quote, easing 5.86% over the month against a 52-week range of CAD$75.58 to CAD$114.41.<sup>32</sup></p>",
+      "note": "Nutrien (NTR.TO) share-price proxy, CAD$ — NOT a US$ potash spot price."
     },
     {
       "name": "Lumber",
       "symbol": "LBR=F",
       "category": "Forest Products",
-      "val": "$623.50/mfbm",
-      "price": "$623.50/mfbm",
-      "day": "+2.55%",
-      "weekly_pct": "+2.55%",
-      "mm": "+8.06%",
-      "mom_pct": "+8.06%",
-      "yy": "+0.73%",
-      "yoy_pct": "+0.73%",
+      "val": "$631.00/mfbm",
+      "price": "$631.00/mfbm",
+      "day": "+3.10%",
+      "weekly_pct": "+3.10%",
+      "mm": "+6.95%",
+      "mom_pct": "+6.95%",
+      "yy": "+0.72%",
+      "yoy_pct": "+0.72%",
       "unit": "US$/mfbm",
       "high_52w": "$695.50/mfbm",
       "low_52w": "$507.00/mfbm",
-      "context": "<p><span class=\"lead-sentence\">Lumber settled at US$623.50 per thousand board feet on June 12, +2.55% on the week and +8.06% on the month</span> &mdash; the year-over-year reading of +0.73% sits roughly in line with the 1-year average of US$585.57, against a 52-week high of US$695.50 per thousand board feet.<sup>37</sup> The Signal Dispatch cross-reference engine ties lumber to 269 active forestry projects ($4.7B aggregate) and to British Columbia, Quebec, and Ontario sawmills whose margins track delivered-product pricing.<sup>37</sup></p>"
+      "context": "<p><span class=\"lead-sentence\">Lumber settled at US$631.00 per thousand board feet, up 3.10% on the week and 6.95% over the month</span> &mdash; the advance came as US housing starts for May were released, a lumber-demand signal for Canadian forestry exporters, with the year-over-year reading of +0.72% in line with the one-year average of US$585.46 against a 52-week high of US$695.50.<sup>35</sup> The Signal Dispatch cross-reference engine ties lumber to Canadian construction-input demand: Canadian housing starts rose to 279,317 SAAR in May (+6.9% m/m), and the database tracks 272 active residential projects ($41.6B aggregate) drawing on framing lumber.<sup>17</sup></p>"
     }
   ],
   "wcs_analysis": null,
   "sources": [
+    {"id": 14, "title": "Statistics Canada 12-10-0163 — Merchandise trade by section", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=12100163"},
     {"id": 16, "title": "StatCan 32-10-0077 — Canola farm price, monthly", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3210007701"},
+    {"id": 17, "title": "CMHC — Monthly Housing Starts Data Tables", "url": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/housing-market-data/monthly-housing-starts-construction-data-tables"},
     {"id": 25, "title": "China NBS — May 2026 PMI release", "url": "https://www.stats.gov.cn/english/PressRelease/202606/t20260601_1963851.html"},
-    {"id": 26, "title": "European Central Bank — Governing Council calendar", "url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html"},
-    {"id": 37, "title": "Pipeline data — docs/data/timeseries.json (commodity, FX, index, yield spot values)", "url": "https://github.com/walterbolduc/AI_newsletter/blob/main/docs/data/timeseries.json"}
+    {"id": 32, "title": "Pipeline data — docs/data/timeseries.json (commodities, FX, indices, yields)", "url": "https://github.com/"},
+    {"id": 35, "title": "US Census Bureau — Housing starts (new residential construction)", "url": "https://www.census.gov/construction/nrc/"}
   ]
 }

@@ -1,6 +1,345 @@
 {
   "weeks": [
     {
+      "week_of": "2026-06-22",
+      "summary": {
+        "total_items": 30,
+        "by_category": {
+          "government_policy": 29,
+          "capital_investment": 1
+        },
+        "by_province": {
+          "BC": 10
+        },
+        "by_level": {
+          "federal": 20,
+          "provincial": 10
+        },
+        "top_developments": [
+          {
+            "title": "S-1 (45-1) - An Act relating to railways",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Introduction and first reading on May 27, 2025 (Senate)",
+            "date": "Mon, 26 May 2025 20:00:00 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-1"
+          },
+          {
+            "title": "S-2 (45-1) - An Act to amend the Indian Act (new registration entitlements)",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Second reading and referral to committee on February 27, 2026 (House of Commons)",
+            "date": "Fri, 27 Feb 2026 10:00:00 -0500",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-2"
+          },
+          {
+            "title": "S-3 (45-1) - An Act to amend the Weights and Measures Act, the Electricity and Gas Inspection Act, the Weights and Measures Regulations and the Electricity and Gas Inspection Regulations",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Debate at second reading on April 29, 2026 (House of Commons)",
+            "date": "Wed, 29 Apr 2026 11:30:00 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-3"
+          },
+          {
+            "title": "S-4 (45-1) - An Act to amend the Energy Efficiency Act",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: First reading on June 5, 2026 (House of Commons)",
+            "date": "Fri, 05 Jun 2026 08:10:29 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-4"
+          },
+          {
+            "title": "S-5 (45-1) - Connected Care for Canadians Act",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: First reading on May 28, 2026 (House of Commons)",
+            "date": "Thu, 28 May 2026 06:10:00 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-5"
+          },
+          {
+            "title": "S-6 (45-1) - Federal Law–Civil Law Harmonization Act, No. 4",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Third reading on June 17, 2026 (Senate)",
+            "date": "Wed, 17 Jun 2026 06:15:00 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-6"
+          },
+          {
+            "title": "S-201 (45-1) - National Framework on Sickle Cell Disease Act",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Second reading and referral to committee on June 16, 2026 (House of Commons)",
+            "date": "Tue, 16 Jun 2026 15:00:33 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-201"
+          },
+          {
+            "title": "S-202 (45-1) - An Act to amend the Food and Drugs Act (warning label on alcoholic beverages)",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Debate at third reading on June 2, 2026 (Senate)",
+            "date": "Tue, 02 Jun 2026 06:45:00 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-202"
+          },
+          {
+            "title": "S-203 (45-1) - Alcoholic Beverage Promotion Prohibition Act",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Debate at second reading on February 5, 2026 (Senate)",
+            "date": "Thu, 05 Feb 2026 06:00:00 -0500",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-203"
+          },
+          {
+            "title": "S-204 (45-1) - National Framework on Heart Failure Act",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Referral to committee on December 9, 2025 (Senate)",
+            "date": "Tue, 09 Dec 2025 05:25:00 -0500",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-204"
+          },
+          {
+            "title": "S-205 (45-1) - Providing Alternatives to Isolation and Ensuring Oversight and Remedies in the Correctional System Act (Tona’s Law)",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Placed in the Order of Precedence on May 28, 2026 (House of Commons)",
+            "date": "Thu, 28 May 2026 18:05:34 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-205"
+          },
+          {
+            "title": "S-206 (45-1) - National Framework for a Guaranteed Livable Basic Income Act",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Referral to committee on November 6, 2025 (Senate)",
+            "date": "Thu, 06 Nov 2025 05:45:00 -0500",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-206"
+          },
+          {
+            "title": "S-207 (45-1) - An Act to amend the Criminal Records Act, to make consequential amendments to other Acts and to repeal a regulation",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Debate at second reading on October 2, 2025 (Senate)",
+            "date": "Thu, 02 Oct 2025 06:30:00 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-207"
+          },
+          {
+            "title": "S-208 (45-1) - An Act to amend the Criminal Code (independence of the judiciary)",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Debate at second reading on February 5, 2026 (Senate)",
+            "date": "Thu, 05 Feb 2026 06:05:00 -0500",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-208"
+          },
+          {
+            "title": "S-209 (45-1) - Protecting Young Persons from Exposure to Pornography Act",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Placed in the Order of Precedence on April 30, 2026 (House of Commons)",
+            "date": "Thu, 30 Apr 2026 10:24:13 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-209"
+          },
+          {
+            "title": "S-210 (45-1) - Ukrainian Heritage Month Act",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Debate at third reading on June 12, 2026 (House of Commons)",
+            "date": "Fri, 12 Jun 2026 09:52:36 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-210"
+          },
+          {
+            "title": "S-211 (45-1) - National Framework on Sports Betting Advertising Act",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Second reading and referral to committee on April 22, 2026 (House of Commons)",
+            "date": "Wed, 22 Apr 2026 11:15:00 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-211"
+          },
+          {
+            "title": "S-212 (45-1) - National Strategy for Children and Youth Act",
+            "source_type": "legislation",
+            "categories": [
+              "capital_investment"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Placed in the Order of Precedence on March 12, 2026 (House of Commons)",
+            "date": "Thu, 12 Mar 2026 08:49:25 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-212"
+          },
+          {
+            "title": "S-213 (45-1) - An Act to amend the Canada Elections Act (demographic information)",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Debate at second reading on June 4, 2026 (Senate)",
+            "date": "Thu, 04 Jun 2026 07:05:00 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-213"
+          },
+          {
+            "title": "S-214 (45-1) - An Act to amend the Special Economic Measures Act (disposal of foreign state assets)",
+            "source_type": "legislation",
+            "categories": [
+              "government_policy"
+            ],
+            "affected_sectors": [],
+            "affected_projects_total": 0,
+            "affected_projects_value": 0,
+            "province": null,
+            "level": "federal",
+            "summary": "Latest activity: Third reading on May 26, 2026 (Senate)",
+            "date": "Tue, 26 May 2026 06:35:00 -0400",
+            "source_description": "Federal bills — House of Commons and Senate",
+            "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-214"
+          }
+        ]
+      }
+    },
+    {
       "week_of": "2026-06-15",
       "summary": {
         "total_items": 30,
@@ -824,17 +1163,7 @@
           }
         ]
       }
-    },
-    {
-      "week_of": "2026-03-15",
-      "summary": {
-        "total_items": 0,
-        "by_category": {},
-        "by_province": {},
-        "by_level": {},
-        "top_developments": []
-      }
     }
   ],
-  "last_updated": "2026-06-15T19:41:31.419417+00:00"
+  "last_updated": "2026-06-22T12:31:35.225055+00:00"
 }

@@ -90,16 +90,16 @@
       "_stale": false
     },
     {
-      "id": 19274,
+      "id": 19639,
       "indicator_name": "aluminum",
       "category": "",
       "province": "national",
-      "value": 3384.75,
-      "period": "2026-06-15",
+      "value": 3475.0,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:33Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "t",
       "frequency": "daily",
       "description": "",
@@ -107,8 +107,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:33Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -116,16 +116,16 @@
       "_stale": false
     },
     {
-      "id": 19285,
+      "id": 19651,
       "indicator_name": "bitcoin",
       "category": "",
       "province": "national",
-      "value": 575.0,
-      "period": "2026-06-15",
+      "value": 64164.0,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "USD",
       "frequency": "daily",
       "description": "",
@@ -133,8 +133,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -202,16 +202,16 @@
       "_stale": false
     },
     {
-      "id": 19266,
+      "id": 19631,
       "indicator_name": "brent",
       "category": "",
       "province": "national",
-      "value": 83.2300033569336,
-      "period": "2026-06-15",
+      "value": 79.28,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:33Z",
+      "fetched_at": "2026-06-22T10:15:38Z",
       "unit": "bbl",
       "frequency": "daily",
       "description": "",
@@ -219,8 +219,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:33Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:38Z"
         }
       },
       "_rn": 1,
@@ -514,16 +514,16 @@
       "_stale": false
     },
     {
-      "id": 19268,
+      "id": 19633,
       "indicator_name": "coal",
       "category": "",
       "province": "national",
       "value": 96.0,
-      "period": "2026-06-15",
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:33Z",
+      "fetched_at": "2026-06-22T10:15:38Z",
       "unit": "t",
       "frequency": "daily",
       "description": "",
@@ -531,8 +531,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:33Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:38Z"
         }
       },
       "_rn": 1,
@@ -540,16 +540,16 @@
       "_stale": false
     },
     {
-      "id": 19280,
+      "id": 19646,
       "indicator_name": "cocoa",
       "category": "",
       "province": "national",
-      "value": 3440.0,
-      "period": "2026-06-15",
+      "value": 4380.0,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "t",
       "frequency": "daily",
       "description": "",
@@ -557,8 +557,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -566,16 +566,16 @@
       "_stale": false
     },
     {
-      "id": 19279,
+      "id": 19645,
       "indicator_name": "coffee",
       "category": "",
       "province": "national",
-      "value": 253.2,
-      "period": "2026-06-15",
+      "value": 264.1499938964844,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "lb",
       "frequency": "daily",
       "description": "",
@@ -583,8 +583,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -651,16 +651,16 @@
       "_stale": false
     },
     {
-      "id": 19100,
+      "id": 19520,
       "indicator_name": "construction_employment",
       "category": "Employment",
       "province": "national",
-      "value": null,
+      "value": 1661.3,
       "period": "2026-05-01",
-      "previous_value": 1998.5,
-      "change": "+0.5%",
+      "previous_value": 1586.2,
+      "change": "+4.7%",
       "source": "StatCan 14-10-0022",
-      "fetched_at": "2026-06-15T12:23:48Z",
+      "fetched_at": "2026-06-22T10:16:26Z",
       "unit": "thousands",
       "frequency": "monthly",
       "description": "",
@@ -669,37 +669,11 @@
         "source_meta": {
           "authority": "Statistics Canada",
           "reference_period": "2026-05-01",
-          "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=14100022",
+          "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410002201",
           "table_id": "14-10-0022",
-          "vector_id": 2057614,
-          "retrieved_at": "2026-06-15T12:23:48Z"
-        }
-      },
-      "_rn": 1,
-      "validation_status": "under_review",
-      "_stale": true,
-      "value_raw": 2008.5
-    },
-    {
-      "id": 19273,
-      "indicator_name": "copper",
-      "category": "",
-      "province": "national",
-      "value": 6.5085,
-      "period": "2026-06-15",
-      "previous_value": null,
-      "change": null,
-      "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:33Z",
-      "unit": "lb",
-      "frequency": "daily",
-      "description": "",
-      "backfilled": 0,
-      "metadata": {
-        "source_meta": {
-          "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:33Z"
+          "coordinate": "1.2.9.1.1.0.0.0.0.0",
+          "vector_id": 2710141,
+          "retrieved_at": "2026-06-22T10:16:26Z"
         }
       },
       "_rn": 1,
@@ -707,16 +681,42 @@
       "_stale": false
     },
     {
-      "id": 19276,
-      "indicator_name": "corn",
+      "id": 19638,
+      "indicator_name": "copper",
       "category": "",
       "province": "national",
-      "value": 414.75,
-      "period": "2026-06-15",
+      "value": 6.378499984741211,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
+      "unit": "lb",
+      "frequency": "daily",
+      "description": "",
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Yahoo Finance",
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
+        }
+      },
+      "_rn": 1,
+      "validation_status": "passed",
+      "_stale": false
+    },
+    {
+      "id": 19642,
+      "indicator_name": "corn",
+      "category": "",
+      "province": "national",
+      "value": 415.0,
+      "period": "2026-06-22",
+      "previous_value": null,
+      "change": null,
+      "source": "Yahoo Finance",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "bu",
       "frequency": "daily",
       "description": "",
@@ -724,8 +724,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -733,16 +733,16 @@
       "_stale": false
     },
     {
-      "id": 19282,
+      "id": 19648,
       "indicator_name": "cotton",
       "category": "",
       "province": "national",
-      "value": 76.42,
-      "period": "2026-06-15",
+      "value": 80.12000274658203,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "lb",
       "frequency": "daily",
       "description": "",
@@ -750,8 +750,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -1045,16 +1045,16 @@
       "_stale": false
     },
     {
-      "id": 19261,
+      "id": 19628,
       "indicator_name": "dax",
       "category": "",
       "province": "national",
-      "value": 24962.0,
-      "period": "2026-06-15",
+      "value": 24912.0,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:24Z",
+      "fetched_at": "2026-06-22T10:15:38Z",
       "unit": "pts",
       "frequency": "daily",
       "description": "",
@@ -1062,8 +1062,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:24Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:38Z"
         }
       },
       "_rn": 1,
@@ -1097,16 +1097,16 @@
       "_stale": false
     },
     {
-      "id": 16944,
+      "id": 19653,
       "indicator_name": "dry_bulk_shipping",
       "category": "",
       "province": "national",
-      "value": 12.95,
-      "period": "2026-05-14",
+      "value": 11.57,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-05-15T03:03:13Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "USD",
       "frequency": "daily",
       "description": "",
@@ -1114,8 +1114,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-05-14",
-          "retrieved_at": "2026-05-15T03:03:13Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -1546,16 +1546,16 @@
       "_stale": false
     },
     {
-      "id": 19286,
+      "id": 19652,
       "indicator_name": "ethereum",
       "category": "",
       "province": "national",
-      "value": 1761.0,
-      "period": "2026-06-15",
+      "value": 1749.0,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "USD",
       "frequency": "daily",
       "description": "",
@@ -1563,8 +1563,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -1572,16 +1572,16 @@
       "_stale": false
     },
     {
-      "id": 19263,
+      "id": 19629,
       "indicator_name": "eurusd",
       "category": "",
       "province": "national",
-      "value": 1.16,
-      "period": "2026-06-15",
+      "value": 1.15,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:24Z",
+      "fetched_at": "2026-06-22T10:15:38Z",
       "unit": "",
       "frequency": "daily",
       "description": "",
@@ -1589,8 +1589,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:24Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:38Z"
         }
       },
       "_rn": 1,
@@ -1627,16 +1627,16 @@
       "_stale": false
     },
     {
-      "id": 19260,
+      "id": 19627,
       "indicator_name": "ftse100",
       "category": "",
       "province": "national",
-      "value": 10480.0,
-      "period": "2026-06-15",
+      "value": 10354.0,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:24Z",
+      "fetched_at": "2026-06-22T10:15:38Z",
       "unit": "pts",
       "frequency": "daily",
       "description": "",
@@ -1644,8 +1644,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:24Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:38Z"
         }
       },
       "_rn": 1,
@@ -2225,7 +2225,7 @@
       "previous_value": null,
       "change": null,
       "source": "ECB",
-      "fetched_at": "2026-06-15T17:19:24Z",
+      "fetched_at": "2026-06-22T10:15:38Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -2235,7 +2235,7 @@
           "authority": "Eurostat/ECB",
           "reference_period": "2026-06-17",
           "source_url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html",
-          "retrieved_at": "2026-06-15T17:19:24Z"
+          "retrieved_at": "2026-06-22T10:15:38Z"
         }
       },
       "_rn": 1,
@@ -2270,16 +2270,16 @@
       "_stale": false
     },
     {
-      "id": 18749,
+      "id": 19569,
       "indicator_name": "global_rate",
       "category": "Global",
       "province": "United States",
       "value": "3.63%",
-      "period": "2026-05-19",
+      "period": "2026-06-17",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-05-19T14:55:15Z",
+      "fetched_at": "2026-06-22T10:15:38Z",
       "unit": "%",
       "frequency": "monthly",
       "description": "",
@@ -2287,9 +2287,9 @@
       "metadata": {
         "source_meta": {
           "authority": "BLS/BEA/Fed",
-          "reference_period": "2026-05-19",
+          "reference_period": "2026-06-17",
           "source_url": "https://www.federalreserve.gov/monetarypolicy/openmarket.htm",
-          "retrieved_at": "2026-05-19T14:55:15Z"
+          "retrieved_at": "2026-06-22T10:15:38Z"
         }
       },
       "_rn": 1,
@@ -2405,16 +2405,16 @@
       "_stale": false
     },
     {
-      "id": 19292,
+      "id": 19658,
       "indicator_name": "goc_10y_yield",
       "category": "",
       "province": "national",
-      "value": 3.4,
-      "period": "2026-06-15",
+      "value": 3.38,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Bank of Canada",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "%",
       "frequency": "daily",
       "description": "",
@@ -2422,8 +2422,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Bank of Canada",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -2431,16 +2431,16 @@
       "_stale": false
     },
     {
-      "id": 19288,
+      "id": 19654,
       "indicator_name": "goc_2y_yield",
       "category": "",
       "province": "national",
-      "value": 2.76,
-      "period": "2026-06-15",
+      "value": 2.78,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Bank of Canada",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "%",
       "frequency": "daily",
       "description": "",
@@ -2448,8 +2448,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Bank of Canada",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -2457,16 +2457,16 @@
       "_stale": false
     },
     {
-      "id": 19289,
+      "id": 19655,
       "indicator_name": "goc_3y_yield",
       "category": "",
       "province": "national",
-      "value": 2.86,
-      "period": "2026-06-15",
+      "value": 2.88,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Bank of Canada",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "%",
       "frequency": "daily",
       "description": "",
@@ -2474,8 +2474,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Bank of Canada",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -2483,16 +2483,16 @@
       "_stale": false
     },
     {
-      "id": 19290,
+      "id": 19656,
       "indicator_name": "goc_5y_yield",
       "category": "",
       "province": "national",
       "value": 3.04,
-      "period": "2026-06-15",
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Bank of Canada",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "%",
       "frequency": "daily",
       "description": "",
@@ -2500,8 +2500,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Bank of Canada",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -2509,16 +2509,16 @@
       "_stale": false
     },
     {
-      "id": 19291,
+      "id": 19657,
       "indicator_name": "goc_7y_yield",
       "category": "",
       "province": "national",
-      "value": 3.18,
-      "period": "2026-06-15",
+      "value": 3.17,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Bank of Canada",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "%",
       "frequency": "daily",
       "description": "",
@@ -2526,8 +2526,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Bank of Canada",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -2535,16 +2535,16 @@
       "_stale": false
     },
     {
-      "id": 19293,
+      "id": 19659,
       "indicator_name": "goc_long_yield",
       "category": "",
       "province": "national",
-      "value": 3.82,
-      "period": "2026-06-15",
+      "value": 3.8,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Bank of Canada",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "%",
       "frequency": "daily",
       "description": "",
@@ -2552,8 +2552,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Bank of Canada",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -2561,16 +2561,16 @@
       "_stale": false
     },
     {
-      "id": 19269,
+      "id": 19634,
       "indicator_name": "gold",
       "category": "",
       "province": "national",
-      "value": 4353.2998046875,
-      "period": "2026-06-15",
+      "value": 4226.7001953125,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:33Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "troy oz",
       "frequency": "daily",
       "description": "",
@@ -2578,8 +2578,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:33Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -3044,16 +3044,16 @@
       "_stale": false
     },
     {
-      "id": 19301,
+      "id": 19667,
       "indicator_name": "hy_spread",
       "category": "",
       "province": "national",
-      "value": 2.71,
-      "period": "2026-06-15",
+      "value": 2.63,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-06-15T17:20:55Z",
+      "fetched_at": "2026-06-22T10:15:47Z",
       "unit": "%",
       "frequency": "daily",
       "description": "",
@@ -3061,8 +3061,8 @@
       "metadata": {
         "source_meta": {
           "authority": "FRED",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:20:55Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:47Z"
         }
       },
       "_rn": 1,
@@ -3070,16 +3070,16 @@
       "_stale": false
     },
     {
-      "id": 19300,
+      "id": 19666,
       "indicator_name": "ig_spread",
       "category": "",
       "province": "national",
       "value": 0.74,
-      "period": "2026-06-15",
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-06-15T17:20:55Z",
+      "fetched_at": "2026-06-22T10:15:47Z",
       "unit": "%",
       "frequency": "daily",
       "description": "",
@@ -3087,8 +3087,8 @@
       "metadata": {
         "source_meta": {
           "authority": "FRED",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:20:55Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:47Z"
         }
       },
       "_rn": 1,
@@ -4236,16 +4236,16 @@
       "value_raw": 1563.3
     },
     {
-      "id": 19294,
+      "id": 19660,
       "indicator_name": "iron_ore",
       "category": "",
       "province": "national",
       "value": 111.6461538461538,
-      "period": "2026-06-15",
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-06-15T17:19:46Z",
+      "fetched_at": "2026-06-22T10:15:41Z",
       "unit": "USD/t",
       "frequency": "daily",
       "description": "",
@@ -4253,8 +4253,8 @@
       "metadata": {
         "source_meta": {
           "authority": "FRED",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:46Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:41Z"
         }
       },
       "_rn": 1,
@@ -4262,16 +4262,16 @@
       "_stale": false
     },
     {
-      "id": 19298,
+      "id": 19664,
       "indicator_name": "lead",
       "category": "",
       "province": "national",
       "value": 1984.263846153846,
-      "period": "2026-06-15",
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-06-15T17:20:40Z",
+      "fetched_at": "2026-06-22T10:15:45Z",
       "unit": "USD/t",
       "frequency": "daily",
       "description": "",
@@ -4279,8 +4279,8 @@
       "metadata": {
         "source_meta": {
           "authority": "FRED",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:20:40Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:45Z"
         }
       },
       "_rn": 1,
@@ -4288,16 +4288,16 @@
       "_stale": false
     },
     {
-      "id": 19299,
+      "id": 19665,
       "indicator_name": "lng_asia",
       "category": "",
       "province": "national",
       "value": 17.608,
-      "period": "2026-06-15",
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-06-15T17:20:54Z",
+      "fetched_at": "2026-06-22T10:15:46Z",
       "unit": "USD/MMBtu",
       "frequency": "daily",
       "description": "",
@@ -4305,8 +4305,8 @@
       "metadata": {
         "source_meta": {
           "authority": "FRED",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:20:54Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:46Z"
         }
       },
       "_rn": 1,
@@ -4409,7 +4409,7 @@
       "previous_value": 73976.802,
       "change": "+4.2%",
       "source": "StatCan 16-10-0047",
-      "fetched_at": "2026-06-15T17:22:01Z",
+      "fetched_at": "2026-06-22T10:16:33Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -4422,7 +4422,7 @@
           "table_id": "16-10-0047",
           "coordinate": "1.1.2.1.0.0.0.0.0.0",
           "vector_id": 800450,
-          "retrieved_at": "2026-06-15T17:22:01Z"
+          "retrieved_at": "2026-06-22T10:16:33Z"
         }
       },
       "_rn": 1,
@@ -4600,16 +4600,16 @@
       "_stale": false
     },
     {
-      "id": 19295,
+      "id": 19661,
       "indicator_name": "nickel",
       "category": "",
       "province": "national",
       "value": 18879.23461538462,
-      "period": "2026-06-15",
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-06-15T17:19:58Z",
+      "fetched_at": "2026-06-22T10:15:42Z",
       "unit": "USD/t",
       "frequency": "daily",
       "description": "",
@@ -4617,8 +4617,8 @@
       "metadata": {
         "source_meta": {
           "authority": "FRED",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:58Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:42Z"
         }
       },
       "_rn": 1,
@@ -5011,16 +5011,16 @@
       "_stale": false
     },
     {
-      "id": 19272,
+      "id": 19637,
       "indicator_name": "palladium",
       "category": "",
       "province": "national",
-      "value": 1363.0,
-      "period": "2026-06-15",
+      "value": 1264.0,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:33Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "troy oz",
       "frequency": "daily",
       "description": "",
@@ -5028,8 +5028,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:33Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -5401,16 +5401,16 @@
       "_stale": false
     },
     {
-      "id": 19271,
+      "id": 19636,
       "indicator_name": "platinum",
       "category": "",
       "province": "national",
-      "value": 1809.0,
-      "period": "2026-06-15",
+      "value": 1681.0999755859375,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:33Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "troy oz",
       "frequency": "daily",
       "description": "",
@@ -5418,8 +5418,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:33Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -5507,41 +5507,61 @@
       "_stale": false
     },
     {
-      "id": 16770,
+      "id": 19701,
       "indicator_name": "qc_bldg_permits_nonres",
-      "category": "",
+      "category": "Housing",
       "province": "QC",
-      "value": 6513.47,
-      "period": "2026-02-01",
-      "previous_value": null,
-      "change": null,
-      "source": "Institut de la statistique du Québec",
-      "fetched_at": "2026-05-15T14:29:18Z",
+      "value": 938.824,
+      "period": "2026-04-01",
+      "previous_value": 848.903,
+      "change": "+10.6%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-06-22T10:16:45Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Statistics Canada",
+          "reference_period": "2026-04-01",
+          "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201",
+          "table_id": "34-10-0292",
+          "coordinate": "6.33.1.1.2.0.0.0.0.0",
+          "vector_id": 1675119689,
+          "retrieved_at": "2026-06-22T10:16:45Z"
+        }
+      },
       "_rn": 1,
       "validation_status": "passed",
       "_stale": false
     },
     {
-      "id": 16761,
+      "id": 19702,
       "indicator_name": "qc_bldg_permits_res",
-      "category": "",
+      "category": "Housing",
       "province": "QC",
-      "value": 22783.2,
-      "period": "2026-02-01",
-      "previous_value": null,
-      "change": null,
-      "source": "Institut de la statistique du Québec",
-      "fetched_at": "2026-05-15T14:29:18Z",
+      "value": 1965.36,
+      "period": "2026-04-01",
+      "previous_value": 1755.685,
+      "change": "+11.9%",
+      "source": "StatCan 34-10-0292",
+      "fetched_at": "2026-06-22T10:16:45Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
-      "backfilled": 1,
-      "metadata": {},
+      "backfilled": 0,
+      "metadata": {
+        "source_meta": {
+          "authority": "Statistics Canada",
+          "reference_period": "2026-04-01",
+          "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201",
+          "table_id": "34-10-0292",
+          "coordinate": "6.4.1.1.2.0.0.0.0.0",
+          "vector_id": 1675119686,
+          "retrieved_at": "2026-06-22T10:16:45Z"
+        }
+      },
       "_rn": 1,
       "validation_status": "passed",
       "_stale": false
@@ -6252,16 +6272,16 @@
       "_stale": false
     },
     {
-      "id": 19277,
+      "id": 19643,
       "indicator_name": "rice",
       "category": "",
       "province": "national",
-      "value": 12.04,
-      "period": "2026-06-15",
+      "value": null,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "cwt",
       "frequency": "daily",
       "description": "",
@@ -6269,25 +6289,26 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
-      "validation_status": "passed",
-      "_stale": false
+      "validation_status": "under_review",
+      "_stale": true,
+      "value_raw": 6.38
     },
     {
-      "id": 19270,
+      "id": 19635,
       "indicator_name": "silver",
       "category": "",
       "province": "national",
-      "value": 70.21499633789062,
-      "period": "2026-06-15",
+      "value": 66.58,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:33Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "troy oz",
       "frequency": "daily",
       "description": "",
@@ -6295,8 +6316,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:33Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -6304,16 +6325,16 @@
       "_stale": false
     },
     {
-      "id": 19284,
+      "id": 19650,
       "indicator_name": "soybean_meal",
       "category": "",
       "province": "national",
-      "value": 302.8,
-      "period": "2026-06-15",
+      "value": 301.6,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "ton",
       "frequency": "daily",
       "description": "",
@@ -6321,8 +6342,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -6330,16 +6351,16 @@
       "_stale": false
     },
     {
-      "id": 19283,
+      "id": 19649,
       "indicator_name": "soybean_oil",
       "category": "",
       "province": "national",
-      "value": 73.03,
-      "period": "2026-06-15",
+      "value": 66.67,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "lb",
       "frequency": "daily",
       "description": "",
@@ -6347,8 +6368,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -6356,16 +6377,16 @@
       "_stale": false
     },
     {
-      "id": 19278,
+      "id": 19644,
       "indicator_name": "soybeans",
       "category": "",
       "province": "national",
-      "value": 1132.5,
-      "period": "2026-06-15",
+      "value": 1144.5,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "bu",
       "frequency": "daily",
       "description": "",
@@ -6373,8 +6394,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -6382,16 +6403,16 @@
       "_stale": false
     },
     {
-      "id": 19053,
+      "id": 19626,
       "indicator_name": "sp500",
       "category": "",
       "province": "national",
-      "value": 7466.0,
-      "period": "2026-06-08",
+      "value": 7501.0,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-08T15:07:51Z",
+      "fetched_at": "2026-06-22T10:15:38Z",
       "unit": "pts",
       "frequency": "daily",
       "description": "",
@@ -6399,8 +6420,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-08",
-          "retrieved_at": "2026-06-08T15:07:51Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:38Z"
         }
       },
       "_rn": 1,
@@ -6408,16 +6429,16 @@
       "_stale": false
     },
     {
-      "id": 19281,
+      "id": 19647,
       "indicator_name": "sugar",
       "category": "",
       "province": "national",
-      "value": 14.34,
-      "period": "2026-06-15",
+      "value": 12.205,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "lb",
       "frequency": "daily",
       "description": "",
@@ -6425,8 +6446,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -6434,16 +6455,16 @@
       "_stale": false
     },
     {
-      "id": 19297,
+      "id": 19663,
       "indicator_name": "tin",
       "category": "",
       "province": "national",
       "value": 52913.5,
-      "period": "2026-06-15",
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-06-15T17:20:26Z",
+      "fetched_at": "2026-06-22T10:15:44Z",
       "unit": "USD/t",
       "frequency": "daily",
       "description": "",
@@ -6451,8 +6472,8 @@
       "metadata": {
         "source_meta": {
           "authority": "FRED",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:20:26Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:44Z"
         }
       },
       "_rn": 1,
@@ -7265,16 +7286,16 @@
       "_stale": false
     },
     {
-      "id": 19275,
+      "id": 19641,
       "indicator_name": "wheat",
       "category": "",
       "province": "national",
-      "value": 586.25,
-      "period": "2026-06-15",
+      "value": 609.25,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:34Z",
+      "fetched_at": "2026-06-22T10:15:39Z",
       "unit": "bu",
       "frequency": "daily",
       "description": "",
@@ -7282,8 +7303,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:34Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:39Z"
         }
       },
       "_rn": 1,
@@ -7330,7 +7351,7 @@
       "previous_value": 134983.483,
       "change": "+2.8%",
       "source": "StatCan 20-10-0074",
-      "fetched_at": "2026-06-15T17:22:06Z",
+      "fetched_at": "2026-06-22T10:16:38Z",
       "unit": "$M",
       "frequency": "monthly",
       "description": "",
@@ -7343,7 +7364,7 @@
           "table_id": "20-10-0074",
           "coordinate": "1.1.2.0.0.0.0.0.0.0",
           "vector_id": 52367637,
-          "retrieved_at": "2026-06-15T17:22:06Z"
+          "retrieved_at": "2026-06-22T10:16:38Z"
         }
       },
       "_rn": 1,
@@ -7351,16 +7372,16 @@
       "_stale": false
     },
     {
-      "id": 19265,
+      "id": 19630,
       "indicator_name": "wti",
       "category": "",
       "province": "national",
-      "value": 80.58000183105469,
-      "period": "2026-06-15",
+      "value": 75.43000030517578,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "Yahoo Finance",
-      "fetched_at": "2026-06-15T17:19:33Z",
+      "fetched_at": "2026-06-22T10:15:38Z",
       "unit": "bbl",
       "frequency": "daily",
       "description": "",
@@ -7368,8 +7389,8 @@
       "metadata": {
         "source_meta": {
           "authority": "Yahoo Finance",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:19:33Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:38Z"
         }
       },
       "_rn": 1,
@@ -7404,16 +7425,16 @@
       "_stale": false
     },
     {
-      "id": 18797,
+      "id": 19668,
       "indicator_name": "yield_curve_10y2y",
       "category": "",
       "province": "national",
-      "value": 0.54,
-      "period": "2026-05-19",
+      "value": 0.27,
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-05-19T14:55:21Z",
+      "fetched_at": "2026-06-22T10:15:48Z",
       "unit": "%",
       "frequency": "daily",
       "description": "",
@@ -7421,8 +7442,8 @@
       "metadata": {
         "source_meta": {
           "authority": "FRED",
-          "reference_period": "2026-05-19",
-          "retrieved_at": "2026-05-19T14:55:21Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:48Z"
         }
       },
       "_rn": 1,
@@ -7430,16 +7451,16 @@
       "_stale": false
     },
     {
-      "id": 19296,
+      "id": 19662,
       "indicator_name": "zinc",
       "category": "",
       "province": "national",
       "value": 3458.04,
-      "period": "2026-06-15",
+      "period": "2026-06-22",
       "previous_value": null,
       "change": null,
       "source": "FRED",
-      "fetched_at": "2026-06-15T17:20:12Z",
+      "fetched_at": "2026-06-22T10:15:43Z",
       "unit": "USD/t",
       "frequency": "daily",
       "description": "",
@@ -7447,8 +7468,8 @@
       "metadata": {
         "source_meta": {
           "authority": "FRED",
-          "reference_period": "2026-06-15",
-          "retrieved_at": "2026-06-15T17:20:12Z"
+          "reference_period": "2026-06-22",
+          "retrieved_at": "2026-06-22T10:15:43Z"
         }
       },
       "_rn": 1,
@@ -7946,6 +7967,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "aluminum",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 3475.0,
+      "unit": "t",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "bitcoin",
       "province": "national",
       "period": "2026-03-30",
@@ -7982,6 +8011,14 @@
       "province": "national",
       "period": "2026-06-15",
       "value": 575.0,
+      "unit": "USD",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "bitcoin",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 64164.0,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -8482,6 +8519,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "brent",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 79.28,
+      "unit": "bbl",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "buildingPermits",
       "province": "AB",
       "period": "2026-04-01",
@@ -8560,14 +8605,6 @@
       "value": "$254M",
       "unit": "",
       "source": "StatCan"
-    },
-    {
-      "indicator_name": "cadusd",
-      "province": "national",
-      "period": "2021-06-21",
-      "value": 0.8,
-      "unit": "USD",
-      "source": "Yahoo Finance"
     },
     {
       "indicator_name": "cadusd",
@@ -11042,6 +11079,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "coal",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 96.0,
+      "unit": "t",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "cocoa",
       "province": "national",
       "period": "2025-03-10",
@@ -11506,6 +11551,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "cocoa",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 4380.0,
+      "unit": "t",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "coffee",
       "province": "national",
       "period": "2025-03-10",
@@ -11954,6 +12007,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "coffee",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 264.1499938964844,
+      "unit": "lb",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "commercial_building_investment",
       "province": "national",
       "period": "2023-10-01",
@@ -12005,7 +12066,7 @@
       "indicator_name": "construction_employment",
       "province": "national",
       "period": "2026-05-01",
-      "value": 2008.5,
+      "value": 1661.3,
       "unit": "thousands",
       "source": "StatCan 14-10-0022"
     },
@@ -16274,6 +16335,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "copper",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 6.378499984741211,
+      "unit": "lb",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "corn",
       "province": "national",
       "period": "2025-03-10",
@@ -16738,6 +16807,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "corn",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 415.0,
+      "unit": "bu",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "cotton",
       "province": "national",
       "period": "2025-03-10",
@@ -17198,6 +17275,14 @@
       "province": "national",
       "period": "2026-06-15",
       "value": 76.42,
+      "unit": "lb",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "cotton",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 80.12000274658203,
       "unit": "lb",
       "source": "Yahoo Finance"
     },
@@ -23186,6 +23271,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "dax",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 24912.0,
+      "unit": "pts",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "djia",
       "province": "national",
       "period": "2025-03-10",
@@ -23654,6 +23747,14 @@
       "province": "national",
       "period": "2026-05-14",
       "value": 12.95,
+      "unit": "USD",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "dry_bulk_shipping",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 11.57,
       "unit": "USD",
       "source": "Yahoo Finance"
     },
@@ -28538,6 +28639,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "ethereum",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 1749.0,
+      "unit": "USD",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "eurusd",
       "province": "national",
       "period": "2025-03-10",
@@ -29014,6 +29123,14 @@
       "province": "national",
       "period": "2026-06-15",
       "value": 1.16,
+      "unit": "",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "eurusd",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 1.15,
       "unit": "",
       "source": "Yahoo Finance"
     },
@@ -29502,6 +29619,14 @@
       "province": "national",
       "period": "2026-06-15",
       "value": 10480.0,
+      "unit": "pts",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "ftse100",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 10354.0,
       "unit": "pts",
       "source": "Yahoo Finance"
     },
@@ -30588,6 +30713,14 @@
     {
       "indicator_name": "global_gdp",
       "province": "United Kingdom",
+      "period": "2026-01-01",
+      "value": 0.6,
+      "unit": "%",
+      "source": "FRED/OECD"
+    },
+    {
+      "indicator_name": "global_gdp",
+      "province": "United Kingdom",
       "period": "2026-03-30",
       "value": 1.1,
       "unit": "%",
@@ -30858,6 +30991,14 @@
       "source": "FRED"
     },
     {
+      "indicator_name": "global_rate",
+      "province": "United States",
+      "period": "2026-06-17",
+      "value": 3.63,
+      "unit": "%",
+      "source": "FRED"
+    },
+    {
       "indicator_name": "global_unemployment",
       "province": "China",
       "period": "2025-01-01",
@@ -30972,6 +31113,14 @@
     {
       "indicator_name": "global_unemployment",
       "province": "United Kingdom",
+      "period": "2026-01-01",
+      "value": 4.9,
+      "unit": "%",
+      "source": "FRED/ONS"
+    },
+    {
+      "indicator_name": "global_unemployment",
+      "province": "United Kingdom",
       "period": "2026-03-30",
       "value": 4.7,
       "unit": "%",
@@ -31064,14 +31213,6 @@
       "value": 4.3,
       "unit": "%",
       "source": "FRED/BLS"
-    },
-    {
-      "indicator_name": "goc_10y_yield",
-      "province": "national",
-      "period": "2021-06-21",
-      "value": 1.41,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "goc_10y_yield",
@@ -40506,12 +40647,12 @@
       "source": "Bank of Canada"
     },
     {
-      "indicator_name": "goc_2y_yield",
+      "indicator_name": "goc_10y_yield",
       "province": "national",
-      "period": "2021-06-21",
-      "value": 0.44,
+      "period": "2026-06-22",
+      "value": 3.38,
       "unit": "%",
-      "source": "Bank of Canada Valet"
+      "source": "Bank of Canada"
     },
     {
       "indicator_name": "goc_2y_yield",
@@ -49946,6 +50087,14 @@
       "source": "Bank of Canada"
     },
     {
+      "indicator_name": "goc_2y_yield",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 2.78,
+      "unit": "%",
+      "source": "Bank of Canada"
+    },
+    {
       "indicator_name": "goc_3y_yield",
       "province": "national",
       "period": "2026-03-14",
@@ -50018,12 +50167,12 @@
       "source": "Bank of Canada"
     },
     {
-      "indicator_name": "goc_5y_yield",
+      "indicator_name": "goc_3y_yield",
       "province": "national",
-      "period": "2021-06-21",
-      "value": 0.97,
+      "period": "2026-06-22",
+      "value": 2.88,
       "unit": "%",
-      "source": "Bank of Canada Valet"
+      "source": "Bank of Canada"
     },
     {
       "indicator_name": "goc_5y_yield",
@@ -59458,6 +59607,14 @@
       "source": "Bank of Canada"
     },
     {
+      "indicator_name": "goc_5y_yield",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 3.04,
+      "unit": "%",
+      "source": "Bank of Canada"
+    },
+    {
       "indicator_name": "goc_7y_yield",
       "province": "national",
       "period": "2026-03-14",
@@ -59530,6 +59687,14 @@
       "source": "Bank of Canada"
     },
     {
+      "indicator_name": "goc_7y_yield",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 3.17,
+      "unit": "%",
+      "source": "Bank of Canada"
+    },
+    {
       "indicator_name": "goc_long_yield",
       "province": "national",
       "period": "2026-03-14",
@@ -59598,6 +59763,14 @@
       "province": "national",
       "period": "2026-06-15",
       "value": 3.82,
+      "unit": "%",
+      "source": "Bank of Canada"
+    },
+    {
+      "indicator_name": "goc_long_yield",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 3.8,
       "unit": "%",
       "source": "Bank of Canada"
     },
@@ -63850,6 +64023,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "gold",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 4226.7001953125,
+      "unit": "troy oz",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "healthcare_employment",
       "province": "national",
       "period": "2026-05-01",
@@ -64858,6 +65039,14 @@
       "source": "StatCan 34-10-0143"
     },
     {
+      "indicator_name": "housing_starts_multi",
+      "province": "national",
+      "period": "2026-05-01",
+      "value": 18770.0,
+      "unit": "units",
+      "source": "StatCan 34-10-0143"
+    },
+    {
       "indicator_name": "housing_starts_single",
       "province": "national",
       "period": "2026-03-01",
@@ -64882,6 +65071,14 @@
       "source": "StatCan 34-10-0143"
     },
     {
+      "indicator_name": "housing_starts_single",
+      "province": "national",
+      "period": "2026-05-01",
+      "value": 3863.0,
+      "unit": "units",
+      "source": "StatCan 34-10-0143"
+    },
+    {
       "indicator_name": "housing_starts_total",
       "province": "national",
       "period": "2026-03-01",
@@ -64902,6 +65099,14 @@
       "province": "national",
       "period": "2026-04-01",
       "value": 21805.0,
+      "unit": "units",
+      "source": "StatCan 34-10-0143"
+    },
+    {
+      "indicator_name": "housing_starts_total",
+      "province": "national",
+      "period": "2026-05-01",
+      "value": 22633.0,
       "unit": "units",
       "source": "StatCan 34-10-0143"
     },
@@ -64946,6 +65151,14 @@
       "source": "FRED"
     },
     {
+      "indicator_name": "hy_spread",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 2.63,
+      "unit": "%",
+      "source": "FRED"
+    },
+    {
       "indicator_name": "ig_spread",
       "province": "national",
       "period": "2026-05-14",
@@ -64981,6 +65194,14 @@
       "indicator_name": "ig_spread",
       "province": "national",
       "period": "2026-06-15",
+      "value": 0.74,
+      "unit": "%",
+      "source": "FRED"
+    },
+    {
+      "indicator_name": "ig_spread",
+      "province": "national",
+      "period": "2026-06-22",
       "value": 0.74,
       "unit": "%",
       "source": "FRED"
@@ -66322,6 +66543,14 @@
       "source": "FRED"
     },
     {
+      "indicator_name": "iron_ore",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 111.6461538461538,
+      "unit": "USD/t",
+      "source": "FRED"
+    },
+    {
       "indicator_name": "lead",
       "province": "national",
       "period": "2026-05-14",
@@ -66357,6 +66586,14 @@
       "indicator_name": "lead",
       "province": "national",
       "period": "2026-06-15",
+      "value": 1984.263846153846,
+      "unit": "USD/t",
+      "source": "FRED"
+    },
+    {
+      "indicator_name": "lead",
+      "province": "national",
+      "period": "2026-06-22",
       "value": 1984.263846153846,
       "unit": "USD/t",
       "source": "FRED"
@@ -66397,6 +66634,14 @@
       "indicator_name": "lng_asia",
       "province": "national",
       "period": "2026-06-15",
+      "value": 17.608,
+      "unit": "USD/MMBtu",
+      "source": "FRED"
+    },
+    {
+      "indicator_name": "lng_asia",
+      "province": "national",
+      "period": "2026-06-22",
       "value": 17.608,
       "unit": "USD/MMBtu",
       "source": "FRED"
@@ -67951,6 +68196,14 @@
       "period": "2026-06-15",
       "value": 631.0,
       "unit": "$/mbf",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "lumber",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 633.0,
+      "unit": "mbf",
       "source": "Yahoo Finance"
     },
     {
@@ -67997,7 +68250,7 @@
       "indicator_name": "manufacturing_employment",
       "province": "national",
       "period": "2026-05-01",
-      "value": 243.2,
+      "value": 1840.8,
       "unit": "thousands",
       "source": "StatCan 14-10-0022"
     },
@@ -68053,7 +68306,7 @@
       "indicator_name": "mining_og_employment",
       "province": "national",
       "period": "2026-05-01",
-      "value": 343.0,
+      "value": 353.0,
       "unit": "thousands",
       "source": "StatCan 14-10-0022"
     },
@@ -72786,6 +73039,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "natural_gas",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 3.325,
+      "unit": "MMBtu",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "new_housing_price_index",
       "province": "national",
       "period": "2026-03-01",
@@ -72806,6 +73067,14 @@
       "province": "national",
       "period": "2026-04-01",
       "value": 121.1,
+      "unit": "index",
+      "source": "StatCan 18-10-0205"
+    },
+    {
+      "indicator_name": "new_housing_price_index",
+      "province": "national",
+      "period": "2026-05-01",
+      "value": 120.7,
       "unit": "index",
       "source": "StatCan 18-10-0205"
     },
@@ -72845,6 +73114,14 @@
       "indicator_name": "nickel",
       "province": "national",
       "period": "2026-06-15",
+      "value": 18879.23461538462,
+      "unit": "USD/t",
+      "source": "FRED"
+    },
+    {
+      "indicator_name": "nickel",
+      "province": "national",
+      "period": "2026-06-22",
       "value": 18879.23461538462,
       "unit": "USD/t",
       "source": "FRED"
@@ -77224,14 +77501,6 @@
       "value": 804.8,
       "unit": "thousands",
       "source": "StatCan 14-10-0022"
-    },
-    {
-      "indicator_name": "overnight_rate",
-      "province": "national",
-      "period": "2021-06-21",
-      "value": 0.25,
-      "unit": "%",
-      "source": "Bank of Canada Valet"
     },
     {
       "indicator_name": "overnight_rate",
@@ -87442,6 +87711,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "palladium",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 1264.0,
+      "unit": "troy oz",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "participationRate",
       "province": "AB",
       "period": "2021-07-01",
@@ -92730,6 +93007,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "platinum",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 1681.0999755859375,
+      "unit": "troy oz",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "prime_rate",
       "province": "national",
       "period": "2021-06-23",
@@ -94804,6 +95089,14 @@
     {
       "indicator_name": "qc_bldg_permits_nonres",
       "province": "QC",
+      "period": "2026-04-01",
+      "value": 938.824,
+      "unit": "$M",
+      "source": "StatCan 34-10-0292"
+    },
+    {
+      "indicator_name": "qc_bldg_permits_nonres",
+      "province": "QC",
       "period": "2025-05-01",
       "value": 9678.47,
       "unit": "$M",
@@ -94936,6 +95229,14 @@
       "value": 22783.2,
       "unit": "$M",
       "source": "Institut de la statistique du Québec"
+    },
+    {
+      "indicator_name": "qc_bldg_permits_res",
+      "province": "QC",
+      "period": "2026-04-01",
+      "value": 1965.36,
+      "unit": "$M",
+      "source": "StatCan 34-10-0292"
     },
     {
       "indicator_name": "qc_bldg_permits_res",
@@ -101018,6 +101319,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "rice",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 6.38,
+      "unit": "cwt",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "silver",
       "province": "national",
       "period": "2025-03-10",
@@ -101466,6 +101775,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "silver",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 66.58,
+      "unit": "troy oz",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "soybean_meal",
       "province": "national",
       "period": "2026-03-14",
@@ -101530,6 +101847,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "soybean_meal",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 301.6,
+      "unit": "ton",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "soybean_oil",
       "province": "national",
       "period": "2026-03-14",
@@ -101574,6 +101899,14 @@
       "province": "national",
       "period": "2026-06-15",
       "value": 73.03,
+      "unit": "lb",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "soybean_oil",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 66.67,
       "unit": "lb",
       "source": "Yahoo Finance"
     },
@@ -102026,6 +102359,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "soybeans",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 1144.5,
+      "unit": "bu",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "sp500",
       "province": "national",
       "period": "2025-03-10",
@@ -102470,6 +102811,14 @@
       "province": "national",
       "period": "2026-06-08",
       "value": 7466.0,
+      "unit": "pts",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "sp500",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 7501.0,
       "unit": "pts",
       "source": "Yahoo Finance"
     },
@@ -102930,6 +103279,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "sugar",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 12.205,
+      "unit": "lb",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "tin",
       "province": "national",
       "period": "2026-05-14",
@@ -102965,6 +103322,14 @@
       "indicator_name": "tin",
       "province": "national",
       "period": "2026-06-15",
+      "value": 52913.5,
+      "unit": "USD/t",
+      "source": "FRED"
+    },
+    {
+      "indicator_name": "tin",
+      "province": "national",
+      "period": "2026-06-22",
       "value": 52913.5,
       "unit": "USD/t",
       "source": "FRED"
@@ -107214,6 +107579,14 @@
       "province": "national",
       "period": "2026-06-15",
       "value": 34938.0,
+      "unit": "pts",
+      "source": "Yahoo Finance"
+    },
+    {
+      "indicator_name": "tsx_composite",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 34969.0,
       "unit": "pts",
       "source": "Yahoo Finance"
     },
@@ -114354,6 +114727,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "wheat",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 609.25,
+      "unit": "bu",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "wholesale_employment",
       "province": "national",
       "period": "2026-05-01",
@@ -116714,6 +117095,14 @@
       "source": "Yahoo Finance"
     },
     {
+      "indicator_name": "wti",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 75.43000030517578,
+      "unit": "bbl",
+      "source": "Yahoo Finance"
+    },
+    {
       "indicator_name": "wti_oil",
       "province": "national",
       "period": "2021-06-23",
@@ -118642,6 +119031,14 @@
       "source": "FRED"
     },
     {
+      "indicator_name": "yield_curve_10y2y",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 0.27,
+      "unit": "%",
+      "source": "FRED"
+    },
+    {
       "indicator_name": "zinc",
       "province": "national",
       "period": "2026-05-14",
@@ -118680,11 +119077,175 @@
       "value": 3458.04,
       "unit": "USD/t",
       "source": "FRED"
+    },
+    {
+      "indicator_name": "zinc",
+      "province": "national",
+      "period": "2026-06-22",
+      "value": 3458.04,
+      "unit": "USD/t",
+      "source": "FRED"
     }
   ],
   "statcan_latest": {
-    "updatedAt": "2026-06-15",
+    "updatedAt": "2026-06-22",
     "indicators": [
+      {
+        "name": "Retail sales",
+        "value": "$73.0 billion",
+        "change": "0.5%",
+        "arrow": 1,
+        "changeDetail": "(monthly change)",
+        "refPer": "April 2026",
+        "releaseDate": "2026-06-19",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010005601",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260619/dq260619a-eng.htm",
+        "dailyTitle": "Retail trade"
+      },
+      {
+        "name": "Industrial Product Price Index",
+        "value": "",
+        "change": "1.2%",
+        "arrow": 1,
+        "changeDetail": "(monthly change)",
+        "refPer": "May 2026",
+        "releaseDate": "2026-06-18",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810026501",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260618/dq260618a-eng.htm",
+        "dailyTitle": "Industrial product and raw materials price indexes"
+      },
+      {
+        "name": "Industrial Product Price Index, excluding energy and petroleum products",
+        "value": "",
+        "change": "0.9%",
+        "arrow": 1,
+        "changeDetail": "(monthly change)",
+        "refPer": "May 2026",
+        "releaseDate": "2026-06-18",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810026501",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260618/dq260618a-eng.htm",
+        "dailyTitle": "Industrial product and raw materials price indexes"
+      },
+      {
+        "name": "Raw Materials Price Index",
+        "value": "",
+        "change": "0.7%",
+        "arrow": 1,
+        "changeDetail": "(monthly change)",
+        "refPer": "May 2026",
+        "releaseDate": "2026-06-18",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810026801",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260618/dq260618a-eng.htm",
+        "dailyTitle": "Industrial product and raw materials price indexes"
+      },
+      {
+        "name": "Raw Materials Price Index, excluding crude energy products",
+        "value": "",
+        "change": "1.4%",
+        "arrow": 1,
+        "changeDetail": "(monthly change)",
+        "refPer": "May 2026",
+        "releaseDate": "2026-06-18",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810026801",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260618/dq260618a-eng.htm",
+        "dailyTitle": "Industrial product and raw materials price indexes"
+      },
+      {
+        "name": "Foreign investment in Canadian securities",
+        "value": "$46.9 billion",
+        "change": "",
+        "arrow": 0,
+        "changeDetail": "",
+        "refPer": "April 2026",
+        "releaseDate": "2026-06-16",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610002801",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260616/dq260616a-eng.htm",
+        "dailyTitle": "Canada's international transactions in securities"
+      },
+      {
+        "name": "Canadian investment in foreign securities",
+        "value": "-$11.4 billion",
+        "change": "",
+        "arrow": 0,
+        "changeDetail": "",
+        "refPer": "April 2026",
+        "releaseDate": "2026-06-16",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610002801",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260616/dq260616a-eng.htm",
+        "dailyTitle": "Canada's international transactions in securities"
+      },
+      {
+        "name": "Manufacturing sales",
+        "value": "$77.1 billion",
+        "change": "4.2%",
+        "arrow": 1,
+        "changeDetail": "(monthly change)",
+        "refPer": "April 2026",
+        "releaseDate": "2026-06-15",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260615/dq260615a-eng.htm",
+        "dailyTitle": "Monthly Survey of Manufacturing"
+      },
+      {
+        "name": "Wholesale sales (excluding petroleum, petroleum products, and other hydrocarbons and excluding oilseed and grain)",
+        "value": "$89.3 billion",
+        "change": "0.6%",
+        "arrow": 1,
+        "changeDetail": "(monthly change)",
+        "refPer": "April 2026",
+        "releaseDate": "2026-06-15",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260615/dq260615b-eng.htm",
+        "dailyTitle": "Wholesale trade"
+      },
+      {
+        "name": "Inventories",
+        "value": "$125.0 billion",
+        "change": "0.5%",
+        "arrow": 1,
+        "changeDetail": "(monthly change)",
+        "refPer": "April 2026",
+        "releaseDate": "2026-06-15",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260615/dq260615a-eng.htm",
+        "dailyTitle": "Monthly Survey of Manufacturing"
+      },
+      {
+        "name": "Inventory-to-sales ratio",
+        "value": "1.62",
+        "change": "-0.06 pts",
+        "arrow": 2,
+        "changeDetail": "(monthly change)",
+        "refPer": "April 2026",
+        "releaseDate": "2026-06-15",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260615/dq260615a-eng.htm",
+        "dailyTitle": "Monthly Survey of Manufacturing"
+      },
+      {
+        "name": "Unfilled orders",
+        "value": "$123.2 billion",
+        "change": "1.3%",
+        "arrow": 1,
+        "changeDetail": "(monthly change)",
+        "refPer": "April 2026",
+        "releaseDate": "2026-06-15",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260615/dq260615a-eng.htm",
+        "dailyTitle": "Monthly Survey of Manufacturing"
+      },
       {
         "name": "National net worth",
         "value": "$19.2 trillion",
@@ -118738,19 +119299,6 @@
         "dailyTitle": "National balance sheet and financial flow accounts"
       },
       {
-        "name": "Canada’s net international investment position",
-        "value": "$1,360.5 billion",
-        "change": "",
-        "arrow": 0,
-        "changeDetail": "",
-        "refPer": "First quarter 2026",
-        "releaseDate": "2026-06-11",
-        "frequency": "Quarterly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610048501",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260611/dq260611a-eng.htm",
-        "dailyTitle": "Canada's international investment position"
-      },
-      {
         "name": "Building permits",
         "value": "$12.5 billion",
         "change": "-7.6%",
@@ -118762,6 +119310,19 @@
         "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029201",
         "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260611/dq260611b-eng.htm",
         "dailyTitle": "Building permits"
+      },
+      {
+        "name": "Canada’s net international investment position",
+        "value": "$1,360.5 billion",
+        "change": "",
+        "arrow": 0,
+        "changeDetail": "",
+        "refPer": "First quarter 2026",
+        "releaseDate": "2026-06-11",
+        "frequency": "Quarterly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610048501",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260611/dq260611a-eng.htm",
+        "dailyTitle": "Canada's international investment position"
       },
       {
         "name": "Imports of goods",
@@ -118907,19 +119468,6 @@
         "dailyTitle": "Gross domestic product, income and expenditure"
       },
       {
-        "name": "Average weekly earnings",
-        "value": "$1,333.23",
-        "change": "3.5%",
-        "arrow": 1,
-        "changeDetail": "(12-month change)",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-28",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410022301",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260528/dq260528b-eng.htm",
-        "dailyTitle": "Payroll employment, earnings and hours, and job vacancies"
-      },
-      {
         "name": "Current account balance",
         "value": "-$7.2 billion",
         "change": "",
@@ -118931,6 +119479,19 @@
         "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610001801",
         "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260528/dq260528a-eng.htm",
         "dailyTitle": "Canada's balance of international payments"
+      },
+      {
+        "name": "Average weekly earnings",
+        "value": "$1,333.23",
+        "change": "3.5%",
+        "arrow": 1,
+        "changeDetail": "(12-month change)",
+        "refPer": "March 2026",
+        "releaseDate": "2026-05-28",
+        "frequency": "Monthly",
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1410022301",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260528/dq260528b-eng.htm",
+        "dailyTitle": "Payroll employment, earnings and hours, and job vacancies"
       },
       {
         "name": "Realized net farm income",
@@ -118985,19 +119546,6 @@
         "dailyTitle": "Farm income"
       },
       {
-        "name": "Total investment in building construction",
-        "value": "$22.6 billion",
-        "change": "-1.3%",
-        "arrow": 2,
-        "changeDetail": "(monthly change)",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-25",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029301",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260525/dq260525b-eng.htm",
-        "dailyTitle": "Investment in building construction"
-      },
-      {
         "name": "Canadian corporations' operating profit, seasonally adjusted",
         "value": "$209.9 billion",
         "change": "",
@@ -119011,69 +119559,17 @@
         "dailyTitle": "Quarterly financial statistics for enterprises"
       },
       {
-        "name": "Industrial Product Price Index",
-        "value": "",
-        "change": "2.0%",
-        "arrow": 1,
-        "changeDetail": "(monthly change)",
-        "refPer": "April 2026",
-        "releaseDate": "2026-05-22",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810026501",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260522/dq260522c-eng.htm",
-        "dailyTitle": "Industrial product and raw materials price indexes"
-      },
-      {
-        "name": "Retail sales",
-        "value": "$72.7 billion",
-        "change": "0.9%",
-        "arrow": 1,
-        "changeDetail": "(monthly change)",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-22",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010005601",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260522/dq260522a-eng.htm",
-        "dailyTitle": "Retail trade"
-      },
-      {
-        "name": "Industrial Product Price Index, excluding energy and petroleum products",
-        "value": "",
-        "change": "1.1%",
-        "arrow": 1,
-        "changeDetail": "(monthly change)",
-        "refPer": "April 2026",
-        "releaseDate": "2026-05-22",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810026501",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260522/dq260522c-eng.htm",
-        "dailyTitle": "Industrial product and raw materials price indexes"
-      },
-      {
-        "name": "Raw Materials Price Index",
-        "value": "",
-        "change": "2.6%",
-        "arrow": 1,
-        "changeDetail": "(monthly change)",
-        "refPer": "April 2026",
-        "releaseDate": "2026-05-22",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810026801",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260522/dq260522c-eng.htm",
-        "dailyTitle": "Industrial product and raw materials price indexes"
-      },
-      {
-        "name": "Raw Materials Price Index, excluding crude energy products",
-        "value": "",
-        "change": "-0.5%",
+        "name": "Total investment in building construction",
+        "value": "$22.6 billion",
+        "change": "-1.3%",
         "arrow": 2,
         "changeDetail": "(monthly change)",
-        "refPer": "April 2026",
-        "releaseDate": "2026-05-22",
+        "refPer": "March 2026",
+        "releaseDate": "2026-05-25",
         "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810026801",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260522/dq260522c-eng.htm",
-        "dailyTitle": "Industrial product and raw materials price indexes"
+        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410029301",
+        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260525/dq260525b-eng.htm",
+        "dailyTitle": "Investment in building construction"
       },
       {
         "name": "Non-resident visitors entering Canada (seasonally adjusted data)",
@@ -119178,97 +119674,6 @@
         "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401",
         "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260519/dq260519a-eng.htm",
         "dailyTitle": "Consumer Price Index"
-      },
-      {
-        "name": "Manufacturing sales",
-        "value": "$73.6 billion",
-        "change": "3.0%",
-        "arrow": 1,
-        "changeDetail": "(monthly change)",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-15",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260515/dq260515b-eng.htm",
-        "dailyTitle": "Monthly Survey of Manufacturing"
-      },
-      {
-        "name": "Foreign investment in Canadian securities",
-        "value": "$4.6 billion",
-        "change": "",
-        "arrow": 0,
-        "changeDetail": "",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-15",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610002801",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260515/dq260515a-eng.htm",
-        "dailyTitle": "Canada's international transactions in securities"
-      },
-      {
-        "name": "Canadian investment in foreign securities",
-        "value": "$3.9 billion",
-        "change": "",
-        "arrow": 0,
-        "changeDetail": "",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-15",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610002801",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260515/dq260515a-eng.htm",
-        "dailyTitle": "Canada's international transactions in securities"
-      },
-      {
-        "name": "Inventories",
-        "value": "$124.2 billion",
-        "change": "1.3%",
-        "arrow": 1,
-        "changeDetail": "(monthly change)",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-15",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260515/dq260515b-eng.htm",
-        "dailyTitle": "Monthly Survey of Manufacturing"
-      },
-      {
-        "name": "Inventory-to-sales ratio",
-        "value": "1.69",
-        "change": "-0.03 pts",
-        "arrow": 2,
-        "changeDetail": "(monthly change)",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-15",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260515/dq260515b-eng.htm",
-        "dailyTitle": "Monthly Survey of Manufacturing"
-      },
-      {
-        "name": "Unfilled orders",
-        "value": "$121.3 billion",
-        "change": "2.4%",
-        "arrow": 1,
-        "changeDetail": "(monthly change)",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-15",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1610004701",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260515/dq260515b-eng.htm",
-        "dailyTitle": "Monthly Survey of Manufacturing"
-      },
-      {
-        "name": "Wholesale sales (excluding petroleum, petroleum products, and other hydrocarbons and excluding oilseed and grain)",
-        "value": "$89.0 billion",
-        "change": "1.9%",
-        "arrow": 1,
-        "changeDetail": "(monthly change)",
-        "refPer": "March 2026",
-        "releaseDate": "2026-05-14",
-        "frequency": "Monthly",
-        "tableUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401",
-        "dailyUrl": "https://www150.statcan.gc.ca/daily-quotidien/260514/dq260514a-eng.htm",
-        "dailyTitle": "Wholesale trade"
       },
       {
         "name": "Wheat stocks",
@@ -119596,10 +120001,6 @@
         "province": "National"
       },
       {
-        "indicator": "construction_employment",
-        "province": "national"
-      },
-      {
         "indicator": "copper",
         "province": "global"
       },
@@ -119618,6 +120019,10 @@
       {
         "indicator": "institutional_building_investment",
         "province": "National"
+      },
+      {
+        "indicator": "rice",
+        "province": "national"
       }
     ]
   }

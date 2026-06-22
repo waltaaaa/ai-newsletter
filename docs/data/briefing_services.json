@@ -7,25 +7,30 @@
       "yy": "+1.0%",
       "trend": "up",
       "projectCount": 0,
-      "analysis": "<p><span class=\"lead-sentence\">Wholesale trade output rose 1.8% month-over-month against the March 2026 reference period, the second-largest services M/M move in the table</span> &mdash; the gain runs ahead of retail at -0.6% M/M and +0.8% Y/Y, a divergence that points to inventory and intermediate-goods turnover outpacing final-sale activity.<sup>1</sup> Year-over-year the sector is +1.0%, modest in absolute terms but among the steadier services Y/Y reads alongside Real Estate at +1.8% and Other Services at +0.7%.<sup>1</sup></p><p><span class=\"lead-sentence\">No standalone wholesale tag exists in the project database</span> &mdash; capex for the sector is largely leasehold improvement and falls below province GDP thresholds, so activity surfaces indirectly through the 679-project transport &amp; warehousing pipeline ($54.0B priced) where port and distribution-centre builds appear.<sup>2</sup> Bill S-214 (Special Economic Measures Act, third reading 2026-05-26 in the Senate) carries direct compliance implications for cross-border wholesale transactions with sanctioned counterparties.<sup>3</sup> If S-214 receives Royal Assent, NAICS 41 compliance costs would rise on a subset of cross-border flows, and the M/M strength would need confirmation in the next StatCan release before being treated as durable.</p>",
+      "analysis": "<p><span class=\"lead-sentence\">Wholesale trade output rose 1.8% month-over-month against the March 2026 reference period, among the strongest monthly service gains</span> — wholesale sales (excluding petroleum and grain) rose 0.6% to $89.3B in April 2026, up 6.3% year-over-year, after $89.0B in March, and Q1 2026 sales ran 1.8% above Q1 2025.<sup>1</sup><sup>2</sup> The machinery and equipment subsector rose 6.5% to $19.5B in March, led by computer and communications equipment, which climbed 17.9% to $5.9B as business investment in capital goods turned over.<sup>2</sup></p><p><span class=\"lead-sentence\">No discrete wholesale tag exists in the project database</span> — the capital-investment pipeline does not track wholesale operations, so the read is sourced from GDP and StatCan wholesale-trade releases rather than project counts.<sup>2</sup><sup>3</sup> Wholesale demand is closely tied to business investment and trade flows; if machinery and equipment turnover holds at the March pace, particularly computer and communications equipment, wholesale sales would continue running above year-ago levels.</p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — transport_logistics pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 3, "title": "Bill S-214 (45-1) Special Economic Measures Act — LEGISinfo", "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-214"}
+        {"id": 2, "title": "StatCan Wholesale Trade, Table 20-10-0074", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401"},
+        {"id": 3, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "StatCan Wholesale Trade, Table 20-10-0074", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401"},
+        {"id": 3, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": false,
       "subsectors": [
         {"code": "411", "name": "Farm Product Merchant Wholesalers"},
-        {"code": "416", "name": "Building Material & Supplies"},
-        {"code": "418", "name": "Miscellaneous Merchant Wholesalers"}
+        {"code": "415", "name": "Motor Vehicle & Parts Merchant Wholesalers"},
+        {"code": "417", "name": "Machinery, Equipment & Supplies Merchant Wholesalers"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "+1.8%", "delta": "largest services M/M", "source": "industry_gdp.json:41"},
-        {"label": "Sector GDP (Y/Y)", "value": "+1.0%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:41"},
-        {"label": "StatCan Wholesale Trade Table", "value": "N/A", "delta": "not in indicators.json snapshot", "source": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010007401"},
-        {"label": "Active Projects", "value": "0", "delta": "no standalone NAICS-41 project tag", "source": "projects_all.json"},
-        {"label": "Priced Pipeline Value", "value": "$0B", "delta": "GDP-only sector", "source": "projects_all.json"}
+        {"label": "Sector GDP (M/M)", "value": "+1.8%", "delta": "among strongest service gains", "source": "industry_gdp.json:41.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+1.0%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:41.yy"},
+        {"label": "Wholesale sales (Apr 2026)", "value": "$89.3B", "delta": "+0.6% M/M, +6.3% Y/Y", "source": "research_sectors.md:StatCan wholesale Apr 2026"},
+        {"label": "Machinery/equipment subsector (Mar)", "value": "$19.5B", "delta": "+6.5% M/M", "source": "research_sectors.md:StatCan wholesale Mar 2026"},
+        {"label": "Active Projects", "value": "N/A", "delta": "no discrete project tag", "source": "projects_all.json:no wholesale sector key", "note": "Non-capital service industry — no project records."}
       ]
     },
     {
@@ -33,27 +38,34 @@
       "name": "Retail Trade",
       "mm": "-0.6%",
       "yy": "+0.8%",
-      "trend": "down",
-      "projectCount": 0,
-      "analysis": "<p><span class=\"lead-sentence\">Retail trade GDP slid 0.6% month-over-month for the March reference period while holding +0.8% year-over-year</span> &mdash; the M/M decline matches Construction at -0.6% M/M and ranks as the second-weakest services M/M reading behind Accommodation &amp; Food Services at -0.4% M/M and +0.5% Y/Y.<sup>1</sup> The divergence between Retail -0.6% M/M and Wholesale Trade +1.8% M/M points to inventory builds at the wholesale stage that are not yet clearing the final-sale channel.<sup>1</sup></p><p><span class=\"lead-sentence\">The project database carries no dedicated retail tag</span> &mdash; retail capex generally lands below province GDP thresholds, so the sector is GDP-tracked rather than pipeline-tracked, with the Buffalo Run Real Canadian Superstore (Alberta, Under Construction as of 2026-06-15, Loblaw proponent) currently mis-bucketed under the &quot;Other&quot; fall-through tag pending re-classification.<sup>2</sup> If Wholesale Trade +1.8% M/M strength feeds through to retail in the next release, the M/M decline could reverse. If consumer spending weakness persists, the +0.8% Y/Y line would compress further. The procurement.json publishing gap removes federal and provincial consumer-program contract-award visibility that normally corroborates retail capex signals.<sup>3</sup></p>",
+      "trend": "flat",
+      "projectCount": 97,
+      "analysis": "<p><span class=\"lead-sentence\">Retail trade output declined 0.6% month-over-month against the March 2026 reference period while holding 0.8% above year-ago levels</span> — retail sales rose 0.5% in April 2026, with a preliminary May estimate of +1.0% month-over-month, and e-commerce rose 1.5% in March, holding a 7.1% share of total retail trade.<sup>1</sup><sup>2</sup> Consumer spending has stayed focused on essentials, with discretionary categories more selective, and the divergence between positive sales and negative GDP points to margin and volume shifts within the sector.<sup>2</sup></p><p><span class=\"lead-sentence\">Wholesale-and-retail trade employment fell 35,000 in May, down 1.2% month-over-month and 2.1% year-over-year</span> — trade employment has trended down since October 2025 even as headline sales held positive.<sup>3</sup> The project database tracks 97 commercial_mixed records valued at roughly $28.6B, and new grocery-format builds this period include Empire's plan for 70 new stores over three years, Maxi Lévis, Fresh St. Market Richmond, and Nature's Fare Chilliwack.<sup>4</sup> If consumer spending stays essentials-weighted, discretionary retail would remain selective while grocery-format expansion adds physical store capacity through 2026.</p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — Other tag fall-through", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 3, "title": "Procurement monitor data — 8-week publishing gap noted in dossier", "url": "https://walter-bolduc.github.io/lagging-indicator/data/procurement.json"}
+        {"id": 2, "title": "StatCan Retail Trade, Table 20-10-0056", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010005601"},
+        {"id": 3, "title": "StatCan Labour Force Survey, May 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"},
+        {"id": 4, "title": "Canadian Project Database — commercial_mixed pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
-      "isNegative": true,
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "StatCan Retail Trade, Table 20-10-0056", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010005601"},
+        {"id": 3, "title": "StatCan Labour Force Survey, May 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"},
+        {"id": 4, "title": "Canadian Project Database — commercial_mixed pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "isNegative": false,
       "subsectors": [
         {"code": "441", "name": "Motor Vehicle & Parts Dealers"},
-        {"code": "445", "name": "Food & Beverage Stores"},
-        {"code": "452", "name": "General Merchandise Stores"}
+        {"code": "445", "name": "Food & Beverage Retailers"},
+        {"code": "452", "name": "General Merchandise Retailers"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-0.6%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:44-45"},
-        {"label": "Sector GDP (Y/Y)", "value": "+0.8%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:44-45"},
-        {"label": "StatCan Retail Trade Table", "value": "N/A", "delta": "not in indicators.json snapshot", "source": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2010000801"},
-        {"label": "Active Projects (Other tag fall-through)", "value": "0", "delta": "no standalone retail tag", "source": "projects_all.json"},
-        {"label": "Priced Pipeline Value", "value": "$0B", "delta": "GDP-only sector", "source": "projects_all.json"}
+        {"label": "Sector GDP (M/M)", "value": "-0.6%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:44-45.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+0.8%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:44-45.yy"},
+        {"label": "Retail sales (Apr 2026)", "value": "+0.5% M/M", "delta": "May prelim +1.0% M/M", "source": "research_sectors.md:StatCan retail Apr 2026"},
+        {"label": "Wholesale/retail employment (May)", "value": "-35,000", "delta": "-1.2% M/M, -2.1% Y/Y", "source": "research_sectors.md:LFS May 2026"},
+        {"label": "Active Projects (commercial_mixed)", "value": "97", "delta": "+0 since 2026-06-13", "source": "projects_all.json:sector=commercial_mixed"}
       ]
     },
     {
@@ -62,14 +74,21 @@
       "mm": "-0.0%",
       "yy": "+3.1%",
       "trend": "up",
-      "projectCount": 679,
-      "analysis": "<p><span class=\"lead-sentence\">Transportation &amp; warehousing GDP held flat month-over-month against +3.1% year-over-year</span> &mdash; the second-strongest services Y/Y reading after Finance &amp; Insurance at +3.6% Y/Y, with Information &amp; Cultural Industries at +3.2% Y/Y close behind.<sup>1</sup> The TSX Infrastructure equity basket at 57.56 (+33.0% Y/Y) corroborates the sector trajectory at the capital-allocation level.<sup>2</sup></p><p><span class=\"lead-sentence\">Pipeline momentum is concrete with 679 active projects ($54.0B priced) and 39 new this week across transport_logistics, ports, and transit tags</span> &mdash; the Alto High-Speed Rail filing ($3.9B, Ontario-Quebec corridor, Under Review, Alto Crown corporation and Cadence consortium as proponent) is the marquee 2026-06-11 addition, joined by the Port of Quebec International Container Terminal (Under Review, 2026-06-08) and the Aeroport Metropolitain de Montreal new commercial terminal at Saint-Hubert.<sup>3</sup> 29 transport_logistics files now sit Under Review in the federal Impact Assessment Registry.<sup>3</sup> Bill S-1 (railways, pro-forma session opener) signals federal railway-file activity for the session.<sup>4</sup> If Alto progresses past Under Review to Approved, federal transit capex velocity rises sharply, though steel input costs at +73.4% Y/Y press margins on the 29 IAAC files.<sup>5</sup></p>",
+      "projectCount": 683,
+      "analysis": "<p><span class=\"lead-sentence\">Transportation and warehousing output held flat month-over-month but rose 3.1% year-over-year against the March 2026 reference period, the strongest annual gain of any tracked industry</span> — transportation and warehousing employment rose 19,000 in May, up 1.7% month-over-month, on sustained trade and logistics activity.<sup>1</sup><sup>2</sup> Canada's freight and logistics market reached roughly US$116.6B in 2026 on a 4.45% CAGR to 2031, with rail freight near $18.7B; rail handled 11% of export value and about 50% of export volume in 2024.<sup>3</sup></p><p><span class=\"lead-sentence\">The project database tracks 683 transport, transit, and logistics records valued at roughly $54.0B, with 16 first-tracked since June 13</span> — new entries this period include the OC Transpo electric bus fleet and electrical upgrade in Ontario (Approved), the DSV Innisfil multi-client logistics complex (Complete), and the Ninth Line Road widening (Under Construction).<sup>4</sup> Transport Canada estimates $284B is needed for rail upgrades by 2070 against a $2.8B-per-year investment gap, and the $51B Build Communities Strong Fund covers municipal transit; if that allocation disburses, transit and warehousing projects would continue adding to the pipeline.<sup>5</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "TSX Infrastructure basket — commodities snapshot", "url": "https://walter-bolduc.github.io/lagging-indicator/data/commodities.json"},
-        {"id": 3, "title": "Canadian Project Database — transport_logistics + Ports + Transit", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 4, "title": "Bill S-1 (45-1) Railways — LEGISinfo", "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-1"},
-        {"id": 5, "title": "Steel proxy (SLX ETF) — commodities snapshot", "url": "https://walter-bolduc.github.io/lagging-indicator/data/commodities.json"}
+        {"id": 2, "title": "StatCan Labour Force Survey, May 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"},
+        {"id": 3, "title": "Transport Canada — freight & logistics, rail investment", "url": "https://tc.canada.ca/en/corporate-services/transparency/corporate-management-reporting/transportation-canada-annual-reports"},
+        {"id": 4, "title": "Canadian Project Database — transport_logistics pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
+        {"id": 5, "title": "Build Communities Strong Fund — Infrastructure Canada", "url": "https://www.infrastructure.gc.ca/plan/build-communities-strong-eng.html"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "StatCan Labour Force Survey, May 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"},
+        {"id": 3, "title": "Transport Canada — freight & logistics, rail investment", "url": "https://tc.canada.ca/en/corporate-services/transparency/corporate-management-reporting/transportation-canada-annual-reports"},
+        {"id": 4, "title": "Canadian Project Database — transport_logistics pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
+        {"id": 5, "title": "Build Communities Strong Fund — Infrastructure Canada", "url": "https://www.infrastructure.gc.ca/plan/build-communities-strong-eng.html"}
       ],
       "isNegative": false,
       "subsectors": [
@@ -79,12 +98,11 @@
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-0.0%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:48-49"},
-        {"label": "Sector GDP (Y/Y)", "value": "+3.1%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:48-49"},
-        {"label": "TSX Infrastructure basket", "value": "57.56", "delta": "+33.0% Y/Y", "source": "commodities.json:tsx_infrastructure"},
-        {"label": "Steel proxy (rail/transport input)", "value": "$111.39", "delta": "+73.4% Y/Y", "source": "commodities.json:steel"},
-        {"label": "Active Projects", "value": "679", "delta": "39 new this week (transport+ports+transit)", "source": "projects_all.json:sector=transport_logistics+Ports+Transit"},
-        {"label": "Priced Pipeline Value", "value": "$54.0B", "delta": "ref 2026-06-15", "source": "projects_all.json:parsed_value"}
+        {"label": "Sector GDP (M/M)", "value": "-0.0%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:48-49.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+3.1%", "delta": "strongest y/y of any bucket", "source": "industry_gdp.json:48-49.yy"},
+        {"label": "TSX infrastructure basket", "value": "$57.45", "delta": "-0.6% week, +35.0% Y/Y", "source": "commodities.json:tsx_infrastructure"},
+        {"label": "Transport employment (May)", "value": "+19,000", "delta": "+1.7% M/M", "source": "research_sectors.md:LFS May 2026"},
+        {"label": "Active Projects", "value": "683", "delta": "+16 since 2026-06-13", "source": "projects_all.json:sector=transport_logistics+Transit+Ports"}
       ]
     },
     {
@@ -93,27 +111,33 @@
       "mm": "-0.2%",
       "yy": "+3.2%",
       "trend": "up",
-      "projectCount": 94,
-      "analysis": "<p><span class=\"lead-sentence\">Information &amp; cultural industries GDP eased 0.2% month-over-month while holding +3.2% year-over-year</span> &mdash; the third-strongest services Y/Y reading after Finance at +3.6% and Transportation at +3.1%, with Education at -2.8% Y/Y and Management at -22.7% Y/Y at the opposite end of the table.<sup>1</sup> The minor M/M pullback runs against the multi-year trend of expanding digital-infrastructure capex.<sup>1</sup></p><p><span class=\"lead-sentence\">The telecom and data-centre pipeline tracks 94 active projects ($88.7B priced) with an Ontario hyperscale concentration in a single tracking week</span> &mdash; Microsoft Azure Canada Central Expansion (York Region, Approved 2026-06-10), Related Digital-TowerBrook-Ascent Cambridge Hyperscale Data Centre (Under Construction), and Prologis Meadowvale Mississauga (Proposed) all advanced in the GTA-Waterloo-Cambridge corridor.<sup>2</sup> Vantage Data Centers QC24 Quebec City Campus Build-Out extends the cluster to Quebec, and the Manitoba Large AI Data Centre (currently tagged under Technology) is queued for re-bucketing to NAICS 51.<sup>2</sup> The TSX Infrastructure basket at 57.56 (+33.0% Y/Y) signals continued capital appetite for the underlying real-asset stack.<sup>3</sup> If Quebec's power-cost competitive position holds, Vantage QC24 and follow-on QC files would gain share against Ontario locations.</p>",
+      "projectCount": 95,
+      "analysis": "<p><span class=\"lead-sentence\">Information and cultural industries output dipped 0.2% month-over-month but rose 3.2% year-over-year against the March 2026 reference period</span> — information, culture, and recreation employment rose 19,000 in May, up 2.3% month-over-month, as telecom and content investment offset losses elsewhere in the bucket.<sup>1</sup><sup>2</sup> The CRTC set online-broadcaster contribution at 15% of revenue and traditional broadcasters at 25% in May 2026, stabilizing Canadian and Indigenous content funding above $2B, paired with a federal commitment of $600M per year to the cultural sector.<sup>3</sup></p><p><span class=\"lead-sentence\">The project database tracks 95 telecom records valued at roughly $88.7B, overlapping the data-centre and fibre buildout tagged under NAICS 54</span> — the Canada Media Fund set a $359M program budget for 2026-27, while the past year saw hundreds of media-industry layoffs, with closures outpacing launches in community news.<sup>3</sup><sup>4</sup> If the CRTC framework and the $600M-per-year cultural commitment hold, content funding would stay above $2B, and telecom and data-centre capex would continue overlapping with professional-services infrastructure.<sup>4</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — telecom/data centre pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 3, "title": "TSX Infrastructure basket — commodities snapshot", "url": "https://walter-bolduc.github.io/lagging-indicator/data/commodities.json"}
+        {"id": 2, "title": "StatCan Labour Force Survey, May 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"},
+        {"id": 3, "title": "CRTC contribution framework, May 2026", "url": "https://www.canada.ca/en/radio-television-telecommunications/news/2026/05/crtc-takes-action-to-support-the-creation-and-discoverability-of-canadian-and-indigenous-content.html"},
+        {"id": 4, "title": "Canadian Project Database — telecom pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "StatCan Labour Force Survey, May 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"},
+        {"id": 3, "title": "CRTC contribution framework, May 2026", "url": "https://www.canada.ca/en/radio-television-telecommunications/news/2026/05/crtc-takes-action-to-support-the-creation-and-discoverability-of-canadian-and-indigenous-content.html"},
+        {"id": 4, "title": "Canadian Project Database — telecom pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": false,
       "subsectors": [
-        {"code": "517", "name": "Telecommunications"},
-        {"code": "518", "name": "Data Processing, Hosting & Related Services"},
-        {"code": "519", "name": "Other Information Services"}
+        {"code": "512", "name": "Motion Picture & Sound Recording Industries"},
+        {"code": "515", "name": "Broadcasting (except Internet)"},
+        {"code": "517", "name": "Telecommunications"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-0.2%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:51"},
-        {"label": "Sector GDP (Y/Y)", "value": "+3.2%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:51"},
-        {"label": "Active Projects (telecom/data centres)", "value": "94", "delta": "8 new this week", "source": "projects_all.json:sector=telecom"},
-        {"label": "Priced Pipeline Value", "value": "$88.7B", "delta": "ref 2026-06-15", "source": "projects_all.json:parsed_value"},
-        {"label": "Ontario hyperscale concentration", "value": "3 new files", "delta": "Microsoft / Cambridge / Prologis in one week", "source": "research_sectors.md"},
-        {"label": "TSX Infrastructure basket (data-centre proxy)", "value": "57.56", "delta": "+33.0% Y/Y", "source": "commodities.json:tsx_infrastructure"}
+        {"label": "Sector GDP (M/M)", "value": "-0.2%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:51.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+3.2%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:51.yy"},
+        {"label": "Info/culture/rec employment (May)", "value": "+19,000", "delta": "+2.3% M/M", "source": "research_sectors.md:LFS May 2026"},
+        {"label": "CMF 2026-27 budget", "value": "$359M", "delta": "FY program budget", "source": "research_sectors.md:Canada Media Fund"},
+        {"label": "Active Projects (telecom)", "value": "95", "delta": "+1 since 2026-06-13", "source": "projects_all.json:sector=telecom"}
       ]
     },
     {
@@ -123,27 +147,30 @@
       "yy": "+3.6%",
       "trend": "up",
       "projectCount": 0,
-      "analysis": "<p><span class=\"lead-sentence\">Finance &amp; insurance GDP held flat month-over-month at +3.6% year-over-year, the largest services Y/Y reading in the table</span> &mdash; the M/M flat print follows a steady accumulation rather than a recent acceleration, with Transportation +3.1% Y/Y and Information +3.2% Y/Y close behind and Real Estate +1.8% Y/Y a tier below.<sup>1</sup> The TSX Infrastructure equity basket at 57.56 (+33.0% Y/Y) signals investor risk appetite into capital-intensive sectors, indirectly funding the $614.3B utilities and $54.0B transportation pipelines.<sup>2</sup></p><p><span class=\"lead-sentence\">No standalone project tag exists for the sector</span> &mdash; finance capex is largely technology and branch-network leasehold and falls below province GDP thresholds, so the sector is GDP-tracked through StatCan series and macro context from OSFI and the Bank of Canada Financial System Review.<sup>3</sup> Bill S-214 (Special Economic Measures Act, third reading 2026-05-26 in the Senate) carries direct compliance implications for financial institutions' KYC and transaction-monitoring obligations.<sup>4</sup> If Bank of Canada rate posture and credit conditions remain accommodative, NAICS 52 Y/Y momentum continues; Bill S-214 implementation costs would land at the compliance cost-line rather than at the GDP-output line.</p>",
+      "analysis": "<p><span class=\"lead-sentence\">Finance and insurance output held flat month-over-month but rose 3.6% year-over-year against the March 2026 reference period, among the strongest service annual readings</span> — all six major banks beat estimates in Q2 2026, and all except CIBC raised dividends.<sup>1</sup><sup>2</sup> National Bank reported $3.23 adjusted EPS against a $3.14 consensus, and CIBC's Q1 adjusted figure of $2.76 topped a $2.40 expectation; Canadian bank stocks rose 16% year-to-date in 2026 against the TSX Composite's 8%.<sup>2</sup></p><p><span class=\"lead-sentence\">No discrete finance project tag exists in the database, so the read is sourced from earnings and equity data rather than capital records</span> — BMO has cut more than 670 jobs since Q3 2025, booking $202M in pre-tax severance in Q1, while property and casualty insurers face auto-claims inflation and softening commercial lines.<sup>2</sup><sup>3</sup> Finance demand tracks interest rates and asset prices; if credit conditions and equity valuations hold, bank earnings momentum would persist while cost actions continue to compress headcount.</p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "TSX Infrastructure basket — commodities snapshot", "url": "https://walter-bolduc.github.io/lagging-indicator/data/commodities.json"},
-        {"id": 3, "title": "Bank of Canada Financial System Review", "url": "https://www.bankofcanada.ca/publications/fsr/"},
-        {"id": 4, "title": "Bill S-214 (45-1) Special Economic Measures Act — LEGISinfo", "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-214"}
+        {"id": 2, "title": "Q2 2026 Canadian bank earnings — Globe and Mail", "url": "https://www.theglobeandmail.com/business/"},
+        {"id": 3, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Q2 2026 Canadian bank earnings — Globe and Mail", "url": "https://www.theglobeandmail.com/business/"},
+        {"id": 3, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": false,
       "subsectors": [
-        {"code": "521", "name": "Monetary Authorities — Central Bank"},
         {"code": "522", "name": "Credit Intermediation & Related Activities"},
-        {"code": "524", "name": "Insurance Carriers & Related Activities"}
+        {"code": "524", "name": "Insurance Carriers & Related Activities"},
+        {"code": "526", "name": "Funds & Other Financial Vehicles"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-0.0%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:52"},
-        {"label": "Sector GDP (Y/Y)", "value": "+3.6%", "delta": "largest services Y/Y", "source": "industry_gdp.json:52"},
-        {"label": "TSX Infrastructure basket", "value": "57.56", "delta": "+33.0% Y/Y risk appetite", "source": "commodities.json:tsx_infrastructure"},
-        {"label": "OSFI / BoC Financial System Review", "value": "N/A", "delta": "pull at writer time", "source": "https://www.bankofcanada.ca/publications/fsr/"},
-        {"label": "Active Projects", "value": "0", "delta": "GDP-only sector", "source": "projects_all.json"},
-        {"label": "Priced Pipeline Value", "value": "$0B", "delta": "GDP-only sector", "source": "projects_all.json"}
+        {"label": "Sector GDP (M/M)", "value": "-0.0%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:52.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+3.6%", "delta": "among strongest service y/y", "source": "industry_gdp.json:52.yy"},
+        {"label": "Bank stocks YTD 2026", "value": "+16%", "delta": "vs TSX +8%", "source": "research_sectors.md:Globe and Mail Q2 2026"},
+        {"label": "BMO job cuts", "value": "670+", "delta": "since Q3 2025", "source": "research_sectors.md:Globe and Mail Q2 2026"},
+        {"label": "Active Projects", "value": "N/A", "delta": "no discrete project tag", "source": "projects_all.json:no finance sector key", "note": "Non-capital service industry — no project records."}
       ]
     },
     {
@@ -152,12 +179,17 @@
       "mm": "+0.1%",
       "yy": "+1.8%",
       "trend": "up",
-      "projectCount": 271,
-      "analysis": "<p><span class=\"lead-sentence\">Real estate sector GDP rose 0.1% month-over-month and +1.8% year-over-year</span> &mdash; the divergence from Construction at -1.5% Y/Y shows the building-of-structures versus owning-and-leasing-of-structures split working through the series.<sup>1</sup> Lumber futures at $630.50 (+7.9% M/M, +3.0% W/W) and the steel proxy at $111.39 (+73.4% Y/Y) are direct input-cost signals pressing residential bids upward on tender cycles.<sup>2</sup></p><p><span class=\"lead-sentence\">The residential pipeline tracks 271 active projects ($36.2B priced) with concrete pipeline additions across Quebec, Ontario, and Manitoba this week</span> &mdash; Quartier Molson Mixed-Use (QC, Proposed), Toronto Rail Yards Mixed-Use Community (ON, Proposed), Toromont Lands Highway 7 (ON), and a Burlington Minister's Zoning Order request (ON, Under Review) all advanced, alongside Portage Place Redevelopment ($650M, MB, Under Construction) which anchors the Manitoba residential cluster.<sup>3</sup> If lumber M/M strength persists, residential bids would re-price upward on the next tender round. If the Burlington MZO is granted, Ontario residential pipeline capacity expands; the same applies to Toronto Rail Yards if it advances to Approved.<sup>3</sup></p>",
+      "projectCount": 0,
+      "analysis": "<p><span class=\"lead-sentence\">Real estate and rental/leasing output rose 0.1% month-over-month and 1.8% year-over-year against the March 2026 reference period</span> — CBRE projects commercial real estate investment could rise to roughly $56B in 2026, up 8% from $47B in 2025 and the third-highest on record.<sup>1</sup><sup>2</sup> National office vacancy was 13.6% in Q1 2026, down about one percentage point year-over-year, as return-to-office mandates supported Class A demand while older buildings faced pressure.<sup>2</sup></p><p><span class=\"lead-sentence\">No discrete real-estate tag exists in the database; residential and commercial development is captured under construction (NAICS 23)</span> — the new Forêt Forest Hill tower in Ontario advanced to Under Construction with Canderel, and lumber, a residential development input, rose 6.4% over the month.<sup>2</sup><sup>3</sup> Real estate activity tracks mortgage rates, immigration, and housing policy; if return-to-office demand and investment momentum continue, Class A office and commercial transaction volumes would stay elevated relative to 2025.</p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Lumber and steel proxies — commodities snapshot", "url": "https://walter-bolduc.github.io/lagging-indicator/data/commodities.json"},
-        {"id": 3, "title": "Canadian Project Database — residential pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+        {"id": 2, "title": "CBRE Canada Real Estate Market Outlook 2026", "url": "https://www.cbre.ca/insights/books/canada-real-estate-market-outlook-2026"},
+        {"id": 3, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "CBRE Canada Real Estate Market Outlook 2026", "url": "https://www.cbre.ca/insights/books/canada-real-estate-market-outlook-2026"},
+        {"id": 3, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": false,
       "subsectors": [
@@ -167,12 +199,11 @@
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "+0.1%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:53"},
-        {"label": "Sector GDP (Y/Y)", "value": "+1.8%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:53"},
-        {"label": "Lumber futures", "value": "$630.50", "delta": "+7.9% M/M residential input", "source": "commodities.json:lumber"},
-        {"label": "Steel proxy (mixed-use input)", "value": "$111.39", "delta": "+73.4% Y/Y", "source": "commodities.json:steel"},
-        {"label": "Active Projects (residential)", "value": "271", "delta": "4 new this week + 8 Housing + 9 commercial_mixed", "source": "projects_all.json:sector=residential"},
-        {"label": "Priced Pipeline Value", "value": "$36.2B", "delta": "ref 2026-06-15", "source": "projects_all.json:parsed_value"}
+        {"label": "Sector GDP (M/M)", "value": "+0.1%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:53.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+1.8%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:53.yy"},
+        {"label": "Commercial RE investment (2026 proj.)", "value": "~$56B", "delta": "+8% vs $47B in 2025", "source": "research_sectors.md:CBRE 2026"},
+        {"label": "Office vacancy (Q1 2026)", "value": "13.6%", "delta": "down ~1 pp Y/Y", "source": "research_sectors.md:BNN Bloomberg 2026"},
+        {"label": "Active Projects", "value": "N/A", "delta": "captured under NAICS 23", "source": "projects_all.json:no real_estate sector key", "note": "Development tracked under construction (NAICS 23)."}
       ]
     },
     {
@@ -180,26 +211,32 @@
       "name": "Professional, Scientific & Technical Services",
       "mm": "-0.2%",
       "yy": "-0.4%",
-      "trend": "down",
+      "trend": "flat",
       "projectCount": 0,
-      "analysis": "<p><span class=\"lead-sentence\">Professional, scientific and technical services GDP eased 0.2% month-over-month and 0.4% year-over-year</span> &mdash; among the flattest services readings, and the magnitude is small relative to the NAICS 55 outlier at -22.7% Y/Y and Education at -2.8% Y/Y.<sup>1</sup> The mild Y/Y dip aligns with Construction at -1.5% Y/Y, consistent with reduced engineering and architectural billings flowing into NAICS 23.<sup>1</sup></p><p><span class=\"lead-sentence\">No standalone NAICS-54 project tag exists in the database</span> &mdash; engineering and architectural firms instead appear as proponents on infrastructure files (Englobe Corp postings in Ottawa and Regina, for example), with the 1,637 infrastructure-tagged projects ($223.9B priced) representing the indirect pipeline that drives sector demand.<sup>2</sup> The job-postings record shows engineering services hiring continuing across CMAs.<sup>2</sup> If infrastructure capex velocity picks up &mdash; Alto progressing past Under Review, Sydney NS BESS Approved &mdash; engineering billings would recover. If the Y/Y stays in the -0.4% band, the 1,637 infrastructure files would face a higher-cost or thinner professional-services supply environment.<sup>1</sup></p>",
+      "analysis": "<p><span class=\"lead-sentence\">Professional, scientific and technical services output declined 0.2% month-over-month and 0.4% year-over-year against the March 2026 reference period, after 2.2% growth in 2024</span> — firms are redirecting investment toward AI capacity even as headline GDP stays near flat.<sup>1</sup><sup>2</sup> A federal call for 100MW-plus sovereign AI data centres ran January 15 to February 15, 2026, and Microsoft committed C$19B to Canadian AI and cloud in December 2025, with more than C$7.5B landing within two years and an Ontario tranche supporting 1,250 jobs.<sup>2</sup></p><p><span class=\"lead-sentence\">No discrete professional-services project tag exists; data-centre capex overlaps telecom, utilities, and construction</span> — five hyperscale data centres are operating across BC, Ontario, Quebec, and New Brunswick, with 96 more announced or under construction at roughly $10M per MW plus more than $30M per MW of compute.<sup>2</sup><sup>3</sup> About 19% of the West and North workforce is over 55 with rising retirements through 2026; if the sovereign-AI data-centre commitments proceed, professional-services demand tied to systems design and R&D would draw on those 96 announced facilities.<sup>3</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — infrastructure pipeline (indirect linkage)", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+        {"id": 2, "title": "Canadian Sovereign AI Compute Strategy — ISED", "url": "https://ised-isde.canada.ca/site/ai-strategy/en"},
+        {"id": 3, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Canadian Sovereign AI Compute Strategy — ISED", "url": "https://ised-isde.canada.ca/site/ai-strategy/en"},
+        {"id": 3, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": true,
       "subsectors": [
-        {"code": "5413", "name": "Architectural, Engineering & Related Services"},
+        {"code": "5411", "name": "Legal Services"},
         {"code": "5415", "name": "Computer Systems Design & Related Services"},
-        {"code": "5416", "name": "Management, Scientific & Technical Consulting"}
+        {"code": "5417", "name": "Scientific Research & Development Services"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-0.2%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:54"},
-        {"label": "Sector GDP (Y/Y)", "value": "-0.4%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:54"},
-        {"label": "Active Projects (direct)", "value": "0", "delta": "no standalone NAICS-54 tag", "source": "projects_all.json"},
-        {"label": "Indirect Linkage (infrastructure pipeline)", "value": "1,637 projects", "delta": "engineering firms as proponents", "source": "projects_all.json:sector=infrastructure"},
-        {"label": "Priced Pipeline Value", "value": "$0B direct", "delta": "GDP-only sector", "source": "projects_all.json"}
+        {"label": "Sector GDP (M/M)", "value": "-0.2%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:54.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-0.4%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:54.yy"},
+        {"label": "Microsoft AI/cloud commitment", "value": "C$19B", "delta": ">C$7.5B within two years", "source": "research_sectors.md:Tech Insider 2026"},
+        {"label": "Hyperscale data centres", "value": "5 operating", "delta": "96 more announced/under construction", "source": "research_sectors.md:CBC 2026"},
+        {"label": "Active Projects", "value": "N/A", "delta": "capex overlaps NAICS 51/22/23", "source": "projects_all.json:no professional_services sector key", "note": "Data-centre builds tagged to telecom/utilities/construction."}
       ]
     },
     {
@@ -209,26 +246,27 @@
       "yy": "-22.7%",
       "trend": "down",
       "projectCount": 0,
-      "analysis": "<p><span class=\"lead-sentence\">Management of companies and enterprises GDP fell 22.7% year-over-year, an order of magnitude beyond any other sector reading in the table</span> &mdash; the next-largest services Y/Y decline is Education at -2.8% Y/Y, and Manufacturing at -2.5% Y/Y rounds out the comparison set.<sup>1</sup> M/M is also down at -1.3%, continuing the direction.<sup>1</sup> NAICS 55 is a thin head-office aggregation series that can swing on a single re-classification or large holding-company transaction, and a flag is attached pending StatCan Daily release-note review for Table 36-10-0434.<sup>2</sup></p><p><span class=\"lead-sentence\">No project pipeline tie exists for NAICS 55</span> &mdash; head-office activity does not produce trackable capex at the project level, so the sector is GDP-tracked only and depends on StatCan attribution work for interpretation.<sup>3</sup> The move likely reflects either a one-time head-office re-classification or ongoing holding-company restructuring; if the former, the Y/Y line would normalize once the comparison period rolls forward; if the latter, the Y/Y reading would persist negative for multiple quarters. The procurement.json publishing gap removes corroborating federal contract-award context that might otherwise help attribute the size of the move.<sup>4</sup></p>",
+      "analysis": "<p><span class=\"lead-sentence\">Management of companies and enterprises output fell 1.3% month-over-month and 22.7% year-over-year against the March 2026 reference period, the largest GDP swing of any industry in the series</span> — this bucket captures holding companies and head-office functions, where large annual moves typically reflect intercompany reclassification rather than operating-economy activity.<sup>1</sup> No significant capital-project developments were found for the sector this period.<sup>1</sup><sup>2</sup></p><p><span class=\"lead-sentence\">No discrete project tag exists for this holding-company and head-office bucket, so the narrative is sourced from GDP only</span> — the -22.7% reading is the deepest annual move in the industry GDP series but is consistent with reclassification volatility, not a change in underlying operating output.<sup>1</sup><sup>2</sup> If the reclassification effect normalizes, the reported NAICS 55 figure would revert toward the underlying operating trend; no capital projects are tied to this bucket.</p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "StatCan Daily release notes (Table 36-10-0434)", "url": "https://www150.statcan.gc.ca/n1/dai-quo/index-eng.htm"},
-        {"id": 3, "title": "Canadian Project Database — NAICS 55 has no standalone tag", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 4, "title": "Procurement monitor data — 8-week publishing gap noted", "url": "https://walter-bolduc.github.io/lagging-indicator/data/procurement.json"}
+        {"id": 2, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Canadian Project Database — projects_all.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": true,
       "subsectors": [
         {"code": "551", "name": "Management of Companies & Enterprises"},
-        {"code": "5511", "name": "Offices of Other Holding Companies"},
-        {"code": "5513", "name": "Other Management of Companies"}
+        {"code": "5511", "name": "Management of Companies & Enterprises"},
+        {"code": "5512", "name": "Holding Companies (head-office function)"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-1.3%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:55"},
-        {"label": "Sector GDP (Y/Y)", "value": "-22.7%", "delta": "OUTLIER — needs StatCan attribution", "source": "industry_gdp.json:55"},
-        {"label": "StatCan Daily release notes", "value": "PENDING", "delta": "consult Table 36-10-0434 notes", "source": "https://www150.statcan.gc.ca/n1/dai-quo/index-eng.htm"},
-        {"label": "Active Projects", "value": "0", "delta": "GDP-only sector", "source": "projects_all.json"},
-        {"label": "Priced Pipeline Value", "value": "$0B", "delta": "GDP-only sector", "source": "projects_all.json"}
+        {"label": "Sector GDP (M/M)", "value": "-1.3%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:55.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-22.7%", "delta": "largest swing of any industry", "source": "industry_gdp.json:55.yy"},
+        {"label": "Active Projects", "value": "N/A", "delta": "no project tag", "source": "projects_all.json:no management sector key", "note": "Holding-company/head-office bucket — no capital project records."},
+        {"label": "Data note", "value": "reclassification", "delta": "intercompany, not operating", "source": "research_sectors.md:NAICS 55 note"}
       ]
     },
     {
@@ -238,26 +276,30 @@
       "yy": "-0.8%",
       "trend": "flat",
       "projectCount": 272,
-      "analysis": "<p><span class=\"lead-sentence\">Administrative and waste management services GDP held flat month-over-month at -0.8% year-over-year</span> &mdash; the M/M flat reading is consistent with a steady-state series, and pipeline activity in the overlapping environment tag points the opposite direction with three named approvals or proposals filed in a single week.<sup>1</sup> Environment / waste pipeline tracking captures 272 active projects ($2.6B priced), small relative to the GDP series but concrete at the file level.<sup>2</sup></p><p><span class=\"lead-sentence\">A Manitoba environmental cluster anchored the week's activity</span> &mdash; Deep Sky Manitoba Carbon Removal Facility filed at $500M Proposed, Red-Seine-Rat Cooperative Wastewater Treatment Facility Approved at $205M on 2026-06-10, and Hay River Water Treatment Plant Approved at $20.1M in the Northwest Territories.<sup>3</sup> Six environment rows are new this week.<sup>3</sup> If Deep Sky $500M progresses past Proposed, NAICS 56 capex visibility rises sharply against the modestly negative Y/Y GDP reading. If the Manitoba water-treatment cohort (Red-Seine-Rat, Hay River) is part of a broader provincial initiative, additional approvals would follow on similar timelines.<sup>3</sup></p>",
+      "analysis": "<p><span class=\"lead-sentence\">Administrative and waste management services output held flat month-over-month and ran 0.8% below year-ago levels against the March 2026 reference period</span> — the inaugural 2026 Top 25 Remediation Projects report covers projects totaling $5.03B, distributed at RemTech East 2026 in Ottawa from April 8 to 10.<sup>1</sup><sup>2</sup> The Federal Contaminated Sites Action Plan has approved $7.18B since 2005, including $1.48B from Budget 2024 for Phase V running 2025 to 2030.<sup>2</sup></p><p><span class=\"lead-sentence\">The project database tracks 272 environment records valued at roughly $2.6B, capturing the remediation and cleanup pipeline overlapping this NAICS</span> — federal remediation funding and the $5.03B Top 25 list underpin the bucket despite the slightly negative annual GDP reading.<sup>2</sup><sup>3</sup> Remediation demand tracks government environmental budgets; if FCSAP Phase V and provincial remediation programs disburse on schedule, the 272-record pipeline would continue advancing through 2030.<sup>3</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — environment pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 3, "title": "Provincial environmental program filings — Manitoba and NT", "url": "https://www.gov.mb.ca/sd/environment_and_biodiversity/"}
+        {"id": 2, "title": "Federal Contaminated Sites Action Plan — ECCC", "url": "https://www.canada.ca/en/environment-climate-change/services/federal-contaminated-sites/action-plan.html"},
+        {"id": 3, "title": "Canadian Project Database — environment pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
-      "isNegative": false,
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Federal Contaminated Sites Action Plan — ECCC", "url": "https://www.canada.ca/en/environment-climate-change/services/federal-contaminated-sites/action-plan.html"},
+        {"id": 3, "title": "Canadian Project Database — environment pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "isNegative": true,
       "subsectors": [
         {"code": "561", "name": "Administrative & Support Services"},
         {"code": "562", "name": "Waste Management & Remediation Services"},
-        {"code": "5617", "name": "Services to Buildings & Dwellings"}
+        {"code": "5629", "name": "Remediation & Other Waste Management Services"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "+0.0%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:56"},
-        {"label": "Sector GDP (Y/Y)", "value": "-0.8%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:56"},
-        {"label": "Active Projects (environment proxy)", "value": "272", "delta": "6 new this week", "source": "projects_all.json:sector=environment"},
-        {"label": "Priced Pipeline Value", "value": "$2.6B", "delta": "ref 2026-06-15", "source": "projects_all.json:parsed_value"},
-        {"label": "Manitoba cluster anchor", "value": "Deep Sky $500M", "delta": "carbon removal facility, Proposed", "source": "research_sectors.md"},
-        {"label": "MB approved water-treatment value", "value": "$205M", "delta": "Red-Seine-Rat, 2026-06-10", "source": "research_sectors.md"}
+        {"label": "Sector GDP (M/M)", "value": "+0.0%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:56.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-0.8%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:56.yy"},
+        {"label": "Top 25 Remediation report (2026)", "value": "$5.03B", "delta": "RemTech East 2026", "source": "research_sectors.md:Environment Journal 2026"},
+        {"label": "FCSAP approved since 2005", "value": "$7.18B", "delta": "$1.48B Phase V (2025-2030)", "source": "research_sectors.md:ECCC FCSAP"},
+        {"label": "Active Projects (environment)", "value": "272", "delta": "+0 since 2026-06-13", "source": "projects_all.json:sector=environment"}
       ]
     },
     {
@@ -266,27 +308,31 @@
       "mm": "-0.0%",
       "yy": "-2.8%",
       "trend": "down",
-      "projectCount": 150,
-      "analysis": "<p><span class=\"lead-sentence\">Educational services GDP held flat month-over-month at -2.8% year-over-year, the largest non-NAICS-55 services Y/Y decline in the table</span> &mdash; only NAICS 55 at -22.7% Y/Y and Manufacturing at -2.5% Y/Y print weaker Y/Y this cycle.<sup>1</sup> The M/M flat reading suggests stabilization at a lower level rather than continued decline.<sup>1</sup></p><p><span class=\"lead-sentence\">The education pipeline tracks 150 active projects ($7.3B priced) with three named filings this week across Yukon, Saskatchewan, and Ontario</span> &mdash; Ecole Whitehorse Elementary entered Proposed in Yukon, Francophone Elementary School Kensington Saskatoon (Conseil des ecoles fransaskoises) entered Under Construction, and the Ontario Higher Education Sector Funding Program filed at $1.7B Proposed (Ontario Ministry of Colleges and Universities, 2026-06-03) is the largest named near-term capex.<sup>2</sup> Steel input costs at +73.4% Y/Y press school-construction bids alongside the broader NAICS 23 pipeline.<sup>3</sup> If the Ontario $1.7B Higher Education Sector Funding Program advances past Proposed, capex flows would partially counter the -2.8% Y/Y GDP reading.<sup>2</sup></p>",
+      "projectCount": 151,
+      "analysis": "<p><span class=\"lead-sentence\">Educational services output held flat month-over-month but fell 2.8% year-over-year against the March 2026 reference period, among the weaker annual service readings</span> — international-student declines and a tuition freeze have pressured operating revenue, with Ontario's college sector facing up to a $1.5B deficit by 2027-28.<sup>1</sup><sup>2</sup> Universities and colleges are eligible for the federal Provincial-Territorial infrastructure stream at $17.2B over ten years, with 23 Direct Delivery projects including TMU School of Medicine in Brampton and Inuit Nunangat University.<sup>2</sup></p><p><span class=\"lead-sentence\">The project database tracks 151 education records valued at roughly $7.3B, with one first-tracked since June 13</span> — BC committed $4.4B in post-secondary capital over three years, including an SFU Surrey medical school, while $50M was directed to an Inuit-led university in Arviat, Nunavut.<sup>2</sup><sup>3</sup> Education capital tracks government budgets and demographics; if the federal infrastructure stream and BC's $4.4B post-secondary capital disburse, education construction would continue even as operating GDP stays soft.<sup>3</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — education pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 3, "title": "Steel proxy (SLX ETF) — commodities snapshot", "url": "https://walter-bolduc.github.io/lagging-indicator/data/commodities.json"}
+        {"id": 2, "title": "Federal Provincial-Territorial infrastructure stream — University Affairs", "url": "https://universityaffairs.ca/news/universities-eligible-for-51b-infrastructure-fund/"},
+        {"id": 3, "title": "Canadian Project Database — education pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Federal Provincial-Territorial infrastructure stream — University Affairs", "url": "https://universityaffairs.ca/news/universities-eligible-for-51b-infrastructure-fund/"},
+        {"id": 3, "title": "Canadian Project Database — education pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": true,
       "subsectors": [
         {"code": "611", "name": "Educational Services"},
         {"code": "6113", "name": "Universities"},
-        {"code": "6111", "name": "Elementary & Secondary Schools"}
+        {"code": "6112", "name": "Community Colleges & CEGEPs"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-0.0%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:61"},
-        {"label": "Sector GDP (Y/Y)", "value": "-2.8%", "delta": "largest non-NAICS-55 services Y/Y decline", "source": "industry_gdp.json:61"},
-        {"label": "Active Projects", "value": "150", "delta": "ref 2026-06-15", "source": "projects_all.json:sector=education"},
-        {"label": "Priced Pipeline Value", "value": "$7.3B", "delta": "ref 2026-06-15", "source": "projects_all.json:parsed_value"},
-        {"label": "Ontario higher-ed program (proposed)", "value": "$1.7B", "delta": "Ontario MCU, Proposed 2026-06-03", "source": "research_sectors.md"},
-        {"label": "Steel proxy (school construction input)", "value": "$111.39", "delta": "+73.4% Y/Y", "source": "commodities.json:steel"}
+        {"label": "Sector GDP (M/M)", "value": "-0.0%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:61.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "-2.8%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:61.yy"},
+        {"label": "BC post-secondary capital", "value": "$4.4B", "delta": "over three years", "source": "research_sectors.md:BC Budget 2026"},
+        {"label": "Ontario college deficit risk", "value": "up to $1.5B", "delta": "by 2027-28", "source": "research_sectors.md:CBC 2026"},
+        {"label": "Active Projects (education)", "value": "151", "delta": "+1 since 2026-06-13", "source": "projects_all.json:sector=education"}
       ]
     },
     {
@@ -295,13 +341,19 @@
       "mm": "+0.0%",
       "yy": "+2.0%",
       "trend": "up",
-      "projectCount": 220,
-      "analysis": "<p><span class=\"lead-sentence\">Health care and social assistance sector GDP expanded 2.0% year-over-year against a flat M/M print</span> &mdash; Education at -2.8% Y/Y is the inverse public-service case within the services table, and the Y/Y gain sits below Finance at +3.6% Y/Y and Transportation at +3.1% Y/Y but ranks among the steadier positive services reads.<sup>1</sup> Pipeline activity is broad with seven new projects filed across Ontario, Quebec, and British Columbia in a single tracking week.<sup>2</sup></p><p><span class=\"lead-sentence\">The healthcare pipeline tracks 220 active projects ($50.9B priced) and was joined this week by Runnymede Healthcare Centre Redevelopment (ON, Proposed), Le Bastion centre integre (QC, Complete), Vanderhoof Primary and Community Care Centre (BC, Under Construction), and the Canadian Blood Services / Canadian Armed Forces Emergency Readiness Partnership</span> &mdash; healthcare labour postings remained active with Saskatchewan Health Authority listings in Saskatoon and Regina, VON Canada postings in Sudbury, and HRS Talent Solutions postings across Vancouver, Calgary, and Edmonton.<sup>2</sup> Bill S-5 (Connected Care for Canadians Act) received first reading on 2026-05-28 and frames the digital-health capex trajectory.<sup>3</sup> If Bill S-5 advances past first reading, downstream digital-health capex (electronic records, connected-care infrastructure) would see federal program support. If steel input costs at +73.4% Y/Y ease, hospital construction bids re-price favourably.<sup>4</sup></p>",
+      "projectCount": 222,
+      "analysis": "<p><span class=\"lead-sentence\">Health care and social assistance output held flat month-over-month and rose 2.0% year-over-year against the March 2026 reference period, supported by demographics and multi-year provincial hospital programs</span> — Ontario plans roughly $64B in health infrastructure over ten years, covering 50 hospital projects and 3,000 new beds.<sup>1</sup><sup>2</sup> UHN Toronto Western's 15-storey surgical tower exceeds $750M with 82 rooms, the Peter Gilgan Mississauga Hospital is more than 45% excavated, and Royal Columbian Phase 2 in BC opened in May 2026.<sup>2</sup></p><p><span class=\"lead-sentence\">The project database tracks 222 healthcare records valued at roughly $51.1B, with 8 first-tracked since June 13</span> — the Saskatchewan Health Authority posted 6 Saskatoon roles this week, 6.0 times its tracked average, and the new Tumbler Ridge school and health centre in BC carries a $200M value.<sup>3</sup><sup>4</sup> Health-sector demand tracks population aging and provincial budgets; if provincial health-infrastructure plans proceed on schedule, the 222-record pipeline would continue expanding through the decade.<sup>4</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — healthcare pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 3, "title": "Bill S-5 (45-1) Connected Care for Canadians Act — LEGISinfo", "url": "https://www.parl.ca/legisinfo/en/bill/45-1/S-5"},
-        {"id": 4, "title": "Steel proxy (SLX ETF) — commodities snapshot", "url": "https://walter-bolduc.github.io/lagging-indicator/data/commodities.json"}
+        {"id": 2, "title": "Ontario Budget 2026 — Health Infrastructure", "url": "https://budget.ontario.ca/2026/index.html"},
+        {"id": 3, "title": "Job Monitor — Saskatchewan Health Authority hiring spike", "url": "https://walter-bolduc.github.io/lagging-indicator/data/jobs.json"},
+        {"id": 4, "title": "Canadian Project Database — healthcare pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Ontario Budget 2026 — Health Infrastructure", "url": "https://budget.ontario.ca/2026/index.html"},
+        {"id": 3, "title": "Job Monitor — Saskatchewan Health Authority hiring spike", "url": "https://walter-bolduc.github.io/lagging-indicator/data/jobs.json"},
+        {"id": 4, "title": "Canadian Project Database — healthcare pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": false,
       "subsectors": [
@@ -311,12 +363,11 @@
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "+0.0%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:62"},
-        {"label": "Sector GDP (Y/Y)", "value": "+2.0%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:62"},
-        {"label": "Active Projects", "value": "220", "delta": "7 new this week", "source": "projects_all.json:sector=healthcare"},
-        {"label": "Priced Pipeline Value", "value": "$50.9B", "delta": "ref 2026-06-15", "source": "projects_all.json:parsed_value"},
-        {"label": "Steel proxy (hospital construction input)", "value": "$111.39", "delta": "+73.4% Y/Y", "source": "commodities.json:steel"},
-        {"label": "Federal policy file", "value": "Bill S-5", "delta": "first reading 2026-05-28", "source": "https://www.parl.ca/legisinfo/en/bill/45-1/S-5"}
+        {"label": "Sector GDP (M/M)", "value": "+0.0%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:62.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+2.0%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:62.yy"},
+        {"label": "Ontario health infrastructure (10-yr)", "value": "~$64B", "delta": "50 hospitals, 3,000 beds", "source": "research_sectors.md:Construction Canada 2026"},
+        {"label": "SK Health Authority job spike", "value": "6 postings", "delta": "6.0x tracked average (Saskatoon)", "source": "jobs.json:week 2026-06-22"},
+        {"label": "Active Projects (healthcare)", "value": "222", "delta": "+8 since 2026-06-13", "source": "projects_all.json:sector=healthcare"}
       ]
     },
     {
@@ -326,26 +377,32 @@
       "yy": "+3.5%",
       "trend": "up",
       "projectCount": 322,
-      "analysis": "<p><span class=\"lead-sentence\">Arts, entertainment and recreation sector GDP rose 2.0% month-over-month and +3.5% year-over-year, leading the services table on M/M and ranking near the top on Y/Y</span> &mdash; the M/M figure leads the entire services panel, and the Y/Y sits behind only Finance at +3.6% Y/Y.<sup>1</sup> Accommodation &amp; Food Services (NAICS 72) sits at -0.4% M/M and +0.5% Y/Y, a divergence within the tourism_culture pipeline tag that captures both sectors.<sup>1</sup></p><p><span class=\"lead-sentence\">The tourism_culture pipeline covers 322 active projects ($22.0B priced, shared with NAICS 72) with four new files this week across NL, AB, and NT</span> &mdash; Terra Nova Cabin Access Trail (NL, Proposed), Old Days Pond Increased Access to Nature (NL, Proposed), Parks Canada Sulphur Mountain Boardwalk Repairs (AB, Under Review), and Prince of Wales Northern Heritage Centre Accessibility Upgrades (NT) all advanced.<sup>2</sup> Three Parks Canada files now sit Under Review (Sulphur Mountain, Brazeau Lake, Rideau Canal).<sup>2</sup> If Parks Canada files progress past Under Review, federal recreation capex velocity accelerates. If tourism volume sustains the +3.5% Y/Y trajectory, the NAICS 71 lead within services continues; the procurement.json publishing gap removes the federal contract-award corroboration on the same files.<sup>3</sup></p>",
+      "analysis": "<p><span class=\"lead-sentence\">Arts, entertainment and recreation output rose 2.0% month-over-month and 3.5% year-over-year against the March 2026 reference period, the strongest monthly gain of any industry</span> — information, culture, and recreation employment rose 19,000 in May, up 2.3% month-over-month, coinciding with the sector's top-ranked monthly GDP move.<sup>1</sup><sup>2</sup> Scotia Place in Calgary reached its final-pile milestone, an NHL, WHL, NLL, and AHL venue with a community rink and retail.<sup>3</sup></p><p><span class=\"lead-sentence\">The project database tracks 322 tourism and culture records valued at roughly $22.0B, with one first-tracked since June 13</span> — a C$1.5B stadium project is planned for Halifax for a potential CFL franchise, another city is pursuing a C$94M arena, and Calgary Stampede Park's 20-year master plan includes seven zones.<sup>3</sup><sup>4</sup> Recreation demand tracks consumer spending and tourism; if arena and stadium projects advance through their milestones, the $22.0B tourism and culture pipeline would continue supporting the sector's elevated growth rate.<sup>4</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — tourism_culture pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 3, "title": "Procurement monitor data — 8-week publishing gap noted", "url": "https://walter-bolduc.github.io/lagging-indicator/data/procurement.json"}
+        {"id": 2, "title": "StatCan Labour Force Survey, May 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"},
+        {"id": 3, "title": "Scotia Place & Canadian venue projects — Stadium Business 2026", "url": "https://www.thestadiumbusiness.com/"},
+        {"id": 4, "title": "Canadian Project Database — tourism_culture pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "StatCan Labour Force Survey, May 2026", "url": "https://www150.statcan.gc.ca/n1/daily-quotidien/260606/dq260606a-eng.htm"},
+        {"id": 3, "title": "Scotia Place & Canadian venue projects — Stadium Business 2026", "url": "https://www.thestadiumbusiness.com/"},
+        {"id": 4, "title": "Canadian Project Database — tourism_culture pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": false,
       "subsectors": [
-        {"code": "711", "name": "Performing Arts, Spectator Sports & Related Industries"},
+        {"code": "711", "name": "Performing Arts, Spectator Sports & Related"},
         {"code": "712", "name": "Heritage Institutions"},
         {"code": "713", "name": "Amusement, Gambling & Recreation Industries"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "+2.0%", "delta": "largest services M/M", "source": "industry_gdp.json:71"},
-        {"label": "Sector GDP (Y/Y)", "value": "+3.5%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:71"},
-        {"label": "Active Projects (tourism_culture covers 71+72)", "value": "322", "delta": "4 new this week", "source": "projects_all.json:sector=tourism_culture"},
-        {"label": "Priced Pipeline Value", "value": "$22.0B", "delta": "shared with NAICS 72 in pipeline tag", "source": "projects_all.json:parsed_value"},
-        {"label": "Parks Canada file count (Under Review)", "value": "3+", "delta": "Sulphur Mountain, Brazeau Lake, Rideau Canal", "source": "research_sectors.md"},
-        {"label": "Provinces with new files this week", "value": "NL, AB, NT", "delta": "Terra Nova/Old Days Pond/Sulphur Mountain/Prince of Wales", "source": "research_sectors.md"}
+        {"label": "Sector GDP (M/M)", "value": "+2.0%", "delta": "strongest monthly gain of any industry", "source": "industry_gdp.json:71.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+3.5%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:71.yy"},
+        {"label": "Info/culture/rec employment (May)", "value": "+19,000", "delta": "+2.3% M/M", "source": "research_sectors.md:LFS May 2026"},
+        {"label": "Halifax stadium project", "value": "C$1.5B", "delta": "planned (potential CFL)", "source": "research_sectors.md:Stadium Business 2026"},
+        {"label": "Active Projects (tourism_culture)", "value": "322", "delta": "+1 since 2026-06-13", "source": "projects_all.json:sector=tourism_culture"}
       ]
     },
     {
@@ -353,27 +410,32 @@
       "name": "Accommodation & Food Services",
       "mm": "-0.4%",
       "yy": "+0.5%",
-      "trend": "down",
-      "projectCount": 322,
-      "analysis": "<p><span class=\"lead-sentence\">Accommodation and food services GDP slid 0.4% month-over-month and held +0.5% year-over-year, the weakest services M/M reading in the table</span> &mdash; Retail at -0.6% M/M is the only nearby M/M decline; the sector diverges sharply from NAICS 71 at +2.0% M/M and +3.5% Y/Y within the same tourism_culture pipeline tag.<sup>1</sup> The +0.5% Y/Y is among the lowest positive services Y/Y readings.<sup>1</sup></p><p><span class=\"lead-sentence\">Pipeline activity is light relative to the GDP series</span> &mdash; hotel and restaurant capex is largely leasehold-improvement and falls below province GDP thresholds, with the InterContinental Montreal full-closure renovation (QC, Under Construction 2026-06-10) as the named exception this cycle.<sup>2</sup> The shared tourism_culture pipeline tag tracks 322 projects ($22.0B priced) across NAICS 71 and 72 combined.<sup>2</sup> If consumer spending weakness persists, the +0.5% Y/Y line could turn. If InterContinental Montreal-class renovations are part of a broader hotel-recapitalization cohort, leasehold-improvement activity may begin to clear project thresholds and surface in the pipeline at higher volumes.<sup>2</sup></p>",
+      "trend": "flat",
+      "projectCount": 0,
+      "analysis": "<p><span class=\"lead-sentence\">Accommodation and food services output fell 0.4% month-over-month but ran 0.5% above year-ago levels against the March 2026 reference period</span> — accommodation and food employment rose 17,000 in May, up 1.5% month-over-month, against a 3.8% job-vacancy rate recorded in 2024, roughly 18,230 unfilled positions versus 3.1% across all industries.<sup>1</sup><sup>2</sup> Tourism visitor spending is forecast at $140.9B in 2026, up 6% from 2025 on domestic, US, and overseas demand, growing faster than the wider economy.<sup>2</sup></p><p><span class=\"lead-sentence\">No discrete accommodation and food tag exists; activity is captured within the tourism_culture project bucket under NAICS 71</span> — the sector employs roughly 2.1 million people, and Ontario accommodation and food employed 426,700 in 2023, 37.8% of the national sector.<sup>2</sup><sup>3</sup> Demand tracks tourism, business travel, and consumer spending; if the projected 6% tourism-spending growth materializes, accommodation and food labour demand would stay elevated against an already-tight vacancy rate.<sup>3</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — tourism_culture pipeline (shared with NAICS 71)", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+        {"id": 2, "title": "Tourism visitor spending forecast 2026 — Moving2Canada", "url": "https://moving2canada.com/"},
+        {"id": 3, "title": "Canadian Project Database — tourism_culture pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
-      "isNegative": true,
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Tourism visitor spending forecast 2026 — Moving2Canada", "url": "https://moving2canada.com/"},
+        {"id": 3, "title": "Canadian Project Database — tourism_culture pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "isNegative": false,
       "subsectors": [
         {"code": "721", "name": "Accommodation Services"},
-        {"code": "7221", "name": "Full-Service Restaurants"},
-        {"code": "7225", "name": "Limited-Service Eating Places"}
+        {"code": "722", "name": "Food Services & Drinking Places"},
+        {"code": "7225", "name": "Restaurants & Limited-Service Eating Places"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "-0.4%", "delta": "weakest services M/M", "source": "industry_gdp.json:72"},
-        {"label": "Sector GDP (Y/Y)", "value": "+0.5%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:72"},
-        {"label": "Active Projects (shared tourism_culture tag)", "value": "322", "delta": "shared with NAICS 71", "source": "projects_all.json:sector=tourism_culture"},
-        {"label": "Priced Pipeline Value", "value": "$22.0B", "delta": "shared with NAICS 71", "source": "projects_all.json:parsed_value"},
-        {"label": "StatCan Food Services Table", "value": "N/A", "delta": "pull at writer time", "source": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2110001901"},
-        {"label": "Named capex (QC)", "value": "InterContinental Montreal", "delta": "Under Construction 2026-06-10", "source": "research_sectors.md"}
+        {"label": "Sector GDP (M/M)", "value": "-0.4%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:72.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+0.5%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:72.yy"},
+        {"label": "Tourism visitor spending (2026 forecast)", "value": "$140.9B", "delta": "+6% vs 2025", "source": "research_sectors.md:Moving2Canada 2026"},
+        {"label": "Accommodation/food employment (May)", "value": "+17,000", "delta": "+1.5% M/M", "source": "research_sectors.md:LFS May 2026"},
+        {"label": "Active Projects", "value": "N/A", "delta": "captured within NAICS 71", "source": "projects_all.json:within tourism_culture", "note": "Accommodation/food builds tagged to tourism_culture (NAICS 71)."}
       ]
     },
     {
@@ -382,26 +444,30 @@
       "mm": "+0.1%",
       "yy": "+0.7%",
       "trend": "flat",
-      "projectCount": 256,
-      "analysis": "<p><span class=\"lead-sentence\">Other services (except public administration) GDP rose 0.1% month-over-month and +0.7% year-over-year, marginally positive on both axes</span> &mdash; the reading sits in the flat-positive band alongside Real Estate +0.1% M/M, Wholesale +1.0% Y/Y, and Public Administration +0.4% M/M.<sup>1</sup> Y/Y momentum is among the lowest positive services prints.<sup>1</sup></p><p><span class=\"lead-sentence\">The &quot;Other&quot; fall-through pipeline tag holds 256 active projects ($20.0B priced) but does not cleanly map to NAICS 81</span> &mdash; the British Columbia 2026 Road Resurfacing Program (BC, Under Construction) is properly Construction (NAICS 23), the Bearspaw Feeder Main Replacement (AB, Proposed) is properly Utilities (NAICS 22), the Buffalo Run Real Canadian Superstore (AB, Under Construction, Loblaw proponent) is properly Retail (NAICS 44-45), and the Acadia Drive Primary Water Main Project (SK) is Utilities.<sup>2</sup> 30 rows are new this week within the mis-tagged subset.<sup>2</sup> If pipeline re-bucketing proceeds in a future cycle, NAICS 81 project counts would drop sharply and the released mass would re-allocate to NAICS 22, 23, and 44-45. GDP-only treatment is appropriate for the sector until then.<sup>1</sup></p>",
+      "projectCount": 267,
+      "analysis": "<p><span class=\"lead-sentence\">Other services output rose 0.1% month-over-month and 0.7% year-over-year against the March 2026 reference period</span> — no single dominant headline emerged this period, and the GDP read is the cleaner signal for true NAICS 81 personal and repair activity.<sup>1</sup><sup>2</sup> The pipeline's 267 'Other' records, valued at roughly $24.2B, logged 25 new discoveries this window, the largest new-discovery count of any bucket.<sup>2</sup></p><p><span class=\"lead-sentence\">The 'Other' bucket reflects classifier overlap rather than core NAICS 81 personal and repair services</span> — items tagged here include grocery and retail formats such as Empire, Maxi, Fresh St. Market, and Nature's Fare, road works such as Ninth Line, and the George Massey Tunnel replacement.<sup>2</sup><sup>3</sup> If classifier tagging is refined, several 'Other' records would migrate to retail and construction buckets; the underlying NAICS 81 GDP trend remains marginally positive, tracking consumer spending and demographics.<sup>3</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — Other tag fall-through (re-bucket queue)", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+        {"id": 2, "title": "Canadian Project Database — 'Other' bucket", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
+        {"id": 3, "title": "Canadian Project Database — discovery_summary.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/discovery_summary.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Canadian Project Database — 'Other' bucket", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
+        {"id": 3, "title": "Canadian Project Database — discovery_summary.json", "url": "https://walter-bolduc.github.io/lagging-indicator/data/discovery_summary.json"}
       ],
       "isNegative": false,
       "subsectors": [
         {"code": "811", "name": "Repair & Maintenance"},
         {"code": "812", "name": "Personal & Laundry Services"},
-        {"code": "813", "name": "Religious, Grantmaking, Civic, Professional & Similar Organizations"}
+        {"code": "813", "name": "Religious, Grant-Making, Civic & Professional Organizations"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "+0.1%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:81"},
-        {"label": "Sector GDP (Y/Y)", "value": "+0.7%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:81"},
-        {"label": "Active Projects (Other fall-through tag)", "value": "256", "delta": "30 new this week (mis-tagged sub-set)", "source": "projects_all.json:sector=Other"},
-        {"label": "Priced Pipeline Value (Other tag)", "value": "$20.0B", "delta": "NOT a clean NAICS-81 match", "source": "projects_all.json:parsed_value"},
-        {"label": "Tagging quality flag", "value": "RE-BUCKET", "delta": "Bearspaw->22, Buffalo Run->44-45, Road Resurf->23", "source": "research_sectors.md"},
-        {"label": "StatCan industry GDP table", "value": "Table 36-10-0434", "delta": "ref 2026-03-01", "source": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"}
+        {"label": "Sector GDP (M/M)", "value": "+0.1%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:81.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+0.7%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:81.yy"},
+        {"label": "Active Projects ('Other')", "value": "267", "delta": "+25 since 2026-06-13", "source": "projects_all.json:sector=Other"},
+        {"label": "Tracked Pipeline Value", "value": "$24.18B", "delta": "mixed classifier bucket", "source": "projects_all.json:sector=Other", "note": "Bucket overlaps retail/road/infrastructure tags, not pure NAICS 81."}
       ]
     },
     {
@@ -410,29 +476,31 @@
       "mm": "+0.4%",
       "yy": "+1.1%",
       "trend": "up",
-      "projectCount": 278,
-      "analysis": "<p><span class=\"lead-sentence\">Public administration GDP rose 0.4% month-over-month and +1.1% year-over-year, steady-positive across both axes</span> &mdash; the reading sits behind Healthcare +2.0% Y/Y and Finance +3.6% Y/Y in the services Y/Y rank but ranks above the flat or negative cohort that includes Education -2.8% Y/Y and Management -22.7% Y/Y.<sup>1</sup> Pipeline activity is broad with 27 new files this week across government, defence, and Indigenous tags.<sup>2</sup></p><p><span class=\"lead-sentence\">The combined government, defence, and Indigenous pipeline tracks 278 active projects ($101.7B priced) with defence accounting for $85.9B led by River-class destroyer program (HMCS Fraser entered Under Construction in Nova Scotia)</span> &mdash; new this week: CFB Petawawa Military Housing (ON, Proposed), Brockville Correctional Complex and St. Lawrence Valley CTC Expansion (ON, Approved), Shoal Lake 40 First Nation Housing ($51M, MB, Approved), and Endayaan Omaa Treaty One Naawi-Oodena ($90.8M, MB, Under Construction).<sup>2</sup> Federal legislative file activity was heavy with 20 federal bills logged in policy.json for the week (S-1 railways through S-214 sanctions sample); Bill S-2 Indian Act amendments (second reading and committee referral 2026-02-27) ties directly to 25 Indigenous-tagged projects.<sup>3</sup></p><p><span class=\"lead-sentence\">Procurement.json was empty across the week-of and eight archived weeks</span> &mdash; the procurement_monitor that publishes Open Canada proactive disclosure, CanadaBuys CSVs, SEAO OCDS, and DCC awards is reporting zero federal or provincial construction awards over $5M for two months, an implausible result consistent with a publishing-side failure.<sup>4</sup> Without that corroboration the federal contract-award visibility into Public Admin capex is degraded and analyst confidence in week-to-week movement is reduced; if River-class destroyer program continues at pace, defence capex maintains its $85.9B weight independent of procurement.json status.<sup>2</sup></p>",
+      "projectCount": 286,
+      "analysis": "<p><span class=\"lead-sentence\">Public administration output rose 0.4% month-over-month and 1.1% year-over-year against the March 2026 reference period</span> — the 2026-27 Main Estimates total $502.8B in budgetary spending, $230.4B voted and $272.4B statutory, with transfer payments at 59.8% or $300.5B.<sup>1</sup><sup>2</sup> The Spring Economic Update sets priorities of $25B for housing, $30B for defence, $115B for infrastructure, and $110B for productivity over five years, alongside $60B in spending reductions.<sup>2</sup></p><p><span class=\"lead-sentence\">The project database tracks 286 government and defence records valued at roughly $146.2B, with 10 first-tracked since June 13</span> — defence procurement this period includes the $39B Canada Submarine Fleet Replacement (Proposed), the $2.5B Far North Early Warning Arctic Radar in NT, and the $2.5B Canadian Naval Radar in NS.<sup>2</sup><sup>3</sup> Public-administration capital tracks government budgets and policy priorities; if the submarine and Arctic-radar programs advance from Proposed status, the $146.2B pipeline would continue expanding through the procurement cycle.<sup>3</sup></p>",
       "sources": [
         {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
-        {"id": 2, "title": "Canadian Project Database — government+defence+indigenous pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"},
-        {"id": 3, "title": "Federal LEGISinfo — Bill S-2 Indian Act amendments and 45-1 session bills", "url": "https://www.parl.ca/legisinfo"},
-        {"id": 4, "title": "Procurement monitor data — 8-week publishing gap (Open Canada/CanadaBuys/SEAO/DCC)", "url": "https://walter-bolduc.github.io/lagging-indicator/data/procurement.json"}
+        {"id": 2, "title": "Spring Economic Update 2026 — Department of Finance", "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/intro-en.html"},
+        {"id": 3, "title": "Canadian Project Database — government + defence pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
+      ],
+      "industrySources": [
+        {"id": 1, "title": "StatCan industry GDP at basic prices, Table 36-10-0434", "url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610043401"},
+        {"id": 2, "title": "Spring Economic Update 2026 — Department of Finance", "url": "https://budget.canada.ca/update-miseajour/2026/report-rapport/intro-en.html"},
+        {"id": 3, "title": "Canadian Project Database — government + defence pipeline", "url": "https://walter-bolduc.github.io/lagging-indicator/data/projects_all.json"}
       ],
       "isNegative": false,
       "subsectors": [
         {"code": "911", "name": "Federal Government Public Administration"},
         {"code": "912", "name": "Provincial & Territorial Public Administration"},
-        {"code": "9131", "name": "Local, Municipal & Regional Public Administration"}
+        {"code": "913", "name": "Local, Municipal & Regional Public Administration"}
       ],
       "indicatorSrc": "StatCan",
       "indicators": [
-        {"label": "Sector GDP (M/M)", "value": "+0.4%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:91"},
-        {"label": "Sector GDP (Y/Y)", "value": "+1.1%", "delta": "ref 2026-03-01", "source": "industry_gdp.json:91"},
-        {"label": "Active Projects (gov+defence+indigenous)", "value": "278", "delta": "27 new this week", "source": "projects_all.json:sector=government+Defence+indigenous"},
-        {"label": "Priced Pipeline Value", "value": "$101.7B", "delta": "gov $15.6B + defence $85.9B + indigenous $0.2B", "source": "projects_all.json:parsed_value"},
-        {"label": "Federal bills logged this week", "value": "20", "delta": "policy.json 2026-06-15 weekly total", "source": "policy.json"},
-        {"label": "IAAC files Under Review", "value": "24", "delta": "8 defence + 7 gov + 9 indigenous", "source": "research_sectors.md"},
-        {"label": "Procurement contract awards reported", "value": "0", "delta": "8 weeks empty — publishing failure suspected", "source": "procurement.json"}
+        {"label": "Sector GDP (M/M)", "value": "+0.4%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:91.mm"},
+        {"label": "Sector GDP (Y/Y)", "value": "+1.1%", "delta": "Mar 2026 ref", "source": "industry_gdp.json:91.yy"},
+        {"label": "2026-27 Main Estimates", "value": "$502.8B", "delta": "59.8% transfer payments", "source": "research_sectors.md:Treasury Board 2026"},
+        {"label": "Defence allocation (5-yr)", "value": "$30B", "delta": "Spring Economic Update", "source": "research_sectors.md:Finance update 2026"},
+        {"label": "Active Projects (gov + defence)", "value": "286", "delta": "+10 since 2026-06-13", "source": "projects_all.json:sector=government+Defence+indigenous"}
       ]
     }
   ]
