@@ -1,25 +1,15 @@
 {
   "last_run": {
-    "started_at": "2026-06-22T10:13:55.711052",
+    "started_at": "2026-06-24T12:40:10.347712",
     "status": "running",
     "duration_seconds": 0,
     "discovery": {
-      "articles_found": 105,
-      "projects_added": 84,
-      "projects_updated": 13,
-      "projects_deduped": 8,
-      "fuzzy_merges": 7
+      "articles_found": 0,
+      "projects_added": 0,
+      "projects_updated": 0,
+      "projects_deduped": 0
     },
-    "errors": [
-      {
-        "step": "Phase 2: Discovery",
-        "error_type": "Exception",
-        "message": "Timeout after 1200s",
-        "recovered": true,
-        "severity": "warn",
-        "timestamp": "2026-06-22T10:36:50.898703"
-      }
-    ]
+    "errors": []
   },
   "analysis_incomplete": false,
   "tavily": {
@@ -32,15 +22,27 @@
   },
   "recent_runs": [
     {
-      "started_at": "2026-06-22T10:13:55.711052",
+      "started_at": "2026-06-24T12:40:10.347712",
       "status": "running",
       "duration_seconds": 0,
+      "discovery": {
+        "articles_found": 0,
+        "projects_added": 0,
+        "projects_updated": 0,
+        "projects_deduped": 0
+      }
+    },
+    {
+      "started_at": "2026-06-22T10:13:55.711052",
+      "status": "degraded",
+      "duration_seconds": 8259,
       "discovery": {
         "articles_found": 105,
         "projects_added": 84,
         "projects_updated": 13,
         "projects_deduped": 8,
-        "fuzzy_merges": 7
+        "fuzzy_merges": 7,
+        "status_changes": 3
       }
     },
     {
@@ -66,18 +68,6 @@
         "projects_updated": 0,
         "projects_deduped": 0,
         "status_changes": 1
-      }
-    },
-    {
-      "started_at": "2026-06-15T12:18:27.589558",
-      "status": "crashed",
-      "duration_seconds": 0,
-      "discovery": {
-        "articles_found": 71,
-        "projects_added": 57,
-        "projects_updated": 8,
-        "projects_deduped": 5,
-        "fuzzy_merges": 5
       }
     }
   ]
