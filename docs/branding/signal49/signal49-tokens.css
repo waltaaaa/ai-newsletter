@@ -1,0 +1,65 @@
+/*
+ * Signal 49 (Signal49 Research, signal49.ca) — brand design tokens
+ * ================================================================
+ * PROVENANCE — READ BEFORE USING:
+ *   signal49.ca could NOT be fetched from this environment (network egress
+ *   allowlist returns 403 for the site, for archive.org, and for all fetch
+ *   proxies; see DESIGN_NOTES.md "Access failures"). These tokens are
+ *   therefore built ONLY from verifiable material already on hand:
+ *
+ *   [A] = pixel-sampled from genuine Signal49 brand assets already in this
+ *         repo (docs/assets/signal49_favicon.png, signal49_logo.png),
+ *         copied to ./assets/. High confidence — these are real brand colors.
+ *   [B] = existing "Signal49-inspired" values already adopted by this
+ *         project's frontend (docs/index.html, docs/js/app.js). Analogues
+ *         chosen in earlier sessions, NOT verified against the live site.
+ *   [TODO] = unverifiable here. Re-extract from https://www.signal49.ca
+ *         stylesheets on a machine with open egress, then update.
+ *
+ * Reference only — not linked from any page. See DESIGN_NOTES.md for the
+ * mapping onto the existing frontend.
+ */
+
+:root {
+  /* ── Core brand palette ─────────────────────────────────────── */
+  /* [A] Brand-mark gradient endpoints (favicon, sampled L→R): */
+  --s49-navy:            #1c3664;  /* deep navy — gradient start */
+  --s49-teal-mid:        #277393;  /* gradient midpoint */
+  --s49-teal:            #35b9c8;  /* bright teal — gradient end */
+  /* [A] Signature brand gradient (linear, left→right, constant vertically): */
+  --s49-gradient:        linear-gradient(90deg, #1c3664 0%, #277393 50%, #35b9c8 100%);
+  /* [A] Logo is a white knockout mark (single color #ffffff, 271x89) —
+     intended for placement on navy/gradient backgrounds: */
+  --s49-logo-on-dark:    #ffffff;
+
+  /* [B] Values this repo already uses as its Signal49-style theme: */
+  --s49-prussian:        #003153;  /* header/nav/accent "Prussian blue" */
+  --s49-prussian-dark:   #00253f;  /* sticky nav bar */
+  --s49-rule-red:        #e3120b;  /* chart kicker "red rule" accent */
+
+  /* [TODO] Full site palette (link colors, secondary accents, alert
+     colors, footer background) — re-extract from live CSS. */
+
+  /* ── Derived tints (mathematical tints of [A] colors, for UI use) ── */
+  --s49-teal-tint:       #e7f6f8;  /* ~10% teal on white */
+  --s49-navy-tint:       #e9edf3;  /* ~8% navy on white */
+
+  /* ── Typography ─────────────────────────────────────────────── */
+  /* [B] The repo treats Inter as the "Neue Haas Grotesk analog" for
+     Signal49-style headings (comment at docs/index.html:1386). The
+     actual signal49.ca font stack is [TODO] — unverified. */
+  --s49-font-heading:    'Inter', 'Neue Haas Grotesk', -apple-system, sans-serif;
+  --s49-font-body:       'Inter', -apple-system, sans-serif;
+  --s49-font-mono:       'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* [B] Loaded from Google Fonts:
+     https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap */
+  --s49-weight-heading:  700;
+  --s49-weight-kicker:   600;   /* uppercase, letter-spacing ~1.5px */
+
+  /* ── Component tokens (proposed, from [A]+[B]) ──────────────── */
+  --s49-header-bg:       var(--s49-prussian);
+  --s49-header-gradient: var(--s49-gradient);   /* alternative: brand gradient header */
+  --s49-nav-bg:          var(--s49-prussian-dark);
+  --s49-link:            var(--s49-prussian);
+  --s49-accent-cta:      var(--s49-teal);
+}
