@@ -485,6 +485,19 @@ def fetch_and_store_commodities(conn=None, db=None):
 
     if not data:
         print("  [MARKETS] No commodity data fetched")
+        # Warehouse instrumentation (RC-6): a totally empty fetch is a failed
+        # connection run, not a quiet week. record_run never raises.
+        if conn and hasattr(conn, 'execute'):
+            try:
+                from data_warehouse import record_run
+                record_run("yf_canadian_proxies", "failed",
+                           error="fetch_canadian_commodities returned no data",
+                           conn=conn)
+                record_run("statcan_canola", "failed",
+                           error="fetch_canadian_commodities returned no data",
+                           conn=conn)
+            except Exception as _wh_e:
+                logger.warning(f"[WAREHOUSE] recording failed (non-critical): {_wh_e}")
         return {}
 
     print(f"  [MARKETS] {len(data)} commodity indicators fetched")
@@ -549,5 +562,23 @@ def fetch_and_store_commodities(conn=None, db=None):
                 print(f"  [MARKETS] {ts_count} commodity values saved to timeseries")
         except Exception as e:
             logger.warning(f"Failed to save commodity timeseries: {e}")
+            ts_count = 0
+
+        # Warehouse instrumentation (RC-6): record the yfinance proxy fetch
+        # and the canola StatCan fetch as connection runs. Never raises.
+        try:
+            from data_warehouse import record_run
+            canola_pts = len(data.get('canola', {}).get('monthly_points') or [])
+            record_run("yf_canadian_proxies",
+                       "ok" if len(data) > 1 or not canola_pts else "degraded",
+                       items_fetched=len(data), items_saved=ts_count,
+                       conn=conn)
+            record_run("statcan_canola",
+                       "ok" if canola_pts else "failed",
+                       items_fetched=canola_pts, items_saved=canola_pts,
+                       error="" if canola_pts else "no canola monthly_points fetched",
+                       conn=conn)
+        except Exception as _wh_e:
+            logger.warning(f"[WAREHOUSE] recording failed (non-critical): {_wh_e}")
 
     return data

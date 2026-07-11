@@ -365,6 +365,22 @@ def update_dashboard(deep_sweep: bool = False):
     # One block that makes a dead tier look different from a quiet week.
     _print_operator_summary(conn, run_log, health_status, context)
 
+    # ── Data warehouse connection health (RC-6, 2026-07-11) ───────
+    # Central per-connection retrieval health: last-success age vs cadence,
+    # consecutive failures, and series-accrual gaps. Writes
+    # docs/data/warehouse_status.json (+ public/data mirror) and prints loud
+    # [WAREHOUSE] lines for failed/overdue connections. Must NEVER crash the
+    # pipeline — everything is wrapped.
+    try:
+        from data_warehouse import check_health, write_status_json, log_health_summary
+        _wh_health = check_health(conn=conn)
+        log_health_summary(_wh_health)
+        for _p in write_status_json(health=_wh_health):
+            print(f"[WAREHOUSE] wrote {_p}")
+    except Exception as _wh_e:
+        print(f"[WAREHOUSE] health check failed (non-critical): "
+              f"{type(_wh_e).__name__}: {_wh_e}")
+
     # ── Finalize pipeline run log ─────────────────────────────────
     final_payload = context.get("final_payload", {})
     if final_payload.get('_analysis_incomplete'):

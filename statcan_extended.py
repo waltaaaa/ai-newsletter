@@ -913,6 +913,11 @@ def run_extended_statcan(conn, mode: str = "weekly") -> dict:
         # Rate-limit: 1-second delay between table fetches
         time.sleep(1)
 
+    # Warehouse instrumentation: snapshot hardcoded-vector loop totals so the
+    # META loop's contribution can be recorded separately below.
+    _hc_ok, _hc_failed = tables_succeeded, tables_failed
+    _hc_fetched, _hc_saved = total_fetched, total_saved
+
     # Metadata-resolved groups (coordinate resolution by member name + range
     # and freshness gates — see META_RESOLVED_GROUPS)
     for group in META_RESOLVED_GROUPS:
@@ -940,6 +945,33 @@ def run_extended_statcan(conn, mode: str = "weekly") -> dict:
 
     print(f"  [STATCAN-EXT] Done: {tables_succeeded} tables OK, "
           f"{tables_failed} failed, {total_saved}/{total_fetched} indicators saved")
+
+    # Warehouse instrumentation (RC-6): persist per-connection outcome so a
+    # dark/degraded StatCan fetch is visible beyond this stdout line.
+    # record_run never raises — retrieval behavior is unchanged.
+    try:
+        from data_warehouse import record_run
+
+        def _wh_status(ok, failed):
+            if ok == 0 and failed == 0:
+                return "skipped"   # all groups mode-skipped this run
+            if ok == 0:
+                return "failed"
+            return "degraded" if failed > 0 else "ok"
+
+        _meta_ok = tables_succeeded - _hc_ok
+        _meta_failed = tables_failed - _hc_failed
+        record_run("statcan_wds_vectors", _wh_status(_hc_ok, _hc_failed),
+                   items_fetched=_hc_fetched, items_saved=_hc_saved,
+                   error=(f"{_hc_failed} table group(s) failed/empty"
+                          if _hc_failed else ""), conn=conn)
+        record_run("statcan_wds_meta", _wh_status(_meta_ok, _meta_failed),
+                   items_fetched=total_fetched - _hc_fetched,
+                   items_saved=total_saved - _hc_saved,
+                   error=(f"{_meta_failed} meta group(s) failed/empty"
+                          if _meta_failed else ""), conn=conn)
+    except Exception as _wh_e:
+        print(f"  [WAREHOUSE] statcan_extended recording failed (non-critical): {_wh_e}")
 
     return {
         "statcan_extended_fetched": total_fetched,

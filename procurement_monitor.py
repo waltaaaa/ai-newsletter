@@ -1065,6 +1065,28 @@ def run_procurement_monitor(conn, days_back=30):
     # Save snapshot (first-seen only — no re-reporting old awards as fresh)
     save_procurement_snapshot(conn, new_contracts)
 
+    # Warehouse instrumentation (RC-6): record the connection outcome. A run
+    # where no source returned raw rows is failed; errored sources or dark
+    # streaks degrade an otherwise-ok run. Never raises.
+    try:
+        from data_warehouse import record_run
+        _errored = [s for s, i in per_source.items() if i.get("errored")]
+        if not sources_had_rows:
+            _wh_status = "failed"
+            _wh_err = "no procurement source returned raw rows"
+        elif _errored or dark_sources:
+            _wh_status = "degraded"
+            _wh_err = "; ".join(
+                ([f"errored: {', '.join(_errored)}"] if _errored else [])
+                + ([f"dark: {', '.join(s for s, _ in dark_sources)}"] if dark_sources else []))
+        else:
+            _wh_status, _wh_err = "ok", ""
+        record_run("procurement_monitor", _wh_status,
+                   items_fetched=len(all_contracts), items_saved=len(new_contracts),
+                   error=_wh_err, conn=conn)
+    except Exception as _wh_e:
+        print(f"[WAREHOUSE] procurement recording failed (non-critical): {_wh_e}")
+
     return {
         "procurement_contracts": new_contracts,
         "procurement_contracts_all": all_contracts,

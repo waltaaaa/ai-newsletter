@@ -529,6 +529,23 @@ def run_job_monitor(conn, sectors=None, cmas=None):
     run_date = datetime.now().strftime("%Y-%m-%d")
     save_job_snapshot(conn, current_counts, spikes, run_date)
 
+    # Warehouse instrumentation (RC-6): a zero-posting week means dead/blocked
+    # feeds (see [JOBS DEGRADED] above), not a quiet labour market — record it
+    # as a failed connection run. Never raises.
+    try:
+        from data_warehouse import record_run
+        if not all_postings:
+            _wh_status, _wh_err = "failed", "0 postings across all Job Bank feeds (dead or blocked)"
+        elif budget_hit:
+            _wh_status, _wh_err = "degraded", "time budget exhausted — partial sector/CMA coverage"
+        else:
+            _wh_status, _wh_err = "ok", ""
+        record_run("job_monitor", _wh_status,
+                   items_fetched=len(all_postings), items_saved=len(current_counts),
+                   error=_wh_err, conn=conn)
+    except Exception as _wh_e:
+        print(f"[WAREHOUSE] job_monitor recording failed (non-critical): {_wh_e}")
+
     return {
         "job_postings_total": len(all_postings),
         "job_spikes": spikes,

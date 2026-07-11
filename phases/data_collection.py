@@ -2105,6 +2105,45 @@ def run(conn, context, logger):
 
         logger.log_step("step_1b_indicators")
 
+        # Warehouse instrumentation (RC-6): record Phase 1 connection outcomes
+        # (yfinance batches, BoC Valet, LFS/CPI primary, global indicators) so
+        # a dark source is visible beyond stdout. record_run never raises and
+        # this block never alters Phase 1 output.
+        try:
+            from data_warehouse import record_run
+
+            def _wh(dct):
+                try:
+                    n = len(dct) if dct else 0
+                except TypeError:
+                    n = 1 if dct else 0
+                return ("ok" if n else "failed"), n
+
+            _st, _n = _wh(commodity_data)
+            record_run("yf_commodities", _st, items_fetched=_n, items_saved=_n,
+                       error="" if _n else "empty commodities payload", conn=conn)
+            _mk_n = (len(financial_markets.get("indices") or [])
+                     + len(financial_markets.get("fx") or [])) if financial_markets else 0
+            record_run("yf_markets", "ok" if _mk_n else "failed",
+                       items_fetched=_mk_n, items_saved=_mk_n,
+                       error="" if _mk_n else "empty indices/fx payload", conn=conn)
+            _boc_ok = bool(boc_data and boc_data.get("rate"))
+            record_run("boc_valet", "ok" if _boc_ok else "failed",
+                       items_fetched=1 if _boc_ok else 0,
+                       items_saved=1 if _boc_ok else 0,
+                       error="" if _boc_ok else "BoC Valet returned no policy rate", conn=conn)
+            _lfs_n = (len(national_ind or {})
+                      + sum(len(v or {}) for v in (prov_ind or {}).values()))
+            record_run("statcan_lfs_primary", "ok" if _lfs_n else "failed",
+                       items_fetched=_lfs_n, items_saved=_lfs_n,
+                       error="" if _lfs_n else "no national/provincial LFS-CPI values", conn=conn)
+            _gl_n = len(global_ind or {})
+            record_run("global_indicators", "ok" if _gl_n else "failed",
+                       items_fetched=_gl_n, items_saved=_gl_n,
+                       error="" if _gl_n else "empty global indicators payload", conn=conn)
+        except Exception as _wh_e:
+            print(f"  [WAREHOUSE] Phase 1 recording failed (non-critical): {_wh_e}")
+
         return {
             "commodity_data": commodity_data,
             "financial_markets": financial_markets,

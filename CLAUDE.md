@@ -191,6 +191,8 @@ The briefing integrates data from: indicator history, project database, discover
 - `procurement_snapshots` — weekly government procurement contract snapshots
 - `policy_snapshots` — weekly policy/legislative developments with sector/project linkages
 - `project_alerts` — Google News RSS tracking per project (auto-registered on discovery, monthly check, deactivated on Cancelled/Complete)
+- `connection_runs` — data-warehouse monitoring (2026-07-11, see `DATA_WAREHOUSE.md`): one row per data connection per attempt — started/finished, status (ok/degraded/failed/skipped), items_fetched/items_saved, error summary. Written via `data_warehouse.record_run()`/`track()` from instrumented modules; recording never raises into callers.
+- `series_accrual` — latest reference period per registered series vs its expected frequency (frequency-aware overdue thresholds: monthly 65d, quarterly 150d, etc.); refreshed by `data_warehouse.check_health()` from indicator_history/timeseries. Detects "series stopped accruing" even when the connection reports ok.
 
 ## Directory Structure
 - `phases/` — Pipeline phase modules (data_collection, discovery, filtering, analysis, etc.)
@@ -209,6 +211,7 @@ The briefing integrates data from: indicator history, project database, discover
 - StatCan Extended: `statcan_extended.py` (8 additional WDS tables — investment, employment, trade, housing)
 - Regulatory: `article_filter.py` contains `is_regulatory_relevant()` pre-filter and `extract_regulatory_signal()` for CanLII feeds (10 feeds in `rss_feeds.json` `regulatory` category)
 - Alert Tracking: `project_alert_tracker.py` (per-project Google News RSS alerts, monthly check, auto-deactivate on Cancelled/Complete)
+- Data Warehouse: `data_warehouse.py` (static CONNECTIONS registry of ~31 data connections — ADDITIVE ONLY — plus `record_run()`/`track()` instrumentation API and `check_health()`) + `tools/warehouse_report.py` (health-table CLI; writes `docs/data/warehouse_status.json` + public/data mirror). Health also runs at the end of every `update_dashboard.py` weekly run (`[WAREHOUSE]` log lines, never crashes the pipeline). See `DATA_WAREHOUSE.md`.
 - Search: `tavily_search.py` (targeted enrichment only)
 - Reasoning: `claude_reasoning.py` (all reasoning — no gemini_pro_reasoning.py)
 - Analysis: `sector_trends.py`, `cross_reference.py`, `indicator_trends.py`

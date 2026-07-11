@@ -214,6 +214,19 @@ def run_iaac_status(conn):
     if update_changes or new_discoveries:
         applied = apply_status_changes(changes, conn)
 
+    # Warehouse instrumentation (RC-6): record the tracker outcome. Zero
+    # projects fetched means the registry scrape failed (statuses silently
+    # not updated today) — record it as failed. Never raises.
+    try:
+        from data_warehouse import record_run
+        record_run("iaac_status_tracker",
+                   "ok" if projects else "failed",
+                   items_fetched=len(projects), items_saved=applied,
+                   error="" if projects else "0 projects from IAAC registry — no status updates applied",
+                   conn=conn)
+    except Exception as _wh_e:
+        print(f"[WAREHOUSE] iaac_status recording failed (non-critical): {_wh_e}")
+
     return {
         "iaac_projects_checked": len(projects),
         "iaac_status_changes": update_changes,

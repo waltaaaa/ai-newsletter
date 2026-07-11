@@ -656,6 +656,22 @@ def run_policy_tracker(conn, research_paths=None):
     # Generate summary for narrative phase
     summary = generate_policy_summary(relevant)
 
+    # Warehouse instrumentation (RC-6): record the connection outcome so dark
+    # policy feeds are visible beyond stdout. Never raises.
+    try:
+        from data_warehouse import record_run
+        if not all_items:
+            _wh_status, _wh_err = "failed", "0 items from all policy feeds (feeds dark)"
+        elif not relevant:
+            _wh_status, _wh_err = "degraded", "feeds returned items but 0 classified relevant"
+        else:
+            _wh_status, _wh_err = "ok", ""
+        record_run("policy_tracker", _wh_status,
+                   items_fetched=len(all_items), items_saved=len(relevant),
+                   error=_wh_err, conn=conn)
+    except Exception as _wh_e:
+        print(f"[WAREHOUSE] policy_tracker recording failed (non-critical): {_wh_e}")
+
     return {
         "policy_items": relevant,
         "policy_new_items": new_items,

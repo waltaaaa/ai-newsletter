@@ -348,7 +348,33 @@ def _scrape_iaac(tavily_client=None) -> list[dict]:
     Scrape IAAC project registry for active and recently decided assessments.
     Fetches the exploration page with browser-like headers and parses article cards.
     Returns list of project dicts with discovery_source='iaac_registry'.
+
+    Warehouse instrumentation (RC-6): records the attempt in connection_runs
+    ('iaac_registry') without altering behavior — an exception is recorded as
+    failed and re-raised; an empty result is recorded as failed; a non-empty
+    result is recorded ok with the project count.
     """
+    result = None
+    try:
+        result = _scrape_iaac_impl(tavily_client=tavily_client)
+        return result
+    finally:
+        try:
+            from data_warehouse import record_run
+            if result is None:
+                record_run("iaac_registry", "failed",
+                           error="_scrape_iaac raised (see pipeline log)")
+            elif not result:
+                record_run("iaac_registry", "failed",
+                           error="0 projects from IAAC registry (fetch/parse failure)")
+            else:
+                record_run("iaac_registry", "ok",
+                           items_fetched=len(result), items_saved=len(result))
+        except Exception as _wh_e:
+            print(f"  [WAREHOUSE] iaac_registry recording failed (non-critical): {_wh_e}")
+
+
+def _scrape_iaac_impl(tavily_client=None) -> list[dict]:
     # patch-1.2: route through shared http_client (browser UA + certifi TLS + retry)
     resp = http_client.get(_IAAC_URL, timeout=20)
     if resp is None:
